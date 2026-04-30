@@ -56,6 +56,11 @@ type ReadingReportItem = ReadingQuestion & {
   isCorrect: boolean
 }
 
+type ScriptReviewItem = {
+  question: string
+  response: string
+}
+
 type ManagedLearnerRecord = {
   id: string
   name: string
@@ -257,6 +262,12 @@ type AnswerReviewModalState = {
   fullExamPhase: FullExamPhase | null
   fullExamPart1Index: number
   fullExamPart3Index: number
+}
+
+type ScriptReviewModalState = {
+  title: string
+  noteThai: string
+  items: ScriptReviewItem[]
 }
 
 const ANALYSIS_LOADING_PHRASES = [
@@ -2922,6 +2933,7 @@ function App() {
   const [pendingStartTopicId, setPendingStartTopicId] = useState<string | null>(null)
   const [selectedExpectedScore, setSelectedExpectedScore] = useState<string>('')
   const [answerReviewModal, setAnswerReviewModal] = useState<AnswerReviewModalState | null>(null)
+  const [scriptReviewModal, setScriptReviewModal] = useState<ScriptReviewModalState | null>(null)
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -2937,6 +2949,12 @@ function App() {
   const assessPollRef = useRef<number | null>(null)
   const assessmentStartedAtRef = useRef<number | null>(null)
   const questionResponsesRef = useRef<Array<{ question: string; response: string }>>([])
+  const pendingAssessmentRef = useRef<null | {
+    audioBlob: Blob | null
+    durationSeconds: number
+    items: ScriptReviewItem[]
+    scoreKeyMode: SpeakingTestMode
+  }>(null)
   const fullExamAnnouncementTimeoutRef = useRef<number | null>(null)
   const questionCountdownIntervalRef = useRef<number | null>(null)
   const micCheckRecorderRef = useRef<MediaRecorder | null>(null)
@@ -3359,6 +3377,14 @@ function App() {
   }, [interimTranscript, isFullExamMode, isQuestionByQuestionMode, transcript])
   const currentTranscriptWordCount = useMemo(() => countWords(currentTranscriptSegment), [currentTranscriptSegment])
   const currentLengthThresholds = activeLengthGuideMode ? SPEAKING_LENGTH_THRESHOLDS[activeLengthGuideMode] : []
+  const canReviewScriptBeforeSubmission =
+    attemptStage === 'speaking' &&
+    !isExamPaused &&
+    ((isFullExamMode &&
+      fullExamPhase === 'part3' &&
+      fullExamPart3Index >= fullExamPlan.part3Questions.length - 1) ||
+      (isQuestionByQuestionMode && currentQuestionIndex >= activeQuestionList.length - 1) ||
+      selectedTestMode === 'part2')
   const fullExamCurrentPart1Recommendations = useMemo(
     () =>
       getPart1Recommendations(
@@ -4925,42 +4951,8 @@ function App() {
   }
 
   const finishSpeakingAndAssess = async () => {
-    if (speakingIntervalRef.current) {
-      window.clearInterval(speakingIntervalRef.current)
-      speakingIntervalRef.current = null
-    }
-    stopTranscription()
-    setIsPromptTtsPlaying(false)
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel()
-    stopPromptAudioPlayback()
-    if (isQuestionByQuestionMode) captureCurrentQuestionResponse()
-    if (isFullExamMode) {
-      if (fullExamPhase === 'part1') {
-        captureFullExamQuestionResponse(fullExamPlan.part1Questions[fullExamPart1Index] || '')
-      } else if (fullExamPhase === 'part2_speaking') {
-        captureFullExamQuestionResponse(fullExamPlan.part2Prompt || 'Part 2')
-      } else if (fullExamPhase === 'part3') {
-        captureFullExamQuestionResponse(fullExamPlan.part3Questions[fullExamPart3Index] || '')
-      }
-    }
-    const audioBlob = await stopAudioRecordingAndGetBlob()
-    const capturedResponses = questionResponsesRef.current
-      .map((item) => String(item?.response || '').trim())
-      .filter(Boolean)
-      .join(' ')
-    const hasTranscriptEvidence = Boolean(transcript.trim() || interimTranscript.trim() || capturedResponses)
-    if (!audioBlob && !hasTranscriptEvidence) {
-      setAudioError('No spoken text was captured yet. Please speak or paste your answer before assessment.')
-      setAttemptStage('speaking')
-      return
-    }
-    const durationSeconds = isFullExamMode
-      ? fullExamPlan.part1Questions.length * 75 + 60 + 120 + 30 + fullExamPlan.part3Questions.length * 90
-      : isQuestionByQuestionMode
-        ? activeQuestionList.length * 75 -
-          (remainingQuestionSeconds + (activeQuestionList.length - 1 - currentQuestionIndex) * 75)
-        : talkSeconds - remainingTalkSeconds
-    await runAssessmentRequest(audioBlob, durationSeconds)
+    const prepared = await prepareAssessmentSubmission()
+    await startPreparedAssessment(prepared)
   }
 
   const doneCurrentQuestion = async () => {
@@ -5004,6 +4996,157 @@ function App() {
       question,
       response: blocks[index] || ''
     }))
+  }
+
+  const joinScriptReviewItems = (items: ScriptReviewItem[]) =>
+    items
+      .map((item) => String(item.response || '').trim())
+      .filter(Boolean)
+      .join('\n\n')
+
+  const buildCurrentScriptReviewItems = (): ScriptReviewItem[] => {
+    if (isQuestionByQuestionMode) {
+      return activeQuestionList.map((question, index) => ({
+        question,
+        response: String(questionResponsesRef.current[index]?.response || '').trim()
+      }))
+    }
+
+    if (isFullExamMode) {
+      const orderedQuestions = [...fullExamPlan.part1Questions, fullExamPlan.part2Prompt, ...fullExamPlan.part3Questions].filter(Boolean)
+      return orderedQuestions.map((question, index) => ({
+        question,
+        response: String(questionResponsesRef.current[index]?.response || '').trim()
+      }))
+    }
+
+    return [
+      {
+        question: activeTopic?.prompt || 'Speaking response',
+        response: transcript.trim()
+      }
+    ]
+  }
+
+  const buildScriptReviewTitle = () => {
+    if (isFullExamMode) return 'Full Mock Script Review'
+    if (selectedTestMode === 'part1') return 'Part 1 Script Review'
+    if (selectedTestMode === 'part2') return 'Part 2 Script Review'
+    return 'Part 3 Script Review'
+  }
+
+  const prepareAssessmentSubmission = async () => {
+    if (speakingIntervalRef.current) {
+      window.clearInterval(speakingIntervalRef.current)
+      speakingIntervalRef.current = null
+    }
+    stopTranscription()
+    setIsPromptTtsPlaying(false)
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+    stopPromptAudioPlayback()
+    if (isQuestionByQuestionMode) captureCurrentQuestionResponse()
+    if (isFullExamMode) {
+      if (fullExamPhase === 'part1') {
+        captureFullExamQuestionResponse(fullExamPlan.part1Questions[fullExamPart1Index] || '')
+      } else if (fullExamPhase === 'part2_speaking') {
+        captureFullExamQuestionResponse(fullExamPlan.part2Prompt || 'Part 2')
+      } else if (fullExamPhase === 'part3') {
+        captureFullExamQuestionResponse(fullExamPlan.part3Questions[fullExamPart3Index] || '')
+      }
+    }
+    const audioBlob = await stopAudioRecordingAndGetBlob()
+    const items = buildCurrentScriptReviewItems()
+    const joinedResponses = joinScriptReviewItems(items)
+    const hasTranscriptEvidence = Boolean(transcript.trim() || interimTranscript.trim() || joinedResponses)
+    const durationSeconds = isFullExamMode
+      ? fullExamPlan.part1Questions.length * 75 + 60 + 120 + 30 + fullExamPlan.part3Questions.length * 90
+      : isQuestionByQuestionMode
+        ? activeQuestionList.length * 75 -
+          (remainingQuestionSeconds + (activeQuestionList.length - 1 - currentQuestionIndex) * 75)
+        : talkSeconds - remainingTalkSeconds
+
+    return {
+      audioBlob,
+      durationSeconds,
+      items,
+      hasTranscriptEvidence
+    }
+  }
+
+  const startPreparedAssessment = async (
+    prepared: {
+      audioBlob: Blob | null
+      durationSeconds: number
+      items: ScriptReviewItem[]
+      hasTranscriptEvidence?: boolean
+    },
+    overrideItems?: ScriptReviewItem[]
+  ) => {
+    const items = Array.isArray(overrideItems) ? overrideItems : prepared.items
+    const filteredQuestionResponses = items
+      .map((item) => ({
+        question: String(item.question || '').trim(),
+        response: String(item.response || '').trim()
+      }))
+      .filter((item) => item.question || item.response)
+    const forcedTranscript = joinScriptReviewItems(filteredQuestionResponses)
+    if (!prepared.audioBlob && !forcedTranscript && !prepared.hasTranscriptEvidence) {
+      setAudioError('No spoken text was captured yet. Please speak or paste your answer before assessment.')
+      setAttemptStage('speaking')
+      return
+    }
+    await runAssessmentRequest(prepared.audioBlob, prepared.durationSeconds, {
+      forcedTranscript: forcedTranscript || transcript.trim(),
+      forcedQuestionResponses: filteredQuestionResponses,
+      scoreKeyMode: selectedTestMode
+    })
+  }
+
+  const openScriptReviewBeforeAssessment = async () => {
+    const prepared = await prepareAssessmentSubmission()
+    const items = prepared.items.filter((item) => item.question || item.response)
+    const hasVisibleContent = items.some((item) => String(item.response || '').trim())
+
+    if (!prepared.audioBlob && !prepared.hasTranscriptEvidence && !hasVisibleContent) {
+      setAudioError('No spoken text was captured yet. Please speak or paste your answer before assessment.')
+      setAttemptStage('speaking')
+      return
+    }
+
+    pendingAssessmentRef.current = {
+      audioBlob: prepared.audioBlob,
+      durationSeconds: prepared.durationSeconds,
+      items,
+      scoreKeyMode: selectedTestMode
+    }
+
+    setScriptReviewModal({
+      title: buildScriptReviewTitle(),
+      noteThai:
+        'ไม่ต้องกังวลเรื่อง punctuation นะครับ ระบบจะเติมให้อัตโนมัติตอนตรวจทีหลัง ตอนนี้เช็กแค่ spelling และคำที่เราใช้ให้โอเคก่อนก็พอ',
+      items
+    })
+    setAttemptStage('speaking')
+  }
+
+  const closeScriptReviewModal = () => {
+    pendingAssessmentRef.current = null
+    setScriptReviewModal(null)
+    setAttemptStage('speaking')
+  }
+
+  const confirmScriptReviewAndAssess = async () => {
+    if (!scriptReviewModal) return
+    const prepared = pendingAssessmentRef.current
+    if (!prepared) {
+      setScriptReviewModal(null)
+      setAssessmentError('Could not prepare your script review. Please try again.')
+      return
+    }
+
+    setScriptReviewModal(null)
+    pendingAssessmentRef.current = null
+    await startPreparedAssessment(prepared, scriptReviewModal.items)
   }
 
   const assessPastedTextNow = async (mode: SpeakingTestMode = selectedTestMode) => {
@@ -7305,6 +7448,15 @@ function App() {
                           </button>
                         )}
                       </div>
+                      {canReviewScriptBeforeSubmission && (
+                        <button
+                          type="button"
+                          className="reviewScriptBtn"
+                          onClick={() => void openScriptReviewBeforeAssessment()}
+                        >
+                          I want to review my script first
+                        </button>
+                      )}
                       <div className="liveTranscriptBox liveTranscriptBoxLarge">
                         <div className="liveTranscriptHeader">
                           <span className="liveTranscriptTitle">Live Transcript</span>
@@ -8270,6 +8422,59 @@ function App() {
               </button>
               <button type="button" className="answerReviewConfirmBtn" onClick={() => void confirmCurrentAnswer()}>
                 I&apos;m happy with it now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {scriptReviewModal && (
+        <div className="scriptReviewOverlay">
+          <div className="scriptReviewCard">
+            <div className="scriptReviewHero">
+              <p className="scriptReviewEyebrow">English Plan Script Review</p>
+              <h3>{scriptReviewModal.title}</h3>
+              <p className="scriptReviewLead">
+                Don&apos;t worry about punctuation right now. ระบบจะเติม punctuation ให้อัตโนมัติตอนตรวจทีหลัง
+                ให้โฟกัสแค่ spelling กับคำที่เราใช้ก่อนส่งตรวจครับ
+              </p>
+            </div>
+            <div className="scriptReviewNotebook">
+              <p className="scriptReviewNotebookLabel">Before submission</p>
+              <p className="scriptReviewNotebookNote">{scriptReviewModal.noteThai}</p>
+              <div className="scriptReviewQuestionList">
+                {scriptReviewModal.items.map((item, index) => (
+                  <article key={`script-review-${index}-${item.question}`} className="scriptReviewQuestionCard">
+                    <p className="scriptReviewQuestionNumber">Question {index + 1}</p>
+                    <p className="scriptReviewQuestionText">{item.question}</p>
+                    <textarea
+                      className="scriptReviewTextarea"
+                      value={item.response}
+                      onChange={(event) =>
+                        setScriptReviewModal((current) =>
+                          current
+                            ? {
+                                ...current,
+                                items: current.items.map((currentItem, currentIndex) =>
+                                  currentIndex === index
+                                    ? { ...currentItem, response: event.target.value }
+                                    : currentItem
+                                )
+                              }
+                            : current
+                        )
+                      }
+                      placeholder="เช็ก spelling และคำที่ใช้ แล้วแก้ตรงนี้ได้เลยก่อนส่งตรวจ..."
+                    />
+                  </article>
+                ))}
+              </div>
+            </div>
+            <div className="scriptReviewActions">
+              <button type="button" className="scriptReviewBackBtn" onClick={closeScriptReviewModal}>
+                Back to speaking
+              </button>
+              <button type="button" className="scriptReviewDoneBtn" onClick={() => void confirmScriptReviewAndAssess()}>
+                I&apos;m done, start assessment
               </button>
             </div>
           </div>

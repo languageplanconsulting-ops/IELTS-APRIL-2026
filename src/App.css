@@ -1087,6 +1087,212 @@ body,
   color: #fff;
 }
 
+.reviewScriptBtn {
+  width: 100%;
+  margin-top: 10px;
+  border: 3px solid var(--bc-black);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(251, 191, 36, 0.18), transparent 30%),
+    linear-gradient(135deg, #fff8d8 0%, #fffdf5 100%);
+  color: #0f2e85;
+  box-shadow: 5px 5px 0 var(--bc-black);
+  padding: 15px 18px;
+  font-size: 0.98rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.reviewScriptBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--bc-black);
+}
+
+.reviewScriptBtn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 var(--bc-black);
+}
+
+.scriptReviewOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.22), transparent 22%),
+    radial-gradient(circle at bottom, rgba(250, 204, 21, 0.18), transparent 32%),
+    rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.scriptReviewCard {
+  width: min(1120px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  border: 3px solid var(--bc-black);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(251, 191, 36, 0.26), transparent 26%),
+    linear-gradient(145deg, #fffdf4 0%, #eef6ff 100%);
+  box-shadow: 10px 10px 0 var(--bc-black);
+  animation: full-exam-pop 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scriptReviewHero {
+  padding: 30px 30px 18px;
+  border-bottom: 2px solid rgba(15, 23, 42, 0.08);
+}
+
+.scriptReviewEyebrow {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0f2e85;
+}
+
+.scriptReviewHero h3 {
+  margin: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.3rem, 4.8vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #0f172a;
+}
+
+.scriptReviewLead {
+  max-width: 860px;
+  margin: 16px 0 0;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #334155;
+  font-weight: 600;
+}
+
+.scriptReviewNotebook {
+  padding: 24px 30px;
+}
+
+.scriptReviewNotebookLabel {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2c7a7b;
+}
+
+.scriptReviewNotebookNote {
+  margin: 8px 0 0;
+  font-size: 0.96rem;
+  line-height: 1.7;
+  color: #475569;
+  font-weight: 600;
+}
+
+.scriptReviewQuestionList {
+  margin-top: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.scriptReviewQuestionCard {
+  border: 3px solid var(--bc-black);
+  border-radius: 28px;
+  padding: 18px 18px 16px;
+  background:
+    radial-gradient(circle at top right, rgba(251, 191, 36, 0.14), transparent 30%),
+    linear-gradient(135deg, #fffef7 0%, #ffffff 100%);
+  box-shadow: 5px 5px 0 rgba(15, 23, 42, 0.88);
+}
+
+.scriptReviewQuestionNumber {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2c7a7b;
+}
+
+.scriptReviewQuestionText {
+  margin: 8px 0 0;
+  font-size: clamp(1.05rem, 1.8vw, 1.32rem);
+  line-height: 1.5;
+  color: #111827;
+  font-weight: 800;
+}
+
+.scriptReviewTextarea {
+  width: 100%;
+  min-height: 136px;
+  margin-top: 14px;
+  border: 2px solid #dce5f7;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 16px 18px;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #0f172a;
+  resize: vertical;
+}
+
+.scriptReviewTextarea:focus {
+  outline: none;
+  border-color: #0f4aa3;
+  box-shadow: 0 0 0 4px rgba(15, 74, 163, 0.12);
+}
+
+.scriptReviewActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 0 30px 30px;
+}
+
+.scriptReviewBackBtn,
+.scriptReviewDoneBtn {
+  min-width: 220px;
+  padding: 16px 22px;
+  border: 3px solid var(--bc-black);
+  border-radius: 999px;
+  box-shadow: 5px 5px 0 var(--bc-black);
+  font-size: 0.96rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.scriptReviewBackBtn {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  color: #0f172a;
+}
+
+.scriptReviewDoneBtn {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+}
+
+.scriptReviewBackBtn:hover,
+.scriptReviewDoneBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--bc-black);
+}
+
+.scriptReviewBackBtn:active,
+.scriptReviewDoneBtn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 var(--bc-black);
+}
+
 @keyframes full-exam-pop {
   from {
     opacity: 0;
@@ -6814,6 +7020,36 @@ body,
 
   .answerReviewRetryBtn,
   .answerReviewConfirmBtn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .scriptReviewOverlay {
+    padding: 14px;
+  }
+
+  .scriptReviewCard {
+    max-height: calc(100vh - 28px);
+    border-radius: 26px;
+  }
+
+  .scriptReviewHero,
+  .scriptReviewNotebook,
+  .scriptReviewActions {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .scriptReviewHero {
+    padding-top: 24px;
+  }
+
+  .scriptReviewActions {
+    padding-bottom: 22px;
+  }
+
+  .scriptReviewBackBtn,
+  .scriptReviewDoneBtn {
     width: 100%;
     min-width: 0;
   }
