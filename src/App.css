@@ -5213,6 +5213,87 @@ body,
   border-radius: 8px;
 }
 
+.nextBandCriteriaBlock {
+  margin-top: 16px;
+  border: 1px solid #dce5f7;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 204, 0, 0.12), transparent 30%),
+    linear-gradient(180deg, #fffef7 0%, #ffffff 100%);
+  box-shadow: 0 16px 28px -28px rgba(15, 23, 42, 0.45);
+  overflow: hidden;
+}
+
+.nextBandCriteriaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #eef3fb;
+}
+
+.nextBandCriteriaEyebrow {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0f4aa3;
+}
+
+.nextBandCriteriaHeader h5 {
+  margin: 0;
+  font-size: 1.02rem;
+  color: #162033;
+}
+
+.nextBandCriteriaCount {
+  flex-shrink: 0;
+  border: 1px solid #cfe0ff;
+  border-radius: 999px;
+  background: #f7faff;
+  color: #234f9a;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 6px 10px;
+}
+
+.nextBandCriteriaList {
+  list-style: none;
+  margin: 0;
+  padding: 14px 18px 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.nextBandCriteriaItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #edf2fb;
+}
+
+.nextBandCriteriaBox {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  border-radius: 5px;
+  border: 2px solid #cfd9eb;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.nextBandCriteriaItem p {
+  margin: 0;
+  color: #25324a;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
 /* Suggestion grid that scales to many items */
 .suggestionGridV2 {
   display: grid;

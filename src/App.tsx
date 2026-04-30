@@ -2616,6 +2616,42 @@ const renderUnlockChecklist = (
   )
 }
 
+const renderNextBandCriteria = (
+  keyPrefix: string,
+  targetBand: number,
+  plans: NonNullable<ComponentReport['plusOneChecklist']>
+) => {
+  const requirements = Array.from(
+    new Set(
+      (Array.isArray(plans) ? plans : [])
+        .map((plan) => String(plan?.requirement || plan?.quote || '').trim())
+        .filter(Boolean)
+    )
+  ).slice(0, 10)
+
+  if (!requirements.length) return null
+
+  return (
+    <div className="nextBandCriteriaBlock">
+      <div className="nextBandCriteriaHeader">
+        <div>
+          <p className="nextBandCriteriaEyebrow">+1 Band Criteria</p>
+          <h5>เกณฑ์ที่ต้องมีเพื่อไป Band {targetBand.toFixed(1)}</h5>
+        </div>
+        <span className="nextBandCriteriaCount">{requirements.length} ข้อ</span>
+      </div>
+      <ul className="nextBandCriteriaList">
+        {requirements.map((requirement, idx) => (
+          <li key={`${keyPrefix}-next-band-${idx}`} className="nextBandCriteriaItem">
+            <span className="nextBandCriteriaBox" aria-hidden="true" />
+            <p>{requirement}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 const NOTEBOOK_ENTRIES_KEY = 'ielts-notebook-entries'
 const NOTEBOOK_CUSTOM_SECTIONS_KEY = 'ielts-notebook-custom-sections'
 const TEST_LATEST_SCORE_KEY = 'ielts-test-latest-scores'
@@ -7849,6 +7885,7 @@ function App() {
                                             )}
                                           </div>
                                           {renderReportTicks(String(key), 'เกณฑ์ของ Band นี้ (Checklist)', report.requiredTicks)}
+                                          {renderNextBandCriteria(String(key), targetBand, report.plusOneChecklist || [])}
                                           {report.plusOnePlan?.length > 0 && (
                                             <div className="subBlockV2">
                                               <div className="subBlockHeader">
@@ -7928,6 +7965,7 @@ function App() {
                                               {report.explanationThai && <p>{report.explanationThai}</p>}
                                             </div>
                                             {renderReportTicks(String(key), 'เกณฑ์ของ Band นี้ (Checklist)', report.requiredTicks)}
+                                            {renderNextBandCriteria(String(key), targetBand, report.plusOneChecklist || [])}
                                             {report.plusOnePlan?.length > 0 && (
                                               <div className="subBlockV2">
                                                 <div className="subBlockHeader">
