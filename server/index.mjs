@@ -590,7 +590,25 @@ const safeFetch = async (url, options = {}, { timeoutMs = 45000, retries = 1, re
 
 const normalizeEmail = (value) => String(value || '').trim().toLowerCase()
 
-const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim().replace(/\/$/, '')
+const normalizeSupabaseUrl = (value) => {
+  const raw = String(value || '').trim().replace(/\/$/, '')
+  if (!raw) return ''
+  if (/^https?:\/\//i.test(raw)) return raw
+
+  // Accept a plain project ref copied from Supabase settings, e.g. "abcd1234xyz".
+  if (/^[a-z0-9-]{8,}$/i.test(raw) && !raw.includes('.')) {
+    return `https://${raw}.supabase.co`
+  }
+
+  // Accept host-only values like "abcd1234xyz.supabase.co".
+  if (/^[a-z0-9-]+\.supabase\.co$/i.test(raw)) {
+    return `https://${raw}`
+  }
+
+  return raw
+}
+
+const SUPABASE_URL = normalizeSupabaseUrl(process.env.SUPABASE_URL)
 const SUPABASE_ANON_KEY = String(process.env.SUPABASE_ANON_KEY || '').trim()
 const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim()
 
@@ -625,7 +643,17 @@ const parseJsonSafe = async (response) => {
 
 const supabaseRequest = async (path, options = {}, requestOptions) => {
   ensureSupabaseConfigured()
-  const response = await safeFetch(buildSupabaseUrl(path), options, requestOptions)
+  let response
+  try {
+    response = await safeFetch(buildSupabaseUrl(path), options, requestOptions)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error || '')
+    const hint =
+      SUPABASE_URL && !/^https?:\/\/[a-z0-9-]+\.supabase\.co$/i.test(SUPABASE_URL)
+        ? ` Check SUPABASE_URL format: ${SUPABASE_URL}`
+        : ''
+    throw new Error(`Could not reach Supabase.${hint}${message ? ` ${message}` : ''}`.trim())
+  }
   if (!response.ok) {
     const payload = await parseJsonSafe(response)
     const message =
