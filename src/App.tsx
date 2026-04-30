@@ -44,6 +44,13 @@ type ReadingExamRecord = {
   updatedAt: string | null
 }
 
+type ReadingBulkUploadInput = {
+  title: string
+  category?: ReadingBankCategory
+  rawPassageText: string
+  rawAnswerKey: string
+}
+
 type ReadingReportItem = ReadingQuestion & {
   userAnswer: string
   isCorrect: boolean
@@ -241,6 +248,15 @@ type RecommendationItem = {
   phrase: string
   tip: string
   source?: 'topic' | 'intent' | 'general'
+}
+
+type AnswerReviewModalState = {
+  question: string
+  contextLabel: string
+  questionIndex: number
+  fullExamPhase: FullExamPhase | null
+  fullExamPart1Index: number
+  fullExamPart3Index: number
 }
 
 const ANALYSIS_LOADING_PHRASES = [
@@ -2817,6 +2833,7 @@ function App() {
   const [adminCodeInput, setAdminCodeInput] = useState('')
   const [authError, setAuthError] = useState('')
   const [authNotice, setAuthNotice] = useState('')
+  const [notebookSaveNotice, setNotebookSaveNotice] = useState('')
   const [adminLearnerNameInput, setAdminLearnerNameInput] = useState('')
   const [adminLearnerEmailInput, setAdminLearnerEmailInput] = useState('')
   const [adminLearnerPasswordInput, setAdminLearnerPasswordInput] = useState('')
@@ -2843,6 +2860,7 @@ function App() {
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('fulltest')
   const [adminReadingPassageInput, setAdminReadingPassageInput] = useState('')
   const [adminReadingAnswerKeyInput, setAdminReadingAnswerKeyInput] = useState('')
+  const [adminReadingBulkJsonInput, setAdminReadingBulkJsonInput] = useState('')
   const [topics] = useState<SpeakingTopic[]>(INITIAL_TOPICS)
   const [enabledTopicIds, setEnabledTopicIds] = useState<string[]>(
     INITIAL_TOPICS.map((topic) => topic.id)
@@ -2903,7 +2921,7 @@ function App() {
   const [prepAccordionOpen, setPrepAccordionOpen] = useState<Record<string, boolean>>({ part1: true, part2: false, part3: false })
   const [pendingStartTopicId, setPendingStartTopicId] = useState<string | null>(null)
   const [selectedExpectedScore, setSelectedExpectedScore] = useState<string>('')
-  const [answerReviewModal, setAnswerReviewModal] = useState<null | { question: string; contextLabel: string }>(null)
+  const [answerReviewModal, setAnswerReviewModal] = useState<AnswerReviewModalState | null>(null)
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -2985,7 +3003,16 @@ function App() {
   }
 
   const handleAdminCreateReadingExam = async () => {
-    if (!authSession?.accessToken || authSession.role !== 'admin') return
+    setAdminPanelMessage('')
+    setAuthError('')
+    if (!authSession?.accessToken || authSession.role !== 'admin') {
+      setAuthError('Admin session not found. Please sign in to the Admin Panel again.')
+      return
+    }
+    if (!adminReadingTitleInput.trim() || !adminReadingPassageInput.trim() || !adminReadingAnswerKeyInput.trim()) {
+      setAuthError('Please fill in the exam title, reading passage text, and answer key before uploading.')
+      return
+    }
     try {
       const payload = await fetchJson<{ exam: ReadingExamRecord }>('/api/admin/reading/exams', {
         method: 'POST',
@@ -3003,10 +3030,50 @@ function App() {
       setAdminReadingPassageInput('')
       setAdminReadingAnswerKeyInput('')
       setAdminPanelMessage(`Uploaded reading exam: ${payload.exam.title}.`)
-      setAuthError('')
     } catch (error) {
       setAdminPanelMessage('')
       setAuthError(error instanceof Error ? error.message : 'Could not upload reading exam.')
+    }
+  }
+
+  const handleAdminBulkCreateReadingExams = async () => {
+    setAdminPanelMessage('')
+    setAuthError('')
+    if (!authSession?.accessToken || authSession.role !== 'admin') {
+      setAuthError('Admin session not found. Please sign in to the Admin Panel again.')
+      return
+    }
+    if (!adminReadingBulkJsonInput.trim()) {
+      setAuthError('Please paste a JSON array before using bulk upload.')
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(adminReadingBulkJsonInput)
+      const exams = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.exams) ? parsed.exams : null
+      if (!exams) {
+        throw new Error('Bulk JSON must be an array, or an object with an "exams" array.')
+      }
+
+      const payload = await fetchJson<{ exams: ReadingExamRecord[] }>('/api/admin/reading/exams/bulk', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          exams: exams as ReadingBulkUploadInput[]
+        })
+      })
+
+      const created = Array.isArray(payload.exams) ? payload.exams : []
+      setReadingExams((current) => {
+        const incoming = new Map(created.map((exam) => [exam.id, exam]))
+        const retained = current.filter((exam) => !incoming.has(exam.id))
+        return [...created, ...retained]
+      })
+      setAdminReadingBulkJsonInput('')
+      setAdminPanelMessage(`Uploaded ${created.length} reading exam${created.length === 1 ? '' : 's'} by bulk JSON.`)
+    } catch (error) {
+      setAdminPanelMessage('')
+      setAuthError(error instanceof Error ? error.message : 'Could not bulk upload reading exams.')
     }
   }
 
@@ -3586,6 +3653,14 @@ function App() {
     }
   }, [authSession?.accessToken, authSession?.email, notebookEntries, customSections, isNotebookHydrating])
 
+  useEffect(() => {
+    if (!notebookSaveNotice) return
+    const timeout = window.setTimeout(() => {
+      setNotebookSaveNotice('')
+    }, 2200)
+    return () => window.clearTimeout(timeout)
+  }, [notebookSaveNotice])
+
   const addCustomSection = () => {
     const sectionName = newCustomSectionName.trim()
     if (!sectionName) return
@@ -3625,8 +3700,8 @@ function App() {
       createdAt: new Date().toISOString()
     }
     setNotebookEntries((current) => [nextEntry, ...current])
-    setActivePage('notebook')
     setSelectedNotebookSection(customSectionName || section)
+    setNotebookSaveNotice('Added to notebook')
   }
 
   const saveFullReportToNotebook = (report: AssessmentReport) => {
@@ -3657,8 +3732,8 @@ function App() {
       createdAt: new Date().toISOString()
     }
     setNotebookEntries((current) => [nextEntry, ...current])
-    setActivePage('notebook')
     setSelectedNotebookSection(customSectionName)
+    setNotebookSaveNotice('Added to notebook')
   }
 
   const removeNotebookEntry = (entryId: string) => {
@@ -5369,22 +5444,31 @@ function App() {
             ? 'Part 1'
             : selectedTestMode === 'part2'
               ? 'Part 2'
-              : 'Part 3'
+              : 'Part 3',
+        questionIndex: currentQuestionIndex,
+        fullExamPhase: isFullExamMode ? fullExamPhase : null,
+        fullExamPart1Index,
+        fullExamPart3Index
       })
       return true
     }
     return false
   }
 
-  const clearCurrentAnswerSectionForRetry = () => {
+  const clearCurrentAnswerSectionForRetry = (snapshot?: AnswerReviewModalState | null) => {
     const currentStart = Math.max(0, questionStartCharIndexRef.current)
     setTranscript((current) => current.slice(0, currentStart).trim())
     setInterimTranscript('')
     setTranscriptionError('')
 
+    const questionIndex = snapshot?.questionIndex ?? currentQuestionIndex
+    const retryPhase = snapshot?.fullExamPhase ?? fullExamPhase
+    const retryPart1Index = snapshot?.fullExamPart1Index ?? fullExamPart1Index
+    const retryPart3Index = snapshot?.fullExamPart3Index ?? fullExamPart3Index
+
     if (isQuestionByQuestionMode) {
       const next = [...questionResponsesRef.current]
-      next[currentQuestionIndex] = { question: activeQuestion, response: '' }
+      next[questionIndex] = { question: activeQuestionList[questionIndex] || activeQuestion, response: '' }
       questionResponsesRef.current = next
       return
     }
@@ -5394,24 +5478,37 @@ function App() {
       return
     }
 
-    if (isFullExamMode && fullExamPhase === 'part1') {
-      questionResponsesRef.current = questionResponsesRef.current.slice(0, fullExamPart1Index)
+    if (isFullExamMode && retryPhase === 'part1') {
+      questionResponsesRef.current = questionResponsesRef.current.slice(0, retryPart1Index)
       return
     }
 
-    if (isFullExamMode && fullExamPhase === 'part2_speaking') {
+    if (isFullExamMode && retryPhase === 'part2_speaking') {
       questionResponsesRef.current = questionResponsesRef.current.slice(0, fullExamPlan.part1Questions.length)
       return
     }
 
-    if (isFullExamMode && fullExamPhase === 'part3') {
-      const targetLength = fullExamPlan.part1Questions.length + 1 + fullExamPart3Index
+    if (isFullExamMode && retryPhase === 'part3') {
+      const targetLength = fullExamPlan.part1Questions.length + 1 + retryPart3Index
       questionResponsesRef.current = questionResponsesRef.current.slice(0, targetLength)
     }
   }
 
   const retryCurrentAnswer = async () => {
-    clearCurrentAnswerSectionForRetry()
+    const modalSnapshot = answerReviewModal
+    const retryQuestionIndex = modalSnapshot?.questionIndex ?? currentQuestionIndex
+    const retryPhase = modalSnapshot?.fullExamPhase ?? fullExamPhase
+    const retryPart1Index = modalSnapshot?.fullExamPart1Index ?? fullExamPart1Index
+    const retryPart3Index = modalSnapshot?.fullExamPart3Index ?? fullExamPart3Index
+    if (modalSnapshot) {
+      setCurrentQuestionIndex(retryQuestionIndex)
+      if (modalSnapshot.fullExamPhase) {
+        setFullExamPhase(retryPhase)
+      }
+      setFullExamPart1Index(retryPart1Index)
+      setFullExamPart3Index(retryPart3Index)
+    }
+    clearCurrentAnswerSectionForRetry(modalSnapshot)
     if (selectedTestMode === 'part2' && !isFullExamMode) {
       setRemainingTalkSeconds(talkSeconds)
       armPart2TimerDelay()
@@ -5422,28 +5519,28 @@ function App() {
     if (isQuestionByQuestionMode) {
       setAnswerReviewModal(null)
       await runPromptThenCountdown(
-        `Question ${currentQuestionIndex + 1} of ${activeQuestionList.length}`,
-        activeQuestionList[currentQuestionIndex] || activeQuestion || `Question ${currentQuestionIndex + 1}`
+        `Question ${retryQuestionIndex + 1} of ${activeQuestionList.length}`,
+        activeQuestionList[retryQuestionIndex] || activeQuestion || `Question ${retryQuestionIndex + 1}`
       )
       return
     }
-    if (isFullExamMode && (fullExamPhase === 'part1' || fullExamPhase === 'part3')) {
-      if (fullExamPhase === 'part1') {
+    if (isFullExamMode && (retryPhase === 'part1' || retryPhase === 'part3')) {
+      if (retryPhase === 'part1') {
         setAnswerReviewModal(null)
         await runPromptThenCountdown(
-          `Part 1 - Question ${fullExamPart1Index + 1}`,
-          fullExamPlan.part1Questions[fullExamPart1Index] || `Part 1 question ${fullExamPart1Index + 1}`
+          `Part 1 - Question ${retryPart1Index + 1}`,
+          fullExamPlan.part1Questions[retryPart1Index] || `Part 1 question ${retryPart1Index + 1}`
         )
         return
       }
       setAnswerReviewModal(null)
       await runPromptThenCountdown(
-        `Part 3 - Question ${fullExamPart3Index + 1}`,
-        fullExamPlan.part3Questions[fullExamPart3Index] || `Part 3 question ${fullExamPart3Index + 1}`
+        `Part 3 - Question ${retryPart3Index + 1}`,
+        fullExamPlan.part3Questions[retryPart3Index] || `Part 3 question ${retryPart3Index + 1}`
       )
       return
     }
-    if (isFullExamMode && fullExamPhase === 'part2_speaking') {
+    if (isFullExamMode && retryPhase === 'part2_speaking') {
       setFullExamPhaseSeconds(120)
       armPart2TimerDelay()
       setAnswerReviewModal(null)
@@ -6115,6 +6212,19 @@ function App() {
               </div>
             </div>
 
+            {(adminPanelMessage || authError) && (
+              <div className="panel adminSectionCard">
+                <div className="adminSectionHeader">
+                  <div>
+                    <p className="sectionLabel">Admin Status</p>
+                    <h3>Upload & Access Messages</h3>
+                  </div>
+                </div>
+                {adminPanelMessage && <p className="meta authSuccess">{adminPanelMessage}</p>}
+                {authError && <p className="error authError">{authError}</p>}
+              </div>
+            )}
+
             <div className="adminLayout">
               <div className="adminMainColumn">
                 <div className="panel adminSectionCard">
@@ -6355,6 +6465,8 @@ function App() {
                     </button>
                     <p className="meta">The parser will split passages, question ranges, exact hints, and paraphrased vocabulary automatically.</p>
                   </div>
+                  {adminPanelMessage && <p className="meta authSuccess">{adminPanelMessage}</p>}
+                  {authError && <p className="error authError">{authError}</p>}
                   {readingExams.length > 0 && (
                     <div className="adminAudioLibraryGrid">
                       {readingExams.slice(0, 6).map((exam) => (
@@ -6368,6 +6480,38 @@ function App() {
                       ))}
                     </div>
                   )}
+                </div>
+
+                <div className="panel adminSectionCard">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Reading Exam Bank</p>
+                      <h3>Bulk JSON Import</h3>
+                    </div>
+                  </div>
+                  <p className="meta">
+                    Paste one JSON array with many reading exams and upload them all in one go. This is the most stable
+                    option if you hate doing copy-paste many times.
+                  </p>
+                  <label>
+                    Bulk JSON Payload
+                    <textarea
+                      value={adminReadingBulkJsonInput}
+                      onChange={(event) => setAdminReadingBulkJsonInput(event.target.value)}
+                      placeholder={`[\n  {\n    "title": "Cambridge-style Reading Test 01",\n    "category": "fulltest",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "Cambridge-style Reading Test 02",\n    "category": "fulltest",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  }\n]`}
+                      rows={16}
+                    />
+                  </label>
+                  <div className="adminActionRow">
+                    <button type="button" onClick={() => void handleAdminBulkCreateReadingExams()}>
+                      Upload Bulk JSON
+                    </button>
+                    <p className="meta">
+                      Each item needs: <code>title</code>, <code>category</code>, <code>rawPassageText</code>, and <code>rawAnswerKey</code>.
+                    </p>
+                  </div>
+                  {adminPanelMessage && <p className="meta authSuccess">{adminPanelMessage}</p>}
+                  {authError && <p className="error authError">{authError}</p>}
                 </div>
 
                 <div className="panel adminSectionCard">
@@ -7353,15 +7497,16 @@ function App() {
                                     </span>
                                   </div>
                                 </div>
-                                <div className="reportStickyActions">
-                                  <button
-                                    type="button"
-                                    onClick={() => saveFullReportToNotebook(activeReport)}
-                                  >
-                                    Save Full Report
-                                  </button>
-                                </div>
+                              <div className="reportStickyActions">
+                                <button
+                                  type="button"
+                                  onClick={() => saveFullReportToNotebook(activeReport)}
+                                >
+                                  Save Full Report
+                                </button>
                               </div>
+                            </div>
+                              {notebookSaveNotice && <p className="meta authSuccess">{notebookSaveNotice}</p>}
                               <section className="reportDisclaimerCard">
                                 <p>
                                   This is just estimation based on your performance today. In the real exam, you might get a higher or lower score. The goal is to see your weakness and a realistic way to improve.

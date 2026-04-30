@@ -5102,6 +5102,76 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
   }
 })
 
+app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
+  try {
+    const rawItems = Array.isArray(req.body?.exams) ? req.body.exams : Array.isArray(req.body) ? req.body : []
+    if (rawItems.length === 0) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Please provide at least one reading exam in the bulk upload payload.'
+        }
+      })
+    }
+
+    if (rawItems.length > 50) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Bulk upload is limited to 50 reading exams per request.'
+        }
+      })
+    }
+
+    const records = rawItems.map((item, index) => {
+      const title = String(item?.title || '').trim()
+      const rawPassageText = String(item?.rawPassageText || '').trim()
+      const rawAnswerKey = String(item?.rawAnswerKey || '').trim()
+      const category = normalizeReadingCategory(item?.category)
+
+      if (!title || !rawPassageText || !rawAnswerKey) {
+        throw new Error(
+          `Bulk item ${index + 1} is missing title, rawPassageText, or rawAnswerKey.`
+        )
+      }
+
+      return {
+        category,
+        title,
+        raw_passage_text: rawPassageText,
+        raw_answer_key: rawAnswerKey,
+        parsed_payload: buildReadingExamPayload({
+          title,
+          category,
+          rawPassageText,
+          rawAnswerKey
+        }),
+        created_by: req.auth.user.id
+      }
+    })
+
+    const rows = await fetchSupabaseJson('/rest/v1/reading_exams', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify(records)
+    })
+
+    return res.json({
+      exams: (Array.isArray(rows) ? rows : []).map(mapReadingExamRecord)
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_exam_bulk_create_error',
+        message: error instanceof Error ? error.message : 'Could not bulk upload reading exams.'
+      }
+    })
+  }
+})
+
 app.get('/api/health', (_, res) => {
   res.json({ ok: true })
 })
