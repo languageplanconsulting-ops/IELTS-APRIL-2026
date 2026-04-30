@@ -4495,6 +4495,12 @@ function App() {
     }
   }
 
+  const shouldUseDirectAssessmentFlow = () => {
+    if (typeof window === 'undefined') return import.meta.env.PROD
+    const host = window.location.hostname.toLowerCase()
+    return import.meta.env.PROD || !['127.0.0.1', 'localhost'].includes(host)
+  }
+
   const runAssessmentRequest = async (
     _audioBlob: Blob | null,
     durationSeconds: number,
@@ -4553,6 +4559,62 @@ function App() {
         audioBase64: null,
         audioMimeType: null
       }
+      const useDirectAssessmentFlow = shouldUseDirectAssessmentFlow()
+
+      if (useDirectAssessmentFlow) {
+        setAssessmentRuntimeMessages([
+          'กำลังตรวจ transcript และจัดรูปประโยคสำหรับการประเมิน',
+          'กำลังประเมิน Grammar, Vocabulary และ Fluency ด้วย direct assessment flow',
+          'Vercel mode: ระบบจะสร้าง report ครบในคำขอนี้โดยตรง'
+        ])
+        const directResponse = await fetch('/api/assess', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders()
+          },
+          body: JSON.stringify(assessmentRequestBody)
+        })
+        if (!directResponse.ok) {
+          const errorPayload = await directResponse.json().catch(() => null)
+          const rawText = errorPayload ? '' : await directResponse.text().catch(() => '')
+          const details = Array.isArray(errorPayload?.details)
+            ? ` Details: ${errorPayload.details.join(' | ')}`
+            : ''
+          const message = errorPayload
+            ? typeof errorPayload.error === 'string'
+              ? errorPayload.error
+              : errorPayload?.error?.message || errorPayload?.message || `Assessment request failed (${directResponse.status}).`
+            : rawText || `Assessment request failed (${directResponse.status} ${directResponse.statusText}).`
+          throw new Error(`${message}${details}`)
+        }
+        const directResult = (await directResponse.json()) as AssessmentResult
+        try {
+          const mePayload = await fetchJson<AuthApiResponse>('/api/auth/me', {
+            headers: getAuthHeaders()
+          })
+          setCreditProfile(mePayload.creditProfile)
+          setAuthSession((current) => (current ? { ...current, ...mePayload.session } : current))
+        } catch {
+          // Keep the current UI state if the post-assessment profile refresh fails.
+        }
+        setIsFullMockAssessmentLoading(false)
+        setAssessmentCountdownSeconds(0)
+        setAssessmentResult(directResult)
+        setActivePage('workspace')
+        setLatestScoresByTest((current) => ({
+          ...current,
+          [`${effectiveMode}:${selectedTopicId}`]: Number(
+            (directResult.totalScore ?? directResult.overallBand ?? 0).toFixed(1)
+          )
+        }))
+        setSelectedProvider(directResult.primaryProvider ?? 'gemini')
+        setAssessmentProgress(100)
+        setAssessmentProgressTarget(100)
+        setAttemptStage('result')
+        return
+      }
+
       const response = await fetch('/api/assess/start', {
         method: 'POST',
         headers: {

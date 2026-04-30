@@ -21,6 +21,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const distDir = path.resolve(__dirname, '../dist')
 const indexHtmlPath = path.join(distDir, 'index.html')
+const isDirectRun = process.argv[1] ? path.resolve(process.argv[1]) === __filename : false
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
@@ -5417,6 +5418,10 @@ app.post('/api/assess', requireAuth, async (req, res) => {
     pruneAssessmentJobs()
     if (String(req.auth.profile?.role || 'student') !== 'admin') {
       ensureActiveStudentAccess(req.auth.profile)
+      await decrementLearnerCredits({
+        userId: req.auth.user.id,
+        assessmentMode: req.body?.assessmentMode
+      })
     }
     const result = await runAssessment(req.body || {})
     return res.json(result)
@@ -5507,6 +5512,10 @@ if (fs.existsSync(indexHtmlPath)) {
   })
 }
 
-app.listen(port, () => {
-  console.log(`English Plan server running on http://localhost:${port}`)
-})
+if (isDirectRun) {
+  app.listen(port, () => {
+    console.log(`English Plan server running on http://localhost:${port}`)
+  })
+}
+
+export default app
