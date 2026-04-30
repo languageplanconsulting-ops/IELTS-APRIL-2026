@@ -2698,11 +2698,191 @@ type ReadingExamsApiResponse = {
   exams: ReadingExamRecord[]
 }
 
+type ReadingBulkValidationItem = {
+  index: number
+  title: string
+  category: ReadingBankCategory
+  ok: boolean
+  passageCount: number
+  questionCount: number
+  error?: string
+}
+
+type ReadingBulkValidationResult = {
+  total: number
+  valid: number
+  invalid: number
+  items: ReadingBulkValidationItem[]
+}
+
 const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   passage1: 'Passage 1',
   passage2: 'Passage 2',
   passage3: 'Passage 3',
   fulltest: 'Full Test'
+}
+
+const READING_JSON_TEMPLATE_ITEMS: Record<ReadingBankCategory, ReadingBulkUploadInput[]> = {
+  passage1: [
+    {
+      title: 'Reading Passage 1 Template',
+      category: 'passage1',
+      rawPassageText: `READING PASSAGE 1
+PASTE PASSAGE 1 TITLE HERE
+
+PASTE THE FULL PASSAGE 1 TEXT HERE
+
+Questions 1-13
+PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 1 HERE`,
+      rawAnswerKey: `READING PASSAGE 1: PASTE PASSAGE 1 TITLE HERE
+Question 1: PASTE QUESTION 1 PROMPT HERE
+
+Correct Answer: TRUE / FALSE / NOT GIVEN / actual answer
+
+Exact Portion: "Paste the exact evidence from the passage here."
+
+Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
+
+Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
+
+Question 2: ...
+
+Correct Answer: ...
+
+Exact Portion: "..."
+
+Short Thai Explanation: ...
+
+Paraphrased Vocabulary: ...`
+    }
+  ],
+  passage2: [
+    {
+      title: 'Reading Passage 2 Template',
+      category: 'passage2',
+      rawPassageText: `READING PASSAGE 2
+PASTE PASSAGE 2 TITLE HERE
+
+PASTE THE FULL PASSAGE 2 TEXT HERE
+
+Questions 14-26
+PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 2 HERE`,
+      rawAnswerKey: `READING PASSAGE 2: PASTE PASSAGE 2 TITLE HERE
+Question 14: PASTE QUESTION 14 PROMPT HERE
+
+Correct Answer: A / B / C / D / actual answer
+
+Exact Portion: "Paste the exact evidence from the passage here."
+
+Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
+
+Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
+
+Question 15: ...
+
+Correct Answer: ...
+
+Exact Portion: "..."
+
+Short Thai Explanation: ...
+
+Paraphrased Vocabulary: ...`
+    }
+  ],
+  passage3: [
+    {
+      title: 'Reading Passage 3 Template',
+      category: 'passage3',
+      rawPassageText: `READING PASSAGE 3
+PASTE PASSAGE 3 TITLE HERE
+
+PASTE THE FULL PASSAGE 3 TEXT HERE
+
+Questions 27-40
+PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 3 HERE`,
+      rawAnswerKey: `READING PASSAGE 3: PASTE PASSAGE 3 TITLE HERE
+Question 27: PASTE QUESTION 27 PROMPT HERE
+
+Correct Answer: A / B / C / D / YES / NO / NOT GIVEN / actual answer
+
+Exact Portion: "Paste the exact evidence from the passage here."
+
+Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
+
+Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
+
+Question 28: ...
+
+Correct Answer: ...
+
+Exact Portion: "..."
+
+Short Thai Explanation: ...
+
+Paraphrased Vocabulary: ...`
+    }
+  ],
+  fulltest: [
+    {
+      title: 'Reading Full Test Template',
+      category: 'fulltest',
+      rawPassageText: `READING PASSAGE 1
+PASTE PASSAGE 1 TITLE HERE
+
+PASTE THE FULL PASSAGE 1 TEXT HERE
+
+Questions 1-13
+PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 1 HERE
+
+READING PASSAGE 2
+PASTE PASSAGE 2 TITLE HERE
+
+PASTE THE FULL PASSAGE 2 TEXT HERE
+
+Questions 14-26
+PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 2 HERE
+
+READING PASSAGE 3
+PASTE PASSAGE 3 TITLE HERE
+
+PASTE THE FULL PASSAGE 3 TEXT HERE
+
+Questions 27-40
+PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 3 HERE`,
+      rawAnswerKey: `READING PASSAGE 1: PASTE PASSAGE 1 TITLE HERE
+Question 1: ...
+
+Correct Answer: ...
+
+Exact Portion: "..."
+
+Short Thai Explanation: ...
+
+Paraphrased Vocabulary: ...
+
+READING PASSAGE 2: PASTE PASSAGE 2 TITLE HERE
+Question 14: ...
+
+Correct Answer: ...
+
+Exact Portion: "..."
+
+Short Thai Explanation: ...
+
+Paraphrased Vocabulary: ...
+
+READING PASSAGE 3: PASTE PASSAGE 3 TITLE HERE
+Question 27: ...
+
+Correct Answer: ...
+
+Exact Portion: "..."
+
+Short Thai Explanation: ...
+
+Paraphrased Vocabulary: ...`
+    }
+  ]
 }
 
 const formatAccessDate = (value: string | null) =>
@@ -2908,6 +3088,8 @@ function App() {
   const [adminReadingPassageInput, setAdminReadingPassageInput] = useState('')
   const [adminReadingAnswerKeyInput, setAdminReadingAnswerKeyInput] = useState('')
   const [adminReadingBulkJsonInput, setAdminReadingBulkJsonInput] = useState('')
+  const [adminReadingTemplateCategory, setAdminReadingTemplateCategory] = useState<ReadingBankCategory>('fulltest')
+  const [adminReadingBulkValidation, setAdminReadingBulkValidation] = useState<ReadingBulkValidationResult | null>(null)
   const [topics] = useState<SpeakingTopic[]>(INITIAL_TOPICS)
   const [enabledTopicIds, setEnabledTopicIds] = useState<string[]>(
     INITIAL_TOPICS.map((topic) => topic.id)
@@ -3056,6 +3238,73 @@ function App() {
     setReadingExams(Array.isArray(payload.exams) ? payload.exams : [])
   }
 
+  const currentReadingJsonTemplate = JSON.stringify(
+    READING_JSON_TEMPLATE_ITEMS[adminReadingTemplateCategory],
+    null,
+    2
+  )
+
+  const copyReadingJsonTemplate = async () => {
+    try {
+      await navigator.clipboard.writeText(currentReadingJsonTemplate)
+      setAdminPanelMessage(`Copied ${READING_CATEGORY_LABELS[adminReadingTemplateCategory]} JSON template.`)
+      setAuthError('')
+    } catch {
+      setAdminPanelMessage('')
+      setAuthError('Could not copy the JSON template automatically. Please copy it manually from the box.')
+    }
+  }
+
+  const loadReadingJsonTemplateIntoUpload = () => {
+    setAdminReadingBulkJsonInput(currentReadingJsonTemplate)
+    setAdminReadingBulkValidation(null)
+    setAdminPanelMessage(`${READING_CATEGORY_LABELS[adminReadingTemplateCategory]} template loaded into the bulk upload box.`)
+    setAuthError('')
+  }
+
+  const validateAdminReadingBulkJson = async () => {
+    setAdminPanelMessage('')
+    setAuthError('')
+    setAdminReadingBulkValidation(null)
+    if (!authSession?.accessToken || authSession.role !== 'admin') {
+      setAuthError('Admin session not found. Please sign in to the Admin Panel again.')
+      return
+    }
+    if (!adminReadingBulkJsonInput.trim()) {
+      setAuthError('Please paste a JSON array before validating.')
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(adminReadingBulkJsonInput)
+      const exams = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.exams) ? parsed.exams : null
+      if (!exams) {
+        throw new Error('Bulk JSON must be an array, or an object with an "exams" array.')
+      }
+
+      const payload = await fetchJson<{ validation: ReadingBulkValidationResult }>('/api/admin/reading/exams/validate-bulk', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          exams: exams as ReadingBulkUploadInput[]
+        })
+      })
+
+      setAdminReadingBulkValidation(payload.validation || null)
+      const summary = payload.validation
+      if (summary) {
+        setAdminPanelMessage(
+          summary.invalid === 0
+            ? `Validation passed. ${summary.valid}/${summary.total} exam payloads are ready to upload.`
+            : `Validation found ${summary.invalid} issue${summary.invalid === 1 ? '' : 's'}. Please fix them before upload.`
+        )
+      }
+    } catch (error) {
+      setAdminPanelMessage('')
+      setAuthError(error instanceof Error ? error.message : 'Could not validate bulk reading exams.')
+    }
+  }
+
   const handleAdminCreateReadingExam = async () => {
     setAdminPanelMessage('')
     setAuthError('')
@@ -3093,6 +3342,7 @@ function App() {
   const handleAdminBulkCreateReadingExams = async () => {
     setAdminPanelMessage('')
     setAuthError('')
+    setAdminReadingBulkValidation(null)
     if (!authSession?.accessToken || authSession.role !== 'admin') {
       setAuthError('Admin session not found. Please sign in to the Admin Panel again.')
       return
@@ -3124,6 +3374,7 @@ function App() {
         return [...created, ...retained]
       })
       setAdminReadingBulkJsonInput('')
+      setAdminReadingBulkValidation(null)
       setAdminPanelMessage(`Uploaded ${created.length} reading exam${created.length === 1 ? '' : 's'} by bulk JSON.`)
     } catch (error) {
       setAdminPanelMessage('')
@@ -3290,6 +3541,16 @@ function App() {
   const filteredReadingExams = useMemo(
     () => readingExams.filter((exam) => exam.category === selectedReadingCategory),
     [readingExams, selectedReadingCategory]
+  )
+  const readingExamCountsByCategory = useMemo(
+    () =>
+      (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => ({
+        category,
+        label: READING_CATEGORY_LABELS[category],
+        count: readingExams.filter((exam) => exam.category === category).length,
+        exams: readingExams.filter((exam) => exam.category === category).slice(0, 6)
+      })),
+    [readingExams]
   )
   const activeReadingExam =
     filteredReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
@@ -6676,12 +6937,51 @@ function App() {
                     Bulk JSON Payload
                     <textarea
                       value={adminReadingBulkJsonInput}
-                      onChange={(event) => setAdminReadingBulkJsonInput(event.target.value)}
+                      onChange={(event) => {
+                        setAdminReadingBulkJsonInput(event.target.value)
+                        setAdminReadingBulkValidation(null)
+                      }}
                       placeholder={`[\n  {\n    "title": "Cambridge-style Reading Test 01",\n    "category": "fulltest",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "Cambridge-style Reading Test 02",\n    "category": "fulltest",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  }\n]`}
                       rows={16}
                     />
                   </label>
+                  <div className="adminWorkflowCard">
+                    <h4>JSON Templates</h4>
+                    <p className="meta">
+                      Choose the category you want, copy the template, then paste your real exam content into
+                      <code> rawPassageText </code>
+                      and
+                      <code> rawAnswerKey </code>.
+                    </p>
+                    <div className="readingCategoryTabs adminTemplateTabs">
+                      {(Object.entries(READING_CATEGORY_LABELS) as Array<[ReadingBankCategory, string]>).map(([key, label]) => (
+                        <button
+                          key={`template-${key}`}
+                          type="button"
+                          className={adminReadingTemplateCategory === key ? 'active' : ''}
+                          onClick={() => setAdminReadingTemplateCategory(key)}
+                        >
+                          {label} Template
+                        </button>
+                      ))}
+                    </div>
+                    <label>
+                      Copyable Template
+                      <textarea value={currentReadingJsonTemplate} readOnly rows={18} />
+                    </label>
+                    <div className="adminActionRow">
+                      <button type="button" className="secondary" onClick={() => void copyReadingJsonTemplate()}>
+                        Copy Template
+                      </button>
+                      <button type="button" className="secondary" onClick={loadReadingJsonTemplateIntoUpload}>
+                        Load Template Into Upload Box
+                      </button>
+                    </div>
+                  </div>
                   <div className="adminActionRow">
+                    <button type="button" className="secondary" onClick={() => void validateAdminReadingBulkJson()}>
+                      Validate JSON First
+                    </button>
                     <button type="button" onClick={() => void handleAdminBulkCreateReadingExams()}>
                       Upload Bulk JSON
                     </button>
@@ -6689,8 +6989,69 @@ function App() {
                       Each item needs: <code>title</code>, <code>category</code>, <code>rawPassageText</code>, and <code>rawAnswerKey</code>.
                     </p>
                   </div>
+                  {adminReadingBulkValidation && (
+                    <div className="adminWorkflowCard">
+                      <h4>Validation Result</h4>
+                      <p className="meta">
+                        Total: {adminReadingBulkValidation.total} · Valid: {adminReadingBulkValidation.valid} · Invalid:{' '}
+                        {adminReadingBulkValidation.invalid}
+                      </p>
+                      <div className="adminAudioLibraryGrid">
+                        {adminReadingBulkValidation.items.map((item) => (
+                          <article key={`reading-validation-${item.index}`} className="adminAudioCard">
+                            <p className="adminAudioEyebrow">
+                              {READING_CATEGORY_LABELS[item.category]} · Item {item.index}
+                            </p>
+                            <h4>{item.title}</h4>
+                            {item.ok ? (
+                              <>
+                                <p>Ready to upload</p>
+                                <p className="meta">
+                                  {item.passageCount} passages · {item.questionCount} questions
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="error">Needs fixing</p>
+                                <p className="meta">{item.error}</p>
+                              </>
+                            )}
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {adminPanelMessage && <p className="meta authSuccess">{adminPanelMessage}</p>}
                   {authError && <p className="error authError">{authError}</p>}
+                </div>
+
+                <div className="panel adminSectionCard">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Reading Exam Bank</p>
+                      <h3>Uploaded Exams by Category</h3>
+                    </div>
+                  </div>
+                  <p className="meta">See what is already inside each reading bank before you upload the next set.</p>
+                  <div className="adminAudioLibraryGrid">
+                    {readingExamCountsByCategory.map((group) => (
+                      <article key={`reading-group-${group.category}`} className="adminAudioCard">
+                        <p className="adminAudioEyebrow">{group.label}</p>
+                        <h4>{group.count} uploaded</h4>
+                        {group.exams.length > 0 ? (
+                          <ul className="compactList">
+                            {group.exams.map((exam) => (
+                              <li key={`reading-group-item-${exam.id}`}>
+                                {exam.title} ({exam.parsedPayload?.questionCount || 0}Q)
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="meta">No exams in this category yet.</p>
+                        )}
+                      </article>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="panel adminSectionCard">

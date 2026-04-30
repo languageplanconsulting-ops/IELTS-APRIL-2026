@@ -5102,6 +5102,88 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
   }
 })
 
+app.post('/api/admin/reading/exams/validate-bulk', requireAdmin, async (req, res) => {
+  try {
+    const rawItems = Array.isArray(req.body?.exams) ? req.body.exams : Array.isArray(req.body) ? req.body : []
+    if (rawItems.length === 0) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Please provide at least one reading exam in the validation payload.'
+        }
+      })
+    }
+
+    if (rawItems.length > 50) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Validation is limited to 50 reading exams per request.'
+        }
+      })
+    }
+
+    const items = rawItems.map((item, index) => {
+      const title = String(item?.title || '').trim() || `Untitled item ${index + 1}`
+      const rawPassageText = String(item?.rawPassageText || '').trim()
+      const rawAnswerKey = String(item?.rawAnswerKey || '').trim()
+      const category = normalizeReadingCategory(item?.category)
+
+      try {
+        if (!rawPassageText || !rawAnswerKey) {
+          throw new Error('Missing rawPassageText or rawAnswerKey.')
+        }
+        const parsedPayload = buildReadingExamPayload({
+          title,
+          category,
+          rawPassageText,
+          rawAnswerKey
+        })
+        return {
+          index: index + 1,
+          title,
+          category,
+          ok: true,
+          passageCount: Array.isArray(parsedPayload?.passages) ? parsedPayload.passages.length : 0,
+          questionCount: Number(parsedPayload?.questionCount || 0)
+        }
+      } catch (error) {
+        return {
+          index: index + 1,
+          title,
+          category,
+          ok: false,
+          passageCount: 0,
+          questionCount: 0,
+          error: error instanceof Error ? error.message : 'Could not validate this exam payload.'
+        }
+      }
+    })
+
+    const valid = items.filter((item) => item.ok).length
+    const invalid = items.length - valid
+
+    return res.json({
+      validation: {
+        total: items.length,
+        valid,
+        invalid,
+        items
+      }
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_exam_bulk_validate_error',
+        message: error instanceof Error ? error.message : 'Could not validate reading exams.'
+      }
+    })
+  }
+})
+
 app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
   try {
     const rawItems = Array.isArray(req.body?.exams) ? req.body.exams : Array.isArray(req.body) ? req.body : []
