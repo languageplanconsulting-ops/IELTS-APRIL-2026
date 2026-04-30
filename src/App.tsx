@@ -2343,15 +2343,50 @@ const dedupeRecommendations = (items: RecommendationItem[]) => {
   })
 }
 
+const pickBestMatchingBankItems = <T extends { matcher: (text: string) => boolean; items: RecommendationItem[] }>(
+  banks: T[],
+  text: string
+) => {
+  const matchedBanks = banks.filter((bank) => bank.matcher(text))
+  if (!matchedBanks.length) return []
+  return matchedBanks[0]?.items || []
+}
+
 const buildRecommendationContext = (primary: string, extraContext: string[] = []) =>
   [primary, ...extraContext]
     .filter(Boolean)
     .join(' ')
     .toLowerCase()
 
+const buildPart1RecommendationExtras = (topic: SpeakingTopic | null, question: string) => {
+  if (!topic) return [question]
+  const relatedCues = [topic.prompt, ...(topic.cues || [])]
+    .filter((item) => item && item !== question)
+    .slice(0, 2)
+  return [topic.title, topic.category, ...relatedCues]
+}
+
+const buildPart3RecommendationExtras = (topic: SpeakingTopic | null, question: string) => {
+  if (!topic) return [question]
+  const relatedCues = [topic.prompt, ...(topic.cues || [])]
+    .filter((item) => item && item !== question)
+    .slice(0, 2)
+  return [topic.title, topic.category, ...relatedCues]
+}
+
+const buildFullExamPart1RecommendationExtras = (topic: SpeakingTopic | null, questions: string[], question: string) => {
+  const siblingQuestions = questions.filter((item) => item && item !== question).slice(0, 2)
+  return [topic?.title || '', 'Part 1', ...siblingQuestions]
+}
+
+const buildFullExamPart3RecommendationExtras = (topic: SpeakingTopic | null, questions: string[], question: string) => {
+  const siblingQuestions = questions.filter((item) => item && item !== question).slice(0, 2)
+  return [topic?.title || '', 'Part 3', ...siblingQuestions]
+}
+
 const getPart2Recommendations = (prompt: string, cues: string[] = []) => {
   const context = [prompt, ...cues].join(' ').toLowerCase()
-  const matched = PART2_RECOMMENDATION_BANKS.filter((bank) => bank.matcher(context)).flatMap((bank) => bank.items)
+  const matched = pickBestMatchingBankItems(PART2_RECOMMENDATION_BANKS, context)
   return dedupeRecommendations([
     ...markRecommendationSource(matched, 'topic'),
     ...markRecommendationSource(PART2_GENERIC_RECOMMENDATIONS, 'general')
@@ -2361,7 +2396,7 @@ const getPart2Recommendations = (prompt: string, cues: string[] = []) => {
 const getPart1Recommendations = (question: string, extraContext: string[] = []) => {
   const normalized = buildRecommendationContext(String(question || ''), extraContext)
   const matchedIntent = PART1_INTENT_BANKS.filter((bank) => bank.matcher(normalized)).flatMap((bank) => bank.items)
-  const matchedTopic = PART1_TOPIC_BANKS.filter((bank) => bank.matcher(normalized)).flatMap((bank) => bank.items)
+  const matchedTopic = pickBestMatchingBankItems(PART1_TOPIC_BANKS, normalized)
   return dedupeRecommendations([
     ...markRecommendationSource(matchedTopic, 'topic'),
     ...markRecommendationSource(matchedIntent, 'intent'),
@@ -2372,7 +2407,7 @@ const getPart1Recommendations = (question: string, extraContext: string[] = []) 
 const getPart3Recommendations = (question: string, extraContext: string[] = []) => {
   const normalized = buildRecommendationContext(String(question || ''), extraContext)
   const matchedIntent = PART3_INTENT_BANKS.filter((bank) => bank.matcher(normalized)).flatMap((bank) => bank.items)
-  const matchedTopic = PART3_TOPIC_BANKS.filter((bank) => bank.matcher(normalized)).flatMap((bank) => bank.items)
+  const matchedTopic = pickBestMatchingBankItems(PART3_TOPIC_BANKS, normalized)
   return dedupeRecommendations([
     ...markRecommendationSource(matchedTopic, 'topic'),
     ...markRecommendationSource(matchedIntent, 'intent'),
@@ -2776,8 +2811,12 @@ function App() {
   const [isAuthLoading, setIsAuthLoading] = useState(true)
   const [userEmailInput, setUserEmailInput] = useState('')
   const [userPasswordInput, setUserPasswordInput] = useState('')
+  const [signupNameInput, setSignupNameInput] = useState('')
+  const [signupEmailInput, setSignupEmailInput] = useState('')
+  const [signupPasswordInput, setSignupPasswordInput] = useState('')
   const [adminCodeInput, setAdminCodeInput] = useState('')
   const [authError, setAuthError] = useState('')
+  const [authNotice, setAuthNotice] = useState('')
   const [adminLearnerNameInput, setAdminLearnerNameInput] = useState('')
   const [adminLearnerEmailInput, setAdminLearnerEmailInput] = useState('')
   const [adminLearnerPasswordInput, setAdminLearnerPasswordInput] = useState('')
@@ -2899,7 +2938,7 @@ function App() {
   const setAuthStateFromPayload = (payload: AuthApiResponse) => {
     setAuthSession(payload.session)
     setCreditProfile(payload.creditProfile)
-    setActivePage(payload.session.role === 'admin' ? 'admin' : 'workspace')
+    setActivePage('home')
   }
 
   const getAuthHeaders = (): Record<string, string> =>
@@ -3220,14 +3259,14 @@ function App() {
   const currentPart1Recommendations = useMemo(
     () =>
       selectedTestMode === 'part1'
-        ? getPart1Recommendations(activeQuestion, [activeTopic?.title || '', activeTopic?.category || '', activeTopic?.prompt || '', ...(activeTopic?.cues || [])])
+        ? getPart1Recommendations(activeQuestion, buildPart1RecommendationExtras(activeTopic, activeQuestion))
         : [],
     [selectedTestMode, activeQuestion, activeTopic]
   )
   const currentPart3Recommendations = useMemo(
     () =>
       selectedTestMode === 'part3'
-        ? getPart3Recommendations(activeQuestion, [activeTopic?.title || '', activeTopic?.category || '', activeTopic?.prompt || '', ...(activeTopic?.cues || [])])
+        ? getPart3Recommendations(activeQuestion, buildPart3RecommendationExtras(activeTopic, activeQuestion))
         : [],
     [selectedTestMode, activeQuestion, activeTopic]
   )
@@ -3255,20 +3294,26 @@ function App() {
   const currentLengthThresholds = activeLengthGuideMode ? SPEAKING_LENGTH_THRESHOLDS[activeLengthGuideMode] : []
   const fullExamCurrentPart1Recommendations = useMemo(
     () =>
-      getPart1Recommendations(fullExamPlan.part1Questions[fullExamPart1Index] || '', [
-        activeTopic?.title || '',
-        activeTopic?.category || '',
-        ...fullExamPlan.part1Questions
-      ]),
+      getPart1Recommendations(
+        fullExamPlan.part1Questions[fullExamPart1Index] || '',
+        buildFullExamPart1RecommendationExtras(
+          activeTopic,
+          fullExamPlan.part1Questions,
+          fullExamPlan.part1Questions[fullExamPart1Index] || ''
+        )
+      ),
     [fullExamPlan.part1Questions, fullExamPart1Index, activeTopic]
   )
   const fullExamCurrentPart3Recommendations = useMemo(
     () =>
-      getPart3Recommendations(fullExamPlan.part3Questions[fullExamPart3Index] || '', [
-        activeTopic?.title || '',
-        activeTopic?.category || '',
-        ...fullExamPlan.part3Questions
-      ]),
+      getPart3Recommendations(
+        fullExamPlan.part3Questions[fullExamPart3Index] || '',
+        buildFullExamPart3RecommendationExtras(
+          activeTopic,
+          fullExamPlan.part3Questions,
+          fullExamPlan.part3Questions[fullExamPart3Index] || ''
+        )
+      ),
     [fullExamPlan.part3Questions, fullExamPart3Index, activeTopic]
   )
   const fullExamPhaseLabel = useMemo(() => {
@@ -5119,11 +5164,41 @@ function App() {
         body: JSON.stringify({ email, password })
       })
       setAuthStateFromPayload(payload)
+      setAuthNotice('')
       setUserEmailInput('')
       setUserPasswordInput('')
       setAuthError('')
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : 'Incorrect email or password.')
+    }
+  }
+
+  const handleUserSignupSubmit = async () => {
+    const name = signupNameInput.trim()
+    const email = normalizeEmail(signupEmailInput)
+    const password = signupPasswordInput.trim()
+
+    if (!name || !email || !password) {
+      setAuthError('Please enter name, email, and password.')
+      setAuthNotice('')
+      return
+    }
+
+    try {
+      const payload = await fetchJson<{ success?: boolean; message?: string }>('/api/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password })
+      })
+      setSignupNameInput('')
+      setSignupEmailInput(email)
+      setSignupPasswordInput('')
+      setUserEmailInput(email)
+      setUserPasswordInput('')
+      setAuthError('')
+      setAuthNotice(payload.message || 'Account created. Please wait for your admin to activate your access.')
+    } catch (error) {
+      setAuthNotice('')
+      setAuthError(error instanceof Error ? error.message : 'Could not create your account.')
     }
   }
 
@@ -5142,6 +5217,7 @@ function App() {
         throw new Error('This account is not an admin.')
       }
       setAuthStateFromPayload(payload)
+      setAuthNotice('')
       await loadManagedLearners(payload.session.accessToken)
       setAdminCodeInput('')
       setAuthError('')
@@ -5155,7 +5231,11 @@ function App() {
     setManagedLearners([])
     setActivePage('home')
     setAdminCodeInput('')
+    setSignupNameInput('')
+    setSignupEmailInput('')
+    setSignupPasswordInput('')
     setUserPasswordInput('')
+    setAuthNotice('')
     setAuthError('')
     resetStudentWorkspaceState()
   }
@@ -5663,6 +5743,44 @@ function App() {
               <div className="authHub">
                 <section className="authPanel">
                   <div className="authPanelHeader">
+                    <p className="sectionLabel">Create Account</p>
+                  </div>
+                  <p className="meta">Create your account first. Your admin will activate your access afterwards.</p>
+                  <div className="authForm">
+                    <label>
+                      Name
+                      <input
+                        type="text"
+                        value={signupNameInput}
+                        onChange={(event) => setSignupNameInput(event.target.value)}
+                        placeholder="Your full name"
+                      />
+                    </label>
+                    <label>
+                      Email
+                      <input
+                        type="email"
+                        value={signupEmailInput}
+                        onChange={(event) => setSignupEmailInput(event.target.value)}
+                        placeholder="you@example.com"
+                      />
+                    </label>
+                    <label>
+                      Password
+                      <input
+                        type="password"
+                        value={signupPasswordInput}
+                        onChange={(event) => setSignupPasswordInput(event.target.value)}
+                        placeholder="At least 6 characters"
+                      />
+                    </label>
+                    <button type="button" onClick={() => void handleUserSignupSubmit()} disabled={isAuthLoading}>
+                      Create Account
+                    </button>
+                  </div>
+                </section>
+                <section className="authPanel">
+                  <div className="authPanelHeader">
                     <p className="sectionLabel">Learner Access</p>
                   </div>
                   <div className="authForm">
@@ -5706,6 +5824,7 @@ function App() {
                     </button>
                   </div>
                 </section>
+                {authNotice && <p className="meta authSuccess">{authNotice}</p>}
                 {authError && <p className="error authError">{authError}</p>}
               </div>
             )}
@@ -6651,7 +6770,10 @@ function App() {
                                 {renderRecommendationDropdown({
                                   title: 'Part 1 vocabulary guide',
                                   question,
-                                  items: getPart1Recommendations(question, [activeTopic.title, activeTopic.category, activeTopic.prompt, ...activeTopic.cues])
+                                  items: getPart1Recommendations(
+                                    question,
+                                    buildFullExamPart1RecommendationExtras(activeTopic, fullExamPlan.part1Questions, question)
+                                  )
                                 })}
                                 <textarea
                                   value={questionPrepNotes[`full-p1-${index}`] || ''}
@@ -6712,7 +6834,10 @@ function App() {
                                 {renderRecommendationDropdown({
                                   title: 'Part 3 speaking guide',
                                   question,
-                                  items: getPart3Recommendations(question, [activeTopic.title, activeTopic.category, activeTopic.prompt, ...activeTopic.cues])
+                                  items: getPart3Recommendations(
+                                    question,
+                                    buildFullExamPart3RecommendationExtras(activeTopic, fullExamPlan.part3Questions, question)
+                                  )
                                 })}
                                 <textarea
                                   value={questionPrepNotes[`full-p3-${index}`] || ''}
@@ -6739,8 +6864,8 @@ function App() {
                               question,
                               items:
                                 selectedTestMode === 'part1'
-                                  ? getPart1Recommendations(question, [activeTopic.title, activeTopic.category, activeTopic.prompt, ...activeTopic.cues])
-                                  : getPart3Recommendations(question, [activeTopic.title, activeTopic.category, activeTopic.prompt, ...activeTopic.cues])
+                                  ? getPart1Recommendations(question, buildPart1RecommendationExtras(activeTopic, question))
+                                  : getPart3Recommendations(question, buildPart3RecommendationExtras(activeTopic, question))
                             })}
                             <textarea
                               value={questionPrepNotes[String(index)] || ''}

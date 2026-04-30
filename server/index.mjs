@@ -14,6 +14,8 @@ const app = express()
 const port = process.env.PORT || 8787
 const assessmentJobs = new Map()
 const ASSESSMENT_JOB_TTL_MS = 1000 * 60 * 30
+const DEFAULT_FEEDBACK_CREDITS = 50
+const DEFAULT_FULL_MOCK_CREDITS = 15
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024 } })
 const ADMIN_PANEL_CODE = String(process.env.ADMIN_PANEL_CODE || 'englishplanforeover').trim()
 const ADMIN_CODE_TOKEN_PREFIX = 'admin-code:'
@@ -744,8 +746,21 @@ const parseQuestionRangesFromText = (text) => {
   }))
 }
 
+const stripWrappedQuotes = (value) => {
+  const text = String(value || '').replace(/\r/g, '').trim()
+  if (!text) return ''
+  if (
+    (text.startsWith('"') && text.endsWith('"')) ||
+    (text.startsWith("'") && text.endsWith("'")) ||
+    (text.startsWith('```') && text.endsWith('```'))
+  ) {
+    return text.replace(/^(```|["'])/, '').replace(/(```|["'])$/, '').trim()
+  }
+  return text
+}
+
 const parseReadingPassages = (rawPassageText) => {
-  const source = String(rawPassageText || '').replace(/\r/g, '')
+  const source = stripWrappedQuotes(rawPassageText)
   const passages = []
   const matches = [...source.matchAll(/READING PASSAGE\s+(\d+)/gi)]
   for (let index = 0; index < matches.length; index += 1) {
@@ -773,12 +788,35 @@ const parseReadingPassages = (rawPassageText) => {
       questionRanges: parseQuestionRangesFromText(questionSectionText)
     })
   }
+
+  if (passages.length === 0 && source.trim()) {
+    const fallbackQuestionMarker = source.search(/Questions?\s+\d+\s*[–-]\s*\d+/i)
+    const fallbackPassageBodyRaw = fallbackQuestionMarker >= 0 ? source.slice(0, fallbackQuestionMarker).trim() : source.trim()
+    const fallbackQuestionSectionText = fallbackQuestionMarker >= 0 ? source.slice(fallbackQuestionMarker).trim() : ''
+    const fallbackLines = fallbackPassageBodyRaw.split('\n')
+    const fallbackTitle = String(fallbackLines.find((line) => line.trim()) || 'Passage 1').trim()
+    const fallbackBodyParagraphs = fallbackPassageBodyRaw
+      .split(/\n\s*\n/)
+      .map((paragraph) => paragraph.replace(/\n+/g, ' ').trim())
+      .filter(Boolean)
+      .slice(1)
+    passages.push({
+      number: 1,
+      title: fallbackTitle,
+      bodyParagraphs: fallbackBodyParagraphs,
+      questionSectionText: fallbackQuestionSectionText,
+      questionRanges: parseQuestionRangesFromText(fallbackQuestionSectionText)
+    })
+  }
+
   return passages
 }
 
 const parseReadingAnswerKey = (rawAnswerKey) => {
-  const source = String(rawAnswerKey || '').replace(/\r/g, '')
-  const segments = source.split(/\n(?=Question\s+\d+:)/g).filter((segment) => /^Question\s+\d+:/i.test(segment.trim()))
+  const source = stripWrappedQuotes(rawAnswerKey)
+  const segments = [...source.matchAll(/(?:^|\n)(Question\s+\d+:\s*[\s\S]*?)(?=\nQuestion\s+\d+:|$)/gi)].map((match) =>
+    String(match[1] || '').trim()
+  )
   return segments.map((segment) => {
     const numberMatch = segment.match(/^Question\s+(\d+):\s*(.+)$/im)
     const correctAnswerMatch = segment.match(/Correct Answer:\s*(.+)/i)
@@ -809,6 +847,26 @@ const buildReadingExamPayload = ({ title, category, rawPassageText, rawAnswerKey
       passage.questionRanges.some((range) => question.number >= range.start && question.number <= range.end)
     )
   }))
+
+  if (passagesWithQuestions.length === 0) {
+    throw new Error('The passage parser could not find any READING PASSAGE blocks. Please keep the "READING PASSAGE 1/2/3" headings in your upload.')
+  }
+
+  if (questions.length === 0) {
+    throw new Error('The answer key parser could not find any "Question X:" blocks. Please keep the Question / Correct Answer / Exact Portion format.')
+  }
+
+  const questionsMissingPassage = questions.filter(
+    (question) => !passagesWithQuestions.some((passage) => passage.questions.some((item) => item.number === question.number))
+  )
+  if (questionsMissingPassage.length > 0) {
+    throw new Error(
+      `Some questions could not be matched to a passage range: ${questionsMissingPassage
+        .slice(0, 10)
+        .map((question) => question.number)
+        .join(', ')}`
+    )
+  }
 
   return {
     title: String(title || '').trim(),
@@ -4524,6 +4582,100 @@ app.post('/api/auth/login', async (req, res) => {
         status: error?.status || 500,
         type: 'auth_login_error',
         message: error instanceof Error ? error.message : 'Could not sign in.'
+      }
+    })
+  }
+})
+
+app.post('/api/auth/signup', async (req, res) => {
+  try {
+    ensureSupabaseConfigured()
+    const name = String(req.body?.name || '').trim()
+    const email = normalizeEmail(req.body?.email)
+    const password = String(req.body?.password || '').trim()
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Name, email, and password are required.'
+        }
+      })
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Password must be at least 6 characters.'
+        }
+      })
+    }
+
+    const existingProfile = await loadUserProfileByEmail(email)
+    if (existingProfile?.id) {
+      return res.status(409).json({
+        error: {
+          status: 409,
+          type: 'email_exists',
+          message: 'This email is already registered. Please sign in instead.'
+        }
+      })
+    }
+
+    const created = await fetchSupabaseJson('/auth/v1/admin/users', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { name, role: 'student' }
+      })
+    })
+    const userId = String(created?.user?.id || created?.id || '')
+    if (!userId) {
+      throw new Error('Could not create learner account.')
+    }
+
+    await supabaseRequest('/rest/v1/profiles', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify({
+        id: userId,
+        email,
+        full_name: name,
+        role: 'student'
+      })
+    })
+
+    await supabaseRequest('/rest/v1/learner_access', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify(
+        buildLearnerAccessPayload({
+          userId,
+          status: 'inactive',
+          startsAt: new Date().toISOString(),
+          expiresAt: null,
+          feedbackCredits: 0,
+          fullMockCredits: 0
+        })
+      )
+    })
+
+    return res.status(201).json({
+      success: true,
+      message: 'Account created successfully. Please wait for your admin to activate your access.'
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'auth_signup_error',
+        message: error instanceof Error ? error.message : 'Could not create your account.'
       }
     })
   }
