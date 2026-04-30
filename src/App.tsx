@@ -3202,20 +3202,41 @@ function App() {
         }
       : {}
 
-  const fetchJson = async <T,>(url: string, options: RequestInit = {}): Promise<T> => {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options.headers || {})
+  const describeFetchFailure = (url: string, error: unknown): string => {
+    const rawMessage = error instanceof Error ? error.message : String(error || '')
+    const normalizedUrl = String(url || '').trim()
+    const runningLocally =
+      typeof window !== 'undefined' &&
+      ['127.0.0.1', 'localhost'].includes(window.location.hostname)
+
+    if (/Failed to fetch|NetworkError|Load failed|fetch failed/i.test(rawMessage)) {
+      if (runningLocally && normalizedUrl.startsWith('/api')) {
+        return 'Could not reach the backend API. If you are testing on localhost, please make sure the Express server is running on port 8787 first.'
       }
-    })
-    if (!response.ok) {
-      const payload = await response.json().catch(() => ({}))
-      const message = payload?.error?.message || payload?.error || `Request failed (${response.status})`
-      throw new Error(String(message))
+      return 'Could not reach the server. Please check your connection and try again.'
     }
-    return response.json() as Promise<T>
+
+    return rawMessage || 'Request failed.'
+  }
+
+  const fetchJson = async <T,>(url: string, options: RequestInit = {}): Promise<T> => {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        }
+      })
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}))
+        const message = payload?.error?.message || payload?.error || `Request failed (${response.status})`
+        throw new Error(String(message))
+      }
+      return response.json() as Promise<T>
+    } catch (error) {
+      throw new Error(describeFetchFailure(url, error))
+    }
   }
 
   const loadManagedLearners = async (accessToken = authSession?.accessToken) => {
