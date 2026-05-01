@@ -3839,6 +3839,10 @@ function App() {
       })),
     [readingExams]
   )
+  const adminFirstReadingCategoryWithContent = useMemo(
+    () => readingExamCountsByCategory.find((group) => group.count > 0)?.category || null,
+    [readingExamCountsByCategory]
+  )
   const recentStudentSupportReports = useMemo(() => mySupportReports.slice(0, 4), [mySupportReports])
   const activeReadingExam =
     filteredReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
@@ -4257,6 +4261,19 @@ function App() {
       setSelectedReadingExamId(filteredReadingExams[0].id)
     }
   }, [filteredReadingExams, selectedReadingExamId])
+
+  useEffect(() => {
+    if (authSession?.role !== 'admin') return
+    if (!readingExams.length) return
+    if (filteredReadingExams.length > 0) return
+    if (!adminFirstReadingCategoryWithContent) return
+    setSelectedReadingCategory(adminFirstReadingCategoryWithContent)
+  }, [
+    authSession?.role,
+    readingExams.length,
+    filteredReadingExams.length,
+    adminFirstReadingCategoryWithContent
+  ])
 
   useEffect(() => {
     if (!activeReadingPassages.length) {
@@ -6749,7 +6766,7 @@ function App() {
                     setReadingAttemptStage('bank')
                   }}
                 >
-                  {label}
+                  {label} ({readingExamCountsByCategory.find((group) => group.category === key)?.count || 0})
                 </button>
               ))}
             </div>
@@ -6760,8 +6777,33 @@ function App() {
               {readingExamError && <p className="error">{readingExamError}</p>}
               {filteredReadingExams.length === 0 ? (
                 <div className="emptyNotebook">
-                  <p>No reading exams in this bank yet.</p>
-                  <p>{authSession?.role === 'admin' ? 'Upload one from the Admin panel.' : 'Ask your admin to upload reading passages first.'}</p>
+                  <p>
+                    {authSession?.role === 'admin' && readingExams.length > 0
+                      ? 'There are uploaded reading exams, but none in this selected bank.'
+                      : 'No reading exams in this bank yet.'}
+                  </p>
+                  <p>
+                    {authSession?.role === 'admin'
+                      ? readingExams.length > 0
+                        ? 'Switch to a bank that already has content below, or upload another set from the Admin panel.'
+                        : 'Upload one from the Admin panel.'
+                      : 'Ask your admin to upload reading passages first.'}
+                  </p>
+                  {authSession?.role === 'admin' && readingExams.length > 0 && (
+                    <div className="readingCategoryTabs">
+                      {readingExamCountsByCategory
+                        .filter((group) => group.count > 0)
+                        .map((group) => (
+                          <button
+                            key={`jump-${group.category}`}
+                            type="button"
+                            onClick={() => setSelectedReadingCategory(group.category)}
+                          >
+                            Open {group.label} ({group.count})
+                          </button>
+                        ))}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="readingBankGrid">

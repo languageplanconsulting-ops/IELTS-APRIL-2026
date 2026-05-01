@@ -822,7 +822,7 @@ const stripWrappedQuotes = (value) => {
 const parseReadingPassages = (rawPassageText) => {
   const source = stripWrappedQuotes(rawPassageText)
   const passages = []
-  const matches = [...source.matchAll(/READING PASSAGE\s+(\d+)/gi)]
+  const matches = [...source.matchAll(/(?:^|\n)READING PASSAGE\s+(\d+)\b(?!:)/gi)]
   for (let index = 0; index < matches.length; index += 1) {
     const current = matches[index]
     const next = matches[index + 1]
@@ -5527,6 +5527,39 @@ app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
         status: error?.status || 500,
         type: 'reading_exam_bulk_create_error',
         message: error instanceof Error ? error.message : 'Could not bulk upload reading exams.'
+      }
+    })
+  }
+})
+
+app.delete('/api/admin/reading/exams/:examId', requireAdmin, async (req, res) => {
+  try {
+    const examId = normalizeOptionalUuid(req.params.examId)
+    if (!examId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'A valid reading exam id is required.'
+        }
+      })
+    }
+
+    await supabaseRequest(`/rest/v1/reading_exams?id=eq.${encodeURIComponent(examId)}`, {
+      method: 'DELETE',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=minimal' })
+    })
+
+    return res.json({
+      success: true,
+      examId
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_exam_delete_error',
+        message: error instanceof Error ? error.message : 'Could not delete reading exam.'
       }
     })
   }
