@@ -822,13 +822,13 @@ const stripWrappedQuotes = (value) => {
 const parseReadingPassages = (rawPassageText) => {
   const source = stripWrappedQuotes(rawPassageText)
   const passages = []
-  const matches = [...source.matchAll(/(?:^|\n)READING PASSAGE\s+(\d+)\b(?!:)/gi)]
+  const matches = [...source.matchAll(/(?:^|\n)\s*READING PASSAGE\s+(\d+)\s*$/gim)]
   for (let index = 0; index < matches.length; index += 1) {
     const current = matches[index]
     const next = matches[index + 1]
     const block = source
       .slice(current.index, next ? next.index : source.length)
-      .replace(/^READING PASSAGE\s+\d+\s*/i, '')
+      .replace(/^\s*READING PASSAGE\s+\d+\s*/i, '')
       .trim()
     const lines = block.split('\n')
     const title = String(lines.find((line) => line.trim()) || `Passage ${current[1]}`).trim()
