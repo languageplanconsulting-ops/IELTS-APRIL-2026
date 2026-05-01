@@ -2358,8 +2358,9 @@ const buildQuestionModeFluencyBand = ({ avgWordsPerQuestion, testMode, signals }
   if (
     avgWordsPerQuestion >= 60 &&
     signals.allAnswersFullyDeveloped &&
-    signals.grammarErrorCount === 0 &&
-    signals.vocabularyIssueCount <= 1
+    signals.grammarErrorCount <= 2 &&
+    signals.vocabularyIssueCount <= 1 &&
+    signals.meaningImpact !== 'major'
   ) {
     return 8
   }
@@ -2367,8 +2368,9 @@ const buildQuestionModeFluencyBand = ({ avgWordsPerQuestion, testMode, signals }
   if (
     avgWordsPerQuestion >= 50 &&
     signals.mostAnswersFullyDeveloped &&
-    signals.grammarErrorCount <= 3 &&
-    signals.vocabularyIssueCount <= 3
+    signals.grammarErrorCount <= 4 &&
+    signals.vocabularyIssueCount <= 3 &&
+    signals.meaningImpact !== 'major'
   ) {
     return 7
   }
@@ -2376,28 +2378,29 @@ const buildQuestionModeFluencyBand = ({ avgWordsPerQuestion, testMode, signals }
   if (
     avgWordsPerQuestion >= 40 &&
     avgWordsPerQuestion < 50 &&
-    signals.someAnswersNotFullyDeveloped &&
-    signals.grammarErrorCount <= 4
+    signals.grammarErrorCount <= 5 &&
+    signals.meaningImpact !== 'major'
   ) {
     return 6
-  }
-
-  let band = 4
-
-  if (avgWordsPerQuestion < 40 && signals.noAnswersFullyDeveloped && signals.grammarErrorCount > 6) {
-    band = 5
   }
 
   if (
-    band < 6 &&
-    signals.grammarErrorCount !== null &&
-    signals.grammarErrorCount >= 5 &&
-    (signals.meaningImpact === 'none' || signals.meaningImpact === 'minor')
+    avgWordsPerQuestion >= 40 &&
+    signals.someAnswersNotFullyDeveloped &&
+    signals.meaningImpact !== 'major'
   ) {
     return 6
   }
 
-  return band
+  if (avgWordsPerQuestion < 40 && signals.noAnswersFullyDeveloped && signals.grammarErrorCount > 6) {
+    return 5
+  }
+
+  if (signals.meaningImpact === 'none' || signals.meaningImpact === 'minor') {
+    return Math.max(5, Math.min(6, fallbackBand))
+  }
+
+  return 4
 }
 
 const buildQuestionModeFluencyRequiredTicks = ({ band, signals, punctuatedTranscript, questionBreakdown }) => {
