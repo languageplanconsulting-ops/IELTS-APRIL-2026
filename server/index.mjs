@@ -1015,6 +1015,15 @@ const verifySupabaseAccessToken = async (accessToken) => {
   return { user, profile }
 }
 
+const normalizeOptionalUuid = (value) => {
+  const normalized = String(value || '').trim()
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    normalized
+  )
+    ? normalized
+    : null
+}
+
 const ensureActiveStudentAccess = (profile) => {
   if (!profile) throw new Error('Profile not found')
   if (String(profile.role || 'student') === 'admin') return
@@ -5111,7 +5120,7 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
         raw_passage_text: rawPassageText,
         raw_answer_key: rawAnswerKey,
         parsed_payload: parsedPayload,
-        created_by: req.auth.user.id
+        created_by: normalizeOptionalUuid(req.auth?.profile?.id || req.auth?.user?.id)
       })
     })
 
@@ -5258,7 +5267,7 @@ app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
           rawPassageText,
           rawAnswerKey
         }),
-        created_by: req.auth.user.id
+        created_by: normalizeOptionalUuid(req.auth?.profile?.id || req.auth?.user?.id)
       }
     })
 
