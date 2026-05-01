@@ -4405,7 +4405,7 @@ const callGemini = async (prompt) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
-    String(process.env.GEMINI_ASSESSMENT_MODEL || 'gemini-2.5-pro').trim(),
+    String(process.env.GEMINI_ASSESSMENT_MODEL || 'gemini-2.5-flash').trim(),
     'gemini-2.5-flash'
   ].filter(Boolean)
   const tried = []
@@ -4417,7 +4417,7 @@ const callGemini = async (prompt) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.2 }
+          generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
         })
       },
       { timeoutMs: 55000, retries: 1, retryDelayMs: 900 }
@@ -4433,7 +4433,14 @@ const callGemini = async (prompt) => {
       tried.push(`${model}: empty text`)
       continue
     }
-    return normalizeAssessment(parseModelJson(text), model)
+    try {
+      return normalizeAssessment(parseModelJson(text), model)
+    } catch (error) {
+      tried.push(
+        `${model}: parse failed ${sanitizeErrorMessage(error?.message || error).slice(0, 120)}`
+      )
+      continue
+    }
   }
   throw new Error(`Gemini failed on all models. ${tried.join(' | ')}`)
 }
@@ -4442,7 +4449,7 @@ const callGeminiText = async (prompt) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
-    String(process.env.GEMINI_TEXT_MODEL || process.env.GEMINI_ASSESSMENT_MODEL || 'gemini-2.5-pro').trim(),
+    String(process.env.GEMINI_TEXT_MODEL || process.env.GEMINI_ASSESSMENT_MODEL || 'gemini-2.5-flash').trim(),
     'gemini-2.5-flash'
   ].filter(Boolean)
   const tried = []
