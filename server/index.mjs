@@ -751,6 +751,25 @@ const normalizeReadingCategory = (value) => {
   return 'fulltest'
 }
 
+const normalizeSupportReportCategory = (value) => {
+  const normalized = String(value || '').trim().toLowerCase()
+  if (['bug', 'account', 'content', 'billing', 'other'].includes(normalized)) return normalized
+  return 'bug'
+}
+
+const normalizeSupportReportStatus = (value) => {
+  const normalized = String(value || '').trim().toLowerCase()
+  if (['open', 'in_progress', 'resolved', 'closed'].includes(normalized)) return normalized
+  return 'open'
+}
+
+const sanitizeSupportPageContext = (value) => {
+  const normalized = String(value || '').trim().toLowerCase()
+  return normalized ? normalized.slice(0, 80) : 'workspace'
+}
+
+const sanitizeSupportMessage = (value) => String(value || '').trim().replace(/\s+\n/g, '\n').slice(0, 5000)
+
 const normalizeReadingAnswer = (value) =>
   String(value || '')
     .trim()
@@ -758,8 +777,21 @@ const normalizeReadingAnswer = (value) =>
     .replace(/\.$/, '')
     .toUpperCase()
 
+const canonicalizeReadingCorrectAnswer = (value) => {
+  const normalized = normalizeReadingAnswer(value)
+  if (!normalized) return ''
+  if (normalized.startsWith('NOT GIVEN')) return 'NOT GIVEN'
+  if (normalized.startsWith('TRUE')) return 'TRUE'
+  if (normalized.startsWith('FALSE')) return 'FALSE'
+  if (normalized.startsWith('YES')) return 'YES'
+  if (normalized.startsWith('NO')) return 'NO'
+  const letterMatch = normalized.match(/^([A-G])(?:\b|\s|\()/)
+  if (letterMatch) return letterMatch[1]
+  return String(value || '').trim()
+}
+
 const guessReadingAnswerType = (correctAnswer) => {
-  const normalized = normalizeReadingAnswer(correctAnswer)
+  const normalized = normalizeReadingAnswer(canonicalizeReadingCorrectAnswer(correctAnswer))
   if (['TRUE', 'FALSE', 'NOT GIVEN'].includes(normalized)) return 'true-false-not-given'
   if (['YES', 'NO', 'NOT GIVEN'].includes(normalized)) return 'yes-no-not-given'
   if (/^[A-G]$/.test(normalized)) return 'multiple-choice'
@@ -853,7 +885,7 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
     const paraphraseMatch = segment.match(/Paraphrased Vocabulary:\s*([\s\S]*?)$/i)
     const questionNumber = Number(numberMatch?.[1] || 0)
     const prompt = String(numberMatch?.[2] || '').trim()
-    const correctAnswer = String(correctAnswerMatch?.[1] || '').trim()
+    const correctAnswer = canonicalizeReadingCorrectAnswer(String(correctAnswerMatch?.[1] || '').trim())
     return {
       number: questionNumber,
       prompt,
@@ -865,6 +897,28 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
     }
   })
 }
+
+const normalizeReadingQuestionRecord = (question) => {
+  const correctAnswer = canonicalizeReadingCorrectAnswer(question?.correctAnswer || '')
+  return {
+    ...question,
+    correctAnswer,
+    answerType: guessReadingAnswerType(correctAnswer)
+  }
+}
+
+const normalizeReadingParsedPayload = (payload) => ({
+  ...(payload && typeof payload === 'object' ? payload : {}),
+  passages: Array.isArray(payload?.passages)
+    ? payload.passages.map((passage) => ({
+        ...passage,
+        questions: Array.isArray(passage?.questions)
+          ? passage.questions.map((question) => normalizeReadingQuestionRecord(question))
+          : []
+      }))
+    : [],
+  questionCount: Number(payload?.questionCount || 0)
+})
 
 const buildReadingExamPayload = ({ title, category, rawPassageText, rawAnswerKey }) => {
   const passages = parseReadingPassages(rawPassageText)
@@ -910,9 +964,24 @@ const mapReadingExamRecord = (row) => ({
   category: normalizeReadingCategory(row?.category),
   rawPassageText: String(row?.raw_passage_text || ''),
   rawAnswerKey: String(row?.raw_answer_key || ''),
-  parsedPayload: row?.parsed_payload && typeof row.parsed_payload === 'object' ? row.parsed_payload : {},
+  parsedPayload: normalizeReadingParsedPayload(row?.parsed_payload),
   createdAt: row?.created_at || null,
   updatedAt: row?.updated_at || null
+})
+
+const mapSupportReportRecord = (row) => ({
+  id: String(row?.id || ''),
+  userId: normalizeOptionalUuid(row?.user_id),
+  reporterName: String(row?.reporter_name || row?.reporter_email || 'Student'),
+  reporterEmail: normalizeEmail(row?.reporter_email || ''),
+  pageContext: sanitizeSupportPageContext(row?.page_context),
+  category: normalizeSupportReportCategory(row?.category),
+  message: String(row?.message || ''),
+  status: normalizeSupportReportStatus(row?.status),
+  adminNote: String(row?.admin_note || ''),
+  createdAt: row?.created_at || null,
+  updatedAt: row?.updated_at || null,
+  resolvedAt: row?.resolved_at || null
 })
 
 const mapLearnerRecord = (row) => ({
@@ -5076,8 +5145,170 @@ app.put('/api/me/notebook', requireAuth, async (req, res) => {
   }
 })
 
-app.get('/api/reading/exams', requireAuth, async (_req, res) => {
+app.get('/api/me/support-reports', requireAuth, async (req, res) => {
   try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'support_reports_auth_error',
+          message: 'Please sign in with a learner account before using support reports.'
+        }
+      })
+    }
+
+    const rows = await fetchSupabaseJson(
+      `/rest/v1/support_reports?select=id,user_id,reporter_name,reporter_email,page_context,category,message,status,admin_note,created_at,updated_at,resolved_at&user_id=eq.${encodeURIComponent(
+        userId
+      )}&order=created_at.desc`,
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+
+    return res.json({
+      reports: (Array.isArray(rows) ? rows : []).map(mapSupportReportRecord)
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'support_reports_load_error',
+        message: error instanceof Error ? error.message : 'Could not load support reports.'
+      }
+    })
+  }
+})
+
+app.post('/api/me/support-reports', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'support_reports_auth_error',
+          message: 'Please sign in with a learner account before submitting a support report.'
+        }
+      })
+    }
+
+    const profile = await loadUserProfileWithAccess(userId)
+    if (!profile) {
+      throw new Error('Profile not found.')
+    }
+
+    const message = sanitizeSupportMessage(req.body?.message)
+    if (!message) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Please describe the bug or problem before sending it to the admin.'
+        }
+      })
+    }
+
+    const rows = await fetchSupabaseJson('/rest/v1/support_reports', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify({
+        user_id: userId,
+        reporter_name: String(profile?.full_name || profile?.email || 'Student').slice(0, 160),
+        reporter_email: normalizeEmail(profile?.email || req.auth?.user?.email || ''),
+        page_context: sanitizeSupportPageContext(req.body?.pageContext),
+        category: normalizeSupportReportCategory(req.body?.category),
+        message,
+        status: 'open',
+        admin_note: ''
+      })
+    })
+
+    const created = Array.isArray(rows) ? rows[0] || null : rows
+    return res.json({
+      report: mapSupportReportRecord(created),
+      message: 'Your problem report has been sent to the admin team.'
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'support_report_create_error',
+        message: error instanceof Error ? error.message : 'Could not create support report.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/support-reports', requireAdmin, async (_req, res) => {
+  try {
+    const rows = await fetchSupabaseJson(
+      '/rest/v1/support_reports?select=id,user_id,reporter_name,reporter_email,page_context,category,message,status,admin_note,created_at,updated_at,resolved_at&order=created_at.desc',
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+    return res.json({
+      reports: (Array.isArray(rows) ? rows : []).map(mapSupportReportRecord)
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_support_reports_error',
+        message: error instanceof Error ? error.message : 'Could not load support reports.'
+      }
+    })
+  }
+})
+
+app.patch('/api/admin/support-reports/:reportId', requireAdmin, async (req, res) => {
+  try {
+    const reportId = normalizeOptionalUuid(req.params.reportId)
+    if (!reportId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'A valid report id is required.'
+        }
+      })
+    }
+
+    const status = normalizeSupportReportStatus(req.body?.status)
+    const adminNote = String(req.body?.adminNote || '').trim().slice(0, 5000)
+
+    const rows = await fetchSupabaseJson(`/rest/v1/support_reports?id=eq.${encodeURIComponent(reportId)}`, {
+      method: 'PATCH',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify({
+        status,
+        admin_note: adminNote,
+        resolved_at: status === 'resolved' || status === 'closed' ? new Date().toISOString() : null
+      })
+    })
+
+    const updated = Array.isArray(rows) ? rows[0] || null : rows
+    return res.json({
+      report: mapSupportReportRecord(updated)
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_support_report_update_error',
+        message: error instanceof Error ? error.message : 'Could not update support report.'
+      }
+    })
+  }
+})
+
+app.get('/api/reading/exams', requireAuth, async (req, res) => {
+  try {
+    if (String(req.auth?.profile?.role || req.auth?.user?.role || 'student') !== 'admin') {
+      return res.json({ exams: [] })
+    }
     const rows = await fetchSupabaseJson(
       '/rest/v1/reading_exams?select=id,category,title,raw_passage_text,raw_answer_key,parsed_payload,created_at,updated_at&order=created_at.desc',
       {

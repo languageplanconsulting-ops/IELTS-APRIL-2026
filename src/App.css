@@ -127,6 +127,33 @@ body,
   box-shadow: 2px 2px 0 var(--bc-black) !important;
 }
 
+.pageSwitch button:disabled,
+.homeGrid button:disabled,
+.nextStepCard:disabled {
+  cursor: not-allowed;
+  opacity: 0.78;
+  background: repeating-linear-gradient(
+    135deg,
+    #f4f4f5 0,
+    #f4f4f5 12px,
+    #e5e7eb 12px,
+    #e5e7eb 24px
+  ) !important;
+  color: #475569 !important;
+  box-shadow: 4px 4px 0 rgba(13, 13, 13, 0.7) !important;
+  transform: none !important;
+}
+
+.pageSwitch button:disabled:hover,
+.homeGrid button:disabled:hover,
+.nextStepCard:disabled:hover,
+.pageSwitch button:disabled:active,
+.homeGrid button:disabled:active,
+.nextStepCard:disabled:active {
+  transform: none !important;
+  box-shadow: 4px 4px 0 rgba(13, 13, 13, 0.7) !important;
+}
+
 .providerTabs button.active,
 .notebookTabs button.active,
 .pronFilters button.active,
@@ -1291,6 +1318,222 @@ body,
 .scriptReviewDoneBtn:active {
   transform: translate(1px, 1px);
   box-shadow: 3px 3px 0 var(--bc-black);
+}
+
+.supportLauncher {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 130;
+  border: 3px solid var(--bc-black);
+  background: linear-gradient(135deg, #ffef9c 0%, #ffcc00 100%);
+  color: #0f172a;
+  box-shadow: 6px 6px 0 var(--bc-black);
+  padding: 14px 18px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.supportLauncher:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--bc-black);
+}
+
+.supportLauncher:active {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 var(--bc-black);
+}
+
+.supportOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top left, rgba(255, 204, 0, 0.2), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(15, 74, 173, 0.22), transparent 28%),
+    rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.supportCard {
+  width: min(900px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  border: 3px solid var(--bc-black);
+  background:
+    radial-gradient(circle at top right, rgba(255, 204, 0, 0.18), transparent 24%),
+    linear-gradient(145deg, #fffdf4 0%, #eef6ff 100%);
+  box-shadow: 10px 10px 0 var(--bc-black);
+}
+
+.supportHero,
+.supportForm,
+.supportHistory,
+.supportActions {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.supportHero {
+  padding-top: 28px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid rgba(15, 23, 42, 0.08);
+}
+
+.supportEyebrow {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0f2e85;
+}
+
+.supportHero h3 {
+  margin: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 4.8vw, 3.7rem);
+  line-height: 0.95;
+  color: #0f172a;
+}
+
+.supportLead {
+  margin: 16px 0 0;
+  max-width: 760px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #334155;
+  font-weight: 600;
+}
+
+.supportForm {
+  padding-top: 22px;
+  padding-bottom: 10px;
+  display: grid;
+  gap: 14px;
+}
+
+.supportForm label,
+.supportAdminBody label {
+  display: grid;
+  gap: 6px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.supportForm input,
+.supportForm select,
+.supportForm textarea,
+.supportAdminBody select,
+.supportAdminBody textarea {
+  width: 100%;
+  border: 3px solid var(--bc-black);
+  background: #fff;
+  padding: 12px 14px;
+  box-shadow: 4px 4px 0 var(--bc-black);
+  font: inherit;
+}
+
+.supportForm textarea,
+.supportAdminBody textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.supportHistory {
+  padding-top: 10px;
+  padding-bottom: 8px;
+}
+
+.supportHistoryHeader h4 {
+  margin: 6px 0 0;
+}
+
+.supportHistoryList {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.supportHistoryCard {
+  border: 3px solid var(--bc-black);
+  background: #fffef7;
+  box-shadow: 4px 4px 0 var(--bc-black);
+  padding: 14px;
+}
+
+.supportHistoryTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.supportHistoryCard p {
+  margin: 6px 0 0;
+}
+
+.supportAdminNote {
+  border-top: 2px dashed var(--bc-black);
+  padding-top: 8px;
+  font-weight: 700;
+  color: #0f2e85;
+}
+
+.supportActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  padding-bottom: 28px;
+}
+
+.supportBackBtn,
+.supportSendBtn {
+  min-width: 210px;
+  padding: 15px 18px;
+  border: 3px solid var(--bc-black);
+  box-shadow: 5px 5px 0 var(--bc-black);
+  font-size: 0.95rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.supportBackBtn {
+  background: #fff;
+  color: #0f172a;
+}
+
+.supportSendBtn {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #fff;
+}
+
+.supportBackBtn:hover,
+.supportSendBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--bc-black);
+}
+
+.supportBackBtn:active,
+.supportSendBtn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 var(--bc-black);
+}
+
+.supportSendBtn:disabled {
+  opacity: 0.7;
+  cursor: wait;
 }
 
 @keyframes full-exam-pop {
@@ -3692,6 +3935,26 @@ body,
   color: #991b1b;
 }
 
+.adminStatusPill-open {
+  background: #fee2e2;
+  color: #9f1239;
+}
+
+.adminStatusPill-in_progress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.adminStatusPill-resolved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.adminStatusPill-closed {
+  background: #e2e8f0;
+  color: #334155;
+}
+
 .adminLearnerMetaGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3704,6 +3967,22 @@ body,
 
 .adminCardActions {
   margin-bottom: 0;
+}
+
+.supportAdminCard {
+  background: linear-gradient(135deg, #fffef7 0%, #f8fbff 100%);
+}
+
+.supportAdminBody {
+  display: grid;
+  gap: 14px;
+}
+
+.supportAdminControls {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
 }
 
 .adminWorkflowCard,
@@ -3962,12 +4241,48 @@ body,
   align-items: start;
 }
 
+.readingSummaryStrip,
+.readingPassageBreakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.readingSummaryCard,
+.readingPassageBreakdownCard {
+  border: 3px solid var(--bc-black);
+  background:
+    linear-gradient(180deg, #fffdf4 0%, #ffffff 100%);
+  box-shadow: 6px 6px 0 var(--bc-black);
+  padding: 14px 16px;
+  display: grid;
+  gap: 4px;
+}
+
+.readingSummaryCard strong,
+.readingPassageBreakdownCard strong,
+.readingPassageBreakdownCard h4 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.readingSummaryCard span,
+.readingPassageBreakdownCard span {
+  color: #475569;
+  font-size: 0.92rem;
+}
+
 .readingPassagePanel,
 .readingQuestionsPanel {
   border: 3px solid var(--bc-black);
   background: #fffef9;
   box-shadow: 8px 8px 0 var(--bc-black);
   padding: 18px;
+}
+
+.readingQuestionsPanel {
+  position: sticky;
+  top: 18px;
 }
 
 .readingPassageBody {
@@ -4036,6 +4351,31 @@ body,
   margin: 12px 0 0;
   font: inherit;
   line-height: 1.6;
+}
+
+.readingQuestionNavigator {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 4px;
+}
+
+.readingQuestionNavigator button {
+  min-width: 42px;
+  border: 2px solid var(--bc-black);
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--bc-black);
+  padding: 8px 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.readingQuestionNavigator button.is-answered {
+  background: #d1fae5;
+}
+
+.readingQuestionNavigator button.is-active {
+  background: #fde68a;
 }
 
 .readingQuestionList {
@@ -4196,6 +4536,11 @@ body,
 
   .readingExamLayout {
     grid-template-columns: 1fr;
+  }
+
+  .readingQuestionsPanel {
+    position: static;
+    top: auto;
   }
 
   .adminSearchField {
@@ -7133,6 +7478,43 @@ body,
   .scriptReviewDoneBtn {
     width: 100%;
     min-width: 0;
+  }
+
+  .supportOverlay {
+    padding: 14px;
+  }
+
+  .supportHero,
+  .supportForm,
+  .supportHistory,
+  .supportActions {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .supportHero {
+    padding-top: 24px;
+  }
+
+  .supportActions {
+    padding-bottom: 22px;
+  }
+
+  .supportBackBtn,
+  .supportSendBtn,
+  .supportLauncher {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .supportLauncher {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .supportAdminControls {
+    grid-template-columns: 1fr;
   }
 
   .prepProgressStepper {

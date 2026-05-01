@@ -50,6 +50,21 @@ create table if not exists public.reading_exams (
   updated_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.support_reports (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references public.profiles(id) on delete set null,
+  reporter_name text not null default 'Student',
+  reporter_email text not null default '',
+  page_context text not null default 'workspace',
+  category text not null default 'bug' check (category in ('bug', 'account', 'content', 'billing', 'other')),
+  message text not null,
+  status text not null default 'open' check (status in ('open', 'in_progress', 'resolved', 'closed')),
+  admin_note text not null default '',
+  resolved_at timestamptz,
+  created_at timestamptz not null default timezone('utc', now()),
+  updated_at timestamptz not null default timezone('utc', now())
+);
+
 drop trigger if exists set_profiles_updated_at on public.profiles;
 create trigger set_profiles_updated_at
 before update on public.profiles
@@ -71,6 +86,12 @@ execute function public.set_updated_at();
 drop trigger if exists set_reading_exams_updated_at on public.reading_exams;
 create trigger set_reading_exams_updated_at
 before update on public.reading_exams
+for each row
+execute function public.set_updated_at();
+
+drop trigger if exists set_support_reports_updated_at on public.support_reports;
+create trigger set_support_reports_updated_at
+before update on public.support_reports
 for each row
 execute function public.set_updated_at();
 
@@ -120,6 +141,7 @@ alter table public.profiles enable row level security;
 alter table public.learner_access enable row level security;
 alter table public.user_notebooks enable row level security;
 alter table public.reading_exams enable row level security;
+alter table public.support_reports enable row level security;
 
 drop policy if exists "Users can read own profile" on public.profiles;
 create policy "Users can read own profile"
@@ -172,7 +194,22 @@ for select
 to authenticated
 using (true);
 
+drop policy if exists "Users can read own support reports" on public.support_reports;
+create policy "Users can read own support reports"
+on public.support_reports
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+drop policy if exists "Users can create own support reports" on public.support_reports;
+create policy "Users can create own support reports"
+on public.support_reports
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
 comment on table public.profiles is 'Application-level profile and role for each Supabase auth user.';
 comment on table public.learner_access is 'Course access, expiry, and credit counters for each learner.';
 comment on table public.user_notebooks is 'Per-user synced notebook entries and custom notebook sections.';
 comment on table public.reading_exams is 'Admin-uploaded reading passages, answer keys, and parsed payloads for reading exam banks.';
+comment on table public.support_reports is 'Client-submitted bug reports and support issues for the admin team to handle.';

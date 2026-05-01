@@ -6,6 +6,8 @@ type AppPage = 'home' | 'workspace' | 'reading' | 'notebook' | 'admin'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
 type ReadingBankCategory = 'passage1' | 'passage2' | 'passage3' | 'fulltest'
+type SupportReportCategory = 'bug' | 'account' | 'content' | 'billing' | 'other'
+type SupportReportStatus = 'open' | 'in_progress' | 'resolved' | 'closed'
 
 type ReadingQuestion = {
   number: number
@@ -49,6 +51,21 @@ type ReadingBulkUploadInput = {
   category?: ReadingBankCategory
   rawPassageText: string
   rawAnswerKey: string
+}
+
+type SupportReportRecord = {
+  id: string
+  userId: string | null
+  reporterName: string
+  reporterEmail: string
+  pageContext: string
+  category: SupportReportCategory
+  message: string
+  status: SupportReportStatus
+  adminNote: string
+  createdAt: string | null
+  updatedAt: string | null
+  resolvedAt: string | null
 }
 
 type ReadingReportItem = ReadingQuestion & {
@@ -2698,6 +2715,10 @@ type ReadingExamsApiResponse = {
   exams: ReadingExamRecord[]
 }
 
+type SupportReportsApiResponse = {
+  reports: SupportReportRecord[]
+}
+
 type ReadingBulkValidationItem = {
   index: number
   title: string
@@ -2720,6 +2741,21 @@ const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   passage2: 'Passage 2',
   passage3: 'Passage 3',
   fulltest: 'Full Test'
+}
+
+const SUPPORT_REPORT_CATEGORY_LABELS: Record<SupportReportCategory, string> = {
+  bug: 'Bug / ระบบผิดปกติ',
+  account: 'Account / บัญชีผู้ใช้',
+  content: 'Content / เนื้อหา',
+  billing: 'Billing / เครดิตหรือแพ็กเกจ',
+  other: 'Other / อื่น ๆ'
+}
+
+const SUPPORT_REPORT_STATUS_LABELS: Record<SupportReportStatus, string> = {
+  open: 'Open',
+  in_progress: 'In Progress',
+  resolved: 'Resolved',
+  closed: 'Closed'
 }
 
 const READING_JSON_TEMPLATE_ITEMS: Record<ReadingBankCategory, ReadingBulkUploadInput[]> = {
@@ -2887,6 +2923,59 @@ Paraphrased Vocabulary: ...`
 
 const formatAccessDate = (value: string | null) =>
   value ? new Date(value).toLocaleDateString() : 'Not set'
+
+const inferReadingCategoryFromSource = (value: string): ReadingBankCategory => {
+  const text = String(value || '')
+  const passageMatches = [...text.matchAll(/READING PASSAGE\s+(\d+)/gi)].map((match) => Number(match[1]))
+  if (passageMatches.length >= 3) return 'fulltest'
+  if (passageMatches.includes(3)) return 'passage3'
+  if (passageMatches.includes(2)) return 'passage2'
+  return 'passage1'
+}
+
+const deriveReadingTitleFromPassageText = (value: string, category: ReadingBankCategory) => {
+  const text = String(value || '').replace(/\r/g, '').trim()
+  if (!text) return category === 'fulltest' ? 'Reading Full Test' : `Reading ${READING_CATEGORY_LABELS[category]}`
+  const firstBlock = text
+    .replace(/^READING PASSAGE\s+\d+\s*/i, '')
+    .trim()
+  const title = String(firstBlock.split('\n').find((line) => line.trim()) || '').trim()
+  if (!title) return category === 'fulltest' ? 'Reading Full Test' : `Reading ${READING_CATEGORY_LABELS[category]}`
+  return category === 'fulltest' ? `${title} Reading Full Test` : title
+}
+
+const splitCombinedReadingImport = (value: string) => {
+  const text = String(value || '').replace(/\r/g, '').trim()
+  if (!text) {
+    throw new Error('Please paste the combined reading source first.')
+  }
+  const answerKeyMatch = text.match(/^READING PASSAGE\s+\d+:\s*/m)
+  const passageMatch = text.match(/^READING PASSAGE\s+\d+\b(?!:)/m)
+
+  if (!answerKeyMatch || answerKeyMatch.index === undefined) {
+    throw new Error('Could not find the answer-key block. Keep headings like "READING PASSAGE 1:" before the Question blocks.')
+  }
+  if (!passageMatch || passageMatch.index === undefined) {
+    throw new Error('Could not find the passage block. Keep headings like "READING PASSAGE 1" before each passage.')
+  }
+
+  const answerKeyStartsFirst = answerKeyMatch.index < passageMatch.index
+  const rawAnswerKey = answerKeyStartsFirst
+    ? text.slice(answerKeyMatch.index, passageMatch.index).trim()
+    : text.slice(answerKeyMatch.index).trim()
+  const rawPassageText = answerKeyStartsFirst
+    ? text.slice(passageMatch.index).trim()
+    : text.slice(passageMatch.index, answerKeyMatch.index).trim()
+
+  const category = inferReadingCategoryFromSource(rawPassageText)
+
+  return {
+    title: deriveReadingTitleFromPassageText(rawPassageText, category),
+    category,
+    rawPassageText,
+    rawAnswerKey
+  }
+}
 
 const normalizeReadingAnswer = (value: string) =>
   String(value || '')
@@ -3060,6 +3149,14 @@ function App() {
   const [adminCodeInput, setAdminCodeInput] = useState('')
   const [authError, setAuthError] = useState('')
   const [authNotice, setAuthNotice] = useState('')
+  const [supportModalOpen, setSupportModalOpen] = useState(false)
+  const [supportCategoryInput, setSupportCategoryInput] = useState<SupportReportCategory>('bug')
+  const [supportMessageInput, setSupportMessageInput] = useState('')
+  const [supportFormError, setSupportFormError] = useState('')
+  const [supportFormNotice, setSupportFormNotice] = useState('')
+  const [isSubmittingSupportReport, setIsSubmittingSupportReport] = useState(false)
+  const [mySupportReports, setMySupportReports] = useState<SupportReportRecord[]>([])
+  const [adminSupportReports, setAdminSupportReports] = useState<SupportReportRecord[]>([])
   const [notebookSaveNotice, setNotebookSaveNotice] = useState('')
   const [adminLearnerNameInput, setAdminLearnerNameInput] = useState('')
   const [adminLearnerEmailInput, setAdminLearnerEmailInput] = useState('')
@@ -3085,6 +3182,7 @@ function App() {
   const [readingExamError, setReadingExamError] = useState('')
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('fulltest')
+  const [adminReadingSmartPasteInput, setAdminReadingSmartPasteInput] = useState('')
   const [adminReadingPassageInput, setAdminReadingPassageInput] = useState('')
   const [adminReadingAnswerKeyInput, setAdminReadingAnswerKeyInput] = useState('')
   const [adminReadingBulkJsonInput, setAdminReadingBulkJsonInput] = useState('')
@@ -3152,6 +3250,7 @@ function App() {
   const [selectedExpectedScore, setSelectedExpectedScore] = useState<string>('')
   const [answerReviewModal, setAnswerReviewModal] = useState<AnswerReviewModalState | null>(null)
   const [scriptReviewModal, setScriptReviewModal] = useState<ScriptReviewModalState | null>(null)
+  const isStudentViewLockedToSpeaking = authSession?.role === 'student'
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -3186,6 +3285,9 @@ function App() {
   const promptAudioRef = useRef<HTMLAudioElement | null>(null)
   const notebookLoadedRef = useRef(false)
   const notebookSyncTimeoutRef = useRef<number | null>(null)
+  const notebookSyncedSignatureRef = useRef('')
+  const notebookEntriesRef = useRef<NotebookEntry[]>([])
+  const customSectionsRef = useRef<string[]>([])
   const part2TimerDelayUntilRef = useRef<number | null>(null)
   const part2TimerDelayArmedRef = useRef(false)
 
@@ -3201,6 +3303,46 @@ function App() {
           Authorization: `Bearer ${authSession.accessToken}`
         }
       : {}
+
+  const buildNotebookSyncSignature = (entries: NotebookEntry[], sections: string[]) =>
+    JSON.stringify({ entries, customSections: sections })
+
+  const syncNotebookSnapshotToSupabase = async ({
+    entries,
+    sections,
+    successNotice
+  }: {
+    entries: NotebookEntry[]
+    sections: string[]
+    successNotice?: string
+  }) => {
+    if (!authSession?.accessToken || authSession.role !== 'student' || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) {
+      return false
+    }
+
+    const signature = buildNotebookSyncSignature(entries, sections)
+    try {
+      await fetchJson<NotebookApiResponse>('/api/me/notebook', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authSession.accessToken}`
+        },
+        body: JSON.stringify({
+          entries,
+          customSections: sections
+        })
+      })
+      notebookSyncedSignatureRef.current = signature
+      setNotebookSyncError('')
+      if (successNotice) {
+        setNotebookSaveNotice(successNotice)
+      }
+      return true
+    } catch {
+      setNotebookSyncError('Saved on this device, but Supabase account sync failed just now.')
+      return false
+    }
+  }
 
   const describeFetchFailure = (url: string, error: unknown): string => {
     const rawMessage = error instanceof Error ? error.message : String(error || '')
@@ -3259,6 +3401,100 @@ function App() {
     setReadingExams(Array.isArray(payload.exams) ? payload.exams : [])
   }
 
+  const loadMySupportReports = async (accessToken = authSession?.accessToken) => {
+    if (!accessToken) return
+    const payload = await fetchJson<SupportReportsApiResponse>('/api/me/support-reports', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    setMySupportReports(Array.isArray(payload.reports) ? payload.reports : [])
+  }
+
+  const loadAdminSupportReports = async (accessToken = authSession?.accessToken) => {
+    if (!accessToken) return
+    const payload = await fetchJson<SupportReportsApiResponse>('/api/admin/support-reports', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    setAdminSupportReports(Array.isArray(payload.reports) ? payload.reports : [])
+  }
+
+  const openSupportModal = () => {
+    setSupportModalOpen(true)
+    setSupportFormError('')
+    setSupportFormNotice('')
+    setSupportCategoryInput('bug')
+  }
+
+  const closeSupportModal = () => {
+    setSupportModalOpen(false)
+    setSupportFormError('')
+    setSupportFormNotice('')
+  }
+
+  const submitSupportReport = async () => {
+    if (!authSession?.accessToken || authSession.role !== 'student') {
+      setSupportFormError('Please sign in as a student before reporting a problem.')
+      return
+    }
+    if (!supportMessageInput.trim()) {
+      setSupportFormError('Please describe the problem first.')
+      return
+    }
+
+    setIsSubmittingSupportReport(true)
+    setSupportFormError('')
+    setSupportFormNotice('')
+    try {
+      const payload = await fetchJson<{ report: SupportReportRecord; message?: string }>('/api/me/support-reports', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          category: supportCategoryInput,
+          pageContext: activePage,
+          message: supportMessageInput
+        })
+      })
+      const created = payload.report
+      setMySupportReports((current) => [created, ...current.filter((item) => item.id !== created.id)])
+      setSupportMessageInput('')
+      setSupportFormNotice(payload.message || 'Added to admin issue inbox.')
+    } catch (error) {
+      setSupportFormError(error instanceof Error ? error.message : 'Could not send the problem report.')
+    } finally {
+      setIsSubmittingSupportReport(false)
+    }
+  }
+
+  const handleAdminSupportReportUpdate = async (
+    reportId: string,
+    patch: { status?: SupportReportStatus; adminNote?: string }
+  ) => {
+    if (!authSession?.accessToken || authSession.role !== 'admin') return
+    setAdminPanelMessage('')
+    setAuthError('')
+    try {
+      const existing = adminSupportReports.find((item) => item.id === reportId)
+      const payload = await fetchJson<{ report: SupportReportRecord }>(`/api/admin/support-reports/${reportId}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          status: patch.status || existing?.status || 'open',
+          adminNote: patch.adminNote ?? existing?.adminNote ?? ''
+        })
+      })
+      setAdminSupportReports((current) =>
+        current.map((item) => (item.id === reportId ? payload.report : item))
+      )
+      setAdminPanelMessage(`Updated issue from ${payload.report.reporterName}.`)
+    } catch (error) {
+      setAdminPanelMessage('')
+      setAuthError(error instanceof Error ? error.message : 'Could not update the support report.')
+    }
+  }
+
   const currentReadingJsonTemplate = JSON.stringify(
     READING_JSON_TEMPLATE_ITEMS[adminReadingTemplateCategory],
     null,
@@ -3281,6 +3517,22 @@ function App() {
     setAdminReadingBulkValidation(null)
     setAdminPanelMessage(`${READING_CATEGORY_LABELS[adminReadingTemplateCategory]} template loaded into the bulk upload box.`)
     setAuthError('')
+  }
+
+  const autoFillReadingUploadFromCombinedPaste = () => {
+    setAdminPanelMessage('')
+    setAuthError('')
+    try {
+      const parsed = splitCombinedReadingImport(adminReadingSmartPasteInput)
+      setAdminReadingTitleInput(parsed.title)
+      setAdminReadingCategoryInput(parsed.category)
+      setAdminReadingPassageInput(parsed.rawPassageText)
+      setAdminReadingAnswerKeyInput(parsed.rawAnswerKey)
+      setAdminPanelMessage(`Split successful. Filled title, category, passage text, and answer key for ${READING_CATEGORY_LABELS[parsed.category]}.`)
+    } catch (error) {
+      setAdminPanelMessage('')
+      setAuthError(error instanceof Error ? error.message : 'Could not split the combined reading source.')
+    }
   }
 
   const validateAdminReadingBulkJson = async () => {
@@ -3416,6 +3668,7 @@ function App() {
     setIsNotebookHydrating(true)
     setNotebookSyncError('')
     notebookLoadedRef.current = false
+    notebookSyncedSignatureRef.current = ''
 
     try {
       const payload = await fetchJson<NotebookApiResponse>('/api/me/notebook', {
@@ -3432,10 +3685,14 @@ function App() {
 
       setNotebookEntries(shouldSeedFromLocal ? localEntries : remoteEntries)
       setCustomSections(shouldSeedFromLocal ? localSections : remoteSections)
+      notebookSyncedSignatureRef.current = shouldSeedFromLocal
+        ? ''
+        : buildNotebookSyncSignature(remoteEntries, remoteSections)
     } catch {
       setNotebookEntries(localEntries)
       setCustomSections(localSections)
       setNotebookSyncError('Notebook sync is temporarily unavailable. Using this device backup for now.')
+      notebookSyncedSignatureRef.current = ''
     } finally {
       setSelectedNotebookSection('speaking')
       setIsNotebookHydrating(false)
@@ -3461,6 +3718,7 @@ function App() {
     setSelectedProvider('gemini')
     setReportViewSnapshot(null)
     notebookLoadedRef.current = false
+    notebookSyncedSignatureRef.current = ''
     if (notebookSyncTimeoutRef.current) {
       window.clearTimeout(notebookSyncTimeoutRef.current)
       notebookSyncTimeoutRef.current = null
@@ -3523,6 +3781,14 @@ function App() {
       )
     )
   }, [adminLearnerSearchInput, managedLearners])
+  const openSupportReportCount = useMemo(
+    () => adminSupportReports.filter((report) => report.status === 'open').length,
+    [adminSupportReports]
+  )
+  const activeSupportReportCount = useMemo(
+    () => adminSupportReports.filter((report) => ['open', 'in_progress'].includes(report.status)).length,
+    [adminSupportReports]
+  )
   const adminTtsQuestionLibrary = useMemo(
     () => [
       ...adminPart1QuestionBank.flatMap((topic) =>
@@ -3573,6 +3839,7 @@ function App() {
       })),
     [readingExams]
   )
+  const recentStudentSupportReports = useMemo(() => mySupportReports.slice(0, 4), [mySupportReports])
   const activeReadingExam =
     filteredReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
     filteredReadingExams[0] ??
@@ -3589,6 +3856,24 @@ function App() {
           .flatMap((passage) => passage.questions || [])
           .find((question) => question.number === readingHintQuestionNumber) ?? null
   const activeReadingQuestions = activeReadingPassage?.questions || []
+  const activeReadingAllQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
+  const answeredReadingCount = activeReadingAllQuestions.filter((question) =>
+    String(readingAnswers[question.number] || '').trim()
+  ).length
+  const readingAccuracy = readingReportItems.length
+    ? Math.round((readingReportItems.filter((item) => item.isCorrect).length / readingReportItems.length) * 100)
+    : 0
+  const unansweredReadingCount = readingReportItems.filter((item) => !String(item.userAnswer || '').trim()).length
+  const readingReportByPassage = activeReadingPassages.map((passage) => {
+    const items = readingReportItems.filter((item) =>
+      passage.questions.some((question) => question.number === item.number)
+    )
+    return {
+      passage,
+      items,
+      correct: items.filter((item) => item.isCorrect).length
+    }
+  })
 
   const part2AvailableTopics = topics.filter((topic) => enabledTopicIds.includes(topic.id))
   const availableTopics = useMemo(() => {
@@ -3886,6 +4171,9 @@ function App() {
         setAuthStateFromPayload(payload)
         if (payload.session.role === 'admin') {
           await loadManagedLearners(payload.session.accessToken)
+          await loadAdminSupportReports(payload.session.accessToken)
+        } else {
+          await loadMySupportReports(payload.session.accessToken)
         }
       } catch {
         localStorage.removeItem(AUTH_SESSION_KEY)
@@ -3910,6 +4198,7 @@ function App() {
     if (!authSession?.email || authSession.role !== 'student') {
       resetStudentWorkspaceState()
       setManagedLearners([])
+      setMySupportReports([])
       return
     }
 
@@ -3917,14 +4206,47 @@ function App() {
   }, [authSession?.accessToken, authSession?.email, authSession?.role])
 
   useEffect(() => {
-    if (authSession?.role !== 'admin') return
+    if (authSession?.role !== 'admin') {
+      setAdminSupportReports([])
+      return
+    }
     void loadManagedLearners()
   }, [authSession?.role])
 
   useEffect(() => {
-    if (!authSession?.accessToken) return
+    if (authSession?.role !== 'admin') return
+    void loadAdminSupportReports()
+  }, [authSession?.role, authSession?.accessToken])
+
+  useEffect(() => {
+    if (!authSession?.accessToken || authSession.role !== 'admin') return
+    const intervalId = window.setInterval(() => {
+      void loadAdminSupportReports(authSession.accessToken)
+    }, 45000)
+    return () => window.clearInterval(intervalId)
+  }, [authSession?.accessToken, authSession?.role])
+
+  useEffect(() => {
+    if (!authSession?.accessToken || authSession.role !== 'student') return
+    void loadMySupportReports(authSession.accessToken)
+  }, [authSession?.accessToken, authSession?.role])
+
+  useEffect(() => {
+    if (!isStudentViewLockedToSpeaking) return
+    if (['reading', 'notebook', 'admin'].includes(activePage)) {
+      setActivePage('home')
+    }
+  }, [activePage, isStudentViewLockedToSpeaking])
+
+  useEffect(() => {
+    if (!authSession?.accessToken || authSession.role !== 'admin') {
+      if (authSession?.role === 'student') {
+        setReadingExams([])
+      }
+      return
+    }
     void loadReadingExams(authSession.accessToken)
-  }, [authSession?.accessToken])
+  }, [authSession?.accessToken, authSession?.role])
 
   useEffect(() => {
     if (!filteredReadingExams.length) {
@@ -3952,6 +4274,10 @@ function App() {
   }, [authSession, notebookEntries])
 
   useEffect(() => {
+    notebookEntriesRef.current = notebookEntries
+  }, [notebookEntries])
+
+  useEffect(() => {
     if (!authSession?.email) return
     localStorage.setItem(
       makeScopedStorageKey(NOTEBOOK_CUSTOM_SECTIONS_KEY, authSession.email),
@@ -3960,33 +4286,27 @@ function App() {
   }, [authSession, customSections])
 
   useEffect(() => {
+    customSectionsRef.current = customSections
+  }, [customSections])
+
+  useEffect(() => {
     if (!authSession || authSession.role !== 'student' || !authSession.email) return
     localStorage.setItem(makeScopedStorageKey(TEST_LATEST_SCORE_KEY, authSession.email), JSON.stringify(latestScoresByTest))
   }, [authSession, latestScoresByTest])
 
   useEffect(() => {
     if (!authSession?.accessToken || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) return
+    const nextSignature = buildNotebookSyncSignature(notebookEntries, customSections)
+    if (nextSignature === notebookSyncedSignatureRef.current) return
     if (notebookSyncTimeoutRef.current) {
       window.clearTimeout(notebookSyncTimeoutRef.current)
     }
 
     notebookSyncTimeoutRef.current = window.setTimeout(() => {
-      void fetchJson<NotebookApiResponse>('/api/me/notebook', {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${authSession.accessToken}`
-        },
-        body: JSON.stringify({
-          entries: notebookEntries,
-          customSections
-        })
+      void syncNotebookSnapshotToSupabase({
+        entries: notebookEntries,
+        sections: customSections
       })
-        .then(() => {
-          setNotebookSyncError('')
-        })
-        .catch(() => {
-          setNotebookSyncError('Changes are saved on this device, but Supabase sync failed just now.')
-        })
     }, 500)
 
     return () => {
@@ -4043,16 +4363,23 @@ function App() {
       personalNote: '',
       createdAt: new Date().toISOString()
     }
-    setNotebookEntries((current) => [nextEntry, ...current])
+    const nextEntries = [nextEntry, ...notebookEntriesRef.current]
+    setNotebookEntries(nextEntries)
     setSelectedNotebookSection(customSectionName || section)
     setNotebookSaveNotice('Added to notebook')
+    void syncNotebookSnapshotToSupabase({
+      entries: nextEntries,
+      sections: customSectionsRef.current,
+      successNotice: 'Added to notebook and synced to your account'
+    })
   }
 
   const saveFullReportToNotebook = (report: AssessmentReport) => {
     const customSectionName = 'saved reports'
-    setCustomSections((current) =>
-      current.includes(customSectionName) ? current : [...current, customSectionName]
-    )
+    const nextSections = customSectionsRef.current.includes(customSectionName)
+      ? customSectionsRef.current
+      : [...customSectionsRef.current, customSectionName]
+    setCustomSections(nextSections)
 
     const nextEntry: NotebookEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -4075,9 +4402,15 @@ function App() {
       },
       createdAt: new Date().toISOString()
     }
-    setNotebookEntries((current) => [nextEntry, ...current])
+    const nextEntries = [nextEntry, ...notebookEntriesRef.current]
+    setNotebookEntries(nextEntries)
     setSelectedNotebookSection(customSectionName)
     setNotebookSaveNotice('Added to notebook')
+    void syncNotebookSnapshotToSupabase({
+      entries: nextEntries,
+      sections: nextSections,
+      successNotice: 'Added to notebook and synced to your account'
+    })
   }
 
   const removeNotebookEntry = (entryId: string) => {
@@ -5700,6 +6033,7 @@ function App() {
         body: JSON.stringify({ email, password })
       })
       setAuthStateFromPayload(payload)
+      await loadMySupportReports(payload.session.accessToken)
       setAuthNotice('')
       setUserEmailInput('')
       setUserPasswordInput('')
@@ -5755,6 +6089,7 @@ function App() {
       setAuthStateFromPayload(payload)
       setAuthNotice('')
       await loadManagedLearners(payload.session.accessToken)
+      await loadAdminSupportReports(payload.session.accessToken)
       setAdminCodeInput('')
       setAuthError('')
     } catch (error) {
@@ -5765,6 +6100,8 @@ function App() {
   const handleLogout = () => {
     setAuthSession(null)
     setManagedLearners([])
+    setMySupportReports([])
+    setAdminSupportReports([])
     setActivePage('home')
     setAdminCodeInput('')
     setSignupNameInput('')
@@ -5773,6 +6110,10 @@ function App() {
     setUserPasswordInput('')
     setAuthNotice('')
     setAuthError('')
+    setSupportModalOpen(false)
+    setSupportMessageInput('')
+    setSupportFormError('')
+    setSupportFormNotice('')
     resetStudentWorkspaceState()
   }
 
@@ -6206,17 +6547,25 @@ function App() {
             </button>
             <button
               className={activePage === 'reading' ? 'active' : ''}
-              onClick={() => setActivePage('reading')}
+              onClick={() => {
+                if (isStudentViewLockedToSpeaking) return
+                setActivePage('reading')
+              }}
               type="button"
+              disabled={isStudentViewLockedToSpeaking}
             >
-              Reading
+              {isStudentViewLockedToSpeaking ? 'Reading (Coming Soon)' : 'Reading'}
             </button>
             <button
               className={activePage === 'notebook' ? 'active' : ''}
-              onClick={() => setActivePage('notebook')}
+              onClick={() => {
+                if (isStudentViewLockedToSpeaking) return
+                setActivePage('notebook')
+              }}
               type="button"
+              disabled={isStudentViewLockedToSpeaking}
             >
-              Notebook
+              {isStudentViewLockedToSpeaking ? 'Notebook (Coming Soon)' : 'Notebook'}
             </button>
             {authSession?.role === 'admin' && (
               <button
@@ -6230,7 +6579,7 @@ function App() {
           </div>
           <div className="metaChip">
             {authSession?.role === 'admin'
-              ? `Admin Mode | Learners: ${managedLearners.length}`
+              ? `Admin Mode | Learners: ${managedLearners.length} | Open Issues: ${openSupportReportCount}`
               : `Name: ${creditProfile.name} | Plan: ${creditProfile.plan} | Feedback: ${creditProfile.feedbackRemaining} | Full Mock: ${creditProfile.fullMockRemaining}`}
           </div>
           {authSession?.role === 'student' && (
@@ -6268,20 +6617,14 @@ function App() {
                 <button type="button" disabled>
                   Listening (Coming Soon)
                 </button>
-                <button type="button" onClick={() => setActivePage('reading')}>
-                  Reading
+                <button type="button" disabled>
+                  Reading (Coming Soon)
                 </button>
                 <button type="button" disabled>
                   Writing (Coming Soon)
                 </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedNotebookSection('writing')
-                    setActivePage('notebook')
-                  }}
-                >
-                  Notebook
+                <button type="button" disabled>
+                  Notebook (Coming Soon)
                 </button>
                 {authSession.role === 'admin' ? (
                   <button
@@ -6447,6 +6790,9 @@ function App() {
                 <div>
                   <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
                   <h3>{activeReadingExam.title}</h3>
+                  <p className="meta">
+                    {answeredReadingCount}/{activeReadingAllQuestions.length} answered · Passage {activeReadingPassage.number} of {activeReadingPassages.length}
+                  </p>
                 </div>
                 <div className="controls">
                   <button type="button" className="secondary" onClick={() => setReadingAttemptStage('bank')}>
@@ -6456,6 +6802,24 @@ function App() {
                     Submit Reading Exam
                   </button>
                 </div>
+              </div>
+
+              <div className="readingSummaryStrip">
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Exam Progress</p>
+                  <strong>{answeredReadingCount}/{activeReadingAllQuestions.length}</strong>
+                  <span>questions answered</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Current Passage</p>
+                  <strong>{activeReadingPassage.title}</strong>
+                  <span>{activeReadingQuestions.length} questions in this passage</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Study Mode</p>
+                  <strong>Highlight + Hint</strong>
+                  <span>Mark evidence before you submit</span>
+                </article>
               </div>
 
               {activeReadingPassages.length > 1 && (
@@ -6545,6 +6909,29 @@ function App() {
                     <span className="bandPill">{activeReadingQuestions.length} questions</span>
                   </div>
 
+                  <div className="readingQuestionNavigator">
+                    {activeReadingQuestions.map((question) => {
+                      const hasAnswer = Boolean(String(readingAnswers[question.number] || '').trim())
+                      const isHinting = readingHintQuestionNumber === question.number
+                      return (
+                        <button
+                          key={`reading-nav-${question.number}`}
+                          type="button"
+                          className={`${hasAnswer ? 'is-answered' : ''} ${isHinting ? 'is-active' : ''}`.trim()}
+                          onClick={() => {
+                            setReadingHintQuestionNumber(question.number)
+                            document.getElementById(`reading-question-${question.number}`)?.scrollIntoView({
+                              behavior: 'smooth',
+                              block: 'start'
+                            })
+                          }}
+                        >
+                          {question.number}
+                        </button>
+                      )
+                    })}
+                  </div>
+
                   {activeReadingPassage.questionSectionText && (
                     <details className="readingQuestionReference">
                       <summary>Show original question block</summary>
@@ -6554,7 +6941,7 @@ function App() {
 
                   <div className="readingQuestionList">
                     {activeReadingQuestions.map((question) => (
-                      <article key={question.number} className="readingQuestionCard">
+                      <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
                         <div className="readingQuestionCardTop">
                           <div>
                             <p className="readingQuestionNumber">Question {question.number}</p>
@@ -6599,6 +6986,36 @@ function App() {
                     Retry Exam
                   </button>
                 </div>
+              </div>
+
+              <div className="readingSummaryStrip">
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Accuracy</p>
+                  <strong>{readingAccuracy}%</strong>
+                  <span>{readingReportItems.filter((item) => item.isCorrect).length} correct answers</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Unanswered</p>
+                  <strong>{unansweredReadingCount}</strong>
+                  <span>questions left blank</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Review Focus</p>
+                  <strong>{readingReportItems.find((item) => !item.isCorrect)?.number ? `Q${readingReportItems.find((item) => !item.isCorrect)?.number}` : 'Strong set'}</strong>
+                  <span>start with the first wrong answer</span>
+                </article>
+              </div>
+
+              <div className="readingPassageBreakdown">
+                {readingReportByPassage.map((group) => (
+                  <article key={`reading-breakdown-${group.passage.number}`} className="readingPassageBreakdownCard">
+                    <p className="sectionLabel">Passage {group.passage.number}</p>
+                    <h4>{group.passage.title}</h4>
+                    <p className="meta">
+                      {group.correct}/{group.items.length || group.passage.questions.length} correct
+                    </p>
+                  </article>
+                ))}
               </div>
 
               <div className="readingReportList">
@@ -6669,6 +7086,10 @@ function App() {
                 <article className="adminStatCard">
                   <span className="adminStatLabel">Audio Ready</span>
                   <strong>{generatedAdminTtsLibrary.length}</strong>
+                </article>
+                <article className="adminStatCard">
+                  <span className="adminStatLabel">Open Issues</span>
+                  <strong>{openSupportReportCount}</strong>
                 </article>
               </div>
             </div>
@@ -6871,6 +7292,99 @@ function App() {
                 <div className="panel adminSectionCard">
                   <div className="adminSectionHeader">
                     <div>
+                      <p className="sectionLabel">Client Support</p>
+                      <h3>Problem Reports Inbox</h3>
+                    </div>
+                    <span className="adminInlineStatus">{activeSupportReportCount} active</span>
+                  </div>
+                  <p className="meta">
+                    Every student report lands here. Update the status, leave an internal note, and keep track of what has already been resolved.
+                  </p>
+                  <div className="subscriptionList adminLearnerList">
+                    {adminSupportReports.length === 0 ? (
+                      <p className="meta">No client issues have been reported yet.</p>
+                    ) : (
+                      adminSupportReports.map((report) => (
+                        <article key={report.id} className="subscriptionCard adminLearnerCard supportAdminCard">
+                          <div className="subscriptionTopRow">
+                            <div>
+                              <h3>{report.reporterName}</h3>
+                              <p className="subscriptionEmail">{report.reporterEmail}</p>
+                            </div>
+                            <div className="adminLearnerBadges">
+                              <span className="bandPill">{SUPPORT_REPORT_CATEGORY_LABELS[report.category]}</span>
+                              <span className={`adminStatusPill adminStatusPill-${report.status}`}>{SUPPORT_REPORT_STATUS_LABELS[report.status]}</span>
+                            </div>
+                          </div>
+                          <div className="adminLearnerMetaGrid">
+                            <p className="meta">Page: {report.pageContext}</p>
+                            <p className="meta">Created: {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Unknown'}</p>
+                            <p className="meta">Updated: {report.updatedAt ? new Date(report.updatedAt).toLocaleString() : 'Unknown'}</p>
+                            <p className="meta">Resolved: {report.resolvedAt ? new Date(report.resolvedAt).toLocaleString() : 'Not resolved yet'}</p>
+                          </div>
+                          <div className="supportAdminBody">
+                            <label>
+                              Client message
+                              <textarea value={report.message} readOnly rows={4} />
+                            </label>
+                            <div className="supportAdminControls">
+                              <label>
+                                Status
+                                <select
+                                  value={report.status}
+                                  onChange={(event) =>
+                                    void handleAdminSupportReportUpdate(report.id, {
+                                      status: event.target.value as SupportReportStatus
+                                    })
+                                  }
+                                >
+                                  {(Object.entries(SUPPORT_REPORT_STATUS_LABELS) as Array<[SupportReportStatus, string]>).map(([value, label]) => (
+                                    <option key={`${report.id}-${value}`} value={value}>
+                                      {label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
+                              <label>
+                                Admin note
+                                <textarea
+                                  value={report.adminNote}
+                                  rows={4}
+                                  onChange={(event) =>
+                                    setAdminSupportReports((current) =>
+                                      current.map((item) =>
+                                        item.id === report.id ? { ...item, adminNote: event.target.value } : item
+                                      )
+                                    )
+                                  }
+                                  placeholder="Internal note for follow-up, fix status, or what you told the client..."
+                                />
+                              </label>
+                            </div>
+                            <div className="adminActionRow">
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() =>
+                                  void handleAdminSupportReportUpdate(report.id, {
+                                    status: report.status,
+                                    adminNote: report.adminNote
+                                  })
+                                }
+                              >
+                                Save Admin Update
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className="panel adminSectionCard">
+                  <div className="adminSectionHeader">
+                    <div>
                       <p className="sectionLabel">Reading Exam Bank</p>
                       <h3>Upload Reading Passage Sets</h3>
                     </div>
@@ -6879,6 +7393,27 @@ function App() {
                     Paste the full reading text and the answer-key format together, then learners will see it inside the
                     Reading bank under Passage 1, Passage 2, Passage 3, or Full Test.
                   </p>
+                  <div className="adminWorkflowCard">
+                    <h4>Smart Paste Helper</h4>
+                    <p className="meta">
+                      If your source looks like the long format you pasted in chat, drop the whole thing here once and let the app split it into title, category, passage text, and answer key for you.
+                    </p>
+                    <label>
+                      Combined Reading Source
+                      <textarea
+                        value={adminReadingSmartPasteInput}
+                        onChange={(event) => setAdminReadingSmartPasteInput(event.target.value)}
+                        placeholder="Paste the full answer-key block and the full reading passage block together here..."
+                        rows={12}
+                      />
+                    </label>
+                    <div className="adminActionRow">
+                      <button type="button" className="secondary" onClick={autoFillReadingUploadFromCombinedPaste}>
+                        Auto-fill from One Pasted Block
+                      </button>
+                      <p className="meta">Best for imports where the answer key appears first and the reading passages come after.</p>
+                    </div>
+                  </div>
                   <div className="adminFormGrid">
                     <label>
                       Exam Title
@@ -8574,13 +9109,11 @@ function App() {
                       <button
                         type="button"
                         className="nextStepCard"
-                        onClick={() => {
-                          setActivePage('notebook')
-                        }}
+                        disabled
                       >
                         <span className="nextStepIcon">📓</span>
-                        <span className="nextStepTitle">Review Notebook</span>
-                        <span className="nextStepDesc">ดู items ที่ save ไว้</span>
+                        <span className="nextStepTitle">Notebook (Coming Soon)</span>
+                        <span className="nextStepDesc">ตอนนี้โฟกัสที่ Speaking ก่อน</span>
                       </button>
                       <button
                         type="button"
@@ -8895,6 +9428,96 @@ function App() {
               </button>
               <button type="button" className="scriptReviewDoneBtn" onClick={() => void confirmScriptReviewAndAssess()}>
                 I&apos;m done, start assessment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {authSession?.role === 'student' && !supportModalOpen && (
+        <button type="button" className="supportLauncher" onClick={openSupportModal}>
+          รายงานปัญหา
+        </button>
+      )}
+      {supportModalOpen && authSession?.role === 'student' && (
+        <div className="supportOverlay">
+          <div className="supportCard">
+            <div className="supportHero">
+              <p className="supportEyebrow">English Plan Support</p>
+              <h3>รายงานปัญหา / Report a Problem</h3>
+              <p className="supportLead">
+                ถ้ามี bug, เนื้อหาผิด, เครดิตมีปัญหา หรืออะไรที่ทำให้ใช้งานสะดุด ส่งหา admin ได้ตรงนี้เลยครับ
+              </p>
+            </div>
+            <div className="supportForm">
+              <label>
+                Current page
+                <input type="text" value={activePage} readOnly />
+              </label>
+              <label>
+                Category
+                <select
+                  value={supportCategoryInput}
+                  onChange={(event) => setSupportCategoryInput(event.target.value as SupportReportCategory)}
+                >
+                  {(Object.entries(SUPPORT_REPORT_CATEGORY_LABELS) as Array<[SupportReportCategory, string]>).map(([value, label]) => (
+                    <option key={`support-category-${value}`} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                What happened?
+                <textarea
+                  value={supportMessageInput}
+                  onChange={(event) => setSupportMessageInput(event.target.value)}
+                  rows={7}
+                  placeholder="บอกสั้น ๆ ว่าคุณกดอะไรอยู่ หน้าไหนขึ้น error อะไร หรือสิ่งที่ควรเกิดแต่ไม่เกิด..."
+                />
+              </label>
+              {supportFormError && <p className="authError">{supportFormError}</p>}
+              {supportFormNotice && <p className="meta authSuccess">{supportFormNotice}</p>}
+            </div>
+            {recentStudentSupportReports.length > 0 && (
+              <div className="supportHistory">
+                <div className="supportHistoryHeader">
+                  <div>
+                    <p className="sectionLabel">Recent reports</p>
+                    <h4>What you already sent</h4>
+                  </div>
+                </div>
+                <div className="supportHistoryList">
+                  {recentStudentSupportReports.map((report) => (
+                    <article key={`support-history-${report.id}`} className="supportHistoryCard">
+                      <div className="supportHistoryTop">
+                        <span className="bandPill">{SUPPORT_REPORT_CATEGORY_LABELS[report.category]}</span>
+                        <span className={`adminStatusPill adminStatusPill-${report.status}`}>
+                          {SUPPORT_REPORT_STATUS_LABELS[report.status]}
+                        </span>
+                      </div>
+                      <p className="meta">
+                        {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Just now'} · page {report.pageContext}
+                      </p>
+                      <p>{report.message}</p>
+                      {report.adminNote && (
+                        <p className="supportAdminNote">Admin note: {report.adminNote}</p>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="supportActions">
+              <button type="button" className="supportBackBtn" onClick={closeSupportModal}>
+                Close
+              </button>
+              <button
+                type="button"
+                className="supportSendBtn"
+                onClick={() => void submitSupportReport()}
+                disabled={isSubmittingSupportReport}
+              >
+                {isSubmittingSupportReport ? 'Sending...' : 'Send to admin'}
               </button>
             </div>
           </div>
