@@ -6518,7 +6518,7 @@ function App() {
     <main className="workspace">
       {activePage !== 'home' && <header className="topbar">
         <div>
-          <h1>English Plan Speaking</h1>
+          <h1>ENGLISH PLAN LEARNING SPACE</h1>
           <p>
             {authSession?.role === 'admin'
               ? 'Admin control for learner access, credits, topics, and speaking flow'
@@ -6596,7 +6596,7 @@ function App() {
       {activePage === 'home' ? (
         <section className="homePage">
           <div className="homeCard">
-            <h1>English Plan</h1>
+            <h1>ENGLISH PLAN LEARNING SPACE</h1>
             <p>
               {authSession
                 ? `Welcome back, ${authSession.name}.`
