@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Plan's IELTS SPEAKING FOR Band 7+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue-900: #0f1c44;
+            --blue-700: #0f53c9;
+            --blue-600: #1d63e0;
+            --blue-100: #eef5ff;
+            --ink: #162033;
+            --muted: #5f6980;
+            --line: rgba(15, 28, 68, 0.10);
+            --warm: #fff0bf;
+            --warm-strong: #ffcf4a;
+            --white: #ffffff;
+            --bg: #f7f9fc;
+            --shadow-soft: 0 18px 50px rgba(16, 31, 68, 0.10);
+            --shadow-card: 0 10px 30px rgba(16, 31, 68, 0.08);
+            --radius-xl: 34px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f7f9fc;
+            color: var(--ink);
+            line-height: 1.65;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.80);
+            border-bottom: 1px solid rgba(15, 28, 68, 0.08);
+            transition: background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+        }
+
+        .topbar.is-scrolled {
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 12px 34px rgba(16, 31, 68, 0.08);
+            border-color: rgba(15, 28, 68, 0.05);
+        }
+
+        .topbar-inner {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: var(--blue-900);
+            color: var(--white);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.92rem;
+            box-shadow: 0 16px 30px rgba(29, 99, 224, 0.22);
+        }
+
+        .brand-copy strong {
+            display: block;
+            font-size: 0.98rem;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-copy span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .topbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .mini-link {
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: var(--muted);
+            font-weight: 500;
+            transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
+        }
+
+        .mini-link:hover {
+            background: rgba(15, 83, 201, 0.08);
+            color: var(--blue-900);
+            transform: translateY(-1px);
+        }
+
+        .pill-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 52px;
+            padding: 0 22px;
+            border-radius: 999px;
+            font-weight: 700;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+        }
+
+        .pill-cta-primary {
+            background: var(--blue-900);
+            color: var(--white);
+            box-shadow: 0 18px 35px rgba(29, 99, 224, 0.22);
+        }
+
+        .pill-cta-secondary {
+            background: var(--white);
+            color: var(--blue-900);
+            border: 1px solid rgba(15, 28, 68, 0.10);
+            box-shadow: 0 12px 28px rgba(16, 31, 68, 0.08);
+        }
+
+        .pill-cta:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            padding: 44px 0 34px;
+        }
+
+        .hero-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+            gap: 30px;
+            align-items: stretch;
+        }
+
+        .hero-copy,
+        .hero-media {
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(15, 28, 68, 0.08);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease;
+        }
+
+        .hero-copy {
+            padding: 34px;
+            position: relative;
+        }
+
+        .hero-copy::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(15, 83, 201, 0.08);
+            color: var(--blue-700);
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.45rem, 5vw, 4.3rem);
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+            margin-bottom: 16px;
+            max-width: 10ch;
+        }
+
+        .hero-lead {
+            max-width: 60ch;
+            color: #40506b;
+            font-size: 1.02rem;
+            margin-bottom: 22px;
+        }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .hero-chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: var(--white);
+            border: 1px solid rgba(15, 28, 68, 0.10);
+            color: var(--ink);
+            box-shadow: 0 10px 24px rgba(16, 31, 68, 0.06);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 26px;
+        }
+
+        .hero-card {
+            padding: 18px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(15, 28, 68, 0.08);
+            box-shadow: var(--shadow-card);
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 36px rgba(16, 31, 68, 0.13);
+            border-color: rgba(29, 99, 224, 0.18);
+        }
+
+        .hero-card strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .hero-card p {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .hero-proof {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .hero-media {
+            padding: 22px;
+            background: #0f1c44;
+        }
+
+        .hero-media:hover,
+        .hero-copy:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 62px rgba(16, 31, 68, 0.14);
+        }
+
+        .hero-media-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+            color: var(--white);
+        }
+
+        .hero-media-header p {
+            opacity: 0.82;
+            margin-bottom: 6px;
+        }
+
+        .hero-media-header h3 {
+            font-size: 1.35rem;
+            line-height: 1.25;
+            max-width: 14ch;
+        }
+
+        .hero-video-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 26px;
+            padding: 14px;
+            box-shadow: 0 22px 40px rgba(6, 16, 44, 0.22);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .hero-video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 28px 54px rgba(6, 16, 44, 0.28);
+        }
+
+        .hero-video {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 18px;
+            background: #0c1633;
+        }
+
+        .hero-video iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .hero-video-caption {
+            padding: 14px 8px 2px;
+            color: #41516c;
+            font-size: 0.92rem;
+        }
+
+        .section {
+            padding: 34px 0 90px;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+        }
+
+        .section-header p {
+            max-width: 54ch;
+            color: var(--muted);
+        }
+
+        .app-section-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+            gap: 28px;
+            align-items: start;
+        }
+
+        .app-copy-panel,
+        .app-gallery-panel,
+        .feature-card,
+        .curriculum-panel,
+        .audience-card,
+        .stats-card,
+        .final-cta-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        .app-copy-panel {
+            padding: 30px;
+            position: sticky;
+            top: 98px;
+        }
+
+        .app-copy-panel h3 {
+            font-size: 2rem;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .app-copy-panel > p {
+            color: #42526b;
+            margin-bottom: 20px;
+        }
+
+        .value-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .value-stat {
+            padding: 18px;
+            border-radius: 20px;
+            background: #ffffff;
+            border: 1px solid rgba(15, 28, 68, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .value-stat:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 34px rgba(16, 31, 68, 0.12);
+            border-color: rgba(29, 99, 224, 0.16);
+        }
+
+        .value-stat strong {
+            display: block;
+            font-size: 1.45rem;
+            color: var(--blue-700);
+            margin-bottom: 4px;
+        }
+
+        .value-list {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .value-item {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 12px;
+            align-items: start;
+            padding: 14px;
+            border-radius: 20px;
+            background: #ffffff;
+            border: 1px solid rgba(15, 28, 68, 0.08);
+            transition: transform 0.32s ease, box-shadow 0.32s ease, border-color 0.32s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 30px rgba(16, 31, 68, 0.10);
+            border-color: rgba(29, 99, 224, 0.14);
+        }
+
+        .value-index {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: var(--blue-900);
+            color: var(--white);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .value-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .value-item p {
+            color: var(--muted);
+            font-size: 0.93rem;
+        }
+
+        .app-copy-panel .cta-row {
+            margin-bottom: 10px;
+        }
+
+        .tiny-note {
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .app-gallery-panel {
+            padding: 20px;
+            background: #0f1c44;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+            color: var(--white);
+        }
+
+        .gallery-header p {
+            opacity: 0.82;
+            margin-bottom: 4px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1.08fr 0.92fr;
+            gap: 14px;
+        }
+
+        .shot-card {
+            overflow: hidden;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 22px 36px rgba(6, 16, 44, 0.18);
+            transition: transform 0.42s cubic-bezier(.2,.8,.2,1), box-shadow 0.42s ease;
+        }
+
+        .shot-card-main {
+            grid-row: span 2;
+        }
+
+        .shot-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #eff5ff;
+            border-bottom: 1px solid rgba(15, 28, 68, 0.08);
+            color: #41516c;
+            font-size: 0.9rem;
+        }
+
+        .shot-dots {
+            display: inline-flex;
+            gap: 6px;
+        }
+
+        .shot-dots span {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #c8d4ea;
+        }
+
+        .shot-body {
+            padding: 14px;
+        }
+
+        .shot-image-wrap {
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 14px 28px rgba(16, 31, 68, 0.14);
+        }
+
+        .shot-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 28px 46px rgba(6, 16, 44, 0.24);
+        }
+
+        .shot-card:hover .shot-image-wrap img {
+            transform: scale(1.018);
+        }
+
+        .shot-body img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.55s ease;
+        }
+
+        .shot-caption {
+            padding: 14px 4px 4px;
+        }
+
+        .shot-caption strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .shot-caption p {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .feature-card {
+            padding: 24px;
+        }
+
+        .feature-card strong {
+            display: inline-flex;
+            margin-bottom: 14px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(15, 83, 201, 0.08);
+            color: var(--blue-700);
+            font-size: 0.84rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .feature-card h3 {
+            font-size: 1.22rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .feature-card:hover,
+        .audience-card:hover,
+        .stats-card:hover,
+        .curriculum-panel:hover,
+        .app-copy-panel:hover,
+        .app-gallery-panel:hover,
+        .final-cta-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 22px 44px rgba(16, 31, 68, 0.13);
+            border-color: rgba(29, 99, 224, 0.14);
+        }
+
+        .curriculum-wrap {
+            display: grid;
+            gap: 18px;
+        }
+
+        .curriculum-panel {
+            padding: 18px;
+        }
+
+        .lesson-card {
+            border: 1px solid rgba(15, 28, 68, 0.08);
+            border-radius: 20px;
+            background: #fbfcff;
+            margin-bottom: 14px;
+            overflow: hidden;
+            transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+        }
+
+        .lesson-header {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            cursor: pointer;
+            transition: background 0.28s ease;
+        }
+
+        .lesson-title-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .lesson-index {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            background: var(--blue-900);
+            color: white;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 38px;
+        }
+
+        .lesson-header h3 {
+            font-size: 1.02rem;
+            margin: 0;
+        }
+
+        .toggle-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(15, 83, 201, 0.08);
+            color: var(--blue-700);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: transform 0.32s ease, background 0.25s ease, color 0.25s ease;
+        }
+
+        .sub-lessons {
+            display: none;
+            padding: 0 20px 0 72px;
+        }
+
+        .sub-lesson {
+            padding: 11px 14px;
+            border-radius: 14px;
+            background: var(--white);
+            border: 1px solid rgba(15, 28, 68, 0.07);
+            color: #43516b;
+            margin-top: 10px;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(29, 99, 224, 0.14);
+            box-shadow: 0 16px 30px rgba(16, 31, 68, 0.09);
+        }
+
+        .lesson-card:hover .lesson-header {
+            background: rgba(15, 83, 201, 0.03);
+        }
+
+        .lesson-card.active {
+            background: #fbfcff;
+            border-color: rgba(29, 99, 224, 0.16);
+            box-shadow: 0 18px 34px rgba(16, 31, 68, 0.10);
+        }
+
+        .lesson-card.active .sub-lessons {
+            display: block;
+            padding: 0 20px 18px 72px;
+        }
+
+        .lesson-card.active .toggle-icon {
+            transform: rotate(45deg);
+            background: var(--blue-900);
+            color: #fff;
+        }
+
+        .audience-grid,
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .audience-card,
+        .stats-card {
+            padding: 24px;
+        }
+
+        .audience-card h3,
+        .stats-card h3 {
+            font-size: 1.14rem;
+            margin-bottom: 8px;
+        }
+
+        .audience-card p,
+        .stats-card p {
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .stats-number {
+            display: block;
+            font-size: 2.45rem;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            color: var(--blue-700);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .final-cta-card {
+            padding: 34px;
+            background: rgba(255, 255, 255, 0.96);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 20px;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .final-cta-card h2 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            margin-bottom: 10px;
+            letter-spacing: -0.04em;
+        }
+
+        .final-cta-card p {
+            max-width: 58ch;
+            color: var(--muted);
+        }
+
+        .final-cta-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 250px;
+        }
+
+        @media (max-width: 1080px) {
+            .hero-shell,
+            .app-section-shell,
+            .final-cta-card {
+                grid-template-columns: 1fr;
+            }
+
+            .app-copy-panel {
+                position: static;
+            }
+
+            .final-cta-actions {
+                min-width: 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .features-grid,
+            .audience-grid,
+            .stats-grid,
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shot-card-main {
+                grid-row: auto;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topbar-inner {
+                padding: 10px 0;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topbar-nav,
+            .cta-row {
+                width: 100%;
+            }
+
+            .pill-cta {
+                width: 100%;
+            }
+
+            .hero,
+            .section {
+                padding-top: 28px;
+                padding-bottom: 72px;
+            }
+
+            .hero-copy,
+            .hero-media,
+            .app-copy-panel,
+            .app-gallery-panel,
+            .feature-card,
+            .curriculum-panel,
+            .audience-card,
+            .stats-card,
+            .final-cta-card {
+                border-radius: 24px;
+            }
+
+            .hero-copy,
+            .app-copy-panel,
+            .final-cta-card {
+                padding: 24px;
+            }
+
+            .sub-lessons {
+                padding: 0 18px 0 18px;
+            }
+
+            .lesson-title-row {
+                align-items: flex-start;
+            }
+
+            .lesson-index {
+                width: 34px;
+                height: 34px;
+                border-radius: 12px;
+                flex-basis: 34px;
+            }
+
+            .section-header {
+                display: grid;
+            }
+        }
+
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(32px) scale(0.985);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.22,.8,.22,1);
+            will-change: transform, opacity;
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .reveal-on-scroll[data-reveal-delay="1"] { transition-delay: 0.06s; }
+        .reveal-on-scroll[data-reveal-delay="2"] { transition-delay: 0.12s; }
+        .reveal-on-scroll[data-reveal-delay="3"] { transition-delay: 0.18s; }
+        .reveal-on-scroll[data-reveal-delay="4"] { transition-delay: 0.24s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <div class="brand">
+                <span class="brand-mark">EP</span>
+                <div class="brand-copy">
+                    <strong>English Plan IELTS Speaking</strong>
+                    <span>Band 7+ course + AI speaking app</span>
+                </div>
+            </div>
+            <nav class="topbar-nav">
+                <a class="mini-link" href="#app-preview">AI App</a>
+                <a class="mini-link" href="#curriculum">Curriculum</a>
+                <a class="mini-link" href="#who">เหมาะกับใคร</a>
+                <a class="pill-cta pill-cta-secondary" href="https://www.englishplan-ielts.com/?trial=1">ลองใช้แอปประเมิน IELTS SPEAKING ตนเองตอนนี้</a>
+                <a class="pill-cta pill-cta-primary" href="https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts">ลงทะเบียนเรียนตอนนี้</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-shell">
+            <div class="hero-copy">
+                <div class="eyebrow">IELTS Speaking Course</div>
+                <h1>เปลี่ยนการพูดที่ยังไม่เป็นระบบ ให้กลายเป็น Band 7+ แบบมั่นใจขึ้นจริง</h1>
+                <p class="hero-lead">
+                    คอร์สนี้ไม่ได้สอนแค่ “ตอบคำถามยังไง” แต่สอนวิธีคิด วิธีเรียบเรียงคำตอบ และวิธีพูดให้ฟังเป็นธรรมชาติสำหรับคนไทย
+                    พร้อม AI speaking app ของ English Plan ที่ช่วยให้คุณซ้อม, รับ report, และเห็นจุดอ่อนของตัวเองแบบชัดเจนขึ้นทุกครั้งที่ฝึก
+                </p>
+
+                <div class="hero-chips">
+                    <span class="hero-chip">10-day challenge structure</span>
+                    <span class="hero-chip">120 speaking practices / 6 months</span>
+                    <span class="hero-chip">Full mock + report</span>
+                </div>
+
+                <div class="hero-grid">
+                    <article class="hero-card">
+                        <strong>สอนให้คิดเร็วขึ้นตอนสอบ</strong>
+                        <p>ลดอาการคิดไม่ออกด้วย template, answer logic และ pattern ที่ใช้ได้จริงใน speaking part 1, 2, 3</p>
+                    </article>
+                    <article class="hero-card">
+                        <strong>รู้จุดอ่อนแบบไม่ต้องเดา</strong>
+                        <p>AI report จะช่วยชี้ grammar, vocabulary และ fluency ที่ยังเป็นจุดตันของคุณอย่างตรงไปตรงมา</p>
+                    </article>
+                    <article class="hero-card">
+                        <strong>เหมาะกับคนไทยโดยเฉพาะ</strong>
+                        <p>ออกแบบจากจุดพลาดจริงที่เจอซ้ำ ๆ กับนักเรียนไทยของ English Plan มากกว่า 500+ คน</p>
+                    </article>
+                    <article class="hero-card">
+                        <strong>ฝึกได้ต่อเนื่องจนคุ้นข้อสอบ</strong>
+                        <p>มีระบบฝึกเอง + mock test เพื่อให้วันสอบจริงไม่รู้สึกแปลกกับ flow ของข้อสอบ</p>
+                    </article>
+                </div>
+
+                <div class="cta-row">
+                    <a class="pill-cta pill-cta-primary" href="https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts">ลงทะเบียนเรียนตอนนี้</a>
+                    <a class="pill-cta pill-cta-secondary" href="https://www.englishplan-ielts.com/?trial=1">ลองใช้แอปประเมิน IELTS SPEAKING ตนเองตอนนี้</a>
+                </div>
+                <p class="hero-proof">มี LINE VIP support และ workflow การฝึกที่ช่วยให้เรียนจบแล้ว “กลับไปใช้เองได้” ไม่ใช่แค่ดูวิดีโอแล้วจบครับ</p>
+            </div>
+
+            <div class="hero-media">
+                <div class="hero-media-header">
+                    <div>
+                        <p>ดูบรรยากาศคอร์สก่อน</p>
+                        <h3>เรียนให้เข้าใจ แล้วเอาไปฝึกต่อในแอปได้ทันที</h3>
+                    </div>
+                </div>
+                <div class="hero-video-card">
+                    <div class="hero-video">
+                        <iframe src="https://drive.google.com/file/d/1biz7cULTyojIg7q5W8VxyuUy1WwJgo9v/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                    <p class="hero-video-caption">เรียนรู้เทคนิคการพูดภาษาอังกฤษอย่างเป็นธรรมชาติ เพื่อคะแนน IELTS Speaking Band 7+ แบบมีระบบ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="app-preview">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow">English Plan AI Speaking App</div>
+                    <h2>คอร์สนี้ไม่ได้ขายแค่วิดีโอ แต่ให้ระบบฝึก speaking ที่ทำให้คุณรู้ว่าควรแก้อะไรต่อจริง ๆ</h2>
+                </div>
+                <p>ใช้ฝึกควบคู่กับคอร์ส เพื่อให้การเรียนไม่จบแค่ “ดูจบแล้ว” แต่กลายเป็น “ซ้อมต่อได้และเห็นความเปลี่ยนแปลงของตัวเอง”</p>
+            </div>
+
+            <div class="app-section-shell">
+                <div class="app-copy-panel">
+                    <h3>สร้างจากฐานข้อมูลการสอนจริง 6 ปีของ English Plan</h3>
+                    <p>
+                        นักเรียนในคอร์สนี้จะได้ใช้ speaking app ที่ออกแบบจาก pattern ความอ่อนและความสับสนของนักเรียนไทยกว่า 500+ คน
+                        เป้าหมายของระบบจึงไม่ใช่แค่ให้คะแนน แต่คือช่วยสะท้อนว่า “คุณยังติดตรงไหน” และควรแก้อย่างไรในแบบที่ realistic ที่สุดครับ
+                    </p>
+
+                    <div class="value-stats">
+                        <div class="value-stat">
+                            <strong>120 ครั้ง</strong>
+                            <span>ฝึก speaking ได้ตลอด 6 เดือน</span>
+                        </div>
+                        <div class="value-stat">
+                            <strong>Full Mock</strong>
+                            <span>มี mock tests แบบเต็มเพื่อเพิ่มความมั่นใจก่อนสอบจริง</span>
+                        </div>
+                        <div class="value-stat">
+                            <strong>6 ปี</strong>
+                            <span>ต่อยอดจากประสบการณ์สอนจริงของ English Plan</span>
+                        </div>
+                        <div class="value-stat">
+                            <strong>500+ คน</strong>
+                            <span>ฐานความเข้าใจจุดพลาดของนักเรียนไทยจริง</span>
+                        </div>
+                    </div>
+
+                    <div class="value-list">
+                        <article class="value-item">
+                            <span class="value-index">1</span>
+                            <div>
+                                <strong>ฝึกเองได้ต่อเนื่องแบบไม่หลงทาง</strong>
+                                <p>ซ้อมตอบ, รับ feedback, กลับมาทบทวน report เดิม และฝึกซ้ำได้จน pattern การตอบเริ่มฝังเป็นธรรมชาติ</p>
+                            </div>
+                        </article>
+                        <article class="value-item">
+                            <span class="value-index">2</span>
+                            <div>
+                                <strong>full mock ช่วยลดความตื่นเต้นก่อนสอบจริง</strong>
+                                <p>ไม่ใช่แค่ random practice แต่มี flow การซ้อมแบบข้อสอบจริง เพื่อให้วันสอบรู้สึก familiar มากขึ้น</p>
+                            </div>
+                        </article>
+                        <article class="value-item">
+                            <span class="value-index">3</span>
+                            <div>
+                                <strong>ไม่ได้แค่รู้ score แต่รู้ weakness ที่ควรแก้ก่อน</strong>
+                                <p>ระบบจะช่วยชี้ให้เห็นว่า grammar, fluency, vocabulary หรือการขยายเหตุผลของคุณยังขาดตรงไหน</p>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="cta-row">
+                        <a class="pill-cta pill-cta-primary" href="https://www.englishplan-ielts.com/?trial=1">ลองใช้แอปประเมิน IELTS SPEAKING ตนเองตอนนี้</a>
+                        <a class="pill-cta pill-cta-secondary" href="https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts">สมัครคอร์สพร้อมสิทธิ์ใช้งานเต็ม</a>
+                    </div>
+                    <p class="tiny-note">ถ้าอยากให้ปุ่มนี้ไปยัง trial funnel เฉพาะบน app โดยตรง คุณเปลี่ยนเป็นลิงก์ production ของ trial route ได้ทันทีครับ</p>
+                </div>
+
+                <div class="app-gallery-panel">
+                    <div class="gallery-header">
+                        <div>
+                            <p>ตัวอย่างประสบการณ์ใช้งาน</p>
+                            <h3>เห็น report, flow การฝึก, และหน้าตา mock ที่นักเรียนจะได้ใช้จริง</h3>
+                        </div>
+                    </div>
+
+                    <div class="gallery-grid">
+                        <article class="shot-card shot-card-main">
+                            <div class="shot-top">
+                                <span>Speaking Report</span>
+                                <div class="shot-dots"><span></span><span></span><span></span></div>
+                            </div>
+                            <div class="shot-body">
+                                <div class="shot-image-wrap">
+                                    <img src="https://i.postimg.cc/TYJ461kv/Clean-Shot-2569-05-09-at-23-06-53-2x.png" alt="ตัวอย่างหน้า speaking report ของแอป English Plan">
+                                </div>
+                                <div class="shot-caption">
+                                    <strong>report ที่ไม่ได้ให้แค่ band</strong>
+                                    <p>ชี้ภาพรวมคะแนน, จุดอ่อน, และ next-step feedback ที่ใช้ฝึกต่อได้ทันที</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="shot-card">
+                            <div class="shot-top">
+                                <span>Practice Flow</span>
+                                <div class="shot-dots"><span></span><span></span><span></span></div>
+                            </div>
+                            <div class="shot-body">
+                                <div class="shot-image-wrap">
+                                    <img src="https://i.postimg.cc/Fs4B83xR/Clean-Shot-2569-05-09-at-23-07-09-2x.png" alt="ตัวอย่าง flow การฝึก speaking ในแอป English Plan">
+                                </div>
+                                <div class="shot-caption">
+                                    <strong>flow การฝึกที่ค่อย ๆ build confidence</strong>
+                                    <p>ช่วยให้การซ้อมไม่กระโดดและไม่รู้สึกโดนโยนเข้าโจทย์แบบไม่มีไกด์</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="shot-card">
+                            <div class="shot-top">
+                                <span>Question Experience</span>
+                                <div class="shot-dots"><span></span><span></span><span></span></div>
+                            </div>
+                            <div class="shot-body">
+                                <div class="shot-image-wrap">
+                                    <img src="https://i.postimg.cc/9FYnh0xj/Clean-Shot-2569-05-09-at-23-07-21-2x.png" alt="ตัวอย่างหน้าคำถาม speaking ของแอป English Plan">
+                                </div>
+                                <div class="shot-caption">
+                                    <strong>ซ้อมตอบในสภาพแวดล้อมที่ใกล้ใช้จริง</strong>
+                                    <p>ช่วยให้คุ้นกับการตอบภายใต้เวลาและแรงกดดันมากขึ้น</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="shot-card">
+                            <div class="shot-top">
+                                <span>Feedback Detail</span>
+                                <div class="shot-dots"><span></span><span></span><span></span></div>
+                            </div>
+                            <div class="shot-body">
+                                <div class="shot-image-wrap">
+                                    <img src="https://i.postimg.cc/vHsNkfvm/Clean-Shot-2569-05-09-at-23-07-50-2x.png" alt="ตัวอย่าง feedback detail ของแอป English Plan">
+                                </div>
+                                <div class="shot-caption">
+                                    <strong>feedback ที่ usable จริง</strong>
+                                    <p>ไม่ใช่ feedback กว้าง ๆ แต่ช่วยบอกว่าอะไรคือจุดที่ควรแก้ก่อน</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="shot-card">
+                            <div class="shot-top">
+                                <span>Mock + Tracking</span>
+                                <div class="shot-dots"><span></span><span></span><span></span></div>
+                            </div>
+                            <div class="shot-body">
+                                <div class="shot-image-wrap">
+                                    <img src="https://i.postimg.cc/jdbFmPhq/Clean-Shot-2569-05-09-at-23-08-30-2x.png" alt="ตัวอย่างหน้าติดตามการฝึก speaking ของแอป English Plan">
+                                </div>
+                                <div class="shot-caption">
+                                    <strong>mock และการซ้อมแบบต่อเนื่องในระบบเดียว</strong>
+                                    <p>เรียนในคอร์ส แล้วกลับมาซ้อมต่อในแอปได้เป็น routine เดียวกัน</p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow">Why English Plan</div>
+                    <h2>สิ่งที่ทำให้คอร์สนี้ต่างจากการดูคลิป random แล้วไปสอบเอง</h2>
+                </div>
+            </div>
+            <div class="features-grid">
+                <article class="feature-card">
+                    <strong>Proven Method</strong>
+                    <h3>ประสบการณ์จริงกับนักเรียน 500+ คน</h3>
+                    <p>สอนโดยอิงจากปัญหาที่เจอบ่อยจริง ไม่ได้เดาว่านักเรียนไทยควรแก้อะไร แต่เห็น pattern นี้ซ้ำมาแล้วในห้องเรียน</p>
+                </article>
+                <article class="feature-card">
+                    <strong>Full Structure</strong>
+                    <h3>ได้ทั้งคอร์สและระบบฝึกต่อ</h3>
+                    <p>เรียนแล้วไม่จบแค่ “เข้าใจในคลาส” แต่เอาสิ่งที่เรียนไปฝึกซ้ำใน app ต่อได้จริง พร้อม report ให้กลับมาทบทวน</p>
+                </article>
+                <article class="feature-card">
+                    <strong>Natural Speaking</strong>
+                    <h3>เน้นการพูดให้ฟังเป็นธรรมชาติ</h3>
+                    <p>โฟกัสทั้งเรื่อง logic, grammar, vocabulary และการตอบแบบที่ฟังดูเป็นคนพูดจริง ไม่ใช่ท่อง template แข็ง ๆ</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="curriculum">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow">Curriculum</div>
+                    <h2>10 บทเรียนที่พาไปตั้งแต่พื้นฐานการตอบ จนถึง full speaking simulation</h2>
+                </div>
+                <p>แต่ละวันเน้น skill จริงที่จำเป็นกับข้อสอบ speaking ไม่ใช่สอนกว้าง ๆ แล้วปล่อยให้ไปแปลเองตอนซ้อม</p>
+            </div>
+
+            <div class="curriculum-panel">
+                <div class="curriculum-wrap">
+                    <div class="lesson-card active">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">1</span>
+                                <h3>About IELTS Speaking</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">รู้จักข้อสอบ + ทำยังไงให้ได้ Band 7</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">2</span>
+                                <h3>Day 1: Talk about normal things like a pro</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">เพิ่ม fluency ด้วย past tense</div>
+                            <div class="sub-lesson">เพิ่ม fluency ด้วย future tense</div>
+                            <div class="sub-lesson">การใช้ discourse markers เพื่อเพิ่ม fluency</div>
+                            <div class="sub-lesson">ตอบคำถามจริง (reading, work, hobby, music) - Part 1</div>
+                            <div class="sub-lesson">Real-life practice - basic questions</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">3</span>
+                                <h3>Day 2: Give your opinion like a pro</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">การออกความเห็น</div>
+                            <div class="sub-lesson">เรียบเรียง idea ให้มี logic</div>
+                            <div class="sub-lesson">ตัวอย่างการออกความเห็น</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">4</span>
+                                <h3>Day 3: Acing part 1 (fluency + grammar)</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">Phrases and topics to improve fluency - talk about work</div>
+                            <div class="sub-lesson">Part 1 questions (history / stationery / science class)</div>
+                            <div class="sub-lesson">Part 1 summary</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">5</span>
+                                <h3>Day 4: How to speak for 2 minutes</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">เทคนิคการพูด 2 นาที</div>
+                            <div class="sub-lesson">วิธีฝึกการพูด 2 นาที</div>
+                            <div class="sub-lesson">Describing a shop</div>
+                            <div class="sub-lesson">Describing your favorite shop</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">6</span>
+                                <h3>Day 5: Speaking for 2 minutes, easy peasy</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">Vocabulary for people (Part 2)</div>
+                            <div class="sub-lesson">ฝึก talk about people</div>
+                            <div class="sub-lesson">Talk about people - family member</div>
+                            <div class="sub-lesson">Vocabulary for places (Speaking Part 2)</div>
+                            <div class="sub-lesson">Practice: talk about places (market)</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">7</span>
+                                <h3>Day 6: Talk about people / activities / objects</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">Tips for talking about activities</div>
+                            <div class="sub-lesson">Practice: habit that annoys you a lot</div>
+                            <div class="sub-lesson">Tips for speaking about objects</div>
+                            <div class="sub-lesson">Practice: product you bought and were dissatisfied with</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">8</span>
+                                <h3>Day 7: Past tenses + introduction to Part 3</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">Template for talking about events</div>
+                            <div class="sub-lesson">Practice: describe an event you recently took part in</div>
+                            <div class="sub-lesson">Introduction to Part 3 with focus on vocabulary</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">9</span>
+                                <h3>Day 8-9: Expand, justify, and ace your Part 3 answers</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">Ambition / work / personality / places / achievement</div>
+                            <div class="sub-lesson">Questions about social media</div>
+                            <div class="sub-lesson">Creativity and art</div>
+                            <div class="sub-lesson">Money and business / language / education / environment</div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card">
+                        <div class="lesson-header" onclick="toggleLesson(this)">
+                            <div class="lesson-title-row">
+                                <span class="lesson-index">10</span>
+                                <h3>Final wrap-up + full simulation</h3>
+                            </div>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="sub-lessons">
+                            <div class="sub-lesson">สรุปเทคนิคการตอบทั้งหมด - grammar</div>
+                            <div class="sub-lesson">Full simulation</div>
+                            <div class="sub-lesson">Speaking Cambridge 18</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="who">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow">Who This Is For</div>
+                    <h2>คอร์สนี้เหมาะกับคนที่อยากพัฒนาการพูดแบบเห็นผล ไม่ใช่แค่สะสมความรู้</h2>
+                </div>
+            </div>
+            <div class="audience-grid">
+                <article class="audience-card">
+                    <h3>ผู้ที่ต้องการ Band 7+</h3>
+                    <p>เหมาะกับคนที่ต้องการคะแนน speaking ที่มั่นคงขึ้นเพื่อเรียนต่อ สมัครงาน หรือใช้ยื่นตามเป้าหมายของตัวเอง</p>
+                </article>
+                <article class="audience-card">
+                    <h3>ผู้ที่กำลังเตรียมสอบ IELTS</h3>
+                    <p>ถ้าคุณรู้สึกว่าตัวเอง “พอพูดได้” แต่ยังไม่มั่นใจว่าตอบได้เป็นระบบพอ คอร์สนี้จะช่วยจัดฐานให้แน่นขึ้นครับ</p>
+                </article>
+                <article class="audience-card">
+                    <h3>ผู้ที่อยากพูดให้ฟังเป็นธรรมชาติขึ้น</h3>
+                    <p>ไม่ว่าจะเป้าหมายคือสอบหรืออยากพูดดีขึ้นจริง คุณจะได้ทั้ง framework การตอบและที่ทางสำหรับฝึกซ้ำแบบมี feedback</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow">What You Get</div>
+                    <h2>สิ่งที่ได้ ไม่ใช่แค่คอร์ส แต่คือระบบฝึก speaking ที่พากลับไปใช้งานได้ต่อ</h2>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <article class="stats-card">
+                    <span class="stats-number">10+</span>
+                    <h3>บทเรียนหลัก</h3>
+                    <p>ครอบคลุมตั้งแต่พื้นฐานของ Part 1 ไปจนถึงการพูด 2 นาที และการขยายคำตอบใน Part 3</p>
+                </article>
+                <article class="stats-card">
+                    <span class="stats-number">40+</span>
+                    <h3>หัวข้อย่อย</h3>
+                    <p>มีตัวอย่าง, หัวข้อฝึก, และ pattern สำคัญที่ช่วยลดความสะเปะสะปะเวลาคิดคำตอบจริง</p>
+                </article>
+                <article class="stats-card">
+                    <span class="stats-number">120</span>
+                    <h3>Speaking practices</h3>
+                    <p>กลับมาฝึกในแอปได้ต่อเนื่องตลอด 6 เดือน เพื่อให้สิ่งที่เรียนจากคอร์สเปลี่ยนเป็น skill จริง</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="final-cta-card">
+                <div>
+                    <div class="eyebrow">Ready To Start?</div>
+                    <h2>ถ้าอยากรู้ว่าตัวเองยังติดตรงไหนก่อนสมัครคอร์ส ลองใช้แอปก่อน แล้วค่อยตัดสินใจ</h2>
+                    <p>หรือถ้าพร้อมแล้ว ก็สมัครคอร์สเพื่อปลดล็อกทั้งบทเรียน, speaking app, mock tests, และการฝึกต่อเนื่องในระบบเดียวกันได้เลยครับ</p>
+                </div>
+                <div class="final-cta-actions">
+                    <a class="pill-cta pill-cta-primary" href="https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts">ลงทะเบียนเรียนตอนนี้</a>
+                    <a class="pill-cta pill-cta-secondary" href="https://www.englishplan-ielts.com/?trial=1">ลองใช้แอปประเมิน IELTS SPEAKING ตนเองตอนนี้</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleLesson(element) {
+            const lessonCard = element.parentElement;
+            lessonCard.classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const topbar = document.querySelector('.topbar');
+            const revealTargets = [
+                ...document.querySelectorAll('.hero-copy, .hero-media, .app-copy-panel, .app-gallery-panel, .feature-card, .lesson-card, .audience-card, .stats-card, .final-cta-card')
+            ];
+
+            revealTargets.forEach((node, index) => {
+                node.classList.add('reveal-on-scroll');
+                node.dataset.revealDelay = String(index % 4);
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.14,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            revealTargets.forEach((node) => observer.observe(node));
+
+
+            const updateTopbar = () => {
+                if (!topbar) return;
+                topbar.classList.toggle('is-scrolled', window.scrollY > 12);
+            };
+
+            updateTopbar();
+            window.addEventListener('scroll', updateTopbar, { passive: true });
+        });
+    </script>
+</body>
+</html>

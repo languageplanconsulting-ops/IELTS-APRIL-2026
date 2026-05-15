@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transcript-First Listening Lab</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+      :root {
+        --bg: #f5fbff;
+        --ink: #11213c;
+        --blue: #2563eb;
+        --sky: #d8f1ff;
+        --mint: #dbffe8;
+        --peach: #ffe1c2;
+        --yellow: #fff4a8;
+        --pink: #ffd4ea;
+        --line: rgba(17, 33, 60, 0.1);
+        --shadow: 0 20px 50px rgba(17, 33, 60, 0.12);
+        --radius: 26px;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(37, 99, 235, 0.1), transparent 28%),
+          radial-gradient(circle at top right, rgba(255, 225, 194, 0.8), transparent 26%),
+          linear-gradient(180deg, #eef9ff 0%, #fefcf7 100%);
+      }
+
+      .page { width: min(1180px, calc(100% - 28px)); margin: 22px auto 56px; }
+
+      .hero {
+        background: linear-gradient(135deg, #1d4ed8, #38bdf8);
+        color: white;
+        border-radius: 34px;
+        padding: 28px;
+        box-shadow: var(--shadow);
+      }
+
+      .eyebrow, .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow { background: rgba(255,255,255,0.16); }
+      .chip { background: white; color: var(--ink); }
+
+      h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; margin: 0; }
+      .hero h1 { font-size: clamp(2.5rem, 5vw, 4.7rem); line-height: 0.95; margin-top: 16px; }
+      .hero p { max-width: 820px; line-height: 1.75; margin: 16px 0 0; }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .hero-panel, .panel, .card, .quiz-card {
+        background: rgba(255,255,255,0.94);
+        color: var(--ink);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-panel, .panel { padding: 20px; }
+      .hero-panel ul { margin: 12px 0 0; padding-left: 18px; line-height: 1.8; }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 310px minmax(0, 1fr);
+        gap: 18px;
+        margin-top: 22px;
+      }
+
+      .sidebar {
+        display: grid;
+        gap: 16px;
+        align-self: start;
+        position: sticky;
+        top: 18px;
+      }
+
+      .pack-list { display: grid; gap: 10px; margin-top: 14px; }
+      .pack-btn, .action-btn {
+        border: 0;
+        border-radius: 18px;
+        cursor: pointer;
+        text-align: left;
+        font: inherit;
+        padding: 14px 16px;
+        background: #f7fbff;
+        color: var(--ink);
+        transition: transform .16s ease, background .16s ease;
+      }
+
+      .pack-btn:hover, .action-btn:hover { transform: translateY(-1px); }
+      .pack-btn.active { background: var(--sky); }
+      .pack-btn strong, .stat strong { display: block; }
+      .pack-btn span { display: block; margin-top: 6px; font-size: 0.92rem; color: #4c5b78; }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .stat {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 12px;
+      }
+
+      .content { display: grid; gap: 18px; }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .action-btn.primary { background: var(--yellow); }
+      .action-btn.secondary { background: var(--mint); }
+      .action-btn.alt { background: var(--peach); }
+
+      .cards { display: grid; gap: 14px; }
+      .card { padding: 18px; }
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 12px;
+      }
+
+      .label {
+        background: var(--sky);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .bridge-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .bridge-box {
+        border-radius: 18px;
+        padding: 14px;
+        border: 1px solid var(--line);
+      }
+
+      .bridge-box:nth-child(1) { background: #f5faff; }
+      .bridge-box:nth-child(2) { background: #f8fff8; }
+      .bridge-box:nth-child(3) { background: #fffaf2; }
+
+      .bridge-box span {
+        display: inline-block;
+        margin-bottom: 8px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .thai-note {
+        margin-top: 14px;
+        border-radius: 18px;
+        background: #fdf8ff;
+        padding: 14px;
+      }
+
+      .meaning {
+        margin-top: 10px;
+        display: inline-flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--pink);
+        font-weight: 700;
+      }
+
+      .quiz-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .quiz-card { padding: 18px; }
+      .quiz-card input {
+        width: 100%;
+        margin-top: 12px;
+        border: 1px solid #c9dbff;
+        border-radius: 16px;
+        padding: 12px 14px;
+        font: inherit;
+      }
+
+      .feedback {
+        margin-top: 10px;
+        border-radius: 16px;
+        padding: 11px 12px;
+        font-weight: 700;
+        display: none;
+      }
+
+      .feedback.show { display: block; }
+      .feedback.ok { background: #e8fff0; color: #17633a; }
+      .feedback.no { background: #fff1f1; color: #a82f2f; }
+
+      @media (max-width: 980px) {
+        .hero-grid, .layout, .bridge-grid, .quiz-grid { grid-template-columns: 1fr; }
+        .sidebar { position: static; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="eyebrow">Transcript-First Listening</div>
+        <h1>Read the audio script first. Then beat the paraphrase.</h1>
+        <p>
+          This page is built from the Cambridge 18-20 Part 1 paraphrase bank. Instead of jumping straight
+          into audio, we train the hidden IELTS skill first: spotting how natural transcript language becomes
+          neat answer language in the question.
+        </p>
+        <div class="hero-grid">
+          <div class="hero-panel">
+            <h3>How to use this</h3>
+            <ul>
+              <li>Read the transcript phrase aloud.</li>
+              <li>Predict how IELTS will rewrite it in the note or form.</li>
+              <li>Check the answer bridge.</li>
+              <li>Use the Thai note to store the pattern, not just the answer.</li>
+            </ul>
+          </div>
+          <div class="hero-panel">
+            <h3>Best for teaching</h3>
+            <div class="toolbar">
+              <span class="chip">Shopping</span>
+              <span class="chip">Workplace</span>
+              <span class="chip">Care</span>
+              <span class="chip">Renting</span>
+              <span class="chip">Travel</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <aside class="sidebar">
+          <div class="panel">
+            <div class="eyebrow" style="background: var(--sky); color: var(--ink);">Topic Packs</div>
+            <div class="pack-list" id="pack-list"></div>
+          </div>
+          <div class="panel">
+            <h3>Learning Rules</h3>
+            <ul style="padding-left: 18px; line-height: 1.8;">
+              <li>Audio is usually longer and more natural.</li>
+              <li>Question wording is shorter and more formal.</li>
+              <li>Many answers are hidden inside a larger sentence.</li>
+            </ul>
+            <div class="stat-grid">
+              <div class="stat"><strong id="card-count">0</strong><span>cards</span></div>
+              <div class="stat"><strong id="quiz-score">0</strong><span>quiz score</span></div>
+              <div class="stat"><strong id="pack-name">-</strong><span>active pack</span></div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="content">
+          <section class="panel">
+            <div class="eyebrow" style="background: var(--mint); color: var(--ink);">Teaching Bank</div>
+            <h2 id="pack-title" style="margin-top: 12px;">Pack</h2>
+            <p id="pack-desc" style="margin-top: 8px; line-height: 1.75;"></p>
+            <div class="toolbar">
+              <button class="action-btn primary" id="show-all">Open all explanations</button>
+              <button class="action-btn secondary" id="hide-all">Close all explanations</button>
+              <button class="action-btn alt" id="reset-quiz">Reset quiz</button>
+            </div>
+          </section>
+
+          <section class="cards" id="cards"></section>
+
+          <section class="panel">
+            <div class="eyebrow" style="background: var(--peach); color: var(--ink);">Mini Quiz</div>
+            <h2 style="margin-top: 12px;">Can you predict the answer language?</h2>
+            <p style="margin-top: 8px; line-height: 1.75;">Type the missing answer word from the transcript bridge. This is not a full listening test. It is a paraphrase training drill.</p>
+            <div class="quiz-grid" id="quiz"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const packs = [
+        {
+          id: 'shopping',
+          title: 'Shopping And Food',
+          description: 'Practice how restaurant, market, and food-talk language gets compressed into short answer words.',
+          cards: [
+            {
+              source: 'Cam 20 Test 01',
+              question: 'Good for people who are especially keen on ___',
+              answer: 'fish',
+              transcript: 'If you like fish, it\'s probably the best restaurant in town for that.',
+              bridge: 'if you like -> are keen on',
+              thai: 'จุดหลอกคือเปลี่ยนจากคำง่ายอย่าง like ไปเป็นวลี formal มากขึ้นคือ be keen on.',
+              meaning: 'be keen on = ชอบมาก'
+            },
+            {
+              source: 'Cam 19 Test 03',
+              question: 'Organic shop called ___',
+              answer: 'Rose',
+              transcript: 'It\'s the name of a flower ... it\'s Rose.',
+              bridge: 'category clue -> exact name',
+              thai: 'ผู้พูดให้ clue กว้าง ๆ ว่าเป็นชื่อดอกไม้ก่อน แล้วค่อยเฉลยชื่อจริงทีหลัง.',
+              meaning: 'flower = ดอกไม้'
+            },
+            {
+              source: 'Cam 19 Test 03',
+              question: 'Curry ingredient sold there: ___',
+              answer: 'coconut',
+              transcript: 'The owner also sells a lot of spices there ... and things like coconut.',
+              bridge: 'category + example -> final noun',
+              thai: 'IELTS ชอบให้หมวดกว้างก่อน แล้วซ่อนคำตอบไว้ในตัวอย่างคำเดียว.',
+              meaning: 'coconut = มะพร้าว'
+            },
+            {
+              source: 'Cam 20 Test 04',
+              question: 'Market is good for ___ food',
+              answer: 'vegetarian',
+              transcript: 'My cousin\'s vegetarian. I know it\'s one of the best places for that kind of food.',
+              bridge: 'that kind of food -> vegetarian',
+              thai: 'ต้องตาม reference ให้ทันว่า that kind of food ย้อนกลับไปหา vegetarian.',
+              meaning: 'vegetarian = มังสวิรัติ'
+            }
+          ],
+          quiz: [
+            { prompt: 'If you like fish -> especially keen on ___', answer: 'fish' },
+            { prompt: 'The name of a flower -> shop called ___', answer: 'rose' },
+            { prompt: 'Things like coconut -> curry ingredient ___', answer: 'coconut' },
+            { prompt: 'That kind of food -> ___ food', answer: 'vegetarian' }
+          ]
+        },
+        {
+          id: 'workplace',
+          title: 'Workplace And Procedures',
+          description: 'Useful for first-day-at-work conversations, instructions, uniforms, safety rules, and stock tasks.',
+          cards: [
+            {
+              source: 'Cam 19 Test 04',
+              question: 'to collect ___',
+              answer: 'uniform',
+              transcript: 'Tiffany will give you a uniform.',
+              bridge: 'give you -> collect',
+              thai: 'เหตุการณ์เดียวกัน แต่มองคนละมุม ผู้พูดบอกจากฝั่ง HR ส่วนโจทย์บอกจากฝั่งผู้รับ.',
+              meaning: 'uniform = ชุดยูนิฟอร์ม'
+            },
+            {
+              source: 'Cam 19 Test 04',
+              question: 'Use ___ labels',
+              answer: 'yellow',
+              transcript: 'Put a yellow one on the package, next to the original price.',
+              bridge: 'put a yellow one on -> use yellow labels',
+              thai: 'คำตอบจริงเป็นสี แต่โจทย์ทำให้ดูเป็น task instruction ที่สั้นกว่า.',
+              meaning: 'yellow = สีเหลือง'
+            },
+            {
+              source: 'Cam 19 Test 04',
+              question: 'Re-stock with ___ boxes',
+              answer: 'plastic',
+              transcript: 'Beneath those is where we keep the plastic boxes.',
+              bridge: 'where we keep the plastic boxes -> re-stock with plastic boxes',
+              thai: 'ต้องไม่หลงกับคำว่า cardboard ที่มาก่อนหน้า เพราะคำตอบจริงคือ plastic.',
+              meaning: 'plastic = พลาสติก'
+            },
+            {
+              source: 'Cam 19 Test 04',
+              question: 'Must wear special ___',
+              answer: 'gloves',
+              transcript: 'Make sure you put on thermal gloves when you take anything out of the cold-room.',
+              bridge: 'put on thermal gloves -> wear special gloves',
+              thai: 'โจทย์ตัด thermal ออก แล้วเหลือ noun หลักให้เติม.',
+              meaning: 'gloves = ถุงมือ'
+            }
+          ],
+          quiz: [
+            { prompt: 'Tiffany will give you a ___', answer: 'uniform' },
+            { prompt: 'Put a yellow one on the package -> use ___ labels', answer: 'yellow' },
+            { prompt: 'We keep the plastic boxes -> re-stock with ___ boxes', answer: 'plastic' },
+            { prompt: 'Put on thermal ___', answer: 'gloves' }
+          ]
+        },
+        {
+          id: 'care',
+          title: 'Care And Support',
+          description: 'Good for abstract nouns and caregiving language, where IELTS often compresses a whole idea into one simple answer.',
+          cards: [
+            {
+              source: 'Cam 20 Test 02',
+              question: 'This can give the carer: a ___',
+              answer: 'break',
+              transcript: 'They sometimes need a break.',
+              bridge: 'need a break -> gives the carer a break',
+              thai: 'คำตอบตรงแต่เป็น concept word สำคัญในหัวข้อ caregiving support.',
+              meaning: 'break = การพัก'
+            },
+            {
+              source: 'Cam 20 Test 02',
+              question: 'how much ___ the caring involves',
+              answer: 'time',
+              transcript: 'They\'d want to know the amount of time you spend looking after your mother every day.',
+              bridge: 'amount of time you spend -> how much time it involves',
+              thai: 'โจทย์ย่อประโยคยาวใน audio ให้เหลือ noun หลักเพียงคำเดียว.',
+              meaning: 'time = เวลา'
+            },
+            {
+              source: 'Cam 20 Test 02',
+              question: 'loss of ___',
+              answer: 'memory',
+              transcript: 'She\'s started to have quite bad problems with her memory.',
+              bridge: 'problems with memory -> loss of memory',
+              thai: 'IELTS เปลี่ยนจากคำบอกอาการให้เป็น noun phrase ที่ formal ขึ้น.',
+              meaning: 'memory = ความจำ'
+            },
+            {
+              source: 'Cam 20 Test 02',
+              question: 'preventing a ___',
+              answer: 'fall',
+              transcript: 'How to avoid the possibility of your mum having a fall.',
+              bridge: 'avoid ... having a fall -> preventing a fall',
+              thai: 'นี่เป็นตัวอย่างดีของ clause ยาวใน audio ที่ถูกย่อเป็น answer phrase ในโน้ต.',
+              meaning: 'fall = การหกล้ม'
+            }
+          ],
+          quiz: [
+            { prompt: 'They sometimes need a ___', answer: 'break' },
+            { prompt: 'The amount of ___ you spend', answer: 'time' },
+            { prompt: 'Problems with her ___', answer: 'memory' },
+            { prompt: 'Having a ___', answer: 'fall' }
+          ]
+        },
+        {
+          id: 'renting',
+          title: 'Renting And Furniture',
+          description: 'A strong pack for price language, company comparison, insurance, damage, app usage, and exchanges.',
+          cards: [
+            {
+              source: 'Cam 20 Test 03',
+              question: 'Monthly price per room can be as high as $___',
+              answer: '239',
+              transcript: 'The monthly price per room starts at $105 and goes up to $239.',
+              bridge: 'goes up to -> can be as high as',
+              thai: 'นี่เป็น pattern ตัวเลขที่ดีมาก เพราะ IELTS ชอบแปลง goes up to เป็น maximum language.',
+              meaning: 'goes up to = สูงสุดถึง'
+            },
+            {
+              source: 'Cam 20 Test 03',
+              question: 'She wants ___ furniture',
+              answer: 'modern',
+              transcript: 'The furniture from Peak Rentals is more modern than any of the other companies.',
+              bridge: 'more modern than ... -> modern',
+              thai: 'ผู้ฟังต้องดึง adjective หลักออกมาจากประโยค comparative.',
+              meaning: 'modern = ทันสมัย'
+            },
+            {
+              source: 'Cam 20 Test 03',
+              question: 'must take out ___',
+              answer: 'insurance',
+              transcript: 'You have to take out insurance on the furniture.',
+              bridge: 'take out insurance -> must take out insurance',
+              thai: 'เป็น collocation ที่ต้องเก็บไว้เลย เพราะออกบ่อยในหัวข้อเช่า บ้าน รถ หรือสุขภาพ.',
+              meaning: 'insurance = ประกัน'
+            },
+            {
+              source: 'Cam 20 Test 03',
+              question: 'can request ___ within a week',
+              answer: 'exchanges',
+              transcript: 'You can request exchanges, as long as you do that within a week.',
+              bridge: 'policy sentence -> short service noun',
+              thai: 'คำพวก exchange, refund, delivery เป็นคำตอบยอดฮิตใน service conversations.',
+              meaning: 'exchange = การเปลี่ยนสินค้า'
+            }
+          ],
+          quiz: [
+            { prompt: 'Starts at $105 and goes up to ___', answer: '239' },
+            { prompt: 'More ___ than the other companies', answer: 'modern' },
+            { prompt: 'Take out ___ on the furniture', answer: 'insurance' },
+            { prompt: 'Request ___ within a week', answer: 'exchanges' }
+          ]
+        },
+        {
+          id: 'travel',
+          title: 'Travel And Local Advice',
+          description: 'This pack trains city guidance, trip planning, opening times, ticket discounts, and landmarks.',
+          cards: [
+            {
+              source: 'Cam 20 Test 04',
+              question: 'Best way to explore: ___',
+              answer: 'walking',
+              transcript: 'I think it\'s better to do a walking tour.',
+              bridge: 'walking tour -> walking',
+              thai: 'คำตอบจริงเป็น mode ของ tour ไม่ใช่คำว่า tour เอง.',
+              meaning: 'walking = การเดิน'
+            },
+            {
+              source: 'Cam 20 Test 04',
+              question: 'Suggested activity: take a ___',
+              answer: 'boat',
+              transcript: 'You could get there by boat.',
+              bridge: 'get there by boat -> take a boat',
+              thai: 'IELTS มักเปลี่ยน preposition phrase ใน audio ให้กลายเป็น simple activity note.',
+              meaning: 'boat = เรือ'
+            },
+            {
+              source: 'Cam 20 Test 04',
+              question: 'Best day for museum visit: ___',
+              answer: 'Tuesday',
+              transcript: 'They\'re here from Saturday for four nights so Tuesday would be best.',
+              bridge: 'reasoning in conversation -> final note answer',
+              thai: 'ผู้ฟังต้องคิดตามเล็กน้อย ไม่ใช่รอฟังคำตอบแบบตรงเสมอไป.',
+              meaning: 'Tuesday = วันอังคาร'
+            },
+            {
+              source: 'Cam 20 Test 04',
+              question: 'View from Telegraph Hill: the ___',
+              answer: 'port',
+              transcript: 'You\'ll be able to look right down on the port.',
+              bridge: 'look right down on -> view of the port',
+              thai: 'คำตอบเป็น landmark ที่ซ่อนอยู่ในประโยคบรรยายภาพวิว.',
+              meaning: 'port = ท่าเรือขนาดใหญ่'
+            }
+          ],
+          quiz: [
+            { prompt: 'A ___ tour', answer: 'walking' },
+            { prompt: 'Get there by ___', answer: 'boat' },
+            { prompt: 'Tuesday would be ___', answer: 'best' },
+            { prompt: 'Look right down on the ___', answer: 'port' }
+          ]
+        }
+      ]
+
+      const packList = document.getElementById('pack-list')
+      const cardsEl = document.getElementById('cards')
+      const quizEl = document.getElementById('quiz')
+      const packTitle = document.getElementById('pack-title')
+      const packDesc = document.getElementById('pack-desc')
+      const cardCount = document.getElementById('card-count')
+      const quizScore = document.getElementById('quiz-score')
+      const packName = document.getElementById('pack-name')
+
+      let activePack = packs[0]
+
+      function normalize(value) {
+        return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ')
+      }
+
+      function renderPacks() {
+        packList.innerHTML = packs.map(pack => `
+          <button class="pack-btn ${pack.id === activePack.id ? 'active' : ''}" data-pack="${pack.id}">
+            <strong>${pack.title}</strong>
+            <span>${pack.cards.length} cards · ${pack.quiz.length} quiz prompts</span>
+          </button>
+        `).join('')
+
+        packList.querySelectorAll('.pack-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            activePack = packs.find(pack => pack.id === btn.dataset.pack)
+            renderAll()
+          })
+        })
+      }
+
+      function renderCards() {
+        packTitle.textContent = activePack.title
+        packDesc.textContent = activePack.description
+        cardCount.textContent = String(activePack.cards.length)
+        packName.textContent = activePack.title.split(' ')[0]
+
+        cardsEl.innerHTML = activePack.cards.map((card, index) => `
+          <article class="card">
+            <div class="card-top">
+              <div>
+                <div class="eyebrow" style="background: var(--sky); color: var(--ink);">${card.source}</div>
+                <h3 style="margin-top: 10px;">Card ${index + 1}</h3>
+              </div>
+              <div class="label">Answer: ${card.answer}</div>
+            </div>
+            <div class="bridge-grid">
+              <div class="bridge-box">
+                <span>Transcript</span>
+                <div>${card.transcript}</div>
+              </div>
+              <div class="bridge-box">
+                <span>Question</span>
+                <div>${card.question}</div>
+              </div>
+              <div class="bridge-box">
+                <span>Bridge</span>
+                <div>${card.bridge}</div>
+              </div>
+            </div>
+            <details style="margin-top: 14px;">
+              <summary style="cursor:pointer; font-weight:800;">Open Thai teaching note</summary>
+              <div class="thai-note">${card.thai}</div>
+              <div class="meaning">${card.meaning}</div>
+            </details>
+          </article>
+        `).join('')
+      }
+
+      function renderQuiz() {
+        quizEl.innerHTML = activePack.quiz.map((item, index) => `
+          <article class="quiz-card">
+            <div class="eyebrow" style="background: var(--yellow); color: var(--ink);">Prompt ${index + 1}</div>
+            <h3 style="margin-top: 10px;">${item.prompt}</h3>
+            <input type="text" id="quiz-${index}" placeholder="Type the missing word" />
+            <div class="feedback" id="feedback-${index}"></div>
+          </article>
+        `).join('')
+      }
+
+      function resetQuiz() {
+        activePack.quiz.forEach((_, index) => {
+          const input = document.getElementById(`quiz-${index}`)
+          const feedback = document.getElementById(`feedback-${index}`)
+          input.value = ''
+          feedback.className = 'feedback'
+          feedback.textContent = ''
+        })
+        quizScore.textContent = '0'
+      }
+
+      function checkQuiz() {
+        let score = 0
+        activePack.quiz.forEach((item, index) => {
+          const input = document.getElementById(`quiz-${index}`)
+          const feedback = document.getElementById(`feedback-${index}`)
+          const ok = normalize(input.value) === normalize(item.answer)
+          if (ok) {
+            score += 1
+            feedback.className = 'feedback show ok'
+            feedback.textContent = 'Correct'
+          } else if (normalize(input.value)) {
+            feedback.className = 'feedback show no'
+            feedback.textContent = `Answer: ${item.answer}`
+          } else {
+            feedback.className = 'feedback'
+            feedback.textContent = ''
+          }
+        })
+        quizScore.textContent = String(score)
+      }
+
+      function renderAll() {
+        renderPacks()
+        renderCards()
+        renderQuiz()
+        quizScore.textContent = '0'
+      }
+
+      document.getElementById('show-all').addEventListener('click', () => {
+        document.querySelectorAll('details').forEach(d => d.open = true)
+      })
+      document.getElementById('hide-all').addEventListener('click', () => {
+        document.querySelectorAll('details').forEach(d => d.open = false)
+      })
+      document.getElementById('reset-quiz').addEventListener('click', resetQuiz)
+
+      document.addEventListener('input', (event) => {
+        if (event.target.matches('input[id^="quiz-"]')) {
+          checkQuiz()
+        }
+      })
+
+      renderAll()
+    </script>
+  </body>
+</html>

@@ -48,9 +48,14 @@ Copy [.env.example](/Users/natchanon/Documents/IELTS%20SPEAKING/.env.example) to
 Required for access control:
 
 - `ADMIN_PANEL_CODE`
+- `APP_BASE_URL`
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `ADMIN_SIGNUP_NOTIFY_EMAIL`
+- `ACCESS_APPROVAL_SECRET`
 
 Required for the existing speaking features:
 
@@ -66,6 +71,13 @@ Recommended Gemini defaults for faster reports:
 - `GEMINI_TEXT_MODEL=gemini-2.5-flash`
 - `GEMINI_CLEANUP_MODEL=gemini-2.5-flash-lite`
 - `GEMINI_TRANSCRIPTION_MODEL=gemini-2.5-flash`
+
+Email approval flow defaults:
+
+- `ADMIN_SIGNUP_NOTIFY_EMAIL=languageplanconsulting@gmail.com`
+- `RESEND_FROM_EMAIL=Language Plan <onboarding@resend.dev>`
+- `APP_BASE_URL=https://your-vercel-app.vercel.app`
+- `ACCESS_APPROVAL_SECRET=choose-a-long-random-secret`
 
 ### 4. Set your admin code
 
@@ -122,6 +134,10 @@ You can also:
    - expiry date
    - remaining credits
 4. When a learner starts an assessment, the server deducts credits from Supabase
+
+Access expiry default:
+
+- when access is granted without an explicit expiry date, the app sets expiry to 3 months from the access date
 
 ## Notes
 

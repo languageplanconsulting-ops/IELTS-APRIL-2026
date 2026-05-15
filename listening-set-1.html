@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IELTS Listening Set 1 | Hinchingbrooke Country Park</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+      :root {
+        --cream: #fffaf0;
+        --ink: #15233b;
+        --sky: #a7e8ff;
+        --blue: #2d7ff9;
+        --mint: #c8facc;
+        --lime: #d8ff6f;
+        --pink: #ff8ec8;
+        --peach: #ffd3a8;
+        --gold: #ffce54;
+        --danger: #ff6b6b;
+        --shadow: 0 16px 40px rgba(21, 35, 59, 0.14);
+        --radius: 28px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), transparent 28%),
+          radial-gradient(circle at top right, rgba(216, 255, 111, 0.6), transparent 20%),
+          linear-gradient(160deg, #7fdafc 0%, #d9f7ff 38%, #fff4df 100%);
+        min-height: 100vh;
+      }
+
+      .page {
+        width: min(1180px, calc(100% - 32px));
+        margin: 28px auto 48px;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1d58d8, #4e97ff 58%, #7adfff);
+        color: white;
+        border-radius: 36px;
+        padding: 28px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after,
+      .hero::before {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.18;
+      }
+
+      .hero::before {
+        width: 220px;
+        height: 220px;
+        right: -40px;
+        top: -60px;
+        background: white;
+      }
+
+      .hero::after {
+        width: 160px;
+        height: 160px;
+        left: -30px;
+        bottom: -70px;
+        background: #d8ff6f;
+      }
+
+      .eyebrow,
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(8px);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.76rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: 'Baloo 2', sans-serif;
+        line-height: 0.95;
+        margin: 0;
+      }
+
+      .hero h1 {
+        margin-top: 16px;
+        font-size: clamp(2.8rem, 5vw, 5rem);
+      }
+
+      .hero p {
+        position: relative;
+        z-index: 1;
+        max-width: 760px;
+        margin: 16px 0 0;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr;
+        gap: 22px;
+        align-items: end;
+        position: relative;
+        z-index: 1;
+      }
+
+      .audio-card,
+      .panel,
+      .question-card,
+      .score-card,
+      .tips-card {
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--ink);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .audio-card {
+        padding: 20px;
+      }
+
+      .audio-card h2 {
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+
+      audio {
+        width: 100%;
+        margin-top: 14px;
+      }
+
+      .link-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .link-row a,
+      .action-row button {
+        text-decoration: none;
+        color: var(--ink);
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 800;
+        border-radius: 999px;
+        padding: 12px 16px;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .link-row a {
+        background: var(--mint);
+      }
+
+      .link-row a:nth-child(2) {
+        background: var(--peach);
+      }
+
+      .link-row a:hover,
+      .action-row button:hover {
+        transform: translateY(-2px);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 22px;
+        margin-top: 22px;
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .panel h2 {
+        font-size: 2rem;
+        margin-bottom: 14px;
+      }
+
+      .panel p,
+      .panel li,
+      .question-card p,
+      .question-card li,
+      .feedback,
+      .explanation {
+        line-height: 1.7;
+      }
+
+      .mini-stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .tips-card,
+      .score-card {
+        padding: 20px;
+      }
+
+      .score-card {
+        background: linear-gradient(140deg, #fffdfa 0%, #fff2c7 100%);
+      }
+
+      .score-big {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .score-big strong {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 4rem;
+        line-height: 0.85;
+        color: #1d58d8;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .stat {
+        background: white;
+        border-radius: 20px;
+        padding: 14px;
+      }
+
+      .stat span {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        opacity: 0.75;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 6px;
+        font-size: 1.3rem;
+      }
+
+      .notes {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .exercise {
+        margin-top: 22px;
+        display: grid;
+        gap: 16px;
+      }
+
+      .question-card {
+        padding: 18px;
+        position: relative;
+      }
+
+      .question-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .tag {
+        background: var(--sky);
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 0.84rem;
+      }
+
+      .question-card h3 {
+        font-size: 1.8rem;
+      }
+
+      .prompt {
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+
+      .input-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+        margin-top: 14px;
+      }
+
+      .input-row input {
+        border: 2px solid #c7d6f6;
+        border-radius: 18px;
+        padding: 14px 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        outline: none;
+        transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .input-row input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 5px rgba(45, 127, 249, 0.14);
+      }
+
+      .hint {
+        border-radius: 14px;
+        padding: 10px 12px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        background: #f3f7ff;
+      }
+
+      .feedback {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 18px;
+        font-weight: 700;
+        display: none;
+      }
+
+      .feedback.show {
+        display: block;
+      }
+
+      .feedback.correct {
+        background: #e8fff0;
+        color: #126132;
+      }
+
+      .feedback.wrong {
+        background: #fff1f1;
+        color: #a32828;
+      }
+
+      details {
+        margin-top: 12px;
+        border-radius: 18px;
+        background: #f6f9ff;
+        padding: 12px 14px;
+      }
+
+      summary {
+        cursor: pointer;
+        font-weight: 800;
+      }
+
+      .answer-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        padding: 8px 12px;
+        background: var(--lime);
+        border-radius: 999px;
+        font-weight: 800;
+      }
+
+      .action-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .action-row button {
+        background: white;
+        box-shadow: var(--shadow);
+      }
+
+      .action-row .primary {
+        background: var(--lime);
+      }
+
+      .action-row .secondary {
+        background: var(--pink);
+      }
+
+      .action-row .ghost {
+        background: var(--sky);
+      }
+
+      .footer-note {
+        margin-top: 22px;
+        padding: 18px 20px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.74);
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .page {
+          width: min(100% - 20px, 100%);
+          margin-top: 14px;
+        }
+
+        .hero,
+        .panel,
+        .audio-card,
+        .question-card {
+          border-radius: 24px;
+        }
+
+        .hero {
+          padding: 22px;
+        }
+
+        .hero h1 {
+          font-size: 2.6rem;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .input-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">IELTS Listening Adventure</span>
+            <h1>Set 1: Hinchingbrooke Country Park</h1>
+            <p>
+              A fun practice page for the first listening section from Cambridge IELTS 19 Test 1.
+              Press play, fill in the notes, check your answers, and open each explanation to see
+              why the answer fits.
+            </p>
+          </div>
+          <div class="audio-card">
+            <div class="pill">Part 1 · Notes Completion · 10 Questions</div>
+            <h2>Press Play</h2>
+            <p>Tip: Listen once for the overall flow, then replay and hunt for each answer.</p>
+            <audio controls preload="none">
+              <source
+                src="https://ieltstrainingonline.com/wp-content/uploads/2024/07/cam19-test1-part1.m4a"
+                type="audio/mp4"
+              />
+              Your browser does not support audio playback.
+            </audio>
+            <div class="link-row">
+              <a
+                href="https://ieltstrainingonline.com/practice-cam-19-listening-test-01-with-answer-and-audioscripts/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Question source
+              </a>
+              <a
+                href="https://ieltstrainingonline.com/audioscripts-cambridge-ielts-019-listening-test-01/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Audioscript source
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="mini-stack">
+          <div class="panel">
+            <h2>Mini Brief</h2>
+            <p>
+              You are listening to a phone enquiry about <strong>educational visits</strong> to a
+              country park. The task is a classic Part 1 note-completion exercise.
+            </p>
+            <ul class="notes">
+              <li>Write <strong>one word and/or a number</strong> for each blank.</li>
+              <li>Watch out for paraphrasing like <strong>covers</strong> instead of <strong>area</strong>.</li>
+              <li>Answers often come in a clear order, so do not skip too far ahead.</li>
+            </ul>
+          </div>
+
+          <div class="score-card">
+            <div class="pill" style="background: #1d58d8; color: white;">Score Board</div>
+            <div class="score-big">
+              <strong id="score">0</strong>
+              <span>/ 10 correct</span>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <span>Checked</span>
+                <strong id="checked-count">0</strong>
+              </div>
+              <div class="stat">
+                <span>Correct</span>
+                <strong id="correct-count">0</strong>
+              </div>
+              <div class="stat">
+                <span>Accuracy</span>
+                <strong id="accuracy">0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="tips-card">
+            <div class="pill" style="background: var(--gold);">Answer Radar</div>
+            <ul class="notes">
+              <li>Numbers can be spoken first, then repeated in a different unit.</li>
+              <li>Plural forms matter, especially when the sentence grammar requires them.</li>
+              <li>For this section, the speaker often gives a category, then examples.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Exercise Time</h2>
+          <p>Fill in each gap, then hit <strong>Check my answers</strong>.</p>
+
+          <div class="exercise" id="exercise"></div>
+
+          <div class="action-row">
+            <button class="primary" id="check-btn" type="button">Check my answers</button>
+            <button class="secondary" id="reveal-btn" type="button">Reveal all answers</button>
+            <button class="ghost" id="reset-btn" type="button">Reset practice</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="footer-note">
+        This page is a custom practice layout built from the referenced question page and
+        audioscript page. Explanations are paraphrased to help with understanding and review.
+      </section>
+    </main>
+
+    <script>
+      const questions = [
+        {
+          number: 1,
+          prompt: 'The park area is ___ hectares.',
+          answers: ['69', 'sixty-nine', 'sixty nine'],
+          hint: 'Listen for the acreage first, then the number in hectares.',
+          explanation:
+            'The ranger says the park covers 170 acres, then immediately converts that to 69 hectares. The note asks for hectares, so 69 is the target answer.',
+        },
+        {
+          number: 2,
+          prompt: 'The wetland includes lakes, ponds and a ___.',
+          answers: ['stream'],
+          hint: 'It is a small natural flow of water.',
+          explanation:
+            'After describing the lakes and ponds, the ranger adds one more water feature that flows through the park: a stream.',
+        },
+        {
+          number: 3,
+          prompt: 'In science, children collect and analyse ___ about plants and other things.',
+          answers: ['data'],
+          hint: 'A common academic noun connected to collecting and analysing.',
+          explanation:
+            'The speaker explains that students study plants, trees and insects, then collect and analyse data about what they observe.',
+        },
+        {
+          number: 4,
+          prompt: 'In geography, children learn to use a ___ and compass.',
+          answers: ['map'],
+          hint: 'This word is paired very naturally with compass.',
+          explanation:
+            'The geography section is about navigation around the park, so the pair is map and compass.',
+        },
+        {
+          number: 5,
+          prompt: 'Leisure and tourism mainly focuses on the park’s ___.',
+          answers: ['visitors'],
+          hint: 'Think about the people who come to the park.',
+          explanation:
+            'John guesses correctly that the topic is about the people who visit the park, and Sally confirms that it mostly focuses on visitors.',
+        },
+        {
+          number: 6,
+          prompt: 'In music, children use natural materials to create ___.',
+          answers: ['sounds'],
+          hint: 'The answer is plural.',
+          explanation:
+            'The ranger says the children experiment with natural materials to create sounds, then explore rhythm and tempo.',
+        },
+        {
+          number: 7,
+          prompt: 'Outdoor visits can give children a sense of ___.',
+          answers: ['freedom'],
+          hint: 'It describes a feeling they may not usually get elsewhere.',
+          explanation:
+            'John comments that children probably get a sense of freedom, and Sally agrees. That exact idea completes the note.',
+        },
+        {
+          number: 8,
+          prompt: 'Children develop new ___ and become more confident.',
+          answers: ['skills'],
+          hint: 'A broad word for abilities.',
+          explanation:
+            'Sally says the children discover they can do new things and develop new skills, which builds self-confidence.',
+        },
+        {
+          number: 9,
+          prompt: 'The cost per child is £___.',
+          answers: ['4.95', '4,95'],
+          hint: 'It is a price under five pounds.',
+          explanation:
+            'For groups over 30, the charge is four pounds ninety-five for each child attending on the day.',
+        },
+        {
+          number: 10,
+          prompt: 'Adults such as ___ can come free of charge.',
+          answers: ['leaders'],
+          hint: 'The answer refers to supervising adults.',
+          explanation:
+            'Sally says there is no charge for leaders and other adults. The notes ask for one example, so leaders is the answer.',
+        },
+      ]
+
+      const exerciseEl = document.getElementById('exercise')
+      const scoreEl = document.getElementById('score')
+      const checkedCountEl = document.getElementById('checked-count')
+      const correctCountEl = document.getElementById('correct-count')
+      const accuracyEl = document.getElementById('accuracy')
+
+      function escapeHtml(value) {
+        return value
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;')
+      }
+
+      function renderQuestions() {
+        exerciseEl.innerHTML = questions
+          .map(
+            (question) => `
+              <article class="question-card" data-number="${question.number}">
+                <div class="question-top">
+                  <div>
+                    <div class="tag">Question ${question.number}</div>
+                    <h3>Fill the gap</h3>
+                  </div>
+                  <div class="pill" style="background: ${question.number % 2 === 0 ? 'var(--peach)' : 'var(--mint)'}; color: var(--ink);">
+                    1 word / number
+                  </div>
+                </div>
+                <p class="prompt">${escapeHtml(question.prompt)}</p>
+                <div class="input-row">
+                  <input
+                    id="answer-${question.number}"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Type your answer here"
+                  />
+                  <div class="hint">${escapeHtml(question.hint)}</div>
+                </div>
+                <div class="feedback" id="feedback-${question.number}"></div>
+                <details>
+                  <summary>Why is this the answer?</summary>
+                  <div class="answer-chip">Answer: ${escapeHtml(question.answers[0])}</div>
+                  <p class="explanation">${escapeHtml(question.explanation)}</p>
+                </details>
+              </article>
+            `,
+          )
+          .join('')
+      }
+
+      function normalize(value) {
+        return value.trim().toLowerCase().replace(/\s+/g, ' ')
+      }
+
+      function updateStats(checked, correct) {
+        scoreEl.textContent = String(correct)
+        checkedCountEl.textContent = String(checked)
+        correctCountEl.textContent = String(correct)
+        accuracyEl.textContent = checked === 0 ? '0%' : `${Math.round((correct / checked) * 100)}%`
+      }
+
+      function checkAnswers(revealAll = false) {
+        let checked = 0
+        let correct = 0
+
+        questions.forEach((question) => {
+          const input = document.getElementById(`answer-${question.number}`)
+          const feedback = document.getElementById(`feedback-${question.number}`)
+          const answer = revealAll ? question.answers[0] : input.value
+
+          if (revealAll) {
+            input.value = question.answers[0]
+          }
+
+          const normalized = normalize(answer)
+          const isBlank = normalized.length === 0
+          const isCorrect = question.answers.some((item) => normalize(item) === normalized)
+
+          if (!isBlank || revealAll) {
+            checked += 1
+          }
+
+          if (isCorrect) {
+            correct += 1
+            feedback.className = 'feedback show correct'
+            feedback.textContent = 'Correct! Nice catch.'
+            input.style.borderColor = '#2fb36d'
+            input.style.background = '#f0fff5'
+          } else if (!isBlank) {
+            feedback.className = 'feedback show wrong'
+            feedback.textContent = `Not quite. The answer is "${question.answers[0]}".`
+            input.style.borderColor = 'var(--danger)'
+            input.style.background = '#fff7f7'
+          } else {
+            feedback.className = 'feedback'
+            feedback.textContent = ''
+            input.style.borderColor = '#c7d6f6'
+            input.style.background = 'white'
+          }
+        })
+
+        updateStats(checked, correct)
+      }
+
+      function resetPractice() {
+        questions.forEach((question) => {
+          const input = document.getElementById(`answer-${question.number}`)
+          const feedback = document.getElementById(`feedback-${question.number}`)
+          input.value = ''
+          input.style.borderColor = '#c7d6f6'
+          input.style.background = 'white'
+          feedback.className = 'feedback'
+          feedback.textContent = ''
+        })
+
+        updateStats(0, 0)
+      }
+
+      renderQuestions()
+
+      document.getElementById('check-btn').addEventListener('click', () => checkAnswers(false))
+      document.getElementById('reveal-btn').addEventListener('click', () => checkAnswers(true))
+      document.getElementById('reset-btn').addEventListener('click', resetPractice)
+    </script>
+  </body>
+</html>

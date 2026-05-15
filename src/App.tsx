@@ -1,11 +1,64 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import './App.css'
+import {
+  getListeningHighlightMatch,
+  isListeningHighlightMatch,
+  normalizeListeningHighlightText,
+  buildListeningHighlightCandidates
+} from './listeningHighlightMatch'
+import {
+  findListeningScriptChunkForText,
+  getListeningSpeakerTone,
+  parseListeningScriptSegments,
+  type ListeningScriptSegment
+} from './listeningScriptReader'
+import listeningWorkbookRaw from '../cambridge-listening-transcript-first-workbook.md?raw'
+import listeningSectionBankRaw from '../cambridge-listening-sections-2-4-bank.md?raw'
+import { CAMBRIDGE_10_SECTION_2_EXAM_SET } from './listeningBuilderCambridge10Section2'
+import { CAMBRIDGE_10_SECTION_4_EXAM_SET } from './listeningBuilderCambridge10Section4'
+import { CAMBRIDGE_11_SECTION_2_EXAM_SET } from './listeningBuilderCambridge11Section2'
+import { CAMBRIDGE_11_SECTION_4_EXAM_SET } from './listeningBuilderCambridge11Section4'
+import { CAMBRIDGE_12_SECTION_2_EXAM_SET } from './listeningBuilderCambridge12Section2'
+import { CAMBRIDGE_12_SECTION_4_EXAM_SET } from './listeningBuilderCambridge12Section4'
+import { CAMBRIDGE_13_SECTION_2_EXAM_SET } from './listeningBuilderCambridge13Section2'
+import { CAMBRIDGE_13_SECTION_4_EXAM_SET } from './listeningBuilderCambridge13Section4'
+import { CAMBRIDGE_14_SECTION_2_EXAM_SET } from './listeningBuilderCambridge14Section2'
+import { CAMBRIDGE_14_SECTION_4_EXAM_SET } from './listeningBuilderCambridge14Section4'
+import { CAMBRIDGE_16_SECTION_2_EXAM_SET } from './listeningBuilderCambridge16Section2'
+import { CAMBRIDGE_17_SECTION_2_EXAM_SET } from './listeningBuilderCambridge17Section2'
+import { CAMBRIDGE_18_SECTION_2_EXAM_SET, type ListeningBuilderExamTask } from './listeningBuilderCambridge18Section2'
+import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './listeningFoundationData'
+import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 
-type Role = 'student' | 'admin'
-type AppPage = 'home' | 'workspace' | 'reading' | 'notebook' | 'admin'
+const LISTENING_BUILDER_EXAM_SETS = [
+  CAMBRIDGE_10_SECTION_2_EXAM_SET,
+  CAMBRIDGE_10_SECTION_4_EXAM_SET,
+  CAMBRIDGE_11_SECTION_2_EXAM_SET,
+  CAMBRIDGE_11_SECTION_4_EXAM_SET,
+  CAMBRIDGE_12_SECTION_2_EXAM_SET,
+  CAMBRIDGE_12_SECTION_4_EXAM_SET,
+  CAMBRIDGE_13_SECTION_2_EXAM_SET,
+  CAMBRIDGE_13_SECTION_4_EXAM_SET,
+  CAMBRIDGE_14_SECTION_2_EXAM_SET,
+  CAMBRIDGE_14_SECTION_4_EXAM_SET,
+  CAMBRIDGE_16_SECTION_2_EXAM_SET,
+  CAMBRIDGE_17_SECTION_2_EXAM_SET,
+  CAMBRIDGE_18_SECTION_2_EXAM_SET
+]
+
+const ALL_LISTENING_FOUNDATION_SETS = [
+  ...LISTENING_FOUNDATION_SETS,
+  ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS
+]
+
+type Role = 'student' | 'admin' | 'trial'
+type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
-type ReadingBankCategory = 'passage1' | 'passage2' | 'passage3' | 'fulltest'
+type ReadingBankCategory = 'normal' | 'advanced'
+type ReadingWorkspaceMode = 'bank' | 'pdoy'
+type ReadingPdoyLessonType = 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'fill-in-the-blank'
+type ReadingPdoyLessonStep = 'intro' | 'evidence' | 'decide' | 'result' | 'complete'
 type SupportReportCategory = 'bug' | 'account' | 'content' | 'billing' | 'other'
 type SupportReportStatus = 'open' | 'in_progress' | 'resolved' | 'closed'
 
@@ -14,6 +67,8 @@ type ReadingQuestion = {
   prompt: string
   correctAnswer: string
   answerType: 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'text'
+  acceptedAnswers?: string[]
+  answerGroup?: string
   exactPortion: string
   explanationThai: string
   paraphrasedVocabulary: string
@@ -68,9 +123,202 @@ type SupportReportRecord = {
   resolvedAt: string | null
 }
 
+type AdminAssessmentReportSummary = {
+  id: string
+  userId: string | null
+  learnerName: string
+  learnerEmail: string
+  testMode: SpeakingTestMode
+  topicTitle: string
+  topicCategory: string
+  overallBand: number
+  provider: string
+  apiCostUsd: number
+  totalTokens: number
+  totalCalls: number
+  createdAt: string | null
+  objectPath: string
+}
+
+type AdminReadingPdoyProgressSummary = {
+  userId: string | null
+  learnerName: string
+  learnerEmail: string
+  lessonId: string
+  lessonType: string
+  examId: string
+  examTitle: string
+  category: ReadingBankCategory
+  passageNumber: number
+  passageTitle: string
+  questionNumber: number
+  questionPrompt: string
+  step: ReadingPdoyLessonStep
+  questionIndex: number
+  sessionActive: boolean
+  updatedAt: string | null
+  objectPath: string
+}
+
 type ReadingReportItem = ReadingQuestion & {
   userAnswer: string
   isCorrect: boolean
+}
+
+type ReadingAttemptSummary = {
+  examId: string
+  examTitle: string
+  category: ReadingBankCategory
+  correctCount: number
+  totalQuestions: number
+  accuracy: number
+  wrongCount: number
+  completedAt: string
+  reportItems: ReadingReportItem[]
+}
+
+type ReadingPdoyLesson = {
+  id: string
+  examId: string
+  examTitle: string
+  category: ReadingBankCategory
+  passageNumber: number
+  passageTitle: string
+  lessonType: ReadingPdoyLessonType
+  questions: ReadingQuestion[]
+}
+
+type ReadingPdoyMultipleChoiceOption = {
+  letter: string
+  text: string
+}
+
+type ReadingPdoyEvidenceOption = {
+  id: string
+  text: string
+  isCorrect: boolean
+}
+
+type ReadingPdoyFillGrammarOption = {
+  id: string
+  label: string
+  isCorrect: boolean
+}
+
+type ReadingPdoyFillWordMatchOption = {
+  id: string
+  text: string
+  meaning: string
+  isCorrect: boolean
+}
+
+type ReadingPdoyProgressSnapshot = {
+  lessonId: string
+  sessionActive: boolean
+  step: ReadingPdoyLessonStep
+  questionIndex: number
+  evidenceInput: string
+  decision: string
+  selectedOption: string
+  optionParaphraseInput: string
+  feedback: string
+  introChoice: string
+  evidenceAttempts: number
+  decisionAttempts: number
+  fillMeaningOptionId?: string
+}
+
+type ListeningQuestion = {
+  number: number
+  prompt: string
+  answerType: 'text' | 'multiple-choice'
+  correctAnswer: string
+  acceptedAnswers?: string[]
+  options?: Array<{ key: string; text: string }>
+  exactPortion: string
+  explanationThai: string
+  paraphrasedVocabulary: string
+}
+
+type ListeningExercise = {
+  id: string
+  title: string
+  label: string
+  summary: string
+  level: string
+  duration: string
+  formatLabel: string
+  instructionsThai: string
+  playbackNoteThai: string
+  audioScript: string[]
+  questions: ListeningQuestion[]
+}
+
+type ListeningVocabularyBuilderItem = {
+  id: string
+  book: string
+  bookNumber: number | null
+  testNumber: number | null
+  sectionNumber: number | null
+  questionNumber: number
+  questionPrompt: string
+  answer: string
+  transcript: string
+  paraphraseType: string
+  paraphraseLogic: string
+  thaiExplanation: string
+  thaiMeaning: string
+}
+
+type ListeningVocabularyBuilderPack = {
+  id: string
+  title: string
+  bookNumber: number | null
+  sectionNumber: number | null
+  testNumbers: number[]
+  items: ListeningVocabularyBuilderItem[]
+  sectionTests: ListeningSectionBankTest[]
+}
+
+type ListeningBuilderBridge = {
+  questionText: string
+  transcriptText: string
+}
+
+type ListeningSectionBankTest = {
+  id: string
+  bookNumber: number
+  sectionNumber: number
+  testNumber: number
+  title: string
+  questionCoverage: string[]
+  answerLines: string[]
+  vocabFocus: string[]
+}
+
+type ListeningOfficialResource = {
+  id: string
+  title: string
+  source: string
+  description: string
+  url: string
+  sampleType: string
+}
+
+type ListeningReportItem = ListeningQuestion & {
+  userAnswer: string
+  isCorrect: boolean
+}
+
+type ListeningAttemptSummary = {
+  exerciseId: string
+  exerciseTitle: string
+  correctCount: number
+  totalQuestions: number
+  accuracy: number
+  wrongCount: number
+  completedAt: string
+  reportItems: ListeningReportItem[]
 }
 
 type ScriptReviewItem = {
@@ -131,6 +379,16 @@ type SpeakingTopic = {
   title: string
   prompt: string
   cues: string[]
+}
+
+type QuestionAudioCatalogItem = {
+  key: string
+  cacheKey: string
+  section: 'Part 1' | 'Part 3'
+  topicId: string
+  topicTitle: string
+  question: string
+  audioUrl: string
 }
 
 type SpeakingTestMode = 'part1' | 'part2' | 'part3' | 'full'
@@ -213,6 +471,33 @@ type AssessmentResult = AssessmentReport & {
   primaryProvider?: string
   comparisons?: Record<string, AssessmentReport>
   comparisonErrors?: string[]
+  apiUsage?: {
+    provider: string
+    totalCalls: number
+    totalPromptTokens: number
+    totalCompletionTokens: number
+    totalTokens: number
+    inputCostUsd: number
+    outputCostUsd: number
+    totalCostUsd: number
+    pricingVersion?: {
+      source: string
+      verifiedAt: string
+    }
+    calls?: Array<{
+      id: number
+      provider: string
+      operation: string
+      model: string
+      modelFamily: string
+      promptTokenCount: number
+      candidatesTokenCount: number
+      totalTokenCount: number
+      inputCostUsd: number
+      outputCostUsd: number
+      totalCostUsd: number
+    }>
+  }
 }
 
 type ComponentReport = {
@@ -1783,6 +2068,30 @@ const FULL_EXAM_TOPICS: SpeakingTopic[] = [
   }
 ]
 
+const TRIAL_SPEAKING_TOPIC_ID = 'trial-speaking-funnel'
+const TRIAL_SPEAKING_PROMPT = 'Describe something you own which is very important to you.'
+const TRIAL_SPEAKING_PART2_CUES = [
+  'where you got it from',
+  'how long you have had it',
+  'what you use it for',
+  'and explain why it is important to you.'
+]
+const TRIAL_SPEAKING_PART3_QUESTIONS = [
+  'What are popular types of advertising in today’s world?',
+  'What type of media advertising do you like most?',
+  'Do you think advertising influences what people buy?'
+]
+const TRIAL_SPEAKING_TOPIC: SpeakingTopic = {
+  id: TRIAL_SPEAKING_TOPIC_ID,
+  category: 'One-Time Trial Speaking',
+  title: 'IELTS Speaking Trial',
+  prompt: TRIAL_SPEAKING_PROMPT,
+  cues: [
+    ...TRIAL_SPEAKING_PART2_CUES,
+    ...TRIAL_SPEAKING_PART3_QUESTIONS.map((question) => `Part 3 - ${question}`)
+  ]
+}
+
 const SPEAKING_MODE_LABELS: Record<SpeakingTestMode, string> = {
   part1: 'Part 1',
   part2: 'Part 2',
@@ -2672,13 +2981,16 @@ const renderNextBandCriteria = (
 const NOTEBOOK_ENTRIES_KEY = 'ielts-notebook-entries'
 const NOTEBOOK_CUSTOM_SECTIONS_KEY = 'ielts-notebook-custom-sections'
 const TEST_LATEST_SCORE_KEY = 'ielts-test-latest-scores'
+const READING_ATTEMPTS_KEY = 'ielts-reading-attempts'
+const LISTENING_ATTEMPTS_KEY = 'ielts-listening-attempts'
+const READING_PDOY_PROGRESS_KEY = 'ielts-reading-pdoy-progress'
 const AUTH_SESSION_KEY = 'english-plan-auth-session'
 const DEFAULT_FEEDBACK_CREDITS = 50
 const DEFAULT_FULL_MOCK_CREDITS = 15
 
 type CreditProfile = {
   name: string
-  plan: 'VIP'
+  plan: 'VIP' | 'TRIAL'
   status: LearnerStatus
   startsAt: string | null
   expiresAt: string | null
@@ -2696,8 +3008,8 @@ const defaultCreditProfile = (name = 'Student'): CreditProfile => ({
   status: 'inactive',
   startsAt: null,
   expiresAt: null,
-  feedbackRemaining: DEFAULT_FEEDBACK_CREDITS,
-  fullMockRemaining: DEFAULT_FULL_MOCK_CREDITS
+  feedbackRemaining: 0,
+  fullMockRemaining: 0
 })
 
 type AuthApiResponse = {
@@ -2737,11 +3049,220 @@ type ReadingBulkValidationResult = {
 }
 
 const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
-  passage1: 'Passage 1',
-  passage2: 'Passage 2',
-  passage3: 'Passage 3',
-  fulltest: 'Full Test'
+  normal: 'Normal Reading',
+  advanced: 'Advanced Reading'
 }
+
+const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
+  const normalized = String(value || '').trim().toLowerCase()
+  if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
+  return 'normal'
+}
+
+const READING_PDOY_LESSON_LABELS: Record<ReadingPdoyLessonType, string> = {
+  'true-false-not-given': 'TRUE / FALSE / NOT GIVEN',
+  'yes-no-not-given': 'YES / NO / NOT GIVEN',
+  'multiple-choice': 'Multiple Choice / ปรนัย',
+  'fill-in-the-blank': 'Fill in the Blank / เติมคำ'
+}
+
+const LISTENING_OFFICIAL_RESOURCES: ListeningOfficialResource[] = [
+  {
+    id: 'ielts-sample-tasks',
+    title: 'IELTS official listening sample tasks',
+    source: 'IELTS official',
+    description: 'ดูหน้าตา question types จริงของ Listening เช่น form completion, note completion, matching และ multiple choice',
+    url: 'https://ielts.org/cdn/ielts-sample-tests/ielts-listening-sample-tasks-2023.pdf',
+    sampleType: 'Official sample task pack'
+  },
+  {
+    id: 'british-council-practice-test',
+    title: 'British Council listening practice test',
+    source: 'British Council',
+    description: 'ตัวอย่างข้อ Listening แบบเต็มพร้อม answer key และ audio practice จากแหล่งทางการ',
+    url: 'https://takeielts.britishcouncil.org/take-ielts/prepare/free-ielts-english-practice-tests/listening',
+    sampleType: 'Official free practice'
+  },
+  {
+    id: 'ielts-format-overview',
+    title: 'IELTS listening format and question overview',
+    source: 'IELTS official',
+    description: 'ใช้ดูโครงสร้างข้อสอบ Listening และชนิดคำสั่งที่เจอบ่อยในข้อสอบจริง',
+    url: 'https://ielts.org/take-a-test/preparation-resources/sample-test-questions',
+    sampleType: 'Official format guide'
+  }
+]
+
+const LISTENING_EXERCISES: ListeningExercise[] = [
+  {
+    id: 'listening-ex1-pottery-workshop',
+    title: 'Exercise 1 - Pottery workshop enquiry',
+    label: 'Exercise 1',
+    summary: 'Notes Completion + Table Completion',
+    level: 'Medium · Band 6.5',
+    duration: '10-15 minutes',
+    formatLabel: 'IELTS Listening Part 1 style',
+    instructionsThai: 'ฟังบทสนทนาเกี่ยวกับการสมัคร pottery workshop แล้วเติมคำตอบจากสิ่งที่ได้ยิน',
+    playbackNoteThai: 'แบบฝึกนี้ให้กดฟังซ้ำได้เพื่อเรียนรู้ แต่ข้อสอบจริงจะเปิด audio เพียงครั้งเดียวครับ',
+    audioScript: [
+      'Receptionist: Good morning, Riverside Community Centre.',
+      'Caller: Hello. I am interested in your evening pottery course. Could you tell me a few details?',
+      'Receptionist: Of course. The next course starts on the fourteenth of May and it runs for six weeks.',
+      'Caller: Great. Where are the classes held?',
+      'Receptionist: They are all in Studio Four, at the back of the main building.',
+      'Caller: Do I need to bring anything with me?',
+      'Receptionist: Just an apron. Everything else is provided for you.',
+      'Caller: So the price includes the materials?',
+      'Receptionist: Yes, all the clay and tools are included in the fee.',
+      'Caller: Is there any discount for students?',
+      'Receptionist: Yes. If you bring your student card, the price is reduced.',
+      'Caller: And what time is the Saturday practice session?',
+      'Receptionist: That extra session begins at ten thirty in the morning.'
+    ],
+    questions: [
+      {
+        number: 1,
+        prompt: 'The next pottery course starts in ______.',
+        answerType: 'text',
+        correctAnswer: 'May',
+        acceptedAnswers: ['May'],
+        exactPortion: 'The next course starts on the fourteenth of May and it runs for six weeks.',
+        explanationThai: 'คำถามใช้ starts in แต่ใน audio พูดว่า starts on the fourteenth of May ดังนั้นคำที่ต้องเติมคือเดือน May ครับ',
+        paraphrasedVocabulary: 'starts in = starts on ... of May'
+      },
+      {
+        number: 2,
+        prompt: 'Classes are held in Studio ______.',
+        answerType: 'text',
+        correctAnswer: '4',
+        acceptedAnswers: ['4', 'four'],
+        exactPortion: 'They are all in Studio Four, at the back of the main building.',
+        explanationThai: 'โจทย์ล็อกคำว่า Studio ไว้แล้ว สิ่งที่ต้องฟังคือเลขห้อง ซึ่ง speaker บอกชัดว่า Studio Four ครับ',
+        paraphrasedVocabulary: 'held in = are all in'
+      },
+      {
+        number: 3,
+        prompt: 'Students should bring an ______.',
+        answerType: 'text',
+        correctAnswer: 'apron',
+        acceptedAnswers: ['apron'],
+        exactPortion: 'Just an apron. Everything else is provided for you.',
+        explanationThai: 'โจทย์ถามของที่ต้อง bring มาเอง และ audio ตอบตรง ๆ ว่า Just an apron ครับ',
+        paraphrasedVocabulary: 'bring = bring with you'
+      },
+      {
+        number: 4,
+        prompt: 'The fee includes all ______.',
+        answerType: 'text',
+        correctAnswer: 'materials',
+        acceptedAnswers: ['materials'],
+        exactPortion: 'Yes, all the clay and tools are included in the fee.',
+        explanationThai: 'audio ไม่พูดคำว่า materials ตรง ๆ แต่ clay and tools คือวัสดุ/อุปกรณ์ทั้งหมดที่รวมอยู่ในราคา จึงสรุปเป็น materials ครับ',
+        paraphrasedVocabulary: 'materials = clay and tools'
+      },
+      {
+        number: 5,
+        prompt: 'To get the discount, learners need a student ______.',
+        answerType: 'text',
+        correctAnswer: 'card',
+        acceptedAnswers: ['card'],
+        exactPortion: 'If you bring your student card, the price is reduced.',
+        explanationThai: 'โจทย์ถามสิ่งที่ต้องมีเพื่อรับส่วนลด และ audio บอกว่า bring your student card ดังนั้นคำที่หายไปคือ card ครับ',
+        paraphrasedVocabulary: 'discount = the price is reduced'
+      },
+      {
+        number: 6,
+        prompt: 'The Saturday practice session begins at ______.',
+        answerType: 'text',
+        correctAnswer: '10.30',
+        acceptedAnswers: ['10.30', '10:30', 'ten thirty'],
+        exactPortion: 'That extra session begins at ten thirty in the morning.',
+        explanationThai: 'โจทย์ใช้ begins at และ audio ก็ใช้คำเดียวกันตรง ๆ ว่า begins at ten thirty ดังนั้นตอบ 10.30 ครับ',
+        paraphrasedVocabulary: 'begins at = starts at / begins at'
+      }
+    ]
+  },
+  {
+    id: 'listening-ex2-bike-tour',
+    title: 'Exercise 2 - City bike tour booking',
+    label: 'Exercise 2',
+    summary: 'Multiple Choice + Notes Completion',
+    level: 'Medium · Band 6.5',
+    duration: '10-15 minutes',
+    formatLabel: 'IELTS Listening Part 1-2 style',
+    instructionsThai: 'ฟังข้อมูลการจอง bike tour แล้วตอบคำถามแบบ multiple choice และเติมโน้ตจากข้อมูลที่ได้ยิน',
+    playbackNoteThai: 'แบบฝึกนี้เปิดฟังซ้ำได้เพื่อฝึกจับ paraphrase แต่ตอนสอบจริงควรฝึกให้ชินกับการฟังครั้งเดียวครับ',
+    audioScript: [
+      'Tour clerk: City Cycle Tours. How can I help?',
+      'Caller: Hi. I would like to book a bike tour for tomorrow, but I cannot join the morning one because my train does not arrive until midday.',
+      'Tour clerk: No problem. The afternoon tour still has places available.',
+      'Caller: Where do we meet?',
+      'Tour clerk: Meet the guide beside the fountain in Central Square, fifteen minutes before the tour starts.',
+      'Caller: Can I borrow safety equipment there?',
+      'Tour clerk: Yes, every rider can borrow a helmet for free.',
+      'Caller: Great. How much is the student ticket?',
+      'Tour clerk: It is eighteen pounds with a valid student card.',
+      'Caller: And how long does the tour last?',
+      'Tour clerk: About three hours, including a short rest by the river.'
+    ],
+    questions: [
+      {
+        number: 1,
+        prompt: 'Why does the caller choose the afternoon tour?',
+        answerType: 'multiple-choice',
+        correctAnswer: 'B',
+        options: [
+          { key: 'A', text: 'He prefers cycling when the weather is cooler.' },
+          { key: 'B', text: 'His journey to the city finishes late.' },
+          { key: 'C', text: 'The morning tour is already fully booked.' }
+        ],
+        exactPortion: 'I cannot join the morning one because my train does not arrive until midday.',
+        explanationThai: 'ผู้พูดบอกว่าร่วมรอบเช้าไม่ได้เพราะรถไฟมาถึงตอนเที่ยง แปลว่าเหตุผลคือการเดินทางมาถึงช้า จึงตรงกับข้อ B ครับ',
+        paraphrasedVocabulary: 'my train does not arrive until midday = his journey to the city finishes late'
+      },
+      {
+        number: 2,
+        prompt: 'The guide will meet visitors beside the ______.',
+        answerType: 'text',
+        correctAnswer: 'fountain',
+        acceptedAnswers: ['fountain'],
+        exactPortion: 'Meet the guide beside the fountain in Central Square, fifteen minutes before the tour starts.',
+        explanationThai: 'จุดนัดพบถูกบอกตรง ๆ ว่า beside the fountain ดังนั้นคำตอบคือ fountain ครับ',
+        paraphrasedVocabulary: 'meet = meet the guide / meeting point'
+      },
+      {
+        number: 3,
+        prompt: 'Each rider can borrow a ______.',
+        answerType: 'text',
+        correctAnswer: 'helmet',
+        acceptedAnswers: ['helmet'],
+        exactPortion: 'Yes, every rider can borrow a helmet for free.',
+        explanationThai: 'โจทย์ใช้ each rider ส่วน audio ใช้ every rider ซึ่งความหมายเท่ากัน และสิ่งที่ยืมได้คือ helmet ครับ',
+        paraphrasedVocabulary: 'each rider = every rider'
+      },
+      {
+        number: 4,
+        prompt: 'The student ticket costs ______ pounds.',
+        answerType: 'text',
+        correctAnswer: '18',
+        acceptedAnswers: ['18', 'eighteen'],
+        exactPortion: 'It is eighteen pounds with a valid student card.',
+        explanationThai: 'speaker บอกราคา student ticket ว่า eighteen pounds ดังนั้นเติม 18 ครับ',
+        paraphrasedVocabulary: 'costs = is'
+      },
+      {
+        number: 5,
+        prompt: 'The tour lasts about ______ hours.',
+        answerType: 'text',
+        correctAnswer: '3',
+        acceptedAnswers: ['3', 'three'],
+        exactPortion: 'About three hours, including a short rest by the river.',
+        explanationThai: 'audio บอกระยะเวลาชัดเจนว่า about three hours ดังนั้นตอบ 3 ครับ',
+        paraphrasedVocabulary: 'lasts = takes / lasts about'
+      }
+    ]
+  }
+]
 
 const SUPPORT_REPORT_CATEGORY_LABELS: Record<SupportReportCategory, string> = {
   bug: 'Bug / ระบบผิดปกติ',
@@ -2759,18 +3280,18 @@ const SUPPORT_REPORT_STATUS_LABELS: Record<SupportReportStatus, string> = {
 }
 
 const READING_JSON_TEMPLATE_ITEMS: Record<ReadingBankCategory, ReadingBulkUploadInput[]> = {
-  passage1: [
+  normal: [
     {
-      title: 'Reading Passage 1 Template',
-      category: 'passage1',
+      title: 'Normal Reading Template',
+      category: 'normal',
       rawPassageText: `READING PASSAGE 1
-PASTE PASSAGE 1 TITLE HERE
+PASTE NORMAL READING TITLE HERE
 
-PASTE THE FULL PASSAGE 1 TEXT HERE
+PASTE THE FULL NORMAL READING PASSAGE TEXT HERE
 
 Questions 1-13
-PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 1 HERE`,
-      rawAnswerKey: `READING PASSAGE 1: PASTE PASSAGE 1 TITLE HERE
+PASTE THE ORIGINAL QUESTION BLOCK HERE`,
+      rawAnswerKey: `READING PASSAGE 1: PASTE NORMAL READING TITLE HERE
 Question 1: PASTE QUESTION 1 PROMPT HERE
 
 Correct Answer: TRUE / FALSE / NOT GIVEN / actual answer
@@ -2779,64 +3300,21 @@ Exact Portion: "Paste the exact evidence from the passage here."
 
 Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
 
-Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
-
-Question 2: ...
-
-Correct Answer: ...
-
-Exact Portion: "..."
-
-Short Thai Explanation: ...
-
-Paraphrased Vocabulary: ...`
+Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ`
     }
   ],
-  passage2: [
+  advanced: [
     {
-      title: 'Reading Passage 2 Template',
-      category: 'passage2',
-      rawPassageText: `READING PASSAGE 2
-PASTE PASSAGE 2 TITLE HERE
-
-PASTE THE FULL PASSAGE 2 TEXT HERE
-
-Questions 14-26
-PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 2 HERE`,
-      rawAnswerKey: `READING PASSAGE 2: PASTE PASSAGE 2 TITLE HERE
-Question 14: PASTE QUESTION 14 PROMPT HERE
-
-Correct Answer: A / B / C / D / actual answer
-
-Exact Portion: "Paste the exact evidence from the passage here."
-
-Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
-
-Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
-
-Question 15: ...
-
-Correct Answer: ...
-
-Exact Portion: "..."
-
-Short Thai Explanation: ...
-
-Paraphrased Vocabulary: ...`
-    }
-  ],
-  passage3: [
-    {
-      title: 'Reading Passage 3 Template',
-      category: 'passage3',
+      title: 'Advanced Reading Template',
+      category: 'advanced',
       rawPassageText: `READING PASSAGE 3
-PASTE PASSAGE 3 TITLE HERE
+PASTE ADVANCED READING TITLE HERE
 
-PASTE THE FULL PASSAGE 3 TEXT HERE
+PASTE THE FULL ADVANCED READING PASSAGE TEXT HERE
 
 Questions 27-40
-PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 3 HERE`,
-      rawAnswerKey: `READING PASSAGE 3: PASTE PASSAGE 3 TITLE HERE
+PASTE THE ORIGINAL QUESTION BLOCK HERE`,
+      rawAnswerKey: `READING PASSAGE 3: PASTE ADVANCED READING TITLE HERE
 Question 27: PASTE QUESTION 27 PROMPT HERE
 
 Correct Answer: A / B / C / D / YES / NO / NOT GIVEN / actual answer
@@ -2845,78 +3323,7 @@ Exact Portion: "Paste the exact evidence from the passage here."
 
 Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
 
-Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
-
-Question 28: ...
-
-Correct Answer: ...
-
-Exact Portion: "..."
-
-Short Thai Explanation: ...
-
-Paraphrased Vocabulary: ...`
-    }
-  ],
-  fulltest: [
-    {
-      title: 'Reading Full Test Template',
-      category: 'fulltest',
-      rawPassageText: `READING PASSAGE 1
-PASTE PASSAGE 1 TITLE HERE
-
-PASTE THE FULL PASSAGE 1 TEXT HERE
-
-Questions 1-13
-PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 1 HERE
-
-READING PASSAGE 2
-PASTE PASSAGE 2 TITLE HERE
-
-PASTE THE FULL PASSAGE 2 TEXT HERE
-
-Questions 14-26
-PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 2 HERE
-
-READING PASSAGE 3
-PASTE PASSAGE 3 TITLE HERE
-
-PASTE THE FULL PASSAGE 3 TEXT HERE
-
-Questions 27-40
-PASTE THE ORIGINAL QUESTION BLOCK FOR PASSAGE 3 HERE`,
-      rawAnswerKey: `READING PASSAGE 1: PASTE PASSAGE 1 TITLE HERE
-Question 1: ...
-
-Correct Answer: ...
-
-Exact Portion: "..."
-
-Short Thai Explanation: ...
-
-Paraphrased Vocabulary: ...
-
-READING PASSAGE 2: PASTE PASSAGE 2 TITLE HERE
-Question 14: ...
-
-Correct Answer: ...
-
-Exact Portion: "..."
-
-Short Thai Explanation: ...
-
-Paraphrased Vocabulary: ...
-
-READING PASSAGE 3: PASTE PASSAGE 3 TITLE HERE
-Question 27: ...
-
-Correct Answer: ...
-
-Exact Portion: "..."
-
-Short Thai Explanation: ...
-
-Paraphrased Vocabulary: ...`
+Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ`
     }
   ]
 }
@@ -2924,24 +3331,163 @@ Paraphrased Vocabulary: ...`
 const formatAccessDate = (value: string | null) =>
   value ? new Date(value).toLocaleDateString() : 'Not set'
 
+const formatUsdCost = (value: number | undefined) => {
+  const amount = Number(value || 0)
+  if (amount >= 0.01) return `$${amount.toFixed(2)}`
+  if (amount >= 0.001) return `$${amount.toFixed(4)}`
+  return `$${amount.toFixed(6)}`
+}
+
+const buildAdminCostSeries = (
+  reports: AdminAssessmentReportSummary[],
+  days: number
+) => {
+  const today = new Date()
+  const dayKeys: string[] = []
+  for (let offset = days - 1; offset >= 0; offset -= 1) {
+    const date = new Date(today)
+    date.setHours(0, 0, 0, 0)
+    date.setDate(date.getDate() - offset)
+    dayKeys.push(date.toISOString().slice(0, 10))
+  }
+
+  const totals = new Map(dayKeys.map((key) => [key, { cost: 0, reports: 0, tokens: 0 }]))
+  reports.forEach((report) => {
+    const key = String(report.createdAt || '').slice(0, 10)
+    if (!totals.has(key)) return
+    const current = totals.get(key)!
+    current.cost += Number(report.apiCostUsd || 0)
+    current.reports += 1
+    current.tokens += Number(report.totalTokens || 0)
+  })
+
+  return dayKeys.map((key) => {
+    const date = new Date(`${key}T00:00:00`)
+    const item = totals.get(key) || { cost: 0, reports: 0, tokens: 0 }
+    return {
+      key,
+      label: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+      cost: item.cost,
+      reports: item.reports,
+      tokens: item.tokens
+    }
+  })
+}
+
+const buildAdminCostLinePath = (values: number[], width = 560, height = 180, padding = 18) => {
+  if (!values.length) return ''
+  const max = Math.max(...values, 0.000001)
+  const min = Math.min(...values, 0)
+  const drawableWidth = width - padding * 2
+  const drawableHeight = height - padding * 2
+  const stepX = values.length === 1 ? 0 : drawableWidth / (values.length - 1)
+  return values
+    .map((value, index) => {
+      const x = padding + stepX * index
+      const ratio = max === min ? 0.5 : (value - min) / (max - min)
+      const y = height - padding - ratio * drawableHeight
+      return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
+    })
+    .join(' ')
+}
+
+const getReadingExerciseMeta = (examId: string) => {
+  if (examId === 'builtin-reading-pdoy-huarango') {
+    return {
+      label: 'Exercise 1',
+      summary: 'Fill in the Blank + TRUE / FALSE / NOT GIVEN',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  if (examId === 'builtin-reading-pdoy-silbo') {
+    return {
+      label: 'Exercise 2',
+      summary: 'TRUE / FALSE / NOT GIVEN + Notes Completion',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  if (examId === 'builtin-reading-ex3-henry-moore') {
+    return {
+      label: 'Exercise 3',
+      summary: 'TRUE / FALSE / NOT GIVEN + Notes Completion',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  if (examId === 'builtin-reading-ex4-desolenator') {
+    return {
+      label: 'Exercise 4',
+      summary: 'Matching Headings + Summary Completion',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  if (examId === 'builtin-reading-ex5-dance-engineers') {
+    return {
+      label: 'Exercise 5',
+      summary: 'Paragraph Matching + Summary Completion',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  if (examId === 'builtin-reading-ex6-extinct-species') {
+    return {
+      label: 'Exercise 6',
+      summary: 'Paragraph Matching + Summary + Matching People',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  if (examId === 'builtin-reading-ex7-nutmeg') {
+    return {
+      label: 'Exercise 7',
+      summary: 'Notes Completion + TRUE / FALSE / NOT GIVEN + Table Completion',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  if (examId === 'builtin-reading-ex8-driverless-cars') {
+    return {
+      label: 'Exercise 8',
+      summary: 'Section Matching + Summary + Choose TWO',
+      duration: '15-25 minutes',
+      level: 'Medium · Band 6.5'
+    }
+  }
+  return null
+}
+
+const READING_PDOY_EXAM_IDS = new Set([
+  'builtin-reading-pdoy-huarango',
+  'builtin-reading-pdoy-silbo',
+  'builtin-reading-ex3-henry-moore',
+  'builtin-reading-ex4-desolenator',
+  'builtin-reading-ex5-dance-engineers',
+  'builtin-reading-ex6-extinct-species',
+  'builtin-reading-ex7-nutmeg',
+  'builtin-reading-ex8-driverless-cars'
+])
+
+const isReadingPdoyExercise = (examId: string) => READING_PDOY_EXAM_IDS.has(String(examId || ''))
+
 const inferReadingCategoryFromSource = (value: string): ReadingBankCategory => {
   const text = String(value || '')
   const passageMatches = [...text.matchAll(/READING PASSAGE\s+(\d+)/gi)].map((match) => Number(match[1]))
-  if (passageMatches.length >= 3) return 'fulltest'
-  if (passageMatches.includes(3)) return 'passage3'
-  if (passageMatches.includes(2)) return 'passage2'
-  return 'passage1'
+  if (passageMatches.includes(3) && !passageMatches.includes(1) && !passageMatches.includes(2)) return 'advanced'
+  return 'normal'
 }
 
 const deriveReadingTitleFromPassageText = (value: string, category: ReadingBankCategory) => {
   const text = String(value || '').replace(/\r/g, '').trim()
-  if (!text) return category === 'fulltest' ? 'Reading Full Test' : `Reading ${READING_CATEGORY_LABELS[category]}`
+  if (!text) return READING_CATEGORY_LABELS[category]
   const firstBlock = text
     .replace(/^READING PASSAGE\s+\d+\s*/i, '')
     .trim()
   const title = String(firstBlock.split('\n').find((line) => line.trim()) || '').trim()
-  if (!title) return category === 'fulltest' ? 'Reading Full Test' : `Reading ${READING_CATEGORY_LABELS[category]}`
-  return category === 'fulltest' ? `${title} Reading Full Test` : title
+  if (!title) return READING_CATEGORY_LABELS[category]
+  return title
 }
 
 const splitCombinedReadingImport = (value: string) => {
@@ -2977,12 +3523,1353 @@ const splitCombinedReadingImport = (value: string) => {
   }
 }
 
+const normalizeTextForLooseMatch = (value: string) =>
+  String(value || '')
+    .toLowerCase()
+    .replace(/["'“”‘’.,!?;:()[\]{}]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const buildReadingHintNeedles = (hintExcerpt?: string) => {
+  const raw = String(hintExcerpt || '').trim()
+  if (!raw) return []
+
+  const quotedSegments = [...raw.matchAll(/["“”']([^"“”']{4,}?)["“”']/g)]
+    .map((match) => String(match[1] || '').replace(/\s+/g, ' ').trim())
+    .filter((segment) => segment.length >= 8)
+  if (quotedSegments.length) return [...new Set(quotedSegments)]
+
+  const normalized = raw
+    .replace(/^["'“”]+|["'“”]+$/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (!normalized) return []
+
+  const segments = normalized
+    .split(/(?:\.\.\.|…)+|(?:\s+\/\s+)|(?:\s*;\s*)|\n+/)
+    .map((segment) => segment.replace(/^["'“”]+|["'“”]+$/g, '').trim())
+    .filter((segment) => segment.length >= 8)
+
+  return segments.length ? [...new Set(segments)] : [normalized]
+}
+
+const READING_THAI_GLOSSARY: Record<string, string> = {
+  'oval': 'รูปวงรี',
+  'shape': 'รูปร่าง',
+  'husk': 'เปลือก / เปลือกหุ้มผล',
+  'seed': 'เมล็ด',
+  'mace': 'ดอกจันทน์เทศ',
+  'aril': 'เยื่อหุ้มเมล็ด',
+  'arabs': 'ชาวอาหรับ',
+  'plague': 'กาฬโรค',
+  'lime': 'ปูนขาว',
+  'run': 'เกาะรัน',
+  'mauritius': 'เกาะมอริเชียส',
+  'tsunami': 'สึนามิ',
+  'surrounds': 'ห่อหุ้ม / ล้อมรอบ',
+  'human error': 'ความผิดพลาดของมนุษย์',
+  'car-sharing': 'การใช้รถร่วมกัน',
+  'car sharing': 'การใช้รถร่วมกัน',
+  'vehicle ownership': 'การครอบครองรถยนต์',
+  'ownership': 'การเป็นเจ้าของ',
+  'mileage': 'ระยะทางการใช้งาน',
+  'co-operation of farmers': 'ความร่วมมือจากเกษตรกร',
+  'preserve wildlife': 'ช่วยรักษาสัตว์ป่า / ระบบนิเวศ',
+  'deep below the surface': 'ลึกลงไปใต้พื้นผิว',
+  'diet': 'อาหาร / รูปแบบการกิน',
+  'drought': 'ภัยแล้ง',
+  'erosion': 'การพังทลายของดิน',
+  'desert': 'ทะเลทราย'
+}
+
+const containsThaiCharacters = (value: string) => /[\u0E00-\u0E7F]/.test(String(value || ''))
+
+const lookupReadingThaiMeaning = (value: string) => {
+  const normalized = String(value || '').trim().toLowerCase()
+  if (!normalized) return ''
+  return READING_THAI_GLOSSARY[normalized] || ''
+}
+
+const buildReadingPromptCueThai = (question: ReadingQuestion) => {
+  const prompt = String(question.prompt || '').toLowerCase()
+  if (prompt.includes('in shape')) return 'match กับ cue คำว่า shape = รูปร่าง'
+  if (prompt.includes('deep below the surface')) return 'ตรงกับความหมายเรื่องตำแหน่งใต้พื้นผิว'
+  if (prompt.includes('periods of')) return 'โครงสร้างนี้กำลังถามหาคำนามหลัง of'
+  if (prompt.includes('prevents')) return 'ดูผลที่สิ่งนี้ช่วยป้องกันไว้'
+  return ''
+}
+
+const buildReadingVocabSupport = (
+  question: ReadingQuestion | null,
+  clue: { clue: string; thaiHelper: string } | null
+) => {
+  if (!question) return null
+
+  const paraphrase = String(question.paraphrasedVocabulary || '').trim()
+  const clueText = String(clue?.clue || '').trim()
+  const answerText = String(question.correctAnswer || '').trim()
+  const paraphraseLead = paraphrase.split(/(?:=|->|→|\/{2,}|;|\n)/)[0]?.trim() || ''
+
+  const glossaryTarget =
+    (lookupReadingThaiMeaning(answerText) && answerText) ||
+    (lookupReadingThaiMeaning(clueText) && clueText) ||
+    (lookupReadingThaiMeaning(paraphraseLead) && paraphraseLead) ||
+    ''
+
+  const thaiMeaning =
+    (containsThaiCharacters(paraphrase) && paraphrase) ||
+    (glossaryTarget ? `${glossaryTarget} = ${lookupReadingThaiMeaning(glossaryTarget)}` : '') ||
+    ''
+
+  const cueThai = buildReadingPromptCueThai(question)
+  const detail = [thaiMeaning, cueThai].filter(Boolean).join(' · ')
+  if (!detail) return null
+
+  return {
+    quote: clueText || answerText || question.prompt,
+    meaning: detail,
+    notebookFix: paraphrase || answerText || clueText
+  }
+}
+
+const pickReadingPdoyQuestionClue = (question: ReadingQuestion) => {
+  const paraphrase = String(question.paraphrasedVocabulary || '').trim()
+  const hintNeedles = buildReadingHintNeedles(question.exactPortion)
+  const fallbackPrompt = String(question.prompt || '').trim()
+  const firstNeedle = hintNeedles[0] || ''
+  if (paraphrase) {
+    const [lead] = paraphrase.split(/(?:->|→|=|\/{2,}|;|\n)/)
+    if (lead?.trim()) {
+      return {
+        clue: lead.trim(),
+        thaiHelper: paraphrase
+      }
+    }
+  }
+  return {
+    clue: firstNeedle || fallbackPrompt,
+    thaiHelper: question.explanationThai || paraphrase || 'ลองเทียบความหมาย ไม่ใช่แค่ดู keyword ตรงตัว'
+  }
+}
+
+const findReadingEvidenceParagraphIndex = (passage: ReadingPassageRecord | null, exactPortion: string) => {
+  if (!passage || !exactPortion) return -1
+  const hintNeedles = buildReadingHintNeedles(exactPortion)
+  const normalizedParagraphs = passage.bodyParagraphs.map((paragraph) => normalizeTextForLooseMatch(paragraph))
+  for (const needle of hintNeedles) {
+    const normalizedNeedle = normalizeTextForLooseMatch(needle)
+    const foundIndex = normalizedParagraphs.findIndex((paragraph) => paragraph.includes(normalizedNeedle))
+    if (foundIndex >= 0) return foundIndex
+  }
+  const normalizedExact = normalizeTextForLooseMatch(exactPortion)
+  return normalizedParagraphs.findIndex((paragraph) => paragraph.includes(normalizedExact))
+}
+
+const extractReadingQuestionBlock = (questionSectionText: string, questionNumber: number) => {
+  const escapedNumber = String(questionNumber).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const pattern = new RegExp(
+    `(?:^|\\n)\\s*${escapedNumber}\\s+([\\s\\S]*?)(?=\\n\\s*\\d+\\s+|$)`,
+    'i'
+  )
+  const match = String(questionSectionText || '').match(pattern)
+  return String(match?.[1] || '').trim()
+}
+
+const READING_ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
+
+const isReadingMatchingHeadingQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!question) return false
+  const sectionText = String(passage?.questionSectionText || '')
+  const prompt = String(question.prompt || '')
+  const answer = String(question.correctAnswer || '').trim()
+  return (
+    READING_ROMAN_HEADING_PATTERN.test(answer) ||
+    /choose the correct heading|list of headings|which heading/i.test(sectionText) ||
+    /choose the correct heading|paragraph [A-F]\b/i.test(prompt) ||
+    /^section\s+[A-Z]\b|^paragraph\s+[A-Z]\b/i.test(prompt)
+  )
+}
+
+const isReadingMatchingInformationQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!question) return false
+  const sectionText = String(passage?.questionSectionText || '')
+  const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+  return (
+    /^[A-G]$/.test(answer) &&
+    /which (?:paragraph|section) contains|which (?:paragraph|section) has|contains the following information/i.test(sectionText)
+  )
+}
+
+const isReadingMatchingQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => isReadingMatchingHeadingQuestion(passage, question) || isReadingMatchingInformationQuestion(passage, question)
+
+const getReadingPassageLabel = (index: number) => String.fromCharCode(65 + index)
+
+const clipReadingOptionText = (value: string, maxLength = 150) => {
+  const compact = String(value || '').replace(/\s+/g, ' ').trim()
+  return compact.length > maxLength ? `${compact.slice(0, maxLength - 1).trim()}…` : compact
+}
+
+const extractReadingMultipleChoiceOptions = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+): ReadingPdoyMultipleChoiceOption[] => {
+  if (!passage || !question) return []
+
+  if (isReadingMatchingHeadingQuestion(passage, question)) {
+    const headingOptions = String(passage.questionSectionText || '')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const match = line.match(/^((?:i|ii|iii|iv|v|vi|vii|viii|ix|x))[\).]?\s+(.+)$/i)
+        if (!match) return null
+        return {
+          letter: match[1].toUpperCase(),
+          text: match[2].trim()
+        }
+      })
+      .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+    if (headingOptions.length) return headingOptions
+  }
+
+  if (isReadingMatchingInformationQuestion(passage, question)) {
+    return (passage.bodyParagraphs || []).slice(0, 7).map((paragraph, index) => ({
+      letter: getReadingPassageLabel(index),
+      text: `Paragraph ${getReadingPassageLabel(index)}: ${clipReadingOptionText(paragraph)}`
+    }))
+  }
+
+  const block = extractReadingQuestionBlock(passage.questionSectionText, question.number)
+  const optionSource = block || passage.questionSectionText
+  const lines = optionSource
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  return lines
+    .map((line) => {
+      const match = line.match(/^([A-G])\s+(.+)$/i)
+      if (!match) return null
+      return {
+        letter: match[1].toUpperCase(),
+        text: match[2].trim()
+      }
+    })
+    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+}
+
+const isReadingOptionParaphraseMatch = (
+  input: string,
+  option: ReadingPdoyMultipleChoiceOption | null,
+  question: ReadingQuestion | null
+) => {
+  const normalizedInput = normalizeTextForLooseMatch(input)
+  if (!normalizedInput || !option || !question) return false
+  const optionText = normalizeTextForLooseMatch(option.text)
+  const paraphrase = normalizeTextForLooseMatch(question.paraphrasedVocabulary)
+  return optionText.includes(normalizedInput) || normalizedInput.includes(optionText) || paraphrase.includes(normalizedInput)
+}
+
+const READING_EVIDENCE_DISTRACTOR_STOPWORDS = new Set([
+  'about', 'after', 'again', 'against', 'also', 'another', 'because', 'before', 'between', 'could', 'does',
+  'during', 'example', 'following', 'from', 'have', 'into', 'mention', 'mentioned', 'more', 'most', 'people',
+  'question', 'reference', 'section', 'should', 'some', 'such', 'than', 'that', 'their', 'there', 'these',
+  'thing', 'this', 'through', 'what', 'when', 'where', 'which', 'while', 'with', 'would'
+])
+
+const extractReadingEvidenceKeywords = (value: string) =>
+  [...new Set(
+    normalizeTextForLooseMatch(value)
+      .split(' ')
+      .map((token) => token.trim())
+      .filter((token) => token.length >= 4)
+      .filter((token) => !READING_EVIDENCE_DISTRACTOR_STOPWORDS.has(token))
+  )]
+
+const scoreReadingEvidenceDistractor = (candidate: string, question: ReadingQuestion | null) => {
+  if (!question) return 0
+  const candidateText = normalizeTextForLooseMatch(candidate)
+  if (!candidateText) return 0
+  const exactPortionNormalized = normalizeTextForLooseMatch(question.exactPortion)
+  if (exactPortionNormalized && candidateText.includes(exactPortionNormalized)) return -100
+  const promptKeywords = extractReadingEvidenceKeywords(question.prompt)
+  const paraphraseKeywords = extractReadingEvidenceKeywords(
+    [question.paraphrasedVocabulary, question.prompt].filter(Boolean).join(' ')
+  )
+  const exactMatches = promptKeywords.filter((keyword) => candidateText.includes(keyword)).length
+  const paraphraseMatches = paraphraseKeywords.filter((keyword) => candidateText.includes(keyword)).length
+  const answerMatch = candidateText.includes(normalizeTextForLooseMatch(question.correctAnswer)) ? -3 : 0
+  return exactMatches * 5 + paraphraseMatches * 3 + answerMatch
+}
+
+const buildReadingMatchingEvidencePortions = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  const hintNeedles = buildReadingHintNeedles(question?.exactPortion || '')
+  const correctText = hintNeedles[0] || String(question?.exactPortion || '').trim()
+  const correctNormalized = normalizeTextForLooseMatch(correctText)
+  const focusIndex = passage && question ? findReadingEvidenceParagraphIndex(passage, question.exactPortion) : -1
+  const paragraphs = passage?.bodyParagraphs || []
+  const useParagraphLabels = isReadingMatchingInformationQuestion(passage, question)
+
+  const pickSnippetFromParagraph = (paragraph: string, index: number, preferTrapSentence: boolean) => {
+    const prefix = useParagraphLabels ? `Paragraph ${getReadingPassageLabel(index)}: ` : ''
+    const sentences = String(paragraph || '')
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+      .filter((sentence) => sentence.length >= 18)
+    if (preferTrapSentence && sentences.length) {
+      const ranked = sentences
+        .map((sentence, sentenceIndex) => ({
+          sentence,
+          sentenceIndex,
+          trapScore: scoreReadingEvidenceDistractor(sentence, question)
+        }))
+        .filter(
+          ({ sentence }) =>
+            !correctNormalized || !normalizeTextForLooseMatch(sentence).includes(correctNormalized)
+        )
+        .sort((a, b) => b.trapScore - a.trapScore)
+      if (ranked[0]?.sentence) {
+        return prefix + clipReadingOptionText(ranked[0].sentence, useParagraphLabels ? 220 : 200)
+      }
+    }
+    return prefix + clipReadingOptionText(paragraph, useParagraphLabels ? 240 : 200)
+  }
+
+  const paragraphCandidates = paragraphs
+    .map((paragraph, index) => ({
+      index,
+      snippet: pickSnippetFromParagraph(paragraph, index, index !== focusIndex),
+      trapScore: scoreReadingEvidenceDistractor(paragraph, question)
+    }))
+    .filter((entry) => entry.index !== focusIndex)
+    .sort((a, b) => b.trapScore - a.trapScore)
+
+  const distractors: string[] = []
+  for (const entry of paragraphCandidates) {
+    if (distractors.length >= 2) break
+    const normalizedSnippet = normalizeTextForLooseMatch(entry.snippet)
+    if (
+      normalizedSnippet &&
+      (!correctNormalized || !normalizedSnippet.includes(correctNormalized)) &&
+      !distractors.some((item) => normalizeTextForLooseMatch(item) === normalizedSnippet)
+    ) {
+      distractors.push(entry.snippet)
+    }
+  }
+
+  return { correctText, distractors, focusIndex }
+}
+
 const normalizeReadingAnswer = (value: string) =>
   String(value || '')
     .trim()
     .replace(/\s+/g, ' ')
     .replace(/\.$/, '')
     .toUpperCase()
+
+const normalizeListeningAnswer = (value: string) =>
+  String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/\.$/, '')
+    .toUpperCase()
+
+const normalizeListeningBuilderText = normalizeListeningHighlightText
+
+const LISTENING_HIGHLIGHT_WRONG_THAI =
+  'นี่ยังไม่ใช่ส่วนที่ paraphrase กับโจทย์ครับ ลองไฮไลต์คำหรือวลีใน script ให้ตรงกับข้อความที่ใช้ตอบอีกครั้ง'
+
+const LISTENING_HIGHLIGHT_CORRECT_THAI = 'ถูกต้องครับ! ไฮไลต์ตรงแล้ว เลือกคำตอบได้เลย'
+
+const LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI =
+  'ดีมากครับ! คุณไฮไลต์ส่วนสำคัญของ evidence แล้ว (อย่างน้อยครึ่งหนึ่ง) เลือกคำตอบได้เลย'
+
+const tokenizeListeningBuilderTranscript = (transcript: string) =>
+  String(transcript || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+
+const buildListeningBuilderCandidateAnswers = buildListeningHighlightCandidates
+
+const buildListeningBuilderQuestionFocusFallback = (prompt: string) => {
+  const raw = String(prompt || '').trim()
+  if (!raw) return ''
+  const withoutBlank = raw.replace(/_{2,}/g, ' ').replace(/\s+/g, ' ').trim()
+  const parts = withoutBlank
+    .split(/:|,|\band\b/i)
+    .map((part) => part.trim())
+    .filter(Boolean)
+  if (parts.length === 0) return withoutBlank
+
+  const ranked = [...parts].sort((a, b) => {
+    const score = (value: string) => {
+      if (value.length <= 2) return -1
+      if (/\b(best|made of|feeling of|look at|look for|arrive by|call him on|covered)\b/i.test(value)) return 3
+      if (value.length <= 18) return 2
+      if (value.length <= 30) return 1
+      return 0
+    }
+    return score(b) - score(a)
+  })
+  return ranked[0] || withoutBlank
+}
+
+const resolveListeningBuilderBridge = (item: ListeningVocabularyBuilderItem): ListeningBuilderBridge => {
+  const logic = String(item.paraphraseLogic || '')
+  const quotedPhrases = [...logic.matchAll(/`([^`]+)`/g)]
+    .map((match) => String(match[1] || '').trim())
+    .filter(Boolean)
+
+  const questionToTranscriptMatch = logic.match(
+    /`([^`]+)`\s+in the (?:question|notes?)\s+(?:corresponds to|equals|matches)\s+`([^`]+)`\s+in the (?:audio|transcript)/i
+  )
+  if (questionToTranscriptMatch) {
+    return {
+      questionText: questionToTranscriptMatch[1].trim(),
+      transcriptText: questionToTranscriptMatch[2].trim()
+    }
+  }
+
+  const questionSaysMatch = logic.match(/question says\s+`([^`]+)`.*?audio gives\s+`([^`]+)`/i)
+  if (questionSaysMatch) {
+    return {
+      questionText: questionSaysMatch[1].trim(),
+      transcriptText: questionSaysMatch[2].trim()
+    }
+  }
+
+  const transcriptToQuestionMatch = logic.match(
+    /`([^`]+)`\s+in the (?:audio|transcript)\s+matches\s+(?:the )?(?:note heading|question|notes?)\s+`([^`]+)`/i
+  )
+  if (transcriptToQuestionMatch) {
+    return {
+      questionText: transcriptToQuestionMatch[2].trim(),
+      transcriptText: transcriptToQuestionMatch[1].trim()
+    }
+  }
+
+  if (quotedPhrases.length >= 2) {
+    return {
+      questionText: quotedPhrases[0],
+      transcriptText: quotedPhrases[1]
+    }
+  }
+
+  return {
+    questionText: buildListeningBuilderQuestionFocusFallback(item.questionPrompt),
+    transcriptText: item.answer
+  }
+}
+
+const resolveListeningBuilderSelectionTarget = (item: ListeningVocabularyBuilderItem) => {
+  const transcriptTokens = tokenizeListeningBuilderTranscript(item.transcript)
+  const normalizedTokens = transcriptTokens.map((token) => normalizeListeningBuilderText(token))
+  const bridge = resolveListeningBuilderBridge(item)
+  const candidates = [
+    ...buildListeningBuilderCandidateAnswers(bridge.transcriptText),
+    ...buildListeningBuilderCandidateAnswers(item.answer)
+  ].filter((candidate, index, array) => array.indexOf(candidate) === index)
+
+  for (const candidate of candidates) {
+    const candidateTokens = candidate.split(' ').filter(Boolean)
+    if (!candidateTokens.length) continue
+    for (let start = 0; start <= normalizedTokens.length - candidateTokens.length; start += 1) {
+      const slice = normalizedTokens.slice(start, start + candidateTokens.length)
+      if (slice.join(' ') === candidateTokens.join(' ')) {
+        return {
+          start,
+          end: start + candidateTokens.length - 1,
+          text: transcriptTokens.slice(start, start + candidateTokens.length).join(' ')
+        }
+      }
+    }
+  }
+
+  return {
+    start: 0,
+    end: Math.max(transcriptTokens.length - 1, 0),
+    text: transcriptTokens.join(' ')
+  }
+}
+
+const slugifyListeningBuilderPack = (value: string) =>
+  String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+const parseListeningBuilderHeadingMeta = (value: string) => {
+  const text = String(value || '')
+  const bookMatch = text.match(/Book\s+(\d+)/i)
+  const testMatch = text.match(/Test\s+(\d+)/i)
+  const sectionMatch = text.match(/Part\s+(\d+)/i)
+  return {
+    bookNumber: bookMatch ? Number.parseInt(bookMatch[1], 10) : null,
+    testNumber: testMatch ? Number.parseInt(testMatch[1], 10) : null,
+    sectionNumber: sectionMatch ? Number.parseInt(sectionMatch[1], 10) : null
+  }
+}
+
+const parseListeningVocabularyWorkbook = (raw: string): ListeningVocabularyBuilderItem[] => {
+  const lines = String(raw || '').split('\n')
+  let currentBook = ''
+  const items: ListeningVocabularyBuilderItem[] = []
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index]
+    if (line.startsWith('## Book ')) {
+      currentBook = line.replace(/^##\s*/, '').trim()
+      continue
+    }
+
+    if (!line.startsWith('### Q')) continue
+
+    const questionLabel = line.replace(/^###\s*/, '').trim()
+    const fields: Record<string, string> = {}
+    let cursor = index + 1
+
+    while (cursor < lines.length && !lines[cursor].startsWith('### Q') && !lines[cursor].startsWith('## ')) {
+      const match = lines[cursor].match(/^- ([^:]+):\s*(.*)$/)
+      if (match) {
+        fields[match[1].trim()] = match[2].replace(/^`|`$/g, '').trim()
+      }
+      cursor += 1
+    }
+
+    if (fields['question prompt'] && fields['final answer'] && fields['transcript trigger']) {
+      const questionNumber = Number.parseInt(questionLabel.replace(/^Q/i, '').trim(), 10)
+      const headingMeta = parseListeningBuilderHeadingMeta(currentBook)
+      items.push({
+        id: `${slugifyListeningBuilderPack(currentBook)}-q${questionNumber}`,
+        book: currentBook,
+        bookNumber: headingMeta.bookNumber,
+        testNumber: headingMeta.testNumber,
+        sectionNumber: headingMeta.sectionNumber,
+        questionNumber: Number.isFinite(questionNumber) ? questionNumber : items.length + 1,
+        questionPrompt: fields['question prompt'],
+        answer: fields['final answer'],
+        transcript: fields['transcript trigger'],
+        paraphraseType: fields['paraphrase type'] || '',
+        paraphraseLogic: fields['paraphrase logic'] || '',
+        thaiExplanation: fields['thai explanation'] || '',
+        thaiMeaning: fields['thai meaning of key word'] || ''
+      })
+    }
+
+    index = cursor - 1
+  }
+
+  return items
+}
+
+const stripListeningBankTick = (value: string) => String(value || '').replace(/^`|`$/g, '').trim()
+
+const parseListeningSectionBank = (raw: string): ListeningSectionBankTest[] => {
+  const lines = String(raw || '').split('\n')
+  const tests: ListeningSectionBankTest[] = []
+  let currentBookNumber: number | null = null
+  let currentSectionNumber: number | null = null
+  let currentTestNumber: number | null = null
+  let currentTitle = ''
+  let currentQuestionCoverage: string[] = []
+  let currentAnswerLines: string[] = []
+  let currentVocabFocus: string[] = []
+  let currentBlock: 'coverage' | 'answers' | 'vocab' | null = null
+
+  const flushCurrentTest = () => {
+    if (
+      currentBookNumber == null ||
+      currentSectionNumber == null ||
+      currentTestNumber == null ||
+      !currentTitle
+    ) {
+      return
+    }
+
+    tests.push({
+      id: `cambridge-${currentBookNumber}-section-${currentSectionNumber}-test-${currentTestNumber}`,
+      bookNumber: currentBookNumber,
+      sectionNumber: currentSectionNumber,
+      testNumber: currentTestNumber,
+      title: currentTitle,
+      questionCoverage: [...currentQuestionCoverage],
+      answerLines: [...currentAnswerLines],
+      vocabFocus: [...currentVocabFocus]
+    })
+  }
+
+  for (const rawLine of lines) {
+    const line = String(rawLine || '').trimEnd()
+    const trimmed = line.trim()
+
+    const bookMatch = trimmed.match(/^## Cambridge (\d+)/i)
+    if (bookMatch) {
+      flushCurrentTest()
+      currentBookNumber = Number.parseInt(bookMatch[1], 10)
+      currentSectionNumber = null
+      currentTestNumber = null
+      currentTitle = ''
+      currentQuestionCoverage = []
+      currentAnswerLines = []
+      currentVocabFocus = []
+      currentBlock = null
+      continue
+    }
+
+    const sectionMatch = trimmed.match(/^### Section (\d+)/i)
+    if (sectionMatch) {
+      flushCurrentTest()
+      currentSectionNumber = Number.parseInt(sectionMatch[1], 10)
+      currentTestNumber = null
+      currentTitle = ''
+      currentQuestionCoverage = []
+      currentAnswerLines = []
+      currentVocabFocus = []
+      currentBlock = null
+      continue
+    }
+
+    const testMatch = trimmed.match(/^#### Test (\d+)/i)
+    if (testMatch) {
+      flushCurrentTest()
+      currentTestNumber = Number.parseInt(testMatch[1], 10)
+      currentTitle = ''
+      currentQuestionCoverage = []
+      currentAnswerLines = []
+      currentVocabFocus = []
+      currentBlock = null
+      continue
+    }
+
+    if (trimmed.startsWith('- section title:')) {
+      currentTitle = stripListeningBankTick(trimmed.replace(/^- section title:\s*/, ''))
+      currentBlock = null
+      continue
+    }
+
+    if (trimmed === '- question coverage:') {
+      currentBlock = 'coverage'
+      continue
+    }
+
+    if (trimmed === '- answer key:' || trimmed === '- answer bank:') {
+      currentBlock = 'answers'
+      continue
+    }
+
+    if (trimmed === '- vocab focus:') {
+      currentBlock = 'vocab'
+      continue
+    }
+
+    if (!trimmed.startsWith('- `')) continue
+
+    const listValue = stripListeningBankTick(trimmed.replace(/^- /, ''))
+    if (!listValue) continue
+
+    if (currentBlock === 'coverage') {
+      currentQuestionCoverage.push(listValue)
+      continue
+    }
+
+    if (currentBlock === 'answers') {
+      currentAnswerLines.push(listValue)
+      continue
+    }
+
+    if (currentBlock === 'vocab') {
+      currentVocabFocus.push(listValue)
+    }
+  }
+
+  flushCurrentTest()
+  return tests
+}
+
+const parseListeningBuilderExamQuestion = (questionText: string) => {
+  const lines = String(questionText || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+  return {
+    stem: lines.filter((line) => !/^[A-Z]\)/.test(line)).join(' '),
+    optionLines: lines.filter((line) => /^[A-Z]\)/.test(line))
+  }
+}
+
+const parseListeningBuilderExamOptionLine = (line: string) => {
+  const match = String(line || '')
+    .trim()
+    .match(/^([A-Z])\)\s*(.+)$/i)
+  return match ? { key: match[1].toUpperCase(), text: match[2].trim() } : null
+}
+
+const resolveListeningBuilderExamCorrectAnswer = (task: ListeningBuilderExamTask) => {
+  const explicit = String(task.correctAnswer || '')
+    .trim()
+    .toUpperCase()
+    .match(/^[A-D]/)?.[0]
+  if (explicit) return explicit
+
+  const phrase = normalizeListeningBuilderText(task.questionWordPhrase)
+  const { optionLines } = parseListeningBuilderExamQuestion(task.questionText)
+  for (const line of optionLines) {
+    const option = parseListeningBuilderExamOptionLine(line)
+    if (!option) continue
+    const optionNorm = normalizeListeningBuilderText(option.text)
+    if (!phrase) continue
+    if (optionNorm.includes(phrase) || phrase.includes(optionNorm)) return option.key
+  }
+  return ''
+}
+
+const canonicalizeReadingCorrectAnswer = (value: string) => {
+  const normalized = normalizeReadingAnswer(value)
+  if (!normalized) return ''
+  if (normalized.startsWith('NOT GIVEN')) return 'NOT GIVEN'
+  if (normalized.startsWith('TRUE')) return 'TRUE'
+  if (normalized.startsWith('FALSE')) return 'FALSE'
+  if (normalized.startsWith('YES')) return 'YES'
+  if (normalized.startsWith('NO')) return 'NO'
+  const letterMatch = normalized.match(/^([A-G])(?:\b|\s|\()/)
+  if (letterMatch) return letterMatch[1]
+  return String(value || '').trim()
+}
+
+const normalizeReadingScoredAnswer = (value: string) => {
+  const canonical = canonicalizeReadingCorrectAnswer(value)
+  return canonical ? normalizeReadingAnswer(canonical) : normalizeReadingAnswer(value)
+}
+
+const isReadingAnswerCorrect = (
+  userAnswer: string,
+  correctAnswer: string,
+  acceptedAnswers?: string[]
+) => {
+  const normalizedUserAnswer = normalizeReadingScoredAnswer(userAnswer)
+  if (!normalizedUserAnswer) return false
+  const answerPool = acceptedAnswers?.length ? acceptedAnswers : [correctAnswer]
+  return answerPool.some((answer) => normalizeReadingScoredAnswer(answer) === normalizedUserAnswer)
+}
+
+const buildReadingEvidenceOptions = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+): ReadingPdoyEvidenceOption[] => {
+  if (!question) return []
+
+  const normalizedCorrectAnswer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+  const isMatchingQuestion = isReadingMatchingQuestion(passage, question)
+
+  if (isMatchingQuestion) {
+    const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question)
+    const safeDistractors = [...distractors]
+    while (safeDistractors.length < 2) {
+      safeDistractors.push(
+        safeDistractors.length === 0
+          ? 'Another paragraph discusses a related topic, but not the one this question targets.'
+          : 'Similar keywords appear here, but the meaning does not match the question.'
+      )
+    }
+    const options: ReadingPdoyEvidenceOption[] = [
+      { id: `matching-evidence-${question.number}-a`, text: safeDistractors[0], isCorrect: false },
+      { id: `matching-evidence-${question.number}-b`, text: correctText, isCorrect: true },
+      { id: `matching-evidence-${question.number}-c`, text: safeDistractors[1], isCorrect: false }
+    ]
+    const rotation = question.number % options.length
+    return options.map((_, index) => ({
+      ...options[(index + rotation) % options.length],
+      id: `matching-evidence-${question.number}-${index}`
+    }))
+  }
+
+  const hintNeedles = buildReadingHintNeedles(question.exactPortion)
+  const correctText = hintNeedles[0] || String(question.exactPortion || '').trim() || String(question.prompt || '').trim()
+  const correctNormalized = normalizeTextForLooseMatch(correctText)
+  const focusIndex = question && passage ? findReadingEvidenceParagraphIndex(passage, question.exactPortion) : -1
+
+  const sentencePool = (passage?.bodyParagraphs || [])
+    .flatMap((paragraph, index) =>
+      String(paragraph || '')
+        .split(/(?<=[.!?])\s+/)
+        .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+        .filter((sentence) => sentence.length >= 18)
+        .map((sentence) => ({ sentence, index }))
+    )
+    .filter(({ sentence, index }) => {
+      const normalizedSentence = normalizeTextForLooseMatch(sentence)
+      if (!normalizedSentence) return false
+      if (correctNormalized && normalizedSentence.includes(correctNormalized)) return false
+      if (focusIndex >= 0 && Math.abs(index - focusIndex) > 2) return false
+      return true
+    })
+    .map((entry, fallbackIndex) => ({
+      ...entry,
+      fallbackIndex,
+      trapScore: scoreReadingEvidenceDistractor(entry.sentence, question)
+    }))
+    .sort((a, b) => {
+      if (b.trapScore !== a.trapScore) return b.trapScore - a.trapScore
+      if (focusIndex >= 0) {
+        const distanceA = Math.abs(a.index - focusIndex)
+        const distanceB = Math.abs(b.index - focusIndex)
+        if (distanceA !== distanceB) return distanceA - distanceB
+      }
+      return a.fallbackIndex - b.fallbackIndex
+    })
+
+  const distractors: string[] = []
+  for (const entry of sentencePool) {
+    if (distractors.length >= 2) break
+    if (!distractors.some((item) => normalizeTextForLooseMatch(item) === normalizeTextForLooseMatch(entry.sentence))) {
+      distractors.push(entry.sentence)
+    }
+  }
+
+  while (distractors.length < 2) {
+    distractors.push(
+      distractors.length === 0
+        ? 'ข้อความนี้พูดถึงอีกประเด็นหนึ่ง ไม่ใช่จุดที่ใช้ตอบข้อนี้'
+        : 'มีคำใกล้เคียง แต่ยังไม่ใช่วลีที่พาราฟเรสตรงกับโจทย์'
+    )
+  }
+
+  const options: ReadingPdoyEvidenceOption[] = [
+    {
+      id: 'choice-a',
+      text: distractors[0],
+      isCorrect: false
+    },
+    {
+      id: 'choice-b',
+      text: distractors[1],
+      isCorrect: false
+    },
+    {
+      id: 'choice-c',
+      text: 'หาไม่เจอใน passage ส่วนนี้ / cannot find it clearly here',
+      isCorrect: normalizedCorrectAnswer === 'NOT GIVEN'
+    },
+    {
+      id: 'choice-d',
+      text: correctText,
+      isCorrect: normalizedCorrectAnswer !== 'NOT GIVEN'
+    }
+  ]
+
+  const rotation = question.number % options.length
+  return options.map((_, index) => options[(index + rotation) % options.length])
+}
+
+const buildReadingFillPortionOptions = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+): ReadingPdoyEvidenceOption[] => {
+  if (!question) return []
+
+  const hintNeedles = buildReadingHintNeedles(question.exactPortion)
+  const correctText = hintNeedles[0] || String(question.exactPortion || '').trim() || String(question.prompt || '').trim()
+  const correctNormalized = normalizeTextForLooseMatch(correctText)
+  const focusIndex = question && passage ? findReadingEvidenceParagraphIndex(passage, question.exactPortion) : -1
+
+  const sentencePool = (passage?.bodyParagraphs || [])
+    .flatMap((paragraph, index) =>
+      String(paragraph || '')
+        .split(/(?<=[.!?])\s+/)
+        .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+        .filter((sentence) => sentence.length >= 30)
+        .map((sentence) => ({ sentence, index }))
+    )
+    .filter(({ sentence, index }) => {
+      const normalizedSentence = normalizeTextForLooseMatch(sentence)
+      if (!normalizedSentence) return false
+      if (correctNormalized && normalizedSentence.includes(correctNormalized)) return false
+      if (focusIndex >= 0 && Math.abs(index - focusIndex) > 3) return false
+      return true
+    })
+
+  const distractors: string[] = []
+  for (const entry of sentencePool) {
+    if (distractors.length >= 2) break
+    if (!distractors.some((item) => normalizeTextForLooseMatch(item) === normalizeTextForLooseMatch(entry.sentence))) {
+      distractors.push(entry.sentence)
+    }
+  }
+
+  while (distractors.length < 2) {
+    distractors.push(
+      distractors.length === 0
+        ? 'This sentence mentions another detail in the passage, but not the exact spot that answers the blank.'
+        : 'This portion is related to the topic, but it does not contain the closest paraphrase for the blank.'
+    )
+  }
+
+  const options: ReadingPdoyEvidenceOption[] = [
+    { id: 'fill-portion-a', text: distractors[0], isCorrect: false },
+    { id: 'fill-portion-b', text: correctText, isCorrect: true },
+    { id: 'fill-portion-c', text: distractors[1], isCorrect: false }
+  ]
+
+  const rotation = Number(question.number || 0) % options.length
+  return options.map((_, index) => options[(index + rotation) % options.length])
+}
+
+const READING_FILL_DISTRACTOR_STOPWORDS = new Set([
+  'the', 'and', 'that', 'with', 'from', 'this', 'into', 'when', 'they', 'them', 'their', 'have', 'been', 'were',
+  'will', 'would', 'there', 'about', 'years', 'could', 'local', 'people', 'surface', 'below', 'deep', 'part',
+  'soil', 'land', 'tree', 'roots', 'ancient', 'go', 'turns', 'only', 'year', 'round', 'source', 'water', 'diet',
+  'drought', 'erosion', 'desert'
+])
+
+const getReadingFillGrammarHint = (question: ReadingQuestion | null) => {
+  if (!question) return ''
+  const prompt = String(question.prompt || '').replace(/\s+/g, ' ').trim()
+  const normalizedPrompt = prompt
+    .replace(/\d+[.·…_]+/g, ' __BLANK__ ')
+    .replace(/_{2,}/g, ' __BLANK__ ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  const tokens = normalizedPrompt.split(' ').filter(Boolean)
+  const blankIndex = tokens.findIndex((token) => token.includes('__BLANK__'))
+  const previous = blankIndex > 0 ? tokens[blankIndex - 1].toLowerCase() : ''
+  const next = blankIndex >= 0 && blankIndex < tokens.length - 1 ? tokens[blankIndex + 1].toLowerCase() : ''
+  const nextTwo = blankIndex >= 0 && blankIndex < tokens.length - 2 ? tokens[blankIndex + 2].toLowerCase() : ''
+  const answer = String(question.correctAnswer || '').trim()
+  const answerLower = answer.toLowerCase()
+
+  const cues: string[] = []
+
+  if (/\b__BLANK__\s+in\s+(shape|size|length|height|colour|color|form)\b/i.test(normalizedPrompt)) {
+    cues.push('ดูโครงสร้างหลัง blank ก่อนครับ ถ้าตามด้วย in shape / in size แบบนี้ คำตอบมักเป็น adjective ที่เอาไว้บอกรูปลักษณะ')
+  }
+
+  if (/\b(a|an|the)\s+__BLANK__\s+[a-z-]+\b/i.test(normalizedPrompt)) {
+    cues.push('มี article แล้วตามด้วยคำนามอีกทีครับ แปลว่า blank นี้มักเป็น adjective ที่ใช้ขยายคำนาม')
+  } else if (/\b(a|an)\s+__BLANK__\b/i.test(normalizedPrompt)) {
+    cues.push('มี a/an อยู่หน้าช่องว่างครับ ปกติคำตอบมักต้องเป็นคำนามนับได้เอกพจน์ หรือคำที่ทำให้โครงสร้างหลัง a/an สมบูรณ์')
+  } else if (/\bthe\s+__BLANK__\b/i.test(normalizedPrompt)) {
+    cues.push('มี the อยู่หน้าช่องว่างครับ ให้เช็กว่าตรงนี้กำลังต้องการ noun หรือชื่อสิ่งเฉพาะตามความหมายของประโยค')
+  }
+
+  if (/\b(periods|part|source|lack|movement|amount|range|risk|type|kind)\s+of\s+__BLANK__\b/i.test(normalizedPrompt)) {
+    cues.push('คำหน้า blank เป็นโครงสร้างแบบ noun + of ครับ ตรงนี้มักต้องการคำนาม')
+  }
+
+  if (/\b(prevents|causes|allows|encourages|reduces|increases|shows|provides|creates|uses|needs|helps)\s+__BLANK__\b/i.test(normalizedPrompt)) {
+    cues.push('หลังคำกริยาแบบ prevents / allows / creates ตรงนี้มักต้องเติมคำนามหรือ noun phrase ที่เป็นผลของกริยานั้น')
+  }
+
+  if (/\b(taken|moved|exported|sent|returned|transported)\s+to\s+__BLANK__\b/i.test(normalizedPrompt)) {
+    cues.push('ดู preposition ด้วยครับ ถ้าเป็น taken to / moved to แบบนี้ คำตอบมักเป็นสถานที่หรือชื่อพื้นที่')
+  }
+
+  if (/\b(local|ancient|young|other|these|those|their|his|her|our|its)\s+__BLANK__\b/i.test(normalizedPrompt)) {
+    cues.push('มีคำชี้เฉพาะหรือคำแสดงความเป็นเจ้าของอยู่หน้า blank ครับ ตรงนี้มักต้องการคำนาม')
+  }
+
+  if (previous && ['is', 'are', 'was', 'were', 'be', 'become', 'became', 'seem', 'seems'].includes(previous) && next && ['in', 'of', 'for', 'to', 'with', 'as'].includes(next)) {
+    cues.push('ดูโครงสร้าง be + blank + preposition ครับ ตรงนี้มักเป็น adjective หรือคำบอกลักษณะมากกว่าคำนาม')
+  }
+
+  if (!/\b(a|an)\s+__BLANK__\b/i.test(normalizedPrompt) && /\b__BLANK__\b/.test(normalizedPrompt)) {
+    cues.push('ถ้าไม่มี a/an นำหน้า ให้เช็กเพิ่มว่าคำตอบควรเป็นนามนับไม่ได้ รูปพหูพจน์ หรือคำคุณศัพท์ตามโครงสร้างรอบ ๆ')
+  }
+
+  if (answer) {
+    if (answerLower.endsWith('s') && !/(ss|us|is)$/.test(answerLower)) {
+      cues.push('คำตอบจริงอยู่ในรูปพหูพจน์ครับ เวลาเลือกคำตอบให้สังเกตด้วยว่าความหมายต้องเป็นหลายสิ่ง')
+    } else if (/^[a-z-]+$/.test(answerLower) && !answerLower.endsWith('s') && /\b(a|an)\s+__BLANK__\b/i.test(normalizedPrompt)) {
+      cues.push('คำตอบอยู่ในรูปเอกพจน์ครับ เพราะโครงสร้างรอบ blank ต้องการคำเดี่ยวที่นับได้')
+    }
+  }
+
+  const compactCues = [...new Set(cues)].slice(0, 3)
+  if (compactCues.length) return compactCues.join(' ')
+
+  if (previous === 'of' || next === 'of' || nextTwo === 'of') {
+    return 'ลองเช็ก grammar รอบ blank ก่อนครับ โครงสร้างแถวนี้มี of เข้ามาเกี่ยวข้อง จึงมักต้องการคำนามที่ทำให้ความหมายสมบูรณ์'
+  }
+
+  return 'ลองดู grammar รอบ blank ก่อนครับ ว่าตำแหน่งนี้ต้องการ noun, adjective, หรือคำบอกสถานที่ แล้วค่อยย้อนหา paraphrase ใน passage'
+}
+
+const READING_FILL_UNCOUNTABLE_ANSWERS = new Set([
+  'water',
+  'erosion',
+  'information',
+  'wildlife',
+  'equipment',
+  'furniture',
+  'advice',
+  'traffic',
+  'pollution'
+])
+
+const getReadingFillAnswerCategory = (question: ReadingQuestion | null) => {
+  if (!question) return 'noun-singular'
+  const prompt = String(question.prompt || '').replace(/\s+/g, ' ').trim()
+  const answer = String(question.correctAnswer || '').trim().toLowerCase()
+
+  if (/\b__BLANK__\s+in\s+(shape|size|length|height|colour|color|form)\b/i.test(
+    prompt.replace(/\d+[.·…_]+/g, ' __BLANK__ ').replace(/_{2,}/g, ' __BLANK__ ')
+  )) {
+    return 'adjective'
+  }
+  if (/\b(taken|moved|exported|sent|returned|transported)\s+to\s+/.test(prompt.toLowerCase())) {
+    return 'place'
+  }
+  if (/\b(a|an)\s+[0-9.·…_]+/i.test(prompt) || /\b(a|an)\s+_{2,}/i.test(prompt)) {
+    return 'noun-singular'
+  }
+  if (READING_FILL_UNCOUNTABLE_ANSWERS.has(answer)) {
+    return 'noun-uncountable'
+  }
+  if (answer.endsWith('s') && !/(ss|us|is)$/.test(answer)) {
+    return 'noun-plural'
+  }
+  return 'noun-singular'
+}
+
+const buildReadingFillGrammarChoiceOptions = (question: ReadingQuestion | null): ReadingPdoyFillGrammarOption[] => {
+  const correctCategory = getReadingFillAnswerCategory(question)
+  const optionPool = [
+    { id: 'grammar-adjective', key: 'adjective', label: 'adjective / คำคุณศัพท์' },
+    { id: 'grammar-singular', key: 'noun-singular', label: 'คำนามนับได้เอกพจน์' },
+    { id: 'grammar-plural', key: 'noun-plural', label: 'คำนามพหูพจน์' },
+    { id: 'grammar-uncountable', key: 'noun-uncountable', label: 'คำนามนับไม่ได้ / คำนามนามธรรม' },
+    { id: 'grammar-place', key: 'place', label: 'ชื่อสถานที่ / ชื่อเฉพาะ' }
+  ]
+  const correctOption = optionPool.find((option) => option.key === correctCategory) || optionPool[1]
+  const distractors = optionPool.filter((option) => option.key !== correctOption.key)
+  const selected = [correctOption, ...distractors.slice(0, 3)]
+  const rotation = Number(question?.number || 0) % selected.length
+  return selected.map((_, index) => {
+    const option = selected[(index + rotation) % selected.length]
+    return {
+      id: option.id,
+      label: option.label,
+      isCorrect: option.key === correctOption.key
+    }
+  })
+}
+
+const parseReadingParaphrasePairs = (question: ReadingQuestion | null) => {
+  const raw = String(question?.paraphrasedVocabulary || '').trim()
+  if (!raw) return []
+  return raw
+    .split(/\s*;\s*|\n+/)
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+    .map((segment) => {
+      const parts = segment.split(/\s*(?:=|->|→)\s*/).map((item) => item.trim()).filter(Boolean)
+      if (parts.length < 2) return null
+      return {
+        important: parts[0].replace(/^\[|\]$/g, '').trim(),
+        match: parts[1].replace(/^\[|\]$/g, '').trim()
+      }
+    })
+    .filter(Boolean) as Array<{ important: string; match: string }>
+}
+
+const parseParaphraseBridge = (value: string) => {
+  const raw = String(value || '').trim()
+  if (!raw) return null
+
+  const firstSegment = raw
+    .split(/\s*;\s*|\n+/)
+    .map((segment) => segment.trim())
+    .find(Boolean)
+
+  if (!firstSegment) return null
+
+  const parts = firstSegment.split(/\s*(?:=|->|→)\s*/).map((item) => item.trim()).filter(Boolean)
+  if (parts.length < 2) return null
+
+  return {
+    questionKeyword: parts[0].replace(/^\[|\]$/g, '').trim(),
+    passageKeyword: parts[1].replace(/^\[|\]$/g, '').trim()
+  }
+}
+
+const buildReadingParaphraseEquation = (
+  question: ReadingQuestion | null,
+  vocabSupport?: { meaning: string } | null
+) => {
+  if (!question) return null
+
+  const target = buildReadingFillWordTarget(question)
+  const bridge = parseParaphraseBridge(question.paraphrasedVocabulary)
+  const exactNeedle = buildReadingHintNeedles(question.exactPortion)[0] || String(question.exactPortion || '').trim()
+  const questionKeyword = String(
+    target?.important || bridge?.questionKeyword || pickReadingPdoyQuestionClue(question).clue || question.correctAnswer
+  ).trim()
+  const passageKeyword = String(target?.match || bridge?.passageKeyword || exactNeedle || question.correctAnswer).trim()
+  const thaiMeaning = String(
+    target?.matchThai ||
+      target?.importantThai ||
+      lookupReadingThaiMeaning(questionKeyword) ||
+      lookupReadingThaiMeaning(passageKeyword) ||
+      vocabSupport?.meaning ||
+      question.explanationThai
+  ).trim()
+
+  if (!questionKeyword && !passageKeyword && !thaiMeaning) return null
+
+  return {
+    questionKeyword: questionKeyword || '-',
+    passageKeyword: passageKeyword || '-',
+    thaiMeaning: thaiMeaning || '-'
+  }
+}
+
+const buildListeningParaphraseEquation = (question: ListeningQuestion | null) => {
+  if (!question) return null
+
+  const bridge = parseParaphraseBridge(question.paraphrasedVocabulary)
+  const exactNeedle = buildReadingHintNeedles(question.exactPortion)[0] || String(question.exactPortion || '').trim()
+  const questionKeyword = String(bridge?.questionKeyword || question.correctAnswer || question.prompt).trim()
+  const passageKeyword = String(bridge?.passageKeyword || exactNeedle || question.correctAnswer).trim()
+  const thaiMeaning = String(
+    lookupReadingThaiMeaning(questionKeyword) ||
+      lookupReadingThaiMeaning(passageKeyword) ||
+      question.explanationThai
+  ).trim()
+
+  if (!questionKeyword && !passageKeyword && !thaiMeaning) return null
+
+  return {
+    questionKeyword: questionKeyword || '-',
+    passageKeyword: passageKeyword || '-',
+    thaiMeaning: thaiMeaning || '-'
+  }
+}
+
+const buildReadingFillWordTarget = (question: ReadingQuestion | null) => {
+  if (!question) return null
+  const pairs = parseReadingParaphrasePairs(question)
+  const exactPortion = String(question.exactPortion || '')
+  const answer = String(question.correctAnswer || '').trim()
+
+  const matchedPair =
+    pairs.find((pair) => normalizeTextForLooseMatch(exactPortion).includes(normalizeTextForLooseMatch(pair.match))) ||
+    pairs.find((pair) => normalizeTextForLooseMatch(pair.match).includes(normalizeTextForLooseMatch(answer))) ||
+    null
+
+  if (matchedPair) {
+    return {
+      important: matchedPair.important,
+      importantThai: lookupReadingThaiMeaning(matchedPair.important),
+      match: matchedPair.match,
+      matchThai: lookupReadingThaiMeaning(matchedPair.match)
+    }
+  }
+
+  if (String(question.prompt || '').toLowerCase().includes('in shape')) {
+    return {
+      important: 'shape',
+      importantThai: lookupReadingThaiMeaning('shape'),
+      match: answer,
+      matchThai: lookupReadingThaiMeaning(answer)
+    }
+  }
+
+  const clue = pickReadingPdoyQuestionClue(question)
+  return {
+    important: clue.clue,
+    importantThai: lookupReadingThaiMeaning(clue.clue),
+    match: answer,
+    matchThai: lookupReadingThaiMeaning(answer)
+  }
+}
+
+const buildReadingPhraseCandidates = (text: string) => {
+  const normalized = String(text || '').replace(/\s+/g, ' ').trim()
+  if (!normalized) return []
+
+  const phraseMatches = normalized.match(/[A-Za-z-]+(?:\s+[A-Za-z-]+){0,2}/g) || []
+  return [...new Set(
+    phraseMatches
+      .map((phrase) => phrase.trim())
+      .filter((phrase) => phrase.length >= 4)
+      .filter((phrase) => !READING_FILL_DISTRACTOR_STOPWORDS.has(phrase.toLowerCase()))
+  )]
+}
+
+const buildReadingFillWordMatchOptions = (
+  question: ReadingQuestion | null,
+  selectedPortionText: string
+): ReadingPdoyFillWordMatchOption[] => {
+  const target = buildReadingFillWordTarget(question)
+  if (!target) return []
+
+  const correctText = String(target.match || '').trim()
+  const correctTextPresentInPortion = normalizeTextForLooseMatch(selectedPortionText).includes(
+    normalizeTextForLooseMatch(correctText)
+  )
+  const phrasePool = buildReadingPhraseCandidates(selectedPortionText)
+  const distractors: string[] = []
+
+  for (const phrase of phrasePool) {
+    if (normalizeTextForLooseMatch(phrase) === normalizeTextForLooseMatch(correctText)) continue
+    if (distractors.some((item) => normalizeTextForLooseMatch(item) === normalizeTextForLooseMatch(phrase))) continue
+    distractors.push(phrase)
+    if (distractors.length >= 2) break
+  }
+
+  while (distractors.length < 2) {
+    distractors.push(
+      distractors.length === 0
+        ? 'cannot find it clearly here'
+        : distractors.length === 1
+          ? String(question?.correctAnswer || '').trim()
+          : 'look again carefully'
+    )
+  }
+
+  const options: ReadingPdoyFillWordMatchOption[] = [
+    {
+      id: 'fill-match-cannot-find',
+      text: 'หาไม่เจอชัดใน portion นี้ / cannot find it clearly here',
+      meaning: 'ใช้ได้เมื่อยังไม่เห็นคำหรือวลีที่ match กันจริง ๆ ในส่วนที่เลือกมา',
+      isCorrect: !correctTextPresentInPortion
+    },
+    {
+      id: 'fill-match-correct',
+      text: correctText,
+      meaning: target.matchThai || lookupReadingThaiMeaning(correctText),
+      isCorrect: correctTextPresentInPortion
+    },
+    {
+      id: 'fill-match-distractor-a',
+      text: distractors[0],
+      meaning: lookupReadingThaiMeaning(distractors[0]),
+      isCorrect: false
+    },
+    {
+      id: 'fill-match-distractor-b',
+      text: distractors[1],
+      meaning: lookupReadingThaiMeaning(distractors[1]),
+      isCorrect: false
+    }
+  ]
+
+  const rotation = Number(question?.number || 0) % options.length
+  return options.map((_, index) => options[(index + rotation) % options.length])
+}
+
+const shouldUseReadingSharedAnswerPool = (orderedQuestions: ReadingQuestion[]) => {
+  if (orderedQuestions.length <= 1) return false
+  const firstAcceptedAnswers = (orderedQuestions[0]?.acceptedAnswers || [])
+    .map((answer) => normalizeReadingScoredAnswer(answer))
+    .filter(Boolean)
+  if (firstAcceptedAnswers.length <= 1) return false
+
+  const firstKey = [...firstAcceptedAnswers].sort().join('\u0001')
+  return orderedQuestions.every((question) => {
+    const acceptedAnswers = (question.acceptedAnswers || [])
+      .map((answer) => normalizeReadingScoredAnswer(answer))
+      .filter(Boolean)
+    return acceptedAnswers.length > 1 && [...acceptedAnswers].sort().join('\u0001') === firstKey
+  })
+}
+
+const scoreReadingQuestions = (
+  questions: ReadingQuestion[],
+  answers: Record<number, string>
+) => {
+  const groupedQuestionNumbers = new Set<number>()
+  const groupedResults = new Map<number, boolean>()
+  const groupedQuestions = new Map<string, ReadingQuestion[]>()
+
+  for (const question of questions) {
+    if (!question.answerGroup) continue
+    groupedQuestionNumbers.add(question.number)
+    const key = String(question.answerGroup)
+    const current = groupedQuestions.get(key) || []
+    current.push(question)
+    groupedQuestions.set(key, current)
+  }
+
+  for (const groupQuestions of groupedQuestions.values()) {
+    const orderedQuestions = [...groupQuestions].sort((a, b) => a.number - b.number)
+    const usesSharedAnswerPool = shouldUseReadingSharedAnswerPool(orderedQuestions)
+
+    if (!usesSharedAnswerPool) {
+      for (const question of orderedQuestions) {
+        groupedResults.set(
+          question.number,
+          isReadingAnswerCorrect(
+            String(answers[question.number] || ''),
+            question.correctAnswer,
+            question.acceptedAnswers
+          )
+        )
+      }
+      continue
+    }
+
+    const acceptedAnswers = orderedQuestions[0]?.acceptedAnswers?.length
+      ? [...orderedQuestions[0].acceptedAnswers]
+      : orderedQuestions.map((question) => question.correctAnswer)
+    const remainingAnswers = acceptedAnswers.map((answer) => normalizeReadingScoredAnswer(answer))
+
+    for (const question of orderedQuestions) {
+      const normalizedUserAnswer = normalizeReadingScoredAnswer(String(answers[question.number] || ''))
+      const matchedIndex = normalizedUserAnswer ? remainingAnswers.indexOf(normalizedUserAnswer) : -1
+      if (matchedIndex >= 0) {
+        groupedResults.set(question.number, true)
+        remainingAnswers.splice(matchedIndex, 1)
+      } else {
+        groupedResults.set(question.number, false)
+      }
+    }
+  }
+
+  return questions.map((question) => {
+    const userAnswer = String(answers[question.number] || '').trim()
+    return {
+      ...question,
+      userAnswer,
+      isCorrect: groupedQuestionNumbers.has(question.number)
+        ? Boolean(groupedResults.get(question.number))
+        : isReadingAnswerCorrect(userAnswer, question.correctAnswer, question.acceptedAnswers)
+    }
+  })
+}
+
+const scoreListeningQuestions = (
+  questions: ListeningQuestion[],
+  answers: Record<number, string>
+) =>
+  questions.map((question) => {
+    const userAnswer = String(answers[question.number] || '').trim()
+    const acceptedAnswers = question.acceptedAnswers?.length
+      ? question.acceptedAnswers
+      : [question.correctAnswer]
+    const normalizedUserAnswer = normalizeListeningAnswer(userAnswer)
+    const isCorrect = acceptedAnswers.some(
+      (answer) => normalizeListeningAnswer(String(answer || '')) === normalizedUserAnswer
+    )
+    return {
+      ...question,
+      userAnswer,
+      isCorrect
+    }
+  })
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -3079,6 +4966,157 @@ const parseStoredScores = (value: string | null): Record<string, number> => {
   }
 }
 
+const parseStoredReadingAttempts = (value: string | null): Record<string, ReadingAttemptSummary> => {
+  if (!value) return {}
+  try {
+    const parsed = JSON.parse(value) as Record<string, ReadingAttemptSummary>
+    if (!parsed || typeof parsed !== 'object') return {}
+    return Object.fromEntries(
+      Object.entries(parsed).map(([examId, attempt]) => {
+        const reportItems = Array.isArray(attempt?.reportItems)
+          ? attempt.reportItems.map((item) => ({
+              ...item,
+              number: Number(item?.number || 0),
+              prompt: String(item?.prompt || ''),
+              correctAnswer: String(item?.correctAnswer || ''),
+              answerType: item?.answerType || 'text',
+              exactPortion: String(item?.exactPortion || ''),
+              explanationThai: String(item?.explanationThai || ''),
+              paraphrasedVocabulary: String(item?.paraphrasedVocabulary || ''),
+              userAnswer: String(item?.userAnswer || ''),
+              isCorrect: Boolean(item?.isCorrect),
+              acceptedAnswers: Array.isArray(item?.acceptedAnswers)
+                ? item.acceptedAnswers.map((answer) => String(answer || ''))
+                : undefined,
+              answerGroup: item?.answerGroup ? String(item.answerGroup) : undefined
+            }))
+          : []
+        const rescoredReportItems = scoreReadingQuestions(
+          reportItems,
+          Object.fromEntries(reportItems.map((item) => [item.number, item.userAnswer]))
+        )
+        const correctCount = rescoredReportItems.filter((item) => item.isCorrect).length
+        const totalQuestions = rescoredReportItems.length
+
+        return [
+          examId,
+          {
+            examId: String(attempt?.examId || examId),
+            examTitle: String(attempt?.examTitle || ''),
+            category: normalizeReadingBankCategory(attempt?.category),
+            correctCount,
+            totalQuestions,
+            accuracy: totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0,
+            wrongCount: Math.max(0, totalQuestions - correctCount),
+            completedAt: String(attempt?.completedAt || ''),
+            reportItems: rescoredReportItems
+          }
+        ]
+      })
+    )
+  } catch {
+    return {}
+  }
+}
+
+const parseStoredListeningAttempts = (value: string | null): Record<string, ListeningAttemptSummary> => {
+  if (!value) return {}
+  try {
+    const parsed = JSON.parse(value) as Record<string, ListeningAttemptSummary>
+    if (!parsed || typeof parsed !== 'object') return {}
+    return Object.fromEntries(
+      Object.entries(parsed).map(([exerciseId, attempt]) => [
+        exerciseId,
+        {
+          exerciseId: String(attempt?.exerciseId || exerciseId),
+          exerciseTitle: String(attempt?.exerciseTitle || ''),
+          correctCount: Math.max(0, Number(attempt?.correctCount || 0)),
+          totalQuestions: Math.max(0, Number(attempt?.totalQuestions || 0)),
+          accuracy: Math.max(0, Number(attempt?.accuracy || 0)),
+          wrongCount: Math.max(0, Number(attempt?.wrongCount || 0)),
+          completedAt: String(attempt?.completedAt || ''),
+          reportItems: Array.isArray(attempt?.reportItems)
+            ? attempt.reportItems.map((item) => ({
+                ...item,
+                number: Number(item?.number || 0),
+                prompt: String(item?.prompt || ''),
+                answerType: item?.answerType === 'multiple-choice' ? 'multiple-choice' : 'text',
+                correctAnswer: String(item?.correctAnswer || ''),
+                acceptedAnswers: Array.isArray(item?.acceptedAnswers)
+                  ? item.acceptedAnswers.map((answer) => String(answer || ''))
+                  : undefined,
+                options: Array.isArray(item?.options)
+                  ? item.options.map((option) => ({
+                      key: String(option?.key || ''),
+                      text: String(option?.text || '')
+                    }))
+                  : undefined,
+                exactPortion: String(item?.exactPortion || ''),
+                explanationThai: String(item?.explanationThai || ''),
+                paraphrasedVocabulary: String(item?.paraphrasedVocabulary || ''),
+                userAnswer: String(item?.userAnswer || ''),
+                isCorrect: Boolean(item?.isCorrect)
+              }))
+            : []
+        }
+      ])
+    )
+  } catch {
+    return {}
+  }
+}
+
+const parseStoredReadingPdoyProgress = (value: string | null): ReadingPdoyProgressSnapshot | null => {
+  if (!value) return null
+  try {
+    const parsed = JSON.parse(value) as Partial<ReadingPdoyProgressSnapshot>
+    if (!parsed?.lessonId) return null
+    const step = String(parsed.step || 'intro')
+    const safeStep: ReadingPdoyLessonStep = ['intro', 'evidence', 'decide', 'result', 'complete'].includes(step)
+      ? (step as ReadingPdoyLessonStep)
+      : 'intro'
+    const normalizedFeedback =
+      safeStep === 'intro' || safeStep === 'decide' || safeStep === 'result' || safeStep === 'complete'
+        ? String(parsed.feedback || '')
+        : ''
+    return {
+      lessonId: String(parsed.lessonId),
+      sessionActive: Boolean(parsed.sessionActive),
+      step: safeStep,
+      questionIndex: Math.max(0, Number(parsed.questionIndex || 0)),
+      evidenceInput: String(parsed.evidenceInput || ''),
+      decision: String(parsed.decision || ''),
+      selectedOption: String(parsed.selectedOption || ''),
+      optionParaphraseInput: String(parsed.optionParaphraseInput || ''),
+      feedback: normalizedFeedback,
+      introChoice: String(parsed.introChoice || ''),
+      evidenceAttempts: Math.max(0, Number(parsed.evidenceAttempts || 0)),
+      decisionAttempts: Math.max(0, Number(parsed.decisionAttempts || 0)),
+      fillMeaningOptionId: String(parsed.fillMeaningOptionId || '')
+    }
+  } catch {
+    return null
+  }
+}
+
+const normalizeReadingPdoySnapshotForStage = (
+  snapshot: ReadingPdoyProgressSnapshot
+): ReadingPdoyProgressSnapshot => ({
+  ...snapshot,
+  feedback:
+    snapshot.step === 'intro' || snapshot.step === 'decide' || snapshot.step === 'result' || snapshot.step === 'complete'
+      ? String(snapshot.feedback || '')
+      : ''
+})
+
+const escapeHtml = (value: string) =>
+  String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
 const buildFullExamPlanFromPromptAndCues = (prompt: string, cues: string[]) => {
   const stripPartPrefix = (value: string) =>
     String(value || '')
@@ -3143,6 +5181,10 @@ function App() {
   const [isAuthLoading, setIsAuthLoading] = useState(true)
   const [userEmailInput, setUserEmailInput] = useState('')
   const [userPasswordInput, setUserPasswordInput] = useState('')
+  const [trialEmailInput, setTrialEmailInput] = useState('')
+  const [trialPasswordInput, setTrialPasswordInput] = useState('')
+  const [trialAuthMode, setTrialAuthMode] = useState<'signup' | 'signin'>('signup')
+  const [trialSignupStep, setTrialSignupStep] = useState<'email' | 'password'>('email')
   const [signupNameInput, setSignupNameInput] = useState('')
   const [signupEmailInput, setSignupEmailInput] = useState('')
   const [signupPasswordInput, setSignupPasswordInput] = useState('')
@@ -3157,7 +5199,14 @@ function App() {
   const [isSubmittingSupportReport, setIsSubmittingSupportReport] = useState(false)
   const [mySupportReports, setMySupportReports] = useState<SupportReportRecord[]>([])
   const [adminSupportReports, setAdminSupportReports] = useState<SupportReportRecord[]>([])
+  const [adminAssessmentReports, setAdminAssessmentReports] = useState<AdminAssessmentReportSummary[]>([])
+  const [, setAdminReadingPdoyProgress] = useState<AdminReadingPdoyProgressSummary[]>([])
   const [notebookSaveNotice, setNotebookSaveNotice] = useState('')
+  const [reportActionToast, setReportActionToast] = useState<{
+    title: string
+    text: string
+    icon: string
+  } | null>(null)
   const [adminLearnerNameInput, setAdminLearnerNameInput] = useState('')
   const [adminLearnerEmailInput, setAdminLearnerEmailInput] = useState('')
   const [adminLearnerPasswordInput, setAdminLearnerPasswordInput] = useState('')
@@ -3170,23 +5219,72 @@ function App() {
   const [adminLearnerSearchInput, setAdminLearnerSearchInput] = useState('')
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
   const [readingExams, setReadingExams] = useState<ReadingExamRecord[]>([])
-  const [selectedReadingCategory, setSelectedReadingCategory] = useState<ReadingBankCategory>('fulltest')
+  const [readingWorkspaceMode, setReadingWorkspaceMode] = useState<ReadingWorkspaceMode>('bank')
+  const [selectedReadingCategory, setSelectedReadingCategory] = useState<ReadingBankCategory>('normal')
   const [selectedReadingExamId, setSelectedReadingExamId] = useState('')
   const [readingAnswers, setReadingAnswers] = useState<Record<number, string>>({})
-  const [readingAttemptStage, setReadingAttemptStage] = useState<'bank' | 'exam' | 'report'>('bank')
+  const [readingAttemptStage, setReadingAttemptStage] = useState<'bank' | 'exam' | 'report' | 'review'>('bank')
   const [readingReportItems, setReadingReportItems] = useState<ReadingReportItem[]>([])
+  const [readingAttemptHistory, setReadingAttemptHistory] = useState<Record<string, ReadingAttemptSummary>>({})
   const [readingActivePassageNumber, setReadingActivePassageNumber] = useState(1)
   const [readingSelectionText, setReadingSelectionText] = useState('')
   const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string }>>([])
   const [readingHintQuestionNumber, setReadingHintQuestionNumber] = useState<number | null>(null)
+  const [readingBankEvidenceByQuestion, setReadingBankEvidenceByQuestion] = useState<Record<number, string>>({})
+  const [readingBankEvidenceVerified, setReadingBankEvidenceVerified] = useState<Record<number, boolean>>({})
+  const [readingBankEvidenceFeedback, setReadingBankEvidenceFeedback] = useState<Record<number, string>>({})
   const [readingExamError, setReadingExamError] = useState('')
+  const [selectedReadingPdoyLessonId, setSelectedReadingPdoyLessonId] = useState('')
+  const [readingPdoySessionActive, setReadingPdoySessionActive] = useState(false)
+  const [readingPdoyStep, setReadingPdoyStep] = useState<ReadingPdoyLessonStep>('intro')
+  const [readingPdoyQuestionIndex, setReadingPdoyQuestionIndex] = useState(0)
+  const [readingPdoyEvidenceInput, setReadingPdoyEvidenceInput] = useState('')
+  const [readingPdoyDecision, setReadingPdoyDecision] = useState('')
+  const [readingPdoySelectedOption, setReadingPdoySelectedOption] = useState('')
+  const [readingPdoyOptionParaphraseInput, setReadingPdoyOptionParaphraseInput] = useState('')
+  const [readingPdoyFeedback, setReadingPdoyFeedback] = useState('')
+  const [readingPdoyIntroChoice, setReadingPdoyIntroChoice] = useState('')
+  const [readingPdoyEvidenceAttempts, setReadingPdoyEvidenceAttempts] = useState(0)
+  const [readingPdoyDecisionAttempts, setReadingPdoyDecisionAttempts] = useState(0)
+  const [readingPdoyFillMeaningOptionId, setReadingPdoyFillMeaningOptionId] = useState('')
+  const [selectedListeningExerciseId, setSelectedListeningExerciseId] = useState('')
+  const [listeningLabMode, setListeningLabMode] = useState<'landing' | 'practice' | 'builder' | 'foundation'>('landing')
+  const [listeningAttemptStage, setListeningAttemptStage] = useState<'bank' | 'exam' | 'report'>('bank')
+  const [listeningAnswers, setListeningAnswers] = useState<Record<number, string>>({})
+  const [listeningReportItems, setListeningReportItems] = useState<ListeningReportItem[]>([])
+  const [listeningAttemptHistory, setListeningAttemptHistory] = useState<Record<string, ListeningAttemptSummary>>({})
+  const [listeningPlaybackState, setListeningPlaybackState] = useState<'idle' | 'playing' | 'ended' | 'error'>('idle')
+  const [listeningPlaybackRate, setListeningPlaybackRate] = useState<'normal' | 'slow'>('normal')
+  const [listeningExerciseError, setListeningExerciseError] = useState('')
+  const [selectedListeningBuilderPackId, setSelectedListeningBuilderPackId] = useState('')
+  const [selectedListeningBuilderExamTestId, setSelectedListeningBuilderExamTestId] = useState('')
+  const [listeningBuilderItemIndex, setListeningBuilderItemIndex] = useState(0)
+  const [listeningBuilderSelectionRange, setListeningBuilderSelectionRange] = useState<{ start: number; end: number } | null>(null)
+  const [listeningBuilderAttempts, setListeningBuilderAttempts] = useState<Record<string, number>>({})
+  const [listeningBuilderResolvedState, setListeningBuilderResolvedState] = useState<Record<string, 'correct' | 'revealed'>>({})
+  const [listeningBuilderExamEvidenceCorrect, setListeningBuilderExamEvidenceCorrect] = useState<Record<string, true>>({})
+  const [listeningBuilderExamAnswerState, setListeningBuilderExamAnswerState] = useState<Record<string, 'correct'>>({})
+  const [listeningBuilderExamFeedback, setListeningBuilderExamFeedback] = useState('')
+  const [listeningBuilderTranscriptShake, setListeningBuilderTranscriptShake] = useState(false)
+  const [listeningFoundationCategory, setListeningFoundationCategory] = useState<ListeningFoundationCategory>('essential')
+  const [selectedListeningFoundationSetId, setSelectedListeningFoundationSetId] = useState('')
+  const [listeningFoundationQuestionIndex, setListeningFoundationQuestionIndex] = useState(0)
+  const [listeningFoundationEvidence, setListeningFoundationEvidence] = useState('')
+  const [listeningFoundationEvidenceCorrect, setListeningFoundationEvidenceCorrect] = useState(false)
+  const [listeningFoundationAnswerState, setListeningFoundationAnswerState] = useState<Record<string, 'correct'>>({})
+  const [listeningFoundationFeedback, setListeningFoundationFeedback] = useState('')
+  const [listeningFoundationScriptMode, setListeningFoundationScriptMode] = useState<'focus' | 'cards'>('focus')
+  const [listeningFoundationScriptChunk, setListeningFoundationScriptChunk] = useState(0)
+  const [listeningFoundationScriptComfort, setListeningFoundationScriptComfort] = useState(true)
+  const listeningFoundationScriptBodyRef = useRef<HTMLDivElement | null>(null)
+  const listeningFoundationPointerSelectingRef = useRef(false)
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
-  const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('fulltest')
+  const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('normal')
   const [adminReadingSmartPasteInput, setAdminReadingSmartPasteInput] = useState('')
   const [adminReadingPassageInput, setAdminReadingPassageInput] = useState('')
   const [adminReadingAnswerKeyInput, setAdminReadingAnswerKeyInput] = useState('')
   const [adminReadingBulkJsonInput, setAdminReadingBulkJsonInput] = useState('')
-  const [adminReadingTemplateCategory, setAdminReadingTemplateCategory] = useState<ReadingBankCategory>('fulltest')
+  const [adminReadingTemplateCategory, setAdminReadingTemplateCategory] = useState<ReadingBankCategory>('normal')
   const [adminReadingBulkValidation, setAdminReadingBulkValidation] = useState<ReadingBulkValidationResult | null>(null)
   const [topics] = useState<SpeakingTopic[]>(INITIAL_TOPICS)
   const [enabledTopicIds, setEnabledTopicIds] = useState<string[]>(
@@ -3194,6 +5292,9 @@ function App() {
   )
   const [selectedTopicId, setSelectedTopicId] = useState<string>(INITIAL_TOPICS[0].id)
   const [selectedTestMode, setSelectedTestMode] = useState<SpeakingTestMode>('part1')
+  const [topicBankSearch, setTopicBankSearch] = useState('')
+  const [topicBankView, setTopicBankView] = useState<'grid' | 'list'>('grid')
+  const [topicBankFocusIndex, setTopicBankFocusIndex] = useState(0)
   const [isTranscribing, setIsTranscribing] = useState(false)
   const [transcript, setTranscript] = useState('')
   const [interimTranscript, setInterimTranscript] = useState('')
@@ -3230,6 +5331,7 @@ function App() {
   const [newCustomSectionName, setNewCustomSectionName] = useState('')
   const [ttsGeneratingKey, setTtsGeneratingKey] = useState('')
   const [ttsAudioUrls, setTtsAudioUrls] = useState<Record<string, string>>({})
+  const [isLoadingAdminTtsCatalog, setIsLoadingAdminTtsCatalog] = useState(false)
   const [adminPasteText, setAdminPasteText] = useState('')
   const [prepNotePart2, setPrepNotePart2] = useState('')
   const [questionPrepNotes, setQuestionPrepNotes] = useState<Record<string, string>>({})
@@ -3246,11 +5348,22 @@ function App() {
   const [isExamPaused, setIsExamPaused] = useState(false)
   const [pauseTimeRemaining, setPauseTimeRemaining] = useState(120)
   const [prepAccordionOpen, setPrepAccordionOpen] = useState<Record<string, boolean>>({ part1: true, part2: false, part3: false })
+
+  const listeningSpeechRef = useRef<SpeechSynthesisUtterance | null>(null)
   const [pendingStartTopicId, setPendingStartTopicId] = useState<string | null>(null)
   const [selectedExpectedScore, setSelectedExpectedScore] = useState<string>('')
   const [answerReviewModal, setAnswerReviewModal] = useState<AnswerReviewModalState | null>(null)
   const [scriptReviewModal, setScriptReviewModal] = useState<ScriptReviewModalState | null>(null)
-  const isStudentViewLockedToSpeaking = authSession?.role === 'student'
+  const isStudentNotebookLocked = authSession?.role === 'student'
+  const isTrialRouteRequested = useMemo(() => {
+    if (typeof window === 'undefined') return false
+    const params = new URLSearchParams(window.location.search)
+    const trialParam = String(params.get('trial') || '').trim().toLowerCase()
+    const path = window.location.pathname.replace(/\/+$/, '').toLowerCase()
+    return trialParam === '1' || trialParam === 'speaking' || path.endsWith('/trial')
+  }, [])
+  const isTrialUser = authSession?.role === 'trial'
+  const canAccessListening = authSession?.role === 'admin' || authSession?.role === 'student'
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -3286,14 +5399,39 @@ function App() {
   const notebookLoadedRef = useRef(false)
   const notebookSyncTimeoutRef = useRef<number | null>(null)
   const notebookSyncedSignatureRef = useRef('')
+  const readingPdoyProgressSyncTimeoutRef = useRef<number | null>(null)
+  const readingPdoyProgressSyncedSignatureRef = useRef('')
   const notebookEntriesRef = useRef<NotebookEntry[]>([])
   const customSectionsRef = useRef<string[]>([])
+  const readingHintMarkRef = useRef<HTMLElement | null>(null)
+  const readingPassagePanelRef = useRef<HTMLElement | null>(null)
+  const readingPassageBodyRef = useRef<HTMLDivElement | null>(null)
+  const readingCoachParagraphRef = useRef<HTMLParagraphElement | null>(null)
+  const readingPdoyStagePanelRef = useRef<HTMLDivElement | null>(null)
   const part2TimerDelayUntilRef = useRef<number | null>(null)
   const part2TimerDelayArmedRef = useRef(false)
 
   const setAuthStateFromPayload = (payload: AuthApiResponse) => {
-    setAuthSession(payload.session)
+    const nextSession = payload.session
+    const currentEmail = normalizeEmail(authSession?.email || '')
+    const nextEmail = normalizeEmail(nextSession?.email || '')
+    const identityChanged =
+      !authSession ||
+      currentEmail !== nextEmail ||
+      String(authSession.userId || '') !== String(nextSession.userId || '') ||
+      authSession.role !== nextSession.role
+
+    if (identityChanged) {
+      resetStudentWorkspaceState(payload.creditProfile.name)
+    }
+    setAuthSession(nextSession)
     setCreditProfile(payload.creditProfile)
+    if (nextSession.role === 'trial') {
+      setSelectedTestMode('full')
+      setSelectedTopicId(TRIAL_SPEAKING_TOPIC_ID)
+      setActivePage('workspace')
+      return
+    }
     setActivePage('home')
   }
 
@@ -3401,6 +5539,32 @@ function App() {
     setReadingExams(Array.isArray(payload.exams) ? payload.exams : [])
   }
 
+  const loadAdminTtsCatalog = async (accessToken = authSession?.accessToken) => {
+    if (!accessToken) return
+    setIsLoadingAdminTtsCatalog(true)
+    try {
+      const payload = await fetchJson<{
+        items: Array<{
+          cacheKey?: string
+          audioUrl?: string
+        }>
+      }>('/api/admin/tts/catalog', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      setTtsAudioUrls(
+        Object.fromEntries(
+          (payload.items || [])
+            .filter((item) => item.cacheKey && item.audioUrl)
+            .map((item) => [String(item.cacheKey), String(item.audioUrl)])
+        )
+      )
+    } finally {
+      setIsLoadingAdminTtsCatalog(false)
+    }
+  }
+
   const loadMySupportReports = async (accessToken = authSession?.accessToken) => {
     if (!accessToken) return
     const payload = await fetchJson<SupportReportsApiResponse>('/api/me/support-reports', {
@@ -3419,6 +5583,26 @@ function App() {
       }
     })
     setAdminSupportReports(Array.isArray(payload.reports) ? payload.reports : [])
+  }
+
+  const loadAdminAssessmentReports = async (accessToken = authSession?.accessToken) => {
+    if (!accessToken) return
+    const payload = await fetchJson<{ reports: AdminAssessmentReportSummary[] }>('/api/admin/assessment-reports', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    setAdminAssessmentReports(Array.isArray(payload.reports) ? payload.reports : [])
+  }
+
+  const loadAdminReadingPdoyProgress = async (accessToken = authSession?.accessToken) => {
+    if (!accessToken) return
+    const payload = await fetchJson<{ reports: AdminReadingPdoyProgressSummary[] }>('/api/admin/reading-pdoy-progress', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    setAdminReadingPdoyProgress(Array.isArray(payload.reports) ? payload.reports : [])
   }
 
   const openSupportModal = () => {
@@ -3602,7 +5786,7 @@ function App() {
       })
       setReadingExams((current) => [payload.exam, ...current.filter((item) => item.id !== payload.exam.id)])
       setAdminReadingTitleInput('')
-      setAdminReadingCategoryInput('fulltest')
+      setAdminReadingCategoryInput('normal')
       setAdminReadingPassageInput('')
       setAdminReadingAnswerKeyInput('')
       setAdminPanelMessage(`Uploaded reading exam: ${payload.exam.title}.`)
@@ -3659,12 +5843,39 @@ function App() {
     const scopedEntriesKey = makeScopedStorageKey(NOTEBOOK_ENTRIES_KEY, session.email)
     const scopedSectionsKey = makeScopedStorageKey(NOTEBOOK_CUSTOM_SECTIONS_KEY, session.email)
     const scopedScoresKey = makeScopedStorageKey(TEST_LATEST_SCORE_KEY, session.email)
+    const scopedReadingAttemptsKey = makeScopedStorageKey(READING_ATTEMPTS_KEY, session.email)
+    const scopedListeningAttemptsKey = makeScopedStorageKey(LISTENING_ATTEMPTS_KEY, session.email)
+    const scopedReadingPdoyProgressKey = makeScopedStorageKey(READING_PDOY_PROGRESS_KEY, session.email)
 
     const localEntries = parseStoredNotebookEntries(localStorage.getItem(scopedEntriesKey))
     const localSections = parseStoredCustomSections(localStorage.getItem(scopedSectionsKey))
     const localScores = parseStoredScores(localStorage.getItem(scopedScoresKey))
+    const localReadingAttempts = parseStoredReadingAttempts(localStorage.getItem(scopedReadingAttemptsKey))
+    const localListeningAttempts = parseStoredListeningAttempts(localStorage.getItem(scopedListeningAttemptsKey))
+    const localReadingPdoyProgress = parseStoredReadingPdoyProgress(localStorage.getItem(scopedReadingPdoyProgressKey))
+    const applyReadingPdoyProgressSnapshot = (snapshot: ReadingPdoyProgressSnapshot | null) => {
+      const normalizedSnapshot = snapshot ? normalizeReadingPdoySnapshotForStage(snapshot) : null
+      setSelectedReadingPdoyLessonId(normalizedSnapshot?.lessonId || '')
+      setReadingPdoySessionActive(Boolean(normalizedSnapshot?.sessionActive))
+      setReadingPdoyStep(normalizedSnapshot?.step || 'intro')
+      setReadingPdoyQuestionIndex(normalizedSnapshot?.questionIndex || 0)
+      setReadingPdoyEvidenceInput(normalizedSnapshot?.evidenceInput || '')
+      setReadingPdoyDecision(normalizedSnapshot?.decision || '')
+      setReadingPdoySelectedOption(normalizedSnapshot?.selectedOption || '')
+      setReadingPdoyOptionParaphraseInput(normalizedSnapshot?.optionParaphraseInput || '')
+      setReadingPdoyFeedback(normalizedSnapshot?.feedback || '')
+      setReadingPdoyIntroChoice(normalizedSnapshot?.introChoice || '')
+      setReadingPdoyEvidenceAttempts(normalizedSnapshot?.evidenceAttempts || 0)
+      setReadingPdoyDecisionAttempts(normalizedSnapshot?.decisionAttempts || 0)
+      setReadingPdoyFillMeaningOptionId(normalizedSnapshot?.fillMeaningOptionId || '')
+      setReadingWorkspaceMode('bank')
+      readingPdoyProgressSyncedSignatureRef.current = normalizedSnapshot ? JSON.stringify(normalizedSnapshot) : ''
+    }
 
     setLatestScoresByTest(localScores)
+    setReadingAttemptHistory(localReadingAttempts)
+    setListeningAttemptHistory(localListeningAttempts)
+    applyReadingPdoyProgressSnapshot(localReadingPdoyProgress)
     setIsNotebookHydrating(true)
     setNotebookSyncError('')
     notebookLoadedRef.current = false
@@ -3688,6 +5899,23 @@ function App() {
       notebookSyncedSignatureRef.current = shouldSeedFromLocal
         ? ''
         : buildNotebookSyncSignature(remoteEntries, remoteSections)
+      try {
+        const progressPayload = await fetchJson<{ progress: ReadingPdoyProgressSnapshot | null }>('/api/me/reading-pdoy-progress', {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`
+          }
+        })
+        const remoteProgress = progressPayload?.progress || null
+        if (remoteProgress) {
+          applyReadingPdoyProgressSnapshot(remoteProgress)
+        } else if (localReadingPdoyProgress) {
+          readingPdoyProgressSyncedSignatureRef.current = ''
+        }
+      } catch {
+        if (localReadingPdoyProgress) {
+          readingPdoyProgressSyncedSignatureRef.current = ''
+        }
+      }
     } catch {
       setNotebookEntries(localEntries)
       setCustomSections(localSections)
@@ -3706,22 +5934,76 @@ function App() {
     setIsNotebookHydrating(false)
     setNotebookSyncError('')
     setLatestScoresByTest({})
+    setReadingAttemptHistory({})
+    setListeningAttemptHistory({})
     setCreditProfile(defaultCreditProfile(name))
     setSelectedNotebookSection('speaking')
     setAssessmentResult(null)
     setAssessmentError('')
     setAssessmentRuntimeMessages([])
+    setAssessmentProgress(0)
+    setAssessmentProgressTarget(0)
+    assessmentStartedAtRef.current = null
     setTranscript('')
     setInterimTranscript('')
     setTranscriptionError('')
     setAudioError('')
+    setAudioUrl('')
+    latestAudioBlobRef.current = null
+    setRecordingDuration(0)
     setSelectedProvider('gemini')
+    setAttemptStage('idle')
     setReportViewSnapshot(null)
+    setAnswerReviewModal(null)
+    setScriptReviewModal(null)
+    pendingAssessmentRef.current = null
+    setReadingWorkspaceMode('bank')
+    setSelectedReadingPdoyLessonId('')
+    setReadingPdoySessionActive(false)
+    setReadingPdoyStep('intro')
+    setReadingPdoyQuestionIndex(0)
+    setReadingPdoyEvidenceInput('')
+    setReadingPdoyDecision('')
+    setReadingPdoySelectedOption('')
+    setReadingPdoyOptionParaphraseInput('')
+    setReadingPdoyFillMeaningOptionId('')
+    setReadingPdoyFeedback('')
+    setReadingPdoyIntroChoice('')
+    setReadingPdoyEvidenceAttempts(0)
+    setReadingPdoyDecisionAttempts(0)
+    setCurrentQuestionIndex(0)
+    setRemainingPrepSeconds(prepSeconds)
+    setRemainingTalkSeconds(talkSeconds)
+    setRemainingQuestionSeconds(75)
+    setFullExamPhase('part1')
+    setFullExamPart1Index(0)
+    setFullExamPart3Index(0)
+    setFullExamPhaseSeconds(75)
+    setFullExamAnnouncement('')
+    setPrepNotePart2('')
+    setQuestionPrepNotes({})
+    setIsPromptTtsPlaying(false)
+    setIsExamPaused(false)
+    questionResponsesRef.current = []
+    questionStartCharIndexRef.current = 0
+    clearQuestionCountdown()
+    resetPart2TimerDelay()
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+    stopPromptAudioPlayback()
+    if (fullExamAnnouncementTimeoutRef.current) {
+      window.clearTimeout(fullExamAnnouncementTimeoutRef.current)
+      fullExamAnnouncementTimeoutRef.current = null
+    }
     notebookLoadedRef.current = false
     notebookSyncedSignatureRef.current = ''
+    readingPdoyProgressSyncedSignatureRef.current = ''
     if (notebookSyncTimeoutRef.current) {
       window.clearTimeout(notebookSyncTimeoutRef.current)
       notebookSyncTimeoutRef.current = null
+    }
+    if (readingPdoyProgressSyncTimeoutRef.current) {
+      window.clearTimeout(readingPdoyProgressSyncTimeoutRef.current)
+      readingPdoyProgressSyncTimeoutRef.current = null
     }
   }
 
@@ -3737,6 +6019,418 @@ function App() {
   const resetPart2TimerDelay = () => {
     part2TimerDelayUntilRef.current = null
     part2TimerDelayArmedRef.current = false
+  }
+
+  const exportReadingReportPdf = () => {
+    if (!activeReadingExam || visibleReadingReportItems.length === 0) return
+
+    const exportWindow = window.open('', '_blank', 'noopener,noreferrer,width=980,height=1280')
+    if (!exportWindow) {
+      setReadingExamError('Please allow pop-ups first so we can open the PDF export view.')
+      return
+    }
+
+    const printedAt = new Date().toLocaleString()
+    const scoreCount = readingReportItems.filter((item) => item.isCorrect).length
+    const summaryCards = `
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span>Score</span>
+          <strong>${scoreCount}/${readingReportItems.length}</strong>
+          <em>overall result</em>
+        </div>
+        <div class="summary-card">
+          <span>Accuracy</span>
+          <strong>${readingAccuracy}%</strong>
+          <em>correct answers</em>
+        </div>
+        <div class="summary-card">
+          <span>Mode</span>
+          <strong>${readingAttemptStage === 'review' ? 'Mistake Review' : 'Full Report'}</strong>
+          <em>exported view</em>
+        </div>
+      </div>
+    `
+
+    const passageSections = readingReportByPassage
+      .filter((group) => group.items.length > 0)
+      .map((group) => {
+        const questionItems = group.items
+          .map(
+            (item) => `
+              <article class="question-card ${item.isCorrect ? 'correct' : 'wrong'}">
+                <div class="question-top">
+                  <div>
+                    <p class="question-number">Question ${item.number}</p>
+                    <h3>${escapeHtml(item.prompt)}</h3>
+                  </div>
+                  <span class="status ${item.isCorrect ? 'correct' : 'wrong'}">${item.isCorrect ? 'Correct' : 'Wrong'}</span>
+                </div>
+                <div class="answer-pair">
+                  <div class="answer-box">
+                    <span>Your answer</span>
+                    <strong>${escapeHtml(item.userAnswer || 'No answer')}</strong>
+                  </div>
+                  <div class="answer-box">
+                    <span>Correct answer</span>
+                    <strong>${escapeHtml(item.correctAnswer)}</strong>
+                  </div>
+                </div>
+                <div class="why-box">
+                  <h4>คำอธิบายภาษาไทย</h4>
+                  <p>${escapeHtml(item.explanationThai)}</p>
+                  <blockquote>${escapeHtml(item.exactPortion)}</blockquote>
+                  ${
+                    item.paraphrasedVocabulary
+                      ? `<p class="paraphrase"><strong>Paraphrased vocabulary:</strong> ${escapeHtml(item.paraphrasedVocabulary)}</p>`
+                      : ''
+                  }
+                </div>
+              </article>
+            `
+          )
+          .join('')
+
+        return `
+          <section class="passage-section">
+            <div class="passage-head">
+              <p class="section-label">Passage ${group.passage.number}</p>
+              <h2>${escapeHtml(group.passage.title)}</h2>
+              <p>${group.correct}/${group.items.length} correct in this section</p>
+            </div>
+            ${questionItems}
+          </section>
+        `
+      })
+      .join('')
+
+    exportWindow.document.write(`<!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8" />
+          <title>${escapeHtml(activeReadingExam.title)} Reading Report</title>
+          <style>
+            * { box-sizing: border-box; }
+            :root {
+              --ink: #0f172a;
+              --muted: #475569;
+              --line: #d6d3d1;
+              --warm: #fffaf0;
+              --paper: #fffdf8;
+              --accent: #b45309;
+              --blue: #1d4ed8;
+              --correct: #14532d;
+              --wrong: #9a3412;
+            }
+            @page {
+              size: A4;
+              margin: 16mm;
+            }
+            body {
+              margin: 0;
+              padding: 28px;
+              font-family: "Georgia", "Times New Roman", serif;
+              color: var(--ink);
+              background:
+                radial-gradient(circle at top right, rgba(251, 191, 36, 0.10), transparent 28%),
+                linear-gradient(180deg, #fffefb 0%, #fffaf3 100%);
+              line-height: 1.6;
+            }
+            .report-shell {
+              max-width: 920px;
+              margin: 0 auto;
+            }
+            .hero {
+              position: relative;
+              overflow: hidden;
+              border: 1px solid var(--line);
+              padding: 28px 30px 24px;
+              margin-bottom: 24px;
+              background:
+                linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(255, 255, 255, 0.96) 34%, rgba(219, 234, 254, 0.70) 100%);
+              box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
+            }
+            .hero::before {
+              content: "";
+              position: absolute;
+              inset: 0 auto 0 0;
+              width: 10px;
+              background: linear-gradient(180deg, #f59e0b 0%, #fb7185 50%, #60a5fa 100%);
+            }
+            .hero h1 {
+              margin: 0 0 10px;
+              padding-left: 4px;
+              font-size: 31px;
+              line-height: 1.16;
+              letter-spacing: -0.02em;
+            }
+            .hero p {
+              margin: 5px 0;
+              color: var(--muted);
+            }
+            .eyebrow {
+              margin: 0 0 12px;
+              font-family: Arial, sans-serif;
+              font-size: 12px;
+              font-weight: 800;
+              letter-spacing: 0.16em;
+              text-transform: uppercase;
+              color: var(--blue);
+            }
+            .hero-meta {
+              display: grid;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 10px;
+              margin-top: 18px;
+            }
+            .hero-meta-card {
+              border-top: 1px solid rgba(15, 23, 42, 0.16);
+              padding-top: 10px;
+            }
+            .hero-meta-card span {
+              display: block;
+              margin-bottom: 4px;
+              font-family: Arial, sans-serif;
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: 0.10em;
+              text-transform: uppercase;
+              color: var(--muted);
+            }
+            .hero-meta-card strong {
+              font-family: Arial, sans-serif;
+              font-size: 14px;
+              color: var(--ink);
+            }
+            .summary-grid {
+              display: grid;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 14px;
+              margin: 0 0 28px;
+            }
+            .summary-card {
+              border: 1px solid var(--line);
+              padding: 18px 18px 16px;
+              background: rgba(255, 255, 255, 0.88);
+              box-shadow: 0 10px 22px rgba(15, 23, 42, 0.05);
+            }
+            .summary-card span {
+              display: block;
+              font-family: Arial, sans-serif;
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 0.12em;
+              color: var(--muted);
+              margin-bottom: 8px;
+            }
+            .summary-card strong {
+              display: block;
+              font-size: 26px;
+              line-height: 1.1;
+              margin-bottom: 6px;
+            }
+            .summary-card em {
+              font-style: normal;
+              color: var(--muted);
+              font-size: 0.92rem;
+            }
+            .passage-section {
+              margin-bottom: 34px;
+            }
+            .passage-head {
+              margin-bottom: 16px;
+              padding-bottom: 10px;
+              border-bottom: 1px solid var(--line);
+            }
+            .section-label {
+              margin: 0 0 4px;
+              font-family: Arial, sans-serif;
+              font-size: 11px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 0.14em;
+              color: var(--blue);
+            }
+            .passage-head h2 {
+              margin: 0 0 6px;
+              font-size: 25px;
+              line-height: 1.2;
+            }
+            .passage-head p {
+              margin: 0;
+              color: var(--muted);
+            }
+            .question-card {
+              border: 1px solid var(--line);
+              border-radius: 16px;
+              padding: 18px 18px 16px;
+              margin-bottom: 16px;
+              background: rgba(255,255,255,0.94);
+              box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+              page-break-inside: avoid;
+            }
+            .question-card.correct {
+              background:
+                linear-gradient(180deg, rgba(240, 253, 244, 0.94) 0%, rgba(255,255,255,0.98) 100%);
+            }
+            .question-card.wrong {
+              background:
+                linear-gradient(180deg, rgba(255, 247, 237, 0.96) 0%, rgba(255,255,255,0.98) 100%);
+            }
+            .question-top {
+              display: flex;
+              justify-content: space-between;
+              gap: 12px;
+              align-items: flex-start;
+            }
+            .question-number {
+              margin: 0 0 6px;
+              font-family: Arial, sans-serif;
+              font-size: 11px;
+              font-weight: 800;
+              color: var(--blue);
+              text-transform: uppercase;
+              letter-spacing: 0.12em;
+            }
+            .question-top h3 {
+              margin: 0 0 8px;
+              font-size: 19px;
+              line-height: 1.38;
+            }
+            .status {
+              border: 1px solid rgba(15, 23, 42, 0.18);
+              border-radius: 999px;
+              padding: 7px 11px;
+              font-family: Arial, sans-serif;
+              font-size: 11px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 0.08em;
+              white-space: nowrap;
+            }
+            .status.correct {
+              background: rgba(187, 247, 208, 0.9);
+              color: var(--correct);
+            }
+            .status.wrong {
+              background: rgba(254, 215, 170, 0.92);
+              color: var(--wrong);
+            }
+            .answer-pair {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 10px;
+              margin: 12px 0 0;
+            }
+            .answer-box {
+              border: 1px solid var(--line);
+              border-radius: 14px;
+              padding: 12px 12px 10px;
+              background: rgba(255,255,255,0.8);
+            }
+            .answer-box span {
+              display: block;
+              margin-bottom: 6px;
+              font-family: Arial, sans-serif;
+              font-size: 11px;
+              font-weight: 800;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              color: var(--muted);
+            }
+            .why-box {
+              border: 1px solid var(--line);
+              border-radius: 16px;
+              background: rgba(255,255,255,0.84);
+              padding: 14px 15px;
+              margin-top: 14px;
+            }
+            .why-box h4 {
+              margin: 0 0 8px;
+              font-size: 16px;
+            }
+            blockquote {
+              margin: 12px 0 0;
+              padding: 0 0 0 14px;
+              border-left: 3px solid #f59e0b;
+              color: #334155;
+              font-style: italic;
+            }
+            .paraphrase {
+              margin-top: 12px;
+              color: #1e3a8a;
+              padding-top: 10px;
+              border-top: 1px dashed rgba(30, 58, 138, 0.22);
+            }
+            .footer-note {
+              margin-top: 28px;
+              padding-top: 12px;
+              border-top: 1px solid var(--line);
+              color: var(--muted);
+              font-size: 12px;
+              text-align: right;
+            }
+            @media print {
+              body {
+                padding: 0;
+                background: #fff;
+              }
+              .hero,
+              .summary-card,
+              .question-card,
+              .why-box,
+              .answer-box {
+                box-shadow: none !important;
+              }
+            }
+            @media (max-width: 900px) {
+              body {
+                padding: 20px;
+              }
+              .summary-grid,
+              .hero-meta,
+              .answer-pair {
+                grid-template-columns: 1fr;
+              }
+              .question-top {
+                flex-direction: column;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="report-shell">
+            <section class="hero">
+              <p class="eyebrow">English Plan Reading Report</p>
+              <h1>${escapeHtml(activeReadingExam.title)}${readingAttemptStage === 'review' ? ' - Mistake Review' : ' - Reading Report'}</h1>
+              <p>A premium export of your latest reading performance with Thai explanations, evidence, and answer review.</p>
+              <div class="hero-meta">
+                <div class="hero-meta-card">
+                  <span>Category</span>
+                  <strong>${escapeHtml(READING_CATEGORY_LABELS[activeReadingExam.category])}</strong>
+                </div>
+                <div class="hero-meta-card">
+                  <span>Generated</span>
+                  <strong>${escapeHtml(printedAt)}</strong>
+                </div>
+                <div class="hero-meta-card">
+                  <span>Included</span>
+                  <strong>Answers, Thai explanations, evidence</strong>
+                </div>
+              </div>
+            </section>
+            ${summaryCards}
+            ${passageSections}
+            <p class="footer-note">Generated by English Plan Learning Space</p>
+          </div>
+          <script>
+            window.onload = () => {
+              window.print();
+            };
+          </script>
+        </body>
+      </html>`)
+    exportWindow.document.close()
   }
 
   const armPart2TimerDelay = () => {
@@ -3772,6 +6466,33 @@ function App() {
       })),
     []
   )
+  const speakingQuestionAudioCatalog = useMemo<QuestionAudioCatalogItem[]>(
+    () => [
+      ...adminPart1QuestionBank.flatMap((topic) =>
+        topic.questions.map((question, index) => ({
+          key: `part1-${topic.topicId}-${index}`,
+          cacheKey: `part1-${topic.topicId}-${index}`,
+          section: 'Part 1' as const,
+          topicId: topic.topicId,
+          topicTitle: topic.topicTitle,
+          question,
+          audioUrl: ''
+        }))
+      ),
+      ...adminPart3QuestionBank.flatMap((topic) =>
+        topic.questions.map((question, index) => ({
+          key: `part3-${topic.topicId}-${index}`,
+          cacheKey: `part3-${topic.topicId}-${index}`,
+          section: 'Part 3' as const,
+          topicId: topic.topicId,
+          topicTitle: topic.topicTitle,
+          question,
+          audioUrl: ''
+        }))
+      )
+    ],
+    [adminPart1QuestionBank, adminPart3QuestionBank]
+  )
   const filteredManagedLearners = useMemo(() => {
     const query = adminLearnerSearchInput.trim().toLowerCase()
     if (!query) return managedLearners
@@ -3785,33 +6506,88 @@ function App() {
     () => adminSupportReports.filter((report) => report.status === 'open').length,
     [adminSupportReports]
   )
+  const adminSpeakingCostLast7Days = useMemo(
+    () => buildAdminCostSeries(adminAssessmentReports, 7),
+    [adminAssessmentReports]
+  )
+  const adminSpeakingCostLast30Days = useMemo(
+    () => buildAdminCostSeries(adminAssessmentReports, 30),
+    [adminAssessmentReports]
+  )
+  const adminSpeakingWeeklyCostTotal = useMemo(
+    () => adminSpeakingCostLast7Days.reduce((sum, item) => sum + item.cost, 0),
+    [adminSpeakingCostLast7Days]
+  )
+  const adminSpeakingMonthlyCostTotal = useMemo(
+    () => adminSpeakingCostLast30Days.reduce((sum, item) => sum + item.cost, 0),
+    [adminSpeakingCostLast30Days]
+  )
+  const adminSpeakingWeeklyTokenTotal = useMemo(
+    () => adminSpeakingCostLast7Days.reduce((sum, item) => sum + item.tokens, 0),
+    [adminSpeakingCostLast7Days]
+  )
+  const adminSpeakingMonthlyTokenTotal = useMemo(
+    () => adminSpeakingCostLast30Days.reduce((sum, item) => sum + item.tokens, 0),
+    [adminSpeakingCostLast30Days]
+  )
+  const adminSpeakingWeeklyReportsTotal = useMemo(
+    () => adminSpeakingCostLast7Days.reduce((sum, item) => sum + item.reports, 0),
+    [adminSpeakingCostLast7Days]
+  )
+  const adminSpeakingMonthlyReportsTotal = useMemo(
+    () => adminSpeakingCostLast30Days.reduce((sum, item) => sum + item.reports, 0),
+    [adminSpeakingCostLast30Days]
+  )
+  const adminSpeakingWeeklyCostPath = useMemo(
+    () => buildAdminCostLinePath(adminSpeakingCostLast7Days.map((item) => item.cost)),
+    [adminSpeakingCostLast7Days]
+  )
+  const adminSpeakingMonthlyCostPath = useMemo(
+    () => buildAdminCostLinePath(adminSpeakingCostLast30Days.map((item) => item.cost)),
+    [adminSpeakingCostLast30Days]
+  )
   const activeSupportReportCount = useMemo(
     () => adminSupportReports.filter((report) => ['open', 'in_progress'].includes(report.status)).length,
     [adminSupportReports]
   )
   const adminTtsQuestionLibrary = useMemo(
-    () => [
-      ...adminPart1QuestionBank.flatMap((topic) =>
-        topic.questions.map((question, index) => ({
-          key: `part1-${topic.topicId}-${index}`,
-          section: 'Part 1',
-          topicTitle: topic.topicTitle,
-          question,
-          audioUrl: ttsAudioUrls[`part1-${topic.topicId}-${index}`] || ''
-        }))
-      ),
-      ...adminPart3QuestionBank.flatMap((topic) =>
-        topic.questions.map((question, index) => ({
-          key: `part3-${topic.topicId}-${index}`,
-          section: 'Part 3',
-          topicTitle: topic.topicTitle,
-          question,
-          audioUrl: ttsAudioUrls[`part3-${topic.topicId}-${index}`] || ''
-        }))
-      )
-    ],
-    [adminPart1QuestionBank, adminPart3QuestionBank, ttsAudioUrls]
+    () =>
+      speakingQuestionAudioCatalog.map((item) => ({
+        ...item,
+        audioUrl: ttsAudioUrls[item.key] || ''
+      })),
+    [speakingQuestionAudioCatalog, ttsAudioUrls]
   )
+  const speakingQuestionAudioByQuestion = useMemo(() => {
+    const map = new Map<string, QuestionAudioCatalogItem>()
+    speakingQuestionAudioCatalog.forEach((item) => {
+      map.set(normalizeReadingAnswer(item.question), item)
+    })
+    return map
+  }, [speakingQuestionAudioCatalog])
+  const adminPart1TtsTopics = useMemo(
+    () =>
+      adminPart1QuestionBank.map((topic) => {
+        const items = adminTtsQuestionLibrary.filter((item) => item.section === 'Part 1' && item.topicId === topic.topicId)
+        const readyCount = items.filter((item) => item.audioUrl).length
+        return {
+          ...topic,
+          items,
+          readyCount,
+          missingCount: items.length - readyCount
+        }
+      }),
+    [adminPart1QuestionBank, adminTtsQuestionLibrary]
+  )
+  const filteredAdminPart1TtsTopics = useMemo(() => {
+    const query = adminTtsSearchInput.trim().toLowerCase()
+    if (!query) return adminPart1TtsTopics
+    return adminPart1TtsTopics.filter(
+      (topic) =>
+        topic.topicTitle.toLowerCase().includes(query) ||
+        topic.items.some((item) => item.question.toLowerCase().includes(query))
+    )
+  }, [adminPart1TtsTopics, adminTtsSearchInput])
   const filteredAdminTtsQuestionLibrary = useMemo(() => {
     const query = adminTtsSearchInput.trim().toLowerCase()
     if (!query) return adminTtsQuestionLibrary
@@ -3825,19 +6601,28 @@ function App() {
     () => adminTtsQuestionLibrary.filter((item) => item.audioUrl),
     [adminTtsQuestionLibrary]
   )
-  const filteredReadingExams = useMemo(
-    () => readingExams.filter((exam) => exam.category === selectedReadingCategory),
-    [readingExams, selectedReadingCategory]
+  const bankReadingExams = useMemo(
+    () => readingExams.filter((exam) => !isReadingPdoyExercise(exam.id)),
+    [readingExams]
   )
+  const pdoyReadingExams = useMemo(
+    () => readingExams.filter((exam) => isReadingPdoyExercise(exam.id)),
+    [readingExams]
+  )
+  const filteredReadingExams = useMemo(
+    () => bankReadingExams.filter((exam) => exam.category === selectedReadingCategory),
+    [bankReadingExams, selectedReadingCategory]
+  )
+  const readingAttemptByExamId = useMemo(() => readingAttemptHistory, [readingAttemptHistory])
   const readingExamCountsByCategory = useMemo(
     () =>
       (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => ({
         category,
         label: READING_CATEGORY_LABELS[category],
-        count: readingExams.filter((exam) => exam.category === category).length,
-        exams: readingExams.filter((exam) => exam.category === category).slice(0, 6)
+        count: bankReadingExams.filter((exam) => exam.category === category).length,
+        exams: bankReadingExams.filter((exam) => exam.category === category).slice(0, 6)
       })),
-    [readingExams]
+    [bankReadingExams]
   )
   const adminFirstReadingCategoryWithContent = useMemo(
     () => readingExamCountsByCategory.find((group) => group.count > 0)?.category || null,
@@ -3853,14 +6638,291 @@ function App() {
     activeReadingPassages.find((passage) => passage.number === readingActivePassageNumber) ??
     activeReadingPassages[0] ??
     null
+  const readingPdoyLessons = useMemo<ReadingPdoyLesson[]>(() => {
+    const lessons: ReadingPdoyLesson[] = []
+    pdoyReadingExams.forEach((exam) => {
+      ;(exam.parsedPayload?.passages || []).forEach((passage) => {
+        ;(['fill-in-the-blank', 'true-false-not-given', 'yes-no-not-given', 'multiple-choice'] as ReadingPdoyLessonType[]).forEach((lessonType) => {
+          const questions = (passage.questions || []).filter((question) =>
+            lessonType === 'multiple-choice'
+              ? (question.answerType === 'multiple-choice' && !(question.answerGroup && (question.acceptedAnswers?.length || 0) > 1)) ||
+                isReadingMatchingQuestion(passage, question)
+              : lessonType === 'fill-in-the-blank'
+                ? question.answerType === 'text' &&
+                  (!question.answerGroup) &&
+                  (exam.id !== 'builtin-reading-pdoy-huarango' || (question.number >= 1 && question.number <= 5))
+                : question.answerType === lessonType
+          )
+          if (!questions.length) return
+          lessons.push({
+            id: `${exam.id}-${passage.number}-${lessonType}`,
+            examId: exam.id,
+            examTitle: exam.title,
+            category: exam.category,
+            passageNumber: passage.number,
+            passageTitle: passage.title,
+            lessonType,
+            questions
+          })
+        })
+      })
+    })
+    return lessons
+  }, [pdoyReadingExams])
+  const activeReadingPdoyLesson =
+    readingPdoyLessons.find((lesson) => lesson.id === selectedReadingPdoyLessonId) ??
+    readingPdoyLessons[0] ??
+    null
+  const activeReadingPdoyExam =
+    pdoyReadingExams.find((exam) => exam.id === activeReadingPdoyLesson?.examId) ?? null
+  const activeReadingPdoyPassage =
+    activeReadingPdoyExam?.parsedPayload?.passages.find((passage) => passage.number === activeReadingPdoyLesson?.passageNumber) ??
+    null
+  const activeReadingPdoyQuestion =
+    activeReadingPdoyLesson?.questions[readingPdoyQuestionIndex] ?? null
+  const activeReadingPdoyClue = activeReadingPdoyQuestion ? pickReadingPdoyQuestionClue(activeReadingPdoyQuestion) : null
+  const activeReadingPdoyVocabSupport = activeReadingPdoyQuestion
+    ? buildReadingVocabSupport(activeReadingPdoyQuestion, activeReadingPdoyClue)
+    : null
+  const activeReadingPdoyIsMatchingQuestion = useMemo(
+    () => isReadingMatchingQuestion(activeReadingPdoyPassage, activeReadingPdoyQuestion),
+    [activeReadingPdoyPassage, activeReadingPdoyQuestion]
+  )
+  const activeReadingPdoyFocusParagraphIndex =
+    activeReadingPdoyPassage && activeReadingPdoyQuestion
+      ? (
+          activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank' &&
+          readingPdoyEvidenceInput &&
+          buildReadingFillPortionOptions(activeReadingPdoyPassage, activeReadingPdoyQuestion).find(
+            (option) => option.id === readingPdoyEvidenceInput
+          )?.text
+            ? findReadingEvidenceParagraphIndex(
+                activeReadingPdoyPassage,
+                buildReadingFillPortionOptions(activeReadingPdoyPassage, activeReadingPdoyQuestion).find(
+                  (option) => option.id === readingPdoyEvidenceInput
+                )?.text || ''
+              )
+            : findReadingEvidenceParagraphIndex(activeReadingPdoyPassage, activeReadingPdoyQuestion.exactPortion)
+        )
+      : -1
+  const activeReadingPdoyGuideCopy = useMemo(() => {
+    if (!activeReadingPdoyQuestion) {
+      return {
+        badge: "P'Doy guide",
+        title: 'มองหาจุดโฟกัสทีละจุด',
+        detail: 'เดี๋ยวพี่จะพาไล่สายตาไปทีละส่วนของ passage เองครับ'
+      }
+    }
+
+    if (readingPdoyStep === 'intro') {
+      return {
+        badge: 'Step 1',
+        title: 'เริ่มจากจุดที่พี่ซูมให้ก่อน',
+        detail:
+          activeReadingPdoyLesson?.lessonType === 'multiple-choice'
+            ? 'มองกล่อง evidence นี้ก่อน แล้วค่อยกลับไปเทียบกับตัวเลือกทีหลัง'
+            : activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank'
+              ? 'ข้อเติมคำเริ่มจากดู grammar cue ก่อนครับ ว่าตรงนี้น่าจะเป็น noun, adjective หรือชื่อสถานที่'
+              : 'อ่าน statement แล้วจ้องตรง evidence box นี้ก่อน ว่ามีความหมายไหนที่ตรงหรือไม่ตรงกัน'
+      }
+    }
+
+    if (readingPdoyStep === 'evidence') {
+      return {
+        badge: 'Step 2',
+        title: 'ใช่ครับ มองตรงย่อหน้านี้เลย',
+        detail:
+          activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank'
+            ? `เลือก portion ที่น่าจะมีคำตอบก่อนครับ ยังไม่ต้องกลัวผิด เดี๋ยวค่อยไปพิสูจน์ด้วยคำพาราฟเรสในขั้นถัดไป`
+            : `ลองจับคำที่พาราฟเรสกับ "${activeReadingPdoyClue?.clue || activeReadingPdoyQuestion.prompt}" ให้เจอก่อน`
+      }
+    }
+
+    if (readingPdoyStep === 'decide') {
+      return {
+        badge: 'Step 3',
+        title: 'ตอนนี้ใช้ evidence ตัดสินคำตอบ',
+        detail:
+          activeReadingPdoyIsMatchingQuestion
+            ? 'ตอนนี้เลือก heading หรือ paragraph ที่ตรงกับ evidence จริง ไม่ใช่แค่ตัวที่มี keyword คล้ายกัน'
+            : activeReadingPdoyLesson?.lessonType === 'multiple-choice'
+            ? 'อย่าเดาจาก keyword อย่างเดียว ให้ดูว่า option ไหนอธิบายความคิดตรงกับ passage จริง'
+            : activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank'
+              ? 'ตอนนี้ชี้ให้ได้ครับว่าใน portion ที่เลือกมา คำหรือวลีไหนพาราฟเรสกับ clue สำคัญในโจทย์'
+              : 'ดูว่าความหมายตรงกัน ขัดกัน หรือ passage ไม่ได้บอกเรื่องนี้เลย'
+      }
+    }
+
+    if (readingPdoyStep === 'result') {
+      return {
+        badge: 'Step 4',
+        title: 'จำ logic ตรงนี้ไว้',
+        detail: 'ย่อหน้านี้คือจุดเฉลยหลักของข้อนี้ เวลากลับมาทบทวนให้ดูเหตุผลจากตรงนี้ก่อน'
+      }
+    }
+
+    return {
+      badge: 'Complete',
+      title: 'จบบทนี้แล้วครับ',
+      detail: 'ถ้าจะเริ่มข้อถัดไป พี่จะพาเลื่อนไปยังจุดโฟกัสใหม่ให้เหมือนเดิม'
+    }
+  }, [activeReadingPdoyClue?.clue, activeReadingPdoyIsMatchingQuestion, activeReadingPdoyLesson?.lessonType, activeReadingPdoyQuestion, readingPdoyStep])
+  const activeReadingPdoyOptions = useMemo(
+    () => extractReadingMultipleChoiceOptions(activeReadingPdoyPassage, activeReadingPdoyQuestion),
+    [activeReadingPdoyPassage, activeReadingPdoyQuestion]
+  )
+  const activeReadingPdoyEvidenceOptions = useMemo(
+    () =>
+      activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank'
+        ? buildReadingFillPortionOptions(activeReadingPdoyPassage, activeReadingPdoyQuestion)
+        : buildReadingEvidenceOptions(activeReadingPdoyPassage, activeReadingPdoyQuestion),
+    [activeReadingPdoyLesson?.lessonType, activeReadingPdoyPassage, activeReadingPdoyQuestion]
+  )
+  const activeReadingPdoyFillGrammarOptions = useMemo(
+    () => buildReadingFillGrammarChoiceOptions(activeReadingPdoyQuestion),
+    [activeReadingPdoyQuestion]
+  )
+  const activeReadingPdoySelectedEvidenceRecord =
+    activeReadingPdoyEvidenceOptions.find((option) => option.id === readingPdoyEvidenceInput) ?? null
+  const activeReadingPdoyFillWordTarget = useMemo(
+    () => buildReadingFillWordTarget(activeReadingPdoyQuestion),
+    [activeReadingPdoyQuestion]
+  )
+  const activeReadingPdoyFillWordMatchOptions = useMemo(
+    () =>
+      buildReadingFillWordMatchOptions(
+        activeReadingPdoyQuestion,
+        activeReadingPdoySelectedEvidenceRecord?.text || ''
+      ),
+    [activeReadingPdoyQuestion, activeReadingPdoySelectedEvidenceRecord?.text]
+  )
+  const activeReadingPdoySelectedFillWordMatchOption =
+    activeReadingPdoyFillWordMatchOptions.find((option) => option.id === readingPdoySelectedOption) ?? null
+  const activeReadingPdoyFillHotspots = useMemo(
+    () =>
+      activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank'
+        ? activeReadingPdoyEvidenceOptions.map((option) => ({
+            ...option,
+            paragraphIndex: findReadingEvidenceParagraphIndex(activeReadingPdoyPassage, option.text)
+          }))
+        : [],
+    [activeReadingPdoyLesson?.lessonType, activeReadingPdoyEvidenceOptions, activeReadingPdoyPassage]
+  )
+  const activeReadingPdoyCoachFloatClass = useMemo(() => {
+    const cycle = Number(activeReadingPdoyQuestion?.number || 0) % 3
+    if (readingPdoyStep === 'intro') return cycle === 0 ? 'readingPdoyCoachCard-float-top' : 'readingPdoyCoachCard-float-mid'
+    if (readingPdoyStep === 'evidence') return cycle === 1 ? 'readingPdoyCoachCard-float-low' : 'readingPdoyCoachCard-float-mid'
+    if (readingPdoyStep === 'decide') return cycle === 2 ? 'readingPdoyCoachCard-float-top' : 'readingPdoyCoachCard-float-low'
+    return 'readingPdoyCoachCard-float-mid'
+  }, [activeReadingPdoyQuestion?.number, readingPdoyStep])
+  const activeReadingPdoySelectedOptionRecord =
+    activeReadingPdoyOptions.find((option) => option.letter === readingPdoySelectedOption) ?? null
+  const activeReadingPdoyHintUnlocked =
+    activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank'
+      ? readingPdoyDecisionAttempts > 0
+      : readingPdoyEvidenceAttempts > 0 || readingPdoyDecisionAttempts > 0
+  const activeReadingPdoyPrimaryAction = useMemo(() => {
+    if (!activeReadingPdoyQuestion || readingPdoyStep === 'complete') return null
+    if (readingPdoyStep === 'intro') {
+      return {
+        label: activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank' ? 'เช็ก grammar cue' : 'เช็กขั้นตอนแรก',
+        tone: 'primary' as const,
+        disabled: !readingPdoyIntroChoice,
+        onClick: () => submitReadingPdoyIntro()
+      }
+    }
+    if (readingPdoyStep === 'evidence') {
+      return {
+        label: activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank' ? 'เลือก portion นี้ต่อ' : 'เช็ก evidence',
+        tone: 'primary' as const,
+        disabled: !readingPdoyEvidenceInput.trim(),
+        onClick: () => submitReadingPdoyEvidence()
+      }
+    }
+    if (readingPdoyStep === 'decide') {
+      if (activeReadingPdoyLesson?.lessonType === 'multiple-choice') {
+        return {
+          label: activeReadingPdoyIsMatchingQuestion ? 'เช็กคำตอบนี้' : 'เช็ก option นี้',
+          tone: 'primary' as const,
+          disabled:
+            !activeReadingPdoyOptions.length ||
+            !readingPdoySelectedOption ||
+            (!activeReadingPdoyIsMatchingQuestion && !readingPdoyOptionParaphraseInput.trim()),
+          onClick: () => submitReadingPdoyDecision()
+        }
+      }
+      if (activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank') {
+        return {
+          label: 'เช็กคำที่ match กัน',
+          tone: 'primary' as const,
+          disabled: !readingPdoySelectedOption,
+          onClick: () => submitReadingPdoyDecision()
+        }
+      }
+      return {
+        label: 'ตอบข้อนี้',
+        tone: 'primary' as const,
+        disabled: !readingPdoyDecision,
+        onClick: () => submitReadingPdoyDecision()
+      }
+    }
+    if (readingPdoyStep === 'result') {
+      return {
+        label: readingPdoyQuestionIndex + 1 >= (activeReadingPdoyLesson?.questions.length || 0) ? 'จบบทเรียน' : 'ข้อต่อไป',
+        tone: 'success' as const,
+        disabled: false,
+        onClick: () => goToNextReadingPdoyQuestion()
+      }
+    }
+    return null
+  }, [
+    activeReadingPdoyQuestion,
+    readingPdoyStep,
+    readingPdoyIntroChoice,
+    readingPdoyEvidenceInput,
+    activeReadingPdoyLesson?.lessonType,
+    activeReadingPdoyLesson?.questions.length,
+    activeReadingPdoyOptions.length,
+    activeReadingPdoyIsMatchingQuestion,
+    readingPdoySelectedOption,
+    readingPdoyOptionParaphraseInput,
+    readingPdoyDecision,
+    readingPdoyQuestionIndex
+  ])
   const activeReadingHint =
     readingHintQuestionNumber === null
       ? null
       : activeReadingPassages
           .flatMap((passage) => passage.questions || [])
           .find((question) => question.number === readingHintQuestionNumber) ?? null
+  const activeReadingHintExcerpt = useMemo(() => {
+    if (!activeReadingHint || !activeReadingPassage) return ''
+    const hintPassage = activeReadingPassages.find((passage) =>
+      (passage.questions || []).some((question) => question.number === activeReadingHint.number)
+    )
+    if (!hintPassage || hintPassage.number !== activeReadingPassage.number) return ''
+    if (
+      isReadingMatchingQuestion(hintPassage, activeReadingHint) &&
+      !readingBankEvidenceVerified[activeReadingHint.number]
+    ) {
+      const selectedId = readingBankEvidenceByQuestion[activeReadingHint.number]
+      const selectedOption = buildReadingEvidenceOptions(hintPassage, activeReadingHint).find(
+        (option) => option.id === selectedId
+      )
+      return selectedOption?.text || ''
+    }
+    return activeReadingHint.exactPortion
+  }, [
+    activeReadingHint,
+    activeReadingPassage,
+    activeReadingPassages,
+    readingBankEvidenceByQuestion,
+    readingBankEvidenceVerified
+  ])
   const activeReadingQuestions = activeReadingPassage?.questions || []
   const activeReadingAllQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
+  const visibleReadingReportItems =
+    readingAttemptStage === 'review' ? readingReportItems.filter((item) => !item.isCorrect) : readingReportItems
   const answeredReadingCount = activeReadingAllQuestions.filter((question) =>
     String(readingAnswers[question.number] || '').trim()
   ).length
@@ -3869,7 +6931,7 @@ function App() {
     : 0
   const unansweredReadingCount = readingReportItems.filter((item) => !String(item.userAnswer || '').trim()).length
   const readingReportByPassage = activeReadingPassages.map((passage) => {
-    const items = readingReportItems.filter((item) =>
+    const items = visibleReadingReportItems.filter((item) =>
       passage.questions.some((question) => question.number === item.number)
     )
     return {
@@ -3878,18 +6940,230 @@ function App() {
       correct: items.filter((item) => item.isCorrect).length
     }
   })
+  const readingPdoySupportedQuestionCount = useMemo(
+    () => readingPdoyLessons.reduce((total, lesson) => total + lesson.questions.length, 0),
+    [readingPdoyLessons]
+  )
+  const listeningAttemptByExerciseId = useMemo(() => listeningAttemptHistory, [listeningAttemptHistory])
+  const activeListeningExercise =
+    LISTENING_EXERCISES.find((exercise) => exercise.id === selectedListeningExerciseId) ??
+    LISTENING_EXERCISES[0] ??
+    null
+  const listeningAnsweredCount = activeListeningExercise
+    ? activeListeningExercise.questions.filter((question) => String(listeningAnswers[question.number] || '').trim()).length
+    : 0
+  const listeningAccuracy = listeningReportItems.length
+    ? Math.round((listeningReportItems.filter((item) => item.isCorrect).length / listeningReportItems.length) * 100)
+    : 0
+  const listeningUnansweredCount = listeningReportItems.filter((item) => !String(item.userAnswer || '').trim()).length
+const visibleListeningFoundationSets = useMemo(
+    () => ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === listeningFoundationCategory),
+    [listeningFoundationCategory]
+  )
+  const activeListeningFoundationSet =
+    ALL_LISTENING_FOUNDATION_SETS.find((set) => set.id === selectedListeningFoundationSetId) ??
+    visibleListeningFoundationSets[0] ??
+    ALL_LISTENING_FOUNDATION_SETS[0] ??
+    null
+  const activeListeningFoundationQuestion =
+    activeListeningFoundationSet?.questions[listeningFoundationQuestionIndex] ??
+    activeListeningFoundationSet?.questions[0] ??
+    null
+  const activeListeningFoundationScriptSegments = useMemo(
+    () =>
+      activeListeningFoundationQuestion
+        ? parseListeningScriptSegments(activeListeningFoundationQuestion.passage)
+        : [],
+    [activeListeningFoundationQuestion]
+  )
+  const listeningFoundationScriptChunkCount = Math.max(activeListeningFoundationScriptSegments.length, 1)
+  const activeListeningFoundationScriptChunk = Math.min(
+    listeningFoundationScriptChunk,
+    listeningFoundationScriptChunkCount - 1
+  )
+  const listeningFoundationCompletedCount = activeListeningFoundationSet
+    ? activeListeningFoundationSet.questions.filter((question) => listeningFoundationAnswerState[question.id] === 'correct').length
+    : 0
+  const listeningVocabularyBuilderItems = useMemo(
+    () => parseListeningVocabularyWorkbook(listeningWorkbookRaw),
+    []
+  )
+  const listeningSectionBankTests = useMemo(
+    () => parseListeningSectionBank(listeningSectionBankRaw),
+    []
+  )
+  const listeningVocabularyBuilderPacks = useMemo(() => {
+    const grouped = listeningSectionBankTests.reduce<Record<string, ListeningVocabularyBuilderPack>>((acc, test) => {
+      const packKey = `${test.bookNumber}-${test.sectionNumber}`
+      const title = `Cambridge ${test.bookNumber} · Section ${test.sectionNumber}`
+      if (!acc[packKey]) {
+        acc[packKey] = {
+          id: slugifyListeningBuilderPack(title),
+          title,
+          bookNumber: test.bookNumber,
+          sectionNumber: test.sectionNumber,
+          testNumbers: [],
+          items: [],
+          sectionTests: []
+        }
+      }
+
+      acc[packKey].sectionTests.push(test)
+      if (!acc[packKey].testNumbers.includes(test.testNumber)) {
+        acc[packKey].testNumbers.push(test.testNumber)
+      }
+      return acc
+    }, {})
+
+    listeningVocabularyBuilderItems.forEach((item) => {
+      const packKey = `${item.bookNumber ?? 'book'}-${item.sectionNumber ?? 'section'}`
+      if (!grouped[packKey]) {
+        const title =
+          item.bookNumber && item.sectionNumber
+            ? `Cambridge ${item.bookNumber} · Section ${item.sectionNumber}`
+            : item.book
+        grouped[packKey] = {
+          id: slugifyListeningBuilderPack(title),
+          title,
+          bookNumber: item.bookNumber,
+          sectionNumber: item.sectionNumber,
+          testNumbers: [],
+          items: [],
+          sectionTests: []
+        }
+      }
+      grouped[packKey].items.push(item)
+      if (item.testNumber && !grouped[packKey].testNumbers.includes(item.testNumber)) {
+        grouped[packKey].testNumbers.push(item.testNumber)
+      }
+    })
+
+    return Object.values(grouped)
+      .map((pack) => ({
+        ...pack,
+        testNumbers: [...pack.testNumbers].sort((a, b) => a - b),
+        sectionTests: [...pack.sectionTests].sort((a, b) => a.testNumber - b.testNumber),
+        items: [...pack.items].sort((a, b) => {
+          const testDiff = (a.testNumber || 0) - (b.testNumber || 0)
+          if (testDiff !== 0) return testDiff
+          return a.questionNumber - b.questionNumber
+        })
+      }))
+      .sort((a, b) => {
+        const bookDiff = (a.bookNumber || 0) - (b.bookNumber || 0)
+        if (bookDiff !== 0) return bookDiff
+        return (a.sectionNumber || 0) - (b.sectionNumber || 0)
+      })
+  }, [listeningSectionBankTests, listeningVocabularyBuilderItems])
+  const visibleListeningVocabularyBuilderPacks = useMemo(() => {
+    const examPacks: ListeningVocabularyBuilderPack[] = LISTENING_BUILDER_EXAM_SETS.map((examSet) => ({
+      id: examSet.id,
+      title: examSet.title,
+      bookNumber: examSet.bookNumber,
+      sectionNumber: examSet.sectionNumber,
+      testNumbers: examSet.tests.map((test) => test.testNumber),
+      items: [],
+      sectionTests: []
+    }))
+    const matchingParsedPacks = listeningVocabularyBuilderPacks.filter((pack) =>
+      LISTENING_BUILDER_EXAM_SETS.some(
+        (examSet) => examSet.bookNumber === pack.bookNumber && examSet.sectionNumber === pack.sectionNumber
+      )
+    )
+    const parsedPackKeys = new Set(matchingParsedPacks.map((pack) => `${pack.bookNumber}-${pack.sectionNumber}`))
+    return [
+      ...examPacks.filter((pack) => !parsedPackKeys.has(`${pack.bookNumber}-${pack.sectionNumber}`)),
+      ...matchingParsedPacks
+    ].sort((a, b) => {
+      const bookDiff = (a.bookNumber || 0) - (b.bookNumber || 0)
+      if (bookDiff !== 0) return bookDiff
+      return (a.sectionNumber || 0) - (b.sectionNumber || 0)
+    })
+  }, [listeningVocabularyBuilderPacks])
+  const activeListeningBuilderPack =
+    visibleListeningVocabularyBuilderPacks.find((pack) => pack.id === selectedListeningBuilderPackId) ??
+    visibleListeningVocabularyBuilderPacks[0] ??
+    null
+  const activeListeningBuilderItem =
+    activeListeningBuilderPack?.items[listeningBuilderItemIndex] ??
+    activeListeningBuilderPack?.items[0] ??
+    null
+  const activeListeningBuilderTarget = activeListeningBuilderItem
+    ? resolveListeningBuilderSelectionTarget(activeListeningBuilderItem)
+    : null
+  const activeListeningBuilderBridge = activeListeningBuilderItem
+    ? resolveListeningBuilderBridge(activeListeningBuilderItem)
+    : null
+  const activeListeningBuilderTranscriptTokens = activeListeningBuilderItem
+    ? tokenizeListeningBuilderTranscript(activeListeningBuilderItem.transcript)
+    : []
+  const activeListeningBuilderExamSet =
+    LISTENING_BUILDER_EXAM_SETS.find(
+      (examSet) =>
+        examSet.bookNumber === activeListeningBuilderPack?.bookNumber &&
+        examSet.sectionNumber === activeListeningBuilderPack?.sectionNumber
+    ) ?? null
+  const activeListeningBuilderExamTest =
+    activeListeningBuilderExamSet?.tests.find((test) => test.id === selectedListeningBuilderExamTestId) ??
+    activeListeningBuilderExamSet?.tests[0] ??
+    null
+  const activeListeningBuilderExamTask =
+    activeListeningBuilderExamTest?.tasks[listeningBuilderItemIndex] ??
+    activeListeningBuilderExamTest?.tasks[0] ??
+    null
+  const activeListeningBuilderExamCompletedCount = activeListeningBuilderExamTest
+    ? activeListeningBuilderExamTest.tasks.filter((task) => listeningBuilderExamAnswerState[task.id] === 'correct').length
+    : 0
 
   const part2AvailableTopics = topics.filter((topic) => enabledTopicIds.includes(topic.id))
   const availableTopics = useMemo(() => {
+    if (isTrialUser && selectedTestMode === 'full') return [TRIAL_SPEAKING_TOPIC]
     if (selectedTestMode === 'part1') return PART1_TOPICS
     if (selectedTestMode === 'part3') return PART3_TOPICS
     if (selectedTestMode === 'full') return FULL_EXAM_TOPICS
     return part2AvailableTopics
-  }, [selectedTestMode, part2AvailableTopics])
+  }, [isTrialUser, selectedTestMode, part2AvailableTopics])
+
+  const topicBankFilteredTopics = useMemo(() => {
+    const q = topicBankSearch.trim().toLowerCase()
+    if (!q) return availableTopics
+    return availableTopics.filter((topic) => {
+      const hay = [topic.title, topic.category, topic.prompt, ...(topic.cues || [])].join(' ').toLowerCase()
+      return hay.includes(q)
+    })
+  }, [availableTopics, topicBankSearch])
+
+  const topicBankGrouped = useMemo(() => {
+    const map = new Map<string, SpeakingTopic[]>()
+    for (const topic of topicBankFilteredTopics) {
+      const cat = topic.category?.trim() || 'Topics'
+      if (!map.has(cat)) map.set(cat, [])
+      map.get(cat)!.push(topic)
+    }
+    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]))
+  }, [topicBankFilteredTopics])
+
+  const topicBankFlatIds = useMemo(
+    () => topicBankGrouped.flatMap(([, groupTopics]) => groupTopics.map((t) => t.id)),
+    [topicBankGrouped]
+  )
+
+  const topicBankIdToFlatIndex = useMemo(() => {
+    const m = new Map<string, number>()
+    let i = 0
+    for (const [, groupTopics] of topicBankGrouped) {
+      for (const t of groupTopics) {
+        m.set(t.id, i++)
+      }
+    }
+    return m
+  }, [topicBankGrouped])
+
   const activeTopic =
     availableTopics.find((topic) => topic.id === selectedTopicId) ?? availableTopics[0] ?? null
   const isFullExamMode = selectedTestMode === 'full'
   const isQuestionByQuestionMode = selectedTestMode === 'part1' || selectedTestMode === 'part3'
+  const isTrialSpeakingFlow = isTrialUser && isFullExamMode && activeTopic?.id === TRIAL_SPEAKING_TOPIC_ID
   const fullExamPlan = useMemo(() => {
     return buildFullExamPlanFromPromptAndCues(activeTopic?.prompt || '', activeTopic?.cues || [])
   }, [activeTopic])
@@ -3901,7 +7175,15 @@ function App() {
         prompt: reportViewSnapshot.prompt,
         cues: reportViewSnapshot.cues
       }
-    : activeTopic
+    : isTrialSpeakingFlow
+      ? {
+          ...TRIAL_SPEAKING_TOPIC,
+          cues: [
+            ...TRIAL_SPEAKING_PART2_CUES,
+            ...TRIAL_SPEAKING_PART3_QUESTIONS.map((question) => `Follow-up - ${question}`)
+          ]
+        }
+      : activeTopic
   const resultFullExamPlan = useMemo(
     () => buildFullExamPlanFromPromptAndCues(resultTopicContext?.prompt || '', resultTopicContext?.cues || []),
     [resultTopicContext]
@@ -3974,14 +7256,27 @@ function App() {
     : selectedTestMode === 'part1' || selectedTestMode === 'part2' || selectedTestMode === 'part3'
       ? selectedTestMode
       : null
+  const activeTranscriptStartIndex = useMemo(() => {
+    const fullText = String(transcript || '').trim()
+    const start = Math.max(0, questionStartCharIndexRef.current)
+    if (fullText.length < start) return 0
+    return start
+  }, [transcript])
+  const currentTranscriptEditableText = useMemo(() => {
+    if (!transcript) return ''
+    if (isFullExamMode || isQuestionByQuestionMode) {
+      const fullText = String(transcript || '').trim()
+      return fullText.slice(activeTranscriptStartIndex).trimStart()
+    }
+    return transcript
+  }, [activeTranscriptStartIndex, isFullExamMode, isQuestionByQuestionMode, transcript])
   const currentTranscriptSegment = useMemo(() => {
     if (!transcript && !interimTranscript) return ''
     if (isFullExamMode || isQuestionByQuestionMode) {
-      const start = Math.max(0, questionStartCharIndexRef.current)
-      return `${transcript.slice(start).trim()} ${interimTranscript.trim()}`.trim()
+      return `${currentTranscriptEditableText.trim()} ${interimTranscript.trim()}`.trim()
     }
     return `${transcript.trim()} ${interimTranscript.trim()}`.trim()
-  }, [interimTranscript, isFullExamMode, isQuestionByQuestionMode, transcript])
+  }, [currentTranscriptEditableText, interimTranscript, isFullExamMode, isQuestionByQuestionMode, transcript])
   const currentTranscriptWordCount = useMemo(() => countWords(currentTranscriptSegment), [currentTranscriptSegment])
   const currentLengthThresholds = activeLengthGuideMode ? SPEAKING_LENGTH_THRESHOLDS[activeLengthGuideMode] : []
   const canReviewScriptBeforeSubmission =
@@ -4018,6 +7313,11 @@ function App() {
   )
   const fullExamPhaseLabel = useMemo(() => {
     if (!isFullExamMode) return ''
+    if (isTrialSpeakingFlow) {
+      if (fullExamPhase === 'part2_prep') return 'Trial | เตรียมตัว 1 นาที | 60s'
+      if (fullExamPhase === 'part2_speaking') return 'Trial | พูด 2 นาที | 120s'
+      return `Trial | Follow-up ${fullExamPart3Index + 1}/${fullExamPlan.part3Questions.length} | 60s`
+    }
     if (fullExamPhase === 'part1') {
       return `Part 1 | Q${fullExamPart1Index + 1}/${fullExamPlan.part1Questions.length} | 75s`
     }
@@ -4030,22 +7330,31 @@ function App() {
     fullExamPhase,
     fullExamPart1Index,
     fullExamPart3Index,
+    isTrialSpeakingFlow,
     fullExamPlan.part1Questions.length,
     fullExamPlan.part3Questions.length
   ])
 
   const fullExamTotalSeconds = useMemo(() => {
     if (!isFullExamMode) return 0
+    if (isTrialSpeakingFlow) {
+      return 60 + 120 + fullExamPlan.part3Questions.length * 60
+    }
     const p1 = fullExamPlan.part1Questions.length * 75
     const p2Prep = 60
     const p2Speak = 120
     const rest = 30
     const p3 = fullExamPlan.part3Questions.length * 90
     return p1 + p2Prep + p2Speak + rest + p3
-  }, [isFullExamMode, fullExamPlan.part1Questions.length, fullExamPlan.part3Questions.length])
+  }, [isFullExamMode, isTrialSpeakingFlow, fullExamPlan.part3Questions.length, fullExamPlan.part1Questions.length])
 
   const fullExamElapsedSeconds = useMemo(() => {
     if (!isFullExamMode) return 0
+    if (isTrialSpeakingFlow) {
+      if (fullExamPhase === 'part2_prep') return Math.max(0, 60 - fullExamPhaseSeconds)
+      if (fullExamPhase === 'part2_speaking') return Math.max(0, 60 + (120 - fullExamPhaseSeconds))
+      return Math.max(0, 60 + 120 + fullExamPart3Index * 60 + (60 - fullExamPhaseSeconds))
+    }
     let elapsed = 0
     const p1Count = fullExamPlan.part1Questions.length
     if (fullExamPhase === 'part1') {
@@ -4060,7 +7369,7 @@ function App() {
       elapsed = p1Count * 75 + 60 + 120 + 30 + fullExamPart3Index * 90 + (90 - fullExamPhaseSeconds)
     }
     return Math.max(0, elapsed)
-  }, [isFullExamMode, fullExamPhase, fullExamPart1Index, fullExamPart3Index, fullExamPhaseSeconds, fullExamPlan.part1Questions.length])
+  }, [isFullExamMode, isTrialSpeakingFlow, fullExamPhase, fullExamPart1Index, fullExamPart3Index, fullExamPhaseSeconds, fullExamPlan.part1Questions.length])
 
   const fullExamProgressPercent = useMemo(() => {
     if (fullExamTotalSeconds === 0) return 0
@@ -4176,7 +7485,10 @@ function App() {
         if (payload.session.role === 'admin') {
           await loadManagedLearners(payload.session.accessToken)
           await loadAdminSupportReports(payload.session.accessToken)
-        } else {
+          await loadAdminAssessmentReports(payload.session.accessToken)
+          await loadAdminReadingPdoyProgress(payload.session.accessToken)
+          await loadAdminTtsCatalog(payload.session.accessToken)
+        } else if (payload.session.role === 'student') {
           await loadMySupportReports(payload.session.accessToken)
         }
       } catch {
@@ -4199,8 +7511,14 @@ function App() {
   }, [authSession])
 
   useEffect(() => {
-    if (!authSession?.email || authSession.role !== 'student') {
+    if (!authSession?.email || (authSession.role !== 'student' && authSession.role !== 'trial')) {
       resetStudentWorkspaceState()
+      setManagedLearners([])
+      setMySupportReports([])
+      return
+    }
+
+    if (authSession.role === 'trial') {
       setManagedLearners([])
       setMySupportReports([])
       return
@@ -4212,14 +7530,28 @@ function App() {
   useEffect(() => {
     if (authSession?.role !== 'admin') {
       setAdminSupportReports([])
+      setAdminAssessmentReports([])
+      setAdminReadingPdoyProgress([])
+      setTtsAudioUrls({})
       return
     }
     void loadManagedLearners()
-  }, [authSession?.role])
+    void loadAdminTtsCatalog()
+  }, [authSession?.role, authSession?.accessToken])
 
   useEffect(() => {
     if (authSession?.role !== 'admin') return
     void loadAdminSupportReports()
+  }, [authSession?.role, authSession?.accessToken])
+
+  useEffect(() => {
+    if (authSession?.role !== 'admin') return
+    void loadAdminAssessmentReports(authSession.accessToken)
+  }, [authSession?.role, authSession?.accessToken])
+
+  useEffect(() => {
+    if (authSession?.role !== 'admin') return
+    void loadAdminReadingPdoyProgress(authSession.accessToken)
   }, [authSession?.role, authSession?.accessToken])
 
   useEffect(() => {
@@ -4236,21 +7568,19 @@ function App() {
   }, [authSession?.accessToken, authSession?.role])
 
   useEffect(() => {
-    if (!isStudentViewLockedToSpeaking) return
-    if (['reading', 'notebook', 'admin'].includes(activePage)) {
+    if (!isStudentNotebookLocked) return
+    if (['notebook', 'admin'].includes(activePage)) {
       setActivePage('home')
     }
-  }, [activePage, isStudentViewLockedToSpeaking])
+  }, [activePage, isStudentNotebookLocked])
 
   useEffect(() => {
-    if (!authSession?.accessToken || authSession.role !== 'admin') {
-      if (authSession?.role === 'student') {
-        setReadingExams([])
-      }
+    if (!authSession?.accessToken) {
+      setReadingExams([])
       return
     }
     void loadReadingExams(authSession.accessToken)
-  }, [authSession?.accessToken, authSession?.role])
+  }, [authSession?.accessToken])
 
   useEffect(() => {
     if (!filteredReadingExams.length) {
@@ -4261,6 +7591,22 @@ function App() {
       setSelectedReadingExamId(filteredReadingExams[0].id)
     }
   }, [filteredReadingExams, selectedReadingExamId])
+
+  useEffect(() => {
+    if (!readingPdoyLessons.length) {
+      setSelectedReadingPdoyLessonId('')
+      return
+    }
+    if (!readingPdoyLessons.some((lesson) => lesson.id === selectedReadingPdoyLessonId)) {
+      setSelectedReadingPdoyLessonId(readingPdoyLessons[0].id)
+    }
+  }, [readingPdoyLessons, selectedReadingPdoyLessonId])
+
+  useEffect(() => {
+    if (!activeReadingPdoyLesson) return
+    if (readingPdoyQuestionIndex < activeReadingPdoyLesson.questions.length) return
+    setReadingPdoyQuestionIndex(Math.max(0, activeReadingPdoyLesson.questions.length - 1))
+  }, [activeReadingPdoyLesson, readingPdoyQuestionIndex])
 
   useEffect(() => {
     if (authSession?.role !== 'admin') return
@@ -4284,6 +7630,67 @@ function App() {
       setReadingActivePassageNumber(activeReadingPassages[0].number)
     }
   }, [activeReadingPassages, readingActivePassageNumber])
+
+  useEffect(() => {
+    readingHintMarkRef.current = null
+  }, [readingHintQuestionNumber, readingActivePassageNumber])
+
+  useEffect(() => {
+    if (readingHintQuestionNumber === null) return
+    const timeout = window.setTimeout(() => {
+      readingHintMarkRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      })
+    }, 80)
+    return () => window.clearTimeout(timeout)
+  }, [readingHintQuestionNumber, readingActivePassageNumber, activeReadingPassage?.bodyParagraphs])
+
+  useEffect(() => {
+    if (!activeReadingPdoyLesson || !activeReadingPdoyQuestion || !activeReadingPdoyPassage) return
+    setReadingActivePassageNumber(activeReadingPdoyLesson.passageNumber)
+  }, [activeReadingPdoyLesson, activeReadingPdoyQuestion, activeReadingPdoyPassage])
+
+  useEffect(() => {
+    if (readingWorkspaceMode !== 'pdoy') return
+    if (!activeReadingPdoyQuestion) return
+    const timeout = window.setTimeout(() => {
+      ;(readingCoachParagraphRef.current || readingPassageBodyRef.current)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      })
+    }, 100)
+    return () => window.clearTimeout(timeout)
+  }, [readingWorkspaceMode, activeReadingPdoyQuestion?.number, readingPdoyStep])
+
+  useEffect(() => {
+    if (readingWorkspaceMode !== 'pdoy') return
+    if (!activeReadingPdoyQuestion) return
+    if (!['evidence', 'decide', 'result'].includes(readingPdoyStep)) return
+    const timeout = window.setTimeout(() => {
+      readingCoachParagraphRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      })
+    }, 180)
+    return () => window.clearTimeout(timeout)
+  }, [readingWorkspaceMode, activeReadingPdoyQuestion?.number, readingPdoyStep, activeReadingPdoyFocusParagraphIndex])
+
+  useEffect(() => {
+    if (readingWorkspaceMode !== 'pdoy') return
+    if (!['decide', 'result', 'complete'].includes(readingPdoyStep)) return
+    const timeout = window.setTimeout(() => {
+      readingPdoyStagePanelRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest'
+      })
+    }, 140)
+    return () => window.clearTimeout(timeout)
+    }, [readingWorkspaceMode, readingPdoyStep, activeReadingPdoyQuestion?.number])
 
   useEffect(() => {
     if (!authSession?.email) return
@@ -4310,6 +7717,159 @@ function App() {
     if (!authSession || authSession.role !== 'student' || !authSession.email) return
     localStorage.setItem(makeScopedStorageKey(TEST_LATEST_SCORE_KEY, authSession.email), JSON.stringify(latestScoresByTest))
   }, [authSession, latestScoresByTest])
+
+  useEffect(() => {
+    if (!authSession?.email) return
+    localStorage.setItem(makeScopedStorageKey(READING_ATTEMPTS_KEY, authSession.email), JSON.stringify(readingAttemptHistory))
+  }, [authSession, readingAttemptHistory])
+
+  useEffect(() => {
+    if (!authSession?.email) return
+    localStorage.setItem(makeScopedStorageKey(LISTENING_ATTEMPTS_KEY, authSession.email), JSON.stringify(listeningAttemptHistory))
+  }, [authSession, listeningAttemptHistory])
+
+  useEffect(() => () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (activePage !== 'listening' && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+      listeningSpeechRef.current = null
+      setListeningPlaybackState('idle')
+    }
+  }, [activePage])
+
+  useEffect(() => {
+    if (activePage !== 'reading') return
+    if (readingWorkspaceMode !== 'bank') {
+      setReadingWorkspaceMode('bank')
+      setReadingPdoySessionActive(false)
+    }
+  }, [activePage, readingWorkspaceMode])
+
+  useEffect(() => {
+    if (!authSession?.email) return
+    const scopedKey = makeScopedStorageKey(READING_PDOY_PROGRESS_KEY, authSession.email)
+    if (!selectedReadingPdoyLessonId) {
+      localStorage.removeItem(scopedKey)
+      return
+    }
+    const snapshot: ReadingPdoyProgressSnapshot = {
+      lessonId: selectedReadingPdoyLessonId,
+      sessionActive: readingPdoySessionActive,
+      step: readingPdoyStep,
+      questionIndex: readingPdoyQuestionIndex,
+      evidenceInput: readingPdoyEvidenceInput,
+      decision: readingPdoyDecision,
+      selectedOption: readingPdoySelectedOption,
+      optionParaphraseInput: readingPdoyOptionParaphraseInput,
+      feedback: readingPdoyFeedback,
+      introChoice: readingPdoyIntroChoice,
+      evidenceAttempts: readingPdoyEvidenceAttempts,
+      decisionAttempts: readingPdoyDecisionAttempts,
+      fillMeaningOptionId: readingPdoyFillMeaningOptionId
+    }
+    localStorage.setItem(scopedKey, JSON.stringify(normalizeReadingPdoySnapshotForStage(snapshot)))
+  }, [
+    authSession,
+    selectedReadingPdoyLessonId,
+    readingPdoySessionActive,
+    readingPdoyStep,
+    readingPdoyQuestionIndex,
+    readingPdoyEvidenceInput,
+    readingPdoyDecision,
+    readingPdoySelectedOption,
+    readingPdoyOptionParaphraseInput,
+    readingPdoyFeedback,
+    readingPdoyIntroChoice,
+    readingPdoyEvidenceAttempts,
+    readingPdoyDecisionAttempts,
+    readingPdoyFillMeaningOptionId
+  ])
+
+  useEffect(() => {
+    if (!authSession?.accessToken || authSession.role !== 'student' || isNotebookHydrating || !notebookLoadedRef.current) return
+    const snapshot =
+      selectedReadingPdoyLessonId
+        ? {
+            lessonId: selectedReadingPdoyLessonId,
+            sessionActive: readingPdoySessionActive,
+            step: readingPdoyStep,
+            questionIndex: readingPdoyQuestionIndex,
+            evidenceInput: readingPdoyEvidenceInput,
+            decision: readingPdoyDecision,
+            selectedOption: readingPdoySelectedOption,
+            optionParaphraseInput: readingPdoyOptionParaphraseInput,
+            feedback: readingPdoyFeedback,
+            introChoice: readingPdoyIntroChoice,
+            evidenceAttempts: readingPdoyEvidenceAttempts,
+            decisionAttempts: readingPdoyDecisionAttempts,
+            fillMeaningOptionId: readingPdoyFillMeaningOptionId,
+            lessonType: activeReadingPdoyLesson?.lessonType || '',
+            examId: activeReadingPdoyExam?.id || '',
+            examTitle: activeReadingPdoyExam?.title || '',
+            category: activeReadingPdoyExam?.category || 'normal',
+            passageNumber: activeReadingPdoyPassage?.number || 0,
+            passageTitle: activeReadingPdoyPassage?.title || '',
+            questionNumber: activeReadingPdoyQuestion?.number || 0,
+            questionPrompt: activeReadingPdoyQuestion?.prompt || ''
+          }
+        : null
+    const normalizedSnapshot = snapshot ? normalizeReadingPdoySnapshotForStage(snapshot) : null
+    const nextSignature = normalizedSnapshot ? JSON.stringify(normalizedSnapshot) : ''
+    if (nextSignature === readingPdoyProgressSyncedSignatureRef.current) return
+    if (readingPdoyProgressSyncTimeoutRef.current) {
+      window.clearTimeout(readingPdoyProgressSyncTimeoutRef.current)
+    }
+    readingPdoyProgressSyncTimeoutRef.current = window.setTimeout(() => {
+      if (!normalizedSnapshot) {
+        readingPdoyProgressSyncedSignatureRef.current = ''
+        return
+      }
+      void fetchJson('/api/me/reading-pdoy-progress', {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ progress: normalizedSnapshot })
+      })
+        .then(() => {
+          readingPdoyProgressSyncedSignatureRef.current = nextSignature
+        })
+        .catch(() => {
+          setNotebookSyncError('Saved on this device, but Reading with P\'Doy account sync failed just now.')
+        })
+    }, 800)
+
+    return () => {
+      if (readingPdoyProgressSyncTimeoutRef.current) {
+        window.clearTimeout(readingPdoyProgressSyncTimeoutRef.current)
+        readingPdoyProgressSyncTimeoutRef.current = null
+      }
+    }
+  }, [
+    authSession?.accessToken,
+    authSession?.role,
+    isNotebookHydrating,
+    selectedReadingPdoyLessonId,
+    readingPdoySessionActive,
+    readingPdoyStep,
+    readingPdoyQuestionIndex,
+    readingPdoyEvidenceInput,
+    readingPdoyDecision,
+    readingPdoySelectedOption,
+    readingPdoyOptionParaphraseInput,
+    readingPdoyFeedback,
+    readingPdoyIntroChoice,
+    readingPdoyEvidenceAttempts,
+    readingPdoyDecisionAttempts,
+    readingPdoyFillMeaningOptionId,
+    activeReadingPdoyLesson,
+    activeReadingPdoyExam,
+    activeReadingPdoyPassage,
+    activeReadingPdoyQuestion
+  ])
 
   useEffect(() => {
     if (!authSession?.accessToken || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) return
@@ -4342,6 +7902,14 @@ function App() {
     return () => window.clearTimeout(timeout)
   }, [notebookSaveNotice])
 
+  useEffect(() => {
+    if (!reportActionToast) return
+    const timeout = window.setTimeout(() => {
+      setReportActionToast(null)
+    }, 3400)
+    return () => window.clearTimeout(timeout)
+  }, [reportActionToast])
+
   const addCustomSection = () => {
     const sectionName = newCustomSectionName.trim()
     if (!sectionName) return
@@ -4355,24 +7923,33 @@ function App() {
     criterion,
     quote,
     fix,
-    thaiMeaning
+    thaiMeaning,
+    preferredSection,
+    successNotice = 'Added to notebook'
   }: {
     criterion: string
     quote: string
     fix: string
     thaiMeaning?: string
+    preferredSection?: NotebookSection | string
+    successNotice?: string
   }) => {
     const chosenSection =
-      selectedNotebookSection === 'custom' ? ('speaking' as const) : selectedNotebookSection
+      preferredSection ||
+      (selectedNotebookSection === 'custom' ? ('speaking' as const) : selectedNotebookSection)
     const isBuiltIn = ['speaking', 'writing', 'listening', 'reading'].includes(chosenSection)
     const section = (isBuiltIn ? chosenSection : 'custom') as NotebookSection
     const customSectionName = section === 'custom' ? chosenSection : undefined
+    const topicTitle =
+      preferredSection === 'reading'
+        ? activeReadingExam?.title || activeReadingPdoyExam?.title || 'Reading lesson'
+        : activeTopic?.title || 'Untitled topic'
 
     const nextEntry: NotebookEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       section,
       customSectionName,
-      topicTitle: activeTopic?.title || 'Untitled topic',
+      topicTitle,
       criterion,
       quote,
       fix,
@@ -4383,11 +7960,15 @@ function App() {
     const nextEntries = [nextEntry, ...notebookEntriesRef.current]
     setNotebookEntries(nextEntries)
     setSelectedNotebookSection(customSectionName || section)
-    setNotebookSaveNotice('Added to notebook')
+    const resolvedSuccessNotice =
+      preferredSection === 'reading' || section === 'reading'
+        ? 'Added to notebook · saved to #reading'
+        : successNotice
+    setNotebookSaveNotice(resolvedSuccessNotice)
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: customSectionsRef.current,
-      successNotice: 'Added to notebook and synced to your account'
+      successNotice: resolvedSuccessNotice
     })
   }
 
@@ -4423,11 +8004,43 @@ function App() {
     setNotebookEntries(nextEntries)
     setSelectedNotebookSection(customSectionName)
     setNotebookSaveNotice('Added to notebook')
+    setReportActionToast({
+      icon: '✦',
+      title: 'Saved for future revision',
+      text: 'บันทึก report เรียบร้อยแล้วครับ กลับมาทบทวนจุดอ่อนชุดนี้ได้ทุกเมื่อเลย'
+    })
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: nextSections,
       successNotice: 'Added to notebook and synced to your account'
     })
+  }
+
+  const handleDownloadCurrentRecording = async () => {
+    if (!audioUrl) return
+    try {
+      const response = await fetch(audioUrl)
+      const blob = await response.blob()
+      const objectUrl = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      const topicSlug = String(activeTopic?.title || 'english-plan-speaking')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+      link.href = objectUrl
+      link.download = `${topicSlug || 'english-plan-speaking'}-recording.webm`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(objectUrl)
+      setReportActionToast({
+        icon: '🎧',
+        title: 'Audio downloaded',
+        text: "โหลดเสียงเรียบร้อยแล้วครับ เก็บไว้ส่งให้พี่ดอยใช้ประกอบการ consult ต่อได้เลย"
+      })
+    } catch {
+      setNotebookSaveNotice('Could not download the recording right now.')
+    }
   }
 
   const removeNotebookEntry = (entryId: string) => {
@@ -4447,10 +8060,57 @@ function App() {
   }, [activeTopic, availableTopics])
 
   useEffect(() => {
+    if (!selectedListeningBuilderPackId && visibleListeningVocabularyBuilderPacks.length > 0) {
+      setSelectedListeningBuilderPackId(visibleListeningVocabularyBuilderPacks[0].id)
+    }
+  }, [selectedListeningBuilderPackId, visibleListeningVocabularyBuilderPacks])
+
+  useEffect(() => {
+    if (!selectedListeningFoundationSetId && visibleListeningFoundationSets.length > 0) {
+      setSelectedListeningFoundationSetId(visibleListeningFoundationSets[0].id)
+    }
+  }, [selectedListeningFoundationSetId, visibleListeningFoundationSets])
+
+  useEffect(() => {
+    if (activeListeningBuilderExamSet && !selectedListeningBuilderExamTestId) {
+      setSelectedListeningBuilderExamTestId(activeListeningBuilderExamSet.tests[0]?.id || '')
+    }
+  }, [activeListeningBuilderExamSet, selectedListeningBuilderExamTestId])
+
+  useEffect(() => {
     if (attemptStage === 'idle' && availableTopics.length > 0) {
       setSelectedTopicId(availableTopics[0].id)
     }
   }, [selectedTestMode, attemptStage, availableTopics])
+
+  useEffect(() => {
+    setTopicBankSearch('')
+  }, [selectedTestMode])
+
+  useEffect(() => {
+    if (attemptStage !== 'idle') return
+    const idx = topicBankFlatIds.indexOf(selectedTopicId)
+    if (idx >= 0) setTopicBankFocusIndex(idx)
+    else if (topicBankFlatIds.length > 0) setTopicBankFocusIndex(0)
+  }, [attemptStage, topicBankFlatIds, selectedTopicId])
+
+  useEffect(() => {
+    setTopicBankFocusIndex((i) => {
+      const len = topicBankFlatIds.length
+      if (len === 0) return 0
+      return Math.min(Math.max(0, i), len - 1)
+    })
+  }, [topicBankFlatIds])
+
+  useEffect(() => {
+    if (attemptStage !== 'idle') return
+    requestAnimationFrame(() => {
+      const el = document.querySelector(
+        `[data-topic-bank-card-index="${topicBankFocusIndex}"]`
+      ) as HTMLElement | null
+      el?.focus()
+    })
+  }, [attemptStage, topicBankFocusIndex])
 
   useEffect(() => {
     const isStandalonePart2 = attemptStage === 'speaking' && !isFullExamMode && selectedTestMode === 'part2'
@@ -4625,27 +8285,10 @@ function App() {
     promptAudioRef.current = null
   }
 
-  const playPromptWithServerTts = async (text: string) => {
-    const response = await fetch('/api/tts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text })
-    })
-
-    if (!response.ok) {
-      const payload = await response.json().catch(() => ({}))
-      const message = payload?.error?.message || 'Question audio playback failed.'
-      throw new Error(String(message))
-    }
-
-    const audioBlob = await response.blob()
-    const audioUrl = URL.createObjectURL(audioBlob)
-
+  const playPromptAudioFromUrl = async (sourceUrl: string, revokeOnFinish = false) => {
     await new Promise<void>((resolve, reject) => {
       stopPromptAudioPlayback()
-      const audio = new Audio(audioUrl)
+      const audio = new Audio(sourceUrl)
       promptAudioRef.current = audio
       let completed = false
 
@@ -4654,7 +8297,9 @@ function App() {
         completed = true
         audio.onended = null
         audio.onerror = null
-        URL.revokeObjectURL(audioUrl)
+        if (revokeOnFinish) {
+          URL.revokeObjectURL(sourceUrl)
+        }
         if (promptAudioRef.current === audio) {
           promptAudioRef.current = null
         }
@@ -4674,6 +8319,48 @@ function App() {
         reject(error instanceof Error ? error : new Error('Question audio playback failed.'))
       })
     })
+  }
+
+  const playPromptWithServerTts = async (text: string) => {
+    const normalizedText = normalizeReadingAnswer(text)
+    const cachedQuestion = speakingQuestionAudioByQuestion.get(normalizedText)
+    if (cachedQuestion && authSession?.accessToken) {
+      const payload = await fetchJson<{ audioUrl: string }>('/api/tts/question-audio', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authSession.accessToken}`
+        },
+        body: JSON.stringify({
+          cacheKey: cachedQuestion.cacheKey,
+          section: cachedQuestion.section,
+          topicId: cachedQuestion.topicId,
+          topicTitle: cachedQuestion.topicTitle,
+          text: cachedQuestion.question
+        })
+      })
+      if (payload.audioUrl) {
+        await playPromptAudioFromUrl(payload.audioUrl)
+        return
+      }
+    }
+
+    const response = await fetch('/api/tts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text })
+    })
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}))
+      const message = payload?.error?.message || 'Question audio playback failed.'
+      throw new Error(String(message))
+    }
+
+    const audioBlob = await response.blob()
+    const audioUrl = URL.createObjectURL(audioBlob)
+    await playPromptAudioFromUrl(audioUrl, true)
   }
 
   const speakPromptWithTtsAndManageTranscription = async (text: string) => {
@@ -4769,34 +8456,55 @@ function App() {
     })
   }
 
-  const generateTtsForQuestion = async (key: string, text: string) => {
-    const cleaned = text.trim()
-    if (!cleaned) return
-    setTtsGeneratingKey(key)
+  const generateQuestionAudioBatch = async (
+    generatingKey: string,
+    items: QuestionAudioCatalogItem[],
+    options?: { force?: boolean }
+  ) => {
+    if (!authSession?.accessToken || authSession.role !== 'admin') return
+    if (!items.length) return
+    setTtsGeneratingKey(generatingKey)
     try {
-      const response = await fetch('/api/tts', {
+      const payload = await fetchJson<{
+        items: Array<{
+          cacheKey?: string
+          audioUrl?: string
+        }>
+      }>('/api/admin/tts/generate', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${authSession.accessToken}`
         },
-        body: JSON.stringify({ text: cleaned })
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            cacheKey: item.cacheKey,
+            section: item.section,
+            topicId: item.topicId,
+            topicTitle: item.topicTitle,
+            text: item.question
+          })),
+          force: Boolean(options?.force)
+        })
       })
-      if (!response.ok) {
-        const payload = await response.json().catch(() => ({}))
-        const message = payload?.error?.message || 'TTS generation failed.'
-        throw new Error(String(message))
+      if (payload.items?.length) {
+        setTtsAudioUrls((current) => ({
+          ...current,
+          ...Object.fromEntries(
+            payload.items
+              .filter((item) => item.cacheKey && item.audioUrl)
+              .map((item) => [String(item.cacheKey), String(item.audioUrl)])
+          )
+        }))
       }
-      const audioBlob = await response.blob()
-      const nextUrl = URL.createObjectURL(audioBlob)
-      setTtsAudioUrls((current) => {
-        if (current[key]) URL.revokeObjectURL(current[key])
-        return { ...current, [key]: nextUrl }
-      })
     } catch (error) {
       setAudioError(error instanceof Error ? error.message : 'TTS generation failed.')
     } finally {
       setTtsGeneratingKey('')
     }
+  }
+
+  const generateTtsForQuestion = async (item: QuestionAudioCatalogItem) => {
+    await generateQuestionAudioBatch(item.key, [item], { force: Boolean(item.audioUrl) })
   }
 
   const resetSession = () => {
@@ -5003,12 +8711,12 @@ function App() {
     }
     setRemainingQuestionSeconds(75)
     setCurrentQuestionIndex(0)
-    setFullExamPhase('part1')
+    setFullExamPhase(isTrialSpeakingFlow ? 'part2_prep' : 'part1')
     setFullExamPart1Index(0)
     setFullExamPart3Index(0)
-    setFullExamPhaseSeconds(75)
+    setFullExamPhaseSeconds(isTrialSpeakingFlow ? 60 : 75)
     if (isFullExamMode) {
-      showFullExamAnnouncement('Part 1 is starting', 1800)
+      showFullExamAnnouncement(isTrialSpeakingFlow ? 'เริ่มช่วงเตรียมตัว 1 นาทีครับ' : 'Part 1 is starting', 1800)
     }
     questionResponsesRef.current = []
     questionStartCharIndexRef.current = 0
@@ -5019,7 +8727,9 @@ function App() {
       return
     }
     startTranscription()
-    if (isFullExamMode) {
+    if (isFullExamMode && isTrialSpeakingFlow) {
+      startQuestionCountdown('Trial - เตรียมตัว 1 นาที')
+    } else if (isFullExamMode) {
       await runPromptThenCountdown('Part 1 - Question 1', fullExamPlan.part1Questions[0] || 'Part 1 question 1')
     } else if (isQuestionByQuestionMode) {
       await runPromptThenCountdown(
@@ -5038,7 +8748,7 @@ function App() {
     if (!isQuestionByQuestionMode || !activeQuestion) return
     const fullTranscript = transcript.trim()
     const start = Math.max(0, questionStartCharIndexRef.current)
-    const responseSlice = fullTranscript.slice(start).trim()
+    const responseSlice = (fullTranscript.length < start ? fullTranscript : fullTranscript.slice(start)).trim()
     const nextQuestion = activeQuestion
     const next = [...questionResponsesRef.current]
     next[currentQuestionIndex] = { question: nextQuestion, response: responseSlice }
@@ -5050,7 +8760,7 @@ function App() {
     if (!isFullExamMode || !question) return
     const fullTranscript = transcript.trim()
     const start = Math.max(0, questionStartCharIndexRef.current)
-    const responseSlice = fullTranscript.slice(start).trim()
+    const responseSlice = (fullTranscript.length < start ? fullTranscript : fullTranscript.slice(start)).trim()
     const next = [...questionResponsesRef.current]
     const part1Count = fullExamPlan.part1Questions.length
     const targetIndex =
@@ -5068,6 +8778,40 @@ function App() {
 
   const advanceFullExamFlow = async () => {
     if (!isFullExamMode) return
+    if (isTrialSpeakingFlow) {
+      if (fullExamPhase === 'part2_prep') {
+        setFullExamPhase('part2_speaking')
+        setFullExamPhaseSeconds(120)
+        armPart2TimerDelay()
+        questionStartCharIndexRef.current = transcript.trim().length
+        showFullExamAnnouncement('เริ่มพูด 2 นาทีได้เลยครับ', 1800)
+        await runPromptThenCountdown('Trial - Speak for 2 minutes', fullExamPlan.part2Prompt || 'Part 2 prompt')
+        return
+      }
+      if (fullExamPhase === 'part2_speaking') {
+        captureFullExamQuestionResponse(fullExamPlan.part2Prompt || 'Part 2')
+        setFullExamPhase('part3')
+        setFullExamPart3Index(0)
+        setFullExamPhaseSeconds(60)
+        questionStartCharIndexRef.current = transcript.trim().length
+        showFullExamAnnouncement('ต่อด้วย follow-up 3 ข้อ ข้อละ 1 นาทีครับ', 2200)
+        await runPromptThenCountdown('Trial - Follow-up Question 1', fullExamPlan.part3Questions[0] || 'Part 3 question 1')
+        return
+      }
+      captureFullExamQuestionResponse(fullExamPlan.part3Questions[fullExamPart3Index] || '')
+      if (fullExamPart3Index < fullExamPlan.part3Questions.length - 1) {
+        const nextIndex = fullExamPart3Index + 1
+        setFullExamPart3Index(nextIndex)
+        setFullExamPhaseSeconds(60)
+        await runPromptThenCountdown(
+          `Trial - Follow-up Question ${nextIndex + 1}`,
+          fullExamPlan.part3Questions[nextIndex] || `Part 3 question ${nextIndex + 1}`
+        )
+        return
+      }
+      await finishSpeakingAndAssess()
+      return
+    }
     if (fullExamPhase === 'part1') {
       captureFullExamQuestionResponse(fullExamPlan.part1Questions[fullExamPart1Index] || '')
       if (fullExamPart1Index < fullExamPlan.part1Questions.length - 1) {
@@ -5149,7 +8893,9 @@ function App() {
     try {
       let initialPromptText = ''
       if (isFullExamMode) {
-        initialPromptText = fullExamPlan.part1Questions[0] || 'Part 1 question 1'
+        initialPromptText = isTrialSpeakingFlow
+          ? fullExamPlan.part2Prompt || 'Part 2 prompt'
+          : fullExamPlan.part1Questions[0] || 'Part 1 question 1'
       } else if (isQuestionByQuestionMode) {
         initialPromptText = activeQuestionList[0] || activeTopic?.prompt || ''
       } else {
@@ -5368,7 +9114,7 @@ function App() {
         questionResponses: effectiveQuestionResponses.filter(
           (item) => String(item?.response || '').trim().length > 0
         ),
-        assessmentMode: effectiveMode === 'full' ? 'fullMock' : 'standard',
+        assessmentMode: isTrialSpeakingFlow ? 'trialSpeaking' : effectiveMode === 'full' ? 'fullMock' : 'standard',
         durationSeconds: Math.max(0, Math.round(durationSeconds)),
         audioBase64: null,
         audioMimeType: null
@@ -5644,6 +9390,17 @@ function App() {
     await advanceFullExamFlow()
   }
 
+  const handleTranscriptTextareaChange = (value: string) => {
+    if (isFullExamMode || isQuestionByQuestionMode) {
+      const fullText = String(transcript || '').trim()
+      const prefix = fullText.slice(0, activeTranscriptStartIndex).trimEnd()
+      const nextSegment = String(value || '')
+      setTranscript(prefix ? `${prefix}\n\n${nextSegment.trimStart()}` : nextSegment)
+      return
+    }
+    setTranscript(value)
+  }
+
   const buildFullMockQuestionResponsesFromText = (
     text: string,
     plan: { part1Questions: string[]; part2Prompt: string; part3Questions: string[] }
@@ -5727,7 +9484,9 @@ function App() {
     const joinedResponses = joinScriptReviewItems(items)
     const hasTranscriptEvidence = Boolean(transcript.trim() || interimTranscript.trim() || joinedResponses)
     const durationSeconds = isFullExamMode
-      ? fullExamPlan.part1Questions.length * 75 + 60 + 120 + 30 + fullExamPlan.part3Questions.length * 90
+      ? isTrialSpeakingFlow
+        ? 60 + 120 + fullExamPlan.part3Questions.length * 60
+        : fullExamPlan.part1Questions.length * 75 + 60 + 120 + 30 + fullExamPlan.part3Questions.length * 90
       : isQuestionByQuestionMode
         ? activeQuestionList.length * 75 -
           (remainingQuestionSeconds + (activeQuestionList.length - 1 - currentQuestionIndex) * 75)
@@ -6050,7 +9809,15 @@ function App() {
         body: JSON.stringify({ email, password })
       })
       setAuthStateFromPayload(payload)
-      await loadMySupportReports(payload.session.accessToken)
+      if (payload.session.role === 'admin') {
+        await loadManagedLearners(payload.session.accessToken)
+        await loadAdminSupportReports(payload.session.accessToken)
+        await loadAdminAssessmentReports(payload.session.accessToken)
+        await loadAdminReadingPdoyProgress(payload.session.accessToken)
+        await loadAdminTtsCatalog(payload.session.accessToken)
+      } else if (payload.session.role === 'student') {
+        await loadMySupportReports(payload.session.accessToken)
+      }
       setAuthNotice('')
       setUserEmailInput('')
       setUserPasswordInput('')
@@ -6089,6 +9856,84 @@ function App() {
     }
   }
 
+  const advanceTrialSignupStep = () => {
+    const email = normalizeEmail(trialEmailInput)
+    if (!email) {
+      setAuthError('กรุณากรอกอีเมลก่อนครับ')
+      return
+    }
+    setAuthError('')
+    setAuthNotice('')
+    setTrialSignupStep('password')
+  }
+
+  const handleTrialSignupSubmit = async () => {
+    const email = normalizeEmail(trialEmailInput)
+    const password = trialPasswordInput.trim()
+
+    if (!email || !password) {
+      setAuthError('กรุณากรอกอีเมลและรหัสผ่านก่อนเริ่มทดลองใช้ฟรีครับ')
+      setAuthNotice('')
+      return
+    }
+
+    try {
+      await fetchJson<{ success?: boolean; message?: string }>('/api/auth/trial-signup', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      })
+      const payload = await fetchJson<AuthApiResponse>('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      })
+      setAuthStateFromPayload(payload)
+      setAuthError('')
+      setAuthNotice('')
+      setTrialEmailInput('')
+      setTrialPasswordInput('')
+      setTrialSignupStep('email')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'ไม่สามารถเริ่ม trial ได้ในตอนนี้ครับ'
+      if (message.toLowerCase().includes('already been used')) {
+        setTrialAuthMode('signin')
+        setTrialSignupStep('password')
+        setAuthError('')
+        setAuthNotice('อีเมลนี้เคยใช้ trial ไปแล้วครับ คุณยังสามารถเข้าสู่บัญชีเดิมตรงนี้ได้เลยเพื่อดูสิทธิ์และ report เดิมของคุณ')
+        return
+      }
+      setAuthNotice('')
+      setAuthError(message)
+    }
+  }
+
+  const handleTrialSignInSubmit = async () => {
+    const email = normalizeEmail(trialEmailInput)
+    const password = trialPasswordInput.trim()
+
+    if (!email || !password) {
+      setAuthError('กรุณากรอกอีเมลและรหัสผ่านเพื่อกลับเข้า trial ครับ')
+      return
+    }
+
+    try {
+      const payload = await fetchJson<AuthApiResponse>('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      })
+      if (payload.session.role !== 'trial') {
+        throw new Error('อีเมลนี้ไม่ได้เป็นบัญชี trial ครับ')
+      }
+      setAuthStateFromPayload(payload)
+      setAuthNotice('')
+      setAuthError('')
+      setTrialEmailInput('')
+      setTrialPasswordInput('')
+      setTrialSignupStep('email')
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'ไม่สามารถเข้าสู่ trial ได้ครับ')
+    }
+  }
+
   const handleAdminLogin = async () => {
     const adminCode = adminCodeInput.trim()
     if (!adminCode) {
@@ -6107,6 +9952,9 @@ function App() {
       setAuthNotice('')
       await loadManagedLearners(payload.session.accessToken)
       await loadAdminSupportReports(payload.session.accessToken)
+      await loadAdminAssessmentReports(payload.session.accessToken)
+      await loadAdminReadingPdoyProgress(payload.session.accessToken)
+      await loadAdminTtsCatalog(payload.session.accessToken)
       setAdminCodeInput('')
       setAuthError('')
     } catch (error) {
@@ -6119,11 +9967,17 @@ function App() {
     setManagedLearners([])
     setMySupportReports([])
     setAdminSupportReports([])
+    setAdminAssessmentReports([])
+    setAdminReadingPdoyProgress([])
     setActivePage('home')
     setAdminCodeInput('')
     setSignupNameInput('')
     setSignupEmailInput('')
     setSignupPasswordInput('')
+    setTrialEmailInput('')
+    setTrialPasswordInput('')
+    setTrialAuthMode('signup')
+    setTrialSignupStep('email')
     setUserPasswordInput('')
     setAuthNotice('')
     setAuthError('')
@@ -6227,8 +10081,21 @@ function App() {
   }
 
   const openStartFlowForTopic = (topicId: string) => {
+    setSelectedTopicId(topicId)
     setPendingStartTopicId(topicId)
     setSelectedExpectedScore('')
+  }
+
+  const handleTopicBankGridKeyDown = (event: KeyboardEvent) => {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowRight' && event.key !== 'ArrowUp' && event.key !== 'ArrowLeft')
+      return
+    const len = topicBankFlatIds.length
+    if (len === 0) return
+    event.preventDefault()
+    setTopicBankFocusIndex((prev) => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowRight') return (prev + 1) % len
+      return (prev - 1 + len) % len
+    })
   }
 
   const closeExpectedScoreModal = () => {
@@ -6353,8 +10220,9 @@ function App() {
         return
       }
       setAnswerReviewModal(null)
+      setFullExamPhaseSeconds(isTrialSpeakingFlow ? 60 : 90)
       await runPromptThenCountdown(
-        `Part 3 - Question ${retryPart3Index + 1}`,
+        `${isTrialSpeakingFlow ? 'Trial - Follow-up Question' : 'Part 3 - Question'} ${retryPart3Index + 1}`,
         fullExamPlan.part3Questions[retryPart3Index] || `Part 3 question ${retryPart3Index + 1}`
       )
       return
@@ -6378,14 +10246,989 @@ function App() {
     }
   }
 
+  const stopListeningPlayback = () => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
+    window.speechSynthesis.cancel()
+    listeningSpeechRef.current = null
+    setListeningPlaybackState('idle')
+  }
+
+  const playListeningExercise = (rate: 'normal' | 'slow' = 'normal') => {
+    if (!activeListeningExercise) return
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setListeningExerciseError('อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงตัวอย่างใน browser ครับ')
+      setListeningPlaybackState('error')
+      return
+    }
+
+    stopListeningPlayback()
+    setListeningExerciseError('')
+    setListeningPlaybackRate(rate)
+
+    const utterance = new SpeechSynthesisUtterance(activeListeningExercise.audioScript.join(' '))
+    const availableVoices = window.speechSynthesis.getVoices()
+    utterance.voice =
+      availableVoices.find((voice) => /^en-GB/i.test(voice.lang)) ||
+      availableVoices.find((voice) => /^en/i.test(voice.lang)) ||
+      null
+    utterance.lang = utterance.voice?.lang || 'en-GB'
+    utterance.rate = rate === 'slow' ? 0.84 : 0.95
+    utterance.pitch = 1
+    utterance.onstart = () => setListeningPlaybackState('playing')
+    utterance.onend = () => {
+      listeningSpeechRef.current = null
+      setListeningPlaybackState('ended')
+    }
+    utterance.onerror = () => {
+      listeningSpeechRef.current = null
+      setListeningPlaybackState('error')
+      setListeningExerciseError('เล่นเสียงตัวอย่างไม่สำเร็จ ลองกดฟังอีกครั้งได้ครับ')
+    }
+
+    listeningSpeechRef.current = utterance
+    window.speechSynthesis.speak(utterance)
+  }
+
+  const startListeningExercise = (exerciseId: string) => {
+    const exercise = LISTENING_EXERCISES.find((item) => item.id === exerciseId) || null
+    if (!exercise) return
+    stopListeningPlayback()
+    setListeningLabMode('practice')
+    setSelectedListeningExerciseId(exercise.id)
+    setListeningAnswers({})
+    setListeningReportItems([])
+    setListeningAttemptStage('exam')
+    setListeningPlaybackState('idle')
+    setListeningPlaybackRate('normal')
+    setListeningExerciseError('')
+    setActivePage('listening')
+  }
+
+  const submitListeningExercise = () => {
+    if (!activeListeningExercise) return
+    stopListeningPlayback()
+    const results = scoreListeningQuestions(activeListeningExercise.questions, listeningAnswers)
+    const correctCount = results.filter((item) => item.isCorrect).length
+    const totalQuestions = results.length
+    setListeningAttemptHistory((current) => ({
+      ...current,
+      [activeListeningExercise.id]: {
+        exerciseId: activeListeningExercise.id,
+        exerciseTitle: activeListeningExercise.title,
+        correctCount,
+        totalQuestions,
+        accuracy: totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0,
+        wrongCount: Math.max(0, totalQuestions - correctCount),
+        completedAt: new Date().toISOString(),
+        reportItems: results
+      }
+    }))
+    setListeningReportItems(results)
+    setListeningAttemptStage('report')
+  }
+
+  const resetListeningFoundationQuestion = () => {
+    setListeningFoundationEvidence('')
+    setListeningFoundationEvidenceCorrect(false)
+    setListeningFoundationFeedback('')
+    window.getSelection()?.removeAllRanges()
+  }
+
+  useEffect(() => {
+    if (!activeListeningFoundationQuestion) return
+    const segments = parseListeningScriptSegments(activeListeningFoundationQuestion.passage)
+    setListeningFoundationScriptChunk(
+      findListeningScriptChunkForText(segments, activeListeningFoundationQuestion.passageKeyword)
+    )
+    if (segments.length >= 3) {
+      setListeningFoundationScriptMode('focus')
+    }
+  }, [activeListeningFoundationQuestion?.id, activeListeningFoundationQuestion?.passageKeyword])
+
+  useEffect(() => {
+    if (!listeningFoundationEvidenceCorrect || !activeListeningFoundationQuestion) return
+    const evidenceIndex = findListeningScriptChunkForText(
+      activeListeningFoundationScriptSegments,
+      activeListeningFoundationQuestion.evidence
+    )
+    setListeningFoundationScriptChunk(evidenceIndex)
+  }, [
+    listeningFoundationEvidenceCorrect,
+    activeListeningFoundationQuestion?.id,
+    activeListeningFoundationScriptSegments
+  ])
+
+  const renderListeningScriptSegmentText = (
+    text: string,
+    evidence: string,
+    showEvidenceHighlight: boolean
+  ): ReactNode => {
+    if (!showEvidenceHighlight) return text
+    const startIndex = text.toLowerCase().indexOf(evidence.toLowerCase())
+    if (startIndex === -1) return text
+    return (
+      <>
+        {text.slice(0, startIndex)}
+        <mark>{text.slice(startIndex, startIndex + evidence.length)}</mark>
+        {text.slice(startIndex + evidence.length)}
+      </>
+    )
+  }
+
+  const renderListeningScriptTurn = (segment: ListeningScriptSegment, index: number) => {
+    const evidence = activeListeningFoundationQuestion?.evidence || ''
+    const tone = getListeningSpeakerTone(segment.speaker)
+    const isActiveChunk =
+      listeningFoundationScriptMode === 'focus'
+        ? index === activeListeningFoundationScriptChunk
+        : index === activeListeningFoundationScriptChunk
+
+    return (
+      <article
+        key={segment.id}
+        id={`listening-script-turn-${index}`}
+        className={`listeningScriptTurn tone-${tone} ${isActiveChunk ? 'is-active' : ''} ${
+          listeningFoundationScriptMode === 'cards' ? 'is-card' : ''
+        }`}
+      >
+        {segment.speaker ? (
+          <header className="listeningScriptTurnHeader">
+            <span className="listeningScriptSpeaker">{segment.speaker}</span>
+            <button
+              type="button"
+              className="listeningScriptTurnIndex"
+              onClick={() => setListeningFoundationScriptChunk(index)}
+            >
+              {index + 1}/{activeListeningFoundationScriptSegments.length}
+            </button>
+          </header>
+        ) : (
+          <header className="listeningScriptTurnHeader">
+            <span className="listeningScriptSpeaker">Part {index + 1}</span>
+            <button
+              type="button"
+              className="listeningScriptTurnIndex"
+              onClick={() => setListeningFoundationScriptChunk(index)}
+            >
+              {index + 1}/{activeListeningFoundationScriptSegments.length}
+            </button>
+          </header>
+        )}
+        <p
+          className="listeningScriptTurnBody"
+          onMouseDown={() => {
+            listeningFoundationPointerSelectingRef.current = true
+          }}
+          onMouseUp={(event) => {
+            event.stopPropagation()
+            handleListeningFoundationPassageMouseUp()
+          }}
+        >
+          {renderListeningScriptSegmentText(segment.text, evidence, listeningFoundationEvidenceCorrect)}
+        </p>
+      </article>
+    )
+  }
+
+  const shiftListeningFoundationScriptChunk = (direction: -1 | 1) => {
+    setListeningFoundationScriptChunk((current) => {
+      const next = current + direction
+      return Math.max(0, Math.min(next, listeningFoundationScriptChunkCount - 1))
+    })
+  }
+
+  const handleListeningFoundationScriptKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (listeningFoundationScriptMode !== 'focus') return
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      shiftListeningFoundationScriptChunk(-1)
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      shiftListeningFoundationScriptChunk(1)
+    }
+  }
+
+  const restoreListeningFoundationQuestionState = (questionId: string) => {
+    const question = activeListeningFoundationSet?.questions.find((item) => item.id === questionId)
+    if (!question) {
+      resetListeningFoundationQuestion()
+      return
+    }
+    if (listeningFoundationAnswerState[questionId] === 'correct') {
+      setListeningFoundationEvidence(question.evidence)
+      setListeningFoundationEvidenceCorrect(true)
+      setListeningFoundationFeedback('Completed. Review the paraphrase bridge below.')
+      window.getSelection()?.removeAllRanges()
+      return
+    }
+    resetListeningFoundationQuestion()
+  }
+
+  const openListeningFoundationSet = (setId: string) => {
+    stopListeningPlayback()
+    setListeningLabMode('foundation')
+    setSelectedListeningFoundationSetId(setId)
+    setListeningFoundationQuestionIndex(0)
+    resetListeningFoundationQuestion()
+    setActivePage('listening_foundation_exam')
+  }
+
+  const openListeningFoundationCategory = (category: ListeningFoundationCategory) => {
+    stopListeningPlayback()
+    setListeningLabMode('foundation')
+    handleListeningFoundationCategoryChange(category)
+    setActivePage('listening')
+  }
+
+  const openListeningPracticeBank = () => {
+    stopListeningPlayback()
+    setListeningLabMode('practice')
+    setListeningAttemptStage('bank')
+    setListeningPlaybackState('idle')
+    setListeningExerciseError('')
+    setActivePage('listening')
+  }
+
+  const openListeningLanding = () => {
+    stopListeningPlayback()
+    setListeningLabMode('landing')
+    setListeningAttemptStage('bank')
+    setActivePage('listening')
+  }
+
+  const handleListeningFoundationCategoryChange = (category: ListeningFoundationCategory) => {
+    const firstSet = ALL_LISTENING_FOUNDATION_SETS.find((set) => set.category === category)
+    setListeningFoundationCategory(category)
+    setSelectedListeningFoundationSetId(firstSet?.id || '')
+    setListeningFoundationQuestionIndex(0)
+    resetListeningFoundationQuestion()
+  }
+
+  const readListeningFoundationScriptSelection = () => {
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return ''
+
+    const container = listeningFoundationScriptBodyRef.current
+    if (container) {
+      const anchor = selection.anchorNode
+      const focus = selection.focusNode
+      const anchorInScript = anchor ? container.contains(anchor) : false
+      const focusInScript = focus ? container.contains(focus) : false
+      if (!anchorInScript && !focusInScript) return ''
+    }
+
+    return selection.toString().replace(/\s+/g, ' ').trim()
+  }
+
+  const handleListeningFoundationPassageMouseUp = () => {
+    if (!activeListeningFoundationQuestion || listeningFoundationEvidenceCorrect) return
+
+    window.requestAnimationFrame(() => {
+      const selectedText = readListeningFoundationScriptSelection()
+      listeningFoundationPointerSelectingRef.current = false
+      if (!selectedText) return
+
+      const matchKind = getListeningHighlightMatch(
+        selectedText,
+        activeListeningFoundationQuestion.evidence
+      )
+
+      setListeningFoundationEvidence(selectedText)
+      if (matchKind === 'exact') {
+        setListeningFoundationEvidenceCorrect(true)
+        setListeningFoundationFeedback(LISTENING_HIGHLIGHT_CORRECT_THAI)
+        window.getSelection()?.removeAllRanges()
+        return
+      }
+      if (matchKind === 'partial') {
+        setListeningFoundationEvidenceCorrect(true)
+        setListeningFoundationFeedback(LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI)
+        window.getSelection()?.removeAllRanges()
+        return
+      }
+
+      setListeningFoundationEvidenceCorrect(false)
+      setListeningFoundationFeedback(LISTENING_HIGHLIGHT_WRONG_THAI)
+      triggerListeningBuilderTranscriptShake()
+      window.getSelection()?.removeAllRanges()
+    })
+  }
+
+  const chooseListeningFoundationAnswer = (answerKey: string) => {
+    if (!activeListeningFoundationQuestion) return
+    if (!listeningFoundationEvidenceCorrect) {
+      setListeningFoundationFeedback('Highlight the exact evidence first. Answers stay locked until the evidence is correct.')
+      return
+    }
+
+    if (answerKey !== activeListeningFoundationQuestion.correctAnswer) {
+      setListeningFoundationFeedback('Wrong answer. You cannot pass this question. Go back to the passage, re-check the evidence, and try again.')
+      return
+    }
+
+    setListeningFoundationAnswerState((current) => ({
+      ...current,
+      [activeListeningFoundationQuestion.id]: 'correct'
+    }))
+    setListeningFoundationFeedback(
+      `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword} → ${activeListeningFoundationQuestion.thaiMeaning}`
+    )
+  }
+
+  const goToListeningFoundationQuestion = (nextIndex: number) => {
+    if (!activeListeningFoundationSet) return
+    const boundedIndex = Math.max(0, Math.min(nextIndex, activeListeningFoundationSet.questions.length - 1))
+    const currentQuestion = activeListeningFoundationQuestion
+    if (
+      currentQuestion &&
+      boundedIndex > listeningFoundationQuestionIndex &&
+      listeningFoundationAnswerState[currentQuestion.id] !== 'correct'
+    ) {
+      setListeningFoundationFeedback('Finish this question first. This foundation mission does not let you skip the weak point.')
+      return
+    }
+    setListeningFoundationQuestionIndex(boundedIndex)
+    const nextQuestion = activeListeningFoundationSet.questions[boundedIndex]
+    restoreListeningFoundationQuestionState(nextQuestion?.id || '')
+  }
+
+  const saveListeningFoundationQuestionToNotebook = () => {
+    if (!activeListeningFoundationQuestion) return
+    savePlanToNotebook({
+      criterion: 'Listening Foundation',
+      quote: `Q${activeListeningFoundationQuestion.number}: ${activeListeningFoundationQuestion.question}`,
+      fix: `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword}`,
+      thaiMeaning: activeListeningFoundationQuestion.thaiMeaning,
+      preferredSection: 'listening',
+      successNotice: 'Added to notebook · saved to #listening'
+    })
+  }
+
+  const openListeningVocabularyBuilderPack = (packId: string) => {
+    setListeningLabMode('builder')
+    setSelectedListeningBuilderPackId(packId)
+    const selectedPack = listeningVocabularyBuilderPacks.find((pack) => pack.id === packId) || null
+    const selectedExamSet =
+      LISTENING_BUILDER_EXAM_SETS.find((examSet) => examSet.id === packId) ??
+      LISTENING_BUILDER_EXAM_SETS.find(
+        (examSet) => examSet.bookNumber === selectedPack?.bookNumber && examSet.sectionNumber === selectedPack?.sectionNumber
+      )
+    if (selectedExamSet) {
+      setSelectedListeningBuilderExamTestId(selectedExamSet.tests[0]?.id || '')
+    } else {
+      setSelectedListeningBuilderExamTestId('')
+    }
+    setListeningBuilderItemIndex(0)
+    setListeningBuilderSelectionRange(null)
+    setActivePage('listening_builder_exam')
+  }
+
+  const updateListeningBuilderSelection = (tokenIndex: number) => {
+    setListeningBuilderSelectionRange((current) => {
+      if (!current) return { start: tokenIndex, end: tokenIndex }
+      if (current.start === current.end) {
+        return {
+          start: Math.min(current.start, tokenIndex),
+          end: Math.max(current.start, tokenIndex)
+        }
+      }
+      return { start: tokenIndex, end: tokenIndex }
+    })
+  }
+
+  const resetListeningBuilderCardState = () => {
+    setListeningBuilderSelectionRange(null)
+    setListeningBuilderExamFeedback('')
+  }
+
+  const resetListeningBuilderExamDrill = () => {
+    setListeningBuilderItemIndex(0)
+    setListeningBuilderSelectionRange(null)
+    setListeningBuilderAttempts({})
+    setListeningBuilderResolvedState({})
+    setListeningBuilderExamEvidenceCorrect({})
+    setListeningBuilderExamAnswerState({})
+    setListeningBuilderExamFeedback('')
+    window.getSelection()?.removeAllRanges()
+  }
+
+  const isListeningBuilderExamEvidenceUnlocked = (taskId: string) =>
+    Boolean(listeningBuilderExamEvidenceCorrect[taskId]) || listeningBuilderResolvedState[taskId] === 'revealed'
+
+  const chooseListeningBuilderExamAnswer = (task: ListeningBuilderExamTask, answerKey: string) => {
+    if (!activeListeningBuilderExamTest) return
+    if (listeningBuilderExamAnswerState[task.id] === 'correct') return
+    if (!isListeningBuilderExamEvidenceUnlocked(task.id)) {
+      setListeningBuilderExamFeedback('Highlight the exact evidence in the script first. Answers stay locked until then.')
+      return
+    }
+
+    const correctKey = resolveListeningBuilderExamCorrectAnswer(task)
+    if (!correctKey) {
+      setListeningBuilderExamFeedback('Could not verify this answer. Check the paraphrase bridge and try again.')
+      return
+    }
+
+    if (answerKey.toUpperCase() !== correctKey) {
+      setListeningBuilderExamFeedback('Wrong answer. Re-read the script highlight and try another option.')
+      return
+    }
+
+    setListeningBuilderExamAnswerState((current) => ({ ...current, [task.id]: 'correct' }))
+    setListeningBuilderResolvedState((current) => ({ ...current, [task.id]: 'correct' }))
+    setListeningBuilderExamFeedback(
+      `${task.targetText} = ${task.questionWordPhrase} → ${task.thaiMeaning}`
+    )
+  }
+
+  const triggerListeningBuilderTranscriptShake = () => {
+    setListeningBuilderTranscriptShake(true)
+    window.setTimeout(() => {
+      setListeningBuilderTranscriptShake(false)
+    }, 700)
+  }
+
+  const confirmListeningBuilderSelectedText = (selectedText: string) => {
+    if (!activeListeningBuilderItem || !activeListeningBuilderTarget) return
+    const selectionId = activeListeningBuilderItem.id
+    if (!normalizeListeningBuilderText(selectedText)) return
+
+    if (isListeningHighlightMatch(selectedText, activeListeningBuilderTarget.text)) {
+      setListeningBuilderResolvedState((current) => ({ ...current, [selectionId]: 'correct' }))
+      window.getSelection()?.removeAllRanges()
+      return
+    }
+
+    setListeningBuilderAttempts((current) => {
+      const nextAttempts = (current[selectionId] || 0) + 1
+      if (nextAttempts >= 3) {
+        setListeningBuilderResolvedState((resolved) => ({ ...resolved, [selectionId]: 'revealed' }))
+      }
+      return {
+        ...current,
+        [selectionId]: nextAttempts
+      }
+    })
+    triggerListeningBuilderTranscriptShake()
+    window.getSelection()?.removeAllRanges()
+  }
+
+  const goToListeningBuilderItem = (direction: 'next' | 'prev') => {
+    if (!activeListeningBuilderPack) return
+    const total = activeListeningBuilderPack.items.length
+    if (!total) return
+    setListeningBuilderItemIndex((current) => {
+      if (direction === 'next') return Math.min(current + 1, total - 1)
+      return Math.max(current - 1, 0)
+    })
+    resetListeningBuilderCardState()
+  }
+
+  const confirmListeningBuilderSelection = () => {
+    if (!activeListeningBuilderItem || !activeListeningBuilderTarget || !listeningBuilderSelectionRange) return
+    const selectionId = activeListeningBuilderItem.id
+    const isCorrect =
+      listeningBuilderSelectionRange.start === activeListeningBuilderTarget.start &&
+      listeningBuilderSelectionRange.end === activeListeningBuilderTarget.end
+
+    if (isCorrect) {
+      setListeningBuilderResolvedState((current) => ({ ...current, [selectionId]: 'correct' }))
+      return
+    }
+
+    setListeningBuilderAttempts((current) => {
+      const nextAttempts = (current[selectionId] || 0) + 1
+      if (nextAttempts >= 3) {
+        setListeningBuilderResolvedState((resolved) => ({ ...resolved, [selectionId]: 'revealed' }))
+      }
+      return {
+        ...current,
+        [selectionId]: nextAttempts
+      }
+    })
+  }
+
+  const saveListeningBuilderItemToNotebook = (item: ListeningVocabularyBuilderItem) => {
+    const target = resolveListeningBuilderSelectionTarget(item)
+    const bridge = resolveListeningBuilderBridge(item)
+    savePlanToNotebook({
+      criterion: 'Listening Paraphrase Drill',
+      quote: `${item.book} · Q${item.questionNumber} · ${bridge.questionText}`,
+      fix: `${bridge.questionText} = ${target.text}`,
+      thaiMeaning: item.thaiMeaning || item.thaiExplanation || '',
+      preferredSection: 'reading',
+      successNotice: 'Added to notebook'
+    })
+  }
+
+  const saveListeningBuilderExamTaskToNotebook = (task: ListeningBuilderExamTask) => {
+    savePlanToNotebook({
+      criterion: 'Listening Paraphrase Drill',
+      quote: `${activeListeningBuilderExamTest?.title || 'Cambridge 18 Section 2'} · Q${task.questionNumber} · ${task.questionWordPhrase}`,
+      fix: `${task.questionWordPhrase} = ${task.targetText}`,
+      thaiMeaning: task.thaiMeaning || task.explanationThai || '',
+      preferredSection: 'reading',
+      successNotice: 'Added to notebook'
+    })
+  }
+
+  const renderListeningBuilderFeedback = () => {
+    if (!activeListeningBuilderItem || !activeListeningBuilderTarget || !activeListeningBuilderBridge) return null
+    const itemId = activeListeningBuilderItem.id
+    const attempts = listeningBuilderAttempts[itemId] || 0
+    const resolved = listeningBuilderResolvedState[itemId] || null
+
+    if (resolved === 'correct') {
+      return (
+        <div className="listeningBuilderFeedback listeningBuilderFeedback-correct">
+          <strong>ถูกต้องครับ</strong>
+          <p>
+            คำในโจทย์ = <strong>{activeListeningBuilderBridge.questionText}</strong>
+          </p>
+          <p>
+            คำ/วลีใน passage = <strong>{activeListeningBuilderTarget.text}</strong>
+          </p>
+          <p>
+            ความหมายไทย = <strong>{activeListeningBuilderItem.thaiMeaning || 'ดูคำอธิบายด้านล่างได้เลยครับ'}</strong>
+          </p>
+          {activeListeningBuilderItem.thaiExplanation && <p>{activeListeningBuilderItem.thaiExplanation}</p>}
+          <div className="listeningBuilderKnownActions">
+            <button type="button" onClick={() => saveListeningBuilderItemToNotebook(activeListeningBuilderItem)}>
+              Add to Notebook (#reading)
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    if (resolved === 'revealed') {
+      return (
+        <div className="listeningBuilderFeedback listeningBuilderFeedback-reveal">
+          <strong>เฉลยแล้วครับ</strong>
+          <p>
+            ส่วนที่ถูกต้องใน passage คือ <strong>{activeListeningBuilderTarget.text}</strong>
+          </p>
+          <p>
+            คำในโจทย์ = <strong>{activeListeningBuilderBridge.questionText}</strong>
+          </p>
+          <p>
+            ความหมายไทย = <strong>{activeListeningBuilderItem.thaiMeaning || 'ดูคำอธิบายด้านล่างได้เลยครับ'}</strong>
+          </p>
+          {activeListeningBuilderItem.thaiExplanation && <p>{activeListeningBuilderItem.thaiExplanation}</p>}
+          <div className="listeningBuilderKnownActions">
+            <button type="button" onClick={() => saveListeningBuilderItemToNotebook(activeListeningBuilderItem)}>
+              Add to Notebook (#reading)
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    if (attempts > 0) {
+      return (
+        <div className="listeningBuilderFeedback listeningBuilderFeedback-wrong">
+          <strong>ลองใหม่</strong>
+          <p>{LISTENING_HIGHLIGHT_WRONG_THAI}</p>
+          <p className="meta">ผิดแล้ว {attempts}/3 ครั้ง · คุณลองใหม่ได้อีก {Math.max(0, 3 - attempts)} ครั้ง</p>
+        </div>
+      )
+    }
+
+    return null
+  }
+
+  const handleListeningBuilderTranscriptMouseUp = () => {
+    if (activeListeningBuilderExamTask && activeListeningBuilderExamTest) {
+      if (listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] === 'correct') return
+      if (listeningBuilderExamEvidenceCorrect[activeListeningBuilderExamTask.id]) return
+      if (listeningBuilderResolvedState[activeListeningBuilderExamTask.id] === 'revealed') return
+
+      const selectedText = window.getSelection()?.toString().trim() || ''
+      if (!selectedText) return
+      if (!normalizeListeningBuilderText(selectedText)) return
+
+      const examHighlightMatch = getListeningHighlightMatch(
+        selectedText,
+        activeListeningBuilderExamTask.targetText
+      )
+      if (examHighlightMatch !== 'none') {
+        setListeningBuilderExamEvidenceCorrect((current) => ({
+          ...current,
+          [activeListeningBuilderExamTask.id]: true
+        }))
+        setListeningBuilderExamFeedback(
+          examHighlightMatch === 'partial'
+            ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI
+            : LISTENING_HIGHLIGHT_CORRECT_THAI
+        )
+        window.getSelection()?.removeAllRanges()
+        return
+      }
+
+      setListeningBuilderAttempts((current) => {
+        const nextAttempts = (current[activeListeningBuilderExamTask.id] || 0) + 1
+        if (nextAttempts >= 3) {
+          setListeningBuilderResolvedState((resolved) => ({
+            ...resolved,
+            [activeListeningBuilderExamTask.id]: 'revealed'
+          }))
+          setListeningBuilderExamEvidenceCorrect((evidence) => ({
+            ...evidence,
+            [activeListeningBuilderExamTask.id]: true
+          }))
+          setListeningBuilderExamFeedback('เฉลยในสคริปต์ให้แล้วครับ เลือกคำตอบที่ถูกทางขวาได้เลย')
+        } else {
+          setListeningBuilderExamFeedback(LISTENING_HIGHLIGHT_WRONG_THAI)
+        }
+        return {
+          ...current,
+          [activeListeningBuilderExamTask.id]: nextAttempts
+        }
+      })
+      triggerListeningBuilderTranscriptShake()
+      window.getSelection()?.removeAllRanges()
+      return
+    }
+
+    if (!activeListeningBuilderItem || !activeListeningBuilderTarget) return
+    if (listeningBuilderResolvedState[activeListeningBuilderItem.id]) return
+    const selectedText = window.getSelection()?.toString().trim() || ''
+    if (!selectedText) return
+    confirmListeningBuilderSelectedText(selectedText)
+  }
+
+  const renderListeningBuilderExamTranscript = () => {
+    if (activeListeningBuilderExamTask && activeListeningBuilderExamTest) {
+      const targetText = String(activeListeningBuilderExamTask.targetText || '').trim()
+      const showTarget =
+        isListeningBuilderExamEvidenceUnlocked(activeListeningBuilderExamTask.id) ||
+        listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] === 'correct'
+
+      if (!showTarget || !targetText) {
+        return activeListeningBuilderExamTest.scriptParagraphs.map((paragraph, index) => (
+          <p key={`exam-paragraph-${index}`}>{paragraph}</p>
+        ))
+      }
+
+      return activeListeningBuilderExamTest.scriptParagraphs.map((paragraph, index) => {
+        const lowerParagraph = paragraph.toLowerCase()
+        const lowerTarget = targetText.toLowerCase()
+        const startIndex = lowerParagraph.indexOf(lowerTarget)
+
+        if (startIndex === -1) {
+          return <p key={`exam-paragraph-${index}`}>{paragraph}</p>
+        }
+
+        const before = paragraph.slice(0, startIndex)
+        const match = paragraph.slice(startIndex, startIndex + targetText.length)
+        const after = paragraph.slice(startIndex + targetText.length)
+
+        return (
+          <p key={`exam-paragraph-${index}`}>
+            {before}
+            <span className="listeningBuilderExamHighlight">{match}</span>
+            {after}
+          </p>
+        )
+      })
+    }
+
+    if (!activeListeningBuilderItem || !activeListeningBuilderTarget) return null
+    const transcript = String(activeListeningBuilderItem.transcript || '')
+    const targetText = String(activeListeningBuilderTarget.text || '').trim()
+    const resolvedState = listeningBuilderResolvedState[activeListeningBuilderItem.id]
+
+    if (!resolvedState || !targetText) {
+      return <p>{transcript}</p>
+    }
+
+    const lowerTranscript = transcript.toLowerCase()
+    const lowerTarget = targetText.toLowerCase()
+    const startIndex = lowerTranscript.indexOf(lowerTarget)
+    if (startIndex === -1) {
+      return <p>{transcript}</p>
+    }
+
+    const before = transcript.slice(0, startIndex)
+    const match = transcript.slice(startIndex, startIndex + targetText.length)
+    const after = transcript.slice(startIndex + targetText.length)
+
+    return (
+      <p>
+        {before}
+        <span className="listeningBuilderExamHighlight">{match}</span>
+        {after}
+      </p>
+    )
+  }
+
   const startReadingExam = (examId: string) => {
     const exam = filteredReadingExams.find((item) => item.id === examId) || null
     if (!exam) return
+    setReadingWorkspaceMode('bank')
+    setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
     setReadingAnswers({})
     setReadingReportItems([])
     setReadingAttemptStage('exam')
     setReadingHintQuestionNumber(null)
+    setReadingBankEvidenceByQuestion({})
+    setReadingBankEvidenceVerified({})
+    setReadingBankEvidenceFeedback({})
+    setReadingExamError('')
+    setReadingSelectionText('')
+    setReadingUserHighlights([])
+    setReadingActivePassageNumber(exam.parsedPayload.passages[0]?.number || 1)
+    setActivePage('reading')
+  }
+
+  const startReadingPdoyLesson = (lessonId: string) => {
+    const lesson = readingPdoyLessons.find((item) => item.id === lessonId) || null
+    if (!lesson) return
+    setReadingWorkspaceMode('pdoy')
+    setReadingPdoySessionActive(true)
+    setSelectedReadingPdoyLessonId(lesson.id)
+    setSelectedReadingExamId(lesson.examId)
+    setReadingAttemptStage('bank')
+    setReadingPdoyStep('intro')
+    setReadingPdoyQuestionIndex(0)
+    setReadingPdoyEvidenceInput('')
+    setReadingPdoyDecision('')
+    setReadingPdoySelectedOption('')
+    setReadingPdoyOptionParaphraseInput('')
+    setReadingPdoyFillMeaningOptionId('')
+    setReadingPdoyFeedback('')
+    setReadingPdoyIntroChoice('')
+    setReadingPdoyEvidenceAttempts(0)
+    setReadingPdoyDecisionAttempts(0)
+    setReadingHintQuestionNumber(null)
+    setReadingSelectionText('')
+    setReadingUserHighlights([])
+    setReadingExamError('')
+    setReadingActivePassageNumber(lesson.passageNumber)
+    setActivePage('reading')
+  }
+
+  const resetReadingPdoyForNextQuestion = () => {
+    setReadingPdoyStep('intro')
+    setReadingPdoyEvidenceInput('')
+    setReadingPdoyDecision('')
+    setReadingPdoySelectedOption('')
+    setReadingPdoyOptionParaphraseInput('')
+    setReadingPdoyFillMeaningOptionId('')
+    setReadingPdoyFeedback('')
+    setReadingPdoyEvidenceAttempts(0)
+    setReadingPdoyDecisionAttempts(0)
+    setReadingPdoyIntroChoice('')
+  }
+
+  const getReadingPdoyIntroGuidance = () => {
+    if (activeReadingPdoyLesson?.lessonType === 'multiple-choice') {
+      return {
+        expectedChoice: 'อ่าน passage ก่อน แล้วค่อยหาส่วนที่ตรงกับโจทย์ ก่อนกลับมาเทียบตัวเลือก',
+        successFeedback:
+          'ถูกต้องครับ เริ่มจาก passage ก่อน และอย่าอ่านแค่ย่อหน้าเดียว ต้องดูย่อหน้าข้าง ๆ ด้วย พร้อมสังเกตคำเชื่อมอย่าง however, but, instead',
+        wrongFeedback:
+          'ยังไม่ใช่ครับ สำหรับ multiple choice เราเริ่มจาก passage ก่อน หาเนื้อหาที่ตรงกันให้เจอ แล้วค่อยกลับมาเทียบตัวเลือก'
+      }
+    }
+
+    if (activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank') {
+      return {
+        expectedChoice: activeReadingPdoyFillGrammarOptions.find((option) => option.isCorrect)?.label || '',
+        successFeedback:
+          `ถูกต้องครับ ${getReadingFillGrammarHint(activeReadingPdoyQuestion)} จากนั้นค่อยไปหา portion ที่พาราฟเรสตรงกันใน passage`,
+        wrongFeedback:
+          `ยังไม่ใช่ครับ ลองดู grammar cue รอบ blank ใหม่ก่อนนะครับ ${getReadingFillGrammarHint(activeReadingPdoyQuestion)}`
+      }
+    }
+
+    return {
+      expectedChoice: 'อ่าน statement ก่อน แล้วค่อยหาส่วนที่ตรงใน passage เพื่อเทียบความหมาย',
+      successFeedback:
+        'ถูกต้องครับ เราต้องเทียบความหมาย แล้วค่อยตัดสินว่าเนื้อหาตรงกัน ขัดแย้งกัน หรือไม่ได้บอกไว้',
+      wrongFeedback:
+        'ยังไม่ใช่ครับ สำหรับคำถามแบบนี้ เราอ่าน statement ก่อน หาเนื้อหาที่ตรงกันใน passage แล้วค่อยเทียบความหมาย ไม่ใช่ดูแค่ keyword ตัวเดียว'
+    }
+  }
+
+  const useReadingPdoyCorrectIntro = () => {
+    const guidance = getReadingPdoyIntroGuidance()
+    setReadingPdoyIntroChoice(guidance.expectedChoice)
+    setReadingPdoyFeedback('')
+    setReadingPdoyStep('evidence')
+  }
+
+  const submitReadingPdoyIntro = () => {
+    const guidance = getReadingPdoyIntroGuidance()
+    const normalizedChoice = normalizeTextForLooseMatch(readingPdoyIntroChoice)
+    const isCorrect = normalizedChoice === normalizeTextForLooseMatch(guidance.expectedChoice)
+    if (!isCorrect) {
+      setReadingPdoyFeedback(guidance.wrongFeedback)
+      return
+    }
+    setReadingPdoyFeedback('')
+    setReadingPdoyStep('evidence')
+  }
+
+  const submitReadingPdoyEvidence = () => {
+    if (!activeReadingPdoyQuestion) return
+    if (activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank') {
+      if (!readingPdoyEvidenceInput.trim()) {
+        setReadingPdoyFeedback('เลือก portion ที่น่าจะใช่ก่อนครับ แล้วค่อยไปจับคำพาราฟเรสข้างใน')
+        return
+      }
+      setReadingPdoySelectedOption('')
+      setReadingPdoyFillMeaningOptionId('')
+      setReadingPdoyDecisionAttempts(0)
+      setReadingPdoyFeedback('โอเคครับ ตอนนี้ยังไม่เฉลยถูกผิดนะ ลองไปหาคำหรือวลีใน portion นี้ที่ match กับ clue ในโจทย์กันต่อ')
+      setReadingPdoyStep('decide')
+      return
+    }
+    const selectedEvidenceOption = activeReadingPdoyEvidenceOptions.find((option) => option.id === readingPdoyEvidenceInput) || null
+    const matched = selectedEvidenceOption?.isCorrect || false
+    if (matched) {
+      setReadingPdoyFeedback('ดีมากครับ วลีที่จับได้ตรงนี้คือ clue สำคัญ ตอนนี้ค่อยไปตัดสินคำตอบสุดท้าย')
+      setReadingPdoyStep('decide')
+      return
+    }
+    const nextAttempts = readingPdoyEvidenceAttempts + 1
+    setReadingPdoyEvidenceAttempts(nextAttempts)
+    setReadingPdoyFeedback(
+      nextAttempts >= 2
+        ? `ลองอีกทีนะครับ ดู evidence ที่ไฮไลต์ไว้ตรงนี้ให้ใกล้ขึ้น: "${buildReadingHintNeedles(activeReadingPdoyQuestion.exactPortion)[0] || activeReadingPdoyQuestion.exactPortion}"`
+        : 'ยังไม่ตรงครับ ลองดูบริเวณที่ไฮไลต์อีกครั้ง แล้วเลือกวลีจาก passage ที่ตรงความหมายที่สุด'
+    )
+  }
+
+  const submitReadingPdoyDecision = () => {
+    if (!activeReadingPdoyQuestion) return
+    if (activeReadingPdoyLesson?.lessonType === 'multiple-choice') {
+      if (!activeReadingPdoySelectedOptionRecord) {
+        setReadingPdoyFeedback('เลือกตัวเลือกก่อนครับ แล้วเราจะเช็ก paraphrase link ระหว่างตัวเลือกกับ passage ด้วยกัน')
+        return
+      }
+      const isMatchingQuestion = isReadingMatchingQuestion(activeReadingPdoyPassage, activeReadingPdoyQuestion)
+      if (!isMatchingQuestion) {
+        const paraphraseMatch = isReadingOptionParaphraseMatch(
+          readingPdoyOptionParaphraseInput,
+          activeReadingPdoySelectedOptionRecord,
+          activeReadingPdoyQuestion
+        )
+        if (!paraphraseMatch) {
+          setReadingPdoyFeedback(
+            `ยังไม่ใช่ครับ กลับไปดู quoted evidence อีกครั้ง แล้วพิมพ์ว่าความคิดใน option ${activeReadingPdoySelectedOptionRecord.letter} ส่วนไหนที่ตรงกับ passage ก่อน`
+          )
+          return
+        }
+      }
+      const normalizedDecision = normalizeReadingScoredAnswer(activeReadingPdoySelectedOptionRecord.letter)
+      const normalizedCorrect = normalizeReadingScoredAnswer(activeReadingPdoyQuestion.correctAnswer)
+      if (normalizedDecision === normalizedCorrect) {
+        setReadingPdoyFeedback(`ถูกต้องครับ ${activeReadingPdoyQuestion.explanationThai}`)
+        setReadingPdoyStep('result')
+        return
+      }
+      const nextAttempts = readingPdoyDecisionAttempts + 1
+      setReadingPdoyDecisionAttempts(nextAttempts)
+      if (nextAttempts >= 2) {
+        setReadingPdoyFeedback(
+          `${isMatchingQuestion ? 'portion ที่เลือกมาหลอกเราได้เพราะมีคำคล้ายกัน' : 'ตัวเลือกนี้เชื่อมกับ evidence บางส่วนได้'} แต่คำตอบที่ดีที่สุดคือ ${activeReadingPdoyQuestion.correctAnswer} ครับ ${activeReadingPdoyQuestion.explanationThai}`
+        )
+        setReadingPdoyStep('result')
+        return
+      }
+      setReadingPdoyFeedback(
+        isMatchingQuestion
+          ? `ยังไม่ใช่ครับ ตัวหลอกมักมี keyword คล้ายโจทย์ แต่ main idea หรือ information ไม่ตรง ลองกลับไปเทียบ 3 portions อีกครั้ง`
+          : `จับ paraphrase ได้ดีแล้วครับ แต่ ${activeReadingPdoySelectedOptionRecord.letter} ยังไม่ใช่คำตอบที่ดีที่สุด ลองดูประโยคข้าง ๆ เพิ่ม โดยเฉพาะคำเชื่อมอย่าง however, but, หรือ instead`
+      )
+      return
+    }
+    if (activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank') {
+      if (!activeReadingPdoySelectedFillWordMatchOption) {
+        setReadingPdoyFeedback('เลือกคำหรือวลีใน portion นี้ก่อนครับ แล้วค่อยเช็กว่ามัน match กับ clue ในโจทย์จริงไหม')
+        return
+      }
+      if (activeReadingPdoySelectedFillWordMatchOption.isCorrect) {
+        if (activeReadingPdoySelectedFillWordMatchOption.id === 'fill-match-cannot-find') {
+          setReadingPdoyFeedback('ถูกที่คิดว่าหาไม่เจอครับ แปลว่า portion นี้ยังไม่น่าใช่ ลองกลับไปเลือกอีกส่วนของ passage แล้วค่อยจับ paraphrase ใหม่')
+          setReadingPdoyStep('evidence')
+          setReadingPdoySelectedOption('')
+          setReadingPdoyFillMeaningOptionId('')
+          return
+        }
+        setReadingPdoyFeedback(
+          `ถูกต้องครับ คำที่ match กันคือ "${activeReadingPdoySelectedFillWordMatchOption.text}" และคำตอบที่ต้องเติมคือ ${activeReadingPdoyQuestion.correctAnswer} ครับ ${activeReadingPdoyQuestion.explanationThai}`
+        )
+        setReadingPdoyStep('result')
+        return
+      }
+      const nextAttempts = readingPdoyDecisionAttempts + 1
+      setReadingPdoyDecisionAttempts(nextAttempts)
+      if (nextAttempts === 1) {
+        const importantWord = activeReadingPdoyFillWordTarget?.important || activeReadingPdoyClue?.clue || 'clue'
+        const thaiMeaning = activeReadingPdoyFillWordTarget?.importantThai || lookupReadingThaiMeaning(importantWord)
+        setReadingPdoyFeedback(
+          `ยังไม่ตรงครับ คำสำคัญในโจทย์คือ "${importantWord}"${thaiMeaning ? ` = ${thaiMeaning}` : ''} ลองมองใน portion นี้ใหม่อย่างละเอียดว่าคำหรือวลีไหนความหมายเท่ากัน`
+        )
+        return
+      }
+      if (nextAttempts >= 2) {
+        setReadingPdoyFeedback(
+          `เฉลยครับ คำหรือวลีที่ match กันคือ "${activeReadingPdoyFillWordTarget?.match || activeReadingPdoyQuestion.correctAnswer}" และคำตอบที่ถูกคือ ${activeReadingPdoyQuestion.correctAnswer} ครับ ${activeReadingPdoyQuestion.explanationThai}`
+        )
+        setReadingPdoyStep('result')
+        return
+      }
+      return
+    }
+    const normalizedDecision = canonicalizeReadingCorrectAnswer(readingPdoyDecision)
+    const normalizedCorrect = canonicalizeReadingCorrectAnswer(activeReadingPdoyQuestion.correctAnswer)
+    if (normalizedDecision === normalizedCorrect) {
+      setReadingPdoyFeedback(`ถูกต้องครับ ${activeReadingPdoyQuestion.explanationThai}`)
+      setReadingPdoyStep('result')
+      return
+    }
+    const nextAttempts = readingPdoyDecisionAttempts + 1
+    setReadingPdoyDecisionAttempts(nextAttempts)
+    if (nextAttempts >= 2) {
+      setReadingPdoyFeedback(
+        `เกือบแล้วครับ คำตอบที่ถูกคือ ${normalizedCorrect} ${activeReadingPdoyQuestion.explanationThai}`
+      )
+      setReadingPdoyStep('result')
+      return
+    }
+    setReadingPdoyFeedback('ยังไม่ใช่ครับ อ่าน evidence ที่ไฮไลต์อีกครั้ง แล้วเทียบความหมายให้ชัดก่อนเลือกใหม่')
+  }
+
+  const goToNextReadingPdoyQuestion = () => {
+    if (!activeReadingPdoyLesson) return
+    const nextIndex = readingPdoyQuestionIndex + 1
+    if (nextIndex >= activeReadingPdoyLesson.questions.length) {
+      setReadingPdoyStep('complete')
+      setReadingPdoyFeedback('เก่งมากครับ ทำ Reading with P\'Doy ชุดนี้จบแล้ว')
+      return
+    }
+    setReadingPdoyQuestionIndex(nextIndex)
+    resetReadingPdoyForNextQuestion()
+  }
+
+  const openReadingReview = (examId: string) => {
+    const exam = filteredReadingExams.find((item) => item.id === examId) || null
+    const savedAttempt = readingAttemptByExamId[examId]
+    if (!exam || !savedAttempt) return
+    setReadingWorkspaceMode('bank')
+    setReadingPdoySessionActive(false)
+    setSelectedReadingExamId(exam.id)
+    setReadingAnswers(Object.fromEntries(savedAttempt.reportItems.map((item) => [item.number, item.userAnswer])))
+    setReadingReportItems(savedAttempt.reportItems)
+    setReadingAttemptStage('review')
+    setReadingHintQuestionNumber(null)
+    setReadingBankEvidenceByQuestion({})
+    setReadingBankEvidenceVerified({})
+    setReadingBankEvidenceFeedback({})
     setReadingExamError('')
     setReadingSelectionText('')
     setReadingUserHighlights([])
@@ -6396,14 +11239,23 @@ function App() {
   const submitReadingExam = () => {
     if (!activeReadingExam) return
     const allQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
-    const results = allQuestions.map((question) => {
-      const userAnswer = String(readingAnswers[question.number] || '').trim()
-      return {
-        ...question,
-        userAnswer,
-        isCorrect: normalizeReadingAnswer(userAnswer) === normalizeReadingAnswer(question.correctAnswer)
+    const results = scoreReadingQuestions(allQuestions, readingAnswers)
+    const correctCount = results.filter((item) => item.isCorrect).length
+    const totalQuestions = results.length
+    setReadingAttemptHistory((current) => ({
+      ...current,
+      [activeReadingExam.id]: {
+        examId: activeReadingExam.id,
+        examTitle: activeReadingExam.title,
+        category: activeReadingExam.category,
+        correctCount,
+        totalQuestions,
+        accuracy: totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0,
+        wrongCount: Math.max(0, totalQuestions - correctCount),
+        completedAt: new Date().toISOString(),
+        reportItems: results
       }
-    })
+    }))
     setReadingReportItems(results)
     setReadingAttemptStage('report')
     setReadingHintQuestionNumber(null)
@@ -6443,11 +11295,12 @@ function App() {
     passageNumber: number,
     hintExcerpt?: string
   ) => {
+    const hintNeedles = buildReadingHintNeedles(hintExcerpt)
     const highlights = [
       ...readingUserHighlights
         .filter((item) => item.passageNumber === passageNumber)
         .map((item) => ({ text: item.text, tone: 'user' as const })),
-      ...(hintExcerpt ? [{ text: hintExcerpt, tone: 'hint' as const }] : [])
+      ...hintNeedles.map((item) => ({ text: item, tone: 'hint' as const }))
     ].filter((item) => item.text.trim().length > 0)
 
     if (!highlights.length) return text
@@ -6461,6 +11314,11 @@ function App() {
         <mark
           key={`reading-text-${index}`}
           className={found.tone === 'hint' ? 'readingHintMark' : 'readingUserMark'}
+          ref={(node) => {
+            if (found.tone === 'hint' && node && !readingHintMarkRef.current) {
+              readingHintMarkRef.current = node
+            }
+          }}
         >
           {part}
         </mark>
@@ -6468,8 +11326,64 @@ function App() {
     })
   }
 
-  const renderReadingAnswerField = (question: ReadingQuestion) => {
+  const handleReadingBankEvidenceSelect = (
+    question: ReadingQuestion,
+    option: ReadingPdoyEvidenceOption
+  ) => {
+    setReadingBankEvidenceByQuestion((current) => ({ ...current, [question.number]: option.id }))
+    setReadingHintQuestionNumber(question.number)
+    if (option.isCorrect) {
+      setReadingBankEvidenceVerified((current) => ({ ...current, [question.number]: true }))
+      setReadingBankEvidenceFeedback((current) => {
+        const next = { ...current }
+        delete next[question.number]
+        return next
+      })
+      return
+    }
+    setReadingBankEvidenceFeedback((current) => ({
+      ...current,
+      [question.number]:
+        'Keyword trap — this portion shares similar words but does not prove the right heading/paragraph. Try again.'
+    }))
+  }
+
+  const renderReadingAnswerField = (
+    question: ReadingQuestion,
+    passage: ReadingPassageRecord | null = activeReadingPassage
+  ) => {
     const value = readingAnswers[question.number] || ''
+    const matchingQuestion = isReadingMatchingQuestion(passage, question)
+    const evidenceVerified = Boolean(readingBankEvidenceVerified[question.number])
+
+    if (matchingQuestion) {
+      const options = extractReadingMultipleChoiceOptions(passage, question)
+      if (options.length) {
+        return (
+          <div className={`readingMatchingAnswerBlock ${evidenceVerified ? '' : 'is-locked'}`.trim()}>
+            {!evidenceVerified && (
+              <p className="meta">Pick the correct evidence above before choosing your heading or paragraph.</p>
+            )}
+            <div className="readingPdoyChoiceGrid">
+              {options.map((option) => (
+                <button
+                  key={`${question.number}-${option.letter}`}
+                  type="button"
+                  className={`readingPdoyOptionBtn ${value === option.letter ? 'active' : ''}`}
+                  disabled={!evidenceVerified}
+                  onClick={() =>
+                    setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
+                  }
+                >
+                  <strong>{option.letter}</strong> {option.text}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    }
+
     if (question.answerType === 'true-false-not-given') {
       return (
         <select
@@ -6521,6 +11435,35 @@ function App() {
     )
   }
 
+  const renderListeningAnswerField = (question: ListeningQuestion) => {
+    const value = listeningAnswers[question.number] || ''
+    if (question.answerType === 'multiple-choice') {
+      return (
+        <div className="listeningChoiceGrid">
+          {(question.options || []).map((option) => (
+            <button
+              key={`${question.number}-${option.key}`}
+              type="button"
+              className={`listeningChoiceBtn ${value === option.key ? 'active' : ''}`}
+              onClick={() => setListeningAnswers((current) => ({ ...current, [question.number]: option.key }))}
+            >
+              <strong>{option.key}</strong>
+              <span>{option.text}</span>
+            </button>
+          ))}
+        </div>
+      )
+    }
+    return (
+      <input
+        type="text"
+        value={value}
+        onChange={(event) => setListeningAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
+        placeholder="Type your answer"
+      />
+    )
+  }
+
   const openSavedReportSnapshot = (snapshot: SavedReportSnapshot) => {
     setReportViewSnapshot(snapshot)
     setSelectedTestMode(snapshot.testMode)
@@ -6531,59 +11474,115 @@ function App() {
     setActivePage('workspace')
   }
 
+  const openAdminAssessmentReport = async (reportId: string) => {
+    if (!authSession?.accessToken || authSession.role !== 'admin') return
+    try {
+      const payload = await fetchJson<{
+        report: {
+          summary?: AdminAssessmentReportSummary
+          testMode?: SpeakingTestMode
+          topicTitle?: string
+          topicCategory?: string
+          prompt?: string
+          cues?: string[]
+          report?: AssessmentResult
+          selectedProvider?: string
+        }
+      }>(`/api/admin/assessment-reports/${reportId}`, {
+        headers: {
+          Authorization: `Bearer ${authSession.accessToken}`
+        }
+      })
+      const detail = payload.report
+      const snapshot: SavedReportSnapshot = {
+        testMode: detail?.testMode || detail?.summary?.testMode || 'part2',
+        topicTitle: detail?.topicTitle || detail?.summary?.topicTitle || 'Speaking report',
+        topicCategory: detail?.topicCategory || detail?.summary?.topicCategory || 'Speaking',
+        prompt: detail?.prompt || '',
+        cues: Array.isArray(detail?.cues) ? detail.cues : [],
+        report: (detail?.report as AssessmentResult) || ({} as AssessmentResult),
+        selectedProvider: detail?.selectedProvider || detail?.summary?.provider || 'gemini'
+      }
+      openSavedReportSnapshot(snapshot)
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Could not open this report.')
+    }
+  }
+
   return (
     <main className="workspace">
       {activePage !== 'home' && <header className="topbar">
         <div>
-          <h1>ENGLISH PLAN LEARNING SPACE</h1>
-          <p>
-            {authSession?.role === 'admin'
-              ? 'Admin control for learner access, credits, topics, and speaking flow'
-              : `Signed in as ${authSession?.name || creditProfile.name}`}
-          </p>
+          <h1>ENGLISH PLAN</h1>
+          <p>Learning Space</p>
         </div>
         <div className="headerActions">
           <div className="pageSwitch">
-            <button
-              className=""
-              onClick={() => setActivePage('home')}
-              type="button"
-            >
-              Home
-            </button>
-            <button
-              className={activePage === 'workspace' ? 'active' : ''}
-              onClick={() => {
-                resetSession()
-                setSelectedTestMode('part1')
-                setActivePage('workspace')
-              }}
-              type="button"
-            >
-              Speaking
-            </button>
-            <button
-              className={activePage === 'reading' ? 'active' : ''}
-              onClick={() => {
-                if (isStudentViewLockedToSpeaking) return
-                setActivePage('reading')
-              }}
-              type="button"
-              disabled={isStudentViewLockedToSpeaking}
-            >
-              {isStudentViewLockedToSpeaking ? 'Reading (Coming Soon)' : 'Reading'}
-            </button>
-            <button
-              className={activePage === 'notebook' ? 'active' : ''}
-              onClick={() => {
-                if (isStudentViewLockedToSpeaking) return
-                setActivePage('notebook')
-              }}
-              type="button"
-              disabled={isStudentViewLockedToSpeaking}
-            >
-              {isStudentViewLockedToSpeaking ? 'Notebook (Coming Soon)' : 'Notebook'}
-            </button>
+            {authSession?.role === 'trial' ? (
+              <button
+                className={activePage === 'workspace' ? 'active' : ''}
+                onClick={() => {
+                  setSelectedTestMode('full')
+                  setSelectedTopicId(TRIAL_SPEAKING_TOPIC_ID)
+                  setActivePage('workspace')
+                }}
+                type="button"
+              >
+                Trial
+              </button>
+            ) : (
+              <>
+                <button
+                  className=""
+                  onClick={() => setActivePage('home')}
+                  type="button"
+                >
+                  Home
+                </button>
+                <button
+                  className={activePage === 'workspace' ? 'active' : ''}
+                  onClick={() => {
+                    resetSession()
+                    setSelectedTestMode('part1')
+                    setActivePage('workspace')
+                  }}
+                  type="button"
+                >
+                  Speaking
+                </button>
+                {canAccessListening && (
+                  <button
+                    className={activePage === 'listening' ? 'active' : ''}
+                    onClick={() => {
+                      openListeningLanding()
+                    }}
+                    type="button"
+                  >
+                    Listening
+                  </button>
+                )}
+                <button
+                  className={activePage === 'reading' ? 'active' : ''}
+                  onClick={() => {
+                    setActivePage('reading')
+                  }}
+                  type="button"
+                >
+                  Reading
+                </button>
+                <button
+                  className={activePage === 'notebook' ? 'active' : ''}
+                  onClick={() => {
+                    if (isStudentNotebookLocked) return
+                    setActivePage('notebook')
+                  }}
+                  type="button"
+                  disabled={isStudentNotebookLocked}
+                >
+                  {isStudentNotebookLocked ? 'Notebook (Coming Soon)' : 'Notebook'}
+                </button>
+              </>
+            )}
             {authSession?.role === 'admin' && (
               <button
                 className={activePage === 'admin' ? 'active' : ''}
@@ -6597,7 +11596,9 @@ function App() {
           <div className="metaChip">
             {authSession?.role === 'admin'
               ? `Admin Mode | Learners: ${managedLearners.length} | Open Issues: ${openSupportReportCount}`
-              : `Name: ${creditProfile.name} | Plan: ${creditProfile.plan} | Feedback: ${creditProfile.feedbackRemaining} | Full Mock: ${creditProfile.fullMockRemaining}`}
+              : authSession?.role === 'trial'
+                ? `Trial | ${authSession?.email || ''} | Uses left: ${Math.min(creditProfile.feedbackRemaining, creditProfile.fullMockRemaining)}`
+                : `Name: ${creditProfile.name} | Plan: ${creditProfile.plan} | Feedback: ${creditProfile.feedbackRemaining} | Full Mock: ${creditProfile.fullMockRemaining}`}
           </div>
           {authSession?.role === 'student' && (
             <button type="button" className="secondary" onClick={updateCreditProfileName}>
@@ -6613,141 +11614,1521 @@ function App() {
       {activePage === 'home' ? (
         <section className="homePage">
           <div className="homeCard">
-            <h1>ENGLISH PLAN LEARNING SPACE</h1>
+            <h1 className="homeBrandTitle">
+              <span>ENGLISH PLAN</span>
+              <small>Learning Space</small>
+            </h1>
             <p>
               {authSession
                 ? `Welcome back, ${authSession.name}.`
                 : 'Sign in with the learner access your admin created for you.'}
             </p>
             {authSession ? (
-              <div className="homeGrid">
-                <button
-                  type="button"
-                  onClick={() => {
-                    resetSession()
-                    setSelectedTestMode('part1')
-                    setActivePage('workspace')
-                  }}
-                >
-                  Speaking
-                </button>
-                <button type="button" disabled>
-                  Listening (Coming Soon)
-                </button>
-                <button type="button" disabled>
-                  Reading (Coming Soon)
-                </button>
-                <button type="button" disabled>
-                  Writing (Coming Soon)
-                </button>
-                <button type="button" disabled>
-                  Notebook (Coming Soon)
-                </button>
-                {authSession.role === 'admin' ? (
+              authSession.role === 'trial' ? (
+                <div className="trialHomeCard">
+                  <p className="sectionLabel">One-time Trial</p>
+                  <h3>พร้อมเริ่มลองใช้ IELTS Speaking Trial แล้วครับ</h3>
+                  <p>กดปุ่มด้านล่างเพื่อกลับไปที่ชุดทดลองใช้ฟรีของคุณได้เลย</p>
+                  <div className="homeGrid">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedTestMode('full')
+                        setSelectedTopicId(TRIAL_SPEAKING_TOPIC_ID)
+                        setActivePage('workspace')
+                      }}
+                    >
+                      ไปที่ Trial ตอนนี้
+                    </button>
+                    <button type="button" onClick={handleLogout}>
+                      Log Out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="homeGrid">
                   <button
                     type="button"
                     onClick={() => {
-                      setActivePage('admin')
+                      resetSession()
+                      setSelectedTestMode('part1')
+                      setActivePage('workspace')
                     }}
                   >
-                    Admin Panel
+                    Speaking
                   </button>
-                ) : null}
-                <button type="button" onClick={handleLogout}>
-                  Log Out
-                </button>
-              </div>
+                  {canAccessListening && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        openListeningLanding()
+                      }}
+                    >
+                      Listening
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActivePage('reading')
+                    }}
+                  >
+                    Reading
+                  </button>
+                  <button type="button" disabled>
+                    Writing (Coming Soon)
+                  </button>
+                  <button type="button" disabled>
+                    Notebook (Coming Soon)
+                  </button>
+                  {authSession.role === 'admin' ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActivePage('admin')
+                      }}
+                    >
+                      Admin Panel
+                    </button>
+                  ) : null}
+                  <button type="button" onClick={handleLogout}>
+                    Log Out
+                  </button>
+                </div>
+              )
             ) : (
-              <div className="authHub">
-                <section className="authPanel">
-                  <div className="authPanelHeader">
-                    <p className="sectionLabel">Create Account</p>
-                  </div>
-                  <p className="meta">Create your account first. Your admin will activate your access afterwards.</p>
-                  <div className="authForm">
-                    <label>
-                      Name
-                      <input
-                        type="text"
-                        value={signupNameInput}
-                        onChange={(event) => setSignupNameInput(event.target.value)}
-                        placeholder="Your full name"
-                      />
-                    </label>
-                    <label>
-                      Email
-                      <input
-                        type="email"
-                        value={signupEmailInput}
-                        onChange={(event) => setSignupEmailInput(event.target.value)}
-                        placeholder="you@example.com"
-                      />
-                    </label>
-                    <label>
-                      Password
-                      <input
-                        type="password"
-                        value={signupPasswordInput}
-                        onChange={(event) => setSignupPasswordInput(event.target.value)}
-                        placeholder="At least 6 characters"
-                      />
-                    </label>
-                    <button type="button" onClick={() => void handleUserSignupSubmit()} disabled={isAuthLoading}>
-                      Create Account
-                    </button>
-                  </div>
-                </section>
-                <section className="authPanel">
-                  <div className="authPanelHeader">
-                    <p className="sectionLabel">Learner Access</p>
-                  </div>
-                  <div className="authForm">
-                    <label>
-                      Email
-                      <input
-                        type="email"
-                        value={userEmailInput}
-                        onChange={(event) => setUserEmailInput(event.target.value)}
-                      />
-                    </label>
-                    <label>
-                      Password
-                      <input
-                        type="password"
-                        value={userPasswordInput}
-                        onChange={(event) => setUserPasswordInput(event.target.value)}
-                      />
-                    </label>
-                    <button type="button" onClick={() => void handleUserAuthSubmit()} disabled={isAuthLoading}>
-                      Sign In
-                    </button>
-                  </div>
-                </section>
-                <section className="authPanel authPanelAdmin">
-                  <div className="authPanelHeader">
-                    <p className="sectionLabel">Admin Access</p>
-                  </div>
-                  <div className="authForm">
-                    <label>
-                      Admin Code
-                      <input
-                        type="password"
-                        value={adminCodeInput}
-                        onChange={(event) => setAdminCodeInput(event.target.value)}
-                        placeholder="Enter admin code"
-                      />
-                    </label>
-                    <button type="button" onClick={() => void handleAdminLogin()} disabled={isAuthLoading}>
-                      Enter Admin Panel
-                    </button>
-                  </div>
-                </section>
-                {authNotice && <p className="meta authSuccess">{authNotice}</p>}
-                {authError && <p className="error authError">{authError}</p>}
-              </div>
+              isTrialRouteRequested ? (
+                <div className="trialEntryHub">
+                  <section className="trialHeroShowcase">
+                    <div className="trialHeroMain">
+                      <p className="sectionLabel">ENGLISH PLAN AI TRIAL</p>
+                      <h2>ลองประเมิน IELTS Speaking ของตัวเองแบบ premium ก่อนตัดสินใจเรียนจริง</h2>
+                      <p className="meta">
+                        ระบบนี้ถูกออกแบบจากประสบการณ์สอนของ English Plan ตลอด 6 ปี และสะท้อน pattern จุดอ่อนของนักเรียนไทยกว่า 500+ คน
+                        เพื่อให้คุณไม่ได้แค่ “ได้คะแนน” แต่รู้ด้วยว่าควรแก้ตรงไหนก่อนแบบ realistic ที่สุดครับ
+                      </p>
+                      <div className="trialHeroChips">
+                        <span>5–7 นาที</span>
+                        <span>1 ครั้งต่อ 1 อีเมล</span>
+                        <span>Report แบบเดียวกับตัวเต็ม</span>
+                      </div>
+                    </div>
+                    <div className="trialValueGrid">
+                      <article className="trialValueCard">
+                        <strong>Band Snapshot</strong>
+                        <p>ดูภาพรวมคะแนน Fluency, Grammar และ Vocabulary ของคุณแบบรวดเร็ว</p>
+                      </article>
+                      <article className="trialValueCard">
+                        <strong>Weakness Diagnosis</strong>
+                        <p>ชี้ให้เห็นจุดอ่อนที่นักเรียนไทยพลาดบ่อย และบอกว่าของคุณอยู่ตรงไหน</p>
+                      </article>
+                      <article className="trialValueCard">
+                        <strong>Next-Step Advice</strong>
+                        <p>ได้คำแนะนำที่เอาไปฝึกต่อได้ทันที ไม่ใช่แค่ feedback กว้าง ๆ</p>
+                      </article>
+                    </div>
+                  </section>
+                  <section className="authPanel trialAuthPanel">
+                    <div className="authPanelHeader">
+                      <p className="sectionLabel">ทดลองใช้ฟรี 1 ครั้ง</p>
+                      <div className="authModeTabs">
+                        <button
+                          type="button"
+                          className={trialAuthMode === 'signup' ? 'active' : ''}
+                          onClick={() => {
+                            setTrialAuthMode('signup')
+                            setTrialSignupStep('email')
+                            setAuthError('')
+                            setAuthNotice('')
+                          }}
+                        >
+                          เริ่ม Trial ใหม่
+                        </button>
+                        <button
+                          type="button"
+                          className={trialAuthMode === 'signin' ? 'active' : ''}
+                          onClick={() => {
+                            setTrialAuthMode('signin')
+                            setAuthError('')
+                            setAuthNotice('')
+                          }}
+                        >
+                          กลับเข้า Trial เดิม
+                        </button>
+                      </div>
+                    </div>
+                    <p className="meta">
+                      สิทธิ์นี้เป็นการทดลองใช้แบบ one-time trial only ต่อ 1 อีเมลครับ หลังเริ่มแล้วควรเผื่อเวลาไว้ประมาณ 5-7 นาที
+                    </p>
+                    <div className="trialChecklist">
+                      <div className="trialChecklistItem">✉️ กรอกอีเมลก่อน แล้วตั้งรหัสผ่านเพื่อเข้า trial</div>
+                      <div className="trialChecklistItem">📝 เตรียมปากกาและสมุด เพราะคุณจะมีเวลาเตรียมคำตอบ 1 นาที</div>
+                      <div className="trialChecklistItem">🎤 จากนั้นต้องพูด 2 นาที และตอบ follow-up อีก 3 ข้อ</div>
+                    </div>
+                    <div className="authForm">
+                      <label>
+                        อีเมล
+                        <input
+                          type="email"
+                          value={trialEmailInput}
+                          onChange={(event) => setTrialEmailInput(event.target.value)}
+                          placeholder="you@example.com"
+                        />
+                      </label>
+                      {(trialAuthMode === 'signin' || trialSignupStep === 'password') && (
+                        <label>
+                          รหัสผ่าน
+                          <input
+                            type="password"
+                            value={trialPasswordInput}
+                            onChange={(event) => setTrialPasswordInput(event.target.value)}
+                            placeholder="อย่างน้อย 6 ตัวอักษร"
+                          />
+                        </label>
+                      )}
+                      {trialAuthMode === 'signup' && trialSignupStep === 'email' ? (
+                        <button type="button" onClick={advanceTrialSignupStep} disabled={isAuthLoading}>
+                          ถัดไป: ตั้งรหัสผ่าน
+                        </button>
+                      ) : trialAuthMode === 'signup' ? (
+                        <button type="button" onClick={() => void handleTrialSignupSubmit()} disabled={isAuthLoading}>
+                          เริ่มใช้ฟรี 1 ครั้งตอนนี้
+                        </button>
+                      ) : (
+                        <button type="button" onClick={() => void handleTrialSignInSubmit()} disabled={isAuthLoading}>
+                          เข้าสู่ Trial ของฉัน
+                        </button>
+                      )}
+                    </div>
+                  </section>
+                  {authNotice && <p className="meta authSuccess">{authNotice}</p>}
+                  {authError && <p className="error authError">{authError}</p>}
+                </div>
+              ) : (
+                <div className="authHub">
+                  <section className="authPanel">
+                    <div className="authPanelHeader">
+                      <p className="sectionLabel">Create Account</p>
+                    </div>
+                    <p className="meta">Create your account first. Your admin will activate your access afterwards.</p>
+                    <div className="authForm">
+                      <label>
+                        Name
+                        <input
+                          type="text"
+                          value={signupNameInput}
+                          onChange={(event) => setSignupNameInput(event.target.value)}
+                          placeholder="Your full name"
+                        />
+                      </label>
+                      <label>
+                        Email
+                        <input
+                          type="email"
+                          value={signupEmailInput}
+                          onChange={(event) => setSignupEmailInput(event.target.value)}
+                          placeholder="you@example.com"
+                        />
+                      </label>
+                      <label>
+                        Password
+                        <input
+                          type="password"
+                          value={signupPasswordInput}
+                          onChange={(event) => setSignupPasswordInput(event.target.value)}
+                          placeholder="At least 6 characters"
+                        />
+                      </label>
+                      <button type="button" onClick={() => void handleUserSignupSubmit()} disabled={isAuthLoading}>
+                        Create Account
+                      </button>
+                    </div>
+                  </section>
+                  <section className="authPanel">
+                    <div className="authPanelHeader">
+                      <p className="sectionLabel">Learner Access</p>
+                    </div>
+                    <div className="authForm">
+                      <label>
+                        Email
+                        <input
+                          type="email"
+                          value={userEmailInput}
+                          onChange={(event) => setUserEmailInput(event.target.value)}
+                        />
+                      </label>
+                      <label>
+                        Password
+                        <input
+                          type="password"
+                          value={userPasswordInput}
+                          onChange={(event) => setUserPasswordInput(event.target.value)}
+                        />
+                      </label>
+                      <button type="button" onClick={() => void handleUserAuthSubmit()} disabled={isAuthLoading}>
+                        Sign In
+                      </button>
+                    </div>
+                  </section>
+                  <section className="authPanel authPanelAdmin">
+                    <div className="authPanelHeader">
+                      <p className="sectionLabel">Admin Access</p>
+                    </div>
+                    <div className="authForm">
+                      <label>
+                        Admin Code
+                        <input
+                          type="password"
+                          value={adminCodeInput}
+                          onChange={(event) => setAdminCodeInput(event.target.value)}
+                          placeholder="Enter admin code"
+                        />
+                      </label>
+                      <button type="button" onClick={() => void handleAdminLogin()} disabled={isAuthLoading}>
+                        Enter Admin Panel
+                      </button>
+                    </div>
+                  </section>
+                  {authNotice && <p className="meta authSuccess">{authNotice}</p>}
+                  {authError && <p className="error authError">{authError}</p>}
+                </div>
+              )
             )}
           </div>
         </section>
+      ) : activePage === 'listening' ? (
+        canAccessListening ? (
+        <section className="panel full readingPage listeningPage">
+          <div className="readingPageHeader listeningLabHeader">
+            <div>
+              <h2>Listening Lab</h2>
+              <p>เลือกโหมดฝึก Listening ที่เหมาะกับระดับตอนนี้</p>
+            </div>
+            {listeningLabMode !== 'landing' && (
+              <button
+                type="button"
+                className="secondary listeningBackChoiceButton"
+                onClick={openListeningLanding}
+              >
+                Back to Listening Choices
+              </button>
+            )}
+          </div>
+
+          {listeningLabMode === 'landing' && (
+            <div className="listeningModeChoiceGrid">
+              <button type="button" className="listeningModeChoiceCard" onClick={() => openListeningFoundationCategory('essential')}>
+                <span>01</span>
+                <strong>Listening Foundation</strong>
+                <p>เหมาะกับคนที่อ่อนศัพท์ระดับเบื้องต้น คนที่ยังได้ไม่ถึง 6.0</p>
+              </button>
+              <button type="button" className="listeningModeChoiceCard" onClick={() => openListeningFoundationCategory('advanced')}>
+                <span>02</span>
+                <strong>Listening Foundation (Advanced)</strong>
+                <p>เหมาะกับคนที่อ่อนศัพท์ระดับกลาง-สูง คนที่ยังได้ไม่ถึง 7.0</p>
+              </button>
+              <button type="button" className="listeningModeChoiceCard listeningModeChoiceCardPractice" onClick={openListeningPracticeBank}>
+                <span>03</span>
+                <strong>Full Practice</strong>
+                <p>ทำชุดฝึก Listening แบบเต็ม แล้วดู report หลัง submit</p>
+              </button>
+            </div>
+          )}
+
+          {listeningLabMode === 'foundation' && (
+            <div className="listeningFoundationPage">
+              <section className="listeningFoundationMission">
+                <div>
+                  <span>Targeted Mission</span>
+                  <h2>{listeningFoundationCategory === 'advanced' ? 'LISTENING FOUNDATION (ADVANCED)' : 'LISTENING FOUNDATION'}</h2>
+                  <p>
+                    {listeningFoundationCategory === 'advanced'
+                      ? 'เหมาะกับคนที่อ่อนศัพท์ระดับกลาง-สูง คนที่ยังได้ไม่ถึง 7.0'
+                      : 'เหมาะกับคนที่อ่อนศัพท์ระดับเบื้องต้น คนที่ยังได้ไม่ถึง 6.0'}
+                  </p>
+                </div>
+                <div className="listeningFoundationProgress">
+                  <span>Overall Progress</span>
+                  <strong>
+                    {activeListeningFoundationSet?.questions.length
+                      ? Math.round((listeningFoundationCompletedCount / activeListeningFoundationSet.questions.length) * 100)
+                      : 0}%
+                  </strong>
+                </div>
+              </section>
+
+              <div className="listeningFoundationCategories" role="tablist" aria-label="Foundation level">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={listeningFoundationCategory === 'essential'}
+                  className={listeningFoundationCategory === 'essential' ? 'active' : ''}
+                  onClick={() => handleListeningFoundationCategoryChange('essential')}
+                >
+                  Essential ({ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential').length} sets)
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={listeningFoundationCategory === 'advanced'}
+                  className={listeningFoundationCategory === 'advanced' ? 'active' : ''}
+                  onClick={() => handleListeningFoundationCategoryChange('advanced')}
+                >
+                  Advanced ({ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced').length} sets)
+                </button>
+              </div>
+
+              <p className="listeningFoundationBankHint meta">
+                Pick a set below, then click <strong>Open Exam Bank</strong>. Script on the left; questions on the right.
+              </p>
+
+              <div className="listeningFoundationBank">
+                {visibleListeningFoundationSets.length === 0 ? (
+                  <div className="listeningFoundationBankEmpty">
+                    <p>No drills in this category yet.</p>
+                    <p className="meta">
+                      Switch Essential / Advanced above. Listening needs a student or admin account (trial cannot open Listening).
+                    </p>
+                  </div>
+                ) : (
+                  visibleListeningFoundationSets.map((set) => (
+                  <article key={set.id} className={activeListeningFoundationSet?.id === set.id ? 'active' : ''}>
+                    <p>{set.levelLabel}</p>
+                    <h3>{set.title}</h3>
+                    <span>{set.questions.length} questions · Section {set.section}</span>
+                    <button type="button" onClick={() => openListeningFoundationSet(set.id)}>
+                      Open Exam Bank
+                    </button>
+                  </article>
+                  ))
+                )}
+              </div>
+
+            </div>
+          )}
+
+          {listeningLabMode === 'practice' && listeningAttemptStage === 'bank' && (
+            <>
+              <div className="readingSummaryStrip listeningOfficialStrip">
+                {LISTENING_OFFICIAL_RESOURCES.map((resource) => (
+                  <article key={resource.id} className="readingSummaryCard listeningReferenceCard">
+                    <p className="sectionLabel">{resource.source}</p>
+                    <strong>{resource.title}</strong>
+                    <span>{resource.sampleType}</span>
+                    <p className="meta">{resource.description}</p>
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => window.open(resource.url, '_blank', 'noopener,noreferrer')}
+                    >
+                      Open official sample
+                    </button>
+                  </article>
+                ))}
+              </div>
+
+              <div className="readingBankGrid listeningExerciseGrid">
+                {LISTENING_EXERCISES.map((exercise) => (
+                  <article key={exercise.id} className="readingBankCard listeningExerciseCard">
+                    <p className="promptPill">{exercise.label}</p>
+                    <h3>{exercise.title}</h3>
+                    <p className="meta">{exercise.formatLabel}</p>
+                    <div className="readingExerciseMeta">
+                      <span>{exercise.summary}</span>
+                      <span>{exercise.level}</span>
+                      <span>{exercise.duration}</span>
+                    </div>
+                    <p className="meta">{exercise.instructionsThai}</p>
+                    {listeningAttemptByExerciseId[exercise.id] && (
+                      <div className="adminWorkflowCard">
+                        <p className="sectionLabel">Latest Score</p>
+                        <strong>
+                          {listeningAttemptByExerciseId[exercise.id].correctCount}/{listeningAttemptByExerciseId[exercise.id].totalQuestions} ({listeningAttemptByExerciseId[exercise.id].accuracy}%)
+                        </strong>
+                        <p className="meta">
+                          {listeningAttemptByExerciseId[exercise.id].wrongCount} wrong · {new Date(listeningAttemptByExerciseId[exercise.id].completedAt).toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                    <div className="controls">
+                      <button type="button" onClick={() => startListeningExercise(exercise.id)}>
+                        {listeningAttemptByExerciseId[exercise.id] ? 'Retry Exercise' : 'Open Exercise'}
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </>
+          )}
+
+          {listeningLabMode === 'practice' && listeningAttemptStage === 'exam' && activeListeningExercise && (
+            <div className="readingExamWrap listeningExamWrap">
+              <div className="readingAttemptToolbar">
+                <div>
+                  <p className="sectionLabel">{activeListeningExercise.label}</p>
+                  <h3>{activeListeningExercise.title}</h3>
+                  <p className="meta">
+                    {activeListeningExercise.summary} · {listeningAnsweredCount}/{activeListeningExercise.questions.length} answered
+                  </p>
+                </div>
+                <div className="controls">
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      stopListeningPlayback()
+                      setListeningAttemptStage('bank')
+                    }}
+                  >
+                    Back to Bank
+                  </button>
+                  <button type="button" onClick={submitListeningExercise}>
+                    Check Answers
+                  </button>
+                </div>
+              </div>
+
+              <div className="readingExamLayout listeningExamLayout">
+                <section className="readingPassagePanel listeningAudioPanel">
+                  <div className="readingPassageHeader">
+                    <div>
+                      <p className="sectionLabel">Audio Practice</p>
+                      <h3>{activeListeningExercise.formatLabel}</h3>
+                    </div>
+                    <div className="readingHintBox">
+                      <strong>Practice mode:</strong> {activeListeningExercise.playbackNoteThai}
+                    </div>
+                  </div>
+
+                  <div className="listeningPlayerCard">
+                    <p className="meta">{activeListeningExercise.instructionsThai}</p>
+                    <div className="controls listeningAudioControls">
+                      <button type="button" onClick={() => playListeningExercise('normal')}>
+                        Play audio
+                      </button>
+                      <button type="button" className="secondary" onClick={() => playListeningExercise('slow')}>
+                        Play slower
+                      </button>
+                      <button type="button" className="secondary" onClick={stopListeningPlayback}>
+                        Stop
+                      </button>
+                    </div>
+                    <div className="readingSummaryStrip">
+                      <article className="readingSummaryCard">
+                        <p className="sectionLabel">Playback</p>
+                        <strong>{listeningPlaybackState === 'playing' ? 'Playing' : listeningPlaybackState === 'ended' ? 'Finished' : listeningPlaybackState === 'error' ? 'Error' : 'Ready'}</strong>
+                        <span>{listeningPlaybackRate === 'slow' ? 'Slow mode' : 'Normal mode'}</span>
+                      </article>
+                      <article className="readingSummaryCard">
+                        <p className="sectionLabel">Question Count</p>
+                        <strong>{activeListeningExercise.questions.length}</strong>
+                        <span>questions in this set</span>
+                      </article>
+                    </div>
+                    {listeningExerciseError ? <p className="error">{listeningExerciseError}</p> : null}
+                  </div>
+
+                  <div className="listeningTranscriptLocked">
+                    <p className="sectionLabel">Transcript</p>
+                    <h4>Transcript unlocks after you check your answers</h4>
+                    <p className="meta">ตอนทำข้อให้โฟกัสจากสิ่งที่ได้ยินก่อนครับ พอส่งคำตอบแล้ว report จะโชว์ exact transcript portion และอธิบาย paraphrase ให้ทีละข้อ</p>
+                  </div>
+                </section>
+
+                <section className="readingQuestionsPanel">
+                  <div className="readingQuestionsHeader">
+                    <div>
+                      <p className="sectionLabel">Questions</p>
+                      <h3>Answer while you listen</h3>
+                    </div>
+                    <span className="bandPill">{activeListeningExercise.questions.length} questions</span>
+                  </div>
+                  <div className="readingQuestionList">
+                    {activeListeningExercise.questions.map((question) => (
+                      <article key={`listening-question-${question.number}`} className="readingQuestionCard listeningQuestionCard">
+                        <div className="readingQuestionCardTop">
+                          <div>
+                            <p className="readingQuestionNumber">Question {question.number}</p>
+                            <p className="readingQuestionPrompt">{question.prompt}</p>
+                          </div>
+                        </div>
+                        <div className="readingAnswerField">
+                          {renderListeningAnswerField(question)}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            </div>
+          )}
+
+          {listeningLabMode === 'practice' && listeningAttemptStage === 'report' && activeListeningExercise && (
+            <div className="readingReportWrap listeningReportWrap">
+              <div className="readingAttemptToolbar">
+                <div>
+                  <p className="sectionLabel">{activeListeningExercise.label}</p>
+                  <h3>{activeListeningExercise.title} Report</h3>
+                  <p className="meta">
+                    Score: {listeningReportItems.filter((item) => item.isCorrect).length}/{listeningReportItems.length}
+                  </p>
+                </div>
+                <div className="controls">
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      stopListeningPlayback()
+                      setListeningAttemptStage('bank')
+                    }}
+                  >
+                    Back to Bank
+                  </button>
+                  <button type="button" onClick={() => startListeningExercise(activeListeningExercise.id)}>
+                    Retry Exercise
+                  </button>
+                </div>
+              </div>
+
+              <div className="readingSummaryStrip">
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Accuracy</p>
+                  <strong>{listeningAccuracy}%</strong>
+                  <span>{listeningReportItems.filter((item) => item.isCorrect).length} correct answers</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Unanswered</p>
+                  <strong>{listeningUnansweredCount}</strong>
+                  <span>questions left blank</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Review focus</p>
+                  <strong>{listeningReportItems.find((item) => !item.isCorrect)?.number ? `Q${listeningReportItems.find((item) => !item.isCorrect)?.number}` : 'Strong set'}</strong>
+                  <span>look at the transcript evidence and paraphrase note</span>
+                </article>
+              </div>
+
+              <div className="listeningTranscriptReviewCard">
+                <p className="sectionLabel">Full Transcript</p>
+                <div className="listeningTranscriptReviewBody">
+                  {activeListeningExercise.audioScript.map((line, index) => (
+                    <p key={`listening-line-${index}`}>{line}</p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="readingReportList">
+                {listeningReportItems.map((item) => {
+                  const paraphraseEquation = buildListeningParaphraseEquation(item)
+                  return (
+                  <article key={`listening-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
+                    <div className="readingReportHeader">
+                      <div>
+                        <p className="readingQuestionNumber">Question {item.number}</p>
+                        <p className="readingQuestionPrompt">{item.prompt}</p>
+                      </div>
+                      <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
+                        {item.isCorrect ? 'Correct' : 'Wrong'}
+                      </span>
+                    </div>
+                    <p className="meta">Your answer: {item.userAnswer || 'No answer'}</p>
+                    <p className="meta">Correct answer: {item.correctAnswer}</p>
+                    {item.answerType === 'multiple-choice' && item.options?.length ? (
+                      <div className="listeningReportOptions">
+                        {item.options.map((option) => (
+                          <div key={`listening-option-${item.number}-${option.key}`} className={`listeningReportOption ${option.key === item.correctAnswer ? 'is-correct' : ''}`}>
+                            <strong>{option.key}</strong>
+                            <span>{option.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                    <div className="readingReportEvidence">
+                      <h4>Why?</h4>
+                      {paraphraseEquation && (
+                        <div className="listeningBuilderExamWordCheck">
+                          <p>Do you know this word?</p>
+                          <div className="listeningBuilderExamWordEquation">
+                            <span>{paraphraseEquation.passageKeyword}</span>
+                            <b>=</b>
+                            <span>{paraphraseEquation.questionKeyword}</span>
+                            <b>=</b>
+                            <span>{paraphraseEquation.thaiMeaning}</span>
+                          </div>
+                        </div>
+                      )}
+                      <p>{item.explanationThai}</p>
+                      <blockquote>{item.exactPortion}</blockquote>
+                    </div>
+                    {(item.paraphrasedVocabulary || paraphraseEquation) && (
+                      <div className="readingParaphraseCard">
+                        <p className="sectionLabel">Paraphrase link</p>
+                        {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
+                        <button
+                          type="button"
+                          className="saveNotebookBtn"
+                          onClick={() =>
+                            savePlanToNotebook({
+                              criterion: 'Listening Paraphrase',
+                              quote: `Q${item.number}: ${item.prompt}`,
+                              fix: item.paraphrasedVocabulary || item.correctAnswer,
+                              thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
+                              preferredSection: 'listening',
+                              successNotice: 'Added to notebook'
+                            })
+                          }
+                        >
+                          Add to Notebook
+                        </button>
+                      </div>
+                    )}
+                  </article>
+                )})}
+              </div>
+            </div>
+          )}
+
+          {listeningLabMode === 'builder' && (
+            <div className="listeningBuilderLayout">
+              <section className="listeningBuilderSidebar">
+                <div className="readingSummaryCard listeningBuilderIntroCard">
+                  <p className="sectionLabel">โหมดใหม่</p>
+                  <strong>Listening Paraphrase Drill</strong>
+                  <p className="meta">
+                    โหมดนี้เป็นอีกทางเลือกหนึ่งก่อนลงข้อจริง และแนะนำมากสำหรับคนที่ Listening ยังต่ำกว่า Band 6
+                  </p>
+                  <p className="meta">
+                    ฝั่งซ้ายคือ transcript ฝั่งขวาคือคำ/วลีในโจทย์ ให้ไฮไลต์ส่วนที่มีความหมายเท่ากัน ถ้าผิดจะลองใหม่ได้ 2 ครั้งก่อนเฉลย
+                  </p>
+                </div>
+                <div className="readingBankGrid listeningBuilderPackGrid">
+                  {visibleListeningVocabularyBuilderPacks.map((pack) => {
+                    const examSet = LISTENING_BUILDER_EXAM_SETS.find(
+                      (set) => set.bookNumber === pack.bookNumber && set.sectionNumber === pack.sectionNumber
+                    )
+                    const uploadedTestCount = examSet?.tests.length ?? pack.sectionTests.length
+                    const detailedCardCount =
+                      examSet?.tests.reduce((total, test) => total + test.tasks.length, 0) ?? pack.items.length
+
+                    return (
+                      <article key={pack.id} className={`readingBankCard listeningBuilderPackCard ${activeListeningBuilderPack?.id === pack.id ? 'active' : ''}`}>
+                        <p className="promptPill">Vocabulary Pack</p>
+                        <h3>{pack.title}</h3>
+                        <p className="meta">{pack.sectionNumber ? `Tests ${pack.testNumbers.map((num) => `Test ${num}`).join(', ')}` : 'Section pack'}</p>
+                        <p className="meta">
+                          {uploadedTestCount} tests uploaded · {detailedCardCount} detailed highlight cards
+                        </p>
+                        <div className="controls">
+                          <button
+                            type="button"
+                            onClick={() => openListeningVocabularyBuilderPack(pack.id)}
+                          >
+                            เปิดชุดนี้
+                          </button>
+                        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              </section>
+
+              {activeListeningBuilderPack && (
+                <section className="listeningBuilderStage">
+                  <div className="readingAttemptToolbar">
+                    <div>
+                      <p className="sectionLabel">{activeListeningBuilderPack.title}</p>
+                      {activeListeningBuilderItem ? (
+                        <>
+                          <h3>ข้อคำศัพท์ {listeningBuilderItemIndex + 1}/{activeListeningBuilderPack.items.length}</h3>
+                          <p className="meta">
+                            Test {activeListeningBuilderItem.testNumber || '-'} · Section {activeListeningBuilderItem.sectionNumber || '-'} · ชนิด paraphrase: {activeListeningBuilderItem.paraphraseType || 'mixed'} · Q{activeListeningBuilderItem.questionNumber}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <h3>Uploaded questions and vocab</h3>
+                          <p className="meta">
+                            {activeListeningBuilderPack.sectionTests.length} tests · {activeListeningBuilderPack.testNumbers.length ? activeListeningBuilderPack.testNumbers.map((num) => `Test ${num}`).join(', ') : 'No tests found yet'}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                    {activeListeningBuilderItem && (
+                      <div className="controls">
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() => goToListeningBuilderItem('prev')}
+                          disabled={listeningBuilderItemIndex === 0}
+                        >
+                          ข้อก่อนหน้า
+                        </button>
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() => goToListeningBuilderItem('next')}
+                          disabled={listeningBuilderItemIndex >= activeListeningBuilderPack.items.length - 1}
+                        >
+                          ข้อต่อไป
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {activeListeningBuilderItem && activeListeningBuilderTarget && activeListeningBuilderBridge ? (
+                    <div className="listeningBuilderBoard">
+                      <section className="listeningBuilderTranscriptPanel">
+                        <div className="readingPassageHeader">
+                          <div>
+                            <p className="sectionLabel">ฝั่งซ้าย · Audioscript</p>
+                            <h3>Highlight the matching transcript portion</h3>
+                          </div>
+                          <span className="bandPill">{activeListeningBuilderItem.answer}</span>
+                        </div>
+                        <p className="meta">คลิกคำแรกก่อน แล้วถ้าส่วนที่ตรงกันมีหลายคำ ให้คลิกอีกครั้งที่คำสุดท้ายเพื่อเลือกทั้งช่วง</p>
+                        <div className="listeningBuilderTranscriptBox">
+                          {activeListeningBuilderTranscriptTokens.map((token, index) => {
+                            const selected =
+                              listeningBuilderSelectionRange &&
+                              index >= listeningBuilderSelectionRange.start &&
+                              index <= listeningBuilderSelectionRange.end
+                            const solved =
+                              (listeningBuilderResolvedState[activeListeningBuilderItem.id] === 'correct' ||
+                                listeningBuilderResolvedState[activeListeningBuilderItem.id] === 'revealed') &&
+                              index >= activeListeningBuilderTarget.start &&
+                              index <= activeListeningBuilderTarget.end
+                            return (
+                              <button
+                                key={`${activeListeningBuilderItem.id}-token-${index}`}
+                                type="button"
+                                className={`listeningBuilderToken ${selected ? 'is-selected' : ''} ${solved ? 'is-solved' : ''}`}
+                                onClick={() => updateListeningBuilderSelection(index)}
+                              >
+                                {token}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </section>
+
+                      <section className="listeningBuilderQuestionPanel">
+                        <div className="readingQuestionsHeader">
+                          <div>
+                            <p className="sectionLabel">ฝั่งขวา · โจทย์</p>
+                            <h3>{activeListeningBuilderItem.questionPrompt}</h3>
+                          </div>
+                          <span className="bandPill">{activeListeningBuilderItem.book}</span>
+                        </div>
+                        <div className="listeningBuilderQuestionCard">
+                          <div className="readingHintBox">
+                            <strong>Question word / phrase:</strong> {activeListeningBuilderBridge.questionText}
+                          </div>
+                          <p>
+                            ใน transcript ฝั่งซ้าย ส่วนไหนมีความหมายเท่ากับคำ/วลีที่ไฮไลต์ในโจทย์ด้านบน?
+                          </p>
+                          {activeListeningBuilderItem.paraphraseLogic && (
+                            <div className="readingHintBox">
+                              <strong>Hint:</strong> {activeListeningBuilderItem.paraphraseLogic}
+                            </div>
+                          )}
+                          <div className="controls listeningBuilderActionRow">
+                            <button
+                              type="button"
+                              onClick={confirmListeningBuilderSelection}
+                              disabled={!listeningBuilderSelectionRange}
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary"
+                              onClick={resetListeningBuilderCardState}
+                            >
+                              ล้างการเลือก
+                            </button>
+                          </div>
+                          {renderListeningBuilderFeedback()}
+                        </div>
+                      </section>
+                    </div>
+                  ) : (
+                    <div className="readingBankGrid">
+                      {activeListeningBuilderPack.sectionTests.map((test) => (
+                        <article key={test.id} className="readingQuestionCard">
+                          <p className="promptPill">Test {test.testNumber}</p>
+                          <h3>{test.title}</h3>
+                          <p className="meta">Question coverage</p>
+                          <ul>
+                            {test.questionCoverage.map((coverageLine) => (
+                              <li key={`${test.id}-coverage-${coverageLine}`}>{coverageLine}</li>
+                            ))}
+                          </ul>
+                          <p className="meta">Answer key / bank</p>
+                          <p>{test.answerLines.join(' · ')}</p>
+                          <p className="meta">Vocab focus</p>
+                          <p>{test.vocabFocus.join(' · ')}</p>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              )}
+            </div>
+          )}
+        </section>
+        ) : (
+          <section className="panel full">
+            <div className="emptyNotebook">
+              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
+              <p>ตอนนี้เปิดให้เฉพาะ student และ admin</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
+      ) : activePage === 'listening_foundation_exam' ? (
+        canAccessListening ? (
+          <section className="panel full listeningFoundationPage listeningFoundationExamPage">
+            {activeListeningFoundationSet && activeListeningFoundationQuestion ? (
+              <>
+                <section className="listeningFoundationMission">
+                  <div>
+                    <span>Listening Foundation Drill</span>
+                    <h2>{activeListeningFoundationSet.title}</h2>
+                    <p>Read the question on the right, highlight evidence in the script on the left, then answer.</p>
+                  </div>
+                  <div className="listeningFoundationProgress">
+                    <span>Progress</span>
+                    <strong>
+                      {listeningFoundationCompletedCount}/{activeListeningFoundationSet.questions.length}
+                    </strong>
+                  </div>
+                </section>
+
+                <div className="listeningFoundationShell">
+                  <div className="listeningFoundationGrid">
+                    <section className="listeningFoundationScriptPane">
+                      <div className="listeningFoundationAudioCompact">
+                      <div className="listeningFoundationAudioTop">
+                        <span>Section {activeListeningFoundationSet.section}</span>
+                        <span>{activeListeningFoundationSet.audioUrl ? 'Audio ready' : 'Audio not uploaded'}</span>
+                      </div>
+                      <div className="listeningFoundationAudioBody">
+                        <button type="button" aria-label="Play audio" disabled={!activeListeningFoundationSet.audioUrl}>
+                          ▶
+                        </button>
+                        <div>
+                          <div className="listeningFoundationAudioTrack">
+                            <span />
+                          </div>
+                          <p>{activeListeningFoundationSet.title}</p>
+                        </div>
+                      </div>
+                      </div>
+
+                      <div className="listeningScriptReader">
+                        <div className="listeningScriptReaderTop">
+                          <h4>Audio Script</h4>
+                          <div className="listeningScriptReaderModes" role="tablist" aria-label="Script reading mode">
+                            <button
+                              type="button"
+                              role="tab"
+                              aria-selected={listeningFoundationScriptMode === 'focus'}
+                              className={listeningFoundationScriptMode === 'focus' ? 'active' : ''}
+                              onClick={() => setListeningFoundationScriptMode('focus')}
+                            >
+                              One turn
+                            </button>
+                            <button
+                              type="button"
+                              role="tab"
+                              aria-selected={listeningFoundationScriptMode === 'cards'}
+                              className={listeningFoundationScriptMode === 'cards' ? 'active' : ''}
+                              onClick={() => setListeningFoundationScriptMode('cards')}
+                            >
+                              All turns
+                            </button>
+                            <button
+                              type="button"
+                              className={listeningFoundationScriptComfort ? 'active' : ''}
+                              aria-pressed={listeningFoundationScriptComfort}
+                              onClick={() => setListeningFoundationScriptComfort((current) => !current)}
+                            >
+                              Comfort text
+                            </button>
+                          </div>
+                        </div>
+
+                        {activeListeningFoundationQuestion && !listeningFoundationEvidenceCorrect && (
+                          <div className="listeningScriptScanHint" aria-live="polite">
+                            <span className="listeningScriptScanLabel">Scan for ideas like</span>
+                            <strong>{activeListeningFoundationQuestion.passageKeyword}</strong>
+                            <span className="listeningScriptScanArrow">→</span>
+                            <em>{activeListeningFoundationQuestion.questionKeyword}</em>
+                          </div>
+                        )}
+
+                        {listeningFoundationScriptMode === 'focus' &&
+                          activeListeningFoundationScriptSegments.length > 1 && (
+                            <div className="listeningScriptChunkNav">
+                              <button
+                                type="button"
+                                className="secondary"
+                                disabled={activeListeningFoundationScriptChunk === 0}
+                                onClick={() => shiftListeningFoundationScriptChunk(-1)}
+                                aria-label="Previous turn"
+                              >
+                                ← Prev
+                              </button>
+                              <div className="listeningScriptChunkProgress" aria-hidden="true">
+                                {activeListeningFoundationScriptSegments.map((segment, index) => (
+                                  <button
+                                    key={segment.id}
+                                    type="button"
+                                    className={index === activeListeningFoundationScriptChunk ? 'active' : ''}
+                                    onClick={() => setListeningFoundationScriptChunk(index)}
+                                    aria-label={`Go to turn ${index + 1}`}
+                                  />
+                                ))}
+                              </div>
+                              <span className="listeningScriptChunkLabel">
+                                Turn {activeListeningFoundationScriptChunk + 1} of{' '}
+                                {activeListeningFoundationScriptSegments.length}
+                              </span>
+                              <button
+                                type="button"
+                                className="secondary"
+                                disabled={
+                                  activeListeningFoundationScriptChunk >=
+                                  activeListeningFoundationScriptSegments.length - 1
+                                }
+                                onClick={() => shiftListeningFoundationScriptChunk(1)}
+                                aria-label="Next turn"
+                              >
+                                Next →
+                              </button>
+                            </div>
+                          )}
+
+                        <div
+                          ref={listeningFoundationScriptBodyRef}
+                          className={`listeningFoundationPassage listeningScriptReaderBody script-scroll ${
+                            listeningBuilderTranscriptShake ? 'is-shaking' : ''
+                          } ${listeningFoundationScriptComfort ? 'is-comfort' : ''} ${
+                            listeningFoundationScriptMode === 'focus' ? 'is-focus-mode' : 'is-cards-mode'
+                          }`}
+                          tabIndex={0}
+                          onKeyDown={handleListeningFoundationScriptKeyDown}
+                        >
+                        {listeningFoundationScriptMode === 'focus' ? (
+                            activeListeningFoundationScriptSegments.length > 0 ? (
+                              renderListeningScriptTurn(
+                                activeListeningFoundationScriptSegments[activeListeningFoundationScriptChunk],
+                                activeListeningFoundationScriptChunk
+                              )
+                            ) : (
+                              <p
+                                className="listeningScriptTurnBody"
+                                onMouseUp={(event) => {
+                                  event.stopPropagation()
+                                  handleListeningFoundationPassageMouseUp()
+                                }}
+                              >
+                                {activeListeningFoundationQuestion.passage}
+                              </p>
+                            )
+                          ) : (
+                            activeListeningFoundationScriptSegments.map((segment, index) =>
+                              renderListeningScriptTurn(segment, index)
+                            )
+                          )}
+                        </div>
+
+                        <p className="listeningScriptReaderHint meta">
+                          {listeningFoundationScriptMode === 'focus'
+                            ? 'Read one turn at a time. Highlight the phrase that matches the question — exact match or at least half of the evidence counts.'
+                            : 'Each box is one speaker turn. Highlight the matching phrase (exact or ≥50% of the evidence).'}
+                        </p>
+                      </div>
+
+                      <p className={listeningFoundationEvidenceCorrect ? 'foundationStatusCorrect' : 'foundationStatus'}>
+                        {listeningFoundationEvidenceCorrect
+                          ? 'Evidence accepted. Choose your answer on the right.'
+                          : listeningFoundationEvidence
+                            ? listeningFoundationFeedback
+                            : 'Highlight the exact phrase in the script that paraphrases the question.'}
+                      </p>
+                    </section>
+
+                    <section className="listeningFoundationQuestionPane">
+                      <header>
+                        <div>
+                          <span>Question {activeListeningFoundationQuestion.number}</span>
+                          <h3>{activeListeningFoundationQuestion.question}</h3>
+                        </div>
+                        <strong>
+                          {listeningFoundationQuestionIndex + 1}/{activeListeningFoundationSet.questions.length}
+                        </strong>
+                      </header>
+
+                      <div className="listeningFoundationQuestionBody">
+                      <div className={`listeningFoundationOptions ${listeningFoundationEvidenceCorrect ? 'unlocked' : 'locked'}`}>
+                        <h4>Choose the answer</h4>
+                        {!listeningFoundationEvidenceCorrect && (
+                          <p>Options are locked until you highlight the evidence in the script.</p>
+                        )}
+                        {activeListeningFoundationQuestion.options.map((option) => (
+                          <button
+                            key={`${activeListeningFoundationQuestion.id}-${option.key}`}
+                            type="button"
+                            disabled={!listeningFoundationEvidenceCorrect}
+                            onClick={() => chooseListeningFoundationAnswer(option.key)}
+                          >
+                            <strong>{option.key}</strong>
+                            <span>{option.text}</span>
+                          </button>
+                        ))}
+                      </div>
+
+                      {listeningFoundationFeedback && (
+                        <div className={listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct' ? 'foundationFeedbackCorrect' : 'foundationFeedback'}>
+                          {listeningFoundationFeedback}
+                        </div>
+                      )}
+
+                      {listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct' && (
+                        <div className="listeningFoundationWordCheck">
+                          <h5>Paraphrase bridge</h5>
+                          <p className="listeningFoundationWordEquation">
+                            <span title="In the script">{activeListeningFoundationQuestion.passageKeyword}</span>
+                            <b>=</b>
+                            <span title="In the question">{activeListeningFoundationQuestion.questionKeyword}</span>
+                            <b>→</b>
+                            <span title="Thai meaning">{activeListeningFoundationQuestion.thaiMeaning}</span>
+                          </p>
+                          <small>{activeListeningFoundationQuestion.explanationThai}</small>
+                          <div>
+                            <button type="button" className="secondary">
+                              Yes, I knew it
+                            </button>
+                            <button type="button" onClick={saveListeningFoundationQuestionToNotebook}>
+                              Save to Notebook
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      </div>
+
+                      <div className="listeningFoundationNav">
+                        {listeningFoundationAnswerState[activeListeningFoundationQuestion.id] !== 'correct' && (
+                          <p className="listeningFoundationNavHint">
+                            Pick the correct option to unlock <strong>Next Question</strong>.
+                          </p>
+                        )}
+                        <div className="listeningFoundationNavButtons">
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() => {
+                            setListeningLabMode('foundation')
+                            setActivePage('listening')
+                          }}
+                        >
+                          Back to Exam Bank
+                        </button>
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex - 1)}
+                          disabled={listeningFoundationQuestionIndex === 0}
+                        >
+                          Previous
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex + 1)}
+                          disabled={
+                            listeningFoundationQuestionIndex >= activeListeningFoundationSet.questions.length - 1 ||
+                            listeningFoundationAnswerState[activeListeningFoundationQuestion.id] !== 'correct'
+                          }
+                        >
+                          Next Question
+                        </button>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="emptyNotebook">
+                <p>No Listening Foundation exam is selected yet.</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setListeningLabMode('foundation')
+                    setActivePage('listening')
+                  }}
+                >
+                  Back to Exam Bank
+                </button>
+              </div>
+            )}
+          </section>
+        ) : (
+          <section className="panel full">
+            <div className="emptyNotebook">
+              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
+      ) : activePage === 'listening_builder_exam' ? (
+        canAccessListening ? (
+          <section className="panel full listeningBuilderExamPage">
+            <div className="listeningBuilderExamShell">
+              <header className="listeningBuilderExamHero">
+                <div className="listeningBuilderExamHeroTop">
+                  <div className="listeningBuilderExamBrand">
+                    <div className="listeningBuilderExamBrandIcon">🎧</div>
+                    <div>
+                      <h2>Vocab-First Trainer</h2>
+                      <p>Read it. Understand it. Then hear it.</p>
+                    </div>
+                  </div>
+                  <div className="listeningBuilderExamBadge">
+                    {activeListeningBuilderPack?.sectionNumber ? `IELTS Section ${activeListeningBuilderPack.sectionNumber}` : 'Listening Builder'}
+                  </div>
+                </div>
+                <div className="listeningBuilderExamTip">
+                  <strong>IELTS strategy:</strong> read the question, highlight evidence in the script on the left, then choose the correct answer on the right.
+                </div>
+              </header>
+
+              <div className="listeningBuilderExamMain">
+                {activeListeningBuilderExamSet && activeListeningBuilderExamTest && activeListeningBuilderExamTask ? (
+                  <div className="listeningBuilderExamGrid">
+                    <section className={`listeningBuilderExamPassage ${listeningBuilderTranscriptShake ? 'is-shaking' : ''}`}>
+                      <div className="listeningBuilderExamPassageTop">
+                        <div className="listeningBuilderExamPassageMeta">
+                          <div className="listeningBuilderExamMiniLabel">Audio Script</div>
+                          <span>
+                            Cambridge {activeListeningBuilderExamSet.bookNumber} • Section {activeListeningBuilderExamSet.sectionNumber}
+                          </span>
+                        </div>
+                        <div className="listeningBuilderExamTestPill">Test {activeListeningBuilderExamTest.testNumber}</div>
+                      </div>
+
+                      <div className="listeningBuilderExamPassageIntro">
+                        <h3>Highlight the matching word or phrase</h3>
+                      </div>
+
+                      <div className="listeningBuilderExamPassageBody script-scroll" onMouseUp={handleListeningBuilderTranscriptMouseUp}>
+                        {renderListeningBuilderExamTranscript()}
+                      </div>
+
+                      <div
+                        className={`listeningBuilderExamHelperBar ${
+                          listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] ? 'is-success' : ''
+                        }`}
+                      >
+                        {listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id]
+                          ? 'Excellent! Review the paraphrase bridge on the right.'
+                          : isListeningBuilderExamEvidenceUnlocked(activeListeningBuilderExamTask.id)
+                            ? 'Evidence accepted. Choose the correct answer on the right.'
+                            : listeningBuilderExamFeedback || 'Highlight the exact evidence in the script first.'}
+                      </div>
+                    </section>
+
+                    <section className="listeningBuilderExamQuestionPane">
+                      <div className="listeningBuilderExamQuestionTop">
+                        <div>
+                          <button
+                            type="button"
+                            className="listeningBuilderExamBackButton"
+                            onClick={openListeningLanding}
+                          >
+                            Back to Listening Choices
+                          </button>
+                          <h2>{activeListeningBuilderExamTest.title}</h2>
+                        </div>
+                        <div className="listeningBuilderExamScoreCard">
+                          <div className="label">Score</div>
+                          <div className="value">
+                            {activeListeningBuilderExamCompletedCount}
+                            <span>/{activeListeningBuilderExamTest.tasks.length}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="listeningBuilderExamQuestionIntro">
+                        <p>
+                          Read each question, highlight the paraphrased evidence in the script on the left, then choose the answer to unlock the bridge.
+                        </p>
+                        <div className="listeningBuilderExamTabs">
+                          {activeListeningBuilderExamSet.tests.map((test) => (
+                            <button
+                              key={test.id}
+                              type="button"
+                              className={activeListeningBuilderExamTest.id === test.id ? 'active' : ''}
+                              onClick={() => {
+                                setSelectedListeningBuilderExamTestId(test.id)
+                                resetListeningBuilderExamDrill()
+                              }}
+                            >
+                              Test {test.testNumber}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="listeningBuilderExamTaskScroller script-scroll">
+                        {activeListeningBuilderExamTest.tasks.map((task, index) => {
+                          const parsedQuestion = parseListeningBuilderExamQuestion(task.questionText)
+                          const isActive = task.id === activeListeningBuilderExamTask.id
+                          const attempts = listeningBuilderAttempts[task.id] || 0
+                          const evidenceUnlocked = isListeningBuilderExamEvidenceUnlocked(task.id)
+                          const isCompleted = listeningBuilderExamAnswerState[task.id] === 'correct'
+                          const taskFeedback = isActive ? listeningBuilderExamFeedback : ''
+                          return (
+                            <article
+                              key={task.id}
+                              className={`listeningBuilderExamTaskCard ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
+                            >
+                              <button
+                                type="button"
+                                className="listeningBuilderExamTaskHeaderBtn"
+                                onClick={() => {
+                                  setListeningBuilderItemIndex(index)
+                                  resetListeningBuilderCardState()
+                                }}
+                              >
+                                <span>Q{task.questionNumber}</span>
+                                <strong>{parsedQuestion.stem}</strong>
+                              </button>
+
+                              {(isActive || isCompleted) && (
+                                <div className="listeningBuilderExamTaskContent">
+                                  <div className="listeningBuilderExamPhraseBox">
+                                    <strong>Question word / phrase:</strong> {task.questionWordPhrase}
+                                  </div>
+
+                                  {!isCompleted && (
+                                    <div className="listeningBuilderExamInstruction">
+                                      {evidenceUnlocked
+                                        ? 'Evidence accepted. Choose the correct answer below.'
+                                        : `Highlight the script phrase that means "${task.questionWordPhrase}".`}
+                                    </div>
+                                  )}
+
+                                  {parsedQuestion.optionLines.length > 0 && (
+                                    <div className="listeningBuilderExamOptionList">
+                                      {parsedQuestion.optionLines.map((optionLine) => {
+                                        const option = parseListeningBuilderExamOptionLine(optionLine)
+                                        if (!option) return null
+                                        return (
+                                          <button
+                                            key={`${task.id}-${optionLine}`}
+                                            type="button"
+                                            className={`listeningBuilderExamOption ${evidenceUnlocked ? 'is-unlocked' : 'is-locked'}`}
+                                            disabled={!evidenceUnlocked || isCompleted}
+                                            onClick={() => chooseListeningBuilderExamAnswer(task, option.key)}
+                                          >
+                                            {optionLine}
+                                          </button>
+                                        )
+                                      })}
+                                    </div>
+                                  )}
+
+                                  {taskFeedback && !isCompleted && (
+                                    <div className="listeningBuilderExamTryAgain">{taskFeedback}</div>
+                                  )}
+
+                                  {attempts > 0 && !isCompleted && !evidenceUnlocked && (
+                                    <div className="listeningBuilderExamTryAgain">
+                                      {LISTENING_HIGHLIGHT_WRONG_THAI} · {attempts}/3
+                                    </div>
+                                  )}
+
+                                  {isCompleted && (
+                                    <>
+                                      <div className="listeningBuilderExamWordCheck">
+                                        <p>Paraphrase bridge</p>
+                                        <div className="listeningBuilderExamWordEquation">
+                                          <span title="In the script">{task.targetText}</span>
+                                          <b>=</b>
+                                          <span title="In the question">{task.questionWordPhrase}</span>
+                                          <b>→</b>
+                                          <span title="Thai meaning">{task.thaiMeaning}</span>
+                                        </div>
+                                      </div>
+                                      <p className="meta">{task.explanationThai}</p>
+                                      <div className="controls">
+                                        <button type="button" onClick={() => saveListeningBuilderExamTaskToNotebook(task)}>
+                                          Add to Notebook (#reading)
+                                        </button>
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </article>
+                          )
+                        })}
+                      </div>
+
+                      {activeListeningBuilderExamCompletedCount === activeListeningBuilderExamTest.tasks.length && (
+                        <div className="listeningBuilderExamSuccess">
+                          <h3>Section Complete!</h3>
+                          <p>You found the evidence and answered the vocabulary drill correctly.</p>
+                          <button type="button" onClick={resetListeningBuilderExamDrill}>
+                            Restart Drill
+                          </button>
+                        </div>
+                      )}
+                    </section>
+                  </div>
+                ) : activeListeningBuilderPack && activeListeningBuilderItem && activeListeningBuilderTarget && activeListeningBuilderBridge ? (
+                  <div className="listeningBuilderExamWorkspace">
+                    <section className={`listeningBuilderExamScript ${listeningBuilderTranscriptShake ? 'is-shaking' : ''}`}>
+                      <div className="listeningBuilderExamSectionHead">
+                        <div>
+                          <p className="sectionLabel">Audio Script</p>
+                          <h3>Highlight the matching word or phrase</h3>
+                        </div>
+                        <span className="bandPill">{activeListeningBuilderItem.answer}</span>
+                      </div>
+                      <div className="listeningBuilderExamScriptBody" onMouseUp={handleListeningBuilderTranscriptMouseUp}>
+                        {renderListeningBuilderExamTranscript()}
+                      </div>
+                      <div className={`listeningBuilderExamHelper ${listeningBuilderAttempts[activeListeningBuilderItem.id] > 0 ? 'is-error' : ''}`}>
+                        {listeningBuilderResolvedState[activeListeningBuilderItem.id]
+                          ? 'Correct portion unlocked. Review the bridge on the right.'
+                          : 'Use your mouse to highlight the exact transcript portion that matches the question phrase.'}
+                      </div>
+                    </section>
+
+                    <section className="listeningBuilderExamTasks">
+                      <div className="listeningBuilderExamTaskHeader">
+                        <div>
+                          <h3>
+                            Part {activeListeningBuilderItem.sectionNumber || '-'} · Test {activeListeningBuilderItem.testNumber || '-'}
+                          </h3>
+                          <p className="meta">Click through the cards like an exam set. Only the active card stays open.</p>
+                        </div>
+                      </div>
+
+                      <div className="listeningBuilderExamTaskList">
+                        {activeListeningBuilderPack.items.map((item, index) => {
+                          const bridge = resolveListeningBuilderBridge(item)
+                          const target = resolveListeningBuilderSelectionTarget(item)
+                          const isActive = item.id === activeListeningBuilderItem.id
+                          const resolved = listeningBuilderResolvedState[item.id]
+                          const attempts = listeningBuilderAttempts[item.id] || 0
+                          return (
+                            <article
+                              key={item.id}
+                              className={`listeningBuilderExamTaskCard ${isActive ? 'is-active' : ''} ${resolved === 'correct' ? 'is-completed' : ''}`}
+                            >
+                              <button
+                                type="button"
+                                className="listeningBuilderExamTaskButton"
+                                onClick={() => {
+                                  setListeningBuilderItemIndex(index)
+                                  resetListeningBuilderCardState()
+                                }}
+                              >
+                                <span>Q{item.questionNumber}</span>
+                                <strong>{item.questionPrompt}</strong>
+                              </button>
+
+                              {(isActive || resolved) && (
+                                <div className="listeningBuilderExamTaskBody">
+                                  <div className="readingHintBox">
+                                    <strong>Question word / phrase:</strong> {bridge.questionText}
+                                  </div>
+                                  {!resolved && (
+                                    <p className="meta">
+                                      Highlight the matching expression in the script on the left. Wrong answers reveal after 3 tries.
+                                    </p>
+                                  )}
+                                  {resolved === 'correct' && (
+                                    <div className="listeningBuilderExamBridgeGrid">
+                                      <div>
+                                        <span>Question</span>
+                                        <strong>{bridge.questionText}</strong>
+                                      </div>
+                                      <div>
+                                        <span>Transcript</span>
+                                        <strong>{target.text}</strong>
+                                      </div>
+                                      <div>
+                                        <span>Thai</span>
+                                        <strong>{item.thaiMeaning || item.thaiExplanation || '-'}</strong>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {resolved === 'revealed' && (
+                                    <div className="listeningBuilderExamBridgeGrid">
+                                      <div>
+                                        <span>Question</span>
+                                        <strong>{bridge.questionText}</strong>
+                                      </div>
+                                      <div>
+                                        <span>Transcript</span>
+                                        <strong>{target.text}</strong>
+                                      </div>
+                                      <div>
+                                        <span>Thai</span>
+                                        <strong>{item.thaiMeaning || item.thaiExplanation || '-'}</strong>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {!resolved && attempts > 0 && (
+                                    <div className="listeningBuilderExamTryAgain">
+                                      Try again · {attempts}/3
+                                    </div>
+                                  )}
+                                  {resolved && (
+                                    <div className="controls">
+                                      <button type="button" onClick={() => saveListeningBuilderItemToNotebook(item)}>
+                                        Add to Notebook (#reading)
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </article>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  </div>
+                ) : (
+                  <div className="emptyNotebook">
+                    <p>No detailed exam card is ready for this pack yet.</p>
+                    <button type="button" onClick={openListeningLanding}>
+                      Back to Listening Choices
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className="panel full">
+            <div className="emptyNotebook">
+              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
       ) : activePage === 'reading' ? (
         <section className="panel full readingPage">
           <div className="readingPageHeader">
@@ -6755,6 +13136,9 @@ function App() {
               <h2>Reading Exam Bank</h2>
               <p>Read the passage on the left, answer questions on the right, click hints to see the exact evidence, and save useful paraphrases to your notebook.</p>
             </div>
+          </div>
+
+          {readingWorkspaceMode === 'bank' && (
             <div className="readingCategoryTabs">
               {(Object.entries(READING_CATEGORY_LABELS) as Array<[ReadingBankCategory, string]>).map(([key, label]) => (
                 <button
@@ -6770,9 +13154,9 @@ function App() {
                 </button>
               ))}
             </div>
-          </div>
+          )}
 
-          {readingAttemptStage === 'bank' && (
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && (
             <>
               {readingExamError && <p className="error">{readingExamError}</p>}
               {filteredReadingExams.length === 0 ? (
@@ -6807,26 +13191,585 @@ function App() {
                 </div>
               ) : (
                 <div className="readingBankGrid">
-                  {filteredReadingExams.map((exam) => (
+                  {filteredReadingExams.map((exam) => {
+                    const exerciseMeta = getReadingExerciseMeta(exam.id)
+                    return (
                     <article key={exam.id} className="readingBankCard">
-                      <p className="promptPill">{READING_CATEGORY_LABELS[exam.category]}</p>
+                      <p className="promptPill">{exerciseMeta?.label || READING_CATEGORY_LABELS[exam.category]}</p>
                       <h3>{exam.title}</h3>
                       <p className="meta">
                         {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
                       </p>
+                      {exerciseMeta && (
+                        <div className="readingExerciseMeta">
+                          <span>{exerciseMeta.summary}</span>
+                          <span>{exerciseMeta.level}</span>
+                          <span>{exerciseMeta.duration}</span>
+                        </div>
+                      )}
+                      {readingAttemptByExamId[exam.id] && (
+                        <div className="adminWorkflowCard">
+                          <p className="sectionLabel">Latest Score</p>
+                          <strong>
+                            {readingAttemptByExamId[exam.id].correctCount}/{readingAttemptByExamId[exam.id].totalQuestions} ({readingAttemptByExamId[exam.id].accuracy}%)
+                          </strong>
+                          <p className="meta">
+                            {readingAttemptByExamId[exam.id].wrongCount} wrong · {new Date(readingAttemptByExamId[exam.id].completedAt).toLocaleString()}
+                          </p>
+                        </div>
+                      )}
                       <div className="controls">
                         <button type="button" onClick={() => startReadingExam(exam.id)}>
-                          Open Exam
+                          {readingAttemptByExamId[exam.id] ? 'Retry Exam' : 'Open Exam'}
                         </button>
+                        {readingAttemptByExamId[exam.id] && (
+                          <button type="button" className="secondary" onClick={() => openReadingReview(exam.id)}>
+                            Review Mistakes
+                          </button>
+                        )}
                       </div>
                     </article>
-                  ))}
+                  )})}
                 </div>
               )}
             </>
           )}
 
-          {readingAttemptStage === 'exam' && activeReadingExam && activeReadingPassage && (
+          {readingWorkspaceMode === 'pdoy' && (
+            <>
+              {!activeReadingPdoyLesson || !activeReadingPdoyExam || !activeReadingPdoyPassage || !activeReadingPdoyQuestion ? (
+                <div className="emptyNotebook">
+                  <p>ยังไม่มีบทเรียน Reading with P'Doy ที่รองรับในชุดนี้</p>
+                  <p>ตอนนี้เริ่มได้จากข้อเติมคำ, TRUE / FALSE / NOT GIVEN, YES / NO / NOT GIVEN และ Multiple Choice แบบคำตอบเดียวก่อนครับ</p>
+                </div>
+              ) : !readingPdoySessionActive ? (
+                <div className="readingPdoyBank">
+                  <div className="readingSummaryStrip">
+                    <article className="readingSummaryCard">
+                      <p className="sectionLabel">ตอนนี้รองรับ</p>
+                      <strong>{readingPdoySupportedQuestionCount}</strong>
+                      <span>คำถามแบบโค้ชทีละขั้น</span>
+                    </article>
+                    <article className="readingSummaryCard">
+                      <p className="sectionLabel">วิธีเรียน</p>
+                      <strong>ทำไปพร้อมกัน</strong>
+                      <span>หา evidence, เทียบความหมาย, แล้วค่อยตอบ</span>
+                    </article>
+                    <article className="readingSummaryCard">
+                      <p className="sectionLabel">ลำดับถัดไป</p>
+                      <strong>Fill / Matching</strong>
+                      <span>เดี๋ยวจะต่อด้วย flow โค้ชแบบเดียวกัน</span>
+                    </article>
+                  </div>
+
+                  <div className="readingBankGrid">
+                    {readingPdoyLessons.map((lesson) => {
+                      const exerciseMeta = getReadingExerciseMeta(lesson.examId)
+                      return (
+                      <article key={lesson.id} className="readingBankCard">
+                        <p className="sectionLabel">Reading with P'Doy</p>
+                        <h3>{lesson.examTitle}</h3>
+                        <p className="meta">
+                          Passage {lesson.passageNumber}: {lesson.passageTitle}
+                        </p>
+                        <p className="meta">{READING_PDOY_LESSON_LABELS[lesson.lessonType]} · {lesson.questions.length} ข้อ</p>
+                        {exerciseMeta && (
+                          <div className="readingExerciseMeta">
+                            <span>{exerciseMeta.label}</span>
+                            <span>{exerciseMeta.level}</span>
+                            <span>{exerciseMeta.duration}</span>
+                          </div>
+                        )}
+                        <button type="button" className="readingActionBtn readingActionBtn-primary" onClick={() => startReadingPdoyLesson(lesson.id)}>
+                          เริ่มบทเรียนนี้
+                        </button>
+                      </article>
+                    )})}
+                  </div>
+                </div>
+              ) : (
+                <div className="readingPdoyLessonWrap">
+                  <div className="readingAttemptToolbar">
+                    <div>
+                      <p className="sectionLabel">Reading with P'Doy</p>
+                      <h3>{activeReadingPdoyExam.title}</h3>
+                      <p className="meta">
+                        {READING_PDOY_LESSON_LABELS[activeReadingPdoyLesson.lessonType]} · ข้อจริง {activeReadingPdoyQuestion.number} · ด่าน {readingPdoyQuestionIndex + 1}/{activeReadingPdoyLesson.questions.length}
+                      </p>
+                    </div>
+                    <div className="readingPdoyGameHud" aria-label="Reading with P'Doy progress">
+                      <div className="readingPdoyGameHudTop">
+                        <strong>ด่าน {readingPdoyQuestionIndex + 1}/{activeReadingPdoyLesson.questions.length}</strong>
+                        <span>
+                          {readingPdoyStep === 'intro'
+                            ? 'เริ่มจับทาง'
+                            : readingPdoyStep === 'evidence'
+                              ? 'หา evidence'
+                              : readingPdoyStep === 'decide'
+                                ? 'ตัดสินคำตอบ'
+                                : readingPdoyStep === 'result'
+                                  ? 'สรุปเหตุผล'
+                                  : 'จบบทเรียน'}
+                        </span>
+                      </div>
+                      <div className="readingPdoyGameMeter" aria-hidden="true">
+                        <span
+                          style={{
+                            width: `${Math.max(
+                              ((readingPdoyQuestionIndex +
+                                (readingPdoyStep === 'complete'
+                                  ? 1
+                                  : readingPdoyStep === 'result'
+                                    ? 0.96
+                                    : readingPdoyStep === 'decide'
+                                      ? 0.82
+                                      : readingPdoyStep === 'evidence'
+                                        ? 0.56
+                                        : 0.26)) /
+                                Math.max(activeReadingPdoyLesson.questions.length, 1)) *
+                                100,
+                              8
+                            )}%`
+                          }}
+                        />
+                      </div>
+                      <p className="meta">ออกเมื่อไรก็ได้ ระบบจำความคืบหน้าให้</p>
+                    </div>
+                    <div className="controls">
+                      <button
+                        type="button"
+                        className="readingActionBtn readingActionBtn-secondary"
+                        onClick={() => {
+                          setReadingPdoySessionActive(false)
+                          setReadingPdoyStep('intro')
+                          setReadingPdoyFeedback('')
+                        }}
+                      >
+                        กลับไปเลือกบทเรียน
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="readingExamLayout readingExamLayout-pdoy">
+                    <section className="readingPassagePanel readingPassagePanel-pdoy readingPassagePanel-pdoyTutorial" ref={readingPassagePanelRef}>
+                      <div className="readingPassageHeader">
+                        <div>
+                          <p className="sectionLabel">Passage {activeReadingPdoyPassage.number}</p>
+                          <h3>{activeReadingPdoyPassage.title}</h3>
+                        </div>
+                        <div className="readingHintBox">
+                          <strong>P'Doy focus:</strong> ดูความหมายเป็นหลัก ไม่ใช่จับแค่ keyword
+                        </div>
+                      </div>
+
+                      <div className="readingPassageBody" ref={readingPassageBodyRef}>
+                        {activeReadingPdoyPassage.bodyParagraphs.map((paragraph, index) => (
+                          <div
+                            key={`pdoy-paragraph-${index}`}
+                            className={`readingCoachParagraphWrap ${
+                              activeReadingPdoyFillHotspots.some((spot) => spot.paragraphIndex === index) ? 'has-hotspot' : ''
+                            }`}
+                          >
+                            {activeReadingPdoyFillHotspots
+                              .filter((spot) => spot.paragraphIndex === index)
+                              .map((spot, hotspotIndex) => (
+                                <button
+                                  key={`${spot.id}-${hotspotIndex}`}
+                                  type="button"
+                                  className={`readingPassageHotspot ${readingPdoyEvidenceInput === spot.id ? 'active' : ''} ${
+                                    activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank' && readingPdoyStep === 'evidence'
+                                      ? 'is-clickable'
+                                      : ''
+                                  }`}
+                                  onClick={() => {
+                                    if (activeReadingPdoyLesson?.lessonType !== 'fill-in-the-blank' || readingPdoyStep !== 'evidence') return
+                                    setReadingPdoyEvidenceInput(spot.id)
+                                    setReadingPdoyFeedback('')
+                                  }}
+                                  disabled={!(activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank' && readingPdoyStep === 'evidence')}
+                                >
+                                  จุดเลือก portion {hotspotIndex + 1}
+                                </button>
+                              ))}
+                            <p
+                              className={
+                                index === activeReadingPdoyFocusParagraphIndex
+                                  ? `readingCoachParagraph ${['evidence', 'decide', 'result'].includes(readingPdoyStep) ? 'is-active' : ''}`
+                                  : ''
+                              }
+                              ref={(node) => {
+                                if (index === activeReadingPdoyFocusParagraphIndex) {
+                                  readingCoachParagraphRef.current = node
+                                }
+                              }}
+                            >
+                              {renderPassageParagraphWithHighlights(paragraph, activeReadingPdoyPassage.number, activeReadingPdoyQuestion.exactPortion)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                    </section>
+
+                    <aside className="readingQuestionsPanel readingQuestionsPanel-pdoyTutorial">
+                      <div className={`readingPdoyGuideFloat readingPdoyGuideFloat-${readingPdoyStep}`}>
+                        <span>{activeReadingPdoyGuideCopy.badge}</span>
+                        <strong>{activeReadingPdoyGuideCopy.title}</strong>
+                        <p>{activeReadingPdoyGuideCopy.detail}</p>
+                      </div>
+                      <div className={`readingPdoyCoachCard ${activeReadingPdoyCoachFloatClass}`}>
+                          <div className="readingQuestionsHeader readingQuestionsHeader-overlay">
+                            <div>
+                              <p className="sectionLabel">Coach Flow</p>
+                              <h3>มาทำข้อนี้ไปด้วยกัน</h3>
+                            </div>
+                            <span className="bandPill">{READING_PDOY_LESSON_LABELS[activeReadingPdoyLesson.lessonType]}</span>
+                          </div>
+                        <p className="readingQuestionNumber">Question {activeReadingPdoyQuestion.number}</p>
+                        <p className="readingQuestionPrompt">{activeReadingPdoyQuestion.prompt}</p>
+
+                        {readingPdoyStep === 'intro' && (
+                          <div
+                            key={`pdoy-stage-${readingPdoyStep}-${activeReadingPdoyQuestion.number}`}
+                            ref={readingPdoyStagePanelRef}
+                            className={`readingPdoyStagePanel readingPdoyStagePanel-${readingPdoyStep}`}
+                          >
+                            <p className="meta">
+                              {activeReadingPdoyLesson.lessonType === 'fill-in-the-blank'
+                                ? 'Step 1: ดู grammar cue ก่อนครับ ตรง blank นี้คำตอบมีโอกาสเป็นคำชนิดไหนมากที่สุด?'
+                                : 'ก่อนตอบ เราควรเริ่มยังไงก่อนสำหรับคำถามแบบนี้?'}
+                            </p>
+                            {activeReadingPdoyLesson.lessonType === 'fill-in-the-blank' && (
+                              <div className="readingParaphraseCard">
+                                <p className="sectionLabel">Grammar cue</p>
+                                <p>{getReadingFillGrammarHint(activeReadingPdoyQuestion)}</p>
+                              </div>
+                            )}
+                            <div className="readingPdoyChoiceGrid">
+                              {(activeReadingPdoyLesson.lessonType === 'multiple-choice'
+                                ? [
+                                    'อ่าน passage ก่อน แล้วค่อยหาส่วนที่ตรงกับโจทย์ ก่อนกลับมาเทียบตัวเลือก',
+                                    'อ่าน choices ก่อน แล้วไล่หา keyword แค่คำเดียว',
+                                    'อ่านเฉพาะย่อหน้าที่คิดว่าใช่ แล้วไม่ต้องดูย่อหน้าข้าง ๆ'
+                                  ]
+                                : activeReadingPdoyLesson.lessonType === 'fill-in-the-blank'
+                                  ? activeReadingPdoyFillGrammarOptions.map((option) => option.label)
+                                : [
+                                    'อ่าน statement ก่อน แล้วค่อยหาส่วนที่ตรงใน passage เพื่อเทียบความหมาย',
+                                    'อ่านแต่ตัวเลือกก่อน แล้วเดาจาก keyword',
+                                    'ไม่ต้องอ่าน passage ก็ตอบจากความรู้ทั่วไปได้เลย'
+                                  ]).map((option) => (
+                                <button
+                                  key={option}
+                                  type="button"
+                                  className={readingPdoyIntroChoice === option ? 'active' : ''}
+                                  onClick={() => setReadingPdoyIntroChoice(option)}
+                                >
+                                  {option}
+                                </button>
+                              ))}
+                            </div>
+                            {readingPdoyFeedback && (
+                              <div className="readingPdoyInlineCoach">
+                                <p>{readingPdoyFeedback}</p>
+                                <div className="controls">
+                                  <button
+                                    type="button"
+                                    className="readingActionBtn readingActionBtn-secondary"
+                                    onClick={() => {
+                                      setReadingPdoyIntroChoice('')
+                                      setReadingPdoyFeedback('')
+                                    }}
+                                  >
+                                    ลองเลือกใหม่
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="readingActionBtn readingActionBtn-primary"
+                                    onClick={useReadingPdoyCorrectIntro}
+                                  >
+                                    พาไปวิธีที่ถูกต้อง
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {readingPdoyStep === 'evidence' && activeReadingPdoyClue && (
+                          <div
+                            key={`pdoy-stage-${readingPdoyStep}-${activeReadingPdoyQuestion.number}`}
+                            ref={readingPdoyStagePanelRef}
+                            className={`readingPdoyStagePanel readingPdoyStagePanel-${readingPdoyStep}`}
+                          >
+                            {activeReadingPdoyVocabSupport && (
+                              <div className="readingParaphraseCard">
+                                <p className="sectionLabel">Important vocab / phrase</p>
+                                <p><strong>{activeReadingPdoyVocabSupport.quote}</strong></p>
+                                <p className="meta">ความหมายไทย: {activeReadingPdoyVocabSupport.meaning}</p>
+                                <button
+                                  type="button"
+                                  className="saveNotebookBtn"
+                                  onClick={() =>
+                                    savePlanToNotebook({
+                                      criterion: "Reading with P'Doy vocab",
+                                      quote: `Q${activeReadingPdoyQuestion.number}: ${activeReadingPdoyVocabSupport.quote}`,
+                                      fix: activeReadingPdoyVocabSupport.notebookFix,
+                                      thaiMeaning: activeReadingPdoyVocabSupport.meaning,
+                                      preferredSection: 'reading',
+                                      successNotice: 'Added to notebook'
+                                    })
+                                  }
+                                >
+                                  บันทึกคำนี้ลง notebook
+                                </button>
+                              </div>
+                            )}
+                            <div className="readingParaphraseCard">
+                              <p className="sectionLabel">Clue จากโจทย์</p>
+                              <p><strong>&quot;{activeReadingPdoyClue.clue}&quot;</strong></p>
+                              {activeReadingPdoyHintUnlocked ? (
+                                <>
+                                  <p className="meta">คำอธิบายไทย: {activeReadingPdoyClue.thaiHelper}</p>
+                                  <button
+                                    type="button"
+                                    className="saveNotebookBtn"
+                                    onClick={() =>
+                                      savePlanToNotebook({
+                                        criterion: "Reading with P'Doy clue",
+                                        quote: `Q${activeReadingPdoyQuestion.number}: ${activeReadingPdoyClue.clue}`,
+                                        fix: activeReadingPdoyQuestion.paraphrasedVocabulary || activeReadingPdoyQuestion.exactPortion,
+                                        thaiMeaning: activeReadingPdoyClue.thaiHelper,
+                                        preferredSection: 'reading',
+                                        successNotice: 'Added to notebook'
+                                      })
+                                    }
+                                  >
+                                    บันทึก clue ลง notebook
+                                  </button>
+                                </>
+                              ) : (
+                                <p className="meta">ถ้ายังไม่แน่ใจ ลองตอบดูก่อนได้ครับ ถ้าพลาดครั้งแรกพี่จะปล่อย hint ไทยเพิ่มให้</p>
+                              )}
+                            </div>
+                            <p className="meta">
+                              {activeReadingPdoyLesson.lessonType === 'multiple-choice'
+                                ? 'หาโซนที่ paraphrase กันให้เจอก่อน อย่าอ่านแค่ย่อหน้าเดียว ต้องดูย่อหน้าข้าง ๆ และดูคำเชื่อมอย่าง however, but, instead, in fact ด้วย'
+                                : activeReadingPdoyLesson.lessonType === 'fill-in-the-blank'
+                                  ? 'Step 2: ไปคลิก 1 ใน 3 จุด highlight ใน passage ด้านซ้ายครับ เลือก portion ที่น่าจะใช้ตอบข้อนี้ที่สุดก่อน โดยยังไม่เฉลยถูกผิด'
+                                : 'เห็นคำหรือวลีที่ความหมายเท่ากันในส่วนที่ซูมไว้ไหม? เลือกวลีจาก passage ที่ตรงที่สุด'}
+                            </p>
+                            {activeReadingPdoyLesson.lessonType !== 'fill-in-the-blank' ? (
+                              <div className="readingPdoyChoiceGrid">
+                                {activeReadingPdoyEvidenceOptions.map((option) => (
+                                  <button
+                                    key={option.id}
+                                    type="button"
+                                    className={`readingPdoyOptionBtn ${readingPdoyEvidenceInput === option.id ? 'active' : ''}`}
+                                    onClick={() => setReadingPdoyEvidenceInput(option.id)}
+                                  >
+                                    {option.text}
+                                  </button>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="readingPdoySoftPopup">
+                                {readingPdoyEvidenceInput
+                                  ? 'เลือก hotspot ใน passage แล้วครับ กดปุ่มด้านล่างเพื่อไปจับคำ paraphrase ต่อได้เลย'
+                                  : 'มองไปที่ passage ด้านซ้ายครับ จะมี 3 จุด highlight ให้เลือกโดยตรงในเนื้อหา'}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {readingPdoyStep === 'decide' && (
+                          <div
+                            key={`pdoy-stage-${readingPdoyStep}-${activeReadingPdoyQuestion.number}`}
+                            ref={readingPdoyStagePanelRef}
+                            className={`readingPdoyStagePanel readingPdoyStagePanel-${readingPdoyStep}`}
+                          >
+                            {activeReadingPdoyLesson.lessonType === 'multiple-choice' ? (
+                              <>
+                                <p className="meta">
+                                  {activeReadingPdoyIsMatchingQuestion
+                                    ? 'ตอนนี้เลือก heading / paragraph ที่ evidence นี้พิสูจน์ได้จริง ระวังตัวหลอกที่มี keyword เหมือนโจทย์แต่ใจความคนละเรื่อง'
+                                    : 'ตอนนี้เลือกตัวเลือกที่ดีที่สุด แต่ก่อนจะเฉลยถูกผิด ลองพิมพ์ให้ดูว่า option นี้เชื่อมกับ passage ตรงไหน'}
+                                </p>
+                                {activeReadingPdoyOptions.length > 0 ? (
+                                  <div className="readingPdoyChoiceGrid">
+                                    {activeReadingPdoyOptions.map((option) => (
+                                      <button
+                                        key={option.letter}
+                                        type="button"
+                                        className={`readingPdoyOptionBtn ${readingPdoySelectedOption === option.letter ? 'active' : ''}`}
+                                        onClick={() => {
+                                          setReadingPdoySelectedOption(option.letter)
+                                          setReadingPdoyOptionParaphraseInput('')
+                                          setReadingPdoyFeedback('')
+                                        }}
+                                      >
+                                        <strong>{option.letter}</strong> {option.text}
+                                      </button>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <div className="readingPdoySoftPopup">
+                                    ระบบยังดึง option block ของข้อนี้ออกมาได้ไม่สมบูรณ์ เลยยังโค้ชแบบทีละขั้นสำหรับข้อนี้ไม่ได้ครับ
+                                  </div>
+                                )}
+                                {activeReadingPdoySelectedOptionRecord && !activeReadingPdoyIsMatchingQuestion && (
+                                  <div className="readingParaphraseCard">
+                                    <p className="sectionLabel">เช็ก paraphrase ของ option {activeReadingPdoySelectedOptionRecord.letter}</p>
+                                    <p>ใน option นี้ ส่วนไหนที่ตรงกับ quoted evidence ใน passage?</p>
+                                    <div className="readingAnswerField">
+                                      <input
+                                        type="text"
+                                        value={readingPdoyOptionParaphraseInput}
+                                        onChange={(event) => setReadingPdoyOptionParaphraseInput(event.target.value)}
+                                        placeholder="พิมพ์ส่วนของ option ที่ตรงกับ passage"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            ) : activeReadingPdoyLesson.lessonType === 'fill-in-the-blank' ? (
+                              <>
+                                <div className="readingParaphraseCard">
+                                  <p className="sectionLabel">Step 3: จับคำพาราฟเรส</p>
+                                  <p>
+                                    คำสำคัญในโจทย์คือ <strong>&quot;{activeReadingPdoyFillWordTarget?.important || activeReadingPdoyClue?.clue}&quot;</strong>
+                                    {activeReadingPdoyFillWordTarget?.importantThai
+                                      ? ` = ${activeReadingPdoyFillWordTarget.importantThai}`
+                                      : ''}
+                                  </p>
+                                  <p className="meta">
+                                    ใน portion ที่เลือกมา คำหรือวลีไหนความหมายตรงกับ clue นี้? กดดูความหมายได้ก่อนแล้วค่อยเลือกครับ
+                                  </p>
+                                </div>
+                                <div className="readingPdoyChoiceGrid">
+                                  {activeReadingPdoyFillWordMatchOptions.map((option) => (
+                                    <div
+                                      key={option.id}
+                                      className={`readingPdoyOptionCard ${readingPdoySelectedOption === option.id ? 'active' : ''}`}
+                                    >
+                                      <button
+                                        type="button"
+                                        className={`readingPdoyOptionBtn ${readingPdoySelectedOption === option.id ? 'active' : ''}`}
+                                        onClick={() => {
+                                          setReadingPdoySelectedOption(option.id)
+                                          setReadingPdoyFeedback('')
+                                        }}
+                                      >
+                                        {option.text}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="readingOptionMeaningBtn"
+                                        onClick={() =>
+                                          setReadingPdoyFillMeaningOptionId((current) => current === option.id ? '' : option.id)
+                                        }
+                                      >
+                                        ดูความหมาย
+                                      </button>
+                                      {readingPdoyFillMeaningOptionId === option.id && option.meaning && (
+                                        <p className="readingOptionMeaningText">{option.meaning}</p>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <p className="meta">อ่านอีกที แล้วตัดสินว่า statement นี้ตรงกัน ขัดกัน หรือไม่ได้บอกไว้</p>
+                                <div className="readingPdoyChoiceGrid readingPdoyChoiceGrid-compact">
+                                  {(activeReadingPdoyLesson.lessonType === 'true-false-not-given'
+                                    ? ['TRUE', 'FALSE', 'NOT GIVEN']
+                                    : ['YES', 'NO', 'NOT GIVEN']).map((option) => (
+                                    <button
+                                      key={option}
+                                      type="button"
+                                      className={`readingPdoyOptionBtn ${readingPdoyDecision === option ? 'active' : ''}`}
+                                      onClick={() => setReadingPdoyDecision(option)}
+                                    >
+                                      {option}
+                                    </button>
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+
+                        {readingPdoyStep === 'result' && (
+                          <div
+                            key={`pdoy-stage-${readingPdoyStep}-${activeReadingPdoyQuestion.number}`}
+                            ref={readingPdoyStagePanelRef}
+                            className={`readingPdoyStagePanel readingPdoyStagePanel-${readingPdoyStep}`}
+                          >
+                            <div className="readingReportEvidence">
+                              <h4>ทำไมคำตอบนี้ถึงถูก?</h4>
+                              <p>{activeReadingPdoyQuestion.explanationThai}</p>
+                              <blockquote>{activeReadingPdoyQuestion.exactPortion}</blockquote>
+                            </div>
+                          </div>
+                        )}
+
+                        {readingPdoyStep === 'complete' && (
+                          <div
+                            key={`pdoy-stage-${readingPdoyStep}-${activeReadingPdoyQuestion.number}`}
+                            ref={readingPdoyStagePanelRef}
+                            className={`readingPdoyStagePanel readingPdoyStagePanel-${readingPdoyStep}`}
+                          >
+                            <div className="readingReportEvidence">
+                              <h4>จบบทเรียนแล้ว</h4>
+                              <p>{readingPdoyFeedback}</p>
+                              <blockquote>คุณทำ flow โค้ชสำหรับคำถามประเภทนี้ครบแล้วครับ</blockquote>
+                            </div>
+                            <div className="controls">
+                              <button type="button" className="readingActionBtn readingActionBtn-primary" onClick={() => startReadingPdoyLesson(activeReadingPdoyLesson.id)}>
+                                เริ่มบทเรียนนี้ใหม่
+                              </button>
+                              <button
+                                type="button"
+                                className="readingActionBtn readingActionBtn-secondary"
+                                onClick={() => {
+                                  setReadingPdoySessionActive(false)
+                                  setReadingPdoyStep('intro')
+                                  setReadingPdoyFeedback('')
+                                }}
+                              >
+                                กลับไปหน้าบทเรียน
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {readingPdoyFeedback && readingPdoyStep !== 'intro' && (
+                          <div className={`readingPdoySoftPopup ${readingPdoyStep === 'result' ? 'is-success' : ''}`}>
+                            {readingPdoyFeedback}
+                          </div>
+                        )}
+                        {activeReadingPdoyPrimaryAction && (
+                          <div className="readingPdoyActionDock">
+                            <button
+                              type="button"
+                              className={`readingActionBtn ${activeReadingPdoyPrimaryAction.tone === 'success' ? 'readingActionBtn-success' : 'readingActionBtn-primary'}`}
+                              onClick={activeReadingPdoyPrimaryAction.onClick}
+                              disabled={activeReadingPdoyPrimaryAction.disabled}
+                            >
+                              {activeReadingPdoyPrimaryAction.label}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </aside>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'exam' && activeReadingExam && activeReadingPassage && (
             <div className="readingExamWrap">
               <div className="readingAttemptToolbar">
                 <div>
@@ -6888,7 +13831,7 @@ function App() {
                     </div>
                     {activeReadingHint?.exactPortion && (
                       <div className="readingHintBox">
-                        <strong>Hint active:</strong> {activeReadingHint.exactPortion}
+                        <strong>Hint active:</strong> highlighted in the passage
                       </div>
                     )}
                   </div>
@@ -6933,8 +13876,9 @@ function App() {
                         {renderPassageParagraphWithHighlights(
                           paragraph,
                           activeReadingPassage.number,
-                          activeReadingHint && activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
-                            ? activeReadingHint.exactPortion
+                          activeReadingHint &&
+                            activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
+                            ? activeReadingHintExcerpt
                             : ''
                         )}
                       </p>
@@ -6982,40 +13926,93 @@ function App() {
                   )}
 
                   <div className="readingQuestionList">
-                    {activeReadingQuestions.map((question) => (
-                      <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
-                        <div className="readingQuestionCardTop">
-                          <div>
-                            <p className="readingQuestionNumber">Question {question.number}</p>
-                            <p className="readingQuestionPrompt">{question.prompt}</p>
+                    {activeReadingQuestions.map((question) => {
+                      const isHinting = readingHintQuestionNumber === question.number
+                      const isMatchingQuestion = isReadingMatchingQuestion(activeReadingPassage, question)
+                      const evidenceOptions = isMatchingQuestion
+                        ? buildReadingEvidenceOptions(activeReadingPassage, question)
+                        : []
+                      const evidenceVerified = Boolean(readingBankEvidenceVerified[question.number])
+                      const selectedEvidenceId = readingBankEvidenceByQuestion[question.number] || ''
+                      return (
+                        <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
+                          <div className="readingQuestionCardTop">
+                            <div>
+                              <p className="readingQuestionNumber">Question {question.number}</p>
+                              <p className="readingQuestionPrompt">{question.prompt}</p>
+                            </div>
+                            <button
+                              type="button"
+                              className="secondary"
+                              onClick={() => {
+                                setReadingHintQuestionNumber((current) => (current === question.number ? null : question.number))
+                              }}
+                            >
+                              {isHinting ? 'Hide Hint' : 'Show Hint'}
+                            </button>
                           </div>
-                          <button
-                            type="button"
-                            className="secondary"
-                            onClick={() => {
-                              setReadingHintQuestionNumber((current) => (current === question.number ? null : question.number))
-                            }}
-                          >
-                            {readingHintQuestionNumber === question.number ? 'Hide Hint' : 'Show Hint'}
-                          </button>
-                        </div>
-                        <div className="readingAnswerField">
-                          {renderReadingAnswerField(question)}
-                        </div>
-                      </article>
-                    ))}
+                          {isMatchingQuestion && (
+                            <div className="readingMatchingEvidenceBlock">
+                              <p className="sectionLabel">Step 1 — Evidence trap check</p>
+                              <p className="meta">
+                                Three portions from the passage — only one proves the right heading or paragraph. Wrong
+                                options reuse keywords but point to the wrong section.
+                              </p>
+                              <div className="readingPdoyChoiceGrid">
+                                {evidenceOptions.map((option) => (
+                                  <button
+                                    key={option.id}
+                                    type="button"
+                                    className={`readingPdoyOptionBtn ${selectedEvidenceId === option.id ? 'active' : ''} ${
+                                      evidenceVerified && option.isCorrect ? 'is-correct' : ''
+                                    }`.trim()}
+                                    onClick={() => handleReadingBankEvidenceSelect(question, option)}
+                                  >
+                                    {option.text}
+                                  </button>
+                                ))}
+                              </div>
+                              {readingBankEvidenceFeedback[question.number] && !evidenceVerified && (
+                                <p className="error">{readingBankEvidenceFeedback[question.number]}</p>
+                              )}
+                              {evidenceVerified && (
+                                <p className="meta readingMatchingEvidenceOk">
+                                  Good — now choose the heading or paragraph that this evidence supports.
+                                </p>
+                              )}
+                            </div>
+                          )}
+                          {isHinting && !isMatchingQuestion && (
+                            <div className="readingHintBox">
+                              <strong>Hint:</strong> evidence highlighted in the passage.
+                            </div>
+                          )}
+                          {isHinting && isMatchingQuestion && evidenceVerified && (
+                            <div className="readingHintBox">
+                              <strong>Hint:</strong> correct evidence highlighted in the passage.
+                            </div>
+                          )}
+                          <div className="readingAnswerField">
+                            {isMatchingQuestion && evidenceVerified && (
+                              <p className="sectionLabel">Step 2 — Your answer</p>
+                            )}
+                            {renderReadingAnswerField(question, activeReadingPassage)}
+                          </div>
+                        </article>
+                      )
+                    })}
                   </div>
                 </section>
               </div>
             </div>
           )}
 
-          {readingAttemptStage === 'report' && activeReadingExam && (
+          {readingWorkspaceMode === 'bank' && (readingAttemptStage === 'report' || readingAttemptStage === 'review') && activeReadingExam && (
             <div className="readingReportWrap">
               <div className="readingAttemptToolbar">
                 <div>
                   <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
-                  <h3>{activeReadingExam.title} Report</h3>
+                  <h3>{activeReadingExam.title} {readingAttemptStage === 'review' ? 'Mistake Review' : 'Report'}</h3>
                   <p className="meta">
                     Score: {readingReportItems.filter((item) => item.isCorrect).length}/{readingReportItems.length}
                   </p>
@@ -7023,6 +14020,9 @@ function App() {
                 <div className="controls">
                   <button type="button" className="secondary" onClick={() => setReadingAttemptStage('bank')}>
                     Back to Bank
+                  </button>
+                  <button type="button" className="secondary" onClick={exportReadingReportPdf}>
+                    Export PDF
                   </button>
                   <button type="button" onClick={() => startReadingExam(activeReadingExam.id)}>
                     Retry Exam
@@ -7043,8 +14043,8 @@ function App() {
                 </article>
                 <article className="readingSummaryCard">
                   <p className="sectionLabel">Review Focus</p>
-                  <strong>{readingReportItems.find((item) => !item.isCorrect)?.number ? `Q${readingReportItems.find((item) => !item.isCorrect)?.number}` : 'Strong set'}</strong>
-                  <span>start with the first wrong answer</span>
+                  <strong>{visibleReadingReportItems.find((item) => !item.isCorrect)?.number ? `Q${visibleReadingReportItems.find((item) => !item.isCorrect)?.number}` : 'Strong set'}</strong>
+                  <span>{readingAttemptStage === 'review' ? 'only wrong answers are shown here' : 'start with the first wrong answer'}</span>
                 </article>
               </div>
 
@@ -7060,47 +14060,89 @@ function App() {
                 ))}
               </div>
 
+              {notebookSaveNotice && (
+                <div className="notebookSaveToast" role="status" aria-live="polite">
+                  <span className="notebookSaveToastSparkle" aria-hidden="true">
+                    ✦
+                  </span>
+                  <div>
+                    <p className="notebookSaveToastTitle">
+                      {notebookSaveNotice.includes('#reading') ? 'Added to notebook' : 'Added to notebook'}
+                    </p>
+                    <p className="notebookSaveToastText">
+                      {notebookSaveNotice.includes('#reading') ? 'Saved in #reading with your vocab notes.' : 'Saved in your Reading notebook.'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {readingAttemptStage === 'review' && visibleReadingReportItems.length === 0 && (
+                <div className="emptyNotebook">
+                  <p>No mistakes in the latest attempt for this exam.</p>
+                  <p>You can still retry the test if you want a fresh timed run.</p>
+                </div>
+              )}
+
               <div className="readingReportList">
-                {readingReportItems.map((item) => (
-                  <article key={`reading-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
-                    <div className="readingReportHeader">
-                      <div>
-                        <p className="readingQuestionNumber">Question {item.number}</p>
-                        <p className="readingQuestionPrompt">{item.prompt}</p>
+                {visibleReadingReportItems.map((item) => {
+                  const vocabSupport = buildReadingVocabSupport(item, pickReadingPdoyQuestionClue(item))
+                  const paraphraseEquation = buildReadingParaphraseEquation(item, vocabSupport)
+                  return (
+                    <article key={`reading-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
+                      <div className="readingReportHeader">
+                        <div>
+                          <p className="readingQuestionNumber">Question {item.number}</p>
+                          <p className="readingQuestionPrompt">{item.prompt}</p>
+                        </div>
+                        <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
+                          {item.isCorrect ? 'Correct' : 'Wrong'}
+                        </span>
                       </div>
-                      <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
-                        {item.isCorrect ? 'Correct' : 'Wrong'}
-                      </span>
-                    </div>
-                    <p className="meta">Your answer: {item.userAnswer || 'No answer'}</p>
-                    <p className="meta">Correct answer: {item.correctAnswer}</p>
-                    <div className="readingReportEvidence">
-                      <h4>Why?</h4>
-                      <p>{item.explanationThai}</p>
-                      <blockquote>{item.exactPortion}</blockquote>
-                    </div>
-                    {item.paraphrasedVocabulary && (
-                      <div className="readingParaphraseCard">
-                        <p className="sectionLabel">Paraphrased vocabulary</p>
-                        <p>{item.paraphrasedVocabulary}</p>
-                        <button
-                          type="button"
-                          className="saveNotebookBtn"
-                          onClick={() =>
+                      <p className="meta">Your answer: {item.userAnswer || 'No answer'}</p>
+                      <p className="meta">Correct answer: {item.correctAnswer}</p>
+                      <div className="readingReportEvidence">
+                        <h4>Why?</h4>
+                        {paraphraseEquation && (
+                          <div className="listeningBuilderExamWordCheck">
+                            <p>Do you know this word?</p>
+                            <div className="listeningBuilderExamWordEquation">
+                              <span>{paraphraseEquation.passageKeyword}</span>
+                              <b>=</b>
+                              <span>{paraphraseEquation.questionKeyword}</span>
+                              <b>=</b>
+                              <span>{paraphraseEquation.thaiMeaning}</span>
+                            </div>
+                          </div>
+                        )}
+                        <p>{item.explanationThai}</p>
+                        <blockquote>{item.exactPortion}</blockquote>
+                      </div>
+                      {(item.paraphrasedVocabulary || vocabSupport) && (
+                        <div className="readingParaphraseCard">
+                          <p className="sectionLabel">Important vocab / phrase</p>
+                          {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
+                          {vocabSupport?.meaning && <p className="meta">TH: {vocabSupport.meaning}</p>}
+                          <button
+                            type="button"
+                            className="saveNotebookBtn"
+                            onClick={() =>
                             savePlanToNotebook({
                               criterion: 'Reading Paraphrase',
                               quote: `Q${item.number}: ${item.prompt}`,
-                              fix: item.paraphrasedVocabulary,
-                              thaiMeaning: item.explanationThai
+                              fix: item.paraphrasedVocabulary || vocabSupport?.notebookFix || item.correctAnswer,
+                              thaiMeaning: paraphraseEquation?.thaiMeaning || vocabSupport?.meaning || item.explanationThai,
+                              preferredSection: 'reading',
+                              successNotice: 'Added to notebook'
                             })
                           }
                         >
-                          Save to Notebook
+                          Add to Notebook
                         </button>
                       </div>
                     )}
-                  </article>
-                ))}
+                    </article>
+                  )
+                })}
               </div>
             </div>
           )}
@@ -7229,7 +14271,7 @@ function App() {
                     <button type="button" onClick={() => void handleAdminCreateLearner()}>
                       Save Learner Access
                     </button>
-                    <p className="meta">Tip: use inactive status to pause access without deleting the account.</p>
+                    <p className="meta">Tip: if Access Until is blank when you grant access, the app will default it to 3 months from the access date.</p>
                   </div>
                 </div>
 
@@ -7284,7 +14326,7 @@ function App() {
                                   })
                                 }
                               >
-                                {learner.status === 'active' ? 'Deactivate' : 'Reactivate'}
+                                {learner.status === 'active' ? 'Deactivate' : 'Grant Access'}
                               </button>
                               <button
                                 type="button"
@@ -7427,6 +14469,156 @@ function App() {
                 <div className="panel adminSectionCard">
                   <div className="adminSectionHeader">
                     <div>
+                      <p className="sectionLabel">Business Analytics</p>
+                      <h3>Speaking Usage Cost</h3>
+                    </div>
+                    <span className="adminInlineStatus">
+                      {adminAssessmentReports.length} reports tracked
+                    </span>
+                  </div>
+                  <p className="meta">
+                    Every speaking attempt is saved per learner. Track total Gemini spend, tokens, and report volume over time here.
+                  </p>
+                  <div className="adminAnalyticsGrid">
+                    <article className="adminAnalyticsStat">
+                      <span>Last 7 days</span>
+                      <strong>{formatUsdCost(adminSpeakingWeeklyCostTotal)}</strong>
+                      <p>{adminSpeakingWeeklyReportsTotal} reports · {adminSpeakingWeeklyTokenTotal.toLocaleString()} tokens</p>
+                    </article>
+                    <article className="adminAnalyticsStat">
+                      <span>Last 30 days</span>
+                      <strong>{formatUsdCost(adminSpeakingMonthlyCostTotal)}</strong>
+                      <p>{adminSpeakingMonthlyReportsTotal} reports · {adminSpeakingMonthlyTokenTotal.toLocaleString()} tokens</p>
+                    </article>
+                    <article className="adminAnalyticsStat">
+                      <span>Average / report</span>
+                      <strong>
+                        {formatUsdCost(
+                          adminAssessmentReports.length
+                            ? adminAssessmentReports.reduce((sum, report) => sum + Number(report.apiCostUsd || 0), 0) /
+                                adminAssessmentReports.length
+                            : 0
+                        )}
+                      </strong>
+                      <p>
+                        {adminAssessmentReports.length
+                          ? Math.round(
+                              adminAssessmentReports.reduce((sum, report) => sum + Number(report.totalTokens || 0), 0) /
+                                adminAssessmentReports.length
+                            ).toLocaleString()
+                          : '0'}{' '}
+                        avg tokens
+                      </p>
+                    </article>
+                  </div>
+                  <div className="adminAnalyticsChartGrid">
+                    <article className="adminAnalyticsChartCard">
+                      <div className="adminAnalyticsChartHeader">
+                        <div>
+                          <p className="sectionLabel">Weekly</p>
+                          <h4>Cost trend (7 days)</h4>
+                        </div>
+                        <span className="bandPill">{formatUsdCost(adminSpeakingWeeklyCostTotal)}</span>
+                      </div>
+                      <svg viewBox="0 0 560 180" className="adminAnalyticsChart" role="img" aria-label="Weekly speaking API cost trend">
+                        <path d="M 18 162 H 542" className="adminAnalyticsAxis" />
+                        <path d={adminSpeakingWeeklyCostPath} className="adminAnalyticsLine" />
+                        {adminSpeakingCostLast7Days.map((item, index) => {
+                          const values = adminSpeakingCostLast7Days.map((point) => point.cost)
+                          const max = Math.max(...values, 0.000001)
+                          const min = Math.min(...values, 0)
+                          const ratio = max === min ? 0.5 : (item.cost - min) / (max - min)
+                          const x = 18 + (adminSpeakingCostLast7Days.length === 1 ? 0 : (524 / (adminSpeakingCostLast7Days.length - 1)) * index)
+                          const y = 162 - ratio * 144
+                          return <circle key={`weekly-${item.key}`} cx={x} cy={y} r="4.5" className="adminAnalyticsDot" />
+                        })}
+                      </svg>
+                      <div className="adminAnalyticsLabels">
+                        {adminSpeakingCostLast7Days.map((item) => (
+                          <span key={`weekly-label-${item.key}`}>{item.label}</span>
+                        ))}
+                      </div>
+                    </article>
+                    <article className="adminAnalyticsChartCard">
+                      <div className="adminAnalyticsChartHeader">
+                        <div>
+                          <p className="sectionLabel">Monthly</p>
+                          <h4>Cost trend (30 days)</h4>
+                        </div>
+                        <span className="bandPill">{formatUsdCost(adminSpeakingMonthlyCostTotal)}</span>
+                      </div>
+                      <svg viewBox="0 0 560 180" className="adminAnalyticsChart" role="img" aria-label="Monthly speaking API cost trend">
+                        <path d="M 18 162 H 542" className="adminAnalyticsAxis" />
+                        <path d={adminSpeakingMonthlyCostPath} className="adminAnalyticsLine" />
+                        {adminSpeakingCostLast30Days.map((item, index) => {
+                          const values = adminSpeakingCostLast30Days.map((point) => point.cost)
+                          const max = Math.max(...values, 0.000001)
+                          const min = Math.min(...values, 0)
+                          const ratio = max === min ? 0.5 : (item.cost - min) / (max - min)
+                          const x = 18 + (adminSpeakingCostLast30Days.length === 1 ? 0 : (524 / (adminSpeakingCostLast30Days.length - 1)) * index)
+                          const y = 162 - ratio * 144
+                          return <circle key={`monthly-${item.key}`} cx={x} cy={y} r="3.5" className="adminAnalyticsDot" />
+                        })}
+                      </svg>
+                      <div className="adminAnalyticsLabels adminAnalyticsLabels-dense">
+                        {adminSpeakingCostLast30Days
+                          .filter((_, index) => index % 4 === 0 || index === adminSpeakingCostLast30Days.length - 1)
+                          .map((item) => (
+                            <span key={`monthly-label-${item.key}`}>{item.label}</span>
+                          ))}
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <div className="panel adminSectionCard">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Speaking Reports</p>
+                      <h3>All Learner Attempted Reports</h3>
+                    </div>
+                    <span className="adminInlineStatus">{adminAssessmentReports.length} saved</span>
+                  </div>
+                  <p className="meta">
+                    Every completed speaking assessment is saved automatically. Open any learner attempt to review the full report in the same report UI.
+                  </p>
+                  <div className="subscriptionList adminLearnerList">
+                    {adminAssessmentReports.length === 0 ? (
+                      <p className="meta">No speaking reports have been saved yet.</p>
+                    ) : (
+                      adminAssessmentReports.map((report) => (
+                        <article key={`assessment-report-${report.id}`} className="subscriptionCard adminLearnerCard">
+                          <div className="subscriptionTopRow">
+                            <div>
+                              <h3>{report.learnerName}</h3>
+                              <p className="subscriptionEmail">{report.learnerEmail}</p>
+                            </div>
+                            <div className="adminLearnerBadges">
+                              <span className="bandPill">{report.topicCategory}</span>
+                              <span className="bandPill">Band {report.overallBand.toFixed(1)}</span>
+                            </div>
+                          </div>
+                          <div className="adminLearnerMetaGrid">
+                            <p className="meta">Test: {report.testMode.toUpperCase()}</p>
+                            <p className="meta">Topic: {report.topicTitle}</p>
+                            <p className="meta">Provider: {report.provider}</p>
+                            <p className="meta">Model calls: {report.totalCalls.toLocaleString()}</p>
+                            <p className="meta">Saved: {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Unknown'}</p>
+                          </div>
+                          <div className="adminActionRow">
+                            <button type="button" className="secondary" onClick={() => void openAdminAssessmentReport(report.id)}>
+                              Open Full Report
+                            </button>
+                          </div>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className="panel adminSectionCard">
+                  <div className="adminSectionHeader">
+                    <div>
                       <p className="sectionLabel">Reading Exam Bank</p>
                       <h3>Upload Reading Passage Sets</h3>
                     </div>
@@ -7539,7 +14731,7 @@ function App() {
                         setAdminReadingBulkJsonInput(event.target.value)
                         setAdminReadingBulkValidation(null)
                       }}
-                      placeholder={`[\n  {\n    "title": "Cambridge-style Reading Test 01",\n    "category": "fulltest",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "Cambridge-style Reading Test 02",\n    "category": "fulltest",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  }\n]`}
+                      placeholder={`[\n  {\n    "title": "Cambridge 11 Test 1 Passage 1",\n    "category": "normal",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "Cambridge 11 Test 1 Passage 3",\n    "category": "advanced",\n    "rawPassageText": "READING PASSAGE 3\\n...",\n    "rawAnswerKey": "Question 27: ..."\n  }\n]`}
                       rows={16}
                     />
                   </label>
@@ -7671,17 +14863,25 @@ function App() {
                   <div className="adminWorkflowCard">
                     <h4>Recommended Process</h4>
                     <ol className="adminWorkflowList">
-                      <li>Search the speaking question you want to prepare.</li>
-                      <li>Generate the audio once with Deepgram.</li>
-                      <li>Use the “Audio Ready” library below to replay and check what is already generated.</li>
+                      <li>Open a Part 1 topic pack instead of generating one question at a time.</li>
+                      <li>Use “Generate Missing” once to create the audio permanently in storage.</li>
+                      <li>When a question has already been generated, the exam can reuse it without spending Deepgram cost again.</li>
                     </ol>
                   </div>
                   <div className="adminTtsLibraryHeader">
                     <div>
                       <h4>Generated Audio Library</h4>
-                      <p className="meta">Audio stays available in this admin session so you can review and replay it quickly.</p>
+                      <p className="meta">Question audio is now stored permanently, so once it is generated it stays ready for future exams.</p>
                     </div>
                     <span className="bandPill">{generatedAdminTtsLibrary.length} ready</span>
+                  </div>
+                  <div className="adminWorkflowCard adminTtsSummaryCard">
+                    <h4>Speaking Part 1 Topic Packs</h4>
+                    <p className="meta">
+                      {isLoadingAdminTtsCatalog
+                        ? 'Loading saved audio progress...'
+                        : `${adminPart1TtsTopics.filter((topic) => topic.missingCount === 0).length}/${adminPart1TtsTopics.length} topics fully ready`}
+                    </p>
                   </div>
                   {generatedAdminTtsLibrary.length > 0 ? (
                     <div className="adminAudioLibraryGrid">
@@ -7697,12 +14897,81 @@ function App() {
                   ) : (
                     <p className="meta adminEmptyState">No generated audio yet. Generate a question below to build the library.</p>
                   )}
+                  {filteredAdminPart1TtsTopics.length > 0 ? (
+                    <div className="adminTtsTopicGrid">
+                      {filteredAdminPart1TtsTopics.map((topic) => (
+                        <article key={`part1-pack-${topic.topicId}`} className="adminTtsTopicCard">
+                          <div className="adminTtsTopicCardTop">
+                            <div>
+                              <p className="adminAudioEyebrow">Part 1 Topic Pack</p>
+                              <h4>{topic.topicTitle}</h4>
+                              <p className="meta">
+                                {topic.readyCount}/{topic.items.length} ready
+                              </p>
+                            </div>
+                            <div className="adminTtsTopicActions">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  void generateQuestionAudioBatch(
+                                    `pack-missing-${topic.topicId}`,
+                                    topic.items.filter((item) => !item.audioUrl)
+                                  )
+                                }
+                                disabled={ttsGeneratingKey === `pack-missing-${topic.topicId}` || topic.missingCount === 0}
+                              >
+                                {ttsGeneratingKey === `pack-missing-${topic.topicId}`
+                                  ? 'Generating...'
+                                  : topic.missingCount === 0
+                                    ? 'All Ready'
+                                    : `Generate Missing (${topic.missingCount})`}
+                              </button>
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() =>
+                                  void generateQuestionAudioBatch(`pack-all-${topic.topicId}`, topic.items, { force: true })
+                                }
+                                disabled={ttsGeneratingKey === `pack-all-${topic.topicId}`}
+                              >
+                                {ttsGeneratingKey === `pack-all-${topic.topicId}` ? 'Refreshing...' : 'Regenerate Topic'}
+                              </button>
+                            </div>
+                          </div>
+                          <div className="adminTtsTopicQuestionList">
+                            {topic.items.map((item) => (
+                              <article key={item.key} className="adminQuestionCard compact">
+                                <div className="adminQuestionCardTop">
+                                  <div>
+                                    <p className="adminQuestionText">{item.question}</p>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => void generateTtsForQuestion(item)}
+                                    disabled={ttsGeneratingKey === item.key}
+                                  >
+                                    {ttsGeneratingKey === item.key ? 'Generating...' : item.audioUrl ? 'Regenerate' : 'Generate'}
+                                  </button>
+                                </div>
+                                {item.audioUrl ? (
+                                  <div className="adminQuestionAudioRow">
+                                    <span className="adminReadyDot">Ready</span>
+                                    <audio controls src={item.audioUrl} />
+                                  </div>
+                                ) : (
+                                  <p className="meta adminQuestionHint">Still missing. Generate once and it will stay available.</p>
+                                )}
+                              </article>
+                            ))}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="meta adminEmptyState">No Part 1 topic packs match this search.</p>
+                  )}
                   <div className="adminTtsGroupStack">
                     {[
-                      {
-                        title: 'Speaking Part 1',
-                        items: filteredAdminTtsQuestionLibrary.filter((item) => item.section === 'Part 1')
-                      },
                       {
                         title: 'Speaking Part 3',
                         items: filteredAdminTtsQuestionLibrary.filter((item) => item.section === 'Part 3')
@@ -7726,7 +14995,7 @@ function App() {
                                   </div>
                                   <button
                                     type="button"
-                                    onClick={() => void generateTtsForQuestion(item.key, item.question)}
+                                    onClick={() => void generateTtsForQuestion(item)}
                                     disabled={ttsGeneratingKey === item.key}
                                   >
                                     {ttsGeneratingKey === item.key ? 'Generating...' : item.audioUrl ? 'Regenerate' : 'Generate'}
@@ -7838,9 +15107,97 @@ function App() {
             </div>
           </section>
         ) : activePage === 'workspace' ? (
-          <section className="panel full">
-          <h2>Speaking Test</h2>
+          <section className="panel full speakingFlowTheme">
+          <h2>{isTrialUser ? 'IELTS Speaking Trial' : 'Speaking Test'}</h2>
           {attemptStage === 'idle' && (
+            isTrialUser ? (
+              <div className="trialStageShell">
+                <div className="trialStageHero">
+                  <p className="sectionLabel">One-time Trial Only</p>
+                  <h3>ทดลองใช้ฟรีเพื่อประเมิน IELTS Speaking ของตัวเองแบบมีระบบ</h3>
+                  <p>
+                    Trial นี้ใช้เวลาประมาณ 5-7 นาทีครับ และใช้ได้เพียง 1 ครั้งต่อ 1 อีเมลเท่านั้น
+                    ระบบจะพาคุณทำ long turn 1 ข้อ แล้วต่อด้วย follow-up 3 ข้อแบบใกล้เคียงข้อสอบจริง
+                  </p>
+                  <div className="trialHeroChips">
+                    <span>2-minute long turn</span>
+                    <span>3 follow-up questions</span>
+                    <span>premium report</span>
+                  </div>
+                </div>
+                {Math.min(creditProfile.feedbackRemaining, creditProfile.fullMockRemaining) <= 0 ? (
+                  <div className="trialUsedCard">
+                    <h4>คุณใช้สิทธิ์ทดลองใช้ฟรีครั้งนี้ครบแล้วครับ</h4>
+                    <p>
+                      report ของรอบนี้ถูกบันทึกไว้ฝั่งแอดมินเรียบร้อยแล้ว หากต้องการฝึกต่อแบบเต็มระบบ
+                      แนะนำให้สมัครคอร์สเพื่อปลดล็อกการซ้อมเพิ่มเติมครับ
+                    </p>
+                    <div className="controls prepControls">
+                      <button
+                        type="button"
+                        className="primaryReadyBtn"
+                        onClick={() => {
+                          window.location.href = 'https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts'
+                        }}
+                      >
+                        ไปดูคอร์สเต็ม
+                      </button>
+                      <button type="button" className="secondary cancelBtn" onClick={handleLogout}>
+                        ออกจากระบบ
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="trialBriefGrid">
+                    <div className="trialBriefCard">
+                      <h4>ก่อนเริ่ม เตรียมตัวแบบนี้นะครับ</h4>
+                      <ul>
+                        <li>เตรียมปากกาและสมุดไว้จด keyword</li>
+                        <li>คุณจะมีเวลาเตรียมคำตอบ 1 นาทีเต็ม</li>
+                        <li>หลังจากนั้นต้องพูดต่อเนื่อง 2 นาที</li>
+                        <li>แล้วจะมี follow-up 3 ข้อ ข้อละ 1 นาที</li>
+                      </ul>
+                    </div>
+                    <div className="trialBriefCard">
+                      <h4>Long Turn</h4>
+                      <p className="trialPromptText">{TRIAL_SPEAKING_PROMPT}</p>
+                      <ul>
+                        {TRIAL_SPEAKING_PART2_CUES.map((cue) => (
+                          <li key={`trial-cue-${cue}`}>{cue}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="trialBriefCard">
+                      <h4>Follow-up Questions</h4>
+                      <p>หลังจากพูด 2 นาทีแล้ว จะมีอีก 3 คำถาม และคุณมีเวลา <strong>1 นาทีต่อข้อ</strong> ครับ</p>
+                      <ol>
+                        {TRIAL_SPEAKING_PART3_QUESTIONS.map((question) => (
+                          <li key={`trial-p3-${question}`}>{question}</li>
+                        ))}
+                      </ol>
+                    </div>
+                  </div>
+                )}
+                {Math.min(creditProfile.feedbackRemaining, creditProfile.fullMockRemaining) > 0 && (
+                  <div className="controls prepControls">
+                    <button
+                      type="button"
+                      className="primaryReadyBtn"
+                      onClick={() => {
+                        setSelectedTestMode('full')
+                        setSelectedTopicId(TRIAL_SPEAKING_TOPIC_ID)
+                        startAttempt()
+                      }}
+                    >
+                      ฉันพร้อมแล้ว เริ่ม Trial ตอนนี้
+                    </button>
+                    <button type="button" className="secondary cancelBtn" onClick={handleLogout}>
+                      ออกจากระบบ
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
             <>
               <div className="providerTabs">
                 {(['part1', 'part2', 'part3', 'full'] as const).map((mode) => (
@@ -7873,53 +15230,133 @@ function App() {
                   </div>
                 </div>
               )}
-              <div className="thumbnailGrid">
-                {availableTopics.map((topic, index) => (
-                  (() => {
-                    const latestScore = latestScoresByTest[`${selectedTestMode}:${topic.id}`]
-                    const hasAttempted = latestScore !== undefined
-                    return (
-                  <div
-                    className={`thumbnailCard color-${index % 6} ${selectedTestMode === 'full' ? 'fullMockCard' : ''}`}
-                    key={topic.id}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      openStartFlowForTopic(topic.id)
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault()
-                        openStartFlowForTopic(topic.id)
-                      }
-                    }}
-                  >
-                    {selectedTestMode === 'full' && <span className="fullMockCardBadge">🎯 Full Exam</span>}
-                    <p className="thumbCategory">{topic.category}</p>
-                    <h3>{topic.title}</h3>
-                    <p className="latestScoreBadge">
-                      Latest score:{' '}
-                      {hasAttempted ? latestScore.toFixed(1) : 'N/A'}
-                    </p>
-                    {hasAttempted && (
+              <div className="speakingTopicBank" role="region" aria-label="Speaking question bank">
+                <div className="topicBankToolbar">
+                  <label className="topicBankSearchWrap">
+                    <span className="sr-only">Search topics</span>
+                    <input
+                      type="search"
+                      className="topicBankSearchInput"
+                      value={topicBankSearch}
+                      onChange={(event) => setTopicBankSearch(event.target.value)}
+                      placeholder="Search by title, category, or cue…"
+                      aria-label="Search topics"
+                    />
+                  </label>
+                  <div className="topicBankToolbarMeta">
+                    <span className="topicBankCount">
+                      {topicBankFilteredTopics.length}/{availableTopics.length} topics
+                    </span>
+                    <div className="topicBankViewToggle" role="group" aria-label="Card layout">
                       <button
                         type="button"
-                        className="redeemBtn"
-                        onClick={(event) => {
-                          event.stopPropagation()
-                          retryTestFromCard(topic.id)
-                        }}
+                        className={topicBankView === 'grid' ? 'active' : ''}
+                        onClick={() => setTopicBankView('grid')}
+                        aria-pressed={topicBankView === 'grid'}
                       >
-                        TRY AGAIN
+                        Grid
                       </button>
-                    )}
-                    <span>Click to Attempt</span>
+                      <button
+                        type="button"
+                        className={topicBankView === 'list' ? 'active' : ''}
+                        onClick={() => setTopicBankView('list')}
+                        aria-pressed={topicBankView === 'list'}
+                      >
+                        List
+                      </button>
+                    </div>
                   </div>
-                    )
-                  })()
-                ))}
+                </div>
+                {topicBankFilteredTopics.length === 0 ? (
+                  <p className="topicBankEmpty">
+                    No topics match your search. Clear the box above or try different keywords.
+                  </p>
+                ) : (
+                  topicBankGrouped.map(([category, groupTopics]) => (
+                    <section key={`topic-bank-${category}`} className="topicBankGroup">
+                      <header className="topicBankGroupHeader">
+                        <h3 className="topicBankGroupTitle">{category}</h3>
+                        <span className="topicBankGroupCount">{groupTopics.length}</span>
+                      </header>
+                      <div className={`thumbnailGrid topicBankCardGrid thumbnailGrid--${topicBankView}`}>
+                        {groupTopics.map((topic) => {
+                          const flatIndex = topicBankIdToFlatIndex.get(topic.id) ?? 0
+                          const latestScore = latestScoresByTest[`${selectedTestMode}:${topic.id}`]
+                          const hasAttempted = latestScore !== undefined
+                          const isSelected = selectedTopicId === topic.id
+                          return (
+                            <div
+                              key={topic.id}
+                              data-topic-bank-card-index={flatIndex}
+                              className={`thumbnailCard thumbnailCard--mode-${selectedTestMode} ${
+                                hasAttempted ? 'thumbnailCard--attempted' : 'thumbnailCard--fresh'
+                              } ${selectedTestMode === 'full' ? 'fullMockCard' : ''} ${isSelected ? 'thumbnailCard--selected' : ''}`}
+                              role="button"
+                              tabIndex={topicBankFocusIndex === flatIndex ? 0 : -1}
+                              onClick={() => {
+                                setTopicBankFocusIndex(flatIndex)
+                                openStartFlowForTopic(topic.id)
+                              }}
+                              onFocus={() => setTopicBankFocusIndex(flatIndex)}
+                              onKeyDown={(event) => {
+                                if (
+                                  event.key === 'ArrowDown' ||
+                                  event.key === 'ArrowRight' ||
+                                  event.key === 'ArrowUp' ||
+                                  event.key === 'ArrowLeft'
+                                ) {
+                                  handleTopicBankGridKeyDown(event)
+                                  return
+                                }
+                                if (event.key === 'Enter' || event.key === ' ') {
+                                  event.preventDefault()
+                                  setTopicBankFocusIndex(flatIndex)
+                                  openStartFlowForTopic(topic.id)
+                                }
+                              }}
+                            >
+                              <p className="thumbCategory">{topic.category}</p>
+                              <h3>{topic.title}</h3>
+                              {hasAttempted ? (
+                                <p className="latestScoreBadge">Latest score: {latestScore.toFixed(1)}</p>
+                              ) : (
+                                <p className="topicCardFreshHint">Not attempted yet</p>
+                              )}
+                              {hasAttempted && (
+                                <button
+                                  type="button"
+                                  className="redeemBtn"
+                                  onClick={(event) => {
+                                    event.stopPropagation()
+                                    retryTestFromCard(topic.id)
+                                  }}
+                                >
+                                  TRY AGAIN
+                                </button>
+                              )}
+                              <div className="topicCardActions">
+                                <button
+                                  type="button"
+                                  className="topicCardStartBtn"
+                                  onClick={(event) => {
+                                    event.stopPropagation()
+                                    setTopicBankFocusIndex(flatIndex)
+                                    openStartFlowForTopic(topic.id)
+                                  }}
+                                >
+                                  Start
+                                </button>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  ))
+                )}
               </div>
             </>
+            )
           )}
 
           {attemptStage !== 'idle' && activeTopic && (
@@ -7936,10 +15373,72 @@ function App() {
 
               {attemptStage === 'prep' && (
                 <div className="stageCard prepStageV2">
-                  <h3>Preparation Time</h3>
+                  <h3>{isTrialSpeakingFlow ? 'ก่อนเริ่ม Trial นี้' : 'Preparation Time'}</h3>
                   <p className="timer">{remainingPrepSeconds}s</p>
 
-                  {isFullExamMode && (
+                  {isTrialSpeakingFlow ? (
+                    <>
+                      <div className="prepTimeEstimate">
+                        <span className="prepTimeIcon">🕐</span>
+                        <span>ใช้เวลาประมาณ <strong>5-7 นาที</strong> สำหรับ trial นี้ครับ</span>
+                      </div>
+                      <div className="trialFlowSteps">
+                        <span className="previewStep">เตรียมตัว 1 นาที</span>
+                        <span className="previewArrow">→</span>
+                        <span className="previewStep">พูด 2 นาที</span>
+                        <span className="previewArrow">→</span>
+                        <span className="previewStep">Follow-up 3 ข้อ</span>
+                        <span className="previewArrow">→</span>
+                        <span className="previewStep previewStepFinal">Report</span>
+                      </div>
+                      <div className="prepHeadsUp">
+                        <p className="prepHeadsUpTitle">⚠️ ก่อนเริ่มจริง</p>
+                        <p>สิทธิ์ทดลองใช้ฟรีนี้ใช้ได้ 1 ครั้งเท่านั้น เตรียมปากกาและสมุดให้พร้อมก่อนกดเริ่มนะครับ</p>
+                      </div>
+                      <div className="prepMicCheck">
+                        <p className="prepMicCheckTitle">🎤 ทดสอบไมค์ก่อนเริ่ม</p>
+                        {micCheckStatus === 'idle' && (
+                          <button type="button" className="micCheckBtn" onClick={() => void startMicCheck()}>
+                            กดเพื่อบันทึก 3 วินาที
+                          </button>
+                        )}
+                        {micCheckStatus === 'recording' && (
+                          <p className="micCheckRecording">🔴 กำลังบันทึก... พูดอะไรสักอย่าง</p>
+                        )}
+                        {micCheckStatus === 'playing' && (
+                          <p className="micCheckPlaying">🔊 กำลังเล่นเสียงของคุณ...</p>
+                        )}
+                        {micCheckStatus === 'success' && (
+                          <div className="micCheckSuccess">
+                            <p>✅ ไมค์ใช้งานได้!</p>
+                            <button type="button" className="micCheckRetry" onClick={resetMicCheck}>ทดสอบอีกครั้ง</button>
+                          </div>
+                        )}
+                        {micCheckStatus === 'error' && (
+                          <div className="micCheckError">
+                            <p>❌ ไม่สามารถเข้าถึงไมค์ได้ กรุณาตรวจสอบการอนุญาต</p>
+                            <button type="button" className="micCheckRetry" onClick={resetMicCheck}>ลองอีกครั้ง</button>
+                          </div>
+                        )}
+                      </div>
+                      <p>อีกสักครู่คุณจะมีเวลาเตรียมคำตอบ 1 นาที จากนั้นต้องพูด 2 นาที และตอบ follow-up 3 ข้อ ข้อละ 1 นาทีครับ</p>
+                      <div className="card">
+                        <p className="category">Long Turn Prompt</p>
+                        <h3>{TRIAL_SPEAKING_PROMPT}</h3>
+                        <ul>
+                          {TRIAL_SPEAKING_PART2_CUES.map((cue) => (
+                            <li key={`trial-prep-cue-${cue}`}>{cue}</li>
+                          ))}
+                        </ul>
+                        <p className="promptSub">จากนั้นจะมี follow-up อีก 3 ข้อ:</p>
+                        <ul>
+                          {TRIAL_SPEAKING_PART3_QUESTIONS.map((question) => (
+                            <li key={`trial-prep-p3-${question}`}>{question}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  ) : isFullExamMode && (
                     <>
                       <div className="prepTimeEstimate">
                         <span className="prepTimeIcon">🕐</span>
@@ -8017,7 +15516,21 @@ function App() {
                     </>
                   )}
 
-                  <p>Review the question list first, then click &quot;I&apos;m Ready&quot;.</p>
+                  {isQuestionByQuestionMode ? (
+                    <div className="prepThaiPracticeGuide">
+                      <strong>วิธีใช้โหมดฝึกนี้</strong>
+                      <p>
+                        อันนี้เป็นโหมด practice นะครับ ยังไม่ใช่สอบจริง เอาเวลาเท่าที่ต้องการได้เลยในการทวนคำศัพท์
+                        คิดไอเดีย และร่างคำตอบไว้ก่อน
+                      </p>
+                      <p>
+                        โน้ตที่พิมพ์ไว้ด้านล่างจะขึ้นให้เห็นตอนพูด ไม่ต้องกังวลนะครับ ;)
+                        ถ้าอยากดูคำแนะนำคำศัพท์สวย ๆ ของพี่ดอยสำหรับแต่ละข้อ ให้กด <strong>Vocabulary Guide</strong>
+                      </p>
+                    </div>
+                  ) : (
+                    <p>Review the question list first, then click &quot;I&apos;m ready&quot;.</p>
+                  )}
 
                   {isQuestionByQuestionMode && (
                     <div className="card">
@@ -8034,7 +15547,22 @@ function App() {
 
                   <div className="prepNotebookCard">
                     <h4>Preparation Notebook</h4>
-                    {isFullExamMode ? (
+                    {isTrialSpeakingFlow ? (
+                      <div className="prepAccordionWrap">
+                        <div className="part2NoteWrap">
+                          <p className="part2PromptPreview">{TRIAL_SPEAKING_PROMPT}</p>
+                          <textarea
+                            className="part2NotebookTextarea"
+                            value={prepNotePart2}
+                            onChange={(event) => setPrepNotePart2(event.target.value)}
+                            placeholder="จด keyword ที่อยากพูด, ตัวอย่าง, เรื่องสั้น ๆ หรือ structure ของคุณตรงนี้..."
+                          />
+                          <p className="part2NotebookHint">
+                            ใช้ 1 นาทีนี้จด note ให้ไวที่สุดครับ เดี๋ยว note นี้จะขึ้นให้เห็นตอนช่วงพูด 2 นาที
+                          </p>
+                        </div>
+                      </div>
+                    ) : isFullExamMode ? (
                       <div className="prepAccordionWrap">
                         <details
                           className="prepAccordion"
@@ -8184,10 +15712,10 @@ function App() {
                   </div>
                   <div className="controls prepControls">
                     <button type="button" className="primaryReadyBtn" onClick={() => void skipPreparation()}>
-                      I&apos;m Ready — Start Exam
+                      {isTrialSpeakingFlow ? 'ฉันพร้อมแล้ว เริ่ม Trial ตอนนี้' : "I'm ready"}
                     </button>
                     <button type="button" className="secondary cancelBtn" onClick={resetSession}>
-                      Cancel
+                      {isTrialSpeakingFlow ? 'ยกเลิก' : 'Cancel'}
                     </button>
                   </div>
                 </div>
@@ -8215,6 +15743,7 @@ function App() {
                       </button>
                     )}
                   </div>
+                  <div className="speakingBrandStrip" aria-hidden="true" />
                   {isExamPaused && (
                     <div className="examPausedOverlay">
                       <div className="examPausedCard">
@@ -8224,10 +15753,58 @@ function App() {
                       </div>
                     </div>
                   )}
-                  <div className="speakingPanelLayout">
+                  <div className="speakingExamLane">
+                    <div className="speakingPanelLayout">
                     <section className="speakingPromptCard">
                       <p className="promptPill">{activeTopic.category}</p>
                       {isFullExamMode ? (
+                        isTrialSpeakingFlow ? (
+                        <>
+                          <div className="card phaseInfoCard">
+                            <p className="category">Trial Flow</p>
+                            <p className="phaseInfoText">{fullExamPhaseLabel}</p>
+                          </div>
+                          {fullExamPhase === 'part2_prep' ? (
+                            <>
+                              <h3>คุณมีเวลาเตรียมคำตอบ 1 นาทีครับ</h3>
+                              <p className="part2BigQuestion">{TRIAL_SPEAKING_PROMPT}</p>
+                              <p className="promptSub">ลองเก็บให้ครบ 4 จุดนี้:</p>
+                              <ul>
+                                {TRIAL_SPEAKING_PART2_CUES.map((cue) => (
+                                  <li key={`trial-live-cue-${cue}`}>{cue}</li>
+                                ))}
+                              </ul>
+                              <label className="part2NotebookLiveWrap">
+                                <span className="part2NotebookLabel">Trial Note</span>
+                                <textarea
+                                  className="part2NotebookTextarea"
+                                  value={prepNotePart2}
+                                  onChange={(event) => setPrepNotePart2(event.target.value)}
+                                  placeholder="จด keyword ที่จะใช้พูด 2 นาทีตรงนี้..."
+                                />
+                                <p className="part2NotebookHint">อีกเดี๋ยวระบบจะให้คุณพูด 2 นาทีเต็มจาก prompt นี้ครับ</p>
+                              </label>
+                            </>
+                          ) : fullExamPhase === 'part2_speaking' ? (
+                            <>
+                              <h3>พูดต่อเนื่อง 2 นาทีจากหัวข้อนี้ครับ</h3>
+                              <p className="part2BigQuestion">{TRIAL_SPEAKING_PROMPT}</p>
+                              <ul>
+                                {TRIAL_SPEAKING_PART2_CUES.map((cue) => (
+                                  <li key={`trial-speak-cue-${cue}`}>{cue}</li>
+                                ))}
+                              </ul>
+                              <p className="promptSub">อย่าพยายามพูด perfect นะครับ ขอแค่ตอบให้ครบและไหลลื่นที่สุดก่อน</p>
+                            </>
+                          ) : (
+                            <>
+                              <h3>Follow-up Question {fullExamPart3Index + 1}/3</h3>
+                              <p>{fullExamCurrentQuestion}</p>
+                              <p className="promptSub">คุณมีเวลา 1 นาทีสำหรับคำถามนี้ครับ ตอบให้มี opinion + reason + example สั้น ๆ</p>
+                            </>
+                          )}
+                        </>
+                        ) : (
                         <>
                           <div className="card phaseInfoCard">
                             <p className="category">Current Phase</p>
@@ -8326,6 +15903,7 @@ function App() {
                             </>
                           )}
                         </>
+                        )
                       ) : isQuestionByQuestionMode ? (
                         <>
                           <h3>
@@ -8377,8 +15955,8 @@ function App() {
                       </div>
                     </section>
 
-                    <section className="speakingControlCard">
-                      <div className="recordingPill">
+                    <section className="speakingControlCard speakingPerformanceCard">
+                      <div className={`recordingPill ${isExamPaused ? 'recordingPill-paused' : 'recordingPill-live'}`}>
                         <span className="recordingDot" />
                         {isExamPaused ? 'Paused' : 'Live Recording'}
                       </div>
@@ -8413,9 +15991,13 @@ function App() {
                               void doneCurrentFullExamPhase()
                             }}
                           >
-                            {fullExamPhase === 'part3' && fullExamPart3Index >= fullExamPlan.part3Questions.length - 1
-                              ? "✓ Finish Exam"
-                              : "✓ Done, Next →"}
+                            {isTrialSpeakingFlow
+                              ? fullExamPhase === 'part3' && fullExamPart3Index >= fullExamPlan.part3Questions.length - 1
+                                ? '✓ ส่งตรวจและดูผล'
+                                : '✓ ข้อต่อไป'
+                              : fullExamPhase === 'part3' && fullExamPart3Index >= fullExamPlan.part3Questions.length - 1
+                                ? "✓ Finish Exam"
+                                : "✓ Done, Next →"}
                           </button>
                         ) : isQuestionByQuestionMode ? (
                           <button
@@ -8468,8 +16050,8 @@ function App() {
                           </p>
                           <textarea
                             className="liveTranscriptTextarea"
-                            value={transcript}
-                            onChange={(event) => setTranscript(event.target.value)}
+                            value={currentTranscriptEditableText}
+                            onChange={(event) => handleTranscriptTextareaChange(event.target.value)}
                             placeholder="Your live browser transcription will appear here while speaking, or you can paste your answer here..."
                           />
                           {interimTranscript && <p className="interim">{interimTranscript}</p>}
@@ -8512,6 +16094,7 @@ function App() {
                         Audio: {isRecordingAudio ? `🔴 Recording (${recordingDuration}s)` : 'Stopped'}
                       </p>
                     </section>
+                    </div>
                   </div>
                 </div>
               )}
@@ -8529,7 +16112,9 @@ function App() {
                     <div className="reportShowcase">
                       <aside className="promptBrief">
                         <p className="promptTag">
-                          {selectedTestMode === 'full'
+                          {isTrialSpeakingFlow
+                            ? 'Trial Prompt'
+                            : selectedTestMode === 'full'
                             ? 'Full Mock Prompt'
                             : selectedTestMode === 'part1'
                               ? 'Part 1 Prompt'
@@ -8647,16 +16232,32 @@ function App() {
                               <div className="reportStickyActions">
                                 <button
                                   type="button"
+                                  className="reportSaveButton"
                                   onClick={() => saveFullReportToNotebook(activeReport)}
                                 >
-                                  Save Full Report
+                                  <span className="reportSaveButtonGlow" aria-hidden="true" />
+                                  <span className="reportSaveButtonIcon" aria-hidden="true">
+                                    ✦
+                                  </span>
+                                  <span>Save Full Report</span>
                                 </button>
                               </div>
                             </div>
+                              {reportActionToast && (
+                                <div className="notebookSaveToast reportSaveToast" role="status" aria-live="polite">
+                                  <span className="notebookSaveToastSparkle reportSaveToastSparkle" aria-hidden="true">
+                                    {reportActionToast.icon}
+                                  </span>
+                                  <div>
+                                    <p className="notebookSaveToastTitle">{reportActionToast.title}</p>
+                                    <p className="notebookSaveToastText">{reportActionToast.text}</p>
+                                  </div>
+                                </div>
+                              )}
                               {notebookSaveNotice && <p className="meta authSuccess">{notebookSaveNotice}</p>}
                               <section className="reportDisclaimerCard">
                                 <p>
-                                  This is just estimation based on your performance today. In the real exam, you might get a higher or lower score. The goal is to see your weakness and a realistic way to improve.
+                                  คะแนนนี้เป็นเพียงการประเมินจากผลงานของคุณในวันนี้ครับ ตอนสอบจริง คุณอาจได้คะแนนสูงกว่าหรือต่ำกว่านี้ได้ เป้าหมายของ report นี้คือช่วยให้คุณเห็นจุดอ่อนของตัวเอง และเห็นแนวทางพัฒนาที่ทำได้จริงครับ
                                 </p>
                               </section>
                               {!isMockFullReport &&
@@ -9036,45 +16637,53 @@ function App() {
                                         </div>
                                         {isFullExamMode ? (
                                           <>
+                                            {resultFullExamPlan.part1Questions.length > 0 && (
+                                              <>
+                                                <div className="pronRiskHeader">
+                                                  <h4>Part 1</h4>
+                                                </div>
+                                                <div className="pronRiskList">
+                                                  {activeReport.questionBreakdown
+                                                    .slice(0, resultFullExamPlan.part1Questions.length)
+                                                    .map((item, idx) => (
+                                                      <article key={`q-breakdown-p1-${idx}`} className="pronRiskItem">
+                                                        <p className="pronRiskWord">Q{idx + 1}: {item.question || 'Question'}</p>
+                                                        <p className="pronRiskReason">{item.punctuatedTranscript}</p>
+                                                      </article>
+                                                    ))}
+                                                </div>
+                                              </>
+                                            )}
                                             <div className="pronRiskHeader">
-                                              <h4>Part 1</h4>
-                                            </div>
-                                            <div className="pronRiskList">
-                                              {activeReport.questionBreakdown
-                                                .slice(0, resultFullExamPlan.part1Questions.length)
-                                                .map((item, idx) => (
-                                                  <article key={`q-breakdown-p1-${idx}`} className="pronRiskItem">
-                                                    <p className="pronRiskWord">Q{idx + 1}: {item.question || 'Question'}</p>
-                                                    <p className="pronRiskReason">{item.punctuatedTranscript}</p>
-                                                  </article>
-                                                ))}
-                                            </div>
-                                            <div className="pronRiskHeader">
-                                              <h4>Part 2</h4>
+                                              <h4>{isTrialSpeakingFlow ? '2-Minute Response' : 'Part 2'}</h4>
                                             </div>
                                             <div className="pronRiskList">
                                               {activeReport.questionBreakdown
                                                 .slice(resultFullExamPlan.part1Questions.length, resultFullExamPlan.part1Questions.length + 1)
                                                 .map((item, idx) => (
                                                   <article key={`q-breakdown-p2-${idx}`} className="pronRiskItem">
-                                                    <p className="pronRiskWord">{item.question || 'Part 2'}</p>
+                                                    <p className="pronRiskWord">{item.question || (isTrialSpeakingFlow ? 'Long Turn' : 'Part 2')}</p>
                                                     <p className="pronRiskReason">{item.punctuatedTranscript}</p>
                                                   </article>
                                                 ))}
                                             </div>
-                                            <div className="pronRiskHeader">
-                                              <h4>Part 3</h4>
-                                            </div>
-                                            <div className="pronRiskList">
-                                              {activeReport.questionBreakdown
-                                                .slice(resultFullExamPlan.part1Questions.length + 1)
-                                                .map((item, idx) => (
-                                                  <article key={`q-breakdown-p3-${idx}`} className="pronRiskItem">
-                                                    <p className="pronRiskWord">Q{idx + 1}: {item.question || 'Question'}</p>
-                                                    <p className="pronRiskReason">{item.punctuatedTranscript}</p>
-                                                  </article>
-                                                ))}
-                                            </div>
+                                            {activeReport.questionBreakdown.slice(resultFullExamPlan.part1Questions.length + 1).length > 0 && (
+                                              <>
+                                                <div className="pronRiskHeader">
+                                                  <h4>{isTrialSpeakingFlow ? 'Follow-up Questions' : 'Part 3'}</h4>
+                                                </div>
+                                                <div className="pronRiskList">
+                                                  {activeReport.questionBreakdown
+                                                    .slice(resultFullExamPlan.part1Questions.length + 1)
+                                                    .map((item, idx) => (
+                                                      <article key={`q-breakdown-p3-${idx}`} className="pronRiskItem">
+                                                        <p className="pronRiskWord">Q{idx + 1}: {item.question || 'Question'}</p>
+                                                        <p className="pronRiskReason">{item.punctuatedTranscript}</p>
+                                                      </article>
+                                                    ))}
+                                                </div>
+                                              </>
+                                            )}
                                           </>
                                         ) : (
                                           <div className="pronRiskList">
@@ -9110,7 +16719,42 @@ function App() {
                                     )}
                                     <div className="punctuatedTranscriptBox">
                                       <h5>Punctuated Submitted Text</h5>
-                                      <p>{activeReport.punctuatedTranscript}</p>
+                                      {isFullExamMode && activeReport.questionBreakdown && activeReport.questionBreakdown.length > 0 ? (
+                                        <>
+                                          {resultFullExamPlan.part1Questions.length > 0 && (
+                                            <>
+                                              <h6>Part 1</h6>
+                                              {activeReport.questionBreakdown
+                                                .slice(0, resultFullExamPlan.part1Questions.length)
+                                                .map((item, idx) => (
+                                                  <p key={`punctuated-p1-${idx}`}>
+                                                    <strong>Q{idx + 1}:</strong> {item.punctuatedTranscript}
+                                                  </p>
+                                                ))}
+                                            </>
+                                          )}
+                                          <h6>{isTrialSpeakingFlow ? '2-Minute Response' : 'Part 2'}</h6>
+                                          {activeReport.questionBreakdown
+                                            .slice(resultFullExamPlan.part1Questions.length, resultFullExamPlan.part1Questions.length + 1)
+                                            .map((item, idx) => (
+                                              <p key={`punctuated-p2-${idx}`}>{item.punctuatedTranscript}</p>
+                                            ))}
+                                          {activeReport.questionBreakdown.slice(resultFullExamPlan.part1Questions.length + 1).length > 0 && (
+                                            <>
+                                              <h6>{isTrialSpeakingFlow ? 'Follow-up Questions' : 'Part 3'}</h6>
+                                              {activeReport.questionBreakdown
+                                                .slice(resultFullExamPlan.part1Questions.length + 1)
+                                                .map((item, idx) => (
+                                                  <p key={`punctuated-p3-${idx}`}>
+                                                    <strong>Q{idx + 1}:</strong> {item.punctuatedTranscript}
+                                                  </p>
+                                                ))}
+                                            </>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <p>{activeReport.punctuatedTranscript}</p>
+                                      )}
                                     </div>
                                   </div>
                                 </details>
@@ -9130,6 +16774,33 @@ function App() {
                         <p>Listen back and compare with the transcript</p>
                       </div>
                       <audio controls src={audioUrl} />
+                      {!isTrialUser && (
+                        <div className="audioConsultCard">
+                          <div className="audioConsultCopy">
+                            <p className="audioConsultEyebrow">For future revision</p>
+                            <h4>เซฟ report ไว้ทบทวน และโหลดเสียงไว้ใช้ตอนปรึกษาพี่ดอยได้ครับ</h4>
+                            <p>
+                              นักเรียนในคอร์สสามารถย้อนกลับมาดู report เดิมได้เรื่อย ๆ และสามารถดาวน์โหลดเสียงชิ้นนี้ไว้ใช้ประกอบการ consult กับพี่ดอยได้เลยครับ
+                            </p>
+                          </div>
+                          <div className="audioConsultActions">
+                            <button
+                              type="button"
+                              className="audioConsultButton audioConsultButton-secondary"
+                              onClick={() => assessmentResult && saveFullReportToNotebook(assessmentResult)}
+                            >
+                              ✦ Save report for revision
+                            </button>
+                            <button
+                              type="button"
+                              className="audioConsultButton"
+                              onClick={() => void handleDownloadCurrentRecording()}
+                            >
+                              ⬇ Download audio for consultation
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -9140,13 +16811,17 @@ function App() {
                         type="button"
                         className="nextStepCard"
                         onClick={() => {
+                          if (isTrialUser) {
+                            window.location.href = 'https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts'
+                            return
+                          }
                           setSelectedTestMode(selectedTestMode)
                           resetSession()
                         }}
                       >
-                        <span className="nextStepIcon">🔄</span>
-                        <span className="nextStepTitle">ลองใหม่อีกรอบ</span>
-                        <span className="nextStepDesc">ฝึก topic เดิมจนชำนาญ</span>
+                        <span className="nextStepIcon">{isTrialUser ? '🚀' : '🔄'}</span>
+                        <span className="nextStepTitle">{isTrialUser ? 'ปลดล็อกคอร์สเต็ม' : 'ลองใหม่อีกรอบ'}</span>
+                        <span className="nextStepDesc">{isTrialUser ? 'ฝึกต่อแบบเต็มระบบพร้อม mock และ feedback เพิ่มเติม' : 'ฝึก topic เดิมจนชำนาญ'}</span>
                       </button>
                       <button
                         type="button"
@@ -9160,11 +16835,11 @@ function App() {
                       <button
                         type="button"
                         className="nextStepCard"
-                        onClick={resetSession}
+                        onClick={isTrialUser ? handleLogout : resetSession}
                       >
-                        <span className="nextStepIcon">📚</span>
-                        <span className="nextStepTitle">เลือก Topic ใหม่</span>
-                        <span className="nextStepDesc">ฝึกหัวข้ออื่น</span>
+                        <span className="nextStepIcon">{isTrialUser ? '👋' : '📚'}</span>
+                        <span className="nextStepTitle">{isTrialUser ? 'ออกจาก Trial' : 'เลือก Topic ใหม่'}</span>
+                        <span className="nextStepDesc">{isTrialUser ? 'กลับไปหน้าเริ่มต้น' : 'ฝึกหัวข้ออื่น'}</span>
                       </button>
                     </div>
                   </div>

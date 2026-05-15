@@ -1,12 +1,19 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import { createHmac, randomUUID } from 'node:crypto'
+import { createHash, createHmac, randomUUID } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import WebSocket from 'ws'
+import { ORIGINAL_IELTS_READING_7_TO_9_EXAMS } from './originalIeltsReading7To9.mjs'
+import { USER_PROVIDED_READING_PRACTICE_EXAMS } from './userProvidedReadingPractice.mjs'
+import { USER_PROVIDED_READING_PRACTICE_2_EXAMS } from './userProvidedReadingPractice2.mjs'
+import { USER_PROVIDED_READING_PRACTICE_3_EXAMS } from './userProvidedReadingPractice3.mjs'
+import { USER_PROVIDED_READING_PRACTICE_4_EXAMS } from './userProvidedReadingPractice4.mjs'
+import { USER_PROVIDED_READING_PRACTICE_5_EXAMS } from './userProvidedReadingPractice5.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvidedReadingPracticeCambridge12.mjs'
 
 dotenv.config()
 
@@ -28,6 +35,209 @@ const isDirectRun = process.argv[1] ? path.resolve(process.argv[1]) === __filena
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
 app.use(express.json({ limit: requestBodyLimit }))
+
+const GEMINI_PRICING_VERIFIED_AT = '2026-05-02'
+const GEMINI_PRICING_SOURCE_URL = 'https://ai.google.dev/gemini-api/docs/pricing?hl=en'
+const GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS = {
+  'gemini-2.5-flash': {
+    inputText: 0.3,
+    inputAudio: 1.0,
+    outputText: 2.5
+  },
+  'gemini-2.5-flash-lite': {
+    inputText: 0.1,
+    inputAudio: 0.3,
+    outputText: 0.4
+  },
+  'gemini-2.0-flash': {
+    inputText: 0.1,
+    inputAudio: 0.7,
+    outputText: 0.4
+  }
+}
+
+const roundUsdAmount = (value, digits = 8) => Number(Number(value || 0).toFixed(digits))
+
+const normalizeUsageDetails = (details) =>
+  (Array.isArray(details) ? details : [])
+    .map((item) => ({
+      modality: String(item?.modality || item?.mode || 'TEXT').trim().toUpperCase(),
+      tokenCount: Math.max(
+        0,
+        Number(
+          item?.tokenCount ??
+            item?.token_count ??
+            item?.count ??
+            0
+        ) || 0
+      )
+    }))
+    .filter((item) => item.tokenCount > 0)
+
+const summarizeUsageDetails = (details) => {
+  const summary = {
+    text: 0,
+    image: 0,
+    video: 0,
+    audio: 0,
+    document: 0,
+    other: 0
+  }
+  for (const item of normalizeUsageDetails(details)) {
+    if (item.modality === 'TEXT') summary.text += item.tokenCount
+    else if (item.modality === 'IMAGE') summary.image += item.tokenCount
+    else if (item.modality === 'VIDEO') summary.video += item.tokenCount
+    else if (item.modality === 'AUDIO') summary.audio += item.tokenCount
+    else if (item.modality === 'DOCUMENT') summary.document += item.tokenCount
+    else summary.other += item.tokenCount
+  }
+  return summary
+}
+
+const normalizeGeminiUsageMetadata = (payload) => {
+  const usage = payload?.usageMetadata || payload?.usage_metadata
+  if (!usage || typeof usage !== 'object') return null
+  return {
+    promptTokenCount: Math.max(0, Number(usage.promptTokenCount ?? usage.prompt_token_count ?? 0) || 0),
+    candidatesTokenCount: Math.max(
+      0,
+      Number(usage.candidatesTokenCount ?? usage.candidates_token_count ?? 0) || 0
+    ),
+    totalTokenCount: Math.max(0, Number(usage.totalTokenCount ?? usage.total_token_count ?? 0) || 0),
+    thoughtsTokenCount: Math.max(0, Number(usage.thoughtsTokenCount ?? usage.thoughts_token_count ?? 0) || 0),
+    promptTokensDetails: normalizeUsageDetails(
+      usage.promptTokensDetails ?? usage.prompt_tokens_details ?? []
+    ),
+    candidatesTokensDetails: normalizeUsageDetails(
+      usage.candidatesTokensDetails ?? usage.candidates_tokens_details ?? []
+    )
+  }
+}
+
+const pickGeminiPricingForModel = (model) => {
+  const normalized = String(model || '').trim().toLowerCase()
+  if (!normalized) return null
+  if (normalized.startsWith('gemini-2.5-flash-lite')) {
+    return {
+      modelFamily: 'gemini-2.5-flash-lite',
+      ...GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS['gemini-2.5-flash-lite']
+    }
+  }
+  if (normalized.startsWith('gemini-2.5-flash')) {
+    return {
+      modelFamily: 'gemini-2.5-flash',
+      ...GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS['gemini-2.5-flash']
+    }
+  }
+  if (normalized.startsWith('gemini-2.0-flash')) {
+    return {
+      modelFamily: 'gemini-2.0-flash',
+      ...GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS['gemini-2.0-flash']
+    }
+  }
+  return null
+}
+
+const calculateGeminiApiCost = ({ model, usageMetadata, fallbackInputModality = 'TEXT' }) => {
+  const normalizedUsage = normalizeGeminiUsageMetadata({ usageMetadata })
+  const pricing = pickGeminiPricingForModel(model)
+  if (!normalizedUsage || !pricing) return null
+
+  const promptByModality = summarizeUsageDetails(normalizedUsage.promptTokensDetails)
+  const outputByModality = summarizeUsageDetails(normalizedUsage.candidatesTokensDetails)
+  const hasPromptDetails = Object.values(promptByModality).some((value) => value > 0)
+  const hasOutputDetails = Object.values(outputByModality).some((value) => value > 0)
+
+  if (!hasPromptDetails && normalizedUsage.promptTokenCount > 0) {
+    const normalizedFallback = String(fallbackInputModality || 'TEXT').trim().toUpperCase()
+    if (normalizedFallback === 'AUDIO') promptByModality.audio = normalizedUsage.promptTokenCount
+    else promptByModality.text = normalizedUsage.promptTokenCount
+  }
+
+  if (!hasOutputDetails && normalizedUsage.candidatesTokenCount > 0) {
+    outputByModality.text = normalizedUsage.candidatesTokenCount
+  }
+
+  const inputTextTokens =
+    promptByModality.text +
+    promptByModality.image +
+    promptByModality.video +
+    promptByModality.document +
+    promptByModality.other
+  const inputAudioTokens = promptByModality.audio
+  const outputTextTokens =
+    outputByModality.text +
+    outputByModality.image +
+    outputByModality.video +
+    outputByModality.audio +
+    outputByModality.document +
+    outputByModality.other
+
+  const inputCostUsd =
+    inputTextTokens * (pricing.inputText / 1_000_000) +
+    inputAudioTokens * (pricing.inputAudio / 1_000_000)
+  const outputCostUsd = outputTextTokens * (pricing.outputText / 1_000_000)
+  const totalCostUsd = inputCostUsd + outputCostUsd
+
+  return {
+    provider: 'gemini',
+    model: String(model || ''),
+    modelFamily: pricing.modelFamily,
+    promptTokenCount: normalizedUsage.promptTokenCount,
+    candidatesTokenCount: normalizedUsage.candidatesTokenCount,
+    totalTokenCount: normalizedUsage.totalTokenCount,
+    thoughtsTokenCount: normalizedUsage.thoughtsTokenCount,
+    promptTokensByModality: promptByModality,
+    outputTokensByModality: outputByModality,
+    inputCostUsd: roundUsdAmount(inputCostUsd),
+    outputCostUsd: roundUsdAmount(outputCostUsd),
+    totalCostUsd: roundUsdAmount(totalCostUsd),
+    pricingVersion: {
+      source: GEMINI_PRICING_SOURCE_URL,
+      verifiedAt: GEMINI_PRICING_VERIFIED_AT
+    }
+  }
+}
+
+const createApiUsageTracker = () => {
+  const records = []
+
+  return {
+    record(entry) {
+      if (entry && typeof entry === 'object') records.push(entry)
+    },
+    summarize() {
+      const calls = records.map((item, index) => ({
+        id: index + 1,
+        provider: String(item.provider || 'gemini'),
+        operation: String(item.operation || 'unknown'),
+        model: String(item.model || ''),
+        modelFamily: String(item.modelFamily || item.model || ''),
+        promptTokenCount: Math.max(0, Number(item.promptTokenCount || 0)),
+        candidatesTokenCount: Math.max(0, Number(item.candidatesTokenCount || 0)),
+        totalTokenCount: Math.max(0, Number(item.totalTokenCount || 0)),
+        inputCostUsd: roundUsdAmount(item.inputCostUsd || 0),
+        outputCostUsd: roundUsdAmount(item.outputCostUsd || 0),
+        totalCostUsd: roundUsdAmount(item.totalCostUsd || 0)
+      }))
+      return {
+        provider: 'gemini',
+        totalCalls: calls.length,
+        totalPromptTokens: calls.reduce((sum, item) => sum + item.promptTokenCount, 0),
+        totalCompletionTokens: calls.reduce((sum, item) => sum + item.candidatesTokenCount, 0),
+        totalTokens: calls.reduce((sum, item) => sum + item.totalTokenCount, 0),
+        inputCostUsd: roundUsdAmount(calls.reduce((sum, item) => sum + item.inputCostUsd, 0)),
+        outputCostUsd: roundUsdAmount(calls.reduce((sum, item) => sum + item.outputCostUsd, 0)),
+        totalCostUsd: roundUsdAmount(calls.reduce((sum, item) => sum + item.totalCostUsd, 0)),
+        pricingVersion: {
+          source: GEMINI_PRICING_SOURCE_URL,
+          verifiedAt: GEMINI_PRICING_VERIFIED_AT
+        },
+        calls
+      }
+    }
+  }
+}
 
 const buildBucketRubricTh = (testMode = 'part2') => `
 ไวยากรณ์ (Grammar)
@@ -180,6 +390,122 @@ ${Array.isArray(questionBreakdown) && questionBreakdown.length
         .join('\n\n')
     : '(none)'}
 `
+
+const splitTrialSpeakingBreakdown = (questionBreakdown) => {
+  const items = Array.isArray(questionBreakdown) ? questionBreakdown : []
+  return {
+    part2: items[0] || null,
+    followUps: items.slice(1)
+  }
+}
+
+const trialSpeakingRubricPrompt = ({
+  topic,
+  prompt,
+  cues,
+  punctuatedTranscript,
+  whisperTranscript,
+  durationSeconds,
+  questionBreakdown
+}) => {
+  const trialBreakdown = splitTrialSpeakingBreakdown(questionBreakdown)
+  const part2Answer = trialBreakdown.part2?.punctuatedTranscript || trialBreakdown.part2?.rawTranscript || '(empty)'
+  const followUpBlock = trialBreakdown.followUps.length
+    ? trialBreakdown.followUps
+        .map(
+          (item, index) =>
+            `[Follow-up ${index + 1}] Question: ${item.question || 'Question'}\nAnswer: ${item.punctuatedTranscript || item.rawTranscript || '(empty)'}`
+        )
+        .join('\n\n')
+    : '(none)'
+
+  return `
+You are an IELTS Speaking examiner evaluating a ONE-TIME TRIAL speaking task.
+
+This trial has:
+- 1 long-turn response (the 2-minute Part 2 style answer)
+- 3 follow-up questions
+
+Scoring rules for this TRIAL:
+- Fluency must be judged ONLY from the 2-minute long-turn response.
+- Grammar must be judged from the ENTIRE submitted task (long turn + all follow-ups).
+- Lexical resource / vocabulary must be judged from the ENTIRE submitted task (long turn + all follow-ups).
+- Do NOT average fluency from the follow-up questions into the fluency score.
+- The final report must still return only 3 scores: fluency, lexical, grammar.
+
+Use this bucket rubric strictly:
+${buildBucketRubricTh('part2')}
+
+Return only valid JSON with this schema:
+{
+  "criteria": {
+    "fluency": number,
+    "lexical": number,
+    "grammar": number
+  },
+  "componentReports": {
+    "grammar": {
+      "band": number,
+      "explanationThai": string,
+      "requiredTicks": [{ "requirement": string, "isMet": boolean, "evidence": string[] }],
+      "plusOnePlan": [{ "quote": string, "fix": string }]
+    },
+    "lexical": {
+      "band": number,
+      "explanationThai": string,
+      "requiredTicks": [{ "requirement": string, "isMet": boolean, "evidence": string[] }],
+      "plusOnePlan": [{ "quote": string, "fix": string }]
+    },
+    "fluency": {
+      "band": number,
+      "explanationThai": string,
+      "requiredTicks": [{ "requirement": string, "isMet": boolean, "evidence": string[] }],
+      "plusOnePlan": [{ "quote": string, "fix": string }]
+    }
+  },
+  "analysisSignals": {
+    "grammarErrorCount": number,
+    "vocabularyIssueCount": number,
+    "meaningImpact": string
+  },
+  "strengths": string[],
+  "improvements": string[],
+  "modelNotes": string
+}
+Rules:
+- Scores must be 4.0 to 9.0
+- Use punctuated transcript as primary evidence
+- Spoken markers are normal in speaking tests: do NOT penalize fillers such as "um", "uh", "you know", "i think" by default.
+- explanationThai must be Thai and use "ครับ"
+- In grammar and lexical explanations, mention that the score reflects the whole submitted task.
+- In fluency explanation, mention clearly that the score reflects only the 2-minute response.
+- plusOnePlan.fix must be Thai coaching language
+- requiredTicks must reflect the chosen band's logic
+- each required tick includes 1-3 short direct quotes whenever possible
+- analysisSignals.grammarErrorCount = count clear grammatical errors across the whole task
+- analysisSignals.vocabularyIssueCount = count clear vocabulary issues across the whole task
+- analysisSignals.meaningImpact must be one of: "none", "minor", "major"
+- strengths: 2-4 bullet-sized strings
+- improvements: 2-4 actionable strings
+- modelNotes <= 70 words
+
+Topic: ${topic}
+Prompt: ${prompt}
+Cue points: ${Array.isArray(cues) ? cues.join(' | ') : ''}
+Duration seconds: ${durationSeconds}
+Full punctuated transcript:
+${punctuatedTranscript || '(empty)'}
+ASR transcript (backup evidence):
+${whisperTranscript || '(empty)'}
+
+Long-turn response only (THIS IS THE ONLY EVIDENCE FOR FLUENCY):
+Question: ${trialBreakdown.part2?.question || prompt || 'Long turn'}
+Answer: ${part2Answer}
+
+Follow-up answers (USE THESE FOR GRAMMAR + VOCABULARY ONLY):
+${followUpBlock}
+`
+}
 
 const fullMockWholeRubricPrompt = ({
   topic,
@@ -611,6 +937,18 @@ const normalizeSupabaseUrl = (value) => {
 const SUPABASE_URL = normalizeSupabaseUrl(process.env.SUPABASE_URL)
 const SUPABASE_ANON_KEY = String(process.env.SUPABASE_ANON_KEY || '').trim()
 const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim()
+const SUPABASE_TTS_BUCKET = String(process.env.SUPABASE_TTS_BUCKET || 'speaking-question-audio').trim()
+const QUESTION_AUDIO_MANIFEST_PATH = '_manifests/question-audio.json'
+let questionAudioBucketReady = false
+let questionAudioManifestCache = null
+const SUPABASE_REPORTS_BUCKET = String(process.env.SUPABASE_REPORTS_BUCKET || 'assessment-report-history').trim()
+const ASSESSMENT_REPORT_INDEX_PATH = '_manifests/assessment-reports.json'
+let assessmentReportsBucketReady = false
+let assessmentReportsIndexCache = null
+const SUPABASE_READING_PDOY_PROGRESS_BUCKET = String(process.env.SUPABASE_READING_PDOY_PROGRESS_BUCKET || 'reading-pdoy-progress').trim()
+const READING_PDOY_PROGRESS_INDEX_PATH = '_manifests/reading-pdoy-progress.json'
+let readingPdoyProgressBucketReady = false
+let readingPdoyProgressIndexCache = null
 
 const ensureSupabaseConfigured = () => {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -676,6 +1014,736 @@ const fetchSupabaseJson = async (path, options = {}, requestOptions) => {
   return parseJsonSafe(response)
 }
 
+const slugifyAudioSegment = (value, fallback = 'item') => {
+  const normalized = String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  return normalized || fallback
+}
+
+const hashQuestionAudioText = (text) =>
+  createHash('sha1')
+    .update(String(text || '').trim())
+    .digest('hex')
+    .slice(0, 12)
+
+const encodeStorageObjectPath = (value) =>
+  String(value || '')
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+
+const buildSupabaseStorageObjectUrl = ({ bucket, objectPath, publicAsset = false }) =>
+  `${SUPABASE_URL}/storage/v1/object/${publicAsset ? 'public/' : ''}${encodeURIComponent(bucket)}/${encodeStorageObjectPath(
+    objectPath
+  )}`
+
+const normalizeQuestionAudioItemInput = (value = {}) => {
+  const text = String(value?.text || value?.question || '').trim()
+  const cacheKey = slugifyAudioSegment(value?.cacheKey || value?.key || '')
+  if (!text || !cacheKey) return null
+  const section = /part\s*3/i.test(String(value?.section || '')) ? 'part3' : 'part1'
+  const topicId = slugifyAudioSegment(value?.topicId || value?.topicTitle || section)
+  const topicTitle = String(value?.topicTitle || value?.topicId || section).trim() || section
+  return {
+    cacheKey,
+    text,
+    section,
+    topicId,
+    topicTitle
+  }
+}
+
+const buildQuestionAudioObjectPath = (item) => {
+  const textHash = hashQuestionAudioText(item.text)
+  return {
+    textHash,
+    objectPath: `${item.section}/${item.topicId}/${item.cacheKey}-${textHash}.mp3`
+  }
+}
+
+const ensureQuestionAudioBucket = async () => {
+  if (questionAudioBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    const bucket = await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_TTS_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+    if (bucket && bucket.public !== true) {
+      await supabaseRequest(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_TTS_BUCKET)}`, {
+        method: 'PUT',
+        headers: buildSupabaseHeaders({ serviceRole: true }),
+        body: JSON.stringify({
+          id: SUPABASE_TTS_BUCKET,
+          name: SUPABASE_TTS_BUCKET,
+          public: true
+        })
+      })
+    }
+  } catch (error) {
+    if (error?.status !== 404) throw error
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        id: SUPABASE_TTS_BUCKET,
+        name: SUPABASE_TTS_BUCKET,
+        public: true
+      })
+    })
+  }
+  questionAudioBucketReady = true
+}
+
+const loadQuestionAudioManifest = async ({ forceRefresh = false } = {}) => {
+  if (questionAudioManifestCache && !forceRefresh) return questionAudioManifestCache
+  await ensureQuestionAudioBucket()
+  const manifestUrl = buildSupabaseStorageObjectUrl({
+    bucket: SUPABASE_TTS_BUCKET,
+    objectPath: QUESTION_AUDIO_MANIFEST_PATH,
+    publicAsset: true
+  })
+  const response = await safeFetch(manifestUrl, { method: 'GET' }, { timeoutMs: 10000, retries: 0 }).catch(() => null)
+  if (!response || response.status === 404) {
+    questionAudioManifestCache = { items: {} }
+    return questionAudioManifestCache
+  }
+  if (!response.ok) {
+    throw new Error(`Could not load TTS audio manifest (${response.status}).`)
+  }
+  const payload = await parseJsonSafe(response)
+  questionAudioManifestCache = payload && typeof payload === 'object' ? payload : { items: {} }
+  if (!questionAudioManifestCache.items || typeof questionAudioManifestCache.items !== 'object') {
+    questionAudioManifestCache.items = {}
+  }
+  return questionAudioManifestCache
+}
+
+const saveQuestionAudioManifest = async (manifest) => {
+  await ensureQuestionAudioBucket()
+  await supabaseRequest(`/storage/v1/object/${encodeURIComponent(SUPABASE_TTS_BUCKET)}/${encodeStorageObjectPath(QUESTION_AUDIO_MANIFEST_PATH)}`, {
+    method: 'POST',
+    headers: {
+      ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+      'Content-Type': 'application/json',
+      'x-upsert': 'true',
+      'cache-control': '3600'
+    },
+    body: JSON.stringify(manifest)
+  })
+  questionAudioManifestCache = manifest
+}
+
+const ensureAssessmentReportsBucket = async () => {
+  if (assessmentReportsBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+  } catch (error) {
+    if (error?.status !== 404) throw error
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        id: SUPABASE_REPORTS_BUCKET,
+        name: SUPABASE_REPORTS_BUCKET,
+        public: false
+      })
+    })
+  }
+  assessmentReportsBucketReady = true
+}
+
+const loadAssessmentReportsIndex = async ({ forceRefresh = false } = {}) => {
+  if (assessmentReportsIndexCache && !forceRefresh) return assessmentReportsIndexCache
+  await ensureAssessmentReportsBucket()
+  try {
+    const response = await supabaseRequest(
+      `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(ASSESSMENT_REPORT_INDEX_PATH)}`,
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+    const payload = await parseJsonSafe(response)
+    assessmentReportsIndexCache = payload && typeof payload === 'object' ? payload : { items: [] }
+  } catch (error) {
+    if (error?.status !== 400 && error?.status !== 404) throw error
+    assessmentReportsIndexCache = { items: [] }
+  }
+  if (!Array.isArray(assessmentReportsIndexCache.items)) {
+    assessmentReportsIndexCache.items = []
+  }
+  return assessmentReportsIndexCache
+}
+
+const saveAssessmentReportsIndex = async (index) => {
+  await ensureAssessmentReportsBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(ASSESSMENT_REPORT_INDEX_PATH)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '3600'
+      },
+      body: JSON.stringify(index)
+    }
+  )
+  assessmentReportsIndexCache = index
+}
+
+const uploadAssessmentReportJson = async ({ objectPath, payload }) => {
+  await ensureAssessmentReportsBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '31536000'
+      },
+      body: JSON.stringify(payload)
+    }
+  )
+}
+
+const loadAssessmentReportJson = async (objectPath) => {
+  const response = await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    }
+  )
+  return parseJsonSafe(response)
+}
+
+const ensureReadingPdoyProgressBucket = async () => {
+  if (readingPdoyProgressBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+  } catch (error) {
+    if (error?.status !== 404) throw error
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        id: SUPABASE_READING_PDOY_PROGRESS_BUCKET,
+        name: SUPABASE_READING_PDOY_PROGRESS_BUCKET,
+        public: false
+      })
+    })
+  }
+  readingPdoyProgressBucketReady = true
+}
+
+const loadReadingPdoyProgressIndex = async ({ forceRefresh = false } = {}) => {
+  if (readingPdoyProgressIndexCache && !forceRefresh) return readingPdoyProgressIndexCache
+  await ensureReadingPdoyProgressBucket()
+  try {
+    const response = await supabaseRequest(
+      `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(READING_PDOY_PROGRESS_INDEX_PATH)}`,
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+    const payload = await parseJsonSafe(response)
+    readingPdoyProgressIndexCache = payload && typeof payload === 'object' ? payload : { items: [] }
+  } catch (error) {
+    if (error?.status !== 400 && error?.status !== 404) throw error
+    readingPdoyProgressIndexCache = { items: [] }
+  }
+  if (!Array.isArray(readingPdoyProgressIndexCache.items)) {
+    readingPdoyProgressIndexCache.items = []
+  }
+  return readingPdoyProgressIndexCache
+}
+
+const saveReadingPdoyProgressIndex = async (index) => {
+  await ensureReadingPdoyProgressBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(READING_PDOY_PROGRESS_INDEX_PATH)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '3600'
+      },
+      body: JSON.stringify(index)
+    }
+  )
+  readingPdoyProgressIndexCache = index
+}
+
+const uploadReadingPdoyProgressJson = async ({ objectPath, payload }) => {
+  await ensureReadingPdoyProgressBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '3600'
+      },
+      body: JSON.stringify(payload)
+    }
+  )
+}
+
+const loadReadingPdoyProgressJson = async (objectPath) => {
+  const response = await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    }
+  )
+  return parseJsonSafe(response)
+}
+
+const normalizeReadingPdoyStep = (value) => {
+  const normalized = String(value || '').trim().toLowerCase()
+  if (['intro', 'evidence', 'decide', 'result', 'complete'].includes(normalized)) return normalized
+  return 'intro'
+}
+
+const sanitizeReadingPdoyProgressPayload = (value) => {
+  if (!value || typeof value !== 'object') return null
+  const lessonId = String(value.lessonId || '').trim()
+  if (!lessonId) return null
+  return {
+    lessonId,
+    sessionActive: Boolean(value.sessionActive),
+    step: normalizeReadingPdoyStep(value.step),
+    questionIndex: Math.max(0, Number(value.questionIndex || 0)),
+    evidenceInput: String(value.evidenceInput || '').slice(0, 1000),
+    decision: String(value.decision || '').slice(0, 100),
+    selectedOption: String(value.selectedOption || '').slice(0, 10),
+    optionParaphraseInput: String(value.optionParaphraseInput || '').slice(0, 1000),
+    feedback: String(value.feedback || '').slice(0, 2000),
+    introChoice: String(value.introChoice || '').slice(0, 500),
+    evidenceAttempts: Math.max(0, Number(value.evidenceAttempts || 0)),
+    decisionAttempts: Math.max(0, Number(value.decisionAttempts || 0)),
+    lessonType: String(value.lessonType || '').slice(0, 80),
+    examId: String(value.examId || '').slice(0, 120),
+    examTitle: String(value.examTitle || '').slice(0, 300),
+    category: normalizeReadingCategory(value.category),
+    passageNumber: Math.max(0, Number(value.passageNumber || 0)),
+    passageTitle: String(value.passageTitle || '').slice(0, 300),
+    questionNumber: Math.max(0, Number(value.questionNumber || 0)),
+    questionPrompt: String(value.questionPrompt || '').slice(0, 1000)
+  }
+}
+
+const mapReadingPdoyProgressSummary = (row) => ({
+  userId: normalizeOptionalUuid(row?.userId),
+  learnerName: String(row?.learnerName || row?.learnerEmail || 'Student'),
+  learnerEmail: normalizeEmail(row?.learnerEmail || ''),
+  lessonId: String(row?.lessonId || ''),
+  lessonType: String(row?.lessonType || ''),
+  examId: String(row?.examId || ''),
+  examTitle: String(row?.examTitle || ''),
+  category: normalizeReadingCategory(row?.category),
+  passageNumber: Math.max(0, Number(row?.passageNumber || 0)),
+  passageTitle: String(row?.passageTitle || ''),
+  questionNumber: Math.max(0, Number(row?.questionNumber || 0)),
+  questionPrompt: String(row?.questionPrompt || ''),
+  step: normalizeReadingPdoyStep(row?.step),
+  questionIndex: Math.max(0, Number(row?.questionIndex || 0)),
+  sessionActive: Boolean(row?.sessionActive),
+  updatedAt: row?.updatedAt || null,
+  objectPath: String(row?.objectPath || '')
+})
+
+const persistReadingPdoyProgressForUser = async ({ userId, profile, progress }) => {
+  const normalizedUserId = normalizeOptionalUuid(userId)
+  const sanitizedProgress = sanitizeReadingPdoyProgressPayload(progress)
+  if (!normalizedUserId || !profile || !sanitizedProgress) return null
+  const updatedAt = new Date().toISOString()
+  const objectPath = `current/${normalizedUserId}.json`
+  const payload = {
+    userId: normalizedUserId,
+    learnerName: String(profile?.full_name || profile?.email || 'Student'),
+    learnerEmail: normalizeEmail(profile?.email || ''),
+    updatedAt,
+    progress: sanitizedProgress
+  }
+  await uploadReadingPdoyProgressJson({ objectPath, payload })
+  const index = await loadReadingPdoyProgressIndex()
+  const summary = mapReadingPdoyProgressSummary({
+    userId: normalizedUserId,
+    learnerName: payload.learnerName,
+    learnerEmail: payload.learnerEmail,
+    lessonId: sanitizedProgress.lessonId,
+    lessonType: sanitizedProgress.lessonType,
+    examId: sanitizedProgress.examId,
+    examTitle: sanitizedProgress.examTitle,
+    category: sanitizedProgress.category,
+    passageNumber: sanitizedProgress.passageNumber,
+    passageTitle: sanitizedProgress.passageTitle,
+    questionNumber: sanitizedProgress.questionNumber,
+    questionPrompt: sanitizedProgress.questionPrompt,
+    step: sanitizedProgress.step,
+    questionIndex: sanitizedProgress.questionIndex,
+    sessionActive: sanitizedProgress.sessionActive,
+    updatedAt,
+    objectPath
+  })
+  const existingItems = Array.isArray(index.items) ? index.items : []
+  index.items = [summary, ...existingItems.filter((item) => normalizeOptionalUuid(item?.userId) !== normalizedUserId)].slice(0, 5000)
+  await saveReadingPdoyProgressIndex(index)
+  return summary
+}
+
+const generateDeepgramTtsAudioBuffer = async (text) => {
+  const apiKey = String(process.env.DEEPGRAM_API_KEY || '').trim()
+  if (!apiKey) {
+    const error = new Error('Missing DEEPGRAM_API_KEY on backend environment')
+    error.status = 500
+    throw error
+  }
+
+  const model = String(process.env.DEEPGRAM_TTS_MODEL || 'aura-2-asteria-en').trim()
+  const response = await safeFetch('https://api.deepgram.com/v1/speak', {
+    method: 'POST',
+    headers: {
+      Authorization: `Token ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      text,
+      model
+    })
+  })
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '')
+    const error = new Error(`Deepgram TTS failed: ${body.slice(0, 180)}`)
+    error.status = response.status
+    throw error
+  }
+
+  return Buffer.from(await response.arrayBuffer())
+}
+
+const uploadQuestionAudioBuffer = async ({ objectPath, audioBuffer }) => {
+  await ensureQuestionAudioBucket()
+  await supabaseRequest(`/storage/v1/object/${encodeURIComponent(SUPABASE_TTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`, {
+    method: 'POST',
+    headers: {
+      ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+      'Content-Type': 'audio/mpeg',
+      'x-upsert': 'true',
+      'cache-control': '31536000'
+    },
+    body: audioBuffer
+  })
+}
+
+const questionAudioObjectExists = async (objectPath) => {
+  const publicUrl = buildSupabaseStorageObjectUrl({
+    bucket: SUPABASE_TTS_BUCKET,
+    objectPath,
+    publicAsset: true
+  })
+  const response = await safeFetch(publicUrl, { method: 'HEAD' }, { timeoutMs: 10000, retries: 0 }).catch(() => null)
+  return Boolean(response?.ok)
+}
+
+const getOrCreateQuestionAudioAsset = async (rawItem, { allowGenerate = true, force = false } = {}) => {
+  const item = normalizeQuestionAudioItemInput(rawItem)
+  if (!item) {
+    const error = new Error('Question audio item is missing key or text.')
+    error.status = 400
+    throw error
+  }
+
+  const manifest = await loadQuestionAudioManifest()
+  const existingEntry = manifest.items?.[item.cacheKey]
+  const { textHash, objectPath } = buildQuestionAudioObjectPath(item)
+  const publicUrl = buildSupabaseStorageObjectUrl({
+    bucket: SUPABASE_TTS_BUCKET,
+    objectPath,
+    publicAsset: true
+  })
+
+  if (!force && existingEntry?.textHash === textHash && existingEntry?.audioUrl) {
+    return {
+      ...existingEntry,
+      cacheKey: item.cacheKey,
+      question: item.text,
+      audioUrl: existingEntry.audioUrl,
+      cached: true
+    }
+  }
+
+  if (!force && (await questionAudioObjectExists(objectPath))) {
+    const nextEntry = {
+      cacheKey: item.cacheKey,
+      section: item.section,
+      topicId: item.topicId,
+      topicTitle: item.topicTitle,
+      question: item.text,
+      textHash,
+      objectPath,
+      audioUrl: publicUrl,
+      createdAt: existingEntry?.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+    manifest.items[item.cacheKey] = nextEntry
+    await saveQuestionAudioManifest(manifest)
+    return {
+      ...nextEntry,
+      cached: true
+    }
+  }
+
+  if (!allowGenerate) {
+    const error = new Error('Question audio has not been generated yet.')
+    error.status = 404
+    throw error
+  }
+
+  const audioBuffer = await generateDeepgramTtsAudioBuffer(item.text)
+  await uploadQuestionAudioBuffer({ objectPath, audioBuffer })
+  const nextEntry = {
+    cacheKey: item.cacheKey,
+    section: item.section,
+    topicId: item.topicId,
+    topicTitle: item.topicTitle,
+    question: item.text,
+    textHash,
+    objectPath,
+    audioUrl: publicUrl,
+    createdAt: existingEntry?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+  manifest.items[item.cacheKey] = nextEntry
+  await saveQuestionAudioManifest(manifest)
+  return {
+    ...nextEntry,
+    cached: false
+  }
+}
+
+const persistAssessmentReportForUser = async ({ userId, profile, requestBody, result }) => {
+  const normalizedUserId = normalizeOptionalUuid(userId)
+  if (!normalizedUserId || !profile || !result || typeof result !== 'object') return null
+
+  const reportId = randomUUID()
+  const createdAt = new Date().toISOString()
+  const testMode = ['part1', 'part2', 'part3', 'full'].includes(String(requestBody?.testMode || ''))
+    ? String(requestBody.testMode)
+    : 'part2'
+  const topicTitle = String(requestBody?.topic || profile?.full_name || 'Speaking report').trim() || 'Speaking report'
+  const topicCategory =
+    testMode === 'part1' ? 'Speaking Part 1' : testMode === 'part2' ? 'Speaking Part 2' : testMode === 'part3' ? 'Speaking Part 3' : 'Speaking Full Mock'
+  const objectPath = `${createdAt.slice(0, 10)}/${normalizedUserId}/${reportId}.json`
+  const snapshot = sanitizeSavedReportSnapshot({
+    testMode,
+    topicTitle,
+    topicCategory,
+    prompt: String(requestBody?.prompt || ''),
+    cues: Array.isArray(requestBody?.cues) ? requestBody.cues : [],
+    report: result,
+    selectedProvider: String(result?.primaryProvider || result?.provider || '')
+  })
+  const payload = {
+    id: reportId,
+    userId: normalizedUserId,
+    learnerName: String(profile?.full_name || profile?.email || 'Student'),
+    learnerEmail: normalizeEmail(profile?.email || ''),
+    testMode,
+    topicTitle,
+    topicCategory,
+    prompt: String(requestBody?.prompt || ''),
+    cues: (Array.isArray(requestBody?.cues) ? requestBody.cues : []).map((item) => String(item || '')).slice(0, 20),
+    transcript: String(requestBody?.transcript || '').slice(0, 40000),
+    questionResponses: Array.isArray(requestBody?.questionResponses)
+      ? requestBody.questionResponses
+          .map((item) => ({
+            question: String(item?.question || '').slice(0, 1000),
+            response: String(item?.response || '').slice(0, 12000)
+          }))
+          .slice(0, 40)
+      : [],
+    report: snapshot?.report || {},
+    selectedProvider: snapshot?.selectedProvider || 'gemini',
+    createdAt
+  }
+
+  await uploadAssessmentReportJson({ objectPath, payload })
+  const index = await loadAssessmentReportsIndex()
+  const apiUsage = result?.apiUsage && typeof result.apiUsage === 'object' ? result.apiUsage : {}
+  const summary = mapAssessmentReportSummary({
+    id: reportId,
+    userId: normalizedUserId,
+    learnerName: payload.learnerName,
+    learnerEmail: payload.learnerEmail,
+    testMode,
+    topicTitle,
+    topicCategory,
+    overallBand: Number(result?.overallBand ?? result?.totalScore ?? 0),
+    provider: payload.selectedProvider,
+    apiCostUsd: Number(apiUsage?.totalCostUsd ?? 0),
+    totalTokens: Number(apiUsage?.totalTokens ?? 0),
+    totalCalls: Number(apiUsage?.totalCalls ?? 0),
+    createdAt,
+    objectPath
+  })
+  index.items = [summary, ...(Array.isArray(index.items) ? index.items : [])].slice(0, 1000)
+  await saveAssessmentReportsIndex(index)
+  return summary
+}
+
+const sendEmailWithResend = async ({ to, subject, html, text }) => {
+  if (!RESEND_API_KEY) {
+    return { skipped: true, reason: 'missing_resend_api_key' }
+  }
+  const recipients = (Array.isArray(to) ? to : [to]).map((item) => normalizeEmail(item)).filter(Boolean)
+  if (recipients.length === 0) {
+    return { skipped: true, reason: 'missing_recipient' }
+  }
+
+  const response = await safeFetch(
+    'https://api.resend.com/emails',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: RESEND_FROM_EMAIL,
+        to: recipients,
+        subject: String(subject || '').trim(),
+        html: String(html || '').trim(),
+        text: String(text || '').trim()
+      })
+    },
+    { timeoutMs: 25000, retries: 1, retryDelayMs: 900 }
+  )
+
+  const payload = await parseJsonSafe(response)
+  if (!response.ok) {
+    const message =
+      payload?.message ||
+      payload?.error ||
+      payload?.name ||
+      `Resend email request failed (${response.status}).`
+    throw new Error(String(message))
+  }
+
+  return {
+    skipped: false,
+    id: String(payload?.id || '')
+  }
+}
+
+const sendNewSignupNotificationEmail = async ({ req, learner }) => {
+  const { baseUrl, approvalUrl } = buildApprovalEmailUrls({ req, userId: learner?.id })
+  const learnerName = escapeHtml(learner?.full_name || learner?.email || 'Student')
+  const learnerEmail = escapeHtml(learner?.email || '')
+  const adminPanelUrl = baseUrl || approvalUrl
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#172033">
+      <h2 style="margin-bottom:8px;">New learner sign-up</h2>
+      <p style="margin-top:0;">A new learner has created an account and is waiting for approval.</p>
+      <p><strong>Name:</strong> ${learnerName}<br /><strong>Email:</strong> ${learnerEmail}</p>
+      ${
+        approvalUrl
+          ? `<p><a href="${escapeHtml(approvalUrl)}" style="display:inline-block;padding:12px 18px;background:#123b7a;color:#ffffff;text-decoration:none;border-radius:8px;">Grant Access</a></p>`
+          : ''
+      }
+      ${
+        adminPanelUrl
+          ? `<p><a href="${escapeHtml(adminPanelUrl)}">Open admin panel</a></p>`
+          : ''
+      }
+      <p style="color:#52607a;">This approval link stays valid for 7 days.</p>
+    </div>
+  `
+  const text = [
+    'New learner sign-up',
+    '',
+    `Name: ${String(learner?.full_name || learner?.email || 'Student')}`,
+    `Email: ${String(learner?.email || '')}`,
+    approvalUrl ? `Grant access: ${approvalUrl}` : '',
+    adminPanelUrl ? `Admin panel: ${adminPanelUrl}` : ''
+  ]
+    .filter(Boolean)
+    .join('\n')
+
+  return sendEmailWithResend({
+    to: ADMIN_SIGNUP_NOTIFY_EMAIL,
+    subject: 'New learner sign-up waiting for approval',
+    html,
+    text
+  })
+}
+
+const sendAccessGrantedEmail = async ({ learner }) => {
+  const learnerName = String(learner?.full_name || learner?.email || 'Student').trim()
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.7;color:#172033">
+      <p>Hi krub,</p>
+      <p>Your access is granted for this app.</p>
+      <p>Have a nice week!</p>
+    </div>
+  `
+  const text = ['Hi krub,', '', 'Your access is granted for this app.', '', 'Have a nice week!'].join('\n')
+  return sendEmailWithResend({
+    to: learner?.email,
+    subject: 'Your app access is granted',
+    html,
+    text
+  })
+}
+
+const activateLearnerAccess = async ({ userId }) => {
+  const before = await loadUserProfileWithAccess(userId)
+  if (!before) throw new Error('Learner profile not found.')
+  const activatedWindow = buildDefaultAccessWindow(new Date().toISOString())
+
+  await supabaseRequest('/rest/v1/learner_access', {
+    method: 'POST',
+    headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+    body: JSON.stringify(
+      buildLearnerAccessPayload({
+        userId,
+        status: 'active',
+        startsAt: activatedWindow.startsAt,
+        expiresAt: before?.learner_access?.expires_at || activatedWindow.expiresAt,
+        feedbackCredits: before?.learner_access?.feedback_credits ?? 0,
+        fullMockCredits: before?.learner_access?.full_mock_credits ?? 0
+      })
+    )
+  })
+
+  const after = await loadUserProfileWithAccess(userId)
+  if (!after) throw new Error('Learner profile not found after activation.')
+  const wasActive = String(before?.learner_access?.status || 'inactive') === 'active'
+  const emailResult = !wasActive ? await sendAccessGrantedEmail({ learner: after }) : { skipped: true, reason: 'already_active' }
+  return {
+    learner: after,
+    wasActive,
+    emailResult
+  }
+}
+
 const buildLearnerAccessPayload = ({
   userId,
   status = 'active',
@@ -691,6 +1759,105 @@ const buildLearnerAccessPayload = ({
   feedback_credits: Math.max(0, Number(feedbackCredits ?? 0)),
   full_mock_credits: Math.max(0, Number(fullMockCredits ?? 0))
 })
+
+const addMonthsUtc = (value, months) => {
+  const baseDate = new Date(value)
+  if (Number.isNaN(baseDate.getTime())) return null
+  const nextDate = new Date(baseDate)
+  nextDate.setUTCMonth(nextDate.getUTCMonth() + Number(months || 0))
+  return nextDate.toISOString()
+}
+
+const buildDefaultAccessWindow = (startsAt) => {
+  const effectiveStartsAt = startsAt || new Date().toISOString()
+  return {
+    startsAt: effectiveStartsAt,
+    expiresAt: addMonthsUtc(effectiveStartsAt, 3)
+  }
+}
+
+const RESEND_API_KEY = String(process.env.RESEND_API_KEY || '').trim()
+const RESEND_FROM_EMAIL = String(process.env.RESEND_FROM_EMAIL || 'Language Plan <onboarding@resend.dev>').trim()
+const ADMIN_SIGNUP_NOTIFY_EMAIL = normalizeEmail(
+  process.env.ADMIN_SIGNUP_NOTIFY_EMAIL || 'languageplanconsulting@gmail.com'
+)
+const APP_BASE_URL = String(process.env.APP_BASE_URL || '').trim().replace(/\/+$/, '')
+const ACCESS_APPROVAL_SECRET = String(process.env.ACCESS_APPROVAL_SECRET || ADMIN_PANEL_CODE || 'language-plan').trim()
+const ACCESS_APPROVAL_TOKEN_TTL_MS = 1000 * 60 * 60 * 24 * 7
+
+const escapeHtml = (value) =>
+  String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+const base64UrlEncode = (value) =>
+  Buffer.from(String(value || ''), 'utf8')
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '')
+
+const base64UrlDecode = (value) => {
+  const normalized = String(value || '').replace(/-/g, '+').replace(/_/g, '/')
+  const padded = normalized + '='.repeat((4 - (normalized.length % 4 || 4)) % 4)
+  return Buffer.from(padded, 'base64').toString('utf8')
+}
+
+const signApprovalPayload = (payload) =>
+  createHmac('sha256', ACCESS_APPROVAL_SECRET).update(payload).digest('hex')
+
+const createAccessApprovalToken = ({ userId }) => {
+  const payload = JSON.stringify({
+    purpose: 'approve-signup',
+    userId: String(userId || '').trim(),
+    exp: Date.now() + ACCESS_APPROVAL_TOKEN_TTL_MS
+  })
+  return `${base64UrlEncode(payload)}.${signApprovalPayload(payload)}`
+}
+
+const verifyAccessApprovalToken = (token) => {
+  const [encodedPayload, signature] = String(token || '').trim().split('.')
+  if (!encodedPayload || !signature) return null
+  let payloadText = ''
+  try {
+    payloadText = base64UrlDecode(encodedPayload)
+  } catch {
+    return null
+  }
+  const expectedSignature = signApprovalPayload(payloadText)
+  if (expectedSignature !== signature) return null
+  let payload = null
+  try {
+    payload = JSON.parse(payloadText)
+  } catch {
+    return null
+  }
+  if (payload?.purpose !== 'approve-signup') return null
+  if (!payload?.userId || Number(payload?.exp || 0) < Date.now()) return null
+  return {
+    userId: String(payload.userId || '').trim()
+  }
+}
+
+const resolveAppBaseUrl = (req) => {
+  if (APP_BASE_URL) return APP_BASE_URL
+  const forwardedProto = String(req?.headers?.['x-forwarded-proto'] || '').split(',')[0].trim()
+  const protocol = forwardedProto || req?.protocol || 'https'
+  const host = String(req?.headers?.host || '').trim()
+  return host ? `${protocol}://${host}`.replace(/\/+$/, '') : ''
+}
+
+const buildApprovalEmailUrls = ({ req, userId }) => {
+  const baseUrl = resolveAppBaseUrl(req)
+  const token = createAccessApprovalToken({ userId })
+  return {
+    baseUrl,
+    approvalUrl: baseUrl ? `${baseUrl}/api/admin/approve-signup?token=${encodeURIComponent(token)}` : ''
+  }
+}
 
 const sanitizeNotebookSection = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
@@ -747,8 +1914,8 @@ const mapNotebookRecord = (row) => ({
 
 const normalizeReadingCategory = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
-  if (['passage1', 'passage2', 'passage3', 'fulltest'].includes(normalized)) return normalized
-  return 'fulltest'
+  if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
+  return 'normal'
 }
 
 const normalizeSupportReportCategory = (value) => {
@@ -777,6 +1944,12 @@ const normalizeReadingAnswer = (value) =>
     .replace(/\.$/, '')
     .toUpperCase()
 
+const parseAcceptedReadingAnswers = (value) =>
+  String(value || '')
+    .split(/[|,/&]+/)
+    .map((item) => canonicalizeReadingCorrectAnswer(item))
+    .filter(Boolean)
+
 const canonicalizeReadingCorrectAnswer = (value) => {
   const normalized = normalizeReadingAnswer(value)
   if (!normalized) return ''
@@ -798,12 +1971,21 @@ const guessReadingAnswerType = (correctAnswer) => {
   return 'text'
 }
 
+const QUESTION_SECTION_HEADER_REGEX =
+  /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
+const QUESTION_SECTION_MARKER_REGEX = /(?:^|\n)\s*Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
+
 const parseQuestionRangesFromText = (text) => {
-  const matches = [...String(text || '').matchAll(/Questions?\s+(\d+)\s*[–-]\s*(\d+)/gi)]
-  return matches.map((match) => ({
-    start: Number(match[1]),
-    end: Number(match[2])
-  }))
+  QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
+  const matches = [...String(text || '').matchAll(QUESTION_SECTION_HEADER_REGEX)]
+  return matches.map((match) => {
+    const start = Number(match[1])
+    const end = Number(match[2] || match[3] || match[1])
+    return {
+      start: Math.min(start, end),
+      end: Math.max(start, end)
+    }
+  })
 }
 
 const stripWrappedQuotes = (value) => {
@@ -819,6 +2001,25 @@ const stripWrappedQuotes = (value) => {
   return text
 }
 
+const splitReadingTitleAndBody = (value, fallbackTitle) => {
+  const lines = String(value || '').replace(/\r/g, '').split('\n')
+  const titleIndex = lines.findIndex((line) => line.trim())
+  const title = String(titleIndex >= 0 ? lines[titleIndex] : fallbackTitle || 'Passage 1').trim() || String(fallbackTitle || 'Passage 1')
+  const bodyText = lines
+    .slice(titleIndex >= 0 ? titleIndex + 1 : 0)
+    .join('\n')
+    .trim()
+  const bodyParagraphs = bodyText
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.replace(/\n+/g, ' ').trim())
+    .filter(Boolean)
+
+  return {
+    title,
+    bodyParagraphs
+  }
+}
+
 const parseReadingPassages = (rawPassageText) => {
   const source = stripWrappedQuotes(rawPassageText)
   const passages = []
@@ -830,16 +2031,10 @@ const parseReadingPassages = (rawPassageText) => {
       .slice(current.index, next ? next.index : source.length)
       .replace(/^\s*READING PASSAGE\s+\d+\s*/i, '')
       .trim()
-    const lines = block.split('\n')
-    const title = String(lines.find((line) => line.trim()) || `Passage ${current[1]}`).trim()
-    const questionMarker = block.search(/Questions?\s+\d+\s*[–-]\s*\d+/i)
+    const questionMarker = block.search(QUESTION_SECTION_MARKER_REGEX)
     const passageBodyRaw = questionMarker >= 0 ? block.slice(0, questionMarker).trim() : block.trim()
     const questionSectionText = questionMarker >= 0 ? block.slice(questionMarker).trim() : ''
-    const bodyParagraphs = passageBodyRaw
-      .split(/\n\s*\n/)
-      .map((paragraph) => paragraph.replace(/\n+/g, ' ').trim())
-      .filter(Boolean)
-      .slice(1)
+    const { title, bodyParagraphs } = splitReadingTitleAndBody(passageBodyRaw, `Passage ${current[1]}`)
     passages.push({
       number: Number(current[1]),
       title,
@@ -850,16 +2045,13 @@ const parseReadingPassages = (rawPassageText) => {
   }
 
   if (passages.length === 0 && source.trim()) {
-    const fallbackQuestionMarker = source.search(/Questions?\s+\d+\s*[–-]\s*\d+/i)
+    const fallbackQuestionMarker = source.search(QUESTION_SECTION_MARKER_REGEX)
     const fallbackPassageBodyRaw = fallbackQuestionMarker >= 0 ? source.slice(0, fallbackQuestionMarker).trim() : source.trim()
     const fallbackQuestionSectionText = fallbackQuestionMarker >= 0 ? source.slice(fallbackQuestionMarker).trim() : ''
-    const fallbackLines = fallbackPassageBodyRaw.split('\n')
-    const fallbackTitle = String(fallbackLines.find((line) => line.trim()) || 'Passage 1').trim()
-    const fallbackBodyParagraphs = fallbackPassageBodyRaw
-      .split(/\n\s*\n/)
-      .map((paragraph) => paragraph.replace(/\n+/g, ' ').trim())
-      .filter(Boolean)
-      .slice(1)
+    const { title: fallbackTitle, bodyParagraphs: fallbackBodyParagraphs } = splitReadingTitleAndBody(
+      fallbackPassageBodyRaw,
+      'Passage 1'
+    )
     passages.push({
       number: 1,
       title: fallbackTitle,
@@ -880,16 +2072,21 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
   return segments.map((segment) => {
     const numberMatch = segment.match(/^Question\s+(\d+):\s*(.+)$/im)
     const correctAnswerMatch = segment.match(/Correct Answer:\s*(.+)/i)
+    const acceptedAnswersMatch = segment.match(/Accepted Answers:\s*(.+)/i)
+    const answerGroupMatch = segment.match(/Answer Group:\s*(.+)/i)
     const exactPortionMatch = segment.match(/Exact Portion:\s*([\s\S]*?)(?=\n(?:Short Thai Explanation|Paraphrased Vocabulary):|$)/i)
     const explanationMatch = segment.match(/Short Thai Explanation:\s*([\s\S]*?)(?=\nParaphrased Vocabulary:|$)/i)
     const paraphraseMatch = segment.match(/Paraphrased Vocabulary:\s*([\s\S]*?)$/i)
     const questionNumber = Number(numberMatch?.[1] || 0)
     const prompt = String(numberMatch?.[2] || '').trim()
     const correctAnswer = canonicalizeReadingCorrectAnswer(String(correctAnswerMatch?.[1] || '').trim())
+    const acceptedAnswers = parseAcceptedReadingAnswers(acceptedAnswersMatch?.[1] || '')
     return {
       number: questionNumber,
       prompt,
       correctAnswer,
+      acceptedAnswers: acceptedAnswers.length ? acceptedAnswers : undefined,
+      answerGroup: String(answerGroupMatch?.[1] || '').trim() || undefined,
       answerType: guessReadingAnswerType(correctAnswer),
       exactPortion: String(exactPortionMatch?.[1] || '').trim(),
       explanationThai: String(explanationMatch?.[1] || '').trim(),
@@ -958,6 +2155,2585 @@ const buildReadingExamPayload = ({ title, category, rawPassageText, rawAnswerKey
   }
 }
 
+const READING_FULL_TEST_PART2_PASSAGE_TEXT = `READING PASSAGE 1
+Manatees
+You should spend about 20 minutes on Questions 1-13, which are based on Reading Passage 1 below.
+
+Manatees, also known as sea cows, are aquatic mammals that belong to a group of animals called Sirenia. This group also contains dugongs. Dugongs and manatees look quite alike – they are similar in size, colour and shape, and both have flexible flippers for forelimbs. However, the manatee has a broad, rounded tail, whereas the dugong’s is fluked, like that of a whale. There are three species of manatees: the West Indian manatee (Trichechus manatus), the African manatee (Trichechus senegalensis) and the Amazonian manatee (Trichechus inunguis).
+
+Unlike most mammals, manatees have only six bones in their neck – most others, including humans and giraffes, have seven. This short neck allows a manatee to move its head up and down, but not side to side. To see something on its left or its right, a manatee must turn its entire body, steering with its flippers. Manatees have pectoral flippers but no back limbs, only a tail for propulsion. They do have pelvic bones, however – a leftover from their evolution from a four-legged to a fully aquatic animal. Manatees share some visual similarities to elephants. Like elephants, manatees have thick, wrinkled skin. They also have some hairs covering their bodies which help them sense vibrations in the water around them.
+
+Seagrasses and other marine plants make up most of a manatee’s diet. Manatees spend about eight hours each day grazing and uprooting plants. They eat up to 15% of their weight in food each day. African manatees are omnivorous – studies have shown that molluscs and fish make up a small part of their diets. West Indian and Amazonian manatees are both herbivores.
+
+Manatees’ teeth are all molars – flat, rounded teeth for grinding food. Due to manatees’ abrasive aquatic plant diet, these teeth get worn down and they eventually fall out, so they continually grow new teeth that get pushed forward to replace the ones they lose. Instead of having incisors to grasp their food, manatees have lips which function like a pair of hands to help tear food away from the seafloor.
+
+Manatees are fully aquatic, but as mammals, they need to come up to the surface to breathe. When awake, they typically surface every two to four minutes, but they can hold their breath for much longer. Adult manatees sleep underwater for 10-12 hours a day, but they come up for air every 15-20 minutes. Active manatees need to breathe more frequently. It’s thought that manatees use their muscular diaphragm and breathing to adjust their buoyancy. They may use diaphragm contractions to compress and store gas in folds in their large intestine to help them float.
+
+The West Indian manatee reaches about 3.5 metres long and weighs on average around 500 kilogrammes. It moves between fresh water and salt water, taking advantage of coastal mangroves and coral reefs, rivers, lakes and inland lagoons. There are two subspecies of West Indian manatee: the Antillean manatee is found in waters from the Bahamas to Brazil, whereas the Florida manatee is found in US waters, although some individuals have been recorded in the Bahamas. In winter, the Florida manatee is typically restricted to Florida. When the ambient water temperature drops below 20°C, it takes refuge in naturally and artificially warmed water, such as at the warm-water outfalls from powerplants.
+
+The African manatee is also about 3.5 metres long and found in the sea along the west coast of Africa, from Mauritania down to Angola. The species also makes use of rivers, with the mammals seen in landlocked countries such as Mali and Niger. The Amazonian manatee is the smallest species, though it is still a big animal. It grows to about 2.5 metres long and 350 kilogrammes. Amazonian manatees favour calm, shallow waters that are above 23°C. This species is found in fresh water in the Amazon Basin in Brazil, as well as in Colombia, Ecuador and Peru.
+
+All three manatee species are endangered or at a heightened risk of extinction. The African manatee and Amazonian manatee are both listed as Vulnerable by the International Union for Conservation of Nature (IUCN). It is estimated that 140,000 Amazonian manatees were killed between 1935 and 1954 for their meat, fat and skin with the latter used to make leather. In more recent years, African manatee decline has been tied to incidental capture in fishing nets and hunting. Manatee hunting is now illegal in every country the African species is found in.
+
+The two subspecies of West Indian manatee are listed as Endangered by the IUCN. Both are also expected to undergo a decline of 20% over the next 40 years. A review of almost 1,800 cases of entanglement in fishing nets and of plastic consumption among marine mammals in US waters from 2009 to 2020 found that at least 700 cases involved manatees. The chief cause of death in Florida manatees is boat strikes. However, laws in certain parts of Florida now limit boat speeds during winter, allowing slow-moving manatees more time to respond.
+
+Questions 1–6
+Complete the notes below.
+Choose ONE WORD AND/OR A NUMBER from the passage for each answer.
+Write your answers in boxes 1–6 on your answer sheet.
+
+Manatees
+Appearance
+● look similar to dugongs, but with a differently shaped 1______________
+Movement
+● have fewer neck bones than most mammals
+● need to use their 2______________ to help to turn their bodies around in order to look sideways
+● sense vibrations in the water by means of 3______________ on their skin
+Feeding
+● eat mainly aquatic vegetation, such as 4______________
+● grasp and pull up plants with their 5______________
+Breathing
+● come to the surface for air every 2-4 minutes when awake and every 15-20 while sleeping
+● may regulate the 6______________ of their bodies by using muscles of diaphragm to store air internally
+
+Questions 7–13
+Do the following statements agree with the information given in Reading Passage 1?
+In boxes 7–13 on your answer sheet, write
+TRUE               if the statement agrees with the information
+FALSE              if the statement contradicts the information
+NOT GIVEN    if there is no information on this
+
+7   West Indian manatees can be found in a variety of different aquatic habitats.
+8   The Florida manatee lives in warmer waters than the Antillean manatee.
+9   The African manatee’s range is limited to coastal waters between the West African countries of Mauritania and Angola.
+10   The extent of the loss of Amazonian manatees in the mid-twentieth century was only revealed many years later.
+11   It is predicted that West Indian manatee populations will fall in the coming decades.
+12   The risk to manatees from entanglement and plastic consumption increased significantly in the period 2009-2020.
+13   There is some legislation in place which aims to reduce the likelihood of boat strikes on manatees in Florida.
+
+READING PASSAGE 2
+Procrastination
+You should spend about 20 minutes on Questions 14–26, which are based on Reading Passage 2 below.
+
+A psychologist explains why we put off important tasks and how we can break this habit
+
+A
+Procrastination is the habit of delaying a necessary task, usually by focusing on less urgent, more enjoyable, and easier activities instead. We all do it from time to time. We might be composing a message to a friend who we have to let down, or putting together an important report for college or work; we’re doing our best to avoid doing the job at hand, but deep down we know that we should just be getting on with it. Unfortunately, berating ourselves won’t stop us procrastinating again. In fact, it’s one of the worst things we can do. This matters because, as my research shows, procrastination doesn’t just waste time, but is actually linked to other problems, too.
+
+B
+Contrary to popular belief, procrastination is not due to laziness or poor time management. Scientific studies suggest procrastination is, in fact, caused by poor mood management. This makes sense if we consider that people are more likely to put off starting or completing tasks that they are really not keen to do. If just thinking about the task threatens our sense of self-worth or makes us anxious, we will be more likely to put it off. Research involving brain imaging has found that areas of the brain linked to detection of threats and emotion regulation are actually different in people who chronically procrastinate compared to those who don’t procrastinate frequently.
+
+C
+Tasks that are emotionally loaded or difficult, such as preparing for exams, are prime candidates for procrastination. People with low self-esteem are more likely to procrastinate. Another group of people who tend to procrastinate are perfectionists, who worry their work will be judged harshly by others. We know that if we don’t finish that report or complete those home repairs, then what we did can’t be evaluated. When we avoid such tasks, we also avoid the negative emotions associated with them. This is rewarding, and it conditions us to use procrastination to repair our mood. If we engage in more enjoyable tasks instead, we get another mood boost. In the long run, however, procrastination isn’t an effective way of managing emotions. The ‘mood repair’ we experience is temporary. Afterwards, people tend to be left with a sense of guilt that not only increases their negative mood, but also reinforces their tendency to procrastinate.
+
+D
+So why is this such a problem? When most people think of the costs of procrastination, they think of the toll on productivity. For example, studies have shown that procrastination negatively impacts on student performance. But putting off reading textbooks and writing essays may affect other areas of students’ lives. In one study of over 3,000 German students over a six-month period, those who reported procrastinating over their university work were also more likely to engage in study-related misconduct, such as cheating and plagiarism. But the behaviour that procrastination was most closely linked with was using fraudulent excuses to get deadline extensions. Other research shows that employees on average spend almost a quarter of their workday procrastinating, and again this is linked with negative outcomes. In fact, in one US survey of over 22,000 employees, participants who said they regularly procrastinated had less annual income and less employment stability. For every one-point increase on a measure of chronic procrastination, annual income decreased by US$15,000.
+
+E
+Procrastination also correlates with serious health and well-being problems. A tendency to procrastinate is linked to poor mental health, including higher levels of depression and anxiety. Across numerous studies, I’ve found people who regularly procrastinate report a greater number of health issues, such as headaches, flu and colds, and digestive issues. They also experience higher levels of stress and poor sleep quality. They are less likely to practise healthy behaviours, such as eating a healthy diet and regularly exercising, and use destructive coping strategies to manage their stress. In one study of over 700 people, I found people prone to procrastination had a 63% greater risk of poor heart health after accounting for other personality traits and demographics.
+
+F
+Finding better ways of managing our emotions is one route out of the vicious cycle of procrastination. An important first step is to manage our environment and how we view the task. There are a number of evidence-based strategies that can help us fend off distractions that can occupy our minds when we should be focusing on the thing we should be getting on with. For example, reminding ourselves about why the task is important and valuable can increase positive feelings towards it. Forgiving ourselves and feeling compassion when we procrastinate can help break the procrastination cycle. We should admit that we feel bad, but not be overly critical of ourselves. We should remind ourselves that we’re not the first person to procrastinate, nor the last. Doing this can take the edge off the negative feelings we have about ourselves when we procrastinate. This can all make it easier to get back on track.
+
+Questions 14–16
+Reading Passage 2 has six paragraphs, A–F.
+Which paragraph contains the following information?
+Write the correct letter, A–F, in boxes 14–16 on your answer sheet.
+NB   You may use any letter more than once.
+
+14   mention of false assumptions about why people procrastinate
+15   reference to the realisation that others also procrastinate
+16   neurological evidence of a link between procrastination and emotion
+
+Questions 17–22
+Complete the summary below.
+Choose ONE WORD ONLY from the passage for each answer.
+Write your answers in boxes 17–22 on your answer sheet.
+
+What makes us procrastinate?
+Many people think that procrastination is the result of 17___________. Others believe it to be the result of an inability to organise time efficiently. But scientific studies suggest that procrastination is actually due to poor mood management. The tasks we are most likely to put off are those that could damage our self-esteem or cause us to feel 18___________ when we think about them. Research comparing chronic procrastinators with other people even found differences in the brain regions associated with regulating emotions and identifying 19___________.
+Emotionally loaded and difficult tasks often cause us to procrastinate. Getting ready to take 20___________ might be a typical example of one such task. People who are likely to procrastinate tend to be either 21___________ or those with low self-esteem.
+Procrastination is only a short-term measure for managing emotions. It’s often followed by a feeling of 22___________, which worsens our mood and leads to more procrastination.
+
+Questions 23 and 24
+Choose TWO letters, A–E.
+Write the correct letters in boxes 23 and 24 on your answer sheet.
+Which TWO comparisons between employees who often procrastinate and those who do not are mentioned in the text?
+A   Their salaries are lower.
+B   The quality of their work is inferior.
+C   They don’t keep their jobs for as long.
+D   They don’t enjoy their working lives as much.
+E   They have poorer relationships with colleagues.
+
+Questions 25 and 26
+Choose TWO letters, A–E.
+Write the correct letters in boxes 25 and 26 on your answer sheet.
+Which TWO recommendations for getting out of a cycle of procrastination does the writer give?
+A   not judging ourselves harshly
+B   setting ourselves manageable aims
+C   rewarding ourselves for tasks achieved
+D   prioritising tasks according to their importance
+E   avoiding things that stop us concentrating on our tasks
+
+READING PASSAGE 3
+Invasion of the Robot Umpires
+You should spend about 20 minutes on Questions 27–40, which are based on Reading Passage 3 below.
+
+A few years ago, Fred DeJesus from Brooklyn, New York became the first umpire in a minor league baseball game to use something called the Automated Ball-Strike System (ABS), often referred to as the ‘robo-umpire’. Instead of making any judgments himself about a strike*, DeJesus had decisions fed to him through an earpiece, connected to a modified missile-tracking system. The contraption looked like a large black pizza box with one glowing green eye; it was mounted above the press stand.
+
+Major League Baseball (MLB), who had commissioned the system, wanted human umpires to announce the calls, just as they would have done in the past. When the first pitch came in, a recorded voice told DeJesus it was a strike. Previously, calling a strike was a judgment call on the part of the umpire. Even if the batter does not hit the ball, a pitch that passes through the ‘strike zone’ (an imaginary zone about seventeen inches wide, stretching from the batter’s knees to the middle of his chest) is considered a strike. During that first game, when DeJesus announced calls, there was no heckling and no shouted disagreement. Nobody said a word.
+
+For a hundred and fifty years or so, the strike zone has been the game’s animating force-countless arguments between a team’s manager and the umpire have taken place over its boundaries and whether a ball had crossed through it. The rules of play have evolved in various stages. Today, everyone knows that you may scream your disagreement in an umpire’s face, but you must never shout personal abuse at them or touch them. That’s a no-no. When the robo-umpires came, however, the arguments stopped.
+
+During the first robo-umpire season, players complained about some strange calls. In response, MLB decided to tweak the dimensions of the zone, and the following year the consensus was that ABS is profoundly consistent. MLB says the device is near-perfect, precise to within fractions of an inch. “It’ll reduce controversy in the game, and be good for the game,” says Rob Manfred, who is Commissioner for MLB. But the question is whether controversy is worth reducing, or whether it is the sign of a human hand.
+
+A human, at least, yells back. When I spoke with Frank Viola, a coach for a North Carolina team, he said that ABS works as designed, but that it was also unforgiving and pedantic, almost legalistic. “Manfred is a lawyer,” Viola noted. Some pitchers have complained that, compared with a human’s, the robot’s strike zone seems too precise. Viola was once a major-league player himself. When he was pitching, he explained, umpires rewarded skill. “Throw it where you aimed, and it would be a strike, even if it was an inch or two outside. There was a dialogue between pitcher and umpire.”
+
+The executive tasked with running the experiment for MLB is Morgan Sword, who’s in charge of baseball operations. According to Sword, ABS was part of a larger project to make baseball more exciting since executives are terrified of losing younger fans, as has been the case with horse racing and boxing. He explains how they began the process by asking fans what version of baseball they found most exciting. The results showed that everyone wanted more action: more hits, more defense, more baserunning. This type of baseball essentially hasn’t existed since the 1960s, when the hundred-mile-an-hour fastball, which is difficult to hit and control, entered the game. It flattened the game into strikeouts, walks, and home runs a type of play lacking much action.
+
+Sword’s team brainstormed potential fixes. Any rule that existed, they talked about changing-from changing the bats to changing the geometry of the field. But while all of these were ruled out as potential fixes, ABS was seen as a perfect vehicle for change. According to Sword, once you get the technology right, you can load any strike zone you want into the system. “It might be a triangle, or a blob, or something shaped like Texas. Over time, as baseball evolves, ABS can allow the zone to change with it.”
+
+“In the past twenty years, sports have moved away from judgment calls. Soccer has Video Assistant Referees (for offside decisions, for example). Tennis has Hawk-Eye (for line calls, for example). For almost a decade, baseball has used instant replay on the base paths. This is widely liked, even if the precision can sometimes cause problems. But these applications deal with something physical: bases, lines, goals. The boundaries of action are precise, delineated like the keys of a piano. This is not the case with ABS and the strike zone. Historically, a certain discretion has been appreciated.”
+
+I decided to email Alva Noë, a professor at Berkeley University and a baseball fan, for his opinion. “Hardly a day goes by that I don’t wake up and run through the reasons that this [robo-umpires] is such a terrible idea,” he replied. He later told me, “This is part of a movement to use algorithms to take the hard choices of living out of life.” Perhaps he’s right. We watch baseball to kill time, not to maximize it. Some players I have met take a dissenting stance toward the robots too, believing that accuracy is not the answer. According to Joe Russo, who plays for a New Jersey team, “With technology, people just want everything to be perfect. That’s not reality. I think perfect would be weird. Your teams are always winning, work is always just great, there’s always money in your pocket, your car never breaks down. What is there to talk about?”
+—————————–
+*strike: a strike is when the batter swings at a ball and misses or when the batter does not swing at a ball that passes through the strike zone.
+
+Questions 27–32
+Do the following statements agree with the claims of the writer in Reading Passage 3?
+In boxes 27-32 on your answer sheet, write
+YES                  if the statement agrees with the claims of the writer
+NO                   if the statement contradicts the claims of the writer
+NOT GIVEN    if it is impossible to say what the writer thinks about this
+
+27   When DeJesus first used ABS, he shared decision-making about strikes with it.
+28   MLB considered it necessary to amend the size of the strike zone when criticisms were received from players.
+29   MLB is keen to justify the money spent on improving the accuracy of ABS’s calculations.
+30   The hundred-mile-an-hour fastball led to a more exciting style of play.
+31   The differing proposals for alterations to the baseball bat led to fierce debate on Sword’s team.
+32   ABS makes changes to the shape of the strike zone feasible.
+
+Questions 33–37
+Complete the summary using the list of phrases, A–H, below.
+Write the correct letter, A–H, in boxes 33-37 on your answer sheet.
+
+Calls by the umpire
+Even after ABS was developed, MLB still wanted human umpires to shout out decisions as they had in their 33___________ . The umpire’s job had, at one time, required a 34___________ about whether a ball was a strike. A ball is considered a strike when the batter does not hit it and it crosses through a 35___________ extending approximately from the batter’s knee to his chest.
+In the past, 36___________ over strike calls were not uncommon, but today everyone accepts the complete ban on pushing or shoving the umpire. One difference, however, is that during the first game DeJesus used ABS, strike calls were met with 37___________
+
+A   pitch boundary
+B   numerous disputes
+C   team tactics
+D   subjective assessment
+E   widespread approval
+F   former roles
+G   total silence
+H   perceived area
+
+Questions 38–40
+Choose the correct letter, A, B, C or D.
+Write the correct letter in boxes 38–40 on your answer sheet.
+
+38   What does the writer suggest about ABS in the fifth paragraph?
+A   lt is bound to make key decisions that are wrong.
+B   It may reduce some of the appeal of the game.
+C   It will lead to the disappearance of human umpires.
+D   It may increase calls for the rules of baseball to be changed.
+
+39   Morgan Sword says that the introduction of ABS
+A   was regarded as an experiment without a guaranteed outcome.
+B   was intended to keep up with developments in other sports.
+C   was a response to changing attitudes about the role of sport.
+D   was an attempt to ensure baseball retained a young audience.
+
+40   Why does the writer include the views of Noe and Russo?
+A   to show that attitudes to technology vary widely
+B   to argue that people have unrealistic expectations of sport
+C   to indicate that accuracy is not the same thing as enjoyment
+D   to suggest that the number of baseball fans needs to increase`
+
+const READING_FULL_TEST_PART2_ANSWER_KEY = `READING PASSAGE 1: Manatees
+Question 1: Appearance: look similar to dugongs, but with a differently shaped 1______________
+
+Correct Answer: tail
+Exact Portion: "However, the manatee has a broad, rounded tail, whereas the dugong’s is fluked, like that of a whale."
+Short Thai Explanation: โจทย์ถามว่าส่วนไหนของ manatee กับ dugong มีรูปร่างต่างกัน โดยในบทความเปรียบเทียบชัดเจนว่าความต่างหลักคือหางของ manatee เป็นทรงกลมกว้าง ส่วน dugong หางเป็นแฉก ดังนั้นคำตอบคือ tail.
+Paraphrased Vocabulary: look similar to = look quite alike; differently shaped = broad, rounded ... whereas the dugong’s is fluked
+
+Question 2: Movement: need to use their 2______________ to help to turn their bodies around in order to look sideways
+
+Correct Answer: flippers
+Exact Portion: "To see something on its left or its right, a manatee must turn its entire body, steering with its flippers."
+Short Thai Explanation: manatee หันคอซ้ายขวาไม่ได้ จึงต้องหมุนทั้งตัวเวลาอยากมองด้านข้าง และบทความบอกตรง ๆ ว่ามันบังคับทิศทางด้วย flippers.
+Paraphrased Vocabulary: look sideways = see something on its left or its right; help to turn their bodies = steering with
+
+Question 3: Movement: sense vibrations in the water by means of 3______________ on their skin
+
+Correct Answer: hairs
+Exact Portion: "They also have some hairs covering their bodies which help them sense vibrations in the water around them."
+Short Thai Explanation: ข้อนี้หาได้ตรงตัวจากบทความ เพราะผู้เขียนบอกว่าเส้นขนที่ปกคลุมร่างกายช่วยให้ manatee รับรู้แรงสั่นสะเทือนในน้ำได้.
+Paraphrased Vocabulary: by means of = with the help of; on their skin = covering their bodies
+
+Question 4: Feeding: eat mainly aquatic vegetation, such as 4______________
+
+Correct Answer: Seagrasses
+Exact Portion: "Seagrasses and other marine plants make up most of a manatee’s diet."
+Short Thai Explanation: คำว่า such as ในโจทย์ต้องการตัวอย่างพืชน้ำที่ manatee กินเป็นหลัก และบทความยก Seagrasses มาเป็นคำแรก จึงเป็นคำตอบที่ตรงที่สุด.
+Paraphrased Vocabulary: eat mainly = make up most of a manatee’s diet; aquatic vegetation = marine plants
+
+Question 5: Feeding: grasp and pull up plants with their 5______________
+
+Correct Answer: lips
+Exact Portion: "manatees have lips which function like a pair of hands to help tear food away from the seafloor."
+Short Thai Explanation: แม้บทความจะบอกว่าไม่ได้ใช้ incisors จับอาหาร แต่ใช้ lips แทน โดย lips ทำหน้าที่เหมือนมือในการดึงหรือฉีกอาหารขึ้นมาจากพื้นทะเล.
+Paraphrased Vocabulary: grasp and pull up plants = tear food away from the seafloor; function like a pair of hands = help pick up food
+
+Question 6: Breathing: may regulate the 6______________ of their bodies by using muscles of diaphragm to store air internally
+
+Correct Answer: buoyancy
+Exact Portion: "It’s thought that manatees use their muscular diaphragm and breathing to adjust their buoyancy."
+Short Thai Explanation: โจทย์ใช้คำว่า regulate แต่บทความใช้คำว่า adjust ซึ่งมีความหมายสอดคล้องกัน และสิ่งที่ manatee ปรับก็คือ buoyancy หรือการลอยตัวของร่างกาย.
+Paraphrased Vocabulary: regulate = adjust; store air internally = compress and store gas in folds in their large intestine
+
+Question 7: West Indian manatees can be found in a variety of different aquatic habitats.
+
+Correct Answer: TRUE
+Exact Portion: "It moves between fresh water and salt water, taking advantage of coastal mangroves and coral reefs, rivers, lakes and inland lagoons."
+Short Thai Explanation: บทความยืนยันชัดว่าพวกมันอาศัยได้ทั้งน้ำจืด น้ำเค็ม ป่าชายเลน แนวปะการัง แม่น้ำ ทะเลสาบ และลากูน จึงตรงกับคำว่า a variety of different aquatic habitats.
+Paraphrased Vocabulary: a variety of different aquatic habitats = fresh water, salt water, mangroves, coral reefs, rivers, lakes and lagoons
+
+Question 8: The Florida manatee lives in warmer waters than the Antillean manatee.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "the Antillean manatee is found in waters from the Bahamas to Brazil, whereas the Florida manatee is found in US waters ... When the ambient water temperature drops below 20°C, it takes refuge in naturally and artificially warmed water"
+Short Thai Explanation: บทความบอกแค่ถิ่นอาศัยของทั้งสองชนิดย่อย และบอกว่า Florida manatee จะหนีไปน้ำอุ่นเมื่ออากาศเย็นลง แต่ไม่ได้เปรียบเทียบตรง ๆ ว่าน้ำที่ Florida manatee อยู่โดยรวมอุ่นกว่า Antillean manatee.
+Paraphrased Vocabulary: warmer waters than = explicit temperature comparison, which is missing
+
+Question 9: The African manatee’s range is limited to coastal waters between the West African countries of Mauritania and Angola.
+
+Correct Answer: FALSE
+Exact Portion: "The species also makes use of rivers, with the mammals seen in landlocked countries such as Mali and Niger."
+Short Thai Explanation: โจทย์บอกว่าถูกจำกัดอยู่แค่ชายฝั่ง แต่บทความระบุชัดว่า African manatees ยังเข้าแม่น้ำและพบได้ในประเทศที่ไม่มีทางออกทะเลด้วย จึงขัดแย้งโดยตรง.
+Paraphrased Vocabulary: limited to coastal waters ≠ seen in landlocked countries
+
+Question 10: The extent of the loss of Amazonian manatees in the mid-twentieth century was only revealed many years later.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "It is estimated that 140,000 Amazonian manatees were killed between 1935 and 1954"
+Short Thai Explanation: เรารู้จำนวนที่ถูกฆ่าในช่วงปี 1935-1954 แต่บทความไม่ได้บอกเลยว่าข้อมูลนี้ถูกค้นพบหรือเปิดเผยเมื่อไร ดังนั้นส่วน many years later ไม่มีหลักฐานรองรับ.
+Paraphrased Vocabulary: extent of the loss = 140,000 were killed; only revealed many years later = timing of discovery not mentioned
+
+Question 11: It is predicted that West Indian manatee populations will fall in the coming decades.
+
+Correct Answer: TRUE
+Exact Portion: "Both are also expected to undergo a decline of 20% over the next 40 years."
+Short Thai Explanation: คำว่า expected ตรงกับ predicted และ undergo a decline ก็คือจำนวนลดลง ดังนั้นข้อความนี้ตรงกับโจทย์ชัดเจน.
+Paraphrased Vocabulary: predicted = expected; will fall = undergo a decline; in the coming decades = over the next 40 years
+
+Question 12: The risk to manatees from entanglement and plastic consumption increased significantly in the period 2009-2020.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "A review of almost 1,800 cases ... from 2009 to 2020 found that at least 700 cases involved manatees."
+Short Thai Explanation: บทความให้เพียงจำนวนเคสในช่วงปี 2009-2020 แต่ไม่ได้เปรียบเทียบกับช่วงก่อนหน้า จึงไม่มีข้อมูลว่าความเสี่ยงเพิ่มขึ้นอย่างมีนัยสำคัญหรือไม่.
+Paraphrased Vocabulary: increased significantly = upward trend over time, which is not stated
+
+Question 13: There is some legislation in place which aims to reduce the likelihood of boat strikes on manatees in Florida.
+
+Correct Answer: TRUE
+Exact Portion: "laws in certain parts of Florida now limit boat speeds during winter, allowing slow-moving manatees more time to respond."
+Short Thai Explanation: บทความพูดถึง laws ที่จำกัดความเร็วเรือในบางพื้นที่ของ Florida เพื่อให้ manatee มีเวลาหลบมากขึ้น จึงตรงกับการลดโอกาสเกิด boat strikes.
+Paraphrased Vocabulary: legislation = laws; reduce likelihood of boat strikes = limit boat speeds during winter
+
+READING PASSAGE 2: Procrastination
+Question 14: mention of false assumptions about why people procrastinate
+
+Correct Answer: B
+Exact Portion: "Contrary to popular belief, procrastination is not due to laziness or poor time management."
+Short Thai Explanation: ย่อหน้า B เริ่มด้วยการหักล้างความเชื่อผิด ๆ เกี่ยวกับสาเหตุของการผัดวันประกันพรุ่ง จึงเป็นย่อหน้าที่พูดถึง false assumptions โดยตรง.
+Paraphrased Vocabulary: false assumptions = popular belief that is contradicted
+
+Question 15: reference to the realisation that others also procrastinate
+
+Correct Answer: F
+Exact Portion: "We should remind ourselves that we’re not the first person to procrastinate, nor the last."
+Short Thai Explanation: ย่อหน้า F แนะนำให้เตือนตัวเองว่าเราไม่ใช่คนเดียวที่เป็นแบบนี้ ซึ่งตรงกับการตระหนักว่าคนอื่นก็ procrastinate เหมือนกัน.
+Paraphrased Vocabulary: realisation that others also procrastinate = not the first person to procrastinate, nor the last
+
+Question 16: neurological evidence of a link between procrastination and emotion
+
+Correct Answer: B
+Exact Portion: "Research involving brain imaging has found that areas of the brain linked to detection of threats and emotion regulation are actually different"
+Short Thai Explanation: brain imaging เป็นหลักฐานทางประสาทวิทยาโดยตรง และเนื้อหาก็เชื่อมพฤติกรรม procrastination เข้ากับสมองส่วนที่เกี่ยวกับอารมณ์.
+Paraphrased Vocabulary: neurological evidence = brain imaging; emotion = emotion regulation
+
+Question 17: Many people think that procrastination is the result of 17___________.
+
+Correct Answer: laziness
+Exact Portion: "Contrary to popular belief, procrastination is not due to laziness or poor time management."
+Short Thai Explanation: โจทย์พูดถึงความเชื่อของคนทั่วไป และบทความระบุสองความเชื่อหลักคือ laziness กับ poor time management โดยช่องว่างแรกต้องเป็น laziness.
+Paraphrased Vocabulary: Many people think = popular belief
+
+Question 18: The tasks we are most likely to put off are those that could damage our self-esteem or cause us to feel 18___________ when we think about them.
+
+Correct Answer: anxious
+Exact Portion: "If just thinking about the task threatens our sense of self-worth or makes us anxious, we will be more likely to put it off."
+Short Thai Explanation: threatens our sense of self-worth ตรงกับ damage our self-esteem และ makes us anxious ก็คือ cause us to feel anxious.
+Paraphrased Vocabulary: damage our self-esteem = threatens our sense of self-worth; cause us to feel = makes us
+
+Question 19: Research comparing chronic procrastinators with other people even found differences in the brain regions associated with regulating emotions and identifying 19___________.
+
+Correct Answer: threats
+Exact Portion: "areas of the brain linked to detection of threats and emotion regulation are actually different"
+Short Thai Explanation: โจทย์ใช้คำว่า identifying แต่บทความใช้คำว่า detection ซึ่งมีความหมายเท่ากัน ดังนั้นสิ่งที่สมองระบุได้ต่างกันคือ threats.
+Paraphrased Vocabulary: identifying = detection of; associated with = linked to
+
+Question 20: Emotionally loaded and difficult tasks often cause us to procrastinate. Getting ready to take 20___________ might be a typical example of one such task.
+
+Correct Answer: exams
+Exact Portion: "Tasks that are emotionally loaded or difficult, such as preparing for exams, are prime candidates for procrastination."
+Short Thai Explanation: preparing for exams คือคำตอบตรงตัวของตัวอย่างงานยากที่มีภาระทางอารมณ์และทำให้เราชอบผัดไปก่อน.
+Paraphrased Vocabulary: getting ready to take = preparing for; typical example = such as
+
+Question 21: People who are likely to procrastinate tend to be either 21___________ or those with low self-esteem.
+
+Correct Answer: perfectionists
+Exact Portion: "People with low self-esteem are more likely to procrastinate. Another group of people who tend to procrastinate are perfectionists"
+Short Thai Explanation: บทความยกมา 2 กลุ่มคือคน self-esteem ต่ำ และ perfectionists ดังนั้นคำตอบที่หายไปคือ perfectionists.
+Paraphrased Vocabulary: another group = either A or B structure in the summary
+
+Question 22: It’s often followed by a feeling of 22___________, which worsens our mood and leads to more procrastination.
+
+Correct Answer: guilt
+Exact Portion: "people tend to be left with a sense of guilt that not only increases their negative mood, but also reinforces their tendency to procrastinate."
+Short Thai Explanation: หลังจาก procrastinate แล้วมักเหลือความรู้สึกผิดอยู่ ซึ่งยิ่งทำให้อารมณ์แย่และวนกลับไป procrastinate อีก.
+Paraphrased Vocabulary: followed by a feeling of = left with a sense of; worsens our mood = increases negative mood
+
+Question 23: Which TWO comparisons between employees who often procrastinate and those who do not are mentioned in the text?
+
+Correct Answer: A
+Accepted Answers: A | C
+Answer Group: procrastination-employees-comparison
+Exact Portion: "participants who said they regularly procrastinated had less annual income and less employment stability."
+Short Thai Explanation: สำหรับข้อ 23-24 บทความให้ 2 คำตอบคือรายได้น้อยกว่าและความมั่นคงในงานน้อยกว่า ระบบจะยอมรับ A และ C โดยไม่บังคับลำดับ.
+Paraphrased Vocabulary: less annual income = salaries are lower; less employment stability = don’t keep their jobs for as long
+
+Question 24: Which TWO comparisons between employees who often procrastinate and those who do not are mentioned in the text?
+
+Correct Answer: C
+Accepted Answers: A | C
+Answer Group: procrastination-employees-comparison
+Exact Portion: "participants who said they regularly procrastinated had less annual income and less employment stability."
+Short Thai Explanation: ข้อนี้อยู่ใน answer pair เดียวกับข้อ 23 ดังนั้นคำตอบที่ถูกอีกตัวคือ C และถ้าผู้เรียนสลับลำดับ A/C กับ C/A ก็ยังจะนับถูก.
+Paraphrased Vocabulary: less employment stability = don’t keep their jobs for as long
+
+Question 25: Which TWO recommendations for getting out of a cycle of procrastination does the writer give?
+
+Correct Answer: A
+Accepted Answers: A | E
+Answer Group: procrastination-cycle-recommendations
+Exact Portion: "strategies that can help us fend off distractions" / "not be overly critical of ourselves"
+Short Thai Explanation: สำหรับข้อ 25-26 ผู้เขียนแนะนำ 2 อย่างคืออย่าตัดสินตัวเองแรงเกินไป และกำจัดสิ่งรบกวนสมาธิ ระบบจะยอมรับ A และ E โดยไม่บังคับลำดับ.
+Paraphrased Vocabulary: not judging ourselves harshly = not be overly critical of ourselves; avoiding things that stop us concentrating = fend off distractions
+
+Question 26: Which TWO recommendations for getting out of a cycle of procrastination does the writer give?
+
+Correct Answer: E
+Accepted Answers: A | E
+Answer Group: procrastination-cycle-recommendations
+Exact Portion: "strategies that can help us fend off distractions" / "not be overly critical of ourselves"
+Short Thai Explanation: ข้อนี้จับคู่กับข้อ 25 และคำตอบอีกตัวคือ E เพราะผู้เขียนชี้ชัดว่าต้องจัดการสิ่งรบกวนสมาธิเมื่อเราควรโฟกัสงาน.
+Paraphrased Vocabulary: fend off distractions = avoid things that stop us concentrating on our tasks
+
+READING PASSAGE 3: Invasion of the Robot Umpires
+Question 27: When DeJesus first used ABS, he shared decision-making about strikes with it.
+
+Correct Answer: NO
+Exact Portion: "Instead of making any judgments himself about a strike, DeJesus had decisions fed to him through an earpiece"
+Short Thai Explanation: ข้อความนี้ขัดกับโจทย์โดยตรง เพราะ DeJesus ไม่ได้ร่วมตัดสินกับระบบ แต่รับคำตัดสินจากระบบอย่างเดียว.
+Paraphrased Vocabulary: shared decision-making ≠ instead of making any judgments himself
+
+Question 28: MLB considered it necessary to amend the size of the strike zone when criticisms were received from players.
+
+Correct Answer: YES
+Exact Portion: "players complained about some strange calls. In response, MLB decided to tweak the dimensions of the zone"
+Short Thai Explanation: เมื่อผู้เล่นร้องเรียนเรื่อง strange calls ทาง MLB ก็ปรับขนาดของ strike zone ทันที จึงตรงกับข้อความในโจทย์.
+Paraphrased Vocabulary: criticisms were received = players complained; amend the size = tweak the dimensions
+
+Question 29: MLB is keen to justify the money spent on improving the accuracy of ABS’s calculations.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "MLB says the device is near-perfect, precise to within fractions of an inch."
+Short Thai Explanation: บทความพูดถึงความแม่นยำของ ABS แต่ไม่ได้พูดถึงเรื่องงบประมาณหรือความพยายามอธิบายว่าค่าใช้จ่ายคุ้มค่า.
+Paraphrased Vocabulary: justify the money spent = financial motivation, which is not mentioned
+
+Question 30: The hundred-mile-an-hour fastball led to a more exciting style of play.
+
+Correct Answer: NO
+Exact Portion: "It flattened the game into strikeouts, walks, and home runs a type of play lacking much action."
+Short Thai Explanation: โจทย์บอกว่าทำให้เกมน่าตื่นเต้นขึ้น แต่บทความบอกตรงกันข้ามว่ามันทำให้เกมขาดแอคชัน จึงเป็น NO.
+Paraphrased Vocabulary: more exciting style of play ≠ flattened the game ... lacking much action
+
+Question 31: The differing proposals for alterations to the baseball bat led to fierce debate on Sword’s team.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "Any rule that existed, they talked about changing-from changing the bats to changing the geometry of the field."
+Short Thai Explanation: บทความบอกเพียงว่าทีมงานคุยกันเรื่องการเปลี่ยนกฎหลายอย่าง แต่ไม่ได้บอกเลยว่ามีการถกเถียงอย่างดุเดือด.
+Paraphrased Vocabulary: fierce debate = argument intensity, which is not stated
+
+Question 32: ABS makes changes to the shape of the strike zone feasible.
+
+Correct Answer: YES
+Exact Portion: "you can load any strike zone you want into the system. 'It might be a triangle, or a blob, or something shaped like Texas.'"
+Short Thai Explanation: Sword อธิบายชัดว่าถ้าเทคโนโลยีพร้อม เราสามารถใส่ strike zone รูปแบบไหนก็ได้ จึงทำให้การเปลี่ยนรูปร่างของ zone เป็นไปได้จริง.
+Paraphrased Vocabulary: feasible = can load any strike zone you want / allow the zone to change
+
+Question 33: Even after ABS was developed, MLB still wanted human umpires to shout out decisions as they had in their 33___________ .
+
+Correct Answer: F
+Exact Portion: "wanted human umpires to announce the calls, just as they would have done in the past"
+Short Thai Explanation: in the past สื่อถึงบทบาทเดิมของกรรมการมนุษย์ จึงตรงกับ former roles.
+Paraphrased Vocabulary: in the past = former roles
+
+Question 34: The umpire’s job had, at one time, required a 34___________ about whether a ball was a strike.
+
+Correct Answer: D
+Exact Portion: "calling a strike was a judgment call on the part of the umpire"
+Short Thai Explanation: judgment call คือการใช้วิจารณญาณส่วนตัวของกรรมการ จึงตรงกับ subjective assessment.
+Paraphrased Vocabulary: judgment call = subjective assessment
+
+Question 35: A ball is considered a strike when the batter does not hit it and it crosses through a 35___________ extending approximately from the batter’s knee to his chest.
+
+Correct Answer: H
+Exact Portion: "the ‘strike zone’ (an imaginary zone about seventeen inches wide, stretching from the batter’s knees to the middle of his chest)"
+Short Thai Explanation: strike zone ถูกอธิบายว่าเป็น imaginary zone หรือพื้นที่สมมติที่ผู้เล่นรับรู้ร่วมกัน จึงตรงกับ perceived area.
+Paraphrased Vocabulary: imaginary zone = perceived area
+
+Question 36: In the past, 36___________ over strike calls were not uncommon.
+
+Correct Answer: B
+Exact Portion: "countless arguments between a team’s manager and the umpire have taken place over its boundaries"
+Short Thai Explanation: countless arguments หมายถึงการโต้เถียงจำนวนมาก ดังนั้น numerous disputes จึงเป็นคำตอบที่ตรงที่สุด.
+Paraphrased Vocabulary: countless arguments = numerous disputes
+
+Question 37: during the first game DeJesus used ABS, strike calls were met with 37___________
+
+Correct Answer: G
+Exact Portion: "there was no heckling and no shouted disagreement. Nobody said a word."
+Short Thai Explanation: nobody said a word แปลว่าเงียบกริบ จึงตรงกับ total silence.
+Paraphrased Vocabulary: nobody said a word = total silence
+
+Question 38: What does the writer suggest about ABS in the fifth paragraph?
+
+Correct Answer: B
+Exact Portion: "ABS works as designed, but that it was also unforgiving and pedantic" / "There was a dialogue between pitcher and umpire."
+Short Thai Explanation: ผู้เขียนชี้ว่า ABS แม่นก็จริง แต่ความเถรตรงเกินไปทำให้เสน่ห์แบบมนุษย์และการโต้ตอบในเกมหายไปบางส่วน จึงสื่อว่ามันอาจลดความน่าดึงดูดของเกม.
+Paraphrased Vocabulary: reduce some of the appeal = unforgiving, pedantic, loss of dialogue and human flexibility
+
+Question 39: Morgan Sword says that the introduction of ABS
+
+Correct Answer: D
+Exact Portion: "ABS was part of a larger project to make baseball more exciting since executives are terrified of losing younger fans"
+Short Thai Explanation: Sword บอกเหตุผลชัดว่า MLB กลัวเสียแฟนรุ่นใหม่ จึงพยายามทำให้เกมน่าตื่นเต้นขึ้นเพื่อรักษาคนดูกลุ่มนี้ไว้.
+Paraphrased Vocabulary: terrified of losing younger fans = attempt to ensure baseball retained a young audience
+
+Question 40: Why does the writer include the views of Noe and Russo?
+
+Correct Answer: C
+Exact Portion: "We watch baseball to kill time, not to maximize it." / "people just want everything to be perfect ... What is there to talk about?"
+Short Thai Explanation: ผู้เขียนใช้มุมมองของทั้งสองคนเพื่อย้ำว่าความแม่นยำหรือความสมบูรณ์แบบไม่ได้เท่ากับความสนุกเสมอไป เพราะกีฬาเองก็มีเสน่ห์จากความเป็นมนุษย์และพื้นที่ให้ถกเถียง.
+Paraphrased Vocabulary: accuracy is not the same thing as enjoyment = perfect would be weird; no imperfection means no conversation`
+
+const READING_FULL_TEST_PART3_PASSAGE_TEXT = `READING PASSAGE 1
+Nutmeg – a valuable spice
+You should spend about 20 minutes on Questions 1-13, which are based on Reading Passage 1 below.
+
+The nutmeg tree, Myristica fragrans, is a large evergreen tree native to Southeast Asia. Until the late 18th century, it only grew in one place in the world: a small group of islands in the Banda Sea, part of the Moluccas – or Spice Islands – in northeastern Indonesia. The tree is thickly branched with dense foliage of tough, dark green oval leaves, and produces small, yellow, bell-shaped flowers and pale yellow pear-shaped fruits. The fruit is encased in a flesh husk. When the fruit is ripe, this husk splits into two halves along a ridge running the length of the fruit. Inside is a purple-brown shiny seed, 2-3 cm long by about 2 cm across, surrounded by a lacy red or crimson covering called an ‘aril’. These are the sources of the two spices nutmeg and mace, the former being produced from the dried seed and the latter from the aril.
+
+Nutmeg was a highly prized and costly ingredient in European cuisine in the Middle Ages, and was used as a flavouring, medicinal, and preservative agent. Throughout this period, the Arabs were the exclusive importers of the spice to Europe. They sold nutmeg for high prices to merchants based in Venice, but they never revealed the exact location of the source of this extremely valuable commodity. The Arab-Venetian dominance of the trade finally ended in 1512, when the Portuguese reached the Banda Islands and began exploiting its precious resources.
+
+Always in danger of competition from neighbouring Spain, the Portuguese began subcontracting their spice distribution to Dutch traders. Profits began to flow into the Netherlands, and the Dutch commercial fleet swiftly grew into one of the largest in the world. The Dutch quietly gained control of most of the shipping and trading of spices in Northern Europe. Then, in 1580, Portugal fell under Spanish rule, and by the end of the 16th century the Dutch found themselves locked out of the market. As prices for pepper, nutmeg, and other spices soared across Europe, they decided to fight back.
+
+In 1602, Dutch merchants founded the VOC, a trading corporation better known as the Dutch East India Company. By 1617, the VOC was the richest commercial operation in the world. The company had 50,000 employees worldwide, with a private army of 30,000 men and a fleet of 200 ships. At the same time, thousands of people across Europe were dying of the plague, a highly contagious and deadly disease. Doctors were desperate for a way to stop the spread of this disease, and they decided nutmeg held the cure. Everybody wanted nutmeg, and many were willing to spare no expense to have it. Nutmeg bought for a few pennies in Indonesia could be sold for 68,000 times its original cost on the streets of London. The only problem was the short supply. And that’s where the Dutch found their opportunity.
+
+The Banda Islands were ruled by local sultans who insisted on maintaining a neutral trading policy towards foreign powers. This allowed them to avoid the presence of Portuguese or Spanish troops on their soil, but it also left them unprotected from other invaders. In 1621, the Dutch arrived and took over. Once securely in control of the Bandas, the Dutch went to work protecting their new investment. They concentrated all nutmeg production into a few easily guarded areas, uprooting and destroying any trees outside the plantation zones. Anyone caught growing a nutmeg seedling or carrying seeds without the proper authority was severely punished. In addition, all exported nutmeg was covered with lime to make sure there was no chance a fertile seed which could be grown elsewhere would leave the islands. There was only one obstacle to Dutch domination. One of the Banda Islands, a sliver of land called Run, only 3 km long by less than 1 km wide, was under the control of the British. After decades of fighting for control of this tiny island, the Dutch and British arrived at a compromise settlement, the Treaty of Breda, in 1667. Intent on securing their hold over every nutmeg-producing island, the Dutch offered a trade: if the British would give them the island of Run, they would in turn give Britain a distant and much less valuable island in North America. The British agreed. That other island was Manhattan, which is how New Amsterdam became New York. The Dutch now had a monopoly over the nutmeg trade which would last for another century.
+
+Then, in 1770, a Frenchman named Pierre Poivre successfully smuggled nutmeg plants to safety in Mauritius, an island off the coast of Africa. Some of these were later exported to the Caribbean where they thrived, especially on the island of Grenada. Next, in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves. Finally, in 1809, the British returned to Indonesia and seized the Banda Islands by force. They returned the islands to the Dutch in 1817, but not before transplanting hundreds of nutmeg seedlings to plantations in several locations across southern Asia. The Dutch nutmeg monopoly was over.
+
+Today, nutmeg is grown in Indonesia, the Caribbean, India, Malaysia, Papua New Guinea and Sri Lanka, and world nutmeg production is estimated to average between 10,000 and 12,000 tonnes per year.
+
+Questions 1-4
+Complete the notes below.
+Choose ONE WORD ONLY from the passage for each answer.
+Write your answers in boxes 1-4 on your answer sheet.
+
+The nutmeg tree and fruit
+●   the leaves of the tree are 1……………………. in shape
+●   the 2……………………. surrounds the fruit and breaks open when the fruit is ripe
+●   the 3……………………. is used to produce the spice nutmeg
+●   the covering known as the aril is used to produce 4……………………..
+●   the tree has yellow flowers and fruit
+
+Questions 5-7
+Do the following statements agree with the information given in Reading Passage 1?
+In boxes 5-7 on your answer sheet, write
+TRUE               if the statement agrees with the information
+FALSE              if the statement contradicts the information
+NOT GIVEN    if there is no information on this
+
+5   In the Middle Ages, most Europeans knew where nutmeg was grown.
+6   The VOC was the world’s first major trading company.
+7   Following the Treaty of Breda, the Dutch had control of all the islands where nutmeg grew.
+
+Questions 8-13
+Complete the table below.
+Choose ONE WORD ONLY from the passage for each answer.
+Write your answers in boxes 8-13 on your answer sheet.
+
+Middle Ages
+Nutmeg was brought to Europe by the 8……………
+16th century
+European nations took control of the nutmeg trade
+17th century
+Demand for nutmeg grew, as it was believed to be effective against the disease known as the 9……………
+The Dutch
+– took control of the Banda Islands
+– restricted nutmeg production to a few areas
+– put 10…………… on nutmeg to avoid it being cultivated outside the islands
+– finally obtained the island of 11…………… from the British
+Late 18th century
+1770 – nutmeg plants were secretly taken to 12……………
+1778 – half the Banda Islands’ nutmeg plantations were destroyed by a 13……………
+
+READING PASSAGE 2
+Driverless cars
+You should spend about 20 minutes on Questions 14-26 which are based on Reading Passage 2 below.
+
+A
+The automotive sector is well used to adapting to automation in manufacturing. The implementation of robotic car manufacture from the 1970s onwards led to significant cost savings and improvements in the reliability and flexibility of vehicle mass production. A new challenge to vehicle production is now on the horizon and, again, it comes from automation. However, this time it is not to do with the manufacturing process, but with the vehicles themselves.
+Research projects on vehicle automation are not new. Vehicles with limited self-driving capabilities have been around for more than 50 years, resulting in significant contributions towards driver assistance systems. But since Google announced in 2010 that it had been trialling self-driving cars on the streets of California, progress in this field has quickly gathered pace.
+
+B
+There are many reasons why technology is advancing so fast. One frequently cited motive is safety; indeed, research at the UK’s Transport Research Laboratory has demonstrated that more than 90 percent of road collisions involve human error as a contributory factor, and it is the primary cause in the vast majority. Automation may help to reduce the incidence of this.
+Another aim is to free the time people spend driving for other purposes. If the vehicle can do some or all of the driving, it may be possible to be productive, to socialise or simply to relax while automation systems have responsibility for safe control of the vehicle. If the vehicle can do the driving, those who are challenged by existing mobility models – such as older or disabled travellers – may be able to enjoy significantly greater travel autonomy.
+
+C
+Beyond these direct benefits, we can consider the wider implications for transport and society, and how manufacturing processes might need to respond as a result. At present, the average car spends more than 90 percent of its life parked. Automation means that initiatives for car-sharing become much more viable, particularly in urban areas with significant travel demand. If a significant proportion of the population choose to use shared automated vehicles, mobility demand can be met by far fewer vehicles.
+
+D
+The Massachusetts Institute of Technology investigated automated mobility in Singapore, finding that fewer than 30 percent of the vehicles currently used would be required if fully automated car sharing could be implemented. If this is the case, it might mean that we need to manufacture far fewer vehicles to meet demand. However, the number of trips being taken would probably increase, partly because empty vehicles would have to be moved from one customer to the next.
+Modelling work by the University of Michigan Transportation Research Institute suggests automated vehicles might reduce vehicle ownership by 43 percent, but that vehicles’ average annual mileage double as a result. As a consequence, each vehicle would be used more intensively, and might need replacing sooner. This faster rate of turnover may mean that vehicle production will not necessarily decrease
+
+E
+Automation may prompt other changes in vehicle manufacture. If we move to a model where consumers are tending not to own a single vehicle but to purchase access to a range of vehicle through a mobility provider, drivers will have the freedom to select one that best suits their needs for a particular journey, rather than making a compromise across all their requirements.
+Since, for most of the time, most of the seats in most cars are unoccupied, this may boost production of a smaller, more efficient range of vehicles that suit the needs of individuals. Specialised vehicles may then be available for exceptional journeys, such as going on a family camping trip or helping a son or daughter move to university.
+
+F
+There are a number of hurdles to overcome in delivering automated vehicles to our roads. These include the technical difficulties in ensuring that the vehicle works reliably in the infinite range of traffic, weather and road situations it might encounter; the regulatory challenges in understanding how liability and enforcement might change when drivers are no longer essential for vehicle operation; and the societal changes that may be required for communities to trust and accept automated vehicles as being a valuable part of the mobility landscape.
+
+G
+It’s clear that there are many challenges that need to be addressed but, through robust and targeted research, these can most probably be conquered within the next 10 years. Mobility will change in such potentially significant ways and in association with so many other technological developments, such as telepresence and virtual reality, that it is hard to make concrete predictions about the future. However, one thing is certain: change is coming, and the need to be flexible in response to this will be vital for those involved in manufacturing the vehicles that will deliver future mobility.
+
+Questions 14-18
+Reading Passage 2 has seven paragraphs, A-G.
+Which section contains the following information?
+Write the correct letter, A-G, in boxes 14-18 on your answer sheet.
+
+14   reference to the amount of time when a car is not in use
+15   mention of several advantages of driverless vehicles for individual road-users
+16   reference to the opportunity of choosing the most appropriate vehicle for each trip
+17   an estimate of how long it will take to overcome a number of problems
+18   a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured
+
+Questions 19-22
+Complete the summary below.
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+Write your answers in boxes 19-22 on your answer sheet.
+
+The impact of driverless cars
+Figures from the Transport Research Laboratory indicate that most motor accidents are partly due to 19……………………., so the introduction of driverless vehicles will result in greater safety. In addition to the direct benefits of automation, it may bring other advantages. For example, schemes for 20………………………. will be more workable, especially in towns and cities, resulting in fewer cars on the road.
+According to the University of Michigan Transportation Research Institute, there could be a 43 percent drop in 21…………………….. of cars. However, this would mean that the yearly 22…………………….. of each car would, on average, be twice as high as it currently is. this would lead to a higher turnover of vehicles, and therefore no reduction in automotive manufacturing.
+
+Questions 23 and 24
+Choose TWO letters, A-E.
+Write the correct letters in boxes 23 and 24 on your answer sheet.
+Which TWO benefits of automated vehicles does the writer mention?
+A   Car travellers could enjoy considerable cost savings.
+B   It would be easier to find parking spaces in urban areas.
+C   Travellers could spend journeys doing something other than driving.
+D   People who find driving physically difficult could travel independently.
+E   A reduction in the number of cars would mean a reduction in pollution.
+
+Questions 25 and 26
+Choose TWO letters, A-E.
+Write the correct letters in boxes 25 and 26 on your answer sheet.
+Which TWO challenges to automated vehicle development does the writer mention?
+A   making sure the general public has confidence in automated vehicles
+B   managing the pace of transition from conventional to automated vehicles
+C   deciding how to compensate professional drivers who become redundant
+D   setting up the infrastructure to make roads suitable for automated vehicles
+E   getting automated vehicles to adapt to various different driving conditions
+
+READING PASSAGE 3
+What is exploration?
+You should spend about 20 minutes on Questions 27-40 which are based on Reading Passage 3 below.
+
+We are all explores. Our desire to discover, and then share that new-found knowledge, is part of what makes us human – indeed, this has played an important part in our success as a species. Long before the first caveman slumped down beside the fire and grunted news that there were plenty of wildebeest over yonder, our ancestors had learnt the value of sending out scouts to investigate the unknown. This questing nature of ours undoubtedly helped our species spread around the globe, just as it nowadays no doubt helps the last nomadic Penan maintain their existence in the depleted forests of Borneo, and a visitor negotiate the subways of New York.
+
+Over the years, we’ve come to think of explorers as a peculiar breed – different from the rest of us, different from those of us who are merely ‘well travelled’, even; and perhaps there is a type of person more suited to seeking out the new, a type of caveman more inclined to risk venturing out. That, however, doesn’t take away from the fact that we all have this enquiring instinct, even today; and that in all sorts of professions – whether artist, marine biologist or astronomer – borders of the unknown are being tested each day.
+
+Thomas Hardy set some of his novels in Egdon Heath, a fictional area of uncultivated land, and used the landscape to suggest the desires and fears of his characters. He is delving into matters we all recognise because they are common to humanity. This is surely an act of exploration, and into a world as remote as the author chooses. Explorer and travel writer Peter Fleming talks of the moment when the explorer returns to the existence he has left behind with his loved ones. The traveller ‘who has for weeks or months seen himself only as a puny and irrelevant alien crawling laboriously over a country in which he has no roots and no background, suddenly encounters his other self, a relatively solid figure, with a place in the minds of certain people’.
+
+In this book about the exploration of the earth’s surface, I have confined myself to those whose travels were real and who also aimed at more than personal discovery. But that still left me with another problem: the word ‘explorer’ has become associated with a past era. We think back to a golden age, as if exploration peaked somehow in the 19th century – as if the process of discovery is now on the decline, though the truth is that we have named only one and a half million of this planet’s species, and there may be more than 10 million – and that’s not including bacteria. We have studied only 5 per cent of the species we know. We have scarcely mapped the ocean floors, and know even less about ourselves; we fully understand the workings of only 10 per cent of our brains.
+
+Here is how some of today’s ‘explorers’ define the word. Ran Fiennes, dubbed the ‘greatest living explorer’, said, ‘An explorer is someone who has done something that no human has done before – and also done something scientifically useful.’ Chris Bonington, a leading mountaineer, felt exploration was to be found in the act of physically touching the unknown: ‘You have to have gone somewhere new.’ Then Robin Hanbury-Tenison, a campaigner on behalf of remote so-called ‘tribal’ peoples, said, ‘A traveller simply records information about some far-off world, and reports back; but an explorer changes the world.’ Wilfred Thesiger, who crossed Arabia’s Empty Quarter in 1946, and belongs to an era of unmechanised travel now lost to the rest of us, told me, ‘If I’d gone across by camel when I could have gone by car, it would have been a stunt.’ To him, exploration meant bringing back information from a remote place regardless of any great self-discovery.
+
+Each definition is slightly different – and tends to reflect the field of endeavour of each pioneer. It was the same whoever I asked: the prominent historian would say exploration was a thing of the past, the cutting-edge scientist would say it was of the present. And so on. They each set their own particular criteria; the common factor in their approach being that they all had, unlike many of us who simply enjoy travel or discovering new things, both a very definite objective from the outset and also a desire to record their findings.
+
+I’d best declare my own bias. As a writer, I’m interested in the exploration of ideas. I’ve done a great many expeditions and each one was unique. I’ve lived for months alone with isolated groups of people all around the world, even two ‘uncontacted tribes’. But none of these things is of the slightest interest to anyone unless, through my books, I’ve found a new slant, explored a new idea. Why? Because the world has moved on. The time has long passed for the great continental voyages – another walk to the poles, another crossing of the Empty Quarter. We know how the land surface of our planet lies; exploration of it is now down to the details – the habits of microbes, say, or the grazing behaviour of buffalo. Aside from the deep sea and deep underground, it’s the era of specialists. However, this is to disregard the role the human mind has in conveying remote places; and this is what interests me: how a fresh interpretation, even of a well-travelled route, can give its readers new insights.
+
+Questions 27-32
+Choose the correct letter, A, B, C or D.
+Write the correct letter in boxes 27-32 on your answer sheet.
+
+27   The writer refers to visitors to New York to illustrate the point that
+A   exploration is an intrinsic element of being human.
+B   most people are enthusiastic about exploring.
+C   exploration can lead to surprising results.
+D   most people find exploration daunting.
+
+28   According to the second paragraph, what is the writer’s view of explorers?
+A   Their discoveries have brought both benefits and disadvantages.
+B   Their main value is in teaching others.
+C   They act on an urge that is common to everyone.
+D   They tend to be more attracted to certain professions than to others.
+
+29   The writer refers to a description of Egdon Heath to suggest that
+A   Hardy was writing about his own experience of exploration.
+B   Hardy was mistaken about the nature of exploration.
+C   Hardy’s aim was to investigate people’s emotional states.
+D   Hardy’s aim was to show the attraction of isolation.
+
+30   In the fourth paragraph, the writer refers to ‘a golden age’ to suggest that
+A   the amount of useful information produced by exploration has decreased.
+B   fewer people are interested in exploring than in the 19th century.
+C   recent developments have made exploration less exciting.
+D   we are wrong to think that exploration is no longer necessary.
+
+31   In the sixth paragraph, when discussing the definition of exploration, the writer argues that
+A   people tend to relate exploration to their own professional interests.
+B   certain people are likely to misunderstand the nature of exploration.
+C   the generally accepted definition has changed over time.
+D   historians and scientists have more valid definitions than the general public.
+
+32   In the last paragraph, the writer explains that he is interested in
+A   how someone’s personality is reflected in their choice of places to visit.
+B   the human ability to cast new light on places that may be familiar.
+C   how travel writing has evolved to meet changing demands.
+D   the feelings that writers develop about the places that they explore.
+
+Questions 33-37
+Look at the following statements (Questions 33-37) and the list of explorers below.
+Match each statement with the correct explorer, A-E.
+Write the correct letter, A-E, in boxes 33-37 on your answer sheet.
+NB  You may use any letter more than once.
+
+33   He referred to the relevance of the form of transport used.
+34   He described feelings on coming back home after a long journey.
+35   He worked for the benefit of specific groups of people.
+36   He did not consider learning about oneself an essential part of exploration.
+37   He defined exploration as being both unique and of value to others.
+
+List of Explorers
+A     Peter Fleming
+B     Ran Fiennes
+C     Chris Bonington
+D     Robin Hanbury-Tenison
+E     Wilfred Thesiger
+
+Questions 38-40
+Complete the summary below.
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+Write your answers in boxes 38-40 on your answer sheet.
+
+The writer’s own bias
+The writer has experience of a large number of 38………………., and was the first stranger that certain previously 39………………… people had encountered. He believes there is no need for further exploration of Earth’s 40…………………., except to answer specific questions such as how buffalo eat.`
+
+const READING_FULL_TEST_PART3_ANSWER_KEY = `READING PASSAGE 1: Nutmeg – a valuable spice
+Question 1: the leaves of the tree are 1……………………. in shape
+
+Correct Answer: oval
+Exact Portion: "The tree is thickly branched with dense foliage of tough, dark green oval leaves"
+Short Thai Explanation: โจทย์ถามรูปร่างของใบไม้ และบทความใช้คำว่า oval leaves ตรงตัว จึงตอบว่า oval.
+Paraphrased Vocabulary: are [oval] in shape = oval leaves
+
+Question 2: the 2……………………. surrounds the fruit and breaks open when the fruit is ripe
+
+Correct Answer: husk
+Exact Portion: "The fruit is encased in a flesh husk. When the fruit is ripe, this husk splits into two halves"
+Short Thai Explanation: สิ่งที่ห่อหุ้มผลไม้และแตกออกเมื่อผลสุกคือ husk ตามบทความระบุชัดเจน.
+Paraphrased Vocabulary: surrounds = encased in; breaks open = splits
+
+Question 3: the 3……………………. is used to produce the spice nutmeg
+
+Correct Answer: seed
+Exact Portion: "the former being produced from the dried seed"
+Short Thai Explanation: ในสองเครื่องเทศที่ได้จากผลนัทเมก ตัวแรกคือ nutmeg และบทความบอกว่ามาจาก dried seed.
+Paraphrased Vocabulary: is used to produce = being produced from
+
+Question 4: the covering known as the aril is used to produce 4……………………..
+
+Correct Answer: mace
+Exact Portion: "the latter from the aril"
+Short Thai Explanation: ส่วนหุ้มที่เรียกว่า aril ใช้ผลิตเครื่องเทศตัวที่สองคือ mace.
+Paraphrased Vocabulary: covering known as the aril = aril; is used to produce = from
+
+Question 5: In the Middle Ages, most Europeans knew where nutmeg was grown.
+
+Correct Answer: FALSE
+Exact Portion: "they never revealed the exact location of the source"
+Short Thai Explanation: ชาวอาหรับไม่เคยเปิดเผยแหล่งปลูกที่แท้จริงให้ยุโรปรู้ ดังนั้นข้อความในโจทย์จึงขัดกับบทความ.
+Paraphrased Vocabulary: knew where ... was grown ≠ never revealed the exact location
+
+Question 6: The VOC was the world’s first major trading company.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "By 1617, the VOC was the richest commercial operation in the world."
+Short Thai Explanation: บทความบอกเพียงว่า VOC ร่ำรวยที่สุดในโลก แต่ไม่ได้บอกว่าเป็นบริษัทการค้าใหญ่แห่งแรกของโลก.
+Paraphrased Vocabulary: world’s first = not stated
+
+Question 7: Following the Treaty of Breda, the Dutch had control of all the islands where nutmeg grew.
+
+Correct Answer: TRUE
+Exact Portion: "Intent on securing their hold over every nutmeg-producing island" / "The Dutch now had a monopoly over the nutmeg trade"
+Short Thai Explanation: หลังอังกฤษยอมยกเกาะ Run ให้ ดัตช์ก็ครอบครองทุกเกาะที่ผลิตนัทเมกและผูกขาดการค้าได้สำเร็จ.
+Paraphrased Vocabulary: control of all the islands = securing their hold over every nutmeg-producing island
+
+Question 8: Nutmeg was brought to Europe by the 8……………
+
+Correct Answer: Arabs
+Exact Portion: "the Arabs were the exclusive importers of the spice to Europe"
+Short Thai Explanation: ผู้นำนัทเมกเข้าสู่ยุโรปในยุคกลางคือ the Arabs ตามที่บทความบอกตรงตัว.
+Paraphrased Vocabulary: brought to Europe = importers to Europe
+
+Question 9: Demand for nutmeg grew, as it was believed to be effective against the disease known as the 9……………
+
+Correct Answer: plague
+Exact Portion: "people across Europe were dying of the plague" / "they decided nutmeg held the cure"
+Short Thai Explanation: ความต้องการนัทเมกเพิ่มขึ้นเพราะคนเชื่อว่ามันช่วยรักษา plague ได้.
+Paraphrased Vocabulary: effective against = held the cure
+
+Question 10: put 10…………… on nutmeg to avoid it being cultivated outside the islands
+
+Correct Answer: lime
+Exact Portion: "all exported nutmeg was covered with lime"
+Short Thai Explanation: ดัตช์เคลือบนัทเมกด้วย lime เพื่อไม่ให้เมล็ดนำไปปลูกต่อที่อื่นได้.
+Paraphrased Vocabulary: put ... on = covered with
+
+Question 11: finally obtained the island of 11…………… from the British
+
+Correct Answer: Run
+Exact Portion: "if the British would give them the island of Run"
+Short Thai Explanation: เกาะที่ดัตช์ได้มาจากอังกฤษในข้อตกลงนั้นคือ Run.
+Paraphrased Vocabulary: obtained ... from = give them
+
+Question 12: 1770 – nutmeg plants were secretly taken to 12……………
+
+Correct Answer: Mauritius
+Exact Portion: "successfully smuggled nutmeg plants to safety in Mauritius"
+Short Thai Explanation: ปี 1770 มีการลักลอบนำต้นนัทเมกไปที่ Mauritius.
+Paraphrased Vocabulary: secretly taken to = smuggled ... to
+
+Question 13: 1778 – half the Banda Islands’ nutmeg plantations were destroyed by a 13……………
+
+Correct Answer: tsunami
+Exact Portion: "a tsunami that wiped out half the nutmeg groves"
+Short Thai Explanation: สิ่งที่ทำลายสวนนัทเมกไปครึ่งหนึ่งคือ tsunami ซึ่งเกิดตามหลังภูเขาไฟระเบิด.
+Paraphrased Vocabulary: destroyed by = wiped out by
+
+READING PASSAGE 2: Driverless cars
+Question 14: reference to the amount of time when a car is not in use
+
+Correct Answer: C
+Exact Portion: "the average car spends more than 90 percent of its life parked"
+Short Thai Explanation: ย่อหน้า C ระบุเวลาที่รถไม่ได้ใช้งานโดยตรง คือจอดอยู่มากกว่า 90% ของอายุการใช้งาน.
+Paraphrased Vocabulary: not in use = parked
+
+Question 15: mention of several advantages of driverless vehicles for individual road-users
+
+Correct Answer: B
+Exact Portion: "be productive, to socialise or simply to relax" / "older or disabled travellers ... may be able to enjoy significantly greater travel autonomy"
+Short Thai Explanation: ย่อหน้า B รวมข้อดีหลายอย่างสำหรับผู้ใช้รถแต่ละคน เช่น มีเวลาไปทำอย่างอื่น และช่วยให้ผู้สูงอายุหรือผู้พิการเดินทางได้อิสระขึ้น.
+Paraphrased Vocabulary: advantages for individual road-users = direct personal benefits
+
+Question 16: reference to the opportunity of choosing the most appropriate vehicle for each trip
+
+Correct Answer: E
+Exact Portion: "select one that best suits their needs for a particular journey"
+Short Thai Explanation: ย่อหน้า E บอกชัดว่าผู้ใช้จะมีอิสระเลือกคันที่เหมาะกับการเดินทางแต่ละแบบมากที่สุด.
+Paraphrased Vocabulary: most appropriate vehicle for each trip = one that best suits their needs for a particular journey
+
+Question 17: an estimate of how long it will take to overcome a number of problems
+
+Correct Answer: G
+Exact Portion: "these can most probably be conquered within the next 10 years"
+Short Thai Explanation: ย่อหน้า G ให้กรอบเวลาชัดเจนว่าอุปสรรคต่าง ๆ น่าจะเอาชนะได้ภายใน 10 ปี.
+Paraphrased Vocabulary: overcome problems = conquered; estimate of how long = within the next 10 years
+
+Question 18: a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured
+
+Correct Answer: D
+Exact Portion: "vehicle production will not necessarily decrease"
+Short Thai Explanation: แม้คนจะมีรถน้อยลง แต่รถแต่ละคันอาจถูกใช้หนักและเปลี่ยนใหม่เร็วขึ้น จึงอาจไม่ทำให้ยอดผลิตรถลดลง.
+Paraphrased Vocabulary: may have no effect on the number manufactured = will not necessarily decrease
+
+Question 19: most motor accidents are partly due to 19…………………….
+
+Correct Answer: human error
+Exact Portion: "more than 90 percent of road collisions involve human error as a contributory factor"
+Short Thai Explanation: สถิติระบุว่าปัจจัยร่วมสำคัญของอุบัติเหตุส่วนใหญ่คือ human error.
+Paraphrased Vocabulary: partly due to = contributory factor
+
+Question 20: schemes for 20………………………. will be more workable
+
+Correct Answer: car-sharing
+Exact Portion: "initiatives for car-sharing become much more viable"
+Short Thai Explanation: ระบบอัตโนมัติจะทำให้โครงการ car-sharing มีความเป็นไปได้มากขึ้น โดยเฉพาะในเขตเมือง.
+Paraphrased Vocabulary: schemes = initiatives; more workable = more viable
+
+Question 21: there could be a 43 percent drop in 21…………………….. of cars
+
+Correct Answer: vehicle ownership
+Exact Portion: "automated vehicles might reduce vehicle ownership by 43 percent"
+Short Thai Explanation: สิ่งที่อาจลดลง 43% คือ vehicle ownership หรือการเป็นเจ้าของรถยนต์.
+Paraphrased Vocabulary: drop in = reduce
+
+Question 22: the yearly 22…………………….. of each car would, on average, be twice as high
+
+Correct Answer: mileage
+Exact Portion: "vehicles’ average annual mileage double as a result"
+Short Thai Explanation: ค่าที่จะเพิ่มขึ้นสองเท่าคือ annual mileage ของรถแต่ละคัน.
+Paraphrased Vocabulary: yearly = annual; twice as high = double
+
+Question 23: Which TWO benefits of automated vehicles does the writer mention?
+
+Correct Answer: C
+Accepted Answers: C | D
+Answer Group: driverless-benefits
+Exact Portion: "it may be possible to be productive, to socialise or simply to relax"
+Short Thai Explanation: หนึ่งในคำตอบคู่ของข้อ 23-24 คือ C เพราะผู้โดยสารสามารถใช้เวลาเดินทางไปทำอย่างอื่นแทนการขับรถ.
+Paraphrased Vocabulary: spend journeys doing something other than driving = be productive, socialise or relax
+
+Question 24: Which TWO benefits of automated vehicles does the writer mention?
+
+Correct Answer: D
+Accepted Answers: C | D
+Answer Group: driverless-benefits
+Exact Portion: "older or disabled travellers – may be able to enjoy significantly greater travel autonomy"
+Short Thai Explanation: อีกคำตอบของคู่ข้อ 23-24 คือ D เพราะคนที่ขับรถลำบากจะมีอิสระในการเดินทางมากขึ้น.
+Paraphrased Vocabulary: travel independently = greater travel autonomy
+
+Question 25: Which TWO challenges to automated vehicle development does the writer mention?
+
+Correct Answer: A
+Accepted Answers: A | E
+Answer Group: driverless-challenges
+Exact Portion: "communities to trust and accept automated vehicles"
+Short Thai Explanation: หนึ่งในคำตอบคู่ของข้อ 25-26 คือ A เพราะบทความพูดถึงความท้าทายในการทำให้สังคมเชื่อมั่นและยอมรับรถอัตโนมัติ.
+Paraphrased Vocabulary: general public has confidence = communities trust and accept
+
+Question 26: Which TWO challenges to automated vehicle development does the writer mention?
+
+Correct Answer: E
+Accepted Answers: A | E
+Answer Group: driverless-challenges
+Exact Portion: "works reliably in the infinite range of traffic, weather and road situations"
+Short Thai Explanation: อีกคำตอบของคู่ข้อ 25-26 คือ E เพราะรถต้องปรับตัวให้ทำงานได้ในสภาพการขับขี่ที่หลากหลายมาก.
+Paraphrased Vocabulary: various different driving conditions = traffic, weather and road situations
+
+READING PASSAGE 3: What is exploration?
+Question 27: The writer refers to visitors to New York to illustrate the point that
+
+Correct Answer: A
+Exact Portion: "Our desire to discover ... is part of what makes us human" / "helps ... a visitor negotiate the subways of New York"
+Short Thai Explanation: ผู้เขียนยกตัวอย่างคนที่พยายามหาทางในรถไฟใต้ดินนิวยอร์กเพื่อชี้ว่าความอยากสำรวจเป็นส่วนหนึ่งของความเป็นมนุษย์.
+Paraphrased Vocabulary: intrinsic element of being human = part of what makes us human
+
+Question 28: According to the second paragraph, what is the writer’s view of explorers?
+
+Correct Answer: C
+Exact Portion: "we all have this enquiring instinct"
+Short Thai Explanation: ผู้เขียนมองว่านักสำรวจเพียงแค่ทำตามสัญชาตญาณอยากรู้อยากเห็นที่ทุกคนมีเหมือนกัน.
+Paraphrased Vocabulary: urge that is common to everyone = enquiring instinct we all have
+
+Question 29: The writer refers to a description of Egdon Heath to suggest that
+
+Correct Answer: C
+Exact Portion: "used the landscape to suggest the desires and fears of his characters"
+Short Thai Explanation: ตัวอย่างนี้ใช้เพื่อแสดงว่าการสำรวจอาจหมายถึงการเจาะลึกสภาวะอารมณ์และความกลัวของมนุษย์ได้ด้วย.
+Paraphrased Vocabulary: investigate people’s emotional states = desires and fears of his characters
+
+Question 30: In the fourth paragraph, the writer refers to ‘a golden age’ to suggest that
+
+Correct Answer: D
+Exact Portion: "as if the process of discovery is now on the decline, though the truth is that ..."
+Short Thai Explanation: ผู้เขียนกำลังโต้แย้งความคิดที่ว่าการสำรวจหมดความจำเป็นแล้ว โดยบอกว่ายังมีสิ่งอีกมากที่เราไม่รู้.
+Paraphrased Vocabulary: wrong to think exploration is no longer necessary = the truth is that much remains unknown
+
+Question 31: In the sixth paragraph, when discussing the definition of exploration, the writer argues that
+
+Correct Answer: A
+Exact Portion: "Each definition is slightly different – and tends to reflect the field of endeavour of each pioneer."
+Short Thai Explanation: คำนิยามของแต่ละคนต่างกันไปเพราะมักสะท้อนสาขาอาชีพหรือความสนใจของคนนั้นเอง.
+Paraphrased Vocabulary: professional interests = field of endeavour
+
+Question 32: In the last paragraph, the writer explains that he is interested in
+
+Correct Answer: B
+Exact Portion: "how a fresh interpretation, even of a well-travelled route, can give its readers new insights"
+Short Thai Explanation: ผู้เขียนสนใจความสามารถของมนุษย์ในการให้มุมมองใหม่กับสถานที่ที่คนคุ้นเคยอยู่แล้ว.
+Paraphrased Vocabulary: cast new light on familiar places = fresh interpretation ... gives new insights
+
+Question 33: He referred to the relevance of the form of transport used.
+
+Correct Answer: E
+Exact Portion: "If I’d gone across by camel when I could have gone by car, it would have been a stunt."
+Short Thai Explanation: คนที่พูดถึงความสำคัญของวิธีเดินทางคือ Wilfred Thesiger เพราะเขาเปรียบเทียบ camel กับ car โดยตรง.
+Paraphrased Vocabulary: form of transport = camel / car
+
+Question 34: He described feelings on coming back home after a long journey.
+
+Correct Answer: A
+Exact Portion: "the moment when the explorer returns to the existence he has left behind with his loved ones"
+Short Thai Explanation: Peter Fleming เป็นคนที่กล่าวถึงความรู้สึกเมื่อเดินทางกลับสู่ชีวิตเดิมและคนที่รัก.
+Paraphrased Vocabulary: coming back home = returns to the existence he has left behind
+
+Question 35: He worked for the benefit of specific groups of people.
+
+Correct Answer: D
+Exact Portion: "a campaigner on behalf of remote so-called ‘tribal’ peoples"
+Short Thai Explanation: Robin Hanbury-Tenison ทำงานเพื่อประโยชน์ของกลุ่มชนเผ่าห่างไกลโดยตรง.
+Paraphrased Vocabulary: specific groups of people = tribal peoples
+
+Question 36: He did not consider learning about oneself an essential part of exploration.
+
+Correct Answer: E
+Exact Portion: "regardless of any great self-discovery"
+Short Thai Explanation: Wilfred Thesiger ไม่ถือว่าการค้นพบตัวเองเป็นแก่นสำคัญของการสำรวจ.
+Paraphrased Vocabulary: did not consider self-learning essential = regardless of any great self-discovery
+
+Question 37: He defined exploration as being both unique and of value to others.
+
+Correct Answer: B
+Exact Portion: "done something that no human has done before – and also done something scientifically useful"
+Short Thai Explanation: Ran Fiennes ให้นิยามว่าต้องไม่เคยมีใครทำมาก่อนและต้องมีประโยชน์ด้วย.
+Paraphrased Vocabulary: unique = no human has done before; of value to others = scientifically useful
+
+Question 38: The writer has experience of a large number of 38……………….
+
+Correct Answer: expeditions
+Exact Portion: "I’ve done a great many expeditions"
+Short Thai Explanation: ผู้เขียนบอกตรงตัวว่าเขาทำ expeditions มาแล้วเป็นจำนวนมาก.
+Paraphrased Vocabulary: a large number of = a great many
+
+Question 39: was the first stranger that certain previously 39………………… people had encountered
+
+Correct Answer: uncontacted
+Exact Portion: "even two ‘uncontacted tribes’"
+Short Thai Explanation: คำตอบคือ uncontacted เพราะผู้เขียนบอกว่าเคยอยู่กับชนเผ่าที่ไม่เคยติดต่อโลกภายนอกมาก่อน.
+Paraphrased Vocabulary: previously uncontacted people = uncontacted tribes
+
+Question 40: He believes there is no need for further exploration of Earth’s 40…………………
+
+Correct Answer: land surface
+Exact Portion: "We know how the land surface of our planet lies; exploration of it is now down to the details"
+Short Thai Explanation: ผู้เขียนมองว่าเราไม่จำเป็นต้องสำรวจภาพใหญ่ของพื้นผิวโลกอีกแล้ว เหลือเพียงการเจาะรายละเอียดเฉพาะเรื่อง.
+Paraphrased Vocabulary: no need for further exploration = we know how it lies; except for details = down to the details`
+
+const READING_PDOY_HUARANGO_PASSAGE_TEXT = `READING PASSAGE 1
+The return of the huarango
+The arid valleys of southern Peru are welcoming the return of a native plant
+
+The south coast of Peru is a narrow, 2,000-kilometre-long strip of desert squeezed between the Andes and the Pacific Ocean. It is also one of the most fragile ecosystems on Earth. It hardly ever rains there, and the only year-round source of water is located tens of metres below the surface. This is why the huarango tree is so suited to life there: it has the longest roots of any tree in the world. They stretch down 50-80 metres and, as well as sucking up water for the tree, they bring it into the higher subsoil, creating a water source for other plant life.
+
+Dr David Beresford-Jones, archaeobotanist at Cambridge University, has been studying the role of the huarango tree in landscape change in the Lower Ica Valley in southern Peru. He believes the huarango was key to the ancient people’s diet and, because it could reach deep water sources, it allowed local people to withstand years of drought when their other crops failed. But over the centuries huarango trees were gradually replaced with crops. Cutting down native woodland leads to erosion, as there is nothing to keep the soil in place. So when the huarangos go, the land turns into a desert. Nothing grows at all in the Lower Ica Valley now.
+
+For centuries the huarango tree was vital to the people of the neighbouring Middle Ica Valley too. They grew vegetables under it and ate products made from its seed pods. Its leaves and bark were used for herbal remedies, while its branches were used for charcoal for cooking and heating, and its trunk was used to build houses. But now it is disappearing rapidly. The majority of the huarango forests in the valley have already been cleared for fuel and agriculture – initially, these were smallholdings, but now they’re huge farms producing crops for the international market.
+
+‘Of the forests that were here 1,000 years ago, 99 per cent have already gone,’ says botanist Oliver Whaley from Kew Gardens in London, who, together with ethnobotanist Dr William Milliken, is running a pioneering project to protect and restore the rapidly disappearing habitat. In order to succeed, Whaley needs to get the local people on board, and that has meant overcoming local prejudices. ‘Increasingly aspirational communities think that if you plant food trees in your home or street, it shows you are poor, and still need to grow your own food,’ he says. In order to stop the Middle Ica Valley going the same way as the Lower Ica Valley, Whaley is encouraging locals to love the huarangos again. ‘It’s a process of cultural resuscitation,’ he says. He has already set up a huarango festival to reinstate a sense of pride in their eco-heritage, and has helped local schoolchildren plant thousands of trees.
+
+‘In order to get people interested in habitat restoration, you need to plant a tree that is useful to them,’ says Whaley. So, he has been working with local families to attempt to create a sustainable income from the huarangos by turning their products into foodstuffs. ‘Boil up the beans and you get this thick brown syrup like molasses. You can also use it in drinks, soups or stews.’ The pods can be ground into flour to make cakes, and the seeds roasted into a sweet, chocolatey ‘coffee’. ‘It’s packed full of vitamins and minerals,’ Whaley says.
+
+And some farmers are already planting huarangos. Alberto Benevides, owner of Ica Valley’s only certified organic farm, which Whaley helped set up, has been planting the tree for 13 years. He produces syrup and flour, and sells these products at an organic farmers’ market in Lima. His farm is relatively small and doesn’t yet provide him with enough to live on, but he hopes this will change. ‘The organic market is growing rapidly in Peru,’ Benevides says. ‘I am investing in the future.’
+
+But even if Whaley can convince the local people to fall in love with the huarango again, there is still the threat of the larger farms. Some of these cut across the forests and break up the corridors that allow the essential movement of mammals, birds and pollen up and down the narrow forest strip. In the hope of counteracting this, he’s persuading farmers to let him plant forest corridors on their land. He believes the extra woodland will also benefit the farms by reducing their water usage through a lowering of evaporation and providing a refuge for bio-control insects.
+
+‘If we can record biodiversity and see how it all works, then we’re in a good position to move on from there. Desert habitats can reduce down to very little,’ Whaley explains. ‘It’s not like a rainforest that needs to have this huge expanse. Life has always been confined to corridors and islands here. If you just have a few trees left, the population can grow up quickly because it’s used to exploiting water when it arrives.’ He sees his project as a model that has the potential to be rolled out across other arid areas around the world. ‘If we can do it here, in the most fragile system on Earth, then that’s a real message of hope for lots of places, including Africa, where there is drought and they just can’t afford to wait for rain.’
+
+Questions 1-5
+Complete the notes below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answer in boxes 1-5 on your answer sheet.
+
+The importance of the huarango tree
+–   its roots can extend as far as 80 metres into the soil
+
+–   can access 1………………… deep below the surface
+
+–   was a crucial part of local inhabitants’ 2………………… a long time ago
+
+–   helped people to survive periods of 3…………………..
+
+–   prevents 4………………… of the soil
+
+–   prevents land from becoming a 5…………………
+
+Questions 6-8
+Complete the table below.
+
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+
+Write your answers in boxes 6-8 on your answer sheet.
+
+Traditional uses of the huarango tree
+Part of tree
+
+Traditional use
+
+6………………..
+
+Fuel
+
+7………………. and ……………….
+
+Medicine
+
+8………………
+
+construction
+
+Questions 9-13
+Do the following statements agree with the information given in Reading Passage 1?
+
+In boxes 9-13 on your answer sheet, write
+
+TRUE               if the statement agrees with the information
+
+FALSE              if the statement contradicts the information
+
+NOT GIVEN    if there is no information on this
+
+9   Local families have told Whaley about some traditional uses of huarango products.
+
+10   Farmer Alberto Benevides is now making a good profit from growing huarangos.
+
+11   Whaley needs the co-operation of farmers to help preserve the area’s wildlife.
+
+12   For Whaley’s project to succeed, it needs to be extended over a very large area.
+
+13   Whaley has plans to go to Africa to set up a similar project.`
+
+const READING_PDOY_HUARANGO_ANSWER_KEY = `READING PASSAGE 1: The return of the huarango
+Question 1: can access 1………………… deep below the surface
+
+Correct Answer: water
+Exact Portion: "the only year-round source of water is located tens of metres below the surface"
+Short Thai Explanation: รากของต้น huarango เข้าถึง water ที่อยู่ลึกลงไปใต้ผิวดินได้ จึงอยู่รอดในพื้นที่แห้งแล้งนี้ได้.
+Paraphrased Vocabulary: deep below the surface = อยู่ลึกลงไปใต้ผิวดิน
+
+Question 2: was a crucial part of local inhabitants’ 2………………… a long time ago
+
+Correct Answer: diet
+Exact Portion: "He believes the huarango was key to the ancient people’s diet"
+Short Thai Explanation: คำว่า crucial part ตรงกับ key และสิ่งที่ต้นไม้ชนิดนี้สำคัญต่อคนโบราณคือ diet หรืออาหารการกิน.
+Paraphrased Vocabulary: crucial part = key; local inhabitants = ancient people; diet = อาหารการกิน
+
+Question 3: helped people to survive periods of 3…………………..
+
+Correct Answer: drought
+Exact Portion: "it allowed local people to withstand years of drought"
+Short Thai Explanation: survive periods of ... ตรงกับ withstand years of drought ดังนั้นคำตอบคือ drought.
+Paraphrased Vocabulary: survive periods of = withstand years of; drought = ภัยแล้ง
+
+Question 4: prevents 4………………… of the soil
+
+Correct Answer: erosion
+Exact Portion: "Cutting down native woodland leads to erosion, as there is nothing to keep the soil in place."
+Short Thai Explanation: ต้น huarango ช่วยยึดดินไว้ พอถูกตัดออกไปก็เกิด erosion หรือการพังทลายของดิน.
+Paraphrased Vocabulary: prevents ... of the soil = keep the soil in place; erosion = การชะล้างพังทลาย
+
+Question 5: prevents land from becoming a 5…………………
+
+Correct Answer: desert
+Exact Portion: "when the huarangos go, the land turns into a desert"
+Short Thai Explanation: ถ้าไม่มีต้น huarango พื้นที่นั้นจะกลายเป็น desert ดังนั้นต้นไม้ชนิดนี้ช่วยป้องกันไม่ให้พื้นที่กลายเป็นทะเลทราย.
+Paraphrased Vocabulary: becoming a = turns into a; desert = ทะเลทราย
+
+Question 6: Traditional uses of the huarango tree - Fuel
+
+Correct Answer: branches
+Exact Portion: "its branches were used for charcoal for cooking and heating"
+Short Thai Explanation: ส่วนของต้นไม้ที่ใช้เป็นเชื้อเพลิงคือ branches เพราะนำไปทำถ่านสำหรับ cooking and heating.
+Paraphrased Vocabulary: fuel = charcoal for cooking and heating; branches = กิ่งไม้
+
+Question 7: Traditional uses of the huarango tree - Medicine
+
+Correct Answer: leaves and bark
+Exact Portion: "Its leaves and bark were used for herbal remedies"
+Short Thai Explanation: ส่วนที่ใช้เป็นยาในข้อนี้คือ leaves and bark เพราะทั้งสองอย่างถูกใช้ทำ herbal remedies.
+Paraphrased Vocabulary: medicine = herbal remedies; leaves and bark = ใบและเปลือก
+
+Question 8: Traditional uses of the huarango tree - construction
+
+Correct Answer: trunk
+Exact Portion: "its trunk was used to build houses"
+Short Thai Explanation: ส่วนที่ใช้ด้าน construction คือ trunk เพราะบทความบอกตรง ๆ ว่าใช้สร้างบ้าน.
+Paraphrased Vocabulary: construction = build houses; trunk = ลำต้น
+
+Question 9: Local families have told Whaley about some traditional uses of huarango products.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "he has been working with local families to attempt to create a sustainable income from the huarangos"
+Short Thai Explanation: บทความบอกแค่ว่า Whaley ทำงานร่วมกับครอบครัวท้องถิ่นเพื่อพัฒนาสินค้า แต่ไม่ได้บอกว่าครอบครัวเหล่านั้นเป็นคนเล่าเรื่องการใช้แบบดั้งเดิมให้เขาฟัง.
+Paraphrased Vocabulary: told Whaley about = เป็นคนให้ข้อมูลกับ Whaley โดยตรง
+
+Question 10: Farmer Alberto Benevides is now making a good profit from growing huarangos.
+
+Correct Answer: FALSE
+Exact Portion: "His farm is relatively small and doesn’t yet provide him with enough to live on"
+Short Thai Explanation: ประโยคในโจทย์บอกว่าเขาได้กำไรดีแล้ว แต่บทความบอกตรงข้ามว่า farm ของเขายังทำเงินไม่พอเลี้ยงชีพ จึงเป็น FALSE.
+Paraphrased Vocabulary: making a good profit = ทำกำไรดี; doesn’t yet provide enough to live on = ยังไม่พอเลี้ยงชีพ
+
+Question 11: Whaley needs the co-operation of farmers to help preserve the area’s wildlife.
+
+Correct Answer: TRUE
+Exact Portion: "he’s persuading farmers to let him plant forest corridors on their land" / "allow the essential movement of mammals, birds and pollen"
+Short Thai Explanation: Whaley ต้องการความร่วมมือจาก farmers จริง เพราะต้องให้เขาปลูก forest corridors บนที่ดินของพวกเขา เพื่อช่วยให้สัตว์และเกสรเคลื่อนที่ได้.
+Paraphrased Vocabulary: co-operation of farmers = persuading farmers to let him; preserve wildlife = allow movement of mammals, birds and pollen
+
+Question 12: For Whaley’s project to succeed, it needs to be extended over a very large area.
+
+Correct Answer: FALSE
+Exact Portion: "Desert habitats can reduce down to very little" / "It’s not like a rainforest that needs to have this huge expanse."
+Short Thai Explanation: โจทย์บอกว่าต้องใช้พื้นที่ใหญ่มาก แต่ Whaley อธิบายตรงกันข้ามว่า desert habitats อยู่ได้แม้เหลือพื้นที่ไม่มาก จึงเป็น FALSE.
+Paraphrased Vocabulary: a very large area = huge expanse; does not need = can reduce down to very little
+
+Question 13: Whaley has plans to go to Africa to set up a similar project.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "a model that has the potential to be rolled out across other arid areas around the world, including Africa"
+Short Thai Explanation: บทความบอกเพียงว่าโมเดลนี้อาจนำไปใช้ใน Africa ได้ แต่ไม่ได้บอกว่า Whaley มีแผนจะเดินทางไปตั้งโครงการเอง จึงเป็น NOT GIVEN.
+Paraphrased Vocabulary: has plans to go = มีแผนจะเดินทางไปเอง; rolled out across = นำไปประยุกต์ใช้ในหลายพื้นที่`
+
+const READING_PDOY_SILBO_PASSAGE_TEXT = `READING PASSAGE 2
+Silbo Gomero – the whistle ‘language’ of the Canary Islands
+La Gomera is one of the Canary Islands situated in the Atlantic Ocean off the northwest coast of Africa. This small volcanic island is mountainous, with steep rocky slopes and deep, wooded ravines, rising to 1,487 metres at its highest peak. It is also home to the best known of the world’s whistle ‘languages’, a means of transmitting information over long distances which is perfectly adapted to the extreme terrain of the island.
+
+This ‘language’, known as ‘Silbo’ or ‘Silbo Gomero’ – from the Spanish word for ‘whistle’ – is now shedding light on the language-processing abilities of the human brain, according to scientists. Researchers say that Silbo activates parts of the brain normally associated with spoken language, suggesting that the brain is remarkably flexible in its ability to interpret sounds as language.
+
+‘Science has developed the idea of brain areas that are dedicated to language, and we are starting to understand the scope of signals that can be recognised as language,’ says David Corina, co-author of a recent study and associate professor of psychology at the University of Washington in Seattle.
+
+Silbo is a substitute for Spanish, with individual words recoded into whistles which have high- and low-frequency tones. A whistler – or silbador – puts a finger in his or her mouth to increase the whistle’s pitch, while the other hand can be cupped to adjust the direction of the sound. ‘There is much more ambiguity in the whistled signal than in the spoken signal,’ explains lead researcher Manuel Carreiras, psychology professor at the University of La Laguna on the Canary island of Tenerife. Because whistled ‘words’ can be hard to distinguish, silbadores rely on repetition, as well as awareness of context, to make themselves understood.
+
+The silbadores of Gomera are traditionally shepherds and other isolated mountain folk, and their novel means of staying in touch allows them to communicate over distances of up to 10 kilometres. Carreiras explains that silbadores are able to pass a surprising amount of information via their whistles. ‘In daily life they use whistles to communicate short commands, but any Spanish sentence could be whistled.’ Silbo has proved particularly useful when fires have occurred on the island and rapid communication across large areas has been vital.
+
+The study team used neuroimaging equipment to contrast the brain activity of silbadores while listening to whistled and spoken Spanish. Results showed the left temporal lobe of the brain, which is usually associated with spoken language, was engaged during the processing of Silbo. The researchers found that other key regions in the brain’s frontal lobe also responded to the whistles, including those activated in response to sign language among deaf people. When the experiments were repeated with non-whistlers, however, activation was observed in all areas of the brain.
+
+‘Our results provide more evidence about the flexibility of human capacity for language in a variety of forms,’ Corina says. ‘These data suggest that left-hemisphere language regions are uniquely adapted for communicative purposes, independent of the modality of signal. The non-Silbo speakers were not recognising Silbo as a language. They had nothing to grab onto, so multiple areas of their brains were activated.’
+
+Carreiras says the origins of Silbo Gomero remain obscure, but that indigenous Canary Islanders, who were of North African origin, already had a whistled language when Spain conquered the volcanic islands in the 15th century. Whistled languages survive today in Papua New Guinea, Mexico, Vietnam, Guyana, China, Nepal, Senegal, and a few mountainous pockets in southern Europe. There are thought to be as many as 70 whistled languages still in use, though only 12 have been described and studied scientifically. This form of communication is an adaptation found among cultures where people are often isolated from each other, according to Julien Meyer, a researcher at the Institute of Human Sciences in Lyon, France. ‘They are mostly used in mountains or dense forests,’ he says. ‘Whistled languages are quite clearly defined and represent an original adaptation of the spoken language for the needs of isolated human groups.’
+
+But with modern communication technology now widely available, researchers say whistled languages like Silbo are threatened with extinction. With dwindling numbers of Gomera islanders still fluent in the language, Canaries’ authorities are taking steps to try to ensure its survival. Since 1999, Silbo Gomero has been taught in all of the island’s elementary schools. In addition, locals are seeking assistance from the United Nations Educational, Scientific and Cultural Organization (UNESCO). ‘The local authorities are trying to get an award from the organisation to declare [Silbo Gomero] as something that should be preserved for humanity,’ Carreiras adds.
+
+Questions 14-19
+Do the following statements agree with the information given in Reading Passage 2?
+
+In boxes 14-19 on your answer sheet, write
+
+TRUE               if the statement agrees with the information
+
+FALSE              if the statement contradicts the information
+
+NOT GIVEN    if there is no information on this
+
+14   La Gomera is the most mountainous of all the Canary Islands.
+
+15   Silbo is only appropriate for short and simple messages.
+
+16   In the brain-activity study, silbadores and non-whistlers produced different results.
+
+17   The Spanish introduced Silbo to the islands in the 15th century.
+
+18   There is precise data available regarding all of the whistle languages in existence today.
+
+19   The children of Gomera now learn Silbo.
+
+Questions 20-26
+Complete the notes below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 20-26 on your answer sheet.
+
+Silbo Gomero
+How Silbo is produced
+
+●   high- and low-frequency tones represent different sounds in Spanish 20……………
+
+●   pitch of whistle is controlled using silbador’s 21……………
+
+●   22………….. is changed with a cupped hand
+
+How Silbo is used
+
+●   has long been used by shepherds and people living in secluded locations
+
+●   in everyday use for the transmission of brief 23……………
+
+●   can relay essential information quickly, e.g. to inform people about 24……………
+
+The future of Silbo
+
+●   future under threat because of new 25……………
+
+●   Canaries’ authorities hoping to receive a UNESCO 26……………. to help preserve it`
+
+const READING_PDOY_SILBO_ANSWER_KEY = `READING PASSAGE 2: Silbo Gomero – the whistle ‘language’ of the Canary Islands
+Question 14: La Gomera is the most mountainous of all the Canary Islands.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "This small volcanic island is mountainous, with steep rocky slopes and deep, wooded ravines"
+Short Thai Explanation: บทความบอกแค่ว่า La Gomera เป็นเกาะที่ภูเขาเยอะ แต่ไม่ได้เปรียบเทียบว่าเป็นเกาะที่ภูเขามากที่สุดในบรรดา Canary Islands จึงเป็น NOT GIVEN.
+Paraphrased Vocabulary: most mountainous = มีภูเขามากที่สุด; mountainous = เป็นเกาะภูเขา
+
+Question 15: Silbo is only appropriate for short and simple messages.
+
+Correct Answer: FALSE
+Exact Portion: "In daily life they use whistles to communicate short commands, but any Spanish sentence could be whistled."
+Short Thai Explanation: ข้อความในโจทย์บอกว่าใช้ได้แค่ข้อความสั้น ๆ แต่บทความบอกชัดว่าแม้จะใช้กับ short commands ในชีวิตประจำวัน ก็ยังสามารถผิวปากเป็นประโยคภาษาสเปนใด ๆ ก็ได้ จึงเป็น FALSE.
+Paraphrased Vocabulary: only appropriate for short and simple messages = use only for short commands; any Spanish sentence could be whistled = ใช้ได้กว้างกว่านั้น
+
+Question 16: In the brain-activity study, silbadores and non-whistlers produced different results.
+
+Correct Answer: TRUE
+Exact Portion: "Results showed the left temporal lobe ... was engaged during the processing of Silbo" / "When the experiments were repeated with non-whistlers, however, activation was observed in all areas of the brain."
+Short Thai Explanation: กลุ่ม silbadores และ non-whistlers ให้ผลต่างกันจริง เพราะผู้ผิวปากใช้สมองบางส่วนที่เกี่ยวกับภาษาโดยเฉพาะ ส่วน non-whistlers มีการทำงานกระจายทั่วสมอง.
+Paraphrased Vocabulary: produced different results = activation patterns were different
+
+Question 17: The Spanish introduced Silbo to the islands in the 15th century.
+
+Correct Answer: FALSE
+Exact Portion: "indigenous Canary Islanders ... already had a whistled language when Spain conquered the volcanic islands in the 15th century"
+Short Thai Explanation: Silbo มีอยู่ก่อนที่สเปนจะเข้ามาแล้ว ดังนั้นสเปนไม่ได้เป็นผู้นำภาษานี้เข้ามา จึงเป็น FALSE.
+Paraphrased Vocabulary: introduced = นำเข้ามา; already had = มีอยู่ก่อนแล้ว
+
+Question 18: There is precise data available regarding all of the whistle languages in existence today.
+
+Correct Answer: FALSE
+Exact Portion: "There are thought to be as many as 70 whistled languages still in use, though only 12 have been described and studied scientifically."
+Short Thai Explanation: ข้อนี้เป็น FALSE เพราะยังไม่มีข้อมูลที่แม่นยำครบทั้งหมด ปัจจุบันมีเพียง 12 ภาษาเท่านั้นที่ได้รับการอธิบายและศึกษาทางวิทยาศาสตร์.
+Paraphrased Vocabulary: precise data regarding all = described and studied scientifically for every language
+
+Question 19: The children of Gomera now learn Silbo.
+
+Correct Answer: TRUE
+Exact Portion: "Since 1999, Silbo Gomero has been taught in all of the island’s elementary schools."
+Short Thai Explanation: เด็ก ๆ บนเกาะ Gomera เรียน Silbo จริง เพราะบทความบอกว่ามีการสอนในโรงเรียนประถมทั้งหมดของเกาะตั้งแต่ปี 1999.
+Paraphrased Vocabulary: children of Gomera = elementary school students on the island; now learn = has been taught
+
+Question 20: high- and low-frequency tones represent different sounds in Spanish 20……………
+
+Correct Answer: words
+Exact Portion: "Silbo is a substitute for Spanish, with individual words recoded into whistles which have high- and low-frequency tones."
+Short Thai Explanation: สิ่งที่ถูก recoded เป็นเสียงผิวปังคือ words จึงเติมคำว่า words.
+Paraphrased Vocabulary: represent different sounds in Spanish = words recoded into whistles
+
+Question 21: pitch of whistle is controlled using silbador’s 21……………
+
+Correct Answer: finger
+Exact Portion: "A whistler – or silbador – puts a finger in his or her mouth to increase the whistle’s pitch"
+Short Thai Explanation: pitch ของเสียงผิวปังถูกควบคุมด้วย finger ตามที่บทความบอกตรง ๆ.
+Paraphrased Vocabulary: pitch is controlled using = puts a finger ... to increase the whistle’s pitch
+
+Question 22: 22………….. is changed with a cupped hand
+
+Correct Answer: direction
+Exact Portion: "the other hand can be cupped to adjust the direction of the sound"
+Short Thai Explanation: มืออีกข้างที่ทำเป็นถ้วยใช้เพื่อปรับ direction ของเสียง ดังนั้นคำตอบคือ direction.
+Paraphrased Vocabulary: is changed = adjusted; cupped hand = มือที่โค้งเป็นถ้วย
+
+Question 23: in everyday use for the transmission of brief 23……………
+
+Correct Answer: commands
+Exact Portion: "In daily life they use whistles to communicate short commands"
+Short Thai Explanation: สิ่งที่ส่งกันในชีวิตประจำวันคือ brief commands หรือคำสั่งสั้น ๆ.
+Paraphrased Vocabulary: in everyday use = in daily life; brief = short
+
+Question 24: can relay essential information quickly, e.g. to inform people about 24……………
+
+Correct Answer: fires
+Exact Portion: "Silbo has proved particularly useful when fires have occurred on the island"
+Short Thai Explanation: ตัวอย่างของข้อมูลสำคัญที่ส่งอย่างรวดเร็วคือเรื่อง fires ที่เกิดขึ้นบนเกาะ.
+Paraphrased Vocabulary: relay essential information quickly = proved particularly useful for rapid communication; inform people about = when fires have occurred
+
+Question 25: future under threat because of new 25……………
+
+Correct Answer: technology
+Exact Portion: "But with modern communication technology now widely available, researchers say whistled languages like Silbo are threatened with extinction."
+Short Thai Explanation: อนาคตของ Silbo ถูกคุกคามเพราะ modern communication technology แพร่หลายขึ้น.
+Paraphrased Vocabulary: under threat = threatened with extinction; new = modern communication
+
+Question 26: Canaries’ authorities hoping to receive a UNESCO 26……………. to help preserve it
+
+Correct Answer: award
+Exact Portion: "The local authorities are trying to get an award from the organisation"
+Short Thai Explanation: คำตอบคือ award เพราะทางการท้องถิ่นกำลังพยายามขอรางวัลหรือการรับรองจาก UNESCO เพื่อช่วยอนุรักษ์ภาษา.
+Paraphrased Vocabulary: hoping to receive = trying to get; help preserve = declare as something that should be preserved`
+
+const READING_EXERCISE3_HENRY_MOORE_PASSAGE_TEXT = `READING PASSAGE 1
+Henry Moore (1898-1986)
+The British sculptor Henry Moore was a leading figure in the 20th-century art world
+
+Henry Moore was born in Castleford, a small town near Leeds in the north of England. He was the seventh child of Raymond Moore and his wife Mary Baker. He studied at Castleford Grammar School from 1909 to 1915, where his early interest in art was encouraged by his teacher Alice Gostick. After leaving school, Moore hoped to become a sculptor, but instead he complied with his father’s wish that he train as a schoolteacher. He had to abandon his training in 1917 when he was sent to France to fight in the First World War.
+
+After the war, Moore enrolled at the Leeds School of Art, where he studied for two years. In his first year, he spent most of his time drawing. Although he wanted to study sculpture, no teacher was appointed until his second year. At the end of that year, he passed the sculpture examination and was awarded a scholarship to the Royal College of Art in London. In September 1921, he moved to London and began three years of advanced study in sculpture.
+
+Alongside the instruction he received at the Royal College, Moore visited many of the London museums, particularly the British Museum, which had a wide-ranging collection of ancient sculpture. During these visits, he discovered the power and beauty of ancient Egyptian and African sculpture. As he became increasingly interested in these ‘primitive’ forms of art, he turned away from European sculptural traditions.
+
+After graduating, Moore spent the first six months of 1925 travelling in France. When he visited the Trocadero Museum in Paris, he was impressed by a cast of a Mayan sculpture of the rain spirit. It was a male reclining figure with its knees drawn up together, and its head at a right angle to its body. Moore became fascinated with this stone sculpture, which he thought had a power and originality that no other stone sculpture possessed. He himself started carving a variety of subjects in stone, including depiction of reclining women, mother-and-child groups, and masks.
+
+Moore’s exceptional talent soon gained recognition, and in 1926 he started work as a sculpture instructor at the Royal College. In 1933, he became a member of a group of young artists called Unit One. The aim of the group was to convince the English public of the merits of the emerging international movement in modern art and architecture.
+
+Around this time, Moore moved away from the human figure to experiment with abstract shapes. In 1931, he held an exhibition at the Leicester Galleries in London. His work was enthusiastically welcomed by fellow sculptors, but the reviews in the press were extremely negative and turned Moore into a notorious figure. There were calls for his resignation from the Royal College, and the following year, when his contract expired, he left to start a sculpture department at the Chelsea School of Art in London.
+
+Throughout the 1930s, Moore did not show any inclination to please the British public. He became interested in the paintings of the Spanish artist Pablo Picasso, whose work inspired him to distort the human body in a radical way. At times, he seemed to abandon the human figure altogether. The pages of his sketchbooks from this period show his ideas for abstract sculptures that bore little resemblance to the human form.
+
+In 1940, during the Second World War, Moore stopped teaching at the Chelsea School and moved to a farmhouse about 20 miles north of London. A shortage of materials forced him to focus on drawing. He did numerous small sketches of Londoners, later turning these ideas into large coloured drawings in his studio. In 1942, he returned to Castleford to make a series of sketches of the miners who worked there.
+
+In 1944, Harlow, a town near London, offered Moore a commission for a sculpture depicting a family. The resulting work signifies a dramatic change in Moore’s style, away from the experimentation of the 1930s towards a more natural and humanistic subject matter. He did dozens of studies in clay for the sculpture, and these were cast in bronze and issued in editions of seven to nine copies each. In this way, Moore’s work became available to collectors all over the world. The boost to his income enabled him to take on ambitious projects and start working on the scale he felt his sculpture demanded.
+
+Critics who had begun to think that Moore had become less revolutionary were proven wrong by the appearance, in 1950, of the first of Moore’s series of standing figures in bronze, with their harsh and angular pierced forms and distinct impression of menace. Moore also varied his subject matter in the 1950s with such works as Warrior with Shield and Falling Warrior. These were rare examples of Moore’s use of the male figure and owe something to his visit to Greece in 1951, when he had the opportunity to study ancient works of art.
+
+In his final years, Moore created the Henry Moore Foundation to promote art appreciation and to display his work. Moore was the first modern English sculptor to achieve international critical acclaim and he is still regarded as one of the most important sculptors of the 20th century.
+
+Questions 1-7
+Do the following statements agree with the claims of the writer in Reading Passage 1?
+
+In boxes 1-7 on your answer sheet, write
+
+TRUE               if the statement agrees with the information
+
+FALSE              if the statement contradicts the information
+
+NOT GIVEN    if there is no information on this
+
+1   On leaving school, Moore did what his father wanted him to do.
+
+2   Moore began studying sculpture in his first term at the Leeds School of Art.
+
+3   When Moore started at the Royal College of Art, its reputation for teaching sculpture was excellent.
+
+4   Moore became aware of ancient sculpture as a result of visiting London Museums.
+
+5   The Trocadero Museum’s Mayan sculpture attracted a lot of public interest.
+
+6   Moore thought the Mayan sculpture was similar in certain respects to other stone sculptures.
+
+7   The artists who belonged to Unit One wanted to make modern art and architecture more popular.
+
+Questions 8-13
+Complete the notes below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 8-13 on your answer sheet.
+
+Moore’s career as an artist
+1930s
+
+●   Moore’s exhibition at the Leicester Galleries is criticised by the press
+
+●   Moore is urged to offer his 8………………… and leave the Royal College.
+
+1940s
+
+●   Moore turns to drawing because 9…………………. for sculpting are not readily available
+
+●   While visiting his hometown, Moore does some drawings of 10………………….
+
+●   Moore is employed to produce a sculpture of a 11…………………
+
+●   12………………. start to buy Moore’s work
+
+●   Moore’s increased 13…………………. makes it possible for him to do more ambitious sculptures
+
+1950s
+
+●   Moore’s series of bronze figures marks a further change in his style`
+
+const READING_EXERCISE3_HENRY_MOORE_ANSWER_KEY = `READING PASSAGE 1: Henry Moore (1898-1986)
+Question 1: On leaving school, Moore did what his father wanted him to do.
+
+Correct Answer: TRUE
+Exact Portion: "he complied with his father’s wish that he train as a schoolteacher"
+Short Thai Explanation: Moore ทำตามความต้องการของพ่อจริง เพราะหลังออกจากโรงเรียนเขายอมฝึกเป็นครูตามที่พ่ออยากให้ทำ.
+Paraphrased Vocabulary: did what his father wanted = complied with his father’s wish
+
+Question 2: Moore began studying sculpture in his first term at the Leeds School of Art.
+
+Correct Answer: FALSE
+Exact Portion: "In his first year, he spent most of his time drawing. Although he wanted to study sculpture, no teacher was appointed until his second year."
+Short Thai Explanation: ข้อนี้เป็น FALSE เพราะปีแรกเขาไม่ได้เริ่มเรียน sculpture อย่างจริงจัง และยังไม่มีครูสอนจนกว่าจะถึงปีที่สอง.
+Paraphrased Vocabulary: first term = first year; began studying sculpture = no teacher was appointed until his second year
+
+Question 3: When Moore started at the Royal College of Art, its reputation for teaching sculpture was excellent.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "he moved to London and began three years of advanced study in sculpture"
+Short Thai Explanation: บทความบอกแค่ว่า Moore ไปเรียน sculpture ที่ Royal College of Art แต่ไม่ได้ให้ข้อมูลเรื่องชื่อเสียงของสถาบันว่าดีเยี่ยมหรือไม่ จึงเป็น NOT GIVEN.
+Paraphrased Vocabulary: reputation was excellent = ชื่อเสียงด้านการสอนยอดเยี่ยม
+
+Question 4: Moore became aware of ancient sculpture as a result of visiting London Museums.
+
+Correct Answer: TRUE
+Exact Portion: "Moore visited many of the London museums ... During these visits, he discovered the power and beauty of ancient Egyptian and African sculpture."
+Short Thai Explanation: Moore รู้จักและซาบซึ้งงานประติมากรรมโบราณจากการไปเยี่ยมพิพิธภัณฑ์ในลอนดอนจริง.
+Paraphrased Vocabulary: became aware of = discovered; as a result of visiting = during these visits
+
+Question 5: The Trocadero Museum’s Mayan sculpture attracted a lot of public interest.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "he was impressed by a cast of a Mayan sculpture of the rain spirit"
+Short Thai Explanation: บทความบอกเพียงว่า Moore ประทับใจงานชิ้นนี้ แต่ไม่ได้บอกว่าคนทั่วไปสนใจมันมากแค่ไหน จึงเป็น NOT GIVEN.
+Paraphrased Vocabulary: attracted a lot of public interest = ได้รับความสนใจจากสาธารณะมาก
+
+Question 6: Moore thought the Mayan sculpture was similar in certain respects to other stone sculptures.
+
+Correct Answer: FALSE
+Exact Portion: "he thought had a power and originality that no other stone sculpture possessed"
+Short Thai Explanation: Moore มองว่างานชิ้นนี้มีพลังและความแปลกใหม่ที่งานหินชิ้นอื่นไม่มี จึงไม่ได้คิดว่ามันคล้ายกับงานหินอื่น.
+Paraphrased Vocabulary: similar in certain respects = คล้ายกันบางด้าน; no other stone sculpture possessed = ไม่มีงานหินอื่นเหมือน
+
+Question 7: The artists who belonged to Unit One wanted to make modern art and architecture more popular.
+
+Correct Answer: TRUE
+Exact Portion: "The aim of the group was to convince the English public of the merits of the emerging international movement in modern art and architecture."
+Short Thai Explanation: กลุ่ม Unit One ต้องการโน้มน้าวให้สาธารณชนเห็นคุณค่าของ modern art and architecture จึงตรงกับการทำให้เป็นที่ยอมรับมากขึ้น.
+Paraphrased Vocabulary: more popular = convince the public of the merits
+
+Question 8: Moore is urged to offer his 8………………… and leave the Royal College.
+
+Correct Answer: resignation
+Exact Portion: "There were calls for his resignation from the Royal College"
+Short Thai Explanation: คำตอบคือ resignation เพราะมีเสียงเรียกร้องให้เขาลาออกจาก Royal College.
+Paraphrased Vocabulary: offer his ... and leave = resignation
+
+Question 9: Moore turns to drawing because 9…………………. for sculpting are not readily available
+
+Correct Answer: materials
+Exact Portion: "A shortage of materials forced him to focus on drawing."
+Short Thai Explanation: เขาหันไปวาดรูปเพราะขาด materials สำหรับทำประติมากรรม.
+Paraphrased Vocabulary: are not readily available = shortage of
+
+Question 10: While visiting his hometown, Moore does some drawings of 10………………….
+
+Correct Answer: miners
+Exact Portion: "he returned to Castleford to make a series of sketches of the miners who worked there"
+Short Thai Explanation: ตอนกลับบ้านเกิด Moore วาดภาพ miners หรือคนงานเหมือง.
+Paraphrased Vocabulary: hometown = Castleford; drawings = sketches
+
+Question 11: Moore is employed to produce a sculpture of a 11…………………
+
+Correct Answer: family
+Exact Portion: "offered Moore a commission for a sculpture depicting a family"
+Short Thai Explanation: คำตอบคือ family เพราะเขาได้รับ commission ให้สร้างประติมากรรมที่แสดงครอบครัว.
+Paraphrased Vocabulary: employed to produce = offered a commission for
+
+Question 12: 12………………. start to buy Moore’s work
+
+Correct Answer: collectors
+Exact Portion: "Moore’s work became available to collectors all over the world"
+Short Thai Explanation: คนที่เริ่มซื้อผลงานของ Moore คือ collectors.
+Paraphrased Vocabulary: start to buy = became available to collectors
+
+Question 13: Moore’s increased 13…………………. makes it possible for him to do more ambitious sculptures
+
+Correct Answer: income
+Exact Portion: "The boost to his income enabled him to take on ambitious projects"
+Short Thai Explanation: รายได้ที่เพิ่มขึ้นทำให้เขาทำงานชิ้นใหญ่และทะเยอทะยานขึ้นได้ คำตอบคือ income.
+Paraphrased Vocabulary: makes it possible = enabled him to; increased = boost to`
+
+const READING_EXERCISE4_DESOLENATOR_PASSAGE_TEXT = `READING PASSAGE 2
+The Desolenator: producing clean water
+A
+
+Travelling around Thailand in the 1990s, William Janssen was impressed with the basic rooftop solar heating systems that were on many homes, where energy from the sun was absorbed by a plate and then used to heat water for domestic use. Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable device that uses the power from the sun to purify water.
+
+B
+
+The Desolenator operates as a mobile desalination unit that can take water from different places, such as the sea, rivers, boreholes and rain, and purify it for human consumption. It is particularly valuable in regions where natural groundwater reserves have been polluted, or where seawater is the only water source available.
+
+Janssen saw that there was a need for a sustainable way to clean water is both the developing and the developed countries when he moved to the United Arab Emirates and saw large-scale water processing. ‘I was confronted with the enormous carbon footprint that the Gulf nations have because of all of the desalination that they do,’ he says.
+
+C
+
+The Desolenator can produce 15 litres of drinking water per day, enough to sustain a family for cooking and drinking. Its main selling point is that unlike standard desalination techniques, it doesn’t require a generated power supply: just sunlight. It measures 120 cm by 90 cm, and it easy to transport, thanks to its two wheels. Water enters through a pipe, and flows as a thin film between a sheet of double glazing and the surface of a solar panel, where it is heated by the sun. the warm water flows into a small boiler (heated by a solar-powered battery) where it is converted to steam. When the steam cools, it becomes distilled water. The device has a very simple filter to trap particles, and this can easily be shaken to remove them. There are two tubes for liquid coming out: one for the waste – salt from seawater, fluoride, etc. – and another for the distilled water. The performance of the unit is shown on an LCD screen and transmitted to the company which provides servicing when necessary.
+
+D
+
+A recent analysis found that at least two-thirds of the world’s population lives with severe water scarcity for at least a month every year. Janssen says that be 2030 half of the world’s population will be living with water stress – where the demand exceeds the supply over a certain period of time. ‘It is really important that a sustainable solution is brought to the market that is able to help these people,’ he says. Many countries ‘don’t have the money for desalination plants, which are very expensive to build. They don’t have the money to operate them, they are very maintenance intensive, and they don’t have the money to buy the diesel to run the desalination plants, so it is a really bad situation.’
+
+E
+
+The device is aimed at a wide variety of users – from homeowners in the developing world who do not have a constant supply of water to people living off the grid in rural parts of the US. The first commercial versions of the Desolenator are expected to be in operation in India early next year, after field tests are carried out. The market for the self-sufficient devices in developing countries is twofold – those who cannot afford the money for the device outright and pay through microfinance, and middle-income homes that can lease their own equipment. ‘People in India don’t pay for a fridge outright; they pay for it over six months. They would put the Desolenator on their roof and hook it up to their municipal supply and they would get very reliable drinking water on a daily basis,’ Janssen says. In the developed world, it is aimed at niche markets where tap water is unavailable – for camping, on boats, or for the military, for instance.
+
+F
+
+Prices will vary according to where it is bought. In the developing world, the price will depend on what deal aid organisations can negotiate. In developed countries, it is likely to come in at $1,000 (£685) a unit, said Janssen. ‘We are a venture with a social mission. We are aware that the product we have envisioned is mainly finding application in the developing world and humanitarian sector and that this is the way we will proceed. We do realise, though, that to be a viable company there is a bottom line to keep in mind,’ he says.
+
+G
+
+The company itself is based at Imperial College London, although Janssen, its chief executive, still lives in the UAE. It has raised £340,000 in funding so far. Within two years, he says, the company aims to be selling 1,000 units a month, mainly in the humanitarian field. They are expected to be sold in areas such as Australia, northern Chile, Peru, Texas and California.
+
+Questions 14-20
+Reading Passage 2 has nine paragraphs, A-H
+
+Choose the correct heading for each section from the list of headings below
+
+Write the correct number, i-x, in boxes 14-20 on your answer sheet.
+
+List of Headings
+
+i           Getting the finance for production
+
+ii          An unexpected benefit
+
+iii         From initial inspiration to new product
+
+iv         The range of potential customers for the device
+
+v          What makes the device different from alternatives
+
+vi         Cleaning water from a range of sources
+
+vii        Overcoming production difficulties
+
+viii       Profit not the primary goal
+
+ix         A warm welcome for the device
+
+x          The number of people affected by water shortages
+
+14   Section A
+
+15   Section B
+
+16   Section C
+
+17   Section D
+
+18   Section E
+
+19   Section F
+
+20   Section G
+
+Questions 21-26
+Complete the summary below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 21-26 on your answer sheet.
+
+How the Desolenator works
+The energy required to operate the Desolenator comes from sunlight. The device can be used in different locations, as it has 21………………… . Water is fed into a pipe, and a 22………………….. of water flows over a solar panel. The water then enters a boiler, where it turns into steam. Any particles in the water are caught in a 23………………… . The purified water comes out through one tube, and all types of 24………………… come out through another. A screen displays the 25………………… of the device, and transmits the information to the company so that they know when the Desolenator requires 26…………………. .`
+
+const READING_EXERCISE4_DESOLENATOR_ANSWER_KEY = `READING PASSAGE 2: The Desolenator: producing clean water
+Question 14: Section A
+
+Correct Answer: iii
+Exact Portion: "Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable device"
+Short Thai Explanation: ย่อหน้า A พูดถึงจุดเริ่มต้นของแรงบันดาลใจในไทย และการพัฒนา idea นั้นจนกลายเป็นผลิตภัณฑ์ใหม่ จึงตรงกับ heading iii.
+Paraphrased Vocabulary: initial inspiration = basic idea he saw in Southeast Asia; new product = portable device
+
+Question 15: Section B
+
+Correct Answer: vi
+Exact Portion: "can take water from different places, such as the sea, rivers, boreholes and rain"
+Short Thai Explanation: ย่อหน้า B เน้นว่าระบบนี้ทำความสะอาดน้ำได้จากหลายแหล่ง จึงตรงกับ heading vi.
+Paraphrased Vocabulary: a range of sources = different places such as sea, rivers, boreholes and rain
+
+Question 16: Section C
+
+Correct Answer: v
+Exact Portion: "unlike standard desalination techniques, it doesn’t require a generated power supply: just sunlight"
+Short Thai Explanation: ย่อหน้า C อธิบายจุดเด่นที่ทำให้ต่างจากวิธี desalination แบบอื่น นั่นคือใช้แค่ sunlight ไม่ต้องมีพลังงานที่ผลิตขึ้นมา จึงตรงกับ heading v.
+Paraphrased Vocabulary: different from alternatives = unlike standard desalination techniques
+
+Question 17: Section D
+
+Correct Answer: x
+Exact Portion: "at least two-thirds of the world’s population lives with severe water scarcity"
+Short Thai Explanation: ย่อหน้า D พูดถึงจำนวนคนจำนวนมากที่ได้รับผลกระทบจากการขาดแคลนน้ำ จึงตรงกับ heading x.
+Paraphrased Vocabulary: number of people affected = two-thirds of the world’s population
+
+Question 18: Section E
+
+Correct Answer: iv
+Exact Portion: "The device is aimed at a wide variety of users"
+Short Thai Explanation: ย่อหน้า E อธิบายกลุ่มลูกค้าหลายแบบ ทั้งในประเทศกำลังพัฒนาและประเทศพัฒนาแล้ว จึงตรงกับ heading iv.
+Paraphrased Vocabulary: range of potential customers = a wide variety of users
+
+Question 19: Section F
+
+Correct Answer: viii
+Exact Portion: "We are a venture with a social mission"
+Short Thai Explanation: ย่อหน้า F บอกชัดว่าบริษัทมี social mission และกำไรไม่ใช่เป้าหมายหลักเพียงอย่างเดียว จึงตรงกับ heading viii.
+Paraphrased Vocabulary: profit not the primary goal = venture with a social mission
+
+Question 20: Section G
+
+Correct Answer: i
+Exact Portion: "It has raised £340,000 in funding so far."
+Short Thai Explanation: ย่อหน้า G พูดถึงการระดมทุนของบริษัท จึงตรงกับ heading i เรื่อง getting the finance for production.
+Paraphrased Vocabulary: getting the finance = raised funding
+
+Question 21: The device can be used in different locations, as it has 21………………… .
+
+Correct Answer: wheels
+Exact Portion: "it is easy to transport, thanks to its two wheels"
+Short Thai Explanation: คำตอบคือ wheels เพราะล้อทำให้อุปกรณ์เคลื่อนย้ายไปใช้ในสถานที่ต่าง ๆ ได้ง่าย.
+Paraphrased Vocabulary: used in different locations = easy to transport
+
+Question 22: a 22………………….. of water flows over a solar panel.
+
+Correct Answer: film
+Exact Portion: "flows as a thin film between a sheet of double glazing and the surface of a solar panel"
+Short Thai Explanation: น้ำไหลเป็น thin film เหนือแผง จึงเติมคำว่า film.
+Paraphrased Vocabulary: flows over a solar panel = flows as a thin film
+
+Question 23: Any particles in the water are caught in a 23………………… .
+
+Correct Answer: filter
+Exact Portion: "The device has a very simple filter to trap particles"
+Short Thai Explanation: คำตอบคือ filter เพราะตัวกรองเป็นส่วนที่ดักจับ particles.
+Paraphrased Vocabulary: are caught in = trap
+
+Question 24: all types of 24………………… come out through another.
+
+Correct Answer: waste
+Exact Portion: "one for the waste – salt from seawater, fluoride, etc."
+Short Thai Explanation: ของเหลวอีกท่อหนึ่งคือ waste หรือของเสียที่ถูกแยกออกมา.
+Paraphrased Vocabulary: all types of = salt, fluoride, etc.
+
+Question 25: A screen displays the 25………………… of the device
+
+Correct Answer: performance
+Exact Portion: "The performance of the unit is shown on an LCD screen"
+Short Thai Explanation: หน้าจอแสดง performance ของตัวเครื่องโดยตรง.
+Paraphrased Vocabulary: screen displays = is shown on an LCD screen
+
+Question 26: they know when the Desolenator requires 26…………………. .
+
+Correct Answer: servicing
+Exact Portion: "transmitted to the company which provides servicing when necessary"
+Short Thai Explanation: ข้อมูลถูกส่งไปให้บริษัทเพื่อรู้ว่าเมื่อไรเครื่องต้องการ servicing.
+Paraphrased Vocabulary: know when ... requires = provides servicing when necessary`
+
+const READING_EXERCISE5_DANCE_ENGINEERS_PASSAGE_TEXT = `READING PASSAGE 1
+Could urban engineers learn from dance?
+A
+
+The way we travel around cities has a major impact on whether they are sustainable. Transportation is estimated to account for 30% of energy consumption in most of the world’s most developed nations, so lowering the need for energy-using vehicles is essential for decreasing the environmental impact of mobility. But as more and more people move to cities, it is important to think about other kinds of sustainable travel too. The ways we travel affect our physical and mental health, our social lives, our access to work and culture, and the air we breathe. Engineers are tasked with changing how we travel round cities through urban design, but the engineering industry still works on the assumptions that led to the creation of the energy-consuming transport systems we have now: the emphasis placed solely on efficiency, speed, and quantitative data. We need radical changes, to make it healthier, more enjoyable, and less environmentally damaging to travel around cities.
+
+B
+
+Dance might hold some of the answers. That is not to suggest everyone should dance their way to work, however healthy and happy it might make us, but rather that the techniques used by choreographers to experiment with and design movement in dance could provide engineers with tools to stimulate new ideas in city-making. Richard Sennett, an influential urbanist and sociologist who has transformed ideas about the way cities are made, argues that urban design has suffered from a separation between mind and body since the introduction of the architectural blueprint.
+
+C
+
+Whereas medieval builders improvised and adapted construction through their intimate knowledge of materials and personal experience of the conditions on a site, building designs are now conceived and stored in media technologies that detach the designer from the physical and social realities they are creating. While the design practices created by these new technologies are essential for managing the technical complexity of the modern city, they have the drawback of simplifying reality in the process.
+
+D
+
+To illustrate, Sennett discusses the Peachtree Center in Atlanta, USA, a development typical of the modernist approach to urban planning prevalent in the 1970s. Peachtree created a grid of streets and towers intended as a new pedestrian-friendly downtown for Atlanta. According to Sennett, this failed because its designers had invested too much faith in computer-aided design to tell them how it would operate. They failed to take into account that purpose-built street cafés could not operate in the hot sun without the protective awnings common in older buildings, and would need energy-consuming air conditioning instead, or that its giant car park would feel so unwelcoming that it would put people off getting out of their cars. What seems entirely predictable and controllable on screen has unexpected results when translated into reality.
+
+E
+
+The same is true in transport engineering, which uses models to predict and shape the way people move through the city. Again, these models are necessary, but they are built on specific world views in which certain forms of efficiency and safety are considered and other experience of the city ignored. Designs that seem logical in models appear counter-intuitive in the actual experience of their users. The guard rails that will be familiar to anyone who has attempted to cross a British road, for example, were an engineering solution to pedestrian safety based on models that prioritise the smooth flow of traffic. On wide major roads, they often guide pedestrians to specific crossing points and slow down their progress across the road by using staggered access points divide the crossing into two – one for each carriageway. In doing so they make crossings feel longer, introducing psychological barriers greatly impacting those that are the least mobile, and encouraging others to make dangerous crossings to get around the guard rails. These barriers don’t just make it harder to cross the road: they divide communities and decrease opportunities for healthy transport. As a result, many are now being removed, causing disruption, cost, and waste.
+
+F
+
+If their designers had had the tools to think with their bodies – like dancers – and imagine how these barriers would feel, there might have been a better solution. In order to bring about fundamental changes to the ways we use our cities, engineering will need to develop a richer understanding of why people move in certain ways, and how this movement affects them. Choreography may not seem an obvious choice for tackling this problem. Yet it shares with engineering the aim of designing patterns of movement within limitations of space. It is an art form developed almost entirely by trying out ideas with the body, and gaining instant feedback on how the results feel. Choreographers have deep understanding of the psychological, aesthetic, and physical implications of different ways of moving.
+
+G
+
+Observing the choreographer Wayne McGregor, cognitive scientist David Kirsh described how he ‘thinks with the body’, Kirsh argues that by using the body to simulate outcomes, McGregor is able to imagine solutions that would not be possible using purely abstract thought. This kind of physical knowledge is valued in many areas of expertise, but currently has no place in formal engineering design processes. A suggested method for transport engineers is to improvise design solutions and instant feedback about how they would work from their own experience of them, or model designs at full scale in the way choreographers experiment with groups of dancers. Above all, perhaps, they might learn to design for emotional as well as functional effects.
+
+Questions 1-6
+Reading Passage 1 has seven paragraphs, A-G.
+
+Which paragraph contains the following information?
+
+Write the correct letter, A-G, in boxes 1-6 on your answer sheet.
+
+1   reference to an appealing way of using dance that the writer is not proposing
+
+2   an example of a contrast between past and present approaches to building
+
+3   mention of an objective of both dance and engineering
+
+4   reference to an unforeseen problem arising from ignoring the climate
+
+5   why some measures intended to help people are being reversed
+
+6   reference to how transport has an impact on human lives
+
+Questions 7-13
+Complete the summary below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 7-13 on your answer sheet.
+
+Guard rails
+Guard rails were introduced on British roads to improve the 7…………………… of pedestrians, while ensuring that the movement of 8……………………. is not disrupted. Pedestrians are led to access points, and encouraged to cross one 9…………………….. at a time.
+
+An unintended effect is to create psychological difficulties in crossing the road, particularly for less 10………………….. people. Another result is that some people cross the road in a 11……………………. way. The guard rails separate 12……………………., and make it more difficult to introduce forms of transport that are 13…………………….`
+
+const READING_EXERCISE5_DANCE_ENGINEERS_ANSWER_KEY = `READING PASSAGE 1: Could urban engineers learn from dance?
+Question 1: reference to an appealing way of using dance that the writer is not proposing
+
+Correct Answer: B
+Exact Portion: "That is not to suggest everyone should dance their way to work, however healthy and happy it might make us"
+Short Thai Explanation: ผู้เขียนยกไอเดียการเต้นไปทำงานที่ฟังดูน่าสนุกและดีต่อสุขภาพขึ้นมา แต่บอกชัดว่าไม่ใช่สิ่งที่กำลังเสนอจริง ๆ ดังนั้นคำตอบคือย่อหน้า B.
+Paraphrased Vocabulary: an appealing way = healthy and happy; not proposing = not to suggest
+
+Question 2: an example of a contrast between past and present approaches to building
+
+Correct Answer: C
+Exact Portion: "Whereas medieval builders improvised ... building designs are now conceived and stored in media technologies"
+Short Thai Explanation: ย่อหน้า C เปรียบเทียบตรง ๆ ระหว่าง medieval builders กับวิธีออกแบบอาคารสมัยใหม่ จึงตรงกับโจทย์.
+Paraphrased Vocabulary: contrast between past and present = Whereas medieval ... now
+
+Question 3: mention of an objective of both dance and engineering
+
+Correct Answer: F
+Exact Portion: "it shares with engineering the aim of designing patterns of movement within limitations of space"
+Short Thai Explanation: ย่อหน้า F บอกว่าทั้ง choreography และ engineering มีเป้าหมายร่วมกัน คือการออกแบบรูปแบบการเคลื่อนไหวในพื้นที่จำกัด.
+Paraphrased Vocabulary: objective of both = shares with engineering the aim
+
+Question 4: reference to an unforeseen problem arising from ignoring the climate
+
+Correct Answer: D
+Exact Portion: "street cafés could not operate in the hot sun without the protective awnings"
+Short Thai Explanation: ปัญหาที่ไม่คาดคิดเกิดจากการไม่คำนึงถึงสภาพอากาศร้อน ทำให้ street cafés ใช้งานไม่ได้ตามที่ออกแบบไว้ จึงอยู่ในย่อหน้า D.
+Paraphrased Vocabulary: unforeseen problem = unexpected results; climate = hot sun
+
+Question 5: why some measures intended to help people are being reversed
+
+Correct Answer: E
+Exact Portion: "As a result, many are now being removed, causing disruption, cost, and waste."
+Short Thai Explanation: ย่อหน้า E อธิบายว่าราวกั้นที่ตั้งใจเพิ่มความปลอดภัยกลับสร้างปัญหาหลายอย่าง จึงกำลังถูกถอดออกในภายหลัง.
+Paraphrased Vocabulary: intended to help people = solution to pedestrian safety; being reversed = being removed
+
+Question 6: reference to how transport has an impact on human lives
+
+Correct Answer: A
+Exact Portion: "The ways we travel affect our physical and mental health, our social lives, our access to work and culture, and the air we breathe."
+Short Thai Explanation: ย่อหน้า A กล่าวชัดว่าการเดินทางส่งผลต่อสุขภาพ ชีวิตสังคม งาน วัฒนธรรม และอากาศที่เราหายใจ จึงตรงกับโจทย์ที่สุด.
+Paraphrased Vocabulary: impact on human lives = affect our physical and mental health, social lives, access to work and culture
+
+Question 7: improve the 7…………………… of pedestrians
+
+Correct Answer: safety
+Exact Portion: "were an engineering solution to pedestrian safety"
+Short Thai Explanation: คำตอบคือ safety เพราะ guard rails ถูกติดตั้งมาเพื่อเพิ่มความปลอดภัยให้ pedestrians.
+Paraphrased Vocabulary: improve = solution to; pedestrians = pedestrian
+
+Question 8: ensuring that the movement of 8……………………. is not disrupted
+
+Correct Answer: traffic
+Exact Portion: "models that prioritise the smooth flow of traffic"
+Short Thai Explanation: guard rails ถูกออกแบบให้ช่วยคนข้ามถนน แต่ก็ต้องไม่รบกวนการไหลของ traffic.
+Paraphrased Vocabulary: movement is not disrupted = smooth flow
+
+Question 9: encouraged to cross one 9…………………….. at a time
+
+Correct Answer: carriageway
+Exact Portion: "divide the crossing into two – one for each carriageway"
+Short Thai Explanation: ทางข้ามถูกแบ่งเป็นสองส่วน ทำให้คนต้องข้ามทีละ carriageway.
+Paraphrased Vocabulary: one ... at a time = divide the crossing into two
+
+Question 10: particularly for less 10………………….. people
+
+Correct Answer: mobile
+Exact Portion: "greatly impacting those that are the least mobile"
+Short Thai Explanation: คนที่ได้รับผลกระทบมากเป็นพิเศษคือคนที่เคลื่อนไหวได้น้อยหรือ less mobile.
+Paraphrased Vocabulary: less ... people = least mobile
+
+Question 11: some people cross the road in a 11……………………. way
+
+Correct Answer: dangerous
+Exact Portion: "encouraging others to make dangerous crossings"
+Short Thai Explanation: ผลข้างเคียงคือบางคนเลือกข้ามถนนแบบ dangerous เพื่อเลี่ยง guard rails.
+Paraphrased Vocabulary: in a ... way = dangerous crossings
+
+Question 12: The guard rails separate 12…………………….
+
+Correct Answer: communities
+Exact Portion: "they divide communities"
+Short Thai Explanation: guard rails ไม่ได้แค่ขวางการข้ามถนน แต่ยัง divide communities ด้วย.
+Paraphrased Vocabulary: separate = divide
+
+Question 13: forms of transport that are 13…………………….
+
+Correct Answer: healthy
+Exact Portion: "decrease opportunities for healthy transport"
+Short Thai Explanation: ราวกั้นทำให้การส่งเสริมรูปแบบการเดินทางที่ healthy ทำได้ยากขึ้น.
+Paraphrased Vocabulary: forms of transport = transport; make it more difficult to introduce = decrease opportunities for`
+
+const READING_EXERCISE6_EXTINCT_SPECIES_PASSAGE_TEXT = `READING PASSAGE 2
+Should we try to bring extinct species back to life?
+A
+
+The passenger pigeon was a legendary species. Flying in vast numbers across North America, with potentially many millions within a single flock, their migration was once one of nature’s great spectacles. Sadly, the passenger pigeon’s existence came to an end on 1 September 1914, when the last living specimen died at Cincinnati Zoo. Geneticist Ben Novak is lead researcher on an ambitious project which now aims to bring the bird back to life through a process known as ‘de-extinction’. The basic premise involves using cloning technology to turn the DNA of extinct animals into a fertilised embryo, which is carried by the nearest relative still in existence – in this case, the abundant band-tailed pigeon – before being born as a living, breathing animal. Passenger pigeons are one of the pioneering species in this field, but they are far from the only ones on which this cutting-edge technology is being trialled.
+
+B
+
+In Australia, the thylacine, more commonly known as the Tasmanian tiger, is another extinct creature which genetic scientists are striving to bring back to life. ‘There is no carnivore now in Tasmania that fills the niche which thylacines once occupied,’ explains Michael Archer of the University of New South Wales. He points out that in the decades since the thylacine went extinct, there has been a spread in a ‘dangerously debilitating’ facial tumour syndrome which threatens the existence of the Tasmanian devils, the island’s other notorious resident. Thylacines would have prevented this spread because they would have killed significant numbers of Tasmanian devils. ‘If that contagious cancer had popped up previously, it would have burned out in whatever region it started. The return of thylacines to Tasmania could help to ensure that devils are never again subjected to risks of this kind.’
+
+C
+
+If extinct species can be brought back to life, can humanity begin to correct the damage it has caused to the natural world over the past few millennia? ‘The idea of de-extinction is that we can reverse this process, bringing species that no longer exist back to life,’ says Beth Shapiro of University of California Santa Cruz’s Genomics Institute. ‘I don’t think that we can do this. There is no way to bring back something that is 100 per cent identical to a species that went extinct a long time ago.’ A more practical approach for long-extinct species is to take the DNA of existing species as a template, ready for the insertion of strands of extinct animal DNA to create something new; a hybrid, based on the living species, but which looks and/or acts like the animal which died out.
+
+D
+
+This complicated process and questionable outcome begs the question: what is the actual point of this technology? ‘For us, the goal has always been replacing the extinct species with a suitable replacement,’ explains Novak. ‘When it comes to breeding, band-tailed pigeons scatter and make maybe one or two nests per hectare, whereas passenger pigeons were very social and would make 10,000 or more nests in one hectare.’ Since the disappearance of this key species, ecosystems in the eastern US have suffered, as the lack of disturbance caused by thousands of passenger pigeons wrecking trees and branches means there has been minimal need for regrowth. This has left forests stagnant and therefore unwelcoming to the plants and animals which evolved to help regenerate the forest after a disturbance. According to Novak, a hybridized band-tailed pigeon, with the added nesting habits of a passenger pigeon, could, in theory, re-establish that forest disturbance, thereby creating a habitat necessary for a great many other native species to thrive.
+
+E
+
+Another popular candidate for this technology is the woolly mammoth. George Church, professor at Harvard Medical School and leader of the Woolly Mammoth Revival Project, has been focusing on cold resistance, the main way in which the extinct woolly mammoth and its nearest living relative, the Asian elephant, differ. By pinpointing which genetic traits made it possible for mammoths to survive the icy climate of the tundra, the project’s goal is to return mammoths, or a mammoth-like species, to the area. ‘My highest priority would be preserving the endangered Asian elephant,’ says Church, ‘expanding their range to the huge ecosystem of the tundra. Necessary adaptations would include smaller ears, thicker hair, and extra insulating fat, all for the purpose of reducing heat loss in the tundra, and all traits found in the now extinct woolly mammoth.’ This repopulation of the tundra and boreal forests of Eurasia and North America with large mammals could also be a useful factor in reducing carbon emissions – elephants punch holes through snow and knock down trees, which encourages grass growth. This grass growth would reduce temperature, and mitigate emissions from melting permafrost.
+
+F
+
+While the prospect of bringing extinct animals back to life might capture imaginations, it is, of course, far easier to try to save an existing species which is merely threatened with extinction. ‘Many of the technologies that people have in mind when they think about de-extinction can be used as a form of “genetic rescue”,’ explains Shapiro. She prefers to focus the debate on how this emerging technology could be used to fully understand why various species went extinct in the first place, and therefore how we could use it to make genetic modifications which could prevent mass extinctions in the future. ‘I would also say there’s an incredible moral hazard to not do anything at all,’ she continues. ‘We know that what we are doing today is not enough, and we have to be willing to take some calculated and measured risks.’
+
+Questions 14-17
+Reading Passage 2 has six paragraphs, A-F.
+
+Which paragraph contains the following information?
+
+Write the correct letter, A-F, in boxes 14-17 on your answer sheet.
+
+NB   You may use any letter more than once.
+
+14   a reference to how further disappearance of multiple species could be avoided.
+
+15   explanation of a way of reproducing an extinct animal using the DNA of only that species
+
+16   reference to a habitat which has suffered following the extinction of a species
+
+17   mention of the exact point at which a particular species became extinct
+
+Questions 18-22
+Complete the summary below.
+
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+
+Write your answers in boxes 18-22 on your answer sheet.
+
+The woolly mammoth revival project
+Professor George Church and his team are trying to identify the 18…………………… which enabled mammoths to live in the tundra. The findings could help preserve the mammoth’s close relative, the endangered Asian elephant.
+
+According to Church, introducing Asian elephants to the tundra would involve certain physical adaptations to minimise 19…………………… To survive in the tundra, the species would need to have the mammoth-like features of thicker hair, 20………………….. of a reduced size and more 21……………………..
+
+Repopulating the tundra with mammoths or Asian elephant/mammoth hybrids would also have an impact on the environment, which could help to reduce temperatures and decrease 22……………………
+
+Questions 23-26
+Look at the following statements (Questions 23-26) and the list of people below.
+
+Match each statement with the correct person, A, B or C.
+
+Write the correct letter, A, B or C, in boxes 23-26 on your answer sheet.
+
+NB   You may use any letter more than once.
+
+23   Reintroducing an extinct species to its original habitat could improve the health of a particular species living there.
+
+24   It is important to concentrate on the causes of an animal’s extinction.
+
+25   A species brought back from extinction could have an important beneficial impact on the vegetation of its habitat.
+
+26   Our current efforts at preserving biodiversity are insufficient.
+
+List of People
+
+A     Ben Novak
+
+B     Michael Archer
+
+C     Beth Shapiro`
+
+const READING_EXERCISE6_EXTINCT_SPECIES_ANSWER_KEY = `READING PASSAGE 2: Should we try to bring extinct species back to life?
+Question 14: a reference to how further disappearance of multiple species could be avoided.
+
+Correct Answer: B
+Exact Portion: "The return of thylacines to Tasmania could help to ensure that devils are never again subjected to risks of this kind."
+Short Thai Explanation: ย่อหน้า B อธิบายว่าการกลับมาของ thylacines อาจช่วยป้องกันไม่ให้ Tasmanian devils เผชิญความเสี่ยงซ้ำอีก ซึ่งเป็นการหลีกเลี่ยงการสูญหายต่อไปของสายพันธุ์อื่น.
+Paraphrased Vocabulary: further disappearance = never again subjected to risks; multiple species = thylacines and devils
+
+Question 15: explanation of a way of reproducing an extinct animal using the DNA of only that species
+
+Correct Answer: A
+Exact Portion: "using cloning technology to turn the DNA of extinct animals into a fertilised embryo"
+Short Thai Explanation: ย่อหน้า A อธิบายกระบวนการ de-extinction แบบพื้นฐานโดยใช้ DNA ของสัตว์สูญพันธุ์นั้นเพื่อสร้างตัวอ่อน.
+Paraphrased Vocabulary: reproducing an extinct animal = bring the bird back to life; using the DNA = turn the DNA ... into a fertilised embryo
+
+Question 16: reference to a habitat which has suffered following the extinction of a species
+
+Correct Answer: D
+Exact Portion: "Since the disappearance of this key species, ecosystems in the eastern US have suffered"
+Short Thai Explanation: ย่อหน้า D กล่าวตรง ๆ ว่าระบบนิเวศใน eastern US ได้รับผลเสียหลังการหายไปของ passenger pigeon.
+Paraphrased Vocabulary: habitat which has suffered = ecosystems ... have suffered following extinction
+
+Question 17: mention of the exact point at which a particular species became extinct
+
+Correct Answer: A
+Exact Portion: "came to an end on 1 September 1914, when the last living specimen died at Cincinnati Zoo"
+Short Thai Explanation: ย่อหน้า A ให้วันเวลาชัดเจนมากว่า passenger pigeon สูญพันธุ์เมื่อไร จึงตรงกับคำถามนี้.
+Paraphrased Vocabulary: exact point = 1 September 1914
+
+Question 18: trying to identify the 18…………………… which enabled mammoths to live in the tundra
+
+Correct Answer: genetic traits
+Exact Portion: "By pinpointing which genetic traits made it possible for mammoths to survive the icy climate of the tundra"
+Short Thai Explanation: ทีมของ Church กำลังพยายามหา genetic traits ที่ทำให้ mammoths อยู่รอดใน tundra ได้.
+Paraphrased Vocabulary: enabled ... to live = made it possible ... to survive
+
+Question 19: physical adaptations to minimise 19……………………
+
+Correct Answer: heat loss
+Exact Portion: "all for the purpose of reducing heat loss in the tundra"
+Short Thai Explanation: การปรับลักษณะทางกายภาพเหล่านี้มีเป้าหมายเพื่อลด heat loss.
+Paraphrased Vocabulary: minimise = reducing
+
+Question 20: have the mammoth-like features of thicker hair, 20………………….. of a reduced size
+
+Correct Answer: ears
+Exact Portion: "Necessary adaptations would include smaller ears, thicker hair"
+Short Thai Explanation: อวัยวะที่ต้องเล็กลงคือ ears.
+Paraphrased Vocabulary: of a reduced size = smaller
+
+Question 21: and more 21……………………..
+
+Correct Answer: insulating fat
+Exact Portion: "and extra insulating fat"
+Short Thai Explanation: อีกลักษณะหนึ่งคือมี insulating fat มากขึ้นเพื่อกันความหนาว.
+Paraphrased Vocabulary: more = extra
+
+Question 22: could help to reduce temperatures and decrease 22……………………
+
+Correct Answer: emissions
+Exact Portion: "reduce temperature, and mitigate emissions from melting permafrost"
+Short Thai Explanation: การเพิ่มสัตว์ใหญ่กลับเข้า tundra อาจช่วยลดอุณหภูมิและลด emissions ได้.
+Paraphrased Vocabulary: decrease = mitigate
+
+Question 23: Reintroducing an extinct species to its original habitat could improve the health of a particular species living there.
+
+Correct Answer: B
+Exact Portion: "The return of thylacines to Tasmania could help to ensure that devils are never again subjected to risks of this kind."
+Short Thai Explanation: Michael Archer เชื่อว่าการนำ thylacines กลับมาอาจช่วยปกป้อง Tasmanian devils จากโรคได้.
+Paraphrased Vocabulary: improve the health of a particular species = help ensure devils are not subjected to risks
+
+Question 24: It is important to concentrate on the causes of an animal’s extinction.
+
+Correct Answer: C
+Exact Portion: "focus the debate on how this emerging technology could be used to fully understand why various species went extinct in the first place"
+Short Thai Explanation: Beth Shapiro เน้นว่าควรทำความเข้าใจสาเหตุที่สัตว์สูญพันธุ์ก่อน.
+Paraphrased Vocabulary: concentrate on the causes = understand why species went extinct
+
+Question 25: A species brought back from extinction could have an important beneficial impact on the vegetation of its habitat.
+
+Correct Answer: A
+Exact Portion: "could, in theory, re-establish that forest disturbance, thereby creating a habitat necessary for a great many other native species to thrive"
+Short Thai Explanation: Ben Novak มองว่าการนำ passenger pigeon แบบลูกผสมกลับมาอาจช่วยให้ป่าฟื้นตัวและเอื้อต่อพืชพรรณและสิ่งมีชีวิตอื่น ๆ.
+Paraphrased Vocabulary: beneficial impact on vegetation = re-establish forest disturbance and habitat regeneration
+
+Question 26: Our current efforts at preserving biodiversity are insufficient.
+
+Correct Answer: C
+Exact Portion: "We know that what we are doing today is not enough"
+Short Thai Explanation: Beth Shapiro พูดตรง ๆ ว่าสิ่งที่เรากำลังทำอยู่ตอนนี้ยังไม่พอ.
+Paraphrased Vocabulary: current efforts ... are insufficient = what we are doing today is not enough`
+
+const READING_EXERCISE7_NUTMEG_PASSAGE_TEXT = `READING PASSAGE 1
+Nutmeg – a valuable spice
+The nutmeg tree, Myristica fragrans, is a large evergreen tree native to Southeast Asia. Until the late 18th century, it only grew in one place in the world: a small group of islands in the Banda Sea, part of the Moluccas – or Spice Islands – in northeastern Indonesia. The tree is thickly branched with dense foliage of tough, dark green oval leaves, and produces small, yellow, bell-shaped flowers and pale yellow pear-shaped fruits. The fruit is encased in a flesh husk. When the fruit is ripe, this husk splits into two halves along a ridge running the length of the fruit. Inside is a purple-brown shiny seed, 2-3 cm long by about 2 cm across, surrounded by a lacy red or crimson covering called an ‘aril’. These are the sources of the two spices nutmeg and mace, the former being produced from the dried seed and the latter from the aril.
+
+Nutmeg was a highly prized and costly ingredient in European cuisine in the Middle Ages, and was used as a flavouring, medicinal, and preservative agent. Throughout this period, the Arabs were the exclusive importers of the spice to Europe. They sold nutmeg for high prices to merchants based in Venice, but they never revealed the exact location of the source of this extremely valuable commodity. The Arab-Venetian dominance of the trade finally ended in 1512, when the Portuguese reached the Banda Islands and began exploiting its precious resources.
+
+Always in danger of competition from neighbouring Spain, the Portuguese began subcontracting their spice distribution to Dutch traders. Profits began to flow into the Netherlands, and the Dutch commercial fleet swiftly grew into one of the largest in the world. The Dutch quietly gained control of most of the shipping and trading of spices in Northern Europe. Then, in 1580, Portugal fell under Spanish rule, and by the end of the 16th century the Dutch found themselves locked out of the market. As prices for pepper, nutmeg, and other spices soared across Europe, they decided to fight back.
+
+In 1602, Dutch merchants founded the VOC, a trading corporation better known as the Dutch East India Company. By 1617, the VOC was the richest commercial operation in the world. The company had 50,000 employees worldwide, with a private army of 30,000 men and a fleet of 200 ships. At the same time, thousands of people across Europe were dying of the plague, a highly contagious and deadly disease. Doctors were desperate for a way to stop the spread of this disease, and they decided nutmeg held the cure. Everybody wanted nutmeg, and many were willing to spare no expense to have it. Nutmeg bought for a few pennies in Indonesia could be sold for 68,000 times its original cost on the streets of London. The only problem was the short supply. And that’s where the Dutch found their opportunity.
+
+The Banda Islands were ruled by local sultans who insisted on maintaining a neutral trading policy towards foreign powers. This allowed them to avoid the presence of Portuguese or Spanish troops on their soil, but it also left them unprotected from other invaders. In 1621, the Dutch arrived and took over. Once securely in control of the Bandas, the Dutch went to work protecting their new investment. They concentrated all nutmeg production into a few easily guarded areas, uprooting and destroying any trees outside the plantation zones. Anyone caught growing a nutmeg seedling or carrying seeds without the proper authority was severely punished. In addition, all exported nutmeg was covered with lime to make sure there was no chance a fertile seed which could be grown elsewhere would leave the islands. There was only one obstacle to Dutch domination. One of the Banda Islands, a sliver of land called Run, only 3 km long by less than 1 km wide, was under the control of the British. After decades of fighting for control of this tiny island, the Dutch and British arrived at a compromise settlement, the Treaty of Breda, in 1667. Intent on securing their hold over every nutmeg-producing island, the Dutch offered a trade: if the British would give them the island of Run, they would in turn give Britain a distant and much less valuable island in North America. The British agreed. That other island was Manhattan, which is how New Amsterdam became New York. The Dutch now had a monopoly over the nutmeg trade which would last for another century.
+
+Then, in 1770, a Frenchman named Pierre Poivre successfully smuggled nutmeg plants to safety in Mauritius, an island off the coast of Africa. Some of these were later exported to the Caribbean where they thrived, especially on the island of Grenada. Next, in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves. Finally, in 1809, the British returned to Indonesia and seized the Banda Islands by force. They returned the islands to the Dutch in 1817, but not before transplanting hundreds of nutmeg seedlings to plantations in several locations across southern Asia. The Dutch nutmeg monopoly was over.
+
+Today, nutmeg is grown in Indonesia, the Caribbean, India, Malaysia, Papua New Guinea and Sri Lanka, and world nutmeg production is estimated to average between 10,000 and 12,000 tonnes per year.
+
+Questions 1-4
+Complete the notes below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 1-4 on your answer sheet.
+
+The nutmeg tree and fruit
+●   the leaves of the tree are 1……………………. in shape
+
+●   the 2……………………. surrounds the fruit and breaks open when the fruit is ripe
+
+●   the 3……………………. is used to produce the spice nutmeg
+
+●   the covering known as the aril is used to produce 4……………………..
+
+●   the tree has yellow flowers and fruit
+
+Questions 5-7
+Do the following statements agree with the information given in Reading Passage 1?
+
+In boxes 5-7 on your answer sheet, write
+
+TRUE               if the statement agrees with the information
+
+FALSE              if the statement contradicts the information
+
+NOT GIVEN    if there is no information on this
+
+5   In the Middle Ages, most Europeans knew where nutmeg was grown.
+
+6   The VOC was the world’s first major trading company.
+
+7   Following the Treaty of Breda, the Dutch had control of all the islands where nutmeg grew.
+
+Questions 8-13
+Complete the table below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 8-13 on your answer sheet.
+
+Middle Ages
+
+Nutmeg was brought to Europe by the 8……………
+
+16th century
+
+European nations took control of the nutmeg trade
+
+17th century
+
+Demand for nutmeg grew, as it was believed to be effective against the disease known as the 9……………
+
+The Dutch
+
+– took control of the Banda Islands
+
+– restricted nutmeg production to a few areas
+
+– put 10…………… on nutmeg to avoid it being cultivated outside the islands
+
+– finally obtained the island of 11…………… from the British
+
+Late 18th century
+
+1770 – nutmeg plants were secretly taken to 12……………
+
+1778 – half the Banda Islands’ nutmeg plantations were destroyed by a 13……………`
+
+const READING_EXERCISE7_NUTMEG_ANSWER_KEY = `READING PASSAGE 1: Nutmeg – a valuable spice
+Question 1: the leaves of the tree are 1……………………. in shape
+
+Correct Answer: oval
+Exact Portion: "dense foliage of tough, dark green oval leaves"
+Short Thai Explanation: คำอธิบายรูปร่างของ leaves คือ oval จึงเติมคำนี้.
+Paraphrased Vocabulary: in shape = leaves
+
+Question 2: the 2……………………. surrounds the fruit and breaks open when the fruit is ripe
+
+Correct Answer: husk
+Exact Portion: "The fruit is encased in a flesh husk. When the fruit is ripe, this husk splits"
+Short Thai Explanation: สิ่งที่หุ้มผลไม้และแตกออกเมื่อสุกคือ husk.
+Paraphrased Vocabulary: surrounds = encased in; breaks open = splits
+
+Question 3: the 3……………………. is used to produce the spice nutmeg
+
+Correct Answer: seed
+Exact Portion: "the former being produced from the dried seed"
+Short Thai Explanation: nutmeg ผลิตจาก dried seed ดังนั้นคำตอบคือ seed.
+Paraphrased Vocabulary: is used to produce = produced from
+
+Question 4: the covering known as the aril is used to produce 4……………………..
+
+Correct Answer: mace
+Exact Portion: "the latter from the aril"
+Short Thai Explanation: เครื่องเทศที่ได้จาก aril คือ mace.
+Paraphrased Vocabulary: covering known as the aril = aril
+
+Question 5: In the Middle Ages, most Europeans knew where nutmeg was grown.
+
+Correct Answer: FALSE
+Exact Portion: "they never revealed the exact location of the source"
+Short Thai Explanation: ชาวอาหรับไม่เคยเปิดเผยแหล่งปลูกที่แท้จริง จึงไม่ใช่ว่าชาวยุโรปส่วนใหญ่รู้.
+Paraphrased Vocabulary: knew where ... was grown = revealed the exact location
+
+Question 6: The VOC was the world’s first major trading company.
+
+Correct Answer: NOT GIVEN
+Exact Portion: "the VOC was the richest commercial operation in the world"
+Short Thai Explanation: บทความบอกว่า VOC ร่ำรวยมาก แต่ไม่ได้บอกว่าเป็นบริษัทการค้าใหญ่แห่งแรกของโลก จึงเป็น NOT GIVEN.
+Paraphrased Vocabulary: first major trading company = บริษัทการค้าใหญ่แห่งแรก
+
+Question 7: Following the Treaty of Breda, the Dutch had control of all the islands where nutmeg grew.
+
+Correct Answer: TRUE
+Exact Portion: "securing their hold over every nutmeg-producing island"
+Short Thai Explanation: หลัง Treaty of Breda ชาวดัตช์ได้ครอบครองทุกเกาะที่ผลิต nutmeg จึงเป็น TRUE.
+Paraphrased Vocabulary: control of all the islands = hold over every nutmeg-producing island
+
+Question 8: Nutmeg was brought to Europe by the 8……………
+
+Correct Answer: Arabs
+Exact Portion: "the Arabs were the exclusive importers of the spice to Europe"
+Short Thai Explanation: ผู้นำ nutmeg เข้ายุโรปในยุคกลางคือ Arabs.
+Paraphrased Vocabulary: brought to Europe = importers ... to Europe
+
+Question 9: disease known as the 9……………
+
+Correct Answer: plague
+Exact Portion: "people across Europe were dying of the plague"
+Short Thai Explanation: โรคที่คนเชื่อว่า nutmeg ช่วยได้คือ plague.
+Paraphrased Vocabulary: disease known as = plague
+
+Question 10: put 10…………… on nutmeg to avoid it being cultivated outside the islands
+
+Correct Answer: lime
+Exact Portion: "all exported nutmeg was covered with lime"
+Short Thai Explanation: ชาวดัตช์เอา lime ไปเคลือบเมล็ดเพื่อไม่ให้เอาไปปลูกที่อื่นได้.
+Paraphrased Vocabulary: put ... on = covered with
+
+Question 11: finally obtained the island of 11…………… from the British
+
+Correct Answer: Run
+Exact Portion: "if the British would give them the island of Run"
+Short Thai Explanation: เกาะที่ดัตช์ได้จากอังกฤษคือ Run.
+Paraphrased Vocabulary: obtained ... from = give them
+
+Question 12: 1770 – nutmeg plants were secretly taken to 12……………
+
+Correct Answer: Mauritius
+Exact Portion: "successfully smuggled nutmeg plants to safety in Mauritius"
+Short Thai Explanation: ในปี 1770 ต้น nutmeg ถูกลักลอบนำไปที่ Mauritius.
+Paraphrased Vocabulary: secretly taken to = smuggled ... to
+
+Question 13: 1778 – half the Banda Islands’ nutmeg plantations were destroyed by a 13……………
+
+Correct Answer: tsunami
+Exact Portion: "caused a tsunami that wiped out half the nutmeg groves"
+Short Thai Explanation: สิ่งที่ทำลายสวน nutmeg ไปครึ่งหนึ่งคือ tsunami.
+Paraphrased Vocabulary: destroyed by = wiped out by`
+
+const READING_EXERCISE8_DRIVERLESS_CARS_PASSAGE_TEXT = `READING PASSAGE 2
+Driverless cars
+A
+
+The automotive sector is well used to adapting to automation in manufacturing. The implementation of robotic car manufacture from the 1970s onwards led to significant cost savings and improvements in the reliability and flexibility of vehicle mass production. A new challenge to vehicle production is now on the horizon and, again, it comes from automation. However, this time it is not to do with the manufacturing process, but with the vehicles themselves.
+
+Research projects on vehicle automation are not new. Vehicles with limited self-driving capabilities have been around for more than 50 years, resulting in significant contributions towards driver assistance systems. But since Google announced in 2010 that it had been trialling self-driving cars on the streets of California, progress in this field has quickly gathered pace.
+
+B
+
+There are many reasons why technology is advancing so fast. One frequently cited motive is safety; indeed, research at the UK’s Transport Research Laboratory has demonstrated that more than 90 percent of road collisions involve human error as a contributory factor, and it is the primary cause in the vast majority. Automation may help to reduce the incidence of this.
+
+Another aim is to free the time people spend driving for other purposes. If the vehicle can do some or all of the driving, it may be possible to be productive, to socialise or simply to relax while automation systems have responsibility for safe control of the vehicle. If the vehicle can do the driving, those who are challenged by existing mobility models – such as older or disabled travellers – may be able to enjoy significantly greater travel autonomy.
+
+C
+
+Beyond these direct benefits, we can consider the wider implications for transport and society, and how manufacturing processes might need to respond as a result. At present, the average car spends more than 90 percent of its life parked. Automation means that initiatives for car-sharing become much more viable, particularly in urban areas with significant travel demand. If a significant proportion of the population choose to use shared automated vehicles, mobility demand can be met by far fewer vehicles.
+
+D
+
+The Massachusetts Institute of Technology investigated automated mobility in Singapore, finding that fewer than 30 percent of the vehicles currently used would be required if fully automated car sharing could be implemented. If this is the case, it might mean that we need to manufacture far fewer vehicles to meet demand. However, the number of trips being taken would probably increase, partly because empty vehicles would have to be moved from one customer to the next.
+
+Modelling work by the University of Michigan Transportation Research Institute suggests automated vehicles might reduce vehicle ownership by 43 percent, but that vehicles’ average annual mileage double as a result. As a consequence, each vehicle would be used more intensively, and might need replacing sooner. This faster rate of turnover may mean that vehicle production will not necessarily decrease
+
+E
+
+Automation may prompt other changes in vehicle manufacture. If we move to a model where consumers are tending not to own a single vehicle but to purchase access to a range of vehicle through a mobility provider, drivers will have the freedom to select one that best suits their needs for a particular journey, rather than making a compromise across all their requirements.
+
+Since, for most of the time, most of the seats in most cars are unoccupied, this may boost production of a smaller, more efficient range of vehicles that suit the needs of individuals. Specialised vehicles may then be available for exceptional journeys, such as going on a family camping trip or helping a son or daughter move to university.
+
+F
+
+There are a number of hurdles to overcome in delivering automated vehicles to our roads. These include the technical difficulties in ensuring that the vehicle works reliably in the infinite range of traffic, weather and road situations it might encounter; the regulatory challenges in understanding how liability and enforcement might change when drivers are no longer essential for vehicle operation; and the societal changes that may be required for communities to trust and accept automated vehicles as being a valuable part of the mobility landscape.
+
+G
+
+It’s clear that there are many challenges that need to be addressed but, through robust and targeted research, these can most probably be conquered within the next 10 years. Mobility will change in such potentially significant ways and in association with so many other technological developments, such as telepresence and virtual reality, that it is hard to make concrete predictions about the future. However, one thing is certain: change is coming, and the need to be flexible in response to this will be vital for those involved in manufacturing the vehicles that will deliver future mobility.
+
+Questions 14-18
+Reading Passage 2 has seven paragraphs, A-G.
+
+Which section contains the following information?
+
+Write the correct letter, A-G, in boxes 14-18 on your answer sheet.
+
+14   reference to the amount of time when a car is not in use
+
+15   mention of several advantages of driverless vehicles for individual road-users
+
+16   reference to the opportunity of choosing the most appropriate vehicle for each trip
+
+17   an estimate of how long it will take to overcome a number of problems
+
+18   a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured
+
+Questions 19-22
+Complete the summary below.
+
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+
+Write your answers in boxes 19-22 on your answer sheet.
+
+The impact of driverless cars
+Figures from the Transport Research Laboratory indicate that most motor accidents are partly due to 19……………………., so the introduction of driverless vehicles will result in greater safety. In addition to the direct benefits of automation, it may bring other advantages. For example, schemes for 20………………………. will be more workable, especially in towns and cities, resulting in fewer cars on the road.
+
+According to the University of Michigan Transportation Research Institute, there could be a 43 percent drop in 21…………………….. of cars. However, this would mean that the yearly 22…………………….. of each car would, on average, be twice as high as it currently is. this would lead to a higher turnover of vehicles, and therefore no reduction in automotive manufacturing.
+
+Questions 23 and 24
+Choose TWO letters, A-E.
+
+Write the correct letters in boxes 23 and 24 on your answer sheet.
+
+Which TWO benefits of automated vehicles does the writer mention?
+
+A   Car travellers could enjoy considerable cost savings.
+
+B   It would be easier to find parking spaces in urban areas.
+
+C   Travellers could spend journeys doing something other than driving.
+
+D   People who find driving physically difficult could travel independently.
+
+E   A reduction in the number of cars would mean a reduction in pollution.
+
+Questions 25 and 26
+Choose TWO letters, A-E.
+
+Write the correct letters in boxes 25 and 26 on your answer sheet.
+
+Which TWO challenges to automated vehicle development does the writer mention?
+
+A   making sure the general public has confidence in automated vehicles
+
+B   managing the pace of transition from conventional to automated vehicles
+
+C   deciding how to compensate professional drivers who become redundant
+
+D   setting up the infrastructure to make roads suitable for automated vehicles
+
+E   getting automated vehicles to adapt to various different driving conditions`
+
+const READING_EXERCISE8_DRIVERLESS_CARS_ANSWER_KEY = `READING PASSAGE 2: Driverless cars
+Question 14: reference to the amount of time when a car is not in use
+
+Correct Answer: C
+Exact Portion: "the average car spends more than 90 percent of its life parked"
+Short Thai Explanation: ย่อหน้า C พูดถึงเวลาที่รถไม่ได้ถูกใช้งานโดยตรง คือจอดอยู่กว่า 90% ของเวลา.
+Paraphrased Vocabulary: not in use = parked
+
+Question 15: mention of several advantages of driverless vehicles for individual road-users
+
+Correct Answer: B
+Exact Portion: "be productive, to socialise or simply to relax" / "older or disabled travellers ... may be able to enjoy significantly greater travel autonomy"
+Short Thai Explanation: ย่อหน้า B กล่าวถึงข้อดีหลายอย่างสำหรับผู้ใช้แต่ละคน เช่น มีเวลาทำอย่างอื่น และช่วยให้ผู้สูงอายุหรือคนพิการเดินทางได้อิสระขึ้น.
+Paraphrased Vocabulary: individual road-users = travellers
+
+Question 16: reference to the opportunity of choosing the most appropriate vehicle for each trip
+
+Correct Answer: E
+Exact Portion: "select one that best suits their needs for a particular journey"
+Short Thai Explanation: ย่อหน้า E บอกว่าผู้ใช้จะมีอิสระเลือกรถที่เหมาะที่สุดสำหรับแต่ละทริป.
+Paraphrased Vocabulary: most appropriate = best suits; each trip = particular journey
+
+Question 17: an estimate of how long it will take to overcome a number of problems
+
+Correct Answer: G
+Exact Portion: "these can most probably be conquered within the next 10 years"
+Short Thai Explanation: ย่อหน้า G ให้กรอบเวลาชัดว่าปัญหาต่าง ๆ น่าจะเอาชนะได้ภายใน 10 ปี.
+Paraphrased Vocabulary: estimate of how long = within the next 10 years
+
+Question 18: a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured
+
+Correct Answer: D
+Exact Portion: "vehicle production will not necessarily decrease"
+Short Thai Explanation: ย่อหน้า D บอกว่าการผลิตรถอาจไม่ได้ลดลง แม้รูปแบบการใช้รถจะเปลี่ยนไป.
+Paraphrased Vocabulary: no effect on the number manufactured = will not necessarily decrease
+
+Question 19: most motor accidents are partly due to 19…………………….
+
+Correct Answer: human error
+Exact Portion: "more than 90 percent of road collisions involve human error as a contributory factor"
+Short Thai Explanation: สาเหตุร่วมสำคัญของอุบัติเหตุส่วนใหญ่คือ human error.
+Paraphrased Vocabulary: partly due to = contributory factor
+
+Question 20: schemes for 20………………………. will be more workable
+
+Correct Answer: car-sharing
+Exact Portion: "initiatives for car-sharing become much more viable"
+Short Thai Explanation: โครงการที่ทำได้จริงมากขึ้นคือ car-sharing.
+Paraphrased Vocabulary: schemes = initiatives; more workable = more viable
+
+Question 21: there could be a 43 percent drop in 21…………………….. of cars
+
+Correct Answer: vehicle ownership
+Exact Portion: "automated vehicles might reduce vehicle ownership by 43 percent"
+Short Thai Explanation: สิ่งที่จะลดลง 43% คือ vehicle ownership.
+Paraphrased Vocabulary: drop in = reduce
+
+Question 22: the yearly 22…………………….. of each car
+
+Correct Answer: mileage
+Exact Portion: "vehicles’ average annual mileage double as a result"
+Short Thai Explanation: คำตอบคือ mileage เพราะระยะทางใช้งานต่อปีของรถแต่ละคันจะเพิ่มเป็นสองเท่า.
+Paraphrased Vocabulary: yearly = annual
+
+Question 23: Which TWO benefits of automated vehicles does the writer mention?
+
+Correct Answer: C
+Exact Portion: "it may be possible to be productive, to socialise or simply to relax"
+Short Thai Explanation: ข้อ C ถูก เพราะผู้เดินทางสามารถใช้เวลาไปทำอย่างอื่นแทนการขับรถ.
+Paraphrased Vocabulary: doing something other than driving = be productive, socialise or relax
+
+Question 24: Which TWO benefits of automated vehicles does the writer mention?
+
+Correct Answer: D
+Exact Portion: "older or disabled travellers – may be able to enjoy significantly greater travel autonomy"
+Short Thai Explanation: ข้อ D ถูก เพราะคนที่ขับรถลำบากทางร่างกายจะเดินทางได้อย่างอิสระมากขึ้น.
+Paraphrased Vocabulary: travel independently = greater travel autonomy
+
+Question 25: Which TWO challenges to automated vehicle development does the writer mention?
+
+Correct Answer: A
+Exact Portion: "communities to trust and accept automated vehicles"
+Short Thai Explanation: ข้อ A ถูก เพราะหนึ่งในความท้าทายคือทำให้สังคมเชื่อมั่นและยอมรับรถอัตโนมัติ.
+Paraphrased Vocabulary: general public has confidence = trust and accept
+
+Question 26: Which TWO challenges to automated vehicle development does the writer mention?
+
+Correct Answer: E
+Exact Portion: "works reliably in the infinite range of traffic, weather and road situations"
+Short Thai Explanation: ข้อ E ถูก เพราะรถต้องปรับตัวให้ทำงานได้ในสภาพถนน จราจร และอากาศที่หลากหลาย.
+Paraphrased Vocabulary: adapt to various driving conditions = works reliably in traffic, weather and road situations`
+
+const BUILT_IN_READING_EXAMS = [
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-15T00:00:00.000Z',
+    updatedAt: '2026-05-15T00:00:00.000Z'
+  })),
+  ...USER_PROVIDED_READING_PRACTICE_5_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-13T00:00:00.000Z',
+    updatedAt: '2026-05-13T00:00:00.000Z'
+  })),
+  ...USER_PROVIDED_READING_PRACTICE_4_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-13T00:00:00.000Z',
+    updatedAt: '2026-05-13T00:00:00.000Z'
+  })),
+  ...USER_PROVIDED_READING_PRACTICE_3_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-13T00:00:00.000Z',
+    updatedAt: '2026-05-13T00:00:00.000Z'
+  })),
+  ...USER_PROVIDED_READING_PRACTICE_2_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-13T00:00:00.000Z',
+    updatedAt: '2026-05-13T00:00:00.000Z'
+  })),
+  ...USER_PROVIDED_READING_PRACTICE_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-13T00:00:00.000Z',
+    updatedAt: '2026-05-13T00:00:00.000Z'
+  })),
+  ...ORIGINAL_IELTS_READING_7_TO_9_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-13T00:00:00.000Z',
+    updatedAt: '2026-05-13T00:00:00.000Z'
+  })),
+  {
+    id: 'builtin-reading-pdoy-huarango',
+    title: 'Exercise 1 - The Return of the Huarango',
+    category: 'normal',
+    rawPassageText: READING_PDOY_HUARANGO_PASSAGE_TEXT,
+    rawAnswerKey: READING_PDOY_HUARANGO_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 1 - The Return of the Huarango',
+      category: 'normal',
+      rawPassageText: READING_PDOY_HUARANGO_PASSAGE_TEXT,
+      rawAnswerKey: READING_PDOY_HUARANGO_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-pdoy-silbo',
+    title: 'Exercise 2 - Silbo Gomero',
+    category: 'normal',
+    rawPassageText: READING_PDOY_SILBO_PASSAGE_TEXT,
+    rawAnswerKey: READING_PDOY_SILBO_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 2 - Silbo Gomero',
+      category: 'normal',
+      rawPassageText: READING_PDOY_SILBO_PASSAGE_TEXT,
+      rawAnswerKey: READING_PDOY_SILBO_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-ex3-henry-moore',
+    title: 'Exercise 3 - Henry Moore',
+    category: 'normal',
+    rawPassageText: READING_EXERCISE3_HENRY_MOORE_PASSAGE_TEXT,
+    rawAnswerKey: READING_EXERCISE3_HENRY_MOORE_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 3 - Henry Moore',
+      category: 'normal',
+      rawPassageText: READING_EXERCISE3_HENRY_MOORE_PASSAGE_TEXT,
+      rawAnswerKey: READING_EXERCISE3_HENRY_MOORE_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-ex4-desolenator',
+    title: 'Exercise 4 - The Desolenator',
+    category: 'normal',
+    rawPassageText: READING_EXERCISE4_DESOLENATOR_PASSAGE_TEXT,
+    rawAnswerKey: READING_EXERCISE4_DESOLENATOR_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 4 - The Desolenator',
+      category: 'normal',
+      rawPassageText: READING_EXERCISE4_DESOLENATOR_PASSAGE_TEXT,
+      rawAnswerKey: READING_EXERCISE4_DESOLENATOR_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-ex5-dance-engineers',
+    title: 'Exercise 5 - Could urban engineers learn from dance?',
+    category: 'normal',
+    rawPassageText: READING_EXERCISE5_DANCE_ENGINEERS_PASSAGE_TEXT,
+    rawAnswerKey: READING_EXERCISE5_DANCE_ENGINEERS_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 5 - Could urban engineers learn from dance?',
+      category: 'normal',
+      rawPassageText: READING_EXERCISE5_DANCE_ENGINEERS_PASSAGE_TEXT,
+      rawAnswerKey: READING_EXERCISE5_DANCE_ENGINEERS_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-ex6-extinct-species',
+    title: 'Exercise 6 - Should we try to bring extinct species back to life?',
+    category: 'normal',
+    rawPassageText: READING_EXERCISE6_EXTINCT_SPECIES_PASSAGE_TEXT,
+    rawAnswerKey: READING_EXERCISE6_EXTINCT_SPECIES_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 6 - Should we try to bring extinct species back to life?',
+      category: 'normal',
+      rawPassageText: READING_EXERCISE6_EXTINCT_SPECIES_PASSAGE_TEXT,
+      rawAnswerKey: READING_EXERCISE6_EXTINCT_SPECIES_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-ex7-nutmeg',
+    title: 'Exercise 7 - Nutmeg',
+    category: 'normal',
+    rawPassageText: READING_EXERCISE7_NUTMEG_PASSAGE_TEXT,
+    rawAnswerKey: READING_EXERCISE7_NUTMEG_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 7 - Nutmeg',
+      category: 'normal',
+      rawPassageText: READING_EXERCISE7_NUTMEG_PASSAGE_TEXT,
+      rawAnswerKey: READING_EXERCISE7_NUTMEG_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-ex8-driverless-cars',
+    title: 'Exercise 8 - Driverless cars',
+    category: 'normal',
+    rawPassageText: READING_EXERCISE8_DRIVERLESS_CARS_PASSAGE_TEXT,
+    rawAnswerKey: READING_EXERCISE8_DRIVERLESS_CARS_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Exercise 8 - Driverless cars',
+      category: 'normal',
+      rawPassageText: READING_EXERCISE8_DRIVERLESS_CARS_PASSAGE_TEXT,
+      rawAnswerKey: READING_EXERCISE8_DRIVERLESS_CARS_ANSWER_KEY
+    }),
+    createdAt: '2026-05-05T00:00:00.000Z',
+    updatedAt: '2026-05-05T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-fulltest-part-2',
+    title: 'Reading Full Test Part 2',
+    category: 'normal',
+    rawPassageText: READING_FULL_TEST_PART2_PASSAGE_TEXT,
+    rawAnswerKey: READING_FULL_TEST_PART2_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Reading Full Test Part 2',
+      category: 'normal',
+      rawPassageText: READING_FULL_TEST_PART2_PASSAGE_TEXT,
+      rawAnswerKey: READING_FULL_TEST_PART2_ANSWER_KEY
+    }),
+    createdAt: '2026-05-02T00:00:00.000Z',
+    updatedAt: '2026-05-02T00:00:00.000Z'
+  },
+  {
+    id: 'builtin-reading-fulltest-part-3',
+    title: 'Reading Full Test Part 3',
+    category: 'normal',
+    rawPassageText: READING_FULL_TEST_PART3_PASSAGE_TEXT,
+    rawAnswerKey: READING_FULL_TEST_PART3_ANSWER_KEY,
+    parsedPayload: buildReadingExamPayload({
+      title: 'Reading Full Test Part 3',
+      category: 'normal',
+      rawPassageText: READING_FULL_TEST_PART3_PASSAGE_TEXT,
+      rawAnswerKey: READING_FULL_TEST_PART3_ANSWER_KEY
+    }),
+    createdAt: '2026-05-02T00:00:00.000Z',
+    updatedAt: '2026-05-02T00:00:00.000Z'
+  }
+]
+
 const mapReadingExamRecord = (row) => ({
   id: String(row?.id || ''),
   title: String(row?.title || 'Reading exam'),
@@ -984,6 +4760,23 @@ const mapSupportReportRecord = (row) => ({
   resolvedAt: row?.resolved_at || null
 })
 
+const mapAssessmentReportSummary = (row) => ({
+  id: String(row?.id || ''),
+  userId: normalizeOptionalUuid(row?.userId),
+  learnerName: String(row?.learnerName || row?.learnerEmail || 'Student'),
+  learnerEmail: normalizeEmail(row?.learnerEmail || ''),
+  testMode: ['part1', 'part2', 'part3', 'full'].includes(String(row?.testMode || '')) ? String(row.testMode) : 'part2',
+  topicTitle: String(row?.topicTitle || 'Speaking report'),
+  topicCategory: String(row?.topicCategory || 'Speaking'),
+  overallBand: clampBand(Number(row?.overallBand ?? 0)),
+  provider: String(row?.provider || row?.selectedProvider || 'gemini'),
+  apiCostUsd: Math.max(0, Number(row?.apiCostUsd ?? row?.api_cost_usd ?? 0)),
+  totalTokens: Math.max(0, Number(row?.totalTokens ?? row?.total_tokens ?? 0)),
+  totalCalls: Math.max(0, Number(row?.totalCalls ?? row?.total_calls ?? 0)),
+  createdAt: row?.createdAt || null,
+  objectPath: String(row?.objectPath || '')
+})
+
 const mapLearnerRecord = (row) => ({
   id: String(row?.id || ''),
   name: String(row?.full_name || row?.email || 'Student'),
@@ -999,7 +4792,7 @@ const mapLearnerRecord = (row) => ({
 
 const mapCreditProfile = (row) => ({
   name: String(row?.full_name || row?.email || 'Student'),
-  plan: 'VIP',
+  plan: isTrialProfileRecord(row) ? 'TRIAL' : 'VIP',
   status: String(row?.learner_access?.status || 'inactive'),
   startsAt: row?.learner_access?.starts_at || null,
   expiresAt: row?.learner_access?.expires_at || null,
@@ -1074,6 +4867,23 @@ const loadUserProfileByEmail = async (email) => {
   return Array.isArray(rows) ? rows[0] || null : null
 }
 
+const isTrialProfileRecord = (profile, authUser = null) => {
+  const profileName = String(profile?.full_name || '').trim()
+  const profileRole = String(profile?.role || 'student').trim()
+  const userMetaRole = String(authUser?.user_metadata?.role || authUser?.raw_user_meta_data?.role || '').trim()
+  return (
+    profileRole === 'trial' ||
+    userMetaRole === 'trial' ||
+    profileName === 'Trial User' ||
+    profileName.startsWith('Trial - ')
+  )
+}
+
+const resolveSessionRole = (profile, authUser = null) => {
+  if (String(profile?.role || 'student') === 'admin') return 'admin'
+  return isTrialProfileRecord(profile, authUser) ? 'trial' : 'student'
+}
+
 const verifySupabaseAccessToken = async (accessToken) => {
   if (!accessToken) throw new Error('Missing access token')
   const user = await fetchSupabaseJson('/auth/v1/user', {
@@ -1083,6 +4893,68 @@ const verifySupabaseAccessToken = async (accessToken) => {
   const profile = await loadUserProfileWithAccess(user.id)
   return { user, profile }
 }
+
+app.get('/api/admin/approve-signup', async (req, res) => {
+  try {
+    const token = String(req.query?.token || '').trim()
+    const verified = verifyAccessApprovalToken(token)
+    if (!verified?.userId) {
+      return res.status(400).send(`
+        <html><body style="font-family:Arial,sans-serif;padding:32px;">
+          <h2>Approval link is invalid</h2>
+          <p>This approval link is missing, expired, or has already been replaced.</p>
+        </body></html>
+      `)
+    }
+
+    if (String(req.query?.confirm || '') !== '1') {
+      return res.send(`
+        <html>
+          <body style="font-family:Arial,sans-serif;padding:32px;color:#172033;">
+            <h2>Grant access</h2>
+            <p>Click the button below to activate this learner and send the access email.</p>
+            <form method="GET" action="/api/admin/approve-signup">
+              <input type="hidden" name="token" value="${escapeHtml(token)}" />
+              <input type="hidden" name="confirm" value="1" />
+              <button type="submit" style="padding:12px 18px;background:#123b7a;color:#fff;border:0;border-radius:8px;cursor:pointer;">
+                Grant Access
+              </button>
+            </form>
+          </body>
+        </html>
+      `)
+    }
+
+    const activation = await activateLearnerAccess({ userId: verified.userId })
+    const learnerName = escapeHtml(activation.learner?.full_name || activation.learner?.email || 'Student')
+    const learnerEmail = escapeHtml(activation.learner?.email || '')
+    const baseUrl = resolveAppBaseUrl(req)
+    const openAppLink = baseUrl ? `<p><a href="${escapeHtml(baseUrl)}">Open the app</a></p>` : ''
+    const emailMessage = activation.emailResult?.skipped
+      ? activation.wasActive
+        ? 'This learner already had active access, so no new client email was sent.'
+        : 'Access was granted, but the client email could not be sent automatically.'
+      : 'The learner has been emailed automatically.'
+
+    return res.send(`
+      <html>
+        <body style="font-family:Arial,sans-serif;padding:32px;color:#172033;">
+          <h2>Access granted</h2>
+          <p><strong>${learnerName}</strong> (${learnerEmail}) now has active access.</p>
+          <p>${escapeHtml(emailMessage)}</p>
+          ${openAppLink}
+        </body>
+      </html>
+    `)
+  } catch (error) {
+    return res.status(500).send(`
+      <html><body style="font-family:Arial,sans-serif;padding:32px;">
+        <h2>Could not grant access</h2>
+        <p>${escapeHtml(error instanceof Error ? error.message : 'Unknown error')}</p>
+      </body></html>
+    `)
+  }
+})
 
 const normalizeOptionalUuid = (value) => {
   const normalized = String(value || '').trim()
@@ -1103,6 +4975,15 @@ const ensureActiveStudentAccess = (profile) => {
   const expiresAt = profile?.learner_access?.expires_at
   if (expiresAt && new Date(expiresAt).getTime() < Date.now()) {
     throw new Error('Your access has expired. Please contact your course admin.')
+  }
+}
+
+const ensureTrialCreditsAvailable = (profile) => {
+  if (!isTrialProfileRecord(profile)) return
+  const feedbackRemaining = Math.max(0, Number(profile?.learner_access?.feedback_credits ?? 0))
+  const fullMockRemaining = Math.max(0, Number(profile?.learner_access?.full_mock_credits ?? 0))
+  if (feedbackRemaining <= 0 || fullMockRemaining <= 0) {
+    throw new Error('This trial email has already been used. Please unlock the full course to continue.')
   }
 }
 
@@ -1170,6 +5051,28 @@ const decrementLearnerCredits = async ({ userId, assessmentMode }) => {
 
   const feedbackRemaining = Math.max(0, Number(profile?.learner_access?.feedback_credits ?? 0))
   const fullMockRemaining = Math.max(0, Number(profile?.learner_access?.full_mock_credits ?? 0))
+  const isTrialUser = isTrialProfileRecord(profile)
+
+  if (assessmentMode === 'trialSpeaking') {
+    if (!isTrialUser) {
+      throw new Error('Trial mode is reserved for trial accounts only.')
+    }
+    if (feedbackRemaining <= 0 || fullMockRemaining <= 0) {
+      throw new Error('This trial email has already been used. Please unlock the full course to continue.')
+    }
+
+    await supabaseRequest(`/rest/v1/learner_access?user_id=eq.${encodeURIComponent(userId)}`, {
+      method: 'PATCH',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=minimal' }),
+      body: JSON.stringify({
+        feedback_credits: 0,
+        full_mock_credits: 0
+      })
+    })
+
+    const updatedTrialProfile = await loadUserProfileWithAccess(userId)
+    return mapCreditProfile(updatedTrialProfile)
+  }
 
   if (feedbackRemaining <= 0) {
     throw new Error('Feedback creditsหมดแล้ว')
@@ -3087,14 +6990,20 @@ const normalizeTranscriptAnnotations = (payload, questionBreakdown) => {
   }))
 }
 
-const buildCustomVocabularySuggestions = async ({ testMode, punctuatedTranscript, questionBreakdown }) => {
+const buildCustomVocabularySuggestions = async ({
+  testMode,
+  punctuatedTranscript,
+  questionBreakdown,
+  usageTracker
+}) => {
   try {
     const payload = await callGeminiCleanupJson(
       customVocabularyLiftPrompt({
         testMode,
         punctuatedTranscript,
         questionBreakdown
-      })
+      }),
+      usageTracker
     )
     return normalizeCustomVocabularySuggestions(payload, questionBreakdown, punctuatedTranscript).slice(0, 12)
   } catch {
@@ -3106,7 +7015,8 @@ const buildTranscriptAnnotations = async ({
   testMode,
   questionBreakdown,
   part3AnswerCoaching,
-  componentReports
+  componentReports,
+  usageTracker
 }) => {
   const breakdown = Array.isArray(questionBreakdown) ? questionBreakdown : []
   if (!breakdown.length) return breakdown
@@ -3117,7 +7027,8 @@ const buildTranscriptAnnotations = async ({
         questionBreakdown: breakdown,
         part3AnswerCoaching,
         componentReports
-      })
+      }),
+      usageTracker
     )
     return normalizeTranscriptAnnotations(payload, breakdown)
   } catch {
@@ -4056,13 +7967,13 @@ const scoreTranscriptionConfidenceQuality = ({ transcript, words }) => {
   return Number((coverage * 0.55 + avg * 0.3 + (1 - criticalRate) * 0.15).toFixed(4))
 }
 
-const transcribeWithEmergencyFallback = async ({ audioBase64, audioMimeType, primaryError }) => {
+const transcribeWithEmergencyFallback = async ({ audioBase64, audioMimeType, primaryError, usageTracker }) => {
   const errors = primaryError
     ? [`english-plan: ${primaryError instanceof Error ? primaryError.message : String(primaryError || 'unknown error')}`]
     : []
   if (process.env.GEMINI_API_KEY) {
     try {
-      const google = await transcribeWithGoogle({ audioBase64, audioMimeType })
+      const google = await transcribeWithGoogle({ audioBase64, audioMimeType, usageTracker })
       const quality = scoreTranscriptionConfidenceQuality({
         transcript: google.whisperTranscript,
         words: google.words || []
@@ -4103,12 +8014,13 @@ const transcribeWithEmergencyFallback = async ({ audioBase64, audioMimeType, pri
   throw new Error(errors.join(' | '))
 }
 
-const transcribeWithBestProvider = async ({ audioBase64, audioMimeType }) => {
+const transcribeWithBestProvider = async ({ audioBase64, audioMimeType, usageTracker }) => {
   // Runtime STT is intentionally Gemini/Deepgram-first. ENGLISH PLAN is used for pronunciation service status.
   return await transcribeWithEmergencyFallback({
     audioBase64,
     audioMimeType,
-    primaryError: null
+    primaryError: null,
+    usageTracker
   })
 }
 
@@ -4399,7 +8311,7 @@ const probeEnglishPlanEndpoint = async ({ host, path }) => {
   })
 }
 
-const transcribeWithGoogle = async ({ audioBase64, audioMimeType }) => {
+const transcribeWithGoogle = async ({ audioBase64, audioMimeType, usageTracker }) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY for transcription')
   if (!audioBase64) throw new Error('No audio payload for transcription')
@@ -4454,6 +8366,17 @@ const transcribeWithGoogle = async ({ audioBase64, audioMimeType }) => {
             modelErrors.push(`${apiVersion}:${model}/${mimeType}: ${blockReason}`)
             continue
           }
+          const costBreakdown = calculateGeminiApiCost({
+            model,
+            usageMetadata: payload?.usageMetadata,
+            fallbackInputModality: 'AUDIO'
+          })
+          if (costBreakdown) {
+            usageTracker?.record({
+              ...costBreakdown,
+              operation: 'transcription'
+            })
+          }
           return {
             raw: null,
             whisperTranscript: transcriptText,
@@ -4473,7 +8396,7 @@ const transcribeWithGoogle = async ({ audioBase64, audioMimeType }) => {
   )
 }
 
-const callGemini = async (prompt) => {
+const callGemini = async (prompt, usageTracker) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
@@ -4505,6 +8428,17 @@ const callGemini = async (prompt) => {
       tried.push(`${model}: empty text`)
       continue
     }
+    const costBreakdown = calculateGeminiApiCost({
+      model,
+      usageMetadata: data?.usageMetadata,
+      fallbackInputModality: 'TEXT'
+    })
+    if (costBreakdown) {
+      usageTracker?.record({
+        ...costBreakdown,
+        operation: 'assessment'
+      })
+    }
     try {
       return normalizeAssessment(parseModelJson(text), model)
     } catch (error) {
@@ -4517,7 +8451,7 @@ const callGemini = async (prompt) => {
   throw new Error(`Gemini failed on all models. ${tried.join(' | ')}`)
 }
 
-const callGeminiText = async (prompt) => {
+const callGeminiText = async (prompt, usageTracker, operation = 'text') => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
@@ -4549,12 +8483,23 @@ const callGeminiText = async (prompt) => {
       tried.push(`${model}: empty text`)
       continue
     }
+    const costBreakdown = calculateGeminiApiCost({
+      model,
+      usageMetadata: data?.usageMetadata,
+      fallbackInputModality: 'TEXT'
+    })
+    if (costBreakdown) {
+      usageTracker?.record({
+        ...costBreakdown,
+        operation
+      })
+    }
     return normalizeTextOutput(text)
   }
   throw new Error(`Gemini text failed on all models. ${tried.join(' | ')}`)
 }
 
-const callGeminiCleanupText = async (prompt) => {
+const callGeminiCleanupText = async (prompt, usageTracker) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
@@ -4587,13 +8532,26 @@ const callGeminiCleanupText = async (prompt) => {
       tried.push(`${model}: empty text`)
       continue
     }
+    const costBreakdown = calculateGeminiApiCost({
+      model,
+      usageMetadata: data?.usageMetadata,
+      fallbackInputModality: 'TEXT'
+    })
+    if (costBreakdown) {
+      usageTracker?.record({
+        ...costBreakdown,
+        operation: 'cleanup'
+      })
+    }
     return normalizeTextOutput(text)
   }
   throw new Error(`Gemini cleanup text failed on all models. ${tried.join(' | ')}`)
 }
 
-const callGeminiJson = async (prompt) => parseModelJson(await callGeminiText(prompt))
-const callGeminiCleanupJson = async (prompt) => parseModelJson(await callGeminiCleanupText(prompt))
+const callGeminiJson = async (prompt, usageTracker, operation = 'json') =>
+  parseModelJson(await callGeminiText(prompt, usageTracker, operation))
+const callGeminiCleanupJson = async (prompt, usageTracker) =>
+  parseModelJson(await callGeminiCleanupText(prompt, usageTracker))
 
 const buildFullMockAssessmentReport = async ({
   topic,
@@ -4605,7 +8563,8 @@ const buildFullMockAssessmentReport = async ({
   questionBreakdown,
   punctuationErrors,
   pronunciationBand,
-  onProgress
+  onProgress,
+  usageTracker
 }) => {
   const safeProgress = typeof onProgress === 'function' ? onProgress : () => {}
 
@@ -4622,7 +8581,8 @@ const buildFullMockAssessmentReport = async ({
         whisperTranscript,
         durationSeconds,
         questionBreakdown
-      })
+      }),
+      usageTracker
     ),
     testMode: 'full',
     pronunciationBand,
@@ -4686,7 +8646,7 @@ app.post('/api/auth/login', async (req, res) => {
         refreshToken: String(authPayload?.refresh_token || ''),
         expiresAt: Number(authPayload?.expires_at || 0),
         userId: String(authPayload?.user?.id || ''),
-        role: String(profile.role || 'student'),
+        role: resolveSessionRole(profile, authPayload?.user),
         name: String(profile.full_name || profile.email || 'Student'),
         email: normalizeEmail(profile.email || authPayload?.user?.email || '')
       },
@@ -4732,6 +8692,28 @@ app.post('/api/auth/signup', async (req, res) => {
 
     const existingProfile = await loadUserProfileByEmail(email)
     if (existingProfile?.id) {
+      if (isTrialProfileRecord(existingProfile)) {
+        await supabaseRequest('/rest/v1/learner_access', {
+          method: 'POST',
+          headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+          body: JSON.stringify(
+            buildLearnerAccessPayload({
+              userId: existingProfile.id,
+              status: 'active',
+              startsAt: existingProfile?.learner_access?.starts_at || new Date().toISOString(),
+              expiresAt: null,
+              feedbackCredits: Math.max(1, Number(existingProfile?.learner_access?.feedback_credits ?? 0)),
+              fullMockCredits: Math.max(1, Number(existingProfile?.learner_access?.full_mock_credits ?? 0))
+            })
+          )
+        })
+
+        return res.status(201).json({
+          success: true,
+          message: 'Your one-time trial account is ready.'
+        })
+      }
+
       return res.status(409).json({
         error: {
           status: 409,
@@ -4782,6 +8764,15 @@ app.post('/api/auth/signup', async (req, res) => {
       )
     })
 
+    const createdProfile = await loadUserProfileWithAccess(userId)
+    try {
+      if (createdProfile) {
+        await sendNewSignupNotificationEmail({ req, learner: createdProfile })
+      }
+    } catch (emailError) {
+      console.error('Could not send new signup notification email:', emailError)
+    }
+
     return res.status(201).json({
       success: true,
       message: 'Account created successfully. Please wait for your admin to activate your access.'
@@ -4792,6 +8783,100 @@ app.post('/api/auth/signup', async (req, res) => {
         status: error?.status || 500,
         type: 'auth_signup_error',
         message: error instanceof Error ? error.message : 'Could not create your account.'
+      }
+    })
+  }
+})
+
+app.post('/api/auth/trial-signup', async (req, res) => {
+  try {
+    ensureSupabaseConfigured()
+    const email = normalizeEmail(req.body?.email)
+    const password = String(req.body?.password || '').trim()
+
+    if (!email || !password) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Email and password are required.'
+        }
+      })
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Password must be at least 6 characters.'
+        }
+      })
+    }
+
+    const existingProfile = await loadUserProfileByEmail(email)
+    if (existingProfile?.id) {
+      return res.status(409).json({
+        error: {
+          status: 409,
+          type: 'email_exists',
+          message: 'This email has already used its one-time trial. Please sign in with the same trial account here to view your access and report.'
+        }
+      })
+    }
+
+    const created = await fetchSupabaseJson('/auth/v1/admin/users', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { name: 'Trial User', role: 'trial' }
+      })
+    })
+    const userId = String(created?.user?.id || created?.id || '')
+    if (!userId) {
+      throw new Error('Could not create trial account.')
+    }
+
+    const displayName = `Trial - ${email.split('@')[0] || 'user'}`
+    await supabaseRequest('/rest/v1/profiles', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify({
+        id: userId,
+        email,
+        full_name: displayName,
+        role: 'student'
+      })
+    })
+
+    await supabaseRequest('/rest/v1/learner_access', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify(
+        buildLearnerAccessPayload({
+          userId,
+          status: 'active',
+          startsAt: new Date().toISOString(),
+          expiresAt: null,
+          feedbackCredits: 1,
+          fullMockCredits: 1
+        })
+      )
+    })
+
+    return res.status(201).json({
+      success: true,
+      message: 'Your one-time trial account is ready.'
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'auth_trial_signup_error',
+        message: error instanceof Error ? error.message : 'Could not create your trial account.'
       }
     })
   }
@@ -4833,7 +8918,7 @@ app.post('/api/auth/refresh', async (req, res) => {
         refreshToken: String(authPayload?.refresh_token || refreshToken),
         expiresAt: Number(authPayload?.expires_at || 0),
         userId: String(authPayload?.user?.id || ''),
-        role: String(profile.role || 'student'),
+        role: resolveSessionRole(profile, authPayload?.user),
         name: String(profile.full_name || profile.email || 'Student'),
         email: normalizeEmail(profile.email || authPayload?.user?.email || '')
       },
@@ -4860,7 +8945,7 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
     return res.json({
       session: {
         userId: String(req.auth.user.id || ''),
-        role: String(profile.role || 'student'),
+        role: resolveSessionRole(profile, req.auth.user),
         name: String(profile.full_name || profile.email || 'Student'),
         email: normalizeEmail(profile.email || req.auth.user.email || '')
       },
@@ -4953,6 +9038,14 @@ app.post('/api/admin/learners', requireAdmin, async (req, res) => {
       })
     }
 
+    const existingProfile = await loadUserProfileByEmail(email)
+    const previousStatus = String(existingProfile?.learner_access?.status || 'inactive')
+    const requestedStatus = String(req.body?.status || 'active') === 'inactive' ? 'inactive' : 'active'
+    const requestedStartsAt = req.body?.startsAt || new Date().toISOString()
+    const defaultAccessWindow =
+      requestedStatus === 'active' && !req.body?.expiresAt
+        ? buildDefaultAccessWindow(requestedStartsAt)
+        : null
     let userId = ''
     try {
       const created = await fetchSupabaseJson('/auth/v1/admin/users', {
@@ -4967,7 +9060,6 @@ app.post('/api/admin/learners', requireAdmin, async (req, res) => {
       })
       userId = String(created?.user?.id || created?.id || '')
     } catch (error) {
-      const existingProfile = await loadUserProfileByEmail(email)
       if (!existingProfile?.id) throw error
       userId = existingProfile.id
       await supabaseRequest(`/auth/v1/admin/users/${encodeURIComponent(userId)}`, {
@@ -4997,15 +9089,23 @@ app.post('/api/admin/learners', requireAdmin, async (req, res) => {
       headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
       body: JSON.stringify(buildLearnerAccessPayload({
         userId,
-        status: req.body?.status,
-        startsAt: req.body?.startsAt,
-        expiresAt: req.body?.expiresAt,
+        status: requestedStatus,
+        startsAt: defaultAccessWindow?.startsAt || requestedStartsAt,
+        expiresAt: req.body?.expiresAt || defaultAccessWindow?.expiresAt || null,
         feedbackCredits: req.body?.feedbackCredits,
         fullMockCredits: req.body?.fullMockCredits
       }))
     })
 
     const profile = await loadUserProfileWithAccess(userId)
+    const nextStatus = String(profile?.learner_access?.status || 'inactive')
+    if (profile && previousStatus !== 'active' && nextStatus === 'active') {
+      try {
+        await sendAccessGrantedEmail({ learner: profile })
+      } catch (emailError) {
+        console.error('Could not send access granted email:', emailError)
+      }
+    }
     return res.json({
       learner: mapLearnerRecord(profile)
     })
@@ -5033,6 +9133,12 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
       })
     }
 
+    const beforeProfile = await loadUserProfileWithAccess(userId)
+    const previousStatus = String(beforeProfile?.learner_access?.status || 'inactive')
+    const requestedStatus = String(req.body?.status || previousStatus || 'inactive') === 'inactive' ? 'inactive' : 'active'
+    const activatingNow = previousStatus !== 'active' && requestedStatus === 'active'
+    const activationWindow =
+      activatingNow && !req.body?.expiresAt ? buildDefaultAccessWindow(new Date().toISOString()) : null
     const profilePatch = {}
     if (req.body?.name) profilePatch.full_name = String(req.body.name).trim()
     if (req.body?.email) profilePatch.email = normalizeEmail(req.body.email)
@@ -5064,15 +9170,23 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
       headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
       body: JSON.stringify(buildLearnerAccessPayload({
         userId,
-        status: req.body?.status,
-        startsAt: req.body?.startsAt,
-        expiresAt: req.body?.expiresAt,
+        status: requestedStatus,
+        startsAt: activationWindow?.startsAt || req.body?.startsAt,
+        expiresAt: req.body?.expiresAt || activationWindow?.expiresAt || null,
         feedbackCredits: req.body?.feedbackCredits,
         fullMockCredits: req.body?.fullMockCredits
       }))
     })
 
     const profile = await loadUserProfileWithAccess(userId)
+    const nextStatus = String(profile?.learner_access?.status || 'inactive')
+    if (profile && previousStatus !== 'active' && nextStatus === 'active') {
+      try {
+        await sendAccessGrantedEmail({ learner: profile })
+      } catch (emailError) {
+        console.error('Could not send access granted email:', emailError)
+      }
+    }
     return res.json({
       learner: mapLearnerRecord(profile)
     })
@@ -5140,6 +9254,96 @@ app.put('/api/me/notebook', requireAuth, async (req, res) => {
         status: error?.status || 500,
         type: 'notebook_save_error',
         message: error instanceof Error ? error.message : 'Could not save notebook.'
+      }
+    })
+  }
+})
+
+app.get('/api/me/reading-pdoy-progress', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'reading_pdoy_auth_error',
+          message: 'Please sign in before loading Reading with P\'Doy progress.'
+        }
+      })
+    }
+    const index = await loadReadingPdoyProgressIndex()
+    const summary = (Array.isArray(index.items) ? index.items : []).find(
+      (item) => normalizeOptionalUuid(item?.userId) === userId
+    )
+    if (!summary?.objectPath) {
+      return res.json({ progress: null, updatedAt: null })
+    }
+    const payload = await loadReadingPdoyProgressJson(summary.objectPath)
+    return res.json({
+      progress: payload?.progress && typeof payload.progress === 'object' ? payload.progress : null,
+      updatedAt: payload?.updatedAt || summary.updatedAt || null
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_pdoy_progress_load_error',
+        message: error instanceof Error ? error.message : 'Could not load Reading with P\'Doy progress.'
+      }
+    })
+  }
+})
+
+app.put('/api/me/reading-pdoy-progress', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'reading_pdoy_auth_error',
+          message: 'Please sign in before saving Reading with P\'Doy progress.'
+        }
+      })
+    }
+    const profile = await loadUserProfileWithAccess(userId)
+    if (!profile) {
+      throw new Error('Profile not found.')
+    }
+    const summary = await persistReadingPdoyProgressForUser({
+      userId,
+      profile,
+      progress: req.body?.progress
+    })
+    return res.json({
+      progress: sanitizeReadingPdoyProgressPayload(req.body?.progress),
+      summary
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_pdoy_progress_save_error',
+        message: error instanceof Error ? error.message : 'Could not save Reading with P\'Doy progress.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/reading-pdoy-progress', requireAdmin, async (_req, res) => {
+  try {
+    const index = await loadReadingPdoyProgressIndex()
+    return res.json({
+      reports: (Array.isArray(index.items) ? index.items : [])
+        .map(mapReadingPdoyProgressSummary)
+        .sort((a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime())
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_reading_pdoy_progress_error',
+        message: error instanceof Error ? error.message : 'Could not load Reading with P\'Doy progress.'
       }
     })
   }
@@ -5304,19 +9508,76 @@ app.patch('/api/admin/support-reports/:reportId', requireAdmin, async (req, res)
   }
 })
 
+app.get('/api/admin/assessment-reports', requireAdmin, async (_req, res) => {
+  try {
+    const index = await loadAssessmentReportsIndex()
+    const reports = (Array.isArray(index.items) ? index.items : [])
+      .map(mapAssessmentReportSummary)
+      .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+    return res.json({ reports })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_assessment_reports_error',
+        message: error instanceof Error ? error.message : 'Could not load assessment reports.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/assessment-reports/:reportId', requireAdmin, async (req, res) => {
+  try {
+    const reportId = String(req.params.reportId || '').trim()
+    if (!reportId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'A report id is required.'
+        }
+      })
+    }
+    const index = await loadAssessmentReportsIndex()
+    const summary = (Array.isArray(index.items) ? index.items : []).find((item) => String(item?.id || '') === reportId)
+    if (!summary?.objectPath) {
+      return res.status(404).json({
+        error: {
+          status: 404,
+          type: 'not_found',
+          message: 'Assessment report not found.'
+        }
+      })
+    }
+    const report = await loadAssessmentReportJson(String(summary.objectPath))
+    return res.json({
+      report: {
+        ...report,
+        summary: mapAssessmentReportSummary(summary)
+      }
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_assessment_report_detail_error',
+        message: error instanceof Error ? error.message : 'Could not load the assessment report.'
+      }
+    })
+  }
+})
+
 app.get('/api/reading/exams', requireAuth, async (req, res) => {
   try {
-    if (String(req.auth?.profile?.role || req.auth?.user?.role || 'student') !== 'admin') {
-      return res.json({ exams: [] })
-    }
     const rows = await fetchSupabaseJson(
       '/rest/v1/reading_exams?select=id,category,title,raw_passage_text,raw_answer_key,parsed_payload,created_at,updated_at&order=created_at.desc',
       {
         headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
       }
     )
+    const uploadedExams = (Array.isArray(rows) ? rows : []).map(mapReadingExamRecord)
     return res.json({
-      exams: (Array.isArray(rows) ? rows : []).map(mapReadingExamRecord)
+      exams: [...BUILT_IN_READING_EXAMS, ...uploadedExams]
     })
   } catch (error) {
     return res.status(error?.status || 500).json({
@@ -5569,19 +9830,91 @@ app.get('/api/health', (_, res) => {
   res.json({ ok: true })
 })
 
-app.post('/api/tts', async (req, res) => {
+app.get('/api/admin/tts/catalog', requireAdmin, async (_req, res) => {
   try {
-    const apiKey = String(process.env.DEEPGRAM_API_KEY || '').trim()
-    if (!apiKey) {
-      return res.status(500).json({
+    const manifest = await loadQuestionAudioManifest()
+    const items = Object.values(manifest.items || {}).sort((a, b) =>
+      String(a.section || '').localeCompare(String(b.section || '')) ||
+      String(a.topicTitle || '').localeCompare(String(b.topicTitle || '')) ||
+      String(a.question || '').localeCompare(String(b.question || ''))
+    )
+    return res.json({ items })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'tts_catalog_error',
+        message: error instanceof Error ? error.message : 'Could not load TTS catalog.'
+      }
+    })
+  }
+})
+
+app.post('/api/admin/tts/generate', requireAdmin, async (req, res) => {
+  try {
+    const items = Array.isArray(req.body?.items) ? req.body.items : req.body?.item ? [req.body.item] : []
+    const force = Boolean(req.body?.force)
+    if (!items.length) {
+      return res.status(400).json({
         error: {
-          status: 500,
-          type: 'configuration_error',
-          message: 'Missing DEEPGRAM_API_KEY on backend environment'
+          status: 400,
+          type: 'validation_error',
+          message: 'At least one question audio item is required.'
+        }
+      })
+    }
+    if (items.length > 20) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Please generate at most 20 question audios in one batch.'
         }
       })
     }
 
+    const results = []
+    for (const item of items) {
+      const asset = await getOrCreateQuestionAudioAsset(item, { allowGenerate: true, force })
+      results.push(asset)
+    }
+
+    return res.json({
+      items: results,
+      generatedCount: results.filter((item) => !item.cached).length,
+      cachedCount: results.filter((item) => item.cached).length
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'tts_generation_error',
+        message: error instanceof Error ? error.message : 'Could not generate question audio.'
+      }
+    })
+  }
+})
+
+app.post('/api/tts/question-audio', requireAuth, async (req, res) => {
+  try {
+    const asset = await getOrCreateQuestionAudioAsset(req.body || {}, { allowGenerate: true })
+    return res.json({
+      audioUrl: asset.audioUrl,
+      cached: asset.cached
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'tts_question_audio_error',
+        message: error instanceof Error ? error.message : 'Could not prepare question audio.'
+      }
+    })
+  }
+})
+
+app.post('/api/tts', async (req, res) => {
+  try {
     const text = String(req.body?.text || '').trim()
     if (!text) {
       return res.status(400).json({
@@ -5593,31 +9926,7 @@ app.post('/api/tts', async (req, res) => {
       })
     }
 
-    const model = String(process.env.DEEPGRAM_TTS_MODEL || 'aura-2-asteria-en').trim()
-    const response = await safeFetch('https://api.deepgram.com/v1/speak', {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        text,
-        model
-      })
-    })
-
-    if (!response.ok) {
-      const body = await response.text().catch(() => '')
-      return res.status(response.status).json({
-        error: {
-          status: response.status,
-          type: 'deepgram_tts_error',
-          message: `Deepgram TTS failed: ${body.slice(0, 180)}`
-        }
-      })
-    }
-
-    const audioBuffer = Buffer.from(await response.arrayBuffer())
+    const audioBuffer = await generateDeepgramTtsAudioBuffer(text)
     res.setHeader('Content-Type', 'audio/mpeg')
     return res.send(audioBuffer)
   } catch (error) {
@@ -5784,6 +10093,7 @@ const runAssessment = async (
 ) => {
   onProgress(5, 'Examining your grammar.')
   onProgress(8, 'กำลังตรวจสอบไวยากรณ์ของคำตอบคุณ')
+  const usageTracker = createApiUsageTracker()
 
   let rawTranscript = String(transcript || '').trim()
   let whisperTranscript = ''
@@ -5798,7 +10108,7 @@ const runAssessment = async (
   if (audioBase64) {
     try {
       onProgress(15, 'Moving on to pronunciation analysis.')
-      const transcription = await transcribeWithBestProvider({ audioBase64, audioMimeType })
+      const transcription = await transcribeWithBestProvider({ audioBase64, audioMimeType, usageTracker })
       const whisperResult = transcription.result
       whisperTranscript = String(whisperResult?.whisperTranscript || '').trim()
       rawTranscript = whisperTranscript || rawTranscript
@@ -5895,7 +10205,10 @@ const runAssessment = async (
       try {
         const punctuatedItems = await Promise.all(
           normalizedQuestionResponses.map(async (item) => {
-            const fixed = await provider.call(punctuationPrompt({ rawTranscript: item.response }))
+            const fixed = await provider.call(
+              punctuationPrompt({ rawTranscript: item.response }),
+              usageTracker
+            )
             return {
               question: item.question,
               rawTranscript: item.response,
@@ -5916,7 +10229,7 @@ const runAssessment = async (
   if (!questionBreakdown.length) {
     for (const provider of punctuationProviders) {
       try {
-        punctuatedTranscript = await provider.call(punctuationPrompt({ rawTranscript }))
+        punctuatedTranscript = await provider.call(punctuationPrompt({ rawTranscript }), usageTracker)
         break
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
@@ -5929,8 +10242,9 @@ const runAssessment = async (
   const comparisons = {}
   const errors = []
   try {
+    const normalizedAssessmentMode = String(assessmentMode || 'standard')
     const geminiReport =
-      assessmentMode === 'fullMock'
+      normalizedAssessmentMode === 'fullMock'
         ? await buildFullMockAssessmentReport({
             topic,
             prompt,
@@ -5941,8 +10255,34 @@ const runAssessment = async (
             questionBreakdown,
             punctuationErrors,
             pronunciationBand,
-            onProgress
+            onProgress,
+            usageTracker
           })
+        : normalizedAssessmentMode === 'trialSpeaking'
+          ? await buildFinalReport({
+              result: await callGemini(
+                trialSpeakingRubricPrompt({
+                  topic,
+                  prompt,
+                  cues: Array.isArray(cues) ? cues : [],
+                  punctuatedTranscript,
+                  whisperTranscript,
+                  durationSeconds: Number(durationSeconds || 0),
+                  questionBreakdown
+                }),
+                usageTracker
+              ),
+              testMode: 'part2',
+              pronunciationBand,
+              pronunciationEngine,
+              pronunciationFallbackReason,
+              pronunciationMetrics,
+              pronunciationEstimate,
+              wordAnalysis,
+              punctuatedTranscript,
+              punctuationErrors,
+              questionBreakdown
+            })
         : await buildFinalReport({
             result: await callGemini(
               rubricPrompt({
@@ -5954,7 +10294,8 @@ const runAssessment = async (
                 whisperTranscript,
                 durationSeconds: Number(durationSeconds || 0),
                 questionBreakdown
-              })
+              }),
+              usageTracker
             ),
             testMode: String(testMode || 'part2'),
             pronunciationBand,
@@ -5997,12 +10338,14 @@ const runAssessment = async (
       testMode: String(testMode || 'part2'),
       questionBreakdown: primaryReport.questionBreakdown || [],
       part3AnswerCoaching: primaryReport.part3AnswerCoaching || [],
-      componentReports: primaryReport.componentReports || {}
+      componentReports: primaryReport.componentReports || {},
+      usageTracker
     })
     const enrichedVocabularySuggestions = await buildCustomVocabularySuggestions({
       testMode: String(testMode || 'part2'),
       punctuatedTranscript: primaryReport.punctuatedTranscript || punctuatedTranscript,
-      questionBreakdown: enrichedQuestionBreakdown
+      questionBreakdown: enrichedQuestionBreakdown,
+      usageTracker
     })
     const topFixes = buildTopFixesFromReport({
       componentReports: primaryReport.componentReports || {},
@@ -6024,7 +10367,8 @@ const runAssessment = async (
     ...comparisons[primaryProvider],
     primaryProvider,
     comparisons,
-    comparisonErrors: errors
+    comparisonErrors: errors,
+    apiUsage: usageTracker.summarize()
   }
 }
 
@@ -6039,6 +10383,16 @@ app.post('/api/assess', requireAuth, async (req, res) => {
       })
     }
     const result = await runAssessment(req.body || {})
+    try {
+      await persistAssessmentReportForUser({
+        userId: req.auth.user.id,
+        profile: req.auth.profile,
+        requestBody: req.body || {},
+        result
+      })
+    } catch (persistError) {
+      console.error('Could not persist assessment report:', persistError)
+    }
     return res.json(result)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
@@ -6081,6 +10435,14 @@ app.post('/api/assess/start', requireAuth, async (req, res) => {
     })
   })
     .then((result) => {
+      void persistAssessmentReportForUser({
+        userId: req.auth.user.id,
+        profile: req.auth.profile,
+        requestBody: req.body || {},
+        result
+      }).catch((persistError) => {
+        console.error('Could not persist assessment report:', persistError)
+      })
       updateAssessmentJob(jobId, {
         status: 'completed',
         progress: 100,

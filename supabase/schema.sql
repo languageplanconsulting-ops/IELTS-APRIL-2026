@@ -40,7 +40,7 @@ create table if not exists public.user_notebooks (
 
 create table if not exists public.reading_exams (
   id uuid primary key default gen_random_uuid(),
-  category text not null check (category in ('passage1', 'passage2', 'passage3', 'fulltest')),
+  category text not null check (category in ('normal', 'advanced')),
   title text not null,
   raw_passage_text text not null,
   raw_answer_key text not null,
