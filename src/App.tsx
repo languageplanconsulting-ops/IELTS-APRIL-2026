@@ -29,6 +29,7 @@ import { CAMBRIDGE_17_SECTION_2_EXAM_SET } from './listeningBuilderCambridge17Se
 import { CAMBRIDGE_18_SECTION_2_EXAM_SET, type ListeningBuilderExamTask } from './listeningBuilderCambridge18Section2'
 import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './listeningFoundationData'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
+import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -48,7 +49,9 @@ const LISTENING_BUILDER_EXAM_SETS = [
 
 const ALL_LISTENING_FOUNDATION_SETS = [
   ...LISTENING_FOUNDATION_SETS,
-  ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS
+  ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
+  ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS,
+  ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced')
 ]
 
 type Role = 'student' | 'admin' | 'trial'
@@ -11931,6 +11934,21 @@ const visibleListeningFoundationSets = useMemo(
                 <span>03</span>
                 <strong>Full Practice</strong>
                 <p>ทำชุดฝึก Listening แบบเต็ม แล้วดู report หลัง submit</p>
+              </button>
+              <button
+                type="button"
+                className="listeningModeChoiceCard listeningModeChoiceCardPractice"
+                onClick={() => {
+                  setListeningLabMode('builder')
+                  setListeningAttemptStage('bank')
+                  setActivePage('listening')
+                  const firstPack = LISTENING_BUILDER_EXAM_SETS[0]
+                  if (firstPack) setSelectedListeningBuilderPackId(firstPack.id)
+                }}
+              >
+                <span>04</span>
+                <strong>Cambridge Paraphrase Builder</strong>
+                <p>Cambridge 10–18 · highlight คำใน transcript ให้ตรงกับโจทย์ (รวม Cambridge 12)</p>
               </button>
             </div>
           )}
