@@ -30,6 +30,7 @@ import { CAMBRIDGE_18_SECTION_2_EXAM_SET, type ListeningBuilderExamTask } from '
 import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './listeningFoundationData'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
+import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -50,8 +51,10 @@ const LISTENING_BUILDER_EXAM_SETS = [
 const ALL_LISTENING_FOUNDATION_SETS = [
   ...LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
+  ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
   ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS,
-  ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced')
+  ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
+  ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced')
 ]
 
 type Role = 'student' | 'admin' | 'trial'
@@ -5276,9 +5279,7 @@ function App() {
   const [listeningFoundationEvidenceCorrect, setListeningFoundationEvidenceCorrect] = useState(false)
   const [listeningFoundationAnswerState, setListeningFoundationAnswerState] = useState<Record<string, 'correct'>>({})
   const [listeningFoundationFeedback, setListeningFoundationFeedback] = useState('')
-  const [listeningFoundationScriptMode, setListeningFoundationScriptMode] = useState<'focus' | 'cards'>('focus')
   const [listeningFoundationScriptChunk, setListeningFoundationScriptChunk] = useState(0)
-  const [listeningFoundationScriptComfort, setListeningFoundationScriptComfort] = useState(true)
   const listeningFoundationScriptBodyRef = useRef<HTMLDivElement | null>(null)
   const listeningFoundationPointerSelectingRef = useRef(false)
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
@@ -10343,9 +10344,6 @@ const visibleListeningFoundationSets = useMemo(
     setListeningFoundationScriptChunk(
       findListeningScriptChunkForText(segments, activeListeningFoundationQuestion.passageKeyword)
     )
-    if (segments.length >= 3) {
-      setListeningFoundationScriptMode('focus')
-    }
   }, [activeListeningFoundationQuestion?.id, activeListeningFoundationQuestion?.passageKeyword])
 
   useEffect(() => {
@@ -10381,18 +10379,13 @@ const visibleListeningFoundationSets = useMemo(
   const renderListeningScriptTurn = (segment: ListeningScriptSegment, index: number) => {
     const evidence = activeListeningFoundationQuestion?.evidence || ''
     const tone = getListeningSpeakerTone(segment.speaker)
-    const isActiveChunk =
-      listeningFoundationScriptMode === 'focus'
-        ? index === activeListeningFoundationScriptChunk
-        : index === activeListeningFoundationScriptChunk
+    const isActiveChunk = index === activeListeningFoundationScriptChunk
 
     return (
       <article
         key={segment.id}
         id={`listening-script-turn-${index}`}
-        className={`listeningScriptTurn tone-${tone} ${isActiveChunk ? 'is-active' : ''} ${
-          listeningFoundationScriptMode === 'cards' ? 'is-card' : ''
-        }`}
+        className={`listeningScriptTurn tone-${tone} is-card ${isActiveChunk ? 'is-active' : ''}`}
       >
         {segment.speaker ? (
           <header className="listeningScriptTurnHeader">
@@ -10431,25 +10424,6 @@ const visibleListeningFoundationSets = useMemo(
         </p>
       </article>
     )
-  }
-
-  const shiftListeningFoundationScriptChunk = (direction: -1 | 1) => {
-    setListeningFoundationScriptChunk((current) => {
-      const next = current + direction
-      return Math.max(0, Math.min(next, listeningFoundationScriptChunkCount - 1))
-    })
-  }
-
-  const handleListeningFoundationScriptKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (listeningFoundationScriptMode !== 'focus') return
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      shiftListeningFoundationScriptChunk(-1)
-    }
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      shiftListeningFoundationScriptChunk(1)
-    }
   }
 
   const restoreListeningFoundationQuestionState = (questionId: string) => {
@@ -12548,34 +12522,6 @@ const visibleListeningFoundationSets = useMemo(
                       <div className="listeningScriptReader">
                         <div className="listeningScriptReaderTop">
                           <h4>Audio Script</h4>
-                          <div className="listeningScriptReaderModes" role="tablist" aria-label="Script reading mode">
-                            <button
-                              type="button"
-                              role="tab"
-                              aria-selected={listeningFoundationScriptMode === 'focus'}
-                              className={listeningFoundationScriptMode === 'focus' ? 'active' : ''}
-                              onClick={() => setListeningFoundationScriptMode('focus')}
-                            >
-                              One turn
-                            </button>
-                            <button
-                              type="button"
-                              role="tab"
-                              aria-selected={listeningFoundationScriptMode === 'cards'}
-                              className={listeningFoundationScriptMode === 'cards' ? 'active' : ''}
-                              onClick={() => setListeningFoundationScriptMode('cards')}
-                            >
-                              All turns
-                            </button>
-                            <button
-                              type="button"
-                              className={listeningFoundationScriptComfort ? 'active' : ''}
-                              aria-pressed={listeningFoundationScriptComfort}
-                              onClick={() => setListeningFoundationScriptComfort((current) => !current)}
-                            >
-                              Comfort text
-                            </button>
-                          </div>
                         </div>
 
                         {activeListeningFoundationQuestion && !listeningFoundationEvidenceCorrect && (
@@ -12587,86 +12533,31 @@ const visibleListeningFoundationSets = useMemo(
                           </div>
                         )}
 
-                        {listeningFoundationScriptMode === 'focus' &&
-                          activeListeningFoundationScriptSegments.length > 1 && (
-                            <div className="listeningScriptChunkNav">
-                              <button
-                                type="button"
-                                className="secondary"
-                                disabled={activeListeningFoundationScriptChunk === 0}
-                                onClick={() => shiftListeningFoundationScriptChunk(-1)}
-                                aria-label="Previous turn"
-                              >
-                                ← Prev
-                              </button>
-                              <div className="listeningScriptChunkProgress" aria-hidden="true">
-                                {activeListeningFoundationScriptSegments.map((segment, index) => (
-                                  <button
-                                    key={segment.id}
-                                    type="button"
-                                    className={index === activeListeningFoundationScriptChunk ? 'active' : ''}
-                                    onClick={() => setListeningFoundationScriptChunk(index)}
-                                    aria-label={`Go to turn ${index + 1}`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="listeningScriptChunkLabel">
-                                Turn {activeListeningFoundationScriptChunk + 1} of{' '}
-                                {activeListeningFoundationScriptSegments.length}
-                              </span>
-                              <button
-                                type="button"
-                                className="secondary"
-                                disabled={
-                                  activeListeningFoundationScriptChunk >=
-                                  activeListeningFoundationScriptSegments.length - 1
-                                }
-                                onClick={() => shiftListeningFoundationScriptChunk(1)}
-                                aria-label="Next turn"
-                              >
-                                Next →
-                              </button>
-                            </div>
-                          )}
-
                         <div
                           ref={listeningFoundationScriptBodyRef}
-                          className={`listeningFoundationPassage listeningScriptReaderBody script-scroll ${
+                          className={`listeningFoundationPassage listeningScriptReaderBody script-scroll is-cards-mode is-comfort ${
                             listeningBuilderTranscriptShake ? 'is-shaking' : ''
-                          } ${listeningFoundationScriptComfort ? 'is-comfort' : ''} ${
-                            listeningFoundationScriptMode === 'focus' ? 'is-focus-mode' : 'is-cards-mode'
                           }`}
-                          tabIndex={0}
-                          onKeyDown={handleListeningFoundationScriptKeyDown}
                         >
-                        {listeningFoundationScriptMode === 'focus' ? (
-                            activeListeningFoundationScriptSegments.length > 0 ? (
-                              renderListeningScriptTurn(
-                                activeListeningFoundationScriptSegments[activeListeningFoundationScriptChunk],
-                                activeListeningFoundationScriptChunk
-                              )
-                            ) : (
-                              <p
-                                className="listeningScriptTurnBody"
-                                onMouseUp={(event) => {
-                                  event.stopPropagation()
-                                  handleListeningFoundationPassageMouseUp()
-                                }}
-                              >
-                                {activeListeningFoundationQuestion.passage}
-                              </p>
-                            )
-                          ) : (
+                          {activeListeningFoundationScriptSegments.length > 0 ? (
                             activeListeningFoundationScriptSegments.map((segment, index) =>
                               renderListeningScriptTurn(segment, index)
                             )
+                          ) : (
+                            <p
+                              className="listeningScriptTurnBody"
+                              onMouseUp={(event) => {
+                                event.stopPropagation()
+                                handleListeningFoundationPassageMouseUp()
+                              }}
+                            >
+                              {activeListeningFoundationQuestion?.passage}
+                            </p>
                           )}
                         </div>
 
                         <p className="listeningScriptReaderHint meta">
-                          {listeningFoundationScriptMode === 'focus'
-                            ? 'Read one turn at a time. Highlight the phrase that matches the question — exact match or at least half of the evidence counts.'
-                            : 'Each box is one speaker turn. Highlight the matching phrase (exact or ≥50% of the evidence).'}
+                          Each box is one speaker turn. Highlight the matching phrase (exact or ≥50% of the evidence).
                         </p>
                       </div>
 

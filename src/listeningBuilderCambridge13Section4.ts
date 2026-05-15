@@ -102,18 +102,18 @@ export const CAMBRIDGE_13_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionNumber: 37,
           questionText: 'Complete the notes below.\\nIntroduction\\n37 – She found urban birds were often braver, but were afraid of situations that were ____',
           questionWordPhrase: '– She found urban birds were often braver, but were afraid of situations that were',
-          targetText: 'before',
-          thaiMeaning: 'ก่อน',
-          explanationThai: '\'– She found urban birds were often braver, but were afraid of situations that were\' ในโจทย์เติมด้วย \'before\' ตามที่พูดในสคริปต์'
+          targetText: 'anything they haven’t experienced before',
+          thaiMeaning: 'สิ่งใหม่',
+          explanationThai: 'afraid of situations that were new ในโจทย์ถูกพูดว่า anything they haven’t experienced before'
         },
         {
           id: 'cam13-s4-t1-q38',
           questionNumber: 38,
           questionText: 'Complete the notes below.\\nIntroduction\\n38 – He found that some animals respond to ____ by producing lower levels of hormones',
           questionWordPhrase: '– He found that some animals respond to',
-          targetText: 'new',
-          thaiMeaning: 'ใหม่',
-          explanationThai: '\'– He found that some animals respond to\' ในโจทย์เติมด้วย \'new\' ตามที่พูดในสคริปต์'
+          targetText: 'when they’re under stress, their endocrine systems react by reducing the amount of hormones',
+          thaiMeaning: 'ความเครียด',
+          explanationThai: 'respond to stress ในโจทย์ถูกอธิบายว่า when they’re under stress, their endocrine systems react'
         },
         {
           id: 'cam13-s4-t1-q39',

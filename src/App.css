@@ -13963,3 +13963,243 @@ textarea {
 .readingReportEvidence pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
 }
+
+/* Premium interaction polish: smoother click/press transitions across the app */
+:root {
+  --luxury-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --luxury-ease-press: cubic-bezier(0.2, 0, 0.13, 1);
+  --luxury-shadow: 0 14px 34px rgba(15, 23, 42, 0.12), 0 8px 0 #0b1530;
+  --luxury-shadow-hover: 0 18px 42px rgba(15, 23, 42, 0.16), 0 10px 0 #0b1530;
+  --luxury-shadow-press: 0 8px 22px rgba(15, 23, 42, 0.14), 0 4px 0 #0b1530;
+}
+
+:where(
+  button,
+  .thumbnailCard,
+  .topicCardStartBtn,
+  .primaryReadyBtn,
+  .primaryNextBtn,
+  .readingActionBtn,
+  .readingPdoyOptionBtn,
+  .listeningChoiceBtn,
+  .saveNotebookBtn,
+  .removeNotebookBtn,
+  .reportSaveButton,
+  .backPillBtn,
+  .answerReviewRetryBtn,
+  .answerReviewConfirmBtn,
+  .reviewScriptBtn,
+  .scriptReviewBackBtn,
+  .scriptReviewDoneBtn,
+  .expectedScoreBackBtn,
+  .expectedScoreReadyBtn,
+  .listeningModeChoiceCard,
+  .listeningBackChoiceButton,
+  .listeningFoundationCategories button,
+  .listeningFoundationBank button,
+  .listeningFoundationAudioBody button,
+  .listeningFoundationWordCheck button,
+  .listeningFoundationNav button,
+  .listeningFoundationOptions button,
+  .listeningScriptReaderModes button,
+  .listeningScriptChunkProgress button,
+  .supportBackBtn,
+  .supportSendBtn,
+  .supportLauncher,
+  .redeemBtn,
+  .cancelBtn,
+  .pauseBtn,
+  .nextStepCard,
+  .expectedScoreOption
+) {
+  -webkit-tap-highlight-color: transparent;
+  transform-origin: center;
+  transition:
+    transform 340ms var(--luxury-ease-out),
+    box-shadow 340ms var(--luxury-ease-out),
+    background 340ms var(--luxury-ease-out),
+    border-color 260ms ease,
+    color 220ms ease,
+    filter 340ms var(--luxury-ease-out),
+    opacity 220ms ease !important;
+  will-change: transform, box-shadow;
+}
+
+:where(
+  .controls button,
+  .homeGrid button,
+  .authForm button,
+  .topicCardStartBtn,
+  .primaryReadyBtn,
+  .primaryNextBtn,
+  .saveNotebookBtn,
+  .removeNotebookBtn,
+  .reportSaveButton,
+  .readingActionBtn,
+  .reviewScriptBtn,
+  .listeningChoiceBtn,
+  .listeningModeChoiceCard,
+  .listeningBackChoiceButton,
+  .listeningFoundationCategories button,
+  .listeningFoundationBank button,
+  .listeningFoundationAudioBody button,
+  .listeningFoundationWordCheck button,
+  .listeningFoundationNav button,
+  .listeningFoundationOptions button,
+  .supportBackBtn,
+  .supportSendBtn,
+  .supportLauncher,
+  .redeemBtn,
+  .cancelBtn,
+  .pauseBtn
+):not(:disabled) {
+  box-shadow: var(--luxury-shadow) !important;
+}
+
+:where(
+  .controls button,
+  .homeGrid button,
+  .authForm button,
+  .topicCardStartBtn,
+  .primaryReadyBtn,
+  .primaryNextBtn,
+  .saveNotebookBtn,
+  .removeNotebookBtn,
+  .reportSaveButton,
+  .readingActionBtn,
+  .reviewScriptBtn,
+  .listeningChoiceBtn,
+  .readingPdoyOptionBtn,
+  .listeningModeChoiceCard,
+  .listeningBackChoiceButton,
+  .listeningFoundationCategories button,
+  .listeningFoundationBank button,
+  .listeningFoundationAudioBody button,
+  .listeningFoundationWordCheck button,
+  .listeningFoundationNav button,
+  .listeningFoundationOptions.unlocked button,
+  .listeningScriptReaderModes button,
+  .supportBackBtn,
+  .supportSendBtn,
+  .supportLauncher,
+  .redeemBtn,
+  .cancelBtn,
+  .pauseBtn,
+  .expectedScoreOption
+):hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.012) !important;
+  box-shadow: var(--luxury-shadow-hover) !important;
+  filter: saturate(1.05) brightness(1.015);
+}
+
+:where(
+  .controls button,
+  .homeGrid button,
+  .authForm button,
+  .topicCardStartBtn,
+  .primaryReadyBtn,
+  .primaryNextBtn,
+  .saveNotebookBtn,
+  .removeNotebookBtn,
+  .reportSaveButton,
+  .readingActionBtn,
+  .reviewScriptBtn,
+  .listeningChoiceBtn,
+  .readingPdoyOptionBtn,
+  .listeningModeChoiceCard,
+  .listeningBackChoiceButton,
+  .listeningFoundationCategories button,
+  .listeningFoundationBank button,
+  .listeningFoundationAudioBody button,
+  .listeningFoundationWordCheck button,
+  .listeningFoundationNav button,
+  .listeningFoundationOptions button,
+  .listeningScriptReaderModes button,
+  .supportBackBtn,
+  .supportSendBtn,
+  .supportLauncher,
+  .redeemBtn,
+  .cancelBtn,
+  .pauseBtn,
+  .expectedScoreOption
+):active:not(:disabled) {
+  transform: translateY(2px) scale(0.988) !important;
+  box-shadow: var(--luxury-shadow-press) !important;
+  transition:
+    transform 120ms var(--luxury-ease-press),
+    box-shadow 120ms var(--luxury-ease-press),
+    filter 120ms ease !important;
+  filter: saturate(0.98) brightness(0.99);
+}
+
+:where(
+  .pageSwitch button,
+  .roleSwitch button,
+  .notebookTabs button,
+  .providerTabs button,
+  .pronFilters button,
+  .topicBankViewToggle button
+):hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.01) !important;
+}
+
+:where(
+  .pageSwitch button,
+  .roleSwitch button,
+  .notebookTabs button,
+  .providerTabs button,
+  .pronFilters button,
+  .topicBankViewToggle button
+):active:not(:disabled) {
+  transform: translateY(1px) scale(0.99) !important;
+  transition: transform 120ms var(--luxury-ease-press), box-shadow 120ms var(--luxury-ease-press) !important;
+}
+
+:where(.listeningScriptChunkProgress button):not(:disabled) {
+  box-shadow: none !important;
+}
+
+:where(.listeningScriptChunkProgress button):hover:not(:disabled) {
+  transform: scale(1.18) !important;
+  box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.1) !important;
+}
+
+:where(.listeningScriptChunkProgress button):active:not(:disabled) {
+  transform: scale(0.92) !important;
+}
+
+:where(.listeningFoundationOptions button:disabled, button:disabled) {
+  transform: none !important;
+  filter: none !important;
+}
+
+:where(.readingPdoyStagePanel, .card, .thumbnailCard, .speakingPromptCard, .speakingControlCard) {
+  transition:
+    transform 380ms var(--luxury-ease-out),
+    box-shadow 380ms var(--luxury-ease-out),
+    opacity 300ms ease,
+    background-color 300ms ease,
+    border-color 300ms ease !important;
+}
+
+:where(input, textarea, select, .readingAnswerField input, .readingAnswerField select) {
+  transition:
+    border-color 220ms ease,
+    box-shadow 260ms var(--luxury-ease-out),
+    background-color 220ms ease,
+    transform 260ms var(--luxury-ease-out) !important;
+}
+
+:where(input, textarea, select, .readingAnswerField input, .readingAnswerField select):focus {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.12), 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(*, *::before, *::after) {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}

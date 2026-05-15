@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { extractTest2, extractTest3, extractTest4 } from './c12-extract-passages.mjs'
+import { CAMBRIDGE_12_THAI_EXPLANATIONS } from './cambridge-12-thai-explanations.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const out = path.join(__dirname, '../cambridge-reading-imports/cambridge-12-reading-import.json')
@@ -41,17 +42,28 @@ const buildKey = (test, passage, title, qs) =>
 const buildPassage = (num, title, body, qText) =>
   `READING PASSAGE ${num}\n${title}\n\n${body}\n\n${qText}`
 
+const explanationKey = (test, passage, n) => `${test}-${passage}-${n}`
+
 const mk = (body, test, passage, items) =>
   items.map((row) => {
     const [n, prompt, answer, hints, thai, para, accepted, exactOverride] = row
+    const key = explanationKey(test, passage, n)
+    const detailed = CAMBRIDGE_12_THAI_EXPLANATIONS[key]
+    const exactHints = detailed?.exactHints || hints
     return {
       n,
       prompt,
       answer,
       accepted,
-      exact: exactOverride || findQuote(body, hints),
-      thai: thai || `จากข้อความในบทความที่เกี่ยวข้องกับ ${hints.split('|')[0]} จึงตอบ ${answer}`,
-      para: para || `${hints.split('|')[0]} = ${answer} = คำตอบจากข้อความ`
+      exact: exactOverride || findQuote(body, exactHints),
+      thai:
+        detailed?.thai ||
+        thai ||
+        `จากข้อความในบทความที่เกี่ยวข้องกับ ${String(exactHints).split('|')[0]} จึงตอบ ${answer}`,
+      para:
+        detailed?.para ||
+        para ||
+        `${String(exactHints).split('|')[0]} = ${answer} = คำตอบจากข้อความ`
     }
   })
 

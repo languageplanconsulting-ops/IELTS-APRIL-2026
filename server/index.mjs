@@ -14,6 +14,7 @@ import { USER_PROVIDED_READING_PRACTICE_3_EXAMS } from './userProvidedReadingPra
 import { USER_PROVIDED_READING_PRACTICE_4_EXAMS } from './userProvidedReadingPractice4.mjs'
 import { USER_PROVIDED_READING_PRACTICE_5_EXAMS } from './userProvidedReadingPractice5.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvidedReadingPracticeCambridge12.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvidedReadingPracticeCambridge13.mjs'
 
 dotenv.config()
 
@@ -4540,6 +4541,12 @@ Short Thai Explanation: ข้อ E ถูก เพราะรถต้อง�
 Paraphrased Vocabulary: adapt to various driving conditions = works reliably in traffic, weather and road situations`
 
 const BUILT_IN_READING_EXAMS = [
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS.map((exam) => ({
+    ...exam,
+    parsedPayload: buildReadingExamPayload(exam),
+    createdAt: '2026-05-15T00:00:00.000Z',
+    updatedAt: '2026-05-15T00:00:00.000Z'
+  })),
   ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS.map((exam) => ({
     ...exam,
     parsedPayload: buildReadingExamPayload(exam),
