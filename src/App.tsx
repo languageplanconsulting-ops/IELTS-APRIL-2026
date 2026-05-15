@@ -31,6 +31,15 @@ import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './l
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
+import {
+  CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
+  CAMBRIDGE_12_SPEAKING_PART1_TOPICS,
+  CAMBRIDGE_12_SPEAKING_PART3_TOPICS,
+  CAMBRIDGE_13_SPEAKING_FULL_EXAM_TOPICS,
+  CAMBRIDGE_13_SPEAKING_PART1_TOPICS,
+  CAMBRIDGE_13_SPEAKING_PART3_TOPICS,
+  CAMBRIDGE_SPEAKING_PART2_TOPICS
+} from './speakingCambridge1213Data'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -4279,16 +4288,69 @@ const parseListeningSectionBank = (raw: string): ListeningSectionBankTest[] => {
   return tests
 }
 
+const normalizeListeningBuilderQuestionText = (value: string) =>
+  String(value || '')
+    .replace(/\\n/g, '\n')
+    .replace(/\r\n/g, '\n')
+    .trim()
+
 const parseListeningBuilderExamQuestion = (questionText: string) => {
-  const lines = String(questionText || '')
+  const lines = normalizeListeningBuilderQuestionText(questionText)
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean)
 
+  const optionLines = lines.filter((line) => /^[A-Z]\)\s/.test(line))
+  const nonOptionLines = lines.filter((line) => !/^[A-Z]\)\s/.test(line))
+  const stem = nonOptionLines[nonOptionLines.length - 1] || nonOptionLines.join(' ')
+  const contextLines = nonOptionLines.slice(0, -1)
+
   return {
-    stem: lines.filter((line) => !/^[A-Z]\)/.test(line)).join(' '),
-    optionLines: lines.filter((line) => /^[A-Z]\)/.test(line))
+    stem,
+    contextLines,
+    optionLines
   }
+}
+
+const isListeningBuilderGapFillTask = (task: ListeningBuilderExamTask) => {
+  const { optionLines } = parseListeningBuilderExamQuestion(task.questionText)
+  return optionLines.length === 0 && Boolean(String(task.targetText || '').trim())
+}
+
+const buildListeningBuilderGapFillOptions = (
+  task: ListeningBuilderExamTask,
+  tasks: ListeningBuilderExamTask[]
+) => {
+  const correct = String(task.targetText || '').trim()
+  const normalizeWord = (value: string) => normalizeListeningBuilderText(value).toLowerCase()
+  const distractorPool = tasks
+    .filter((item) => item.id !== task.id)
+    .map((item) => String(item.targetText || '').trim())
+    .filter(Boolean)
+    .filter((word, index, arr) => arr.findIndex((entry) => normalizeWord(entry) === normalizeWord(word)) === index)
+    .filter((word) => normalizeWord(word) !== normalizeWord(correct))
+
+  const fallbackDistractors = ['power', 'roads', 'islands', 'fishing', 'reproduction', 'strangers', 'erosion', 'habitat']
+  const distractors = [...distractorPool]
+  for (const word of fallbackDistractors) {
+    if (distractors.length >= 3) break
+    if (!distractors.some((entry) => normalizeWord(entry) === normalizeWord(word))) {
+      distractors.push(word)
+    }
+  }
+
+  const options = [
+    { key: 'A', text: correct },
+    { key: 'B', text: distractors[0] || 'habitat' },
+    { key: 'C', text: distractors[1] || 'erosion' },
+    { key: 'D', text: distractors[2] || 'islands' }
+  ]
+  const rotation = task.questionNumber % options.length
+  const rotated = options.map((_, index) => options[(index + rotation) % options.length])
+  const correctKey =
+    rotated.find((option) => normalizeWord(option.text) === normalizeWord(correct))?.key || 'A'
+
+  return { options: rotated, correctKey }
 }
 
 const parseListeningBuilderExamOptionLine = (line: string) => {
@@ -4298,12 +4360,19 @@ const parseListeningBuilderExamOptionLine = (line: string) => {
   return match ? { key: match[1].toUpperCase(), text: match[2].trim() } : null
 }
 
-const resolveListeningBuilderExamCorrectAnswer = (task: ListeningBuilderExamTask) => {
+const resolveListeningBuilderExamCorrectAnswer = (
+  task: ListeningBuilderExamTask,
+  tasks: ListeningBuilderExamTask[] = []
+) => {
   const explicit = String(task.correctAnswer || '')
     .trim()
     .toUpperCase()
     .match(/^[A-D]/)?.[0]
   if (explicit) return explicit
+
+  if (isListeningBuilderGapFillTask(task)) {
+    return buildListeningBuilderGapFillOptions(task, tasks).correctKey
+  }
 
   const phrase = normalizeListeningBuilderText(task.questionWordPhrase)
   const { optionLines } = parseListeningBuilderExamQuestion(task.questionText)
@@ -5396,9 +5465,9 @@ function App() {
   const [adminReadingBulkJsonInput, setAdminReadingBulkJsonInput] = useState('')
   const [adminReadingTemplateCategory, setAdminReadingTemplateCategory] = useState<ReadingBankCategory>('normal')
   const [adminReadingBulkValidation, setAdminReadingBulkValidation] = useState<ReadingBulkValidationResult | null>(null)
-  const [topics] = useState<SpeakingTopic[]>(INITIAL_TOPICS)
-  const [enabledTopicIds, setEnabledTopicIds] = useState<string[]>(
-    INITIAL_TOPICS.map((topic) => topic.id)
+  const [topics] = useState<SpeakingTopic[]>([...INITIAL_TOPICS, ...CAMBRIDGE_SPEAKING_PART2_TOPICS])
+  const [enabledTopicIds, setEnabledTopicIds] = useState<string[]>(() =>
+    [...INITIAL_TOPICS, ...CAMBRIDGE_SPEAKING_PART2_TOPICS].map((topic) => topic.id)
   )
   const [selectedTopicId, setSelectedTopicId] = useState<string>(INITIAL_TOPICS[0].id)
   const [selectedTestMode, setSelectedTestMode] = useState<SpeakingTestMode>('part1')
@@ -6560,7 +6629,7 @@ function App() {
   }, [topics])
   const adminPart1QuestionBank = useMemo(
     () =>
-      PART1_TOPICS.map((topic) => ({
+      [...PART1_TOPICS, ...CAMBRIDGE_12_SPEAKING_PART1_TOPICS, ...CAMBRIDGE_13_SPEAKING_PART1_TOPICS].map((topic) => ({
         topicId: topic.id,
         topicTitle: topic.title,
         questions: [topic.prompt, ...topic.cues]
@@ -6569,7 +6638,7 @@ function App() {
   )
   const adminPart3QuestionBank = useMemo(
     () =>
-      PART3_TOPICS.map((topic) => ({
+      [...PART3_TOPICS, ...CAMBRIDGE_12_SPEAKING_PART3_TOPICS, ...CAMBRIDGE_13_SPEAKING_PART3_TOPICS].map((topic) => ({
         topicId: topic.id,
         topicTitle: topic.title,
         questions: [topic.prompt, ...topic.cues]
@@ -7221,9 +7290,16 @@ const visibleListeningFoundationSets = useMemo(
   const part2AvailableTopics = topics.filter((topic) => enabledTopicIds.includes(topic.id))
   const availableTopics = useMemo(() => {
     if (isTrialUser && selectedTestMode === 'full') return [TRIAL_SPEAKING_TOPIC]
-    if (selectedTestMode === 'part1') return PART1_TOPICS
-    if (selectedTestMode === 'part3') return PART3_TOPICS
-    if (selectedTestMode === 'full') return FULL_EXAM_TOPICS
+    if (selectedTestMode === 'part1')
+      return [...PART1_TOPICS, ...CAMBRIDGE_12_SPEAKING_PART1_TOPICS, ...CAMBRIDGE_13_SPEAKING_PART1_TOPICS]
+    if (selectedTestMode === 'part3')
+      return [...PART3_TOPICS, ...CAMBRIDGE_12_SPEAKING_PART3_TOPICS, ...CAMBRIDGE_13_SPEAKING_PART3_TOPICS]
+    if (selectedTestMode === 'full')
+      return [
+        ...FULL_EXAM_TOPICS,
+        ...CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
+        ...CAMBRIDGE_13_SPEAKING_FULL_EXAM_TOPICS
+      ]
     return part2AvailableTopics
   }, [isTrialUser, selectedTestMode, part2AvailableTopics])
 
@@ -10740,7 +10816,10 @@ const visibleListeningFoundationSets = useMemo(
       return
     }
 
-    const correctKey = resolveListeningBuilderExamCorrectAnswer(task)
+    const correctKey = resolveListeningBuilderExamCorrectAnswer(
+      task,
+      activeListeningBuilderExamTest?.tasks || []
+    )
     if (!correctKey) {
       setListeningBuilderExamFeedback('Could not verify this answer. Check the paraphrase bridge and try again.')
       return
@@ -12911,6 +12990,13 @@ const visibleListeningFoundationSets = useMemo(
                       <div className="listeningBuilderExamTaskScroller script-scroll">
                         {activeListeningBuilderExamTest.tasks.map((task, index) => {
                           const parsedQuestion = parseListeningBuilderExamQuestion(task.questionText)
+                          const gapFillOptions = isListeningBuilderGapFillTask(task)
+                            ? buildListeningBuilderGapFillOptions(task, activeListeningBuilderExamTest.tasks)
+                            : null
+                          const headerPreview =
+                            parsedQuestion.stem ||
+                            task.questionWordPhrase ||
+                            `Question ${task.questionNumber}`
                           const isActive = task.id === activeListeningBuilderExamTask.id
                           const attempts = listeningBuilderAttempts[task.id] || 0
                           const evidenceUnlocked = isListeningBuilderExamEvidenceUnlocked(task.id)
@@ -12930,11 +13016,21 @@ const visibleListeningFoundationSets = useMemo(
                                 }}
                               >
                                 <span>Q{task.questionNumber}</span>
-                                <strong>{parsedQuestion.stem}</strong>
+                                <strong>{headerPreview}</strong>
                               </button>
 
                               {(isActive || isCompleted) && (
                                 <div className="listeningBuilderExamTaskContent">
+                                  {parsedQuestion.contextLines.length > 0 && (
+                                    <div className="listeningBuilderExamNotesContext">
+                                      {parsedQuestion.contextLines.map((line) => (
+                                        <p key={`${task.id}-ctx-${line}`}>{line}</p>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  <p className="listeningBuilderExamGapPrompt">{parsedQuestion.stem || headerPreview}</p>
+
                                   <div className="listeningBuilderExamPhraseBox">
                                     <strong>Question word / phrase:</strong> {task.questionWordPhrase}
                                   </div>
@@ -12942,12 +13038,31 @@ const visibleListeningFoundationSets = useMemo(
                                   {!isCompleted && (
                                     <div className="listeningBuilderExamInstruction">
                                       {evidenceUnlocked
-                                        ? 'Evidence accepted. Choose the correct answer below.'
+                                        ? gapFillOptions
+                                          ? 'Evidence accepted. Choose the word that completes the note.'
+                                          : 'Evidence accepted. Choose the correct answer below.'
                                         : `Highlight the script phrase that means "${task.questionWordPhrase}".`}
                                     </div>
                                   )}
 
-                                  {parsedQuestion.optionLines.length > 0 && (
+                                  {gapFillOptions && (
+                                    <div className="listeningBuilderExamOptionList">
+                                      {gapFillOptions.options.map((option) => (
+                                        <button
+                                          key={`${task.id}-${option.key}`}
+                                          type="button"
+                                          className={`listeningBuilderExamOption ${evidenceUnlocked ? 'is-unlocked' : 'is-locked'}`}
+                                          disabled={!evidenceUnlocked || isCompleted}
+                                          onClick={() => chooseListeningBuilderExamAnswer(task, option.key)}
+                                        >
+                                          <strong>{option.key}</strong>
+                                          <span>{option.text}</span>
+                                        </button>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  {!gapFillOptions && parsedQuestion.optionLines.length > 0 && (
                                     <div className="listeningBuilderExamOptionList">
                                       {parsedQuestion.optionLines.map((optionLine) => {
                                         const option = parseListeningBuilderExamOptionLine(optionLine)
