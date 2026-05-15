@@ -1,14 +1,27 @@
 import type { ListeningBuilderExamSet, ListeningBuilderExamTask } from './listeningBuilderCambridge18Section2'
 import type { ListeningFoundationQuestion, ListeningFoundationSet } from './listeningFoundationData'
+import {
+  buildListeningBuilderGapFillOptions,
+  getListeningBuilderTaskAnswerChoices,
+  isListeningBuilderGapFillTask,
+  normalizeListeningBuilderQuestionText,
+  parseListeningBuilderExamOptionLine,
+  isListeningBuilderOptionLine,
+  LISTENING_BUILDER_ANSWER_OVERRIDES,
+  resolveListeningBuilderExamCorrectAnswer
+} from './listeningBuilderQuestionParse'
 
 const parseMcOptions = (questionText: string) => {
   const options: Array<{ key: string; text: string }> = []
-  const lines = String(questionText || '').split('\n')
+  const lines = normalizeListeningBuilderQuestionText(questionText).split('\n')
   for (const line of lines) {
-    const match = line.trim().match(/^([A-G])\s*[\).:-]\s*(.+)$/i)
-    if (match) {
-      options.push({ key: match[1].toUpperCase(), text: match[2].trim() })
+    const parsed = parseListeningBuilderExamOptionLine(line)
+    if (parsed) {
+      options.push(parsed)
+      continue
     }
+    const loose = line.trim().match(/^([A-G])\s*[\).:-]\s*(.+)$/i)
+    if (loose) options.push({ key: loose[1].toUpperCase(), text: loose[2].trim() })
   }
   return options
 }
@@ -20,61 +33,54 @@ const normalize = (value: string) =>
     .replace(/\s+/g, ' ')
     .trim()
 
-const inferCorrectAnswer = (task: ListeningBuilderExamTask, options: Array<{ key: string; text: string }>) => {
-  if (task.correctAnswer) return task.correctAnswer.toUpperCase()
-  const phrase = normalize(task.questionWordPhrase)
-  if (!options.length) return 'A'
-
-  for (const option of options) {
-    const optionText = normalize(option.text)
-    if (optionText === phrase || optionText.includes(phrase) || phrase.includes(optionText)) {
-      return option.key
-    }
-  }
-
-  for (const option of options) {
-    const optionWords = normalize(option.text).split(' ').filter((word) => word.length > 4)
-    if (optionWords.some((word) => phrase.includes(word))) {
-      return option.key
-    }
-  }
-
-  return options[0].key
-}
-
-const buildFillOptions = (task: ListeningBuilderExamTask, correctAnswer: string) => {
-  const answer = correctAnswer || task.correctAnswer || task.targetText.split(/\s+/).slice(0, 3).join(' ')
-  return [
-    { key: 'A', text: answer },
-    { key: 'B', text: 'equipment' },
-    { key: 'C', text: 'transport' },
-    { key: 'D', text: 'weather' }
-  ]
-}
-
 const builderTaskToFoundationQuestion = (
   setKey: string,
+  testId: string,
   section: number,
   task: ListeningBuilderExamTask,
+  allTasks: ListeningBuilderExamTask[],
   passage: string,
   answerOverrides: Record<string, string>
 ): ListeningFoundationQuestion => {
-  const correctAnswer = answerOverrides[task.id] || task.correctAnswer || ''
-  let options = parseMcOptions(task.questionText)
-  if (options.length < 2) {
-    options = buildFillOptions(task, correctAnswer)
+  const mergedOverrides = { ...LISTENING_BUILDER_ANSWER_OVERRIDES, ...answerOverrides }
+  const resolvedAnswer =
+    mergedOverrides[task.id] ||
+    resolveListeningBuilderExamCorrectAnswer(task, allTasks, testId) ||
+    task.correctAnswer ||
+    'A'
+
+  const builderChoices = getListeningBuilderTaskAnswerChoices(task, allTasks, testId)
+  let options =
+    builderChoices.options.length >= 2
+      ? builderChoices.options
+      : parseMcOptions(task.questionText)
+  if (options.length < 2 || isListeningBuilderGapFillTask(task)) {
+    options = buildListeningBuilderGapFillOptions(task, allTasks).options
   }
 
-  const resolvedAnswer = correctAnswer || inferCorrectAnswer(task, options)
+  const answerKey =
+    builderChoices.correctKey ||
+    (/^[A-I]$/i.test(String(resolvedAnswer).trim())
+      ? String(resolvedAnswer).trim().toUpperCase()
+      : options.find((option) => normalize(option.text) === normalize(String(task.targetText || resolvedAnswer)))
+          ?.key || 'A')
+
+  const parsedLines = normalizeListeningBuilderQuestionText(task.questionText)
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const displayQuestion =
+    parsedLines.filter((line) => !isListeningBuilderOptionLine(line)).join(' — ') ||
+    task.questionWordPhrase
 
   return {
     id: `${setKey}-${task.id}`,
     number: task.questionNumber,
     section,
-    question: task.questionText.split('\n')[0].trim() || task.questionWordPhrase,
+    question: displayQuestion,
     passage,
     evidence: task.targetText,
-    correctAnswer: resolvedAnswer,
+    correctAnswer: answerKey,
     options,
     passageKeyword: task.targetText.slice(0, 80),
     questionKeyword: task.questionWordPhrase,
@@ -102,7 +108,15 @@ export const builderExamSetToFoundationSets = (
       levelLabel: `${category === 'advanced' ? 'Advanced' : 'Essential'} · Cam ${examSet.bookNumber} Test ${test.testNumber} · Section ${examSet.sectionNumber}`,
       audioUrl: cambridgeAudioUrl(examSet.bookNumber, examSet.sectionNumber, test.testNumber),
       questions: test.tasks.map((task) =>
-        builderTaskToFoundationQuestion(setKey, examSet.sectionNumber, task, passage, answerOverrides)
+        builderTaskToFoundationQuestion(
+          setKey,
+          test.id,
+          examSet.sectionNumber,
+          task,
+          test.tasks,
+          passage,
+          answerOverrides
+        )
       )
     }
   })

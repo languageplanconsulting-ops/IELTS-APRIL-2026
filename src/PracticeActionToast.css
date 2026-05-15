@@ -1,0 +1,114 @@
+.practiceActionToast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 1200;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: min(92vw, 360px);
+  padding: 16px 22px;
+  border: 3px solid #0f172a;
+  border-radius: 18px;
+  box-shadow: 8px 8px 0 #0f172a;
+  text-align: center;
+  pointer-events: none;
+  animation: practiceActionToastIn 0.55s cubic-bezier(0.22, 1.1, 0.36, 1) both;
+}
+
+.practiceActionToast--celebrate {
+  background: linear-gradient(135deg, #fff7cc 0%, #ffe066 45%, #ffcc00 100%);
+  color: #0f172a;
+}
+
+.practiceActionToast--notebook {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #0f172a;
+}
+
+.practiceActionToastBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border: 2px solid #0f172a;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  animation: practiceActionBadgePop 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) 0.12s both;
+}
+
+.practiceActionToastMessage {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  font-weight: 900;
+  line-height: 1.25;
+  animation: practiceActionMessagePop 0.65s cubic-bezier(0.22, 1.15, 0.36, 1) 0.08s both;
+}
+
+.practiceActionToast--celebrate .practiceActionToastMessage {
+  animation:
+    practiceActionMessagePop 0.65s cubic-bezier(0.22, 1.15, 0.36, 1) 0.08s both,
+    practiceActionCelebrateWiggle 0.9s ease-in-out 0.35s 2;
+}
+
+.paraphraseBridgeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.paraphraseBridgeActions button {
+  flex: 1 1 140px;
+}
+
+@keyframes practiceActionToastIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 24px) scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes practiceActionBadgePop {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes practiceActionMessagePop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes practiceActionCelebrateWiggle {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-2deg) scale(1.03);
+  }
+  75% {
+    transform: rotate(2deg) scale(1.03);
+  }
+}

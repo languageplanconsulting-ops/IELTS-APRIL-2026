@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import './App.css'
+import { ParaphraseBridgeActions, PracticeActionToast, type PracticeActionToastState } from './PracticeActionToast'
 import {
   getListeningHighlightMatch,
   isListeningHighlightMatch,
@@ -40,6 +41,20 @@ import {
   CAMBRIDGE_13_SPEAKING_PART3_TOPICS,
   CAMBRIDGE_SPEAKING_PART2_TOPICS
 } from './speakingCambridge1213Data'
+import {
+  getListeningBuilderTaskAnswerChoices,
+  isListeningBuilderLabelMatchTask,
+  parseListeningBuilderExamQuestion,
+  resolveListeningBuilderExamCorrectAnswer
+} from './listeningBuilderQuestionParse'
+import {
+  groupBuilderPacksByBook,
+  groupFoundationSetsByBook,
+  listBuilderBooks,
+  listFoundationBooks,
+  parseListeningFoundationSetMeta,
+  type ListeningBankBookFilter
+} from './listeningBankLayout'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -4288,104 +4303,6 @@ const parseListeningSectionBank = (raw: string): ListeningSectionBankTest[] => {
   return tests
 }
 
-const normalizeListeningBuilderQuestionText = (value: string) =>
-  String(value || '')
-    .replace(/\\n/g, '\n')
-    .replace(/\r\n/g, '\n')
-    .trim()
-
-const parseListeningBuilderExamQuestion = (questionText: string) => {
-  const lines = normalizeListeningBuilderQuestionText(questionText)
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-
-  const optionLines = lines.filter((line) => /^[A-Z]\)\s/.test(line))
-  const nonOptionLines = lines.filter((line) => !/^[A-Z]\)\s/.test(line))
-  const stem = nonOptionLines[nonOptionLines.length - 1] || nonOptionLines.join(' ')
-  const contextLines = nonOptionLines.slice(0, -1)
-
-  return {
-    stem,
-    contextLines,
-    optionLines
-  }
-}
-
-const isListeningBuilderGapFillTask = (task: ListeningBuilderExamTask) => {
-  const { optionLines } = parseListeningBuilderExamQuestion(task.questionText)
-  return optionLines.length === 0 && Boolean(String(task.targetText || '').trim())
-}
-
-const buildListeningBuilderGapFillOptions = (
-  task: ListeningBuilderExamTask,
-  tasks: ListeningBuilderExamTask[]
-) => {
-  const correct = String(task.targetText || '').trim()
-  const normalizeWord = (value: string) => normalizeListeningBuilderText(value).toLowerCase()
-  const distractorPool = tasks
-    .filter((item) => item.id !== task.id)
-    .map((item) => String(item.targetText || '').trim())
-    .filter(Boolean)
-    .filter((word, index, arr) => arr.findIndex((entry) => normalizeWord(entry) === normalizeWord(word)) === index)
-    .filter((word) => normalizeWord(word) !== normalizeWord(correct))
-
-  const fallbackDistractors = ['power', 'roads', 'islands', 'fishing', 'reproduction', 'strangers', 'erosion', 'habitat']
-  const distractors = [...distractorPool]
-  for (const word of fallbackDistractors) {
-    if (distractors.length >= 3) break
-    if (!distractors.some((entry) => normalizeWord(entry) === normalizeWord(word))) {
-      distractors.push(word)
-    }
-  }
-
-  const options = [
-    { key: 'A', text: correct },
-    { key: 'B', text: distractors[0] || 'habitat' },
-    { key: 'C', text: distractors[1] || 'erosion' },
-    { key: 'D', text: distractors[2] || 'islands' }
-  ]
-  const rotation = task.questionNumber % options.length
-  const rotated = options.map((_, index) => options[(index + rotation) % options.length])
-  const correctKey =
-    rotated.find((option) => normalizeWord(option.text) === normalizeWord(correct))?.key || 'A'
-
-  return { options: rotated, correctKey }
-}
-
-const parseListeningBuilderExamOptionLine = (line: string) => {
-  const match = String(line || '')
-    .trim()
-    .match(/^([A-Z])\)\s*(.+)$/i)
-  return match ? { key: match[1].toUpperCase(), text: match[2].trim() } : null
-}
-
-const resolveListeningBuilderExamCorrectAnswer = (
-  task: ListeningBuilderExamTask,
-  tasks: ListeningBuilderExamTask[] = []
-) => {
-  const explicit = String(task.correctAnswer || '')
-    .trim()
-    .toUpperCase()
-    .match(/^[A-D]/)?.[0]
-  if (explicit) return explicit
-
-  if (isListeningBuilderGapFillTask(task)) {
-    return buildListeningBuilderGapFillOptions(task, tasks).correctKey
-  }
-
-  const phrase = normalizeListeningBuilderText(task.questionWordPhrase)
-  const { optionLines } = parseListeningBuilderExamQuestion(task.questionText)
-  for (const line of optionLines) {
-    const option = parseListeningBuilderExamOptionLine(line)
-    if (!option) continue
-    const optionNorm = normalizeListeningBuilderText(option.text)
-    if (!phrase) continue
-    if (optionNorm.includes(phrase) || phrase.includes(optionNorm)) return option.key
-  }
-  return ''
-}
-
 const canonicalizeReadingCorrectAnswer = (value: string) => {
   const normalized = normalizeReadingAnswer(value)
   if (!normalized) return ''
@@ -5383,6 +5300,7 @@ function App() {
   const [adminAssessmentReports, setAdminAssessmentReports] = useState<AdminAssessmentReportSummary[]>([])
   const [, setAdminReadingPdoyProgress] = useState<AdminReadingPdoyProgressSummary[]>([])
   const [notebookSaveNotice, setNotebookSaveNotice] = useState('')
+  const [practiceActionToast, setPracticeActionToast] = useState<PracticeActionToastState>(null)
   const [reportActionToast, setReportActionToast] = useState<{
     title: string
     text: string
@@ -5440,7 +5358,6 @@ function App() {
   const [selectedListeningBuilderPackId, setSelectedListeningBuilderPackId] = useState('')
   const [selectedListeningBuilderExamTestId, setSelectedListeningBuilderExamTestId] = useState('')
   const [listeningBuilderItemIndex, setListeningBuilderItemIndex] = useState(0)
-  const [listeningBuilderSelectionRange, setListeningBuilderSelectionRange] = useState<{ start: number; end: number } | null>(null)
   const [listeningBuilderAttempts, setListeningBuilderAttempts] = useState<Record<string, number>>({})
   const [listeningBuilderResolvedState, setListeningBuilderResolvedState] = useState<Record<string, 'correct' | 'revealed'>>({})
   const [listeningBuilderExamEvidenceCorrect, setListeningBuilderExamEvidenceCorrect] = useState<Record<string, true>>({})
@@ -5448,6 +5365,7 @@ function App() {
   const [listeningBuilderExamFeedback, setListeningBuilderExamFeedback] = useState('')
   const [listeningBuilderTranscriptShake, setListeningBuilderTranscriptShake] = useState(false)
   const [listeningFoundationCategory, setListeningFoundationCategory] = useState<ListeningFoundationCategory>('essential')
+  const [listeningBankBookFilter, setListeningBankBookFilter] = useState<ListeningBankBookFilter>('all')
   const [selectedListeningFoundationSetId, setSelectedListeningFoundationSetId] = useState('')
   const [listeningFoundationQuestionIndex, setListeningFoundationQuestionIndex] = useState(0)
   const [listeningFoundationEvidence, setListeningFoundationEvidence] = useState('')
@@ -7128,9 +7046,17 @@ function App() {
     ? Math.round((listeningReportItems.filter((item) => item.isCorrect).length / listeningReportItems.length) * 100)
     : 0
   const listeningUnansweredCount = listeningReportItems.filter((item) => !String(item.userAnswer || '').trim()).length
-const visibleListeningFoundationSets = useMemo(
+  const visibleListeningFoundationSets = useMemo(
     () => ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === listeningFoundationCategory),
     [listeningFoundationCategory]
+  )
+  const foundationBooksInCategory = useMemo(
+    () => listFoundationBooks(visibleListeningFoundationSets),
+    [visibleListeningFoundationSets]
+  )
+  const foundationSetsByBook = useMemo(
+    () => groupFoundationSetsByBook(visibleListeningFoundationSets, listeningBankBookFilter),
+    [visibleListeningFoundationSets, listeningBankBookFilter]
   )
   const activeListeningFoundationSet =
     ALL_LISTENING_FOUNDATION_SETS.find((set) => set.id === selectedListeningFoundationSetId) ??
@@ -7252,6 +7178,22 @@ const visibleListeningFoundationSets = useMemo(
       return (a.sectionNumber || 0) - (b.sectionNumber || 0)
     })
   }, [listeningVocabularyBuilderPacks])
+  const builderPackSummaries = useMemo(
+    () =>
+      visibleListeningVocabularyBuilderPacks.map((pack) => {
+        const examSet = LISTENING_BUILDER_EXAM_SETS.find(
+          (set) => set.bookNumber === pack.bookNumber && set.sectionNumber === pack.sectionNumber
+        )
+        const taskCount = examSet?.tests.reduce((total, test) => total + test.tasks.length, 0) ?? pack.items.length
+        return { ...pack, taskCount }
+      }),
+    [visibleListeningVocabularyBuilderPacks]
+  )
+  const builderBooks = useMemo(() => listBuilderBooks(builderPackSummaries), [builderPackSummaries])
+  const builderPacksByBook = useMemo(
+    () => groupBuilderPacksByBook(builderPackSummaries, listeningBankBookFilter),
+    [builderPackSummaries, listeningBankBookFilter]
+  )
   const activeListeningBuilderPack =
     visibleListeningVocabularyBuilderPacks.find((pack) => pack.id === selectedListeningBuilderPackId) ??
     visibleListeningVocabularyBuilderPacks[0] ??
@@ -7266,9 +7208,6 @@ const visibleListeningFoundationSets = useMemo(
   const activeListeningBuilderBridge = activeListeningBuilderItem
     ? resolveListeningBuilderBridge(activeListeningBuilderItem)
     : null
-  const activeListeningBuilderTranscriptTokens = activeListeningBuilderItem
-    ? tokenizeListeningBuilderTranscript(activeListeningBuilderItem.transcript)
-    : []
   const activeListeningBuilderExamSet =
     LISTENING_BUILDER_EXAM_SETS.find(
       (examSet) =>
@@ -10652,10 +10591,33 @@ const visibleListeningFoundationSets = useMemo(
   const handleListeningFoundationCategoryChange = (category: ListeningFoundationCategory) => {
     const firstSet = ALL_LISTENING_FOUNDATION_SETS.find((set) => set.category === category)
     setListeningFoundationCategory(category)
+    setListeningBankBookFilter('all')
     setSelectedListeningFoundationSetId(firstSet?.id || '')
     setListeningFoundationQuestionIndex(0)
     resetListeningFoundationQuestion()
   }
+
+  const renderListeningBookFilter = (books: number[], ariaLabel: string) => (
+    <div className="listeningBookFilter" role="group" aria-label={ariaLabel}>
+      <button
+        type="button"
+        className={listeningBankBookFilter === 'all' ? 'active' : ''}
+        onClick={() => setListeningBankBookFilter('all')}
+      >
+        All books
+      </button>
+      {books.map((book) => (
+        <button
+          key={`listening-book-filter-${book}`}
+          type="button"
+          className={listeningBankBookFilter === book ? 'active' : ''}
+          onClick={() => setListeningBankBookFilter(book)}
+        >
+          Cambridge {book}
+        </button>
+      ))}
+    </div>
+  )
 
   const readListeningFoundationScriptSelection = () => {
     const selection = window.getSelection()
@@ -10745,16 +10707,33 @@ const visibleListeningFoundationSets = useMemo(
     restoreListeningFoundationQuestionState(nextQuestion?.id || '')
   }
 
+  const dismissPracticeActionToast = () => setPracticeActionToast(null)
+
+  const showPracticeKnewItToast = () => {
+    setPracticeActionToast({ id: Date.now(), message: 'ดีมากครับ', variant: 'celebrate' })
+  }
+
+  const showPracticeNotebookToast = () => {
+    setPracticeActionToast({ id: Date.now(), message: 'อย่าลืมทบทวนด้วยนะ :)', variant: 'notebook' })
+  }
+
+  const handlePracticeSaveToNotebook = (saveFn: () => void) => {
+    saveFn()
+    showPracticeNotebookToast()
+  }
+
   const saveListeningFoundationQuestionToNotebook = () => {
     if (!activeListeningFoundationQuestion) return
-    savePlanToNotebook({
-      criterion: 'Listening Foundation',
-      quote: `Q${activeListeningFoundationQuestion.number}: ${activeListeningFoundationQuestion.question}`,
-      fix: `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword}`,
-      thaiMeaning: activeListeningFoundationQuestion.thaiMeaning,
-      preferredSection: 'listening',
-      successNotice: 'Added to notebook · saved to #listening'
-    })
+    handlePracticeSaveToNotebook(() =>
+      savePlanToNotebook({
+        criterion: 'Listening Foundation',
+        quote: `Q${activeListeningFoundationQuestion.number}: ${activeListeningFoundationQuestion.question}`,
+        fix: `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword}`,
+        thaiMeaning: activeListeningFoundationQuestion.thaiMeaning,
+        preferredSection: 'listening',
+        successNotice: 'Added to notebook · saved to #listening'
+      })
+    )
   }
 
   const openListeningVocabularyBuilderPack = (packId: string) => {
@@ -10772,31 +10751,15 @@ const visibleListeningFoundationSets = useMemo(
       setSelectedListeningBuilderExamTestId('')
     }
     setListeningBuilderItemIndex(0)
-    setListeningBuilderSelectionRange(null)
     setActivePage('listening_builder_exam')
   }
 
-  const updateListeningBuilderSelection = (tokenIndex: number) => {
-    setListeningBuilderSelectionRange((current) => {
-      if (!current) return { start: tokenIndex, end: tokenIndex }
-      if (current.start === current.end) {
-        return {
-          start: Math.min(current.start, tokenIndex),
-          end: Math.max(current.start, tokenIndex)
-        }
-      }
-      return { start: tokenIndex, end: tokenIndex }
-    })
-  }
-
   const resetListeningBuilderCardState = () => {
-    setListeningBuilderSelectionRange(null)
     setListeningBuilderExamFeedback('')
   }
 
   const resetListeningBuilderExamDrill = () => {
     setListeningBuilderItemIndex(0)
-    setListeningBuilderSelectionRange(null)
     setListeningBuilderAttempts({})
     setListeningBuilderResolvedState({})
     setListeningBuilderExamEvidenceCorrect({})
@@ -10818,7 +10781,8 @@ const visibleListeningFoundationSets = useMemo(
 
     const correctKey = resolveListeningBuilderExamCorrectAnswer(
       task,
-      activeListeningBuilderExamTest?.tasks || []
+      activeListeningBuilderExamTest?.tasks || [],
+      activeListeningBuilderExamTest?.id
     )
     if (!correctKey) {
       setListeningBuilderExamFeedback('Could not verify this answer. Check the paraphrase bridge and try again.')
@@ -10869,41 +10833,6 @@ const visibleListeningFoundationSets = useMemo(
     window.getSelection()?.removeAllRanges()
   }
 
-  const goToListeningBuilderItem = (direction: 'next' | 'prev') => {
-    if (!activeListeningBuilderPack) return
-    const total = activeListeningBuilderPack.items.length
-    if (!total) return
-    setListeningBuilderItemIndex((current) => {
-      if (direction === 'next') return Math.min(current + 1, total - 1)
-      return Math.max(current - 1, 0)
-    })
-    resetListeningBuilderCardState()
-  }
-
-  const confirmListeningBuilderSelection = () => {
-    if (!activeListeningBuilderItem || !activeListeningBuilderTarget || !listeningBuilderSelectionRange) return
-    const selectionId = activeListeningBuilderItem.id
-    const isCorrect =
-      listeningBuilderSelectionRange.start === activeListeningBuilderTarget.start &&
-      listeningBuilderSelectionRange.end === activeListeningBuilderTarget.end
-
-    if (isCorrect) {
-      setListeningBuilderResolvedState((current) => ({ ...current, [selectionId]: 'correct' }))
-      return
-    }
-
-    setListeningBuilderAttempts((current) => {
-      const nextAttempts = (current[selectionId] || 0) + 1
-      if (nextAttempts >= 3) {
-        setListeningBuilderResolvedState((resolved) => ({ ...resolved, [selectionId]: 'revealed' }))
-      }
-      return {
-        ...current,
-        [selectionId]: nextAttempts
-      }
-    })
-  }
-
   const saveListeningBuilderItemToNotebook = (item: ListeningVocabularyBuilderItem) => {
     const target = resolveListeningBuilderSelectionTarget(item)
     const bridge = resolveListeningBuilderBridge(item)
@@ -10928,70 +10857,6 @@ const visibleListeningFoundationSets = useMemo(
     })
   }
 
-  const renderListeningBuilderFeedback = () => {
-    if (!activeListeningBuilderItem || !activeListeningBuilderTarget || !activeListeningBuilderBridge) return null
-    const itemId = activeListeningBuilderItem.id
-    const attempts = listeningBuilderAttempts[itemId] || 0
-    const resolved = listeningBuilderResolvedState[itemId] || null
-
-    if (resolved === 'correct') {
-      return (
-        <div className="listeningBuilderFeedback listeningBuilderFeedback-correct">
-          <strong>ถูกต้องครับ</strong>
-          <p>
-            คำในโจทย์ = <strong>{activeListeningBuilderBridge.questionText}</strong>
-          </p>
-          <p>
-            คำ/วลีใน passage = <strong>{activeListeningBuilderTarget.text}</strong>
-          </p>
-          <p>
-            ความหมายไทย = <strong>{activeListeningBuilderItem.thaiMeaning || 'ดูคำอธิบายด้านล่างได้เลยครับ'}</strong>
-          </p>
-          {activeListeningBuilderItem.thaiExplanation && <p>{activeListeningBuilderItem.thaiExplanation}</p>}
-          <div className="listeningBuilderKnownActions">
-            <button type="button" onClick={() => saveListeningBuilderItemToNotebook(activeListeningBuilderItem)}>
-              Add to Notebook (#reading)
-            </button>
-          </div>
-        </div>
-      )
-    }
-
-    if (resolved === 'revealed') {
-      return (
-        <div className="listeningBuilderFeedback listeningBuilderFeedback-reveal">
-          <strong>เฉลยแล้วครับ</strong>
-          <p>
-            ส่วนที่ถูกต้องใน passage คือ <strong>{activeListeningBuilderTarget.text}</strong>
-          </p>
-          <p>
-            คำในโจทย์ = <strong>{activeListeningBuilderBridge.questionText}</strong>
-          </p>
-          <p>
-            ความหมายไทย = <strong>{activeListeningBuilderItem.thaiMeaning || 'ดูคำอธิบายด้านล่างได้เลยครับ'}</strong>
-          </p>
-          {activeListeningBuilderItem.thaiExplanation && <p>{activeListeningBuilderItem.thaiExplanation}</p>}
-          <div className="listeningBuilderKnownActions">
-            <button type="button" onClick={() => saveListeningBuilderItemToNotebook(activeListeningBuilderItem)}>
-              Add to Notebook (#reading)
-            </button>
-          </div>
-        </div>
-      )
-    }
-
-    if (attempts > 0) {
-      return (
-        <div className="listeningBuilderFeedback listeningBuilderFeedback-wrong">
-          <strong>ลองใหม่</strong>
-          <p>{LISTENING_HIGHLIGHT_WRONG_THAI}</p>
-          <p className="meta">ผิดแล้ว {attempts}/3 ครั้ง · คุณลองใหม่ได้อีก {Math.max(0, 3 - attempts)} ครั้ง</p>
-        </div>
-      )
-    }
-
-    return null
-  }
 
   const handleListeningBuilderTranscriptMouseUp = () => {
     if (activeListeningBuilderExamTask && activeListeningBuilderExamTest) {
@@ -12086,50 +11951,68 @@ const visibleListeningFoundationSets = useMemo(
           </div>
 
           {listeningLabMode === 'landing' && (
-            <div className="listeningModeChoiceGrid">
-              <button type="button" className="listeningModeChoiceCard" onClick={() => openListeningFoundationCategory('essential')}>
-                <span>01</span>
-                <strong>Listening Foundation</strong>
-                <p>เหมาะกับคนที่อ่อนศัพท์ระดับเบื้องต้น คนที่ยังได้ไม่ถึง 6.0</p>
-              </button>
-              <button type="button" className="listeningModeChoiceCard" onClick={() => openListeningFoundationCategory('advanced')}>
-                <span>02</span>
-                <strong>Listening Foundation (Advanced)</strong>
-                <p>เหมาะกับคนที่อ่อนศัพท์ระดับกลาง-สูง คนที่ยังได้ไม่ถึง 7.0</p>
-              </button>
-              <button type="button" className="listeningModeChoiceCard listeningModeChoiceCardPractice" onClick={openListeningPracticeBank}>
-                <span>03</span>
-                <strong>Full Practice</strong>
-                <p>ทำชุดฝึก Listening แบบเต็ม แล้วดู report หลัง submit</p>
-              </button>
-              <button
-                type="button"
-                className="listeningModeChoiceCard listeningModeChoiceCardPractice"
-                onClick={() => {
-                  setListeningLabMode('builder')
-                  setListeningAttemptStage('bank')
-                  setActivePage('listening')
-                  const firstPack = LISTENING_BUILDER_EXAM_SETS[0]
-                  if (firstPack) setSelectedListeningBuilderPackId(firstPack.id)
-                }}
-              >
-                <span>04</span>
-                <strong>Cambridge Paraphrase Builder</strong>
-                <p>Cambridge 10–18 · highlight คำใน transcript ให้ตรงกับโจทย์ (รวม Cambridge 12)</p>
-              </button>
+            <div className="listeningBankLanding">
+              <p className="listeningBankLandingLead meta">
+                Pick one path. Foundation and Paraphrase drills are organised by <strong>Cambridge book → test → section</strong>.
+              </p>
+              <div className="listeningModeChoiceGrid listeningModeChoiceGrid--three">
+                <button
+                  type="button"
+                  className="listeningModeChoiceCard"
+                  onClick={() => openListeningFoundationCategory('essential')}
+                >
+                  <span>01</span>
+                  <strong>Vocabulary Foundation</strong>
+                  <p>Read the script, highlight evidence, answer MCQ. Best below Band 6–7.</p>
+                  <em className="listeningModeChoiceHint">Essential &amp; Advanced inside</em>
+                </button>
+                <button
+                  type="button"
+                  className="listeningModeChoiceCard listeningModeChoiceCardPractice"
+                  onClick={() => {
+                    setListeningLabMode('builder')
+                    setListeningBankBookFilter('all')
+                    setListeningAttemptStage('bank')
+                    setActivePage('listening')
+                  }}
+                >
+                  <span>02</span>
+                  <strong>Paraphrase Builder</strong>
+                  <p>Cambridge 10–18 · Sections 2 &amp; 4 · highlight then answer.</p>
+                </button>
+                <button
+                  type="button"
+                  className="listeningModeChoiceCard listeningModeChoiceCardPractice"
+                  onClick={openListeningPracticeBank}
+                >
+                  <span>03</span>
+                  <strong>Full Practice Sets</strong>
+                  <p>Audio + questions + scored report with transcript evidence.</p>
+                </button>
+              </div>
             </div>
           )}
 
           {listeningLabMode === 'foundation' && (
             <div className="listeningFoundationPage">
+              <nav className="listeningBankBreadcrumb" aria-label="Listening navigation">
+                <button type="button" className="listeningBankBreadcrumbLink" onClick={openListeningLanding}>
+                  Listening
+                </button>
+                <span aria-hidden="true">/</span>
+                <span>Foundation</span>
+                <span aria-hidden="true">/</span>
+                <span>{listeningFoundationCategory === 'advanced' ? 'Advanced' : 'Essential'}</span>
+              </nav>
+
               <section className="listeningFoundationMission">
                 <div>
-                  <span>Targeted Mission</span>
-                  <h2>{listeningFoundationCategory === 'advanced' ? 'LISTENING FOUNDATION (ADVANCED)' : 'LISTENING FOUNDATION'}</h2>
+                  <span>Vocabulary Foundation</span>
+                  <h2>{listeningFoundationCategory === 'advanced' ? 'Advanced level' : 'Essential level'}</h2>
                   <p>
                     {listeningFoundationCategory === 'advanced'
-                      ? 'เหมาะกับคนที่อ่อนศัพท์ระดับกลาง-สูง คนที่ยังได้ไม่ถึง 7.0'
-                      : 'เหมาะกับคนที่อ่อนศัพท์ระดับเบื้องต้น คนที่ยังได้ไม่ถึง 6.0'}
+                      ? 'Mid–high vocabulary · target Band 6.5–7'
+                      : 'Core vocabulary · target below Band 6'}
                   </p>
                 </div>
                 <div className="listeningFoundationProgress">
@@ -12163,28 +12046,48 @@ const visibleListeningFoundationSets = useMemo(
                 </button>
               </div>
 
+              {foundationBooksInCategory.length > 0 &&
+                renderListeningBookFilter(foundationBooksInCategory, 'Filter foundation sets by book')}
+
               <p className="listeningFoundationBankHint meta">
-                Pick a set below, then click <strong>Open Exam Bank</strong>. Script on the left; questions on the right.
+                Choose <strong>book → test → section</strong>, then start. Script on the left; questions on the right.
               </p>
 
-              <div className="listeningFoundationBank">
-                {visibleListeningFoundationSets.length === 0 ? (
+              <div className="listeningFoundationBankGrouped">
+                {foundationSetsByBook.length === 0 ? (
                   <div className="listeningFoundationBankEmpty">
                     <p>No drills in this category yet.</p>
                     <p className="meta">
-                      Switch Essential / Advanced above. Listening needs a student or admin account (trial cannot open Listening).
+                      Switch Essential / Advanced above, or pick another book filter.
                     </p>
                   </div>
                 ) : (
-                  visibleListeningFoundationSets.map((set) => (
-                  <article key={set.id} className={activeListeningFoundationSet?.id === set.id ? 'active' : ''}>
-                    <p>{set.levelLabel}</p>
-                    <h3>{set.title}</h3>
-                    <span>{set.questions.length} questions · Section {set.section}</span>
-                    <button type="button" onClick={() => openListeningFoundationSet(set.id)}>
-                      Open Exam Bank
-                    </button>
-                  </article>
+                  foundationSetsByBook.map(({ book, sets }) => (
+                    <section key={`foundation-book-${book}`} className="listeningBookGroup">
+                      <header className="listeningBookGroupHeader">
+                        <h3>Cambridge {book}</h3>
+                        <span>{sets.length} tests</span>
+                      </header>
+                      <div className="listeningSetCardGrid">
+                        {sets.map((set) => {
+                          const meta = parseListeningFoundationSetMeta(set)
+                          return (
+                            <article
+                              key={set.id}
+                              className={`listeningSetCard ${activeListeningFoundationSet?.id === set.id ? 'active' : ''}`}
+                            >
+                              <p className="listeningSetCardEyebrow">Section {meta.section}</p>
+                              <h4>{meta.cardTitle}</h4>
+                              <p className="listeningSetCardTopic">{meta.cardSubtitle}</p>
+                              <span className="listeningSetCardMeta">{set.questions.length} questions</span>
+                              <button type="button" onClick={() => openListeningFoundationSet(set.id)}>
+                                Start drill
+                              </button>
+                            </article>
+                          )
+                        })}
+                      </div>
+                    </section>
                   ))
                 )}
               </div>
@@ -12449,22 +12352,21 @@ const visibleListeningFoundationSets = useMemo(
                       <div className="readingParaphraseCard">
                         <p className="sectionLabel">Paraphrase link</p>
                         {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
-                        <button
-                          type="button"
-                          className="saveNotebookBtn"
-                          onClick={() =>
-                            savePlanToNotebook({
-                              criterion: 'Listening Paraphrase',
-                              quote: `Q${item.number}: ${item.prompt}`,
-                              fix: item.paraphrasedVocabulary || item.correctAnswer,
-                              thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
-                              preferredSection: 'listening',
-                              successNotice: 'Added to notebook'
-                            })
+                        <ParaphraseBridgeActions
+                          onKnewIt={showPracticeKnewItToast}
+                          onSaveToNotebook={() =>
+                            handlePracticeSaveToNotebook(() =>
+                              savePlanToNotebook({
+                                criterion: 'Listening Paraphrase',
+                                quote: `Q${item.number}: ${item.prompt}`,
+                                fix: item.paraphrasedVocabulary || item.correctAnswer,
+                                thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
+                                preferredSection: 'listening',
+                                successNotice: 'Added to notebook'
+                              })
+                            )
                           }
-                        >
-                          Add to Notebook
-                        </button>
+                        />
                       </div>
                     )}
                   </article>
@@ -12474,190 +12376,328 @@ const visibleListeningFoundationSets = useMemo(
           )}
 
           {listeningLabMode === 'builder' && (
-            <div className="listeningBuilderLayout">
-              <section className="listeningBuilderSidebar">
-                <div className="readingSummaryCard listeningBuilderIntroCard">
-                  <p className="sectionLabel">โหมดใหม่</p>
-                  <strong>Listening Paraphrase Drill</strong>
-                  <p className="meta">
-                    โหมดนี้เป็นอีกทางเลือกหนึ่งก่อนลงข้อจริง และแนะนำมากสำหรับคนที่ Listening ยังต่ำกว่า Band 6
-                  </p>
-                  <p className="meta">
-                    ฝั่งซ้ายคือ transcript ฝั่งขวาคือคำ/วลีในโจทย์ ให้ไฮไลต์ส่วนที่มีความหมายเท่ากัน ถ้าผิดจะลองใหม่ได้ 2 ครั้งก่อนเฉลย
-                  </p>
-                </div>
-                <div className="readingBankGrid listeningBuilderPackGrid">
-                  {visibleListeningVocabularyBuilderPacks.map((pack) => {
-                    const examSet = LISTENING_BUILDER_EXAM_SETS.find(
-                      (set) => set.bookNumber === pack.bookNumber && set.sectionNumber === pack.sectionNumber
-                    )
-                    const uploadedTestCount = examSet?.tests.length ?? pack.sectionTests.length
-                    const detailedCardCount =
-                      examSet?.tests.reduce((total, test) => total + test.tasks.length, 0) ?? pack.items.length
+            <div className="listeningBuilderBankPage">
+              <nav className="listeningBankBreadcrumb" aria-label="Listening navigation">
+                <button type="button" className="listeningBankBreadcrumbLink" onClick={openListeningLanding}>
+                  Listening
+                </button>
+                <span aria-hidden="true">/</span>
+                <span>Paraphrase Builder</span>
+              </nav>
 
-                    return (
-                      <article key={pack.id} className={`readingBankCard listeningBuilderPackCard ${activeListeningBuilderPack?.id === pack.id ? 'active' : ''}`}>
-                        <p className="promptPill">Vocabulary Pack</p>
-                        <h3>{pack.title}</h3>
-                        <p className="meta">{pack.sectionNumber ? `Tests ${pack.testNumbers.map((num) => `Test ${num}`).join(', ')}` : 'Section pack'}</p>
-                        <p className="meta">
-                          {uploadedTestCount} tests uploaded · {detailedCardCount} detailed highlight cards
-                        </p>
-                        <div className="controls">
-                          <button
-                            type="button"
-                            onClick={() => openListeningVocabularyBuilderPack(pack.id)}
-                          >
-                            เปิดชุดนี้
-                          </button>
-                        </div>
-                      </article>
-                    )
-                  })}
-                </div>
+              <section className="listeningBuilderBankIntro">
+                <h3>Cambridge Paraphrase Builder</h3>
+                <p className="meta">
+                  Pick a book and section. Highlight evidence in the script, then choose the answer.
+                </p>
               </section>
 
-              {activeListeningBuilderPack && (
-                <section className="listeningBuilderStage">
-                  <div className="readingAttemptToolbar">
-                    <div>
-                      <p className="sectionLabel">{activeListeningBuilderPack.title}</p>
-                      {activeListeningBuilderItem ? (
-                        <>
-                          <h3>ข้อคำศัพท์ {listeningBuilderItemIndex + 1}/{activeListeningBuilderPack.items.length}</h3>
-                          <p className="meta">
-                            Test {activeListeningBuilderItem.testNumber || '-'} · Section {activeListeningBuilderItem.sectionNumber || '-'} · ชนิด paraphrase: {activeListeningBuilderItem.paraphraseType || 'mixed'} · Q{activeListeningBuilderItem.questionNumber}
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <h3>Uploaded questions and vocab</h3>
-                          <p className="meta">
-                            {activeListeningBuilderPack.sectionTests.length} tests · {activeListeningBuilderPack.testNumbers.length ? activeListeningBuilderPack.testNumbers.map((num) => `Test ${num}`).join(', ') : 'No tests found yet'}
-                          </p>
-                        </>
-                      )}
-                    </div>
-                    {activeListeningBuilderItem && (
-                      <div className="controls">
-                        <button
-                          type="button"
-                          className="secondary"
-                          onClick={() => goToListeningBuilderItem('prev')}
-                          disabled={listeningBuilderItemIndex === 0}
-                        >
-                          ข้อก่อนหน้า
-                        </button>
-                        <button
-                          type="button"
-                          className="secondary"
-                          onClick={() => goToListeningBuilderItem('next')}
-                          disabled={listeningBuilderItemIndex >= activeListeningBuilderPack.items.length - 1}
-                        >
-                          ข้อต่อไป
-                        </button>
-                      </div>
-                    )}
-                  </div>
+              {builderBooks.length > 0 &&
+                renderListeningBookFilter(builderBooks, 'Filter paraphrase packs by book')}
 
-                  {activeListeningBuilderItem && activeListeningBuilderTarget && activeListeningBuilderBridge ? (
-                    <div className="listeningBuilderBoard">
-                      <section className="listeningBuilderTranscriptPanel">
-                        <div className="readingPassageHeader">
-                          <div>
-                            <p className="sectionLabel">ฝั่งซ้าย · Audioscript</p>
-                            <h3>Highlight the matching transcript portion</h3>
-                          </div>
-                          <span className="bandPill">{activeListeningBuilderItem.answer}</span>
-                        </div>
-                        <p className="meta">คลิกคำแรกก่อน แล้วถ้าส่วนที่ตรงกันมีหลายคำ ให้คลิกอีกครั้งที่คำสุดท้ายเพื่อเลือกทั้งช่วง</p>
-                        <div className="listeningBuilderTranscriptBox">
-                          {activeListeningBuilderTranscriptTokens.map((token, index) => {
-                            const selected =
-                              listeningBuilderSelectionRange &&
-                              index >= listeningBuilderSelectionRange.start &&
-                              index <= listeningBuilderSelectionRange.end
-                            const solved =
-                              (listeningBuilderResolvedState[activeListeningBuilderItem.id] === 'correct' ||
-                                listeningBuilderResolvedState[activeListeningBuilderItem.id] === 'revealed') &&
-                              index >= activeListeningBuilderTarget.start &&
-                              index <= activeListeningBuilderTarget.end
-                            return (
-                              <button
-                                key={`${activeListeningBuilderItem.id}-token-${index}`}
-                                type="button"
-                                className={`listeningBuilderToken ${selected ? 'is-selected' : ''} ${solved ? 'is-solved' : ''}`}
-                                onClick={() => updateListeningBuilderSelection(index)}
-                              >
-                                {token}
-                              </button>
-                            )
-                          })}
-                        </div>
-                      </section>
-
-                      <section className="listeningBuilderQuestionPanel">
-                        <div className="readingQuestionsHeader">
-                          <div>
-                            <p className="sectionLabel">ฝั่งขวา · โจทย์</p>
-                            <h3>{activeListeningBuilderItem.questionPrompt}</h3>
-                          </div>
-                          <span className="bandPill">{activeListeningBuilderItem.book}</span>
-                        </div>
-                        <div className="listeningBuilderQuestionCard">
-                          <div className="readingHintBox">
-                            <strong>Question word / phrase:</strong> {activeListeningBuilderBridge.questionText}
-                          </div>
-                          <p>
-                            ใน transcript ฝั่งซ้าย ส่วนไหนมีความหมายเท่ากับคำ/วลีที่ไฮไลต์ในโจทย์ด้านบน?
-                          </p>
-                          {activeListeningBuilderItem.paraphraseLogic && (
-                            <div className="readingHintBox">
-                              <strong>Hint:</strong> {activeListeningBuilderItem.paraphraseLogic}
-                            </div>
-                          )}
-                          <div className="controls listeningBuilderActionRow">
-                            <button
-                              type="button"
-                              onClick={confirmListeningBuilderSelection}
-                              disabled={!listeningBuilderSelectionRange}
-                            >
-                              Confirm
-                            </button>
-                            <button
-                              type="button"
-                              className="secondary"
-                              onClick={resetListeningBuilderCardState}
-                            >
-                              ล้างการเลือก
-                            </button>
-                          </div>
-                          {renderListeningBuilderFeedback()}
-                        </div>
-                      </section>
-                    </div>
-                  ) : (
-                    <div className="readingBankGrid">
-                      {activeListeningBuilderPack.sectionTests.map((test) => (
-                        <article key={test.id} className="readingQuestionCard">
-                          <p className="promptPill">Test {test.testNumber}</p>
-                          <h3>{test.title}</h3>
-                          <p className="meta">Question coverage</p>
-                          <ul>
-                            {test.questionCoverage.map((coverageLine) => (
-                              <li key={`${test.id}-coverage-${coverageLine}`}>{coverageLine}</li>
-                            ))}
-                          </ul>
-                          <p className="meta">Answer key / bank</p>
-                          <p>{test.answerLines.join(' · ')}</p>
-                          <p className="meta">Vocab focus</p>
-                          <p>{test.vocabFocus.join(' · ')}</p>
+              <div className="listeningFoundationBankGrouped">
+                {builderPacksByBook.map(({ book, packs }) => (
+                  <section key={`builder-book-${book}`} className="listeningBookGroup">
+                    <header className="listeningBookGroupHeader">
+                      <h3>Cambridge {book}</h3>
+                      <span>{packs.length} sections</span>
+                    </header>
+                    <div className="listeningSetCardGrid">
+                      {packs.map((pack) => (
+                        <article key={pack.id} className="listeningSetCard listeningSetCard--builder">
+                          <p className="listeningSetCardEyebrow">Section {pack.sectionNumber}</p>
+                          <h4>Section {pack.sectionNumber}</h4>
+                          <p className="listeningSetCardTopic">Tests {pack.testNumbers.join(', ')}</p>
+                          <span className="listeningSetCardMeta">{pack.taskCount} questions</span>
+                          <button type="button" onClick={() => openListeningVocabularyBuilderPack(pack.id)}>
+                            Open drill
+                          </button>
                         </article>
                       ))}
                     </div>
-                  )}
+                  </section>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {listeningLabMode === 'practice' && listeningAttemptStage === 'bank' && (
+            <>
+              <div className="readingSummaryStrip listeningOfficialStrip">
+                {LISTENING_OFFICIAL_RESOURCES.map((resource) => (
+                  <article key={resource.id} className="readingSummaryCard listeningReferenceCard">
+                    <p className="sectionLabel">{resource.source}</p>
+                    <strong>{resource.title}</strong>
+                    <span>{resource.sampleType}</span>
+                    <p className="meta">{resource.description}</p>
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => window.open(resource.url, '_blank', 'noopener,noreferrer')}
+                    >
+                      Open official sample
+                    </button>
+                  </article>
+                ))}
+              </div>
+
+              <div className="readingBankGrid listeningExerciseGrid">
+                {LISTENING_EXERCISES.map((exercise) => (
+                  <article key={exercise.id} className="readingBankCard listeningExerciseCard">
+                    <p className="promptPill">{exercise.label}</p>
+                    <h3>{exercise.title}</h3>
+                    <p className="meta">{exercise.formatLabel}</p>
+                    <div className="readingExerciseMeta">
+                      <span>{exercise.summary}</span>
+                      <span>{exercise.level}</span>
+                      <span>{exercise.duration}</span>
+                    </div>
+                    <p className="meta">{exercise.instructionsThai}</p>
+                    {listeningAttemptByExerciseId[exercise.id] && (
+                      <div className="adminWorkflowCard">
+                        <p className="sectionLabel">Latest Score</p>
+                        <strong>
+                          {listeningAttemptByExerciseId[exercise.id].correctCount}/{listeningAttemptByExerciseId[exercise.id].totalQuestions} ({listeningAttemptByExerciseId[exercise.id].accuracy}%)
+                        </strong>
+                        <p className="meta">
+                          {listeningAttemptByExerciseId[exercise.id].wrongCount} wrong · {new Date(listeningAttemptByExerciseId[exercise.id].completedAt).toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                    <div className="controls">
+                      <button type="button" onClick={() => startListeningExercise(exercise.id)}>
+                        {listeningAttemptByExerciseId[exercise.id] ? 'Retry Exercise' : 'Open Exercise'}
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </>
+          )}
+
+          {listeningLabMode === 'practice' && listeningAttemptStage === 'exam' && activeListeningExercise && (
+            <div className="readingExamWrap listeningExamWrap">
+              <div className="readingAttemptToolbar">
+                <div>
+                  <p className="sectionLabel">{activeListeningExercise.label}</p>
+                  <h3>{activeListeningExercise.title}</h3>
+                  <p className="meta">
+                    {activeListeningExercise.summary} · {listeningAnsweredCount}/{activeListeningExercise.questions.length} answered
+                  </p>
+                </div>
+                <div className="controls">
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      stopListeningPlayback()
+                      setListeningAttemptStage('bank')
+                    }}
+                  >
+                    Back to Bank
+                  </button>
+                  <button type="button" onClick={submitListeningExercise}>
+                    Check Answers
+                  </button>
+                </div>
+              </div>
+
+              <div className="readingExamLayout listeningExamLayout">
+                <section className="readingPassagePanel listeningAudioPanel">
+                  <div className="readingPassageHeader">
+                    <div>
+                      <p className="sectionLabel">Audio Practice</p>
+                      <h3>{activeListeningExercise.formatLabel}</h3>
+                    </div>
+                    <div className="readingHintBox">
+                      <strong>Practice mode:</strong> {activeListeningExercise.playbackNoteThai}
+                    </div>
+                  </div>
+
+                  <div className="listeningPlayerCard">
+                    <p className="meta">{activeListeningExercise.instructionsThai}</p>
+                    <div className="controls listeningAudioControls">
+                      <button type="button" onClick={() => playListeningExercise('normal')}>
+                        Play audio
+                      </button>
+                      <button type="button" className="secondary" onClick={() => playListeningExercise('slow')}>
+                        Play slower
+                      </button>
+                      <button type="button" className="secondary" onClick={stopListeningPlayback}>
+                        Stop
+                      </button>
+                    </div>
+                    <div className="readingSummaryStrip">
+                      <article className="readingSummaryCard">
+                        <p className="sectionLabel">Playback</p>
+                        <strong>{listeningPlaybackState === 'playing' ? 'Playing' : listeningPlaybackState === 'ended' ? 'Finished' : listeningPlaybackState === 'error' ? 'Error' : 'Ready'}</strong>
+                        <span>{listeningPlaybackRate === 'slow' ? 'Slow mode' : 'Normal mode'}</span>
+                      </article>
+                      <article className="readingSummaryCard">
+                        <p className="sectionLabel">Question Count</p>
+                        <strong>{activeListeningExercise.questions.length}</strong>
+                        <span>questions in this set</span>
+                      </article>
+                    </div>
+                    {listeningExerciseError ? <p className="error">{listeningExerciseError}</p> : null}
+                  </div>
+
+                  <div className="listeningTranscriptLocked">
+                    <p className="sectionLabel">Transcript</p>
+                    <h4>Transcript unlocks after you check your answers</h4>
+                    <p className="meta">ตอนทำข้อให้โฟกัสจากสิ่งที่ได้ยินก่อนครับ พอส่งคำตอบแล้ว report จะโชว์ exact transcript portion และอธิบาย paraphrase ให้ทีละข้อ</p>
+                  </div>
                 </section>
-              )}
+
+                <section className="readingQuestionsPanel">
+                  <div className="readingQuestionsHeader">
+                    <div>
+                      <p className="sectionLabel">Questions</p>
+                      <h3>Answer while you listen</h3>
+                    </div>
+                    <span className="bandPill">{activeListeningExercise.questions.length} questions</span>
+                  </div>
+                  <div className="readingQuestionList">
+                    {activeListeningExercise.questions.map((question) => (
+                      <article key={`listening-question-${question.number}`} className="readingQuestionCard listeningQuestionCard">
+                        <div className="readingQuestionCardTop">
+                          <div>
+                            <p className="readingQuestionNumber">Question {question.number}</p>
+                            <p className="readingQuestionPrompt">{question.prompt}</p>
+                          </div>
+                        </div>
+                        <div className="readingAnswerField">
+                          {renderListeningAnswerField(question)}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            </div>
+          )}
+
+          {listeningLabMode === 'practice' && listeningAttemptStage === 'report' && activeListeningExercise && (
+            <div className="readingReportWrap listeningReportWrap">
+              <div className="readingAttemptToolbar">
+                <div>
+                  <p className="sectionLabel">{activeListeningExercise.label}</p>
+                  <h3>{activeListeningExercise.title} Report</h3>
+                  <p className="meta">
+                    Score: {listeningReportItems.filter((item) => item.isCorrect).length}/{listeningReportItems.length}
+                  </p>
+                </div>
+                <div className="controls">
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      stopListeningPlayback()
+                      setListeningAttemptStage('bank')
+                    }}
+                  >
+                    Back to Bank
+                  </button>
+                  <button type="button" onClick={() => startListeningExercise(activeListeningExercise.id)}>
+                    Retry Exercise
+                  </button>
+                </div>
+              </div>
+
+              <div className="readingSummaryStrip">
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Accuracy</p>
+                  <strong>{listeningAccuracy}%</strong>
+                  <span>{listeningReportItems.filter((item) => item.isCorrect).length} correct answers</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Unanswered</p>
+                  <strong>{listeningUnansweredCount}</strong>
+                  <span>questions left blank</span>
+                </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">Review focus</p>
+                  <strong>{listeningReportItems.find((item) => !item.isCorrect)?.number ? `Q${listeningReportItems.find((item) => !item.isCorrect)?.number}` : 'Strong set'}</strong>
+                  <span>look at the transcript evidence and paraphrase note</span>
+                </article>
+              </div>
+
+              <div className="listeningTranscriptReviewCard">
+                <p className="sectionLabel">Full Transcript</p>
+                <div className="listeningTranscriptReviewBody">
+                  {activeListeningExercise.audioScript.map((line, index) => (
+                    <p key={`listening-line-${index}`}>{line}</p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="readingReportList">
+                {listeningReportItems.map((item) => {
+                  const paraphraseEquation = buildListeningParaphraseEquation(item)
+                  return (
+                  <article key={`listening-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
+                    <div className="readingReportHeader">
+                      <div>
+                        <p className="readingQuestionNumber">Question {item.number}</p>
+                        <p className="readingQuestionPrompt">{item.prompt}</p>
+                      </div>
+                      <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
+                        {item.isCorrect ? 'Correct' : 'Wrong'}
+                      </span>
+                    </div>
+                    <p className="meta">Your answer: {item.userAnswer || 'No answer'}</p>
+                    <p className="meta">Correct answer: {item.correctAnswer}</p>
+                    {item.answerType === 'multiple-choice' && item.options?.length ? (
+                      <div className="listeningReportOptions">
+                        {item.options.map((option) => (
+                          <div key={`listening-option-${item.number}-${option.key}`} className={`listeningReportOption ${option.key === item.correctAnswer ? 'is-correct' : ''}`}>
+                            <strong>{option.key}</strong>
+                            <span>{option.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                    <div className="readingReportEvidence">
+                      <h4>Why?</h4>
+                      {paraphraseEquation && (
+                        <div className="listeningBuilderExamWordCheck">
+                          <p>Do you know this word?</p>
+                          <div className="listeningBuilderExamWordEquation">
+                            <span>{paraphraseEquation.passageKeyword}</span>
+                            <b>=</b>
+                            <span>{paraphraseEquation.questionKeyword}</span>
+                            <b>=</b>
+                            <span>{paraphraseEquation.thaiMeaning}</span>
+                          </div>
+                        </div>
+                      )}
+                      <p>{item.explanationThai}</p>
+                      <blockquote>{item.exactPortion}</blockquote>
+                    </div>
+                    {(item.paraphrasedVocabulary || paraphraseEquation) && (
+                      <div className="readingParaphraseCard">
+                        <p className="sectionLabel">Paraphrase link</p>
+                        {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
+                        <ParaphraseBridgeActions
+                          onKnewIt={showPracticeKnewItToast}
+                          onSaveToNotebook={() =>
+                            handlePracticeSaveToNotebook(() =>
+                              savePlanToNotebook({
+                                criterion: 'Listening Paraphrase',
+                                quote: `Q${item.number}: ${item.prompt}`,
+                                fix: item.paraphrasedVocabulary || item.correctAnswer,
+                                thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
+                                preferredSection: 'listening',
+                                successNotice: 'Added to notebook'
+                              })
+                            )
+                          }
+                        />
+                      </div>
+                    )}
+                  </article>
+                )})}
+              </div>
             </div>
           )}
         </section>
@@ -12680,8 +12720,16 @@ const visibleListeningFoundationSets = useMemo(
                 <section className="listeningFoundationMission">
                   <div>
                     <span>Listening Foundation Drill</span>
-                    <h2>{activeListeningFoundationSet.title}</h2>
-                    <p>Read the question on the right, highlight evidence in the script on the left, then answer.</p>
+                    <h2>
+                      {activeListeningFoundationSet
+                        ? parseListeningFoundationSetMeta(activeListeningFoundationSet).cardTitle
+                        : 'Foundation drill'}
+                    </h2>
+                    <p>
+                      {activeListeningFoundationSet
+                        ? parseListeningFoundationSetMeta(activeListeningFoundationSet).cardSubtitle
+                        : 'Read the question on the right, highlight evidence in the script on the left, then answer.'}
+                    </p>
                   </div>
                   <div className="listeningFoundationProgress">
                     <span>Progress</span>
@@ -12732,35 +12780,43 @@ const visibleListeningFoundationSets = useMemo(
                             listeningBuilderTranscriptShake ? 'is-shaking' : ''
                           }`}
                         >
-                          {activeListeningFoundationScriptSegments.length > 0 ? (
-                            activeListeningFoundationScriptSegments.map((segment, index) =>
-                              renderListeningScriptTurn(segment, index)
-                            )
-                          ) : (
-                            <p
-                              className="listeningScriptTurnBody"
-                              onMouseUp={(event) => {
-                                event.stopPropagation()
-                                handleListeningFoundationPassageMouseUp()
-                              }}
-                            >
-                              {activeListeningFoundationQuestion?.passage}
-                            </p>
-                          )}
+                          <div className="listeningScriptTurnStack">
+                            {activeListeningFoundationScriptSegments.length > 0 ? (
+                              activeListeningFoundationScriptSegments.map((segment, index) =>
+                                renderListeningScriptTurn(segment, index)
+                              )
+                            ) : (
+                              <p
+                                className="listeningScriptTurnBody"
+                                onMouseUp={(event) => {
+                                  event.stopPropagation()
+                                  handleListeningFoundationPassageMouseUp()
+                                }}
+                              >
+                                {activeListeningFoundationQuestion?.passage}
+                              </p>
+                            )}
+                          </div>
                         </div>
 
-                        <p className="listeningScriptReaderHint meta">
-                          Each box is one speaker turn. Highlight the matching phrase (exact or ≥50% of the evidence).
-                        </p>
+                        <footer className="listeningScriptReaderFooter">
+                          <p className="listeningScriptReaderHint meta">
+                            Each box is one speaker turn. Highlight the matching phrase (exact or ≥50% of the evidence).
+                          </p>
+                          <p
+                            className={
+                              listeningFoundationEvidenceCorrect ? 'foundationStatusCorrect' : 'foundationStatus'
+                            }
+                            aria-live="polite"
+                          >
+                            {listeningFoundationEvidenceCorrect
+                              ? 'Evidence accepted. Choose your answer on the right.'
+                              : listeningFoundationEvidence
+                                ? listeningFoundationFeedback
+                                : 'Highlight the exact phrase in the script that paraphrases the question.'}
+                          </p>
+                        </footer>
                       </div>
-
-                      <p className={listeningFoundationEvidenceCorrect ? 'foundationStatusCorrect' : 'foundationStatus'}>
-                        {listeningFoundationEvidenceCorrect
-                          ? 'Evidence accepted. Choose your answer on the right.'
-                          : listeningFoundationEvidence
-                            ? listeningFoundationFeedback
-                            : 'Highlight the exact phrase in the script that paraphrases the question.'}
-                      </p>
                     </section>
 
                     <section className="listeningFoundationQuestionPane">
@@ -12810,14 +12866,10 @@ const visibleListeningFoundationSets = useMemo(
                             <span title="Thai meaning">{activeListeningFoundationQuestion.thaiMeaning}</span>
                           </p>
                           <small>{activeListeningFoundationQuestion.explanationThai}</small>
-                          <div>
-                            <button type="button" className="secondary">
-                              Yes, I knew it
-                            </button>
-                            <button type="button" onClick={saveListeningFoundationQuestionToNotebook}>
-                              Save to Notebook
-                            </button>
-                          </div>
+                          <ParaphraseBridgeActions
+                            onKnewIt={showPracticeKnewItToast}
+                            onSaveToNotebook={saveListeningFoundationQuestionToNotebook}
+                          />
                         </div>
                       )}
                       </div>
@@ -12990,9 +13042,16 @@ const visibleListeningFoundationSets = useMemo(
                       <div className="listeningBuilderExamTaskScroller script-scroll">
                         {activeListeningBuilderExamTest.tasks.map((task, index) => {
                           const parsedQuestion = parseListeningBuilderExamQuestion(task.questionText)
-                          const gapFillOptions = isListeningBuilderGapFillTask(task)
-                            ? buildListeningBuilderGapFillOptions(task, activeListeningBuilderExamTest.tasks)
-                            : null
+                          const answerChoices = getListeningBuilderTaskAnswerChoices(
+                            task,
+                            activeListeningBuilderExamTest.tasks,
+                            activeListeningBuilderExamTest.id
+                          )
+                          const isLabelMatch = isListeningBuilderLabelMatchTask(
+                            task,
+                            activeListeningBuilderExamTest.tasks,
+                            activeListeningBuilderExamTest.id
+                          )
                           const headerPreview =
                             parsedQuestion.stem ||
                             task.questionWordPhrase ||
@@ -13038,16 +13097,31 @@ const visibleListeningFoundationSets = useMemo(
                                   {!isCompleted && (
                                     <div className="listeningBuilderExamInstruction">
                                       {evidenceUnlocked
-                                        ? gapFillOptions
+                                        ? answerChoices.type === 'gap-fill'
                                           ? 'Evidence accepted. Choose the word that completes the note.'
-                                          : 'Evidence accepted. Choose the correct answer below.'
+                                          : isLabelMatch
+                                            ? 'Evidence accepted. Choose the matching label (A–G).'
+                                            : 'Evidence accepted. Choose the correct answer below.'
                                         : `Highlight the script phrase that means "${task.questionWordPhrase}".`}
                                     </div>
                                   )}
 
-                                  {gapFillOptions && (
+                                  {isLabelMatch && answerChoices.options.length > 0 && (
+                                    <div className="listeningBuilderExamLabelPool">
+                                      <p className="meta">Matching options for this set:</p>
+                                      <ul>
+                                        {answerChoices.options.map((option) => (
+                                          <li key={`${task.id}-pool-${option.key}`}>
+                                            <strong>{option.key}</strong> {option.text}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  {answerChoices.options.length > 0 && (
                                     <div className="listeningBuilderExamOptionList">
-                                      {gapFillOptions.options.map((option) => (
+                                      {answerChoices.options.map((option) => (
                                         <button
                                           key={`${task.id}-${option.key}`}
                                           type="button"
@@ -13059,26 +13133,6 @@ const visibleListeningFoundationSets = useMemo(
                                           <span>{option.text}</span>
                                         </button>
                                       ))}
-                                    </div>
-                                  )}
-
-                                  {!gapFillOptions && parsedQuestion.optionLines.length > 0 && (
-                                    <div className="listeningBuilderExamOptionList">
-                                      {parsedQuestion.optionLines.map((optionLine) => {
-                                        const option = parseListeningBuilderExamOptionLine(optionLine)
-                                        if (!option) return null
-                                        return (
-                                          <button
-                                            key={`${task.id}-${optionLine}`}
-                                            type="button"
-                                            className={`listeningBuilderExamOption ${evidenceUnlocked ? 'is-unlocked' : 'is-locked'}`}
-                                            disabled={!evidenceUnlocked || isCompleted}
-                                            onClick={() => chooseListeningBuilderExamAnswer(task, option.key)}
-                                          >
-                                            {optionLine}
-                                          </button>
-                                        )
-                                      })}
                                     </div>
                                   )}
 
@@ -13105,11 +13159,13 @@ const visibleListeningFoundationSets = useMemo(
                                         </div>
                                       </div>
                                       <p className="meta">{task.explanationThai}</p>
-                                      <div className="controls">
-                                        <button type="button" onClick={() => saveListeningBuilderExamTaskToNotebook(task)}>
-                                          Add to Notebook (#reading)
-                                        </button>
-                                      </div>
+                                      <ParaphraseBridgeActions
+                                        onKnewIt={showPracticeKnewItToast}
+                                        onSaveToNotebook={() =>
+                                          handlePracticeSaveToNotebook(() => saveListeningBuilderExamTaskToNotebook(task))
+                                        }
+                                        saveLabel="Save to Notebook"
+                                      />
                                     </>
                                   )}
                                 </div>
@@ -13232,11 +13288,13 @@ const visibleListeningFoundationSets = useMemo(
                                     </div>
                                   )}
                                   {resolved && (
-                                    <div className="controls">
-                                      <button type="button" onClick={() => saveListeningBuilderItemToNotebook(item)}>
-                                        Add to Notebook (#reading)
-                                      </button>
-                                    </div>
+                                    <ParaphraseBridgeActions
+                                      onKnewIt={showPracticeKnewItToast}
+                                      onSaveToNotebook={() =>
+                                        handlePracticeSaveToNotebook(() => saveListeningBuilderItemToNotebook(item))
+                                      }
+                                      saveLabel="Save to Notebook"
+                                    />
                                   )}
                                 </div>
                               )}
@@ -14277,28 +14335,27 @@ const visibleListeningFoundationSets = useMemo(
                         )}
                         <blockquote>{reportBlockquote}</blockquote>
                       </div>
-                      {(item.paraphrasedVocabulary || vocabSupport) && (
+                      {(item.paraphrasedVocabulary || vocabSupport || paraphraseEquation) && (
                         <div className="readingParaphraseCard">
                           <p className="sectionLabel">Important vocab / phrase</p>
                           {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
                           {vocabSupport?.meaning && <p className="meta">TH: {vocabSupport.meaning}</p>}
-                          <button
-                            type="button"
-                            className="saveNotebookBtn"
-                            onClick={() =>
-                            savePlanToNotebook({
-                              criterion: 'Reading Paraphrase',
-                              quote: `Q${item.number}: ${item.prompt}`,
-                              fix: item.paraphrasedVocabulary || vocabSupport?.notebookFix || item.correctAnswer,
-                              thaiMeaning: paraphraseEquation?.thaiMeaning || vocabSupport?.meaning || item.explanationThai,
-                              preferredSection: 'reading',
-                              successNotice: 'Added to notebook'
-                            })
-                          }
-                        >
-                          Add to Notebook
-                        </button>
-                      </div>
+                          <ParaphraseBridgeActions
+                            onKnewIt={showPracticeKnewItToast}
+                            onSaveToNotebook={() =>
+                              handlePracticeSaveToNotebook(() =>
+                                savePlanToNotebook({
+                                  criterion: 'Reading Paraphrase',
+                                  quote: `Q${item.number}: ${item.prompt}`,
+                                  fix: item.paraphrasedVocabulary || vocabSupport?.notebookFix || item.correctAnswer,
+                                  thaiMeaning: paraphraseEquation?.thaiMeaning || vocabSupport?.meaning || item.explanationThai,
+                                  preferredSection: 'reading',
+                                  successNotice: 'Added to notebook'
+                                })
+                              )
+                            }
+                          />
+                        </div>
                     )}
                     </article>
                   )
@@ -17413,6 +17470,7 @@ const visibleListeningFoundationSets = useMemo(
           </div>
         </div>
       )}
+      <PracticeActionToast toast={practiceActionToast} onDismiss={dismissPracticeActionToast} />
     </main>
   )
 }
