@@ -1,3 +1,9 @@
+import {
+  buildListeningHighlightCandidates,
+  getListeningEvidenceOverlapRatio,
+  normalizeListeningHighlightText
+} from './listeningHighlightMatch'
+
 export type ListeningScriptSegment = {
   id: string
   speaker: string | null
@@ -7,7 +13,7 @@ export type ListeningScriptSegment = {
 const SPEAKER_LINE = /^([A-Z][A-Z0-9\s]{0,22}):\s*(.*)$/
 
 const splitLongTextIntoChunks = (text: string, maxChars = 220): ListeningScriptSegment[] => {
-  const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean)
+  const sentences = text.split(/(?<=[.!?…])\s+/).filter(Boolean)
   if (sentences.length <= 1) {
     return [{ id: 'seg-0', speaker: null, text }]
   }
@@ -108,7 +114,65 @@ export const getListeningSpeakerTone = (speaker: string | null): string => {
   return 'neutral'
 }
 
-/** Substantial passage excerpt (~half the section) centered on evidence when possible. */
+const splitTextIntoSentences = (text: string): string[] =>
+  text
+    .split(/(?<=[.!?…])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+
+const buildEvidencePieces = (evidence: string): string[] =>
+  evidence
+    .split(/\s*(?:\.{2,}|…)\s*/)
+    .map((piece) => piece.trim())
+    .filter((piece) => piece.length >= 3)
+
+const buildCandidateWindows = (candidate: string): string[] => {
+  const words = candidate.split(/\s+/).filter(Boolean)
+  if (words.length < 4) return []
+
+  const windows: string[] = []
+  for (let size = Math.min(7, words.length); size >= 4; size -= 1) {
+    for (let start = 0; start <= words.length - size; start += 1) {
+      windows.push(words.slice(start, start + size).join(' '))
+    }
+  }
+  return windows
+}
+
+const findEvidenceSentenceIndex = (sentences: string[], evidence: string): number => {
+  const normalizedSentences = sentences.map((sentence) => normalizeListeningHighlightText(sentence))
+  const candidates = buildListeningHighlightCandidates(evidence)
+  const directCandidates = [
+    ...candidates,
+    ...buildEvidencePieces(evidence).flatMap((piece) => buildListeningHighlightCandidates(piece))
+  ].filter(Boolean)
+
+  for (const candidate of directCandidates) {
+    const exactIndex = normalizedSentences.findIndex((sentence) => sentence.includes(candidate))
+    if (exactIndex >= 0) return exactIndex
+  }
+
+  for (const candidate of directCandidates) {
+    for (const window of buildCandidateWindows(candidate)) {
+      const windowIndex = normalizedSentences.findIndex((sentence) => sentence.includes(window))
+      if (windowIndex >= 0) return windowIndex
+    }
+  }
+
+  let bestIndex = -1
+  let bestRatio = 0
+  sentences.forEach((sentence, index) => {
+    const ratio = getListeningEvidenceOverlapRatio(sentence, evidence)
+    if (ratio > bestRatio) {
+      bestRatio = ratio
+      bestIndex = index
+    }
+  })
+
+  return bestRatio >= 0.35 ? bestIndex : -1
+}
+
+/** Contextual passage excerpt: 2 sentences before evidence and 1 sentence after when possible. */
 export const buildListeningPassageExcerpt = (
   passage: string,
   evidence: string,
@@ -117,14 +181,27 @@ export const buildListeningPassageExcerpt = (
   const text = passage.replace(/\s+/g, ' ').trim()
   if (!text) return ''
 
-  const targetLength = Math.max(480, Math.floor(text.length * ratio))
-  if (text.length <= targetLength) return text
-
   const needle = evidence.trim()
   if (needle) {
+    const sentences = splitTextIntoSentences(text)
+    const sentenceIndex = findEvidenceSentenceIndex(sentences, needle)
+    if (sentenceIndex >= 0) {
+      if (sentences.length > 1) {
+        const startSentence = Math.max(0, sentenceIndex - 2)
+        const endSentence = Math.min(sentences.length, sentenceIndex + 2)
+        const excerpt = sentences.slice(startSentence, endSentence).join(' ')
+        const prefix = startSentence > 0 ? '…' : ''
+        const suffix = endSentence < sentences.length ? '…' : ''
+        return `${prefix}${excerpt}${suffix}`
+      }
+
+      return text
+    }
+
     const lower = text.toLowerCase()
     const idx = lower.indexOf(needle.toLowerCase())
     if (idx >= 0) {
+      const targetLength = Math.max(480, Math.floor(text.length * ratio))
       const half = Math.floor(targetLength / 2)
       const start = Math.max(0, idx - half)
       const end = Math.min(text.length, start + targetLength)
@@ -135,6 +212,9 @@ export const buildListeningPassageExcerpt = (
       return `${prefix}${slice}${suffix}`
     }
   }
+
+  const targetLength = Math.max(480, Math.floor(text.length * ratio))
+  if (text.length <= targetLength) return text
 
   return `${text.slice(0, targetLength).trim()}…`
 }

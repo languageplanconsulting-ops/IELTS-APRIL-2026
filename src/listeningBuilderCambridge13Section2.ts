@@ -413,7 +413,7 @@ export const CAMBRIDGE_13_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionNumber: 18,
           questionText: 'What information does Annie give about Pine Trail?\nA It has a good place to stop and rest.\nB It is suitable for all abilities.\nC It involves crossing a river.\nD It demands a lot of skill.\nE It may be closed in bad weather.\nF It has some very narrow sections.',
           questionWordPhrase: 'demands a lot of skill',
-          targetText: 'leave this one to the experts ... if you’ve fully mastered the techniques needed for hills',
+          targetText: 'Pine Trail is one for experts who have mastered skiing on hills',
           thaiMeaning: 'ต้องใช้ทักษะสูง',
           explanationThai: 'demands a lot of skill ในโจทย์ถูกขยายความว่า leave this one to the experts'
         },
@@ -431,7 +431,7 @@ export const CAMBRIDGE_13_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionNumber: 20,
           questionText: 'What information does Annie give about Loser’s Trail?\nA It has a good place to stop and rest.\nB It is suitable for all abilities.\nC It involves crossing a river.\nD It demands a lot of skill.\nE It may be closed in bad weather.\nF It has some very narrow sections.',
           questionWordPhrase: 'may be closed in bad weather',
-          targetText: 'if it’s snowing or windy, check with us ... to make sure the trail’s open',
+          targetText: 'the last part is exposed, so in bad weather you need to check with us whether the trail is open',
           thaiMeaning: 'อาจปิดเมื่ออากาศไม่ดี',
           explanationThai: 'may be closed in bad weather ในโจทย์ถูกอธิบายว่า check with us to make sure the trail’s open'
         }
