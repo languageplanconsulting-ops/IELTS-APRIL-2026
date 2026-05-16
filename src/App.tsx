@@ -29,6 +29,8 @@ import { CAMBRIDGE_14_SECTION_2_EXAM_SET } from './listeningBuilderCambridge14Se
 import { CAMBRIDGE_14_SECTION_4_EXAM_SET } from './listeningBuilderCambridge14Section4'
 import { CAMBRIDGE_16_SECTION_2_EXAM_SET } from './listeningBuilderCambridge16Section2'
 import { CAMBRIDGE_17_SECTION_2_EXAM_SET } from './listeningBuilderCambridge17Section2'
+import { CAMBRIDGE_17_SECTION_4_EXAM_SET } from './listeningBuilderCambridge17Section4'
+import { CAMBRIDGE_17_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge17Data'
 import { CAMBRIDGE_18_SECTION_2_EXAM_SET, type ListeningBuilderExamTask } from './listeningBuilderCambridge18Section2'
 import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './listeningFoundationData'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
@@ -71,6 +73,7 @@ const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_14_SECTION_4_EXAM_SET,
   CAMBRIDGE_16_SECTION_2_EXAM_SET,
   CAMBRIDGE_17_SECTION_2_EXAM_SET,
+  CAMBRIDGE_17_SECTION_4_EXAM_SET,
   CAMBRIDGE_18_SECTION_2_EXAM_SET
 ]
 
@@ -78,9 +81,11 @@ const ALL_LISTENING_FOUNDATION_SETS = [
   ...LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
   ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
+  ...CAMBRIDGE_17_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
   ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
-  ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced')
+  ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
+  ...CAMBRIDGE_17_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced')
 ]
 
 type Role = 'student' | 'admin' | 'trial'
@@ -7864,23 +7869,36 @@ function App() {
     activeListeningFoundationSet?.questions[listeningFoundationQuestionIndex] ??
     activeListeningFoundationSet?.questions[0] ??
     null
+  const activeListeningFoundationScriptText = useMemo(() => {
+    if (!activeListeningFoundationSet) return activeListeningFoundationQuestion?.passage || ''
+
+    const uniquePassages = Array.from(
+      new Set(
+        activeListeningFoundationSet.questions
+          .map((question) => question.passage.trim())
+          .filter(Boolean)
+      )
+    )
+
+    return uniquePassages.join(' ') || activeListeningFoundationQuestion?.passage || ''
+  }, [activeListeningFoundationSet, activeListeningFoundationQuestion?.passage])
   const activeListeningFoundationScriptSegments = useMemo(
     () =>
-      activeListeningFoundationQuestion
-        ? parseListeningScriptSegments(activeListeningFoundationQuestion.passage)
+      activeListeningFoundationScriptText
+        ? parseListeningScriptSegments(activeListeningFoundationScriptText)
         : [],
-    [activeListeningFoundationQuestion]
+    [activeListeningFoundationScriptText]
   )
   const activeListeningFoundationPassageExcerpt = useMemo(
     () =>
       activeListeningFoundationQuestion
         ? buildListeningPassageExcerpt(
-            activeListeningFoundationQuestion.passage,
+            activeListeningFoundationScriptText || activeListeningFoundationQuestion.passage,
             activeListeningFoundationQuestion.evidence,
             0.5
           )
         : '',
-    [activeListeningFoundationQuestion]
+    [activeListeningFoundationQuestion, activeListeningFoundationScriptText]
   )
   const activeListeningFoundationHasDialogue = useMemo(
     () => listeningScriptHasDialogue(activeListeningFoundationScriptSegments),
@@ -11376,7 +11394,7 @@ function App() {
       ? activeListeningFoundationScriptSegments
           .map((segment) => (segment.speaker ? `${segment.speaker}: ${segment.text}` : segment.text))
           .join(' ')
-      : activeListeningFoundationQuestion.passage
+      : activeListeningFoundationScriptText || activeListeningFoundationQuestion.passage
 
     const utterance = new SpeechSynthesisUtterance(spokenText)
     const availableVoices = window.speechSynthesis.getVoices()
@@ -11403,11 +11421,14 @@ function App() {
 
   useEffect(() => {
     if (!activeListeningFoundationQuestion) return
-    const segments = parseListeningScriptSegments(activeListeningFoundationQuestion.passage)
     setListeningFoundationScriptChunk(
-      findListeningScriptChunkForText(segments, activeListeningFoundationQuestion.passageKeyword)
+      findListeningScriptChunkForText(activeListeningFoundationScriptSegments, activeListeningFoundationQuestion.passageKeyword)
     )
-  }, [activeListeningFoundationQuestion?.id, activeListeningFoundationQuestion?.passageKeyword])
+  }, [
+    activeListeningFoundationQuestion?.id,
+    activeListeningFoundationQuestion?.passageKeyword,
+    activeListeningFoundationScriptSegments
+  ])
 
   useEffect(() => {
     if (!listeningFoundationEvidenceCorrect || !activeListeningFoundationQuestion) return
@@ -13872,7 +13893,7 @@ function App() {
                                   handleListeningFoundationPassageMouseUp()
                                 }}
                               >
-                                {activeListeningFoundationQuestion?.passage}
+                                {activeListeningFoundationScriptText || activeListeningFoundationQuestion?.passage}
                               </p>
                             )}
                           </div>

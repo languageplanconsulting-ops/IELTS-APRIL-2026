@@ -15,6 +15,8 @@ import { CAMBRIDGE_14_SECTION_2_EXAM_SET } from '../src/listeningBuilderCambridg
 import { CAMBRIDGE_14_SECTION_4_EXAM_SET } from '../src/listeningBuilderCambridge14Section4'
 import { CAMBRIDGE_16_SECTION_2_EXAM_SET } from '../src/listeningBuilderCambridge16Section2'
 import { CAMBRIDGE_17_SECTION_2_EXAM_SET } from '../src/listeningBuilderCambridge17Section2'
+import { CAMBRIDGE_17_SECTION_4_EXAM_SET } from '../src/listeningBuilderCambridge17Section4'
+import { CAMBRIDGE_17_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridge17Data'
 import { CAMBRIDGE_18_SECTION_2_EXAM_SET } from '../src/listeningBuilderCambridge18Section2'
 import type { ListeningBuilderExamSet, ListeningBuilderExamTask } from '../src/listeningBuilderCambridge18Section2'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridge12Data'
@@ -46,6 +48,7 @@ const EXAM_SETS: ListeningBuilderExamSet[] = [
   CAMBRIDGE_14_SECTION_4_EXAM_SET,
   CAMBRIDGE_16_SECTION_2_EXAM_SET,
   CAMBRIDGE_17_SECTION_2_EXAM_SET,
+  CAMBRIDGE_17_SECTION_4_EXAM_SET,
   CAMBRIDGE_18_SECTION_2_EXAM_SET
 ]
 
@@ -96,6 +99,7 @@ const allFoundation = [
   ...LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS,
+  ...CAMBRIDGE_17_LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS
 ]
 
