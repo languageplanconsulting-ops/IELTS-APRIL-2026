@@ -3115,7 +3115,6 @@ const READING_ENTRY_CHOICES: Array<{
   }
 ]
 
-const NORMAL_READING_STAGE_COUNT = 5
 const NORMAL_READING_STAGE_SIZE = 3
 const NORMAL_READING_UNLOCK_PERCENT = 80
 
@@ -6860,8 +6859,9 @@ function App() {
     const normalExams = sortNormalReadingExamsForStages(
       bankReadingExams.filter((exam) => exam.category === 'normal')
     )
+    const stageCount = Math.ceil(normalExams.length / NORMAL_READING_STAGE_SIZE)
     let nextStageUnlocked = true
-    return Array.from({ length: NORMAL_READING_STAGE_COUNT }, (_, index) => {
+    return Array.from({ length: stageCount }, (_, index) => {
       const exams = normalExams.slice(
         index * NORMAL_READING_STAGE_SIZE,
         (index + 1) * NORMAL_READING_STAGE_SIZE
