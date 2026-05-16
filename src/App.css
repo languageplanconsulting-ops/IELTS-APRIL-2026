@@ -11418,6 +11418,162 @@ select:focus,
   font-weight: 900;
 }
 
+.readingPage .readingEntryShell {
+  max-width: 1180px;
+}
+
+.readingPage .readingEntryChooser {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.readingPage .readingEntryCard {
+  position: relative;
+  overflow: hidden;
+  min-height: 244px;
+  display: grid;
+  gap: 12px;
+  align-content: end;
+  text-align: left;
+  padding: 30px !important;
+  border: 1px solid #d6e0ef !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12) !important;
+  cursor: pointer;
+  isolation: isolate;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.readingPage .readingEntryCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(135deg, rgba(255, 204, 0, 0.24), transparent 44%),
+    linear-gradient(160deg, rgba(0, 74, 173, 0.16), transparent 64%);
+}
+
+.readingPage .readingEntryCard::after {
+  content: '';
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: -1;
+  width: 94px;
+  height: 94px;
+  border: 18px solid rgba(255, 255, 255, 0.56);
+  border-radius: 999px;
+}
+
+.readingPage .readingEntryCard-advanced::before {
+  background:
+    linear-gradient(135deg, rgba(0, 74, 173, 0.24), transparent 44%),
+    linear-gradient(160deg, rgba(239, 68, 68, 0.14), transparent 64%);
+}
+
+.readingPage .readingEntryCard:hover {
+  transform: translateY(-3px) !important;
+  border-color: #9fb4d6 !important;
+  box-shadow: 0 30px 70px rgba(0, 51, 122, 0.18) !important;
+}
+
+.readingPage .readingEntrySubtitle {
+  color: #00337a;
+  font-size: clamp(1.02rem, 1.5vw, 1.28rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.readingPage .readingEntryLabel,
+.readingPage .readingEntryCount {
+  width: fit-content;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.76);
+  color: #00337a;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.readingPage .readingEntryCard strong {
+  color: #091226;
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  font-weight: 950;
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+}
+
+.readingPage .readingEntryCard small {
+  max-width: 46ch;
+  color: #516078;
+  font-size: 1.02rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.readingPage .readingEntryCount {
+  background: #ffcc00;
+  color: #2f2600;
+}
+
+.readingPage .readingBankWindow {
+  display: grid;
+  gap: 24px;
+}
+
+.readingPage .readingBankWindowHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  max-width: 1180px;
+  padding: 22px 0;
+  border-top: 1px solid #d6e0ef;
+  border-bottom: 1px solid #d6e0ef;
+}
+
+.readingPage .readingBankWindowHeader h3 {
+  margin: 12px 0 6px;
+  color: #091226;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+.readingPage .readingBankWindowHeader p {
+  margin: 0;
+  color: #516078;
+  font-weight: 750;
+}
+
+.readingPage .readingBankWindowActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.readingPage .readingBankWindowActions .secondary {
+  min-height: 42px !important;
+  padding: 0 16px !important;
+}
+
 .speakingFlowTheme .providerTabs button.active {
   background: var(--ep-yellow) !important;
   color: var(--ep-yellow-dark) !important;
@@ -14134,13 +14290,21 @@ section.panel.full.speakingFlowTheme > h2 {
 
 @media (max-width: 720px) {
   .speakingFlowTheme .speakingEntryChooser,
-  .speakingFlowTheme .providerTabs.speakingPartTabs {
+  .speakingFlowTheme .providerTabs.speakingPartTabs,
+  .readingPage .readingEntryChooser {
     grid-template-columns: 1fr;
   }
 
-  .speakingFlowTheme .speakingEntryCard {
-    min-height: 128px;
+  .speakingFlowTheme .speakingEntryCard,
+  .readingPage .readingEntryCard {
+    min-height: 198px;
     padding: 18px !important;
+  }
+
+  .readingPage .readingBankWindowHeader,
+  .readingPage .readingBankWindowActions {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .workspace .topbar {

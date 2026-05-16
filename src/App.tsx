@@ -3084,9 +3084,27 @@ const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   advanced: 'Advanced Reading'
 }
 
-const READING_ENTRY_CHOICES: Array<{ category: ReadingBankCategory; title: string; subtitle: string }> = [
-  { category: 'normal', title: 'ข้อสอบระดับง่าย', subtitle: 'สำหรับ band 4-6.5' },
-  { category: 'advanced', title: 'ข้อสอบระดับยาก', subtitle: 'สำหรับ 7 ขึ้นไป' }
+const READING_ENTRY_CHOICES: Array<{
+  category: ReadingBankCategory
+  title: string
+  subtitle: string
+  detail: string
+  tone: string
+}> = [
+  {
+    category: 'normal',
+    title: 'Normal Reading',
+    subtitle: 'ข้อสอบระดับง่าย',
+    detail: 'สำหรับ Band 4-6.5',
+    tone: 'Core'
+  },
+  {
+    category: 'advanced',
+    title: 'Advanced Reading',
+    subtitle: 'ข้อสอบระดับยาก',
+    detail: 'สำหรับ Band 7+',
+    tone: 'Challenge'
+  }
 ]
 
 const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
@@ -6784,6 +6802,8 @@ function App() {
       })),
     [bankReadingExams]
   )
+  const selectedReadingEntryChoice =
+    READING_ENTRY_CHOICES.find((choice) => choice.category === readingEntryCategory) || null
   const adminFirstReadingCategoryWithContent = useMemo(
     () => readingExamCountsByCategory.find((group) => group.count > 0)?.category || null,
     [readingExamCountsByCategory]
@@ -11763,6 +11783,11 @@ function App() {
                   <button
                     type="button"
                     onClick={() => {
+                      setReadingEntryCategory(null)
+                      setReadingWorkspaceMode('bank')
+                      setSelectedReadingCategory('normal')
+                      setReadingAttemptStage('bank')
+                      setReadingHintQuestionNumber(null)
                       setActivePage('reading')
                     }}
                   >
@@ -13387,38 +13412,69 @@ function App() {
         <section className="panel full readingPage">
           <div className="readingPageHeader">
             <div>
-              <h2>Reading Exam Bank</h2>
-              <p>Read the passage on the left, answer questions on the right, click hints to see the exact evidence, and save useful paraphrases to your notebook.</p>
+              <p className="sectionLabel">IELTS Reading</p>
+              <h2>{selectedReadingEntryChoice ? selectedReadingEntryChoice.title : 'Choose Reading Level'}</h2>
+              <p>
+                {selectedReadingEntryChoice
+                  ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
+                  : 'Start with the bank that matches your target band.'}
+              </p>
             </div>
           </div>
 
-          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && (
-            <div className="readingEntryChooser" aria-label="Choose reading exam level">
-              {READING_ENTRY_CHOICES.map((choice) => {
-                const count = readingExamCountsByCategory.find((group) => group.category === choice.category)?.count || 0
-                return (
-                  <button
-                    key={choice.category}
-                    type="button"
-                    className={`readingEntryCard ${readingEntryCategory === choice.category ? 'active' : ''}`}
-                    onClick={() => {
-                      setReadingEntryCategory(choice.category)
-                      setSelectedReadingCategory(choice.category)
-                      setReadingAttemptStage('bank')
-                    }}
-                  >
-                    <span className="readingEntryLabel">{READING_CATEGORY_LABELS[choice.category]}</span>
-                    <strong>{choice.title}</strong>
-                    <small>{choice.subtitle}</small>
-                    <span className="readingEntryCount">{count} exams</span>
-                  </button>
-                )
-              })}
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && (
+            <div className="readingEntryShell">
+              <div className="readingEntryChooser" aria-label="Choose reading exam level">
+                {READING_ENTRY_CHOICES.map((choice) => {
+                  const count = readingExamCountsByCategory.find((group) => group.category === choice.category)?.count || 0
+                  return (
+                    <button
+                      key={choice.category}
+                      type="button"
+                      className={`readingEntryCard readingEntryCard-${choice.category}`}
+                      onClick={() => {
+                        setReadingEntryCategory(choice.category)
+                        setSelectedReadingCategory(choice.category)
+                        setReadingAttemptStage('bank')
+                      }}
+                    >
+                      <span className="readingEntryLabel">{choice.tone}</span>
+                      <strong>{choice.title}</strong>
+                      <span className="readingEntrySubtitle">{choice.subtitle}</span>
+                      <small>{choice.detail}</small>
+                      <span className="readingEntryCount">{count} exams</span>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           )}
 
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && readingEntryCategory && (
-            <>
+            <div className="readingBankWindow">
+              <div className="readingBankWindowHeader">
+                <div>
+                  <span className="readingEntryLabel">{selectedReadingEntryChoice?.tone || 'Reading'}</span>
+                  <h3>{selectedReadingEntryChoice?.title || READING_CATEGORY_LABELS[readingEntryCategory]}</h3>
+                  <p>
+                    {selectedReadingEntryChoice?.subtitle} | {selectedReadingEntryChoice?.detail}
+                  </p>
+                </div>
+                <div className="readingBankWindowActions">
+                  <span className="readingEntryCount">{filteredReadingExams.length} exams</span>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      setReadingEntryCategory(null)
+                      setReadingAttemptStage('bank')
+                      setReadingExamError('')
+                    }}
+                  >
+                    Back to Levels
+                  </button>
+                </div>
+              </div>
               {readingExamError && <p className="error">{readingExamError}</p>}
               {filteredReadingExams.length === 0 ? (
                 <div className="emptyNotebook">
@@ -13496,7 +13552,7 @@ function App() {
                   )})}
                 </div>
               )}
-            </>
+            </div>
           )}
 
           {readingWorkspaceMode === 'pdoy' && (

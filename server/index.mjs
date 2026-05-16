@@ -2065,7 +2065,10 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
     String(match[1] || '').trim()
   )
   return segments.map((segment) => {
-    const numberMatch = segment.match(/^Question\s+(\d+):\s*(.+)$/im)
+    const numberMatch = segment.match(/^Question\s+(\d+):/im)
+    const promptMatch = segment.match(
+      /^Question\s+\d+:\s*([\s\S]*?)(?=\n\s*(?:Correct Answer|Accepted Answers|Answer Group|Exact Portion|Short Thai Explanation|Paraphrased Vocabulary):|$)/im
+    )
     const correctAnswerMatch = segment.match(/Correct Answer:\s*(.+)/i)
     const acceptedAnswersMatch = segment.match(/Accepted Answers:\s*(.+)/i)
     const answerGroupMatch = segment.match(/Answer Group:\s*(.+)/i)
@@ -2073,7 +2076,7 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
     const explanationMatch = segment.match(/Short Thai Explanation:\s*([\s\S]*?)(?=\nParaphrased Vocabulary:|$)/i)
     const paraphraseMatch = segment.match(/Paraphrased Vocabulary:\s*([\s\S]*?)$/i)
     const questionNumber = Number(numberMatch?.[1] || 0)
-    const prompt = String(numberMatch?.[2] || '').trim()
+    const prompt = String(promptMatch?.[1] || '').trim()
     const correctAnswer = canonicalizeReadingCorrectAnswer(String(correctAnswerMatch?.[1] || '').trim())
     const acceptedAnswers = parseAcceptedReadingAnswers(acceptedAnswersMatch?.[1] || '')
     return {
@@ -4691,16 +4694,24 @@ const BUILT_IN_READING_PDOY_EXAMS = [
 
 const BUILT_IN_READING_EXAMS = [...BUILT_IN_READING_BANK_EXAMS, ...BUILT_IN_READING_PDOY_EXAMS]
 
-const mapReadingExamRecord = (row) => ({
-  id: String(row?.id || ''),
-  title: String(row?.title || 'Reading exam'),
-  category: normalizeReadingCategory(row?.category),
-  rawPassageText: String(row?.raw_passage_text || ''),
-  rawAnswerKey: String(row?.raw_answer_key || ''),
-  parsedPayload: normalizeReadingParsedPayload(row?.parsed_payload),
-  createdAt: row?.created_at || null,
-  updatedAt: row?.updated_at || null
-})
+const mapReadingExamRecord = (row) => {
+  const exam = {
+    id: String(row?.id || ''),
+    title: String(row?.title || 'Reading exam'),
+    category: normalizeReadingCategory(row?.category),
+    rawPassageText: String(row?.raw_passage_text || ''),
+    rawAnswerKey: String(row?.raw_answer_key || ''),
+    createdAt: row?.created_at || null,
+    updatedAt: row?.updated_at || null
+  }
+  return {
+    ...exam,
+    parsedPayload:
+      exam.rawPassageText && exam.rawAnswerKey
+        ? buildReadingExamPayload(exam)
+        : normalizeReadingParsedPayload(row?.parsed_payload)
+  }
+}
 
 const mapSupportReportRecord = (row) => ({
   id: String(row?.id || ''),

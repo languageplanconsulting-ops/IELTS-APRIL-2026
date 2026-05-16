@@ -10,7 +10,8 @@
     "build": "tsc -b && vite build",
     "start": "node server/index.mjs",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "verify:reading": "node scripts/verify-reading-prompts.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

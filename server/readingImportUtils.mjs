@@ -137,7 +137,10 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
     String(match[1] || '').trim()
   )
   return segments.map((segment) => {
-    const numberMatch = segment.match(/^Question\s+(\d+):\s*([\s\S]+)$/im)
+    const numberMatch = segment.match(/^Question\s+(\d+):/im)
+    const promptMatch = segment.match(
+      /^Question\s+\d+:\s*([\s\S]*?)(?=\n\s*(?:Correct Answer|Accepted Answers|Answer Group|Exact Portion|Short Thai Explanation|Paraphrased Vocabulary):|$)/im
+    )
     const correctAnswerMatch = segment.match(/Correct Answer:\s*(.+)/i)
     const acceptedAnswersMatch = segment.match(/Accepted Answers:\s*(.+)/i)
     const answerGroupMatch = segment.match(/Answer Group:\s*(.+)/i)
@@ -145,7 +148,7 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
     const explanationMatch = segment.match(/Short Thai Explanation:\s*([\s\S]*?)(?=\nParaphrased Vocabulary:|$)/i)
     const paraphraseMatch = segment.match(/Paraphrased Vocabulary:\s*([\s\S]*?)$/i)
     const questionNumber = Number(numberMatch?.[1] || 0)
-    const prompt = String(numberMatch?.[2] || '').trim()
+    const prompt = String(promptMatch?.[1] || '').trim()
     const correctAnswer = canonicalizeReadingCorrectAnswer(String(correctAnswerMatch?.[1] || '').trim())
     const acceptedAnswers = parseAcceptedReadingAnswers(acceptedAnswersMatch?.[1] || '')
     return {

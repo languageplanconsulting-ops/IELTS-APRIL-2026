@@ -39,7 +39,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "The cork oak has the thickest bark of any living tree.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"Its bark grows up to 20 cm in thickness, insulating the tree like a coat wrapped around the trunk and branches and keeping the inside at a constant 20°c all year round.\"\n\nShort Thai Explanation: ไม่มีการเปรียบเทียบว่าหนาที่สุด มีแค่บอกความหนา 20 ซม. บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: thickest bark = grows up to 20 cm in thickness = เปลือกหนา 20 ซม.",
+              "prompt": "The cork oak has the thickest bark of any living tree.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -52,7 +52,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "Scientists have developed a synthetic cork with the same cellular structure as natural cork.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"Developed most probably as a defence against forest fires, the bark of the cork oak has a particular cellular structure – with about 40 million cells per cubic centimetre – that technology has never succeeded in replicat\"\n\nShort Thai Explanation: technology never succeeded in replicating แปลว่าทำสำเนาไม่สำเร็จ ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE\n\nParaphrased Vocabulary: synthetic = replicating = เลียนแบบโครงสร้าง",
+              "prompt": "Scientists have developed a synthetic cork with the same cellular structure as natural cork.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -65,7 +65,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "Individual cork oak trees must be left for 25 years between the first and second harvest.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"From the planting of a cork sapling to the first harvest takes 25 years, and a gap of approximately a decade must separate harvests from an individual tree.\"\n\nShort Thai Explanation: 25 ปีคือจนถึงเก็บครั้งแรก ระหว่างเก็บครั้งแรกกับสองห่างประมาณทศวรรษ ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE\n\nParaphrased Vocabulary: between first and second = decade = ห่าง ~10 ปี",
+              "prompt": "Individual cork oak trees must be left for 25 years between the first and second harvest.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -78,7 +78,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "Cork bark should be stripped in dry atmospheric conditions.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"If the bark is stripped on a day when it's too cold – or when the air is damp – the tree will be damaged.\"\n\nShort Thai Explanation: ถ้าอากาศชื้นจะเสียหาย แปลว่าควรลอกตอนอากาศแห้ง ข้อความในบทความสนับสนุนข้อนี้โดยตรง จึงตอบ TRUE\n\nParaphrased Vocabulary: dry conditions = not damp = อากาศแห้ง",
+              "prompt": "Cork bark should be stripped in dry atmospheric conditions.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -91,7 +91,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "The only way to remove the bark from cork oak trees is by hand.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"No mechanical means of stripping cork bark has been invented, so the job is done by teams of highly skilled workers.\"\n\nShort Thai Explanation: ไม่มีเครื่องจักร ต้องใช้คนงานทำ ข้อความในบทความสนับสนุนข้อนี้โดยตรง จึงตอบ TRUE\n\nParaphrased Vocabulary: only way = no mechanical means = ด้วยมือ",
+              "prompt": "The only way to remove the bark from cork oak trees is by hand.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -104,7 +104,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Advantages of aluminium screw caps: do not affect the … of the bottle contents\n\nCorrect Answer: taste\n\nAccepted Answers: taste\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"The tiniest concentrations – as little as three or four parts to a trillion – can spoil the taste of the product contained in the bottle.\"\n\nShort Thai Explanation: บทความบอกว่าสาร TCA ใน cork อาจทำให้รสชาติในขวดเสีย แต่ฝาแก้วและฝาสกรูไม่กระทบรสดังกล่าว คำว่า do not affect ในข้อจึงสอดคล้องกับ spoil the taste (ในทางตรงข้าม) จึงเติม taste\n\nParaphrased Vocabulary: affect = spoil (negated) = taste = รสชาติ",
+              "prompt": "Advantages of aluminium screw caps: do not affect the … of the bottle contents",
               "correctAnswer": "taste",
               "acceptedAnswers": [
                 "taste"
@@ -117,7 +117,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "Advantages of aluminium screw caps: are … to produce\n\nCorrect Answer: cheaper\n\nAccepted Answers: cheaper\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"These substitutes are cheaper to manufacture and, in the case of screw caps, more convenient for the user.\"\n\nShort Thai Explanation: ข้อเปรียบเทียบฝาทดแทนว่าพลาสติกและอลูมิเนียม cheaper to manufacture กว่า cork คำว่า are … to produce ในข้อจึงตรงกับ cheaper\n\nParaphrased Vocabulary: produce = manufacture = cheaper = ถูกกว่า",
+              "prompt": "Advantages of aluminium screw caps: are … to produce",
               "correctAnswer": "cheaper",
               "acceptedAnswers": [
                 "cheaper"
@@ -130,7 +130,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "Advantages of aluminium screw caps: are … to use\n\nCorrect Answer: convenient\n\nAccepted Answers: convenient\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"These substitutes are cheaper to manufacture and, in the case of screw caps, more convenient for the user.\"\n\nShort Thai Explanation: บทความระบุว่าฝาสกรู more convenient for the user กว่า คำว่า are … to use จึงตรงกับ convenient\n\nParaphrased Vocabulary: to use = for the user = convenient = สะดวก",
+              "prompt": "Advantages of aluminium screw caps: are … to use",
               "correctAnswer": "convenient",
               "acceptedAnswers": [
                 "convenient"
@@ -143,7 +143,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "Advantages of cork bottle stoppers: suit the … of quality products\n\nCorrect Answer: image\n\nAccepted Answers: image\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"Firstly, its traditional image is more in keeping with that of the type of high quality goods with which it has long been associated.\"\n\nShort Thai Explanation: ข้อดีของ cork คือ traditional image ที่เข้ากับ (in keeping with) สินค้าคุณภาพสูง คำว่า suit the … of quality products จึงตอบ image\n\nParaphrased Vocabulary: suit = in keeping with = image = ภาพลักษณ์",
+              "prompt": "Advantages of cork bottle stoppers: suit the … of quality products",
               "correctAnswer": "image",
               "acceptedAnswers": [
                 "image"
@@ -156,7 +156,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "Advantages of cork bottle stoppers: made from a … material\n\nCorrect Answer: sustainable\n\nAccepted Answers: sustainable\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"Secondly – and very importantly – cork is a sustainable product that can be recycled without difficulty.\"\n\nShort Thai Explanation: บทความเน้นว่า cork เป็น sustainable product ที่รีไซเคิลได้ คำว่า made from a … material จึงตอบ sustainable\n\nParaphrased Vocabulary: material = sustainable = ยั่งยืน",
+              "prompt": "Advantages of cork bottle stoppers: made from a … material",
               "correctAnswer": "sustainable",
               "acceptedAnswers": [
                 "sustainable"
@@ -169,7 +169,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Advantages of cork bottle stoppers: … easily\n\nCorrect Answer: recycled\n\nAccepted Answers: recycled\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"Secondly – and very importantly – cork is a sustainable product that can be recycled without difficulty.\"\n\nShort Thai Explanation: บทความบอกว่า cork can be recycled without difficulty คำว่า … easily ในข้อจึงตรงกับ recycled\n\nParaphrased Vocabulary: easily = without difficulty = recycled",
+              "prompt": "Advantages of cork bottle stoppers: … easily",
               "correctAnswer": "recycled",
               "acceptedAnswers": [
                 "recycled"
@@ -182,7 +182,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "cork forests aid …\n\nCorrect Answer: biodiversity\n\nAccepted Answers: biodiversity\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"Moreover, cork forests are a resource which support local biodiversity, and prevent desertification in the regions where they are planted.\"\n\nShort Thai Explanation: ป่า cork support local biodiversity คำว่า aid … ในข้อจึงตอบ biodiversity\n\nParaphrased Vocabulary: aid = support = biodiversity",
+              "prompt": "cork forests aid …",
               "correctAnswer": "biodiversity",
               "acceptedAnswers": [
                 "biodiversity"
@@ -195,7 +195,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "cork forests stop … happening\n\nCorrect Answer: desertification\n\nAccepted Answers: desertification\n\nAnswer Group: Cambridge 12 Test 1 Passage 1\n\nExact Portion: \"Moreover, cork forests are a resource which support local biodiversity, and prevent desertification in the regions where they are planted.\"\n\nShort Thai Explanation: ป่า cork prevent desertification ในพื้นที่ที่ปลูก คำว่า stop … happening จึงตอบ desertification\n\nParaphrased Vocabulary: stop = prevent = desertification",
+              "prompt": "cork forests stop … happening",
               "correctAnswer": "desertification",
               "acceptedAnswers": [
                 "desertification"
@@ -257,7 +257,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "The writer mentions collecting as an example of collecting in order to make money.\n\nCorrect Answer: antiques\n\nAccepted Answers: antiques\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"They'll look for, say, antiques that they can buy cheaply and expect to be able to sell at a profit.\"\n\nShort Thai Explanation: ย่อหน้าแรกของเหตุผลเชิงเครื่องมือ (instrumental) ยกตัวอย่างการซื้อ antiques ราคาถูกแล้วขายทำกำไร คำว่า mentions … as an example of collecting to make money จึงตอบ antiques\n\nParaphrased Vocabulary: make money = sell at a profit = antiques = ของโบราณ",
+              "prompt": "The writer mentions collecting as an example of collecting in order to make money.",
               "correctAnswer": "antiques",
               "acceptedAnswers": [
                 "antiques"
@@ -270,7 +270,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "Collectors may get a feeling of … from buying and selling items.\n\nCorrect Answer: triumph\n\nAccepted Answers: triumph\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"But there may well be a psychological element, too – buying cheap and selling dear can give the collector a sense of triumph.\"\n\nShort Thai Explanation: การซื้อถูกขายแพงให้ collector a sense of triumph คำว่า feeling of … จึงตอบ triumph\n\nParaphrased Vocabulary: feeling = sense of = triumph = ชัยชนะ",
+              "prompt": "Collectors may get a feeling of … from buying and selling items.",
               "correctAnswer": "triumph",
               "acceptedAnswers": [
                 "triumph"
@@ -283,7 +283,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 16,
-              "prompt": "Collectors' clubs provide opportunities to share …\n\nCorrect Answer: information\n\nAccepted Answers: information\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"Many collectors collect to develop their social life, attending meetings of a group of collectors and exchanging information on items.\"\n\nShort Thai Explanation: ชมรมนักสะสมมีการ exchanging information on items คำว่า share … จึงตอบ information\n\nParaphrased Vocabulary: share = exchanging = information = ข้อมูล",
+              "prompt": "Collectors' clubs provide opportunities to share …",
               "correctAnswer": "information",
               "acceptedAnswers": [
                 "information"
@@ -296,7 +296,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "Collectors' clubs offer … with people who have similar interests.\n\nCorrect Answer: contact\n\nAccepted Answers: contact|meetings\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"This is a variant on joining a bridge club or a gym, and similarly brings them into contact with like-minded people.\"\n\nShort Thai Explanation: การเข้าร่วมกลุ่ม brings them into contact with like-minded people คำว่า offer … with people who have similar interests จึงตอบ contact\n\nParaphrased Vocabulary: similar interests = like-minded = contact = ติดต่อ/พบปะ",
+              "prompt": "Collectors' clubs offer … with people who have similar interests.",
               "correctAnswer": "contact",
               "acceptedAnswers": [
                 "contact",
@@ -310,7 +310,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "Collecting sometimes involves a life-long … for a special item.\n\nCorrect Answer: desire\n\nAccepted Answers: desire|hunt\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"Another motive for collecting is the desire to find something special, or a particular example of the collected item, such as a rare early recording by a particular singer.\"\n\nShort Thai Explanation: บางคนมี desire to find something special และอาจใช้ชีวิตทั้งชีวิตในการ hunt คำว่า life-long … จึงตอบ desire (หรือ hunt ตามข้อความ)\n\nParaphrased Vocabulary: life-long = whole lives = desire/hunt = ความปรารถนา/การล่า",
+              "prompt": "Collecting sometimes involves a life-long … for a special item.",
               "correctAnswer": "desire",
               "acceptedAnswers": [
                 "desire",
@@ -324,7 +324,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "Searching for something particular may prevent people from feeling their life is completely …\n\nCorrect Answer: aimless\n\nAccepted Answers: aimless|empty\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"Psychologically, this can give a purpose to a life that otherwise feels aimless.\"\n\nShort Thai Explanation: การล่าหาของพิเศษทำให้ชีวิตที่มิฉะนั้นจะ feels aimless มีจุดหมาย คำว่า prevent … feeling life is completely … จึงตอบ aimless\n\nParaphrased Vocabulary: prevent = otherwise feels = aimless = ไร้จุดหมาย",
+              "prompt": "Searching for something particular may prevent people from feeling their life is completely …",
               "correctAnswer": "aimless",
               "acceptedAnswers": [
                 "aimless",
@@ -338,7 +338,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "Stamp collecting may be … because it provides facts about different countries.\n\nCorrect Answer: educational\n\nAccepted Answers: educational\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"If you think about collecting postage stamps, another potential reason for it – or, perhaps, a result of collecting – is its educational value.\"\n\nShort Thai Explanation: การสะสมแสตมป์มี educational value เพราะเปิดโลกทัศน์เกี่ยวกับประเทศต่างๆ คำว่า may be … จึงตอบ educational\n\nParaphrased Vocabulary: facts about countries = educational value = การศึกษา",
+              "prompt": "Stamp collecting may be … because it provides facts about different countries.",
               "correctAnswer": "educational",
               "acceptedAnswers": [
                 "educational"
@@ -351,7 +351,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "… tends to be mostly a male hobby.\n\nCorrect Answer: trainspotting\n\nAccepted Answers: trainspotting\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"In the past – and nowadays, too, though to a lesser extent – a popular form of collecting, particularly among boys and men, was trainspotting.\"\n\nShort Thai Explanation: trainspotting เป็นที่นิยม particularly among boys and men คำว่า … tends to be mostly a male hobby จึงตอบ trainspotting\n\nParaphrased Vocabulary: male hobby = boys and men = trainspotting",
+              "prompt": "… tends to be mostly a male hobby.",
               "correctAnswer": "trainspotting",
               "acceptedAnswers": [
                 "trainspotting"
@@ -364,7 +364,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "The number of people buying dolls has grown over the centuries.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"Similarly, people who collect dolls may go beyond simply enlarging their collection, and develop an interest in the way that dolls are made, or the materials that are used.\"\n\nShort Thai Explanation: ไม่มีข้อมูลจำนวนผู้ซื้อตุ๊กตา บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: number buying dolls = not mentioned = ไม่ได้บอก",
+              "prompt": "The number of people buying dolls has grown over the centuries.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -377,7 +377,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "Sixteenth century European dolls were normally made of wax and porcelain.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"These have changed over the centuries from the wood that was standard in 16th century Europe, through the wax and porcelain of later centuries, to the plastics of today's dolls.\"\n\nShort Thai Explanation: ศตวรรษที่ 16 ใช้ไม้ ไม่ใช่ wax/porcelain ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE\n\nParaphrased Vocabulary: 16th century = wood = ไม้",
+              "prompt": "Sixteenth century European dolls were normally made of wax and porcelain.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -390,7 +390,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "Arranging a stamp collection by the size of the stamps is less common than other methods.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"Stamp collectors, for instance, arrange their stamps in albums, usually very neatly, organising their collection according to certain commonplace principles – perhaps by country in alphabetical order, or grouping stamps \"\n\nShort Thai Explanation: ไม่ได้เปรียบเทียบวิธีจัดเรียง บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: by size = not mentioned = ไม่ได้บอก",
+              "prompt": "Arranging a stamp collection by the size of the stamps is less common than other methods.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -403,7 +403,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "Someone who collects unusual objects may want others to think he or she is also unusual.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"Someone who decides to collect something as unexpected as dog collars, for instance, may be conveying their belief that they must be interesting themselves.\"\n\nShort Thai Explanation: สะสมของแปลกเพื่อแสดงว่าตนเองน่าสนใจ ข้อความในบทความสนับสนุนข้อนี้โดยตรง จึงตอบ TRUE\n\nParaphrased Vocabulary: unusual = unexpected = interesting = แปลก/น่าสนใจ",
+              "prompt": "Someone who collects unusual objects may want others to think he or she is also unusual.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -416,7 +416,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Collecting gives a feeling that other hobbies are unlikely to inspire.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 12 Test 1 Passage 2\n\nExact Portion: \"More than most other hobbies, collecting can be totally engrossing, and can give a strong sense of personal fulfilment.\"\n\nShort Thai Explanation: ให้ความสำเร็จทางใจมากกว่างานอดิเรกอื่น ข้อความในบทความสนับสนุนข้อนี้โดยตรง จึงตอบ TRUE\n\nParaphrased Vocabulary: feeling = fulfilment = more than other hobbies = มากกว่างานอดิเรกอื่น",
+              "prompt": "Collecting gives a feeling that other hobbies are unlikely to inspire.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -484,7 +484,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "Choose the correct heading for Paragraph A\n\nCorrect Answer: vi\n\nAccepted Answers: vi\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"But what would the founders of these two institutions have thought of a course called 'Arson for Profit'?\"\n\nShort Thai Explanation: ชื่อวิชาแปลกที่มีจริง = heading vi เนื้อหาย่อหน้าที่เกี่ยวกับ \"Arson for Profit\" ตรงกับหัวข้อ vi มากที่สุด\n\nParaphrased Vocabulary: surprising course title = Arson for Profit = ชื่อวิชาแปลก",
+              "prompt": "Choose the correct heading for Paragraph A",
               "correctAnswer": "vi",
               "acceptedAnswers": [
                 "vi"
@@ -497,7 +497,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "Choose the correct heading for Paragraph B\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"But wouldn't this also be the perfect course for prospective arsonists to sign up for?\"\n\nShort Thai Explanation: อาจดึงดูดนักวิชาการผิดประเภท เนื้อหาย่อหน้าที่เกี่ยวกับ \"perfect course for prospective arsonists\" ตรงกับหัวข้อ viii มากที่สุด\n\nParaphrased Vocabulary: wrong kind of student = prospective arsonists",
+              "prompt": "Choose the correct heading for Paragraph B",
               "correctAnswer": "viii",
               "acceptedAnswers": [
                 "viii"
@@ -510,7 +510,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "Choose the correct heading for Paragraph C\n\nCorrect Answer: ii\n\nAccepted Answers: ii\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"Similarly, if you employed the 'principles of marketing' in an unprincipled way, you would not be doing marketing.\"\n\nShort Thai Explanation: ชื่อวิชามีสองความหมายของ principles เนื้อหาย่อหน้าที่เกี่ยวกับ \"Principles of Marketing\" ตรงกับหัวข้อ ii มากที่สุด\n\nParaphrased Vocabulary: two meanings = principled/ethical = สองความหมาย",
+              "prompt": "Choose the correct heading for Paragraph C",
               "correctAnswer": "ii",
               "acceptedAnswers": [
                 "ii"
@@ -523,7 +523,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "Choose the correct heading for Paragraph D\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"My inspiration for this judgement is the philosopher Immanuel Kant, who argued that any body of knowledge consists of an end (or purpose) and a means.\"\n\nShort Thai Explanation: นำทฤษฎี Kant มาใช้กับการตลาด เนื้อหาย่อหน้าที่เกี่ยวกับ \"Immanuel Kant\" ตรงกับหัวข้อ iv มากที่สุด\n\nParaphrased Vocabulary: unexpected context = Kant + marketing",
+              "prompt": "Choose the correct heading for Paragraph D",
               "correctAnswer": "iv",
               "acceptedAnswers": [
                 "iv"
@@ -536,7 +536,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "Choose the correct heading for Paragraph E\n\nCorrect Answer: iii\n\nAccepted Answers: iii\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"field of knowledge or a professional endeavor is defined by both the means and the end; hence both deserve scrutiny.\"\n\nShort Thai Explanation: means และ end สำคัญเท่ากัน เนื้อหาย่อหน้าที่เกี่ยวกับ \"defined by both the means and the end\" ตรงกับหัวข้อ iii มากที่สุด\n\nParaphrased Vocabulary: equal importance = both means and end",
+              "prompt": "Choose the correct heading for Paragraph E",
               "correctAnswer": "iii",
               "acceptedAnswers": [
                 "iii"
@@ -549,7 +549,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "Choose the correct heading for Paragraph F\n\nCorrect Answer: vii\n\nAccepted Answers: vii\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"We would say that one is practicing medicine, the other, murder.\"\n\nShort Thai Explanation: ชื่อต่างกันเมื่อจุดประสงค์ต่างกัน เนื้อหาย่อหน้าที่เกี่ยวกับ \"separate word for it: arson\" ตรงกับหัวข้อ vii มากที่สุด\n\nParaphrased Vocabulary: different names = arson/fraud/murder",
+              "prompt": "Choose the correct heading for Paragraph F",
               "correctAnswer": "vii",
               "acceptedAnswers": [
                 "vii"
@@ -562,7 +562,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "The 'Arson for Profit' course: students studying …\n\nCorrect Answer: fire science\n\nAccepted Answers: fire science\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"Any undergraduates who have met the academic requirements can sign up for the course in our program in 'fire science'.\"\n\nShort Thai Explanation: บทความระบุว่านักศึกษาลงทะเบียนใน program in 'fire science' คำว่า studying … ในสรุปจึงตอบ fire science\n\nParaphrased Vocabulary: studying = program in = fire science",
+              "prompt": "The 'Arson for Profit' course: students studying …",
               "correctAnswer": "fire science",
               "acceptedAnswers": [
                 "fire science"
@@ -575,7 +575,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "They will become … specialising in arson.\n\nCorrect Answer: investigators\n\nAccepted Answers: investigators\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"Naturally, the course is intended for prospective arson investigators, who can learn all the tricks of the trade for detecting whether a fire was deliberately set, discovering who did it, and establishing a chain of evid\"\n\nShort Thai Explanation: วิชานี้สำหรับ prospective arson investigators คำว่า become … specialising in arson จึงตอบ investigators\n\nParaphrased Vocabulary: become = prospective = investigators",
+              "prompt": "They will become … specialising in arson.",
               "correctAnswer": "investigators",
               "acceptedAnswers": [
                 "investigators"
@@ -588,7 +588,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "Find … of criminal intent\n\nCorrect Answer: evidence\n\nAccepted Answers: evidence\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"Naturally, the course is intended for prospective arson investigators, who can learn all the tricks of the trade for detecting whether a fire was deliberately set, discovering who did it, and establishing a chain of evid\"\n\nShort Thai Explanation: หลักสูตรช่วยสร้าง chain of evidence เพื่อพิสูจน์เจตนาทางอาญา คำว่า find … of criminal intent จึงตอบ evidence\n\nParaphrased Vocabulary: find = chain of = evidence = หลักฐาน",
+              "prompt": "Find … of criminal intent",
               "correctAnswer": "evidence",
               "acceptedAnswers": [
                 "evidence"
@@ -601,7 +601,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "Leading to successful … in the courts.\n\nCorrect Answer: prosecution\n\nAccepted Answers: prosecution\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"Naturally, the course is intended for prospective arson investigators, who can learn all the tricks of the trade for detecting whether a fire was deliberately set, discovering who did it, and establishing a chain of evid\"\n\nShort Thai Explanation: เป้าหมายคือ effective prosecution in a court of law คำว่า successful … in the courts จึงตอบ prosecution\n\nParaphrased Vocabulary: successful = effective = prosecution = ดำเนินคดี",
+              "prompt": "Leading to successful … in the courts.",
               "correctAnswer": "prosecution",
               "acceptedAnswers": [
                 "prosecution"
@@ -614,7 +614,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 37,
-              "prompt": "It is difficult to attract students onto courses that do not focus on a career.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"student can prepare for a career in resort management, engineering, interior design, accounting, music, law enforcement, you name it.\"\n\nShort Thai Explanation: ไม่ได้พูดถึงความยากในการดึงดูดนักศึกษา บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: difficult to attract = not mentioned",
+              "prompt": "It is difficult to attract students onto courses that do not focus on a career.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -627,7 +627,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 38,
-              "prompt": "The 'Arson for Profit' course would be useful for people intending to set fire to buildings.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"As we have seen, someone could use the very same knowledge of means to achieve a much less noble end, such as personal profit via destructive, dangerous, reckless activity.\"\n\nShort Thai Explanation: ความรู้เดียวกันใช้ทำลายได้ มุมมองของผู้เขียนสอดคล้องกับข้อความในข้อ จึงตอบ YES\n\nParaphrased Vocabulary: useful = same knowledge = destructive activity",
+              "prompt": "The 'Arson for Profit' course would be useful for people intending to set fire to buildings.",
               "correctAnswer": "YES",
               "acceptedAnswers": [
                 "YES"
@@ -640,7 +640,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 39,
-              "prompt": "Fire science courses are too academic to help people to be good at the job of firefighting.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"My point is not to criticize academic programs in fire science: they are highly welcome as part of the increasing professionalization of this and many other occupations.\"\n\nShort Thai Explanation: หลักสูตรช่วยให้เป็นมืออาชีพ ไม่ได้ว่าไร้ประโยชน์ มุมมองของผู้เขียนขัดแย้งกับข้อความในข้อ จึงตอบ NO\n\nParaphrased Vocabulary: too academic = professionalization (negated)",
+              "prompt": "Fire science courses are too academic to help people to be good at the job of firefighting.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -653,7 +653,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 40,
-              "prompt": "The writer's fire science students provided a detailed definition of the purpose of their studies.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 12 Test 1 Passage 3\n\nExact Portion: \"When I ask fire science students to articulate the end, or purpose, of their field, they eventually generalize to something like, 'The safety and welfare of society,' which seems right.\"\n\nShort Thai Explanation: พวกเขา generalize เท่านั้น ไม่ได้ให้คำจำกัดความละเอียด มุมมองของผู้เขียนขัดแย้งกับข้อความในข้อ จึงตอบ NO\n\nParaphrased Vocabulary: detailed = generalize (negated)",
+              "prompt": "The writer's fire science students provided a detailed definition of the purpose of their studies.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -734,7 +734,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "Which paragraph: characteristics that only apply to food production\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r\"\n\nShort Thai Explanation: ย่อหน้า A บอกสองสิ่งที่เฉพาะของ food production ข้อความที่เกี่ยวกับ \"distinguish food production from all other\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: only apply = distinguish from all other = เฉพาะการผลิตอาหาร",
+              "prompt": "Which paragraph: characteristics that only apply to food production",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -747,7 +747,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "Which paragraph: challenges faced only by farmers in certain parts of the world\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"However, smallholder farmers in developing countries must in addition deal with adverse environments, both natural, in terms of soil quality, rainfall, etc., and human, in terms of infrastructure, financial systems, mark\"\n\nShort Thai Explanation: ย่อหน้า B เกี่ยวกับเกษตรกรในประเทศกำลังพัฒนา ข้อความที่เกี่ยวกับ \"smallholder farmers in developing countries\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: only = developing countries = เฉพาะบางภูมิภาค",
+              "prompt": "Which paragraph: challenges faced only by farmers in certain parts of the world",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -760,7 +760,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "Which paragraph: difficulties in bringing about co-operation between farmers\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"According to Murphy, ‘collective action offers an important way for farmers to strengthen their political and economic bargaining power, and to reduce their business risks.’ One commentator, Giel Ton, warned that collect\"\n\nShort Thai Explanation: ย่อหน้า H อธิบายว่า collective action does not come as a free good ต้องใช้เวลาและความพยายามในการสร้างความร่วมมือ จึงเป็นย่อหน้าที่พูดถึง difficulties in co-operation\n\nParaphrased Vocabulary: co-operation = collective action = ความร่วมมือ",
+              "prompt": "Which paragraph: difficulties in bringing about co-operation between farmers",
               "correctAnswer": "H",
               "acceptedAnswers": [
                 "H"
@@ -773,7 +773,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "Financial assistance does not always go to farmers who most need it.\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’ F Nwanze, Murphy and Fan argued that private risk management tools, like private insurance\"\n\nShort Thai Explanation: อุดหนุนไปหมดคนรวย ไม่ใช่คนจน ข้อความที่เกี่ยวกับ \"sixty percent of beneficiaries of subsidies are not poor\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: financial assistance = subsidies = อุดหนุน",
+              "prompt": "Financial assistance does not always go to farmers who most need it.",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -786,7 +786,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Farmers can benefit from collaborating as a group.\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"According to Murphy, ‘collective action offers an important way for farmers to strengthen their political and economic bargaining power, and to reduce their business risks.’ One commentator, Giel Ton, warned that collect\"\n\nShort Thai Explanation: Murphy ว่าการร่วมมือช่วยเพิ่มอำนาจต่อรอง ข้อความที่เกี่ยวกับ \"collective action offers an important way\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: collaborating = collective action = ร่วมมือกลุ่ม",
+              "prompt": "Farmers can benefit from collaborating as a group.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -799,7 +799,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Financial assistance can improve standard of living of farmers.\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Shenggen Fan, Director General of the International Food Policy Research Institute, held up social safety nets and public welfare programmes in Ethiopia, Brazil and Mexico as valuable ways to address poverty among farmin\"\n\nShort Thai Explanation: Fan ว่า safety nets ช่วยลดความยากจน ข้อความที่เกี่ยวกับ \"address poverty among farming families\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: standard of living = address poverty = ระดับชีวิต",
+              "prompt": "Financial assistance can improve standard of living of farmers.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -812,7 +812,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "Financial input by the same individuals who buy from them.\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Similarly, Sonali Bisht, founder and advisor to the Institute of Himalayan Environmental Research and Education (INHERE), India, wrote that community-supported agriculture, where consumers invest in local farmers by subs\"\n\nShort Thai Explanation: ผู้บริโภคลงทุนกับเกษตรกรโดยตรง ข้อความที่เกี่ยวกับ \"consumers invest in local farmers by subscription\" ชี้ไปที่ตัวเลือก G มากที่สุด\n\nParaphrased Vocabulary: financial input = invest by subscription = ลงทุน",
+              "prompt": "Financial input by the same individuals who buy from them.",
               "correctAnswer": "G",
               "acceptedAnswers": [
                 "G"
@@ -825,7 +825,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "Governments can help to reduce variation in prices.\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Sophia Murphy, senior advisor to the Institute for Agriculture and Trade Policy, suggested that the procurement and holding of stocks by governments can also help mitigate wild swings in food prices by alleviating uncert\"\n\nShort Thai Explanation: Murphy ว่ารัฐเก็บสต็อกช่วยลดความผันผวนราคา ข้อความที่เกี่ยวกับ \"mitigate wild swings in food prices\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: variation in prices = wild swings = ความผันผวน",
+              "prompt": "Governments can help to reduce variation in prices.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -838,7 +838,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "Improvements to infrastructure can have a major impact on risk.\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Nwanze, President of the International Fund for Agricultural Development, argued that governments can significantly reduce risks for farmers by providing basic services like roads to get produce more efficiently to marke\"\n\nShort Thai Explanation: Nwanze ว่าโครงสร้างพื้นฐานลดความเสี่ยง ข้อความที่เกี่ยวกับ \"providing basic services like roads\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: infrastructure = basic services like roads = โครงสร้างพื้นฐาน",
+              "prompt": "Improvements to infrastructure can have a major impact on risk.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -851,7 +851,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "Which TWO problems affect small farmers (first answer)\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Fan explained that ‘in addition to reducing crop yields, climate change increases the magnitude and frequency of extreme weather events, which increase smallholder vulnerability.’ The growing unpredictability of weather \"\n\nShort Thai Explanation: ปัญหาหนึ่งคือสภาพอากาศเปลี่ยนแปลง ข้อความที่เกี่ยวกับ \"climate change increases the magnitude and frequency of extreme weather\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: changing weather = extreme weather = สภาพอากาศ",
+              "prompt": "Which TWO problems affect small farmers (first answer)",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -864,7 +864,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Which TWO problems affect small farmers (second answer)\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r\"\n\nShort Thai Explanation: ผู้ซื้อกลางกดราคา ข้อความที่เกี่ยวกับ \"intermediary purchasers who dictate prices\" ชี้ไปที่ตัวเลือก E มากที่สุด\n\nParaphrased Vocabulary: intermediary buyers = purchasers who dictate prices = คนกลาง",
+              "prompt": "Which TWO problems affect small farmers (second answer)",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -877,7 +877,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "Which TWO recommended actions (first answer)\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r\"\n\nShort Thai Explanation: ทุกฝ่ายต้องร่วมมือกัน ข้อความที่เกี่ยวกับ \"all stakeholders must work together\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: co-operation = work together = ร่วมมือ",
+              "prompt": "Which TWO recommended actions (first answer)",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -890,7 +890,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "Which TWO recommended actions (second answer)\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Similarly, Sonali Bisht, founder and advisor to the Institute of Himalayan Environmental Research and Education (INHERE), India, wrote that community-supported agriculture, where consumers invest in local farmers by subs\"\n\nShort Thai Explanation: แบบ community-supported agriculture ข้อความที่เกี่ยวกับ \"consumers invest in local farmers by subscription\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: financial stake = invest by subscription = ลงทุนร่วม",
+              "prompt": "Which TWO recommended actions (second answer)",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -962,7 +962,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "Heading for Paragraph A\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"His goal was to locate the remains of a city called Vitcos, the last capital of the Inca civilisation.\"\n\nShort Thai Explanation: เป้าหมายการเดินทาง เนื้อหาย่อหน้าที่เกี่ยวกับ \"His goal was to locate the remains of a city called Vitcos\" ตรงกับหัวข้อ iv มากที่สุด\n\nParaphrased Vocabulary: aim = goal = iv",
+              "prompt": "Heading for Paragraph A",
               "correctAnswer": "iv",
               "acceptedAnswers": [
                 "iv"
@@ -975,7 +975,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "Heading for Paragraph B\n\nCorrect Answer: vi\n\nAccepted Answers: vi\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"When Bingham and his team set off down the Urubamba in late July, they had an advantage over travelers who had preceded them: a track had recently been blasted down the valley canyon to enable rubber to be brought up by \"\n\nShort Thai Explanation: เส้นทางใหม่ เนื้อหาย่อหน้าที่เกี่ยวกับ \"a track had recently been blasted down the valley\" ตรงกับหัวข้อ vi มากที่สุด\n\nParaphrased Vocabulary: new route = track recently blasted = vi",
+              "prompt": "Heading for Paragraph B",
               "correctAnswer": "vi",
               "acceptedAnswers": [
                 "vi"
@@ -988,7 +988,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 16,
-              "prompt": "Heading for Paragraph C\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"His companions showed no interest in accompanying him up the nearby hill to see some ruins that a local farmer, Melchor Arteaga, had told them about the night before.\"\n\nShort Thai Explanation: Bingham ไม่กระตือรือร้น เนื้อหาย่อหน้าที่เกี่ยวกับ \"showed no interest\" ตรงกับหัวข้อ viii มากที่สุด\n\nParaphrased Vocabulary: lack of enthusiasm = no interest = viii",
+              "prompt": "Heading for Paragraph C",
               "correctAnswer": "viii",
               "acceptedAnswers": [
                 "viii"
@@ -1001,7 +1001,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "Heading for Paragraph D\n\nCorrect Answer: v\n\nAccepted Answers: v\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"First, as he climbs up the hill, he describes the ever-present possibility of deadly snakes, ‘capable of making considerable springs when in pursuit of their prey’; not that he sees any.\"\n\nShort Thai Explanation: บรรยายอย่างตื่นเต้น เนื้อหาย่อหน้าที่เกี่ยวกับ \"describes the ever-present possibility of deadly snakes\" ตรงกับหัวข้อ v มากที่สุด\n\nParaphrased Vocabulary: dramatic description = vivid style = v",
+              "prompt": "Heading for Paragraph D",
               "correctAnswer": "v",
               "acceptedAnswers": [
                 "v"
@@ -1014,7 +1014,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "Heading for Paragraph E\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready f\"\n\nShort Thai Explanation: บันทึกกับหนังสือเล่าไม่เหมือนกัน เนื้อหาย่อหน้าที่เกี่ยวกับ \"journal entries reveal a much more gradual appreciation\" ตรงกับหัวข้อ i มากที่สุด\n\nParaphrased Vocabulary: different accounts = journal vs book = i",
+              "prompt": "Heading for Paragraph E",
               "correctAnswer": "i",
               "acceptedAnswers": [
                 "i"
@@ -1027,7 +1027,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "Heading for Paragraph F\n\nCorrect Answer: vii\n\nAccepted Answers: vii\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"When he came to write the National Geographic magazine article that broke the story to the world in April 1913, he knew he had to produce a big idea.\"\n\nShort Thai Explanation: ตีพิมพ์ทฤษฎี เนื้อหาย่อหน้าที่เกี่ยวกับ \"he knew he had to produce a big idea\" ตรงกับหัวข้อ vii มากที่สุด\n\nParaphrased Vocabulary: publishes theory = big idea for magazine = vii",
+              "prompt": "Heading for Paragraph F",
               "correctAnswer": "vii",
               "acceptedAnswers": [
                 "vii"
@@ -1040,7 +1040,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "Heading for Paragraph G\n\nCorrect Answer: iii\n\nAccepted Answers: iii\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"An idea which has gained wide acceptance over the past few years is that Machu Picchu was a moya, a country estate built by an Inca emperor to escape the cold winters of Cusco, where the elite could enjoy monumental arch\"\n\nShort Thai Explanation: ความเชื่อที่ยอมรับกว้าง เนื้อหาย่อหน้าที่เกี่ยวกับ \"An idea which has gained wide acceptance\" ตรงกับหัวข้อ iii มากที่สุด\n\nParaphrased Vocabulary: common belief = wide acceptance = iii",
+              "prompt": "Heading for Paragraph G",
               "correctAnswer": "iii",
               "acceptedAnswers": [
                 "iii"
@@ -1053,7 +1053,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "Bingham went to South America in search of an Inca city.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"His goal was to locate the remains of a city called Vitcos, the last capital of the Inca civilisation.\"\n\nShort Thai Explanation: เป้าหมายคือหาเมืองอินคา ข้อความในบทความสนับสนุนข้อนี้โดยตรง จึงตอบ TRUE\n\nParaphrased Vocabulary: search = goal to locate = ค้นหา",
+              "prompt": "Bingham went to South America in search of an Inca city.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -1066,7 +1066,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "Bingham chose the route because it was the most common route.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready f\"\n\nShort Thai Explanation: ใช้เส้นทางใหม่ ไม่ใช่เส้นทางที่คนส่วนใหญ่ใช้ ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE\n\nParaphrased Vocabulary: most common = advantage over others (negated)",
+              "prompt": "Bingham chose the route because it was the most common route.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -1079,7 +1079,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "Bingham understood the significance as soon as he saw it.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready f\"\n\nShort Thai Explanation: ยังไม่เข้าใจความสำคัญทันที ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE\n\nParaphrased Vocabulary: as soon as = did not realise = ไม่เข้าใจทันที",
+              "prompt": "Bingham understood the significance as soon as he saw it.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -1092,7 +1092,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "Bingham returned to find evidence for his theory.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"Bingham made desperate attempts to prove this belief for nearly 40 years.\"\n\nShort Thai Explanation: ไม่ได้บอกว่ากลับไปที่ซาก บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: returned = not mentioned",
+              "prompt": "Bingham returned to find evidence for his theory.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -1105,7 +1105,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "Track created for transportation of …\n\nCorrect Answer: rubber\n\nAccepted Answers: rubber\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"When Bingham and his team set off down the Urubamba in late July, they had an advantage over travelers who had preceded them: a track had recently been blasted down the valley canyon to enable rubber to be brought up by \"\n\nShort Thai Explanation: เส้นทางถูกเปิดเพื่อ enable rubber to be brought up by mules คำว่า transportation of … จึงตอบ rubber\n\nParaphrased Vocabulary: transportation = brought up = rubber = ยาง",
+              "prompt": "Track created for transportation of …",
               "correctAnswer": "rubber",
               "acceptedAnswers": [
                 "rubber"
@@ -1118,7 +1118,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Bingham found out about the ruins from a …\n\nCorrect Answer: farmer\n\nAccepted Answers: farmer\n\nAnswer Group: Cambridge 12 Test 2 Passage 2\n\nExact Portion: \"His companions showed no interest in accompanying him up the nearby hill to see some ruins that a local farmer, Melchor Arteaga, had told them about the night before.\"\n\nShort Thai Explanation: Bingham ได้ยินข่าวซากจาก a local farmer, Melchor Arteaga คำว่า found out … from a … จึงตอบ farmer\n\nParaphrased Vocabulary: from a = local farmer = ชาวนา",
+              "prompt": "Bingham found out about the ruins from a …",
               "correctAnswer": "farmer",
               "acceptedAnswers": [
                 "farmer"
@@ -1189,7 +1189,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "Observing the … of Russian-English bilingual people\n\nCorrect Answer: eye movements\n\nAccepted Answers: eye movements\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.\"\n\nShort Thai Explanation: หลักฐานของปรากฏการณ์นี้มาจาก studying eye movements ของผู้พูดสองภาษา คำว่า Observing the … จึงตอบ eye movements\n\nParaphrased Vocabulary: observing = studying = eye movements",
+              "prompt": "Observing the … of Russian-English bilingual people",
               "correctAnswer": "eye movements",
               "acceptedAnswers": [
                 "eye movements"
@@ -1202,7 +1202,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "mechanism known as …\n\nCorrect Answer: language co-activation\n\nAccepted Answers: language co-activation\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.\"\n\nShort Thai Explanation: บทความเรียกกลไกนี้ว่า phenomenon called 'language co-activation' คำว่า mechanism known as … จึงตอบ language co-activation\n\nParaphrased Vocabulary: simultaneously = co-activation = เปิดใช้สองภาษา",
+              "prompt": "mechanism known as …",
               "correctAnswer": "language co-activation",
               "acceptedAnswers": [
                 "language co-activation"
@@ -1215,7 +1215,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "A test called the …\n\nCorrect Answer: Stroop Task\n\nAccepted Answers: Stroop Task\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"In the classic Stroop Task, people see a word and are asked to name the colour of the word’s font.\"\n\nShort Thai Explanation: การทดลองอ้างถึง In the classic Stroop Task คำว่า A test called the … จึงตอบ Stroop Task\n\nParaphrased Vocabulary: test = Stroop Task",
+              "prompt": "A test called the …",
               "correctAnswer": "Stroop Task",
               "acceptedAnswers": [
                 "Stroop Task"
@@ -1228,7 +1228,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "more able to handle …\n\nCorrect Answer: conflict management\n\nAccepted Answers: conflict management\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"For this reason, bilingual people often perform better on tasks that require conflict management.\"\n\nShort Thai Explanation: ผู้พูดสองภาษา perform better on tasks that require conflict management คำว่า more able to handle … จึงตอบ conflict management\n\nParaphrased Vocabulary: handle = conflict management",
+              "prompt": "more able to handle …",
               "correctAnswer": "conflict management",
               "acceptedAnswers": [
                 "conflict management"
@@ -1241,7 +1241,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "have superior …\n\nCorrect Answer: cognitive control\n\nAccepted Answers: cognitive control\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"Bilinguals are also better at switching between two tasks; for example, when bilinguals have to switch from categorizing objects by colour (red or green) to categorizing them by shape (circle or triangle), they do so mor\"\n\nShort Thai Explanation: ผลการทดลองสะท้อน better cognitive control คำว่า have superior … จึงตอบ cognitive control\n\nParaphrased Vocabulary: superior = better = cognitive control",
+              "prompt": "have superior …",
               "correctAnswer": "cognitive control",
               "acceptedAnswers": [
                 "cognitive control"
@@ -1254,7 +1254,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "Attitudes towards bilingualism have changed in recent years.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"In the past, such children were considered to be at a disadvantage compared with their monolingual peers.\"\n\nShort Thai Explanation: มุมมองเปลี่ยนจากเสียเปรียบเป็นข้อดี มุมมองของผู้เขียนสอดคล้องกับข้อความในข้อ จึงตอบ YES\n\nParaphrased Vocabulary: changed = used to be disadvantage = เปลี่ยน",
+              "prompt": "Attitudes towards bilingualism have changed in recent years.",
               "correctAnswer": "YES",
               "acceptedAnswers": [
                 "YES"
@@ -1267,7 +1267,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "Bilingual people are better at guessing words before they are finished.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.\"\n\nShort Thai Explanation: ไม่ได้เปรียบเทียบพหุภาษา vs ภาษาเดียว บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: better at guessing = not compared",
+              "prompt": "Bilingual people are better at guessing words before they are finished.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -1280,7 +1280,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "Bilingual people consistently name images faster than monolingual people.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"For instance, knowing more than one language can cause speakers to name pictures more slowly, and can increase ‘tip-of-the-tongue states’, when you can almost, but not quite, bring a word to mind.\"\n\nShort Thai Explanation: พหุภาษาตั้งชื่อภาพช้ากว่า มุมมองของผู้เขียนขัดแย้งกับข้อความในข้อ จึงตอบ NO\n\nParaphrased Vocabulary: faster = more slowly (negated)",
+              "prompt": "Bilingual people consistently name images faster than monolingual people.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -1293,7 +1293,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "Bilingual people's brains process single sounds more efficiently in all situations.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"When researchers play the same sound to both groups in the presence of background noise, however, the bilingual listeners’ neural response is considerably larger, reflecting better encoding of the sound’s fundamental fre\"\n\nShort Thai Explanation: มีประสิทธิภาพมากกว่าเฉพาะเมื่อมีเสียงรบกวน มุมมองของผู้เขียนขัดแย้งกับข้อความในข้อ จึงตอบ NO\n\nParaphrased Vocabulary: in all situations = only with background noise",
+              "prompt": "Bilingual people's brains process single sounds more efficiently in all situations.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -1306,7 +1306,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "Fewer bilingual people than monolingual people suffer from brain disease in old age.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.\"\n\nShort Thai Explanation: ไม่ได้บอกว่าป่วยน้อยกว่า แค่อาการมาช้ากว่า บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: fewer suffer = symptoms later (not fewer)",
+              "prompt": "Fewer bilingual people than monolingual people suffer from brain disease in old age.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -1319,7 +1319,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 37,
-              "prompt": "example of brains responding differently to non-verbal auditory input\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"When monolingual and bilingual adolescents listen to simple speech sounds without any intervening background noise, they show highly similar brain stem responses.\"\n\nShort Thai Explanation: ย่อหน้า D เปรียบเทียบเมื่อมีเสียงรบกวน ข้อความที่เกี่ยวกับ \"listen to simple speech sounds\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: non-verbal auditory = speech sounds = เสียง",
+              "prompt": "example of brains responding differently to non-verbal auditory input",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -1332,7 +1332,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 38,
-              "prompt": "bilingual upbringing has benefits before we learn to speak\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"In one study, researchers taught seven-month-old babies growing up in monolingual or bilingual homes that when they heard a tinkling sound, a puppet appeared on one side of a screen.\"\n\nShort Thai Explanation: ทารก 7 เดือน ข้อความที่เกี่ยวกับ \"seven-month-old babies growing up in monolingual or bilingual homes\" ชี้ไปที่ตัวเลือก G มากที่สุด\n\nParaphrased Vocabulary: before we learn to speak = seven-month-old = ก่อนพูด",
+              "prompt": "bilingual upbringing has benefits before we learn to speak",
               "correctAnswer": "G",
               "acceptedAnswers": [
                 "G"
@@ -1345,7 +1345,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 39,
-              "prompt": "process by which people identify words that they hear\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.\"\n\nShort Thai Explanation: กระบวนการเดา/รับรู้คำ ข้อความที่เกี่ยวกับ \"When we hear a word, we don't hear the entire word all at once\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: identify words = guess what that word might be",
+              "prompt": "process by which people identify words that they hear",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1358,7 +1358,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 40,
-              "prompt": "reference to some negative consequences of being bilingual\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 2 Passage 3\n\nExact Portion: \"Having to deal with this persistent linguistic competition can result in difficulties, however.\"\n\nShort Thai Explanation: มีข้อเสียบางอย่าง ข้อความที่เกี่ยวกับ \"can result in difficulties\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: negative consequences = difficulties = ข้อเสีย",
+              "prompt": "reference to some negative consequences of being bilingual",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1426,7 +1426,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "Heading Paragraph A\n\nCorrect Answer: v\n\nAccepted Answers: v\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Some time after the Galápagos’s birth, around five million years ago, the islands were colonised by one or more tortoises from mainland South America.\"\n\nShort Thai Explanation: เต่าเข้ามาอาศัยเกาะ เนื้อหาย่อหน้าที่เกี่ยวกับ \"islands were colonised by one or more tortoises\" ตรงกับหัวข้อ v มากที่สุด\n\nParaphrased Vocabulary: populate = colonised = v",
+              "prompt": "Heading Paragraph A",
               "correctAnswer": "v",
               "acceptedAnswers": [
                 "v"
@@ -1439,7 +1439,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "Heading Paragraph B\n\nCorrect Answer: iii\n\nAccepted Answers: iii\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"From the 17th century onwards, pirates took a few on board for food, but the arrival of whaling ships in the 1790s saw this exploitation grow exponentially.\"\n\nShort Thai Explanation: การล่าและทำลายประชากร เนื้อหาย่อหน้าที่เกี่ยวกับ \"pirates took a few\" ตรงกับหัวข้อ iii มากที่สุด\n\nParaphrased Vocabulary: disadvantage = exploitation = iii",
+              "prompt": "Heading Paragraph B",
               "correctAnswer": "iii",
               "acceptedAnswers": [
                 "iii"
@@ -1452,7 +1452,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "Heading Paragraph C\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"In 1989, work began on a tortoise-breeding centre just outside the town of Puerto Villamil on Isabela, dedicated to protecting the island’s tortoise populations.\"\n\nShort Thai Explanation: เริ่มโครงการอนุรักษ์ เนื้อหาย่อหน้าที่เกี่ยวกับ \"tortoise-breeding centre\" ตรงกับหัวข้อ viii มากที่สุด\n\nParaphrased Vocabulary: conservation project = breeding centre = viii",
+              "prompt": "Heading Paragraph C",
               "correctAnswer": "viii",
               "acceptedAnswers": [
                 "viii"
@@ -1465,7 +1465,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "Heading Paragraph D\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Flying tortoises An airborne reintroduction programme has helped conservationists take significant steps to protect the endangered Galápagos tortoise.\"\n\nShort Thai Explanation: ต้องรอให้ถึงอายุที่ปลอดภัย เนื้อหาย่อหน้าที่เกี่ยวกับ \"can't be reintroduced until they're at least five years old\" ตรงกับหัวข้อ i มากที่สุด\n\nParaphrased Vocabulary: timing right = at least five years old = i",
+              "prompt": "Heading Paragraph D",
               "correctAnswer": "i",
               "acceptedAnswers": [
                 "i"
@@ -1478,7 +1478,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Heading Paragraph E\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"But in November 2010, the environmentalist and Galápagos National Park liaison officer Godfrey Merlin, a visiting private motor yacht captain and a helicopter pilot gathered around a table in a small café in Puerto Ayora\"\n\nShort Thai Explanation: วางแผนย้าย 300 ตัว เนื้อหาย่อหน้าที่เกี่ยวกับ \"work out more ambitious reintroduction\" ตรงกับหัวข้อ iv มากที่สุด\n\nParaphrased Vocabulary: bigger idea = more ambitious = iv",
+              "prompt": "Heading Paragraph E",
               "correctAnswer": "iv",
               "acceptedAnswers": [
                 "iv"
@@ -1491,7 +1491,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Heading Paragraph F\n\nCorrect Answer: vi\n\nAccepted Answers: vi\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"The aim was to use a helicopter to move 300 of the breeding centre’s tortoises to various locations close to Sierra Negra.\"\n\nShort Thai Explanation: ดำเนินการอย่างพิถีพิถัน เนื้อหาย่อหน้าที่เกี่ยวกับ \"helicopter to move\" ตรงกับหัวข้อ vi มากที่สุด\n\nParaphrased Vocabulary: carefully prepared operation = helicopter operation = vi",
+              "prompt": "Heading Paragraph F",
               "correctAnswer": "vi",
               "acceptedAnswers": [
                 "vi"
@@ -1504,7 +1504,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "Heading Paragraph G\n\nCorrect Answer: ii\n\nAccepted Answers: ii\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Eventually, one tiny tortoise came across a fully grown giant who had been lumbering around the island for around a hundred years.\"\n\nShort Thai Explanation: เจอเต่าตัวใหญ่ เนื้อหาย่อหน้าที่เกี่ยวกับ \"one tiny tortoise came across a fully grown giant\" ตรงกับหัวข้อ ii มากที่สุด\n\nParaphrased Vocabulary: young meets old = tiny tortoise and giant = ii",
+              "prompt": "Heading Paragraph G",
               "correctAnswer": "ii",
               "acceptedAnswers": [
                 "ii"
@@ -1517,7 +1517,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "17th century: taken onto ships used by …\n\nCorrect Answer: pirates\n\nAccepted Answers: pirates\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"From the 17th century onwards, pirates took a few on board for food, but the arrival of whaling ships in the 1790s saw this exploitation grow exponentially.\"\n\nShort Thai Explanation: ตั้งแต่ศตวรรษที่ 17 pirates took a few tortoises on board คำว่า ships used by … จึงตอบ pirates\n\nParaphrased Vocabulary: ships used by = pirates took = โจรสลัด",
+              "prompt": "17th century: taken onto ships used by …",
               "correctAnswer": "pirates",
               "acceptedAnswers": [
                 "pirates"
@@ -1530,7 +1530,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "1790s: kept for …\n\nCorrect Answer: food\n\nAccepted Answers: food\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships to act as food supplies during long ocean passages.\"\n\nShort Thai Explanation: เต่าถูกเก็บเป็น food supplies ระหว่างเดินทางทะเลยาว คำว่า kept for … จึงตอบ food\n\nParaphrased Vocabulary: kept for = food supplies = อาหาร",
+              "prompt": "1790s: kept for …",
               "correctAnswer": "food",
               "acceptedAnswers": [
                 "food"
@@ -1543,7 +1543,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "also used to produce …\n\nCorrect Answer: oil\n\nAccepted Answers: oil\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Sometimes, their bodies were processed into high-grade oil.\"\n\nShort Thai Explanation: ร่างเต่าถูก processed into high-grade oil คำว่า used to produce … จึงตอบ oil\n\nParaphrased Vocabulary: produce = processed into = oil = น้ำมัน",
+              "prompt": "also used to produce …",
               "correctAnswer": "oil",
               "acceptedAnswers": [
                 "oil"
@@ -1556,7 +1556,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Hunted by … on the islands\n\nCorrect Answer: settlers\n\nAccepted Answers: settlers\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Flying tortoises An airborne reintroduction programme has helped conservationists take significant steps to protect the endangered Galápagos tortoise.\"\n\nShort Thai Explanation: เมื่อ settlers มาถึงเกาะ พวกเขา hunted the tortoises คำว่า Hunted by … จึงตอบ settlers\n\nParaphrased Vocabulary: hunted by = settlers hunted = ผู้บุกเบิก",
+              "prompt": "Hunted by … on the islands",
               "correctAnswer": "settlers",
               "acceptedAnswers": [
                 "settlers"
@@ -1569,7 +1569,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "by various … not native to the islands\n\nCorrect Answer: species\n\nAccepted Answers: species\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants – that either prey on the eggs and young tortoises or damage or destroy their habitat.\"\n\nShort Thai Explanation: มีการนำ introduced alien species เข้ามา คำว่า by various … not native จึงตอบ species\n\nParaphrased Vocabulary: not native = alien species = species",
+              "prompt": "by various … not native to the islands",
               "correctAnswer": "species",
               "acceptedAnswers": [
                 "species"
@@ -1582,7 +1582,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "fed on baby tortoises and tortoises' …\n\nCorrect Answer: eggs\n\nAccepted Answers: eggs\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants – that either prey on the eggs and young tortoises or damage or destroy their habitat.\"\n\nShort Thai Explanation: สัตว์ต่างถิ่น prey on the eggs and young tortoises คำว่า fed on … eggs จึงตอบ eggs\n\nParaphrased Vocabulary: fed on = prey on = eggs = ไข่",
+              "prompt": "fed on baby tortoises and tortoises' …",
               "correctAnswer": "eggs",
               "acceptedAnswers": [
                 "eggs"
@@ -1651,7 +1651,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "acceptance that not all diseases can be totally eliminated\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"While people will always be prone to illness, the study of how geography affects our health could lead to the eradication of certain illnesses, and the prevention of others in the future.\"\n\nShort Thai Explanation: ไม่สามารถกำจัดทุกโรคได้ ข้อความที่เกี่ยวกับ \"lead to the eradication of certain illnesses, and the prevention of others\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: not all eliminated = eradication of certain illnesses = บางโรค",
+              "prompt": "acceptance that not all diseases can be totally eliminated",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -1664,7 +1664,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "examples of physical conditions caused by human behaviour\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"In many large cities, the wind is not strong enough to clear the air of the massive amounts of smog and pollution that cause asthma, lung problems, eyesight issues and more in the people who live there.\"\n\nShort Thai Explanation: มลพิษจากพฤติกรรมมนุษย์ ข้อความที่เกี่ยวกับ \"asthma, lung problems, eyesight issues\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: physical conditions = asthma, lung problems = สภาพทางกาย",
+              "prompt": "examples of physical conditions caused by human behaviour",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1677,7 +1677,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 16,
-              "prompt": "classifying diseases on how far they extend geographically\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"Researchers study the interactions between humans and their environment that could lead to illness (such as asthma in places with high levels of pollution) and work to create a clear way of categorizing illnesses, diseas\"\n\nShort Thai Explanation: จำแนกตามขอบเขตภูมิศาสตร์ ข้อความที่เกี่ยวกับ \"categorizing illnesses, diseases and epidemics into local and global scales\" ชี้ไปที่ตัวเลือก F มากที่สุด\n\nParaphrased Vocabulary: classifying = categorizing into local and global",
+              "prompt": "classifying diseases on how far they extend geographically",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -1690,7 +1690,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "reasons why access to healthcare can vary within a country\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"In both developed and developing nations there is often a very large discrepancy between the options available to people in different social classes, income brackets, and levels of education.\"\n\nShort Thai Explanation: ความไม่เท่าเทียมในประเทศ ข้อความที่เกี่ยวกับ \"discrepancy between the options available to people in different social classes\" ชี้ไปที่ตัวเลือก G มากที่สุด\n\nParaphrased Vocabulary: vary = discrepancy = social classes",
+              "prompt": "reasons why access to healthcare can vary within a country",
               "correctAnswer": "G",
               "acceptedAnswers": [
                 "G"
@@ -1703,7 +1703,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "health geography as a mixture of different academic fields\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"The Intersection of Health Sciences and Geography A While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wor\"\n\nShort Thai Explanation: ผสานสองสาขา ข้อความที่เกี่ยวกับ \"combination of knowledge regarding geography and the study of health\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: mixture = combination = สองสาขา",
+              "prompt": "health geography as a mixture of different academic fields",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -1716,7 +1716,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "type of area where a particular illness is rare\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"Malaria is much less of a problem in high-altitude deserts, for instance.\"\n\nShort Thai Explanation: มาลาเรียหายากในทะเลทราย ข้อความที่เกี่ยวกับ \"Malaria is much less of a problem in high-altitude deserts\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: rare = much less of a problem = หายาก",
+              "prompt": "type of area where a particular illness is rare",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1729,7 +1729,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "diseases disappeared thanks to better … and healthcare\n\nCorrect Answer: vaccinations\n\nAccepted Answers: vaccinations\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"The Intersection of Health Sciences and Geography A While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wor\"\n\nShort Thai Explanation: โรคหายไปเพราะ improvements in vaccinations และการเข้าถึง healthcare คำว่า better … จึงตอบ vaccinations\n\nParaphrased Vocabulary: better = improvements in = vaccinations",
+              "prompt": "diseases disappeared thanks to better … and healthcare",
               "correctAnswer": "vaccinations",
               "acceptedAnswers": [
                 "vaccinations"
@@ -1742,7 +1742,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "… are losing their usefulness\n\nCorrect Answer: antibiotics\n\nAccepted Answers: antibiotics\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"As a result, super-viruses and other infections resistant to antibiotics are becoming more and more common.\"\n\nShort Thai Explanation: มี super-viruses resistant to antibiotics ทำให้ยาปฏิชีวนะเสียประสิทธิภาพ คำว่า … are losing their usefulness จึงตอบ antibiotics\n\nParaphrased Vocabulary: losing usefulness = resistant to = antibiotics",
+              "prompt": "… are losing their usefulness",
               "correctAnswer": "antibiotics",
               "acceptedAnswers": [
                 "antibiotics"
@@ -1755,7 +1755,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "Disease-causing … in hot, damp regions\n\nCorrect Answer: mosquitoes\n\nAccepted Answers: mosquitoes\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"Perhaps one of the most obvious examples of this idea is malaria-prone areas, which are usually tropical regions that foster a warm and damp environment in which the mosquitos that can give people this disease can grow.\"\n\nShort Thai Explanation: ในพื้นที่ร้อนชื้น mosquitos ที่แพร่โรคเติบโตได้ คำว่า Disease-causing … จึงตอบ mosquitoes\n\nParaphrased Vocabulary: hot damp = tropical = mosquitoes",
+              "prompt": "Disease-causing … in hot, damp regions",
               "correctAnswer": "mosquitoes",
               "acceptedAnswers": [
                 "mosquitoes"
@@ -1768,7 +1768,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "One cause of pollution is … that burn a particular fuel\n\nCorrect Answer: factories\n\nAccepted Answers: factories\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"Part of the problem is, of course, the massive number of cars being driven, in addition to factories that run on coal power.\"\n\nShort Thai Explanation: มลพิษมาจาก factories that run on coal power คำว่า … that burn a particular fuel จึงตอบ factories\n\nParaphrased Vocabulary: burn fuel = run on coal = factories",
+              "prompt": "One cause of pollution is … that burn a particular fuel",
               "correctAnswer": "factories",
               "acceptedAnswers": [
                 "factories"
@@ -1781,7 +1781,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "growth of cities often has an impact on nearby …\n\nCorrect Answer: forests\n\nAccepted Answers: forests\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"The rapid industrialisation of some countries in recent years has also led to the cutting down of forests to allow for the expansion of big cities, which makes it even harder to fight the pollution with the fresh air tha\"\n\nShort Thai Explanation: การขยายเมืองทำให้มี cutting down of forests คำว่า impact on nearby … จึงตอบ forests\n\nParaphrased Vocabulary: impact on = cutting down = forests",
+              "prompt": "growth of cities often has an impact on nearby …",
               "correctAnswer": "forests",
               "acceptedAnswers": [
                 "forests"
@@ -1794,7 +1794,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "… is one disease growing after being eradicated\n\nCorrect Answer: polio\n\nAccepted Answers: polio\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"It is an increasingly important area of study in a world where diseases like polio are re-emerging, respiratory diseases continue to spread, and malaria-prone areas are still fighting to find a better cure.\"\n\nShort Thai Explanation: โรคอย่าง polio are re-emerging หลังเคยถูกกำจัด คำว่า … growing after being eradicated จึงตอบ polio\n\nParaphrased Vocabulary: growing after eradicated = re-emerging = polio",
+              "prompt": "… is one disease growing after being eradicated",
               "correctAnswer": "polio",
               "acceptedAnswers": [
                 "polio"
@@ -1807,7 +1807,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "A physical barrier such as a … can prevent people reaching a hospital\n\nCorrect Answer: mountain\n\nAccepted Answers: mountain\n\nAnswer Group: Cambridge 12 Test 3 Passage 2\n\nExact Portion: \"Individuals working in the area of the geography of healthcare provision attempt to assess the levels of healthcare in the area (for instance, it may be very difficult for people to get medical attention because there is\"\n\nShort Thai Explanation: ตัวอย่างมี a mountain between their village and the nearest hospital คำว่า barrier such as a … จึงตอบ mountain\n\nParaphrased Vocabulary: barrier = mountain = ภูเขา",
+              "prompt": "A physical barrier such as a … can prevent people reaching a hospital",
               "correctAnswer": "mountain",
               "acceptedAnswers": [
                 "mountain"
@@ -1871,7 +1871,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "music stimulated neurons to release substance called …\n\nCorrect Answer: dopamine\n\nAccepted Answers: dopamine\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"The first thing they discovered is that music triggers the production of dopamine – a chemical with a key role in setting people’s moods – by the neurons (nerve cells) in both the dorsal and ventral regions of the brain.\"\n\nShort Thai Explanation: ดนตรี triggers the production of dopamine คำว่า substance called … จึงตอบ dopamine\n\nParaphrased Vocabulary: substance = dopamine = โดปามีน",
+              "prompt": "music stimulated neurons to release substance called …",
               "correctAnswer": "dopamine",
               "acceptedAnswers": [
                 "dopamine"
@@ -1884,7 +1884,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "parts of the brain associated with feeling …\n\nCorrect Answer: pleasure\n\nAccepted Answers: pleasure\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"As these two regions have long been linked with the experience of pleasure, this finding isn’t particularly surprising.\"\n\nShort Thai Explanation: ส่วนของสมอง linked with the experience of pleasure คำว่า associated with feeling … จึงตอบ pleasure\n\nParaphrased Vocabulary: feeling = experience of = pleasure",
+              "prompt": "parts of the brain associated with feeling …",
               "correctAnswer": "pleasure",
               "acceptedAnswers": [
                 "pleasure"
@@ -1897,7 +1897,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "neurons in the area called the …\n\nCorrect Answer: caudate\n\nAccepted Answers: caudate\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"What is rather more significant is the finding that the dopamine neurons in the caudate – a region of the brain involved in learning stimulus-response associations, and in anticipating food and other ‘reward’ stimuli – w\"\n\nShort Thai Explanation: มี dopamine neurons in the caudate คำว่า area called the … จึงตอบ caudate\n\nParaphrased Vocabulary: area called = caudate = caudate",
+              "prompt": "neurons in the area called the …",
               "correctAnswer": "caudate",
               "acceptedAnswers": [
                 "caudate"
@@ -1910,7 +1910,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "period known as the …\n\nCorrect Answer: anticipatory phase\n\nAccepted Answers: anticipatory phase\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?\"\n\nShort Thai Explanation: นักวิจัยเรียกช่วงนี้ the 'anticipatory phase' คำว่า period known as the … จึงตอบ anticipatory phase\n\nParaphrased Vocabulary: period known as = anticipatory phase",
+              "prompt": "period known as the …",
               "correctAnswer": "anticipatory phase",
               "acceptedAnswers": [
                 "anticipatory phase"
@@ -1923,7 +1923,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "expectation of 'reward' stimuli such as …\n\nCorrect Answer: food\n\nAccepted Answers: food\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?\"\n\nShort Thai Explanation: ระบบรางวัลเชื่อมกับ anticipating food และ 'reward' stimuli อื่นๆ คำว่า reward stimuli such as … จึงตอบ food\n\nParaphrased Vocabulary: reward stimuli = food = อาหาร",
+              "prompt": "expectation of 'reward' stimuli such as …",
               "correctAnswer": "food",
               "acceptedAnswers": [
                 "food"
@@ -1936,7 +1936,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "What point does the writer emphasise in the first paragraph?\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"When listening to our favourite songs, our body betrays all the symptoms of emotional arousal.\"\n\nShort Thai Explanation: ปฏิกิริยาทางกายรุนแรง ข้อความที่เกี่ยวกับ \"our body betrays all the symptoms of emotional arousal\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: emphasise = symptoms of emotional arousal = B",
+              "prompt": "What point does the writer emphasise in the first paragraph?",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1949,7 +1949,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "view of the Montreal study in the second paragraph?\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"Because the scientists were combining methodologies (PET and fMRI), they were able to obtain an impressively exact and detailed portrait of music in the brain.\"\n\nShort Thai Explanation: ข้อมูลละเอียดแม่นยำ ข้อความที่เกี่ยวกับ \"obtain an impressively exact and detailed portrait\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: view = impressively exact = C",
+              "prompt": "view of the Montreal study in the second paragraph?",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1962,7 +1962,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "What does the writer find interesting about the results?\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?\"\n\nShort Thai Explanation: จังหวะก่อนถึงจุดไฮไลต์ ข้อความที่เกี่ยวกับ \"most active around 15 seconds before the participants' favourite moments\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: interesting = timing = A",
+              "prompt": "What does the writer find interesting about the results?",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1975,7 +1975,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "Why refer to Meyer's work?\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?\"\n\nShort Thai Explanation: สนับสนุนผล Montreal ข้อความที่เกี่ยวกับ \"offer support for the findings of the Montreal study\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: refer = offer support = B",
+              "prompt": "Why refer to Meyer's work?",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1988,7 +1988,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "According to Meyer, what causes the listener's emotional response?\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"While earlier theories of music focused on the way a sound can refer to the real world of images and experiences – its ‘connotative’ meaning – Meyer argued that the emotions we find in music come from the unfolding event\"\n\nShort Thai Explanation: โครงสร้างภายในเพลง ข้อความที่เกี่ยวกับ \"emotions we find in music come from the unfolding events of the music itself\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: causes = unfolding events = D",
+              "prompt": "According to Meyer, what causes the listener's emotional response?",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -2001,7 +2001,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 37,
-              "prompt": "The Montreal researchers discovered that\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"What is rather more significant is the finding that the dopamine neurons in the caudate – a region of the brain involved in learning stimulus-response associations, and in anticipating food and other ‘reward’ stimuli – w\"\n\nShort Thai Explanation: กิจกรรม neuron ก่อนจุดสำคัญ ข้อความที่เกี่ยวกับ \"most active around 15 seconds before\" ชี้ไปที่ตัวเลือก F มากที่สุด\n\nParaphrased Vocabulary: discovered = most active before = F",
+              "prompt": "The Montreal researchers discovered that",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -2014,7 +2014,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 38,
-              "prompt": "Many studies have demonstrated that\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"Numerous studies, after all, have demonstrated that dopamine neurons quickly adapt to predictable rewards.\"\n\nShort Thai Explanation: neuron ลดลงเมื่อคาดเดาได้ ข้อความที่เกี่ยวกับ \"dopamine neurons quickly adapt to predictable rewards\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: predictable = adapt = B",
+              "prompt": "Many studies have demonstrated that",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2027,7 +2027,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 39,
-              "prompt": "Meyer's analysis of Beethoven's music shows that\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"Meyer dissected 50 measures (bars) of the masterpiece, showing how Beethoven begins with the clear statement of a rhythmic and harmonic pattern and then, in an ingenious tonal dance, carefully holds off repeating it.\"\n\nShort Thai Explanation: เลื่อนให้สิ่งที่ผู้ฟังคาดหวัง ข้อความที่เกี่ยวกับ \"carefully holds off repeating it\" ชี้ไปที่ตัวเลือก E มากที่สุด\n\nParaphrased Vocabulary: delays = holds off repeating = E",
+              "prompt": "Meyer's analysis of Beethoven's music shows that",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -2040,7 +2040,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 40,
-              "prompt": "Earlier theories of music suggested that\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 3 Passage 3\n\nExact Portion: \"While earlier theories of music focused on the way a sound can refer to the real world of images and experiences – its ‘connotative’ meaning – Meyer argued that the emotions we find in music come from the unfolding event\"\n\nShort Thai Explanation: เชื่อมโยงภาพและเหตุการณ์จริง ข้อความที่เกี่ยวกับ \"music focused on the way a sound can refer to the real world of images\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: earlier theories = refer to real world = C",
+              "prompt": "Earlier theories of music suggested that",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -2100,7 +2100,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "Early humans used a material called … to make sharp points\n\nCorrect Answer: obsidian\n\nAccepted Answers: obsidian\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"Historians have discovered that a type of natural glass – obsidian – formed in places such as the mouth of a volcano as a result of the intense heat of an eruption melting sand – was first used as tips for spears.\"\n\nShort Thai Explanation: มนุษย์ยุคแรกใช้ obsidian ซึ่งเป็น a type of natural glass คำว่า material called … จึงตอบ obsidian\n\nParaphrased Vocabulary: material = obsidian = ออบซิเดียน",
+              "prompt": "Early humans used a material called … to make sharp points",
               "correctAnswer": "obsidian",
               "acceptedAnswers": [
                 "obsidian"
@@ -2113,7 +2113,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "… of their spears\n\nCorrect Answer: spears\n\nAccepted Answers: spears\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"Historians have discovered that a type of natural glass – obsidian – formed in places such as the mouth of a volcano as a result of the intense heat of an eruption melting sand – was first used as tips for spears.\"\n\nShort Thai Explanation: obsidian ถูก used as tips for spears คำว่า … of their spears จึงตอบ spears\n\nParaphrased Vocabulary: sharp points = tips for spears = spears",
+              "prompt": "… of their spears",
               "correctAnswer": "spears",
               "acceptedAnswers": [
                 "spears"
@@ -2126,7 +2126,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "4000 BC: … made of stone were covered in glass\n\nCorrect Answer: beads\n\nAccepted Answers: beads\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"Archaeologists have even found evidence of man-made glass which dates back to 4000 BC; this took the form of glazes used for coating stone beads.\"\n\nShort Thai Explanation: มีการ coating stone beads ด้วยแก้ว คำว่า … made of stone were covered in glass จึงตอบ beads\n\nParaphrased Vocabulary: made of stone = stone beads = beads",
+              "prompt": "4000 BC: … made of stone were covered in glass",
               "correctAnswer": "beads",
               "acceptedAnswers": [
                 "beads"
@@ -2139,7 +2139,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "First century BC: glass was coloured because of the … in the material\n\nCorrect Answer: impurities\n\nAccepted Answers: impurities\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"The glass made during this time was highly coloured due to the impurities of the raw material.\"\n\nShort Thai Explanation: แก้วยุคแรก highly coloured due to the impurities คำว่า coloured because of the … จึงตอบ impurities\n\nParaphrased Vocabulary: coloured because = impurities = สิ่งเจือปน",
+              "prompt": "First century BC: glass was coloured because of the … in the material",
               "correctAnswer": "impurities",
               "acceptedAnswers": [
                 "impurities"
@@ -2152,7 +2152,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Until 476 AD: Only the … knew how to make glass\n\nCorrect Answer: Romans\n\nAccepted Answers: Romans\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"However, they guarded the skills and technology required to make glass very closely, and it was not until their empire collapsed in 476 AD that glass-making knowledge became widespread throughout Europe and the Middle Ea\"\n\nShort Thai Explanation: ชาวโรมัน guarded the skills จนกว่าจักรวรรลจะล่มสลายปี 476 คำว่า Only the … knew how จึงตอบ Romans\n\nParaphrased Vocabulary: only = guarded skills until 476 = Romans",
+              "prompt": "Until 476 AD: Only the … knew how to make glass",
               "correctAnswer": "Romans",
               "acceptedAnswers": [
                 "Romans"
@@ -2165,7 +2165,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "George Ravenscroft developed a process using …\n\nCorrect Answer: lead\n\nAccepted Answers: lead\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"He attempted to counter the effect of clouding that sometimes occurred in blown glass by introducing lead to the raw materials used in the process.\"\n\nShort Thai Explanation: Ravenscroft พัฒนาวิธี by introducing lead to the raw materials คำว่า using … จึงตอบ lead\n\nParaphrased Vocabulary: using = introducing = lead = ตะกั่ว",
+              "prompt": "George Ravenscroft developed a process using …",
               "correctAnswer": "lead",
               "acceptedAnswers": [
                 "lead"
@@ -2178,7 +2178,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "to avoid the occurrence of … in blown glass\n\nCorrect Answer: clouding\n\nAccepted Answers: clouding\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"He attempted to counter the effect of clouding that sometimes occurred in blown glass by introducing lead to the raw materials used in the process.\"\n\nShort Thai Explanation: ตะกั่วช่วย counter the effect of clouding ในแก้วเป่า คำว่า avoid the occurrence of … จึงตอบ clouding\n\nParaphrased Vocabulary: avoid = counter = clouding = ขุ่น",
+              "prompt": "to avoid the occurrence of … in blown glass",
               "correctAnswer": "clouding",
               "acceptedAnswers": [
                 "clouding"
@@ -2191,7 +2191,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "after changes to laws concerning …\n\nCorrect Answer: taxes\n\nAccepted Answers: taxes\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"In Britain, the modern glass industry only really started to develop after the repeal of the Excise Act in 1845.\"\n\nShort Thai Explanation: อุตสาหกรรมแก้วฟื้นหลัง repeal ของกฎภาษี (Excise Act) คำว่า laws concerning … จึงตอบ taxes\n\nParaphrased Vocabulary: laws = Excise Act = taxes = ภาษี",
+              "prompt": "after changes to laws concerning …",
               "correctAnswer": "taxes",
               "acceptedAnswers": [
                 "taxes"
@@ -2204,7 +2204,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "HM Ashley had the fastest bottle-producing machine at the time.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"From 1887 onwards, glass making developed from traditional mouth-blowing to a semi-automatic process, after factory-owner HM Ashley introduced a machine capable of producing 200 bottles per hour in Castleford, Yorkshire,\"\n\nShort Thai Explanation: เร็วกว่าวิธีเดิมมาก ข้อความในบทความสนับสนุนข้อนี้โดยตรง จึงตอบ TRUE\n\nParaphrased Vocabulary: fastest = three times quicker = เร็วที่สุด",
+              "prompt": "HM Ashley had the fastest bottle-producing machine at the time.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -2217,7 +2217,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "Michael Owens was hired by a large US company to design a machine.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"Then in 1907, the first fully automated machine was developed in the USA by Michael Owens – founder of the Owens Bottle Machine Company (later the major manufacturers Owens-Illinois) – and installed in its factory.\"\n\nShort Thai Explanation: เขาเป็นผู้ก่อตั้ง ไม่ได้ถูกจ้าง ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE\n\nParaphrased Vocabulary: hired = founder (negated)",
+              "prompt": "Michael Owens was hired by a large US company to design a machine.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -2230,7 +2230,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Nowadays, most glass is produced by large international manufacturers.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"It has become a modern, hi-tech industry operating in a fiercely competitive global market where quality, design and service levels are critical to maintaining market share.\"\n\nShort Thai Explanation: ไม่ได้ระบุว่าผลิตโดยบริษัทใหญ่ส่วนใหญ่ บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: most glass = not stated",
+              "prompt": "Nowadays, most glass is produced by large international manufacturers.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -2243,7 +2243,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "Concern for the environment is leading to increased demand for glass containers.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"Glass is an ideal material for recycling, and with growing consumer concern for green issues, glass bottles and jars are becoming ever more popular.\"\n\nShort Thai Explanation: ความต้องการเพิ่ม ข้อความในบทความสนับสนุนข้อนี้โดยตรง จึงตอบ TRUE\n\nParaphrased Vocabulary: increased demand = more popular = เพิ่มขึ้น",
+              "prompt": "Concern for the environment is leading to increased demand for glass containers.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -2256,7 +2256,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "It is more expensive to produce recycled glass than new glass.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 12 Test 4 Passage 1\n\nExact Portion: \"As less energy is needed to melt recycled glass than to melt down raw materials, this also saves fuel and production costs.\"\n\nShort Thai Explanation: รีไซเคิลถูกกว่า ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE\n\nParaphrased Vocabulary: more expensive = less energy needed (negated)",
+              "prompt": "It is more expensive to produce recycled glass than new glass.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -2323,7 +2323,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "What did the 2006 discovery reveal about the lynx?\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"it would bring forward the tassel-eared cat's estimated extinction date by roughly 5,000 years\"\n\nShort Thai Explanation: อยู่ในอังกฤษนานกว่าที่คิด ข้อความที่เกี่ยวกับ \"estimated extinction date\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: survived longer = extinction date brought forward = D",
+              "prompt": "What did the 2006 discovery reveal about the lynx?",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -2336,7 +2336,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "What point about large predators in paragraph 3?\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"One of the most striking findings of modern ecology is that ecosystems without large predators behave in completely different ways from those that retain them.\"\n\nShort Thai Explanation: เพิ่มความหลากหลายทางชีวภาพ ข้อความที่เกี่ยวกับ \"large predators behave in completely different ways\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: increase biodiversity = creating niches = A",
+              "prompt": "What point about large predators in paragraph 3?",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -2349,7 +2349,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 16,
-              "prompt": "What does the writer suggest about British conservation?\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"Conservationists are starting to accept that the old preservation-jar model is failing, even on its own terms.\"\n\nShort Thai Explanation: แนวทางผิดพลาด ข้อความที่เกี่ยวกับ \"sought to prevent them from changing\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: misguided = preservation-jar = C",
+              "prompt": "What does the writer suggest about British conservation?",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -2362,7 +2362,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "Protecting large areas of the sea would result in\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"This policy would also greatly boost catches in the surrounding seas; the fishing industry’s insistence on scouring every inch of seabed, leaving no breeding reserves, could not be more damaging to its own interests.\"\n\nShort Thai Explanation: ประโยชน์ต่อการประมง ข้อความที่เกี่ยวกับ \"greatly boost catches in the surrounding seas\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: practical benefits = boost catches = A",
+              "prompt": "Protecting large areas of the sea would result in",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -2375,7 +2375,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "What distinguishes rewilding from other campaigns?\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"One of the reasons why the enthusiasm for rewilding is spreading so quickly in Britain is that it helps to create a more inspiring vision than the green movement’s usual promise of ‘Follow us and the world will be slight\"\n\nShort Thai Explanation: ข้อความเชิงบวกน่าดึงดูด ข้อความที่เกี่ยวกับ \"helps to create a more inspiring vision\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: positive message = inspiring vision = C",
+              "prompt": "What distinguishes rewilding from other campaigns?",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -2388,7 +2388,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "lynx has ever put … in danger\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"One of the reasons why the enthusiasm for rewilding is spreading so quickly in Britain is that it helps to create a more inspiring vision than the green movement’s usual promise of ‘Follow us and the world will be slight\"\n\nShort Thai Explanation: มนุษย์ ข้อความที่เกี่ยวกับ \"no known instance of one preying on people\" ชี้ไปที่ตัวเลือก E มากที่สุด\n\nParaphrased Vocabulary: in danger = preying on people (none) = humans = E",
+              "prompt": "lynx has ever put … in danger",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -2401,7 +2401,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "reduce the numbers of certain …\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"It is a specialist predator of roe deer, a species that has exploded in Britain in recent decades, holding back, by intensive browsing, attempts to re-establish forests.\"\n\nShort Thai Explanation: สัตว์ป่า ข้อความที่เกี่ยวกับ \"specialist predator of roe deer\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: wild animals = roe deer/sika deer = D",
+              "prompt": "reduce the numbers of certain …",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -2414,7 +2414,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "minimal threat to …\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"The lynx requires deep cover, and as such presents little risk to sheep and other livestock, which are supposed, as a condition of farm subsidies, to be kept out of the woods.\"\n\nShort Thai Explanation: ปศุสัตว์ ข้อความที่เกี่ยวกับ \"little risk to sheep and other livestock\" ชี้ไปที่ตัวเลือก F มากที่สุด\n\nParaphrased Vocabulary: livestock = farm animals = F",
+              "prompt": "minimal threat to …",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -2427,7 +2427,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "return native … to certain areas\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"The attempt to reintroduce this predator marries well with the aim of bringing forests back to parts of our bare and barren uplands.\"\n\nShort Thai Explanation: ป่าไม้/ต้นไม้ ข้อความที่เกี่ยวกับ \"bringing forests back\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: native = forests back = trees = A",
+              "prompt": "return native … to certain areas",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -2440,7 +2440,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "Britain could become the first European country to reintroduce the lynx.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"There is nothing extraordinary about these proposals, seen from the perspective of anywhere else in Europe.\"\n\nShort Thai Explanation: ไม่ใช่ประเทศแรกในยุโรป มุมมองของผู้เขียนขัดแย้งกับข้อความในข้อ จึงตอบ NO\n\nParaphrased Vocabulary: first = nothing extraordinary elsewhere = NO",
+              "prompt": "Britain could become the first European country to reintroduce the lynx.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -2453,7 +2453,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "European lynx population growth has exceeded expectations.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"The European population has tripled since 1970 to roughly 10,000.\"\n\nShort Thai Explanation: ไม่ได้เปรียบเทียบกับความคาดหวัง บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: exceeded expectations = not stated",
+              "prompt": "European lynx population growth has exceeded expectations.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -2466,7 +2466,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "Changes in agricultural practices have extended lynx habitat in Europe.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"As with wolves, bears, beavers, boar, bison, moose and many other species, the lynx has been able to spread as farming has left the hills and people discover that it is more lucrative to protect charismatic wildlife than\"\n\nShort Thai Explanation: การเกษตรเปลี่ยนทำให้ที่อยู่อาศัยขยาย มุมมองของผู้เขียนสอดคล้องกับข้อความในข้อ จึงตอบ YES\n\nParaphrased Vocabulary: extended habitat = farming left the hills = YES",
+              "prompt": "Changes in agricultural practices have extended lynx habitat in Europe.",
               "correctAnswer": "YES",
               "acceptedAnswers": [
                 "YES"
@@ -2479,7 +2479,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Species reintroduction has commercial advantages.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 12 Test 4 Passage 2\n\nExact Portion: \"As with wolves, bears, beavers, boar, bison, moose and many other species, the lynx has been able to spread as farming has left the hills and people discover that it is more lucrative to protect charismatic wildlife than\"\n\nShort Thai Explanation: ท่องเที่ยวทำเงินได้ มุมมองของผู้เขียนสอดคล้องกับข้อความในข้อ จึงตอบ YES\n\nParaphrased Vocabulary: commercial = lucrative/tourists pay = YES",
+              "prompt": "Species reintroduction has commercial advantages.",
               "correctAnswer": "YES",
               "acceptedAnswers": [
                 "YES"
@@ -2550,7 +2550,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "Heading Paragraph A\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Following the 2008 financial meltdown, which resulted in a deeper and more prolonged period of economic downturn than anyone expected, the search for explanations in the many post-mortems of the crisis has meant blame ha\"\n\nShort Thai Explanation: หลายหน่วยถูกกล่าวหา เนื้อหาย่อหน้าที่เกี่ยวกับ \"blame has been spread far and wide\" ตรงกับหัวข้อ iv มากที่สุด\n\nParaphrased Vocabulary: external bodies = blame spread = iv",
+              "prompt": "Heading Paragraph A",
               "correctAnswer": "iv",
               "acceptedAnswers": [
                 "iv"
@@ -2563,7 +2563,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "Heading Paragraph B\n\nCorrect Answer: ii\n\nAccepted Answers: ii\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"The knock-on effect of this scrutiny has been to make the governance of companies in general an issue of intense public debate and has significantly increased the pressures on, and the responsibilities of, directors.\"\n\nShort Thai Explanation: ผลกระทบจากการถูกจับตา เนื้อหาย่อหน้าที่เกี่ยวกับ \"increased the pressures on, and the responsibilities of, directors\" ตรงกับหัวข้อ ii มากที่สุด\n\nParaphrased Vocabulary: close examination = scrutiny = ii",
+              "prompt": "Heading Paragraph B",
               "correctAnswer": "ii",
               "acceptedAnswers": [
                 "ii"
@@ -2576,7 +2576,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "Heading Paragraph C\n\nCorrect Answer: vi\n\nAccepted Answers: vi\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Often, board business is devolved to committees in order to cope with the workload, which may be more efficient but can mean that the board as a whole is less involved in fully addressing some of the most important issue\"\n\nShort Thai Explanation: กรรมการอาจไม่ร่วมแก้ปัญหาสำคัญ เนื้อหาย่อหน้าที่เกี่ยวกับ \"the board as a whole is less involved in fully addressing\" ตรงกับหัวข้อ vi มากที่สุด\n\nParaphrased Vocabulary: not all directors take part = less involved = vi",
+              "prompt": "Heading Paragraph C",
               "correctAnswer": "vi",
               "acceptedAnswers": [
                 "vi"
@@ -2589,7 +2589,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "Heading Paragraph D\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"A radical solution, which may work for some very large companies whose businesses are extensive and complex, is the professional board, whose members would work up to three or four days a week, supported by their own ded\"\n\nShort Thai Explanation: ข้อเสนอเปลี่ยนรูปแบบคณะกรรมการ เนื้อหาย่อหน้าที่เกี่ยวกับ \"the professional board, whose members would work up to three or four days a week\" ตรงกับหัวข้อ viii มากที่สุด\n\nParaphrased Vocabulary: proposal = professional board = viii",
+              "prompt": "Heading Paragraph D",
               "correctAnswer": "viii",
               "acceptedAnswers": [
                 "viii"
@@ -2602,7 +2602,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "Heading Paragraph E\n\nCorrect Answer: vii\n\nAccepted Answers: vii\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"One of the main criticisms of boards and their directors is that they do not focus sufficiently on longer-term matters of strategy, sustainability and governance, but instead concentrate too much on short-term financial \"\n\nShort Thai Explanation: มองไม่ไกลพอ เนื้อหาย่อหน้าที่เกี่ยวกับ \"do not focus sufficiently on longer-term matters\" ตรงกับหัวข้อ vii มากที่สุด\n\nParaphrased Vocabulary: not far enough ahead = short-term focus = vii",
+              "prompt": "Heading Paragraph E",
               "correctAnswer": "vii",
               "acceptedAnswers": [
                 "vii"
@@ -2615,7 +2615,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "Heading Paragraph F\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Compensation for chief executives has become a combat zone where pitched battles between investors, management and board members are fought, often behind closed doors but increasingly frequently in the full glare of pres\"\n\nShort Thai Explanation: ข้อพิพาทเรื่องค่าตอบแทน เนื้อหาย่อหน้าที่เกี่ยวกับ \"Compensation for chief executives has become a combat zone\" ตรงกับหัวข้อ i มากที่สุด\n\nParaphrased Vocabulary: disputes over financial arrangements = compensation battles = i",
+              "prompt": "Heading Paragraph F",
               "correctAnswer": "i",
               "acceptedAnswers": [
                 "i"
@@ -2628,7 +2628,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "Heading Paragraph G\n\nCorrect Answer: iii\n\nAccepted Answers: iii\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Boards of companies in all sectors will need to widen their perspective to encompass these issues and this may involve a realignment of corporate goals.\"\n\nShort Thai Explanation: อาจต้องเปลี่ยนแปลงพื้นฐาน เนื้อหาย่อหน้าที่เกี่ยวกับ \"widen their perspective\" ตรงกับหัวข้อ iii มากที่สุด\n\nParaphrased Vocabulary: fundamental change = realignment of goals = iii",
+              "prompt": "Heading Paragraph G",
               "correctAnswer": "iii",
               "acceptedAnswers": [
                 "iii"
@@ -2641,7 +2641,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "Close scrutiny of boards has increased since the economic downturn.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Following the 2008 financial meltdown, which resulted in a deeper and more prolonged period of economic downturn than anyone expected, the search for explanations in the many post-mortems of the crisis has meant blame ha\"\n\nShort Thai Explanation: หลังวิกฤต 2008 การตรวจสอบเข้มขึ้น มุมมองของผู้เขียนสอดคล้องกับข้อความในข้อ จึงตอบ YES\n\nParaphrased Vocabulary: increased = intense public debate = YES",
+              "prompt": "Close scrutiny of boards has increased since the economic downturn.",
               "correctAnswer": "YES",
               "acceptedAnswers": [
                 "YES"
@@ -2654,7 +2654,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "Banks have been mismanaged to a greater extent than other businesses.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"The role of bank directors and management and their widely publicised failures have been extensively picked over and examined in reports, inquiries and commentaries.\"\n\nShort Thai Explanation: ไม่ได้เปรียบเทียบกับธุรกิจอื่น บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: greater extent = not compared",
+              "prompt": "Banks have been mismanaged to a greater extent than other businesses.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -2667,7 +2667,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "Board meetings normally continue as long as necessary to debate in full.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Agendas can become overloaded and this can mean the time for constructive debate must necessarily be restricted in favour of getting through the business.\"\n\nShort Thai Explanation: เวลาถกเถียงถูกจำกัด มุมมองของผู้เขียนขัดแย้งกับข้อความในข้อ จึงตอบ NO\n\nParaphrased Vocabulary: as long as necessary = restricted (negated) = NO",
+              "prompt": "Board meetings normally continue as long as necessary to debate in full.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -2680,7 +2680,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 37,
-              "prompt": "Using a committee structure would ensure board members are fully informed.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Often, board business is devolved to committees in order to cope with the workload, which may be more efficient but can mean that the board as a whole is less involved in fully addressing some of the most important issue\"\n\nShort Thai Explanation: คณะกรรมการทำให้บอร์ดร่วมน้อยลง มุมมองของผู้เขียนขัดแย้งกับข้อความในข้อ จึงตอบ NO\n\nParaphrased Vocabulary: ensure informed = less involved (negated) = NO",
+              "prompt": "Using a committee structure would ensure board members are fully informed.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -2693,7 +2693,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 38,
-              "prompt": "non-executive directors were at a disadvantage because of lack of …\n\nCorrect Answer: information\n\nAccepted Answers: information\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"However, more professional and better-informed boards would have been particularly appropriate for banks where the executives had access to information that part-time non-executive directors lacked, leaving the latter un\"\n\nShort Thai Explanation: กรรมการ part-time non-executive directors lacked ข้อมูล ทำให้ไม่เข้าใจธุรกิจ คำว่า lack of … จึงตอบ information\n\nParaphrased Vocabulary: lack of = lacked = information",
+              "prompt": "non-executive directors were at a disadvantage because of lack of …",
               "correctAnswer": "information",
               "acceptedAnswers": [
                 "information"
@@ -2706,7 +2706,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 39,
-              "prompt": "too much emphasis on … considerations of short-term relevance\n\nCorrect Answer: financial\n\nAccepted Answers: financial\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"One of the main criticisms of boards and their directors is that they do not focus sufficiently on longer-term matters of strategy, sustainability and governance, but instead concentrate too much on short-term financial \"\n\nShort Thai Explanation: บอร์ด concentrate too much on short-term financial metrics คำว่า too much emphasis on … considerations จึงตอบ financial\n\nParaphrased Vocabulary: considerations = financial metrics = financial",
+              "prompt": "too much emphasis on … considerations of short-term relevance",
               "correctAnswer": "financial",
               "acceptedAnswers": [
                 "financial"
@@ -2719,7 +2719,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 40,
-              "prompt": "the board may have to accept the views of …\n\nCorrect Answer: shareholders\n\nAccepted Answers: shareholders|investors\n\nAnswer Group: Cambridge 12 Test 4 Passage 3\n\nExact Portion: \"Many would argue that this is in the interest of transparency and good governance as shareholders use their muscle in the area of pay to pressure boards to remove underperforming chief executives.\"\n\nShort Thai Explanation: shareholders use their muscle ในเรื่องค่าตอบแทน CEO คำว่า accept the views of … จึงตอบ shareholders\n\nParaphrased Vocabulary: accept views = shareholders use muscle = shareholders",
+              "prompt": "the board may have to accept the views of …",
               "correctAnswer": "shareholders",
               "acceptedAnswers": [
                 "shareholders",

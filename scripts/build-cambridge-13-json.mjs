@@ -86,7 +86,7 @@ const parseNumberedPrompts = (qText, start, end) => {
   }
 
   for (const line of lines) {
-    const m = line.match(/^(\d+)\.\s*(.*)$/)
+    const m = line.match(/^(\d+)\s*\.\s*(.*)$/)
     if (m) {
       flush()
       currentNum = Number(m[1])
