@@ -5074,9 +5074,9 @@ body,
 
 .readingExamLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.95fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .readingSummaryStrip,
@@ -5154,7 +5154,10 @@ body,
   display: grid;
   align-content: start;
   gap: 16px;
+  min-height: calc(100vh - 220px);
+  min-height: calc(100dvh - 220px);
   max-height: calc(100vh - 36px);
+  max-height: calc(100dvh - 140px);
   overflow: auto;
   padding-bottom: 96px;
   background:
@@ -6674,8 +6677,8 @@ body,
 }
 
 .readingExamLayout-pdoy {
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.88fr);
-  align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
 }
 
 .readingPdoyStagePanel-decide,
@@ -6899,7 +6902,7 @@ body,
 
 @media (max-width: 1100px) {
   .readingExamLayout {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .listeningBuilderExamMain,
@@ -6917,7 +6920,7 @@ body,
   }
 
   .readingExamLayout-pdoy {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .readingQuestionsPanel,
@@ -6930,7 +6933,8 @@ body,
   }
 
   .readingQuestionsPanel-pdoyTutorial {
-    max-height: calc(100vh - 28px);
+    max-height: calc(100vh - 140px);
+    max-height: calc(100dvh - 140px);
   }
 
   .trialHeroShowcase {
@@ -13944,6 +13948,32 @@ section.panel.full.speakingFlowTheme > h2 {
 .speakingFlowTheme .speakingPerformanceCard {
   position: sticky !important;
   top: 56px !important;
+}
+
+.speakingFlowTheme .speakingStageWrap:has(.globalProgressBar) .speakingPanelLayout {
+  align-items: start !important;
+}
+
+.speakingFlowTheme .speakingStageWrap:has(.globalProgressBar) .speakingPromptCard {
+  max-height: calc(100vh - 190px);
+  max-height: calc(100dvh - 190px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: auto;
+}
+
+.speakingFlowTheme .speakingStageWrap:has(.globalProgressBar) .speakingPerformanceCard {
+  position: static !important;
+  align-self: start;
+}
+
+.speakingFlowTheme .prepAccordion[open] .questionNoteGrid,
+.speakingFlowTheme .prepAccordion[open] .part2NoteWrap {
+  max-height: min(62vh, 680px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 8px;
+  scroll-behavior: auto;
 }
 
 .speakingFlowTheme .reportStickyBar {

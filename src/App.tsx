@@ -3695,6 +3695,58 @@ const findReadingEvidenceParagraphIndex = (passage: ReadingPassageRecord | null,
   return normalizedParagraphs.findIndex((paragraph) => paragraph.includes(normalizedExact))
 }
 
+const resolveReadingEvidenceNeedleInPassage = (
+  passage: ReadingPassageRecord | null,
+  evidenceText: string
+) => {
+  const stripped = String(evidenceText || '')
+    .replace(/^Paragraph\s+[A-G]:\s*/i, '')
+    .trim()
+  if (!stripped || !passage) return ''
+
+  const paragraphs = passage.bodyParagraphs || []
+  const needles = buildReadingHintNeedles(stripped)
+
+  for (const needle of needles) {
+    const normalizedNeedle = normalizeTextForLooseMatch(needle)
+    if (normalizedNeedle.length < 8) continue
+    for (const paragraph of paragraphs) {
+      const regex = new RegExp(escapeRegExp(needle), 'i')
+      const match = paragraph.match(regex)
+      if (match?.[0]) return match[0]
+    }
+  }
+
+  const words = stripped.split(/\s+/).filter((word) => word.length > 3)
+  for (let length = Math.min(14, words.length); length >= 5; length -= 1) {
+    const candidate = words.slice(0, length).join(' ')
+    const normalizedCandidate = normalizeTextForLooseMatch(candidate)
+    if (normalizedCandidate.length < 12) continue
+    for (const paragraph of paragraphs) {
+      if (normalizeTextForLooseMatch(paragraph).includes(normalizedCandidate)) {
+        const regex = new RegExp(escapeRegExp(candidate), 'i')
+        const match = paragraph.match(regex)
+        if (match?.[0]) return match[0]
+      }
+    }
+  }
+
+  return stripped.length > 120 ? stripped.slice(0, 120).trim() : stripped
+}
+
+const buildReadingMatchingHintNeedles = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!passage || !question) return []
+  return buildReadingEvidenceOptions(passage, question)
+    .map((option) => resolveReadingEvidenceNeedleInPassage(passage, option.text))
+    .filter((needle, index, list) => {
+      const normalized = normalizeTextForLooseMatch(needle)
+      return normalized.length >= 8 && list.findIndex((item) => normalizeTextForLooseMatch(item) === normalized) === index
+    })
+}
+
 const extractReadingQuestionBlock = (questionSectionText: string, questionNumber: number) => {
   const escapedNumber = String(questionNumber).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const pattern = new RegExp(
@@ -3751,13 +3803,6 @@ const isReadingNotGivenAnswer = (answer: string) => {
     .toUpperCase()
   return normalized === 'NOT GIVEN' || normalized.startsWith('NOT GIVEN')
 }
-
-const readingQuestionNeedsEvidenceStep = (
-  passage: ReadingPassageRecord | null,
-  question: ReadingQuestion | null
-) =>
-  isReadingMatchingQuestion(passage, question) ||
-  (isReadingJudgementQuestion(question) && isReadingNotGivenAnswer(question?.correctAnswer || ''))
 
 const pickReadingTrapSentence = (
   passage: ReadingPassageRecord | null,
@@ -5329,9 +5374,6 @@ function App() {
   const [readingSelectionText, setReadingSelectionText] = useState('')
   const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string }>>([])
   const [readingHintQuestionNumber, setReadingHintQuestionNumber] = useState<number | null>(null)
-  const [readingBankEvidenceByQuestion, setReadingBankEvidenceByQuestion] = useState<Record<number, string>>({})
-  const [readingBankEvidenceVerified, setReadingBankEvidenceVerified] = useState<Record<number, boolean>>({})
-  const [readingBankEvidenceFeedback, setReadingBankEvidenceFeedback] = useState<Record<number, string>>({})
   const [readingExamError, setReadingExamError] = useState('')
   const [selectedReadingPdoyLessonId, setSelectedReadingPdoyLessonId] = useState('')
   const [readingPdoySessionActive, setReadingPdoySessionActive] = useState(false)
@@ -6992,23 +7034,22 @@ function App() {
       : activeReadingPassages
           .flatMap((passage) => passage.questions || [])
           .find((question) => question.number === readingHintQuestionNumber) ?? null
-  const activeReadingHintExcerpt = useMemo(() => {
-    if (!activeReadingHint || !activeReadingPassage) return ''
+  const activeReadingHintNeedles = useMemo(() => {
+    if (!activeReadingHint || !activeReadingPassage) return []
     const hintPassage = activeReadingPassages.find((passage) =>
       (passage.questions || []).some((question) => question.number === activeReadingHint.number)
     )
-    if (!hintPassage || hintPassage.number !== activeReadingPassage.number) return ''
-    const selectedId = readingBankEvidenceByQuestion[activeReadingHint.number]
-    const selectedOption = selectedId
-      ? buildReadingEvidenceOptions(hintPassage, activeReadingHint).find((option) => option.id === selectedId)
-      : null
-    return getReadingQuestionHintExcerpt(hintPassage, activeReadingHint, selectedOption?.text)
-  }, [
-    activeReadingHint,
-    activeReadingPassage,
-    activeReadingPassages,
-    readingBankEvidenceByQuestion
-  ])
+    if (!hintPassage || hintPassage.number !== activeReadingPassage.number) return []
+
+    if (isReadingMatchingQuestion(hintPassage, activeReadingHint)) {
+      return buildReadingMatchingHintNeedles(hintPassage, activeReadingHint)
+    }
+
+    const excerpt = getReadingQuestionHintExcerpt(hintPassage, activeReadingHint)
+    const resolved = resolveReadingEvidenceNeedleInPassage(hintPassage, excerpt)
+    if (resolved) return [resolved]
+    return buildReadingHintNeedles(excerpt)
+  }, [activeReadingHint, activeReadingPassage, activeReadingPassages])
   const activeReadingQuestions = activeReadingPassage?.questions || []
   const activeReadingAllQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
   const visibleReadingReportItems =
@@ -10993,9 +11034,6 @@ function App() {
     setReadingReportItems([])
     setReadingAttemptStage('exam')
     setReadingHintQuestionNumber(null)
-    setReadingBankEvidenceByQuestion({})
-    setReadingBankEvidenceVerified({})
-    setReadingBankEvidenceFeedback({})
     setReadingExamError('')
     setReadingSelectionText('')
     setReadingUserHighlights([])
@@ -11246,9 +11284,6 @@ function App() {
     setReadingReportItems(savedAttempt.reportItems)
     setReadingAttemptStage('review')
     setReadingHintQuestionNumber(null)
-    setReadingBankEvidenceByQuestion({})
-    setReadingBankEvidenceVerified({})
-    setReadingBankEvidenceFeedback({})
     setReadingExamError('')
     setReadingSelectionText('')
     setReadingUserHighlights([])
@@ -11313,9 +11348,9 @@ function App() {
   const renderPassageParagraphWithHighlights = (
     text: string,
     passageNumber: number,
-    hintExcerpt?: string
+    hintExcerpt?: string | string[]
   ) => {
-    const hintNeedles = buildReadingHintNeedles(hintExcerpt)
+    const hintNeedles = Array.isArray(hintExcerpt) ? hintExcerpt : buildReadingHintNeedles(hintExcerpt)
     const highlights = [
       ...readingUserHighlights
         .filter((item) => item.passageNumber === passageNumber)
@@ -11346,62 +11381,29 @@ function App() {
     })
   }
 
-  const handleReadingBankEvidenceSelect = (
-    question: ReadingQuestion,
-    option: ReadingPdoyEvidenceOption
-  ) => {
-    setReadingBankEvidenceByQuestion((current) => ({ ...current, [question.number]: option.id }))
-    setReadingHintQuestionNumber(question.number)
-    if (option.isCorrect) {
-      setReadingBankEvidenceVerified((current) => ({ ...current, [question.number]: true }))
-      setReadingBankEvidenceFeedback((current) => {
-        const next = { ...current }
-        delete next[question.number]
-        return next
-      })
-      return
-    }
-    const isNotGivenTrap =
-      isReadingJudgementQuestion(question) && isReadingNotGivenAnswer(question.correctAnswer)
-    setReadingBankEvidenceFeedback((current) => ({
-      ...current,
-      [question.number]: isNotGivenTrap
-        ? 'ยังไม่ใช่จุดนี้ — ประโยคนี้อาจยืนยันหรือปฏิเทธข้อความในข้อชัดเจน หรือไม่เกี่ยวกับหัวข้อเลย ลองหาประโยคที่มีคำจากโจทย์แต่ไม่ได้บอกว่าจริงหรือเท็จ'
-        : 'Keyword trap — this portion shares similar words but does not prove the right heading/paragraph. Try again.'
-    }))
-  }
-
   const renderReadingAnswerField = (
     question: ReadingQuestion,
     passage: ReadingPassageRecord | null = activeReadingPassage
   ) => {
     const value = readingAnswers[question.number] || ''
-    const needsEvidenceStep = readingQuestionNeedsEvidenceStep(passage, question)
-    const evidenceVerified = Boolean(readingBankEvidenceVerified[question.number])
 
-    if (needsEvidenceStep && isReadingMatchingQuestion(passage, question)) {
+    if (isReadingMatchingQuestion(passage, question)) {
       const options = extractReadingMultipleChoiceOptions(passage, question)
       if (options.length) {
         return (
-          <div className={`readingMatchingAnswerBlock ${evidenceVerified ? '' : 'is-locked'}`.trim()}>
-            {!evidenceVerified && (
-              <p className="meta">Pick the correct evidence above before choosing your heading or paragraph.</p>
-            )}
-            <div className="readingPdoyChoiceGrid">
-              {options.map((option) => (
-                <button
-                  key={`${question.number}-${option.letter}`}
-                  type="button"
-                  className={`readingPdoyOptionBtn ${value === option.letter ? 'active' : ''}`}
-                  disabled={!evidenceVerified}
-                  onClick={() =>
-                    setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
-                  }
-                >
-                  <strong>{option.letter}</strong> {option.text}
-                </button>
-              ))}
-            </div>
+          <div className="readingPdoyChoiceGrid">
+            {options.map((option) => (
+              <button
+                key={`${question.number}-${option.letter}`}
+                type="button"
+                className={`readingPdoyOptionBtn ${value === option.letter ? 'active' : ''}`}
+                onClick={() =>
+                  setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
+                }
+              >
+                <strong>{option.letter}</strong> {option.text}
+              </button>
+            ))}
           </div>
         )
       }
@@ -11409,40 +11411,28 @@ function App() {
 
     if (question.answerType === 'true-false-not-given') {
       return (
-        <div className={`readingMatchingAnswerBlock ${evidenceVerified || !needsEvidenceStep ? '' : 'is-locked'}`.trim()}>
-          {needsEvidenceStep && !evidenceVerified && (
-            <p className="meta">Pick the related passage portion above first — it uses question words but does not confirm TRUE or FALSE.</p>
-          )}
-          <select
-            value={value}
-            disabled={needsEvidenceStep && !evidenceVerified}
-            onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
-          >
-            <option value="">Select answer</option>
-            <option value="TRUE">TRUE</option>
-            <option value="FALSE">FALSE</option>
-            <option value="NOT GIVEN">NOT GIVEN</option>
-          </select>
-        </div>
+        <select
+          value={value}
+          onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
+        >
+          <option value="">Select answer</option>
+          <option value="TRUE">TRUE</option>
+          <option value="FALSE">FALSE</option>
+          <option value="NOT GIVEN">NOT GIVEN</option>
+        </select>
       )
     }
     if (question.answerType === 'yes-no-not-given') {
       return (
-        <div className={`readingMatchingAnswerBlock ${evidenceVerified || !needsEvidenceStep ? '' : 'is-locked'}`.trim()}>
-          {needsEvidenceStep && !evidenceVerified && (
-            <p className="meta">Pick the related passage portion above first — it uses question words but does not confirm YES or NO.</p>
-          )}
-          <select
-            value={value}
-            disabled={needsEvidenceStep && !evidenceVerified}
-            onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
-          >
-            <option value="">Select answer</option>
-            <option value="YES">YES</option>
-            <option value="NO">NO</option>
-            <option value="NOT GIVEN">NOT GIVEN</option>
-          </select>
-        </div>
+        <select
+          value={value}
+          onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
+        >
+          <option value="">Select answer</option>
+          <option value="YES">YES</option>
+          <option value="NO">NO</option>
+          <option value="NOT GIVEN">NOT GIVEN</option>
+        </select>
       )
     }
     if (question.answerType === 'multiple-choice') {
@@ -14074,7 +14064,7 @@ function App() {
                           activeReadingPassage.number,
                           activeReadingHint &&
                             activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
-                            ? activeReadingHintExcerpt
+                            ? activeReadingHintNeedles
                             : ''
                         )}
                       </p>
@@ -14124,15 +14114,10 @@ function App() {
                   <div className="readingQuestionList">
                     {activeReadingQuestions.map((question) => {
                       const isHinting = readingHintQuestionNumber === question.number
-                      const needsEvidenceStep = readingQuestionNeedsEvidenceStep(activeReadingPassage, question)
+                      const isMatchingQuestion = isReadingMatchingQuestion(activeReadingPassage, question)
                       const isNotGivenQuestion =
                         isReadingJudgementQuestion(question) &&
                         isReadingNotGivenAnswer(question.correctAnswer)
-                      const evidenceOptions = needsEvidenceStep
-                        ? buildReadingEvidenceOptions(activeReadingPassage, question)
-                        : []
-                      const evidenceVerified = Boolean(readingBankEvidenceVerified[question.number])
-                      const selectedEvidenceId = readingBankEvidenceByQuestion[question.number] || ''
                       return (
                         <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
                           <div className="readingQuestionCardTop">
@@ -14150,59 +14135,22 @@ function App() {
                               {isHinting ? 'Hide Hint' : 'Show Hint'}
                             </button>
                           </div>
-                          {needsEvidenceStep && (
-                            <div className="readingMatchingEvidenceBlock">
-                              <p className="sectionLabel">Step 1 — Evidence trap check</p>
-                              <p className="meta">
-                                {isNotGivenQuestion
-                                  ? 'One portion mentions the topic and reuses words from the question, but does not confirm TRUE/FALSE (or YES/NO). The others are keyword traps or over-claim.'
-                                  : 'Three portions from the passage — only one proves the right heading or paragraph. Wrong options reuse keywords but point to the wrong section.'}
-                              </p>
-                              <div className="readingPdoyChoiceGrid">
-                                {evidenceOptions.map((option) => (
-                                  <button
-                                    key={option.id}
-                                    type="button"
-                                    className={`readingPdoyOptionBtn ${selectedEvidenceId === option.id ? 'active' : ''} ${
-                                      evidenceVerified && option.isCorrect ? 'is-correct' : ''
-                                    }`.trim()}
-                                    onClick={() => handleReadingBankEvidenceSelect(question, option)}
-                                  >
-                                    {option.text}
-                                  </button>
-                                ))}
-                              </div>
-                              {readingBankEvidenceFeedback[question.number] && !evidenceVerified && (
-                                <p className="error">{readingBankEvidenceFeedback[question.number]}</p>
-                              )}
-                              {evidenceVerified && (
-                                <p className="meta readingMatchingEvidenceOk">
-                                  {isNotGivenQuestion
-                                    ? 'Good — the highlighted portion shows related vocabulary but not a clear TRUE/FALSE (or YES/NO). Now choose NOT GIVEN.'
-                                    : 'Good — now choose the heading or paragraph that this evidence supports.'}
-                                </p>
-                              )}
+                          {isHinting && isMatchingQuestion && (
+                            <div className="readingHintBox">
+                              <strong>Hint:</strong> three potential evidence portions are highlighted in the passage on the left.
                             </div>
                           )}
-                          {isHinting && !needsEvidenceStep && (
+                          {isHinting && isNotGivenQuestion && (
+                            <div className="readingHintBox">
+                              <strong>Hint:</strong> the related passage portion is highlighted on the left — it mentions the topic but does not confirm TRUE/FALSE (or YES/NO).
+                            </div>
+                          )}
+                          {isHinting && !isMatchingQuestion && !isNotGivenQuestion && (
                             <div className="readingHintBox">
                               <strong>Hint:</strong> evidence highlighted in the passage.
                             </div>
                           )}
-                          {isHinting && needsEvidenceStep && !evidenceVerified && isNotGivenQuestion && (
-                            <div className="readingHintBox">
-                              <strong>Hint:</strong> pick the related portion above, or use Show Hint to preview it in the passage.
-                            </div>
-                          )}
-                          {isHinting && needsEvidenceStep && evidenceVerified && (
-                            <div className="readingHintBox">
-                              <strong>Hint:</strong> correct evidence highlighted in the passage.
-                            </div>
-                          )}
                           <div className="readingAnswerField">
-                            {needsEvidenceStep && evidenceVerified && (
-                              <p className="sectionLabel">Step 2 — Your answer</p>
-                            )}
                             {renderReadingAnswerField(question, activeReadingPassage)}
                           </div>
                         </article>
