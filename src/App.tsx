@@ -422,6 +422,7 @@ type QuestionAudioCatalogItem = {
 }
 
 type SpeakingTestMode = 'part1' | 'part2' | 'part3' | 'full'
+type SpeakingEntryMode = 'practice' | 'full' | null
 type FullExamPhase = 'part1' | 'part2_prep' | 'part2_speaking' | 'rest' | 'part3'
 
 type AttemptStage = 'idle' | 'prep' | 'speaking' | 'assessing' | 'result'
@@ -3083,6 +3084,11 @@ const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   advanced: 'Advanced Reading'
 }
 
+const READING_ENTRY_CHOICES: Array<{ category: ReadingBankCategory; title: string; subtitle: string }> = [
+  { category: 'normal', title: 'ข้อสอบระดับง่าย', subtitle: 'สำหรับ band 4-6.5' },
+  { category: 'advanced', title: 'ข้อสอบระดับยาก', subtitle: 'สำหรับ 7 ขึ้นไป' }
+]
+
 const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
   const normalized = String(value || '').trim().toLowerCase()
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
@@ -3501,6 +3507,16 @@ const READING_PDOY_EXAM_IDS = new Set([
 ])
 
 const isReadingPdoyExercise = (examId: string) => READING_PDOY_EXAM_IDS.has(String(examId || ''))
+
+const isCambridge1213ReadingExam = (exam: Pick<ReadingExamRecord, 'id' | 'title'>) => {
+  const id = String(exam.id || '').toLowerCase()
+  const title = String(exam.title || '').toLowerCase()
+  return (
+    /^cambridge-1[23]-/.test(id) ||
+    /\bcambridge\s*1[23]\b/.test(title) ||
+    /^c1[23]\s/.test(title)
+  )
+}
 
 const inferReadingCategoryFromSource = (value: string): ReadingBankCategory => {
   const text = String(value || '')
@@ -5364,6 +5380,7 @@ function App() {
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
   const [readingExams, setReadingExams] = useState<ReadingExamRecord[]>([])
   const [readingWorkspaceMode, setReadingWorkspaceMode] = useState<ReadingWorkspaceMode>('bank')
+  const [readingEntryCategory, setReadingEntryCategory] = useState<ReadingBankCategory | null>(null)
   const [selectedReadingCategory, setSelectedReadingCategory] = useState<ReadingBankCategory>('normal')
   const [selectedReadingExamId, setSelectedReadingExamId] = useState('')
   const [readingAnswers, setReadingAnswers] = useState<Record<number, string>>({})
@@ -5431,6 +5448,7 @@ function App() {
   )
   const [selectedTopicId, setSelectedTopicId] = useState<string>(INITIAL_TOPICS[0].id)
   const [selectedTestMode, setSelectedTestMode] = useState<SpeakingTestMode>('part1')
+  const [speakingEntryMode, setSpeakingEntryMode] = useState<SpeakingEntryMode>(null)
   const [topicBankSearch, setTopicBankSearch] = useState('')
   const [topicBankView, setTopicBankView] = useState<'grid' | 'list'>('grid')
   const [topicBankFocusIndex, setTopicBankFocusIndex] = useState(0)
@@ -6741,7 +6759,10 @@ function App() {
     [adminTtsQuestionLibrary]
   )
   const bankReadingExams = useMemo(
-    () => readingExams.filter((exam) => !isReadingPdoyExercise(exam.id)),
+    () =>
+      readingExams.filter(
+        (exam) => !isReadingPdoyExercise(exam.id) && isCambridge1213ReadingExam(exam)
+      ),
     [readingExams]
   )
   const pdoyReadingExams = useMemo(
@@ -7283,6 +7304,40 @@ function App() {
     return part2AvailableTopics
   }, [isTrialUser, selectedTestMode, part2AvailableTopics])
 
+  const speakingModeTopics = useMemo<Record<SpeakingTestMode, SpeakingTopic[]>>(
+    () => ({
+      part1: [...PART1_TOPICS, ...CAMBRIDGE_12_SPEAKING_PART1_TOPICS, ...CAMBRIDGE_13_SPEAKING_PART1_TOPICS],
+      part2: part2AvailableTopics,
+      part3: [...PART3_TOPICS, ...CAMBRIDGE_12_SPEAKING_PART3_TOPICS, ...CAMBRIDGE_13_SPEAKING_PART3_TOPICS],
+      full: [
+        ...FULL_EXAM_TOPICS,
+        ...CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
+        ...CAMBRIDGE_13_SPEAKING_FULL_EXAM_TOPICS
+      ]
+    }),
+    [part2AvailableTopics]
+  )
+
+  const roundSpeakingAverageScore = (score: number) => Math.ceil(score * 2) / 2
+
+  const getSpeakingAverageScore = (mode: SpeakingTestMode) => {
+    const scores = speakingModeTopics[mode]
+      .map((topic) => latestScoresByTest[`${mode}:${topic.id}`])
+      .filter((score): score is number => typeof score === 'number' && Number.isFinite(score))
+    if (!scores.length) return null
+    return roundSpeakingAverageScore(scores.reduce((total, score) => total + score, 0) / scores.length)
+  }
+
+  const speakingAverageScores = useMemo(
+    () => ({
+      part1: getSpeakingAverageScore('part1'),
+      part2: getSpeakingAverageScore('part2'),
+      part3: getSpeakingAverageScore('part3'),
+      full: getSpeakingAverageScore('full')
+    }),
+    [latestScoresByTest, speakingModeTopics]
+  )
+
   const topicBankFilteredTopics = useMemo(() => {
     const q = topicBankSearch.trim().toLowerCase()
     if (!q) return availableTopics
@@ -7772,11 +7827,15 @@ function App() {
     if (!readingExams.length) return
     if (filteredReadingExams.length > 0) return
     if (!adminFirstReadingCategoryWithContent) return
+    if (readingEntryCategory) {
+      setReadingEntryCategory(adminFirstReadingCategoryWithContent)
+    }
     setSelectedReadingCategory(adminFirstReadingCategoryWithContent)
   }, [
     authSession?.role,
     readingExams.length,
     filteredReadingExams.length,
+    readingEntryCategory,
     adminFirstReadingCategoryWithContent
   ])
 
@@ -11028,6 +11087,7 @@ function App() {
     const exam = filteredReadingExams.find((item) => item.id === examId) || null
     if (!exam) return
     setReadingWorkspaceMode('bank')
+    setReadingEntryCategory(exam.category)
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
     setReadingAnswers({})
@@ -11278,6 +11338,7 @@ function App() {
     const savedAttempt = readingAttemptByExamId[examId]
     if (!exam || !savedAttempt) return
     setReadingWorkspaceMode('bank')
+    setReadingEntryCategory(exam.category)
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
     setReadingAnswers(Object.fromEntries(savedAttempt.reportItems.map((item) => [item.number, item.userAnswer])))
@@ -11569,6 +11630,8 @@ function App() {
                   onClick={() => {
                     resetSession()
                     setSelectedTestMode('part1')
+                    setSpeakingEntryMode(null)
+                    setTopicBankSearch('')
                     setActivePage('workspace')
                   }}
                   type="button"
@@ -11589,6 +11652,11 @@ function App() {
                 <button
                   className={activePage === 'reading' ? 'active' : ''}
                   onClick={() => {
+                    setReadingEntryCategory(null)
+                    setReadingWorkspaceMode('bank')
+                    setSelectedReadingCategory('normal')
+                    setReadingAttemptStage('bank')
+                    setReadingHintQuestionNumber(null)
                     setActivePage('reading')
                   }}
                   type="button"
@@ -13324,25 +13392,32 @@ function App() {
             </div>
           </div>
 
-          {readingWorkspaceMode === 'bank' && (
-            <div className="readingCategoryTabs">
-              {(Object.entries(READING_CATEGORY_LABELS) as Array<[ReadingBankCategory, string]>).map(([key, label]) => (
-                <button
-                  key={key}
-                  type="button"
-                  className={selectedReadingCategory === key ? 'active' : ''}
-                  onClick={() => {
-                    setSelectedReadingCategory(key)
-                    setReadingAttemptStage('bank')
-                  }}
-                >
-                  {label} ({readingExamCountsByCategory.find((group) => group.category === key)?.count || 0})
-                </button>
-              ))}
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && (
+            <div className="readingEntryChooser" aria-label="Choose reading exam level">
+              {READING_ENTRY_CHOICES.map((choice) => {
+                const count = readingExamCountsByCategory.find((group) => group.category === choice.category)?.count || 0
+                return (
+                  <button
+                    key={choice.category}
+                    type="button"
+                    className={`readingEntryCard ${readingEntryCategory === choice.category ? 'active' : ''}`}
+                    onClick={() => {
+                      setReadingEntryCategory(choice.category)
+                      setSelectedReadingCategory(choice.category)
+                      setReadingAttemptStage('bank')
+                    }}
+                  >
+                    <span className="readingEntryLabel">{READING_CATEGORY_LABELS[choice.category]}</span>
+                    <strong>{choice.title}</strong>
+                    <small>{choice.subtitle}</small>
+                    <span className="readingEntryCount">{count} exams</span>
+                  </button>
+                )
+              })}
             </div>
           )}
 
-          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && (
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && readingEntryCategory && (
             <>
               {readingExamError && <p className="error">{readingExamError}</p>}
               {filteredReadingExams.length === 0 ? (
@@ -13367,7 +13442,10 @@ function App() {
                           <button
                             key={`jump-${group.category}`}
                             type="button"
-                            onClick={() => setSelectedReadingCategory(group.category)}
+                            onClick={() => {
+                              setReadingEntryCategory(group.category)
+                              setSelectedReadingCategory(group.category)
+                            }}
                           >
                             Open {group.label} ({group.count})
                           </button>
@@ -13969,9 +14047,6 @@ function App() {
                   <button type="button" className="secondary" onClick={() => setReadingAttemptStage('bank')}>
                     Back to Bank
                   </button>
-                  <button type="button" onClick={submitReadingExam}>
-                    Submit Reading Exam
-                  </button>
                 </div>
               </div>
 
@@ -14132,7 +14207,7 @@ function App() {
                                 setReadingHintQuestionNumber((current) => (current === question.number ? null : question.number))
                               }}
                             >
-                              {isHinting ? 'Hide Hint' : 'Show Hint'}
+                              {isHinting ? 'ซ่อนคำใบ้' : 'ดูคำใบ้'}
                             </button>
                           </div>
                           {isHinting && isMatchingQuestion && (
@@ -14156,6 +14231,12 @@ function App() {
                         </article>
                       )
                     })}
+                  </div>
+
+                  <div className="readingExamSubmitBar">
+                    <button type="button" onClick={submitReadingExam}>
+                      Submit Reading Exam
+                    </button>
                   </div>
                 </section>
               </div>
@@ -15364,22 +15445,60 @@ function App() {
               </div>
             ) : (
             <>
-              <div className="providerTabs">
-                {(['part1', 'part2', 'part3', 'full'] as const).map((mode) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    className={`${selectedTestMode === mode ? 'active' : ''} ${mode === 'full' ? 'fullMockTab' : ''}`}
-                    onClick={() => setSelectedTestMode(mode)}
-                  >
-                    {SPEAKING_MODE_LABELS[mode]}
-                    {mode === 'full' && <span className="tabDurationBadge">🕐 15-17 min</span>}
-                  </button>
-                ))}
+              <div className="speakingEntryChooser" aria-label="Choose speaking practice mode">
+                <button
+                  type="button"
+                  className={`speakingEntryCard ${speakingEntryMode === 'practice' ? 'active' : ''}`}
+                  onClick={() => {
+                    setSpeakingEntryMode('practice')
+                    if (selectedTestMode === 'full') setSelectedTestMode('part1')
+                    setTopicBankSearch('')
+                  }}
+                >
+                  <span className="speakingEntryLabel">ฝึกที่ละ part</span>
+                  <strong>Part 1, Part 2, Part 3</strong>
+                  <small>เลือกพาร์ตที่อยากซ้อม แล้วดูคะแนนเฉลี่ยของแต่ละพาร์ต</small>
+                </button>
+                <button
+                  type="button"
+                  className={`speakingEntryCard speakingEntryCard-full ${speakingEntryMode === 'full' ? 'active' : ''}`}
+                  onClick={() => {
+                    setSpeakingEntryMode('full')
+                    setSelectedTestMode('full')
+                    setTopicBankSearch('')
+                  }}
+                >
+                  <span className="speakingEntryLabel">ทำข้อสอบเต็ม</span>
+                  <strong>ควรเตรียมเวลา 13-15 นาที</strong>
+                  <small>หากหยุดกลางทางจะเสีย credit mock test</small>
+                </button>
               </div>
-              {selectedTestMode === 'full' && (
+
+              {speakingEntryMode === 'practice' && (
+                <div className="providerTabs speakingPartTabs">
+                  {(['part1', 'part2', 'part3'] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      className={selectedTestMode === mode ? 'active' : ''}
+                      onClick={() => {
+                        setSelectedTestMode(mode)
+                        setTopicBankSearch('')
+                      }}
+                    >
+                      <span>{SPEAKING_MODE_LABELS[mode]}</span>
+                      <span className="speakingAverageScore">
+                        Avg {speakingAverageScores[mode] === null ? '-' : speakingAverageScores[mode]?.toFixed(1)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {speakingEntryMode === 'full' && (
                 <div className="fullMockPreviewBanner">
-                  <p className="fullMockPreviewTitle">Full Mock Test Flow</p>
+                  <p className="fullMockPreviewTitle">Full Mock Test Flow · Avg {speakingAverageScores.full === null ? '-' : speakingAverageScores.full?.toFixed(1)}</p>
+                  <p className="meta">ควรเตรียมเวลา 13-15 นาที หากหยุดกลางทางจะเสีย credit mock test</p>
                   <div className="fullMockPreviewSteps">
                     <span className="previewStep">Part 1 (4Q)</span>
                     <span className="previewArrow">→</span>
@@ -15395,7 +15514,7 @@ function App() {
                   </div>
                 </div>
               )}
-              <div className="speakingTopicBank" role="region" aria-label="Speaking question bank">
+              {speakingEntryMode && <div className="speakingTopicBank" role="region" aria-label="Speaking question bank">
                 <div className="topicBankToolbar">
                   <label className="topicBankSearchWrap">
                     <span className="sr-only">Search topics</span>
@@ -15519,7 +15638,7 @@ function App() {
                     </section>
                   ))
                 )}
-              </div>
+              </div>}
             </>
             )
           )}

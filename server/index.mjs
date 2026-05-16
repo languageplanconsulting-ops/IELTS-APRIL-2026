@@ -7,12 +7,6 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import WebSocket from 'ws'
-import { ORIGINAL_IELTS_READING_7_TO_9_EXAMS } from './originalIeltsReading7To9.mjs'
-import { USER_PROVIDED_READING_PRACTICE_EXAMS } from './userProvidedReadingPractice.mjs'
-import { USER_PROVIDED_READING_PRACTICE_2_EXAMS } from './userProvidedReadingPractice2.mjs'
-import { USER_PROVIDED_READING_PRACTICE_3_EXAMS } from './userProvidedReadingPractice3.mjs'
-import { USER_PROVIDED_READING_PRACTICE_4_EXAMS } from './userProvidedReadingPractice4.mjs'
-import { USER_PROVIDED_READING_PRACTICE_5_EXAMS } from './userProvidedReadingPractice5.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvidedReadingPracticeCambridge12.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvidedReadingPracticeCambridge13.mjs'
 
@@ -4540,55 +4534,39 @@ Exact Portion: "works reliably in the infinite range of traffic, weather and roa
 Short Thai Explanation: ข้อ E ถูก เพราะรถต้องปรับตัวให้ทำงานได้ในสภาพถนน จราจร และอากาศที่หลากหลาย.
 Paraphrased Vocabulary: adapt to various driving conditions = works reliably in traffic, weather and road situations`
 
-const BUILT_IN_READING_EXAMS = [
-  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-15T00:00:00.000Z',
-    updatedAt: '2026-05-15T00:00:00.000Z'
-  })),
-  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-15T00:00:00.000Z',
-    updatedAt: '2026-05-15T00:00:00.000Z'
-  })),
-  ...USER_PROVIDED_READING_PRACTICE_5_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-13T00:00:00.000Z',
-    updatedAt: '2026-05-13T00:00:00.000Z'
-  })),
-  ...USER_PROVIDED_READING_PRACTICE_4_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-13T00:00:00.000Z',
-    updatedAt: '2026-05-13T00:00:00.000Z'
-  })),
-  ...USER_PROVIDED_READING_PRACTICE_3_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-13T00:00:00.000Z',
-    updatedAt: '2026-05-13T00:00:00.000Z'
-  })),
-  ...USER_PROVIDED_READING_PRACTICE_2_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-13T00:00:00.000Z',
-    updatedAt: '2026-05-13T00:00:00.000Z'
-  })),
-  ...USER_PROVIDED_READING_PRACTICE_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-13T00:00:00.000Z',
-    updatedAt: '2026-05-13T00:00:00.000Z'
-  })),
-  ...ORIGINAL_IELTS_READING_7_TO_9_EXAMS.map((exam) => ({
-    ...exam,
-    parsedPayload: buildReadingExamPayload(exam),
-    createdAt: '2026-05-13T00:00:00.000Z',
-    updatedAt: '2026-05-13T00:00:00.000Z'
-  })),
+const isCambridge1213ReadingExamRecord = (exam) => {
+  const id = String(exam?.id || '').toLowerCase()
+  const title = String(exam?.title || '').toLowerCase()
+  return (
+    /^cambridge-1[23]-/.test(id) ||
+    /\bcambridge\s*1[23]\b/.test(title) ||
+    /^c1[23]\s/.test(title)
+  )
+}
+
+const mapBuiltInReadingExam = (exam, timestamps) => ({
+  ...exam,
+  parsedPayload: buildReadingExamPayload(exam),
+  createdAt: timestamps.createdAt,
+  updatedAt: timestamps.updatedAt
+})
+
+const BUILT_IN_READING_BANK_EXAMS = [
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-15T00:00:00.000Z',
+      updatedAt: '2026-05-15T00:00:00.000Z'
+    })
+  ),
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-15T00:00:00.000Z',
+      updatedAt: '2026-05-15T00:00:00.000Z'
+    })
+  )
+]
+
+const BUILT_IN_READING_PDOY_EXAMS = [
   {
     id: 'builtin-reading-pdoy-huarango',
     title: 'Exercise 1 - The Return of the Huarango',
@@ -4708,38 +4686,10 @@ const BUILT_IN_READING_EXAMS = [
     }),
     createdAt: '2026-05-05T00:00:00.000Z',
     updatedAt: '2026-05-05T00:00:00.000Z'
-  },
-  {
-    id: 'builtin-reading-fulltest-part-2',
-    title: 'Reading Full Test Part 2',
-    category: 'normal',
-    rawPassageText: READING_FULL_TEST_PART2_PASSAGE_TEXT,
-    rawAnswerKey: READING_FULL_TEST_PART2_ANSWER_KEY,
-    parsedPayload: buildReadingExamPayload({
-      title: 'Reading Full Test Part 2',
-      category: 'normal',
-      rawPassageText: READING_FULL_TEST_PART2_PASSAGE_TEXT,
-      rawAnswerKey: READING_FULL_TEST_PART2_ANSWER_KEY
-    }),
-    createdAt: '2026-05-02T00:00:00.000Z',
-    updatedAt: '2026-05-02T00:00:00.000Z'
-  },
-  {
-    id: 'builtin-reading-fulltest-part-3',
-    title: 'Reading Full Test Part 3',
-    category: 'normal',
-    rawPassageText: READING_FULL_TEST_PART3_PASSAGE_TEXT,
-    rawAnswerKey: READING_FULL_TEST_PART3_ANSWER_KEY,
-    parsedPayload: buildReadingExamPayload({
-      title: 'Reading Full Test Part 3',
-      category: 'normal',
-      rawPassageText: READING_FULL_TEST_PART3_PASSAGE_TEXT,
-      rawAnswerKey: READING_FULL_TEST_PART3_ANSWER_KEY
-    }),
-    createdAt: '2026-05-02T00:00:00.000Z',
-    updatedAt: '2026-05-02T00:00:00.000Z'
   }
 ]
+
+const BUILT_IN_READING_EXAMS = [...BUILT_IN_READING_BANK_EXAMS, ...BUILT_IN_READING_PDOY_EXAMS]
 
 const mapReadingExamRecord = (row) => ({
   id: String(row?.id || ''),
@@ -9582,7 +9532,9 @@ app.get('/api/reading/exams', requireAuth, async (req, res) => {
         headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
       }
     )
-    const uploadedExams = (Array.isArray(rows) ? rows : []).map(mapReadingExamRecord)
+    const uploadedExams = (Array.isArray(rows) ? rows : [])
+      .map(mapReadingExamRecord)
+      .filter(isCambridge1213ReadingExamRecord)
     return res.json({
       exams: [...BUILT_IN_READING_EXAMS, ...uploadedExams]
     })

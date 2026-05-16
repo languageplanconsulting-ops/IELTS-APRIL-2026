@@ -6802,6 +6802,16 @@ body,
   margin-top: 14px;
 }
 
+.readingExamSubmitBar {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 2px solid var(--bc-black);
+}
+
+.readingExamSubmitBar button {
+  width: 100%;
+}
+
 .readingQuestionCardTop {
   display: flex;
   justify-content: space-between;
@@ -11304,6 +11314,68 @@ select:focus,
   letter-spacing: -0.085em !important;
 }
 
+.speakingFlowTheme .speakingEntryChooser {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 1180px;
+}
+
+.speakingFlowTheme .speakingEntryCard {
+  min-height: 150px;
+  display: grid;
+  gap: 8px;
+  align-content: center;
+  text-align: left;
+  padding: 22px 24px !important;
+  border: 2px solid #0f172a !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+  cursor: pointer;
+}
+
+.speakingFlowTheme .speakingEntryCard.active,
+.speakingFlowTheme .speakingEntryCard:hover {
+  transform: translate(-1px, -1px) !important;
+  box-shadow: 6px 6px 0 #0f172a !important;
+}
+
+.speakingFlowTheme .speakingEntryCard.active {
+  background: #fffbeb !important;
+  border-color: #00337a !important;
+}
+
+.speakingFlowTheme .speakingEntryCard-full.active {
+  background: #eef6ff !important;
+}
+
+.speakingFlowTheme .speakingEntryLabel {
+  width: fit-content;
+  padding: 5px 10px;
+  border: 2px solid #0f172a;
+  border-radius: 999px !important;
+  background: #ffcc00;
+  color: #0f172a;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.speakingFlowTheme .speakingEntryCard strong {
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.speakingFlowTheme .speakingEntryCard small {
+  max-width: 46ch;
+  color: #475569;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
 .speakingFlowTheme .providerTabs {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -11323,6 +11395,27 @@ select:focus,
   box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08) !important;
   font-size: clamp(1.05rem, 1.8vw, 1.6rem) !important;
   overflow: hidden;
+}
+
+.speakingFlowTheme .providerTabs.speakingPartTabs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.speakingFlowTheme .providerTabs.speakingPartTabs button {
+  display: grid !important;
+  gap: 6px;
+  align-content: center;
+}
+
+.speakingFlowTheme .speakingAverageScore {
+  justify-self: center;
+  padding: 4px 9px;
+  border: 1px solid rgba(15, 23, 42, 0.24);
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.72);
+  color: #00337a;
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .speakingFlowTheme .providerTabs button.active {
@@ -14040,6 +14133,16 @@ section.panel.full.speakingFlowTheme > h2 {
 }
 
 @media (max-width: 720px) {
+  .speakingFlowTheme .speakingEntryChooser,
+  .speakingFlowTheme .providerTabs.speakingPartTabs {
+    grid-template-columns: 1fr;
+  }
+
+  .speakingFlowTheme .speakingEntryCard {
+    min-height: 128px;
+    padding: 18px !important;
+  }
+
   .workspace .topbar {
     flex-direction: column !important;
     align-items: stretch !important;
