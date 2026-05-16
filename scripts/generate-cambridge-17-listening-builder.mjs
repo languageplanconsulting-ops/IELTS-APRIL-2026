@@ -13,8 +13,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
 const scriptsPath = path.join(__dirname, 'cambridge-17-listening-scripts.json')
 const tasksPath = path.join(__dirname, 'cambridge-17-listening-tasks.json')
+const overridesPath = path.join(__dirname, 'cambridge-17-listening-script-overrides.json')
 
 const scripts = JSON.parse(fs.readFileSync(scriptsPath, 'utf8'))
+const scriptOverrides = fs.existsSync(overridesPath)
+  ? JSON.parse(fs.readFileSync(overridesPath, 'utf8'))
+  : { section2: {}, section4: {} }
 const tasksData = JSON.parse(fs.readFileSync(tasksPath, 'utf8'))
 
 const esc = (s) =>
@@ -31,11 +35,13 @@ const buildExamSet = (sectionNumber, titleSuffix) => {
     const tt = taskTests.find((t) => t.test === st.test)
     if (!tt) throw new Error(`Missing tasks for ${secKey} test ${st.test}`)
     const tasks = [...tt.tasks].sort((a, b) => a.questionNumber - b.questionNumber)
+    const secOverrides = sectionNumber === 2 ? scriptOverrides.section2 : scriptOverrides.section4
+    const testOverride = secOverrides?.[String(st.test)]
     return {
       id: `cam17-sec${sectionNumber}-test${st.test}`,
       testNumber: st.test,
-      title: st.title,
-      scriptParagraphs: st.scriptParagraphs,
+      title: testOverride?.title || st.title,
+      scriptParagraphs: testOverride?.scriptParagraphs || st.scriptParagraphs,
       tasks
     }
   })
@@ -104,20 +110,20 @@ fs.writeFileSync(
   'utf8'
 )
 
-const overrides = {}
+const answerOverrides = {}
 for (const sec of ['section2', 'section4']) {
   for (const test of tasksData[sec]) {
     for (const task of test.tasks) {
-      if (task.correctAnswer) overrides[task.id] = task.correctAnswer
+      if (task.correctAnswer) answerOverrides[task.id] = task.correctAnswer
     }
   }
 }
 fs.writeFileSync(
   path.join(__dirname, 'cambridge-17-listening-overrides.json'),
-  JSON.stringify(overrides, null, 2) + '\n',
+  JSON.stringify(answerOverrides, null, 2) + '\n',
   'utf8'
 )
 
 console.log('Wrote src/listeningBuilderCambridge17Section2.ts')
 console.log('Wrote src/listeningBuilderCambridge17Section4.ts')
-console.log(`Overrides: ${Object.keys(overrides).length} task answers`)
+console.log(`Overrides: ${Object.keys(answerOverrides).length} task answers`)

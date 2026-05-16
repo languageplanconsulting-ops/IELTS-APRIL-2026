@@ -555,7 +555,7 @@
           "questionNumber": 33,
           "questionText": "Complete the notes below.\\nhas its own words for computer-based concepts, such as web browser and 33 ____",
           "questionWordPhrase": "such as",
-          "targetText": "word Q33 for podcast",
+          "targetText": "word for podcast",
           "thaiMeaning": "พอดแคสต์",
           "explanationThai": "มีคำภาษาไอซ์แลนด์สำหรับ podcast",
           "correctAnswer": "podcast"
@@ -565,7 +565,7 @@
           "questionNumber": 34,
           "questionText": "Complete the notes below.\\nYoung speakers are big users of digital technology, such as 34 ____",
           "questionWordPhrase": "such as",
-          "targetText": "Think about Q34 smartphones",
+          "targetText": "use them all the time",
           "thaiMeaning": "สมาร์ทโฟน",
           "explanationThai": "ยกตัวอย่าง smartphones",
           "correctAnswer": "smartphones"
@@ -605,7 +605,7 @@
           "questionNumber": 38,
           "questionText": "Complete the notes below.\\nbecause of how complicated its 38 ____ is",
           "questionWordPhrase": "complicated its",
-          "targetText": "grammar, which is Q38 significantly more complex",
+          "targetText": "grammar, which is significantly more complex",
           "thaiMeaning": "ไวยากรณ์",
           "explanationThai": "grammar ซับซ้อนมาก",
           "correctAnswer": "grammar"
@@ -765,7 +765,7 @@
           "questionNumber": 33,
           "questionText": "Complete the notes below.\\nbest growing conditions and 33 ____ are in Canada",
           "questionWordPhrase": "best growing conditions",
-          "targetText": "climate suits the trees Q33 perfectly",
+          "targetText": "climate suits the trees perfectly",
           "thaiMeaning": "สภาพภูมิอากาศ",
           "explanationThai": "สภาพภูมิอากาศในแคนาดาเหมาะกับต้นเมเปิล",
           "correctAnswer": "climate"
@@ -775,7 +775,7 @@
           "questionNumber": 34,
           "questionText": "Complete the notes below.\\nused hot 34 ____ to heat the sap",
           "questionWordPhrase": "hot",
-          "targetText": "pieces of rock Q34 that had become scorching hot",
+          "targetText": "pieces of rock that had become scorching hot",
           "thaiMeaning": "หิน",
           "explanationThai": "ใช้หินร้อนจากแดดต้มน้ำยาง",
           "correctAnswer": "rock"
@@ -785,7 +785,7 @@
           "questionNumber": 35,
           "questionText": "Complete the notes below.\\nTree trunks may not have the correct 35 ____ until they have been growing for 40 years",
           "questionWordPhrase": "correct",
-          "targetText": "reach a diameter of Q35 around 25 centimetres",
+          "targetText": "reach a diameter of around 25 centimetres",
           "thaiMeaning": "เส้นผ่านศูนย์กลาง",
           "explanationThai": "ลำต้นต้องมีเส้นผ่านศูนย์กลางประมาณ 25 cm",
           "correctAnswer": "diameter"

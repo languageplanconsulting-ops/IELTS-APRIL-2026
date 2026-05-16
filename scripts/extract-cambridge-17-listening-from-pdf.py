@@ -14,18 +14,46 @@ OUT_PATH = Path(__file__).resolve().parent / "cambridge-17-listening-scripts.jso
 SCRIPT_PAGE_START = 88
 SCRIPT_PAGE_END = 111
 
-# (section, test, title, start_pattern) — boundaries are the next segment's start in PDF order
+# Chronological order in PDF appendix (include Part 1/3 skips between S2/S4 blocks)
 SEGMENT_STARTS = [
     (2, 1, "Boat trip round Tasmania", r"My name['\u2019]?s Lou Miller"),
-    (3, 1, "_part3_skip_", r"DIANA:\s*So, Tim"),  # boundary only
+    (3, 1, "_skip_", r"DIANA:\s*So, Tim"),
     (4, 1, "Labyrinths", r"Labyrinths have existed"),
+    (1, 0, "_skip_", r"Jane Fairbanks"),
     (2, 2, "Oniton Hall", r"Oniton Hall, one of the largest estates"),
+    (3, 0, "_skip_", r"Did you make notes while you were watching the performances of Romeo"),
     (4, 2, "Impact of digital technology on the Icelandic language", r"Right, everyone, let['\u2019]?s make a start"),
+    (1, 0, "_skip_", r"Jack, I['\u2019]?m thinking of taking the kids"),
     (2, 3, "Childcare Services", r"My name['\u2019]?s Mrs Carter"),
+    (3, 0, "_skip_", r"HOLLY:\s*Hello Dr Green"),
     (4, 3, "Bird Migration Theory", r"Scientists believe that a majority of the earth['\u2019]?s bird population"),
+    (1, 0, "_skip_", r"Easy Life Cleaning Services"),
     (2, 4, "Hotel Management", r"worked in the hotel industry"),
-    (4, 4, "Maple syrup", r"maple syrup is a thick"),
+    (4, 4, "Maple syrup", r"another natural food product"),
 ]
+
+OCR_FIXES = [
+    (r"\bhe first\b", "the first"),
+    (r"\bhad ed to\b", "had led to"),
+    (r"\bwilling to ive\b", "willing to live"),
+    (r"\bwhere hey nest\b", "where they nest"),
+    (r"pops up\.\s*right in front", "pops up right in front"),
+    (r"\bhe house\b", "the house"),
+    (r"\bike the\b", "like the"),
+    (r"\balwa\b", "always"),
+    (r"\bt heir\b", "their"),
+    (r"\babyrinth\b", "labyrinth"),
+    (r"\bifyou\b", "if you"),
+    (r"\battimes\b", "at times"),
+    (r"\bl'd\b", "I'd"),
+    (r"\bI['\u2019]m going to be your tour guide tod\b", "I'm going to be your tour guide today"),
+]
+
+BLEED_MARKERS = re.compile(
+    r"Jane Fairbanks|Frank Pritchard|DIANA:\s*So, Tim|Jack, I['\u2019]?m thinking|"
+    r"Easy Life Cleaning|Jacinta speaking|we come to Oniton|Good morning, and we come to",
+    re.I,
+)
 
 
 def clean_raw(text: str) -> str:
@@ -38,6 +66,27 @@ def clean_raw(text: str) -> str:
     return text.strip()
 
 
+def polish_paragraph(text: str) -> str:
+    for pattern, repl in OCR_FIXES:
+        text = re.sub(pattern, repl, text, flags=re.I)
+    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"\s+\d{2,3}\s*$", "", text)  # trailing page numbers
+    return text
+
+
+def is_garbage_paragraph(text: str) -> bool:
+    if len(text) < 40:
+        return True
+    if BLEED_MARKERS.search(text) and len(text) < 500:
+        return True
+    # Shattered dialogue from PDF columns
+    if text.count(":") >= 6 and re.search(r"[A-Z]{2,6}:\s*[A-Z]{2,6}:", text):
+        return True
+    if re.search(r"FRANK:.*JANE:.*FRANK:", text) and len(text) < 800:
+        return True
+    return False
+
+
 def split_paragraphs(block: str) -> list[str]:
     block = re.sub(r"\bQ\d{1,2}\b", " ", block)
     lines = [ln.strip() for ln in block.split("\n")]
@@ -46,7 +95,7 @@ def split_paragraphs(block: str) -> list[str]:
     for ln in lines:
         if not ln:
             if buf:
-                paras.append(" ".join(buf))
+                paras.append(polish_paragraph(" ".join(buf)))
                 buf = []
             continue
         if re.match(r"^PART\s+\d", ln, re.I):
@@ -57,9 +106,12 @@ def split_paragraphs(block: str) -> list[str]:
             continue
         buf.append(ln)
     if buf:
-        paras.append(" ".join(buf))
+        paras.append(polish_paragraph(" ".join(buf)))
+
     refined: list[str] = []
     for p in paras:
+        if is_garbage_paragraph(p):
+            continue
         if len(p) < 900:
             refined.append(p)
             continue
@@ -68,14 +120,18 @@ def split_paragraphs(block: str) -> list[str]:
         length = 0
         for part in parts:
             if length + len(part) > 700 and chunk:
-                refined.append(" ".join(chunk))
+                merged = polish_paragraph(" ".join(chunk))
+                if not is_garbage_paragraph(merged):
+                    refined.append(merged)
                 chunk = [part]
                 length = len(part)
             else:
                 chunk.append(part)
                 length += len(part)
         if chunk:
-            refined.append(" ".join(chunk))
+            merged = polish_paragraph(" ".join(chunk))
+            if not is_garbage_paragraph(merged):
+                refined.append(merged)
     return [p for p in refined if len(p) > 35]
 
 
