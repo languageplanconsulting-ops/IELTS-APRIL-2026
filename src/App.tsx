@@ -231,6 +231,36 @@ type ReadingPdoyMultipleChoiceOption = {
   text: string
 }
 
+type ReadingMatchingGroupKind = 'heading' | 'information' | 'statement'
+
+type ReadingMatchingGroup = {
+  id: string
+  kind: ReadingMatchingGroupKind
+  start: number
+  end: number
+  instruction: string
+  choiceLabel: string
+  choiceOptions: ReadingPdoyMultipleChoiceOption[]
+  questions: ReadingQuestion[]
+}
+
+type ReadingFillLineSegment =
+  | { kind: 'text' | 'heading' | 'clue'; text: string }
+  | { kind: 'blank'; questionNumber: number; before: string; after: string }
+
+type ReadingFillDisplayLine = {
+  segments: ReadingFillLineSegment[]
+}
+
+type ReadingFillQuestionGroup = {
+  id: string
+  start: number
+  end: number
+  instruction: string
+  displayLines: ReadingFillDisplayLine[]
+  questions: ReadingQuestion[]
+}
+
 type ReadingPdoyEvidenceOption = {
   id: string
   text: string
@@ -3805,12 +3835,38 @@ const buildReadingMatchingHintNeedles = (
   question: ReadingQuestion | null
 ) => {
   if (!passage || !question) return []
-  return buildReadingEvidenceOptions(passage, question)
-    .map((option) => resolveReadingEvidenceNeedleInPassage(passage, option.text))
+  const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question)
+  const portions = [correctText, ...distractors.slice(0, 3)].filter(Boolean)
+  return portions
+    .map((portion) => resolveReadingEvidenceNeedleInPassage(passage, portion))
     .filter((needle, index, list) => {
       const normalized = normalizeTextForLooseMatch(needle)
       return normalized.length >= 8 && list.findIndex((item) => normalizeTextForLooseMatch(item) === normalized) === index
     })
+}
+
+const extractReadingQuestionRangeBlock = (questionSectionText: string, start: number, end: number) => {
+  const lines = String(questionSectionText || '').split('\n')
+  const startPattern = new RegExp(`^\\s*${start}\\s`)
+  const endPattern = new RegExp(`^\\s*${end + 1}\\s`)
+  let capturing = false
+  const captured: string[] = []
+  for (const line of lines) {
+    if (!capturing && startPattern.test(line)) capturing = true
+    if (!capturing) continue
+    if (endPattern.test(line) && captured.length > 0) break
+    captured.push(line)
+  }
+  return captured.join('\n').trim()
+}
+
+const findReadingQuestionRange = (passage: ReadingPassageRecord | null, question: ReadingQuestion) => {
+  const ranges = passage?.questionRanges || []
+  const match = ranges.find(
+    (range) => question.number >= range.start && question.number <= range.end
+  )
+  if (match) return match
+  return { start: question.number, end: question.number }
 }
 
 const extractReadingQuestionBlock = (questionSectionText: string, questionNumber: number) => {
@@ -3826,18 +3882,45 @@ const extractReadingQuestionBlock = (questionSectionText: string, questionNumber
 const READING_ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
 
 const isReadingMatchingHeadingQuestion = (
-  passage: ReadingPassageRecord | null,
+  _passage: ReadingPassageRecord | null,
   question: ReadingQuestion | null
 ) => {
   if (!question) return false
-  const sectionText = String(passage?.questionSectionText || '')
-  const prompt = String(question.prompt || '')
+  const prompt = String(question.prompt || '').trim()
   const answer = String(question.correctAnswer || '').trim()
-  return (
-    READING_ROMAN_HEADING_PATTERN.test(answer) ||
-    /choose the correct heading|list of headings|which heading/i.test(sectionText) ||
-    /choose the correct heading|paragraph [A-F]\b/i.test(prompt) ||
-    /^section\s+[A-Z]\b|^paragraph\s+[A-Z]\b/i.test(prompt)
+
+  if (
+    /^which\s+two\b|^match\s+each\b|^complete the\s+(?:summary|sentences|notes|table)\b|^true\s*\/\s*false|^yes\s*\/\s*no/i.test(
+      prompt
+    )
+  ) {
+    return false
+  }
+
+  if (/^heading for paragraph/i.test(prompt) || /^heading paragraph/i.test(prompt)) {
+    return true
+  }
+  if (/choose the correct heading/i.test(prompt)) {
+    return true
+  }
+  if (
+    READING_ROMAN_HEADING_PATTERN.test(answer) &&
+    (/^paragraph\s+[A-G]\b/i.test(prompt) || /^section\s+[A-Z]\b/i.test(prompt))
+  ) {
+    return true
+  }
+
+  return false
+}
+
+const getReadingParagraphAnswerLetters = (sectionText: string) => {
+  const rangeMatch = String(sectionText || '').match(/write\s+([A-Z])\s*[-–—]\s*([A-Z])\b/i)
+  if (!rangeMatch) return null
+  const startCode = rangeMatch[1].toUpperCase().charCodeAt(0)
+  const endCode = rangeMatch[2].toUpperCase().charCodeAt(0)
+  if (endCode < startCode) return null
+  return Array.from({ length: endCode - startCode + 1 }, (_, index) =>
+    String.fromCharCode(startCode + index)
   )
 }
 
@@ -3847,17 +3930,380 @@ const isReadingMatchingInformationQuestion = (
 ) => {
   if (!question) return false
   const sectionText = String(passage?.questionSectionText || '')
+  if (!/which (?:paragraph|section) contains|contains the following information/i.test(sectionText)) {
+    return false
+  }
   const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
-  return (
-    /^[A-G]$/.test(answer) &&
-    /which (?:paragraph|section) contains|which (?:paragraph|section) has|contains the following information/i.test(sectionText)
-  )
+  const allowedLetters = getReadingParagraphAnswerLetters(sectionText)
+  if (allowedLetters?.length) {
+    return allowedLetters.includes(answer.toUpperCase())
+  }
+  return /^[A-G]$/.test(answer)
+}
+
+const isReadingMatchingStatementQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!question) return false
+  if (isReadingMatchingHeadingQuestion(passage, question) || isReadingMatchingInformationQuestion(passage, question)) {
+    return false
+  }
+  const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+  if (!/^[A-G]$/.test(answer)) return false
+  const range = findReadingQuestionRange(passage, question)
+  const block = extractReadingQuestionRangeBlock(passage?.questionSectionText || '', range.start, range.end)
+  return /match\s+each/i.test(block)
+}
+
+const getReadingMatchingQuestionKind = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+): ReadingMatchingGroupKind | null => {
+  if (isReadingMatchingHeadingQuestion(passage, question)) return 'heading'
+  if (isReadingMatchingInformationQuestion(passage, question)) return 'information'
+  if (isReadingMatchingStatementQuestion(passage, question)) return 'statement'
+  return null
 }
 
 const isReadingMatchingQuestion = (
   passage: ReadingPassageRecord | null,
   question: ReadingQuestion | null
-) => isReadingMatchingHeadingQuestion(passage, question) || isReadingMatchingInformationQuestion(passage, question)
+) => getReadingMatchingQuestionKind(passage, question) !== null
+
+const extractReadingMatchingListOptions = (sourceText: string) => {
+  const listMatch = sourceText.match(
+    /List of (?:Headings|Ideas|Researchers|People|Statements)\s*\n([\s\S]*?)(?=\n\s*\d+\s*(?:[.)]|\s)|\nQuestions\s+|\nNB\b|$)/i
+  )
+  const listSource = listMatch?.[1] || ''
+  const romanOptions = listSource
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const match = line.match(/^((?:i|ii|iii|iv|v|vi|vii|viii|ix|x))[\).:\-]?\s+(.+)$/i)
+      if (!match) return null
+      return { letter: match[1].toLowerCase(), text: match[2].trim() }
+    })
+    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+  if (romanOptions.length) return romanOptions
+
+  return listSource
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const match = line.match(/^([A-G])\s+(.+)$/i)
+      if (!match) return null
+      return { letter: match[1].toUpperCase(), text: match[2].trim() }
+    })
+    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+}
+
+const getReadingMatchingAnswerOptions = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion,
+  kind: ReadingMatchingGroupKind
+): ReadingPdoyMultipleChoiceOption[] => {
+  if (!passage) return []
+  const range = findReadingQuestionRange(passage, question)
+  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+
+  if (kind === 'information') {
+    const letters =
+      getReadingParagraphAnswerLetters(passage.questionSectionText || '') ||
+      (passage.bodyParagraphs || [])
+        .map((paragraph) => String(paragraph || '').trim())
+        .filter((paragraph) => /^[A-I]$/i.test(paragraph))
+        .map((paragraph) => paragraph.toUpperCase())
+    const paragraphLetters = letters.length ? letters : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+    return paragraphLetters.map((letter) => ({ letter, text: `Paragraph ${letter}` }))
+  }
+
+  const fromList = extractReadingMatchingListOptions(block || passage.questionSectionText || '')
+  if (fromList.length) return fromList
+
+  const extractedOptions = extractReadingMultipleChoiceOptions(passage, question)
+  if (extractedOptions.length) return extractedOptions
+  return ['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((letter) => ({ letter, text: letter }))
+}
+
+
+const extractReadingMatchingGroupInstruction = (
+  passage: ReadingPassageRecord | null,
+  kind: ReadingMatchingGroupKind,
+  start: number,
+  end: number
+) => {
+  const block = extractReadingQuestionRangeBlock(passage?.questionSectionText || '', start, end)
+  const lines = block
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !/^\d+\s/.test(line) && !/^\d+\.\s/.test(line))
+
+  if (kind === 'information') {
+    const instructionLines = lines.filter(
+      (line) =>
+        /which (?:paragraph|section) contains/i.test(line) || /^write\s+[A-Z]/i.test(line) || /^nb\b/i.test(line)
+    )
+    if (instructionLines.length) return instructionLines.join('\n')
+  }
+
+  if (kind === 'heading') {
+    const instructionLines = lines.filter(
+      (line) =>
+        /choose the correct heading|list of headings|write the correct number/i.test(line) ||
+        /paragraphs?,\s*[A-Z]/i.test(line)
+    )
+    if (instructionLines.length) return instructionLines.join('\n')
+  }
+
+  if (kind === 'statement') {
+    const instructionLines = lines.filter(
+      (line) =>
+        /match\s+each/i.test(line) ||
+        /^write\s+the\s+correct\s+letter/i.test(line) ||
+        /list of (?:ideas|researchers|people|statements)/i.test(line) ||
+        /^nb\b/i.test(line)
+    )
+    if (instructionLines.length) return instructionLines.join('\n')
+  }
+
+  return block.trim()
+}
+
+const getReadingMatchingQuestionStatement = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion,
+  kind: ReadingMatchingGroupKind
+) => {
+  const fromBlock = extractReadingQuestionBlock(passage?.questionSectionText || '', question.number)
+  if (fromBlock) return fromBlock.trim()
+
+  const prompt = String(question.prompt || '').trim()
+  if (kind === 'heading') {
+    return prompt.replace(/^heading (?:for )?paragraph\s*/i, '').trim() || prompt
+  }
+  if (kind === 'information') {
+    return prompt.replace(/^which paragraph:\s*/i, '').trim() || prompt
+  }
+  return prompt
+}
+
+const buildReadingMatchingGroupFromQuestions = (
+  passage: ReadingPassageRecord,
+  kind: ReadingMatchingGroupKind,
+  questions: ReadingQuestion[]
+): ReadingMatchingGroup => {
+  const start = questions[0].number
+  const end = questions[questions.length - 1].number
+  const choiceOptions = getReadingMatchingAnswerOptions(passage, questions[0], kind)
+  const choiceLabel =
+    kind === 'heading' ? 'Heading' : kind === 'information' ? 'Paragraph' : 'Answer'
+
+  return {
+    id: `${passage.number}-${kind}-${start}-${end}`,
+    kind,
+    start,
+    end,
+    instruction: extractReadingMatchingGroupInstruction(passage, kind, start, end),
+    choiceLabel,
+    choiceOptions,
+    questions: [...questions]
+  }
+}
+
+const buildReadingMatchingGroups = (
+  passage: ReadingPassageRecord | null,
+  questions: ReadingQuestion[]
+): ReadingMatchingGroup[] => {
+  if (!passage) return []
+
+  const groups: ReadingMatchingGroup[] = []
+  let pending: ReadingQuestion[] = []
+  let pendingKind: ReadingMatchingGroupKind | null = null
+
+  const flush = () => {
+    if (!pending.length || !pendingKind) return
+    groups.push(buildReadingMatchingGroupFromQuestions(passage, pendingKind, pending))
+    pending = []
+    pendingKind = null
+  }
+
+  questions.forEach((question) => {
+    const kind = getReadingMatchingQuestionKind(passage, question)
+    if (!kind) {
+      flush()
+      return
+    }
+    if (pendingKind && pendingKind !== kind) {
+      flush()
+    }
+    pendingKind = kind
+    pending.push(question)
+  })
+  flush()
+
+  return groups
+}
+
+const READING_FILL_SECTION_PATTERN =
+  /complete the (?:notes|sentences|summary|table)|choose (?:one|no more than)|write one word only|each gap|fill in the/i
+
+const READING_FILL_BLANK_IN_LINE = /\b(\d+)\s*([.．…⋯·•_\-–—]{2,})/g
+
+const isReadingFillSectionBlock = (block: string) => READING_FILL_SECTION_PATTERN.test(block)
+
+const isReadingFillQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!question || question.answerType !== 'text') return false
+  if (isReadingMatchingQuestion(passage, question)) return false
+  if (!passage) return false
+  const range = findReadingQuestionRange(passage, question)
+  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+  return isReadingFillSectionBlock(block)
+}
+
+const extractReadingFillGroupInstruction = (block: string) => {
+  const lines = block
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const instructionLines = lines.filter((line) =>
+    /complete the|choose (?:one|no more)|write one word|write your answers|from the passage|each gap/i.test(line)
+  )
+  return instructionLines.join('\n').trim()
+}
+
+const isReadingFillBoilerplateLine = (line: string) =>
+  /^Questions \d+/i.test(line) ||
+  /^Complete the (?:notes|sentences|summary|table)/i.test(line) ||
+  /^Choose (?:ONE WORD|NO MORE THAN)/i.test(line) ||
+  /^Write your answers in boxes/i.test(line) ||
+  /^Write the correct/i.test(line) ||
+  /^Reading Passage \d+/i.test(line) ||
+  /^In boxes \d+/i.test(line)
+
+const parseReadingFillLineSegments = (line: string, questionNumbers: Set<number>): ReadingFillLineSegment[] => {
+  const matches = [...line.matchAll(READING_FILL_BLANK_IN_LINE)].filter((match) =>
+    questionNumbers.has(Number(match[1]))
+  )
+
+  if (!matches.length) {
+    const text = line.trim()
+    const withoutBullet = text.replace(/^[•\-\*]\s*/, '').trim()
+    if (
+      withoutBullet.length > 0 &&
+      withoutBullet.length < 80 &&
+      /^[A-Z]/.test(withoutBullet) &&
+      !withoutBullet.includes('.') &&
+      !/^\d+\s/.test(withoutBullet)
+    ) {
+      return [{ kind: 'heading', text: withoutBullet }]
+    }
+    if (/^[•\-\*]/.test(text) || /^(?:must|should|need|have to)\b/i.test(withoutBullet)) {
+      return [{ kind: 'clue', text }]
+    }
+    return text ? [{ kind: 'text', text }] : []
+  }
+
+  const segments: ReadingFillLineSegment[] = []
+  let lastIndex = 0
+
+  matches.forEach((match, index) => {
+    const questionNumber = Number(match[1])
+    const start = match.index ?? 0
+    const end = start + match[0].length
+    const nextStart = matches[index + 1]?.index ?? line.length
+
+    if (start > lastIndex) {
+      const beforeText = line.slice(lastIndex, start).trim()
+      if (beforeText) {
+        segments.push({ kind: 'text', text: beforeText })
+      }
+    }
+
+    const after = line.slice(end, nextStart).trim()
+    segments.push({ kind: 'blank', questionNumber, before: '', after })
+    lastIndex = nextStart
+  })
+
+  if (lastIndex < line.length) {
+    const tail = line.slice(lastIndex).trim()
+    if (tail) {
+      segments.push({ kind: 'text', text: tail })
+    }
+  }
+
+  return segments
+}
+
+const extractReadingFillDisplayLines = (
+  block: string,
+  questionNumbers: Set<number>
+): ReadingFillDisplayLine[] => {
+  const contentLines = block
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !isReadingFillBoilerplateLine(line))
+
+  const displayLines = contentLines
+    .map((line) => ({
+      segments: parseReadingFillLineSegments(line, questionNumbers)
+    }))
+    .filter((line) => line.segments.length > 0)
+
+  if (displayLines.length) return displayLines
+
+  return [...questionNumbers]
+    .sort((first, second) => first - second)
+    .map((questionNumber) => ({
+      segments: [{ kind: 'blank' as const, questionNumber, before: '', after: '' }]
+    }))
+}
+
+const buildReadingFillQuestionGroups = (
+  passage: ReadingPassageRecord | null,
+  questions: ReadingQuestion[]
+): ReadingFillQuestionGroup[] => {
+  if (!passage) return []
+
+  const groups: ReadingFillQuestionGroup[] = []
+  const ranges = passage.questionRanges?.length ? passage.questionRanges : [{ start: 1, end: 999 }]
+
+  ranges.forEach((range) => {
+    const block = extractReadingQuestionRangeBlock(
+      passage.questionSectionText || '',
+      range.start,
+      range.end
+    )
+    if (!block || !isReadingFillSectionBlock(block)) return
+
+    const rangeQuestions = questions.filter(
+      (question) =>
+        question.number >= range.start &&
+        question.number <= range.end &&
+        isReadingFillQuestion(passage, question)
+    )
+    if (!rangeQuestions.length) return
+
+    const questionNumbers = new Set(rangeQuestions.map((question) => question.number))
+    groups.push({
+      id: `${passage.number}-fill-${range.start}-${range.end}`,
+      start: range.start,
+      end: range.end,
+      instruction: extractReadingFillGroupInstruction(block),
+      displayLines: extractReadingFillDisplayLines(block, questionNumbers),
+      questions: [...rangeQuestions]
+    })
+  })
+
+  return groups.sort((first, second) => first.start - second.start)
+}
 
 const isReadingJudgementQuestion = (question: ReadingQuestion | null) =>
   question?.answerType === 'true-false-not-given' || question?.answerType === 'yes-no-not-given'
@@ -3967,15 +4413,18 @@ const extractReadingMultipleChoiceOptions = (
   if (!passage || !question) return []
 
   if (isReadingMatchingHeadingQuestion(passage, question)) {
-    const headingOptions = String(passage.questionSectionText || '')
+    const sectionText = String(passage.questionSectionText || '')
+    const listMatch = sectionText.match(/List of Headings\s*\n([\s\S]*?)(?=\n\s*\d+\s*(?:Paragraph|\.|\s))/i)
+    const headingSource = listMatch?.[1] || sectionText
+    const headingOptions = headingSource
       .split('\n')
       .map((line) => line.trim())
       .filter(Boolean)
       .map((line) => {
-        const match = line.match(/^((?:i|ii|iii|iv|v|vi|vii|viii|ix|x))[\).]?\s+(.+)$/i)
+        const match = line.match(/^((?:i|ii|iii|iv|v|vi|vii|viii|ix|x))[\).:\-]?\s+(.+)$/i)
         if (!match) return null
         return {
-          letter: match[1].toUpperCase(),
+          letter: match[1].toLowerCase(),
           text: match[2].trim()
         }
       })
@@ -3984,9 +4433,16 @@ const extractReadingMultipleChoiceOptions = (
   }
 
   if (isReadingMatchingInformationQuestion(passage, question)) {
-    return (passage.bodyParagraphs || []).slice(0, 7).map((paragraph, index) => ({
-      letter: getReadingPassageLabel(index),
-      text: `Paragraph ${getReadingPassageLabel(index)}: ${clipReadingOptionText(paragraph)}`
+    const letters =
+      getReadingParagraphAnswerLetters(passage.questionSectionText || '') ||
+      (passage.bodyParagraphs || [])
+        .map((paragraph) => String(paragraph || '').trim())
+        .filter((paragraph) => /^[A-I]$/i.test(paragraph))
+        .map((paragraph) => paragraph.toUpperCase())
+    const paragraphLetters = letters.length ? letters : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+    return paragraphLetters.map((letter) => ({
+      letter,
+      text: `Paragraph ${letter}`
     }))
   }
 
@@ -4061,45 +4517,63 @@ const buildReadingMatchingEvidencePortions = (
   const correctNormalized = normalizeTextForLooseMatch(correctText)
   const focusIndex = passage && question ? findReadingEvidenceParagraphIndex(passage, question.exactPortion) : -1
   const paragraphs = passage?.bodyParagraphs || []
-  const useParagraphLabels = isReadingMatchingInformationQuestion(passage, question)
+  const useParagraphLabels = isReadingMatchingQuestion(passage, question)
 
-  const pickSnippetFromParagraph = (paragraph: string, index: number, preferTrapSentence: boolean) => {
+  const pickTrapSentenceSnippet = (paragraph: string, index: number) => {
     const prefix = useParagraphLabels ? `Paragraph ${getReadingPassageLabel(index)}: ` : ''
     const sentences = String(paragraph || '')
       .split(/(?<=[.!?])\s+/)
       .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
       .filter((sentence) => sentence.length >= 18)
-    if (preferTrapSentence && sentences.length) {
-      const ranked = sentences
-        .map((sentence, sentenceIndex) => ({
-          sentence,
-          sentenceIndex,
-          trapScore: scoreReadingEvidenceDistractor(sentence, question)
-        }))
-        .filter(
-          ({ sentence }) =>
-            !correctNormalized || !normalizeTextForLooseMatch(sentence).includes(correctNormalized)
-        )
-        .sort((a, b) => b.trapScore - a.trapScore)
-      if (ranked[0]?.sentence) {
-        return prefix + clipReadingOptionText(ranked[0].sentence, useParagraphLabels ? 220 : 200)
-      }
+    if (!sentences.length) {
+      return prefix + clipReadingOptionText(paragraph, useParagraphLabels ? 240 : 200)
+    }
+    const ranked = sentences
+      .map((sentence) => ({
+        sentence,
+        trapScore: scoreReadingEvidenceDistractor(sentence, question)
+      }))
+      .filter(
+        ({ sentence }) =>
+          !correctNormalized || !normalizeTextForLooseMatch(sentence).includes(correctNormalized)
+      )
+      .sort((a, b) => b.trapScore - a.trapScore)
+    if (ranked[0]?.sentence) {
+      return prefix + clipReadingOptionText(ranked[0].sentence, useParagraphLabels ? 220 : 200)
     }
     return prefix + clipReadingOptionText(paragraph, useParagraphLabels ? 240 : 200)
   }
 
+  const sentenceCandidates = paragraphs.flatMap((paragraph, index) => {
+    if (index === focusIndex) return []
+    const prefix = useParagraphLabels ? `Paragraph ${getReadingPassageLabel(index)}: ` : ''
+    return String(paragraph || '')
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+      .filter((sentence) => sentence.length >= 18)
+      .map((sentence) => ({
+        index,
+        snippet: prefix + clipReadingOptionText(sentence, useParagraphLabels ? 220 : 200),
+        trapScore: scoreReadingEvidenceDistractor(sentence, question)
+      }))
+  })
+
   const paragraphCandidates = paragraphs
     .map((paragraph, index) => ({
       index,
-      snippet: pickSnippetFromParagraph(paragraph, index, index !== focusIndex),
+      snippet: pickTrapSentenceSnippet(paragraph, index),
       trapScore: scoreReadingEvidenceDistractor(paragraph, question)
     }))
     .filter((entry) => entry.index !== focusIndex)
     .sort((a, b) => b.trapScore - a.trapScore)
 
+  const rankedCandidates = [...sentenceCandidates, ...paragraphCandidates].sort(
+    (a, b) => b.trapScore - a.trapScore
+  )
+
   const distractors: string[] = []
-  for (const entry of paragraphCandidates) {
-    if (distractors.length >= 2) break
+  for (const entry of rankedCandidates) {
+    if (distractors.length >= 3) break
     const normalizedSnippet = normalizeTextForLooseMatch(entry.snippet)
     if (
       normalizedSnippet &&
@@ -4448,6 +4922,9 @@ const canonicalizeReadingCorrectAnswer = (value: string) => {
   if (normalized.startsWith('FALSE')) return 'FALSE'
   if (normalized.startsWith('YES')) return 'YES'
   if (normalized.startsWith('NO')) return 'NO'
+  if (READING_ROMAN_HEADING_PATTERN.test(normalized)) {
+    return normalized.toLowerCase()
+  }
   const letterMatch = normalized.match(/^([A-G])(?:\b|\s|\()/)
   if (letterMatch) return letterMatch[1]
   return String(value || '').trim()
@@ -4480,7 +4957,7 @@ const buildReadingEvidenceOptions = (
   if (isMatchingQuestion) {
     const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question)
     const safeDistractors = [...distractors]
-    while (safeDistractors.length < 2) {
+    while (safeDistractors.length < 3) {
       safeDistractors.push(
         safeDistractors.length === 0
           ? 'Another paragraph discusses a related topic, but not the one this question targets.'
@@ -4489,8 +4966,9 @@ const buildReadingEvidenceOptions = (
     }
     const options: ReadingPdoyEvidenceOption[] = [
       { id: `matching-evidence-${question.number}-a`, text: safeDistractors[0], isCorrect: false },
-      { id: `matching-evidence-${question.number}-b`, text: correctText, isCorrect: true },
-      { id: `matching-evidence-${question.number}-c`, text: safeDistractors[1], isCorrect: false }
+      { id: `matching-evidence-${question.number}-b`, text: safeDistractors[1], isCorrect: false },
+      { id: `matching-evidence-${question.number}-c`, text: correctText, isCorrect: true },
+      { id: `matching-evidence-${question.number}-d`, text: safeDistractors[2], isCorrect: false }
     ]
     const rotation = question.number % options.length
     return options.map((_, index) => ({
@@ -7248,6 +7726,28 @@ function App() {
     return buildReadingHintNeedles(excerpt)
   }, [activeReadingHint, activeReadingPassage, activeReadingPassages])
   const activeReadingQuestions = activeReadingPassage?.questions || []
+  const activeReadingMatchingGroups = useMemo(
+    () => buildReadingMatchingGroups(activeReadingPassage, activeReadingQuestions),
+    [activeReadingPassage, activeReadingQuestions]
+  )
+  const activeReadingMatchingGroupByQuestionNumber = useMemo(() => {
+    const lookup = new Map<number, ReadingMatchingGroup>()
+    activeReadingMatchingGroups.forEach((group) => {
+      group.questions.forEach((question) => lookup.set(question.number, group))
+    })
+    return lookup
+  }, [activeReadingMatchingGroups])
+  const activeReadingFillQuestionGroups = useMemo(
+    () => buildReadingFillQuestionGroups(activeReadingPassage, activeReadingQuestions),
+    [activeReadingPassage, activeReadingQuestions]
+  )
+  const activeReadingFillGroupByQuestionNumber = useMemo(() => {
+    const lookup = new Map<number, ReadingFillQuestionGroup>()
+    activeReadingFillQuestionGroups.forEach((group) => {
+      group.questions.forEach((question) => lookup.set(question.number, group))
+    })
+    return lookup
+  }, [activeReadingFillQuestionGroups])
   const activeReadingAllQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
   const visibleReadingReportItems =
     readingAttemptStage === 'review' ? readingReportItems.filter((item) => !item.isCorrect) : readingReportItems
@@ -11638,32 +12138,245 @@ function App() {
     })
   }
 
+
+  const renderReadingFillQuestionGroup = (group: ReadingFillQuestionGroup) => {
+    const questionByNumber = new Map(group.questions.map((question) => [question.number, question]))
+
+    return (
+      <article key={`reading-fill-group-${group.id}`} className="readingQuestionCard readingFillQuestionGroup">
+        <div className="readingFillGroupHeader">
+          <div>
+            <p className="readingQuestionNumber">
+              Questions {group.start}-{group.end}
+            </p>
+            <h4>Fill in the blanks</h4>
+          </div>
+        </div>
+        {group.instruction && <pre className="readingFillInstruction">{group.instruction}</pre>}
+        <div className="readingFillOriginalBlock">
+          {group.displayLines.map((line, lineIndex) => {
+            const onlySegment = line.segments.length === 1 ? line.segments[0] : null
+
+            if (onlySegment?.kind === 'clue') {
+              return (
+                <p key={`${group.id}-clue-${lineIndex}`} className="readingFillClueLine">
+                  {onlySegment.text}
+                </p>
+              )
+            }
+
+            if (onlySegment?.kind === 'heading') {
+              return (
+                <p key={`${group.id}-heading-${lineIndex}`} className="readingFillSectionHeading">
+                  {onlySegment.text}
+                </p>
+              )
+            }
+
+            return (
+              <p key={`${group.id}-line-${lineIndex}`} className="readingFillLine">
+                {line.segments.map((segment, segmentIndex) => {
+                  if (segment.kind === 'text') {
+                    return <span key={`${group.id}-text-${lineIndex}-${segmentIndex}`}>{segment.text} </span>
+                  }
+                  if (segment.kind === 'heading') {
+                    return (
+                      <strong key={`${group.id}-heading-${lineIndex}-${segmentIndex}`} className="readingFillInlineHeading">
+                        {segment.text}{' '}
+                      </strong>
+                    )
+                  }
+                  if (segment.kind === 'clue') {
+                    return (
+                      <span key={`${group.id}-clue-${lineIndex}-${segmentIndex}`} className="readingFillClueInline">
+                        {segment.text}{' '}
+                      </span>
+                    )
+                  }
+                  if (segment.kind !== 'blank') return null
+
+                  const question = questionByNumber.get(segment.questionNumber)
+                  if (!question) return null
+                  const isHinting = readingHintQuestionNumber === question.number
+
+                  return (
+                    <span
+                      key={`reading-fill-slot-${group.id}-${segment.questionNumber}`}
+                      id={`reading-question-${question.number}`}
+                      className={`readingFillBlankSlot ${isHinting ? 'is-active' : ''}`.trim()}
+                    >
+                      {segment.before && <span className="readingFillBlankPrefix">{segment.before} </span>}
+                      <label>
+                        <span>{question.number}</span>
+                        <input
+                          type="text"
+                          value={readingAnswers[question.number] || ''}
+                          onChange={(event) =>
+                            setReadingAnswers((current) => ({
+                              ...current,
+                              [question.number]: event.target.value
+                            }))
+                          }
+                          placeholder="Answer"
+                          className="readingFillBlankInput"
+                        />
+                      </label>
+                      {segment.after && <span className="readingFillBlankSuffix"> {segment.after}</span>}
+                      <button
+                        type="button"
+                        className="secondary readingFillHintBtn"
+                        onClick={() => {
+                          setReadingHintQuestionNumber((current) =>
+                            current === question.number ? null : question.number
+                          )
+                        }}
+                      >
+                        {isHinting ? 'Hide hint' : 'Show hint'}
+                      </button>
+                    </span>
+                  )
+                })}
+              </p>
+            )
+          })}
+        </div>
+        {group.questions.some((question) => question.number === readingHintQuestionNumber) && (
+          <div className="readingHintBox">
+            <strong>Hint:</strong> evidence highlighted in the passage.
+          </div>
+        )}
+      </article>
+    )
+  }
+
+  const renderReadingMatchingGroup = (group: ReadingMatchingGroup) => {
+    const hintedQuestion = group.questions.find((question) => question.number === readingHintQuestionNumber)
+    const choiceListTitle =
+      group.kind === 'heading'
+        ? 'List of headings'
+        : group.kind === 'statement'
+          ? 'Answer choices'
+          : 'Paragraphs'
+
+    return (
+      <article key={`reading-matching-group-${group.id}`} className="readingQuestionCard readingMatchingInfoGroup">
+        <pre className="readingMatchingInfoInstruction">{group.instruction}</pre>
+        {group.choiceOptions.length > 0 && group.kind !== 'information' && (
+          <div className="readingHeadingListPanel" aria-label={choiceListTitle}>
+            <p className="readingQuestionNumber">{choiceListTitle}</p>
+            <ul className="readingHeadingListPanelList">
+              {group.choiceOptions.map((option) => (
+                <li key={`${group.id}-choice-${option.letter}`}>
+                  <strong>{option.letter}</strong>
+                  <span>{option.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div className="readingMatchingInfoList">
+          {group.questions.map((question) => {
+            const statement = getReadingMatchingQuestionStatement(
+              activeReadingPassage,
+              question,
+              group.kind
+            )
+            const isHinting = readingHintQuestionNumber === question.number
+            const selectPlaceholder =
+              group.kind === 'heading'
+                ? 'Select heading'
+                : group.kind === 'information'
+                  ? 'Select paragraph'
+                  : 'Select answer'
+            return (
+              <div
+                key={`reading-matching-row-${group.id}-${question.number}`}
+                id={`reading-question-${question.number}`}
+                className={`readingMatchingInfoRow ${isHinting ? 'is-active' : ''}`.trim()}
+              >
+                <p className="readingMatchingInfoStatement">
+                  <strong>{question.number}</strong> {statement}
+                </p>
+                <div className="readingMatchingInfoControls">
+                  <select
+                    value={readingAnswers[question.number] || ''}
+                    onChange={(event) =>
+                      setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))
+                    }
+                    className="readingMatchingInfoSelect"
+                  >
+                    <option value="">{selectPlaceholder}</option>
+                    {group.choiceOptions.map((option) => (
+                      <option key={`${group.id}-${question.number}-${option.letter}`} value={option.letter}>
+                        {group.kind === 'information'
+                          ? `Paragraph ${option.letter}`
+                          : `${option.letter}. ${option.text}`}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    className="secondary readingFillHintBtn"
+                    onClick={() => {
+                      setReadingHintQuestionNumber((current) =>
+                        current === question.number ? null : question.number
+                      )
+                    }}
+                  >
+                    {isHinting ? 'Hide hint' : 'Show hint'}
+                  </button>
+                </div>
+                {isHinting && (
+                  <p className="readingMatchingInfoHintNote">
+                    Four possible evidence portions are highlighted in the passage on the left.
+                  </p>
+                )}
+              </div>
+            )
+          })}
+        </div>
+        {hintedQuestion && (
+          <div className="readingHintBox">
+            <strong>Hint:</strong> four possible evidence portions are highlighted in the passage.
+          </div>
+        )}
+      </article>
+    )
+  }
+
   const renderReadingAnswerField = (
     question: ReadingQuestion,
     passage: ReadingPassageRecord | null = activeReadingPassage
   ) => {
     const value = readingAnswers[question.number] || ''
 
-    if (isReadingMatchingQuestion(passage, question)) {
-      const options = extractReadingMultipleChoiceOptions(passage, question)
-      if (options.length) {
-        return (
-          <div className="readingPdoyChoiceGrid">
-            {options.map((option) => (
-              <button
-                key={`${question.number}-${option.letter}`}
-                type="button"
-                className={`readingPdoyOptionBtn ${value === option.letter ? 'active' : ''}`}
-                onClick={() =>
-                  setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
-                }
-              >
-                <strong>{option.letter}</strong> {option.text}
-              </button>
-            ))}
-          </div>
-        )
-      }
+    const matchingKind = getReadingMatchingQuestionKind(passage, question)
+    if (matchingKind) {
+      const options = getReadingMatchingAnswerOptions(passage, question, matchingKind)
+      const placeholder =
+        matchingKind === 'heading'
+          ? 'Select heading'
+          : matchingKind === 'information'
+            ? 'Select paragraph'
+            : 'Select answer'
+      return (
+        <select
+          value={value}
+          onChange={(event) =>
+            setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))
+          }
+          className="readingMatchingInfoSelect"
+        >
+          <option value="">{placeholder}</option>
+          {options.map((option) => (
+            <option key={`${question.number}-${option.letter}`} value={option.letter}>
+              {matchingKind === 'information'
+                ? `Paragraph ${option.letter}`
+                : `${option.letter}. ${option.text}`}
+            </option>
+          ))}
+        </select>
+      )
     }
 
     if (question.answerType === 'true-false-not-given') {
@@ -14407,8 +15120,8 @@ function App() {
                 </div>
               )}
 
-              <div className="readingExamLayout">
-                <section className="readingPassagePanel">
+              <div className="readingExamLayout readingExamLayout-bank">
+                <section className="readingPassagePanel readingPassagePanel-exam">
                   <div className="readingPassageHeader">
                     <div>
                       <p className="sectionLabel">Passage {activeReadingPassage.number}</p>
@@ -14471,15 +15184,16 @@ function App() {
                   </div>
                 </section>
 
-                <section className="readingQuestionsPanel">
+                <section className="readingQuestionsPanel readingQuestionsPanel-exam">
                   <div className="readingQuestionsHeader">
                     <div>
                       <p className="sectionLabel">Questions</p>
-                      <h3>Answer on the right, inspect evidence on the left</h3>
+                      <h3>Answer below — scroll to the end to submit</h3>
                     </div>
                     <span className="bandPill">{activeReadingQuestions.length} questions</span>
                   </div>
 
+                  <div className="readingQuestionsScroll">
                   <div className="readingQuestionNavigator">
                     {activeReadingQuestions.map((question) => {
                       const hasAnswer = Boolean(String(readingAnswers[question.number] || '').trim())
@@ -14512,8 +15226,19 @@ function App() {
 
                   <div className="readingQuestionList">
                     {activeReadingQuestions.map((question) => {
+                      const matchingGroup = activeReadingMatchingGroupByQuestionNumber.get(question.number)
+                      if (matchingGroup) {
+                        return matchingGroup.questions[0]?.number === question.number
+                          ? renderReadingMatchingGroup(matchingGroup)
+                          : null
+                      }
+                      const fillGroup = activeReadingFillGroupByQuestionNumber.get(question.number)
+                      if (fillGroup) {
+                        return fillGroup.questions[0]?.number === question.number
+                          ? renderReadingFillQuestionGroup(fillGroup)
+                          : null
+                      }
                       const isHinting = readingHintQuestionNumber === question.number
-                      const isMatchingQuestion = isReadingMatchingQuestion(activeReadingPassage, question)
                       const isNotGivenQuestion =
                         isReadingJudgementQuestion(question) &&
                         isReadingNotGivenAnswer(question.correctAnswer)
@@ -14534,17 +15259,12 @@ function App() {
                               {isHinting ? 'ซ่อนคำใบ้' : 'ดูคำใบ้'}
                             </button>
                           </div>
-                          {isHinting && isMatchingQuestion && (
-                            <div className="readingHintBox">
-                              <strong>Hint:</strong> three potential evidence portions are highlighted in the passage on the left.
-                            </div>
-                          )}
                           {isHinting && isNotGivenQuestion && (
                             <div className="readingHintBox">
                               <strong>Hint:</strong> the related passage portion is highlighted on the left — it mentions the topic but does not confirm TRUE/FALSE (or YES/NO).
                             </div>
                           )}
-                          {isHinting && !isMatchingQuestion && !isNotGivenQuestion && (
+                          {isHinting && !isNotGivenQuestion && (
                             <div className="readingHintBox">
                               <strong>Hint:</strong> evidence highlighted in the passage.
                             </div>
@@ -14558,9 +15278,10 @@ function App() {
                   </div>
 
                   <div className="readingExamSubmitBar">
-                    <button type="button" onClick={submitReadingExam}>
+                    <button type="button" className="readingSubmitExamBtn readingSubmitExamBtn-end" onClick={submitReadingExam}>
                       Submit Reading Exam
                     </button>
+                  </div>
                   </div>
                 </section>
               </div>

@@ -5063,8 +5063,10 @@ body,
 .readingReportWrap,
 .readingPdoyBank,
 .readingPdoyLessonWrap {
-  display: grid;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: calc(100dvh - 120px);
 }
 
 .readingPdoyBank,
@@ -5077,6 +5079,119 @@ body,
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
+}
+
+.readingExamLayout-bank {
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.readingExamLayout-bank .readingPassagePanel-exam,
+.readingExamLayout-bank .readingQuestionsPanel-exam {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 200px);
+  max-height: calc(100dvh - 200px);
+  overflow: hidden;
+}
+
+.readingExamWrap .readingSummaryStrip {
+  gap: 8px;
+}
+
+.readingExamWrap .readingSummaryCard {
+  padding: 10px 14px;
+}
+
+.readingExamLayout-bank .readingPassagePanel-exam {
+  padding-bottom: 14px;
+}
+
+.readingExamLayout-bank .readingPassageBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+}
+
+.readingExamLayout-bank .readingQuestionsPanel-exam {
+  position: static;
+  top: auto;
+  max-height: none;
+  overflow: hidden;
+  padding-right: 18px;
+}
+
+.readingExamLayout-bank .readingQuestionsHeader {
+  flex-shrink: 0;
+}
+
+.readingExamLayout-bank .readingQuestionsScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+  scroll-behavior: smooth;
+}
+
+.readingExamLayout-bank .readingExamSubmitBar {
+  position: static;
+  bottom: auto;
+  z-index: auto;
+  flex-shrink: 0;
+  margin-top: 28px;
+  padding: 8px 0 20px;
+  background: transparent;
+}
+
+.readingExamLayout-bank .readingSubmitExamBtn-end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 56px;
+  padding: 14px 18px;
+  border: 3px solid var(--bc-black);
+  border-radius: 14px;
+  background: #004aad;
+  color: #ffffff;
+  box-shadow: 5px 5px 0 var(--bc-black);
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  text-align: left;
+  transform: none;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.readingExamLayout-bank .readingSubmitExamBtn-end::before {
+  display: none;
+}
+
+.readingExamLayout-bank .readingSubmitExamBtn-end:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--bc-black);
+  filter: none;
+}
+
+.readingExamLayout-bank .readingSubmitExamBtn-end:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 var(--bc-black);
+}
+
+.readingExamLayout-bank .readingSubmitExamBtnMeta {
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: 0;
 }
 
 .readingSummaryStrip,
@@ -5165,7 +5280,7 @@ body,
     linear-gradient(180deg, #fffdf6 0%, #ffffff 100%);
 }
 
-.readingQuestionsPanel {
+.readingQuestionsPanel:not(.readingQuestionsPanel-exam) {
   position: sticky;
   top: 18px;
   max-height: 72vh;
@@ -6802,14 +6917,207 @@ body,
   margin-top: 14px;
 }
 
-.readingExamSubmitBar {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 2px solid var(--bc-black);
+.readingHeadingListPanel {
+  margin: 12px 0 4px;
+  padding: 14px 16px;
+  border: 2px solid var(--bc-black);
+  border-radius: 14px;
+  background: #f8fafc;
 }
 
-.readingExamSubmitBar button {
+.readingHeadingListPanelList {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.readingHeadingListPanelList li {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.readingHeadingListPanelList strong {
+  font-weight: 900;
+  color: #004aad;
+}
+
+.readingMatchingInfoGroup {
+  display: grid;
+  gap: 16px;
+}
+
+.readingMatchingInfoInstruction {
+  margin: 0;
+  padding: 14px 16px;
+  border: 2px solid var(--bc-black);
+  border-radius: 12px;
+  background: #f8fafc;
+  white-space: pre-wrap;
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.readingMatchingInfoList {
+  display: grid;
+  gap: 14px;
+}
+
+.readingMatchingInfoRow {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.readingMatchingInfoRow.is-active {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+.readingMatchingInfoStatement {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: #0f172a;
+}
+
+.readingMatchingInfoStatement strong {
+  margin-right: 0.35rem;
+}
+
+.readingMatchingInfoControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.readingMatchingInfoSelect {
+  min-width: 180px;
+  flex: 1 1 180px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--bc-black);
+  border-radius: 10px;
+  background: #ffffff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.readingMatchingInfoHintNote {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.readingExamSubmitBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  margin-top: 22px;
+  padding: 16px 0 2px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), #ffffff 34%);
+}
+
+.readingSubmitExamBtn {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   width: 100%;
+  min-height: 76px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 18px;
+  padding: 16px 18px 16px 22px;
+  background: linear-gradient(135deg, #004aad 0%, #1d4ed8 52%, #0f766e 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 0 #0b1530, 0 20px 36px rgba(15, 23, 42, 0.18);
+  cursor: pointer;
+  font-family: Inter, system-ui, sans-serif;
+  text-align: left;
+  transform: translateY(0);
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    filter 220ms ease;
+}
+
+.readingSubmitExamBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: translateX(-110%);
+  transition: transform 520ms ease;
+}
+
+.readingSubmitExamBtn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 0 #0b1530, 0 24px 42px rgba(15, 23, 42, 0.22);
+  filter: saturate(1.08);
+}
+
+.readingSubmitExamBtn:hover:not(:disabled)::before {
+  transform: translateX(110%);
+}
+
+.readingSubmitExamBtn:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 6px 0 #0b1530, 0 12px 24px rgba(15, 23, 42, 0.18);
+}
+
+.readingSubmitExamBtn:focus-visible {
+  outline: 4px solid #fde68a;
+  outline-offset: 4px;
+}
+
+.readingSubmitExamBtnText {
+  display: grid;
+  gap: 4px;
+}
+
+.readingSubmitExamBtnText > span {
+  font-size: clamp(1.08rem, 2vw, 1.35rem);
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.readingSubmitExamBtnText > small {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.86rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.readingSubmitExamBtnArrow {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #004aad;
+  box-shadow: inset 0 0 0 2px rgba(0, 74, 173, 0.12);
+  font-size: 1.45rem;
+  font-weight: 950;
+  line-height: 1;
 }
 
 .readingQuestionCardTop {
@@ -6848,6 +7156,149 @@ body,
   background: #fff;
 }
 
+.readingOriginalInstructionCard {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 2px solid var(--bc-black);
+  background: #fff7cc;
+  box-shadow: 4px 4px 0 var(--bc-black);
+}
+
+.readingOriginalInstructionCard pre {
+  white-space: pre-wrap;
+  margin: 0;
+  color: #111827;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.65;
+}
+
+.readingFillQuestionGroup {
+  gap: 16px;
+}
+
+.readingFillGroupHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.readingFillGroupHeader h4 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.08rem;
+}
+
+.readingFillInstruction {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #334155;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.readingFillOriginalBlock {
+  display: grid;
+  gap: 8px;
+  color: #111827;
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.85;
+}
+
+.readingFillLine {
+  margin: 0;
+}
+
+.readingFillSectionHeading {
+  margin: 12px 0 4px;
+  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.readingFillClueLine {
+  margin: 0;
+  padding: 6px 0 6px 12px;
+  border-left: 3px solid #94a3b8;
+  color: #475569;
+  font-size: 0.98rem;
+  font-weight: 600;
+  list-style: none;
+}
+
+.readingFillClueLine::before {
+  content: '• ';
+  color: #64748b;
+}
+
+.readingFillBlankPrefix,
+.readingFillBlankSuffix {
+  font-weight: 650;
+}
+
+.readingFillBlankSlot {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  gap: 4px;
+  min-width: 174px;
+  margin: 0 4px;
+  vertical-align: middle;
+  scroll-margin: 140px;
+}
+
+.readingFillBlankSlot label {
+  display: grid;
+  gap: 4px;
+}
+
+.readingFillBlankSlot label > span {
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.readingFillHintBtn {
+  min-height: 30px !important;
+  padding: 4px 8px !important;
+  font-size: 0.78rem !important;
+}
+
+.readingFillBlankSlot input,
+.readingFillBlankSlot select,
+.readingFillBlankSlot .readingAnswerField input {
+  width: 100%;
+  border: 2px solid var(--bc-black);
+  box-shadow: 4px 4px 0 var(--bc-black);
+  min-height: 42px;
+  padding: 8px 10px;
+  font: inherit;
+  background: #fff;
+}
+
+.readingFillFallbackList {
+  display: grid;
+  gap: 12px;
+}
+
+.readingFillFallbackRow {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  scroll-margin: 140px;
+}
+
 .readingReportCard {
   display: grid;
   gap: 12px;
@@ -6881,6 +7332,56 @@ body,
   border: 2px solid var(--bc-black);
   background: #fff;
   padding: 12px;
+}
+
+.readingRetryGuidanceCard,
+.readingFinalNotebookPush,
+.readingCheckpointEvidence {
+  border: 2px solid var(--bc-black);
+  background: #fff;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.readingRetryGuidanceCard {
+  margin: 18px 0;
+  background: #eff6ff;
+}
+
+.readingFinalNotebookPush {
+  margin: 18px 0;
+  background: #fff7ed;
+}
+
+.readingRetryGuidanceCard h4,
+.readingFinalNotebookPush h4,
+.readingCheckpointEvidence p {
+  margin: 0;
+}
+
+.readingUrgentNotebookBtn {
+  justify-self: flex-start;
+  white-space: normal;
+  line-height: 1.25;
+  animation: readingNotebookPulse 1.15s ease-in-out infinite;
+}
+
+.readingDictionaryBtn {
+  justify-self: flex-start;
+}
+
+@keyframes readingNotebookPulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    filter: saturate(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.025);
+    filter: saturate(1.18);
+  }
 }
 
 .readingReportEvidence h4,
@@ -7059,11 +7560,21 @@ body,
     padding-right: 0;
   }
 
-  .readingQuestionsPanel {
+  .readingQuestionsPanel:not(.readingQuestionsPanel-exam) {
     position: static;
     top: auto;
     max-height: none;
     overflow: visible;
+  }
+
+  .readingExamLayout-bank {
+    grid-template-columns: 1fr;
+  }
+
+  .readingExamLayout-bank .readingPassagePanel-exam,
+  .readingExamLayout-bank .readingQuestionsPanel-exam {
+    min-height: min(52dvh, 520px);
+    max-height: min(52dvh, 520px);
   }
 
   .adminSearchField {
@@ -13339,8 +13850,8 @@ select:focus,
 
 .listeningFoundationScriptPane .listeningScriptReader {
   flex: 1 1 auto;
-  min-height: 280px;
-  max-height: min(58vh, 560px);
+  min-height: min(420px, 52vh);
+  max-height: min(72vh, 720px);
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: #ffffff;
@@ -13351,11 +13862,6 @@ select:focus,
   padding: 12px 16px;
   border-bottom: 1px solid #e2e8f0;
   background: #f8fafc;
-}
-
-.listeningFoundationScriptPane .listeningScriptScanHint {
-  margin: 12px 16px 0;
-  flex-shrink: 0;
 }
 
 .listeningFoundationScriptPane .listeningFoundationPassage {
@@ -13374,8 +13880,26 @@ select:focus,
 .listeningFoundationScriptPane .listeningScriptTurnStack {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   padding-bottom: 8px;
+}
+
+.listeningFoundationScriptPane .listeningScriptReaderBody.is-comfort {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
+.listeningFoundationScriptPane .listeningScriptReaderBody.is-comfort .listeningScriptTurnBody {
+  max-width: none;
+}
+
+.listeningFoundationScriptPane .listeningScriptTurn {
+  padding: 10px 12px;
+}
+
+.listeningFoundationScriptPane .listeningScriptTurnHeader {
+  margin-bottom: 6px;
 }
 
 .listeningFoundationQuestionBody {

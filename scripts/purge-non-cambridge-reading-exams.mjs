@@ -6,13 +6,13 @@ dotenv.config({ path: '.env.local' })
 const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim().replace(/\/$/, '')
 const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim()
 
-const isCambridge1213ReadingExam = (exam) => {
+const isCambridgeBookReadingExam = (exam) => {
   const id = String(exam?.id || '').toLowerCase()
   const title = String(exam?.title || '').toLowerCase()
   return (
-    /^cambridge-1[23]-/.test(id) ||
-    /\bcambridge\s*1[23]\b/.test(title) ||
-    /^c1[23]\s/.test(title)
+    /^cambridge-1[289]-/.test(id) ||
+    /\bcambridge\s*1[289]\b/.test(title) ||
+    /^c1[289]\s/.test(title)
   )
 }
 
@@ -38,12 +38,12 @@ if (!listResponse.ok) {
 }
 
 const exams = await listResponse.json()
-const toDelete = (Array.isArray(exams) ? exams : []).filter((exam) => !isCambridge1213ReadingExam(exam))
-const toKeep = (Array.isArray(exams) ? exams : []).filter((exam) => isCambridge1213ReadingExam(exam))
+const toDelete = (Array.isArray(exams) ? exams : []).filter((exam) => !isCambridgeBookReadingExam(exam))
+const toKeep = (Array.isArray(exams) ? exams : []).filter((exam) => isCambridgeBookReadingExam(exam))
 
 console.log(`Found ${exams.length} uploaded reading exam(s).`)
-console.log(`Keeping ${toKeep.length} Cambridge 12–13 exam(s).`)
-console.log(`Deleting ${toDelete.length} non–Cambridge 12–13 exam(s).`)
+console.log(`Keeping ${toKeep.length} Cambridge 12/13/18/19 exam(s).`)
+console.log(`Deleting ${toDelete.length} non-Cambridge book exam(s).`)
 
 for (const exam of toDelete) {
   const deleteResponse = await fetch(

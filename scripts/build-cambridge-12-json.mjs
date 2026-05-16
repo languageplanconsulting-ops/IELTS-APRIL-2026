@@ -171,7 +171,7 @@ const q1p2 = `Questions 14-26
 Questions 14-20
 Complete the sentences below. Write ONE WORD ONLY from the passage in each gap.
 
-14 The writer mentions collecting as an example of collecting in order to make money.
+14 The writer mentions …………… as an example of collecting in order to make money.
 15 Collectors may get a feeling of …………… from buying and selling items.
 16 Collectors' clubs provide opportunities to share ……………
 17 Collectors' clubs offer …………… with people who have similar interests.
@@ -261,7 +261,7 @@ const exams = [
     body: t1p2Body,
     qText: q1p2,
     questions: mk(t1p2Body, 1, 2, [
-      [14, 'The writer mentions collecting as an example of collecting in order to make money.', 'antiques', 'antiques that they can buy cheaply', 'ตัวอย่างของการสะสมเพื่อหาเงินคือ antiques', 'make money = sell at a profit = antiques = ของโบราณ'],
+      [14, 'The writer mentions … as an example of collecting in order to make money.', 'antiques', 'antiques that they can buy cheaply', 'ตัวอย่างของการสะสมเพื่อหาเงินคือ antiques', 'make money = sell at a profit = antiques = ของโบราณ'],
       [15, 'Collectors may get a feeling of … from buying and selling items.', 'triumph', 'sense of triumph', 'ได้ความรู้สึกชัยชนะ', 'feeling = sense of = triumph = ชัยชนะ'],
       [16, "Collectors' clubs provide opportunities to share …", 'information', 'exchanging information on items', 'แลกเปลี่ยนข้อมูล', 'share = exchanging = information = ข้อมูล'],
       [17, "Collectors' clubs offer … with people who have similar interests.", 'contact', 'brings them into contact with like-minded people', 'ได้พบปะคนที่มีความสนใจคล้ายกัน', 'similar interests = like-minded = contact = ติดต่อ/พบปะ', 'contact|meetings'],
@@ -331,7 +331,26 @@ Which TWO actions are recommended for improving conditions for farmers?`
 const q2p2 = `Questions 14-26
 
 Questions 14-20
-Choose the correct heading for each paragraph, i-viii.
+Choose the correct heading for each paragraph from the list of headings below.
+Write the correct number, i-viii, in boxes 14-20 on your answer sheet.
+
+List of Headings
+i Different accounts of the same journey
+ii Bingham gains support
+iii A common belief
+iv The aim of the trip
+v A dramatic description
+vi A new route
+vii Bingham publishes his theory
+viii Bingham's lack of enthusiasm
+
+14 Paragraph A
+15 Paragraph B
+16 Paragraph C
+17 Paragraph D
+18 Paragraph E
+19 Paragraph F
+20 Paragraph G
 
 Questions 21-24
 TRUE / FALSE / NOT GIVEN
@@ -441,7 +460,26 @@ exams.push(
 const q3p1 = `Questions 1-13
 
 Questions 1-7
-Choose the correct heading for each paragraph, i-viii.
+Choose the correct heading for each paragraph from the list of headings below.
+Write the correct number, i-viii, in boxes 1-7 on your answer sheet.
+
+List of Headings
+i The importance of getting the timing right
+ii Young meets old
+iii Developments to the disadvantage of tortoise populations
+iv Planning a bigger idea
+v Tortoises populate the islands
+vi Carrying out a carefully prepared operation
+vii Looking for a home for the islands' tortoises
+viii The start of the conservation project
+
+1 Paragraph A
+2 Paragraph B
+3 Paragraph C
+4 Paragraph D
+5 Paragraph E
+6 Paragraph F
+7 Paragraph G
 
 Questions 8-13
 Complete the notes. ONE WORD ONLY.`
@@ -560,7 +598,26 @@ YES / NO / NOT GIVEN`
 const q4p3 = `Questions 27-40
 
 Questions 27-33
-Choose the correct heading for each paragraph, i-viii.
+Choose the correct heading for each paragraph from the list of headings below.
+Write the correct number, i-viii, in boxes 27-33 on your answer sheet.
+
+List of Headings
+i Disputes over financial arrangements regarding senior managers
+ii The impact on companies of being subjected to close examination
+iii The possible need for fundamental change in every area of business
+iv Many external bodies being held responsible for problems
+v The falling number of board members with broad enough experience
+vi A risk that not all directors take part in solving major problems
+vii Boards not looking far enough ahead
+viii A proposal to change the way the board operates
+
+27 Paragraph A
+28 Paragraph B
+29 Paragraph C
+30 Paragraph D
+31 Paragraph E
+32 Paragraph F
+33 Paragraph G
 
 Questions 34-37
 YES / NO / NOT GIVEN

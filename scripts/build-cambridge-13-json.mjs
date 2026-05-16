@@ -98,7 +98,22 @@ const parseNumberedPrompts = (qText, start, end) => {
       continue
     }
     if (currentNum !== null && line.trim() && !line.startsWith('#')) {
-      current += ` ${line.trim()}`
+      const trimmed = line.trim()
+      if (
+        /^Questions\s+\d+/i.test(trimmed) ||
+        /^##\s/.test(trimmed) ||
+        /^Look at the following/i.test(trimmed) ||
+        /^Match each/i.test(trimmed) ||
+        /^Complete the summary/i.test(trimmed) ||
+        /^Do the following statements/i.test(trimmed) ||
+        /^Choose the correct heading/i.test(trimmed) ||
+        /^List of (?:Headings|Ideas)/i.test(trimmed) ||
+        /^Reading Passage/i.test(trimmed)
+      ) {
+        flush()
+        continue
+      }
+      current += ` ${trimmed}`
     }
   }
   flush()

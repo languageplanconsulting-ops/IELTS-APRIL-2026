@@ -9,6 +9,7 @@ import multer from 'multer'
 import WebSocket from 'ws'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvidedReadingPracticeCambridge12.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvidedReadingPracticeCambridge13.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
 
 dotenv.config()
 
@@ -4657,13 +4658,13 @@ Exact Portion: "works reliably in the infinite range of traffic, weather and roa
 Short Thai Explanation: ข้อ E ถูก เพราะรถต้องปรับตัวให้ทำงานได้ในสภาพถนน จราจร และอากาศที่หลากหลาย.
 Paraphrased Vocabulary: adapt to various driving conditions = works reliably in traffic, weather and road situations`
 
-const isCambridge1213ReadingExamRecord = (exam) => {
+const isCambridgeBookReadingExamRecord = (exam) => {
   const id = String(exam?.id || '').toLowerCase()
   const title = String(exam?.title || '').toLowerCase()
   return (
-    /^cambridge-1[23]-/.test(id) ||
-    /\bcambridge\s*1[23]\b/.test(title) ||
-    /^c1[23]\s/.test(title)
+    /^cambridge-1[289]-/.test(id) ||
+    /\bcambridge\s*1[289]\b/.test(title) ||
+    /^c1[289]\s/.test(title)
   )
 }
 
@@ -4675,6 +4676,12 @@ const mapBuiltInReadingExam = (exam, timestamps) => ({
 })
 
 const BUILT_IN_READING_BANK_EXAMS = [
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-16T00:00:00.000Z',
+      updatedAt: '2026-05-16T00:00:00.000Z'
+    })
+  ),
   ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS.map((exam) =>
     mapBuiltInReadingExam(exam, {
       createdAt: '2026-05-15T00:00:00.000Z',
@@ -9734,7 +9741,7 @@ app.get('/api/reading/exams', requireAuth, async (req, res) => {
     )
     const uploadedExams = (Array.isArray(rows) ? rows : [])
       .map(mapReadingExamRecord)
-      .filter(isCambridge1213ReadingExamRecord)
+      .filter(isCambridgeBookReadingExamRecord)
     return res.json({
       exams: [...BUILT_IN_READING_EXAMS, ...uploadedExams]
     })
