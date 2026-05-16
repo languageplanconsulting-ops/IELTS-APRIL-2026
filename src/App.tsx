@@ -207,6 +207,14 @@ type ReadingAttemptSummary = {
   reportItems: ReadingReportItem[]
 }
 
+type NormalReadingStage = {
+  number: number
+  title: string
+  exams: ReadingExamRecord[]
+  isUnlocked: boolean
+  bestAccuracy: number
+}
+
 type ReadingPdoyLesson = {
   id: string
   examId: string
@@ -3107,6 +3115,26 @@ const READING_ENTRY_CHOICES: Array<{
   }
 ]
 
+const NORMAL_READING_STAGE_COUNT = 5
+const NORMAL_READING_STAGE_SIZE = 3
+const NORMAL_READING_UNLOCK_PERCENT = 80
+
+const hashReadingStageValue = (value: string) => {
+  let hash = 2166136261
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index)
+    hash = Math.imul(hash, 16777619)
+  }
+  return hash >>> 0
+}
+
+const sortNormalReadingExamsForStages = (exams: ReadingExamRecord[]) =>
+  [...exams].sort((first, second) => {
+    const firstScore = hashReadingStageValue(`normal-stage-v1:${first.id}`)
+    const secondScore = hashReadingStageValue(`normal-stage-v1:${second.id}`)
+    return firstScore - secondScore || first.title.localeCompare(second.title)
+  })
+
 const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
   const normalized = String(value || '').trim().toLowerCase()
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
@@ -3829,6 +3857,32 @@ const isReadingMatchingQuestion = (
 
 const isReadingJudgementQuestion = (question: ReadingQuestion | null) =>
   question?.answerType === 'true-false-not-given' || question?.answerType === 'yes-no-not-given'
+
+const getReadingExamTypeSummary = (exam: ReadingExamRecord) => {
+  const labels = new Set<string>()
+  ;(exam.parsedPayload?.passages || []).forEach((passage) => {
+    ;(passage.questions || []).forEach((question) => {
+      if (isReadingMatchingQuestion(passage, question)) {
+        labels.add('Matching')
+        return
+      }
+      if (question.answerType === 'true-false-not-given') {
+        labels.add('TRUE / FALSE / NOT GIVEN')
+        return
+      }
+      if (question.answerType === 'yes-no-not-given') {
+        labels.add('YES / NO / NOT GIVEN')
+        return
+      }
+      if (question.answerType === 'multiple-choice') {
+        labels.add('Multiple Choice')
+        return
+      }
+      labels.add('Fill in the Blanks')
+    })
+  })
+  return Array.from(labels).slice(0, 4).join(' · ') || 'IELTS Reading'
+}
 
 const isReadingNotGivenAnswer = (answer: string) => {
   const normalized = String(answer || '')
@@ -6802,6 +6856,31 @@ function App() {
       })),
     [bankReadingExams]
   )
+  const normalReadingStages = useMemo<NormalReadingStage[]>(() => {
+    const normalExams = sortNormalReadingExamsForStages(
+      bankReadingExams.filter((exam) => exam.category === 'normal')
+    )
+    let nextStageUnlocked = true
+    return Array.from({ length: NORMAL_READING_STAGE_COUNT }, (_, index) => {
+      const exams = normalExams.slice(
+        index * NORMAL_READING_STAGE_SIZE,
+        (index + 1) * NORMAL_READING_STAGE_SIZE
+      )
+      const bestAccuracy = exams.reduce(
+        (best, exam) => Math.max(best, readingAttemptByExamId[exam.id]?.accuracy || 0),
+        0
+      )
+      const stage: NormalReadingStage = {
+        number: index + 1,
+        title: `ด่าน ${index + 1}`,
+        exams,
+        isUnlocked: nextStageUnlocked,
+        bestAccuracy
+      }
+      nextStageUnlocked = nextStageUnlocked && bestAccuracy >= NORMAL_READING_UNLOCK_PERCENT
+      return stage
+    })
+  }, [bankReadingExams, readingAttemptByExamId])
   const selectedReadingEntryChoice =
     READING_ENTRY_CHOICES.find((choice) => choice.category === readingEntryCategory) || null
   const adminFirstReadingCategoryWithContent = useMemo(
@@ -11353,7 +11432,7 @@ function App() {
     resetReadingPdoyForNextQuestion()
   }
 
-  const openReadingReview = (examId: string) => {
+  const openReadingReview = (examId: string, stage: 'review' | 'report' = 'review') => {
     const exam = filteredReadingExams.find((item) => item.id === examId) || null
     const savedAttempt = readingAttemptByExamId[examId]
     if (!exam || !savedAttempt) return
@@ -11363,7 +11442,7 @@ function App() {
     setSelectedReadingExamId(exam.id)
     setReadingAnswers(Object.fromEntries(savedAttempt.reportItems.map((item) => [item.number, item.userAnswer])))
     setReadingReportItems(savedAttempt.reportItems)
-    setReadingAttemptStage('review')
+    setReadingAttemptStage(stage)
     setReadingHintQuestionNumber(null)
     setReadingExamError('')
     setReadingSelectionText('')
@@ -12883,9 +12962,6 @@ function App() {
                         </div>
 
                         <footer className="listeningScriptReaderFooter">
-                          <p className="listeningScriptReaderHint meta">
-                            Each box is one speaker turn. Highlight the matching phrase (exact or ≥50% of the evidence).
-                          </p>
                           <p
                             className={
                               listeningFoundationEvidenceCorrect ? 'foundationStatusCorrect' : 'foundationStatus'
@@ -13508,6 +13584,96 @@ function App() {
                         ))}
                     </div>
                   )}
+                </div>
+              ) : readingEntryCategory === 'normal' ? (
+                <div className="readingStageBoard">
+                  {normalReadingStages.map((stage) => (
+                    <section
+                      key={`normal-reading-stage-${stage.number}`}
+                      className={`readingStagePanel ${stage.isUnlocked ? 'is-unlocked' : 'is-locked'}`}
+                    >
+                      <div className="readingStageHeader">
+                        <div>
+                          <p className="sectionLabel">Normal Reading</p>
+                          <h4>{stage.title}</h4>
+                          <p>
+                            {stage.exams.length
+                              ? 'สุ่ม 3 ชุดข้อสอบ พร้อมระบุประเภทคำถามในแต่ละชุด'
+                              : 'ยังไม่มีข้อสอบในด่านนี้'}
+                          </p>
+                        </div>
+                        <div className="readingStageStatus">
+                          <strong>{stage.bestAccuracy}%</strong>
+                          <span>
+                            {stage.isUnlocked
+                              ? stage.bestAccuracy >= NORMAL_READING_UNLOCK_PERCENT
+                                ? 'ผ่านแล้ว'
+                                : `ต้องได้ ${NORMAL_READING_UNLOCK_PERCENT}%+`
+                              : 'ล็อกอยู่'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {!stage.isUnlocked && (
+                        <div className="readingStageLockNote">
+                          ต้องผ่านด่านก่อนหน้าอย่างน้อย {NORMAL_READING_UNLOCK_PERCENT}% เพื่อปลดล็อกด่านนี้
+                        </div>
+                      )}
+
+                      <div className="readingStageExamGrid">
+                        {stage.exams.map((exam, index) => {
+                          const attempt = readingAttemptByExamId[exam.id]
+                          const canUseExam = stage.isUnlocked || Boolean(attempt)
+                          const isPerfect = attempt?.accuracy === 100
+                          return (
+                            <article
+                              key={exam.id}
+                              className={`readingStageExamCard ${canUseExam ? '' : 'is-disabled'} ${isPerfect ? 'is-perfect' : ''}`}
+                            >
+                              <div className="readingStageExamThumb">
+                                <span>{attempt ? `${attempt.accuracy}%` : `ชุด ${index + 1}`}</span>
+                                <small>{attempt ? 'คะแนนล่าสุด' : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
+                              </div>
+                              <div className="readingStageExamBody">
+                                <p className="promptPill">{getReadingExamTypeSummary(exam)}</p>
+                                <h5>{exam.title}</h5>
+                                <p className="meta">
+                                  {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
+                                </p>
+                                {attempt && (
+                                  <p className="readingStageAttemptMeta">
+                                    {attempt.correctCount}/{attempt.totalQuestions} correct · {new Date(attempt.completedAt).toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="readingStageExamActions">
+                                {!attempt && (
+                                  <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
+                                    เริ่มทำข้อสอบ
+                                  </button>
+                                )}
+                                {attempt && !isPerfect && (
+                                  <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
+                                    Redeem
+                                  </button>
+                                )}
+                                {attempt && isPerfect && (
+                                  <>
+                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
+                                      ดู report
+                                    </button>
+                                    <button type="button" onClick={() => startReadingExam(exam.id)}>
+                                      ทำข้อสอบอีกรอบ
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </article>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  ))}
                 </div>
               ) : (
                 <div className="readingBankGrid">

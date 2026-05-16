@@ -11574,6 +11574,169 @@ select:focus,
   padding: 0 16px !important;
 }
 
+.readingPage .readingStageBoard {
+  display: grid;
+  gap: 22px;
+  max-width: 1180px;
+}
+
+.readingPage .readingStagePanel {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.readingPage .readingStagePanel.is-locked {
+  background: #f7f9fc;
+  opacity: 0.72;
+}
+
+.readingPage .readingStageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.readingPage .readingStageHeader h4 {
+  margin: 6px 0 6px;
+  color: #091226;
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+  font-weight: 950;
+  letter-spacing: -0.05em;
+}
+
+.readingPage .readingStageHeader p {
+  margin: 0;
+  color: #516078;
+  font-weight: 750;
+}
+
+.readingPage .readingStageStatus {
+  min-width: 118px;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid #cdd9eb;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.readingPage .readingStageStatus strong {
+  color: #00337a;
+  font-size: 1.85rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.readingPage .readingStageStatus span,
+.readingPage .readingStageAttemptMeta {
+  color: #516078;
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.readingPage .readingStageLockNote {
+  padding: 12px 14px;
+  border: 1px dashed #aebed5;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #516078;
+  font-weight: 850;
+}
+
+.readingPage .readingStageExamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.readingPage .readingStageExamCard {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 14px;
+  min-height: 290px;
+  padding: 14px;
+  border: 1px solid #d6e0ef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.07);
+}
+
+.readingPage .readingStageExamCard.is-perfect {
+  border-color: #9fc7ac;
+  background: #fbfffc;
+}
+
+.readingPage .readingStageExamCard.is-disabled {
+  pointer-events: none;
+  filter: grayscale(0.5);
+}
+
+.readingPage .readingStageExamThumb {
+  min-height: 96px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  border: 1px solid #cdd9eb;
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 204, 0, 0.28), transparent 55%),
+    #f3f7ff;
+}
+
+.readingPage .readingStageExamThumb span {
+  color: #00337a;
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.readingPage .readingStageExamThumb small {
+  color: #516078;
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.readingPage .readingStageExamBody {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.readingPage .readingStageExamBody h5 {
+  margin: 0;
+  color: #091226;
+  font-size: 1.03rem;
+  font-weight: 950;
+  line-height: 1.18;
+}
+
+.readingPage .readingStageAttemptMeta {
+  margin: 0;
+}
+
+.readingPage .readingStageExamActions {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.readingPage .readingStageExamActions button {
+  flex: 1 1 132px;
+  min-height: 42px !important;
+  padding: 0 12px !important;
+}
+
 .speakingFlowTheme .providerTabs button.active {
   background: var(--ep-yellow) !important;
   color: var(--ep-yellow-dark) !important;
@@ -14305,6 +14468,19 @@ section.panel.full.speakingFlowTheme > h2 {
   .readingPage .readingBankWindowActions {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .readingPage .readingStageExamGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .readingPage .readingStageHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .readingPage .readingStageStatus {
+    justify-items: start;
   }
 
   .workspace .topbar {
