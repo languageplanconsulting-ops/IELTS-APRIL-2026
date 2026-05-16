@@ -944,6 +944,8 @@ const SUPABASE_READING_PDOY_PROGRESS_BUCKET = String(process.env.SUPABASE_READIN
 const READING_PDOY_PROGRESS_INDEX_PATH = '_manifests/reading-pdoy-progress.json'
 let readingPdoyProgressBucketReady = false
 let readingPdoyProgressIndexCache = null
+const SUPABASE_READING_ATTEMPTS_BUCKET = String(process.env.SUPABASE_READING_ATTEMPTS_BUCKET || 'reading-attempt-history').trim()
+let readingAttemptsBucketReady = false
 
 const ensureSupabaseConfigured = () => {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -1302,6 +1304,58 @@ const uploadReadingPdoyProgressJson = async ({ objectPath, payload }) => {
 const loadReadingPdoyProgressJson = async (objectPath) => {
   const response = await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    }
+  )
+  return parseJsonSafe(response)
+}
+
+const ensureReadingAttemptsBucket = async () => {
+  if (readingAttemptsBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_READING_ATTEMPTS_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+  } catch (error) {
+    if (error?.status !== 404) throw error
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        id: SUPABASE_READING_ATTEMPTS_BUCKET,
+        name: SUPABASE_READING_ATTEMPTS_BUCKET,
+        public: false
+      })
+    })
+  }
+  readingAttemptsBucketReady = true
+}
+
+const buildReadingAttemptsObjectPath = (userId) => `users/${normalizeOptionalUuid(userId) || 'unknown'}.json`
+
+const uploadReadingAttemptsJson = async ({ objectPath, payload }) => {
+  await ensureReadingAttemptsBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '3600'
+      },
+      body: JSON.stringify(payload)
+    }
+  )
+}
+
+const loadReadingAttemptsJson = async (objectPath) => {
+  await ensureReadingAttemptsBucket()
+  const response = await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
     {
       headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
     }
@@ -1911,6 +1965,72 @@ const normalizeReadingCategory = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
   return 'normal'
+}
+
+const normalizeReadingAnswerType = (value) => {
+  const normalized = String(value || '').trim().toLowerCase()
+  if (['true-false-not-given', 'yes-no-not-given', 'multiple-choice', 'text'].includes(normalized)) {
+    return normalized
+  }
+  return 'text'
+}
+
+const sanitizeReadingReportItems = (value) =>
+  (Array.isArray(value) ? value : [])
+    .slice(0, 200)
+    .map((item) => ({
+      number: Math.max(0, Number(item?.number || 0)),
+      prompt: String(item?.prompt || '').slice(0, 2000),
+      correctAnswer: String(item?.correctAnswer || '').slice(0, 500),
+      answerType: normalizeReadingAnswerType(item?.answerType),
+      acceptedAnswers: Array.isArray(item?.acceptedAnswers)
+        ? item.acceptedAnswers.map((answer) => String(answer || '').slice(0, 500)).slice(0, 20)
+        : undefined,
+      ...(item?.answerGroup ? { answerGroup: String(item.answerGroup).slice(0, 300) } : {}),
+      exactPortion: String(item?.exactPortion || '').slice(0, 4000),
+      explanationThai: String(item?.explanationThai || '').slice(0, 4000),
+      paraphrasedVocabulary: String(item?.paraphrasedVocabulary || '').slice(0, 2000),
+      userAnswer: String(item?.userAnswer || '').slice(0, 1000),
+      isCorrect: Boolean(item?.isCorrect)
+    }))
+    .filter((item) => item.number > 0)
+
+const sanitizeReadingAttemptSummary = (value, fallbackExamId = '') => {
+  if (!value || typeof value !== 'object') return null
+  const examId = String(value.examId || fallbackExamId || '').trim().slice(0, 180)
+  if (!examId) return null
+  const reportItems = sanitizeReadingReportItems(value.reportItems)
+  const computedCorrect = reportItems.filter((item) => item.isCorrect).length
+  const computedTotal = reportItems.length
+  const totalQuestions = computedTotal || Math.max(0, Number(value.totalQuestions || 0))
+  const correctCount = computedTotal ? computedCorrect : Math.max(0, Number(value.correctCount || 0))
+  const accuracy = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : Math.max(0, Number(value.accuracy || 0))
+  return {
+    examId,
+    examTitle: String(value.examTitle || '').slice(0, 300),
+    category: normalizeReadingCategory(value.category),
+    correctCount,
+    totalQuestions,
+    accuracy: Math.max(0, Math.min(100, accuracy)),
+    wrongCount: Math.max(0, totalQuestions - correctCount),
+    completedAt: String(value.completedAt || new Date().toISOString()),
+    reportItems
+  }
+}
+
+const sanitizeReadingAttemptHistory = (value) => {
+  const source =
+    value && typeof value === 'object'
+      ? Array.isArray(value)
+        ? value.map((attempt) => [attempt?.examId, attempt])
+        : Object.entries(value)
+      : []
+  return Object.fromEntries(
+    source
+      .map(([examId, attempt]) => sanitizeReadingAttemptSummary(attempt, examId))
+      .filter(Boolean)
+      .map((attempt) => [attempt.examId, attempt])
+  )
 }
 
 const normalizeSupportReportCategory = (value) => {
@@ -9222,6 +9342,75 @@ app.put('/api/me/notebook', requireAuth, async (req, res) => {
         status: error?.status || 500,
         type: 'notebook_save_error',
         message: error instanceof Error ? error.message : 'Could not save notebook.'
+      }
+    })
+  }
+})
+
+app.get('/api/me/reading-attempts', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'reading_attempts_auth_error',
+          message: 'Please sign in before loading reading reports.'
+        }
+      })
+    }
+    const objectPath = buildReadingAttemptsObjectPath(userId)
+    try {
+      const payload = await loadReadingAttemptsJson(objectPath)
+      return res.json({
+        attempts: sanitizeReadingAttemptHistory(payload?.attempts),
+        updatedAt: payload?.updatedAt || null
+      })
+    } catch (error) {
+      if (error?.status !== 400 && error?.status !== 404) throw error
+      return res.json({ attempts: {}, updatedAt: null })
+    }
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_attempts_load_error',
+        message: error instanceof Error ? error.message : 'Could not load reading reports.'
+      }
+    })
+  }
+})
+
+app.put('/api/me/reading-attempts', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'reading_attempts_auth_error',
+          message: 'Please sign in before saving reading reports.'
+        }
+      })
+    }
+    const attempts = sanitizeReadingAttemptHistory(req.body?.attempts)
+    const updatedAt = new Date().toISOString()
+    const payload = {
+      userId,
+      updatedAt,
+      attempts
+    }
+    await uploadReadingAttemptsJson({
+      objectPath: buildReadingAttemptsObjectPath(userId),
+      payload
+    })
+    return res.json({ attempts, updatedAt })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_attempts_save_error',
+        message: error instanceof Error ? error.message : 'Could not save reading reports.'
       }
     })
   }

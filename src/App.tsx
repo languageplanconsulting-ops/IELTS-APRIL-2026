@@ -3062,6 +3062,11 @@ type NotebookApiResponse = {
   updatedAt: string | null
 }
 
+type ReadingAttemptsApiResponse = {
+  attempts: Record<string, ReadingAttemptSummary>
+  updatedAt: string | null
+}
+
 type ReadingExamsApiResponse = {
   exams: ReadingExamRecord[]
 }
@@ -5249,6 +5254,25 @@ const parseStoredReadingAttempts = (value: string | null): Record<string, Readin
   }
 }
 
+const getReadingAttemptCompletedTime = (attempt: ReadingAttemptSummary | undefined) => {
+  const timestamp = attempt?.completedAt ? new Date(attempt.completedAt).getTime() : 0
+  return Number.isFinite(timestamp) ? timestamp : 0
+}
+
+const mergeReadingAttemptHistories = (
+  remoteAttempts: Record<string, ReadingAttemptSummary>,
+  localAttempts: Record<string, ReadingAttemptSummary>
+) => {
+  const merged = { ...remoteAttempts }
+  Object.entries(localAttempts).forEach(([examId, localAttempt]) => {
+    const remoteAttempt = merged[examId]
+    if (!remoteAttempt || getReadingAttemptCompletedTime(localAttempt) > getReadingAttemptCompletedTime(remoteAttempt)) {
+      merged[examId] = localAttempt
+    }
+  })
+  return merged
+}
+
 const parseStoredListeningAttempts = (value: string | null): Record<string, ListeningAttemptSummary> => {
   if (!value) return {}
   try {
@@ -5627,6 +5651,8 @@ function App() {
   const notebookLoadedRef = useRef(false)
   const notebookSyncTimeoutRef = useRef<number | null>(null)
   const notebookSyncedSignatureRef = useRef('')
+  const readingAttemptsSyncTimeoutRef = useRef<number | null>(null)
+  const readingAttemptsSyncedSignatureRef = useRef('')
   const readingPdoyProgressSyncTimeoutRef = useRef<number | null>(null)
   const readingPdoyProgressSyncedSignatureRef = useRef('')
   const notebookEntriesRef = useRef<NotebookEntry[]>([])
@@ -5672,6 +5698,32 @@ function App() {
 
   const buildNotebookSyncSignature = (entries: NotebookEntry[], sections: string[]) =>
     JSON.stringify({ entries, customSections: sections })
+
+  const buildReadingAttemptsSyncSignature = (attempts: Record<string, ReadingAttemptSummary>) =>
+    JSON.stringify(attempts)
+
+  const syncReadingAttemptsToSupabase = async (attempts: Record<string, ReadingAttemptSummary>) => {
+    if (!authSession?.accessToken || authSession.role === 'admin' || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) {
+      return false
+    }
+
+    const signature = buildReadingAttemptsSyncSignature(attempts)
+    try {
+      await fetchJson<ReadingAttemptsApiResponse>('/api/me/reading-attempts', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authSession.accessToken}`
+        },
+        body: JSON.stringify({ attempts })
+      })
+      readingAttemptsSyncedSignatureRef.current = signature
+      setNotebookSyncError('')
+      return true
+    } catch {
+      setNotebookSyncError('Saved on this device, but Reading report account sync failed just now.')
+      return false
+    }
+  }
 
   const syncNotebookSnapshotToSupabase = async ({
     entries,
@@ -6104,6 +6156,25 @@ function App() {
     setReadingAttemptHistory(localReadingAttempts)
     setListeningAttemptHistory(localListeningAttempts)
     applyReadingPdoyProgressSnapshot(localReadingPdoyProgress)
+    const hydrateReadingAttemptsFromRemote = async () => {
+      try {
+        const payload = await fetchJson<ReadingAttemptsApiResponse>('/api/me/reading-attempts', {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`
+          }
+        })
+        const remoteAttempts = parseStoredReadingAttempts(JSON.stringify(payload.attempts || {}))
+        const mergedAttempts = mergeReadingAttemptHistories(remoteAttempts, localReadingAttempts)
+        const remoteSignature = buildReadingAttemptsSyncSignature(remoteAttempts)
+        const mergedSignature = buildReadingAttemptsSyncSignature(mergedAttempts)
+        setReadingAttemptHistory(mergedAttempts)
+        readingAttemptsSyncedSignatureRef.current = mergedSignature === remoteSignature ? mergedSignature : ''
+      } catch {
+        readingAttemptsSyncedSignatureRef.current = Object.keys(localReadingAttempts).length
+          ? ''
+          : buildReadingAttemptsSyncSignature(localReadingAttempts)
+      }
+    }
     setIsNotebookHydrating(true)
     setNotebookSyncError('')
     notebookLoadedRef.current = false
@@ -6150,6 +6221,7 @@ function App() {
       setNotebookSyncError('Notebook sync is temporarily unavailable. Using this device backup for now.')
       notebookSyncedSignatureRef.current = ''
     } finally {
+      await hydrateReadingAttemptsFromRemote()
       setSelectedNotebookSection('speaking')
       setIsNotebookHydrating(false)
       notebookLoadedRef.current = true
@@ -6224,10 +6296,15 @@ function App() {
     }
     notebookLoadedRef.current = false
     notebookSyncedSignatureRef.current = ''
+    readingAttemptsSyncedSignatureRef.current = ''
     readingPdoyProgressSyncedSignatureRef.current = ''
     if (notebookSyncTimeoutRef.current) {
       window.clearTimeout(notebookSyncTimeoutRef.current)
       notebookSyncTimeoutRef.current = null
+    }
+    if (readingAttemptsSyncTimeoutRef.current) {
+      window.clearTimeout(readingAttemptsSyncTimeoutRef.current)
+      readingAttemptsSyncTimeoutRef.current = null
     }
     if (readingPdoyProgressSyncTimeoutRef.current) {
       window.clearTimeout(readingPdoyProgressSyncTimeoutRef.current)
@@ -8039,6 +8116,26 @@ function App() {
     if (!authSession?.email) return
     localStorage.setItem(makeScopedStorageKey(READING_ATTEMPTS_KEY, authSession.email), JSON.stringify(readingAttemptHistory))
   }, [authSession, readingAttemptHistory])
+
+  useEffect(() => {
+    if (!authSession?.accessToken || !authSession.email || authSession.role === 'admin' || isNotebookHydrating || !notebookLoadedRef.current) return
+    const nextSignature = buildReadingAttemptsSyncSignature(readingAttemptHistory)
+    if (nextSignature === readingAttemptsSyncedSignatureRef.current) return
+    if (readingAttemptsSyncTimeoutRef.current) {
+      window.clearTimeout(readingAttemptsSyncTimeoutRef.current)
+    }
+
+    readingAttemptsSyncTimeoutRef.current = window.setTimeout(() => {
+      void syncReadingAttemptsToSupabase(readingAttemptHistory)
+    }, 500)
+
+    return () => {
+      if (readingAttemptsSyncTimeoutRef.current) {
+        window.clearTimeout(readingAttemptsSyncTimeoutRef.current)
+        readingAttemptsSyncTimeoutRef.current = null
+      }
+    }
+  }, [authSession?.accessToken, authSession?.email, authSession?.role, readingAttemptHistory, isNotebookHydrating])
 
   useEffect(() => {
     if (!authSession?.email) return
@@ -13653,9 +13750,14 @@ function App() {
                                   </button>
                                 )}
                                 {attempt && !isPerfect && (
-                                  <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
-                                    Redeem
-                                  </button>
+                                  <>
+                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
+                                      ดู report
+                                    </button>
+                                    <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
+                                      Redeem
+                                    </button>
+                                  </>
                                 )}
                                 {attempt && isPerfect && (
                                   <>
@@ -13709,8 +13811,8 @@ function App() {
                           {readingAttemptByExamId[exam.id] ? 'Retry Exam' : 'Open Exam'}
                         </button>
                         {readingAttemptByExamId[exam.id] && (
-                          <button type="button" className="secondary" onClick={() => openReadingReview(exam.id)}>
-                            Review Mistakes
+                          <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
+                            ดู report
                           </button>
                         )}
                       </div>
