@@ -8,8 +8,10 @@ import {
   buildListeningHighlightCandidates
 } from './listeningHighlightMatch'
 import {
+  buildListeningPassageExcerpt,
   findListeningScriptChunkForText,
   getListeningSpeakerTone,
+  listeningScriptHasDialogue,
   parseListeningScriptSegments,
   type ListeningScriptSegment
 } from './listeningScriptReader'
@@ -3152,6 +3154,8 @@ const READING_ENTRY_CHOICES: Array<{
 
 const NORMAL_READING_STAGE_SIZE = 3
 const NORMAL_READING_UNLOCK_PERCENT = 80
+const ADVANCED_READING_STAGE_SIZE = 2
+const ADVANCED_READING_UNLOCK_PERCENT = 75
 
 const hashReadingStageValue = (value: string) => {
   let hash = 2166136261
@@ -3166,6 +3170,13 @@ const sortNormalReadingExamsForStages = (exams: ReadingExamRecord[]) =>
   [...exams].sort((first, second) => {
     const firstScore = hashReadingStageValue(`normal-stage-v1:${first.id}`)
     const secondScore = hashReadingStageValue(`normal-stage-v1:${second.id}`)
+    return firstScore - secondScore || first.title.localeCompare(second.title)
+  })
+
+const sortAdvancedReadingExamsForStages = (exams: ReadingExamRecord[]) =>
+  [...exams].sort((first, second) => {
+    const firstScore = hashReadingStageValue(`advanced-stage-v1:${first.id}`)
+    const secondScore = hashReadingStageValue(`advanced-stage-v1:${second.id}`)
     return firstScore - secondScore || first.title.localeCompare(second.title)
   })
 
@@ -3588,13 +3599,13 @@ const READING_PDOY_EXAM_IDS = new Set([
 
 const isReadingPdoyExercise = (examId: string) => READING_PDOY_EXAM_IDS.has(String(examId || ''))
 
-const isCambridge1213ReadingExam = (exam: Pick<ReadingExamRecord, 'id' | 'title'>) => {
+const isCambridgeBookReadingExam = (exam: Pick<ReadingExamRecord, 'id' | 'title'>) => {
   const id = String(exam.id || '').toLowerCase()
   const title = String(exam.title || '').toLowerCase()
   return (
-    /^cambridge-1[23]-/.test(id) ||
-    /\bcambridge\s*1[23]\b/.test(title) ||
-    /^c1[23]\s/.test(title)
+    /^cambridge-(1[2-3]|17|19)-/.test(id) ||
+    /\bcambridge\s*(1[2-3]|17|19)\b/.test(title) ||
+    /^c(12|13|17|19)\s/.test(title)
   )
 }
 
@@ -5993,6 +6004,8 @@ function App() {
   const [listeningBuilderAttempts, setListeningBuilderAttempts] = useState<Record<string, number>>({})
   const [listeningBuilderResolvedState, setListeningBuilderResolvedState] = useState<Record<string, 'correct' | 'revealed'>>({})
   const [listeningBuilderExamEvidenceCorrect, setListeningBuilderExamEvidenceCorrect] = useState<Record<string, true>>({})
+  const [listeningBuilderExamSelectedAnswer, setListeningBuilderExamSelectedAnswer] = useState<Record<string, string>>({})
+  const [listeningBuilderExamAnswerPickCorrect, setListeningBuilderExamAnswerPickCorrect] = useState<Record<string, true>>({})
   const [listeningBuilderExamAnswerState, setListeningBuilderExamAnswerState] = useState<Record<string, 'correct'>>({})
   const [listeningBuilderExamFeedback, setListeningBuilderExamFeedback] = useState('')
   const [listeningBuilderTranscriptShake, setListeningBuilderTranscriptShake] = useState(false)
@@ -6002,11 +6015,16 @@ function App() {
   const [listeningFoundationQuestionIndex, setListeningFoundationQuestionIndex] = useState(0)
   const [listeningFoundationEvidence, setListeningFoundationEvidence] = useState('')
   const [listeningFoundationEvidenceCorrect, setListeningFoundationEvidenceCorrect] = useState(false)
+  const [listeningFoundationSelectedAnswer, setListeningFoundationSelectedAnswer] = useState('')
+  const [listeningFoundationAnswerPickCorrect, setListeningFoundationAnswerPickCorrect] = useState(false)
+  const [listeningFoundationAudioPlayed, setListeningFoundationAudioPlayed] = useState(false)
   const [listeningFoundationAnswerState, setListeningFoundationAnswerState] = useState<Record<string, 'correct'>>({})
   const [listeningFoundationFeedback, setListeningFoundationFeedback] = useState('')
   const [listeningFoundationScriptChunk, setListeningFoundationScriptChunk] = useState(0)
   const listeningFoundationScriptBodyRef = useRef<HTMLDivElement | null>(null)
   const listeningFoundationPointerSelectingRef = useRef(false)
+  const listeningFoundationSelectedAnswerRef = useRef('')
+  const listeningBuilderExamSelectedAnswerRef = useRef<Record<string, string>>({})
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('normal')
   const [adminReadingSmartPasteInput, setAdminReadingSmartPasteInput] = useState('')
@@ -6714,6 +6732,21 @@ function App() {
     setLatestScoresByTest({})
     setReadingAttemptHistory({})
     setListeningAttemptHistory({})
+    setListeningFoundationAnswerState({})
+    setListeningFoundationEvidence('')
+    setListeningFoundationEvidenceCorrect(false)
+    setListeningFoundationSelectedAnswer('')
+    setListeningFoundationAnswerPickCorrect(false)
+    setListeningFoundationAudioPlayed(false)
+    setListeningFoundationFeedback('')
+    setListeningFoundationQuestionIndex(0)
+    setListeningBuilderExamEvidenceCorrect({})
+    setListeningBuilderExamSelectedAnswer({})
+    setListeningBuilderExamAnswerPickCorrect({})
+    setListeningBuilderExamAnswerState({})
+    setListeningBuilderExamFeedback('')
+    setListeningBuilderAttempts({})
+    setListeningBuilderResolvedState({})
     setCreditProfile(defaultCreditProfile(name))
     setSelectedNotebookSection('speaking')
     setAssessmentResult(null)
@@ -7387,7 +7420,7 @@ function App() {
   const bankReadingExams = useMemo(
     () =>
       readingExams.filter(
-        (exam) => !isReadingPdoyExercise(exam.id) && isCambridge1213ReadingExam(exam)
+        (exam) => !isReadingPdoyExercise(exam.id) && isCambridgeBookReadingExam(exam)
       ),
     [readingExams]
   )
@@ -7433,6 +7466,32 @@ function App() {
         bestAccuracy
       }
       nextStageUnlocked = nextStageUnlocked && bestAccuracy >= NORMAL_READING_UNLOCK_PERCENT
+      return stage
+    })
+  }, [bankReadingExams, readingAttemptByExamId])
+  const advancedReadingStages = useMemo<NormalReadingStage[]>(() => {
+    const advancedExams = sortAdvancedReadingExamsForStages(
+      bankReadingExams.filter((exam) => exam.category === 'advanced')
+    )
+    const stageCount = Math.ceil(advancedExams.length / ADVANCED_READING_STAGE_SIZE)
+    let nextStageUnlocked = true
+    return Array.from({ length: stageCount }, (_, index) => {
+      const exams = advancedExams.slice(
+        index * ADVANCED_READING_STAGE_SIZE,
+        (index + 1) * ADVANCED_READING_STAGE_SIZE
+      )
+      const bestAccuracy = exams.reduce(
+        (best, exam) => Math.max(best, readingAttemptByExamId[exam.id]?.accuracy || 0),
+        0
+      )
+      const stage: NormalReadingStage = {
+        number: index + 1,
+        title: `ด่าน ${index + 1}`,
+        exams,
+        isUnlocked: nextStageUnlocked,
+        bestAccuracy
+      }
+      nextStageUnlocked = nextStageUnlocked && bestAccuracy >= ADVANCED_READING_UNLOCK_PERCENT
       return stage
     })
   }, [bankReadingExams, readingAttemptByExamId])
@@ -7812,6 +7871,24 @@ function App() {
         : [],
     [activeListeningFoundationQuestion]
   )
+  const activeListeningFoundationPassageExcerpt = useMemo(
+    () =>
+      activeListeningFoundationQuestion
+        ? buildListeningPassageExcerpt(
+            activeListeningFoundationQuestion.passage,
+            activeListeningFoundationQuestion.evidence,
+            0.5
+          )
+        : '',
+    [activeListeningFoundationQuestion]
+  )
+  const activeListeningFoundationHasDialogue = useMemo(
+    () => listeningScriptHasDialogue(activeListeningFoundationScriptSegments),
+    [activeListeningFoundationScriptSegments]
+  )
+  const listeningFoundationQuestionComplete =
+    Boolean(activeListeningFoundationQuestion) &&
+    listeningFoundationAnswerState[activeListeningFoundationQuestion?.id || ''] === 'correct'
   const listeningFoundationScriptChunkCount = Math.max(activeListeningFoundationScriptSegments.length, 1)
   const activeListeningFoundationScriptChunk = Math.min(
     listeningFoundationScriptChunk,
@@ -7820,6 +7897,20 @@ function App() {
   const listeningFoundationCompletedCount = activeListeningFoundationSet
     ? activeListeningFoundationSet.questions.filter((question) => listeningFoundationAnswerState[question.id] === 'correct').length
     : 0
+  const listeningFoundationCategoryCompletedCount = useMemo(
+    () =>
+      visibleListeningFoundationSets.reduce(
+        (total, set) =>
+          total +
+          set.questions.filter((question) => listeningFoundationAnswerState[question.id] === 'correct').length,
+        0
+      ),
+    [visibleListeningFoundationSets, listeningFoundationAnswerState]
+  )
+  const listeningFoundationCategoryQuestionTotal = useMemo(
+    () => visibleListeningFoundationSets.reduce((total, set) => total + set.questions.length, 0),
+    [visibleListeningFoundationSets]
+  )
   const listeningVocabularyBuilderItems = useMemo(
     () => parseListeningVocabularyWorkbook(listeningWorkbookRaw),
     []
@@ -11244,8 +11335,70 @@ function App() {
   const resetListeningFoundationQuestion = () => {
     setListeningFoundationEvidence('')
     setListeningFoundationEvidenceCorrect(false)
+    setListeningFoundationSelectedAnswer('')
+    setListeningFoundationAnswerPickCorrect(false)
+    setListeningFoundationAudioPlayed(false)
     setListeningFoundationFeedback('')
     window.getSelection()?.removeAllRanges()
+  }
+
+  const markListeningFoundationQuestionComplete = () => {
+    if (!activeListeningFoundationQuestion) return
+    if (listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct') return
+    setListeningFoundationAnswerState((current) => ({
+      ...current,
+      [activeListeningFoundationQuestion.id]: 'correct'
+    }))
+    setListeningFoundationFeedback(
+      `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword} → ${activeListeningFoundationQuestion.thaiMeaning}`
+    )
+  }
+
+  const tryCompleteListeningFoundationQuestion = (
+    evidenceOk: boolean,
+    answerOk: boolean
+  ) => {
+    if (!activeListeningFoundationQuestion || !evidenceOk || !answerOk) return
+    markListeningFoundationQuestionComplete()
+  }
+
+  const playListeningFoundationPassage = () => {
+    if (!activeListeningFoundationQuestion) return
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setListeningFoundationFeedback('อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ')
+      return
+    }
+
+    stopListeningPlayback()
+    setListeningFoundationAudioPlayed(true)
+
+    const spokenText = activeListeningFoundationScriptSegments.length
+      ? activeListeningFoundationScriptSegments
+          .map((segment) => (segment.speaker ? `${segment.speaker}: ${segment.text}` : segment.text))
+          .join(' ')
+      : activeListeningFoundationQuestion.passage
+
+    const utterance = new SpeechSynthesisUtterance(spokenText)
+    const availableVoices = window.speechSynthesis.getVoices()
+    utterance.voice =
+      availableVoices.find((voice) => /^en-GB/i.test(voice.lang)) ||
+      availableVoices.find((voice) => /^en/i.test(voice.lang)) ||
+      null
+    utterance.lang = utterance.voice?.lang || 'en-GB'
+    utterance.rate = 0.92
+    utterance.pitch = 1
+    utterance.onstart = () => setListeningPlaybackState('playing')
+    utterance.onend = () => {
+      listeningSpeechRef.current = null
+      setListeningPlaybackState('ended')
+    }
+    utterance.onerror = () => {
+      listeningSpeechRef.current = null
+      setListeningPlaybackState('error')
+    }
+
+    listeningSpeechRef.current = utterance
+    window.speechSynthesis.speak(utterance)
   }
 
   useEffect(() => {
@@ -11268,6 +11421,14 @@ function App() {
     activeListeningFoundationQuestion?.id,
     activeListeningFoundationScriptSegments
   ])
+
+  useEffect(() => {
+    listeningFoundationSelectedAnswerRef.current = listeningFoundationSelectedAnswer
+  }, [listeningFoundationSelectedAnswer])
+
+  useEffect(() => {
+    listeningBuilderExamSelectedAnswerRef.current = listeningBuilderExamSelectedAnswer
+  }, [listeningBuilderExamSelectedAnswer])
 
   const renderListeningScriptSegmentText = (
     text: string,
@@ -11336,8 +11497,12 @@ function App() {
     )
   }
 
-  const restoreListeningFoundationQuestionState = (questionId: string) => {
-    const question = activeListeningFoundationSet?.questions.find((item) => item.id === questionId)
+  const restoreListeningFoundationQuestionState = (
+    questionId: string,
+    setOverride?: typeof activeListeningFoundationSet
+  ) => {
+    const set = setOverride ?? activeListeningFoundationSet
+    const question = set?.questions.find((item) => item.id === questionId)
     if (!question) {
       resetListeningFoundationQuestion()
       return
@@ -11345,7 +11510,10 @@ function App() {
     if (listeningFoundationAnswerState[questionId] === 'correct') {
       setListeningFoundationEvidence(question.evidence)
       setListeningFoundationEvidenceCorrect(true)
-      setListeningFoundationFeedback('Completed. Review the paraphrase bridge below.')
+      setListeningFoundationSelectedAnswer(question.correctAnswer)
+      setListeningFoundationAnswerPickCorrect(true)
+      setListeningFoundationAudioPlayed(true)
+      setListeningFoundationFeedback('ทำข้อนี้ครบแล้วครับ ทบทวน paraphrase bridge ด้านซ้ายได้เลย')
       window.getSelection()?.removeAllRanges()
       return
     }
@@ -11354,10 +11522,19 @@ function App() {
 
   const openListeningFoundationSet = (setId: string) => {
     stopListeningPlayback()
+    const set = ALL_LISTENING_FOUNDATION_SETS.find((item) => item.id === setId)
+    const firstIncompleteIndex =
+      set?.questions.findIndex((question) => listeningFoundationAnswerState[question.id] !== 'correct') ?? 0
     setListeningLabMode('foundation')
     setSelectedListeningFoundationSetId(setId)
-    setListeningFoundationQuestionIndex(0)
+    setListeningFoundationQuestionIndex(firstIncompleteIndex >= 0 ? firstIncompleteIndex : 0)
     resetListeningFoundationQuestion()
+    if (set) {
+      const resumeQuestion = set.questions[firstIncompleteIndex >= 0 ? firstIncompleteIndex : 0]
+      if (resumeQuestion) {
+        restoreListeningFoundationQuestionState(resumeQuestion.id, set)
+      }
+    }
     setActivePage('listening_foundation_exam')
   }
 
@@ -11432,7 +11609,18 @@ function App() {
   }
 
   const handleListeningFoundationPassageMouseUp = () => {
-    if (!activeListeningFoundationQuestion || listeningFoundationEvidenceCorrect) return
+    if (
+      !activeListeningFoundationQuestion ||
+      listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct' ||
+      listeningFoundationEvidenceCorrect
+    ) {
+      return
+    }
+
+    if (!listeningFoundationAudioPlayed) {
+      setListeningFoundationFeedback('กดเล่นเสียงก่อนครับ แล้วค่อยไฮไลต์ในสคริปต์ทางขวา')
+      return
+    }
 
     window.requestAnimationFrame(() => {
       const selectedText = readListeningFoundationScriptSelection()
@@ -11445,15 +11633,18 @@ function App() {
       )
 
       setListeningFoundationEvidence(selectedText)
-      if (matchKind === 'exact') {
+      if (matchKind === 'exact' || matchKind === 'partial') {
         setListeningFoundationEvidenceCorrect(true)
-        setListeningFoundationFeedback(LISTENING_HIGHLIGHT_CORRECT_THAI)
-        window.getSelection()?.removeAllRanges()
-        return
-      }
-      if (matchKind === 'partial') {
-        setListeningFoundationEvidenceCorrect(true)
-        setListeningFoundationFeedback(LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI)
+        const answerOk =
+          listeningFoundationSelectedAnswerRef.current === activeListeningFoundationQuestion.correctAnswer
+        tryCompleteListeningFoundationQuestion(true, answerOk)
+        setListeningFoundationFeedback(
+          answerOk
+            ? matchKind === 'partial'
+              ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI
+              : LISTENING_HIGHLIGHT_CORRECT_THAI
+            : `${matchKind === 'partial' ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI : LISTENING_HIGHLIGHT_CORRECT_THAI} เลือกคำตอบทางซ้ายให้ถูกด้วยครับ`
+        )
         window.getSelection()?.removeAllRanges()
         return
       }
@@ -11467,23 +11658,21 @@ function App() {
 
   const chooseListeningFoundationAnswer = (answerKey: string) => {
     if (!activeListeningFoundationQuestion) return
+    if (listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct') return
+
+    setListeningFoundationSelectedAnswer(answerKey)
+    const answerOk = answerKey === activeListeningFoundationQuestion.correctAnswer
+    setListeningFoundationAnswerPickCorrect(answerOk)
+
+    if (!answerOk) {
+      setListeningFoundationFeedback('คำตอบยังไม่ถูกครับ ลองอ่านข้อความจาก section และเลือกใหม่')
+      return
+    }
+
+    tryCompleteListeningFoundationQuestion(listeningFoundationEvidenceCorrect, true)
     if (!listeningFoundationEvidenceCorrect) {
-      setListeningFoundationFeedback('Highlight the exact evidence first. Answers stay locked until the evidence is correct.')
-      return
+      setListeningFoundationFeedback('คำตอบถูกแล้วครับ ต่อไปไฮไลต์ประโยคในสคริปต์ทางขวาให้ตรงกับ evidence')
     }
-
-    if (answerKey !== activeListeningFoundationQuestion.correctAnswer) {
-      setListeningFoundationFeedback('Wrong answer. You cannot pass this question. Go back to the passage, re-check the evidence, and try again.')
-      return
-    }
-
-    setListeningFoundationAnswerState((current) => ({
-      ...current,
-      [activeListeningFoundationQuestion.id]: 'correct'
-    }))
-    setListeningFoundationFeedback(
-      `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword} → ${activeListeningFoundationQuestion.thaiMeaning}`
-    )
   }
 
   const goToListeningFoundationQuestion = (nextIndex: number) => {
@@ -11533,6 +11722,8 @@ function App() {
   }
 
   const openListeningVocabularyBuilderPack = (packId: string) => {
+    stopListeningPlayback()
+    resetListeningBuilderExamDrill()
     setListeningLabMode('builder')
     setSelectedListeningBuilderPackId(packId)
     const selectedPack = listeningVocabularyBuilderPacks.find((pack) => pack.id === packId) || null
@@ -11559,9 +11750,29 @@ function App() {
     setListeningBuilderAttempts({})
     setListeningBuilderResolvedState({})
     setListeningBuilderExamEvidenceCorrect({})
+    setListeningBuilderExamSelectedAnswer({})
+    setListeningBuilderExamAnswerPickCorrect({})
     setListeningBuilderExamAnswerState({})
     setListeningBuilderExamFeedback('')
     window.getSelection()?.removeAllRanges()
+  }
+
+  const markListeningBuilderExamTaskComplete = (task: ListeningBuilderExamTask) => {
+    if (listeningBuilderExamAnswerState[task.id] === 'correct') return
+    setListeningBuilderExamAnswerState((current) => ({ ...current, [task.id]: 'correct' }))
+    setListeningBuilderResolvedState((current) => ({ ...current, [task.id]: 'correct' }))
+    setListeningBuilderExamFeedback(
+      `${task.targetText} = ${task.questionWordPhrase} → ${task.thaiMeaning}`
+    )
+  }
+
+  const tryCompleteListeningBuilderExamTask = (
+    task: ListeningBuilderExamTask,
+    evidenceOk: boolean,
+    answerOk: boolean
+  ) => {
+    if (!evidenceOk || !answerOk) return
+    markListeningBuilderExamTaskComplete(task)
   }
 
   const isListeningBuilderExamEvidenceUnlocked = (taskId: string) =>
@@ -11570,10 +11781,6 @@ function App() {
   const chooseListeningBuilderExamAnswer = (task: ListeningBuilderExamTask, answerKey: string) => {
     if (!activeListeningBuilderExamTest) return
     if (listeningBuilderExamAnswerState[task.id] === 'correct') return
-    if (!isListeningBuilderExamEvidenceUnlocked(task.id)) {
-      setListeningBuilderExamFeedback('Highlight the exact evidence in the script first. Answers stay locked until then.')
-      return
-    }
 
     const correctKey = resolveListeningBuilderExamCorrectAnswer(
       task,
@@ -11585,16 +11792,20 @@ function App() {
       return
     }
 
-    if (answerKey.toUpperCase() !== correctKey) {
-      setListeningBuilderExamFeedback('Wrong answer. Re-read the script highlight and try another option.')
+    setListeningBuilderExamSelectedAnswer((current) => ({ ...current, [task.id]: answerKey }))
+    const answerOk = answerKey.toUpperCase() === correctKey
+    if (answerOk) {
+      setListeningBuilderExamAnswerPickCorrect((current) => ({ ...current, [task.id]: true }))
+    } else {
+      setListeningBuilderExamFeedback('Wrong answer. Re-read the script and try another option.')
       return
     }
 
-    setListeningBuilderExamAnswerState((current) => ({ ...current, [task.id]: 'correct' }))
-    setListeningBuilderResolvedState((current) => ({ ...current, [task.id]: 'correct' }))
-    setListeningBuilderExamFeedback(
-      `${task.targetText} = ${task.questionWordPhrase} → ${task.thaiMeaning}`
-    )
+    const evidenceOk = isListeningBuilderExamEvidenceUnlocked(task.id)
+    tryCompleteListeningBuilderExamTask(task, evidenceOk, true)
+    if (!evidenceOk) {
+      setListeningBuilderExamFeedback('คำตอบถูกแล้วครับ ต่อไปไฮไลต์ evidence ในสคริปต์ทางขวา')
+    }
   }
 
   const triggerListeningBuilderTranscriptShake = () => {
@@ -11648,8 +11859,8 @@ function App() {
       quote: `${activeListeningBuilderExamTest?.title || 'Cambridge 18 Section 2'} · Q${task.questionNumber} · ${task.questionWordPhrase}`,
       fix: `${task.questionWordPhrase} = ${task.targetText}`,
       thaiMeaning: task.thaiMeaning || task.explanationThai || '',
-      preferredSection: 'reading',
-      successNotice: 'Added to notebook'
+      preferredSection: 'listening',
+      successNotice: 'Added to notebook · saved to #listening'
     })
   }
 
@@ -11669,14 +11880,25 @@ function App() {
         activeListeningBuilderExamTask.targetText
       )
       if (examHighlightMatch !== 'none') {
+        const task = activeListeningBuilderExamTask
         setListeningBuilderExamEvidenceCorrect((current) => ({
           ...current,
-          [activeListeningBuilderExamTask.id]: true
+          [task.id]: true
         }))
+        const correctKey = resolveListeningBuilderExamCorrectAnswer(
+          task,
+          activeListeningBuilderExamTest.tasks,
+          activeListeningBuilderExamTest.id
+        )
+        const selected = listeningBuilderExamSelectedAnswerRef.current[task.id] || ''
+        const answerOk = Boolean(correctKey && selected.toUpperCase() === correctKey)
+        tryCompleteListeningBuilderExamTask(task, true, answerOk)
         setListeningBuilderExamFeedback(
-          examHighlightMatch === 'partial'
-            ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI
-            : LISTENING_HIGHLIGHT_CORRECT_THAI
+          answerOk
+            ? examHighlightMatch === 'partial'
+              ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI
+              : LISTENING_HIGHLIGHT_CORRECT_THAI
+            : `${examHighlightMatch === 'partial' ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI : LISTENING_HIGHLIGHT_CORRECT_THAI} เลือกคำตอบทางซ้ายให้ถูกด้วยครับ`
         )
         window.getSelection()?.removeAllRanges()
         return
@@ -11693,7 +11915,7 @@ function App() {
             ...evidence,
             [activeListeningBuilderExamTask.id]: true
           }))
-          setListeningBuilderExamFeedback('เฉลยในสคริปต์ให้แล้วครับ เลือกคำตอบที่ถูกทางขวาได้เลย')
+          setListeningBuilderExamFeedback('เฉลยในสคริปต์ให้แล้วครับ เลือกคำตอบที่ถูกทางซ้ายได้เลย')
         } else {
           setListeningBuilderExamFeedback(LISTENING_HIGHLIGHT_WRONG_THAI)
         }
@@ -12549,7 +12771,13 @@ function App() {
                 </button>
                 {canAccessListening && (
                   <button
-                    className={activePage === 'listening' ? 'active' : ''}
+                    className={
+                      activePage === 'listening' ||
+                      activePage === 'listening_foundation_exam' ||
+                      activePage === 'listening_builder_exam'
+                        ? 'active'
+                        : ''
+                    }
                     onClick={() => {
                       openListeningLanding()
                     }}
@@ -12988,11 +13216,14 @@ function App() {
                   </p>
                 </div>
                 <div className="listeningFoundationProgress">
-                  <span>Overall Progress</span>
+                  <span>Category progress</span>
                   <strong>
-                    {activeListeningFoundationSet?.questions.length
-                      ? Math.round((listeningFoundationCompletedCount / activeListeningFoundationSet.questions.length) * 100)
-                      : 0}%
+                    {listeningFoundationCategoryQuestionTotal
+                      ? Math.round(
+                          (listeningFoundationCategoryCompletedCount / listeningFoundationCategoryQuestionTotal) * 100
+                        )
+                      : 0}
+                    %
                   </strong>
                 </div>
               </section>
@@ -13022,7 +13253,7 @@ function App() {
                 renderListeningBookFilter(foundationBooksInCategory, 'Filter foundation sets by book')}
 
               <p className="listeningFoundationBankHint meta">
-                Choose <strong>book → test → section</strong>, then start. Script on the left; questions on the right.
+                Choose <strong>book → test → section</strong>, then start. Questions on the left, audio script on the right — answer and highlight evidence for each question.
               </p>
 
               <div className="listeningFoundationBankGrouped">
@@ -13043,15 +13274,20 @@ function App() {
                       <div className="listeningSetCardGrid">
                         {sets.map((set) => {
                           const meta = parseListeningFoundationSetMeta(set)
+                          const setCompletedCount = set.questions.filter(
+                            (question) => listeningFoundationAnswerState[question.id] === 'correct'
+                          ).length
                           return (
                             <article
                               key={set.id}
-                              className={`listeningSetCard ${activeListeningFoundationSet?.id === set.id ? 'active' : ''}`}
+                              className={`listeningSetCard ${selectedListeningFoundationSetId === set.id ? 'active' : ''}`}
                             >
                               <p className="listeningSetCardEyebrow">Section {meta.section}</p>
                               <h4>{meta.cardTitle}</h4>
                               <p className="listeningSetCardTopic">{meta.cardSubtitle}</p>
-                              <span className="listeningSetCardMeta">{set.questions.length} questions</span>
+                              <span className="listeningSetCardMeta">
+                                {setCompletedCount}/{set.questions.length} complete · {set.questions.length} questions
+                              </span>
                               <button type="button" onClick={() => openListeningFoundationSet(set.id)}>
                                 Start drill
                               </button>
@@ -13137,6 +13373,7 @@ function App() {
                     className="secondary"
                     onClick={() => {
                       stopListeningPlayback()
+                      setListeningAnswers({})
                       setListeningAttemptStage('bank')
                     }}
                   >
@@ -13239,6 +13476,7 @@ function App() {
                     className="secondary"
                     onClick={() => {
                       stopListeningPlayback()
+                      setListeningAnswers({})
                       setListeningAttemptStage('bank')
                     }}
                   >
@@ -13392,286 +13630,6 @@ function App() {
               </div>
             </div>
           )}
-
-          {listeningLabMode === 'practice' && listeningAttemptStage === 'bank' && (
-            <>
-              <div className="readingSummaryStrip listeningOfficialStrip">
-                {LISTENING_OFFICIAL_RESOURCES.map((resource) => (
-                  <article key={resource.id} className="readingSummaryCard listeningReferenceCard">
-                    <p className="sectionLabel">{resource.source}</p>
-                    <strong>{resource.title}</strong>
-                    <span>{resource.sampleType}</span>
-                    <p className="meta">{resource.description}</p>
-                    <button
-                      type="button"
-                      className="secondary"
-                      onClick={() => window.open(resource.url, '_blank', 'noopener,noreferrer')}
-                    >
-                      Open official sample
-                    </button>
-                  </article>
-                ))}
-              </div>
-
-              <div className="readingBankGrid listeningExerciseGrid">
-                {LISTENING_EXERCISES.map((exercise) => (
-                  <article key={exercise.id} className="readingBankCard listeningExerciseCard">
-                    <p className="promptPill">{exercise.label}</p>
-                    <h3>{exercise.title}</h3>
-                    <p className="meta">{exercise.formatLabel}</p>
-                    <div className="readingExerciseMeta">
-                      <span>{exercise.summary}</span>
-                      <span>{exercise.level}</span>
-                      <span>{exercise.duration}</span>
-                    </div>
-                    <p className="meta">{exercise.instructionsThai}</p>
-                    {listeningAttemptByExerciseId[exercise.id] && (
-                      <div className="adminWorkflowCard">
-                        <p className="sectionLabel">Latest Score</p>
-                        <strong>
-                          {listeningAttemptByExerciseId[exercise.id].correctCount}/{listeningAttemptByExerciseId[exercise.id].totalQuestions} ({listeningAttemptByExerciseId[exercise.id].accuracy}%)
-                        </strong>
-                        <p className="meta">
-                          {listeningAttemptByExerciseId[exercise.id].wrongCount} wrong · {new Date(listeningAttemptByExerciseId[exercise.id].completedAt).toLocaleString()}
-                        </p>
-                      </div>
-                    )}
-                    <div className="controls">
-                      <button type="button" onClick={() => startListeningExercise(exercise.id)}>
-                        {listeningAttemptByExerciseId[exercise.id] ? 'Retry Exercise' : 'Open Exercise'}
-                      </button>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </>
-          )}
-
-          {listeningLabMode === 'practice' && listeningAttemptStage === 'exam' && activeListeningExercise && (
-            <div className="readingExamWrap listeningExamWrap">
-              <div className="readingAttemptToolbar">
-                <div>
-                  <p className="sectionLabel">{activeListeningExercise.label}</p>
-                  <h3>{activeListeningExercise.title}</h3>
-                  <p className="meta">
-                    {activeListeningExercise.summary} · {listeningAnsweredCount}/{activeListeningExercise.questions.length} answered
-                  </p>
-                </div>
-                <div className="controls">
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() => {
-                      stopListeningPlayback()
-                      setListeningAttemptStage('bank')
-                    }}
-                  >
-                    Back to Bank
-                  </button>
-                  <button type="button" onClick={submitListeningExercise}>
-                    Check Answers
-                  </button>
-                </div>
-              </div>
-
-              <div className="readingExamLayout listeningExamLayout">
-                <section className="readingPassagePanel listeningAudioPanel">
-                  <div className="readingPassageHeader">
-                    <div>
-                      <p className="sectionLabel">Audio Practice</p>
-                      <h3>{activeListeningExercise.formatLabel}</h3>
-                    </div>
-                    <div className="readingHintBox">
-                      <strong>Practice mode:</strong> {activeListeningExercise.playbackNoteThai}
-                    </div>
-                  </div>
-
-                  <div className="listeningPlayerCard">
-                    <p className="meta">{activeListeningExercise.instructionsThai}</p>
-                    <div className="controls listeningAudioControls">
-                      <button type="button" onClick={() => playListeningExercise('normal')}>
-                        Play audio
-                      </button>
-                      <button type="button" className="secondary" onClick={() => playListeningExercise('slow')}>
-                        Play slower
-                      </button>
-                      <button type="button" className="secondary" onClick={stopListeningPlayback}>
-                        Stop
-                      </button>
-                    </div>
-                    <div className="readingSummaryStrip">
-                      <article className="readingSummaryCard">
-                        <p className="sectionLabel">Playback</p>
-                        <strong>{listeningPlaybackState === 'playing' ? 'Playing' : listeningPlaybackState === 'ended' ? 'Finished' : listeningPlaybackState === 'error' ? 'Error' : 'Ready'}</strong>
-                        <span>{listeningPlaybackRate === 'slow' ? 'Slow mode' : 'Normal mode'}</span>
-                      </article>
-                      <article className="readingSummaryCard">
-                        <p className="sectionLabel">Question Count</p>
-                        <strong>{activeListeningExercise.questions.length}</strong>
-                        <span>questions in this set</span>
-                      </article>
-                    </div>
-                    {listeningExerciseError ? <p className="error">{listeningExerciseError}</p> : null}
-                  </div>
-
-                  <div className="listeningTranscriptLocked">
-                    <p className="sectionLabel">Transcript</p>
-                    <h4>Transcript unlocks after you check your answers</h4>
-                    <p className="meta">ตอนทำข้อให้โฟกัสจากสิ่งที่ได้ยินก่อนครับ พอส่งคำตอบแล้ว report จะโชว์ exact transcript portion และอธิบาย paraphrase ให้ทีละข้อ</p>
-                  </div>
-                </section>
-
-                <section className="readingQuestionsPanel">
-                  <div className="readingQuestionsHeader">
-                    <div>
-                      <p className="sectionLabel">Questions</p>
-                      <h3>Answer while you listen</h3>
-                    </div>
-                    <span className="bandPill">{activeListeningExercise.questions.length} questions</span>
-                  </div>
-                  <div className="readingQuestionList">
-                    {activeListeningExercise.questions.map((question) => (
-                      <article key={`listening-question-${question.number}`} className="readingQuestionCard listeningQuestionCard">
-                        <div className="readingQuestionCardTop">
-                          <div>
-                            <p className="readingQuestionNumber">Question {question.number}</p>
-                            <p className="readingQuestionPrompt">{question.prompt}</p>
-                          </div>
-                        </div>
-                        <div className="readingAnswerField">
-                          {renderListeningAnswerField(question)}
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              </div>
-            </div>
-          )}
-
-          {listeningLabMode === 'practice' && listeningAttemptStage === 'report' && activeListeningExercise && (
-            <div className="readingReportWrap listeningReportWrap">
-              <div className="readingAttemptToolbar">
-                <div>
-                  <p className="sectionLabel">{activeListeningExercise.label}</p>
-                  <h3>{activeListeningExercise.title} Report</h3>
-                  <p className="meta">
-                    Score: {listeningReportItems.filter((item) => item.isCorrect).length}/{listeningReportItems.length}
-                  </p>
-                </div>
-                <div className="controls">
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() => {
-                      stopListeningPlayback()
-                      setListeningAttemptStage('bank')
-                    }}
-                  >
-                    Back to Bank
-                  </button>
-                  <button type="button" onClick={() => startListeningExercise(activeListeningExercise.id)}>
-                    Retry Exercise
-                  </button>
-                </div>
-              </div>
-
-              <div className="readingSummaryStrip">
-                <article className="readingSummaryCard">
-                  <p className="sectionLabel">Accuracy</p>
-                  <strong>{listeningAccuracy}%</strong>
-                  <span>{listeningReportItems.filter((item) => item.isCorrect).length} correct answers</span>
-                </article>
-                <article className="readingSummaryCard">
-                  <p className="sectionLabel">Unanswered</p>
-                  <strong>{listeningUnansweredCount}</strong>
-                  <span>questions left blank</span>
-                </article>
-                <article className="readingSummaryCard">
-                  <p className="sectionLabel">Review focus</p>
-                  <strong>{listeningReportItems.find((item) => !item.isCorrect)?.number ? `Q${listeningReportItems.find((item) => !item.isCorrect)?.number}` : 'Strong set'}</strong>
-                  <span>look at the transcript evidence and paraphrase note</span>
-                </article>
-              </div>
-
-              <div className="listeningTranscriptReviewCard">
-                <p className="sectionLabel">Full Transcript</p>
-                <div className="listeningTranscriptReviewBody">
-                  {activeListeningExercise.audioScript.map((line, index) => (
-                    <p key={`listening-line-${index}`}>{line}</p>
-                  ))}
-                </div>
-              </div>
-
-              <div className="readingReportList">
-                {listeningReportItems.map((item) => {
-                  const paraphraseEquation = buildListeningParaphraseEquation(item)
-                  return (
-                  <article key={`listening-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
-                    <div className="readingReportHeader">
-                      <div>
-                        <p className="readingQuestionNumber">Question {item.number}</p>
-                        <p className="readingQuestionPrompt">{item.prompt}</p>
-                      </div>
-                      <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
-                        {item.isCorrect ? 'Correct' : 'Wrong'}
-                      </span>
-                    </div>
-                    <p className="meta">Your answer: {item.userAnswer || 'No answer'}</p>
-                    <p className="meta">Correct answer: {item.correctAnswer}</p>
-                    {item.answerType === 'multiple-choice' && item.options?.length ? (
-                      <div className="listeningReportOptions">
-                        {item.options.map((option) => (
-                          <div key={`listening-option-${item.number}-${option.key}`} className={`listeningReportOption ${option.key === item.correctAnswer ? 'is-correct' : ''}`}>
-                            <strong>{option.key}</strong>
-                            <span>{option.text}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                    <div className="readingReportEvidence">
-                      <h4>Why?</h4>
-                      {paraphraseEquation && (
-                        <div className="listeningBuilderExamWordCheck">
-                          <p>Do you know this word?</p>
-                          <div className="listeningBuilderExamWordEquation">
-                            <span>{paraphraseEquation.passageKeyword}</span>
-                            <b>=</b>
-                            <span>{paraphraseEquation.questionKeyword}</span>
-                            <b>=</b>
-                            <span>{paraphraseEquation.thaiMeaning}</span>
-                          </div>
-                        </div>
-                      )}
-                      <p>{item.explanationThai}</p>
-                      <blockquote>{item.exactPortion}</blockquote>
-                    </div>
-                    {(item.paraphrasedVocabulary || paraphraseEquation) && (
-                      <div className="readingParaphraseCard">
-                        <p className="sectionLabel">Paraphrase link</p>
-                        {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
-                        <ParaphraseBridgeActions
-                          onKnewIt={showPracticeKnewItToast}
-                          onSaveToNotebook={() =>
-                            handlePracticeSaveToNotebook(() =>
-                              savePlanToNotebook({
-                                criterion: 'Listening Paraphrase',
-                                quote: `Q${item.number}: ${item.prompt}`,
-                                fix: item.paraphrasedVocabulary || item.correctAnswer,
-                                thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
-                                preferredSection: 'listening',
-                                successNotice: 'Added to notebook'
-                              })
-                            )
-                          }
-                        />
-                      </div>
-                    )}
-                  </article>
-                )})}
-              </div>
-            </div>
-          )}
         </section>
         ) : (
           <section className="panel full">
@@ -13700,7 +13658,7 @@ function App() {
                     <p>
                       {activeListeningFoundationSet
                         ? parseListeningFoundationSetMeta(activeListeningFoundationSet).cardSubtitle
-                        : 'Read the question on the right, highlight evidence in the script on the left, then answer.'}
+                        : 'Answer on the left and highlight evidence on the right — both must be correct to continue.'}
                     </p>
                   </div>
                   <div className="listeningFoundationProgress">
@@ -13713,19 +13671,168 @@ function App() {
 
                 <div className="listeningFoundationShell">
                   <div className="listeningFoundationGrid">
+                    <section className="listeningFoundationQuestionPane">
+                      <header>
+                        <div>
+                          <span>Question {activeListeningFoundationQuestion.number}</span>
+                          <h3>{activeListeningFoundationQuestion.question}</h3>
+                        </div>
+                        <strong>
+                          {listeningFoundationQuestionIndex + 1}/{activeListeningFoundationSet.questions.length}
+                        </strong>
+                      </header>
+
+                      <div className="listeningFoundationQuestionBody">
+                        {activeListeningFoundationPassageExcerpt ? (
+                          <div className="listeningFoundationPassageExcerpt">
+                            <h4>From the section</h4>
+                            <blockquote>{activeListeningFoundationPassageExcerpt}</blockquote>
+                          </div>
+                        ) : null}
+
+                        <div className="listeningFoundationOptions">
+                          <h4>Choose the answer</h4>
+                          <p className="listeningFoundationDualHint meta">
+                            Answer here and highlight evidence on the right — order does not matter.
+                          </p>
+                          {activeListeningFoundationQuestion.options.map((option) => {
+                            const isSelected = listeningFoundationSelectedAnswer === option.key
+                            const isCorrectOption =
+                              option.key === activeListeningFoundationQuestion.correctAnswer
+                            return (
+                              <button
+                                key={`${activeListeningFoundationQuestion.id}-${option.key}`}
+                                type="button"
+                                className={`listeningFoundationOptionBtn ${
+                                  isSelected ? (isCorrectOption ? 'is-correct' : 'is-wrong') : ''
+                                }`}
+                                disabled={listeningFoundationQuestionComplete}
+                                onClick={() => chooseListeningFoundationAnswer(option.key)}
+                              >
+                                <strong>{option.key}</strong>
+                                <span>{option.text}</span>
+                              </button>
+                            )
+                          })}
+                        </div>
+
+                        <div className="listeningFoundationWordCheck">
+                          <p>Do you know this word?</p>
+                          <div className="listeningFoundationWordEquation">
+                            <span title="In the script">{activeListeningFoundationQuestion.passageKeyword}</span>
+                            <b>=</b>
+                            <span title="In the question">{activeListeningFoundationQuestion.questionKeyword}</span>
+                            <b>=</b>
+                            <span title="Thai meaning">{activeListeningFoundationQuestion.thaiMeaning}</span>
+                          </div>
+                          <small>{activeListeningFoundationQuestion.explanationThai}</small>
+                          <ParaphraseBridgeActions
+                            onKnewIt={showPracticeKnewItToast}
+                            onSaveToNotebook={saveListeningFoundationQuestionToNotebook}
+                          />
+                        </div>
+
+                        {listeningFoundationFeedback ? (
+                          <div
+                            className={
+                              listeningFoundationQuestionComplete
+                                ? 'foundationFeedbackCorrect'
+                                : 'foundationFeedback'
+                            }
+                          >
+                            {listeningFoundationFeedback}
+                          </div>
+                        ) : null}
+
+                        <div className="listeningFoundationStepStatus" aria-live="polite">
+                          <span className={listeningFoundationAnswerPickCorrect ? 'is-done' : ''}>
+                            Answer {listeningFoundationAnswerPickCorrect ? '✓' : '○'}
+                          </span>
+                          <span className={listeningFoundationEvidenceCorrect ? 'is-done' : ''}>
+                            Evidence {listeningFoundationEvidenceCorrect ? '✓' : '○'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="listeningFoundationNav">
+                        {!listeningFoundationQuestionComplete && (
+                          <p className="listeningFoundationNavHint">
+                            Get both <strong>Answer</strong> and <strong>Evidence</strong> correct to unlock{' '}
+                            <strong>Next Question</strong>.
+                          </p>
+                        )}
+                        <div className="listeningFoundationNavButtons">
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() => {
+                            stopListeningPlayback()
+                            setListeningLabMode('foundation')
+                            setActivePage('listening')
+                          }}
+                        >
+                          Back to Exam Bank
+                        </button>
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex - 1)}
+                          disabled={listeningFoundationQuestionIndex === 0}
+                        >
+                          Previous
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex + 1)}
+                          disabled={
+                            listeningFoundationQuestionIndex >= activeListeningFoundationSet.questions.length - 1 ||
+                            !listeningFoundationQuestionComplete
+                          }
+                        >
+                          Next Question
+                        </button>
+                        </div>
+                      </div>
+                    </section>
+
                     <section className="listeningFoundationScriptPane">
                       <div className="listeningFoundationAudioCompact">
                       <div className="listeningFoundationAudioTop">
                         <span>Section {activeListeningFoundationSet.section}</span>
-                        <span>{activeListeningFoundationSet.audioUrl ? 'Audio ready' : 'Audio not uploaded'}</span>
+                        <span>
+                          {listeningPlaybackState === 'playing'
+                            ? 'Playing…'
+                            : listeningFoundationAudioPlayed
+                              ? 'Played'
+                              : 'Press play to hear the section'}
+                        </span>
                       </div>
                       <div className="listeningFoundationAudioBody">
-                        <button type="button" aria-label="Play audio" disabled={!activeListeningFoundationSet.audioUrl}>
-                          ▶
+                        <button
+                          type="button"
+                          aria-label={listeningPlaybackState === 'playing' ? 'Stop audio' : 'Play audio'}
+                          onClick={() => {
+                            if (listeningPlaybackState === 'playing') {
+                              stopListeningPlayback()
+                            } else {
+                              playListeningFoundationPassage()
+                            }
+                          }}
+                        >
+                          {listeningPlaybackState === 'playing' ? '■' : '▶'}
                         </button>
                         <div>
                           <div className="listeningFoundationAudioTrack">
-                            <span />
+                            <span
+                              style={{
+                                width:
+                                  listeningPlaybackState === 'playing'
+                                    ? '66%'
+                                    : listeningFoundationAudioPlayed
+                                      ? '100%'
+                                      : '12%'
+                              }}
+                            />
                           </div>
                           <p>{activeListeningFoundationSet.title}</p>
                         </div>
@@ -13735,24 +13842,24 @@ function App() {
                       <div className="listeningScriptReader">
                         <div className="listeningScriptReaderTop">
                           <h4>Audio Script</h4>
+                          {!listeningFoundationAudioPlayed ? (
+                            <span className="listeningScriptReaderPlayHint">Play audio to reveal the full script</span>
+                          ) : null}
                         </div>
-
-                        {activeListeningFoundationQuestion && !listeningFoundationEvidenceCorrect && (
-                          <div className="listeningScriptScanHint" aria-live="polite">
-                            <span className="listeningScriptScanLabel">Scan for ideas like</span>
-                            <strong>{activeListeningFoundationQuestion.passageKeyword}</strong>
-                            <span className="listeningScriptScanArrow">→</span>
-                            <em>{activeListeningFoundationQuestion.questionKeyword}</em>
-                          </div>
-                        )}
 
                         <div
                           ref={listeningFoundationScriptBodyRef}
                           className={`listeningFoundationPassage listeningScriptReaderBody script-scroll is-cards-mode is-comfort ${
                             listeningBuilderTranscriptShake ? 'is-shaking' : ''
+                          } ${!listeningFoundationAudioPlayed ? 'is-awaiting-play' : ''} ${
+                            activeListeningFoundationHasDialogue ? 'is-dialogue' : ''
                           }`}
                         >
-                          <div className="listeningScriptTurnStack">
+                          <div
+                            className={`listeningScriptTurnStack ${
+                              activeListeningFoundationHasDialogue ? 'is-dialogue' : ''
+                            }`}
+                          >
                             {activeListeningFoundationScriptSegments.length > 0 ? (
                               activeListeningFoundationScriptSegments.map((segment, index) =>
                                 renderListeningScriptTurn(segment, index)
@@ -13778,107 +13885,21 @@ function App() {
                             }
                             aria-live="polite"
                           >
-                            {listeningFoundationEvidenceCorrect
-                              ? 'Evidence accepted. Choose your answer on the right.'
-                              : listeningFoundationEvidence
-                                ? listeningFoundationFeedback
-                                : 'Highlight the exact phrase in the script that paraphrases the question.'}
+                            {listeningFoundationQuestionComplete
+                              ? 'Question complete — both answer and evidence are correct.'
+                              : listeningFoundationEvidenceCorrect && listeningFoundationAnswerPickCorrect
+                                ? 'Both steps correct — you can go to the next question.'
+                                : listeningFoundationEvidenceCorrect
+                                  ? 'Evidence accepted. Choose the correct answer on the left.'
+                                  : listeningFoundationAnswerPickCorrect
+                                    ? 'Answer accepted. Highlight the matching phrase in this script.'
+                                    : listeningFoundationEvidence
+                                      ? listeningFoundationFeedback
+                                      : !listeningFoundationAudioPlayed
+                                        ? 'Press play above, then highlight the exact phrase that paraphrases the question.'
+                                        : 'Highlight the exact phrase in the script that paraphrases the question.'}
                           </p>
                         </footer>
-                      </div>
-                    </section>
-
-                    <section className="listeningFoundationQuestionPane">
-                      <header>
-                        <div>
-                          <span>Question {activeListeningFoundationQuestion.number}</span>
-                          <h3>{activeListeningFoundationQuestion.question}</h3>
-                        </div>
-                        <strong>
-                          {listeningFoundationQuestionIndex + 1}/{activeListeningFoundationSet.questions.length}
-                        </strong>
-                      </header>
-
-                      <div className="listeningFoundationQuestionBody">
-                      <div className={`listeningFoundationOptions ${listeningFoundationEvidenceCorrect ? 'unlocked' : 'locked'}`}>
-                        <h4>Choose the answer</h4>
-                        {!listeningFoundationEvidenceCorrect && (
-                          <p>Options are locked until you highlight the evidence in the script.</p>
-                        )}
-                        {activeListeningFoundationQuestion.options.map((option) => (
-                          <button
-                            key={`${activeListeningFoundationQuestion.id}-${option.key}`}
-                            type="button"
-                            disabled={!listeningFoundationEvidenceCorrect}
-                            onClick={() => chooseListeningFoundationAnswer(option.key)}
-                          >
-                            <strong>{option.key}</strong>
-                            <span>{option.text}</span>
-                          </button>
-                        ))}
-                      </div>
-
-                      {listeningFoundationFeedback && (
-                        <div className={listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct' ? 'foundationFeedbackCorrect' : 'foundationFeedback'}>
-                          {listeningFoundationFeedback}
-                        </div>
-                      )}
-
-                      {listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct' && (
-                        <div className="listeningFoundationWordCheck">
-                          <h5>Paraphrase bridge</h5>
-                          <p className="listeningFoundationWordEquation">
-                            <span title="In the script">{activeListeningFoundationQuestion.passageKeyword}</span>
-                            <b>=</b>
-                            <span title="In the question">{activeListeningFoundationQuestion.questionKeyword}</span>
-                            <b>→</b>
-                            <span title="Thai meaning">{activeListeningFoundationQuestion.thaiMeaning}</span>
-                          </p>
-                          <small>{activeListeningFoundationQuestion.explanationThai}</small>
-                          <ParaphraseBridgeActions
-                            onKnewIt={showPracticeKnewItToast}
-                            onSaveToNotebook={saveListeningFoundationQuestionToNotebook}
-                          />
-                        </div>
-                      )}
-                      </div>
-
-                      <div className="listeningFoundationNav">
-                        {listeningFoundationAnswerState[activeListeningFoundationQuestion.id] !== 'correct' && (
-                          <p className="listeningFoundationNavHint">
-                            Pick the correct option to unlock <strong>Next Question</strong>.
-                          </p>
-                        )}
-                        <div className="listeningFoundationNavButtons">
-                        <button
-                          type="button"
-                          className="secondary"
-                          onClick={() => {
-                            setListeningLabMode('foundation')
-                            setActivePage('listening')
-                          }}
-                        >
-                          Back to Exam Bank
-                        </button>
-                        <button
-                          type="button"
-                          className="secondary"
-                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex - 1)}
-                          disabled={listeningFoundationQuestionIndex === 0}
-                        >
-                          Previous
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex + 1)}
-                          disabled={
-                            listeningFoundationQuestionIndex >= activeListeningFoundationSet.questions.length - 1 ||
-                            listeningFoundationAnswerState[activeListeningFoundationQuestion.id] !== 'correct'
-                          }
-                        >
-                          Next Question
-                        </button>
-                        </div>
                       </div>
                     </section>
                   </div>
@@ -13927,7 +13948,7 @@ function App() {
                   </div>
                 </div>
                 <div className="listeningBuilderExamTip">
-                  <strong>IELTS strategy:</strong> read the question, highlight evidence in the script on the left, then choose the correct answer on the right.
+                  <strong>IELTS strategy:</strong> read the question on the left, choose your answer, then highlight evidence in the audio script on the right — both must be correct.
                 </div>
               </header>
 
@@ -13959,10 +13980,14 @@ function App() {
                         }`}
                       >
                         {listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id]
-                          ? 'Excellent! Review the paraphrase bridge on the right.'
+                          ? 'Excellent! Review the paraphrase bridge on the left.'
                           : isListeningBuilderExamEvidenceUnlocked(activeListeningBuilderExamTask.id)
-                            ? 'Evidence accepted. Choose the correct answer on the right.'
-                            : listeningBuilderExamFeedback || 'Highlight the exact evidence in the script first.'}
+                            ? listeningBuilderExamAnswerPickCorrect[activeListeningBuilderExamTask.id]
+                              ? 'Both steps correct — choose the next question when ready.'
+                              : 'Evidence accepted. Choose the correct answer on the left.'
+                            : listeningBuilderExamAnswerPickCorrect[activeListeningBuilderExamTask.id]
+                              ? 'Answer accepted. Highlight the matching phrase in this script.'
+                              : listeningBuilderExamFeedback || 'Highlight evidence here or answer on the left — order does not matter.'}
                       </div>
                     </section>
 
@@ -13989,7 +14014,7 @@ function App() {
 
                       <div className="listeningBuilderExamQuestionIntro">
                         <p>
-                          Read each question, highlight the paraphrased evidence in the script on the left, then choose the answer to unlock the bridge.
+                          Read each question on the left, choose your answer, then highlight paraphrased evidence in the script on the right. Both must be correct.
                         </p>
                         <div className="listeningBuilderExamTabs">
                           {activeListeningBuilderExamSet.tests.map((test) => (
@@ -14028,6 +14053,8 @@ function App() {
                           const isActive = task.id === activeListeningBuilderExamTask.id
                           const attempts = listeningBuilderAttempts[task.id] || 0
                           const evidenceUnlocked = isListeningBuilderExamEvidenceUnlocked(task.id)
+                          const answerPickCorrect = Boolean(listeningBuilderExamAnswerPickCorrect[task.id])
+                          const selectedAnswer = listeningBuilderExamSelectedAnswer[task.id] || ''
                           const isCompleted = listeningBuilderExamAnswerState[task.id] === 'correct'
                           const taskFeedback = isActive ? listeningBuilderExamFeedback : ''
                           return (
@@ -14039,6 +14066,17 @@ function App() {
                                 type="button"
                                 className="listeningBuilderExamTaskHeaderBtn"
                                 onClick={() => {
+                                  const currentTask = activeListeningBuilderExamTest?.tasks[listeningBuilderItemIndex]
+                                  if (
+                                    currentTask &&
+                                    index !== listeningBuilderItemIndex &&
+                                    listeningBuilderExamAnswerState[currentTask.id] !== 'correct'
+                                  ) {
+                                    setListeningBuilderExamFeedback(
+                                      'Finish this question first — both answer and evidence must be correct.'
+                                    )
+                                    return
+                                  }
                                   setListeningBuilderItemIndex(index)
                                   resetListeningBuilderCardState()
                                 }}
@@ -14066,12 +14104,36 @@ function App() {
                                   {!isCompleted && (
                                     <div className="listeningBuilderExamInstruction">
                                       {evidenceUnlocked
-                                        ? answerChoices.type === 'gap-fill'
-                                          ? 'Evidence accepted. Choose the word that completes the note.'
-                                          : isLabelMatch
-                                            ? 'Evidence accepted. Choose the matching label (A–G).'
-                                            : 'Evidence accepted. Choose the correct answer below.'
-                                        : `Highlight the script phrase that means "${task.questionWordPhrase}".`}
+                                          ? answerChoices.type === 'gap-fill'
+                                            ? 'Evidence accepted. Choose the word that completes the note on the left.'
+                                            : isLabelMatch
+                                              ? 'Evidence accepted. Choose the matching label (A–G) on the left.'
+                                              : 'Evidence accepted. Choose the correct answer on the left.'
+                                          : answerPickCorrect
+                                            ? `Answer accepted. Highlight the script phrase that means "${task.questionWordPhrase}".`
+                                            : `Answer on the left or highlight "${task.questionWordPhrase}" in the script — either order.`}
+                                    </div>
+                                  )}
+
+                                  {(isActive || isCompleted) && (
+                                    <div className="listeningBuilderExamWordCheck">
+                                      <p>Do you know this word?</p>
+                                      <div className="listeningBuilderExamWordEquation">
+                                        <span title="In the script">{task.targetText}</span>
+                                        <b>=</b>
+                                        <span title="In the question">{task.questionWordPhrase}</span>
+                                        <b>=</b>
+                                        <span title="Thai meaning">{task.thaiMeaning}</span>
+                                      </div>
+                                      {!isCompleted ? (
+                                        <ParaphraseBridgeActions
+                                          onKnewIt={showPracticeKnewItToast}
+                                          onSaveToNotebook={() =>
+                                            handlePracticeSaveToNotebook(() => saveListeningBuilderExamTaskToNotebook(task))
+                                          }
+                                          saveLabel="Save to Notebook"
+                                        />
+                                      ) : null}
                                     </div>
                                   )}
 
@@ -14090,18 +14152,30 @@ function App() {
 
                                   {answerChoices.options.length > 0 && (
                                     <div className="listeningBuilderExamOptionList">
-                                      {answerChoices.options.map((option) => (
+                                      {answerChoices.options.map((option) => {
+                                        const isSelected = selectedAnswer === option.key
+                                        const correctKey = resolveListeningBuilderExamCorrectAnswer(
+                                          task,
+                                          activeListeningBuilderExamTest.tasks,
+                                          activeListeningBuilderExamTest.id
+                                        )
+                                        const isCorrectOption =
+                                          Boolean(correctKey) && option.key.toUpperCase() === correctKey
+                                        return (
                                         <button
                                           key={`${task.id}-${option.key}`}
                                           type="button"
-                                          className={`listeningBuilderExamOption ${evidenceUnlocked ? 'is-unlocked' : 'is-locked'}`}
-                                          disabled={!evidenceUnlocked || isCompleted}
+                                          className={`listeningBuilderExamOption is-unlocked ${
+                                            isSelected ? (isCorrectOption ? 'is-correct' : 'is-wrong') : ''
+                                          }`}
+                                          disabled={isCompleted}
                                           onClick={() => chooseListeningBuilderExamAnswer(task, option.key)}
                                         >
                                           <strong>{option.key}</strong>
                                           <span>{option.text}</span>
                                         </button>
-                                      ))}
+                                        )
+                                      })}
                                     </div>
                                   )}
 
@@ -14117,16 +14191,6 @@ function App() {
 
                                   {isCompleted && (
                                     <>
-                                      <div className="listeningBuilderExamWordCheck">
-                                        <p>Paraphrase bridge</p>
-                                        <div className="listeningBuilderExamWordEquation">
-                                          <span title="In the script">{task.targetText}</span>
-                                          <b>=</b>
-                                          <span title="In the question">{task.questionWordPhrase}</span>
-                                          <b>→</b>
-                                          <span title="Thai meaning">{task.thaiMeaning}</span>
-                                        </div>
-                                      </div>
                                       <p className="meta">{task.explanationThai}</p>
                                       <ParaphraseBridgeActions
                                         onKnewIt={showPracticeKnewItToast}
@@ -14427,6 +14491,101 @@ function App() {
                       {!stage.isUnlocked && (
                         <div className="readingStageLockNote">
                           ต้องผ่านด่านก่อนหน้าอย่างน้อย {NORMAL_READING_UNLOCK_PERCENT}% เพื่อปลดล็อกด่านนี้
+                        </div>
+                      )}
+
+                      <div className="readingStageExamGrid">
+                        {stage.exams.map((exam, index) => {
+                          const attempt = readingAttemptByExamId[exam.id]
+                          const canUseExam = stage.isUnlocked || Boolean(attempt)
+                          const isPerfect = attempt?.accuracy === 100
+                          return (
+                            <article
+                              key={exam.id}
+                              className={`readingStageExamCard ${canUseExam ? '' : 'is-disabled'} ${isPerfect ? 'is-perfect' : ''}`}
+                            >
+                              <div className="readingStageExamThumb">
+                                <span>{attempt ? `${attempt.accuracy}%` : `ชุด ${index + 1}`}</span>
+                                <small>{attempt ? 'คะแนนล่าสุด' : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
+                              </div>
+                              <div className="readingStageExamBody">
+                                <p className="promptPill">{getReadingExamTypeSummary(exam)}</p>
+                                <h5>{exam.title}</h5>
+                                <p className="meta">
+                                  {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
+                                </p>
+                                {attempt && (
+                                  <p className="readingStageAttemptMeta">
+                                    {attempt.correctCount}/{attempt.totalQuestions} correct · {new Date(attempt.completedAt).toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="readingStageExamActions">
+                                {!attempt && (
+                                  <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
+                                    เริ่มทำข้อสอบ
+                                  </button>
+                                )}
+                                {attempt && !isPerfect && (
+                                  <>
+                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
+                                      ดู report
+                                    </button>
+                                    <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
+                                      Redeem
+                                    </button>
+                                  </>
+                                )}
+                                {attempt && isPerfect && (
+                                  <>
+                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
+                                      ดู report
+                                    </button>
+                                    <button type="button" onClick={() => startReadingExam(exam.id)}>
+                                      ทำข้อสอบอีกรอบ
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </article>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+              ) : readingEntryCategory === 'advanced' ? (
+                <div className="readingStageBoard">
+                  {advancedReadingStages.map((stage) => (
+                    <section
+                      key={`advanced-reading-stage-${stage.number}`}
+                      className={`readingStagePanel ${stage.isUnlocked ? 'is-unlocked' : 'is-locked'}`}
+                    >
+                      <div className="readingStageHeader">
+                        <div>
+                          <p className="sectionLabel">Advanced Reading</p>
+                          <h4>{stage.title}</h4>
+                          <p>
+                            {stage.exams.length
+                              ? 'ด่านนี้มี 2 ชุดข้อสอบระดับยาก ต้องทำให้ได้อย่างน้อย 75% เพื่อปลดล็อกด่านถัดไป'
+                              : 'ยังไม่มีข้อสอบในด่านนี้'}
+                          </p>
+                        </div>
+                        <div className="readingStageStatus">
+                          <strong>{stage.bestAccuracy}%</strong>
+                          <span>
+                            {stage.isUnlocked
+                              ? stage.bestAccuracy >= ADVANCED_READING_UNLOCK_PERCENT
+                                ? 'ผ่านแล้ว'
+                                : `ต้องได้ ${ADVANCED_READING_UNLOCK_PERCENT}%+`
+                              : 'ล็อกอยู่'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {!stage.isUnlocked && (
+                        <div className="readingStageLockNote">
+                          ต้องผ่านด่านก่อนหน้าอย่างน้อย {ADVANCED_READING_UNLOCK_PERCENT}% เพื่อปลดล็อกด่านนี้
                         </div>
                       )}
 

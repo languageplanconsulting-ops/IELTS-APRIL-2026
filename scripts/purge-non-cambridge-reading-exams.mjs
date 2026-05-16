@@ -7,12 +7,13 @@ const SUPABASE_URL = String(process.env.SUPABASE_URL || '').trim().replace(/\/$/
 const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim()
 
 const isCambridgeBookReadingExam = (exam) => {
+  // Keep in sync with src/App.tsx isCambridgeBookReadingExam and server/index.mjs
   const id = String(exam?.id || '').toLowerCase()
   const title = String(exam?.title || '').toLowerCase()
   return (
-    /^cambridge-1[289]-/.test(id) ||
-    /\bcambridge\s*1[289]\b/.test(title) ||
-    /^c1[289]\s/.test(title)
+    /^cambridge-(1[2-3]|17|19)-/.test(id) ||
+    /\bcambridge\s*(1[2-3]|17|19)\b/.test(title) ||
+    /^c(12|13|17|19)\s/.test(title)
   )
 }
 

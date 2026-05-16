@@ -107,3 +107,37 @@ export const getListeningSpeakerTone = (speaker: string | null): string => {
   if (key.includes('rob') || key.includes('david') || key.includes('dexter') || key.includes('mike')) return 'b'
   return 'neutral'
 }
+
+/** Substantial passage excerpt (~half the section) centered on evidence when possible. */
+export const buildListeningPassageExcerpt = (
+  passage: string,
+  evidence: string,
+  ratio = 0.5
+): string => {
+  const text = passage.replace(/\s+/g, ' ').trim()
+  if (!text) return ''
+
+  const targetLength = Math.max(480, Math.floor(text.length * ratio))
+  if (text.length <= targetLength) return text
+
+  const needle = evidence.trim()
+  if (needle) {
+    const lower = text.toLowerCase()
+    const idx = lower.indexOf(needle.toLowerCase())
+    if (idx >= 0) {
+      const half = Math.floor(targetLength / 2)
+      const start = Math.max(0, idx - half)
+      const end = Math.min(text.length, start + targetLength)
+      const adjustedStart = Math.max(0, end - targetLength)
+      const slice = text.slice(adjustedStart, end).trim()
+      const prefix = adjustedStart > 0 ? '…' : ''
+      const suffix = end < text.length ? '…' : ''
+      return `${prefix}${slice}${suffix}`
+    }
+  }
+
+  return `${text.slice(0, targetLength).trim()}…`
+}
+
+export const listeningScriptHasDialogue = (segments: ListeningScriptSegment[]): boolean =>
+  segments.some((segment) => Boolean(segment.speaker?.trim()))

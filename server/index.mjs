@@ -10,6 +10,7 @@ import WebSocket from 'ws'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvidedReadingPracticeCambridge12.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvidedReadingPracticeCambridge13.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS } from './userProvidedReadingPracticeCambridge17.mjs'
 
 dotenv.config()
 
@@ -4662,9 +4663,9 @@ const isCambridgeBookReadingExamRecord = (exam) => {
   const id = String(exam?.id || '').toLowerCase()
   const title = String(exam?.title || '').toLowerCase()
   return (
-    /^cambridge-1[289]-/.test(id) ||
-    /\bcambridge\s*1[289]\b/.test(title) ||
-    /^c1[289]\s/.test(title)
+    /^cambridge-(1[2-3]|17|19)-/.test(id) ||
+    /\bcambridge\s*(1[2-3]|17|19)\b/.test(title) ||
+    /^c(12|13|17|19)\s/.test(title)
   )
 }
 
@@ -4676,6 +4677,12 @@ const mapBuiltInReadingExam = (exam, timestamps) => ({
 })
 
 const BUILT_IN_READING_BANK_EXAMS = [
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-16T00:00:00.000Z',
+      updatedAt: '2026-05-16T00:00:00.000Z'
+    })
+  ),
   ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS.map((exam) =>
     mapBuiltInReadingExam(exam, {
       createdAt: '2026-05-16T00:00:00.000Z',

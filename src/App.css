@@ -5069,6 +5069,31 @@ body,
   min-height: calc(100dvh - 120px);
 }
 
+.readingPage:has(.readingExamLayout-bank) {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 72px);
+  gap: 12px;
+}
+
+.readingPage:has(.readingExamLayout-bank) .readingPageHeader {
+  flex-shrink: 0;
+}
+
+.readingPage:has(.readingExamLayout-bank) .readingExamWrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingAttemptToolbar,
+.readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingSummaryStrip,
+.readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingPassageTabs {
+  flex-shrink: 0;
+}
+
 .readingPdoyBank,
 .readingPdoyLessonWrap {
   gap: 18px;
@@ -5081,18 +5106,27 @@ body,
   align-items: stretch;
 }
 
+.readingPage:has(.readingExamLayout-bank) .readingExamLayout-bank {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+}
+
 .readingExamLayout-bank {
   flex: 1 1 auto;
   min-height: 0;
   align-items: stretch;
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .readingExamLayout-bank .readingPassagePanel-exam,
 .readingExamLayout-bank .readingQuestionsPanel-exam {
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 200px);
-  max-height: calc(100dvh - 200px);
+  height: 100%;
+  min-height: 0;
+  max-height: none;
   overflow: hidden;
 }
 
@@ -5108,11 +5142,20 @@ body,
   padding-bottom: 14px;
 }
 
+.readingExamLayout-bank .readingPassagePanel-exam .readingPassageHeader,
+.readingExamLayout-bank .readingPassagePanel-exam .readingHighlightToolbar,
+.readingExamLayout-bank .readingPassagePanel-exam .readingHighlightChipRow {
+  flex-shrink: 0;
+}
+
 .readingExamLayout-bank .readingPassageBody {
   flex: 1 1 auto;
   min-height: 0;
+  height: auto;
   max-height: none;
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .readingExamLayout-bank .readingQuestionsPanel-exam {
@@ -5593,6 +5636,14 @@ body,
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 32px;
   align-items: start;
+}
+
+.listeningBuilderExamQuestionPane {
+  order: 1;
+}
+
+.listeningBuilderExamPassage {
+  order: 2;
 }
 
 .listeningBuilderExamPassage,
@@ -7569,12 +7620,13 @@ body,
 
   .readingExamLayout-bank {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
   }
 
   .readingExamLayout-bank .readingPassagePanel-exam,
   .readingExamLayout-bank .readingQuestionsPanel-exam {
-    min-height: min(52dvh, 520px);
-    max-height: min(52dvh, 520px);
+    min-height: min(58dvh, 640px);
+    height: min(58dvh, 640px);
   }
 
   .adminSearchField {
@@ -13813,6 +13865,10 @@ select:focus,
   box-shadow: 4px 4px 0 #0f172a;
 }
 
+.listeningFoundationQuestionPane {
+  grid-column: span 5;
+}
+
 .listeningFoundationScriptPane {
   grid-column: span 7;
   padding: 20px;
@@ -13826,7 +13882,6 @@ select:focus,
 }
 
 .listeningFoundationQuestionPane {
-  grid-column: span 5;
   max-height: min(88vh, 920px);
   min-height: 0;
   display: flex;
@@ -14142,6 +14197,147 @@ select:focus,
   white-space: nowrap;
 }
 
+.listeningFoundationPassageExcerpt {
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  max-height: min(42vh, 420px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.listeningFoundationPassageExcerpt h4 {
+  margin: 0 0 10px;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.listeningFoundationPassageExcerpt blockquote {
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: #1e293b;
+  font-size: 1.02rem;
+  font-weight: 520;
+  line-height: 1.72;
+  white-space: pre-wrap;
+}
+
+.listeningFoundationDualHint {
+  margin: 0 0 12px !important;
+}
+
+.listeningFoundationOptionBtn.is-correct {
+  border-color: #22c55e;
+  background: #ecfdf5;
+}
+
+.listeningFoundationOptionBtn.is-wrong {
+  border-color: #f87171;
+  background: #fef2f2;
+}
+
+.listeningFoundationStepStatus {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.listeningFoundationStepStatus span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.listeningFoundationStepStatus span.is-done {
+  border-color: #86efac;
+  background: #ecfdf5;
+  color: #166534;
+}
+
+.listeningScriptReaderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.listeningScriptReaderPlayHint {
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: #64748b;
+}
+
+.listeningFoundationScriptPane .listeningScriptReaderBody.is-awaiting-play {
+  position: relative;
+}
+
+.listeningFoundationScriptPane .listeningScriptReaderBody.is-awaiting-play .listeningScriptTurnStack {
+  opacity: 0.35;
+  filter: blur(1px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.listeningFoundationScriptPane .listeningScriptReaderBody.is-awaiting-play::after {
+  content: 'Press play above to unlock the audio script';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1e40af;
+  background: rgba(248, 250, 252, 0.72);
+  pointer-events: none;
+}
+
+.listeningScriptTurnStack.is-dialogue {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listeningFoundationScriptPane .listeningScriptTurnStack.is-dialogue .listeningScriptTurn.tone-a {
+  margin-right: 12%;
+  border-radius: 14px 14px 14px 4px;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.08);
+}
+
+.listeningFoundationScriptPane .listeningScriptTurnStack.is-dialogue .listeningScriptTurn.tone-b {
+  margin-left: 12%;
+  border-radius: 14px 14px 4px 14px;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+}
+
+.listeningFoundationScriptPane .listeningScriptTurnStack.is-dialogue .listeningScriptTurn.tone-host {
+  margin-inline: 8%;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+}
+
+.listeningFoundationScriptPane .listeningScriptTurnStack.is-dialogue .listeningScriptTurnBody {
+  max-width: none;
+}
+
 .listeningFoundationPassageBlock {
   margin: 24px;
 }
@@ -14233,46 +14429,6 @@ select:focus,
 .listeningScriptReaderModes button.active {
   background: #004aad;
   color: #ffffff;
-}
-
-.listeningScriptScanHint {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 2px dashed #93c5fd;
-  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-  color: #0f172a;
-  font-size: 0.92rem;
-  line-height: 1.45;
-}
-
-.listeningScriptScanLabel {
-  font-size: 0.72rem;
-  font-weight: 850;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #64748b;
-}
-
-.listeningScriptScanHint strong {
-  padding: 2px 8px;
-  border-radius: 8px;
-  background: #fef08a;
-  color: #713f12;
-}
-
-.listeningScriptScanHint em {
-  font-style: normal;
-  font-weight: 750;
-  color: #1d4ed8;
-}
-
-.listeningScriptScanArrow {
-  color: #64748b;
-  font-weight: 900;
 }
 
 .listeningScriptChunkNav {
