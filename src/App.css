@@ -5525,6 +5525,63 @@ body,
   flex-shrink: 0;
 }
 
+.readingExamLayout-bank .readingHighlightToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 0;
+  margin: 6px 0 8px;
+  padding: 6px 8px;
+  border-width: 1px;
+  border-style: dashed;
+  border-radius: 10px;
+}
+
+.readingExamLayout-bank .readingHighlightToolbar .meta {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #64748b !important;
+  font-size: 0.78rem !important;
+  font-weight: 650;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.readingExamLayout-bank .readingHighlightToolbar .controls {
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.readingExamLayout-bank .readingHighlightToolbar .controls button {
+  min-height: 30px !important;
+  padding: 0 10px !important;
+  border-width: 1px !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  font-size: 0.76rem !important;
+  letter-spacing: 0 !important;
+}
+
+.readingExamLayout-bank .readingHighlightChipRow {
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.readingExamLayout-bank .readingHighlightChip {
+  max-width: 100%;
+  padding: 4px 8px;
+  overflow: hidden;
+  font-size: 0.76rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .readingExamLayout-bank .readingPassageBody {
   flex: 1 1 auto;
   min-height: 0;

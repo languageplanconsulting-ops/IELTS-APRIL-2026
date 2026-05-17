@@ -32,6 +32,12 @@ const indexHtmlPath = path.join(distDir, 'index.html')
 const isDirectRun = process.argv[1] ? path.resolve(process.argv[1]) === __filename : false
 const JAN_2026_MUSIC_BRAIN_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-2-music-and-brain.json')
 const JAN_2026_MEDIEVAL_CASTLES_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-2-medieval-castles.json')
+const FEB_2026_BRITISH_ARISTOCRACY_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-2-british-aristocracy.json')
+const FEB_2026_VAQUITA_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-2-saving-the-vaquita.json')
+const FEB_2026_ADHD_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json')
+const FEB_2026_DIGITAL_NOMADS_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-rise-of-digital-nomads.json')
+const FEB_2026_MOVIE_THEATRES_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json')
+const FEB_2026_SPANISH_ARMADA_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-spanish-armada.json')
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
@@ -2098,6 +2104,16 @@ const guessReadingAnswerType = (correctAnswer) => {
   return 'text'
 }
 
+const inferReadingAnswerType = (correctAnswer, questionSectionText = '') => {
+  const normalized = normalizeReadingAnswer(canonicalizeReadingCorrectAnswer(correctAnswer))
+  const section = String(questionSectionText || '')
+  if (normalized === 'NOT GIVEN') {
+    if (/\bYES\b/i.test(section) && /\bNO\b/i.test(section)) return 'yes-no-not-given'
+    if (/\bTRUE\b/i.test(section) && /\bFALSE\b/i.test(section)) return 'true-false-not-given'
+  }
+  return guessReadingAnswerType(correctAnswer)
+}
+
 const QUESTION_SECTION_HEADER_REGEX =
   /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
 const QUESTION_SECTION_MARKER_REGEX = /(?:^|\n)\s*Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
@@ -2113,6 +2129,21 @@ const parseQuestionRangesFromText = (text) => {
       end: Math.max(start, end)
     }
   })
+}
+
+const getQuestionSectionTextForNumber = (text, questionNumber) => {
+  QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
+  const source = String(text || '')
+  const matches = [...source.matchAll(QUESTION_SECTION_HEADER_REGEX)]
+  const matchIndex = matches.findIndex((match) => {
+    const start = Number(match[1])
+    const end = Number(match[2] || match[3] || match[1])
+    return questionNumber >= Math.min(start, end) && questionNumber <= Math.max(start, end)
+  })
+  if (matchIndex < 0) return ''
+  const current = matches[matchIndex]
+  const next = matches[matchIndex + 1]
+  return source.slice(current.index, next ? next.index : source.length)
 }
 
 const stripWrappedQuotes = (value) => {
@@ -2225,12 +2256,12 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
   })
 }
 
-const normalizeReadingQuestionRecord = (question) => {
+const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
   const correctAnswer = canonicalizeReadingCorrectAnswer(question?.correctAnswer || '')
   return {
     ...question,
     correctAnswer,
-    answerType: guessReadingAnswerType(correctAnswer)
+    answerType: inferReadingAnswerType(correctAnswer, questionSectionText)
   }
 }
 
@@ -2252,9 +2283,13 @@ const buildReadingExamPayload = ({ title, category, collectionTitle, rawPassageT
   const questions = parseReadingAnswerKey(rawAnswerKey)
   const passagesWithQuestions = passages.map((passage) => ({
     ...passage,
-    questions: questions.filter((question) =>
-      passage.questionRanges.some((range) => question.number >= range.start && question.number <= range.end)
-    )
+    questions: questions
+      .filter((question) =>
+        passage.questionRanges.some((range) => question.number >= range.start && question.number <= range.end)
+      )
+      .map((question) =>
+        normalizeReadingQuestionRecord(question, getQuestionSectionTextForNumber(passage.questionSectionText, question.number))
+      )
   }))
 
   if (passagesWithQuestions.length === 0) {
@@ -4696,6 +4731,78 @@ const mapBuiltInReadingExam = (exam, timestamps) => ({
 })
 
 const BUILT_IN_READING_BANK_EXAMS = [
+  ...FEB_2026_DIGITAL_NOMADS_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-1-rise-of-digital-nomads',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_MOVIE_THEATRES_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-1-disappearance-of-movie-theatres',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_SPANISH_ARMADA_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-1-spanish-armada',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_BRITISH_ARISTOCRACY_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-2-british-aristocracy',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_VAQUITA_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-2-saving-the-vaquita',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_ADHD_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-2-adhd-innate-or-upbringing',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
   ...JAN_2026_MUSIC_BRAIN_READING_EXAMS.map((exam) =>
     mapBuiltInReadingExam(
       {

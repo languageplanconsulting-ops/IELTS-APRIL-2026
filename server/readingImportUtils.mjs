@@ -38,6 +38,16 @@ const guessReadingAnswerType = (correctAnswer) => {
   return 'text'
 }
 
+const inferReadingAnswerType = (correctAnswer, questionSectionText = '') => {
+  const normalized = normalizeReadingAnswer(canonicalizeReadingCorrectAnswer(correctAnswer))
+  const section = String(questionSectionText || '')
+  if (normalized === 'NOT GIVEN') {
+    if (/\bYES\b/i.test(section) && /\bNO\b/i.test(section)) return 'yes-no-not-given'
+    if (/\bTRUE\b/i.test(section) && /\bFALSE\b/i.test(section)) return 'true-false-not-given'
+  }
+  return guessReadingAnswerType(correctAnswer)
+}
+
 const QUESTION_SECTION_HEADER_REGEX =
   /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
 const QUESTION_SECTION_MARKER_REGEX = /(?:^|\n)\s*Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
@@ -53,6 +63,21 @@ const parseQuestionRangesFromText = (text) => {
       end: Math.max(start, end)
     }
   })
+}
+
+const getQuestionSectionTextForNumber = (text, questionNumber) => {
+  QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
+  const source = String(text || '')
+  const matches = [...source.matchAll(QUESTION_SECTION_HEADER_REGEX)]
+  const matchIndex = matches.findIndex((match) => {
+    const start = Number(match[1])
+    const end = Number(match[2] || match[3] || match[1])
+    return questionNumber >= Math.min(start, end) && questionNumber <= Math.max(start, end)
+  })
+  if (matchIndex < 0) return ''
+  const current = matches[matchIndex]
+  const next = matches[matchIndex + 1]
+  return source.slice(current.index, next ? next.index : source.length)
 }
 
 const stripWrappedQuotes = (value) => {
@@ -165,12 +190,12 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
   })
 }
 
-const normalizeReadingQuestionRecord = (question) => {
+const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
   const correctAnswer = canonicalizeReadingCorrectAnswer(question?.correctAnswer || '')
   return {
     ...question,
     correctAnswer,
-    answerType: guessReadingAnswerType(correctAnswer)
+    answerType: inferReadingAnswerType(correctAnswer, questionSectionText)
   }
 }
 
@@ -183,7 +208,7 @@ export const buildReadingExamPayload = ({ title, category, rawPassageText, rawAn
       .filter((question) =>
         passage.questionRanges.some((range) => question.number >= range.start && question.number <= range.end)
       )
-      .map((question) => normalizeReadingQuestionRecord(question))
+      .map((question) => normalizeReadingQuestionRecord(question, getQuestionSectionTextForNumber(passage.questionSectionText, question.number)))
   }))
 
   if (passagesWithQuestions.length === 0) {
