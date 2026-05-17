@@ -11,6 +11,8 @@ const normalizeReadingAnswer = (value) =>
     .replace(/\.$/, '')
     .toUpperCase()
 
+const READING_ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
+
 const canonicalizeReadingCorrectAnswer = (value) => {
   const normalized = normalizeReadingAnswer(value)
   if (!normalized) return ''
@@ -19,6 +21,7 @@ const canonicalizeReadingCorrectAnswer = (value) => {
   if (normalized.startsWith('FALSE')) return 'FALSE'
   if (normalized.startsWith('YES')) return 'YES'
   if (normalized.startsWith('NO')) return 'NO'
+  if (READING_ROMAN_HEADING_PATTERN.test(normalized)) return normalized.toLowerCase()
   const letterMatch = normalized.match(/^([A-G])(?:\b|\s|\()/)
   if (letterMatch) return letterMatch[1]
   return String(value || '').trim()
@@ -35,6 +38,7 @@ const guessReadingAnswerType = (correctAnswer) => {
   if (['TRUE', 'FALSE', 'NOT GIVEN'].includes(normalized)) return 'true-false-not-given'
   if (['YES', 'NO', 'NOT GIVEN'].includes(normalized)) return 'yes-no-not-given'
   if (/^[A-G]$/.test(normalized)) return 'multiple-choice'
+  if (READING_ROMAN_HEADING_PATTERN.test(normalized)) return 'multiple-choice'
   return 'text'
 }
 

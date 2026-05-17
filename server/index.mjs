@@ -38,6 +38,13 @@ const FEB_2026_ADHD_READING_EXAMS = requireJson('../cambridge-reading-imports/ie
 const FEB_2026_DIGITAL_NOMADS_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-rise-of-digital-nomads.json')
 const FEB_2026_MOVIE_THEATRES_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json')
 const FEB_2026_SPANISH_ARMADA_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-spanish-armada.json')
+const MARCH_2026_NATURAL_WATER_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json')
+const MARCH_2026_CRITICAL_THINKING_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-2-critical-thinking.json')
+const MARCH_2026_HISTORY_AI_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-2-history-education-ai.json')
+const MARCH_2026_ARTISTS_AI_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-2-artists-ai.json')
+const MARCH_2026_GREEN_ARCHITECTURE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-1-future-green-architecture.json')
+const MARCH_2026_DEVELOPING_ENVIRONMENT_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-1-environmental-problems-developing-countries.json')
+const MARCH_2026_WOOD_CYCAD_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-1-saving-the-wood-cycad.json')
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
@@ -2077,6 +2084,8 @@ const normalizeReadingAnswer = (value) =>
     .replace(/\.$/, '')
     .toUpperCase()
 
+const READING_ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
+
 const parseAcceptedReadingAnswers = (value) =>
   String(value || '')
     .split(/[|,/&]+/)
@@ -2091,6 +2100,7 @@ const canonicalizeReadingCorrectAnswer = (value) => {
   if (normalized.startsWith('FALSE')) return 'FALSE'
   if (normalized.startsWith('YES')) return 'YES'
   if (normalized.startsWith('NO')) return 'NO'
+  if (READING_ROMAN_HEADING_PATTERN.test(normalized)) return normalized.toLowerCase()
   const letterMatch = normalized.match(/^([A-G])(?:\b|\s|\()/)
   if (letterMatch) return letterMatch[1]
   return String(value || '').trim()
@@ -2101,6 +2111,7 @@ const guessReadingAnswerType = (correctAnswer) => {
   if (['TRUE', 'FALSE', 'NOT GIVEN'].includes(normalized)) return 'true-false-not-given'
   if (['YES', 'NO', 'NOT GIVEN'].includes(normalized)) return 'yes-no-not-given'
   if (/^[A-G]$/.test(normalized)) return 'multiple-choice'
+  if (READING_ROMAN_HEADING_PATTERN.test(normalized)) return 'multiple-choice'
   return 'text'
 }
 
@@ -4731,6 +4742,90 @@ const mapBuiltInReadingExam = (exam, timestamps) => ({
 })
 
 const BUILT_IN_READING_BANK_EXAMS = [
+  ...MARCH_2026_WOOD_CYCAD_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-1-saving-the-wood-cycad',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_DEVELOPING_ENVIRONMENT_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-1-environmental-problems-developing-countries',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_GREEN_ARCHITECTURE_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-1-future-green-architecture',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_ARTISTS_AI_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-2-artists-ai',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_HISTORY_AI_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-2-history-education-ai',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_CRITICAL_THINKING_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-2-critical-thinking',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_NATURAL_WATER_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-2-natural-water-cleaning',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
   ...FEB_2026_DIGITAL_NOMADS_READING_EXAMS.map((exam) =>
     mapBuiltInReadingExam(
       {
