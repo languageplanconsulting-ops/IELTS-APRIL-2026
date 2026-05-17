@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
 import fs from 'node:fs'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import multer from 'multer'
@@ -25,9 +26,11 @@ const ADMIN_PANEL_CODE = String(process.env.ADMIN_PANEL_CODE || 'englishplanfore
 const ADMIN_CODE_TOKEN_PREFIX = 'admin-code:'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const requireJson = createRequire(import.meta.url)
 const distDir = path.resolve(__dirname, '../dist')
 const indexHtmlPath = path.join(distDir, 'index.html')
 const isDirectRun = process.argv[1] ? path.resolve(process.argv[1]) === __filename : false
+const JAN_2026_MUSIC_BRAIN_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-2-music-and-brain.json')
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
@@ -4692,6 +4695,18 @@ const mapBuiltInReadingExam = (exam, timestamps) => ({
 })
 
 const BUILT_IN_READING_BANK_EXAMS = [
+  ...JAN_2026_MUSIC_BRAIN_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-jan-2026-passage-2-music-brain',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
   ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS.map((exam) =>
     mapBuiltInReadingExam(exam, {
       createdAt: '2026-05-16T00:00:00.000Z',
