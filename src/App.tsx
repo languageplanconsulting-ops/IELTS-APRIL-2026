@@ -3113,12 +3113,15 @@ type ReadingBulkValidationResult = {
 
 type AdminReadingGeneratorQuestionType =
   | 'fill-in-the-blank'
+  | 'summary-completion'
   | 'multiple-choice'
   | 'true-false-not-given'
   | 'yes-no-not-given'
   | 'matching-statements'
+  | 'matching-features'
   | 'matching-heading'
   | 'matching-information'
+  | 'matching-sentence-endings'
 
 type AdminReadingGeneratorPassageConfig = {
   id: string
@@ -3217,38 +3220,61 @@ const ADMIN_READING_GENERATOR_QUESTION_TYPES: Array<{
   shortLabel: string
 }> = [
   { id: 'fill-in-the-blank', label: 'Fill in the Blank', shortLabel: 'Fill blanks' },
+  { id: 'summary-completion', label: 'Summary Completion', shortLabel: 'Summary' },
   { id: 'multiple-choice', label: 'Multiple Choice', shortLabel: 'MCQ' },
   { id: 'true-false-not-given', label: 'TRUE / FALSE / NOT GIVEN', shortLabel: 'TFNG' },
   { id: 'yes-no-not-given', label: 'YES / NO / NOT GIVEN', shortLabel: 'YNNG' },
   { id: 'matching-statements', label: 'Matching Statements / Who says what', shortLabel: 'Statements' },
+  { id: 'matching-features', label: 'Matching Features / Experts / Eras', shortLabel: 'Features' },
   { id: 'matching-heading', label: 'Matching Headings', shortLabel: 'Headings' },
-  { id: 'matching-information', label: 'Matching Information / Paragraph contains', shortLabel: 'Information' }
+  { id: 'matching-information', label: 'Matching Information / Paragraph contains', shortLabel: 'Information' },
+  { id: 'matching-sentence-endings', label: 'Matching Sentence Endings', shortLabel: 'Endings' }
 ]
 
 const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGeneratorQuestionType, string> = {
   'fill-in-the-blank': [
-    'One word only for every answer.',
-    'The answer must be the exact word from the generated passage with no conjugation or form change.',
-    'Each question must paraphrase exactly one passage portion and appear in chronological order.',
+    'Focus: scanning for specific details and understanding local context.',
+    'Order: usually chronological, except sometimes in tables or flowcharts.',
+    'Surround every blank with paraphrased text.',
+    'The answer must be the exact word from the generated passage with no tense, singular/plural, or word-form change.',
+    'Respect the word limit literally, e.g. ONE WORD ONLY means "the manatees" is wrong if the answer is "manatees".',
     'Include the original IELTS-style instruction block above the questions.'
   ].join('\n'),
+  'summary-completion': [
+    'Focus: understanding a concentrated section of the text.',
+    'Order: chronological within the specific section summarized.',
+    'Type A, no word bank: exact passage words must be extracted, like fill in the blanks.',
+    'Type B, with word bank: answer must be a letter corresponding to the word box; test secondary vocabulary and paraphrase.',
+    'For word banks, include grammatically plausible but factually wrong distractors.',
+    'Also include exact words from the text that do not fit the grammar or meaning of the paraphrased summary.'
+  ].join('\n'),
   'multiple-choice': [
-    'Use IELTS-style answer choices, normally A-D unless the source pattern uses fewer or more options.',
-    'The correct option must be supported by one exact passage portion only.',
-    'Distractors must be plausible but contradicted, unsupported, or too broad.',
-    'Questions must appear in chronological order.'
+    'Focus: detailed understanding of specific paragraphs, writer purpose, or global text meaning.',
+    'Order: chronological.',
+    'Often direct the reader to a location, e.g. "In the fourth paragraph...".',
+    'Require reading around reference words such as "this", "these", and "such", and transition words.',
+    'The correct option must be a heavy paraphrase of the core concept and supported by one exact passage portion.',
+    'Use Half-Truth distractors: the first half is correct but the second half subtly introduces wrong information.',
+    'Use Right Answer to the Wrong Question distractors: factually true from the text but not answering the question asked.'
   ].join('\n'),
   'true-false-not-given': [
-    'Questions must be paraphrased from one exact passage portion only.',
-    'TRUE, FALSE, and NOT GIVEN counts must be the same or very similar.',
-    'NOT GIVEN must use an anchor portion containing exact words from the question, but the claim must remain irrelevant or unstated.',
-    'Questions must appear in chronological order.'
+    'Focus: identifying specific factual information.',
+    'Order: chronological.',
+    'TRUE: statement perfectly matches factual meaning but uses heavy paraphrasing and synonyms.',
+    'FALSE: statement explicitly contradicts or states the opposite of the fact in the text.',
+    'NOT GIVEN: information is irrelevant, incomplete, or simply not mentioned.',
+    'Use False Positive traps: keep the exact subject/object but change the verb, adjective, adverb, or degree such as some/all or frequently/always.',
+    'Use Keyword Bait traps for NOT GIVEN: include exact, highly specific keywords from the text, but keep the claim unstated.',
+    'TRUE, FALSE, and NOT GIVEN counts must be the same or very similar.'
   ].join('\n'),
   'yes-no-not-given': [
-    'Use this for writer claims/opinions, not simple factual information.',
-    'YES, NO, and NOT GIVEN counts must be the same or very similar.',
-    'NOT GIVEN must use an anchor portion containing exact words from the question, but the claim must remain irrelevant or unstated.',
-    'Questions must appear in chronological order.'
+    'Focus: identifying the writer’s claims, views, or opinions, usually Passage 3.',
+    'Order: chronological.',
+    'YES: statement agrees with the writer’s specific opinion.',
+    'NO: statement contradicts the writer’s specific opinion.',
+    'NOT GIVEN: impossible to say what the writer thinks about it.',
+    'Use Real-World Fact traps: statements may be true in real life, but if the writer has not explicitly claimed it, answer is NOT GIVEN.',
+    'YES, NO, and NOT GIVEN counts must be the same or very similar.'
   ].join('\n'),
   'matching-statements': [
     'Create IELTS-style matching statements for who says what or which named person/group is linked to each statement.',
@@ -3256,17 +3282,37 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
     'Use a clear option list and keep the statements paraphrased.',
     'Questions should follow the natural order of the supporting portions where possible.'
   ].join('\n'),
+  'matching-features': [
+    'Focus: connecting specific theories, discoveries, claims, quotes, places, eras, or people to the features that produced them.',
+    'Order: not chronological.',
+    'Give a list of statements and a list of proper nouns or feature labels, usually capitalized names.',
+    'The correct answer must be a heavily paraphrased version of a direct quote or reported speech clause in the text.',
+    'Use Scattered Expert traps: place quotes or claims from the same expert/feature in different paragraphs so scanning the name once is not enough.'
+  ].join('\n'),
   'matching-heading': [
-    'Create headings that summarize whole paragraphs, not tiny details.',
+    'Focus: identifying the main idea or core theme of an entire paragraph.',
+    'Order: not chronological.',
+    'Headings should be short, around 2-12 words.',
+    'The correct heading usually requires synthesizing the topic sentence, conclusion, or sentences after major transitions such as but/however/therefore.',
     'Use more headings than paragraphs so there are plausible unused headings.',
-    'Each answer must map to one paragraph and the answer key must include the paragraph evidence summary.',
-    'Keep heading wording concise and IELTS-like.'
+    'Use Overly Specific Heading traps: a distractor accurately describes one sentence but not the whole paragraph.',
+    'Use Exact Word Match traps: a heading uses exact paragraph words but is still the wrong main idea.'
   ].join('\n'),
   'matching-information': [
-    'Create questions asking which paragraph contains each piece of information.',
-    'Each answer must be a paragraph letter and must be supported by one exact passage portion.',
-    'Items do not need to follow strict chronological order if the IELTS type normally scans across paragraphs, but evidence must be clear.',
+    'Focus: locating specific details, examples, reasons, or descriptions.',
+    'Order: not chronological.',
+    'Format prompts as noun phrases, e.g. "a reference to...", "an explanation of...", "examples of...".',
+    'Allow paragraph letters to be used more than once when appropriate, and include "NB You may use any letter more than once" if reused.',
+    'Each answer must be a paragraph letter and supported by one exact passage portion.',
+    'Use plural traps: if the prompt asks for plural outcomes/examples/reasons, the paragraph must contain more than one; a paragraph with only one is a trap.',
     'Include a clear paragraph-letter system in the passage.'
+  ].join('\n'),
+  'matching-sentence-endings': [
+    'Focus: understanding sentence-level cause/effect or logical flow.',
+    'Order: the first halves of the sentences are chronological.',
+    'Match each premise to the correct conclusion based on the text.',
+    'The combined sentence must be grammatical and factually accurate.',
+    'Use distractor endings with exact recognizable words from the text, but when attached to the first half they are grammatically broken or factually opposite.'
   ].join('\n')
 }
 
@@ -3281,7 +3327,9 @@ const createAdminReadingGeneratorPassage = (index: number): AdminReadingGenerato
       ? ['true-false-not-given', 'fill-in-the-blank']
       : index === 1
         ? ['matching-heading', 'matching-information']
-        : ['yes-no-not-given', 'multiple-choice'],
+        : index === 2
+          ? ['yes-no-not-given', 'multiple-choice']
+          : ['summary-completion', 'matching-features', 'matching-sentence-endings'],
   questionCount: '13',
   requirements: ''
 })
@@ -6664,6 +6712,12 @@ function App() {
       '- Questions must be chronological unless the IELTS type normally asks paragraph scanning, such as matching information.',
       '- Each question should rely on only one passage portion.',
       '- Include plausible distractors for multiple choice and matching types.',
+      '- Distractors must be tempting for scanners, not random; they should reuse keywords, exact names, or local wording while breaking meaning, degree, grammar, or relevance.',
+      '',
+      'Macro difficulty curve:',
+      '- Passage 1 should be descriptive/concrete and highly factual. Use history, nature, technology, or concrete process topics. Chronological question types dominate: T/F/NG and fill in the blanks. It should rely heavily on exact scanning.',
+      '- Passage 2 should be discursive/process-based, with systems, social patterns, research applications, or institutional topics. Language becomes more abstract. Prefer matching headings and matching information so learners must understand whole paragraphs.',
+      '- Passage 3 should be argumentative/abstract and conceptually dense. Use Y/N/NG and multiple choice to test the writer’s claims, implications, and inferential logic rather than only printed facts.',
       '',
       'Question-type requirements:',
       typeRequirements || 'Admin will define exact requirements later. Use IELTS standard rules.',
