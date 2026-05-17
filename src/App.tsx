@@ -6747,7 +6747,7 @@ function App() {
     ].join('\n')
 
     setAdminReadingGeneratorBrief(brief)
-      setAdminPanelMessage(`Built a Codex prompt for ${passages.length} passage${passages.length === 1 ? '' : 's'}. Copy it into Codex, then paste the JSON result back here.`)
+    setAdminPanelMessage(`Built a Codex prompt for ${passages.length} passage${passages.length === 1 ? '' : 's'}. Copy it into Codex, then paste the JSON result back here.`)
   }
 
   const copyAdminReadingGeneratorBrief = async () => {
