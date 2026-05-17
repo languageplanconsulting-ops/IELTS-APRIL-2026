@@ -111,6 +111,7 @@ type ReadingPassageRecord = {
 type ReadingParsedPayload = {
   title: string
   category: ReadingBankCategory
+  collectionTitle?: string
   passages: ReadingPassageRecord[]
   questionCount: number
 }
@@ -119,6 +120,7 @@ type ReadingExamRecord = {
   id: string
   title: string
   category: ReadingBankCategory
+  collectionTitle?: string
   rawPassageText: string
   rawAnswerKey: string
   parsedPayload: ReadingParsedPayload
@@ -129,6 +131,7 @@ type ReadingExamRecord = {
 type ReadingBulkUploadInput = {
   title: string
   category?: ReadingBankCategory
+  collectionTitle?: string
   rawPassageText: string
   rawAnswerKey: string
 }
@@ -3130,6 +3133,7 @@ type AdminReadingGeneratorPassageConfig = {
   sourcePassage: string
   newTopic: string
   category: ReadingBankCategory
+  collectionTitle: string
   questionTypes: AdminReadingGeneratorQuestionType[]
   questionCount: string
   requirements: string
@@ -3157,6 +3161,23 @@ const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   normal: 'Normal Reading',
   advanced: 'Advanced Reading'
 }
+
+const READING_COLLECTION_OPTIONS = [
+  'IELTS Academic Reading Jan 2026',
+  'IELTS Academic Reading Feb 2026',
+  'IELTS Academic Reading Mar 2026',
+  'IELTS Academic Reading Apr 2026',
+  'IELTS Academic Reading May 2026',
+  'IELTS Academic Reading Jun 2026',
+  'IELTS Academic Reading Jul 2026',
+  'IELTS Academic Reading Aug 2026',
+  'IELTS Academic Reading Sep 2026',
+  'IELTS Academic Reading Oct 2026',
+  'IELTS Academic Reading Nov 2026',
+  'IELTS Academic Reading Dec 2026'
+]
+
+const DEFAULT_READING_COLLECTION_TITLE = 'IELTS Academic Reading May 2026'
 
 const ADMIN_WORKSPACE_SECTIONS: Array<{
   id: AdminWorkspaceSection
@@ -3337,6 +3358,7 @@ const createAdminReadingGeneratorPassage = (index: number): AdminReadingGenerato
   sourcePassage: '',
   newTopic: '',
   category: index >= 2 ? 'advanced' : 'normal',
+  collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
   questionTypes:
     index === 0
       ? ['true-false-not-given', 'fill-in-the-blank']
@@ -3401,6 +3423,7 @@ const validateAdminGeneratedReadingDraft = (value: string): AdminReadingGenerato
     const warnings: string[] = []
     const title = String(exam?.title || `Generated exam ${index + 1}`).trim()
     const category = normalizeReadingBankCategory(exam?.category)
+    const collectionTitle = String(exam?.collectionTitle || '').trim()
     const rawPassageText = String(exam?.rawPassageText || '')
     const rawAnswerKey = String(exam?.rawAnswerKey || '')
     const passageCount = (rawPassageText.match(/READING PASSAGE\s+\d+/gi) || []).length || (rawPassageText.trim() ? 1 : 0)
@@ -3408,6 +3431,7 @@ const validateAdminGeneratedReadingDraft = (value: string): AdminReadingGenerato
     const normalizedPassage = normalizeGeneratedReadingText(rawPassageText)
 
     if (!title) errors.push('Missing title.')
+    if (!collectionTitle) warnings.push('Missing collectionTitle. It will be placed into the selected admin collection before upload.')
     if (!rawPassageText.trim()) errors.push('Missing rawPassageText.')
     if (!rawAnswerKey.trim()) errors.push('Missing rawAnswerKey.')
     if (passageCount < 1) errors.push('No reading passage detected.')
@@ -3697,6 +3721,7 @@ const READING_JSON_TEMPLATE_ITEMS: Record<ReadingBankCategory, ReadingBulkUpload
     {
       title: 'Normal Reading Template',
       category: 'normal',
+      collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
       rawPassageText: `READING PASSAGE 1
 PASTE NORMAL READING TITLE HERE
 
@@ -3720,6 +3745,7 @@ Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
     {
       title: 'Advanced Reading Template',
       category: 'advanced',
+      collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
       rawPassageText: `READING PASSAGE 3
 PASTE ADVANCED READING TITLE HERE
 
@@ -3895,6 +3921,15 @@ const isCambridgeBookReadingExam = (exam: Pick<ReadingExamRecord, 'id' | 'title'
   )
 }
 
+const getReadingExamCollectionTitle = (exam: Pick<ReadingExamRecord, 'title' | 'collectionTitle' | 'parsedPayload'>) => {
+  const explicit = String(exam.collectionTitle || exam.parsedPayload?.collectionTitle || '').trim()
+  if (explicit) return explicit
+  return isCambridgeBookReadingExam({ id: '', title: exam.title }) ? 'Cambridge Reading Bank' : 'Unsorted Reading Uploads'
+}
+
+const hasExplicitReadingCollection = (exam: Pick<ReadingExamRecord, 'collectionTitle' | 'parsedPayload'>) =>
+  Boolean(String(exam.collectionTitle || exam.parsedPayload?.collectionTitle || '').trim())
+
 const inferReadingCategoryFromSource = (value: string): ReadingBankCategory => {
   const text = String(value || '')
   const passageMatches = [...text.matchAll(/READING PASSAGE\s+(\d+)/gi)].map((match) => Number(match[1]))
@@ -3944,6 +3979,17 @@ const splitCombinedReadingImport = (value: string) => {
     rawPassageText,
     rawAnswerKey
   }
+}
+
+const attachReadingCollectionToBulkItems = (
+  exams: ReadingBulkUploadInput[],
+  collectionTitle: string
+): ReadingBulkUploadInput[] => {
+  const fallbackCollection = String(collectionTitle || DEFAULT_READING_COLLECTION_TITLE).trim()
+  return exams.map((exam) => ({
+    ...exam,
+    collectionTitle: String(exam.collectionTitle || fallbackCollection).trim()
+  }))
 }
 
 const normalizeTextForLooseMatch = (value: string) =>
@@ -6134,6 +6180,7 @@ function App() {
   const [readingWorkspaceMode, setReadingWorkspaceMode] = useState<ReadingWorkspaceMode>('bank')
   const [readingEntryCategory, setReadingEntryCategory] = useState<ReadingBankCategory | null>(null)
   const [selectedReadingCategory, setSelectedReadingCategory] = useState<ReadingBankCategory>('normal')
+  const [selectedReadingCollection, setSelectedReadingCollection] = useState('all')
   const [selectedReadingExamId, setSelectedReadingExamId] = useState('')
   const [readingAnswers, setReadingAnswers] = useState<Record<number, string>>({})
   const [readingAttemptStage, setReadingAttemptStage] = useState<'bank' | 'exam' | 'report' | 'review'>('bank')
@@ -6178,6 +6225,7 @@ function App() {
   const [listeningFoundationAnswerState, setListeningFoundationAnswerState] = useState<Record<string, 'correct'>>({})
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('normal')
+  const [adminReadingCollectionInput, setAdminReadingCollectionInput] = useState(DEFAULT_READING_COLLECTION_TITLE)
   const [adminReadingSmartPasteInput, setAdminReadingSmartPasteInput] = useState('')
   const [adminReadingPassageInput, setAdminReadingPassageInput] = useState('')
   const [adminReadingAnswerKeyInput, setAdminReadingAnswerKeyInput] = useState('')
@@ -6687,6 +6735,7 @@ function App() {
           `SOURCE PASSAGE ${index + 1}`,
           `Working title: ${passage.title.trim() || `Generated Reading Passage ${index + 1}`}`,
           `Bank category: ${READING_CATEGORY_LABELS[passage.category]}`,
+          `Collection title: ${passage.collectionTitle.trim() || DEFAULT_READING_COLLECTION_TITLE}`,
           `New topic to generate: ${passage.newTopic.trim() || 'Choose a clearly different topic while preserving the original structure.'}`,
           `Target question count: ${passage.questionCount.trim() || 'Match the source passage pattern.'}`,
           `Question types needed: ${selectedTypes}`,
@@ -6704,8 +6753,9 @@ function App() {
       'Do not copy names, facts, examples, topic, or sentence wording from the original passage unless a common word is unavoidable.',
       '',
       'Return ONLY valid JSON. No Markdown fences. The JSON must be an array of ReadingBulkUploadInput objects.',
-      'Each object must have exactly these fields: title, category, rawPassageText, rawAnswerKey.',
+      'Each object must have exactly these fields: title, category, collectionTitle, rawPassageText, rawAnswerKey.',
       'category must be either "normal" or "advanced".',
+      'collectionTitle must be the monthly bank name, for example "IELTS Academic Reading Jan 2026".',
       'Important JSON formatting rule: output JSON.stringify-safe strings only. Escape all internal quotation marks as \\" and represent line breaks as \\n. Do not put literal unescaped line breaks inside string values.',
       '',
       'rawPassageText format:',
@@ -6804,7 +6854,7 @@ function App() {
 
       const parsed = JSON.parse(adminReadingGeneratorDraftInput)
       const exams = Array.isArray(parsed) ? parsed : parsed.exams
-      setAdminReadingBulkJsonInput(JSON.stringify(exams, null, 2))
+      setAdminReadingBulkJsonInput(JSON.stringify(attachReadingCollectionToBulkItems(exams, adminReadingCollectionInput), null, 2))
       setAdminReadingBulkValidation(null)
       setAdminReadingGeneratorValidation(validation)
       setAdminPanelMessage('Loaded the generated JSON into Bulk JSON Import. Check server format, then upload to the Reading Bank.')
@@ -6869,11 +6919,14 @@ function App() {
         throw new Error('Bulk JSON must be an array, or an object with an "exams" array.')
       }
 
+      const examsWithCollection = attachReadingCollectionToBulkItems(exams as ReadingBulkUploadInput[], adminReadingCollectionInput)
+      setAdminReadingBulkJsonInput(JSON.stringify(examsWithCollection, null, 2))
+
       const payload = await fetchJson<{ validation: ReadingBulkValidationResult }>('/api/admin/reading/exams/validate-bulk', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({
-          exams: exams as ReadingBulkUploadInput[]
+          exams: examsWithCollection
         })
       })
 
@@ -6910,6 +6963,7 @@ function App() {
         body: JSON.stringify({
           title: adminReadingTitleInput,
           category: adminReadingCategoryInput,
+          collectionTitle: adminReadingCollectionInput,
           rawPassageText: adminReadingPassageInput,
           rawAnswerKey: adminReadingAnswerKeyInput
         })
@@ -6946,11 +7000,12 @@ function App() {
         throw new Error('Bulk JSON must be an array, or an object with an "exams" array.')
       }
 
+      const examsWithCollection = attachReadingCollectionToBulkItems(exams as ReadingBulkUploadInput[], adminReadingCollectionInput)
       const payload = await fetchJson<{ exams: ReadingExamRecord[] }>('/api/admin/reading/exams/bulk', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({
-          exams: exams as ReadingBulkUploadInput[]
+          exams: examsWithCollection
         })
       })
 
@@ -7763,7 +7818,7 @@ function App() {
   const bankReadingExams = useMemo(
     () =>
       readingExams.filter(
-        (exam) => !isReadingPdoyExercise(exam.id) && isCambridgeBookReadingExam(exam)
+        (exam) => !isReadingPdoyExercise(exam.id) && (isCambridgeBookReadingExam(exam) || hasExplicitReadingCollection(exam))
       ),
     [readingExams]
   )
@@ -7772,8 +7827,33 @@ function App() {
     [readingExams]
   )
   const filteredReadingExams = useMemo(
-    () => bankReadingExams.filter((exam) => exam.category === selectedReadingCategory),
-    [bankReadingExams, selectedReadingCategory]
+    () =>
+      bankReadingExams.filter(
+        (exam) =>
+          exam.category === selectedReadingCategory &&
+          (selectedReadingCollection === 'all' || getReadingExamCollectionTitle(exam) === selectedReadingCollection)
+      ),
+    [bankReadingExams, selectedReadingCategory, selectedReadingCollection]
+  )
+  const readingCollectionsByCategory = useMemo(
+    () =>
+      (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).reduce(
+        (collectionMap, category) => {
+          const counts = new Map<string, number>()
+          bankReadingExams
+            .filter((exam) => exam.category === category)
+            .forEach((exam) => {
+              const collection = getReadingExamCollectionTitle(exam)
+              counts.set(collection, (counts.get(collection) || 0) + 1)
+            })
+          collectionMap[category] = [...counts.entries()]
+            .map(([title, count]) => ({ title, count }))
+            .sort((first, second) => first.title.localeCompare(second.title))
+          return collectionMap
+        },
+        {} as Record<ReadingBankCategory, Array<{ title: string; count: number }>>
+      ),
+    [bankReadingExams]
   )
   const readingAttemptByExamId = useMemo(() => readingAttemptHistory, [readingAttemptHistory])
   const readingExamCountsByCategory = useMemo(
@@ -7788,7 +7868,7 @@ function App() {
   )
   const normalReadingStages = useMemo<NormalReadingStage[]>(() => {
     const normalExams = sortNormalReadingExamsForStages(
-      bankReadingExams.filter((exam) => exam.category === 'normal')
+      filteredReadingExams.filter((exam) => exam.category === 'normal')
     )
     const stageCount = Math.ceil(normalExams.length / NORMAL_READING_STAGE_SIZE)
     let nextStageUnlocked = true
@@ -7811,10 +7891,10 @@ function App() {
       nextStageUnlocked = nextStageUnlocked && bestAccuracy >= NORMAL_READING_UNLOCK_PERCENT
       return stage
     })
-  }, [bankReadingExams, readingAttemptByExamId])
+  }, [filteredReadingExams, readingAttemptByExamId])
   const advancedReadingStages = useMemo<NormalReadingStage[]>(() => {
     const advancedExams = sortAdvancedReadingExamsForStages(
-      bankReadingExams.filter((exam) => exam.category === 'advanced')
+      filteredReadingExams.filter((exam) => exam.category === 'advanced')
     )
     const stageCount = Math.ceil(advancedExams.length / ADVANCED_READING_STAGE_SIZE)
     let nextStageUnlocked = true
@@ -7837,7 +7917,7 @@ function App() {
       nextStageUnlocked = nextStageUnlocked && bestAccuracy >= ADVANCED_READING_UNLOCK_PERCENT
       return stage
     })
-  }, [bankReadingExams, readingAttemptByExamId])
+  }, [filteredReadingExams, readingAttemptByExamId])
   const selectedReadingEntryChoice =
     READING_ENTRY_CHOICES.find((choice) => choice.category === readingEntryCategory) || null
   const adminFirstReadingCategoryWithContent = useMemo(
@@ -13694,6 +13774,7 @@ function App() {
                       onClick={() => {
                         setReadingEntryCategory(choice.category)
                         setSelectedReadingCategory(choice.category)
+                        setSelectedReadingCollection('all')
                         setReadingAttemptStage('bank')
                       }}
                     >
@@ -13727,12 +13808,32 @@ function App() {
                     onClick={() => {
                       setReadingEntryCategory(null)
                       setReadingAttemptStage('bank')
+                      setSelectedReadingCollection('all')
                       setReadingExamError('')
                     }}
                   >
                     Back to Levels
                   </button>
                 </div>
+              </div>
+              <div className="readingCollectionTabs" aria-label="Choose reading collection">
+                <button
+                  type="button"
+                  className={selectedReadingCollection === 'all' ? 'active' : ''}
+                  onClick={() => setSelectedReadingCollection('all')}
+                >
+                  All collections
+                </button>
+                {(readingCollectionsByCategory[readingEntryCategory] || []).map((collection) => (
+                  <button
+                    key={`${readingEntryCategory}-${collection.title}`}
+                    type="button"
+                    className={selectedReadingCollection === collection.title ? 'active' : ''}
+                    onClick={() => setSelectedReadingCollection(collection.title)}
+                  >
+                    {collection.title} ({collection.count})
+                  </button>
+                ))}
               </div>
               {readingExamError && <p className="error">{readingExamError}</p>}
               {filteredReadingExams.length === 0 ? (
@@ -13823,6 +13924,7 @@ function App() {
                                 <p className="meta">
                                   {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
                                 </p>
+                                <p className="meta">{getReadingExamCollectionTitle(exam)}</p>
                                 {attempt && (
                                   <p className="readingStageAttemptMeta">
                                     {attempt.correctCount}/{attempt.totalQuestions} correct · {new Date(attempt.completedAt).toLocaleString()}
@@ -13918,6 +14020,7 @@ function App() {
                                 <p className="meta">
                                   {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
                                 </p>
+                                <p className="meta">{getReadingExamCollectionTitle(exam)}</p>
                                 {attempt && (
                                   <p className="readingStageAttemptMeta">
                                     {attempt.correctCount}/{attempt.totalQuestions} correct · {new Date(attempt.completedAt).toLocaleString()}
@@ -15411,6 +15514,11 @@ function App() {
                     Paste the full reading text and the answer-key format together, then learners will see it inside the
                     Reading bank under Passage 1, Passage 2, Passage 3, or Full Test.
                   </p>
+                  <datalist id="reading-collection-options">
+                    {READING_COLLECTION_OPTIONS.map((collection) => (
+                      <option key={collection} value={collection} />
+                    ))}
+                  </datalist>
                   <div className="adminReadingGeneratorStudio">
                     <div className="adminGeneratorSteps">
                       <article>
@@ -15495,6 +15603,17 @@ function App() {
                                   </option>
                                 ))}
                               </select>
+                            </label>
+                            <label>
+                              Monthly Collection
+                              <input
+                                list="reading-collection-options"
+                                value={passage.collectionTitle}
+                                onChange={(event) =>
+                                  updateAdminReadingGeneratorPassage(passage.id, { collectionTitle: event.target.value })
+                                }
+                                placeholder={DEFAULT_READING_COLLECTION_TITLE}
+                              />
                             </label>
                           </div>
 
@@ -15694,6 +15813,15 @@ function App() {
                           ))}
                         </select>
                       </label>
+                      <label>
+                        Monthly Collection
+                        <input
+                          list="reading-collection-options"
+                          value={adminReadingCollectionInput}
+                          onChange={(event) => setAdminReadingCollectionInput(event.target.value)}
+                          placeholder={DEFAULT_READING_COLLECTION_TITLE}
+                        />
+                      </label>
                     </div>
                     <label>
                       Reading Passage Text
@@ -15731,6 +15859,7 @@ function App() {
                           <p>
                             {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
                           </p>
+                          <p className="meta">{getReadingExamCollectionTitle(exam)}</p>
                         </article>
                       ))}
                     </div>
@@ -15748,6 +15877,15 @@ function App() {
                     Paste one JSON array with many reading exams and upload them all in one go. This is the most stable
                     option if you hate doing copy-paste many times.
                   </p>
+                  <label className="adminSearchField">
+                    Monthly Collection for This Upload
+                    <input
+                      list="reading-collection-options"
+                      value={adminReadingCollectionInput}
+                      onChange={(event) => setAdminReadingCollectionInput(event.target.value)}
+                      placeholder={DEFAULT_READING_COLLECTION_TITLE}
+                    />
+                  </label>
                   <label>
                     Bulk JSON Payload
                     <textarea
@@ -15756,7 +15894,7 @@ function App() {
                         setAdminReadingBulkJsonInput(event.target.value)
                         setAdminReadingBulkValidation(null)
                       }}
-                      placeholder={`[\n  {\n    "title": "Cambridge 11 Test 1 Passage 1",\n    "category": "normal",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "Cambridge 11 Test 1 Passage 3",\n    "category": "advanced",\n    "rawPassageText": "READING PASSAGE 3\\n...",\n    "rawAnswerKey": "Question 27: ..."\n  }\n]`}
+                      placeholder={`[\n  {\n    "title": "IELTS Academic Reading Jan 2026 Passage 1",\n    "category": "normal",\n    "collectionTitle": "IELTS Academic Reading Jan 2026",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "IELTS Academic Reading Jan 2026 Passage 3",\n    "category": "advanced",\n    "collectionTitle": "IELTS Academic Reading Jan 2026",\n    "rawPassageText": "READING PASSAGE 3\\n...",\n    "rawAnswerKey": "Question 27: ..."\n  }\n]`}
                       rows={10}
                     />
                   </label>

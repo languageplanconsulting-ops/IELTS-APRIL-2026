@@ -1969,6 +1969,9 @@ const normalizeReadingCategory = (value) => {
   return 'normal'
 }
 
+const normalizeReadingCollectionTitle = (value) =>
+  String(value || '').trim().slice(0, 160)
+
 const normalizeReadingAnswerType = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
   if (['true-false-not-given', 'yes-no-not-given', 'multiple-choice', 'text'].includes(normalized)) {
@@ -2237,7 +2240,7 @@ const normalizeReadingParsedPayload = (payload) => ({
   questionCount: Number(payload?.questionCount || 0)
 })
 
-const buildReadingExamPayload = ({ title, category, rawPassageText, rawAnswerKey }) => {
+const buildReadingExamPayload = ({ title, category, collectionTitle, rawPassageText, rawAnswerKey }) => {
   const passages = parseReadingPassages(rawPassageText)
   const questions = parseReadingAnswerKey(rawAnswerKey)
   const passagesWithQuestions = passages.map((passage) => ({
@@ -2270,6 +2273,9 @@ const buildReadingExamPayload = ({ title, category, rawPassageText, rawAnswerKey
   return {
     title: String(title || '').trim(),
     category: normalizeReadingCategory(category),
+    ...(normalizeReadingCollectionTitle(collectionTitle)
+      ? { collectionTitle: normalizeReadingCollectionTitle(collectionTitle) }
+      : {}),
     passages: passagesWithQuestions,
     questionCount: questions.length
   }
@@ -4669,6 +4675,12 @@ const isCambridgeBookReadingExamRecord = (exam) => {
   )
 }
 
+const getReadingExamCollectionTitle = (exam) =>
+  normalizeReadingCollectionTitle(exam?.collectionTitle || exam?.parsedPayload?.collectionTitle || exam?.parsed_payload?.collectionTitle)
+
+const isReadingBankExamRecord = (exam) =>
+  isCambridgeBookReadingExamRecord(exam) || Boolean(getReadingExamCollectionTitle(exam))
+
 const mapBuiltInReadingExam = (exam, timestamps) => ({
   ...exam,
   parsedPayload: buildReadingExamPayload(exam),
@@ -4829,10 +4841,16 @@ const BUILT_IN_READING_PDOY_EXAMS = [
 const BUILT_IN_READING_EXAMS = [...BUILT_IN_READING_BANK_EXAMS, ...BUILT_IN_READING_PDOY_EXAMS]
 
 const mapReadingExamRecord = (row) => {
+  const storedPayload = normalizeReadingParsedPayload(row?.parsed_payload)
+  const collectionTitle = getReadingExamCollectionTitle({
+    parsedPayload: storedPayload,
+    parsed_payload: row?.parsed_payload
+  })
   const exam = {
     id: String(row?.id || ''),
     title: String(row?.title || 'Reading exam'),
     category: normalizeReadingCategory(row?.category),
+    ...(collectionTitle ? { collectionTitle } : {}),
     rawPassageText: String(row?.raw_passage_text || ''),
     rawAnswerKey: String(row?.raw_answer_key || ''),
     createdAt: row?.created_at || null,
@@ -4842,8 +4860,11 @@ const mapReadingExamRecord = (row) => {
     ...exam,
     parsedPayload:
       exam.rawPassageText && exam.rawAnswerKey
-        ? buildReadingExamPayload(exam)
-        : normalizeReadingParsedPayload(row?.parsed_payload)
+        ? {
+            ...buildReadingExamPayload(exam),
+            ...(collectionTitle ? { collectionTitle } : {})
+          }
+        : storedPayload
   }
 }
 
@@ -9748,7 +9769,7 @@ app.get('/api/reading/exams', requireAuth, async (req, res) => {
     )
     const uploadedExams = (Array.isArray(rows) ? rows : [])
       .map(mapReadingExamRecord)
-      .filter(isCambridgeBookReadingExamRecord)
+      .filter(isReadingBankExamRecord)
     return res.json({
       exams: [...BUILT_IN_READING_EXAMS, ...uploadedExams]
     })
@@ -9769,6 +9790,7 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
     const rawPassageText = String(req.body?.rawPassageText || '').trim()
     const rawAnswerKey = String(req.body?.rawAnswerKey || '').trim()
     const category = normalizeReadingCategory(req.body?.category)
+    const collectionTitle = normalizeReadingCollectionTitle(req.body?.collectionTitle) || 'IELTS Academic Reading May 2026'
     if (!title || !rawPassageText || !rawAnswerKey) {
       return res.status(400).json({
         error: {
@@ -9782,6 +9804,7 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
     const parsedPayload = buildReadingExamPayload({
       title,
       category,
+      collectionTitle,
       rawPassageText,
       rawAnswerKey
     })
@@ -9842,6 +9865,7 @@ app.post('/api/admin/reading/exams/validate-bulk', requireAdmin, async (req, res
       const rawPassageText = String(item?.rawPassageText || '').trim()
       const rawAnswerKey = String(item?.rawAnswerKey || '').trim()
       const category = normalizeReadingCategory(item?.category)
+      const collectionTitle = normalizeReadingCollectionTitle(item?.collectionTitle) || 'IELTS Academic Reading May 2026'
 
       try {
         if (!rawPassageText || !rawAnswerKey) {
@@ -9850,6 +9874,7 @@ app.post('/api/admin/reading/exams/validate-bulk', requireAdmin, async (req, res
         const parsedPayload = buildReadingExamPayload({
           title,
           category,
+          collectionTitle,
           rawPassageText,
           rawAnswerKey
         })
@@ -9857,6 +9882,7 @@ app.post('/api/admin/reading/exams/validate-bulk', requireAdmin, async (req, res
           index: index + 1,
           title,
           category,
+          collectionTitle,
           ok: true,
           passageCount: Array.isArray(parsedPayload?.passages) ? parsedPayload.passages.length : 0,
           questionCount: Number(parsedPayload?.questionCount || 0)
@@ -9924,6 +9950,7 @@ app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
       const rawPassageText = String(item?.rawPassageText || '').trim()
       const rawAnswerKey = String(item?.rawAnswerKey || '').trim()
       const category = normalizeReadingCategory(item?.category)
+      const collectionTitle = normalizeReadingCollectionTitle(item?.collectionTitle) || 'IELTS Academic Reading May 2026'
 
       if (!title || !rawPassageText || !rawAnswerKey) {
         throw new Error(
@@ -9939,6 +9966,7 @@ app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
         parsed_payload: buildReadingExamPayload({
           title,
           category,
+          collectionTitle,
           rawPassageText,
           rawAnswerKey
         }),

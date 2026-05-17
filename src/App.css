@@ -12526,6 +12526,34 @@ select:focus,
   padding: 0 16px !important;
 }
 
+.readingPage .readingCollectionTabs {
+  display: flex;
+  gap: 10px;
+  max-width: 1180px;
+  overflow-x: auto;
+  padding: 2px 0 8px;
+}
+
+.readingPage .readingCollectionTabs button {
+  width: auto;
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid #cbd8ef;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #263650;
+  font-size: 0.9rem;
+  font-weight: 850;
+  box-shadow: none;
+}
+
+.readingPage .readingCollectionTabs button.active {
+  border-color: #123f91;
+  background: #eaf1ff;
+  color: #123f91;
+}
+
 .readingPage .readingStageBoard {
   display: grid;
   gap: 22px;
