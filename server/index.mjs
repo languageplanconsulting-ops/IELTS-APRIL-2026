@@ -1969,6 +1969,9 @@ const normalizeReadingCategory = (value) => {
   return 'normal'
 }
 
+const toReadingDatabaseCategory = (value) =>
+  normalizeReadingCategory(value) === 'advanced' ? 'passage3' : 'passage1'
+
 const normalizeReadingCollectionTitle = (value) =>
   String(value || '').trim().slice(0, 160)
 
@@ -9813,7 +9816,7 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
       method: 'POST',
       headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
       body: JSON.stringify({
-        category,
+        category: toReadingDatabaseCategory(category),
         title,
         raw_passage_text: rawPassageText,
         raw_answer_key: rawAnswerKey,
@@ -9959,7 +9962,7 @@ app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
       }
 
       return {
-        category,
+        category: toReadingDatabaseCategory(category),
         title,
         raw_passage_text: rawPassageText,
         raw_answer_key: rawAnswerKey,
