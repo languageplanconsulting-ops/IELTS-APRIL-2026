@@ -47,6 +47,10 @@ import {
   type ListeningBankBookFilter
 } from './listeningBankLayout'
 import { READING_PASSAGE_1_PROTOTYPES, type ReadingPassagePrototype } from './readingPassage1Prototypes'
+import {
+  READING_PASSAGE_2_PROTOTYPES,
+  READING_PASSAGE_2_PROTOTYPE_PATTERN_NOTES
+} from './readingPassage2Prototypes'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -3382,6 +3386,10 @@ const getAdminReadingGeneratorTypeLabel = (type: AdminReadingGeneratorQuestionTy
 const pickRandomReadingPassage1Prototype = (): ReadingPassagePrototype =>
   READING_PASSAGE_1_PROTOTYPES[Math.floor(Math.random() * READING_PASSAGE_1_PROTOTYPES.length)] ??
   READING_PASSAGE_1_PROTOTYPES[0]
+
+const pickRandomReadingPassage2Prototype = (): ReadingPassagePrototype =>
+  READING_PASSAGE_2_PROTOTYPES[Math.floor(Math.random() * READING_PASSAGE_2_PROTOTYPES.length)] ??
+  READING_PASSAGE_2_PROTOTYPES[0]
 
 const stripQuotedReadingPortion = (value: string) =>
   String(value || '')
@@ -6724,6 +6732,17 @@ function App() {
     setAdminPanelMessage(`Loaded Passage 1 prototype: ${prototype.title}.`)
   }
 
+  const applyRandomReadingPassage2Prototype = (passageId: string) => {
+    const prototype = pickRandomReadingPassage2Prototype()
+    updateAdminReadingGeneratorPassage(passageId, {
+      title: prototype.title,
+      sourcePassage: prototype.text,
+      category: 'normal',
+      questionCount: '13'
+    })
+    setAdminPanelMessage(`Loaded Passage 2 prototype: ${prototype.title}.`)
+  }
+
   const buildAdminReadingGeneratorBrief = () => {
     setAdminPanelMessage('')
     setAuthError('')
@@ -6733,13 +6752,24 @@ function App() {
       adminReadingGeneratorPassages[0] && !adminReadingGeneratorPassages[0].sourcePassage.trim()
         ? pickRandomReadingPassage1Prototype()
         : null
+    const passage2Prototype =
+      adminReadingGeneratorPassages[1] && !adminReadingGeneratorPassages[1].sourcePassage.trim()
+        ? pickRandomReadingPassage2Prototype()
+        : null
     const passages = adminReadingGeneratorPassages
       .map((passage, originalIndex) => {
-        const prototype = originalIndex === 0 && !passage.sourcePassage.trim() ? passage1Prototype : null
+        const prototype =
+          originalIndex === 0 && !passage.sourcePassage.trim()
+            ? passage1Prototype
+            : originalIndex === 1 && !passage.sourcePassage.trim()
+              ? passage2Prototype
+              : null
+        const prototypeKind = originalIndex === 0 ? 'Passage 1' : originalIndex === 1 ? 'Passage 2' : ''
         return {
           passage,
           originalIndex,
           prototype,
+          prototypeKind,
           sourcePassage: passage.sourcePassage.trim() || prototype?.text || ''
         }
       })
@@ -6759,7 +6789,7 @@ function App() {
       .join('\n\n')
 
     const passageBriefs = passages
-      .map(({ passage, prototype, sourcePassage }, index) => {
+      .map(({ passage, prototype, prototypeKind, sourcePassage }, index) => {
         const selectedTypes = passage.questionTypes.map(getAdminReadingGeneratorTypeLabel).join(', ') || 'Admin will define later'
         return [
           `SOURCE PASSAGE ${index + 1}`,
@@ -6771,8 +6801,9 @@ function App() {
           `Question types needed: ${selectedTypes}`,
           passage.requirements.trim() ? `Extra admin requirements:\n${passage.requirements.trim()}` : '',
           prototype
-            ? `Saved Passage 1 prototype randomly selected by the app: ${prototype.title}. Use this only as a structural model and change the generated topic completely.`
+            ? `Saved ${prototypeKind} prototype randomly selected by the app: ${prototype.title}. Use this only as a structural model and change the generated topic completely.`
             : '',
+          prototypeKind === 'Passage 2' ? READING_PASSAGE_2_PROTOTYPE_PATTERN_NOTES : '',
           'Original passage to imitate for length, difficulty, paragraph organization, and IELTS academic style:',
           sourcePassage.trim()
         ].filter(Boolean).join('\n')
@@ -15684,18 +15715,22 @@ function App() {
                               rows={8}
                             />
                           </label>
-                          {originalIndex === 0 && (
+                          {(originalIndex === 0 || originalIndex === 1) && (
                             <div className="adminGeneratorPrototypeTools">
                               <p className="meta">
-                                Passage 1 can be left blank. BUILD CODEX PROMPT will randomly use one saved Passage 1 prototype
-                                as the structure model.
+                                Passage {originalIndex + 1} can be left blank. BUILD CODEX PROMPT will randomly use one saved
+                                Passage {originalIndex + 1} prototype as the structure model.
                               </p>
                               <button
                                 type="button"
                                 className="secondary"
-                                onClick={() => applyRandomReadingPassage1Prototype(passage.id)}
+                                onClick={() =>
+                                  originalIndex === 0
+                                    ? applyRandomReadingPassage1Prototype(passage.id)
+                                    : applyRandomReadingPassage2Prototype(passage.id)
+                                }
                               >
-                                USE RANDOM PASSAGE 1 PROTOTYPE
+                                USE RANDOM PASSAGE {originalIndex + 1} PROTOTYPE
                               </button>
                             </div>
                           )}
