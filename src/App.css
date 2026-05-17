@@ -5037,6 +5037,26 @@ body,
   color: var(--brand-primary);
 }
 
+.adminGeneratorPrototypeTools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+  border: 1px solid #c8d7f1;
+  background: #f8fbff;
+}
+
+.adminGeneratorPrototypeTools .meta {
+  margin: 0;
+  max-width: 720px;
+}
+
+.adminGeneratorPrototypeTools button {
+  min-height: 42px;
+}
+
 .adminGeneratorActionBar {
   display: flex;
   align-items: center;
