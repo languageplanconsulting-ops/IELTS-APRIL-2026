@@ -4771,6 +4771,83 @@ body,
   margin-top: 8px;
 }
 
+.adminReadingGeneratorStudio {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid #cfdcf4;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f9fbff 0%, #ffffff 100%);
+}
+
+.adminReadingGeneratorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.adminReadingGeneratorPassageCard {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #d8e4f7;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.adminReadingGeneratorCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.adminReadingGeneratorPassageCard label,
+.adminReadingGeneratorReviewGrid label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.adminReadingTypeSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.adminReadingTypeSelector button {
+  width: auto;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid #cad8f2;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #29405f;
+  box-shadow: none;
+}
+
+.adminReadingTypeSelector button.active {
+  border-color: var(--brand-primary);
+  background: #eaf1ff;
+  color: var(--brand-primary);
+}
+
+.adminReadingGeneratorReviewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.adminGeneratorValidationCard {
+  display: grid;
+  gap: 12px;
+  padding-top: 4px;
+  border-top: 1px solid #d8e4f7;
+}
+
 .adminTtsLibraryHeader {
   display: flex;
   justify-content: space-between;
@@ -7666,6 +7743,11 @@ body,
 
   .adminSearchField {
     min-width: 100%;
+  }
+
+  .adminReadingGeneratorGrid,
+  .adminReadingGeneratorReviewGrid {
+    grid-template-columns: 1fr;
   }
 
   .adminTtsTopicActions {

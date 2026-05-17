@@ -1,20 +1,13 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import './App.css'
-import { ListeningParaphraseBridgeModal } from './ListeningParaphraseBridgeModal'
+import { ListeningSectionExamView } from './ListeningSectionExamView'
+import {
+  buildListeningSectionExamGroups,
+  builderTaskToExamQuestion,
+  foundationSetToExamConfig
+} from './listeningSectionExamModel'
 import { ParaphraseBridgeActions, PracticeActionToast, type PracticeActionToastState } from './PracticeActionToast'
-import {
-  getListeningHighlightMatch,
-  isListeningHighlightMatch,
-  normalizeListeningHighlightText,
-  buildListeningHighlightCandidates
-} from './listeningHighlightMatch'
-import {
-  findListeningScriptChunkForText,
-  getListeningSpeakerTone,
-  listeningScriptHasDialogue,
-  parseListeningScriptSegments,
-  type ListeningScriptSegment
-} from './listeningScriptReader'
+import { parseListeningScriptSegments } from './listeningScriptReader'
 import listeningWorkbookRaw from '../cambridge-listening-transcript-first-workbook.md?raw'
 import listeningSectionBankRaw from '../cambridge-listening-sections-2-4-bank.md?raw'
 import { CAMBRIDGE_10_SECTION_2_EXAM_SET } from './listeningBuilderCambridge10Section2'
@@ -31,7 +24,7 @@ import { CAMBRIDGE_16_SECTION_2_EXAM_SET } from './listeningBuilderCambridge16Se
 import { CAMBRIDGE_17_SECTION_2_EXAM_SET } from './listeningBuilderCambridge17Section2'
 import { CAMBRIDGE_17_SECTION_4_EXAM_SET } from './listeningBuilderCambridge17Section4'
 import { CAMBRIDGE_17_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge17Data'
-import { CAMBRIDGE_18_SECTION_2_EXAM_SET, type ListeningBuilderExamTask } from './listeningBuilderCambridge18Section2'
+import { CAMBRIDGE_18_SECTION_2_EXAM_SET } from './listeningBuilderCambridge18Section2'
 import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './listeningFoundationData'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
@@ -45,12 +38,6 @@ import {
   CAMBRIDGE_13_SPEAKING_PART3_TOPICS,
   CAMBRIDGE_SPEAKING_PART2_TOPICS
 } from './speakingCambridge1213Data'
-import {
-  getListeningBuilderTaskAnswerChoices,
-  isListeningBuilderLabelMatchTask,
-  parseListeningBuilderExamQuestion,
-  resolveListeningBuilderExamCorrectAnswer
-} from './listeningBuilderQuestionParse'
 import {
   groupBuilderPacksByBook,
   groupFoundationSetsByBook,
@@ -353,11 +340,6 @@ type ListeningVocabularyBuilderPack = {
   testNumbers: number[]
   items: ListeningVocabularyBuilderItem[]
   sectionTests: ListeningSectionBankTest[]
-}
-
-type ListeningBuilderBridge = {
-  questionText: string
-  transcriptText: string
 }
 
 type ListeningSectionBankTest = {
@@ -3129,6 +3111,44 @@ type ReadingBulkValidationResult = {
   items: ReadingBulkValidationItem[]
 }
 
+type AdminReadingGeneratorQuestionType =
+  | 'fill-in-the-blank'
+  | 'multiple-choice'
+  | 'true-false-not-given'
+  | 'yes-no-not-given'
+  | 'matching-statements'
+  | 'matching-heading'
+  | 'matching-information'
+
+type AdminReadingGeneratorPassageConfig = {
+  id: string
+  title: string
+  sourcePassage: string
+  newTopic: string
+  category: ReadingBankCategory
+  questionTypes: AdminReadingGeneratorQuestionType[]
+  questionCount: string
+  requirements: string
+}
+
+type AdminReadingGeneratorValidationItem = {
+  index: number
+  title: string
+  category: ReadingBankCategory
+  ok: boolean
+  warnings: string[]
+  errors: string[]
+  questionCount: number
+  passageCount: number
+}
+
+type AdminReadingGeneratorValidationResult = {
+  total: number
+  valid: number
+  invalid: number
+  items: AdminReadingGeneratorValidationItem[]
+}
+
 const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   normal: 'Normal Reading',
   advanced: 'Advanced Reading'
@@ -3189,6 +3209,204 @@ const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
   const normalized = String(value || '').trim().toLowerCase()
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
   return 'normal'
+}
+
+const ADMIN_READING_GENERATOR_QUESTION_TYPES: Array<{
+  id: AdminReadingGeneratorQuestionType
+  label: string
+  shortLabel: string
+}> = [
+  { id: 'fill-in-the-blank', label: 'Fill in the Blank', shortLabel: 'Fill blanks' },
+  { id: 'multiple-choice', label: 'Multiple Choice', shortLabel: 'MCQ' },
+  { id: 'true-false-not-given', label: 'TRUE / FALSE / NOT GIVEN', shortLabel: 'TFNG' },
+  { id: 'yes-no-not-given', label: 'YES / NO / NOT GIVEN', shortLabel: 'YNNG' },
+  { id: 'matching-statements', label: 'Matching Statements / Who says what', shortLabel: 'Statements' },
+  { id: 'matching-heading', label: 'Matching Headings', shortLabel: 'Headings' },
+  { id: 'matching-information', label: 'Matching Information / Paragraph contains', shortLabel: 'Information' }
+]
+
+const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGeneratorQuestionType, string> = {
+  'fill-in-the-blank': [
+    'One word only for every answer.',
+    'The answer must be the exact word from the generated passage with no conjugation or form change.',
+    'Each question must paraphrase exactly one passage portion and appear in chronological order.',
+    'Include the original IELTS-style instruction block above the questions.'
+  ].join('\n'),
+  'multiple-choice': [
+    'Use IELTS-style answer choices, normally A-D unless the source pattern uses fewer or more options.',
+    'The correct option must be supported by one exact passage portion only.',
+    'Distractors must be plausible but contradicted, unsupported, or too broad.',
+    'Questions must appear in chronological order.'
+  ].join('\n'),
+  'true-false-not-given': [
+    'Questions must be paraphrased from one exact passage portion only.',
+    'TRUE, FALSE, and NOT GIVEN counts must be the same or very similar.',
+    'NOT GIVEN must use an anchor portion containing exact words from the question, but the claim must remain irrelevant or unstated.',
+    'Questions must appear in chronological order.'
+  ].join('\n'),
+  'yes-no-not-given': [
+    'Use this for writer claims/opinions, not simple factual information.',
+    'YES, NO, and NOT GIVEN counts must be the same or very similar.',
+    'NOT GIVEN must use an anchor portion containing exact words from the question, but the claim must remain irrelevant or unstated.',
+    'Questions must appear in chronological order.'
+  ].join('\n'),
+  'matching-statements': [
+    'Create IELTS-style matching statements for who says what or which named person/group is linked to each statement.',
+    'Each answer must be supported by one exact passage portion.',
+    'Use a clear option list and keep the statements paraphrased.',
+    'Questions should follow the natural order of the supporting portions where possible.'
+  ].join('\n'),
+  'matching-heading': [
+    'Create headings that summarize whole paragraphs, not tiny details.',
+    'Use more headings than paragraphs so there are plausible unused headings.',
+    'Each answer must map to one paragraph and the answer key must include the paragraph evidence summary.',
+    'Keep heading wording concise and IELTS-like.'
+  ].join('\n'),
+  'matching-information': [
+    'Create questions asking which paragraph contains each piece of information.',
+    'Each answer must be a paragraph letter and must be supported by one exact passage portion.',
+    'Items do not need to follow strict chronological order if the IELTS type normally scans across paragraphs, but evidence must be clear.',
+    'Include a clear paragraph-letter system in the passage.'
+  ].join('\n')
+}
+
+const createAdminReadingGeneratorPassage = (index: number): AdminReadingGeneratorPassageConfig => ({
+  id: `generator-passage-${index + 1}`,
+  title: '',
+  sourcePassage: '',
+  newTopic: '',
+  category: index >= 2 ? 'advanced' : 'normal',
+  questionTypes:
+    index === 0
+      ? ['true-false-not-given', 'fill-in-the-blank']
+      : index === 1
+        ? ['matching-heading', 'matching-information']
+        : ['yes-no-not-given', 'multiple-choice'],
+  questionCount: '13',
+  requirements: ''
+})
+
+const INITIAL_ADMIN_READING_GENERATOR_PASSAGES = Array.from({ length: 4 }, (_, index) =>
+  createAdminReadingGeneratorPassage(index)
+)
+
+const getAdminReadingGeneratorTypeLabel = (type: AdminReadingGeneratorQuestionType) =>
+  ADMIN_READING_GENERATOR_QUESTION_TYPES.find((item) => item.id === type)?.label || type
+
+const stripQuotedReadingPortion = (value: string) =>
+  String(value || '')
+    .trim()
+    .replace(/^["“”]+|["“”]+$/g, '')
+    .replace(/\s+/g, ' ')
+
+const normalizeGeneratedReadingText = (value: string) =>
+  String(value || '')
+    .toLowerCase()
+    .replace(/[“”"'.:;,!?()[\]{}–—-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const parseAdminGeneratedAnswerBlocks = (rawAnswerKey: string) =>
+  String(rawAnswerKey || '')
+    .split(/(?=\bQuestion\s+\d+\s*:)/i)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => {
+      const number = Number(block.match(/^Question\s+(\d+)\s*:/i)?.[1] || 0)
+      const prompt = block.match(/^Question\s+\d+\s*:\s*([\s\S]*?)(?=\n\s*Correct Answer\s*:|$)/i)?.[1]?.trim() || ''
+      const correctAnswer = block.match(/Correct Answer\s*:\s*([^\n]+)/i)?.[1]?.trim() || ''
+      const exactPortion =
+        block.match(/Exact Portion\s*:\s*["“]?([\s\S]*?)["”]?(?=\n\s*(?:Short Thai Explanation|Paraphrased Vocabulary|Question\s+\d+\s*:)|$)/i)?.[1]?.trim() ||
+        ''
+      return {
+        number,
+        prompt,
+        correctAnswer,
+        exactPortion: stripQuotedReadingPortion(exactPortion)
+      }
+    })
+
+const validateAdminGeneratedReadingDraft = (value: string): AdminReadingGeneratorValidationResult => {
+  const parsed = JSON.parse(value)
+  const exams = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.exams) ? parsed.exams : null
+  if (!exams) {
+    throw new Error('Generated draft must be a JSON array, or an object with an "exams" array.')
+  }
+
+  const items: AdminReadingGeneratorValidationItem[] = exams.map((exam: Partial<ReadingBulkUploadInput>, index: number) => {
+    const errors: string[] = []
+    const warnings: string[] = []
+    const title = String(exam?.title || `Generated exam ${index + 1}`).trim()
+    const category = normalizeReadingBankCategory(exam?.category)
+    const rawPassageText = String(exam?.rawPassageText || '')
+    const rawAnswerKey = String(exam?.rawAnswerKey || '')
+    const passageCount = (rawPassageText.match(/READING PASSAGE\s+\d+/gi) || []).length || (rawPassageText.trim() ? 1 : 0)
+    const answerBlocks = parseAdminGeneratedAnswerBlocks(rawAnswerKey)
+    const normalizedPassage = normalizeGeneratedReadingText(rawPassageText)
+
+    if (!title) errors.push('Missing title.')
+    if (!rawPassageText.trim()) errors.push('Missing rawPassageText.')
+    if (!rawAnswerKey.trim()) errors.push('Missing rawAnswerKey.')
+    if (passageCount < 1) errors.push('No reading passage detected.')
+    if (answerBlocks.length === 0) errors.push('No "Question X:" answer-key blocks detected.')
+
+    const questionNumbers = answerBlocks.map((item) => item.number).filter(Boolean)
+    const sortedQuestionNumbers = [...questionNumbers].sort((first, second) => first - second)
+    if (questionNumbers.some((number, numberIndex) => number !== sortedQuestionNumbers[numberIndex])) {
+      errors.push('Question numbers are not chronological in the answer key.')
+    }
+
+    const judgementCounts: Record<string, number> = {}
+    answerBlocks.forEach((question) => {
+      const answer = question.correctAnswer.toUpperCase()
+      if (!question.prompt) warnings.push(`Q${question.number || '?'} has no visible prompt after "Question X:".`)
+      if (!question.correctAnswer) errors.push(`Q${question.number || '?'} is missing Correct Answer.`)
+      if (!question.exactPortion) {
+        errors.push(`Q${question.number || '?'} is missing Exact Portion.`)
+      } else if (!normalizedPassage.includes(normalizeGeneratedReadingText(question.exactPortion))) {
+        errors.push(`Q${question.number || '?'} Exact Portion is not found in the passage.`)
+      }
+
+      if (['TRUE', 'FALSE', 'NOT GIVEN', 'YES', 'NO'].includes(answer)) {
+        judgementCounts[answer] = (judgementCounts[answer] || 0) + 1
+      } else if (!/^[A-H](?:\s*,\s*[A-H])?$/i.test(question.correctAnswer)) {
+        const answerWords = question.correctAnswer.split(/\s+/).filter(Boolean)
+        if (answerWords.length !== 1) {
+          warnings.push(`Q${question.number || '?'} text answer is not one word.`)
+        }
+        if (!normalizedPassage.includes(normalizeGeneratedReadingText(question.correctAnswer))) {
+          errors.push(`Q${question.number || '?'} text answer is not found exactly in the passage.`)
+        }
+      }
+    })
+
+    const tfngValues = ['TRUE', 'FALSE', 'NOT GIVEN'].map((answer) => judgementCounts[answer] || 0)
+    const ynngValues = ['YES', 'NO', 'NOT GIVEN'].map((answer) => judgementCounts[answer] || 0)
+    if (tfngValues.some(Boolean) && Math.max(...tfngValues) - Math.min(...tfngValues) > 1) {
+      warnings.push('TRUE/FALSE/NOT GIVEN distribution is not balanced.')
+    }
+    if (ynngValues.some(Boolean) && Math.max(...ynngValues) - Math.min(...ynngValues) > 1) {
+      warnings.push('YES/NO/NOT GIVEN distribution is not balanced.')
+    }
+
+    return {
+      index: index + 1,
+      title,
+      category,
+      ok: errors.length === 0,
+      warnings,
+      errors,
+      questionCount: answerBlocks.length,
+      passageCount
+    }
+  })
+
+  return {
+    total: items.length,
+    valid: items.filter((item) => item.ok).length,
+    invalid: items.filter((item) => !item.ok).length,
+    items
+  }
 }
 
 const READING_PDOY_LESSON_LABELS: Record<ReadingPdoyLessonType, string> = {
@@ -4617,125 +4835,6 @@ const normalizeListeningAnswer = (value: string) =>
     .replace(/\.$/, '')
     .toUpperCase()
 
-const normalizeListeningBuilderText = normalizeListeningHighlightText
-
-const LISTENING_HIGHLIGHT_WRONG_THAI =
-  'นี่ยังไม่ใช่ส่วนที่ paraphrase กับโจทย์ครับ ลองไฮไลต์คำหรือวลีใน script ให้ตรงกับข้อความที่ใช้ตอบอีกครั้ง'
-
-const LISTENING_HIGHLIGHT_CORRECT_THAI = 'ถูกต้องครับ! ไฮไลต์ตรงแล้ว เลือกคำตอบได้เลย'
-
-const LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI =
-  'ดีมากครับ! คุณไฮไลต์ส่วนสำคัญของ evidence แล้ว (อย่างน้อยครึ่งหนึ่ง) เลือกคำตอบได้เลย'
-
-const tokenizeListeningBuilderTranscript = (transcript: string) =>
-  String(transcript || '')
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-
-const buildListeningBuilderCandidateAnswers = buildListeningHighlightCandidates
-
-const buildListeningBuilderQuestionFocusFallback = (prompt: string) => {
-  const raw = String(prompt || '').trim()
-  if (!raw) return ''
-  const withoutBlank = raw.replace(/_{2,}/g, ' ').replace(/\s+/g, ' ').trim()
-  const parts = withoutBlank
-    .split(/:|,|\band\b/i)
-    .map((part) => part.trim())
-    .filter(Boolean)
-  if (parts.length === 0) return withoutBlank
-
-  const ranked = [...parts].sort((a, b) => {
-    const score = (value: string) => {
-      if (value.length <= 2) return -1
-      if (/\b(best|made of|feeling of|look at|look for|arrive by|call him on|covered)\b/i.test(value)) return 3
-      if (value.length <= 18) return 2
-      if (value.length <= 30) return 1
-      return 0
-    }
-    return score(b) - score(a)
-  })
-  return ranked[0] || withoutBlank
-}
-
-const resolveListeningBuilderBridge = (item: ListeningVocabularyBuilderItem): ListeningBuilderBridge => {
-  const logic = String(item.paraphraseLogic || '')
-  const quotedPhrases = [...logic.matchAll(/`([^`]+)`/g)]
-    .map((match) => String(match[1] || '').trim())
-    .filter(Boolean)
-
-  const questionToTranscriptMatch = logic.match(
-    /`([^`]+)`\s+in the (?:question|notes?)\s+(?:corresponds to|equals|matches)\s+`([^`]+)`\s+in the (?:audio|transcript)/i
-  )
-  if (questionToTranscriptMatch) {
-    return {
-      questionText: questionToTranscriptMatch[1].trim(),
-      transcriptText: questionToTranscriptMatch[2].trim()
-    }
-  }
-
-  const questionSaysMatch = logic.match(/question says\s+`([^`]+)`.*?audio gives\s+`([^`]+)`/i)
-  if (questionSaysMatch) {
-    return {
-      questionText: questionSaysMatch[1].trim(),
-      transcriptText: questionSaysMatch[2].trim()
-    }
-  }
-
-  const transcriptToQuestionMatch = logic.match(
-    /`([^`]+)`\s+in the (?:audio|transcript)\s+matches\s+(?:the )?(?:note heading|question|notes?)\s+`([^`]+)`/i
-  )
-  if (transcriptToQuestionMatch) {
-    return {
-      questionText: transcriptToQuestionMatch[2].trim(),
-      transcriptText: transcriptToQuestionMatch[1].trim()
-    }
-  }
-
-  if (quotedPhrases.length >= 2) {
-    return {
-      questionText: quotedPhrases[0],
-      transcriptText: quotedPhrases[1]
-    }
-  }
-
-  return {
-    questionText: buildListeningBuilderQuestionFocusFallback(item.questionPrompt),
-    transcriptText: item.answer
-  }
-}
-
-const resolveListeningBuilderSelectionTarget = (item: ListeningVocabularyBuilderItem) => {
-  const transcriptTokens = tokenizeListeningBuilderTranscript(item.transcript)
-  const normalizedTokens = transcriptTokens.map((token) => normalizeListeningBuilderText(token))
-  const bridge = resolveListeningBuilderBridge(item)
-  const candidates = [
-    ...buildListeningBuilderCandidateAnswers(bridge.transcriptText),
-    ...buildListeningBuilderCandidateAnswers(item.answer)
-  ].filter((candidate, index, array) => array.indexOf(candidate) === index)
-
-  for (const candidate of candidates) {
-    const candidateTokens = candidate.split(' ').filter(Boolean)
-    if (!candidateTokens.length) continue
-    for (let start = 0; start <= normalizedTokens.length - candidateTokens.length; start += 1) {
-      const slice = normalizedTokens.slice(start, start + candidateTokens.length)
-      if (slice.join(' ') === candidateTokens.join(' ')) {
-        return {
-          start,
-          end: start + candidateTokens.length - 1,
-          text: transcriptTokens.slice(start, start + candidateTokens.length).join(' ')
-        }
-      }
-    }
-  }
-
-  return {
-    start: 0,
-    end: Math.max(transcriptTokens.length - 1, 0),
-    text: transcriptTokens.join(' ')
-  }
-}
-
 const slugifyListeningBuilderPack = (value: string) =>
   String(value || '')
     .toLowerCase()
@@ -6005,31 +6104,14 @@ function App() {
   const [listeningExerciseError, setListeningExerciseError] = useState('')
   const [selectedListeningBuilderPackId, setSelectedListeningBuilderPackId] = useState('')
   const [selectedListeningBuilderExamTestId, setSelectedListeningBuilderExamTestId] = useState('')
-  const [listeningBuilderItemIndex, setListeningBuilderItemIndex] = useState(0)
-  const [listeningBuilderAttempts, setListeningBuilderAttempts] = useState<Record<string, number>>({})
-  const [listeningBuilderResolvedState, setListeningBuilderResolvedState] = useState<Record<string, 'correct' | 'revealed'>>({})
-  const [listeningBuilderExamEvidenceCorrect, setListeningBuilderExamEvidenceCorrect] = useState<Record<string, true>>({})
-  const [listeningBuilderExamSelectedAnswer, setListeningBuilderExamSelectedAnswer] = useState<Record<string, string>>({})
-  const [listeningBuilderExamAnswerPickCorrect, setListeningBuilderExamAnswerPickCorrect] = useState<Record<string, true>>({})
-  const [listeningBuilderExamAnswerState, setListeningBuilderExamAnswerState] = useState<Record<string, 'correct'>>({})
-  const [listeningBuilderExamFeedback, setListeningBuilderExamFeedback] = useState('')
-  const [listeningBuilderTranscriptShake, setListeningBuilderTranscriptShake] = useState(false)
+  const [, setListeningBuilderItemIndex] = useState(0)
+  const [, setListeningBuilderExamAnswerState] = useState<Record<string, 'correct'>>({})
   const [listeningFoundationCategory, setListeningFoundationCategory] = useState<ListeningFoundationCategory>('essential')
   const [listeningBankBookFilter, setListeningBankBookFilter] = useState<ListeningBankBookFilter>('all')
   const [selectedListeningFoundationSetId, setSelectedListeningFoundationSetId] = useState('')
   const [listeningFoundationQuestionIndex, setListeningFoundationQuestionIndex] = useState(0)
-  const [listeningFoundationEvidence, setListeningFoundationEvidence] = useState('')
-  const [listeningFoundationEvidenceCorrect, setListeningFoundationEvidenceCorrect] = useState(false)
-  const [listeningFoundationSelectedAnswer, setListeningFoundationSelectedAnswer] = useState('')
-  const [listeningFoundationAnswerPickCorrect, setListeningFoundationAnswerPickCorrect] = useState(false)
   const [listeningFoundationAudioPlayed, setListeningFoundationAudioPlayed] = useState(false)
   const [listeningFoundationAnswerState, setListeningFoundationAnswerState] = useState<Record<string, 'correct'>>({})
-  const [listeningFoundationFeedback, setListeningFoundationFeedback] = useState('')
-  const [listeningFoundationScriptChunk, setListeningFoundationScriptChunk] = useState(0)
-  const listeningFoundationScriptBodyRef = useRef<HTMLDivElement | null>(null)
-  const listeningFoundationPointerSelectingRef = useRef(false)
-  const listeningFoundationSelectedAnswerRef = useRef('')
-  const listeningBuilderExamSelectedAnswerRef = useRef<Record<string, string>>({})
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('normal')
   const [adminReadingSmartPasteInput, setAdminReadingSmartPasteInput] = useState('')
@@ -6038,6 +6120,13 @@ function App() {
   const [adminReadingBulkJsonInput, setAdminReadingBulkJsonInput] = useState('')
   const [adminReadingTemplateCategory, setAdminReadingTemplateCategory] = useState<ReadingBankCategory>('normal')
   const [adminReadingBulkValidation, setAdminReadingBulkValidation] = useState<ReadingBulkValidationResult | null>(null)
+  const [adminReadingGeneratorPassages, setAdminReadingGeneratorPassages] = useState<AdminReadingGeneratorPassageConfig[]>(
+    INITIAL_ADMIN_READING_GENERATOR_PASSAGES
+  )
+  const [adminReadingGeneratorBrief, setAdminReadingGeneratorBrief] = useState('')
+  const [adminReadingGeneratorDraftInput, setAdminReadingGeneratorDraftInput] = useState('')
+  const [adminReadingGeneratorValidation, setAdminReadingGeneratorValidation] =
+    useState<AdminReadingGeneratorValidationResult | null>(null)
   const [topics] = useState<SpeakingTopic[]>([...INITIAL_TOPICS, ...CAMBRIDGE_SPEAKING_PART2_TOPICS])
   const [enabledTopicIds, setEnabledTopicIds] = useState<string[]>(() =>
     [...INITIAL_TOPICS, ...CAMBRIDGE_SPEAKING_PART2_TOPICS].map((topic) => topic.id)
@@ -6105,7 +6194,6 @@ function App() {
   const listeningSpeechRef = useRef<SpeechSynthesisUtterance | null>(null)
   const listeningSectionAudioRef = useRef<HTMLAudioElement | null>(null)
   const [listeningBuilderExamAudioPlayed, setListeningBuilderExamAudioPlayed] = useState(false)
-  const [listeningParaphraseBridgeDismissed, setListeningParaphraseBridgeDismissed] = useState<Record<string, true>>({})
   const [pendingStartTopicId, setPendingStartTopicId] = useState<string | null>(null)
   const [selectedExpectedScore, setSelectedExpectedScore] = useState<string>('')
   const [answerReviewModal, setAnswerReviewModal] = useState<AnswerReviewModalState | null>(null)
@@ -6468,6 +6556,190 @@ function App() {
     null,
     2
   )
+  const activeAdminReadingGeneratorPassages = useMemo(
+    () => adminReadingGeneratorPassages.filter((passage) => passage.sourcePassage.trim()),
+    [adminReadingGeneratorPassages]
+  )
+
+  const updateAdminReadingGeneratorPassage = (
+    id: string,
+    patch: Partial<AdminReadingGeneratorPassageConfig>
+  ) => {
+    setAdminReadingGeneratorPassages((current) =>
+      current.map((passage) => (passage.id === id ? { ...passage, ...patch } : passage))
+    )
+    setAdminReadingGeneratorBrief('')
+    setAdminReadingGeneratorValidation(null)
+  }
+
+  const toggleAdminReadingGeneratorQuestionType = (
+    passageId: string,
+    type: AdminReadingGeneratorQuestionType
+  ) => {
+    setAdminReadingGeneratorPassages((current) =>
+      current.map((passage) => {
+        if (passage.id !== passageId) return passage
+        const hasType = passage.questionTypes.includes(type)
+        const nextTypes = hasType
+          ? passage.questionTypes.filter((item) => item !== type)
+          : [...passage.questionTypes, type]
+        return {
+          ...passage,
+          questionTypes: nextTypes
+        }
+      })
+    )
+    setAdminReadingGeneratorBrief('')
+    setAdminReadingGeneratorValidation(null)
+  }
+
+  const buildAdminReadingGeneratorBrief = () => {
+    setAdminPanelMessage('')
+    setAuthError('')
+    setAdminReadingGeneratorValidation(null)
+
+    const passages = activeAdminReadingGeneratorPassages
+    if (passages.length === 0) {
+      setAuthError('Paste at least one source passage into the generator studio first.')
+      return
+    }
+
+    const typeRequirements = ADMIN_READING_GENERATOR_QUESTION_TYPES
+      .map((type) => {
+        const used = passages.some((passage) => passage.questionTypes.includes(type.id))
+        if (!used) return ''
+        return `${type.label}\n${ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS[type.id]}`
+      })
+      .filter(Boolean)
+      .join('\n\n')
+
+    const passageBriefs = passages
+      .map((passage, index) => {
+        const selectedTypes = passage.questionTypes.map(getAdminReadingGeneratorTypeLabel).join(', ') || 'Admin will define later'
+        return [
+          `SOURCE PASSAGE ${index + 1}`,
+          `Working title: ${passage.title.trim() || `Generated Reading Passage ${index + 1}`}`,
+          `Bank category: ${READING_CATEGORY_LABELS[passage.category]}`,
+          `New topic to generate: ${passage.newTopic.trim() || 'Choose a clearly different topic while preserving the original structure.'}`,
+          `Target question count: ${passage.questionCount.trim() || 'Match the source passage pattern.'}`,
+          `Question types needed: ${selectedTypes}`,
+          passage.requirements.trim() ? `Extra admin requirements:\n${passage.requirements.trim()}` : '',
+          'Original passage to imitate for length, difficulty, paragraph organization, and IELTS academic style:',
+          passage.sourcePassage.trim()
+        ].filter(Boolean).join('\n')
+      })
+      .join('\n\n---\n\n')
+
+    const brief = [
+      'You are helping create IELTS Academic Reading exams for an admin-only production workflow.',
+      '',
+      'Generate NEW passages. Imitate each original passage length, difficulty, paragraph organization, density, and IELTS academic tone, but change the topic completely.',
+      'Do not copy names, facts, examples, topic, or sentence wording from the original passage unless a common word is unavoidable.',
+      '',
+      'Return ONLY valid JSON. No Markdown fences. The JSON must be an array of ReadingBulkUploadInput objects.',
+      'Each object must have exactly these fields: title, category, rawPassageText, rawAnswerKey.',
+      'category must be either "normal" or "advanced".',
+      '',
+      'rawPassageText format:',
+      '- Include READING PASSAGE X.',
+      '- Include the generated passage title.',
+      '- Include paragraph letters A, B, C... when needed for matching heading or matching information.',
+      '- Include the full original IELTS-style question section text exactly as the learner should see it.',
+      '- Preserve the exact instruction wording for each question type you create.',
+      '',
+      'rawAnswerKey format for every question:',
+      'Question N: full question prompt',
+      'Correct Answer: answer',
+      'Accepted Answers: answer variants if useful',
+      'Answer Group: short group label',
+      'Exact Portion: "exact passage evidence or NOT GIVEN anchor portion"',
+      'Short Thai Explanation: concise Thai explanation',
+      'Paraphrased Vocabulary: key paraphrase mapping',
+      '',
+      'Global validation rules:',
+      '- Every answer must have one exact portion from the generated passage.',
+      '- TRUE/FALSE/NOT GIVEN and YES/NO/NOT GIVEN must be balanced or very similar in count.',
+      '- NOT GIVEN items must use an anchor portion containing exact words from the question, but the claim itself must remain unstated or irrelevant.',
+      '- Fill in the blank answers must be ONE WORD ONLY and must be copied exactly from the passage.',
+      '- Questions must be chronological unless the IELTS type normally asks paragraph scanning, such as matching information.',
+      '- Each question should rely on only one passage portion.',
+      '- Include plausible distractors for multiple choice and matching types.',
+      '',
+      'Question-type requirements:',
+      typeRequirements || 'Admin will define exact requirements later. Use IELTS standard rules.',
+      '',
+      'Admin source passages and requested configuration:',
+      passageBriefs
+    ].join('\n')
+
+    setAdminReadingGeneratorBrief(brief)
+    setAdminPanelMessage(`Prepared a Codex generation brief for ${passages.length} passage${passages.length === 1 ? '' : 's'}.`)
+  }
+
+  const copyAdminReadingGeneratorBrief = async () => {
+    if (!adminReadingGeneratorBrief.trim()) {
+      setAuthError('Build the generation brief first.')
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(adminReadingGeneratorBrief)
+      setAdminPanelMessage('Copied the Codex reading generation brief.')
+      setAuthError('')
+    } catch {
+      setAdminPanelMessage('')
+      setAuthError('Could not copy the brief automatically. Please copy it manually from the box.')
+    }
+  }
+
+  const validateAdminReadingGeneratorDraft = () => {
+    setAdminPanelMessage('')
+    setAuthError('')
+    setAdminReadingGeneratorValidation(null)
+    if (!adminReadingGeneratorDraftInput.trim()) {
+      setAuthError('Paste the JSON that Codex generated before validating.')
+      return
+    }
+
+    try {
+      const validation = validateAdminGeneratedReadingDraft(adminReadingGeneratorDraftInput)
+      setAdminReadingGeneratorValidation(validation)
+      setAdminPanelMessage(
+        validation.invalid === 0
+          ? `Generator draft passed local checks: ${validation.valid}/${validation.total} ready.`
+          : `Generator draft has ${validation.invalid} item${validation.invalid === 1 ? '' : 's'} to fix.`
+      )
+    } catch (error) {
+      setAdminPanelMessage('')
+      setAuthError(error instanceof Error ? error.message : 'Could not validate the generated reading draft.')
+    }
+  }
+
+  const loadAdminReadingGeneratorDraftIntoBulkUpload = () => {
+    if (!adminReadingGeneratorDraftInput.trim()) {
+      setAuthError('Paste the generated JSON first.')
+      return
+    }
+
+    try {
+      const validation = validateAdminGeneratedReadingDraft(adminReadingGeneratorDraftInput)
+      if (validation.invalid > 0) {
+        setAdminReadingGeneratorValidation(validation)
+        setAuthError('Fix the generated draft before loading it into bulk upload.')
+        return
+      }
+
+      const parsed = JSON.parse(adminReadingGeneratorDraftInput)
+      const exams = Array.isArray(parsed) ? parsed : parsed.exams
+      setAdminReadingBulkJsonInput(JSON.stringify(exams, null, 2))
+      setAdminReadingBulkValidation(null)
+      setAdminReadingGeneratorValidation(validation)
+      setAdminPanelMessage('Loaded the generated draft into Bulk JSON Import. Run server validation before upload.')
+      setAuthError('')
+    } catch (error) {
+      setAdminPanelMessage('')
+      setAuthError(error instanceof Error ? error.message : 'Could not load the generated draft.')
+    }
+  }
 
   const copyReadingJsonTemplate = async () => {
     try {
@@ -6741,20 +7013,9 @@ function App() {
     setReadingAttemptHistory({})
     setListeningAttemptHistory({})
     setListeningFoundationAnswerState({})
-    setListeningFoundationEvidence('')
-    setListeningFoundationEvidenceCorrect(false)
-    setListeningFoundationSelectedAnswer('')
-    setListeningFoundationAnswerPickCorrect(false)
     setListeningFoundationAudioPlayed(false)
-    setListeningFoundationFeedback('')
     setListeningFoundationQuestionIndex(0)
-    setListeningBuilderExamEvidenceCorrect({})
-    setListeningBuilderExamSelectedAnswer({})
-    setListeningBuilderExamAnswerPickCorrect({})
     setListeningBuilderExamAnswerState({})
-    setListeningBuilderExamFeedback('')
-    setListeningBuilderAttempts({})
-    setListeningBuilderResolvedState({})
     setCreditProfile(defaultCreditProfile(name))
     setSelectedNotebookSection('speaking')
     setAssessmentResult(null)
@@ -7892,21 +8153,10 @@ function App() {
         : [],
     [activeListeningFoundationScriptText]
   )
-  const activeListeningFoundationHasDialogue = useMemo(
-    () => listeningScriptHasDialogue(activeListeningFoundationScriptSegments),
-    [activeListeningFoundationScriptSegments]
+  const listeningFoundationExamConfig = useMemo(
+    () => (activeListeningFoundationSet ? foundationSetToExamConfig(activeListeningFoundationSet) : null),
+    [activeListeningFoundationSet]
   )
-  const listeningFoundationQuestionComplete =
-    Boolean(activeListeningFoundationQuestion) &&
-    listeningFoundationAnswerState[activeListeningFoundationQuestion?.id || ''] === 'correct'
-  const listeningFoundationScriptChunkCount = Math.max(activeListeningFoundationScriptSegments.length, 1)
-  const activeListeningFoundationScriptChunk = Math.min(
-    listeningFoundationScriptChunk,
-    listeningFoundationScriptChunkCount - 1
-  )
-  const listeningFoundationCompletedCount = activeListeningFoundationSet
-    ? activeListeningFoundationSet.questions.filter((question) => listeningFoundationAnswerState[question.id] === 'correct').length
-    : 0
   const listeningFoundationCategoryCompletedCount = useMemo(
     () =>
       visibleListeningFoundationSets.reduce(
@@ -8037,16 +8287,6 @@ function App() {
     visibleListeningVocabularyBuilderPacks.find((pack) => pack.id === selectedListeningBuilderPackId) ??
     visibleListeningVocabularyBuilderPacks[0] ??
     null
-  const activeListeningBuilderItem =
-    activeListeningBuilderPack?.items[listeningBuilderItemIndex] ??
-    activeListeningBuilderPack?.items[0] ??
-    null
-  const activeListeningBuilderTarget = activeListeningBuilderItem
-    ? resolveListeningBuilderSelectionTarget(activeListeningBuilderItem)
-    : null
-  const activeListeningBuilderBridge = activeListeningBuilderItem
-    ? resolveListeningBuilderBridge(activeListeningBuilderItem)
-    : null
   const activeListeningBuilderExamSet =
     LISTENING_BUILDER_EXAM_SETS.find(
       (examSet) =>
@@ -8057,13 +8297,21 @@ function App() {
     activeListeningBuilderExamSet?.tests.find((test) => test.id === selectedListeningBuilderExamTestId) ??
     activeListeningBuilderExamSet?.tests[0] ??
     null
-  const activeListeningBuilderExamTask =
-    activeListeningBuilderExamTest?.tasks[listeningBuilderItemIndex] ??
-    activeListeningBuilderExamTest?.tasks[0] ??
-    null
-  const activeListeningBuilderExamCompletedCount = activeListeningBuilderExamTest
-    ? activeListeningBuilderExamTest.tasks.filter((task) => listeningBuilderExamAnswerState[task.id] === 'correct').length
-    : 0
+  const listeningBuilderExamConfig = useMemo(() => {
+    if (!activeListeningBuilderExamSet || !activeListeningBuilderExamTest) return null
+    const questions = activeListeningBuilderExamTest.tasks.map((task) =>
+      builderTaskToExamQuestion(task, activeListeningBuilderExamTest.tasks, activeListeningBuilderExamTest.id)
+    )
+    return {
+      title: activeListeningBuilderExamTest.title,
+      subtitle: `Cambridge ${activeListeningBuilderExamSet.bookNumber} · Section ${activeListeningBuilderExamSet.sectionNumber} · Test ${activeListeningBuilderExamTest.testNumber}`,
+      sectionNumber: activeListeningBuilderExamSet.sectionNumber,
+      audioUrl: `https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam${activeListeningBuilderExamSet.bookNumber}-Test${activeListeningBuilderExamTest.testNumber}-Section${activeListeningBuilderExamSet.sectionNumber}.mp3`,
+      passage: activeListeningBuilderExamTest.scriptParagraphs.join('\n\n'),
+      questions,
+      groups: buildListeningSectionExamGroups(questions)
+    }
+  }, [activeListeningBuilderExamSet, activeListeningBuilderExamTest])
 
   const part2AvailableTopics = topics.filter((topic) => enabledTopicIds.includes(topic.id))
   const availableTopics = useMemo(() => {
@@ -11420,43 +11668,19 @@ function App() {
   }
 
   const resetListeningFoundationQuestion = () => {
-    setListeningFoundationEvidence('')
-    setListeningFoundationEvidenceCorrect(false)
-    setListeningFoundationSelectedAnswer('')
-    setListeningFoundationAnswerPickCorrect(false)
     setListeningFoundationAudioPlayed(false)
-    setListeningFoundationFeedback('')
+    stopListeningPlayback()
     window.getSelection()?.removeAllRanges()
   }
 
-  const markListeningFoundationQuestionComplete = () => {
-    if (!activeListeningFoundationQuestion) return
-    if (listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct') return
-    setListeningFoundationAnswerState((current) => ({
-      ...current,
-      [activeListeningFoundationQuestion.id]: 'correct'
-    }))
-    setListeningFoundationFeedback(
-      `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword} → ${activeListeningFoundationQuestion.thaiMeaning}`
-    )
-  }
-
-  const tryCompleteListeningFoundationQuestion = (
-    evidenceOk: boolean,
-    answerOk: boolean
-  ) => {
-    if (!activeListeningFoundationQuestion || !evidenceOk || !answerOk) return
-    markListeningFoundationQuestionComplete()
-  }
-
   const playListeningFoundationPassage = async () => {
-    if (!activeListeningFoundationQuestion || !activeListeningFoundationSet) return
+    if (!activeListeningFoundationSet) return
     setListeningFoundationAudioPlayed(true)
     const spokenText = activeListeningFoundationScriptSegments.length
       ? activeListeningFoundationScriptSegments
           .map((segment) => (segment.speaker ? `${segment.speaker}: ${segment.text}` : segment.text))
           .join(' ')
-      : activeListeningFoundationScriptText || activeListeningFoundationQuestion.passage
+      : activeListeningFoundationScriptText || activeListeningFoundationSet.questions[0]?.passage || ''
 
     try {
       if (activeListeningFoundationSet.audioUrl) {
@@ -11468,7 +11692,7 @@ function App() {
         'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ'
       )
     } catch {
-      setListeningFoundationFeedback('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
+      setListeningExerciseError('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
     }
   }
 
@@ -11484,193 +11708,17 @@ function App() {
       try {
         playListeningScriptWithSpeech(spokenText, 'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ')
       } catch {
-        setListeningBuilderExamFeedback('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
+        setListeningExerciseError('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
       }
     }
-  }
-
-  useEffect(() => {
-    if (!activeListeningFoundationQuestion) return
-    setListeningFoundationScriptChunk(
-      findListeningScriptChunkForText(activeListeningFoundationScriptSegments, activeListeningFoundationQuestion.passageKeyword)
-    )
-  }, [
-    activeListeningFoundationQuestion?.id,
-    activeListeningFoundationQuestion?.passageKeyword,
-    activeListeningFoundationScriptSegments
-  ])
-
-  useEffect(() => {
-    if (!listeningFoundationEvidenceCorrect || !activeListeningFoundationQuestion) return
-    const evidenceIndex = findListeningScriptChunkForText(
-      activeListeningFoundationScriptSegments,
-      activeListeningFoundationQuestion.evidence
-    )
-    setListeningFoundationScriptChunk(evidenceIndex)
-  }, [
-    listeningFoundationEvidenceCorrect,
-    activeListeningFoundationQuestion?.id,
-    activeListeningFoundationScriptSegments
-  ])
-
-  useEffect(() => {
-    listeningFoundationSelectedAnswerRef.current = listeningFoundationSelectedAnswer
-  }, [listeningFoundationSelectedAnswer])
-
-  useEffect(() => {
-    listeningBuilderExamSelectedAnswerRef.current = listeningBuilderExamSelectedAnswer
-  }, [listeningBuilderExamSelectedAnswer])
-
-  const renderListeningScriptSegmentText = (
-    text: string,
-    evidence: string,
-    showEvidenceHighlight: boolean
-  ): ReactNode => {
-    if (!showEvidenceHighlight) return text
-    const startIndex = text.toLowerCase().indexOf(evidence.toLowerCase())
-    if (startIndex === -1) return text
-    return (
-      <>
-        {text.slice(0, startIndex)}
-        <mark>{text.slice(startIndex, startIndex + evidence.length)}</mark>
-        {text.slice(startIndex + evidence.length)}
-      </>
-    )
-  }
-
-  const renderListeningScriptTurn = (segment: ListeningScriptSegment, index: number) => {
-    const evidence = activeListeningFoundationQuestion?.evidence || ''
-    const tone = getListeningSpeakerTone(segment.speaker)
-    const isActiveChunk = index === activeListeningFoundationScriptChunk
-
-    return (
-      <article
-        key={segment.id}
-        id={`listening-script-turn-${index}`}
-        className={`listeningScriptTurn tone-${tone} is-card ${isActiveChunk ? 'is-active' : ''}`}
-      >
-        {segment.speaker ? (
-          <header className="listeningScriptTurnHeader">
-            <span className="listeningScriptSpeaker">{segment.speaker}</span>
-            <button
-              type="button"
-              className="listeningScriptTurnIndex"
-              onClick={() => setListeningFoundationScriptChunk(index)}
-            >
-              {index + 1}/{activeListeningFoundationScriptSegments.length}
-            </button>
-          </header>
-        ) : (
-          <header className="listeningScriptTurnHeader">
-            <span className="listeningScriptSpeaker">Part {index + 1}</span>
-            <button
-              type="button"
-              className="listeningScriptTurnIndex"
-              onClick={() => setListeningFoundationScriptChunk(index)}
-            >
-              {index + 1}/{activeListeningFoundationScriptSegments.length}
-            </button>
-          </header>
-        )}
-        <p
-          className="listeningScriptTurnBody"
-          onMouseDown={() => {
-            listeningFoundationPointerSelectingRef.current = true
-          }}
-          onMouseUp={(event) => {
-            event.stopPropagation()
-            handleListeningFoundationPassageMouseUp()
-          }}
-        >
-          {renderListeningScriptSegmentText(segment.text, evidence, listeningFoundationEvidenceCorrect)}
-        </p>
-      </article>
-    )
-  }
-
-  const renderListeningSectionAudioPlayer = ({
-    title,
-    sectionLabel,
-    audioPlayed,
-    onTogglePlay
-  }: {
-    title: string
-    sectionLabel: string
-    audioPlayed: boolean
-    onTogglePlay: () => void
-  }) => (
-    <div className="listeningFoundationAudioCompact listeningSectionAudioPlayer">
-      <div className="listeningFoundationAudioTop">
-        <span>{sectionLabel}</span>
-        <span>
-          {listeningPlaybackState === 'playing'
-            ? 'Playing…'
-            : audioPlayed
-              ? 'Finished — highlight evidence on the right'
-              : 'Press play to hear the section'}
-        </span>
-      </div>
-      <div className="listeningFoundationAudioBody">
-        <button
-          type="button"
-          aria-label={listeningPlaybackState === 'playing' ? 'Stop audio' : 'Play audio'}
-          onClick={onTogglePlay}
-        >
-          {listeningPlaybackState === 'playing' ? '■' : '▶'}
-        </button>
-        <div>
-          <div className="listeningFoundationAudioTrack">
-            <span
-              style={{
-                width:
-                  listeningPlaybackState === 'playing' ? '66%' : audioPlayed ? '100%' : '12%'
-              }}
-            />
-          </div>
-          <p>{title}</p>
-        </div>
-      </div>
-    </div>
-  )
-
-  const restoreListeningFoundationQuestionState = (
-    questionId: string,
-    setOverride?: typeof activeListeningFoundationSet
-  ) => {
-    const set = setOverride ?? activeListeningFoundationSet
-    const question = set?.questions.find((item) => item.id === questionId)
-    if (!question) {
-      resetListeningFoundationQuestion()
-      return
-    }
-    if (listeningFoundationAnswerState[questionId] === 'correct') {
-      setListeningFoundationEvidence(question.evidence)
-      setListeningFoundationEvidenceCorrect(true)
-      setListeningFoundationSelectedAnswer(question.correctAnswer)
-      setListeningFoundationAnswerPickCorrect(true)
-      setListeningFoundationAudioPlayed(true)
-      setListeningFoundationFeedback('ทำข้อนี้ครบแล้วครับ ทบทวน paraphrase bridge ด้านซ้ายได้เลย')
-      window.getSelection()?.removeAllRanges()
-      return
-    }
-    resetListeningFoundationQuestion()
   }
 
   const openListeningFoundationSet = (setId: string) => {
     stopListeningPlayback()
-    const set = ALL_LISTENING_FOUNDATION_SETS.find((item) => item.id === setId)
-    const firstIncompleteIndex =
-      set?.questions.findIndex((question) => listeningFoundationAnswerState[question.id] !== 'correct') ?? 0
     setListeningLabMode('foundation')
     setSelectedListeningFoundationSetId(setId)
-    setListeningFoundationQuestionIndex(firstIncompleteIndex >= 0 ? firstIncompleteIndex : 0)
+    setListeningFoundationQuestionIndex(0)
     resetListeningFoundationQuestion()
-    if (set) {
-      const resumeQuestion = set.questions[firstIncompleteIndex >= 0 ? firstIncompleteIndex : 0]
-      if (resumeQuestion) {
-        restoreListeningFoundationQuestionState(resumeQuestion.id, set)
-      }
-    }
     setActivePage('listening_foundation_exam')
   }
 
@@ -11728,106 +11776,6 @@ function App() {
     </div>
   )
 
-  const readListeningFoundationScriptSelection = () => {
-    const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return ''
-
-    const container = listeningFoundationScriptBodyRef.current
-    if (container) {
-      const anchor = selection.anchorNode
-      const focus = selection.focusNode
-      const anchorInScript = anchor ? container.contains(anchor) : false
-      const focusInScript = focus ? container.contains(focus) : false
-      if (!anchorInScript && !focusInScript) return ''
-    }
-
-    return selection.toString().replace(/\s+/g, ' ').trim()
-  }
-
-  const handleListeningFoundationPassageMouseUp = () => {
-    if (
-      !activeListeningFoundationQuestion ||
-      listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct' ||
-      listeningFoundationEvidenceCorrect
-    ) {
-      return
-    }
-
-    if (!listeningFoundationAudioPlayed) {
-      setListeningFoundationFeedback('กดเล่นเสียงก่อนครับ แล้วค่อยไฮไลต์ในสคริปต์ทางขวา')
-      return
-    }
-
-    window.requestAnimationFrame(() => {
-      const selectedText = readListeningFoundationScriptSelection()
-      listeningFoundationPointerSelectingRef.current = false
-      if (!selectedText) return
-
-      const matchKind = getListeningHighlightMatch(
-        selectedText,
-        activeListeningFoundationQuestion.evidence
-      )
-
-      setListeningFoundationEvidence(selectedText)
-      if (matchKind === 'exact' || matchKind === 'partial') {
-        setListeningFoundationEvidenceCorrect(true)
-        const answerOk =
-          listeningFoundationSelectedAnswerRef.current === activeListeningFoundationQuestion.correctAnswer
-        tryCompleteListeningFoundationQuestion(true, answerOk)
-        setListeningFoundationFeedback(
-          answerOk
-            ? matchKind === 'partial'
-              ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI
-              : LISTENING_HIGHLIGHT_CORRECT_THAI
-            : `${matchKind === 'partial' ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI : LISTENING_HIGHLIGHT_CORRECT_THAI} เลือกคำตอบทางซ้ายให้ถูกด้วยครับ`
-        )
-        window.getSelection()?.removeAllRanges()
-        return
-      }
-
-      setListeningFoundationEvidenceCorrect(false)
-      setListeningFoundationFeedback(LISTENING_HIGHLIGHT_WRONG_THAI)
-      triggerListeningBuilderTranscriptShake()
-      window.getSelection()?.removeAllRanges()
-    })
-  }
-
-  const chooseListeningFoundationAnswer = (answerKey: string) => {
-    if (!activeListeningFoundationQuestion) return
-    if (listeningFoundationAnswerState[activeListeningFoundationQuestion.id] === 'correct') return
-
-    setListeningFoundationSelectedAnswer(answerKey)
-    const answerOk = answerKey === activeListeningFoundationQuestion.correctAnswer
-    setListeningFoundationAnswerPickCorrect(answerOk)
-
-    if (!answerOk) {
-      setListeningFoundationFeedback('คำตอบยังไม่ถูกครับ ลองอ่านข้อความจาก section และเลือกใหม่')
-      return
-    }
-
-    tryCompleteListeningFoundationQuestion(listeningFoundationEvidenceCorrect, true)
-    if (!listeningFoundationEvidenceCorrect) {
-      setListeningFoundationFeedback('คำตอบถูกแล้วครับ ต่อไปไฮไลต์ประโยคในสคริปต์ทางขวาให้ตรงกับ evidence')
-    }
-  }
-
-  const goToListeningFoundationQuestion = (nextIndex: number) => {
-    if (!activeListeningFoundationSet) return
-    const boundedIndex = Math.max(0, Math.min(nextIndex, activeListeningFoundationSet.questions.length - 1))
-    const currentQuestion = activeListeningFoundationQuestion
-    if (
-      currentQuestion &&
-      boundedIndex > listeningFoundationQuestionIndex &&
-      listeningFoundationAnswerState[currentQuestion.id] !== 'correct'
-    ) {
-      setListeningFoundationFeedback('Finish this question first. This foundation mission does not let you skip the weak point.')
-      return
-    }
-    setListeningFoundationQuestionIndex(boundedIndex)
-    const nextQuestion = activeListeningFoundationSet.questions[boundedIndex]
-    restoreListeningFoundationQuestionState(nextQuestion?.id || '')
-  }
-
   const dismissPracticeActionToast = () => setPracticeActionToast(null)
 
   const showPracticeKnewItToast = () => {
@@ -11841,20 +11789,6 @@ function App() {
   const handlePracticeSaveToNotebook = (saveFn: () => void) => {
     saveFn()
     showPracticeNotebookToast()
-  }
-
-  const saveListeningFoundationQuestionToNotebook = () => {
-    if (!activeListeningFoundationQuestion) return
-    handlePracticeSaveToNotebook(() =>
-      savePlanToNotebook({
-        criterion: 'Listening Foundation',
-        quote: `Q${activeListeningFoundationQuestion.number}: ${activeListeningFoundationQuestion.question}`,
-        fix: `${activeListeningFoundationQuestion.passageKeyword} = ${activeListeningFoundationQuestion.questionKeyword}`,
-        thaiMeaning: activeListeningFoundationQuestion.thaiMeaning,
-        preferredSection: 'listening',
-        successNotice: 'Added to notebook · saved to #listening'
-      })
-    )
   }
 
   const openListeningVocabularyBuilderPack = (packId: string) => {
@@ -11877,326 +11811,11 @@ function App() {
     setActivePage('listening_builder_exam')
   }
 
-  const resetListeningBuilderCardState = () => {
-    setListeningBuilderExamFeedback('')
-  }
-
   const resetListeningBuilderExamDrill = () => {
     setListeningBuilderItemIndex(0)
-    setListeningBuilderAttempts({})
-    setListeningBuilderResolvedState({})
-    setListeningBuilderExamEvidenceCorrect({})
-    setListeningBuilderExamSelectedAnswer({})
-    setListeningBuilderExamAnswerPickCorrect({})
-    setListeningBuilderExamAnswerState({})
-    setListeningBuilderExamFeedback('')
     setListeningBuilderExamAudioPlayed(false)
-    setListeningParaphraseBridgeDismissed({})
     stopListeningPlayback()
     window.getSelection()?.removeAllRanges()
-  }
-
-  const markListeningBuilderExamTaskComplete = (task: ListeningBuilderExamTask) => {
-    if (listeningBuilderExamAnswerState[task.id] === 'correct') return
-    setListeningBuilderExamAnswerState((current) => ({ ...current, [task.id]: 'correct' }))
-    setListeningBuilderResolvedState((current) => ({ ...current, [task.id]: 'correct' }))
-    setListeningBuilderExamFeedback(
-      `${task.targetText} = ${task.questionWordPhrase} → ${task.thaiMeaning}`
-    )
-  }
-
-  const tryCompleteListeningBuilderExamTask = (
-    task: ListeningBuilderExamTask,
-    evidenceOk: boolean,
-    answerOk: boolean
-  ) => {
-    if (!evidenceOk || !answerOk) return
-    markListeningBuilderExamTaskComplete(task)
-  }
-
-  const isListeningBuilderExamEvidenceUnlocked = (taskId: string) =>
-    Boolean(listeningBuilderExamEvidenceCorrect[taskId]) || listeningBuilderResolvedState[taskId] === 'revealed'
-
-  const chooseListeningBuilderExamAnswer = (task: ListeningBuilderExamTask, answerKey: string) => {
-    if (!activeListeningBuilderExamTest) return
-    if (listeningBuilderExamAnswerState[task.id] === 'correct') return
-
-    const correctKey = resolveListeningBuilderExamCorrectAnswer(
-      task,
-      activeListeningBuilderExamTest?.tasks || [],
-      activeListeningBuilderExamTest?.id
-    )
-    if (!correctKey) {
-      setListeningBuilderExamFeedback('Could not verify this answer. Check the paraphrase bridge and try again.')
-      return
-    }
-
-    setListeningBuilderExamSelectedAnswer((current) => ({ ...current, [task.id]: answerKey }))
-    const answerOk = answerKey.toUpperCase() === correctKey
-    if (answerOk) {
-      setListeningBuilderExamAnswerPickCorrect((current) => ({ ...current, [task.id]: true }))
-    } else {
-      setListeningBuilderExamFeedback('Wrong answer. Re-read the script and try another option.')
-      return
-    }
-
-    const evidenceOk = isListeningBuilderExamEvidenceUnlocked(task.id)
-    tryCompleteListeningBuilderExamTask(task, evidenceOk, true)
-    if (!evidenceOk) {
-      setListeningBuilderExamFeedback('คำตอบถูกแล้วครับ ต่อไปไฮไลต์ evidence ในสคริปต์ทางขวา')
-    }
-  }
-
-  const triggerListeningBuilderTranscriptShake = () => {
-    setListeningBuilderTranscriptShake(true)
-    window.setTimeout(() => {
-      setListeningBuilderTranscriptShake(false)
-    }, 700)
-  }
-
-  const confirmListeningBuilderSelectedText = (selectedText: string) => {
-    if (!activeListeningBuilderItem || !activeListeningBuilderTarget) return
-    const selectionId = activeListeningBuilderItem.id
-    if (!normalizeListeningBuilderText(selectedText)) return
-
-    if (isListeningHighlightMatch(selectedText, activeListeningBuilderTarget.text)) {
-      setListeningBuilderResolvedState((current) => ({ ...current, [selectionId]: 'correct' }))
-      window.getSelection()?.removeAllRanges()
-      return
-    }
-
-    setListeningBuilderAttempts((current) => {
-      const nextAttempts = (current[selectionId] || 0) + 1
-      if (nextAttempts >= 3) {
-        setListeningBuilderResolvedState((resolved) => ({ ...resolved, [selectionId]: 'revealed' }))
-      }
-      return {
-        ...current,
-        [selectionId]: nextAttempts
-      }
-    })
-    triggerListeningBuilderTranscriptShake()
-    window.getSelection()?.removeAllRanges()
-  }
-
-  const saveListeningBuilderItemToNotebook = (item: ListeningVocabularyBuilderItem) => {
-    const target = resolveListeningBuilderSelectionTarget(item)
-    const bridge = resolveListeningBuilderBridge(item)
-    savePlanToNotebook({
-      criterion: 'Listening Paraphrase Drill',
-      quote: `${item.book} · Q${item.questionNumber} · ${bridge.questionText}`,
-      fix: `${bridge.questionText} = ${target.text}`,
-      thaiMeaning: item.thaiMeaning || item.thaiExplanation || '',
-      preferredSection: 'reading',
-      successNotice: 'Added to notebook'
-    })
-  }
-
-  const saveListeningBuilderExamTaskToNotebook = (task: ListeningBuilderExamTask) => {
-    savePlanToNotebook({
-      criterion: 'Listening Paraphrase Drill',
-      quote: `${activeListeningBuilderExamTest?.title || 'Cambridge 18 Section 2'} · Q${task.questionNumber} · ${task.questionWordPhrase}`,
-      fix: `${task.questionWordPhrase} = ${task.targetText}`,
-      thaiMeaning: task.thaiMeaning || task.explanationThai || '',
-      preferredSection: 'listening',
-      successNotice: 'Added to notebook · saved to #listening'
-    })
-  }
-
-  const dismissListeningParaphraseBridge = (id: string) => {
-    setListeningParaphraseBridgeDismissed((current) => ({ ...current, [id]: true }))
-  }
-
-  const renderListeningParaphraseBridgeModal = () => {
-    if (activePage === 'listening_foundation_exam' && activeListeningFoundationQuestion && listeningFoundationQuestionComplete) {
-      const id = activeListeningFoundationQuestion.id
-      if (listeningParaphraseBridgeDismissed[id]) return null
-      return (
-        <ListeningParaphraseBridgeModal
-          passageKeyword={activeListeningFoundationQuestion.passageKeyword}
-          questionKeyword={activeListeningFoundationQuestion.questionKeyword}
-          thaiMeaning={activeListeningFoundationQuestion.thaiMeaning}
-          explanationThai={activeListeningFoundationQuestion.explanationThai}
-          onKnewIt={() => {
-            showPracticeKnewItToast()
-            dismissListeningParaphraseBridge(id)
-          }}
-          onSaveToNotebook={() => {
-            saveListeningFoundationQuestionToNotebook()
-            dismissListeningParaphraseBridge(id)
-          }}
-          onClose={() => dismissListeningParaphraseBridge(id)}
-        />
-      )
-    }
-    if (
-      activePage === 'listening_builder_exam' &&
-      activeListeningBuilderExamTask &&
-      listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] === 'correct'
-    ) {
-      const id = activeListeningBuilderExamTask.id
-      if (listeningParaphraseBridgeDismissed[id]) return null
-      const task = activeListeningBuilderExamTask
-      return (
-        <ListeningParaphraseBridgeModal
-          passageKeyword={task.targetText}
-          questionKeyword={task.questionWordPhrase}
-          thaiMeaning={task.thaiMeaning}
-          explanationThai={task.explanationThai}
-          onKnewIt={() => {
-            showPracticeKnewItToast()
-            dismissListeningParaphraseBridge(id)
-          }}
-          onSaveToNotebook={() => {
-            handlePracticeSaveToNotebook(() => saveListeningBuilderExamTaskToNotebook(task))
-            dismissListeningParaphraseBridge(id)
-          }}
-          onClose={() => dismissListeningParaphraseBridge(id)}
-        />
-      )
-    }
-    return null
-  }
-
-  const handleListeningBuilderTranscriptMouseUp = () => {
-    if (activeListeningBuilderExamTask && activeListeningBuilderExamTest) {
-      if (listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] === 'correct') return
-      if (listeningBuilderExamEvidenceCorrect[activeListeningBuilderExamTask.id]) return
-      if (listeningBuilderResolvedState[activeListeningBuilderExamTask.id] === 'revealed') return
-
-      if (!listeningBuilderExamAudioPlayed) {
-        setListeningBuilderExamFeedback('กดเล่นเสียงทางซ้ายก่อนครับ แล้วค่อยไฮไลต์ evidence ในสคริปต์ทางขวา')
-        return
-      }
-
-      const selectedText = window.getSelection()?.toString().trim() || ''
-      if (!selectedText) return
-      if (!normalizeListeningBuilderText(selectedText)) return
-
-      const examHighlightMatch = getListeningHighlightMatch(
-        selectedText,
-        activeListeningBuilderExamTask.targetText
-      )
-      if (examHighlightMatch !== 'none') {
-        const task = activeListeningBuilderExamTask
-        setListeningBuilderExamEvidenceCorrect((current) => ({
-          ...current,
-          [task.id]: true
-        }))
-        const correctKey = resolveListeningBuilderExamCorrectAnswer(
-          task,
-          activeListeningBuilderExamTest.tasks,
-          activeListeningBuilderExamTest.id
-        )
-        const selected = listeningBuilderExamSelectedAnswerRef.current[task.id] || ''
-        const answerOk = Boolean(correctKey && selected.toUpperCase() === correctKey)
-        tryCompleteListeningBuilderExamTask(task, true, answerOk)
-        setListeningBuilderExamFeedback(
-          answerOk
-            ? examHighlightMatch === 'partial'
-              ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI
-              : LISTENING_HIGHLIGHT_CORRECT_THAI
-            : `${examHighlightMatch === 'partial' ? LISTENING_HIGHLIGHT_PARTIAL_CORRECT_THAI : LISTENING_HIGHLIGHT_CORRECT_THAI} เลือกคำตอบทางซ้ายให้ถูกด้วยครับ`
-        )
-        window.getSelection()?.removeAllRanges()
-        return
-      }
-
-      setListeningBuilderAttempts((current) => {
-        const nextAttempts = (current[activeListeningBuilderExamTask.id] || 0) + 1
-        if (nextAttempts >= 3) {
-          setListeningBuilderResolvedState((resolved) => ({
-            ...resolved,
-            [activeListeningBuilderExamTask.id]: 'revealed'
-          }))
-          setListeningBuilderExamEvidenceCorrect((evidence) => ({
-            ...evidence,
-            [activeListeningBuilderExamTask.id]: true
-          }))
-          setListeningBuilderExamFeedback('เฉลยในสคริปต์ให้แล้วครับ เลือกคำตอบที่ถูกทางซ้ายได้เลย')
-        } else {
-          setListeningBuilderExamFeedback(LISTENING_HIGHLIGHT_WRONG_THAI)
-        }
-        return {
-          ...current,
-          [activeListeningBuilderExamTask.id]: nextAttempts
-        }
-      })
-      triggerListeningBuilderTranscriptShake()
-      window.getSelection()?.removeAllRanges()
-      return
-    }
-
-    if (!activeListeningBuilderItem || !activeListeningBuilderTarget) return
-    if (listeningBuilderResolvedState[activeListeningBuilderItem.id]) return
-    const selectedText = window.getSelection()?.toString().trim() || ''
-    if (!selectedText) return
-    confirmListeningBuilderSelectedText(selectedText)
-  }
-
-  const renderListeningBuilderExamTranscript = () => {
-    if (activeListeningBuilderExamTask && activeListeningBuilderExamTest) {
-      const targetText = String(activeListeningBuilderExamTask.targetText || '').trim()
-      const showTarget =
-        isListeningBuilderExamEvidenceUnlocked(activeListeningBuilderExamTask.id) ||
-        listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] === 'correct'
-
-      if (!showTarget || !targetText) {
-        return activeListeningBuilderExamTest.scriptParagraphs.map((paragraph, index) => (
-          <p key={`exam-paragraph-${index}`}>{paragraph}</p>
-        ))
-      }
-
-      return activeListeningBuilderExamTest.scriptParagraphs.map((paragraph, index) => {
-        const lowerParagraph = paragraph.toLowerCase()
-        const lowerTarget = targetText.toLowerCase()
-        const startIndex = lowerParagraph.indexOf(lowerTarget)
-
-        if (startIndex === -1) {
-          return <p key={`exam-paragraph-${index}`}>{paragraph}</p>
-        }
-
-        const before = paragraph.slice(0, startIndex)
-        const match = paragraph.slice(startIndex, startIndex + targetText.length)
-        const after = paragraph.slice(startIndex + targetText.length)
-
-        return (
-          <p key={`exam-paragraph-${index}`}>
-            {before}
-            <span className="listeningBuilderExamHighlight">{match}</span>
-            {after}
-          </p>
-        )
-      })
-    }
-
-    if (!activeListeningBuilderItem || !activeListeningBuilderTarget) return null
-    const transcript = String(activeListeningBuilderItem.transcript || '')
-    const targetText = String(activeListeningBuilderTarget.text || '').trim()
-    const resolvedState = listeningBuilderResolvedState[activeListeningBuilderItem.id]
-
-    if (!resolvedState || !targetText) {
-      return <p>{transcript}</p>
-    }
-
-    const lowerTranscript = transcript.toLowerCase()
-    const lowerTarget = targetText.toLowerCase()
-    const startIndex = lowerTranscript.indexOf(lowerTarget)
-    if (startIndex === -1) {
-      return <p>{transcript}</p>
-    }
-
-    const before = transcript.slice(0, startIndex)
-    const match = transcript.slice(startIndex, startIndex + targetText.length)
-    const after = transcript.slice(startIndex + targetText.length)
-
-    return (
-      <p>
-        {before}
-        <span className="listeningBuilderExamHighlight">{match}</span>
-        {after}
-      </p>
-    )
   }
 
   const startReadingExam = (examId: string) => {
@@ -13842,212 +13461,46 @@ function App() {
         )
       ) : activePage === 'listening_foundation_exam' ? (
         canAccessListening ? (
-          <section className="panel full listeningFoundationPage listeningFoundationExamPage">
-            {activeListeningFoundationSet && activeListeningFoundationQuestion ? (
-              <>
-                <section className="listeningFoundationMission">
-                  <div>
-                    <span>Listening Foundation Drill</span>
-                    <h2>
-                      {activeListeningFoundationSet
-                        ? parseListeningFoundationSetMeta(activeListeningFoundationSet).cardTitle
-                        : 'Foundation drill'}
-                    </h2>
-                    <p>
-                      {activeListeningFoundationSet
-                        ? parseListeningFoundationSetMeta(activeListeningFoundationSet).cardSubtitle
-                        : 'Play the section, answer on the left, then highlight evidence on the right.'}
-                    </p>
-                  </div>
-                  <div className="listeningFoundationProgress">
-                    <span>Progress</span>
-                    <strong>
-                      {listeningFoundationCompletedCount}/{activeListeningFoundationSet.questions.length}
-                    </strong>
-                  </div>
-                </section>
-
-                <div className="listeningFoundationShell">
-                  <div className="listeningFoundationGrid">
-                    <section className="listeningFoundationQuestionPane">
-                      <header>
-                        <div>
-                          <span>Question {activeListeningFoundationQuestion.number}</span>
-                          <h3>{activeListeningFoundationQuestion.question}</h3>
-                        </div>
-                        <strong>
-                          {listeningFoundationQuestionIndex + 1}/{activeListeningFoundationSet.questions.length}
-                        </strong>
-                      </header>
-
-                      {renderListeningSectionAudioPlayer({
-                        title: activeListeningFoundationSet.title,
-                        sectionLabel: `Section ${activeListeningFoundationSet.section}`,
-                        audioPlayed: listeningFoundationAudioPlayed,
-                        onTogglePlay: () => {
-                          if (listeningPlaybackState === 'playing') {
-                            stopListeningPlayback()
-                          } else {
-                            void playListeningFoundationPassage()
-                          }
-                        }
-                      })}
-
-                      <div className="listeningFoundationQuestionBody">
-                        <div className="listeningFoundationOptions">
-                          {activeListeningFoundationQuestion.options.map((option) => {
-                            const isSelected = listeningFoundationSelectedAnswer === option.key
-                            const isCorrectOption =
-                              option.key === activeListeningFoundationQuestion.correctAnswer
-                            return (
-                              <button
-                                key={`${activeListeningFoundationQuestion.id}-${option.key}`}
-                                type="button"
-                                className={`listeningFoundationOptionBtn ${
-                                  isSelected ? (isCorrectOption ? 'is-correct' : 'is-wrong') : ''
-                                }`}
-                                disabled={listeningFoundationQuestionComplete}
-                                onClick={() => chooseListeningFoundationAnswer(option.key)}
-                              >
-                                <strong>{option.key}</strong>
-                                <span>{option.text}</span>
-                              </button>
-                            )
-                          })}
-                        </div>
-
-
-                        {listeningFoundationFeedback ? (
-                          <div
-                            className={
-                              listeningFoundationQuestionComplete
-                                ? 'foundationFeedbackCorrect'
-                                : 'foundationFeedback'
-                            }
-                          >
-                            {listeningFoundationFeedback}
-                          </div>
-                        ) : null}
-
-                        <div className="listeningFoundationStepStatus" aria-live="polite">
-                          <span className={listeningFoundationAnswerPickCorrect ? 'is-done' : ''}>
-                            Answer {listeningFoundationAnswerPickCorrect ? '✓' : '○'}
-                          </span>
-                          <span className={listeningFoundationEvidenceCorrect ? 'is-done' : ''}>
-                            Evidence {listeningFoundationEvidenceCorrect ? '✓' : '○'}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="listeningFoundationNav">
-                        {!listeningFoundationQuestionComplete && (
-                          <p className="listeningFoundationNavHint">
-                            Get both <strong>Answer</strong> and <strong>Evidence</strong> correct to unlock{' '}
-                            <strong>Next Question</strong>.
-                          </p>
-                        )}
-                        <div className="listeningFoundationNavButtons">
-                        <button
-                          type="button"
-                          className="secondary"
-                          onClick={() => {
-                            stopListeningPlayback()
-                            setListeningLabMode('foundation')
-                            setActivePage('listening')
-                          }}
-                        >
-                          Back to Exam Bank
-                        </button>
-                        <button
-                          type="button"
-                          className="secondary"
-                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex - 1)}
-                          disabled={listeningFoundationQuestionIndex === 0}
-                        >
-                          Previous
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => goToListeningFoundationQuestion(listeningFoundationQuestionIndex + 1)}
-                          disabled={
-                            listeningFoundationQuestionIndex >= activeListeningFoundationSet.questions.length - 1 ||
-                            !listeningFoundationQuestionComplete
-                          }
-                        >
-                          Next Question
-                        </button>
-                        </div>
-                      </div>
-                    </section>
-
-                    <section className="listeningFoundationScriptPane">
-
-                      <div className="listeningScriptReader">
-                        <div className="listeningScriptReaderTop">
-                          <h4>Highlight evidence</h4>
-                          {!listeningFoundationAudioPlayed ? (
-                            <span className="listeningScriptReaderPlayHint">Play audio on the left first</span>
-                          ) : null}
-                        </div>
-
-                        <div
-                          ref={listeningFoundationScriptBodyRef}
-                          className={`listeningFoundationPassage listeningScriptReaderBody script-scroll is-cards-mode is-comfort ${
-                            listeningBuilderTranscriptShake ? 'is-shaking' : ''
-                          } ${!listeningFoundationAudioPlayed ? 'is-awaiting-play' : ''} ${
-                            activeListeningFoundationHasDialogue ? 'is-dialogue' : ''
-                          }`}
-                        >
-                          <div
-                            className={`listeningScriptTurnStack ${
-                              activeListeningFoundationHasDialogue ? 'is-dialogue' : ''
-                            }`}
-                          >
-                            {activeListeningFoundationScriptSegments.length > 0 ? (
-                              activeListeningFoundationScriptSegments.map((segment, index) =>
-                                renderListeningScriptTurn(segment, index)
-                              )
-                            ) : (
-                              <p
-                                className="listeningScriptTurnBody"
-                                onMouseUp={(event) => {
-                                  event.stopPropagation()
-                                  handleListeningFoundationPassageMouseUp()
-                                }}
-                              >
-                                {activeListeningFoundationScriptText || activeListeningFoundationQuestion?.passage}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        <footer className="listeningScriptReaderFooter">
-                          <p
-                            className={
-                              listeningFoundationEvidenceCorrect ? 'foundationStatusCorrect' : 'foundationStatus'
-                            }
-                            aria-live="polite"
-                          >
-                            {listeningFoundationQuestionComplete
-                              ? 'Question complete — both answer and evidence are correct.'
-                              : listeningFoundationEvidenceCorrect && listeningFoundationAnswerPickCorrect
-                                ? 'Both steps correct — you can go to the next question.'
-                                : listeningFoundationEvidenceCorrect
-                                  ? 'Evidence accepted. Choose the correct answer on the left.'
-                                  : listeningFoundationAnswerPickCorrect
-                                    ? 'Answer accepted. Highlight the matching phrase in this script.'
-                                    : listeningFoundationEvidence
-                                      ? listeningFoundationFeedback
-                                      : !listeningFoundationAudioPlayed
-                                        ? 'Press play on the left, then highlight the exact phrase that paraphrases the question.'
-                                        : 'Highlight the exact phrase in the script that paraphrases the question.'}
-                          </p>
-                        </footer>
-                      </div>
-                    </section>
-                  </div>
-                </div>
-              </>
+          <section className="panel full listeningFoundationPage listeningFoundationExamPage listeningSectionExamHost">
+            {listeningFoundationExamConfig && activeListeningFoundationSet ? (
+              <ListeningSectionExamView
+                config={{
+                  ...listeningFoundationExamConfig,
+                  title: parseListeningFoundationSetMeta(activeListeningFoundationSet).cardTitle,
+                  subtitle: parseListeningFoundationSetMeta(activeListeningFoundationSet).cardSubtitle
+                }}
+                excerptDrill={Boolean(listeningFoundationExamConfig.excerptDrill)}
+                playbackState={listeningPlaybackState}
+                audioPlayed={listeningFoundationAudioPlayed}
+                onTogglePlay={() => {
+                  if (listeningPlaybackState === 'playing') {
+                    stopListeningPlayback()
+                  } else {
+                    void playListeningFoundationPassage()
+                  }
+                }}
+                onBack={() => {
+                  stopListeningPlayback()
+                  setListeningLabMode('foundation')
+                  setActivePage('listening')
+                }}
+                onKnewIt={showPracticeKnewItToast}
+                onQuestionComplete={(questionId) => {
+                  setListeningFoundationAnswerState((current) => ({ ...current, [questionId]: 'correct' }))
+                }}
+                onSaveNotebook={(question) => {
+                  handlePracticeSaveToNotebook(() =>
+                    savePlanToNotebook({
+                      criterion: 'Listening Foundation',
+                      quote: `Q${question.number}: ${question.stem}`,
+                      fix: `${question.passageKeyword} = ${question.questionKeyword}`,
+                      thaiMeaning: question.thaiMeaning,
+                      preferredSection: 'listening',
+                      successNotice: 'Added to notebook · saved to #listening'
+                    })
+                  )
+                }}
+              />
             ) : (
               <div className="emptyNotebook">
                 <p>No Listening Foundation exam is selected yet.</p>
@@ -14075,401 +13528,56 @@ function App() {
         )
       ) : activePage === 'listening_builder_exam' ? (
         canAccessListening ? (
-          <section className="panel full listeningBuilderExamPage">
-            <div className="listeningBuilderExamShell">
-              <header className="listeningBuilderExamHero">
-                <div className="listeningBuilderExamHeroTop">
-                  <div className="listeningBuilderExamBrand">
-                    <div className="listeningBuilderExamBrandIcon">🎧</div>
-                    <div>
-                      <h2>Vocab-First Trainer</h2>
-                      <p>Read it. Understand it. Then hear it.</p>
-                    </div>
-                  </div>
-                  <div className="listeningBuilderExamBadge">
-                    {activeListeningBuilderPack?.sectionNumber ? `IELTS Section ${activeListeningBuilderPack.sectionNumber}` : 'Listening Builder'}
-                  </div>
-                </div>
-                <div className="listeningBuilderExamTip">
-                  <strong>IELTS strategy:</strong> play the section on the left, answer the question, then highlight evidence in the script on the right.
-                </div>
-              </header>
-
-              <div className="listeningBuilderExamMain">
-                {activeListeningBuilderExamSet && activeListeningBuilderExamTest && activeListeningBuilderExamTask ? (
-                  <div className="listeningBuilderExamGrid">
-                    <section className={`listeningBuilderExamPassage ${listeningBuilderTranscriptShake ? 'is-shaking' : ''}`}>
-                      <div className="listeningBuilderExamPassageTop">
-                        <div className="listeningBuilderExamPassageMeta">
-                          <div className="listeningBuilderExamMiniLabel">Audio Script</div>
-                          <span>
-                            Cambridge {activeListeningBuilderExamSet.bookNumber} • Section {activeListeningBuilderExamSet.sectionNumber}
-                          </span>
-                        </div>
-                        <div className="listeningBuilderExamTestPill">Test {activeListeningBuilderExamTest.testNumber}</div>
-                      </div>
-
-                      <div className="listeningBuilderExamPassageIntro">
-                        <h3>Highlight the matching word or phrase</h3>
-                      </div>
-
-                      <div
-                        className={`listeningBuilderExamPassageBody script-scroll ${
-                          !listeningBuilderExamAudioPlayed ? 'is-awaiting-play' : ''
-                        }`}
-                        onMouseUp={handleListeningBuilderTranscriptMouseUp}
-                      >
-                        {renderListeningBuilderExamTranscript()}
-                      </div>
-
-                      <div
-                        className={`listeningBuilderExamHelperBar ${
-                          listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] ? 'is-success' : ''
-                        }`}
-                      >
-                        {listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id]
-                          ? 'Excellent! Review the paraphrase bridge on the left.'
-                          : isListeningBuilderExamEvidenceUnlocked(activeListeningBuilderExamTask.id)
-                            ? listeningBuilderExamAnswerPickCorrect[activeListeningBuilderExamTask.id]
-                              ? 'Both steps correct — choose the next question when ready.'
-                              : 'Evidence accepted. Choose the correct answer on the left.'
-                            : listeningBuilderExamAnswerPickCorrect[activeListeningBuilderExamTask.id]
-                              ? 'Answer accepted. Highlight the matching phrase in this script.'
-                              : listeningBuilderExamFeedback || 'Play audio on the left, then highlight matching evidence in this script.'}
-                      </div>
-                    </section>
-
-                    <section className="listeningBuilderExamQuestionPane">
-                      <div className="listeningBuilderExamQuestionTop">
-                        <div>
-                          <button
-                            type="button"
-                            className="listeningBuilderExamBackButton"
-                            onClick={openListeningLanding}
-                          >
-                            Back to Listening Choices
-                          </button>
-                          <h2>{activeListeningBuilderExamTest.title}</h2>
-                        </div>
-                        <div className="listeningBuilderExamScoreCard">
-                          <div className="label">Score</div>
-                          <div className="value">
-                            {activeListeningBuilderExamCompletedCount}
-                            <span>/{activeListeningBuilderExamTest.tasks.length}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="listeningBuilderExamQuestionIntro">
-                        {renderListeningSectionAudioPlayer({
-                          title: `${activeListeningBuilderExamTest.title} · Cambridge ${activeListeningBuilderExamSet.bookNumber}`,
-                          sectionLabel: `Section ${activeListeningBuilderExamSet.sectionNumber}`,
-                          audioPlayed: listeningBuilderExamAudioPlayed,
-                          onTogglePlay: () => {
-                            if (listeningPlaybackState === 'playing') {
-                              stopListeningPlayback()
-                            } else {
-                              void playListeningBuilderExamSection()
-                            }
-                          }
-                        })}
-                        <div className="listeningBuilderExamTabs">
-                          {activeListeningBuilderExamSet.tests.map((test) => (
-                            <button
-                              key={test.id}
-                              type="button"
-                              className={activeListeningBuilderExamTest.id === test.id ? 'active' : ''}
-                              onClick={() => {
-                                setSelectedListeningBuilderExamTestId(test.id)
-                                resetListeningBuilderExamDrill()
-                              }}
-                            >
-                              Test {test.testNumber}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="listeningBuilderExamTaskScroller script-scroll">
-                        {activeListeningBuilderExamTest.tasks.map((task, index) => {
-                          const parsedQuestion = parseListeningBuilderExamQuestion(task.questionText)
-                          const answerChoices = getListeningBuilderTaskAnswerChoices(
-                            task,
-                            activeListeningBuilderExamTest.tasks,
-                            activeListeningBuilderExamTest.id
-                          )
-                          const isLabelMatch = isListeningBuilderLabelMatchTask(
-                            task,
-                            activeListeningBuilderExamTest.tasks,
-                            activeListeningBuilderExamTest.id
-                          )
-                          const headerPreview =
-                            parsedQuestion.stem ||
-                            task.questionWordPhrase ||
-                            `Question ${task.questionNumber}`
-                          const isActive = task.id === activeListeningBuilderExamTask.id
-                          const attempts = listeningBuilderAttempts[task.id] || 0
-                          const evidenceUnlocked = isListeningBuilderExamEvidenceUnlocked(task.id)
-                          const answerPickCorrect = Boolean(listeningBuilderExamAnswerPickCorrect[task.id])
-                          const selectedAnswer = listeningBuilderExamSelectedAnswer[task.id] || ''
-                          const isCompleted = listeningBuilderExamAnswerState[task.id] === 'correct'
-                          const taskFeedback = isActive ? listeningBuilderExamFeedback : ''
-                          return (
-                            <article
-                              key={task.id}
-                              className={`listeningBuilderExamTaskCard ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
-                            >
-                              <button
-                                type="button"
-                                className="listeningBuilderExamTaskHeaderBtn"
-                                onClick={() => {
-                                  const currentTask = activeListeningBuilderExamTest?.tasks[listeningBuilderItemIndex]
-                                  if (
-                                    currentTask &&
-                                    index !== listeningBuilderItemIndex &&
-                                    listeningBuilderExamAnswerState[currentTask.id] !== 'correct'
-                                  ) {
-                                    setListeningBuilderExamFeedback(
-                                      'Finish this question first — both answer and evidence must be correct.'
-                                    )
-                                    return
-                                  }
-                                  setListeningBuilderItemIndex(index)
-                                  resetListeningBuilderCardState()
-                                }}
-                              >
-                                <span>Q{task.questionNumber}</span>
-                                <strong>{headerPreview}</strong>
-                              </button>
-
-                              {(isActive || isCompleted) && (
-                                <div className="listeningBuilderExamTaskContent">
-                                  {parsedQuestion.contextLines.length > 0 && (
-                                    <div className="listeningBuilderExamNotesContext">
-                                      {parsedQuestion.contextLines.map((line) => (
-                                        <p key={`${task.id}-ctx-${line}`}>{line}</p>
-                                      ))}
-                                    </div>
-                                  )}
-
-                                  <p className="listeningBuilderExamGapPrompt">{parsedQuestion.stem || headerPreview}</p>
-
-                                  <div className="listeningBuilderExamPhraseBox">
-                                    <strong>Question word / phrase:</strong> {task.questionWordPhrase}
-                                  </div>
-
-                                  {!isCompleted && (
-                                    <div className="listeningBuilderExamInstruction">
-                                      {evidenceUnlocked
-                                          ? answerChoices.type === 'gap-fill'
-                                            ? 'Evidence accepted. Choose the word that completes the note on the left.'
-                                            : isLabelMatch
-                                              ? 'Evidence accepted. Choose the matching label (A–G) on the left.'
-                                              : 'Evidence accepted. Choose the correct answer on the left.'
-                                          : answerPickCorrect
-                                            ? `Answer accepted. Highlight the script phrase that means "${task.questionWordPhrase}".`
-                                            : `Listen on the left, answer here, then highlight "${task.questionWordPhrase}" in the script on the right.`}
-                                    </div>
-                                  )}
-
-                                  {isLabelMatch && answerChoices.options.length > 0 && (
-                                    <div className="listeningBuilderExamLabelPool">
-                                      <p className="meta">Matching options for this set:</p>
-                                      <ul>
-                                        {answerChoices.options.map((option) => (
-                                          <li key={`${task.id}-pool-${option.key}`}>
-                                            <strong>{option.key}</strong> {option.text}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )}
-
-                                  {answerChoices.options.length > 0 && (
-                                    <div className="listeningBuilderExamOptionList">
-                                      {answerChoices.options.map((option) => {
-                                        const isSelected = selectedAnswer === option.key
-                                        const correctKey = resolveListeningBuilderExamCorrectAnswer(
-                                          task,
-                                          activeListeningBuilderExamTest.tasks,
-                                          activeListeningBuilderExamTest.id
-                                        )
-                                        const isCorrectOption =
-                                          Boolean(correctKey) && option.key.toUpperCase() === correctKey
-                                        return (
-                                          <button
-                                            key={`${task.id}-${option.key}`}
-                                            type="button"
-                                            className={`listeningBuilderExamOption is-unlocked ${
-                                              isSelected ? (isCorrectOption ? 'is-correct' : 'is-wrong') : ''
-                                            }`}
-                                            disabled={isCompleted}
-                                            onClick={() => chooseListeningBuilderExamAnswer(task, option.key)}
-                                          >
-                                            <strong>{option.key}</strong>
-                                            <span>{option.text}</span>
-                                          </button>
-                                        )
-                                      })}
-                                    </div>
-                                  )}
-
-                                  {taskFeedback && !isCompleted && (
-                                    <div className="listeningBuilderExamTryAgain">{taskFeedback}</div>
-                                  )}
-
-                                  {attempts > 0 && !isCompleted && !evidenceUnlocked && (
-                                    <div className="listeningBuilderExamTryAgain">
-                                      {LISTENING_HIGHLIGHT_WRONG_THAI} · {attempts}/3
-                                    </div>
-                                  )}
-
-                                </div>
-                              )}
-                            </article>
-                          )
-                        })}
-                      </div>
-
-                      {activeListeningBuilderExamCompletedCount === activeListeningBuilderExamTest.tasks.length && (
-                        <div className="listeningBuilderExamSuccess">
-                          <h3>Section Complete!</h3>
-                          <p>You found the evidence and answered the vocabulary drill correctly.</p>
-                          <button type="button" onClick={resetListeningBuilderExamDrill}>
-                            Restart Drill
-                          </button>
-                        </div>
-                      )}
-                    </section>
-                  </div>
-                ) : activeListeningBuilderPack && activeListeningBuilderItem && activeListeningBuilderTarget && activeListeningBuilderBridge ? (
-                  <div className="listeningBuilderExamWorkspace">
-                    <section className={`listeningBuilderExamScript ${listeningBuilderTranscriptShake ? 'is-shaking' : ''}`}>
-                      <div className="listeningBuilderExamSectionHead">
-                        <div>
-                          <p className="sectionLabel">Audio Script</p>
-                          <h3>Highlight the matching word or phrase</h3>
-                        </div>
-                        <span className="bandPill">{activeListeningBuilderItem.answer}</span>
-                      </div>
-                      <div className="listeningBuilderExamScriptBody" onMouseUp={handleListeningBuilderTranscriptMouseUp}>
-                        {renderListeningBuilderExamTranscript()}
-                      </div>
-                      <div className={`listeningBuilderExamHelper ${listeningBuilderAttempts[activeListeningBuilderItem.id] > 0 ? 'is-error' : ''}`}>
-                        {listeningBuilderResolvedState[activeListeningBuilderItem.id]
-                          ? 'Correct portion unlocked. Review the bridge on the right.'
-                          : 'Use your mouse to highlight the exact transcript portion that matches the question phrase.'}
-                      </div>
-                    </section>
-
-                    <section className="listeningBuilderExamTasks">
-                      <div className="listeningBuilderExamTaskHeader">
-                        <div>
-                          <h3>
-                            Part {activeListeningBuilderItem.sectionNumber || '-'} · Test {activeListeningBuilderItem.testNumber || '-'}
-                          </h3>
-                          <p className="meta">Click through the cards like an exam set. Only the active card stays open.</p>
-                        </div>
-                      </div>
-
-                      <div className="listeningBuilderExamTaskList">
-                        {activeListeningBuilderPack.items.map((item, index) => {
-                          const bridge = resolveListeningBuilderBridge(item)
-                          const target = resolveListeningBuilderSelectionTarget(item)
-                          const isActive = item.id === activeListeningBuilderItem.id
-                          const resolved = listeningBuilderResolvedState[item.id]
-                          const attempts = listeningBuilderAttempts[item.id] || 0
-                          return (
-                            <article
-                              key={item.id}
-                              className={`listeningBuilderExamTaskCard ${isActive ? 'is-active' : ''} ${resolved === 'correct' ? 'is-completed' : ''}`}
-                            >
-                              <button
-                                type="button"
-                                className="listeningBuilderExamTaskButton"
-                                onClick={() => {
-                                  setListeningBuilderItemIndex(index)
-                                  resetListeningBuilderCardState()
-                                }}
-                              >
-                                <span>Q{item.questionNumber}</span>
-                                <strong>{item.questionPrompt}</strong>
-                              </button>
-
-                              {(isActive || resolved) && (
-                                <div className="listeningBuilderExamTaskBody">
-                                  <div className="readingHintBox">
-                                    <strong>Question word / phrase:</strong> {bridge.questionText}
-                                  </div>
-                                  {!resolved && (
-                                    <p className="meta">
-                                      Highlight the matching expression in the script on the left. Wrong answers reveal after 3 tries.
-                                    </p>
-                                  )}
-                                  {resolved === 'correct' && (
-                                    <div className="listeningBuilderExamBridgeGrid">
-                                      <div>
-                                        <span>Question</span>
-                                        <strong>{bridge.questionText}</strong>
-                                      </div>
-                                      <div>
-                                        <span>Transcript</span>
-                                        <strong>{target.text}</strong>
-                                      </div>
-                                      <div>
-                                        <span>Thai</span>
-                                        <strong>{item.thaiMeaning || item.thaiExplanation || '-'}</strong>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {resolved === 'revealed' && (
-                                    <div className="listeningBuilderExamBridgeGrid">
-                                      <div>
-                                        <span>Question</span>
-                                        <strong>{bridge.questionText}</strong>
-                                      </div>
-                                      <div>
-                                        <span>Transcript</span>
-                                        <strong>{target.text}</strong>
-                                      </div>
-                                      <div>
-                                        <span>Thai</span>
-                                        <strong>{item.thaiMeaning || item.thaiExplanation || '-'}</strong>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {!resolved && attempts > 0 && (
-                                    <div className="listeningBuilderExamTryAgain">
-                                      Try again · {attempts}/3
-                                    </div>
-                                  )}
-                                  {resolved && (
-                                    <ParaphraseBridgeActions
-                                      onKnewIt={showPracticeKnewItToast}
-                                      onSaveToNotebook={() =>
-                                        handlePracticeSaveToNotebook(() => saveListeningBuilderItemToNotebook(item))
-                                      }
-                                      saveLabel="Save to Notebook"
-                                    />
-                                  )}
-                                </div>
-                              )}
-                            </article>
-                          )
-                        })}
-                      </div>
-                    </section>
-                  </div>
-                ) : (
-                  <div className="emptyNotebook">
-                    <p>No detailed exam card is ready for this pack yet.</p>
-                    <button type="button" onClick={openListeningLanding}>
-                      Back to Listening Choices
-                    </button>
-                  </div>
-                )}
+          <section className="panel full listeningBuilderExamPage listeningSectionExamHost">
+            {listeningBuilderExamConfig && activeListeningBuilderExamSet ? (
+              <ListeningSectionExamView
+                config={listeningBuilderExamConfig}
+                playbackState={listeningPlaybackState}
+                audioPlayed={listeningBuilderExamAudioPlayed}
+                onTogglePlay={() => {
+                  if (listeningPlaybackState === 'playing') {
+                    stopListeningPlayback()
+                  } else {
+                    void playListeningBuilderExamSection()
+                  }
+                }}
+                onBack={openListeningLanding}
+                onKnewIt={showPracticeKnewItToast}
+                onQuestionComplete={(questionId) => {
+                  setListeningBuilderExamAnswerState((current) => ({ ...current, [questionId]: 'correct' }))
+                }}
+                testTabs={activeListeningBuilderExamSet.tests.map((test) => ({
+                  id: test.id,
+                  label: `Test ${test.testNumber}`
+                }))}
+                activeTestId={activeListeningBuilderExamTest?.id}
+                onTestChange={(testId) => {
+                  setSelectedListeningBuilderExamTestId(testId)
+                  resetListeningBuilderExamDrill()
+                  setListeningBuilderExamAudioPlayed(false)
+                  stopListeningPlayback()
+                }}
+                onSaveNotebook={(question) => {
+                  handlePracticeSaveToNotebook(() =>
+                    savePlanToNotebook({
+                      criterion: 'Listening Paraphrase Drill',
+                      quote: `${listeningBuilderExamConfig.title} · Q${question.number} · ${question.questionKeyword}`,
+                      fix: `${question.questionKeyword} = ${question.evidence}`,
+                      thaiMeaning: question.thaiMeaning || question.explanationThai || '',
+                      preferredSection: 'listening',
+                      successNotice: 'Added to notebook · saved to #listening'
+                    })
+                  )
+                }}
+              />
+            ) : (
+              <div className="emptyNotebook">
+                <p>No detailed exam card is ready for this pack yet.</p>
+                <button type="button" onClick={openListeningLanding}>
+                  Back to Listening Choices
+                </button>
               </div>
-            </div>
+            )}
           </section>
         ) : (
           <section className="panel full">
@@ -16204,6 +15312,204 @@ function App() {
                     Paste the full reading text and the answer-key format together, then learners will see it inside the
                     Reading bank under Passage 1, Passage 2, Passage 3, or Full Test.
                   </p>
+                  <div className="adminReadingGeneratorStudio">
+                    <div className="adminSectionHeader">
+                      <div>
+                        <h4>Reading Generator Studio</h4>
+                        <p className="meta">
+                          Paste up to 4 original passages, choose the IELTS question types for each, then copy the
+                          Codex brief. Paste Codex JSON back here for local checks before bulk upload.
+                        </p>
+                      </div>
+                      <span className="bandPill">{activeAdminReadingGeneratorPassages.length}/4 active</span>
+                    </div>
+
+                    <div className="adminReadingGeneratorGrid">
+                      {adminReadingGeneratorPassages.map((passage, index) => (
+                        <article key={passage.id} className="adminReadingGeneratorPassageCard">
+                          <div className="adminReadingGeneratorCardTop">
+                            <div>
+                              <p className="adminAudioEyebrow">Source Passage {index + 1}</p>
+                              <h4>{passage.title.trim() || `Passage ${index + 1}`}</h4>
+                            </div>
+                            <span className="bandPill">{READING_CATEGORY_LABELS[passage.category]}</span>
+                          </div>
+
+                          <div className="adminFormGrid">
+                            <label>
+                              Working Title
+                              <input
+                                value={passage.title}
+                                onChange={(event) =>
+                                  updateAdminReadingGeneratorPassage(passage.id, { title: event.target.value })
+                                }
+                                placeholder={`Generated Reading Passage ${index + 1}`}
+                              />
+                            </label>
+                            <label>
+                              Bank
+                              <select
+                                value={passage.category}
+                                onChange={(event) =>
+                                  updateAdminReadingGeneratorPassage(passage.id, {
+                                    category: event.target.value as ReadingBankCategory
+                                  })
+                                }
+                              >
+                                {Object.entries(READING_CATEGORY_LABELS).map(([key, label]) => (
+                                  <option key={`${passage.id}-${key}`} value={key}>
+                                    {label}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                          </div>
+
+                          <div className="adminFormGrid">
+                            <label>
+                              New Topic
+                              <input
+                                value={passage.newTopic}
+                                onChange={(event) =>
+                                  updateAdminReadingGeneratorPassage(passage.id, { newTopic: event.target.value })
+                                }
+                                placeholder="e.g. marine archaeology, urban heat, ancient dyes"
+                              />
+                            </label>
+                            <label>
+                              Target Questions
+                              <input
+                                value={passage.questionCount}
+                                onChange={(event) =>
+                                  updateAdminReadingGeneratorPassage(passage.id, { questionCount: event.target.value })
+                                }
+                                placeholder="13"
+                              />
+                            </label>
+                          </div>
+
+                          <label>
+                            Original Passage to Imitate
+                            <textarea
+                              value={passage.sourcePassage}
+                              onChange={(event) =>
+                                updateAdminReadingGeneratorPassage(passage.id, { sourcePassage: event.target.value })
+                              }
+                              placeholder="Paste the original passage here. Codex will imitate length, difficulty, and paragraph organization, but change the topic."
+                              rows={8}
+                            />
+                          </label>
+
+                          <div className="adminReadingTypeSelector">
+                            {ADMIN_READING_GENERATOR_QUESTION_TYPES.map((type) => (
+                              <button
+                                key={`${passage.id}-${type.id}`}
+                                type="button"
+                                className={passage.questionTypes.includes(type.id) ? 'active' : ''}
+                                onClick={() => toggleAdminReadingGeneratorQuestionType(passage.id, type.id)}
+                              >
+                                {type.shortLabel}
+                              </button>
+                            ))}
+                          </div>
+
+                          <label>
+                            Extra Requirements for This Passage
+                            <textarea
+                              value={passage.requirements}
+                              onChange={(event) =>
+                                updateAdminReadingGeneratorPassage(passage.id, { requirements: event.target.value })
+                              }
+                              placeholder="Optional. Add special rules for this passage, e.g. 7 TFNG + 6 fill blanks, matching headings only for paragraphs A-G, etc."
+                              rows={5}
+                            />
+                          </label>
+                        </article>
+                      ))}
+                    </div>
+
+                    <div className="adminActionRow">
+                      <button type="button" onClick={buildAdminReadingGeneratorBrief}>
+                        Build Codex Brief
+                      </button>
+                      <button type="button" className="secondary" onClick={() => void copyAdminReadingGeneratorBrief()}>
+                        Copy Brief
+                      </button>
+                      <p className="meta">Use this brief in Codex, then paste the returned JSON into the review box below.</p>
+                    </div>
+
+                    <div className="adminReadingGeneratorReviewGrid">
+                      <label>
+                        Codex Generation Brief
+                        <textarea
+                          value={adminReadingGeneratorBrief}
+                          onChange={(event) => setAdminReadingGeneratorBrief(event.target.value)}
+                          placeholder="Build the brief after filling the passage slots."
+                          rows={16}
+                        />
+                      </label>
+                      <label>
+                        Generated JSON Review
+                        <textarea
+                          value={adminReadingGeneratorDraftInput}
+                          onChange={(event) => {
+                            setAdminReadingGeneratorDraftInput(event.target.value)
+                            setAdminReadingGeneratorValidation(null)
+                          }}
+                          placeholder='Paste Codex output here. It should be a JSON array with title, category, rawPassageText, and rawAnswerKey.'
+                          rows={16}
+                        />
+                      </label>
+                    </div>
+
+                    <div className="adminActionRow">
+                      <button type="button" className="secondary" onClick={validateAdminReadingGeneratorDraft}>
+                        Check Generated JSON
+                      </button>
+                      <button type="button" onClick={loadAdminReadingGeneratorDraftIntoBulkUpload}>
+                        Load Clean Draft to Bulk Upload
+                      </button>
+                      <p className="meta">
+                        Local checks catch missing evidence, non-chronological answer keys, unbalanced judgement sets,
+                        and fill answers that are not exact one-word passage answers.
+                      </p>
+                    </div>
+
+                    {adminReadingGeneratorValidation && (
+                      <div className="adminGeneratorValidationCard">
+                        <h4>Generator Validation</h4>
+                        <p className="meta">
+                          Total: {adminReadingGeneratorValidation.total} · Ready:{' '}
+                          {adminReadingGeneratorValidation.valid} · Needs fixing:{' '}
+                          {adminReadingGeneratorValidation.invalid}
+                        </p>
+                        <div className="adminAudioLibraryGrid">
+                          {adminReadingGeneratorValidation.items.map((item) => (
+                            <article key={`generator-validation-${item.index}`} className="adminAudioCard">
+                              <p className="adminAudioEyebrow">
+                                {READING_CATEGORY_LABELS[item.category]} · Item {item.index}
+                              </p>
+                              <h4>{item.title}</h4>
+                              <p>
+                                {item.passageCount} passage{item.passageCount === 1 ? '' : 's'} ·{' '}
+                                {item.questionCount} questions
+                              </p>
+                              {item.ok ? (
+                                <p className="meta authSuccess">Ready for server validation</p>
+                              ) : (
+                                <p className="error">Needs fixing</p>
+                              )}
+                              {[...item.errors, ...item.warnings].slice(0, 5).map((message) => (
+                                <p key={`${item.index}-${message}`} className={item.errors.includes(message) ? 'error' : 'meta'}>
+                                  {message}
+                                </p>
+                              ))}
+                            </article>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <div className="adminWorkflowCard">
                     <h4>Smart Paste Helper</h4>
                     <p className="meta">
@@ -18687,7 +17993,6 @@ function App() {
           </div>
         </div>
       )}
-      {renderListeningParaphraseBridgeModal()}
       {answerReviewModal && (
         <div className="answerReviewOverlay">
           <div className="answerReviewCard">

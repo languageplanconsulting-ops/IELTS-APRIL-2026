@@ -1,0 +1,315 @@
+{
+  "missingBlankInLine": [
+    {
+      "examId": "cambridge-13-test3-passage3",
+      "q": 28,
+      "line": "28.   reference to a present-day application of some archaeological research findings",
+      "prompt": "reference to a present-day application of some archaeological research findings"
+    },
+    {
+      "examId": "cambridge-19-test3-passage2",
+      "q": 16,
+      "line": "16   reference to the idea that people are beginning to appreciate the value of wetlands",
+      "prompt": "people are beginning to appreciate the value of wetlands"
+    }
+  ],
+  "missingBlankInPrompt": [
+    {
+      "examId": "cambridge-19-test4-passage1",
+      "q": 7,
+      "line": "●   lives in large 7……………….",
+      "prompt": "lives in large"
+    },
+    {
+      "examId": "cambridge-19-test4-passage1",
+      "q": 8,
+      "line": "●   first appears at the start of 8……………….",
+      "prompt": "first appears at the start of"
+    },
+    {
+      "examId": "cambridge-19-test4-passage1",
+      "q": 9,
+      "line": "●   is considered to be more 9………………. than other species",
+      "prompt": "is considered to be more"
+    },
+    {
+      "examId": "cambridge-19-test4-passage1",
+      "q": 10,
+      "line": "●   its caterpillars occupy a limited range of 10……………….",
+      "prompt": "its caterpillars occupy a limited range of"
+    },
+    {
+      "examId": "cambridge-19-test4-passage1",
+      "q": 11,
+      "line": "●   is already able to reproduce twice a year in warm areas of 11……………….",
+      "prompt": "in warm areas of"
+    },
+    {
+      "examId": "cambridge-19-test4-passage1",
+      "q": 12,
+      "line": "●   is found in 12………………. areas of England",
+      "prompt": "is found in"
+    },
+    {
+      "examId": "cambridge-19-test4-passage1",
+      "q": 13,
+      "line": "●   both climate change and the 13………………. of the caterpillar are possible reasons for decline",
+      "prompt": "both climate change and the"
+    },
+    {
+      "examId": "cambridge-19-test4-passage2",
+      "q": 24,
+      "line": "Mining corporations believe that the mineral resources lying under the sea may be superior to those ",
+      "prompt": "without producing much"
+    },
+    {
+      "examId": "cambridge-19-test4-passage2",
+      "q": 25,
+      "line": "The extraction is often done by adapting the 25………………… that has already been used to work on land. T",
+      "prompt": "adapting the"
+    },
+    {
+      "examId": "cambridge-19-test4-passage2",
+      "q": 26,
+      "line": "The extraction is often done by adapting the 25………………… that has already been used to work on land. T",
+      "prompt": "strongly believe that"
+    },
+    {
+      "examId": "cambridge-19-test4-passage3",
+      "q": 31,
+      "line": "Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high lev",
+      "prompt": "tend to exhibit a high level of"
+    },
+    {
+      "examId": "cambridge-19-test4-passage3",
+      "q": 32,
+      "line": "Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high lev",
+      "prompt": "prevent differences in"
+    },
+    {
+      "examId": "cambridge-19-test4-passage3",
+      "q": 33,
+      "line": "Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high lev",
+      "prompt": "one person's success at"
+    },
+    {
+      "examId": "cambridge-19-test4-passage3",
+      "q": 34,
+      "line": "Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high lev",
+      "prompt": "Individuals who behave in a"
+    },
+    {
+      "examId": "cambridge-19-test4-passage3",
+      "q": 35,
+      "line": "Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high lev",
+      "prompt": "considerable amount of"
+    }
+  ],
+  "noteStyleNoNumber": [],
+  "wrongTypeText": [
+    {
+      "examId": "cambridge-12-test1-passage3",
+      "q": 27,
+      "prompt": "Choose the correct heading for Paragraph A",
+      "answer": "vi"
+    },
+    {
+      "examId": "cambridge-12-test1-passage3",
+      "q": 28,
+      "prompt": "Choose the correct heading for Paragraph B",
+      "answer": "viii"
+    },
+    {
+      "examId": "cambridge-12-test1-passage3",
+      "q": 29,
+      "prompt": "Choose the correct heading for Paragraph C",
+      "answer": "ii"
+    },
+    {
+      "examId": "cambridge-12-test1-passage3",
+      "q": 30,
+      "prompt": "Choose the correct heading for Paragraph D",
+      "answer": "iv"
+    },
+    {
+      "examId": "cambridge-12-test1-passage3",
+      "q": 31,
+      "prompt": "Choose the correct heading for Paragraph E",
+      "answer": "iii"
+    },
+    {
+      "examId": "cambridge-12-test1-passage3",
+      "q": 32,
+      "prompt": "Choose the correct heading for Paragraph F",
+      "answer": "vii"
+    },
+    {
+      "examId": "cambridge-12-test2-passage2",
+      "q": 14,
+      "prompt": "Heading for Paragraph A",
+      "answer": "iv"
+    },
+    {
+      "examId": "cambridge-12-test2-passage2",
+      "q": 15,
+      "prompt": "Heading for Paragraph B",
+      "answer": "vi"
+    },
+    {
+      "examId": "cambridge-12-test2-passage2",
+      "q": 16,
+      "prompt": "Heading for Paragraph C",
+      "answer": "viii"
+    },
+    {
+      "examId": "cambridge-12-test2-passage2",
+      "q": 17,
+      "prompt": "Heading for Paragraph D",
+      "answer": "v"
+    },
+    {
+      "examId": "cambridge-12-test2-passage2",
+      "q": 18,
+      "prompt": "Heading for Paragraph E",
+      "answer": "i"
+    },
+    {
+      "examId": "cambridge-12-test2-passage2",
+      "q": 19,
+      "prompt": "Heading for Paragraph F",
+      "answer": "vii"
+    },
+    {
+      "examId": "cambridge-12-test2-passage2",
+      "q": 20,
+      "prompt": "Heading for Paragraph G",
+      "answer": "iii"
+    },
+    {
+      "examId": "cambridge-12-test3-passage1",
+      "q": 1,
+      "prompt": "Heading Paragraph A",
+      "answer": "v"
+    },
+    {
+      "examId": "cambridge-12-test3-passage1",
+      "q": 2,
+      "prompt": "Heading Paragraph B",
+      "answer": "iii"
+    },
+    {
+      "examId": "cambridge-12-test3-passage1",
+      "q": 3,
+      "prompt": "Heading Paragraph C",
+      "answer": "viii"
+    },
+    {
+      "examId": "cambridge-12-test3-passage1",
+      "q": 4,
+      "prompt": "Heading Paragraph D",
+      "answer": "i"
+    },
+    {
+      "examId": "cambridge-12-test3-passage1",
+      "q": 5,
+      "prompt": "Heading Paragraph E",
+      "answer": "iv"
+    },
+    {
+      "examId": "cambridge-12-test3-passage1",
+      "q": 6,
+      "prompt": "Heading Paragraph F",
+      "answer": "vi"
+    },
+    {
+      "examId": "cambridge-12-test3-passage1",
+      "q": 7,
+      "prompt": "Heading Paragraph G",
+      "answer": "ii"
+    },
+    {
+      "examId": "cambridge-12-test4-passage3",
+      "q": 27,
+      "prompt": "Heading Paragraph A",
+      "answer": "iv"
+    },
+    {
+      "examId": "cambridge-12-test4-passage3",
+      "q": 28,
+      "prompt": "Heading Paragraph B",
+      "answer": "ii"
+    },
+    {
+      "examId": "cambridge-12-test4-passage3",
+      "q": 29,
+      "prompt": "Heading Paragraph C",
+      "answer": "vi"
+    },
+    {
+      "examId": "cambridge-12-test4-passage3",
+      "q": 30,
+      "prompt": "Heading Paragraph D",
+      "answer": "viii"
+    },
+    {
+      "examId": "cambridge-12-test4-passage3",
+      "q": 31,
+      "prompt": "Heading Paragraph E",
+      "answer": "vii"
+    },
+    {
+      "examId": "cambridge-12-test4-passage3",
+      "q": 32,
+      "prompt": "Heading Paragraph F",
+      "answer": "i"
+    },
+    {
+      "examId": "cambridge-12-test4-passage3",
+      "q": 33,
+      "prompt": "Heading Paragraph G",
+      "answer": "iii"
+    },
+    {
+      "examId": "cambridge-13-test1-passage2",
+      "q": 14,
+      "prompt": "Paragraph A",
+      "answer": "iv"
+    },
+    {
+      "examId": "cambridge-13-test1-passage2",
+      "q": 15,
+      "prompt": "Paragraph B",
+      "answer": "vi"
+    },
+    {
+      "examId": "cambridge-13-test1-passage2",
+      "q": 16,
+      "prompt": "Paragraph C",
+      "answer": "i"
+    },
+    {
+      "examId": "cambridge-13-test1-passage2",
+      "q": 17,
+      "prompt": "Paragraph D",
+      "answer": "v"
+    },
+    {
+      "examId": "cambridge-13-test1-passage2",
+      "q": 18,
+      "prompt": "Paragraph E",
+      "answer": "viii"
+    },
+    {
+      "examId": "cambridge-13-test1-passage2",
+      "q": 19,
+      "prompt": "Paragraph F",
+      "answer": "iii"
+    },
+    {
+      "examId": "cambridge-19-test2-passage3",
+      "q": 32,
+      "prompt": "she was responsible for some extremely … mathematical studies",
+      "answer": "I"
+    }
+  ]
+}

@@ -4,8 +4,10 @@ import {
   buildListeningBuilderGapFillOptions,
   getListeningBuilderTaskAnswerChoices,
   isListeningBuilderGapFillTask,
+  isListeningBuilderLabelMatchTask,
   normalizeListeningBuilderQuestionText,
   parseListeningBuilderExamOptionLine,
+  parseListeningBuilderExamQuestion,
   isListeningBuilderOptionLine,
   LISTENING_BUILDER_ANSWER_OVERRIDES,
   resolveListeningBuilderExamCorrectAnswer
@@ -73,6 +75,12 @@ const builderTaskToFoundationQuestion = (
     parsedLines.filter((line) => !isListeningBuilderOptionLine(line)).join(' — ') ||
     task.questionWordPhrase
 
+  const isGap = isListeningBuilderGapFillTask(task)
+  const isMatching = isListeningBuilderLabelMatchTask(task, allTasks, testId)
+  const parsedStem = parseListeningBuilderExamQuestion(task.questionText).stem || task.questionWordPhrase
+  const rowLabel =
+    isMatching && parsedStem && !parsedStem.includes('?') && parsedStem.length <= 64 ? parsedStem : undefined
+
   return {
     id: `${setKey}-${task.id}`,
     number: task.questionNumber,
@@ -85,7 +93,10 @@ const builderTaskToFoundationQuestion = (
     passageKeyword: task.targetText.slice(0, 80),
     questionKeyword: task.questionWordPhrase,
     thaiMeaning: task.thaiMeaning,
-    explanationThai: task.explanationThai
+    explanationThai: task.explanationThai,
+    questionText: task.questionText,
+    layout: isGap ? 'gap-fill' : isMatching ? 'matching-row' : 'choice',
+    rowLabel
   }
 }
 

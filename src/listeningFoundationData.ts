@@ -1,3 +1,5 @@
+import { CAM10_TEST1_SECTION3_SCRIPT } from './listeningFoundationSectionScripts'
+
 export type ListeningFoundationCategory = 'essential' | 'advanced'
 
 export type ListeningFoundationQuestion = {
@@ -13,6 +15,9 @@ export type ListeningFoundationQuestion = {
   questionKeyword: string
   thaiMeaning: string
   explanationThai: string
+  questionText?: string
+  layout?: 'choice' | 'gap-fill' | 'matching-row'
+  rowLabel?: string
 }
 
 export type ListeningFoundationSet = {
@@ -22,6 +27,8 @@ export type ListeningFoundationSet = {
   section: number
   levelLabel: string
   audioUrl?: string
+  /** Full section audioscript for the exam UI (optional; resolved automatically when omitted). */
+  audioscript?: string
   questions: ListeningFoundationQuestion[]
 }
 
@@ -202,18 +209,19 @@ export const LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
     category: 'advanced',
     title: 'Section 3 - Global Design Competition',
     section: 3,
-    levelLabel: 'Advanced · Section 3 reasoning',
+    levelLabel: 'Advanced · Cam 10 Test 1 style',
+    audioUrl: 'https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam10-Test1-Section3.mp3',
     questions: [
-      q(3, 21, 'Students entering the design competition have to _____.', 'This year is different. We have to adopt an innovative approach to existing technology, using it in a way that has not been thought of before.', 'using it in a way that has not been thought of before', 'C', [{ key: 'A', text: 'produce an energy-efficient design' }, { key: 'B', text: 'adapt an existing energy-saving appliance' }, { key: 'C', text: 'develop a new use for current technology' }], 'existing technology', 'current technology', 'เทคโนโลยีที่มีอยู่แล้ว', 'A new use for current technology is paraphrased as using existing technology in a new way.'),
-      q(3, 22, 'John chose a dishwasher because he wanted to make dishwashers _____.', 'They are all pretty boring and almost identical to each other. I think some people will be prepared to pay a little extra for something that looks different.', 'something that looks different', 'A', [{ key: 'A', text: 'more appealing' }, { key: 'B', text: 'more common' }, { key: 'C', text: 'more economical' }], 'looks different', 'more appealing', 'ดูน่าสนใจมากขึ้น', 'Looks different links to making the product more attractive or appealing.'),
-      q(3, 23, 'The stone in John’s Rockpool design is used _____.', 'Actually it does have a function. Instead of pushing a button, you turn the stone.', 'you turn the stone', 'B', [{ key: 'A', text: 'for decoration' }, { key: 'B', text: 'to switch it on' }, { key: 'C', text: 'to stop water escaping' }], 'turn the stone', 'switch it on', 'เปิดเครื่อง', 'Turning the stone replaces pushing a button, so it switches the dishwasher on.'),
-      q(3, 24, 'In the holding chamber, the carbon dioxide _____.', 'That is where the liquid is depressurised and so it reverts to a gas.', 'reverts to a gas', 'A', [{ key: 'A', text: 'changes back to a gas' }, { key: 'B', text: 'dries the dishes' }, { key: 'C', text: 'is allowed to cool' }], 'reverts to a gas', 'changes back to a gas', 'เปลี่ยนกลับเป็นก๊าซ', 'Revert means change back to a previous state.'),
-      q(3, 25, 'At the end of the cleaning process, the carbon dioxide _____.', 'The carbon dioxide is sent back to the cylinder and can be used again and again.', 'can be used again and again', 'C', [{ key: 'A', text: 'is released into the air' }, { key: 'B', text: 'is disposed of with the waste' }, { key: 'C', text: 'is collected ready to be re-used' }], 'used again and again', 're-used', 'นำกลับมาใช้ซ้ำ', 'Used again and again means re-used.'),
-      q(3, 26, 'John needs help preparing for his _____.', 'In a few months time, I have to give a presentation, and that is the part I was hoping you could help me with.', 'give a presentation', 'B', [{ key: 'A', text: 'drawings' }, { key: 'B', text: 'presentation' }, { key: 'C', text: 'competition' }, { key: 'D', text: 'paper' }], 'give a presentation', 'preparing for his presentation', 'การนำเสนอ', 'He asks for help with the presentation.'),
-      q(3, 27, 'The professor advises John to make a _____.', 'If you want to stand a good chance of winning you really need a model of the machine.', 'need a model of the machine', 'A', [{ key: 'A', text: 'model' }, { key: 'B', text: 'list' }, { key: 'C', text: 'grant' }, { key: 'D', text: 'report' }], 'need a model', 'advises him to make a model', 'แบบจำลอง', 'The professor says John needs a model.'),
-      q(3, 28, 'John’s main problem is getting good quality _____.', 'Yes. I want it to look professional but everything that is top quality is also very expensive.', 'everything that is top quality is also very expensive', 'C', [{ key: 'A', text: 'information' }, { key: 'B', text: 'drawings' }, { key: 'C', text: 'materials' }, { key: 'D', text: 'technology' }], 'top quality', 'good quality materials', 'วัสดุคุณภาพดี', 'The professor guesses the problem is materials, and John confirms quality is expensive.'),
-      q(3, 29, 'The professor suggests John apply for a _____.', 'Why do you not talk to the university about a grant? I can help you fill out the application forms if you like.', 'talk to the university about a grant', 'D', [{ key: 'A', text: 'job' }, { key: 'B', text: 'course' }, { key: 'C', text: 'patent' }, { key: 'D', text: 'grant' }], 'grant', 'apply for a grant', 'ทุนสนับสนุน', 'Talking to the university about a grant means applying for funding.'),
-      q(3, 30, 'The professor will check the _____ information in John’s report.', 'You need to make sure the technical details you have given are accurate and thorough.', 'technical details', 'A', [{ key: 'A', text: 'technical' }, { key: 'B', text: 'financial' }, { key: 'C', text: 'personal' }, { key: 'D', text: 'historical' }], 'technical details', 'technical information', 'ข้อมูลทางเทคนิค', 'Technical details are technical information.')
+      q(3, 21, 'Students entering the design competition have to _____.', CAM10_TEST1_SECTION3_SCRIPT, 'using it in a way that hasn’t been thought of before', 'C', [{ key: 'A', text: 'produce an energy-efficient design' }, { key: 'B', text: 'adapt an existing energy-saving appliance' }, { key: 'C', text: 'develop a new use for current technology' }], 'existing technology', 'current technology', 'เทคโนโลยีที่มีอยู่แล้ว', 'A new use for current technology is paraphrased as using existing technology in a new way.'),
+      q(3, 22, 'John chose a dishwasher because he wanted to make dishwashers _____.', CAM10_TEST1_SECTION3_SCRIPT, 'I think some people will be prepared to pay a little extra for something that looks different.', 'A', [{ key: 'A', text: 'more appealing' }, { key: 'B', text: 'more common' }, { key: 'C', text: 'more economical' }], 'looks different', 'more appealing', 'ดูน่าสนใจมากขึ้น', 'Looks different links to making the product more attractive or appealing.'),
+      q(3, 23, 'The stone in John’s Rockpool design is used _____.', CAM10_TEST1_SECTION3_SCRIPT, 'Instead of pushing a button, you turn the stone.', 'B', [{ key: 'A', text: 'for decoration' }, { key: 'B', text: 'to switch it on' }, { key: 'C', text: 'to stop water escaping' }], 'turn the stone', 'switch it on', 'เปิดเครื่อง', 'Turning the stone replaces pushing a button, so it switches the dishwasher on.'),
+      q(3, 24, 'In the holding chamber, the carbon dioxide _____.', CAM10_TEST1_SECTION3_SCRIPT, 'That’s where the liquid is depressurised and so it reverts to a gas.', 'A', [{ key: 'A', text: 'changes back to a gas' }, { key: 'B', text: 'dries the dishes' }, { key: 'C', text: 'is allowed to cool' }], 'reverts to a gas', 'changes back to a gas', 'เปลี่ยนกลับเป็นก๊าซ', 'Revert means change back to a previous state.'),
+      q(3, 25, 'At the end of the cleaning process, the carbon dioxide _____.', CAM10_TEST1_SECTION3_SCRIPT, 'The carbon dioxide is sent back to the cylinder and can be used again and again.', 'C', [{ key: 'A', text: 'is released into the air' }, { key: 'B', text: 'is disposed of with the waste' }, { key: 'C', text: 'is collected ready to be re-used' }], 'used again and again', 're-used', 'นำกลับมาใช้ซ้ำ', 'Used again and again means re-used.'),
+      q(3, 26, 'John needs help preparing for his _____.', CAM10_TEST1_SECTION3_SCRIPT, 'I have to give a presentation, and that’s the part I was hoping you could help me with.', 'B', [{ key: 'A', text: 'drawings' }, { key: 'B', text: 'presentation' }, { key: 'C', text: 'competition' }, { key: 'D', text: 'paper' }], 'give a presentation', 'preparing for his presentation', 'การนำเสนอ', 'He asks for help with the presentation.'),
+      q(3, 27, 'The professor advises John to make a _____.', CAM10_TEST1_SECTION3_SCRIPT, 'if you want to stand a good chance of winning you really need a model of the machine.', 'A', [{ key: 'A', text: 'model' }, { key: 'B', text: 'list' }, { key: 'C', text: 'grant' }, { key: 'D', text: 'report' }], 'need a model', 'advises him to make a model', 'แบบจำลอง', 'The professor says John needs a model.'),
+      q(3, 28, 'John’s main problem is getting good quality _____.', CAM10_TEST1_SECTION3_SCRIPT, 'everything that’s top quality is also very expensive.', 'C', [{ key: 'A', text: 'information' }, { key: 'B', text: 'drawings' }, { key: 'C', text: 'materials' }, { key: 'D', text: 'technology' }], 'top quality', 'good quality materials', 'วัสดุคุณภาพดี', 'The professor guesses the problem is materials, and John confirms quality is expensive.'),
+      q(3, 29, 'The professor suggests John apply for a _____.', CAM10_TEST1_SECTION3_SCRIPT, 'why don’t you talk to the university about a grant?', 'D', [{ key: 'A', text: 'job' }, { key: 'B', text: 'course' }, { key: 'C', text: 'patent' }, { key: 'D', text: 'grant' }], 'grant', 'apply for a grant', 'ทุนสนับสนุน', 'Talking to the university about a grant means applying for funding.'),
+      q(3, 30, 'The professor will check the _____ information in John’s report.', CAM10_TEST1_SECTION3_SCRIPT, 'make sure the technical details you’ve given are accurate and thorough.', 'A', [{ key: 'A', text: 'technical' }, { key: 'B', text: 'financial' }, { key: 'C', text: 'personal' }, { key: 'D', text: 'historical' }], 'technical details', 'technical information', 'ข้อมูลทางเทคนิค', 'Technical details are technical information.')
     ]
   },
   {
