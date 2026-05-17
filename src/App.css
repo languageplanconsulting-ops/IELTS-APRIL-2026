@@ -4973,6 +4973,46 @@ body,
   color: var(--text-main);
 }
 
+.adminGeneratorSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.adminGeneratorSteps article {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+  border: 1px solid #d2def4;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.adminGeneratorSteps span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #123f91;
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 950;
+}
+
+.adminGeneratorSteps strong {
+  color: #111a2e;
+  font-weight: 950;
+}
+
+.adminGeneratorSteps p {
+  margin: 0;
+  color: #5d6b83;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
 .adminReadingTypeSelector {
   display: flex;
   flex-wrap: wrap;
@@ -7934,6 +7974,11 @@ body,
 
   .adminReadingPassageTabs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adminGeneratorSteps,
+  .adminReadingGeneratorReviewGrid {
+    grid-template-columns: 1fr;
   }
 
   .readingExamLayout,
