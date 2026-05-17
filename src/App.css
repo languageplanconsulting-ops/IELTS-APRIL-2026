@@ -5069,18 +5069,46 @@ body,
   min-height: calc(100dvh - 120px);
 }
 
-.readingPage:has(.readingExamLayout-bank) {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100dvh - 72px);
-  gap: 12px;
+.readingPage-examActive .readingExamWrap {
+  min-height: 0;
+  gap: 10px;
 }
 
-.readingPage:has(.readingExamLayout-bank) .readingPageHeader {
+.workspace:has(.readingPage-examActive) {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.workspace:has(.readingPage-examActive) > .topbar {
   flex-shrink: 0;
 }
 
-.readingPage:has(.readingExamLayout-bank) .readingExamWrap {
+.workspace:has(.readingPage-examActive) > .readingPage-examActive {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+
+.readingPage:has(.readingExamLayout-bank),
+.readingPage.readingPage-examActive {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.readingPage:has(.readingExamLayout-bank) .readingPageHeader,
+.readingPage.readingPage-examActive .readingPageHeader {
+  display: none;
+}
+
+.readingPage:has(.readingExamLayout-bank) .readingExamWrap,
+.readingPage.readingPage-examActive .readingExamWrap {
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
@@ -5090,7 +5118,10 @@ body,
 
 .readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingAttemptToolbar,
 .readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingSummaryStrip,
-.readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingPassageTabs {
+.readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingPassageTabs,
+.readingPage-examActive .readingExamWrap > .readingAttemptToolbar,
+.readingPage-examActive .readingExamWrap > .readingSummaryStrip,
+.readingPage-examActive .readingExamWrap > .readingPassageTabs {
   flex-shrink: 0;
 }
 
@@ -5106,11 +5137,13 @@ body,
   align-items: stretch;
 }
 
-.readingPage:has(.readingExamLayout-bank) .readingExamLayout-bank {
+.readingPage:has(.readingExamLayout-bank) .readingExamLayout-bank,
+.readingPage-examActive .readingExamLayout-bank {
   flex: 1 1 auto;
   min-height: 0;
   height: auto;
   max-height: none;
+  overflow: hidden;
 }
 
 .readingExamLayout-bank {
@@ -5178,6 +5211,7 @@ body,
   overscroll-behavior: contain;
   padding-right: 4px;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .readingExamLayout-bank .readingExamSubmitBar {
@@ -5185,9 +5219,10 @@ body,
   bottom: auto;
   z-index: auto;
   flex-shrink: 0;
-  margin-top: 28px;
-  padding: 8px 0 20px;
-  background: transparent;
+  margin-top: auto;
+  padding: 12px 0 0;
+  border-top: 2px solid rgba(15, 23, 42, 0.1);
+  background: linear-gradient(180deg, rgba(255, 254, 249, 0.72) 0%, #fffef9 42%);
 }
 
 .readingExamLayout-bank .readingSubmitExamBtn-end {
@@ -7485,8 +7520,8 @@ body,
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .readingQuestionsPanel,
-  .readingPassageBody {
+  .readingQuestionsPanel:not(.readingQuestionsPanel-exam),
+  .readingPassagePanel:not(.readingPassagePanel-exam) .readingPassageBody {
     max-height: 68vh;
   }
 
@@ -13889,10 +13924,20 @@ select:focus,
   overflow: hidden;
 }
 
-.listeningFoundationAudioCompact {
+.listeningFoundationAudioCompact,
+.listeningSectionAudioPlayer {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   overflow: hidden;
+}
+
+.listeningFoundationQuestionPane .listeningSectionAudioPlayer {
+  margin: 0 20px 14px;
+  flex-shrink: 0;
+}
+
+.listeningBuilderExamQuestionIntro .listeningSectionAudioPlayer {
+  margin-bottom: 16px;
 }
 
 .listeningFoundationAudioCompact .listeningFoundationAudioTop {
@@ -14294,8 +14339,32 @@ select:focus,
   user-select: none;
 }
 
+.listeningBuilderExamPassageBody.is-awaiting-play {
+  position: relative;
+  opacity: 0.35;
+  filter: blur(1px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.listeningBuilderExamPassageBody.is-awaiting-play::after {
+  content: 'Press play on the left to unlock the audio script';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1e40af;
+  background: rgba(248, 250, 252, 0.72);
+  pointer-events: none;
+}
+
 .listeningFoundationScriptPane .listeningScriptReaderBody.is-awaiting-play::after {
-  content: 'Press play above to unlock the audio script';
+  content: 'Press play on the left to unlock the audio script';
   position: absolute;
   inset: 0;
   display: flex;

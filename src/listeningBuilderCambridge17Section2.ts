@@ -25,8 +25,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What is the maximum number of people who can stand on each side of the boat?\nA 9\nB 15\nC 18",
           questionWordPhrase: "maximum number of people who can stand on each side",
           targetText: "more than nine people on either side of the boat",
-          thaiMeaning: "จำนวนคนสูงสุดต่อข้างเรือ",
-          explanationThai: "โจทย์ถามจำนวนต่อข้าง และสคริปต์บอกว่าถ้ามากกว่า nine people on either side จะย้ายคน",
+          thaiMeaning: "จำนวนสูงสุด",
+          explanationThai: "'maximum number of people who can stand on each side' ในโจทย์ถูก paraphrase ในเสียงว่า \"please note if there are more than nine people on either side of the boat, we'll move some of you\" ซึ่งสอดคล้องกับตัวเลือก A (9) จึงตอบ A",
           correctAnswer: "A"
         },
         {
@@ -35,8 +35,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What colour are the tour boats?\nA dark red\nB jet black\nC light green",
           questionWordPhrase: "colour are the tour boats",
           targetText: "light-green exterior",
-          thaiMeaning: "สีเรือ",
-          explanationThai: "สีนั่งแดงเข้ม แต่ตัวเรือเป็น light-green exterior",
+          thaiMeaning: "สี (ในเสียงพูด)",
+          explanationThai: "'colour are the tour boats' ในโจทย์ถูกขยายความในเสียงว่า \"light-green exterior\" ซึ่งสอดคล้องกับตัวเลือก C (light green) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -46,7 +46,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "doesn't eat meat or fish",
           targetText: "cheddar cheese roll",
           thaiMeaning: "ไม่กินเนื้อหรือปลา",
-          explanationThai: "Lunchbox 2 มีแค่ cheddar cheese roll ไม่มีเนื้อสัตว์หรือปลา",
+          explanationThai: "'doesn't eat meat or fish' ในโจทย์ข้อนี้เน้นสิ่งที่ไม่ใช่/ไม่ได้ — ในเสียงอธิบายว่า \"Lunchbox 2 contains a cheddar cheese roll and Lunchbox 3 is salad-based and also contains eggs and t\" ซึ่งสอดคล้องกับตัวเลือก B (Lunchbox 2) จึงตอบ B",
           correctAnswer: "B"
         },
         {
@@ -55,8 +55,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What should people do with their litter?\nA take it home\nB hand it to a member of staff\nC put it in the bins provided on the boat",
           questionWordPhrase: "do with their litter",
           targetText: "will collect it from you",
-          thaiMeaning: "ขยะ",
-          explanationThai: "ไม่มีถังขยะบนเรือ แต่เจ้าหน้าที่จะ collect it from you",
+          thaiMeaning: "การทิ้งขยะ",
+          explanationThai: "'do with their litter' ในโจทย์ถูกขยายความในเสียงว่า \"or Ray, our other guide, will collect it from you after lunch and put it all in a large plastic s\" ซึ่งสอดคล้องกับตัวเลือก B (hand it to a member of staff) จึงตอบ B",
           correctAnswer: "B"
         },
         {
@@ -66,7 +66,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "why it was built",
           targetText: "built in 1838 to protect sailors",
           thaiMeaning: "เหตุผลที่สร้าง",
-          explanationThai: "why it was built ถูกอธิบายว่าสร้างเพื่อ protect sailors หลัง shipwrecks",
+          explanationThai: "'why it was built' ในโจทย์ถูก paraphrase ในเสียงว่า \"It was built in 1838 to protect sailors as a number of shipwrecks had led to significant loss of lif\" ซึ่งสอดคล้องกับตัวเลือก A (why it was built) จึงเลือก A เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "A"
         },
         {
@@ -75,8 +75,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which TWO features of the lighthouse does Lou mention?\nA why it was built\nB who built it\nC how long it took to build\nD who staffed it\nE what it was built with",
           questionWordPhrase: "who staffed it",
           targetText: "workers were mainly prison convicts",
-          thaiMeaning: "ใครทำงานที่นั่น",
-          explanationThai: "who staffed it ตรงกับ workers were mainly prison convicts แล้วค่อยเป็นครอบครัวธรรมดา",
+          thaiMeaning: "ผู้ทำงาน/คนดูแล",
+          explanationThai: "'who staffed it' ในโจทย์ถูกขยายความในเสียงว่า \"These workers were mainly prison convicts until the middle of that century when ordinary families wi\" ซึ่งสอดคล้องกับตัวเลือก D (who staffed it) จึงเลือก D เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "D"
         },
         {
@@ -86,7 +86,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "fur seals",
           targetText: "don't be surprised if one pops up",
           thaiMeaning: "แมวน้ำขนสั้น",
-          explanationThai: "fur seals อาจโผล่มาหน้าเรือ สคริปต์บอก don't be surprised if one pops up",
+          explanationThai: "'fur seals' ในโจทย์ถูกขยายความในเสียงว่า \"inquisitive creatures so don't be surprised if one pops up right in front of you.\" ซึ่งสอดคล้องกับตัวเลือก B (fur seals) จึงเลือก B เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "B"
         },
         {
@@ -96,7 +96,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "dolphins",
           targetText: "ride the waves beside us",
           thaiMeaning: "ปลาโลมา",
-          explanationThai: "dolphins บางครั้งว่ายมา ride the waves beside us",
+          explanationThai: "'dolphins' ในโจทย์ถูกขยายความในเสียงว่า \"own or in groups as they ride the waves beside us.\" ซึ่งสอดคล้องกับตัวเลือก C (dolphins) จึงเลือก C เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "C"
         },
         {
@@ -106,7 +106,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "explain what is inside them",
           targetText: "talk to you about what lies beyond",
           thaiMeaning: "อธิบายสิ่งข้างใน",
-          explanationThai: "explain what is inside ถูกพูดว่า talk about what lies beyond",
+          explanationThai: "'explain what is inside them' ในโจทย์ถูกขยายความในเสียงว่า \"and at that point we'll talk to you about what lies beyond.\" ซึ่งสอดคล้องกับตัวเลือก D (Someone will explain what is inside them.) จึงเลือก D เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "D"
         },
         {
@@ -115,8 +115,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which TWO points does Lou make about the caves?\nA Only large tourist boats can visit them.\nB The entrances to them are often blocked.\nC It is too dangerous for individuals to go near them.\nD Someone will explain what is inside them.\nE They cannot be reached on foot.",
           questionWordPhrase: "cannot be reached on foot",
           targetText: "can only be approached by sea",
-          thaiMeaning: "เดินเข้าไม่ได้",
-          explanationThai: "cannot be reached on foot ตรงกับ can only be approached by sea",
+          thaiMeaning: "เข้าไม่ได้ด้วยการเดิน",
+          explanationThai: "'cannot be reached on foot' ในโจทย์ข้อนี้เน้นสิ่งที่ไม่ใช่/ไม่ได้ — ในเสียงอธิบายว่า \"They can only be approached by sea, but if you feel that you want to see more than we're able to sho\" ซึ่งสอดคล้องกับตัวเลือก E (They cannot be reached on foot.) จึงเลือก E เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "E"
         }
       ]
@@ -142,8 +142,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Many past owners made changes to\nA the gardens.\nB the house.\nC the farm.",
           questionWordPhrase: "made changes to",
           targetText: "adding new rooms",
-          thaiMeaning: "การเปลี่ยนแปลงของเจ้าของในอดีต",
-          explanationThai: "โจทย์ถามว่าเปลี่ยนอะไร และสคริปต์พูด adding new rooms หรือ demolishing",
+          thaiMeaning: "การเปลี่ยนแปลงที่ทำ",
+          explanationThai: "'made changes to' ในโจทย์ถูกขยายความในเสียงว่า \"their mark, generally by adding new rooms, like the ballroom and conservatory, or by demolishing\" ซึ่งสอดคล้องกับตัวเลือก B (the house.) จึงตอบ B",
           correctAnswer: "B"
         },
         {
@@ -152,8 +152,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Sir Edward Downes built Oniton Hall because he wanted\nA a place for discussing politics.\nB a place to display his wealth.\nC a place for artists and writers.",
           questionWordPhrase: "built Oniton Hall because",
           targetText: "hosted meetings of creative and literary people",
-          thaiMeaning: "สถานที่สำหรับศิลปินและนักเขียน",
-          explanationThai: "เขาต้องการหนีการเมืองและรับ painters and poets",
+          thaiMeaning: "ศิลปินและนักเขียน",
+          explanationThai: "'built Oniton Hall because' ในโจทย์ถูกขยายความในเสียงว่า \"political allies, and hosted meetings of creative and literary people, like painters and poets\" ซึ่งสอดคล้องกับตัวเลือก C (a place for artists and writers.) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -162,8 +162,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Visitors can learn about the work of servants in the past from\nA audio guides.\nB photographs.\nC people in costume.",
           questionWordPhrase: "work of servants",
           targetText: "you'll see volunteers dressed up",
-          thaiMeaning: "เรียนรู้งานคนรับใช้",
-          explanationThai: "เรียนรู้จากคนแต่งชุด ไม่ใช่ audio guide",
+          thaiMeaning: "คนรับใช้/ชุดย้อนยุค",
+          explanationThai: "'work of servants' ในโจทย์ถูกขยายความในเสียงว่า \"you go round the house, you'll see volunteers dressed up as nineteenth-century servants, going a\" ซึ่งสอดคล้องกับตัวเลือก C (people in costume.) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -172,8 +172,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What is new for children at Oniton Hall?\nA clothes for dressing up\nB mini tractors\nC the adventure playground",
           questionWordPhrase: "new for children",
           targetText: "latest addition is child-sized tractors",
-          thaiMeaning: "ของใหม่สำหรับเด็ก",
-          explanationThai: "latest addition คือ child-sized tractors",
+          thaiMeaning: "เด็ก",
+          explanationThai: "'new for children' ในโจทย์ถูกขยายความในเสียงว่า \"Our latest addition is child-sized tractors, that you can drive around the grounds.\" ซึ่งสอดคล้องกับตัวเลือก B (mini tractors) จึงตอบ B",
           correctAnswer: "B"
         },
         {
@@ -182,8 +182,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which activity is offered at each of the following locations on the farm?\nActivities\nA shopping\nB watching cows being milked\nC seeing old farming equipment\nD eating and drinking\nE starting a trip\nF seeing rare breeds of animals\nG helping to look after animals\nH using farming tools\n15 dairy",
           questionWordPhrase: "eating and drinking",
           targetText: "place to go for lunch, or afternoon tea",
-          thaiMeaning: "กินและดื่ม",
-          explanationThai: "dairy ตอนนี้เป็น lunch, afternoon tea, coffee",
+          thaiMeaning: "eating and drinking",
+          explanationThai: "'eating and drinking' ในโจทย์ถูกขยายความในเสียงว่า \"It's now the place to go for lunch, or afternoon tea, or just a cup of coffee and a slice of homemad\" ซึ่งสอดคล้องกับตัวเลือก D (eating and drinking) จึงตอบ D",
           correctAnswer: "D"
         },
         {
@@ -192,8 +192,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which activity is offered at each of the following locations on the farm?\nActivities\nA shopping\nB watching cows being milked\nC seeing old farming equipment\nD eating and drinking\nE starting a trip\nF seeing rare breeds of animals\nG helping to look after animals\nH using farming tools\n16 large barn",
           questionWordPhrase: "old farming equipment",
           targetText: "collection of agricultural tools",
-          thaiMeaning: "เครื่องมือเกษตรเก่า",
-          explanationThai: "large barn มี collection of agricultural tools",
+          thaiMeaning: "seeing old farming equipment",
+          explanationThai: "'old farming equipment' ในโจทย์ถูกขยายความในเสียงว่า \"barn, and in here is our collection of agricultural tools.\" ซึ่งสอดคล้องกับตัวเลือก C (seeing old farming equipment) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -202,8 +202,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which activity is offered at each of the following locations on the farm?\nActivities\nA shopping\nB watching cows being milked\nC seeing old farming equipment\nD eating and drinking\nE starting a trip\nF seeing rare breeds of animals\nG helping to look after animals\nH using farming tools\n17 small barn",
           questionWordPhrase: "look after animals",
           targetText: "groom the donkeys and horses",
-          thaiMeaning: "ดูแลสัตว์",
-          explanationThai: "small barn ให้ groom donkeys and horses",
+          thaiMeaning: "helping to look after animals",
+          explanationThai: "'look after animals' ในโจทย์ถูกขยายความในเสียงว่า \"of stone, where you can groom the donkeys and horses, to keep their coats clean.\" ซึ่งสอดคล้องกับตัวเลือก G (helping to look after animals) จึงตอบ G",
           correctAnswer: "G"
         },
         {
@@ -212,8 +212,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which activity is offered at each of the following locations on the farm?\nActivities\nA shopping\nB watching cows being milked\nC seeing old farming equipment\nD eating and drinking\nE starting a trip\nF seeing rare breeds of animals\nG helping to look after animals\nH using farming tools\n18 stables",
           questionWordPhrase: "shopping",
           targetText: "place to go to buy gifts",
-          thaiMeaning: "ช้อปปิ้ง",
-          explanationThai: "stables เป็นที่ซื้อ gifts, jams, clothes",
+          thaiMeaning: "ของฝาก/ช้อปปิ้ง",
+          explanationThai: "'shopping' ในโจทย์ถูกขยายความในเสียงว่า \"which instead is the place to go to buy gifts, books, our own jams and pickles, and clothes a\" ซึ่งสอดคล้องกับตัวเลือก A (shopping) จึงตอบ A",
           correctAnswer: "A"
         },
         {
@@ -222,8 +222,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which activity is offered at each of the following locations on the farm?\nActivities\nA shopping\nB watching cows being milked\nC seeing old farming equipment\nD eating and drinking\nE starting a trip\nF seeing rare breeds of animals\nG helping to look after animals\nH using farming tools\n19 shed",
           questionWordPhrase: "starting a trip",
           targetText: "climb into a horse-drawn carriage",
-          thaiMeaning: "เริ่มทริป",
-          explanationThai: "ที่ shed ขึ้น carriage ทัวร์ park and farm",
+          thaiMeaning: "กิจกรรมวาดภาพ",
+          explanationThai: "'starting a trip' ในโจทย์ถูกขยายความในเสียงว่า \"brick building, you can climb into a horse-drawn carriage for a lovely, relaxing tour of the par\" ซึ่งสอดคล้องกับตัวเลือก E (starting a trip) จึงตอบ E",
           correctAnswer: "E"
         },
         {
@@ -233,7 +233,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "rare breeds",
           targetText: "types of cattle and sheep that are hardly ever found",
           thaiMeaning: "สายพันธุ์หายาก",
-          explanationThai: "parkland มีสัตว์ที่ hardly ever found on farms",
+          explanationThai: "'rare breeds' ในโจทย์ถูกขยายความในเสียงว่า \"You'll see types of cattle and sheep that are hardly ever found on farms these days.\" ซึ่งสอดคล้องกับตัวเลือก F (seeing rare breeds of animals) จึงตอบ F",
           correctAnswer: "F"
         }
       ]
@@ -261,8 +261,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which TWO facts are given about the school's extended hours childcare service?\nA It started recently.\nB More children attend after school than before school.\nC An average of 50 children attend in the mornings.\nD A child cannot attend both the before and after school sessions.\nE The maximum number of children who can attend is 70.",
           questionWordPhrase: "More children attend after school",
           targetText: "about half that number for the breakfast sessions",
-          thaiMeaning: "เด็กหลังเลิกเรียนมากกว่าก่อนเรียน",
-          explanationThai: "after school มี 50–60 คน แต่ breakfast มีประมาณครึ่งหนึ่ง",
+          thaiMeaning: "เด็ก",
+          explanationThai: "'More children attend after school' ในโจทย์ถูกขยายความในเสียงว่า \"afternoon sessions and about half that number for the breakfast sessions.\" ซึ่งสอดคล้องกับตัวเลือก B (More children attend after school than before school.) จึงเลือก B เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "B"
         },
         {
@@ -271,8 +271,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which TWO facts are given about the school's extended hours childcare service?\nA It started recently.\nB More children attend after school than before school.\nC An average of 50 children attend in the mornings.\nD A child cannot attend both the before and after school sessions.\nE The maximum number of children who can attend is 70.",
           questionWordPhrase: "maximum number of children",
           targetText: "insured to provide care for up to 70 children",
-          thaiMeaning: "จำนวนสูงสุด 70 คน",
-          explanationThai: "maximum 70 ตรงกับ insured for up to 70 children",
+          thaiMeaning: "จำนวนสูงสุด",
+          explanationThai: "'maximum number of children' ในโจทย์ถูก paraphrase ในเสียงว่า \"We are insured to provide care for up to 70 children, although we rarely have this many attending at\" ซึ่งสอดคล้องกับตัวเลือก E (The maximum number of children who can attend is 70.) จึงเลือก E เป็นหนึ่งในสองคำตอบ",
           correctAnswer: "E"
         },
         {
@@ -281,8 +281,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "How much does childcare cost for a complete afternoon session per child?\nA £3.50\nB £5.70\nC £7.20",
           questionWordPhrase: "complete afternoon session",
           targetText: "afternoon sessions, which run from 3.30 until 6 p.m., it's £7.20",
-          thaiMeaning: "ค่าบริการบ่ายเต็มรอบ",
-          explanationThai: "afternoon session ราคา £7.20 ตามสคริปต์",
+          thaiMeaning: "ค่าบริการ",
+          explanationThai: "'complete afternoon session' ในโจทย์ถูก paraphrase ในเสียงว่า \"For the afternoon sessions, which run from 3.30 until 6 p.m., it's £7.20.\" ซึ่งสอดคล้องกับตัวเลือก C (£7.20) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -291,8 +291,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What does the manager say about food?\nA Children with allergies should bring their own food.\nB Children may bring healthy snacks with them.\nC Children are given a proper meal at 5 p.m.",
           questionWordPhrase: "proper meal at 5 p.m.",
           targetText: "At 5 p.m. children are given something more substantial",
-          thaiMeaning: "มื้อหลักตอนห้าโมงเย็น",
-          explanationThai: "proper meal at 5 p.m. ถูกพูดว่า something more substantial เช่น pasta",
+          thaiMeaning: "มื้อหลักตอนเย็น",
+          explanationThai: "'proper meal at 5 p.m.' ในโจทย์ถูกขยายความในเสียงว่า \"are given something more substantial, such as pasta or a casserole.\" ซึ่งสอดคล้องกับตัวเลือก C (Children are given a proper meal at 5 p.m.) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -301,8 +301,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What is different about arrangements in the school holidays?\nA Children from other schools can attend.\nB Older children can attend.\nC A greater number of children can attend.",
           questionWordPhrase: "school holidays",
           targetText: "make new friends with children from other schools",
-          thaiMeaning: "เด็กจากโรงเรียนอื่นมาได้",
-          explanationThai: "ช่วงปิดเทอมมี spaces ให้เด็กจาก other schools",
+          thaiMeaning: "ช่วงปิดเทอม/โรงเรียนอื่น",
+          explanationThai: "'school holidays' ในโจทย์ถูกขยายความในเสียงว่า \"ance to make new friends with children from other schools — spaces are available for them because a\" ซึ่งสอดคล้องกับตัวเลือก A (Children from other schools can attend.) จึงตอบ A",
           correctAnswer: "A"
         },
         {
@@ -311,8 +311,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What information is given about each of the following activities on offer?\nInformation\nA has limited availability\nB is no longer available\nC is for over 8s only\nD requires help from parents\nE involves an additional fee\nF is a new activity\nG was requested by children\n16 Spanish",
           questionWordPhrase: "additional fee",
           targetText: "only activity which we have to make an extra charge for",
-          thaiMeaning: "มีค่าใช้จ่ายเพิ่ม",
-          explanationThai: "Spanish เป็นกิจกรรมเดียวที่ extra charge",
+          thaiMeaning: "involves an additional fee",
+          explanationThai: "'additional fee' ในโจทย์ถูกขยายความในเสียงว่า \"This is the only activity which we have to make an extra charge for — but it's well worth it.\" ซึ่งสอดคล้องกับตัวเลือก E (involves an additional fee) จึงตอบ E",
           correctAnswer: "E"
         },
         {
@@ -321,8 +321,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What information is given about each of the following activities on offer?\nInformation\nA has limited availability\nB is no longer available\nC is for over 8s only\nD requires help from parents\nE involves an additional fee\nF is a new activity\nG was requested by children\n17 Music",
           questionWordPhrase: "help from parents",
           targetText: "rely on parental support for this",
-          thaiMeaning: "ต้องการความช่วยเหลือจากผู้ปกครอง",
-          explanationThai: "music ต้องการ parental support",
+          thaiMeaning: "ความช่วยเหลือจากผู้ปกครอง",
+          explanationThai: "'help from parents' ในโจทย์ถูกขยายความในเสียงว่า \"We do rely on parental support for this, so if any of you sing or play an instrument and would be pr\" ซึ่งสอดคล้องกับตัวเลือก D (requires help from parents) จึงตอบ D",
           correctAnswer: "D"
         },
         {
@@ -331,8 +331,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What information is given about each of the following activities on offer?\nInformation\nA has limited availability\nB is no longer available\nC is for over 8s only\nD requires help from parents\nE involves an additional fee\nF is a new activity\nG was requested by children\n18 Painting",
           questionWordPhrase: "requested by children",
           targetText: "children kept asking if they could do some art",
-          thaiMeaning: "เด็กขอมา",
-          explanationThai: "เปิด painting เพราะ children kept asking",
+          thaiMeaning: "เด็ก",
+          explanationThai: "'requested by children' ในโจทย์ถูก paraphrase ในเสียงว่า \"extra mess involved, but children kept asking if they could do some art and so we finally gave in\" ซึ่งสอดคล้องกับตัวเลือก G (was requested by children) จึงตอบ G",
           correctAnswer: "G"
         },
         {
@@ -341,8 +341,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What information is given about each of the following activities on offer?\nInformation\nA has limited availability\nB is no longer available\nC is for over 8s only\nD requires help from parents\nE involves an additional fee\nF is a new activity\nG was requested by children\n19 Yoga",
           questionWordPhrase: "new activity",
           targetText: "until now that is",
-          thaiMeaning: "กิจกรรมใหม่",
-          explanationThai: "yoga เพิ่งหาคนสอนได้ until now",
+          thaiMeaning: "is a new activity",
+          explanationThai: "'new activity' ในโจทย์ถูกขยายความในเสียงว่า \"available to teach it — until now that is.\" ซึ่งสอดคล้องกับตัวเลือก F (is a new activity) จึงตอบ F",
           correctAnswer: "F"
         },
         {
@@ -351,8 +351,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What information is given about each of the following activities on offer?\nInformation\nA has limited availability\nB is no longer available\nC is for over 8s only\nD requires help from parents\nE involves an additional fee\nF is a new activity\nG was requested by children\n20 Cooking",
           questionWordPhrase: "over 8s only",
           targetText: "restrict this to the over 8s",
-          thaiMeaning: "สำหรับอายุเกิน 8 ปี",
-          explanationThai: "cooking จำกัด over 8s เพราะเลอะมาก",
+          thaiMeaning: "ทำอาหาร (อายุ 8+ ปี)",
+          explanationThai: "'over 8s only' ในโจทย์ถูกขยายความในเสียงว่า \"much, so we've decided to restrict this to the over 8s, as they are better able to clean up after\" ซึ่งสอดคล้องกับตัวเลือก C (is for over 8s only) จึงตอบ C",
           correctAnswer: "C"
         }
       ]
@@ -381,8 +381,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Many hotel managers are unaware that their staff often leave because of\nA a lack of training.\nB long hours.\nC low pay.",
           questionWordPhrase: "leave because of",
           targetText: "lack of training in many hotel jobs",
-          thaiMeaning: "ขาดการฝึกอบรม",
-          explanationThai: "ผู้จัดการคิดว่าเป็นเรื่องเงินหรือเวลา แต่จริง ๆ คือ lack of training",
+          thaiMeaning: "การฝึกอบรม",
+          explanationThai: "'leave because of' ในโจทย์ถูกขยายความในเสียงว่า \"realise is that it's the lack of training in many hotel jobs which is a huge factor.\" ซึ่งสอดคล้องกับตัวเลือก A (a lack of training.) จึงตอบ A",
           correctAnswer: "A"
         },
         {
@@ -391,8 +391,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What is the impact of high staff turnover on managers?\nA an increased workload\nB low morale\nC an inability to meet targets",
           questionWordPhrase: "impact on managers",
           targetText: "managers may have to cover some duties",
-          thaiMeaning: "ภาระงานเพิ่ม",
-          explanationThai: "ต้อง recruit ตลอดและ cover duties เอง",
+          thaiMeaning: "ภาระงานหนัก",
+          explanationThai: "'impact on managers' ในโจทย์ถูก paraphrase ในเสียงว่า \"very time-consuming, and managers may have to cover some duties while waiting for new staff to ar\" ซึ่งสอดคล้องกับตัวเลือก A (an increased workload) จึงตอบ A",
           correctAnswer: "A"
         },
         {
@@ -401,8 +401,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What mistake should managers always avoid?\nA failing to treat staff equally\nB reorganising shifts without warning\nC neglecting to have enough staff during busy periods",
           questionWordPhrase: "mistake should managers avoid",
           targetText: "never give certain staff preferential treatment",
-          thaiMeaning: "ปฏิบัติไม่เท่าเทียม",
-          explanationThai: "อย่าให้ preferential treatment กับบางคน",
+          thaiMeaning: "failing to treat staff equally",
+          explanationThai: "'mistake should managers avoid' ในโจทย์ถูกขยายความในเสียงว่า \"example, make sure you never give certain staff preferential treatment.\" ซึ่งสอดคล้องกับตัวเลือก A (failing to treat staff equally) จึงตอบ A",
           correctAnswer: "A"
         },
         {
@@ -411,8 +411,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "What unexpected benefit did Dunwich Hotel notice after improving staff retention rates?\nA a fall in customer complaints\nB an increase in loyalty club membership\nC a rise in spending per customer",
           questionWordPhrase: "unexpected benefit",
           targetText: "significant increase in the amount each customer spent",
-          thaiMeaning: "ลูกค้าใช้จ่ายมากขึ้น",
-          explanationThai: "ได้ increase in the amount each customer spent",
+          thaiMeaning: "a rise in spending per customer",
+          explanationThai: "'unexpected benefit' ในโจทย์ถูกขยายความในเสียงว่า \"but they also noticed a significant increase in the amount each customer spent during their stay\" ซึ่งสอดคล้องกับตัวเลือก C (a rise in spending per customer) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -422,7 +422,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "relationships and teamwork",
           targetText: "partners who were contributing to the success",
           thaiMeaning: "ความสัมพันธ์และทีมเวิร์ก",
-          explanationThai: "ให้พนักงานรู้สึกเป็น partners และเชิญเข้าประชุม",
+          explanationThai: "'relationships and teamwork' ในโจทย์ถูกขยายความในเสียงว่า \"made to feel they were partners who were contributing to the success of the business as a whole\" ซึ่งสอดคล้องกับตัวเลือก A (improving relationships and teamwork) จึงตอบ A",
           correctAnswer: "A"
         },
         {
@@ -432,7 +432,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "career opportunities",
           targetText: "individuals with management potential",
           thaiMeaning: "โอกาสในสายอาชีพ",
-          explanationThai: "scheme for recognising talent และ management potential",
+          explanationThai: "'career opportunities' ในโจทย์ถูกขยายความในเสียงว่า \"organising training for individuals with management potential will encourage them to stay with t\" ซึ่งสอดคล้องกับตัวเลือก C (providing career opportunities) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -441,8 +441,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which way of reducing staff turnover was used in each of the following hotels?\nWays of reducing staff turnover\nA improving relationships and teamwork\nB offering incentives and financial benefits\nC providing career opportunities\n17 Bluewater Hotels",
           questionWordPhrase: "incentives and financial benefits",
           targetText: "all-expenses-paid trip abroad every year",
-          thaiMeaning: "สิทธิประโยชน์ทางการเงิน",
-          explanationThai: "รางวัลเป็น all-expenses-paid trip abroad",
+          thaiMeaning: "ผลประโยชน์ทางการเงิน",
+          explanationThai: "'incentives and financial benefits' ในโจทย์ถูกขยายความในเสียงว่า \"they're sent on an all-expenses-paid trip abroad every year.\" ซึ่งสอดคล้องกับตัวเลือก B (offering incentives and financial benefits) จึงตอบ B",
           correctAnswer: "B"
         },
         {
@@ -451,8 +451,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which way of reducing staff turnover was used in each of the following hotels?\nWays of reducing staff turnover\nA improving relationships and teamwork\nB offering incentives and financial benefits\nC providing career opportunities\n18 Pentlow Hotels",
           questionWordPhrase: "career opportunities",
           targetText: "introduced a management programme",
-          thaiMeaning: "โอกาสก้าวหน้า",
-          explanationThai: "management programme ให้ทำงานหลายบทบาท",
+          thaiMeaning: "โอกาสในสายอาชีพ",
+          explanationThai: "'career opportunities' ในโจทย์ถูกขยายความในเสียงว่า \"with good prospects, they introduced a management programme.\" ซึ่งสอดคล้องกับตัวเลือก C (providing career opportunities) จึงตอบ C",
           correctAnswer: "C"
         },
         {
@@ -462,7 +462,7 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "financial benefits",
           targetText: "issuing vouchers to help cover the cost of childcare",
           thaiMeaning: "ผลประโยชน์ทางการเงิน",
-          explanationThai: "vouchers ช่วยค่า childcare",
+          explanationThai: "'financial benefits' ในโจทย์ถูกขยายความในเสียงว่า \"the hotel began issuing vouchers to help cover the cost of childcare.\" ซึ่งสอดคล้องกับตัวเลือก B (offering incentives and financial benefits) จึงตอบ B",
           correctAnswer: "B"
         },
         {
@@ -471,8 +471,8 @@ export const CAMBRIDGE_17_SECTION_2_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Which way of reducing staff turnover was used in each of the following hotels?\nWays of reducing staff turnover\nA improving relationships and teamwork\nB offering incentives and financial benefits\nC providing career opportunities\n20 The Amesbury",
           questionWordPhrase: "relationships and teamwork",
           targetText: "co-operative and supportive environment",
-          thaiMeaning: "บรรยากาศทีม",
-          explanationThai: "co-operative and supportive environment แบบครอบครัว",
+          thaiMeaning: "ความสัมพันธ์และทีมเวิร์ก",
+          explanationThai: "'relationships and teamwork' ในโจทย์ถูกขยายความในเสียงว่า \"this by creating a co-operative and supportive environment.\" ซึ่งสอดคล้องกับตัวเลือก A (improving relationships and teamwork) จึงตอบ A",
           correctAnswer: "A"
         }
       ]

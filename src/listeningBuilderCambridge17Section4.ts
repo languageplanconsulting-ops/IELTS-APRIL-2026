@@ -27,7 +27,7 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "type of",
           targetText: "kind of puzzle",
           thaiMeaning: "ปริศนา",
-          explanationThai: "maze ถูกอธิบายว่า kind of puzzle",
+          explanationThai: "'type of' ในโจทย์ถูกขยายความในเสียงว่า \"different as it is a kind of puzzle with an intricate network of paths.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"puzzle\"",
           correctAnswer: "puzzle"
         },
         {
@@ -36,8 +36,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nLabyrinths\\n32 ____ is needed to navigate through a maze",
           questionWordPhrase: "navigate through a maze",
           targetText: "using logic to work out the pattern",
-          thaiMeaning: "ตรรกะ",
-          explanationThai: "ต้องใช้ logic เพื่อหาทางออก",
+          thaiMeaning: "ตรรกะในการหาทาง",
+          explanationThai: "'navigate through a maze' ในโจทย์ถูกขยายความในเสียงว่า \"lost a few times before using logic to work out the pattern and find your way to the centre and\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"logic\"",
           correctAnswer: "logic"
         },
         {
@@ -47,7 +47,7 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "feeling of",
           targetText: "state of confusion",
           thaiMeaning: "ความสับสน",
-          explanationThai: "maze มาจากคำว่า confusion",
+          explanationThai: "'feeling of' ในโจทย์ถูกขยายความในเสียงว่า \"a Scandinavian word for a state of confusion.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"confusion\"",
           correctAnswer: "confusion"
         },
         {
@@ -57,7 +57,7 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "used in",
           targetText: "meditation and prayer tool",
           thaiMeaning: "การทำสมาธิ",
-          explanationThai: "ใช้เป็น meditation and prayer tool",
+          explanationThai: "'used in' ในโจทย์ถูกขยายความในเสียงว่า \"and have been used as a meditation and prayer tool in many cultures over many centuries.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"meditation\"",
           correctAnswer: "meditation"
         },
         {
@@ -66,8 +66,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nLabyrinths\\nAncient carvings on 35 ____ have been found",
           questionWordPhrase: "carvings on",
           targetText: "found carved into stone",
-          thaiMeaning: "หิน",
-          explanationThai: "ลายเกลียวสลักบน stone",
+          thaiMeaning: "ลายสลัก",
+          explanationThai: "'carvings on' ในโจทย์ถูกขยายความในเสียงว่า \"spiral pattern have been found carved into stone, from Sardinia to Scandinavia, from Arizona to I\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"stone\"",
           correctAnswer: "stone"
         },
         {
@@ -77,7 +77,7 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "Greeks used",
           targetText: "used on coins",
           thaiMeaning: "เหรียญ",
-          explanationThai: "กรีกใช้บน coins",
+          explanationThai: "'Greeks used' ในโจทย์ถูก paraphrase ในเสียงว่า \"the labyrinth spiral was used on coins around four thousand years ago.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"coins\"",
           correctAnswer: "coins"
         },
         {
@@ -86,8 +86,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nLabyrinths\\nthe largest turf labyrinth once had a big 37 ____ in the middle",
           questionWordPhrase: "in the middle",
           targetText: "large tree in the middle of it",
-          thaiMeaning: "ต้นไม้",
-          explanationThai: "เคยมี large tree ตรงกลาง",
+          thaiMeaning: "ต้นไม้ตรงกลาง",
+          explanationThai: "'in the middle' ในโจทย์ถูกพูดในเสียงตรง ๆ ว่า \"which used to have a large tree in the middle of it.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"tree\"",
           correctAnswer: "tree"
         },
         {
@@ -97,7 +97,7 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "reduce a person's",
           targetText: "slower breathing",
           thaiMeaning: "อัตราการหายใจ",
-          explanationThai: "benefits รวม slower breathing",
+          explanationThai: "'reduce a person's' ในโจทย์ถูกขยายความในเสียงว่า \"benefits, which include slower breathing and a restored sense of balance and perspecti\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"breathing\"",
           correctAnswer: "breathing"
         },
         {
@@ -107,7 +107,7 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "made from",
           targetText: "have a paper ‘finger labyrinth’",
           thaiMeaning: "กระดาษ",
-          explanationThai: "ผู้ป่วยใช้ finger labyrinth กระดาษ",
+          explanationThai: "'made from' ในโจทย์ถูกขยายความในเสียงว่า \"who can't walk can have a paper ‘finger labyrinth’ brought to their bed.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"paper\"",
           correctAnswer: "paper"
         },
         {
@@ -117,7 +117,7 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionWordPhrase: "experience less",
           targetText: "relief from anxiety",
           thaiMeaning: "ความวิตกกังวล",
-          explanationThai: "study พบ relief from anxiety",
+          explanationThai: "'experience less' ในโจทย์ถูกขยายความในเสียงว่า \"calming, relaxation, and relief from anxiety' for Alzheimer's patients.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"anxiety\"",
           correctAnswer: "anxiety"
         }
       ]
@@ -142,8 +142,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nThe impact of digital technology on the Icelandic language\\nhas approximately 31 ____ speakers",
           questionWordPhrase: "speakers",
           targetText: "321,000 people",
-          thaiMeaning: "ผู้พูด",
-          explanationThai: "พูดว่า spoken by around 321,000 people",
+          thaiMeaning: "จำนวนผู้พูดภาษาไอซ์แลนด์",
+          explanationThai: "'speakers' ในโจทย์ถูกขยายความในเสียงว่า \"which is spoken by around 321,000 people, most of whom live in Iceland — an island in the North At\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"321000\"",
           correctAnswer: "321000"
         },
         {
@@ -152,8 +152,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nhas a 32 ____ that is still growing",
           questionWordPhrase: "still growing",
           targetText: "vocabulary of Icelandic is continually increasing",
-          thaiMeaning: "คลังคำศัพท์",
-          explanationThai: "vocabulary continually increasing",
+          thaiMeaning: "คลังคำศัพท์ที่เติบโต",
+          explanationThai: "'still growing' ในโจทย์ถูกขยายความในเสียงว่า \"In fact, the vocabulary of Icelandic is continually increasing because when speakers need a new word\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"vocabulary\"",
           correctAnswer: "vocabulary"
         },
         {
@@ -162,8 +162,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nhas its own words for computer-based concepts, such as web browser and 33 ____",
           questionWordPhrase: "such as",
           targetText: "word for podcast",
-          thaiMeaning: "พอดแคสต์",
-          explanationThai: "มีคำภาษาไอซ์แลนด์สำหรับ podcast",
+          thaiMeaning: "such as",
+          explanationThai: "'such as' ในโจทย์ถูกขยายความในเสียงว่า \"Then there's an Icelandic word for podcast — which is too hard to pronounce!\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"podcast\"",
           correctAnswer: "podcast"
         },
         {
@@ -172,8 +172,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nYoung speakers are big users of digital technology, such as 34 ____",
           questionWordPhrase: "such as",
           targetText: "use them all the time",
-          thaiMeaning: "สมาร์ทโฟน",
-          explanationThai: "ยกตัวอย่าง smartphones",
+          thaiMeaning: "such as",
+          explanationThai: "'such as' ในโจทย์ถูกขยายความในเสียงว่า \"but today young people use them all the time to read books, watch TV or films, play games, list\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"smartphones\"",
           correctAnswer: "smartphones"
         },
         {
@@ -182,8 +182,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nare becoming 35 ____ very quickly",
           questionWordPhrase: "becoming",
           targetText: "promotes their bilingual skills",
-          thaiMeaning: "สองภาษา",
-          explanationThai: "ใช้ภาษาอังกฤษมากจนเก่งสองภาษาเร็ว",
+          thaiMeaning: "becoming",
+          explanationThai: "'becoming' ในโจทย์ถูกขยายความในเสียงว่า \"many respects because it promotes their bilingual skills, but the extent of the influence of Engl\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"bilingual\"",
           correctAnswer: "bilingual"
         },
         {
@@ -192,8 +192,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nare having discussions using only English while they are in the 36 ____ at school",
           questionWordPhrase: "while they are in the",
           targetText: "playground conversations in Icelandic",
-          thaiMeaning: "สนามเด็กเล่น",
-          explanationThai: "คุยกันในสนามเด็กเล่นเป็นภาษาอังกฤษ",
+          thaiMeaning: "while they are in the",
+          explanationThai: "'while they are in the' ในโจทย์ถูกขยายความในเสียงว่า \"teachers have found that playground conversations in Icelandic secondary schools can be conducted\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"playground\"",
           correctAnswer: "playground"
         },
         {
@@ -202,8 +202,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\neasier to say what is in a 37 ____ using English",
           questionWordPhrase: "what is in a",
           targetText: "easier to say what is in a picture",
-          thaiMeaning: "รูปภาพ",
-          explanationThai: "บอกสิ่งใน picture ด้วยอังกฤษง่ายกว่า",
+          thaiMeaning: "what is in a",
+          explanationThai: "'what is in a' ในโจทย์ถูกพูดในเสียงตรง ๆ ว่า \"easier to say what is in a picture\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"picture\"",
           correctAnswer: "picture"
         },
         {
@@ -212,8 +212,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nbecause of how complicated its 38 ____ is",
           questionWordPhrase: "complicated its",
           targetText: "grammar, which is significantly more complex",
-          thaiMeaning: "ไวยากรณ์",
-          explanationThai: "grammar ซับซ้อนมาก",
+          thaiMeaning: "complicated its",
+          explanationThai: "'complicated its' ในโจทย์ถูกขยายความในเสียงว่า \"of Icelandic is the grammar, which is significantly more complex than in most languages.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"grammar\"",
           correctAnswer: "grammar"
         },
         {
@@ -222,8 +222,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nyoung Icelanders may lose their 39 ____ as Icelanders",
           questionWordPhrase: "lose their",
           targetText: "lose their sense of their own identity",
-          thaiMeaning: "อัตลักษณ์",
-          explanationThai: "อาจ lose sense of their own identity",
+          thaiMeaning: "lose their",
+          explanationThai: "'lose their' ในโจทย์ถูกพูดในเสียงตรง ๆ ว่า \"will young Icelanders lose their sense of their own identity?\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"identity\"",
           correctAnswer: "identity"
         },
         {
@@ -232,8 +232,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nchildren not being 40 ____ in either Icelandic or English",
           questionWordPhrase: "not being",
           targetText: "neither of which they are fully fluent in",
-          thaiMeaning: "คล่องแคล่ว",
-          explanationThai: "ไม่ fully fluent ในทั้งสองภาษา",
+          thaiMeaning: "not being",
+          explanationThai: "'not being' ในโจทย์ข้อนี้เน้นสิ่งที่ไม่ใช่/ไม่ได้ — ในเสียงอธิบายว่า \"through different routes, neither of which they are fully fluent in, will they be able to express\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"fluent\"",
           correctAnswer: "fluent"
         }
       ]
@@ -258,8 +258,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nBird Migration Theory\\nHibernation theory\\nburied themselves in 31 ____",
           questionWordPhrase: "buried themselves in",
           targetText: "hidden in mud",
-          thaiMeaning: "โคลน",
-          explanationThai: "เชื่อว่าซ่อนตัวใน mud",
+          thaiMeaning: "buried themselves in",
+          explanationThai: "'buried themselves in' ในโจทย์ถูกขยายความในเสียงว่า \"that they spent winter hidden in mud till the weather changed and food became abundant again.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"mud\"",
           correctAnswer: "mud"
         },
         {
@@ -268,8 +268,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nredstarts experience the loss of 32 ____",
           questionWordPhrase: "loss of",
           targetText: "began to lose their feathers",
-          thaiMeaning: "ขน",
-          explanationThai: "redstarts lose their feathers",
+          thaiMeaning: "loss of",
+          explanationThai: "'loss of' ในโจทย์ถูกขยายความในเสียงว่า \"birds called 'redstarts' began to lose their feathers, which convinced Aristotle that they change\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"feathers\"",
           correctAnswer: "feathers"
         },
         {
@@ -278,8 +278,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nthe two species of birds had a similar 33 ____",
           questionWordPhrase: "similar",
           targetText: "similar in shape",
-          thaiMeaning: "รูปร่าง",
-          explanationThai: "species similar in shape",
+          thaiMeaning: "similar",
+          explanationThai: "'similar' ในโจทย์ถูกพูดในเสียงตรง ๆ ว่า \"this pair of species are similar in shape, but are a classic example of an incorrect interpretati\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"shape\"",
           correctAnswer: "shape"
         },
         {
@@ -288,8 +288,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nbirds fly to the 34 ____ in winter",
           questionWordPhrase: "fly to the",
           targetText: "migrate to the moon and back",
-          thaiMeaning: "ดวงจันทร์",
-          explanationThai: "Charles Morton คิดว่าบินไปดวงจันทร์",
+          thaiMeaning: "fly to the",
+          explanationThai: "'fly to the' ในโจทย์ถูกขยายความในเสียงว่า \"paper claiming that birds migrate to the moon and back every year.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"moon\"",
           correctAnswer: "moon"
         },
         {
@@ -298,8 +298,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nstork was killed in Germany which had an African spear in its 35 ____",
           questionWordPhrase: "spear in its",
           targetText: "long spear in its neck",
-          thaiMeaning: "คอ",
-          explanationThai: "หลักฐานคือ spear in its neck",
+          thaiMeaning: "spear in its",
+          explanationThai: "'spear in its' ในโจทย์ถูกพูดในเสียงตรง ๆ ว่า \"history because of the long spear in its neck which incredibly had not killed it — everyone imm\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"neck\"",
           correctAnswer: "neck"
         },
         {
@@ -308,8 +308,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nthere had been no 36 ____ that storks migrate to Africa",
           questionWordPhrase: "no",
           targetText: "first evidence that storks spend their winters",
-          thaiMeaning: "หลักฐาน",
-          explanationThai: "เป็นหลักฐานแรก evidence",
+          thaiMeaning: "no",
+          explanationThai: "'no' ในโจทย์ถูกขยายความในเสียงว่า \"because it was the first evidence that storks spend their winters in sub-Saharan Africa.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"evidence\"",
           correctAnswer: "evidence"
         },
         {
@@ -318,8 +318,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nLittle was known about the 37 ____ and journeys of migrating birds",
           questionWordPhrase: "known about the",
           targetText: "destinations of particular species and how they travelled",
-          thaiMeaning: "จุดหมาย",
-          explanationThai: "ไม่รู้ destinations and journeys",
+          thaiMeaning: "known about the",
+          explanationThai: "'known about the' ในโจทย์ถูกขยายความในเสียงว่า \"about the actual destinations of particular species and how they travelled there.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"destinations\"",
           correctAnswer: "destinations"
         },
         {
@@ -328,8 +328,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nincapable of travelling across huge 38 ____",
           questionWordPhrase: "across huge",
           targetText: "fly over vast oceans",
-          thaiMeaning: "มหาสมุทร",
-          explanationThai: "นกเล็กบินข้าม vast oceans",
+          thaiMeaning: "across huge",
+          explanationThai: "'across huge' ในโจทย์ถูกขยายความในเสียงว่า \"only a few grams could fly over vast oceans.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"oceans\"",
           correctAnswer: "oceans"
         },
         {
@@ -338,8 +338,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nRinging depended on what is called the 39 ____ of dead birds",
           questionWordPhrase: "called the",
           targetText: "what is known as ‘recovery’",
-          thaiMeaning: "การกู้คืน/พบซ้ำ",
-          explanationThai: "ringing ใช้ recovery เมื่อพบนกตาย",
+          thaiMeaning: "called the",
+          explanationThai: "'called the' ในโจทย์ถูกขยายความในเสียงว่า \"today and relies upon what is known as ‘recovery’ - this is when ringed birds are found dead i\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"recovery\"",
           correctAnswer: "recovery"
         },
         {
@@ -348,8 +348,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nIn 1931, the first 40 ____ was printed",
           questionWordPhrase: "first",
           targetText: "an atlas was published",
-          thaiMeaning: "แผนที่/atlas",
-          explanationThai: "พิมพ์ atlas แสดงการอพยพ",
+          thaiMeaning: "first",
+          explanationThai: "'first' ในโจทย์ถูกขยายความในเสียงว่า \"In 1931, an atlas was published showing where the most common species of European birds migrated to.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"atlas\"",
           correctAnswer: "atlas"
         }
       ]
@@ -375,8 +375,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nMaple syrup\\ncolour described as 31 ____",
           questionWordPhrase: "colour described as",
           targetText: "thick, golden, sweet-tasting liquid",
-          thaiMeaning: "สีทอง",
-          explanationThai: "maple syrup สี golden",
+          thaiMeaning: "สี (ในเสียงพูด)",
+          explanationThai: "'colour described as' ในโจทย์ถูกขยายความในเสียงว่า \"Maple syrup is a thick, golden, sweet-tasting liquid that can be bought in bottles or jars and poure\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"golden\"",
           correctAnswer: "golden"
         },
         {
@@ -385,8 +385,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nvery 32 ____ compared to refined sugar",
           questionWordPhrase: "very",
           targetText: "healthy alternative to refined sugar",
-          thaiMeaning: "ดีต่อสุขภาพ",
-          explanationThai: "healthy alternative to refined sugar",
+          thaiMeaning: "very",
+          explanationThai: "'very' ในโจทย์ถูกขยายความในเสียงว่า \"provides a healthy alternative to refined sugar.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"healthy\"",
           correctAnswer: "healthy"
         },
         {
@@ -395,8 +395,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nbest growing conditions and 33 ____ are in Canada",
           questionWordPhrase: "best growing conditions",
           targetText: "climate suits the trees perfectly",
-          thaiMeaning: "สภาพภูมิอากาศ",
-          explanationThai: "สภาพภูมิอากาศในแคนาดาเหมาะกับต้นเมเปิล",
+          thaiMeaning: "คลังคำศัพท์ที่เติบโต",
+          explanationThai: "'best growing conditions' ในโจทย์ถูกขยายความในเสียงว่า \"In these areas, the climate suits the trees perfectly.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"climate\"",
           correctAnswer: "climate"
         },
         {
@@ -405,8 +405,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nused hot 34 ____ to heat the sap",
           questionWordPhrase: "hot",
           targetText: "pieces of rock that had become scorching hot",
-          thaiMeaning: "หิน",
-          explanationThai: "ใช้หินร้อนจากแดดต้มน้ำยาง",
+          thaiMeaning: "hot",
+          explanationThai: "'hot' ในโจทย์ถูกพูดในเสียงตรง ๆ ว่า \"the liquid by placing pieces of rock that had become scorching hot from the sun into the sap\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"rock\"",
           correctAnswer: "rock"
         },
         {
@@ -415,8 +415,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nTree trunks may not have the correct 35 ____ until they have been growing for 40 years",
           questionWordPhrase: "correct",
           targetText: "reach a diameter of around 25 centimetres",
-          thaiMeaning: "เส้นผ่านศูนย์กลาง",
-          explanationThai: "ลำต้นต้องมีเส้นผ่านศูนย์กลางประมาณ 25 cm",
+          thaiMeaning: "correct",
+          explanationThai: "'correct' ในโจทย์ถูกขยายความในเสียงว่า \"syrup until the trunks reach a diameter of around 25 centimetres.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"diameter\"",
           correctAnswer: "diameter"
         },
         {
@@ -425,8 +425,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nA 36 ____ carries the sap into a bucket",
           questionWordPhrase: "carries the sap",
           targetText: "inserting a tube into it that ends in a bucket",
-          thaiMeaning: "ท่อ",
-          explanationThai: "ใช้ tube ลงถัง",
+          thaiMeaning: "carries the sap",
+          explanationThai: "'carries the sap' ในโจทย์ถูกขยายความในเสียงว่า \"hole into the trunk and inserting a tube into it that ends in a bucket.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"tube\"",
           correctAnswer: "tube"
         },
         {
@@ -435,8 +435,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nEvaporators are heated by means of a 37 ____",
           questionWordPhrase: "heated by means of",
           targetText: "a fire is built",
-          thaiMeaning: "ไฟ",
-          explanationThai: "ต้มด้วย fire",
+          thaiMeaning: "heated by means of",
+          explanationThai: "'heated by means of' ในโจทย์ถูกขยายความในเสียงว่า \"sap is poured into these, a fire is built and the pans are then .\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"fire\"",
           correctAnswer: "fire"
         },
         {
@@ -445,8 +445,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nA lot of 38 ____ is produced during the evaporation process",
           questionWordPhrase: "produced during",
           targetText: "creates large quantities of steam",
-          thaiMeaning: "ไอน้ำ",
-          explanationThai: "evaporation สร้าง steam มาก",
+          thaiMeaning: "produced during",
+          explanationThai: "'produced during' ในโจทย์ถูกขยายความในเสียงว่า \"The evaporation process creates large quantities of steam, and the sap becomes thicker and denser, a\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"steam\"",
           correctAnswer: "steam"
         },
         {
@@ -455,8 +455,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\n'Sugar sand' makes the syrup look 39 ____",
           questionWordPhrase: "makes the syrup look",
           targetText: "gives the syrup a cloudy appearance",
-          thaiMeaning: "ขุ่น",
-          explanationThai: "sugar sand ทำให้ cloudy",
+          thaiMeaning: "makes the syrup look",
+          explanationThai: "'makes the syrup look' ในโจทย์ถูก paraphrase ในเสียงว่า \"up during the boiling and gives the syrup a cloudy appearance and a slightly gritty taste.\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"cloudy\"",
           correctAnswer: "cloudy"
         },
         {
@@ -465,8 +465,8 @@ export const CAMBRIDGE_17_SECTION_4_EXAM_SET: ListeningBuilderExamSet = {
           questionText: "Complete the notes below.\\nA huge quantity of sap is needed to make a 40 ____ of maple syrup",
           questionWordPhrase: "make a",
           targetText: "40 litres of sap to produce one litre",
-          thaiMeaning: "ลิตร",
-          explanationThai: "40 ลิตรน้ำยางได้ 1 litre",
+          thaiMeaning: "make a",
+          explanationThai: "'make a' ในโจทย์ถูกขยายความในเสียงว่า \"It takes 40 litres of sap to produce one litre of maple syrup so you can get an idea of how much is\" ดังนั้นคำที่ต้องเติม/คำตอบคือ \"litre\"",
           correctAnswer: "litre"
         }
       ]

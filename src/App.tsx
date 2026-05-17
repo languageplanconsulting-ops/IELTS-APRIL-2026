@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import './App.css'
+import { ListeningParaphraseBridgeModal } from './ListeningParaphraseBridgeModal'
 import { ParaphraseBridgeActions, PracticeActionToast, type PracticeActionToastState } from './PracticeActionToast'
 import {
   getListeningHighlightMatch,
@@ -8,7 +9,6 @@ import {
   buildListeningHighlightCandidates
 } from './listeningHighlightMatch'
 import {
-  buildListeningPassageExcerpt,
   findListeningScriptChunkForText,
   getListeningSpeakerTone,
   listeningScriptHasDialogue,
@@ -6103,6 +6103,9 @@ function App() {
   const [prepAccordionOpen, setPrepAccordionOpen] = useState<Record<string, boolean>>({ part1: true, part2: false, part3: false })
 
   const listeningSpeechRef = useRef<SpeechSynthesisUtterance | null>(null)
+  const listeningSectionAudioRef = useRef<HTMLAudioElement | null>(null)
+  const [listeningBuilderExamAudioPlayed, setListeningBuilderExamAudioPlayed] = useState(false)
+  const [listeningParaphraseBridgeDismissed, setListeningParaphraseBridgeDismissed] = useState<Record<string, true>>({})
   const [pendingStartTopicId, setPendingStartTopicId] = useState<string | null>(null)
   const [selectedExpectedScore, setSelectedExpectedScore] = useState<string>('')
   const [answerReviewModal, setAnswerReviewModal] = useState<AnswerReviewModalState | null>(null)
@@ -7888,17 +7891,6 @@ function App() {
         ? parseListeningScriptSegments(activeListeningFoundationScriptText)
         : [],
     [activeListeningFoundationScriptText]
-  )
-  const activeListeningFoundationPassageExcerpt = useMemo(
-    () =>
-      activeListeningFoundationQuestion
-        ? buildListeningPassageExcerpt(
-            activeListeningFoundationScriptText || activeListeningFoundationQuestion.passage,
-            activeListeningFoundationQuestion.evidence,
-            0.5
-          )
-        : '',
-    [activeListeningFoundationQuestion, activeListeningFoundationScriptText]
   )
   const activeListeningFoundationHasDialogue = useMemo(
     () => listeningScriptHasDialogue(activeListeningFoundationScriptSegments),
@@ -11269,11 +11261,88 @@ function App() {
     }
   }
 
+  const stopListeningSectionAudio = () => {
+    const audio = listeningSectionAudioRef.current
+    if (!audio) return
+    audio.pause()
+    audio.currentTime = 0
+    audio.onended = null
+    audio.onerror = null
+    audio.src = ''
+    listeningSectionAudioRef.current = null
+  }
+
   const stopListeningPlayback = () => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-    window.speechSynthesis.cancel()
+    stopListeningSectionAudio()
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
     listeningSpeechRef.current = null
     setListeningPlaybackState('idle')
+  }
+
+  const playListeningSectionAudioFromUrl = async (sourceUrl: string) => {
+    stopListeningSectionAudio()
+    stopListeningPlayback()
+    await new Promise<void>((resolve, reject) => {
+      const audio = new Audio(sourceUrl)
+      listeningSectionAudioRef.current = audio
+      let completed = false
+      const cleanup = () => {
+        if (completed) return
+        completed = true
+        audio.onended = null
+        audio.onerror = null
+        audio.onplay = null
+        if (listeningSectionAudioRef.current === audio) {
+          listeningSectionAudioRef.current = null
+        }
+      }
+      audio.onplay = () => setListeningPlaybackState('playing')
+      audio.onended = () => {
+        cleanup()
+        setListeningPlaybackState('ended')
+        resolve()
+      }
+      audio.onerror = () => {
+        cleanup()
+        setListeningPlaybackState('error')
+        reject(new Error('Section audio failed to load.'))
+      }
+      audio.play().catch((error) => {
+        cleanup()
+        setListeningPlaybackState('error')
+        reject(error instanceof Error ? error : new Error('Section audio playback failed.'))
+      })
+    })
+  }
+
+  const playListeningScriptWithSpeech = (spokenText: string, onErrorMessage: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setListeningPlaybackState('error')
+      throw new Error(onErrorMessage)
+    }
+    stopListeningPlayback()
+    const utterance = new SpeechSynthesisUtterance(spokenText)
+    const availableVoices = window.speechSynthesis.getVoices()
+    utterance.voice =
+      availableVoices.find((voice) => /^en-GB/i.test(voice.lang)) ||
+      availableVoices.find((voice) => /^en/i.test(voice.lang)) ||
+      null
+    utterance.lang = utterance.voice?.lang || 'en-GB'
+    utterance.rate = 0.92
+    utterance.pitch = 1
+    utterance.onstart = () => setListeningPlaybackState('playing')
+    utterance.onend = () => {
+      listeningSpeechRef.current = null
+      setListeningPlaybackState('ended')
+    }
+    utterance.onerror = () => {
+      listeningSpeechRef.current = null
+      setListeningPlaybackState('error')
+    }
+    listeningSpeechRef.current = utterance
+    window.speechSynthesis.speak(utterance)
   }
 
   const playListeningExercise = (rate: 'normal' | 'slow' = 'normal') => {
@@ -11380,43 +11449,44 @@ function App() {
     markListeningFoundationQuestionComplete()
   }
 
-  const playListeningFoundationPassage = () => {
-    if (!activeListeningFoundationQuestion) return
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      setListeningFoundationFeedback('อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ')
-      return
-    }
-
-    stopListeningPlayback()
+  const playListeningFoundationPassage = async () => {
+    if (!activeListeningFoundationQuestion || !activeListeningFoundationSet) return
     setListeningFoundationAudioPlayed(true)
-
     const spokenText = activeListeningFoundationScriptSegments.length
       ? activeListeningFoundationScriptSegments
           .map((segment) => (segment.speaker ? `${segment.speaker}: ${segment.text}` : segment.text))
           .join(' ')
       : activeListeningFoundationScriptText || activeListeningFoundationQuestion.passage
 
-    const utterance = new SpeechSynthesisUtterance(spokenText)
-    const availableVoices = window.speechSynthesis.getVoices()
-    utterance.voice =
-      availableVoices.find((voice) => /^en-GB/i.test(voice.lang)) ||
-      availableVoices.find((voice) => /^en/i.test(voice.lang)) ||
-      null
-    utterance.lang = utterance.voice?.lang || 'en-GB'
-    utterance.rate = 0.92
-    utterance.pitch = 1
-    utterance.onstart = () => setListeningPlaybackState('playing')
-    utterance.onend = () => {
-      listeningSpeechRef.current = null
-      setListeningPlaybackState('ended')
+    try {
+      if (activeListeningFoundationSet.audioUrl) {
+        await playListeningSectionAudioFromUrl(activeListeningFoundationSet.audioUrl)
+        return
+      }
+      playListeningScriptWithSpeech(
+        spokenText,
+        'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ'
+      )
+    } catch {
+      setListeningFoundationFeedback('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
     }
-    utterance.onerror = () => {
-      listeningSpeechRef.current = null
-      setListeningPlaybackState('error')
-    }
+  }
 
-    listeningSpeechRef.current = utterance
-    window.speechSynthesis.speak(utterance)
+  const playListeningBuilderExamSection = async () => {
+    if (!activeListeningBuilderExamSet || !activeListeningBuilderExamTest) return
+    setListeningBuilderExamAudioPlayed(true)
+    const spokenText = activeListeningBuilderExamTest.scriptParagraphs.join(' ')
+    const sectionAudioUrl = `https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam${activeListeningBuilderExamSet.bookNumber}-Test${activeListeningBuilderExamTest.testNumber}-Section${activeListeningBuilderExamSet.sectionNumber}.mp3`
+
+    try {
+      await playListeningSectionAudioFromUrl(sectionAudioUrl)
+    } catch {
+      try {
+        playListeningScriptWithSpeech(spokenText, 'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ')
+      } catch {
+        setListeningBuilderExamFeedback('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
+      }
+    }
   }
 
   useEffect(() => {
@@ -11517,6 +11587,51 @@ function App() {
       </article>
     )
   }
+
+  const renderListeningSectionAudioPlayer = ({
+    title,
+    sectionLabel,
+    audioPlayed,
+    onTogglePlay
+  }: {
+    title: string
+    sectionLabel: string
+    audioPlayed: boolean
+    onTogglePlay: () => void
+  }) => (
+    <div className="listeningFoundationAudioCompact listeningSectionAudioPlayer">
+      <div className="listeningFoundationAudioTop">
+        <span>{sectionLabel}</span>
+        <span>
+          {listeningPlaybackState === 'playing'
+            ? 'Playing…'
+            : audioPlayed
+              ? 'Finished — highlight evidence on the right'
+              : 'Press play to hear the section'}
+        </span>
+      </div>
+      <div className="listeningFoundationAudioBody">
+        <button
+          type="button"
+          aria-label={listeningPlaybackState === 'playing' ? 'Stop audio' : 'Play audio'}
+          onClick={onTogglePlay}
+        >
+          {listeningPlaybackState === 'playing' ? '■' : '▶'}
+        </button>
+        <div>
+          <div className="listeningFoundationAudioTrack">
+            <span
+              style={{
+                width:
+                  listeningPlaybackState === 'playing' ? '66%' : audioPlayed ? '100%' : '12%'
+              }}
+            />
+          </div>
+          <p>{title}</p>
+        </div>
+      </div>
+    </div>
+  )
 
   const restoreListeningFoundationQuestionState = (
     questionId: string,
@@ -11775,6 +11890,9 @@ function App() {
     setListeningBuilderExamAnswerPickCorrect({})
     setListeningBuilderExamAnswerState({})
     setListeningBuilderExamFeedback('')
+    setListeningBuilderExamAudioPlayed(false)
+    setListeningParaphraseBridgeDismissed({})
+    stopListeningPlayback()
     window.getSelection()?.removeAllRanges()
   }
 
@@ -11885,12 +12003,71 @@ function App() {
     })
   }
 
+  const dismissListeningParaphraseBridge = (id: string) => {
+    setListeningParaphraseBridgeDismissed((current) => ({ ...current, [id]: true }))
+  }
+
+  const renderListeningParaphraseBridgeModal = () => {
+    if (activePage === 'listening_foundation_exam' && activeListeningFoundationQuestion && listeningFoundationQuestionComplete) {
+      const id = activeListeningFoundationQuestion.id
+      if (listeningParaphraseBridgeDismissed[id]) return null
+      return (
+        <ListeningParaphraseBridgeModal
+          passageKeyword={activeListeningFoundationQuestion.passageKeyword}
+          questionKeyword={activeListeningFoundationQuestion.questionKeyword}
+          thaiMeaning={activeListeningFoundationQuestion.thaiMeaning}
+          explanationThai={activeListeningFoundationQuestion.explanationThai}
+          onKnewIt={() => {
+            showPracticeKnewItToast()
+            dismissListeningParaphraseBridge(id)
+          }}
+          onSaveToNotebook={() => {
+            saveListeningFoundationQuestionToNotebook()
+            dismissListeningParaphraseBridge(id)
+          }}
+          onClose={() => dismissListeningParaphraseBridge(id)}
+        />
+      )
+    }
+    if (
+      activePage === 'listening_builder_exam' &&
+      activeListeningBuilderExamTask &&
+      listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] === 'correct'
+    ) {
+      const id = activeListeningBuilderExamTask.id
+      if (listeningParaphraseBridgeDismissed[id]) return null
+      const task = activeListeningBuilderExamTask
+      return (
+        <ListeningParaphraseBridgeModal
+          passageKeyword={task.targetText}
+          questionKeyword={task.questionWordPhrase}
+          thaiMeaning={task.thaiMeaning}
+          explanationThai={task.explanationThai}
+          onKnewIt={() => {
+            showPracticeKnewItToast()
+            dismissListeningParaphraseBridge(id)
+          }}
+          onSaveToNotebook={() => {
+            handlePracticeSaveToNotebook(() => saveListeningBuilderExamTaskToNotebook(task))
+            dismissListeningParaphraseBridge(id)
+          }}
+          onClose={() => dismissListeningParaphraseBridge(id)}
+        />
+      )
+    }
+    return null
+  }
 
   const handleListeningBuilderTranscriptMouseUp = () => {
     if (activeListeningBuilderExamTask && activeListeningBuilderExamTest) {
       if (listeningBuilderExamAnswerState[activeListeningBuilderExamTask.id] === 'correct') return
       if (listeningBuilderExamEvidenceCorrect[activeListeningBuilderExamTask.id]) return
       if (listeningBuilderResolvedState[activeListeningBuilderExamTask.id] === 'revealed') return
+
+      if (!listeningBuilderExamAudioPlayed) {
+        setListeningBuilderExamFeedback('กดเล่นเสียงทางซ้ายก่อนครับ แล้วค่อยไฮไลต์ evidence ในสคริปต์ทางขวา')
+        return
+      }
 
       const selectedText = window.getSelection()?.toString().trim() || ''
       if (!selectedText) return
@@ -13679,7 +13856,7 @@ function App() {
                     <p>
                       {activeListeningFoundationSet
                         ? parseListeningFoundationSetMeta(activeListeningFoundationSet).cardSubtitle
-                        : 'Answer on the left and highlight evidence on the right — both must be correct to continue.'}
+                        : 'Play the section, answer on the left, then highlight evidence on the right.'}
                     </p>
                   </div>
                   <div className="listeningFoundationProgress">
@@ -13703,19 +13880,21 @@ function App() {
                         </strong>
                       </header>
 
-                      <div className="listeningFoundationQuestionBody">
-                        {activeListeningFoundationPassageExcerpt ? (
-                          <div className="listeningFoundationPassageExcerpt">
-                            <h4>From the section</h4>
-                            <blockquote>{activeListeningFoundationPassageExcerpt}</blockquote>
-                          </div>
-                        ) : null}
+                      {renderListeningSectionAudioPlayer({
+                        title: activeListeningFoundationSet.title,
+                        sectionLabel: `Section ${activeListeningFoundationSet.section}`,
+                        audioPlayed: listeningFoundationAudioPlayed,
+                        onTogglePlay: () => {
+                          if (listeningPlaybackState === 'playing') {
+                            stopListeningPlayback()
+                          } else {
+                            void playListeningFoundationPassage()
+                          }
+                        }
+                      })}
 
+                      <div className="listeningFoundationQuestionBody">
                         <div className="listeningFoundationOptions">
-                          <h4>Choose the answer</h4>
-                          <p className="listeningFoundationDualHint meta">
-                            Answer here and highlight evidence on the right — order does not matter.
-                          </p>
                           {activeListeningFoundationQuestion.options.map((option) => {
                             const isSelected = listeningFoundationSelectedAnswer === option.key
                             const isCorrectOption =
@@ -13737,21 +13916,6 @@ function App() {
                           })}
                         </div>
 
-                        <div className="listeningFoundationWordCheck">
-                          <p>Do you know this word?</p>
-                          <div className="listeningFoundationWordEquation">
-                            <span title="In the script">{activeListeningFoundationQuestion.passageKeyword}</span>
-                            <b>=</b>
-                            <span title="In the question">{activeListeningFoundationQuestion.questionKeyword}</span>
-                            <b>=</b>
-                            <span title="Thai meaning">{activeListeningFoundationQuestion.thaiMeaning}</span>
-                          </div>
-                          <small>{activeListeningFoundationQuestion.explanationThai}</small>
-                          <ParaphraseBridgeActions
-                            onKnewIt={showPracticeKnewItToast}
-                            onSaveToNotebook={saveListeningFoundationQuestionToNotebook}
-                          />
-                        </div>
 
                         {listeningFoundationFeedback ? (
                           <div
@@ -13817,54 +13981,12 @@ function App() {
                     </section>
 
                     <section className="listeningFoundationScriptPane">
-                      <div className="listeningFoundationAudioCompact">
-                      <div className="listeningFoundationAudioTop">
-                        <span>Section {activeListeningFoundationSet.section}</span>
-                        <span>
-                          {listeningPlaybackState === 'playing'
-                            ? 'Playing…'
-                            : listeningFoundationAudioPlayed
-                              ? 'Played'
-                              : 'Press play to hear the section'}
-                        </span>
-                      </div>
-                      <div className="listeningFoundationAudioBody">
-                        <button
-                          type="button"
-                          aria-label={listeningPlaybackState === 'playing' ? 'Stop audio' : 'Play audio'}
-                          onClick={() => {
-                            if (listeningPlaybackState === 'playing') {
-                              stopListeningPlayback()
-                            } else {
-                              playListeningFoundationPassage()
-                            }
-                          }}
-                        >
-                          {listeningPlaybackState === 'playing' ? '■' : '▶'}
-                        </button>
-                        <div>
-                          <div className="listeningFoundationAudioTrack">
-                            <span
-                              style={{
-                                width:
-                                  listeningPlaybackState === 'playing'
-                                    ? '66%'
-                                    : listeningFoundationAudioPlayed
-                                      ? '100%'
-                                      : '12%'
-                              }}
-                            />
-                          </div>
-                          <p>{activeListeningFoundationSet.title}</p>
-                        </div>
-                      </div>
-                      </div>
 
                       <div className="listeningScriptReader">
                         <div className="listeningScriptReaderTop">
-                          <h4>Audio Script</h4>
+                          <h4>Highlight evidence</h4>
                           {!listeningFoundationAudioPlayed ? (
-                            <span className="listeningScriptReaderPlayHint">Play audio to reveal the full script</span>
+                            <span className="listeningScriptReaderPlayHint">Play audio on the left first</span>
                           ) : null}
                         </div>
 
@@ -13917,7 +14039,7 @@ function App() {
                                     : listeningFoundationEvidence
                                       ? listeningFoundationFeedback
                                       : !listeningFoundationAudioPlayed
-                                        ? 'Press play above, then highlight the exact phrase that paraphrases the question.'
+                                        ? 'Press play on the left, then highlight the exact phrase that paraphrases the question.'
                                         : 'Highlight the exact phrase in the script that paraphrases the question.'}
                           </p>
                         </footer>
@@ -13969,7 +14091,7 @@ function App() {
                   </div>
                 </div>
                 <div className="listeningBuilderExamTip">
-                  <strong>IELTS strategy:</strong> read the question on the left, choose your answer, then highlight evidence in the audio script on the right — both must be correct.
+                  <strong>IELTS strategy:</strong> play the section on the left, answer the question, then highlight evidence in the script on the right.
                 </div>
               </header>
 
@@ -13991,7 +14113,12 @@ function App() {
                         <h3>Highlight the matching word or phrase</h3>
                       </div>
 
-                      <div className="listeningBuilderExamPassageBody script-scroll" onMouseUp={handleListeningBuilderTranscriptMouseUp}>
+                      <div
+                        className={`listeningBuilderExamPassageBody script-scroll ${
+                          !listeningBuilderExamAudioPlayed ? 'is-awaiting-play' : ''
+                        }`}
+                        onMouseUp={handleListeningBuilderTranscriptMouseUp}
+                      >
                         {renderListeningBuilderExamTranscript()}
                       </div>
 
@@ -14008,7 +14135,7 @@ function App() {
                               : 'Evidence accepted. Choose the correct answer on the left.'
                             : listeningBuilderExamAnswerPickCorrect[activeListeningBuilderExamTask.id]
                               ? 'Answer accepted. Highlight the matching phrase in this script.'
-                              : listeningBuilderExamFeedback || 'Highlight evidence here or answer on the left — order does not matter.'}
+                              : listeningBuilderExamFeedback || 'Play audio on the left, then highlight matching evidence in this script.'}
                       </div>
                     </section>
 
@@ -14034,9 +14161,18 @@ function App() {
                       </div>
 
                       <div className="listeningBuilderExamQuestionIntro">
-                        <p>
-                          Read each question on the left, choose your answer, then highlight paraphrased evidence in the script on the right. Both must be correct.
-                        </p>
+                        {renderListeningSectionAudioPlayer({
+                          title: `${activeListeningBuilderExamTest.title} · Cambridge ${activeListeningBuilderExamSet.bookNumber}`,
+                          sectionLabel: `Section ${activeListeningBuilderExamSet.sectionNumber}`,
+                          audioPlayed: listeningBuilderExamAudioPlayed,
+                          onTogglePlay: () => {
+                            if (listeningPlaybackState === 'playing') {
+                              stopListeningPlayback()
+                            } else {
+                              void playListeningBuilderExamSection()
+                            }
+                          }
+                        })}
                         <div className="listeningBuilderExamTabs">
                           {activeListeningBuilderExamSet.tests.map((test) => (
                             <button
@@ -14132,29 +14268,7 @@ function App() {
                                               : 'Evidence accepted. Choose the correct answer on the left.'
                                           : answerPickCorrect
                                             ? `Answer accepted. Highlight the script phrase that means "${task.questionWordPhrase}".`
-                                            : `Answer on the left or highlight "${task.questionWordPhrase}" in the script — either order.`}
-                                    </div>
-                                  )}
-
-                                  {(isActive || isCompleted) && (
-                                    <div className="listeningBuilderExamWordCheck">
-                                      <p>Do you know this word?</p>
-                                      <div className="listeningBuilderExamWordEquation">
-                                        <span title="In the script">{task.targetText}</span>
-                                        <b>=</b>
-                                        <span title="In the question">{task.questionWordPhrase}</span>
-                                        <b>=</b>
-                                        <span title="Thai meaning">{task.thaiMeaning}</span>
-                                      </div>
-                                      {!isCompleted ? (
-                                        <ParaphraseBridgeActions
-                                          onKnewIt={showPracticeKnewItToast}
-                                          onSaveToNotebook={() =>
-                                            handlePracticeSaveToNotebook(() => saveListeningBuilderExamTaskToNotebook(task))
-                                          }
-                                          saveLabel="Save to Notebook"
-                                        />
-                                      ) : null}
+                                            : `Listen on the left, answer here, then highlight "${task.questionWordPhrase}" in the script on the right.`}
                                     </div>
                                   )}
 
@@ -14183,18 +14297,18 @@ function App() {
                                         const isCorrectOption =
                                           Boolean(correctKey) && option.key.toUpperCase() === correctKey
                                         return (
-                                        <button
-                                          key={`${task.id}-${option.key}`}
-                                          type="button"
-                                          className={`listeningBuilderExamOption is-unlocked ${
-                                            isSelected ? (isCorrectOption ? 'is-correct' : 'is-wrong') : ''
-                                          }`}
-                                          disabled={isCompleted}
-                                          onClick={() => chooseListeningBuilderExamAnswer(task, option.key)}
-                                        >
-                                          <strong>{option.key}</strong>
-                                          <span>{option.text}</span>
-                                        </button>
+                                          <button
+                                            key={`${task.id}-${option.key}`}
+                                            type="button"
+                                            className={`listeningBuilderExamOption is-unlocked ${
+                                              isSelected ? (isCorrectOption ? 'is-correct' : 'is-wrong') : ''
+                                            }`}
+                                            disabled={isCompleted}
+                                            onClick={() => chooseListeningBuilderExamAnswer(task, option.key)}
+                                          >
+                                            <strong>{option.key}</strong>
+                                            <span>{option.text}</span>
+                                          </button>
                                         )
                                       })}
                                     </div>
@@ -14210,18 +14324,6 @@ function App() {
                                     </div>
                                   )}
 
-                                  {isCompleted && (
-                                    <>
-                                      <p className="meta">{task.explanationThai}</p>
-                                      <ParaphraseBridgeActions
-                                        onKnewIt={showPracticeKnewItToast}
-                                        onSaveToNotebook={() =>
-                                          handlePracticeSaveToNotebook(() => saveListeningBuilderExamTaskToNotebook(task))
-                                        }
-                                        saveLabel="Save to Notebook"
-                                      />
-                                    </>
-                                  )}
                                 </div>
                               )}
                             </article>
@@ -14380,7 +14482,11 @@ function App() {
           </section>
         )
       ) : activePage === 'reading' ? (
-        <section className="panel full readingPage">
+        <section
+          className={`panel full readingPage${
+            readingWorkspaceMode === 'bank' && readingAttemptStage === 'exam' ? ' readingPage-examActive' : ''
+          }`}
+        >
           <div className="readingPageHeader">
             <div>
               <p className="sectionLabel">IELTS Reading</p>
@@ -15368,7 +15474,7 @@ function App() {
                   <div className="readingQuestionsHeader">
                     <div>
                       <p className="sectionLabel">Questions</p>
-                      <h3>Answer below — scroll to the end to submit</h3>
+                      <h3>Answer below — scroll this panel for more questions</h3>
                     </div>
                     <span className="bandPill">{activeReadingQuestions.length} questions</span>
                   </div>
@@ -15456,12 +15562,12 @@ function App() {
                       )
                     })}
                   </div>
+                  </div>
 
                   <div className="readingExamSubmitBar">
                     <button type="button" className="readingSubmitExamBtn readingSubmitExamBtn-end" onClick={submitReadingExam}>
                       Submit Reading Exam
                     </button>
-                  </div>
                   </div>
                 </section>
               </div>
@@ -18581,6 +18687,7 @@ function App() {
           </div>
         </div>
       )}
+      {renderListeningParaphraseBridgeModal()}
       {answerReviewModal && (
         <div className="answerReviewOverlay">
           <div className="answerReviewCard">

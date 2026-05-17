@@ -3,6 +3,7 @@
  * from cambridge-17-listening-scripts.json + cambridge-17-listening-tasks.json
  *
  * Run: python3 scripts/extract-cambridge-17-listening-from-pdf.py
+ *      node scripts/generate-cambridge-17-listening-explanations.mjs
  *      node scripts/generate-cambridge-17-listening-builder.mjs
  */
 import fs from 'fs'
