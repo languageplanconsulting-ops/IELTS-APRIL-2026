@@ -5389,9 +5389,10 @@ body,
 }
 
 .workspace:has(.readingPage-examActive) {
-  height: 100dvh;
-  max-height: 100dvh;
-  overflow: hidden;
+  min-height: 100dvh;
+  height: auto;
+  max-height: none;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -5403,9 +5404,9 @@ body,
 
 .workspace:has(.readingPage-examActive) > .readingPage-examActive {
   flex: 1 1 auto;
-  min-height: 0;
-  max-height: 100%;
-  overflow: hidden;
+  min-height: calc(100dvh - 92px);
+  max-height: none;
+  overflow: visible;
 }
 
 .readingPage:has(.readingExamLayout-bank),
@@ -5413,11 +5414,11 @@ body,
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  min-height: 0;
-  height: 100%;
-  max-height: 100%;
+  min-height: calc(100dvh - 92px);
+  height: auto;
+  max-height: none;
   gap: 10px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .readingPage:has(.readingExamLayout-bank) .readingPageHeader,
@@ -5431,7 +5432,7 @@ body,
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .readingPage:has(.readingExamLayout-bank) .readingExamWrap > .readingAttemptToolbar,
@@ -5459,17 +5460,17 @@ body,
 .readingPage:has(.readingExamLayout-bank) .readingExamLayout-bank,
 .readingPage-examActive .readingExamLayout-bank {
   flex: 1 1 auto;
-  min-height: 0;
-  height: 100%;
-  max-height: 100%;
-  overflow: hidden;
+  min-height: max(620px, calc(100dvh - 310px));
+  height: auto;
+  max-height: none;
+  overflow: visible;
 }
 
 .readingExamLayout-bank {
   flex: 1 1 auto;
-  min-height: 0;
-  height: 100%;
-  max-height: 100%;
+  min-height: max(620px, calc(100dvh - 310px));
+  height: auto;
+  max-height: none;
   align-items: stretch;
   grid-template-rows: minmax(0, 1fr);
 }
