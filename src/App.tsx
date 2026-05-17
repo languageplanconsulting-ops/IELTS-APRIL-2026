@@ -6747,7 +6747,7 @@ function App() {
     ].join('\n')
 
     setAdminReadingGeneratorBrief(brief)
-    setAdminPanelMessage(`Prepared a Codex generation brief for ${passages.length} passage${passages.length === 1 ? '' : 's'}.`)
+      setAdminPanelMessage(`Built a Codex prompt for ${passages.length} passage${passages.length === 1 ? '' : 's'}. Copy it into Codex, then paste the JSON result back here.`)
   }
 
   const copyAdminReadingGeneratorBrief = async () => {
@@ -6757,7 +6757,7 @@ function App() {
     }
     try {
       await navigator.clipboard.writeText(adminReadingGeneratorBrief)
-      setAdminPanelMessage('Copied the Codex reading generation brief.')
+      setAdminPanelMessage('Copied the Codex prompt. Paste it into Codex chat to generate the JSON.')
       setAuthError('')
     } catch {
       setAdminPanelMessage('')
@@ -6807,7 +6807,7 @@ function App() {
       setAdminReadingBulkJsonInput(JSON.stringify(exams, null, 2))
       setAdminReadingBulkValidation(null)
       setAdminReadingGeneratorValidation(validation)
-      setAdminPanelMessage('Loaded the generated draft into Bulk JSON Import. Run server validation before upload.')
+      setAdminPanelMessage('Loaded the generated JSON into Bulk JSON Import. Check server format, then upload to the Reading Bank.')
       setAuthError('')
     } catch (error) {
       setAdminPanelMessage('')
@@ -15412,12 +15412,28 @@ function App() {
                     Reading bank under Passage 1, Passage 2, Passage 3, or Full Test.
                   </p>
                   <div className="adminReadingGeneratorStudio">
+                    <div className="adminGeneratorSteps">
+                      <article>
+                        <span>1</span>
+                        <strong>Paste source passage</strong>
+                        <p>Put the original IELTS passage in Passage 1-4 and choose the question types.</p>
+                      </article>
+                      <article>
+                        <span>2</span>
+                        <strong>Build Codex prompt</strong>
+                        <p>Copy the prompt into Codex. Codex returns the finished JSON exam.</p>
+                      </article>
+                      <article>
+                        <span>3</span>
+                        <strong>Check and upload</strong>
+                        <p>Paste the JSON result here, check it, then upload it to the Reading Bank.</p>
+                      </article>
+                    </div>
                     <div className="adminSectionHeader">
                       <div>
                         <h4>Reading Generator Studio</h4>
                         <p className="meta">
-                          Paste up to 4 original passages, choose the IELTS question types for each, then copy the
-                          Codex brief. Paste Codex JSON back here for local checks before bulk upload.
+                          This app prepares and checks the exam workflow. Codex writes the new passage and answer-key JSON.
                         </p>
                       </div>
                       <span className="bandPill">{activeAdminReadingGeneratorPassages.length}/4 active</span>
@@ -15548,38 +15564,38 @@ function App() {
 
                     <div className="adminGeneratorActionBar">
                       <button type="button" className="adminGenerateBtn" onClick={buildAdminReadingGeneratorBrief}>
-                        GENERATE
+                        BUILD CODEX PROMPT
                       </button>
                       <button type="button" className="secondary" onClick={() => void copyAdminReadingGeneratorBrief()}>
-                        Copy Brief
+                        COPY PROMPT
                       </button>
-                      <p className="meta">Generate the Codex brief, paste it into Codex, then paste the JSON result below for checking.</p>
+                      <p className="meta">Use your long prompt in Codex chat. Paste only Codex's JSON result in the next box.</p>
                     </div>
 
                     <details
                       className="adminGeneratorReviewDrawer"
                       open={Boolean(adminReadingGeneratorBrief || adminReadingGeneratorDraftInput || adminReadingGeneratorValidation)}
                     >
-                      <summary>Codex brief + generated JSON check</summary>
+                      <summary>Codex prompt + JSON result</summary>
                       <div className="adminReadingGeneratorReviewGrid">
                         <label>
-                          Codex Generation Brief
+                          Prompt to Send to Codex
                           <textarea
                             value={adminReadingGeneratorBrief}
                             onChange={(event) => setAdminReadingGeneratorBrief(event.target.value)}
-                            placeholder="Build the brief after filling the passage slots."
+                            placeholder="Click BUILD CODEX PROMPT after filling the passage slots."
                             rows={12}
                           />
                         </label>
                         <label>
-                          Generated JSON Review
+                          Paste Codex JSON Result Here
                           <textarea
                             value={adminReadingGeneratorDraftInput}
                             onChange={(event) => {
                               setAdminReadingGeneratorDraftInput(event.target.value)
                               setAdminReadingGeneratorValidation(null)
                             }}
-                            placeholder='Paste Codex output here. It should be a JSON array with title, category, rawPassageText, and rawAnswerKey.'
+                            placeholder='Paste only the JSON array here, starting with [{"title":...}]'
                             rows={12}
                           />
                         </label>
@@ -15587,10 +15603,10 @@ function App() {
 
                       <div className="adminGeneratorActionBar">
                         <button type="button" className="secondary" onClick={validateAdminReadingGeneratorDraft}>
-                          CHECK ONLY
+                          CHECK JSON
                         </button>
                         <button type="button" className="adminGenerateBtn" onClick={loadAdminReadingGeneratorDraftIntoBulkUpload}>
-                          CHECK + LOAD
+                          CHECK + SEND TO UPLOAD
                         </button>
                         <p className="meta">
                           Local checks catch missing evidence, order problems, unbalanced judgement sets, and fill answers that are not exact one-word passage answers.
@@ -15782,10 +15798,10 @@ function App() {
                   </details>
                   <div className="adminActionRow">
                     <button type="button" className="secondary" onClick={() => void validateAdminReadingBulkJson()}>
-                      Validate JSON First
+                      Check Server Format
                     </button>
                     <button type="button" onClick={() => void handleAdminBulkCreateReadingExams()}>
-                      Upload Bulk JSON
+                      Upload to Reading Bank
                     </button>
                     <p className="meta">
                       Each item needs: <code>title</code>, <code>category</code>, <code>rawPassageText</code>, and <code>rawAnswerKey</code>.
