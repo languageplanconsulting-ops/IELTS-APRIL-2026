@@ -77,6 +77,7 @@ const ALL_LISTENING_FOUNDATION_SETS = [
 
 type Role = 'student' | 'admin' | 'trial'
 type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
+type AdminWorkspaceSection = 'reading' | 'learners' | 'support' | 'analytics' | 'reports' | 'audio' | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
 type ReadingBankCategory = 'normal' | 'advanced'
@@ -3157,6 +3158,20 @@ const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   advanced: 'Advanced Reading'
 }
 
+const ADMIN_WORKSPACE_SECTIONS: Array<{
+  id: AdminWorkspaceSection
+  label: string
+  description: string
+}> = [
+  { id: 'reading', label: 'Reading Generator', description: 'Create, check, and upload exams' },
+  { id: 'learners', label: 'Learners', description: 'Access, credits, expiry' },
+  { id: 'support', label: 'Support Inbox', description: 'Student issue reports' },
+  { id: 'analytics', label: 'Analytics', description: 'Usage and cost' },
+  { id: 'reports', label: 'Speaking Reports', description: 'Saved attempts' },
+  { id: 'audio', label: 'Question Audio', description: 'TTS library' },
+  { id: 'settings', label: 'Settings', description: 'Topics and QA tools' }
+]
+
 const READING_ENTRY_CHOICES: Array<{
   category: ReadingBankCategory
   title: string
@@ -6112,6 +6127,7 @@ function App() {
   const [adminLearnerFullMockCreditsInput, setAdminLearnerFullMockCreditsInput] = useState(DEFAULT_FULL_MOCK_CREDITS)
   const [adminLearnerRoleInput, setAdminLearnerRoleInput] = useState<Role>('student')
   const [adminPanelMessage, setAdminPanelMessage] = useState('')
+  const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('reading')
   const [adminLearnerSearchInput, setAdminLearnerSearchInput] = useState('')
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
   const [readingExams, setReadingExams] = useState<ReadingExamRecord[]>([])
@@ -6171,6 +6187,7 @@ function App() {
   const [adminReadingGeneratorPassages, setAdminReadingGeneratorPassages] = useState<AdminReadingGeneratorPassageConfig[]>(
     INITIAL_ADMIN_READING_GENERATOR_PASSAGES
   )
+  const [adminReadingGeneratorActiveIndex, setAdminReadingGeneratorActiveIndex] = useState(0)
   const [adminReadingGeneratorBrief, setAdminReadingGeneratorBrief] = useState('')
   const [adminReadingGeneratorDraftInput, setAdminReadingGeneratorDraftInput] = useState('')
   const [adminReadingGeneratorValidation, setAdminReadingGeneratorValidation] =
@@ -6687,6 +6704,7 @@ function App() {
       'Return ONLY valid JSON. No Markdown fences. The JSON must be an array of ReadingBulkUploadInput objects.',
       'Each object must have exactly these fields: title, category, rawPassageText, rawAnswerKey.',
       'category must be either "normal" or "advanced".',
+      'Important JSON formatting rule: output JSON.stringify-safe strings only. Escape all internal quotation marks as \\" and represent line breaks as \\n. Do not put literal unescaped line breaks inside string values.',
       '',
       'rawPassageText format:',
       '- Include READING PASSAGE X.',
@@ -14887,7 +14905,7 @@ function App() {
           )}
         </section>
       ) : activePage === 'admin' ? (
-          <section className="adminPanelPage">
+          <section className="adminPanelPage" data-admin-section={adminWorkspaceSection}>
             <div className="adminHero">
               <div>
                 <p className="sectionLabel">Admin Workspace</p>
@@ -14931,8 +14949,24 @@ function App() {
             )}
 
             <div className="adminLayout">
+              <aside className="adminNavRail" aria-label="Admin navigation">
+                <p className="sectionLabel">Admin Menu</p>
+                <div className="adminNavList">
+                  {ADMIN_WORKSPACE_SECTIONS.map((section) => (
+                    <button
+                      key={section.id}
+                      type="button"
+                      className={adminWorkspaceSection === section.id ? 'active' : ''}
+                      onClick={() => setAdminWorkspaceSection(section.id)}
+                    >
+                      <span>{section.label}</span>
+                      <small>{section.description}</small>
+                    </button>
+                  ))}
+                </div>
+              </aside>
               <div className="adminMainColumn">
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-learners">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Access Control</p>
@@ -15014,7 +15048,7 @@ function App() {
                   </div>
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-learners">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Learner Directory</p>
@@ -15112,7 +15146,7 @@ function App() {
                   </div>
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-support">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Client Support</p>
@@ -15205,7 +15239,7 @@ function App() {
                   </div>
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-analytics">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Business Analytics</p>
@@ -15310,7 +15344,7 @@ function App() {
                   </div>
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-reports">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Speaking Reports</p>
@@ -15355,7 +15389,7 @@ function App() {
                   </div>
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-reading">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Reading Exam Bank</p>
@@ -15378,15 +15412,33 @@ function App() {
                       <span className="bandPill">{activeAdminReadingGeneratorPassages.length}/4 active</span>
                     </div>
 
-                    <div className="adminReadingGeneratorGrid">
+                    <div className="adminReadingPassageTabs" role="tablist" aria-label="Source passage slots">
                       {adminReadingGeneratorPassages.map((passage, index) => (
+                        <button
+                          key={`generator-tab-${passage.id}`}
+                          type="button"
+                          className={adminReadingGeneratorActiveIndex === index ? 'active' : ''}
+                          onClick={() => setAdminReadingGeneratorActiveIndex(index)}
+                        >
+                          <span>Passage {index + 1}</span>
+                          <small>{passage.sourcePassage.trim() ? 'Ready' : 'Empty'}</small>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="adminReadingGeneratorGrid">
+                      {adminReadingGeneratorPassages
+                        .filter((_, index) => index === adminReadingGeneratorActiveIndex)
+                        .map((passage) => {
+                          const originalIndex = adminReadingGeneratorPassages.findIndex((item) => item.id === passage.id)
+                          return (
                         <article key={passage.id} className="adminReadingGeneratorPassageCard">
                           <div className="adminReadingGeneratorCardTop">
                             <div>
-                              <p className="adminAudioEyebrow">Source Passage {index + 1}</p>
-                              <h4>{passage.title.trim() || `Passage ${index + 1}`}</h4>
+                              <p className="adminAudioEyebrow">Source Passage {originalIndex + 1}</p>
+                              <h4>{passage.title.trim() || `Passage ${originalIndex + 1}`}</h4>
                             </div>
-                            <span className="bandPill">{READING_CATEGORY_LABELS[passage.category]}</span>
+                            <span className="adminReadingBankBadge">{READING_CATEGORY_LABELS[passage.category]}</span>
                           </div>
 
                           <div className="adminFormGrid">
@@ -15397,7 +15449,7 @@ function App() {
                                 onChange={(event) =>
                                   updateAdminReadingGeneratorPassage(passage.id, { title: event.target.value })
                                 }
-                                placeholder={`Generated Reading Passage ${index + 1}`}
+                                placeholder={`Generated Reading Passage ${originalIndex + 1}`}
                               />
                             </label>
                             <label>
@@ -15479,55 +15531,61 @@ function App() {
                             />
                           </label>
                         </article>
-                      ))}
+                          )
+                        })}
                     </div>
 
-                    <div className="adminActionRow">
-                      <button type="button" onClick={buildAdminReadingGeneratorBrief}>
-                        Build Codex Brief
+                    <div className="adminGeneratorActionBar">
+                      <button type="button" className="adminGenerateBtn" onClick={buildAdminReadingGeneratorBrief}>
+                        GENERATE
                       </button>
                       <button type="button" className="secondary" onClick={() => void copyAdminReadingGeneratorBrief()}>
                         Copy Brief
                       </button>
-                      <p className="meta">Use this brief in Codex, then paste the returned JSON into the review box below.</p>
+                      <p className="meta">Generate the Codex brief, paste it into Codex, then paste the JSON result below for checking.</p>
                     </div>
 
-                    <div className="adminReadingGeneratorReviewGrid">
-                      <label>
-                        Codex Generation Brief
-                        <textarea
-                          value={adminReadingGeneratorBrief}
-                          onChange={(event) => setAdminReadingGeneratorBrief(event.target.value)}
-                          placeholder="Build the brief after filling the passage slots."
-                          rows={16}
-                        />
-                      </label>
-                      <label>
-                        Generated JSON Review
-                        <textarea
-                          value={adminReadingGeneratorDraftInput}
-                          onChange={(event) => {
-                            setAdminReadingGeneratorDraftInput(event.target.value)
-                            setAdminReadingGeneratorValidation(null)
-                          }}
-                          placeholder='Paste Codex output here. It should be a JSON array with title, category, rawPassageText, and rawAnswerKey.'
-                          rows={16}
-                        />
-                      </label>
-                    </div>
+                    <details
+                      className="adminGeneratorReviewDrawer"
+                      open={Boolean(adminReadingGeneratorBrief || adminReadingGeneratorDraftInput || adminReadingGeneratorValidation)}
+                    >
+                      <summary>Codex brief + generated JSON check</summary>
+                      <div className="adminReadingGeneratorReviewGrid">
+                        <label>
+                          Codex Generation Brief
+                          <textarea
+                            value={adminReadingGeneratorBrief}
+                            onChange={(event) => setAdminReadingGeneratorBrief(event.target.value)}
+                            placeholder="Build the brief after filling the passage slots."
+                            rows={12}
+                          />
+                        </label>
+                        <label>
+                          Generated JSON Review
+                          <textarea
+                            value={adminReadingGeneratorDraftInput}
+                            onChange={(event) => {
+                              setAdminReadingGeneratorDraftInput(event.target.value)
+                              setAdminReadingGeneratorValidation(null)
+                            }}
+                            placeholder='Paste Codex output here. It should be a JSON array with title, category, rawPassageText, and rawAnswerKey.'
+                            rows={12}
+                          />
+                        </label>
+                      </div>
 
-                    <div className="adminActionRow">
-                      <button type="button" className="secondary" onClick={validateAdminReadingGeneratorDraft}>
-                        Check Generated JSON
-                      </button>
-                      <button type="button" onClick={loadAdminReadingGeneratorDraftIntoBulkUpload}>
-                        Load Clean Draft to Bulk Upload
-                      </button>
-                      <p className="meta">
-                        Local checks catch missing evidence, non-chronological answer keys, unbalanced judgement sets,
-                        and fill answers that are not exact one-word passage answers.
-                      </p>
-                    </div>
+                      <div className="adminGeneratorActionBar">
+                        <button type="button" className="secondary" onClick={validateAdminReadingGeneratorDraft}>
+                          CHECK ONLY
+                        </button>
+                        <button type="button" className="adminGenerateBtn" onClick={loadAdminReadingGeneratorDraftIntoBulkUpload}>
+                          CHECK + LOAD
+                        </button>
+                        <p className="meta">
+                          Local checks catch missing evidence, order problems, unbalanced judgement sets, and fill answers that are not exact one-word passage answers.
+                        </p>
+                      </div>
+                    </details>
 
                     {adminReadingGeneratorValidation && (
                       <div className="adminGeneratorValidationCard">
@@ -15564,8 +15622,10 @@ function App() {
                       </div>
                     )}
                   </div>
-                  <div className="adminWorkflowCard">
-                    <h4>Smart Paste Helper</h4>
+                  <details className="adminCollapsedTools">
+                    <summary>Manual upload tools</summary>
+                    <div className="adminWorkflowCard">
+                      <h4>Smart Paste Helper</h4>
                     <p className="meta">
                       If your source looks like the long format you pasted in chat, drop the whole thing here once and let the app split it into title, category, passage text, and answer key for you.
                     </p>
@@ -15584,54 +15644,55 @@ function App() {
                       </button>
                       <p className="meta">Best for imports where the answer key appears first and the reading passages come after.</p>
                     </div>
-                  </div>
-                  <div className="adminFormGrid">
+                    </div>
+                    <div className="adminFormGrid">
+                      <label>
+                        Exam Title
+                        <input
+                          value={adminReadingTitleInput}
+                          onChange={(event) => setAdminReadingTitleInput(event.target.value)}
+                          placeholder="e.g. Cambridge-style Reading Test 01"
+                        />
+                      </label>
+                      <label>
+                        Bank Category
+                        <select
+                          value={adminReadingCategoryInput}
+                          onChange={(event) => setAdminReadingCategoryInput(event.target.value as ReadingBankCategory)}
+                        >
+                          {Object.entries(READING_CATEGORY_LABELS).map(([key, label]) => (
+                            <option key={key} value={key}>
+                              {label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
                     <label>
-                      Exam Title
-                      <input
-                        value={adminReadingTitleInput}
-                        onChange={(event) => setAdminReadingTitleInput(event.target.value)}
-                        placeholder="e.g. Cambridge-style Reading Test 01"
+                      Reading Passage Text
+                      <textarea
+                        value={adminReadingPassageInput}
+                        onChange={(event) => setAdminReadingPassageInput(event.target.value)}
+                        placeholder="Paste the uploaded passage format here..."
+                        rows={10}
                       />
                     </label>
                     <label>
-                      Bank Category
-                      <select
-                        value={adminReadingCategoryInput}
-                        onChange={(event) => setAdminReadingCategoryInput(event.target.value as ReadingBankCategory)}
-                      >
-                        {Object.entries(READING_CATEGORY_LABELS).map(([key, label]) => (
-                          <option key={key} value={key}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
+                      Answer Key + Thai Explanation
+                      <textarea
+                        value={adminReadingAnswerKeyInput}
+                        onChange={(event) => setAdminReadingAnswerKeyInput(event.target.value)}
+                        placeholder="Paste the uploaded answer-key format here..."
+                        rows={10}
+                      />
                     </label>
-                  </div>
-                  <label>
-                    Reading Passage Text
-                    <textarea
-                      value={adminReadingPassageInput}
-                      onChange={(event) => setAdminReadingPassageInput(event.target.value)}
-                      placeholder="Paste the uploaded passage format here..."
-                      rows={14}
-                    />
-                  </label>
-                  <label>
-                    Answer Key + Thai Explanation
-                    <textarea
-                      value={adminReadingAnswerKeyInput}
-                      onChange={(event) => setAdminReadingAnswerKeyInput(event.target.value)}
-                      placeholder="Paste the uploaded answer-key format here..."
-                      rows={14}
-                    />
-                  </label>
-                  <div className="adminActionRow">
-                    <button type="button" onClick={() => void handleAdminCreateReadingExam()}>
-                      Upload Reading Exam
-                    </button>
-                    <p className="meta">The parser will split passages, question ranges, exact hints, and paraphrased vocabulary automatically.</p>
-                  </div>
+                    <div className="adminActionRow">
+                      <button type="button" onClick={() => void handleAdminCreateReadingExam()}>
+                        Upload Reading Exam
+                      </button>
+                      <p className="meta">The parser will split passages, question ranges, exact hints, and paraphrased vocabulary automatically.</p>
+                    </div>
+                  </details>
                   {adminPanelMessage && <p className="meta authSuccess">{adminPanelMessage}</p>}
                   {authError && <p className="error authError">{authError}</p>}
                   {readingExams.length > 0 && (
@@ -15649,7 +15710,7 @@ function App() {
                   )}
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-reading">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Reading Exam Bank</p>
@@ -15669,11 +15730,13 @@ function App() {
                         setAdminReadingBulkValidation(null)
                       }}
                       placeholder={`[\n  {\n    "title": "Cambridge 11 Test 1 Passage 1",\n    "category": "normal",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "Cambridge 11 Test 1 Passage 3",\n    "category": "advanced",\n    "rawPassageText": "READING PASSAGE 3\\n...",\n    "rawAnswerKey": "Question 27: ..."\n  }\n]`}
-                      rows={16}
+                      rows={10}
                     />
                   </label>
-                  <div className="adminWorkflowCard">
-                    <h4>JSON Templates</h4>
+                  <details className="adminCollapsedTools">
+                    <summary>JSON templates</summary>
+                    <div className="adminWorkflowCard">
+                      <h4>JSON Templates</h4>
                     <p className="meta">
                       Choose the category you want, copy the template, then paste your real exam content into
                       <code> rawPassageText </code>
@@ -15704,7 +15767,8 @@ function App() {
                         Load Template Into Upload Box
                       </button>
                     </div>
-                  </div>
+                    </div>
+                  </details>
                   <div className="adminActionRow">
                     <button type="button" className="secondary" onClick={() => void validateAdminReadingBulkJson()}>
                       Validate JSON First
@@ -15752,7 +15816,7 @@ function App() {
                   {authError && <p className="error authError">{authError}</p>}
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-reading">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Reading Exam Bank</p>
@@ -15781,7 +15845,7 @@ function App() {
                   </div>
                 </div>
 
-                <div className="panel adminSectionCard">
+                <div className="panel adminSectionCard adminOnly-audio">
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Question Audio</p>
@@ -15956,7 +16020,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="adminSideColumn">
+              <div className="adminSideColumn adminOnly-settings">
                 <div className="panel adminSectionCard">
                   <div className="adminSectionHeader">
                     <div>

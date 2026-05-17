@@ -4473,15 +4473,83 @@ body,
 
 .adminLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.95fr);
+  grid-template-columns: 270px minmax(0, 1fr);
   gap: 18px;
   align-items: start;
 }
 
+.adminNavRail {
+  position: sticky;
+  top: 88px;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #d8e3f7;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 18px 34px -30px rgba(15, 23, 42, 0.42);
+}
+
+.adminNavList {
+  display: grid;
+  gap: 8px;
+}
+
+.adminNavList button {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 12px;
+  border: 1px solid #d4e0f5;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #172033;
+  text-align: left;
+  box-shadow: none;
+}
+
+.adminNavList button span {
+  font-weight: 800;
+}
+
+.adminNavList button small {
+  color: #64748b;
+  font-size: 0.76rem;
+  line-height: 1.25;
+}
+
+.adminNavList button.active {
+  border-color: #123f91;
+  background: #eaf1ff;
+  color: #123f91;
+}
+
 .adminMainColumn,
 .adminSideColumn {
+  grid-column: 2;
   display: grid;
   gap: 18px;
+}
+
+.adminOnly-learners,
+.adminOnly-support,
+.adminOnly-analytics,
+.adminOnly-reports,
+.adminOnly-reading,
+.adminOnly-audio,
+.adminOnly-settings {
+  display: none;
+}
+
+.adminPanelPage[data-admin-section='learners'] .adminOnly-learners,
+.adminPanelPage[data-admin-section='support'] .adminOnly-support,
+.adminPanelPage[data-admin-section='analytics'] .adminOnly-analytics,
+.adminPanelPage[data-admin-section='reports'] .adminOnly-reports,
+.adminPanelPage[data-admin-section='reading'] .adminOnly-reading,
+.adminPanelPage[data-admin-section='audio'] .adminOnly-audio,
+.adminPanelPage[data-admin-section='settings'] .adminOnly-settings {
+  display: grid;
 }
 
 .adminSectionCard {
@@ -4775,24 +4843,56 @@ body,
   display: grid;
   gap: 16px;
   padding: 18px;
-  border: 1px solid #cfdcf4;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #f9fbff 0%, #ffffff 100%);
+  border: 2px solid #d6e0f4;
+  border-radius: 10px;
+  background: #ffffff;
 }
 
 .adminReadingGeneratorGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: 1fr;
   gap: 14px;
+}
+
+.adminReadingPassageTabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.adminReadingPassageTabs button {
+  display: grid;
+  gap: 2px;
+  min-height: 54px;
+  padding: 9px 12px;
+  border: 1px solid #c8d7f1;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #172033;
+  box-shadow: none;
+}
+
+.adminReadingPassageTabs button span {
+  font-weight: 900;
+}
+
+.adminReadingPassageTabs button small {
+  color: #64748b;
+}
+
+.adminReadingPassageTabs button.active {
+  border-color: #123f91;
+  background: #eaf1ff;
+  color: #123f91;
 }
 
 .adminReadingGeneratorPassageCard {
   display: grid;
-  gap: 12px;
+  gap: 18px;
   min-width: 0;
-  padding: 14px;
+  padding: 24px 28px;
   border: 1px solid #d8e4f7;
-  border-radius: 14px;
+  border-radius: 8px;
   background: #ffffff;
 }
 
@@ -4803,12 +4903,34 @@ body,
   gap: 12px;
 }
 
+.adminReadingGeneratorCardTop h4 {
+  max-width: 560px;
+  font-size: clamp(1.6rem, 2.2vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.adminReadingBankBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 9px 18px;
+  border: 3px solid #0f172a;
+  background: #ffd21e;
+  color: #071127;
+  box-shadow: 6px 6px 0 #0f172a;
+  font-size: 0.98rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .adminReadingGeneratorPassageCard label,
-.adminReadingGeneratorReviewGrid label {
+.adminReadingGeneratorReviewGrid label,
+.adminCollapsedTools label {
   display: grid;
   gap: 6px;
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 850;
   color: var(--text-main);
 }
 
@@ -4820,12 +4942,13 @@ body,
 
 .adminReadingTypeSelector button {
   width: auto;
-  min-height: 36px;
-  padding: 8px 10px;
+  min-height: 44px;
+  padding: 9px 14px;
   border: 1px solid #cad8f2;
-  border-radius: 999px;
+  border-radius: 0;
   background: #ffffff;
   color: #29405f;
+  font-size: 0.95rem;
   box-shadow: none;
 }
 
@@ -4833,6 +4956,41 @@ body,
   border-color: var(--brand-primary);
   background: #eaf1ff;
   color: var(--brand-primary);
+}
+
+.adminGeneratorActionBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adminGenerateBtn {
+  width: auto;
+  min-height: 52px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  background: #123f91;
+  color: #ffffff;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+}
+
+.adminGeneratorReviewDrawer,
+.adminCollapsedTools {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #d8e4f7;
+  border-radius: 12px;
+  background: #f8fbff;
+  padding: 12px;
+}
+
+.adminGeneratorReviewDrawer summary,
+.adminCollapsedTools summary {
+  cursor: pointer;
+  color: #123f91;
+  font-weight: 900;
 }
 
 .adminReadingGeneratorReviewGrid {
@@ -7712,6 +7870,20 @@ body,
   .adminStatGrid,
   .adminLayout {
     grid-template-columns: 1fr;
+  }
+
+  .adminNavRail,
+  .adminMainColumn,
+  .adminSideColumn {
+    grid-column: 1;
+  }
+
+  .adminNavRail {
+    position: static;
+  }
+
+  .adminReadingPassageTabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .readingExamLayout,
