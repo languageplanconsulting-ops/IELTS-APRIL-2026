@@ -5642,6 +5642,10 @@ body,
   box-shadow: none !important;
 }
 
+.listeningBuilderExamPage.listeningSectionExamHost {
+  min-height: 0 !important;
+}
+
 .listeningBuilderExamShell {
   min-height: calc(100vh - 120px);
   display: grid;
@@ -14959,7 +14963,7 @@ select:focus,
   margin-left: auto;
 }
 
-.listeningFoundationExamPage {
+.listeningFoundationExamPage:not(.listeningSectionExamHost) {
   overflow: visible;
 }
 
