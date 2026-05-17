@@ -31,6 +31,7 @@ const distDir = path.resolve(__dirname, '../dist')
 const indexHtmlPath = path.join(distDir, 'index.html')
 const isDirectRun = process.argv[1] ? path.resolve(process.argv[1]) === __filename : false
 const JAN_2026_MUSIC_BRAIN_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-2-music-and-brain.json')
+const JAN_2026_MEDIEVAL_CASTLES_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-2-medieval-castles.json')
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
@@ -4699,6 +4700,18 @@ const BUILT_IN_READING_BANK_EXAMS = [
     mapBuiltInReadingExam(
       {
         id: 'builtin-reading-jan-2026-passage-2-music-brain',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-18T00:00:00.000Z',
+        updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...JAN_2026_MEDIEVAL_CASTLES_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-jan-2026-passage-2-medieval-castles',
         ...exam
       },
       {
