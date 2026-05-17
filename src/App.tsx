@@ -6625,6 +6625,8 @@ function App() {
     () => adminReadingGeneratorPassages.filter((passage) => passage.sourcePassage.trim()),
     [adminReadingGeneratorPassages]
   )
+  const activeAdminWorkspaceSection =
+    ADMIN_WORKSPACE_SECTIONS.find((section) => section.id === adminWorkspaceSection) ?? ADMIN_WORKSPACE_SECTIONS[0]
 
   const updateAdminReadingGeneratorPassage = (
     id: string,
@@ -14957,6 +14959,7 @@ function App() {
                       key={section.id}
                       type="button"
                       className={adminWorkspaceSection === section.id ? 'active' : ''}
+                      aria-current={adminWorkspaceSection === section.id ? 'page' : undefined}
                       onClick={() => setAdminWorkspaceSection(section.id)}
                     >
                       <span>{section.label}</span>
@@ -14966,6 +14969,14 @@ function App() {
                 </div>
               </aside>
               <div className="adminMainColumn">
+                <div className="adminWorkspaceWindowHeader">
+                  <div>
+                    <p className="sectionLabel">Selected Admin Function</p>
+                    <h3>{activeAdminWorkspaceSection.label}</h3>
+                    <p className="meta">{activeAdminWorkspaceSection.description}</p>
+                  </div>
+                  <span className="adminWindowStatus">Active Window</span>
+                </div>
                 <div className="panel adminSectionCard adminOnly-learners">
                   <div className="adminSectionHeader">
                     <div>
