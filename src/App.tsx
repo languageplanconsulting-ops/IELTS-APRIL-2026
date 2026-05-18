@@ -5908,6 +5908,32 @@ const parseStoredCustomSections = (value: string | null): string[] => {
   }
 }
 
+const canSyncNotebookToAccount = (session: Pick<AuthSession, 'userId'> | null | undefined) => {
+  const userId = String(session?.userId || '').trim()
+  return Boolean(userId && userId !== 'admin-code' && /^[0-9a-f-]{36}$/i.test(userId))
+}
+
+const mergeNotebookEntries = (remote: NotebookEntry[], local: NotebookEntry[]) => {
+  const merged = new Map<string, NotebookEntry>()
+  for (const entry of [...remote, ...local]) {
+    if (!entry?.id) continue
+    const existing = merged.get(entry.id)
+    if (!existing) {
+      merged.set(entry.id, entry)
+      continue
+    }
+    const existingTime = Date.parse(existing.createdAt || '')
+    const nextTime = Date.parse(entry.createdAt || '')
+    merged.set(entry.id, Number.isFinite(nextTime) && nextTime >= existingTime ? entry : existing)
+  }
+  return Array.from(merged.values()).sort(
+    (left, right) => Date.parse(right.createdAt || '') - Date.parse(left.createdAt || '')
+  )
+}
+
+const mergeNotebookCustomSections = (remote: string[], local: string[]) =>
+  Array.from(new Set([...remote, ...local].map((name) => String(name || '').trim()).filter(Boolean)))
+
 const parseStoredScores = (value: string | null): Record<string, number> => {
   if (!value) return {}
   try {
@@ -6454,7 +6480,13 @@ function App() {
     sections: string[]
     successNotice?: string
   }) => {
-    if (!authSession?.accessToken || authSession.role !== 'student' || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) {
+    if (
+      !authSession?.accessToken ||
+      !authSession.email ||
+      !canSyncNotebookToAccount(authSession) ||
+      isNotebookHydrating ||
+      !notebookLoadedRef.current
+    ) {
       return false
     }
 
@@ -7152,6 +7184,11 @@ function App() {
     notebookSyncedSignatureRef.current = ''
 
     try {
+      if (!canSyncNotebookToAccount(session)) {
+        setNotebookEntries(localEntries)
+        setCustomSections(localSections)
+        notebookSyncedSignatureRef.current = buildNotebookSyncSignature(localEntries, localSections)
+      } else {
       const payload = await fetchJson<NotebookApiResponse>('/api/me/notebook', {
         headers: {
           Authorization: `Bearer ${session.accessToken}`
@@ -7159,16 +7196,20 @@ function App() {
       })
       const remoteEntries = Array.isArray(payload.entries) ? payload.entries : []
       const remoteSections = Array.isArray(payload.customSections) ? payload.customSections : []
-      const shouldSeedFromLocal =
-        remoteEntries.length === 0 &&
-        remoteSections.length === 0 &&
-        (localEntries.length > 0 || localSections.length > 0)
+      const mergedEntries = mergeNotebookEntries(remoteEntries, localEntries)
+      const mergedSections = mergeNotebookCustomSections(remoteSections, localSections)
+      const shouldPushMerged =
+        mergedEntries.length !== remoteEntries.length ||
+        mergedSections.length !== remoteSections.length ||
+        JSON.stringify(mergedEntries) !== JSON.stringify(remoteEntries) ||
+        JSON.stringify(mergedSections) !== JSON.stringify(remoteSections)
 
-      setNotebookEntries(shouldSeedFromLocal ? localEntries : remoteEntries)
-      setCustomSections(shouldSeedFromLocal ? localSections : remoteSections)
-      notebookSyncedSignatureRef.current = shouldSeedFromLocal
+      setNotebookEntries(mergedEntries)
+      setCustomSections(mergedSections)
+      notebookSyncedSignatureRef.current = shouldPushMerged
         ? ''
         : buildNotebookSyncSignature(remoteEntries, remoteSections)
+      }
       try {
         const progressPayload = await fetchJson<{ progress: ReadingPdoyProgressSnapshot | null }>('/api/me/reading-pdoy-progress', {
           headers: {
@@ -8979,7 +9020,7 @@ function App() {
   }, [authSession])
 
   useEffect(() => {
-    if (!authSession?.email || (authSession.role !== 'student' && authSession.role !== 'trial')) {
+    if (!authSession?.email) {
       resetStudentWorkspaceState()
       setManagedLearners([])
       setMySupportReports([])
@@ -8992,7 +9033,14 @@ function App() {
       return
     }
 
-    void loadNotebookForSession(authSession)
+    if (authSession.role === 'student' || authSession.role === 'admin') {
+      void loadNotebookForSession(authSession)
+      return
+    }
+
+    resetStudentWorkspaceState()
+    setManagedLearners([])
+    setMySupportReports([])
   }, [authSession?.accessToken, authSession?.email, authSession?.role])
 
   useEffect(() => {
@@ -9165,21 +9213,21 @@ function App() {
     }, [readingWorkspaceMode, readingPdoyStep, activeReadingPdoyQuestion?.number])
 
   useEffect(() => {
-    if (!authSession?.email) return
+    if (!authSession?.email || isNotebookHydrating || !notebookLoadedRef.current) return
     localStorage.setItem(makeScopedStorageKey(NOTEBOOK_ENTRIES_KEY, authSession.email), JSON.stringify(notebookEntries))
-  }, [authSession, notebookEntries])
+  }, [authSession, notebookEntries, isNotebookHydrating])
 
   useEffect(() => {
     notebookEntriesRef.current = notebookEntries
   }, [notebookEntries])
 
   useEffect(() => {
-    if (!authSession?.email) return
+    if (!authSession?.email || isNotebookHydrating || !notebookLoadedRef.current) return
     localStorage.setItem(
       makeScopedStorageKey(NOTEBOOK_CUSTOM_SECTIONS_KEY, authSession.email),
       JSON.stringify(customSections)
     )
-  }, [authSession, customSections])
+  }, [authSession, customSections, isNotebookHydrating])
 
   useEffect(() => {
     customSectionsRef.current = customSections
@@ -9364,7 +9412,15 @@ function App() {
   ])
 
   useEffect(() => {
-    if (!authSession?.accessToken || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) return
+    if (
+      !authSession?.accessToken ||
+      !authSession.email ||
+      !canSyncNotebookToAccount(authSession) ||
+      isNotebookHydrating ||
+      !notebookLoadedRef.current
+    ) {
+      return
+    }
     const nextSignature = buildNotebookSyncSignature(notebookEntries, customSections)
     if (nextSignature === notebookSyncedSignatureRef.current) return
     if (notebookSyncTimeoutRef.current) {
