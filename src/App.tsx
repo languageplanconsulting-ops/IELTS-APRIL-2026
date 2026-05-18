@@ -212,14 +212,6 @@ type ReadingAttemptSummary = {
   reportItems: ReadingReportItem[]
 }
 
-type NormalReadingStage = {
-  number: number
-  title: string
-  exams: ReadingExamRecord[]
-  isUnlocked: boolean
-  bestAccuracy: number
-}
-
 type ReadingPdoyLesson = {
   id: string
   examId: string
@@ -3223,34 +3215,6 @@ const READING_ENTRY_CHOICES: Array<{
   }
 ]
 
-const NORMAL_READING_STAGE_SIZE = 3
-const NORMAL_READING_UNLOCK_PERCENT = 80
-const ADVANCED_READING_STAGE_SIZE = 2
-const ADVANCED_READING_UNLOCK_PERCENT = 75
-
-const hashReadingStageValue = (value: string) => {
-  let hash = 2166136261
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index)
-    hash = Math.imul(hash, 16777619)
-  }
-  return hash >>> 0
-}
-
-const sortNormalReadingExamsForStages = (exams: ReadingExamRecord[]) =>
-  [...exams].sort((first, second) => {
-    const firstScore = hashReadingStageValue(`normal-stage-v1:${first.id}`)
-    const secondScore = hashReadingStageValue(`normal-stage-v1:${second.id}`)
-    return firstScore - secondScore || first.title.localeCompare(second.title)
-  })
-
-const sortAdvancedReadingExamsForStages = (exams: ReadingExamRecord[]) =>
-  [...exams].sort((first, second) => {
-    const firstScore = hashReadingStageValue(`advanced-stage-v1:${first.id}`)
-    const secondScore = hashReadingStageValue(`advanced-stage-v1:${second.id}`)
-    return firstScore - secondScore || first.title.localeCompare(second.title)
-  })
-
 const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
   const normalized = String(value || '').trim().toLowerCase()
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
@@ -3941,6 +3905,101 @@ const getReadingExamCollectionTitle = (exam: Pick<ReadingExamRecord, 'title' | '
   if (explicit) return explicit
   return isCambridgeBookReadingExam({ id: '', title: exam.title }) ? 'Cambridge Reading Bank' : 'Unsorted Reading Uploads'
 }
+
+const READING_COLLECTION_MONTH_LABELS: Record<string, string> = {
+  jan: 'January',
+  january: 'January',
+  feb: 'February',
+  february: 'February',
+  mar: 'March',
+  march: 'March',
+  apr: 'April',
+  april: 'April',
+  may: 'May',
+  jun: 'June',
+  june: 'June',
+  jul: 'July',
+  july: 'July',
+  aug: 'August',
+  august: 'August',
+  sep: 'September',
+  sept: 'September',
+  september: 'September',
+  oct: 'October',
+  october: 'October',
+  nov: 'November',
+  november: 'November',
+  dec: 'December',
+  december: 'December'
+}
+
+const READING_COLLECTION_MONTH_ORDER: Record<string, number> = {
+  jan: 0,
+  january: 0,
+  feb: 1,
+  february: 1,
+  mar: 2,
+  march: 2,
+  apr: 3,
+  april: 3,
+  may: 4,
+  jun: 5,
+  june: 5,
+  jul: 6,
+  july: 6,
+  aug: 7,
+  august: 7,
+  sep: 8,
+  sept: 8,
+  september: 8,
+  oct: 9,
+  october: 9,
+  nov: 10,
+  november: 10,
+  dec: 11,
+  december: 11
+}
+
+const READING_MONTH_COLLECTION_REGEX =
+  /\b(?:ielts\s+academic\s+reading\s+)?(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{4})\b/i
+
+const getReadingCollectionSortValue = (title: string) => {
+  const normalized = String(title || '').trim().toLowerCase()
+  const match = normalized.match(READING_MONTH_COLLECTION_REGEX)
+  if (!match) return Number.MAX_SAFE_INTEGER
+  const month = READING_COLLECTION_MONTH_ORDER[match[1]] ?? 99
+  return Number(match[2]) * 12 + month
+}
+
+const getReadingMonthCollectionLabel = (title: string) => {
+  const match = String(title || '').trim().match(READING_MONTH_COLLECTION_REGEX)
+  if (!match) return String(title || '').trim() || 'Reading Collection'
+  const month = READING_COLLECTION_MONTH_LABELS[match[1].toLowerCase()] || match[1]
+  return `${month} ${match[2]}`
+}
+
+const isMonthlyReadingCollection = (exam: Pick<ReadingExamRecord, 'title' | 'collectionTitle' | 'parsedPayload'>) =>
+  READING_MONTH_COLLECTION_REGEX.test(getReadingExamCollectionTitle(exam))
+
+const compareReadingCollectionTitles = (first: string, second: string) => {
+  const firstSort = getReadingCollectionSortValue(first)
+  const secondSort = getReadingCollectionSortValue(second)
+  return firstSort - secondSort || first.localeCompare(second)
+}
+
+const getReadingPassageSortValue = (exam: Pick<ReadingExamRecord, 'title' | 'parsedPayload' | 'createdAt'>) => {
+  const titleMatch = String(exam.title || '').match(/Passage\s+(\d+)/i)
+  if (titleMatch) return Number(titleMatch[1])
+  const passageNumber = exam.parsedPayload?.passages?.[0]?.number
+  return Number.isFinite(passageNumber) ? Number(passageNumber) : 99
+}
+
+const sortReadingExamsForMonthlyBank = (exams: ReadingExamRecord[]) =>
+  [...exams].sort((first, second) => {
+    const passageOrder = getReadingPassageSortValue(first) - getReadingPassageSortValue(second)
+    if (passageOrder !== 0) return passageOrder
+    return first.title.localeCompare(second.title) || Date.parse(first.createdAt || '') - Date.parse(second.createdAt || '')
+  })
 
 const hasExplicitReadingCollection = (exam: Pick<ReadingExamRecord, 'collectionTitle' | 'parsedPayload'>) =>
   Boolean(String(exam.collectionTitle || exam.parsedPayload?.collectionTitle || '').trim())
@@ -5838,8 +5897,9 @@ const SPEAKING_LENGTH_THRESHOLDS: Record<'part1' | 'part2' | 'part3', Array<{ ba
     { band: 'Band 9', minWords: 70 }
   ],
   part2: [
-    { band: 'Band 7', minWords: 250 },
-    { band: 'Band 8', minWords: 280 },
+    { band: 'Band 6', minWords: 170 },
+    { band: 'Band 7', minWords: 213 },
+    { band: 'Band 8', minWords: 238 },
     { band: 'Band 9', minWords: 310 }
   ],
   part3: [
@@ -7933,6 +7993,24 @@ function App() {
     () => readingExams.filter((exam) => isReadingPdoyExercise(exam.id)),
     [readingExams]
   )
+  const monthlyReadingExams = useMemo(
+    () => bankReadingExams.filter((exam) => isMonthlyReadingCollection(exam)),
+    [bankReadingExams]
+  )
+  const readingMonthGroups = useMemo(() => {
+    const groups = new Map<string, ReadingExamRecord[]>()
+    monthlyReadingExams.forEach((exam) => {
+      const collection = getReadingExamCollectionTitle(exam)
+      groups.set(collection, [...(groups.get(collection) || []), exam])
+    })
+    return [...groups.entries()]
+      .map(([title, exams]) => ({
+        title,
+        displayTitle: getReadingMonthCollectionLabel(title),
+        exams: sortReadingExamsForMonthlyBank(exams)
+      }))
+      .sort((first, second) => compareReadingCollectionTitles(second.title, first.title))
+  }, [monthlyReadingExams])
   const filteredReadingExams = useMemo(
     () =>
       bankReadingExams.filter(
@@ -7955,7 +8033,7 @@ function App() {
             })
           collectionMap[category] = [...counts.entries()]
             .map(([title, count]) => ({ title, count }))
-            .sort((first, second) => first.title.localeCompare(second.title))
+            .sort((first, second) => compareReadingCollectionTitles(first.title, second.title))
           return collectionMap
         },
         {} as Record<ReadingBankCategory, Array<{ title: string; count: number }>>
@@ -7973,58 +8051,19 @@ function App() {
       })),
     [bankReadingExams]
   )
-  const normalReadingStages = useMemo<NormalReadingStage[]>(() => {
-    const normalExams = sortNormalReadingExamsForStages(
-      filteredReadingExams.filter((exam) => exam.category === 'normal')
-    )
-    const stageCount = Math.ceil(normalExams.length / NORMAL_READING_STAGE_SIZE)
-    let nextStageUnlocked = true
-    return Array.from({ length: stageCount }, (_, index) => {
-      const exams = normalExams.slice(
-        index * NORMAL_READING_STAGE_SIZE,
-        (index + 1) * NORMAL_READING_STAGE_SIZE
-      )
-      const bestAccuracy = exams.reduce(
-        (best, exam) => Math.max(best, readingAttemptByExamId[exam.id]?.accuracy || 0),
-        0
-      )
-      const stage: NormalReadingStage = {
-        number: index + 1,
-        title: `ด่าน ${index + 1}`,
-        exams,
-        isUnlocked: nextStageUnlocked,
-        bestAccuracy
-      }
-      nextStageUnlocked = nextStageUnlocked && bestAccuracy >= NORMAL_READING_UNLOCK_PERCENT
-      return stage
+  const readingExamGroupsByCollection = useMemo(() => {
+    const groups = new Map<string, ReadingExamRecord[]>()
+    filteredReadingExams.forEach((exam) => {
+      const collection = getReadingExamCollectionTitle(exam)
+      groups.set(collection, [...(groups.get(collection) || []), exam])
     })
-  }, [filteredReadingExams, readingAttemptByExamId])
-  const advancedReadingStages = useMemo<NormalReadingStage[]>(() => {
-    const advancedExams = sortAdvancedReadingExamsForStages(
-      filteredReadingExams.filter((exam) => exam.category === 'advanced')
-    )
-    const stageCount = Math.ceil(advancedExams.length / ADVANCED_READING_STAGE_SIZE)
-    let nextStageUnlocked = true
-    return Array.from({ length: stageCount }, (_, index) => {
-      const exams = advancedExams.slice(
-        index * ADVANCED_READING_STAGE_SIZE,
-        (index + 1) * ADVANCED_READING_STAGE_SIZE
-      )
-      const bestAccuracy = exams.reduce(
-        (best, exam) => Math.max(best, readingAttemptByExamId[exam.id]?.accuracy || 0),
-        0
-      )
-      const stage: NormalReadingStage = {
-        number: index + 1,
-        title: `ด่าน ${index + 1}`,
-        exams,
-        isUnlocked: nextStageUnlocked,
-        bestAccuracy
-      }
-      nextStageUnlocked = nextStageUnlocked && bestAccuracy >= ADVANCED_READING_UNLOCK_PERCENT
-      return stage
-    })
-  }, [filteredReadingExams, readingAttemptByExamId])
+    return [...groups.entries()]
+      .map(([title, exams]) => ({
+        title,
+        exams: sortReadingExamsForMonthlyBank(exams)
+      }))
+      .sort((first, second) => compareReadingCollectionTitles(first.title, second.title))
+  }, [filteredReadingExams])
   const selectedReadingEntryChoice =
     READING_ENTRY_CHOICES.find((choice) => choice.category === readingEntryCategory) || null
   const adminFirstReadingCategoryWithContent = useMemo(
@@ -8033,7 +8072,7 @@ function App() {
   )
   const recentStudentSupportReports = useMemo(() => mySupportReports.slice(0, 4), [mySupportReports])
   const activeReadingExam =
-    filteredReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
+    bankReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
     filteredReadingExams[0] ??
     null
   const activeReadingPassages = activeReadingExam?.parsedPayload?.passages || []
@@ -9099,6 +9138,7 @@ function App() {
   }, [authSession?.accessToken])
 
   useEffect(() => {
+    if (selectedReadingExamId && bankReadingExams.some((exam) => exam.id === selectedReadingExamId)) return
     if (!filteredReadingExams.length) {
       setSelectedReadingExamId('')
       return
@@ -9106,7 +9146,7 @@ function App() {
     if (!filteredReadingExams.some((exam) => exam.id === selectedReadingExamId)) {
       setSelectedReadingExamId(filteredReadingExams[0].id)
     }
-  }, [filteredReadingExams, selectedReadingExamId])
+  }, [bankReadingExams, filteredReadingExams, selectedReadingExamId])
 
   useEffect(() => {
     if (!readingPdoyLessons.length) {
@@ -12104,10 +12144,12 @@ function App() {
   }
 
   const startReadingExam = (examId: string) => {
-    const exam = filteredReadingExams.find((item) => item.id === examId) || null
+    const exam = bankReadingExams.find((item) => item.id === examId) || null
     if (!exam) return
     setReadingWorkspaceMode('bank')
     setReadingEntryCategory(exam.category)
+    setSelectedReadingCategory(exam.category)
+    setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
     setReadingAnswers({})
@@ -12354,11 +12396,13 @@ function App() {
   }
 
   const openReadingReview = (examId: string, stage: 'review' | 'report' = 'review') => {
-    const exam = filteredReadingExams.find((item) => item.id === examId) || null
+    const exam = bankReadingExams.find((item) => item.id === examId) || null
     const savedAttempt = readingAttemptByExamId[examId]
     if (!exam || !savedAttempt) return
     setReadingWorkspaceMode('bank')
     setReadingEntryCategory(exam.category)
+    setSelectedReadingCategory(exam.category)
+    setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
     setReadingAnswers(Object.fromEntries(savedAttempt.reportItems.map((item) => [item.number, item.userAnswer])))
@@ -12752,6 +12796,17 @@ function App() {
         placeholder="Type your answer"
       />
     )
+  }
+
+  const formatReadingAttemptDate = (attempt: ReadingAttemptSummary) => {
+    const date = new Date(attempt.completedAt)
+    if (Number.isNaN(date.getTime())) return 'Last attempt'
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
   const renderListeningAnswerField = (question: ListeningQuestion) => {
@@ -13883,40 +13938,84 @@ function App() {
           <div className="readingPageHeader">
             <div>
               <p className="sectionLabel">IELTS Reading</p>
-              <h2>{selectedReadingEntryChoice ? selectedReadingEntryChoice.title : 'Choose Reading Level'}</h2>
+              <h2>{selectedReadingEntryChoice ? selectedReadingEntryChoice.title : 'Reading by Month'}</h2>
               <p>
                 {selectedReadingEntryChoice
                   ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
-                  : 'Start with the bank that matches your target band.'}
+                  : '2026 reading sets, grouped by month.'}
               </p>
             </div>
           </div>
 
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && (
             <div className="readingEntryShell">
-              <div className="readingEntryChooser" aria-label="Choose reading exam level">
-                {READING_ENTRY_CHOICES.map((choice) => {
-                  const count = readingExamCountsByCategory.find((group) => group.category === choice.category)?.count || 0
-                  return (
-                    <button
-                      key={choice.category}
-                      type="button"
-                      className={`readingEntryCard readingEntryCard-${choice.category}`}
-                      onClick={() => {
-                        setReadingEntryCategory(choice.category)
-                        setSelectedReadingCategory(choice.category)
-                        setSelectedReadingCollection('all')
-                        setReadingAttemptStage('bank')
-                      }}
-                    >
-                      <span className="readingEntryLabel">{choice.tone}</span>
-                      <strong>{choice.title}</strong>
-                      <span className="readingEntrySubtitle">{choice.subtitle}</span>
-                      <small>{choice.detail}</small>
-                      <span className="readingEntryCount">{count} exams</span>
-                    </button>
-                  )
-                })}
+              <div className="readingMonthBank">
+                <div className="readingBankWindowHeader">
+                  <div>
+                    <span className="readingEntryLabel">Monthly Bank</span>
+                    <h3>IELTS Academic Reading</h3>
+                    <p>Free-pick practice sets organized by release month.</p>
+                  </div>
+                  <div className="readingBankWindowActions">
+                    <span className="readingEntryCount">{monthlyReadingExams.length} exams</span>
+                  </div>
+                </div>
+                {readingMonthGroups.length === 0 ? (
+                  <div className="emptyNotebook">
+                    <p>No monthly reading sets are ready yet.</p>
+                  </div>
+                ) : (
+                  <div className="readingStageBoard readingMonthBoard">
+                    {readingMonthGroups.map((group) => (
+                      <section key={`reading-month-all-${group.title}`} className="readingStagePanel readingMonthPanel">
+                        <div className="readingStageHeader">
+                          <div>
+                            <p className="sectionLabel">Monthly Reading</p>
+                            <h4>{group.displayTitle}</h4>
+                            <p>{group.exams.length} exams</p>
+                          </div>
+                        </div>
+
+                        <div className="readingStageExamGrid">
+                          {group.exams.map((exam, index) => {
+                            const attempt = readingAttemptByExamId[exam.id]
+                            const isPerfect = attempt?.accuracy === 100
+                            return (
+                              <article key={exam.id} className={`readingStageExamCard ${isPerfect ? 'is-perfect' : ''}`}>
+                                <div className="readingStageExamThumb">
+                                  <span>{attempt ? `${attempt.correctCount}/${attempt.totalQuestions}` : `ชุด ${index + 1}`}</span>
+                                  <small>{attempt ? `${attempt.accuracy}% ล่าสุด` : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
+                                </div>
+                                <div className="readingStageExamBody">
+                                  <p className="promptPill">{getReadingExamTypeSummary(exam)}</p>
+                                  <h5>{exam.title}</h5>
+                                  <p className="meta">
+                                    {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
+                                  </p>
+                                  {attempt && (
+                                    <p className="readingStageAttemptMeta">
+                                      Last attempt · {attempt.wrongCount} wrong · {formatReadingAttemptDate(attempt)}
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="readingStageExamActions">
+                                  <button type="button" onClick={() => startReadingExam(exam.id)}>
+                                    {attempt ? 'Retry Exam' : 'Open Exam'}
+                                  </button>
+                                  {attempt && (
+                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
+                                      ดู report
+                                    </button>
+                                  )}
+                                </div>
+                              </article>
+                            )
+                          })}
+                        </div>
+                      </section>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -14000,239 +14099,64 @@ function App() {
                     </div>
                   )}
                 </div>
-              ) : readingEntryCategory === 'normal' ? (
-                <div className="readingStageBoard">
-                  {normalReadingStages.map((stage) => (
-                    <section
-                      key={`normal-reading-stage-${stage.number}`}
-                      className={`readingStagePanel ${stage.isUnlocked ? 'is-unlocked' : 'is-locked'}`}
-                    >
-                      <div className="readingStageHeader">
-                        <div>
-                          <p className="sectionLabel">Normal Reading</p>
-                          <h4>{stage.title}</h4>
-                          <p>
-                            {stage.exams.length
-                              ? 'สุ่ม 3 ชุดข้อสอบ พร้อมระบุประเภทคำถามในแต่ละชุด'
-                              : 'ยังไม่มีข้อสอบในด่านนี้'}
-                          </p>
-                        </div>
-                        <div className="readingStageStatus">
-                          <strong>{stage.bestAccuracy}%</strong>
-                          <span>
-                            {stage.isUnlocked
-                              ? stage.bestAccuracy >= NORMAL_READING_UNLOCK_PERCENT
-                                ? 'ผ่านแล้ว'
-                                : `ต้องได้ ${NORMAL_READING_UNLOCK_PERCENT}%+`
-                              : 'ล็อกอยู่'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {!stage.isUnlocked && (
-                        <div className="readingStageLockNote">
-                          ต้องผ่านด่านก่อนหน้าอย่างน้อย {NORMAL_READING_UNLOCK_PERCENT}% เพื่อปลดล็อกด่านนี้
-                        </div>
-                      )}
-
-                      <div className="readingStageExamGrid">
-                        {stage.exams.map((exam, index) => {
-                          const attempt = readingAttemptByExamId[exam.id]
-                          const canUseExam = stage.isUnlocked || Boolean(attempt)
-                          const isPerfect = attempt?.accuracy === 100
-                          return (
-                            <article
-                              key={exam.id}
-                              className={`readingStageExamCard ${canUseExam ? '' : 'is-disabled'} ${isPerfect ? 'is-perfect' : ''}`}
-                            >
-                              <div className="readingStageExamThumb">
-                                <span>{attempt ? `${attempt.accuracy}%` : `ชุด ${index + 1}`}</span>
-                                <small>{attempt ? 'คะแนนล่าสุด' : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
-                              </div>
-                              <div className="readingStageExamBody">
-                                <p className="promptPill">{getReadingExamTypeSummary(exam)}</p>
-                                <h5>{exam.title}</h5>
-                                <p className="meta">
-                                  {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
-                                </p>
-                                <p className="meta">{getReadingExamCollectionTitle(exam)}</p>
-                                {attempt && (
-                                  <p className="readingStageAttemptMeta">
-                                    {attempt.correctCount}/{attempt.totalQuestions} correct · {new Date(attempt.completedAt).toLocaleString()}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="readingStageExamActions">
-                                {!attempt && (
-                                  <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
-                                    เริ่มทำข้อสอบ
-                                  </button>
-                                )}
-                                {attempt && !isPerfect && (
-                                  <>
-                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
-                                      ดู report
-                                    </button>
-                                    <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
-                                      Redeem
-                                    </button>
-                                  </>
-                                )}
-                                {attempt && isPerfect && (
-                                  <>
-                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
-                                      ดู report
-                                    </button>
-                                    <button type="button" onClick={() => startReadingExam(exam.id)}>
-                                      ทำข้อสอบอีกรอบ
-                                    </button>
-                                  </>
-                                )}
-                              </div>
-                            </article>
-                          )
-                        })}
-                      </div>
-                    </section>
-                  ))}
-                </div>
-              ) : readingEntryCategory === 'advanced' ? (
-                <div className="readingStageBoard">
-                  {advancedReadingStages.map((stage) => (
-                    <section
-                      key={`advanced-reading-stage-${stage.number}`}
-                      className={`readingStagePanel ${stage.isUnlocked ? 'is-unlocked' : 'is-locked'}`}
-                    >
-                      <div className="readingStageHeader">
-                        <div>
-                          <p className="sectionLabel">Advanced Reading</p>
-                          <h4>{stage.title}</h4>
-                          <p>
-                            {stage.exams.length
-                              ? 'ด่านนี้มี 2 ชุดข้อสอบระดับยาก ต้องทำให้ได้อย่างน้อย 75% เพื่อปลดล็อกด่านถัดไป'
-                              : 'ยังไม่มีข้อสอบในด่านนี้'}
-                          </p>
-                        </div>
-                        <div className="readingStageStatus">
-                          <strong>{stage.bestAccuracy}%</strong>
-                          <span>
-                            {stage.isUnlocked
-                              ? stage.bestAccuracy >= ADVANCED_READING_UNLOCK_PERCENT
-                                ? 'ผ่านแล้ว'
-                                : `ต้องได้ ${ADVANCED_READING_UNLOCK_PERCENT}%+`
-                              : 'ล็อกอยู่'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {!stage.isUnlocked && (
-                        <div className="readingStageLockNote">
-                          ต้องผ่านด่านก่อนหน้าอย่างน้อย {ADVANCED_READING_UNLOCK_PERCENT}% เพื่อปลดล็อกด่านนี้
-                        </div>
-                      )}
-
-                      <div className="readingStageExamGrid">
-                        {stage.exams.map((exam, index) => {
-                          const attempt = readingAttemptByExamId[exam.id]
-                          const canUseExam = stage.isUnlocked || Boolean(attempt)
-                          const isPerfect = attempt?.accuracy === 100
-                          return (
-                            <article
-                              key={exam.id}
-                              className={`readingStageExamCard ${canUseExam ? '' : 'is-disabled'} ${isPerfect ? 'is-perfect' : ''}`}
-                            >
-                              <div className="readingStageExamThumb">
-                                <span>{attempt ? `${attempt.accuracy}%` : `ชุด ${index + 1}`}</span>
-                                <small>{attempt ? 'คะแนนล่าสุด' : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
-                              </div>
-                              <div className="readingStageExamBody">
-                                <p className="promptPill">{getReadingExamTypeSummary(exam)}</p>
-                                <h5>{exam.title}</h5>
-                                <p className="meta">
-                                  {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
-                                </p>
-                                <p className="meta">{getReadingExamCollectionTitle(exam)}</p>
-                                {attempt && (
-                                  <p className="readingStageAttemptMeta">
-                                    {attempt.correctCount}/{attempt.totalQuestions} correct · {new Date(attempt.completedAt).toLocaleString()}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="readingStageExamActions">
-                                {!attempt && (
-                                  <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
-                                    เริ่มทำข้อสอบ
-                                  </button>
-                                )}
-                                {attempt && !isPerfect && (
-                                  <>
-                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
-                                      ดู report
-                                    </button>
-                                    <button type="button" disabled={!canUseExam} onClick={() => startReadingExam(exam.id)}>
-                                      Redeem
-                                    </button>
-                                  </>
-                                )}
-                                {attempt && isPerfect && (
-                                  <>
-                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
-                                      ดู report
-                                    </button>
-                                    <button type="button" onClick={() => startReadingExam(exam.id)}>
-                                      ทำข้อสอบอีกรอบ
-                                    </button>
-                                  </>
-                                )}
-                              </div>
-                            </article>
-                          )
-                        })}
-                      </div>
-                    </section>
-                  ))}
-                </div>
               ) : (
-                <div className="readingBankGrid">
-                  {filteredReadingExams.map((exam) => {
-                    const exerciseMeta = getReadingExerciseMeta(exam.id)
-                    return (
-                    <article key={exam.id} className="readingBankCard">
-                      <p className="promptPill">{exerciseMeta?.label || READING_CATEGORY_LABELS[exam.category]}</p>
-                      <h3>{exam.title}</h3>
-                      <p className="meta">
-                        {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
-                      </p>
-                      {exerciseMeta && (
-                        <div className="readingExerciseMeta">
-                          <span>{exerciseMeta.summary}</span>
-                          <span>{exerciseMeta.level}</span>
-                          <span>{exerciseMeta.duration}</span>
+                <div className="readingStageBoard readingMonthBoard">
+                  {readingExamGroupsByCollection.map((group) => (
+                    <section key={`reading-month-${readingEntryCategory}-${group.title}`} className="readingStagePanel readingMonthPanel">
+                      <div className="readingStageHeader">
+                        <div>
+                          <p className="sectionLabel">Monthly Reading</p>
+                          <h4>{group.title}</h4>
+                          <p>{group.exams.length} exams · open anytime</p>
                         </div>
-                      )}
-                      {readingAttemptByExamId[exam.id] && (
-                        <div className="adminWorkflowCard">
-                          <p className="sectionLabel">Latest Score</p>
-                          <strong>
-                            {readingAttemptByExamId[exam.id].correctCount}/{readingAttemptByExamId[exam.id].totalQuestions} ({readingAttemptByExamId[exam.id].accuracy}%)
-                          </strong>
-                          <p className="meta">
-                            {readingAttemptByExamId[exam.id].wrongCount} wrong · {new Date(readingAttemptByExamId[exam.id].completedAt).toLocaleString()}
-                          </p>
-                        </div>
-                      )}
-                      <div className="controls">
-                        <button type="button" onClick={() => startReadingExam(exam.id)}>
-                          {readingAttemptByExamId[exam.id] ? 'Retry Exam' : 'Open Exam'}
-                        </button>
-                        {readingAttemptByExamId[exam.id] && (
-                          <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
-                            ดู report
-                          </button>
-                        )}
                       </div>
-                    </article>
-                  )})}
+
+                      <div className="readingStageExamGrid">
+                        {group.exams.map((exam, index) => {
+                          const exerciseMeta = getReadingExerciseMeta(exam.id)
+                          const attempt = readingAttemptByExamId[exam.id]
+                          const isPerfect = attempt?.accuracy === 100
+                          return (
+                            <article key={exam.id} className={`readingStageExamCard ${isPerfect ? 'is-perfect' : ''}`}>
+                              <div className="readingStageExamThumb">
+                                <span>{attempt ? `${attempt.accuracy}%` : `ชุด ${index + 1}`}</span>
+                                <small>{attempt ? 'คะแนนล่าสุด' : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
+                              </div>
+                              <div className="readingStageExamBody">
+                                <p className="promptPill">{exerciseMeta?.label || getReadingExamTypeSummary(exam)}</p>
+                                <h5>{exam.title}</h5>
+                                <p className="meta">
+                                  {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
+                                </p>
+                                {exerciseMeta && (
+                                  <div className="readingExerciseMeta">
+                                    <span>{exerciseMeta.summary}</span>
+                                    <span>{exerciseMeta.level}</span>
+                                    <span>{exerciseMeta.duration}</span>
+                                  </div>
+                                )}
+                                {attempt && (
+                                  <p className="readingStageAttemptMeta">
+                                    {attempt.correctCount}/{attempt.totalQuestions} correct · {new Date(attempt.completedAt).toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="readingStageExamActions">
+                                <button type="button" onClick={() => startReadingExam(exam.id)}>
+                                  {attempt ? 'Retry Exam' : 'Open Exam'}
+                                </button>
+                                {attempt && (
+                                  <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
+                                    ดู report
+                                  </button>
+                                )}
+                              </div>
+                            </article>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  ))}
                 </div>
               )}
             </div>
@@ -14783,7 +14707,14 @@ function App() {
                   </p>
                 </div>
                 <div className="controls">
-                  <button type="button" className="secondary" onClick={() => setReadingAttemptStage('bank')}>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      setReadingAttemptStage('bank')
+                      setReadingEntryCategory(null)
+                    }}
+                  >
                     Back to Bank
                   </button>
                 </div>
@@ -15001,7 +14932,14 @@ function App() {
                   </p>
                 </div>
                 <div className="controls">
-                  <button type="button" className="secondary" onClick={() => setReadingAttemptStage('bank')}>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      setReadingAttemptStage('bank')
+                      setReadingEntryCategory(null)
+                    }}
+                  >
                     Back to Bank
                   </button>
                   <button type="button" className="secondary" onClick={exportReadingReportPdf}>
