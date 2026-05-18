@@ -8,12 +8,12 @@ import './SpeakingPart2SampleVideo.css'
 
 export function SpeakingPart2SampleBadge() {
   return (
-    <div className="speakingP2SampleBadge" aria-label="พี่โดย speaking sample available">
+    <div className="speakingP2SampleBadge" aria-label="พี่ดอย speaking sample available">
       <span className="speakingP2SampleBadgePlay" aria-hidden>
         ▶
       </span>
       <span>
-        <strong>พี่โดย sample</strong>
+        <strong>พี่ดอย sample</strong>
         <small>Model answer available</small>
       </span>
     </div>
@@ -33,11 +33,11 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
   return (
     <section
       className="speakingP2SamplePanel"
-      aria-label={`พี่โดย speaking sample: ${sample.shortLabel}`}
+      aria-label={`พี่ดอย speaking sample: ${sample.shortLabel}`}
       onContextMenu={(event) => event.preventDefault()}
     >
       <div className="speakingP2SamplePanelHeader">
-        <span className="speakingP2SampleKicker">พี่โดย · P&apos;Doy</span>
+        <span className="speakingP2SampleKicker">พี่ดอย · P&apos;Doy</span>
         <span className="speakingP2SampleTopicPill">{sample.shortLabel}</span>
       </div>
       <h4 className="speakingP2SampleTitle">{sample.topicLabel}</h4>
@@ -51,7 +51,7 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
             type="button"
             className="speakingP2SampleLaunch"
             onClick={() => setIsPlaying(true)}
-            aria-label={`Play พี่โดย speaking sample for ${sample.shortLabel}`}
+            aria-label={`Play พี่ดอย speaking sample for ${sample.shortLabel}`}
           >
             {thumbFailed ? <span className="speakingP2SampleThumbFallback" aria-hidden /> : null}
             {!thumbFailed ? (
@@ -75,7 +75,7 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
           <iframe
             className="speakingP2SampleIframe"
             src={embedUrl}
-            title={`พี่โดย speaking sample — ${sample.shortLabel}`}
+            title={`พี่ดอย speaking sample — ${sample.shortLabel}`}
             allow="autoplay; encrypted-media; fullscreen"
             allowFullScreen
             referrerPolicy="no-referrer"
