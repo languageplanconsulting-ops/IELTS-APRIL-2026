@@ -4575,12 +4575,14 @@ body,
 .adminMainColumn > .adminOnly-support,
 .adminMainColumn > .adminOnly-analytics,
 .adminMainColumn > .adminOnly-reports,
+.adminMainColumn > .adminOnly-landing,
 .adminMainColumn > .adminOnly-reading,
 .adminMainColumn > .adminOnly-audio,
 .adminSideColumn.adminOnly-settings {
   display: none;
 }
 
+.adminPanelPage[data-admin-section='landing'] .adminOnly-landing,
 .adminPanelPage[data-admin-section='learners'] .adminOnly-learners,
 .adminPanelPage[data-admin-section='support'] .adminOnly-support,
 .adminPanelPage[data-admin-section='analytics'] .adminOnly-analytics,
@@ -4595,6 +4597,1106 @@ body,
   display: grid;
   gap: 16px;
   border-radius: 18px;
+}
+
+.landingSeoPreview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #cddbf3;
+  border-radius: 16px;
+  background: #f8fbff;
+}
+
+.landingSeoPreview div {
+  display: grid;
+  gap: 6px;
+}
+
+.landingSeoPreview span,
+.mockLandingKicker {
+  color: #123f91;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.landingSeoPreview strong {
+  color: #111a2e;
+  line-height: 1.25;
+}
+
+.landingSeoPreview p {
+  margin: 0;
+  color: #475569;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.mockLandingPage {
+  overflow: hidden;
+  display: grid;
+  gap: 0;
+  border: 1px solid #d6e0ef;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.mockLandingPage section {
+  padding: clamp(28px, 5vw, 64px);
+}
+
+.mockLandingNav {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px clamp(20px, 4vw, 48px);
+  border-bottom: 1px solid #d6e0ef;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+}
+
+.mockLandingNav strong {
+  color: #06142f;
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.mockLandingNav div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mockLandingNav a {
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.mockLandingNav > a:last-child {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 2px solid #0f172a;
+  border-radius: 10px;
+  background: #ffcc00;
+  color: #111827;
+  box-shadow: 3px 3px 0 #0f172a;
+}
+
+.mockLandingHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: clamp(24px, 4vw, 54px);
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(255, 204, 0, 0.18), transparent 44%),
+    linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+}
+
+.mockLandingHeroCopy,
+.mockLandingSplit > div,
+.mockLandingCtaBand > div {
+  display: grid;
+  gap: 18px;
+}
+
+.mockLandingHero h1 {
+  max-width: 13em;
+  margin: 0;
+  color: #06142f;
+  font-size: clamp(2.75rem, 5.6vw, 5.7rem);
+  font-weight: 950;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.mockLandingHero p,
+.mockLandingSplit p,
+.mockLandingOfferGrid p,
+.mockLandingCtaBand p,
+.mockLandingFaq p {
+  margin: 0;
+  color: #475569;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.65;
+}
+
+.mockLandingHeroCopy > p:not(.mockLandingKicker) {
+  max-width: 58ch;
+  font-size: clamp(1.06rem, 1.4vw, 1.28rem);
+}
+
+.mockLandingActions,
+.mockLandingTrustRow,
+.mockLandingSearchBand div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mockLandingActions a,
+.mockLandingCtaBand a {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 2px solid #0f172a;
+  border-radius: 12px;
+  background: #ffcc00;
+  color: #111827;
+  box-shadow: 4px 4px 0 #0f172a;
+  font-weight: 950;
+  text-decoration: none;
+}
+
+.mockLandingActions a + a {
+  background: #ffffff;
+}
+
+.mockLandingTrustRow span,
+.mockLandingSearchBand span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #cbd8ef;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #123f91;
+  font-size: 0.88rem;
+  font-weight: 850;
+}
+
+.mockLandingScorePanel {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border: 2px solid #0f172a;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 8px 8px 0 #0f172a;
+}
+
+.mockLandingScorePanel > span {
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eaf1ff;
+  color: #123f91;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mockLandingScorePanel strong {
+  color: #06142f;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1;
+}
+
+.mockLandingScorePanel p {
+  margin: 0;
+  color: #475569;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.mockLandingScorePanel ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 14px 12px 30px;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #334155;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.mockLandingScorePanel div {
+  display: grid;
+  gap: 6px;
+}
+
+.mockLandingScorePanel b {
+  color: #172033;
+  font-size: 0.86rem;
+}
+
+.mockLandingScorePanel meter {
+  width: 100%;
+  height: 14px;
+}
+
+.mockLandingStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  border-top: 1px solid #d6e0ef;
+  background: #ffffff;
+}
+
+.mockLandingStatsGrid article {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.mockLandingStatsGrid strong {
+  color: #123f91;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.mockLandingStatsGrid span {
+  color: #111827;
+  font-size: 0.88rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.mockLandingStatsGrid p {
+  margin: 0;
+  color: #475569;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.mockLandingSearchBand {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid #d6e0ef;
+  border-bottom: 1px solid #d6e0ef;
+  background: #0f172a;
+}
+
+.mockLandingSearchBand p {
+  margin: 0;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.mockLandingSearchBand span {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.mockLandingSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(22px, 4vw, 48px);
+  align-items: start;
+}
+
+.mockLandingSplit h2,
+.mockLandingCtaBand h2,
+.mockLandingFaq h2 {
+  margin: 0;
+  color: #06142f;
+  font-size: clamp(2rem, 4vw, 3.55rem);
+  font-weight: 950;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.mockLandingProofList,
+.mockLandingOfferGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.mockLandingProofList article,
+.mockLandingOfferGrid article {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.mockLandingProofList strong,
+.mockLandingOfferGrid h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.12rem;
+  font-weight: 950;
+}
+
+.mockLandingOfferGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: #f7fbff;
+}
+
+.mockLandingOfferGrid article span {
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  border: 2px solid #0f172a;
+  border-radius: 50%;
+  background: #ffcc00;
+  color: #111827;
+  font-weight: 950;
+}
+
+.mockLandingCtaBand {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  background: #fff7d6;
+}
+
+.mockLandingTrustBand,
+.mockLandingMeasurement {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(22px, 4vw, 44px);
+  align-items: start;
+  background: #ffffff;
+}
+
+.mockLandingTrustBand h2,
+.mockLandingMeasurement h2 {
+  margin: 0;
+  color: #06142f;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mockLandingTrustCards,
+.mockLandingMeasurement > div:last-child {
+  display: grid;
+  gap: 14px;
+}
+
+.mockLandingTrustCards article,
+.mockLandingMeasurement article {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.mockLandingTrustCards strong,
+.mockLandingMeasurement strong {
+  color: #111827;
+  font-size: 1.08rem;
+  font-weight: 950;
+}
+
+.mockLandingTrustCards p,
+.mockLandingMeasurement p {
+  margin: 0;
+  color: #475569;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.mockLandingMeasurement {
+  border-top: 1px solid #d6e0ef;
+  border-bottom: 1px solid #d6e0ef;
+  background: #f7fbff;
+}
+
+.mockLandingMeasurement code {
+  color: #123f91;
+  font-weight: 900;
+  white-space: normal;
+}
+
+.mockLandingDiagnostic,
+.mockLandingProgressPreview,
+.mockLandingDifficulty,
+.mockLandingMistakeAnalysis,
+.mockLandingExamMode,
+.mockLandingTeacherTips,
+.mockLandingComparison,
+.mockLandingStudyPlan,
+.mockLandingToolsHub {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(22px, 4vw, 44px);
+  align-items: start;
+}
+
+.mockLandingDiagnostic,
+.mockLandingProgressPreview,
+.mockLandingMistakeAnalysis,
+.mockLandingToolsHub {
+  background: #f7fbff;
+}
+
+.mockLandingDifficulty,
+.mockLandingComparison,
+.mockLandingTeacherTips {
+  background: #ffffff;
+}
+
+.mockLandingStudyPlan,
+.mockLandingExamMode {
+  background:
+    linear-gradient(135deg, rgba(255, 204, 0, 0.18), transparent 44%),
+    #ffffff;
+}
+
+.mockLandingDiagnostic > div:first-child,
+.mockLandingProgressPreview > div:first-child,
+.mockLandingDifficulty > div:first-child,
+.mockLandingMistakeAnalysis > div:first-child,
+.mockLandingExamMode > div:first-child,
+.mockLandingTeacherTips > div:first-child,
+.mockLandingComparison > div:first-child,
+.mockLandingStudyPlan > div:first-child,
+.mockLandingToolsHub > div:first-child {
+  display: grid;
+  gap: 16px;
+}
+
+.mockLandingDiagnostic h2,
+.mockLandingProgressPreview h2,
+.mockLandingDifficulty h2,
+.mockLandingMistakeAnalysis h2,
+.mockLandingExamMode h2,
+.mockLandingTeacherTips h2,
+.mockLandingComparison h2,
+.mockLandingStudyPlan h2,
+.mockLandingToolsHub h2 {
+  margin: 0;
+  color: #06142f;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mockLandingDiagnostic p,
+.mockLandingProgressPreview p,
+.mockLandingDifficulty p,
+.mockLandingMistakeAnalysis p,
+.mockLandingExamMode p,
+.mockLandingTeacherTips p,
+.mockLandingComparison p,
+.mockLandingStudyPlan p,
+.mockLandingToolsHub p {
+  margin: 0;
+  color: #475569;
+  font-weight: 650;
+  line-height: 1.65;
+}
+
+.mockLandingDiagnosticCard,
+.mockLandingProgressCard,
+.mockLandingExamCard,
+.mockLandingPlanCard {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  border: 2px solid #0f172a;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 8px 8px 0 #ffcc00;
+}
+
+.mockLandingProgressCard {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mockLandingProgressCard div {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid #d6e0ef;
+  border-radius: 12px;
+  background: #f8fbff;
+}
+
+.mockLandingProgressCard span {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mockLandingProgressCard strong {
+  color: #123f91;
+  font-size: 1.12rem;
+  font-weight: 950;
+}
+
+.mockLandingProgressCard article {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fff7d6;
+}
+
+.mockLandingProgressCard b,
+.mockLandingExamCard strong {
+  color: #06142f;
+  font-weight: 950;
+}
+
+.mockLandingDiagnosticCard > span {
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eaf1ff;
+  color: #123f91;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mockLandingDiagnosticCard strong {
+  color: #06142f;
+  font-size: clamp(1.55rem, 3vw, 2.45rem);
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.mockLandingDiagnosticCard div {
+  display: grid;
+  gap: 6px;
+}
+
+.mockLandingDiagnosticCard b {
+  color: #172033;
+  font-size: 0.86rem;
+}
+
+.mockLandingDiagnosticCard meter {
+  width: 100%;
+  height: 14px;
+}
+
+.mockLandingDifficultyGrid,
+.mockLandingMistakeGrid,
+.mockLandingTipGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.mockLandingDifficultyGrid article,
+.mockLandingMistakeGrid article,
+.mockLandingTipGrid article {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.mockLandingDifficultyGrid span,
+.mockLandingMistakeGrid span {
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eaf1ff;
+  color: #123f91;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mockLandingDifficultyGrid strong,
+.mockLandingMistakeGrid strong,
+.mockLandingTipGrid strong {
+  color: #111827;
+  font-size: 1.08rem;
+  font-weight: 950;
+}
+
+.mockLandingMistakeGrid span {
+  background: #fff7d6;
+  color: #7c2d12;
+}
+
+.mockLandingExamCard ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 14px 14px 32px;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #334155;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.mockLandingExamCard button {
+  min-height: 46px;
+  border: 2px solid #0f172a;
+  border-radius: 10px;
+  background: #123f91;
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.mockLandingCompareTable {
+  overflow: hidden;
+  display: grid;
+  border: 1px solid #d6e0ef;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.mockLandingCompareTable > div {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.8fr) repeat(2, minmax(0, 1fr));
+  border-top: 1px solid #e2e8f0;
+}
+
+.mockLandingCompareTable > div:first-child {
+  border-top: none;
+  background: #123f91;
+  color: #ffffff;
+}
+
+.mockLandingCompareTable strong,
+.mockLandingCompareTable span {
+  padding: 14px;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.mockLandingCompareTable strong {
+  color: inherit;
+}
+
+.mockLandingCompareTable span {
+  color: #475569;
+}
+
+.mockLandingCompareTable span:nth-child(2) {
+  color: #123f91;
+  font-weight: 950;
+}
+
+.mockLandingPlanCard label {
+  display: grid;
+  gap: 4px;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mockLandingPlanCard label span {
+  color: #111827;
+  font-size: 1.05rem;
+  font-weight: 950;
+  text-transform: none;
+}
+
+.mockLandingPlanCard ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 14px 14px 32px;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #334155;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.mockLandingPlanCard button {
+  min-height: 46px;
+  border: 2px solid #0f172a;
+  border-radius: 10px;
+  background: #123f91;
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.mockLandingToolGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mockLandingToolGrid article {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.mockLandingToolGrid strong {
+  color: #111827;
+  font-size: 1.08rem;
+  font-weight: 950;
+}
+
+.mockLandingLaunchGrid,
+.mockLandingSchemaSection,
+.mockLandingScreenshots,
+.mockLandingTestimonials,
+.mockLandingPerformance {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(22px, 4vw, 44px);
+  align-items: start;
+}
+
+.mockLandingLaunchGrid {
+  background: #0f172a;
+}
+
+.mockLandingLaunchGrid .mockLandingKicker,
+.mockLandingLaunchGrid h2 {
+  color: #ffffff;
+}
+
+.mockLandingLaunchGrid h2,
+.mockLandingSchemaSection h2,
+.mockLandingScreenshots h2,
+.mockLandingTestimonials h2,
+.mockLandingPerformance h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mockLandingSchemaSection h2,
+.mockLandingScreenshots h2,
+.mockLandingTestimonials h2,
+.mockLandingPerformance h2 {
+  color: #06142f;
+}
+
+.mockLandingLaunchCards,
+.mockLandingScreenshotGrid,
+.mockLandingPerformance > div:last-child,
+.mockLandingTestimonials > div:last-child {
+  display: grid;
+  gap: 14px;
+}
+
+.mockLandingProofStat {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 2px solid #0f172a;
+  border-radius: 14px;
+  background: #fff7d6;
+  box-shadow: 5px 5px 0 #0f172a;
+}
+
+.mockLandingProofStat strong {
+  color: #06142f;
+  font-size: 1.08rem;
+  font-weight: 950;
+}
+
+.mockLandingProofStat span {
+  color: #123f91;
+  font-size: 1.2rem;
+  font-weight: 950;
+}
+
+.mockLandingProofStat p {
+  margin: 0;
+  color: #475569;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.mockLandingLaunchCards article,
+.mockLandingScreenshotGrid article,
+.mockLandingPerformance article {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.mockLandingLaunchCards strong,
+.mockLandingScreenshotGrid strong,
+.mockLandingPerformance strong {
+  color: #111827;
+  font-size: 1.08rem;
+  font-weight: 950;
+}
+
+.mockLandingLaunchCards p,
+.mockLandingSchemaSection p,
+.mockLandingScreenshotGrid p,
+.mockLandingPerformance p {
+  margin: 0;
+  color: #475569;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.mockLandingLaunchCards code {
+  color: #123f91;
+  font-size: 0.9rem;
+  font-weight: 900;
+  white-space: normal;
+}
+
+.mockLandingSchemaSection {
+  border-top: 1px solid #d6e0ef;
+  background:
+    linear-gradient(135deg, rgba(255, 204, 0, 0.16), transparent 45%),
+    #ffffff;
+}
+
+.mockLandingSchemaSection > div:first-child,
+.mockLandingScreenshots > div:first-child,
+.mockLandingTestimonials > div:first-child,
+.mockLandingPerformance > div:first-child {
+  display: grid;
+  gap: 16px;
+}
+
+.mockLandingSchemaSection pre {
+  overflow: auto;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid #cbd8ef;
+  border-radius: 14px;
+  background: #06142f;
+  color: #eaf1ff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.mockLandingScreenshots {
+  background: #f7fbff;
+}
+
+.mockLandingScreenshotGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mockLandingScreenshotGrid article {
+  min-height: 210px;
+  align-content: end;
+  border: 2px solid #0f172a;
+  box-shadow: 6px 6px 0 #dbeafe;
+}
+
+.mockLandingScreenshotGrid article::before {
+  content: "";
+  min-height: 86px;
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, #123f91 0 34%, #ffcc00 34% 48%, #eaf1ff 48%),
+    linear-gradient(#ffffff, #ffffff);
+}
+
+.mockLandingScreenshotGrid span {
+  color: #123f91;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mockLandingTestimonials {
+  background: #ffffff;
+}
+
+.mockLandingTestimonials blockquote {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid #d6e0ef;
+  border-left: 5px solid #ffcc00;
+  border-radius: 14px;
+  background: #f8fbff;
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.mockLandingTestimonials cite {
+  color: #64748b;
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.mockLandingPerformance {
+  background: #fff7d6;
+}
+
+.mockLandingFreeReading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+  gap: clamp(22px, 4vw, 44px);
+  align-items: start;
+  background:
+    linear-gradient(135deg, rgba(18, 63, 145, 0.09), transparent 48%),
+    #ffffff;
+}
+
+.mockLandingFreeReading > div {
+  display: grid;
+  gap: 16px;
+}
+
+.mockLandingFreeReading h2 {
+  margin: 0;
+  color: #06142f;
+  font-size: clamp(2rem, 4vw, 3.55rem);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mockLandingFreeReading p {
+  margin: 0;
+  color: #475569;
+  font-weight: 650;
+  line-height: 1.65;
+}
+
+.mockLandingMonthCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mockLandingMonthCards article {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid #cbd8ef;
+  border-radius: 12px;
+  background: #f8fbff;
+}
+
+.mockLandingMonthCards strong {
+  color: #123f91;
+  font-size: 0.95rem;
+  font-weight: 950;
+}
+
+.mockLandingMonthCards span {
+  color: #475569;
+  font-size: 0.88rem;
+  font-weight: 850;
+}
+
+.mockLandingCommentBox {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border: 2px solid #0f172a;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 8px 8px 0 #ffcc00;
+}
+
+.mockLandingCommentBox strong {
+  color: #06142f;
+  font-size: 1.16rem;
+  font-weight: 950;
+}
+
+.mockLandingCommentBox textarea {
+  min-height: 92px;
+  resize: none;
+  padding: 12px;
+  border: 1px solid #cbd8ef;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #334155;
+  font: inherit;
+  font-weight: 650;
+}
+
+.mockLandingCommentBox button {
+  min-height: 44px;
+  width: 100%;
+  padding: 0 16px;
+  border: 2px solid #0f172a;
+  border-radius: 10px;
+  background: #123f91;
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.mockLandingCommentBox small {
+  color: #64748b;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.mockLandingCommentBox div {
+  display: grid;
+  gap: 8px;
+}
+
+.mockLandingCommentBox div p {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.mockLandingFaq {
+  display: grid;
+  gap: 12px;
+}
+
+.mockLandingFaq details {
+  padding: 16px 18px;
+  border: 1px solid #d6e0ef;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.mockLandingFaq summary {
+  cursor: pointer;
+  color: #111827;
+  font-weight: 950;
+}
+
+.mockLandingFaq details p {
+  margin-top: 10px;
 }
 
 .adminSectionHeader {
@@ -7992,7 +9094,53 @@ body,
   }
 
   .adminAnalyticsGrid,
-  .adminAnalyticsChartGrid {
+  .adminAnalyticsChartGrid,
+  .landingSeoPreview,
+  .mockLandingNav,
+  .mockLandingHero,
+  .mockLandingStatsGrid,
+  .mockLandingDiagnostic,
+  .mockLandingProgressPreview,
+  .mockLandingDifficulty,
+  .mockLandingMistakeAnalysis,
+  .mockLandingSplit,
+  .mockLandingOfferGrid,
+  .mockLandingExamMode,
+  .mockLandingTeacherTips,
+  .mockLandingComparison,
+  .mockLandingFreeReading,
+  .mockLandingStudyPlan,
+  .mockLandingToolsHub,
+  .mockLandingTrustBand,
+  .mockLandingMeasurement,
+  .mockLandingLaunchGrid,
+  .mockLandingSchemaSection,
+  .mockLandingScreenshots,
+  .mockLandingTestimonials,
+  .mockLandingPerformance,
+  .mockLandingCtaBand {
+    grid-template-columns: 1fr;
+  }
+
+  .mockLandingNav {
+    position: static;
+  }
+
+  .mockLandingNav div {
+    justify-content: flex-start;
+  }
+
+  .mockLandingMonthCards {
+    grid-template-columns: 1fr;
+  }
+
+  .mockLandingScreenshotGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .mockLandingCompareTable > div,
+  .mockLandingProgressCard,
+  .mockLandingToolGrid {
     grid-template-columns: 1fr;
   }
 

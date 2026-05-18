@@ -38,6 +38,7 @@ const FEB_2026_ADHD_READING_EXAMS = requireJson('../cambridge-reading-imports/ie
 const FEB_2026_DIGITAL_NOMADS_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-rise-of-digital-nomads.json')
 const FEB_2026_MOVIE_THEATRES_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json')
 const FEB_2026_SPANISH_ARMADA_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-spanish-armada.json')
+const APRIL_2024_TRAUMA_LANGUAGE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2024-passage-2-trauma-language-popular-culture.json')
 const APRIL_2026_BALD_EAGLE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-1-bald-eagle.json')
 const APRIL_2026_HABSBURG_JAW_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json')
 const APRIL_2026_PRIMARY_EDUCATION_AI_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-1-primary-education-ai.json')
@@ -4838,6 +4839,18 @@ const BUILT_IN_READING_BANK_EXAMS = [
     mapBuiltInReadingExam(
       {
         id: 'builtin-reading-april-2026-passage-1-bald-eagle',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...APRIL_2024_TRAUMA_LANGUAGE_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-april-2024-passage-2-trauma-language-popular-culture',
         ...exam
       },
       {

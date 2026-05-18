@@ -84,7 +84,7 @@ const ALL_LISTENING_FOUNDATION_SETS = [
 
 type Role = 'student' | 'admin' | 'trial'
 type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
-type AdminWorkspaceSection = 'reading' | 'learners' | 'support' | 'analytics' | 'reports' | 'audio' | 'settings'
+type AdminWorkspaceSection = 'landing' | 'reading' | 'learners' | 'support' | 'analytics' | 'reports' | 'audio' | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
 type ReadingBankCategory = 'normal' | 'advanced'
@@ -3183,6 +3183,7 @@ const ADMIN_WORKSPACE_SECTIONS: Array<{
   label: string
   description: string
 }> = [
+  { id: 'landing', label: 'Landing Preview', description: 'Admin-only SEO draft' },
   { id: 'reading', label: 'Reading Generator', description: 'Create, check, and upload exams' },
   { id: 'learners', label: 'Learners', description: 'Access, credits, expiry' },
   { id: 'support', label: 'Support Inbox', description: 'Student issue reports' },
@@ -15148,6 +15149,655 @@ function App() {
                     <p className="meta">{activeAdminWorkspaceSection.description}</p>
                   </div>
                   <span className="adminWindowStatus">Active Window</span>
+                </div>
+                <div className="panel adminSectionCard adminOnly-landing">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Admin-only mock page</p>
+                      <h3>SEO Landing Page Draft</h3>
+                    </div>
+                    <span className="adminInlineStatus">Private preview</span>
+                  </div>
+                  <div className="landingSeoPreview">
+                    <div>
+                      <span>SEO title</span>
+                      <strong>คอร์ส IELTS ออนไลน์ | ฝึก Speaking Reading Listening พร้อม AI Feedback</strong>
+                    </div>
+                    <div>
+                      <span>Meta description</span>
+                      <p>
+                        English Plan Learning Space ช่วยฝึก IELTS Speaking, Reading และ Listening พร้อม AI
+                        feedback, mock test, เฉลยภาษาไทย และข้อสอบ Reading ฟรีรายเดือนสำหรับผู้เรียนไทย
+                      </p>
+                    </div>
+                  </div>
+
+                  <article className="mockLandingPage" aria-label="ตัวอย่างหน้า Landing Page สำหรับแอดมิน">
+                    <nav className="mockLandingNav" aria-label="ตัวอย่างเมนูหน้า Landing">
+                      <strong>English Plan IELTS</strong>
+                      <div>
+                        <a href="#mock-landing-diagnostic">เช็กระดับฟรี</a>
+                        <a href="#mock-landing-speaking">Speaking</a>
+                        <a href="#mock-landing-tools">เครื่องมือฟรี</a>
+                        <a href="#mock-landing-free-reading">Reading ฟรี</a>
+                        <a href="#mock-landing-faq">FAQ</a>
+                      </div>
+                      <a href="#mock-landing-trial" data-analytics-event="landing_nav_trial_click">ลองฟรี</a>
+                    </nav>
+                    <section className="mockLandingHero">
+                      <div className="mockLandingHeroCopy">
+                        <p className="mockLandingKicker">คอร์ส IELTS ออนไลน์สำหรับคนไทย</p>
+                        <h1>คอร์ส IELTS ออนไลน์สำหรับคนไทย พร้อม AI Feedback และข้อสอบฟรี</h1>
+                        <p>
+                          English Plan Learning Space คือแอปฝึก IELTS ที่รวม Speaking mock test, Reading
+                          practice, Listening drill, AI feedback และเฉลยภาษาไทย เพื่อให้ผู้เรียนรู้จุดอ่อนจริง
+                          ก่อนจ่ายเงินเรียนหรือสมัครสอบ
+                        </p>
+                        <div className="mockLandingActions">
+                          <a href="#mock-landing-trial" data-analytics-event="landing_hero_speaking_trial_click">
+                            ลอง Speaking Trial ฟรี
+                          </a>
+                          <a href="#mock-landing-free-reading" data-analytics-event="landing_hero_free_reading_click">
+                            ทำ Reading ฟรีรายเดือน
+                          </a>
+                        </div>
+                        <div className="mockLandingTrustRow">
+                          <span>เหมาะกับ Band 5.5-7.0+</span>
+                          <span>อธิบายเป็นภาษาไทย</span>
+                          <span>AI feedback + แนวครูสอนจริง</span>
+                        </div>
+                      </div>
+                      <div className="mockLandingScorePanel" aria-label="Sample IELTS speaking report preview">
+                        <span>ตัวอย่างรายงาน</span>
+                        <strong>Band 6.5 → 7.0</strong>
+                        <p>สิ่งที่ควรแก้ต่อ: Part 2 ยังสั้น, linking word ยังซ้ำ, past tense ยังหลุดบางจุด</p>
+                        <ul>
+                          <li>รู้คะแนนทันทีหลังซ้อมตอบ</li>
+                          <li>เห็นจุดผิดพลาดเป็นภาษาไทย</li>
+                          <li>เก็บคำแนะนำไว้ทบทวนก่อนสอบ</li>
+                        </ul>
+                        <div>
+                          <b>Fluency</b>
+                          <meter min="0" max="9" value="7">7</meter>
+                        </div>
+                        <div>
+                          <b>Grammar</b>
+                          <meter min="0" max="9" value="6.5">6.5</meter>
+                        </div>
+                        <div>
+                          <b>Vocabulary</b>
+                          <meter min="0" max="9" value="7">7</meter>
+                        </div>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingStatsGrid" aria-label="จำนวนข้อสอบ IELTS ในระบบ">
+                      <article>
+                        <strong>1,074+</strong>
+                        <span>Reading questions</span>
+                        <p>คลังข้อสอบอ่านพร้อม passage และคำตอบสำหรับฝึกจับเวลา</p>
+                      </article>
+                      <article>
+                        <strong>711+</strong>
+                        <span>Listening questions</span>
+                        <p>แบบฝึกฟังและ drill แยกทักษะเพื่อเพิ่มความแม่นยำ</p>
+                      </article>
+                      <article>
+                        <strong>89</strong>
+                        <span>Speaking prompts</span>
+                        <p>หัวข้อ Part 1, Part 2 และ Part 3 สำหรับซ้อมตอบจริง</p>
+                      </article>
+                      <article>
+                        <strong>24</strong>
+                        <span>Monthly reading sets</span>
+                        <p>ข้อสอบ Reading จัดตามเดือน เช่น Jan, Feb, March และ April</p>
+                      </article>
+                    </section>
+
+                    <section id="mock-landing-diagnostic" className="mockLandingDiagnostic">
+                      <div>
+                        <p className="mockLandingKicker">Free IELTS diagnostic</p>
+                        <h2>เช็กระดับ IELTS ฟรี แล้วรู้ทันทีว่าควรเริ่มแก้ skill ไหนก่อน</h2>
+                        <p>
+                          Lead magnet แบบ Magoosh: ให้ผู้เรียนลองทำ Speaking 1 คำถาม และ Reading mini passage
+                          จากนั้นแสดง band estimate, จุดอ่อนหลัก และ next step ในแอป
+                        </p>
+                        <div className="mockLandingActions">
+                          <a href="#mock-landing-trial" data-analytics-event="landing_diagnostic_start_click">
+                            เริ่มเช็กระดับฟรี
+                          </a>
+                        </div>
+                      </div>
+                      <div className="mockLandingDiagnosticCard" aria-label="ตัวอย่างผล Diagnostic IELTS">
+                        <span>Diagnostic result</span>
+                        <strong>Current level: Band 6.0-6.5</strong>
+                        <p>Focus next: Speaking fluency, Reading heading questions, Listening spelling accuracy</p>
+                        <div>
+                          <b>Speaking</b>
+                          <meter min="0" max="9" value="6.5">6.5</meter>
+                        </div>
+                        <div>
+                          <b>Reading</b>
+                          <meter min="0" max="9" value="6">6</meter>
+                        </div>
+                        <div>
+                          <b>Listening</b>
+                          <meter min="0" max="9" value="6">6</meter>
+                        </div>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingProgressPreview" aria-label="ตัวอย่าง Progress Dashboard IELTS">
+                      <div>
+                        <p className="mockLandingKicker">Progress dashboard</p>
+                        <h2>แดชบอร์ดบอกผู้เรียนว่าควรทำอะไรต่อ ไม่ใช่แค่โชว์คะแนน</h2>
+                        <p>
+                          คู่แข่งสาย official prep เน้น progress tracking. เราควรโชว์ weak skill, streak,
+                          target band, recent attempts และ recommended task บนหน้า landing
+                        </p>
+                      </div>
+                      <div className="mockLandingProgressCard">
+                        <div>
+                          <span>Target Band</span>
+                          <strong>7.0</strong>
+                        </div>
+                        <div>
+                          <span>Weekly streak</span>
+                          <strong>5 days</strong>
+                        </div>
+                        <div>
+                          <span>Weakest skill</span>
+                          <strong>Reading headings</strong>
+                        </div>
+                        <article>
+                          <b>Next recommended task</b>
+                          <p>ทำ March 2026 Passage 2 แบบ Matching Headings แล้วอ่าน teacher tip ก่อนเริ่ม</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingDifficulty" aria-label="ตัวอย่าง Difficulty Calibration">
+                      <div>
+                        <p className="mockLandingKicker">Difficulty calibration</p>
+                        <h2>ติดป้ายความยากให้ทุกข้อสอบ เพื่อให้คะแนนดูน่าเชื่อถือ</h2>
+                        <p>
+                          ผู้เรียนมักสับสนว่า mock test ยากกว่า exam จริงไหม เราควรบอกระดับให้ชัดก่อนเริ่มทำ
+                          และอธิบายหลังจบว่าคะแนนควรตีความอย่างไร
+                        </p>
+                      </div>
+                      <div className="mockLandingDifficultyGrid">
+                        <article>
+                          <span>Cambridge-style</span>
+                          <strong>ใกล้ข้อสอบจริง</strong>
+                          <p>ใช้สำหรับวัดคะแนนแบบจริงจัง</p>
+                        </article>
+                        <article>
+                          <span>Challenge</span>
+                          <strong>ยากกว่าปกติ</strong>
+                          <p>ใช้ฝึกตอนอยากเจอ keyword trap หนักขึ้น</p>
+                        </article>
+                        <article>
+                          <span>Realistic</span>
+                          <strong>เหมาะกับ timed practice</strong>
+                          <p>ใช้ฝึกจับเวลาและคุมพลังงานสอบ</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingMistakeAnalysis" aria-label="ตัวอย่าง Mistake Analysis by IELTS Question Type">
+                      <div>
+                        <p className="mockLandingKicker">Mistake analysis</p>
+                        <h2>หลังทำข้อสอบ ต้องบอกว่าพลาด question type ไหน ไม่ใช่แค่ได้กี่คะแนน</h2>
+                      </div>
+                      <div className="mockLandingMistakeGrid">
+                        <article>
+                          <strong>Matching Headings</strong>
+                          <span>3 wrong</span>
+                          <p>ปัญหา: เลือกจาก keyword เดี่ยว ไม่อ่าน main idea ทั้ง paragraph</p>
+                        </article>
+                        <article>
+                          <strong>True / False / Not Given</strong>
+                          <span>2 wrong</span>
+                          <p>ปัญหา: สับสนระหว่าง “ไม่มีข้อมูล” กับ “ข้อมูลตรงข้าม”</p>
+                        </article>
+                        <article>
+                          <strong>Fill in the blanks</strong>
+                          <span>1 wrong</span>
+                          <p>ปัญหา: สะกดคำผิดและไม่เช็ก singular/plural</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingSearchBand">
+                      <p>หัวข้อค้นหาที่หน้าเดียวต้องตอบให้ชัด</p>
+                      <div>
+                        <span>คอร์ส IELTS ออนไลน์</span>
+                        <span>ฝึก IELTS Speaking</span>
+                        <span>ข้อสอบ IELTS Reading ฟรี</span>
+                        <span>IELTS mock test Thailand</span>
+                        <span>IELTS Listening practice</span>
+                      </div>
+                    </section>
+
+                    <section id="mock-landing-speaking" className="mockLandingSplit">
+                      <div>
+                        <p className="mockLandingKicker">ฝึก IELTS Speaking ออนไลน์</p>
+                        <h2>ไม่ใช่แค่พูดเยอะขึ้น แต่ต้องรู้ว่าอะไรทำให้คะแนนไม่ขึ้น</h2>
+                      </div>
+                      <div className="mockLandingProofList">
+                        <article>
+                          <strong>Feedback เป็นรายจุด</strong>
+                          <p>ระบบบอกเหตุผลของคะแนน ทั้ง fluency, grammar, vocabulary และ pronunciation ไม่ใช่แค่โชว์ band score อย่างเดียว</p>
+                        </article>
+                        <article>
+                          <strong>เฉลยภาษาไทยที่ใช้ได้จริง</strong>
+                          <p>อธิบายข้อผิดพลาดแบบที่ผู้เรียนไทยเจอบ่อย ทำให้เข้าใจว่าควรแก้อย่างไรในคำตอบครั้งถัดไป</p>
+                        </article>
+                        <article>
+                          <strong>จัดข้อสอบ Reading ตามเดือน</strong>
+                          <p>ผู้เรียนเลือกทำ Jan, Feb, March, April หรือเดือนอื่นได้เอง พร้อมดูคะแนนและ last attempt บน thumbnail</p>
+                        </article>
+                        <article>
+                          <strong>Speaking notebook</strong>
+                          <p>เก็บคำตอบ คำแนะนำ และจุดที่ต้องแก้ไว้ทบทวนก่อนสอบจริง ลดการซ้อมแบบลืมเป้าหมาย</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingOfferGrid">
+                      <article>
+                        <span>1</span>
+                        <h3>เลือก skill ที่อยากฝึก</h3>
+                        <p>ฝึก IELTS Reading, Listening หรือ Speaking ได้เอง ไม่ต้องเข้าลำดับบทเรียนแบบบังคับ</p>
+                      </article>
+                      <article>
+                        <span>2</span>
+                        <h3>ทำ mock test พร้อมผลย้อนหลัง</h3>
+                        <p>ระบบแสดงคะแนนล่าสุด ความแม่นยำ และข้อที่ควรกลับไปแก้ เพื่อให้เห็นพัฒนาการชัดเจน</p>
+                      </article>
+                      <article>
+                        <span>3</span>
+                        <h3>ใช้ AI feedback วางแผนอ่านต่อ</h3>
+                        <p>หลังตอบ Speaking หรือทำข้อสอบ ผู้เรียนรู้ทันทีว่าควรแก้ grammar, vocabulary หรือ structure ตรงไหน</p>
+                      </article>
+                    </section>
+
+                    <section className="mockLandingExamMode" aria-label="Exam-day familiarisation mode">
+                      <div>
+                        <p className="mockLandingKicker">Exam-day mode</p>
+                        <h2>เพิ่มโหมดเหมือนสอบจริง สำหรับคนที่กลัว IELTS computer-based test</h2>
+                        <p>
+                          British Council มี familiarisation test. เราควรมีโหมดจับเวลา, instruction จริง,
+                          answer sheet flow, ไม่มี hint และสรุปคะแนนหลังจบเท่านั้น
+                        </p>
+                      </div>
+                      <div className="mockLandingExamCard">
+                        <strong>IELTS Computer Practice Mode</strong>
+                        <ul>
+                          <li>60-minute Reading timer</li>
+                          <li>No hints during test</li>
+                          <li>Answer review after submit</li>
+                          <li>Keyboard-friendly answer sheet</li>
+                        </ul>
+                        <button type="button" data-analytics-event="landing_exam_mode_preview_click">
+                          ลองโหมดเหมือนสอบจริง
+                        </button>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingTeacherTips" aria-label="Teacher tip cards">
+                      <div>
+                        <p className="mockLandingKicker">Teacher tip cards</p>
+                        <h2>แทรก mini lesson ภาษาไทยข้างข้อสอบ เพื่อช่วย SEO และช่วยให้คนอยู่ในหน้านานขึ้น</h2>
+                      </div>
+                      <div className="mockLandingTipGrid">
+                        <article>
+                          <strong>เทคนิค Matching Headings</strong>
+                          <p>อ่าน first sentence + final sentence ก่อน แล้วค่อยดู supporting detail</p>
+                        </article>
+                        <article>
+                          <strong>วิธีอ่าน True / False / Not Given</strong>
+                          <p>ถามตัวเองว่า passage พูดตรงข้ามไหม หรือไม่ได้พูดถึงเลย</p>
+                        </article>
+                        <article>
+                          <strong>Listening spelling trap</strong>
+                          <p>เช็ก plural, hyphen และตัวเลขก่อนส่งคำตอบทุกครั้ง</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingTrustBand" aria-label="หลักฐานความน่าเชื่อถือของคอร์ส IELTS">
+                      <div>
+                        <p className="mockLandingKicker">Trust signals</p>
+                        <h2>ทำให้ผู้เรียนรู้สึกว่าหน้านี้น่าเชื่อถือก่อนกดสมัคร</h2>
+                      </div>
+                      <div className="mockLandingTrustCards">
+                        <article>
+                          <strong>Teacher-designed prompts</strong>
+                          <p>โจทย์และ feedback flow อิงจากวิธีสอนของ English Plan ไม่ใช่ AI สุ่มคำแนะนำทั่วไป</p>
+                        </article>
+                        <article>
+                          <strong>ตัวอย่างรายงานก่อนสมัคร</strong>
+                          <p>ผู้เรียนเห็นว่าระบบจะบอกคะแนน จุดอ่อน และ next action อย่างไร ก่อนเข้าสู่แพ็กเกจเต็ม</p>
+                        </article>
+                        <article>
+                          <strong>ไม่มีคำสัญญาเกินจริง</strong>
+                          <p>หน้าใช้คำว่า “ช่วยวางแผนและฝึกให้ถูกจุด” แทนการรับประกันคะแนน เพื่อให้ดูน่าเชื่อถือกว่า</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingComparison" aria-label="เปรียบเทียบ English Plan กับวิธีเตรียม IELTS แบบอื่น">
+                      <div>
+                        <p className="mockLandingKicker">Why us vs alternatives</p>
+                        <h2>ต่างจากการดู YouTube หรือทำเว็บข้อสอบทั่วไปอย่างไร</h2>
+                      </div>
+                      <div className="mockLandingCompareTable" role="table" aria-label="IELTS prep comparison">
+                        <div role="row">
+                          <strong role="columnheader">สิ่งที่ผู้เรียนต้องการ</strong>
+                          <strong role="columnheader">English Plan</strong>
+                          <strong role="columnheader">ทำเองทั่วไป</strong>
+                        </div>
+                        <div role="row">
+                          <span>Feedback หลังตอบ Speaking</span>
+                          <span>AI feedback + ภาษาไทย + จุดแก้ต่อ</span>
+                          <span>มักไม่มี feedback เฉพาะคำตอบ</span>
+                        </div>
+                        <div role="row">
+                          <span>Reading practice</span>
+                          <span>จัดตามเดือน + last attempt + score</span>
+                          <span>ทำแล้วจบ จำไม่ได้ว่าพลาดตรงไหน</span>
+                        </div>
+                        <div role="row">
+                          <span>Study direction</span>
+                          <span>เห็นจุดอ่อนและเลือก skill ที่ต้องแก้</span>
+                          <span>ต้องเดาเองว่าจะฝึกอะไรต่อ</span>
+                        </div>
+                        <div role="row">
+                          <span>ภาษาอธิบาย</span>
+                          <span>เน้นผู้เรียนไทย</span>
+                          <span>ส่วนใหญ่เป็นอังกฤษล้วนหรือกระจัดกระจาย</span>
+                        </div>
+                      </div>
+                    </section>
+
+                    <section id="mock-landing-free-reading" className="mockLandingFreeReading">
+                      <div>
+                        <p className="mockLandingKicker">ข้อสอบ IELTS Reading ฟรี</p>
+                        <h2>เปิด Reading ฟรี 1 passage ต่อเดือน เพื่อสร้าง Organic SEO ระยะยาว</h2>
+                        <p>
+                          แต่ละเดือนควรมี public page ของตัวเอง พร้อม passage, questions, answer key, เฉลยภาษาไทย
+                          และคอมเมนต์ที่รอแอดมินอนุมัติ เพื่อให้ Google เห็นเนื้อหาที่มีประโยชน์จริง ไม่ใช่แค่หน้าโฆษณา
+                        </p>
+                        <div className="mockLandingMonthCards">
+                          <article>
+                            <strong>January 2026</strong>
+                            <span>Free Passage 1</span>
+                          </article>
+                          <article>
+                            <strong>February 2026</strong>
+                            <span>Free Passage 1</span>
+                          </article>
+                          <article>
+                            <strong>March 2026</strong>
+                            <span>Free Passage 1</span>
+                          </article>
+                          <article>
+                            <strong>April 2024</strong>
+                            <span>Trauma language topic</span>
+                          </article>
+                        </div>
+                      </div>
+                      <aside className="mockLandingCommentBox" aria-label="ตัวอย่างกล่องคอมเมนต์ SEO">
+                        <strong>คอมเมนต์ใต้ข้อสอบฟรี</strong>
+                        <textarea readOnly value="ตัวอย่าง: ทำไมข้อ 18 ถึงตอบ C ไม่ใช่ B?" />
+                        <button type="button" data-analytics-event="landing_free_reading_comment_submit">
+                          ส่งคอมเมนต์เพื่อรออนุมัติ
+                        </button>
+                        <small>คอมเมนต์ต้องผ่านแอดมินก่อนแสดงบนหน้า public เพื่อกัน spam และรักษาคุณภาพ SEO</small>
+                        <div>
+                          <p><b>Nat:</b> ข้อนี้ดู keyword แล้วเหมือน B แต่ paragraph พูดถึงผลลัพธ์ระยะยาวครับ</p>
+                          <p><b>Admin:</b> ใช่ครับ ให้ดูคำว่า sustained impact ใน passage จะตรงกับ heading C มากกว่า</p>
+                        </div>
+                      </aside>
+                    </section>
+
+                    <section className="mockLandingStudyPlan" aria-label="ตัวอย่าง Study Plan Generator">
+                      <div>
+                        <p className="mockLandingKicker">Study plan generator</p>
+                        <h2>สร้างแผนอ่าน IELTS 14 วัน หรือ 30 วันจากเป้าคะแนนจริง</h2>
+                        <p>
+                          จุดแข็งแบบ IELTS Advantage/E2 คือ structure. เราควรให้ผู้เรียนกรอก target band,
+                          วันสอบ และ skill ที่อ่อน แล้วแนะนำ task รายวันพร้อมลิงก์กลับเข้าแอป
+                        </p>
+                      </div>
+                      <div className="mockLandingPlanCard">
+                        <label>
+                          Target band
+                          <span>7.0</span>
+                        </label>
+                        <label>
+                          Exam date
+                          <span>30 days</span>
+                        </label>
+                        <label>
+                          Weakest skill
+                          <span>Speaking + Reading</span>
+                        </label>
+                        <ol>
+                          <li>Day 1: Speaking diagnostic + save 3 grammar fixes</li>
+                          <li>Day 2: Reading heading questions from March set</li>
+                          <li>Day 3: Listening spelling drill + vocabulary notebook</li>
+                        </ol>
+                        <button type="button" data-analytics-event="landing_study_plan_generate_click">
+                          สร้างแผนอ่านตัวอย่าง
+                        </button>
+                      </div>
+                    </section>
+
+                    <section id="mock-landing-tools" className="mockLandingToolsHub" aria-label="เครื่องมือ IELTS ฟรี">
+                      <div>
+                        <p className="mockLandingKicker">Free IELTS tools hub</p>
+                        <h2>เครื่องมือ IELTS ฟรีที่ช่วยดึงคนจาก Google ก่อนขายคอร์ส</h2>
+                        <p>
+                          แนว Engnovate คือให้เครื่องมือฟรีเยอะพอให้คนกลับมาใช้ซ้ำ แล้วค่อยพาไป trial หรือ premium
+                        </p>
+                      </div>
+                      <div className="mockLandingToolGrid">
+                        <article>
+                          <strong>Band score calculator</strong>
+                          <p>คำนวณ Listening / Reading band จากจำนวนข้อถูก</p>
+                        </article>
+                        <article>
+                          <strong>Speaking Part 2 timer</strong>
+                          <p>จับเวลา 1 นาทีเตรียม + 2 นาทีตอบ พร้อม topic sample</p>
+                        </article>
+                        <article>
+                          <strong>Vocabulary notebook</strong>
+                          <p>เก็บ collocation, paraphrase และคำแปลไทย</p>
+                        </article>
+                        <article>
+                          <strong>Listening dictation sample</strong>
+                          <p>ฝึก spelling และ word boundary จาก short audio</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingLaunchGrid" aria-label="แผนเตรียมหน้า Landing ก่อนเผยแพร่จริง">
+                      <div>
+                        <p className="mockLandingKicker">Pre-launch SEO system</p>
+                        <h2>10 อย่างที่เตรียมไว้ก่อนเปิดหน้า public</h2>
+                      </div>
+                      <div className="mockLandingLaunchCards">
+                        <article>
+                          <strong>1. Public URL slugs</strong>
+                          <p><code>/ielts-reading-free/january-2026-passage-1</code></p>
+                          <p><code>/ielts-reading-free/february-2026-passage-1</code></p>
+                          <p><code>/ielts-reading-free/march-2026-passage-1</code></p>
+                          <p><code>/ielts-reading-free/april-2024-trauma-language</code></p>
+                        </article>
+                        <article>
+                          <strong>2. Monthly SEO titles</strong>
+                          <p>ข้อสอบ IELTS Reading ฟรี January 2026 พร้อมเฉลยภาษาไทย</p>
+                          <p>IELTS Reading Practice February 2026 สำหรับคนไทย</p>
+                          <p>ฝึก IELTS Reading March 2026 ฟรี พร้อมคำอธิบายคำตอบ</p>
+                        </article>
+                        <article>
+                          <strong>3. Internal link map</strong>
+                          <p>Landing → Speaking trial → Free Reading → Listening practice → FAQ → สมัครเรียน</p>
+                        </article>
+                        <article>
+                          <strong>4. Launch gate</strong>
+                          <p>สถานะตอนนี้: Admin preview only. Publish หลังเช็ก copy, speed, comments และ schema แล้วเท่านั้น</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingSchemaSection" aria-label="ตัวอย่าง Schema markup สำหรับ SEO">
+                      <div>
+                        <p className="mockLandingKicker">Structured data</p>
+                        <h2>Schema ที่ควรใส่เมื่อเผยแพร่จริง</h2>
+                        <p>
+                          ใช้ FAQPage, Course และ BreadcrumbList เพื่อช่วยให้ Google เข้าใจว่าเป็นคอร์ส IELTS,
+                          มีคำถามที่พบบ่อย และมีเส้นทางไปยังข้อสอบ Reading ฟรีรายเดือน
+                        </p>
+                      </div>
+                      <pre>{`{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "คอร์ส IELTS ออนไลน์สำหรับคนไทย",
+  "description": "ฝึก IELTS Speaking, Reading และ Listening พร้อม AI feedback และเฉลยภาษาไทย",
+  "provider": {
+    "@type": "Organization",
+    "name": "English Plan Learning Space"
+  }
+}`}</pre>
+                    </section>
+
+                    <section className="mockLandingScreenshots" aria-label="ตัวอย่าง screenshot ที่ควรใช้บนหน้า Landing">
+                      <div>
+                        <p className="mockLandingKicker">Product screenshots</p>
+                        <h2>ภาพที่ต้องโชว์เพื่อให้คนเชื่อว่าแอปใช้งานได้จริง</h2>
+                      </div>
+                      <div className="mockLandingScreenshotGrid">
+                        <article>
+                          <span>Score report</span>
+                          <strong>AI feedback + Band estimate</strong>
+                          <p>โชว์ report ที่บอกคะแนน จุดอ่อน และคำแนะนำเป็นภาษาไทย</p>
+                        </article>
+                        <article>
+                          <span>Reading bank</span>
+                          <strong>Monthly cards + last attempt</strong>
+                          <p>โชว์ thumbnail ที่มี score ล่าสุดและเดือนของข้อสอบ</p>
+                        </article>
+                        <article>
+                          <span>Notebook</span>
+                          <strong>Saved corrections</strong>
+                          <p>โชว์ว่าผู้เรียนเก็บประโยค คำแนะนำ และ personal note ได้</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingTestimonials" aria-label="ตัวอย่างรีวิวและผลลัพธ์ผู้เรียน">
+                      <div>
+                        <p className="mockLandingKicker">Student proof wall</p>
+                        <h2>รีวิวต้องเล่า pain point, สิ่งที่แก้ได้ และผลลัพธ์ที่เห็น</h2>
+                      </div>
+                      <div>
+                        <article className="mockLandingProofStat">
+                          <strong>Before → After</strong>
+                          <span>Speaking confidence: 5/10 → 8/10</span>
+                          <p>หลังใช้ feedback report ผู้เรียนรู้ว่าควรเพิ่มตัวอย่างและลดคำซ้ำใน Part 2</p>
+                        </article>
+                        <blockquote>
+                          “รู้เลยว่า Part 2 ของเราสั้นเกินไป และควรเพิ่มตัวอย่างตรงไหน”
+                          <cite>นักเรียน IELTS Speaking, เป้าหมาย Band 7</cite>
+                        </blockquote>
+                        <blockquote>
+                          “เฉลย Reading ภาษาไทยช่วยให้เข้าใจว่าพลาดเพราะ keyword trap ไม่ใช่แค่อ่านไม่ออก”
+                          <cite>นักเรียน IELTS Academic Reading</cite>
+                        </blockquote>
+                        <blockquote>
+                          “ชอบที่กลับมาดู last attempt ได้ ทำให้รู้ว่าควรซ้อมชุดไหนซ้ำ”
+                          <cite>ผู้ใช้ Reading bank</cite>
+                        </blockquote>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingPerformance">
+                      <div>
+                        <p className="mockLandingKicker">Speed and tracking</p>
+                        <h2>เช็กความเร็วและ conversion ก่อนปล่อยหน้าออก Google</h2>
+                      </div>
+                      <div>
+                        <article>
+                          <strong>Core Web Vitals</strong>
+                          <p>Landing page public ควรเป็น route ที่เบากว่า dashboard และโหลดเร็วบนมือถือไทย</p>
+                        </article>
+                        <article>
+                          <strong>Analytics events</strong>
+                          <p>Track trial click, free Reading click, passage start, comment submit และ signup complete</p>
+                        </article>
+                        <article>
+                          <strong>Comment moderation</strong>
+                          <p>คอมเมนต์ใหม่ต้องมีสถานะ pending, approved, rejected พร้อม spam protection ก่อนขึ้น public</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section className="mockLandingMeasurement">
+                      <div>
+                        <p className="mockLandingKicker">Measure and improve</p>
+                        <h2>สิ่งที่ต้อง track เพื่อรู้ว่าหน้านี้ convert จริงไหม</h2>
+                      </div>
+                      <div>
+                        <article>
+                          <strong>CTA clicks</strong>
+                          <p><code>landing_hero_speaking_trial_click</code> และ <code>landing_hero_free_reading_click</code></p>
+                        </article>
+                        <article>
+                          <strong>Free Reading starts</strong>
+                          <p>ดูว่าเดือนไหนดึง organic traffic และสมัคร trial ได้ดีที่สุด</p>
+                        </article>
+                        <article>
+                          <strong>Comment submissions</strong>
+                          <p>ใช้วัดว่า free passage สร้าง discussion และ long-tail keyword ได้จริงไหม</p>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section id="mock-landing-trial" className="mockLandingCtaBand">
+                      <div>
+                        <p className="mockLandingKicker">Conversion funnel</p>
+                        <h2>ให้ผู้เรียนลองเห็นรายงานจริง ก่อนตัดสินใจสมัครเรียน</h2>
+                        <p>
+                          เป้าหมายแรกของ landing page คือให้ผู้เรียนทำ Speaking trial หรือ Reading ฟรี แล้วเห็นคุณค่าของ
+                          feedback, เฉลย และ progress tracking ก่อนเข้าสู่แพ็กเกจเรียนเต็ม
+                        </p>
+                      </div>
+                      <a href="/trial-speaking" data-analytics-event="landing_bottom_trial_click">เริ่มลองฟรี</a>
+                    </section>
+
+                    <section id="mock-landing-faq" className="mockLandingFaq">
+                      <h2>คำถามที่พบบ่อยเกี่ยวกับคอร์ส IELTS ออนไลน์</h2>
+                      <details open>
+                        <summary>แอปนี้เหมาะกับใคร?</summary>
+                        <p>เหมาะกับผู้เรียนไทยที่ต้องการฝึก IELTS ด้วยตัวเอง แต่ยังอยากได้ feedback ชัดเจนว่าคะแนนหายตรงไหนและควรแก้อะไรก่อน</p>
+                      </details>
+                      <details>
+                        <summary>มีข้อสอบ IELTS Reading ฟรีไหม?</summary>
+                        <p>มีแผนเปิด Reading passage ฟรีเดือนละ 1 ชุด พร้อมเฉลยและคอมเมนต์ใต้ข้อสอบ เพื่อให้ผู้เรียนถามข้อสงสัยได้</p>
+                      </details>
+                      <details>
+                        <summary>ช่วย IELTS Speaking อย่างไร?</summary>
+                        <p>ผู้เรียนสามารถซ้อม Part 1, Part 2, Part 3 หรือ full mock แล้วรับ AI feedback ตามเกณฑ์ IELTS เพื่อปรับคำตอบรอบถัดไป</p>
+                      </details>
+                      <details>
+                        <summary>ต่างจากการทำข้อสอบเองอย่างไร?</summary>
+                        <p>นอกจากทำข้อสอบ ระบบยังเก็บ last attempt, score, จุดผิดพลาด และคำแนะนำ ทำให้การซ้อมมีทิศทางมากกว่าการดูเฉลยอย่างเดียว</p>
+                      </details>
+                    </section>
+                  </article>
                 </div>
                 <div className="panel adminSectionCard adminOnly-learners">
                   <div className="adminSectionHeader">
