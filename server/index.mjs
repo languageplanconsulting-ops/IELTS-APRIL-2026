@@ -8771,7 +8771,7 @@ const callGemini = async (prompt, usageTracker) => {
           generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
         })
       },
-      { timeoutMs: 55000, retries: 1, retryDelayMs: 900 }
+      { timeoutMs: 65000, retries: 2, retryDelayMs: 1200 }
     )
     if (!response.ok) {
       const body = await response.text().catch(() => '')
@@ -8805,6 +8805,42 @@ const callGemini = async (prompt, usageTracker) => {
     }
   }
   throw new Error(`Gemini failed on all models. ${tried.join(' | ')}`)
+}
+
+const GEMINI_ASSESSMENT_REPORT_ATTEMPTS = Math.max(
+  1,
+  Math.min(5, Math.round(Number(process.env.GEMINI_ASSESSMENT_REPORT_ATTEMPTS || 3)) || 3)
+)
+const GEMINI_ASSESSMENT_RETRY_DELAY_MS = Math.max(
+  500,
+  Math.min(5000, Math.round(Number(process.env.GEMINI_ASSESSMENT_RETRY_DELAY_MS || 1600)) || 1600)
+)
+
+const runGeminiAssessmentReportWithRetries = async ({ buildReport, onProgress }) => {
+  const errors = []
+  for (let attempt = 1; attempt <= GEMINI_ASSESSMENT_REPORT_ATTEMPTS; attempt += 1) {
+    try {
+      if (attempt > 1) {
+        onProgress(
+          Math.min(88, 58 + attempt * 7),
+          `Main scoring model was busy. Retrying assessment API (${attempt}/${GEMINI_ASSESSMENT_REPORT_ATTEMPTS}) for the full report.`
+        )
+      }
+      return await buildReport()
+    } catch (error) {
+      const message = sanitizeErrorMessage(error instanceof Error ? error.message : String(error))
+      errors.push(`attempt ${attempt}: ${message}`)
+      if (attempt >= GEMINI_ASSESSMENT_REPORT_ATTEMPTS) break
+      onProgress(
+        Math.min(86, 56 + attempt * 7),
+        'Main scoring model did not return a usable report yet. Trying the API again before using backup mode.'
+      )
+      await sleep(GEMINI_ASSESSMENT_RETRY_DELAY_MS * attempt)
+    }
+  }
+  throw new Error(
+    `Gemini assessment failed after ${GEMINI_ASSESSMENT_REPORT_ATTEMPTS} attempts. ${errors.join(' | ')}`
+  )
 }
 
 const callGeminiText = async (prompt, usageTracker, operation = 'text') => {
@@ -10677,7 +10713,7 @@ const runAssessment = async (
   const errors = []
   try {
     const normalizedAssessmentMode = String(assessmentMode || 'standard')
-    const geminiReport =
+    const buildGeminiReport = async () =>
       normalizedAssessmentMode === 'fullMock'
         ? await buildFullMockAssessmentReport({
             topic,
@@ -10717,31 +10753,35 @@ const runAssessment = async (
               punctuationErrors,
               questionBreakdown
             })
-        : await buildFinalReport({
-            result: await callGemini(
-              rubricPrompt({
-                testMode: String(testMode || 'part2'),
-                topic,
-                prompt,
-                cues: Array.isArray(cues) ? cues : [],
-                punctuatedTranscript,
-                whisperTranscript,
-                durationSeconds: Number(durationSeconds || 0),
-                questionBreakdown
-              }),
-              usageTracker
-            ),
-            testMode: String(testMode || 'part2'),
-            pronunciationBand,
-            pronunciationEngine,
-            pronunciationFallbackReason,
-            pronunciationMetrics,
-            pronunciationEstimate,
-            wordAnalysis,
-            punctuatedTranscript,
-            punctuationErrors,
-            questionBreakdown
-          })
+          : await buildFinalReport({
+              result: await callGemini(
+                rubricPrompt({
+                  testMode: String(testMode || 'part2'),
+                  topic,
+                  prompt,
+                  cues: Array.isArray(cues) ? cues : [],
+                  punctuatedTranscript,
+                  whisperTranscript,
+                  durationSeconds: Number(durationSeconds || 0),
+                  questionBreakdown
+                }),
+                usageTracker
+              ),
+              testMode: String(testMode || 'part2'),
+              pronunciationBand,
+              pronunciationEngine,
+              pronunciationFallbackReason,
+              pronunciationMetrics,
+              pronunciationEstimate,
+              wordAnalysis,
+              punctuatedTranscript,
+              punctuationErrors,
+              questionBreakdown
+            })
+    const geminiReport = await runGeminiAssessmentReportWithRetries({
+      buildReport: buildGeminiReport,
+      onProgress
+    })
     comparisons.gemini = geminiReport
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
