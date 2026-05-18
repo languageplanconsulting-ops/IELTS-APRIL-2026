@@ -29,6 +29,8 @@ import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './l
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
+import { SpeakingPart2SampleBadge, SpeakingPart2SamplePanel } from './SpeakingPart2SampleVideo'
+import { resolveSpeakingPart2SampleVideo } from './speakingPart2SampleVideos'
 import {
   CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
   CAMBRIDGE_12_SPEAKING_PART1_TOPICS,
@@ -8687,6 +8689,15 @@ function App() {
     () => (isFullExamMode ? getPart2Recommendations(fullExamPlan.part2Prompt, activeTopic?.cues || []) : []),
     [isFullExamMode, fullExamPlan.part2Prompt, activeTopic]
   )
+  const activePart2SampleVideo = useMemo(() => {
+    if (!activeTopic) return null
+    const prompt = isFullExamMode ? fullExamPlan.part2Prompt : activeTopic.prompt
+    return resolveSpeakingPart2SampleVideo({
+      id: activeTopic.id,
+      title: activeTopic.title,
+      prompt
+    })
+  }, [activeTopic, isFullExamMode, fullExamPlan.part2Prompt])
   const currentPart1Recommendations = useMemo(
     () =>
       selectedTestMode === 'part1'
@@ -16571,13 +16582,17 @@ function App() {
                           const latestScore = latestScoresByTest[`${selectedTestMode}:${topic.id}`]
                           const hasAttempted = latestScore !== undefined
                           const isSelected = selectedTopicId === topic.id
+                          const part2SampleVideo =
+                            selectedTestMode === 'part2' ? resolveSpeakingPart2SampleVideo(topic) : null
                           return (
                             <div
                               key={topic.id}
                               data-topic-bank-card-index={flatIndex}
                               className={`thumbnailCard thumbnailCard--mode-${selectedTestMode} ${
                                 hasAttempted ? 'thumbnailCard--attempted' : 'thumbnailCard--fresh'
-                              } ${selectedTestMode === 'full' ? 'fullMockCard' : ''} ${isSelected ? 'thumbnailCard--selected' : ''}`}
+                              } ${selectedTestMode === 'full' ? 'fullMockCard' : ''} ${isSelected ? 'thumbnailCard--selected' : ''} ${
+                                part2SampleVideo ? 'thumbnailCard--has-pdoy-sample' : ''
+                              }`}
                               role="button"
                               tabIndex={topicBankFocusIndex === flatIndex ? 0 : -1}
                               onClick={() => {
@@ -16602,6 +16617,7 @@ function App() {
                                 }
                               }}
                             >
+                              {part2SampleVideo ? <SpeakingPart2SampleBadge /> : null}
                               <p className="thumbCategory">{topic.category}</p>
                               <h3>{topic.title}</h3>
                               {hasAttempted ? (
@@ -16897,6 +16913,7 @@ function App() {
                             <span className="prepAccordionTip">💡 จดโครงเรื่อง + keywords</span>
                           </summary>
                           <div className="part2NoteWrap">
+                            {activePart2SampleVideo ? <SpeakingPart2SamplePanel sample={activePart2SampleVideo} /> : null}
                             <p className="part2PromptPreview">{fullExamPlan.part2Prompt}</p>
                             {renderRecommendationDropdown({
                               title: 'Part 2 vocabulary guide',
@@ -16980,6 +16997,7 @@ function App() {
                     ) : (
                       <label className="questionNoteItem">
                         <span>Part 2 Note</span>
+                        {activePart2SampleVideo ? <SpeakingPart2SamplePanel sample={activePart2SampleVideo} /> : null}
                         {renderRecommendationDropdown({
                           title: 'Part 2 vocabulary guide',
                           question: activeTopic.prompt,
@@ -17053,6 +17071,7 @@ function App() {
                           </div>
                           {fullExamPhase === 'part2_prep' ? (
                             <>
+                              {activePart2SampleVideo ? <SpeakingPart2SamplePanel sample={activePart2SampleVideo} /> : null}
                               <h3>คุณมีเวลาเตรียมคำตอบ 1 นาทีครับ</h3>
                               <p className="part2BigQuestion">{TRIAL_SPEAKING_PROMPT}</p>
                               <p className="promptSub">ลองเก็บให้ครบ 4 จุดนี้:</p>
@@ -17099,6 +17118,7 @@ function App() {
                           </div>
                           {fullExamPhase === 'part2_prep' ? (
                             <>
+                              {activePart2SampleVideo ? <SpeakingPart2SamplePanel sample={activePart2SampleVideo} /> : null}
                               <h3>Part 2 Preparation (1 minute)</h3>
                               <p>{fullExamPlan.part2Prompt}</p>
                               <p className="promptSub">Write note now. It will appear during your 2-minute speaking.</p>
