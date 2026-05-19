@@ -458,7 +458,9 @@ type SpeakingTopic = {
 type QuestionAudioCatalogItem = {
   key: string
   cacheKey: string
-  section: 'Part 1' | 'Part 3'
+  section: string
+  audioKind?: 'question' | 'listening-section'
+  sectionNumber?: number
   topicId: string
   topicTitle: string
   question: string
@@ -7869,6 +7871,7 @@ function App() {
           key: `part1-${topic.topicId}-${index}`,
           cacheKey: `part1-${topic.topicId}-${index}`,
           section: 'Part 1' as const,
+          audioKind: 'question' as const,
           topicId: topic.topicId,
           topicTitle: topic.topicTitle,
           question,
@@ -7880,6 +7883,7 @@ function App() {
           key: `part3-${topic.topicId}-${index}`,
           cacheKey: `part3-${topic.topicId}-${index}`,
           section: 'Part 3' as const,
+          audioKind: 'question' as const,
           topicId: topic.topicId,
           topicTitle: topic.topicTitle,
           question,
@@ -7888,6 +7892,23 @@ function App() {
       )
     ],
     [adminPart1QuestionBank, adminPart3QuestionBank]
+  )
+  const listeningSectionAudioCatalog = useMemo<QuestionAudioCatalogItem[]>(
+    () =>
+      ALL_LISTENING_FOUNDATION_SETS
+        .filter((set) => set.audioCacheKey && set.audioscript)
+        .map((set) => ({
+          key: set.audioCacheKey || `listening-section-${set.section}-${set.id}`,
+          cacheKey: set.audioCacheKey || `listening-section-${set.section}-${set.id}`,
+          section: `Listening Section ${set.section}`,
+          audioKind: 'listening-section' as const,
+          sectionNumber: set.section,
+          topicId: set.id,
+          topicTitle: set.title,
+          question: set.audioscript || '',
+          audioUrl: ''
+        })),
+    []
   )
   const filteredManagedLearners = useMemo(() => {
     const query = adminLearnerSearchInput.trim().toLowerCase()
@@ -7948,11 +7969,11 @@ function App() {
   )
   const adminTtsQuestionLibrary = useMemo(
     () =>
-      speakingQuestionAudioCatalog.map((item) => ({
+      [...speakingQuestionAudioCatalog, ...listeningSectionAudioCatalog].map((item) => ({
         ...item,
         audioUrl: ttsAudioUrls[item.key] || ''
       })),
-    [speakingQuestionAudioCatalog, ttsAudioUrls]
+    [speakingQuestionAudioCatalog, listeningSectionAudioCatalog, ttsAudioUrls]
   )
   const speakingQuestionAudioByQuestion = useMemo(() => {
     const map = new Map<string, QuestionAudioCatalogItem>()
@@ -7995,6 +8016,10 @@ function App() {
   }, [adminTtsQuestionLibrary, adminTtsSearchInput])
   const generatedAdminTtsLibrary = useMemo(
     () => adminTtsQuestionLibrary.filter((item) => item.audioUrl),
+    [adminTtsQuestionLibrary]
+  )
+  const adminListeningSectionTtsItems = useMemo(
+    () => adminTtsQuestionLibrary.filter((item) => item.audioKind === 'listening-section'),
     [adminTtsQuestionLibrary]
   )
   const bankReadingExams = useMemo(
@@ -10081,7 +10106,12 @@ function App() {
         body: JSON.stringify({
           items: items.map((item) => ({
             cacheKey: item.cacheKey,
-            section: item.section,
+            section:
+              item.audioKind === 'listening-section' && item.sectionNumber
+                ? `listening-section-${item.sectionNumber}`
+                : item.section,
+            audioKind: item.audioKind || 'question',
+            sectionNumber: item.sectionNumber,
             topicId: item.topicId,
             topicTitle: item.topicTitle,
             text: item.question
@@ -16837,13 +16867,81 @@ function App() {
                         : `${adminPart1TtsTopics.filter((topic) => topic.missingCount === 0).length}/${adminPart1TtsTopics.length} topics fully ready`}
                     </p>
                   </div>
+                  {adminListeningSectionTtsItems.length > 0 ? (
+                    <div className="adminWorkflowCard adminTtsSummaryCard">
+                      <div className="adminTtsTopicCardTop">
+                        <div>
+                          <h4>Uploaded Listening Section Audio</h4>
+                          <p className="meta">
+                            {adminListeningSectionTtsItems.filter((item) => item.audioUrl).length}/
+                            {adminListeningSectionTtsItems.length} permanent British-accent section audios ready
+                          </p>
+                        </div>
+                        <div className="adminTtsTopicActions">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              void generateQuestionAudioBatch(
+                                'listening-sections-missing',
+                                adminListeningSectionTtsItems.filter((item) => !item.audioUrl)
+                              )
+                            }
+                            disabled={
+                              ttsGeneratingKey === 'listening-sections-missing' ||
+                              adminListeningSectionTtsItems.every((item) => item.audioUrl)
+                            }
+                          >
+                            {ttsGeneratingKey === 'listening-sections-missing'
+                              ? 'Generating...'
+                              : adminListeningSectionTtsItems.every((item) => item.audioUrl)
+                                ? 'All Ready'
+                                : `Generate Missing (${adminListeningSectionTtsItems.filter((item) => !item.audioUrl).length})`}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="adminTtsTopicQuestionList">
+                        {adminListeningSectionTtsItems.map((item) => (
+                          <article key={item.key} className="adminQuestionCard compact">
+                            <div className="adminQuestionCardTop">
+                              <div>
+                                <p className="adminAudioEyebrow">{item.section}</p>
+                                <p className="adminQuestionText">{item.topicTitle}</p>
+                                <p className="meta">
+                                  Deepgram British voice · {item.question.length.toLocaleString()} script characters
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => void generateTtsForQuestion(item)}
+                                disabled={ttsGeneratingKey === item.key}
+                              >
+                                {ttsGeneratingKey === item.key ? 'Generating...' : item.audioUrl ? 'Regenerate' : 'Generate'}
+                              </button>
+                            </div>
+                            {item.audioUrl ? (
+                              <div className="adminQuestionAudioRow">
+                                <span className="adminReadyDot">Audio Ready</span>
+                                <audio controls src={item.audioUrl} />
+                              </div>
+                            ) : (
+                              <p className="meta adminQuestionHint">Generate once to store this full listening audio permanently.</p>
+                            )}
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                   {generatedAdminTtsLibrary.length > 0 ? (
                     <div className="adminAudioLibraryGrid">
                       {generatedAdminTtsLibrary.map((item) => (
                         <article key={`generated-${item.key}`} className="adminAudioCard">
                           <p className="adminAudioEyebrow">{item.section}</p>
                           <h4>{item.topicTitle}</h4>
-                          <p>{item.question}</p>
+                          <p>
+                            {item.audioKind === 'listening-section'
+                              ? `Full IELTS-style section audio (${item.question.length.toLocaleString()} script characters).`
+                              : item.question}
+                          </p>
                           <audio controls src={item.audioUrl} />
                         </article>
                       ))}

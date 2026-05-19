@@ -1570,6 +1570,18 @@ const generateListeningSectionTtsAudioBuffer = async ({ text, section }) => {
   return generateDeepgramTtsAudioBuffer(lectureText || text, lectureModel)
 }
 
+const getListeningSectionNumberFromAudioItem = (item = {}) => {
+  const explicitSection = Number(item?.sectionNumber || 0)
+  if ([1, 2, 3, 4].includes(explicitSection)) return explicitSection
+  const rawSection = String(item?.section || '').trim()
+  const match = rawSection.match(/(?:listening[-\s]*)?section[-\s]*(\d+)/i)
+  const parsed = match ? Number(match[1]) : 0
+  return [1, 2, 3, 4].includes(parsed) ? parsed : 0
+}
+
+const isListeningSectionAudioItem = (item = {}) =>
+  String(item?.audioKind || '').trim() === 'listening-section' || getListeningSectionNumberFromAudioItem(item) > 0
+
 const uploadQuestionAudioBuffer = async ({ objectPath, audioBuffer }) => {
   await ensureQuestionAudioBucket()
   await supabaseRequest(`/storage/v1/object/${encodeURIComponent(SUPABASE_TTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`, {
@@ -10536,7 +10548,20 @@ app.post('/api/admin/tts/generate', requireAdmin, async (req, res) => {
 
     const results = []
     for (const item of items) {
-      const asset = await getOrCreateQuestionAudioAsset(item, { allowGenerate: true, force })
+      const listeningSectionNumber = isListeningSectionAudioItem(item)
+        ? getListeningSectionNumberFromAudioItem(item)
+        : 0
+      const asset = await getOrCreateQuestionAudioAsset(item, {
+        allowGenerate: true,
+        force,
+        audioBufferFactory: listeningSectionNumber
+          ? (normalizedItem) =>
+              generateListeningSectionTtsAudioBuffer({
+                text: normalizedItem.text,
+                section: listeningSectionNumber
+              })
+          : undefined
+      })
       results.push(asset)
     }
 
