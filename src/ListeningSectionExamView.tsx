@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { ListeningParaphraseBridgeModal } from './ListeningParaphraseBridgeModal'
 import { getListeningHighlightMatch } from './listeningHighlightMatch'
 import type {
@@ -40,14 +40,26 @@ type ScriptDecoration = {
   start: number
   end: number
   kind: 'correct' | 'wrong' | 'draft'
+  questionId: string
   questionNumber: number
+}
+
+type LatestEvidenceSelection = {
+  questionId: string
+  text: string
+}
+
+type HighlightMenuState = {
+  questionId: string
+  questionNumber: number
+  x: number
+  y: number
 }
 
 const buildPassageDecorations = (
   passage: string,
   questions: ListeningSectionExamQuestion[],
-  attempts: Record<string, QuestionAttempt>,
-  activeQuestionId: string
+  attempts: Record<string, QuestionAttempt>
 ): ScriptDecoration[] => {
   const lowerPassage = passage.toLowerCase()
   const decorations: ScriptDecoration[] = []
@@ -58,9 +70,7 @@ const buildPassageDecorations = (
       ? question.evidence
       : attempt.evidenceStatus === 'wrong'
         ? attempt.wrongEvidence || attempt.evidenceDraft
-        : question.id === activeQuestionId
-          ? attempt.evidenceDraft
-          : ''
+        : attempt.evidenceDraft
 
     if (!highlightText.trim()) continue
 
@@ -70,6 +80,7 @@ const buildPassageDecorations = (
     decorations.push({
       start,
       end: start + highlightText.length,
+      questionId: question.id,
       kind: attempt.completed
         ? 'correct'
         : attempt.evidenceStatus === 'wrong'
@@ -88,7 +99,11 @@ const buildPassageDecorations = (
     })
 }
 
-const renderDecoratedPassage = (passage: string, decorations: ScriptDecoration[]): ReactNode => {
+const renderDecoratedPassage = (
+  passage: string,
+  decorations: ScriptDecoration[],
+  onHighlightContextMenu?: (event: MouseEvent<HTMLElement>, decoration: ScriptDecoration) => void
+): ReactNode => {
   if (decorations.length === 0) return passage
 
   const parts: ReactNode[] = []
@@ -103,6 +118,11 @@ const renderDecoratedPassage = (passage: string, decorations: ScriptDecoration[]
       <mark
         key={`${decoration.questionNumber}-${index}`}
         className={`listeningSectionExamEvidenceMark is-${decoration.kind}`}
+        onContextMenu={
+          decoration.kind === 'correct' || !onHighlightContextMenu
+            ? undefined
+            : (event) => onHighlightContextMenu(event, decoration)
+        }
       >
         {decoration.kind === 'correct' ? (
           <span className="listeningSectionExamEvidenceBadge">{decoration.questionNumber}</span>
@@ -117,7 +137,12 @@ const renderDecoratedPassage = (passage: string, decorations: ScriptDecoration[]
   return parts
 }
 
-const renderSegmentBody = (text: string, passage: string, decorations: ScriptDecoration[]) => {
+const renderSegmentBody = (
+  text: string,
+  passage: string,
+  decorations: ScriptDecoration[],
+  onHighlightContextMenu?: (event: MouseEvent<HTMLElement>, decoration: ScriptDecoration) => void
+) => {
   if (decorations.length === 0) return text
 
   const passageOffset = passage.toLowerCase().indexOf(text.toLowerCase())
@@ -132,7 +157,7 @@ const renderSegmentBody = (text: string, passage: string, decorations: ScriptDec
     }))
 
   if (localDecorations.length === 0) return text
-  return renderDecoratedPassage(text, localDecorations)
+  return renderDecoratedPassage(text, localDecorations, onHighlightContextMenu)
 }
 
 export type ListeningSectionExamViewProps = {
@@ -167,12 +192,28 @@ export function ListeningSectionExamView({
   const scriptBodyRef = useRef<HTMLDivElement | null>(null)
   const [activeQuestionId, setActiveQuestionId] = useState(config.questions[0]?.id || '')
   const [attempts, setAttempts] = useState<Record<string, QuestionAttempt>>({})
+  const [latestEvidenceSelection, setLatestEvidenceSelection] = useState<LatestEvidenceSelection | null>(null)
+  const [highlightMenu, setHighlightMenu] = useState<HighlightMenuState | null>(null)
   const [scriptCollapsed, setScriptCollapsed] = useState(false)
 
   useEffect(() => {
     setActiveQuestionId(config.questions[0]?.id || '')
     setAttempts({})
+    setLatestEvidenceSelection(null)
+    setHighlightMenu(null)
   }, [config.title, config.passage])
+
+  useEffect(() => {
+    if (!highlightMenu || typeof window === 'undefined') return undefined
+
+    const closeMenu = () => setHighlightMenu(null)
+    window.addEventListener('click', closeMenu)
+    window.addEventListener('keydown', closeMenu)
+    return () => {
+      window.removeEventListener('click', closeMenu)
+      window.removeEventListener('keydown', closeMenu)
+    }
+  }, [highlightMenu])
 
   const segments = useMemo(
     () => parseListeningScriptSegments(config.passage),
@@ -184,8 +225,8 @@ export function ListeningSectionExamView({
   const activeAttempt = attempts[activeQuestion?.id || ''] || defaultAttempt()
 
   const decorations = useMemo(
-    () => buildPassageDecorations(config.passage, config.questions, attempts, activeQuestionId),
-    [config.passage, config.questions, attempts, activeQuestionId]
+    () => buildPassageDecorations(config.passage, config.questions, attempts),
+    [config.passage, config.questions, attempts]
   )
 
   const completedCount = config.questions.filter((item) => attempts[item.id]?.completed).length
@@ -196,6 +237,57 @@ export function ListeningSectionExamView({
       [questionId]: { ...(current[questionId] || defaultAttempt()), ...patch }
     }))
   }, [])
+
+  const claimLatestEvidenceForQuestion = useCallback((questionId: string) => {
+    if (!latestEvidenceSelection?.text.trim()) return
+
+    setAttempts((current) => {
+      const targetAttempt = current[questionId] || defaultAttempt()
+      if (targetAttempt.completed || targetAttempt.evidenceDraft.trim()) return current
+
+      if (latestEvidenceSelection.questionId !== questionId) {
+        const sourceAttempt = current[latestEvidenceSelection.questionId] || defaultAttempt()
+        if (
+          sourceAttempt.completed ||
+          sourceAttempt.answer.trim() ||
+          sourceAttempt.evidenceDraft !== latestEvidenceSelection.text
+        ) {
+          return current
+        }
+      }
+
+      const next: Record<string, QuestionAttempt> = {
+        ...current,
+        [questionId]: {
+          ...targetAttempt,
+          evidenceDraft: latestEvidenceSelection.text,
+          evidenceStatus: 'idle',
+          wrongEvidence: '',
+          feedback: ''
+        }
+      }
+
+      Object.entries(current).forEach(([attemptQuestionId, attempt]) => {
+        if (attemptQuestionId === questionId) return
+        if (attempt.completed || attempt.answer.trim()) return
+        if (attempt.evidenceDraft !== latestEvidenceSelection.text) return
+        next[attemptQuestionId] = {
+          ...attempt,
+          evidenceDraft: '',
+          evidenceStatus: 'idle',
+          wrongEvidence: '',
+          feedback: ''
+        }
+      })
+
+      return next
+    })
+  }, [latestEvidenceSelection])
+
+  const activateQuestion = useCallback((questionId: string, claimEvidence = false) => {
+    setActiveQuestionId(questionId)
+    if (claimEvidence) claimLatestEvidenceForQuestion(questionId)
+  }, [claimLatestEvidenceForQuestion])
 
   const readScriptSelection = () => {
     const container = scriptBodyRef.current
@@ -220,8 +312,40 @@ export function ListeningSectionExamView({
         wrongEvidence: '',
         feedback: ''
       })
+      setLatestEvidenceSelection({ questionId: activeQuestion.id, text: selectedText })
+      setHighlightMenu(null)
       window.getSelection()?.removeAllRanges()
     })
+  }
+
+  const handleHighlightContextMenu = (event: MouseEvent<HTMLElement>, decoration: ScriptDecoration) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setHighlightMenu({
+      questionId: decoration.questionId,
+      questionNumber: decoration.questionNumber,
+      x: event.clientX,
+      y: event.clientY
+    })
+  }
+
+  const removeListeningHighlight = (questionId: string) => {
+    setAttempts((current) => {
+      const attempt = current[questionId]
+      if (!attempt || attempt.completed) return current
+      return {
+        ...current,
+        [questionId]: {
+          ...attempt,
+          evidenceDraft: '',
+          evidenceStatus: 'idle',
+          wrongEvidence: '',
+          feedback: ''
+        }
+      }
+    })
+    setLatestEvidenceSelection((current) => (current?.questionId === questionId ? null : current))
+    setHighlightMenu(null)
   }
 
   const handleSubmitQuestion = (question: ListeningSectionExamQuestion) => {
@@ -289,7 +413,7 @@ export function ListeningSectionExamView({
     if (segments.length === 0) {
       return (
         <p className="listeningSectionExamScriptPlain" onMouseUp={handleScriptMouseUp}>
-          {renderDecoratedPassage(config.passage, decorations)}
+          {renderDecoratedPassage(config.passage, decorations, handleHighlightContextMenu)}
         </p>
       )
     }
@@ -307,7 +431,7 @@ export function ListeningSectionExamView({
       <article key={segment.id} className={`listeningSectionExamScriptTurn tone-${tone}`}>
         {segment.speaker ? <span className="listeningSectionExamScriptSpeaker">{segment.speaker}</span> : null}
         <p className="listeningSectionExamScriptBody" onMouseUp={handleScriptMouseUp}>
-          {renderSegmentBody(segment.text, config.passage, decorations)}
+          {renderSegmentBody(segment.text, config.passage, decorations, handleHighlightContextMenu)}
         </p>
       </article>
     )
@@ -433,6 +557,19 @@ export function ListeningSectionExamView({
           onClose={() => updateAttempt(bridgeQuestion.id, { bridgeDismissed: true })}
         />
       ) : null}
+
+      {highlightMenu ? (
+        <div
+          className="listeningSectionExamHighlightMenu"
+          style={{ left: highlightMenu.x, top: highlightMenu.y }}
+          role="menu"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <button type="button" role="menuitem" onClick={() => removeListeningHighlight(highlightMenu.questionId)}>
+            Remove Q{highlightMenu.questionNumber} highlight
+          </button>
+        </div>
+      ) : null}
     </div>
   )
 
@@ -525,7 +662,7 @@ export function ListeningSectionExamView({
         className={`listeningSectionExamQuestionCard ${isActive ? 'is-active' : ''} ${
           attempt.completed ? 'is-complete' : ''
         }`}
-        onClick={() => setActiveQuestionId(question.id)}
+        onClick={() => activateQuestion(question.id, true)}
       >
         <div className="listeningSectionExamQuestionHead">
           <span className="listeningSectionExamQNum">{question.number}</span>
@@ -548,7 +685,7 @@ export function ListeningSectionExamView({
                     disabled={attempt.completed}
                     onClick={(event) => {
                       event.stopPropagation()
-                      setActiveQuestionId(question.id)
+                      activateQuestion(question.id, true)
                       updateAttempt(question.id, {
                         answer: option.key,
                         answerStatus: 'idle',
@@ -571,7 +708,7 @@ export function ListeningSectionExamView({
               disabled={attempt.completed}
               onClick={(event) => event.stopPropagation()}
               onChange={(event) => {
-                setActiveQuestionId(question.id)
+                activateQuestion(question.id, true)
                 updateAttempt(question.id, {
                   answer: event.target.value,
                   answerStatus: 'idle',
@@ -597,13 +734,13 @@ export function ListeningSectionExamView({
   function renderMatchingRow(question: ListeningSectionExamQuestion) {
     const attempt = attempts[question.id] || defaultAttempt()
     const isActive = question.id === activeQuestionId
-  return (
+    return (
       <li
         key={question.id}
         className={`listeningSectionExamMatchingRow ${isActive ? 'is-active' : ''} ${
           attempt.completed ? 'is-complete' : ''
         }`}
-        onClick={() => setActiveQuestionId(question.id)}
+        onClick={() => activateQuestion(question.id, true)}
       >
         <span className="listeningSectionExamQNum">{question.number}</span>
         <span className="listeningSectionExamMatchingLabel">{question.rowLabel || question.stem}</span>
@@ -613,7 +750,7 @@ export function ListeningSectionExamView({
           className={attempt.answerStatus === 'wrong' ? 'is-wrong' : ''}
           onClick={(event) => event.stopPropagation()}
           onChange={(event) => {
-            setActiveQuestionId(question.id)
+            activateQuestion(question.id, true)
             updateAttempt(question.id, {
               answer: event.target.value,
               answerStatus: 'idle',
@@ -642,7 +779,7 @@ export function ListeningSectionExamView({
         className={`listeningSectionExamGapItem ${isActive ? 'is-active' : ''} ${
           attempt.completed ? 'is-complete' : ''
         }`}
-        onClick={() => setActiveQuestionId(question.id)}
+        onClick={() => activateQuestion(question.id, true)}
       >
         <span className="listeningSectionExamQNum">{question.number}</span>
         <p>{question.stem}</p>
@@ -652,7 +789,7 @@ export function ListeningSectionExamView({
           className={attempt.answerStatus === 'wrong' ? 'is-wrong' : ''}
           onClick={(event) => event.stopPropagation()}
           onChange={(event) => {
-            setActiveQuestionId(question.id)
+            activateQuestion(question.id, true)
             updateAttempt(question.id, {
               answer: event.target.value,
               answerStatus: 'idle',
@@ -704,7 +841,7 @@ export function ListeningSectionExamView({
             disabled={!canSubmit}
             onClick={(event) => {
               event.stopPropagation()
-              setActiveQuestionId(question.id)
+              activateQuestion(question.id)
               handleSubmitQuestion(question)
             }}
           >
