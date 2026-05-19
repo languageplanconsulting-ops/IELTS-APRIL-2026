@@ -22,7 +22,7 @@ const canonicalizeReadingCorrectAnswer = (value) => {
   if (normalized.startsWith('YES')) return 'YES'
   if (normalized.startsWith('NO')) return 'NO'
   if (READING_ROMAN_HEADING_PATTERN.test(normalized)) return normalized.toLowerCase()
-  const letterMatch = normalized.match(/^([A-G])(?:\b|\s|\()/)
+  const letterMatch = normalized.match(/^([A-H])(?:\b|\s|\()/)
   if (letterMatch) return letterMatch[1]
   return String(value || '').trim()
 }
@@ -37,7 +37,7 @@ const guessReadingAnswerType = (correctAnswer) => {
   const normalized = normalizeReadingAnswer(canonicalizeReadingCorrectAnswer(correctAnswer))
   if (['TRUE', 'FALSE', 'NOT GIVEN'].includes(normalized)) return 'true-false-not-given'
   if (['YES', 'NO', 'NOT GIVEN'].includes(normalized)) return 'yes-no-not-given'
-  if (/^[A-G]$/.test(normalized)) return 'multiple-choice'
+  if (/^[A-H]$/.test(normalized)) return 'multiple-choice'
   if (READING_ROMAN_HEADING_PATTERN.test(normalized)) return 'multiple-choice'
   return 'text'
 }
