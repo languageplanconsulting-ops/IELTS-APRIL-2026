@@ -234,6 +234,122 @@ Another problem is that stored seeds do not remain alive forever. Banks must car
 
 So, seed banks are not simply museums for plants. They are active scientific resources that may help agriculture respond to disease, climate change and food insecurity.`
 
+const COMMUNITY_GARDENS_PART3_SCRIPT = `NINA: Hi Oscar. Did you finish reading the report on community gardens?
+OSCAR: Yes. I thought it was going to be a simple topic, people growing vegetables together, but there's actually a lot to discuss.
+NINA: Exactly. The report shows they're not just about food.
+OSCAR: That surprised me. I assumed the main benefit was cheaper fruit and vegetables.
+NINA: That can happen, but the report said the amount of food produced is usually quite small. So I wouldn't call that the main advantage.
+OSCAR: True. What seemed more important was the way people learn practical skills. Some residents had never grown anything before, and now they know about planting, watering and composting.
+NINA: I agree. And the other big benefit is social. People who had lived in the same street for years finally started talking to each other.
+OSCAR: Yes, that was convincing. The report mentioned public parks too, but I don't think community gardens reduce pressure on them much.
+NINA: No. People still need parks for sport and open space.
+OSCAR: And full-time jobs? That sounded unrealistic.
+NINA: Definitely. Most of the work is voluntary.
+OSCAR: What problems should we include?
+NINA: Funding is the obvious one. Some gardens begin with a grant, but after two or three years they struggle to pay for water, insurance and equipment.
+OSCAR: Yes, that's a serious issue. Soil quality was mentioned, but most groups solve that by using raised beds.
+NINA: Right, so it's not usually the main barrier.
+OSCAR: Getting permission to use land seems more difficult. If the land belongs to the council or a private owner, groups may wait months before they can start.
+NINA: Agreed. The report also mentioned younger volunteers, but not as a problem. It said gardens wanted more of them.
+OSCAR: And complaints about noise were rare. Gardens are usually quiet places.
+NINA: Now, the improvement ideas. What did you think about evening gardening sessions?
+OSCAR: I liked that. People who work during the day could come after work, so it would attract people who don't usually take part.
+NINA: Exactly. Shared tool cupboards?
+OSCAR: Useful, but there need to be rules. Tools can go missing, or people may not return them clean.
+NINA: So clearer rules are needed.
+OSCAR: Cooking events using produce from the garden sounded great.
+NINA: Yes. The report gave examples where people cooked together and exchanged recipes. It seems to help people learn from each other.
+OSCAR: What about school vegetable plots?
+NINA: I think schools should organise those. Teachers can connect them with science lessons and healthy eating.
+OSCAR: Selling produce to restaurants worried me.
+NINA: Me too. Once money becomes the main focus, the garden may stop being a community space.
+OSCAR: So it could damage the original purpose.
+NINA: Finally, online advice groups.
+OSCAR: The report said several gardens already use them well. People post photos of plant diseases or ask when to harvest things.
+NINA: Yes, that already seems to be successful.`
+
+const CORAL_REEF_PART4_SCRIPT = `For my presentation today, I'm going to talk about coral reef restoration and the methods scientists are using to repair damaged reefs.
+
+Coral reefs are sometimes described as the rainforests of the sea because they support such a high level of marine diversity. A huge number of fish, shellfish and other sea creatures depend on reefs for food and shelter.
+
+Reefs also protect coastal areas. When large waves move towards the shore, the structure of the reef reduces the force of the waves before they reach land.
+
+However, reefs are under increasing pressure. One major problem is coral bleaching. This happens when corals lose the tiny organisms that live inside them and provide much of their colour and energy. Bleaching is often linked to warmer water.
+
+One restoration method involves growing small pieces of coral in underwater nurseries. These nurseries allow young corals to develop in a protected place before they are moved back to damaged reefs.
+
+In some areas, reefs have been physically broken by storms or human activity. To repair these areas, scientists may use metal frames. These create a stable structure where coral can begin to grow again.
+
+Another technique is to attach coral fragments directly to rocks or dead reef surfaces. In many projects, divers use a special glue to hold the fragments in position until they become fixed naturally.
+
+There are, however, several challenges. Young corals are delicate, and storms can break or bury them before they are well established.
+
+Pollution is another problem. If too many nutrients enter the water, algae may grow quickly and cover the reef, blocking light from the corals.
+
+Restoration work is also expensive. It requires boats, diving equipment and skilled divers who can work carefully underwater.
+
+For the future, scientists are also studying corals that show greater heat tolerance. The hope is that these corals may survive better as ocean temperatures continue to rise.
+
+So coral restoration is promising, but it is not a complete solution. Protecting reefs also depends on reducing pollution and limiting further damage to the marine environment.`
+
+const DIGITAL_NOTE_TAKING_PART3_SCRIPT = `EMMA: Hi Ravi. Have you read the article on digital note-taking?
+RAVI: Yes. I wasn't sure at first. I thought the topic might be too ordinary, everyone already knows students use laptops and tablets.
+EMMA: I thought that too, but the research is more complicated than I expected.
+RAVI: Especially the section on laptops in lectures.
+EMMA: I use my laptop because it helps me organise information. I can move headings around and add links later.
+RAVI: I agree it helps organisation. But I think laptops can distract people sitting nearby, especially if someone is checking messages.
+EMMA: I'm not sure that's a major problem. Students should just concentrate on their own work.
+RAVI: Maybe, but if a bright screen is in front of you, it's hard not to notice it.
+EMMA: Fair point.
+RAVI: Do you ever take notes by hand now?
+EMMA: Yes, especially in biology lectures. If the lecturer draws a process or a diagram, I remember it better when I draw it myself.
+RAVI: I'm slower with handwriting.
+EMMA: Me too, but sometimes slower is useful.
+RAVI: That connects with the finding that surprised me. Students who typed notes often wrote down more words, but that didn't always mean they understood the lecture better.
+EMMA: Yes, because they may just copy without thinking.
+EMMA: We need to choose a research method for our presentation.
+RAVI: What about filming students during lectures and analysing what they do?
+EMMA: That would be interesting, but we'd need special permission. Some students wouldn't want to be recorded.
+RAVI: True. Comparing exam results might be easier.
+EMMA: I'm not sure. Too many other things affect exam results: revision, attendance, background knowledge. The results would be hard to measure properly.
+RAVI: Good point. We could just interview five classmates.
+EMMA: Five people isn't enough. The sample would be too small to tell us much.
+RAVI: What about lending tablets to volunteers and asking them to use them for a week?
+EMMA: That would cost too much unless we already had the tablets.
+RAVI: So we need something simpler.
+EMMA: Maybe we can include a short memory test. We give students the same short talk, ask half to type notes and half to write by hand, then ask a few questions.
+RAVI: That won't prove one method is better forever, but it would give us some simple data of our own.
+EMMA: Exactly. We can use it as a small classroom demonstration, not a full scientific experiment.
+RAVI: What should our final message be?
+EMMA: I don't think we should say handwriting is always better or laptops are always better.
+RAVI: Agreed. It depends on the task. Typing may be useful for organised lecture notes, but handwriting may help with diagrams or problem-solving.
+EMMA: So our presentation should explain when different methods are useful.
+RAVI: That's a balanced angle.`
+
+const LIGHT_POLLUTION_PART4_SCRIPT = `Today I'm going to discuss light pollution and why it has become an important environmental issue.
+
+Light pollution is caused by artificial light that is unnecessary, too bright, or directed in the wrong direction. It is different from useful lighting, such as a lamp that helps people walk safely at night.
+
+This problem is especially common in large cities, where streetlights, advertising signs, office buildings and traffic all produce light after dark.
+
+One obvious result is that people can no longer see many stars in the night sky. In some urban areas, only the brightest stars are visible.
+
+Light pollution also affects wildlife. For example, young sea turtles normally move towards the ocean after they hatch. They use natural light reflected from the sea, but artificial lights near beaches can lead them away from the water.
+
+Birds are also affected. Many species travel long distances during migration, and bright lights from buildings can confuse them, especially in cloudy weather.
+
+Insects may also be disturbed. Instead of finding food or mates, they often gather around lamps for long periods, which can affect their survival.
+
+There are human effects as well. Bright light at night can disturb sleep patterns because the body may not receive a clear signal that it is time to rest.
+
+Another issue is road safety. Poorly designed lights can create glare, making it harder for drivers to see clearly.
+
+Fortunately, there are practical solutions. Streetlights should be designed to point downward, so the light falls on roads and pavements instead of escaping into the sky.
+
+Some towns also reduce lighting after midnight, when fewer people are outside. This saves energy and reduces the impact on wildlife and the night sky.
+
+So the aim is not to remove outdoor lighting completely, but to use it more carefully.`
+
 const mcQuestion = (
   id: string,
   number: number,
@@ -644,6 +760,82 @@ const sleepAppOptions = [
   { key: 'C', text: 'They can replace professional advice.' },
   { key: 'D', text: 'They should be required by universities.' },
   { key: 'E', text: 'They need more independent research.' }
+]
+
+const communityBenefitsQuestionText = `Questions 21 and 22
+Choose TWO letters, A-E.
+Which TWO advantages of community gardens do the students agree are most important?
+A They make fresh food cheaper for everyone.
+B They give residents practical gardening skills.
+C They reduce pressure on public parks.
+D They improve relationships between neighbours.
+E They provide full-time employment for local people.`
+
+const communityProblemsQuestionText = `Questions 23 and 24
+Choose TWO letters, A-E.
+Which TWO problems do the students agree community gardens often face?
+A lack of long-term funding
+B poor soil quality
+C too many young volunteers
+D difficulty getting permission to use land
+E complaints about noise`
+
+const communityIdeaQuestionText = `Questions 25-30
+What is the students' opinion about each idea for improving community gardens?
+Choose SIX answers from the box and write the correct letter, A-H.
+A This could attract people who do not usually take part.
+B This might create safety problems.
+C This should be organised by schools.
+D This may not be worth the cost.
+E This already seems to be successful.
+F This needs clearer rules.
+G This would help people learn from each other.
+H This could damage the original purpose of the gardens.`
+
+const communityBenefitOptions = [
+  { key: 'A', text: 'They make fresh food cheaper for everyone.' },
+  { key: 'B', text: 'They give residents practical gardening skills.' },
+  { key: 'C', text: 'They reduce pressure on public parks.' },
+  { key: 'D', text: 'They improve relationships between neighbours.' },
+  { key: 'E', text: 'They provide full-time employment for local people.' }
+]
+
+const communityProblemOptions = [
+  { key: 'A', text: 'lack of long-term funding' },
+  { key: 'B', text: 'poor soil quality' },
+  { key: 'C', text: 'too many young volunteers' },
+  { key: 'D', text: 'difficulty getting permission to use land' },
+  { key: 'E', text: 'complaints about noise' }
+]
+
+const communityIdeaOptions = [
+  { key: 'A', text: 'This could attract people who do not usually take part.' },
+  { key: 'B', text: 'This might create safety problems.' },
+  { key: 'C', text: 'This should be organised by schools.' },
+  { key: 'D', text: 'This may not be worth the cost.' },
+  { key: 'E', text: 'This already seems to be successful.' },
+  { key: 'F', text: 'This needs clearer rules.' },
+  { key: 'G', text: 'This would help people learn from each other.' },
+  { key: 'H', text: 'This could damage the original purpose of the gardens.' }
+]
+
+const digitalMethodQuestionText = `Questions 25-28
+What reason did the students give for rejecting each research method?
+Choose FOUR answers from the box and write the correct letter, A-F.
+A The sample would be too small.
+B The results would be hard to measure.
+C It would take too much time.
+D Students might change their normal behaviour.
+E The equipment would be too expensive.
+F It would need special permission.`
+
+const digitalMethodOptions = [
+  { key: 'A', text: 'The sample would be too small.' },
+  { key: 'B', text: 'The results would be hard to measure.' },
+  { key: 'C', text: 'It would take too much time.' },
+  { key: 'D', text: 'Students might change their normal behaviour.' },
+  { key: 'E', text: 'The equipment would be too expensive.' },
+  { key: 'F', text: 'It would need special permission.' }
 ]
 
 export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
@@ -1154,6 +1346,114 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
       gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q38', 38, 'Farmers may need replacement seeds after 38 ____.', 'support farmers after extreme events such as floods, when stored seed for the next planting season may have been destroyed', 'floods', ['storms', 'disease', 'fires'], 'after extreme events such as floods', 'after', 'น้ำท่วม', 'after ในโจทย์ตรงกับ after extreme events such as floods. replacement seeds ถูก paraphrase จาก stored seed destroyed.'),
       gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q39', 39, 'Some seeds cannot survive 39 ____.', 'Some seeds are difficult to store because they cannot survive drying', 'drying', ['storage', 'testing', 'freezing'], 'cannot survive drying', 'cannot survive', 'การทำให้แห้ง', 'cannot survive ในโจทย์ตามด้วย drying ในสคริปต์. คำหลอกคือ storage เพราะเป็นหัวข้อใหญ่ ไม่ใช่สิ่งที่เมล็ดบางชนิดทนไม่ได้.'),
       gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q40', 40, 'Seeds need regular 40 ____ to check whether they can still grow.', 'Banks must carry out regular testing to check whether samples can still germinate', 'testing', ['collection', 'drying', 'cataloguing'], 'regular testing', 'regular to check', 'การทดสอบ', 'regular testing ตรงกับโจทย์ และ can still grow ถูก paraphrase เป็น can still germinate.')
+    ]
+  },
+  {
+    id: 'advanced-listening-community-gardens-part-3',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 3 - Community Gardens',
+    section: 3,
+    levelLabel: 'ADVANCED LISTENING · Part 3 dialogue · target Band 7+',
+    audioCacheKey: 'advanced-listening-community-gardens-part-3',
+    audioscript: COMMUNITY_GARDENS_PART3_SCRIPT,
+    questions: [
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q21', 21, 'Which TWO advantages of community gardens do the students agree are most important?', 'What seemed more important was the way people learn practical skills. Some residents had never grown anything before, and now they know about planting, watering and composting. I agree.', 'B', communityBenefitOptions, 'learn practical skills', 'practical gardening skills', 'ทักษะการทำสวนจริง', 'most important ต้องฟังหลัง cheaper food ถูกลดความสำคัญด้วย but. practical skills และ I agree ยืนยันว่าทั้งคู่เห็นด้วย.', communityBenefitsQuestionText),
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q22', 22, 'Which TWO advantages of community gardens do the students agree are most important?', 'the other big benefit is social. People who had lived in the same street for years finally started talking to each other. Yes, that was convincing.', 'D', communityBenefitOptions, 'people ... finally started talking to each other', 'improve relationships between neighbours', 'ความสัมพันธ์ระหว่างเพื่อนบ้านดีขึ้น', 'social benefit และ started talking to each other = improve relationships between neighbours. คำว่า Yes เป็น agreement marker.', communityBenefitsQuestionText),
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q23', 23, 'Which TWO problems do the students agree community gardens often face?', 'Some gardens begin with a grant, but after two or three years they struggle to pay for water, insurance and equipment. Yes, that\'s a serious issue.', 'A', communityProblemOptions, 'struggle to pay for water, insurance and equipment', 'lack of long-term funding', 'ขาดเงินทุนระยะยาว', 'begin with a grant แต่หลังสองสามปี struggle to pay = lack of long-term funding. คำว่า serious issue ยืนยันว่าเป็นปัญหาหลัก.', communityProblemsQuestionText),
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q24', 24, 'Which TWO problems do the students agree community gardens often face?', 'Getting permission to use land seems more difficult. If the land belongs to the council or a private owner, groups may wait months before they can start. Agreed.', 'D', communityProblemOptions, 'Getting permission to use land seems more difficult', 'difficulty getting permission to use land', 'ขออนุญาตใช้ที่ดินยาก', 'keyword ตรงมาก: getting permission to use land. Agreed เป็น consensus marker. คำหลอกคือ soil quality เพราะแก้ด้วย raised beds ได้.', communityProblemsQuestionText),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q25', 25, 'evening gardening sessions', 'People who work during the day could come after work, so it would attract people who don\'t usually take part.', 'A', 'attract people who don\'t usually take part', 'attract people who do not usually take part', 'ดึงดูดคนที่ปกติไม่เข้าร่วม', 'after work อธิบายกลุ่มที่มาไม่ได้ตอนกลางวัน และสรุปตรงว่า attract people who do not usually take part.'),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q26', 26, 'shared tool cupboards', 'there need to be rules. Tools can go missing, or people may not return them clean. So clearer rules are needed.', 'F', 'clearer rules are needed', 'needs clearer rules', 'ต้องมีกฎชัดเจนขึ้น', 'Useful เป็นคำหลอกเชิงบวก แต่หลัง but พาไปคำตอบจริงว่า need clearer rules.'),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q27', 27, 'cooking events using garden produce', 'people cooked together and exchanged recipes. It seems to help people learn from each other.', 'G', 'help people learn from each other', 'help people learn from each other', 'ช่วยให้คนเรียนรู้จากกันและกัน', 'exchanged recipes เป็นตัวอย่าง และคำตอบตรงคือ help people learn from each other.'),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q28', 28, 'school vegetable plots', 'I think schools should organise those. Teachers can connect them with science lessons and healthy eating.', 'C', 'schools should organise those', 'should be organised by schools', 'ควรจัดโดยโรงเรียน', 'schools should organise those ตรงกับ should be organised by schools. Teachers เป็น clue เสริม.'),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q29', 29, 'selling produce to restaurants', 'Once money becomes the main focus, the garden may stop being a community space. So it could damage the original purpose.', 'H', 'damage the original purpose', 'damage the original purpose of the gardens', 'ทำลายจุดประสงค์เดิมของสวน', 'worried และ money becomes the main focus เป็น warning ก่อนคำตอบตรง: damage the original purpose.'),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q30', 30, 'online advice groups', 'several gardens already use them well. People post photos of plant diseases or ask when to harvest things. Yes, that already seems to be successful.', 'E', 'already seems to be successful', 'already seems to be successful', 'ดูเหมือนสำเร็จอยู่แล้ว', 'already use them well และ already seems to be successful ตรงกับตัวเลือก E.')
+    ]
+  },
+  {
+    id: 'advanced-listening-coral-reef-restoration-part-4',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 4 - Coral Reef Restoration',
+    section: 4,
+    levelLabel: 'ADVANCED LISTENING · Part 4 lecture · target Band 7+',
+    audioCacheKey: 'advanced-listening-coral-reef-restoration-part-4',
+    audioscript: CORAL_REEF_PART4_SCRIPT,
+    questions: [
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q31', 31, 'Coral reefs support a high level of marine 31 ____.', 'support such a high level of marine diversity', 'diversity', ['life', 'animals', 'shelter'], 'high level of marine diversity', 'support a high level of marine', 'ความหลากหลายทางทะเล', 'โจทย์และสคริปต์ตรงกัน: high level of marine diversity.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q32', 32, 'Reefs protect coastlines by reducing the force of 32 ____.', 'the structure of the reef reduces the force of the waves before they reach land', 'waves', ['storms', 'water', 'wind'], 'reduces the force of the waves', 'reducing the force of', 'คลื่น', 'reducing the force of ตรงกับ reduces the force of the waves จึงตอบ waves.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q33', 33, 'Coral bleaching is linked to warmer 33 ____.', 'Bleaching is often linked to warmer water', 'water', ['weather', 'oceans', 'temperatures'], 'linked to warmer water', 'linked to warmer', 'น้ำ', 'linked to warmer ในโจทย์ตรงกับสคริปต์ และคำตอบคือ water.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q34', 34, 'Small pieces of coral are grown in underwater 34 ____.', 'growing small pieces of coral in underwater nurseries', 'nurseries', ['gardens', 'frames', 'cages'], 'underwater nurseries', 'grown in underwater', 'แหล่งเพาะเลี้ยง', 'small pieces of coral และ underwater ตรงกัน คำตอบคือ nurseries.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q35', 35, 'Damaged reefs may be repaired using metal 35 ____.', 'scientists may use metal frames. These create a stable structure', 'frames', ['cages', 'tools', 'pipes'], 'metal frames', 'using metal', 'โครงโลหะ', 'using metal ในโจทย์ต้องตามด้วย frames ในสคริปต์.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q36', 36, 'Some projects attach coral fragments with special 36 ____.', 'divers use a special glue to hold the fragments in position', 'glue', ['ropes', 'cement', 'clips'], 'special glue', 'attach coral fragments with special', 'กาว', 'attach fragments ถูกอธิบายเป็น use a special glue to hold the fragments.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q37', 37, 'Young corals can be damaged by 37 ____.', 'Young corals are delicate, and storms can break or bury them', 'storms', ['divers', 'boats', 'waves'], 'storms can break or bury them', 'Young corals can be damaged by', 'พายุ', 'delicate เป็น clue และสิ่งที่ทำให้เสียหายคือ storms.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q38', 38, 'Pollution can encourage the growth of 38 ____.', 'If too many nutrients enter the water, algae may grow quickly and cover the reef', 'algae', ['plants', 'bacteria', 'organisms'], 'algae may grow quickly', 'encourage the growth of', 'สาหร่าย', 'pollution ถูกขยายเป็น too many nutrients และ grow quickly ชี้คำตอบ algae.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q39', 39, 'Restoration is expensive because it requires skilled 39 ____.', 'It requires boats, diving equipment and skilled divers who can work carefully underwater', 'divers', ['scientists', 'workers', 'teams'], 'skilled divers', 'requires skilled', 'นักดำน้ำ', 'requires skilled ในโจทย์ตรงกับ skilled divers ในสคริปต์. boats/equipment เป็นคำหลอกในบริบทค่าใช้จ่าย.'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q40', 40, 'Scientists are studying coral with greater heat 40 ____.', 'studying corals that show greater heat tolerance', 'tolerance', ['resistance', 'protection', 'survival'], 'greater heat tolerance', 'greater heat', 'ความทนทาน', 'greater heat ในโจทย์ต้องตามด้วย tolerance. survive better เป็นผลของ tolerance ไม่ใช่คำตอบ.')
+    ]
+  },
+  {
+    id: 'advanced-listening-digital-note-taking-part-3',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 3 - Digital Note-Taking',
+    section: 3,
+    levelLabel: 'ADVANCED LISTENING · Part 3 dialogue · target Band 7+',
+    audioCacheKey: 'advanced-listening-digital-note-taking-part-3',
+    audioscript: DIGITAL_NOTE_TAKING_PART3_SCRIPT,
+    questions: [
+      choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q21', 21, 'At first, Ravi thought digital note-taking would be', 'I thought the topic might be too ordinary, everyone already knows students use laptops and tablets.', 'A', [
+        { key: 'A', text: 'too ordinary as a research topic.' },
+        { key: 'B', text: 'too difficult to test fairly.' },
+        { key: 'C', text: 'too technical for their audience.' }
+      ], 'too ordinary', 'too ordinary as a research topic', 'ธรรมดาเกินไปเป็นหัวข้อวิจัย', 'At first เป็น signal และ Ravi พูดตรงว่า might be too ordinary. คำหลอกคือ technical เพราะพูดถึง laptops/tablets แต่ไม่ได้บอกว่ายากเชิงเทคนิค.'),
+      choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q22', 22, 'When discussing laptops in lectures, Emma and Ravi disagree about', 'I think laptops can distract people sitting nearby ... I\'m not sure that\'s a major problem.', 'B', [
+        { key: 'A', text: 'whether they help students organise information.' },
+        { key: 'B', text: 'whether they distract other students nearby.' },
+        { key: 'C', text: 'whether they are suitable for first-year students.' }
+      ], 'distract people sitting nearby', 'distract other students nearby', 'รบกวนนักศึกษาคนข้างๆ', 'disagree ต้องจับจุดที่ Emma บอก I\'m not sure หลัง Ravi พูด distract nearby. ทั้งคู่ไม่ได้เถียงเรื่อง organisation เพราะ Ravi บอก I agree.'),
+      choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q23', 23, 'Emma says she sometimes takes handwritten notes because', 'If the lecturer draws a process or a diagram, I remember it better when I draw it myself.', 'B', [
+        { key: 'A', text: 'her laptop battery runs out.' },
+        { key: 'B', text: 'she remembers diagrams better that way.' },
+        { key: 'C', text: 'she can write faster than she can type.' }
+      ], 'remember it better when I draw it myself', 'remembers diagrams better', 'จำแผนภาพได้ดีกว่า', 'because ในคำถามตรงกับเหตุผลเรื่อง diagram/process. คำหลอกคือ faster เพราะทั้งคู่บอก handwriting ช้ากว่า.'),
+      choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q24', 24, 'What finding in the article surprised Ravi?', 'Students who typed notes often wrote down more words, but that didn\'t always mean they understood the lecture better.', 'A', [
+        { key: 'A', text: 'Students who typed more words did not always understand more.' },
+        { key: 'B', text: 'Students using tablets were slower than students using paper.' },
+        { key: 'C', text: 'Students preferred printed lecture slides to digital copies.' }
+      ], 'typed notes ... more words ... didn\'t always mean they understood better', 'typed more words did not always understand more', 'พิมพ์ได้มากกว่าแต่ไม่ได้เข้าใจมากกว่าเสมอไป', 'finding that surprised me เป็น signal ของคำตอบ และ but แสดงความขัดแย้ง: more words ไม่เท่ากับ more understanding.'),
+      matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q25', 25, 'filming students during lectures', 'we\'d need special permission. Some students wouldn\'t want to be recorded.', 'F', 'need special permission', 'need special permission', 'ต้องขออนุญาตพิเศษ', 'recorded เป็นเหตุผลว่าทำไมต้อง special permission.'),
+      matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q26', 26, 'comparing exam results', 'Too many other things affect exam results: revision, attendance, background knowledge. The results would be hard to measure properly.', 'B', 'results would be hard to measure properly', 'results would be hard to measure', 'วัดผลยาก', 'Too many other things affect exam results คือเหตุผลว่าทำไมวัดผลยาก.'),
+      matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q27', 27, 'interviewing five classmates', 'Five people isn\'t enough. The sample would be too small to tell us much.', 'A', 'sample would be too small', 'sample would be too small', 'กลุ่มตัวอย่างเล็กเกินไป', 'five classmates ตรงกับ Five people และคำตอบชัดคือ sample too small.'),
+      matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q28', 28, 'lending tablets to volunteers', 'That would cost too much unless we already had the tablets.', 'E', 'cost too much', 'equipment would be too expensive', 'อุปกรณ์แพงเกินไป', 'tablets เป็น equipment และ cost too much = too expensive.'),
+      choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q29', 29, 'Why do Emma and Ravi decide to include a short memory test?', 'That won\'t prove one method is better forever, but it would give us some simple data of our own.', 'A', [
+        { key: 'A', text: 'It will give them some simple data of their own.' },
+        { key: 'B', text: 'It will prove that handwriting is better than typing.' },
+        { key: 'C', text: 'It will make their presentation more entertaining.' }
+      ], 'give us some simple data of our own', 'simple data of their own', 'ข้อมูลของตัวเองแบบง่ายๆ', 'คำหลอกคือ prove handwriting is better เพราะ Ravi พูดชัดว่า won\'t prove one method is better forever.'),
+      choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q30', 30, 'Emma and Ravi agree that their presentation should focus on', 'It depends on the task. Typing may be useful for organised lecture notes, but handwriting may help with diagrams or problem-solving. So our presentation should explain when different methods are useful.', 'B', [
+        { key: 'A', text: 'recommending one best note-taking method.' },
+        { key: 'B', text: 'explaining when different methods are useful.' },
+        { key: 'C', text: 'criticising students who rely on technology.' }
+      ], 'explain when different methods are useful', 'when different methods are useful', 'อธิบายว่าแต่ละวิธีเหมาะเมื่อไร', 'Agreed และ balanced angle ชี้ว่าทั้งคู่ไม่เลือกวิธีเดียวดีที่สุด แต่จะอธิบายว่าแต่ละวิธีใช้เมื่อไร.')
+    ]
+  },
+  {
+    id: 'advanced-listening-light-pollution-part-4',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 4 - Light Pollution',
+    section: 4,
+    levelLabel: 'ADVANCED LISTENING · Part 4 lecture · target Band 7+',
+    audioCacheKey: 'advanced-listening-light-pollution-part-4',
+    audioscript: LIGHT_POLLUTION_PART4_SCRIPT,
+    questions: [
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q31', 31, 'Light pollution is caused by unnecessary artificial 31 ____.', 'Light pollution is caused by artificial light that is unnecessary', 'light', ['lighting', 'energy', 'lamps'], 'artificial light that is unnecessary', 'unnecessary artificial', 'แสง', 'โจทย์สลับลำดับคำจาก unnecessary artificial light แต่คำตอบคือ light.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q32', 32, 'It is common in large 32 ____.', 'This problem is especially common in large cities', 'cities', ['towns', 'areas', 'streets'], 'common in large cities', 'common in large', 'เมือง', 'common in large ตรงกับ large cities.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q33', 33, 'It makes it harder to see 33 ____ in the night sky.', 'people can no longer see many stars in the night sky', 'stars', ['clouds', 'planets', 'lights'], 'see many stars in the night sky', 'see in the night sky', 'ดวงดาว', 'night sky ช่วย locate และสิ่งที่มองเห็นยากคือ stars.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q34', 34, 'Young sea turtles may move away from the 34 ____.', 'young sea turtles normally move towards the ocean ... artificial lights near beaches can lead them away from the water', 'water', ['ocean', 'beach', 'sea'], 'lead them away from the water', 'move away from the', 'น้ำ', 'คำหลอกคือ ocean เพราะพูดก่อนหน้าเป็นทิศปกติ แต่คำตอบหลัง away from คือ water.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q35', 35, 'Birds can become confused during 35 ____.', 'Many species travel long distances during migration, and bright lights from buildings can confuse them', 'migration', ['weather', 'night', 'travel'], 'during migration', 'confused during', 'การอพยพย้ายถิ่น', 'during migration ตรงกับโจทย์ และ confuse them ตรงกับ become confused.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q36', 36, 'Insects may gather around lamps instead of finding 36 ____.', 'Instead of finding food or mates, they often gather around lamps', 'food', ['shelter', 'water', 'light'], 'finding food or mates', 'instead of finding', 'อาหาร', 'โจทย์ให้ ONE WORD ONLY และสคริปต์พูด food or mates. ตัวเลือกคำตอบใช้ food เป็นคำแรกที่เติมได้กับ finding.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q37', 37, 'Bright light at night can affect normal 37 ____ patterns.', 'Bright light at night can disturb sleep patterns', 'sleep', ['rest', 'body', 'health'], 'disturb sleep patterns', 'affect normal patterns', 'การนอน', 'affect = disturb และ normal ... patterns ตรงกับ sleep patterns.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q38', 38, 'Poorly designed lights may create 38 ____ for drivers.', 'Poorly designed lights can create glare, making it harder for drivers to see clearly', 'glare', ['danger', 'reflections', 'brightness'], 'create glare', 'create for drivers', 'แสงจ้าแยงตา', 'create ในโจทย์ตรงกับ create glare และ for drivers อยู่ในประโยคเดียวกัน.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q39', 39, 'Streetlights should point 39 ____.', 'Streetlights should be designed to point downward', 'downward', ['inside', 'lower', 'roads'], 'point downward', 'point', 'ลงด้านล่าง', 'point ในโจทย์ตามด้วย downward ในสคริปต์.'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q40', 40, 'Some towns reduce lighting after 40 ____.', 'Some towns also reduce lighting after midnight', 'midnight', ['dark', 'evening', 'hours'], 'reduce lighting after midnight', 'after', 'เที่ยงคืน', 'reduce lighting after ตรงกันมาก คำตอบคือ midnight.')
     ]
   }
 ]
