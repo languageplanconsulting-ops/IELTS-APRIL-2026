@@ -105,6 +105,135 @@ There is also the question of what material is used to make it. Clean crop waste
 
 So, although biochar has real potential, it needs to be matched carefully to the soil type, the crop, and the environmental problem being addressed.`
 
+const TEXTILE_RECYCLING_PART3_SCRIPT = `LEAH: Hi Arun. Did you finish reading the article on textile recycling?
+ARUN: Yes, I did. I was surprised, actually. Before I read it, I thought textile recycling might be too broad for our presentation: clothes, curtains, carpets, shoes, all sorts of things.
+LEAH: I know what you mean, but the article gives us a clear angle: what happens to clothing after people put it in donation banks.
+ARUN: Exactly. It's much more complicated than just old clothes go to charity shops.
+LEAH: The section on fast fashion was interesting too. I thought the main problem was that cheap clothes are badly made.
+ARUN: Some are, but the article said low prices are the bigger issue because people don't feel guilty about throwing things away.
+LEAH: I agree with that. But you said earlier that young people are mostly responsible, and I'm not sure that's fair.
+ARUN: Really? Students buy loads of cheap clothes.
+LEAH: Maybe, but adults order just as much online. The problem is wider than one age group.
+ARUN: Fair point.
+LEAH: I have to admit, I sometimes donate clothes that are perfectly wearable.
+ARUN: Because they're out of fashion?
+LEAH: Not usually. It's more because I buy things online and the size isn't quite right. I mean to return them, but then I miss the deadline.
+ARUN: That's common. What confused me was one of the statistics. The number of clothing banks has increased, but the percentage of clothing that actually gets reused has fallen.
+LEAH: Yes, because a lot of donated clothing is rejected before it reaches a shop.
+ARUN: Let's use those examples from the sorting centre.
+LEAH: Good idea. The winter coat first?
+ARUN: The manager said it was good quality, and the fabric was clean, but the main zip wouldn't close. That made it impossible to sell.
+LEAH: So, broken zip. What about the cotton curtains?
+ARUN: Those had paint marks across one side. The fabric itself was strong, but the stains were too obvious.
+LEAH: Right. And the wool jumper?
+ARUN: That one had been washed badly. It had shrunk so much that the sleeves were far too short.
+LEAH: The sports bag was different, wasn't it?
+ARUN: Yes. It had probably been stored outside. The manager said it was still wet when it arrived, so they rejected it straight away.
+LEAH: There was also a shirt with torn seams, but that wasn't one of the examples we need.
+ARUN: What did you think about the project where they tried to make new clothes from old fabric?
+LEAH: It sounded clever, but I wasn't surprised it failed.
+ARUN: Was it because people didn't like the idea of recycled clothing?
+LEAH: No, the article said customers were actually open to that. The problem was that the pieces of fabric they received were too inconsistent: different weights, different colours, different levels of wear.
+ARUN: So manufacturers couldn't rely on a steady supply.
+LEAH: Exactly.
+ARUN: I think that gives us our presentation angle. We shouldn't just talk about people shopping too much.
+LEAH: Or just criticise fashion brands.
+ARUN: Right. The interesting part is what happens after people donate clothes: sorting, rejection, reuse, export, landfill.
+LEAH: Yes, that's the hidden process most people know nothing about.`
+
+const VERTICAL_FARMING_PART4_SCRIPT = `Today I'm going to talk about vertical farming, a method of food production that has attracted increasing interest in urban areas.
+
+In traditional farming, crops are grown across large areas of land. In vertical farming, however, crops are grown indoors in stacked layers. This means that a relatively small building can produce a large amount of food.
+
+Many vertical farms are established in unused warehouses, especially in cities where land is expensive but empty industrial buildings are available.
+
+The production method is very different from ordinary field farming. Since the crops are indoors, they do not receive natural sunlight. Instead, they are given artificial light, usually from LED systems that can be adjusted for different crops.
+
+In many vertical farms, plants are not grown in soil. Their roots grow in nutrient-rich water, which provides the minerals they need.
+
+The growing environment is carefully controlled. Computer systems monitor humidity and temperature, and they can adjust the conditions automatically if the plants need more or less moisture in the air.
+
+One advantage of vertical farming is that pests are easier to control indoors. As a result, farmers often need far fewer pesticides than they would in outdoor agriculture.
+
+Another possible benefit is location. If food is grown close to the people who buy it, there is less need for long-distance transport from rural farms to city supermarkets.
+
+However, vertical farming also has limitations. The first is the amount of electricity needed for lighting, heating, cooling and computer control systems. This can make production expensive.
+
+Another limitation is the type of crop that can be grown. Leafy vegetables such as lettuce work well, but crops such as wheat are much harder to produce profitably because they require more space and have a lower market value.
+
+Finally, vertical farms need reliable contracts with supermarkets, restaurants or other buyers. Without these, it is difficult to cover the high cost of equipment and energy.
+
+So vertical farming is not a replacement for all traditional agriculture, but it may become an important part of food production in large cities.`
+
+const SLEEP_UNIVERSITY_PART3_SCRIPT = `DANA: Shall we go through our notes on sleep and university students?
+SAM: Yes. I thought this would be a simple topic, but there's more research than I expected.
+DANA: Same here. The first question is why so many students sleep badly.
+SAM: I assumed noisy accommodation would be the main cause.
+DANA: It can be a problem, but the studies didn't treat it as one of the major causes. It depends too much on where students live.
+SAM: True. Screen use seems much more significant. Students work on laptops, message friends, and watch videos late at night.
+DANA: Yes, and the light from screens can delay sleep. That's definitely one cause we should include.
+SAM: What about caffeine? Energy drinks were mentioned.
+DANA: They were, but the evidence was mixed. Some students drink them early in the day, so it doesn't always affect sleep.
+SAM: Fair enough. I think part-time employment is important. Students who work evening shifts often get home late and then still have assignments to finish.
+DANA: I agree. That creates a routine where sleep gets pushed later and later.
+SAM: Early morning lectures are annoying, but not every course has them.
+DANA: Exactly. They make bad sleep worse, but they aren't the main cause.
+SAM: What effects of poor sleep should we mention?
+DANA: Concentration is the obvious one. Several studies showed that students who slept badly found it harder to focus in seminars and lectures.
+SAM: Yes. I also saw a claim that poor sleep increases creativity, but that sounded doubtful.
+DANA: I wouldn't include that. The stronger evidence is about memory. Sleep seems to help students process and store what they've learned.
+SAM: Right. There were also claims about back pain and skin problems.
+DANA: But those seemed much weaker. They may be connected indirectly, but the evidence wasn't strong enough for our presentation.
+SAM: What did you think about sleep-tracking apps?
+DANA: They're interesting, but I'm worried they might make some people anxious. If students keep checking their sleep score every morning, they may become stressed about it.
+SAM: I thought the same. Some people might sleep worse because they're trying too hard to get a perfect result.
+DANA: Exactly.
+SAM: Are they too expensive, though?
+DANA: Some are, but lots of students already have basic versions on their phones, so cost isn't the main issue.
+SAM: The article said the apps can be useful, but I don't think they can replace proper advice from a doctor or counsellor.
+DANA: No, definitely not.
+SAM: And we should say more independent research is needed. A lot of the evidence comes from the companies that make the apps.
+DANA: Yes, that's a really important point.
+SAM: I don't like the idea of universities making students use them.
+DANA: Me neither. That would be too intrusive.
+DANA: Now, what about the phrase sleep hygiene?
+SAM: It sounds strange. Some students may think it means keeping your bed clean.
+DANA: True, but it's a common term in the research. We could define it first, then give examples like having a regular bedtime and avoiding screens late at night.
+SAM: That makes sense.
+DANA: I think we should start the presentation with a personal example. Maybe my first exam period, when I stayed up too late every night and felt awful.
+SAM: Good idea. Most students will recognise that situation, even if they don't talk about it.
+DANA: What about naps? Should we recommend them?
+SAM: Carefully. The studies suggest short naps can help, but long ones can make it harder to sleep at night.
+DANA: So the key point is that naps are useful only if they aren't too long.
+SAM: Exactly.
+DANA: One thing that surprised me was the advice from universities. The health centre says one thing, academic departments say another, and accommodation teams send different information again.
+SAM: Yes, it's not coordinated. Students may get advice, but it comes from too many separate places.
+DANA: That can be our final recommendation: universities need a clearer approach.`
+
+const SEED_BANKS_PART4_SCRIPT = `For my presentation today, I'm going to discuss seed banks and their role in protecting crop diversity.
+
+A seed bank is a place where seeds are collected, catalogued and stored for future use. One of its main purposes is to protect agricultural diversity. This is important because modern farming often depends on a limited number of commercial crops.
+
+In the past, farmers grew many local varieties that were adapted to particular soils, climates and diseases. But when farmers change to commercial crops, these older varieties may disappear.
+
+The storage process has to be carefully controlled. First, seeds are cleaned and dried to remove moisture. If too much moisture remains inside the seed, it may decay during storage.
+
+After drying, most seeds are kept at a low temperature. This slows down the natural ageing process and allows the seeds to remain usable for many years.
+
+Each seed sample is placed in sealed containers. These protect the seeds from air, water and insects, and they also make it easier to label and organise the collection.
+
+Seed banks are useful in several ways. If a crop is damaged by disease, researchers can search stored collections for older varieties that may have natural protection against it.
+
+Plant breeders also use seed banks to develop crops with greater resistance to drought. This is becoming more important in regions where rainfall is less reliable than it used to be.
+
+Seed banks can also support farmers after extreme events such as floods, when stored seed for the next planting season may have been destroyed.
+
+However, seed banks have limitations. Some seeds are difficult to store because they cannot survive drying. These include the seeds of certain tropical plants, which lose their ability to grow if too much water is removed.
+
+Another problem is that stored seeds do not remain alive forever. Banks must carry out regular testing to check whether samples can still germinate. If too few seeds grow during testing, new samples have to be collected or produced.
+
+So, seed banks are not simply museums for plants. They are active scientific resources that may help agriculture respond to disease, climate change and food insecurity.`
+
 const mcQuestion = (
   id: string,
   number: number,
@@ -356,6 +485,166 @@ const biocharGapQuestion = (
   questionText: question,
   layout: 'gap-fill'
 })
+
+const choiceQuestionFor = (
+  script: string,
+  id: string,
+  number: number,
+  question: string,
+  evidence: string,
+  correctAnswer: string,
+  options: Array<{ key: string; text: string }>,
+  passageKeyword: string,
+  questionKeyword: string,
+  thaiMeaning: string,
+  explanationThai: string,
+  questionText?: string
+): ListeningFoundationQuestion => ({
+  id,
+  number,
+  section: 3,
+  question,
+  passage: script,
+  evidence,
+  correctAnswer,
+  options,
+  passageKeyword,
+  questionKeyword,
+  thaiMeaning,
+  explanationThai,
+  questionText: questionText ?? [question, ...options.map((option) => `${option.key} ${option.text}`)].join('\n'),
+  layout: 'choice'
+})
+
+const matchQuestionFor = (
+  script: string,
+  options: Array<{ key: string; text: string }>,
+  questionText: string,
+  id: string,
+  number: number,
+  rowLabel: string,
+  evidence: string,
+  correctAnswer: string,
+  passageKeyword: string,
+  questionKeyword: string,
+  thaiMeaning: string,
+  explanationThai: string
+): ListeningFoundationQuestion => ({
+  id,
+  number,
+  section: 3,
+  question: rowLabel,
+  passage: script,
+  evidence,
+  correctAnswer,
+  options,
+  passageKeyword,
+  questionKeyword,
+  thaiMeaning,
+  explanationThai,
+  questionText,
+  layout: 'matching-row',
+  rowLabel
+})
+
+const gapQuestionFor = (
+  script: string,
+  id: string,
+  number: number,
+  question: string,
+  evidence: string,
+  answer: string,
+  distractors: string[],
+  passageKeyword: string,
+  questionKeyword: string,
+  thaiMeaning: string,
+  explanationThai: string
+): ListeningFoundationQuestion => ({
+  id,
+  number,
+  section: 4,
+  question,
+  passage: script,
+  evidence,
+  correctAnswer: 'A',
+  options: gapOptions(answer, distractors),
+  passageKeyword,
+  questionKeyword,
+  thaiMeaning,
+  explanationThai,
+  questionText: question,
+  layout: 'gap-fill'
+})
+
+const textileSortingQuestionText = `Questions 25-28
+What reason did the sorting centre give for rejecting each item?
+Choose FOUR answers from the box and write the correct letter, A-F.
+A the fabric was too badly stained
+B the fibre label was missing
+C the material had shrunk
+D the zip was broken
+E the item was damp
+F the seams had torn`
+
+const textileSortingOptions = [
+  { key: 'A', text: 'the fabric was too badly stained' },
+  { key: 'B', text: 'the fibre label was missing' },
+  { key: 'C', text: 'the material had shrunk' },
+  { key: 'D', text: 'the zip was broken' },
+  { key: 'E', text: 'the item was damp' },
+  { key: 'F', text: 'the seams had torn' }
+]
+
+const sleepCauseQuestionText = `Questions 21 and 22
+Choose TWO letters, A-E.
+Which TWO factors do the students both believe are major causes of poor sleep among university students?
+A late-night screen use
+B noisy accommodation
+C part-time employment
+D caffeine in energy drinks
+E early morning lectures`
+
+const sleepEffectQuestionText = `Questions 23 and 24
+Choose TWO letters, A-E.
+Which TWO effects of poor sleep do the students agree are supported by strong evidence?
+A reduced concentration
+B increased creativity
+C poorer memory
+D back pain
+E skin problems`
+
+const sleepAppQuestionText = `Questions 25 and 26
+Choose TWO letters, A-E.
+Which TWO opinions do the students both express about sleep-tracking apps?
+A They may make users anxious.
+B They are too expensive for most students.
+C They can replace professional advice.
+D They should be required by universities.
+E They need more independent research.`
+
+const sleepCauseOptions = [
+  { key: 'A', text: 'late-night screen use' },
+  { key: 'B', text: 'noisy accommodation' },
+  { key: 'C', text: 'part-time employment' },
+  { key: 'D', text: 'caffeine in energy drinks' },
+  { key: 'E', text: 'early morning lectures' }
+]
+
+const sleepEffectOptions = [
+  { key: 'A', text: 'reduced concentration' },
+  { key: 'B', text: 'increased creativity' },
+  { key: 'C', text: 'poorer memory' },
+  { key: 'D', text: 'back pain' },
+  { key: 'E', text: 'skin problems' }
+]
+
+const sleepAppOptions = [
+  { key: 'A', text: 'They may make users anxious.' },
+  { key: 'B', text: 'They are too expensive for most students.' },
+  { key: 'C', text: 'They can replace professional advice.' },
+  { key: 'D', text: 'They should be required by universities.' },
+  { key: 'E', text: 'They need more independent research.' }
+]
 
 export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
   {
@@ -669,6 +958,202 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
       biocharGapQuestion('advanced-biochar-p4-q38', 38, 'It provides shelter for beneficial 38 ____.', 'provide shelter for microbes, including bacteria and fungi', 'microbes', ['plants', 'insects', 'chemicals'], 'shelter for microbes', 'beneficial microbes', 'จุลินทรีย์', 'provide shelter for ตรงกับโจทย์ และ bacteria/fungi เป็นตัวอย่างของ microbes.'),
       biocharGapQuestion('advanced-biochar-p4-q39', 39, 'Very high production 39 ____ may reduce its benefits.', 'If the production temperatures are too high, some of the useful chemical properties may be lost', 'temperatures', ['costs', 'methods', 'volumes'], 'production temperatures are too high', 'very high production', 'อุณหภูมิ', 'very high production ในโจทย์ต้องฟังต่อว่า temperatures. คำหลอกคือ costs เพราะ high + production อาจหลอกให้คิดเรื่องราคา แต่สคริปต์พูด temperatures.'),
       biocharGapQuestion('advanced-biochar-p4-q40', 40, 'Some waste materials can cause 40 ____ if not checked carefully.', 'If these are not tested carefully, the final product could cause contamination', 'contamination', ['erosion', 'pollution', 'decay'], 'cause contamination', 'cause if not checked carefully', 'การปนเปื้อน', 'if not checked carefully = if not tested carefully และคำตอบตรงคือ contamination.')
+    ]
+  },
+  {
+    id: 'advanced-listening-textile-recycling-part-3',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 3 - Textile Recycling',
+    section: 3,
+    levelLabel: 'ADVANCED LISTENING · Part 3 dialogue · target Band 7+',
+    audioCacheKey: 'advanced-listening-textile-recycling-part-3',
+    audioscript: TEXTILE_RECYCLING_PART3_SCRIPT,
+    questions: [
+      choiceQuestionFor(
+        TEXTILE_RECYCLING_PART3_SCRIPT,
+        'advanced-textile-recycling-p3-q21',
+        21,
+        'At first, Arun thought the topic of textile recycling might be too',
+        'I thought textile recycling might be too broad for our presentation: clothes, curtains, carpets, shoes, all sorts of things.',
+        'B',
+        [
+          { key: 'A', text: 'technical.' },
+          { key: 'B', text: 'broad.' },
+          { key: 'C', text: 'familiar.' }
+        ],
+        'too broad for our presentation',
+        'too broad',
+        'กว้างเกินไป',
+        'keyword ในโจทย์คือ At first และ too. Arun พูดตรงว่า might be too broad. คำหลอกคือรายการ clothes, curtains, carpets, shoes ที่อธิบายว่าทำไมกว้าง ไม่ใช่คำตอบอื่น.'
+      ),
+      choiceQuestionFor(
+        TEXTILE_RECYCLING_PART3_SCRIPT,
+        'advanced-textile-recycling-p3-q22',
+        22,
+        'When discussing fast fashion, Leah and Arun disagree about',
+        'you said earlier that young people are mostly responsible, and I\'m not sure that\'s fair. Maybe, but adults order just as much online. The problem is wider than one age group.',
+        'C',
+        [
+          { key: 'A', text: 'whether cheap clothes are usually badly made.' },
+          { key: 'B', text: 'whether low prices encourage waste.' },
+          { key: 'C', text: 'whether young people are mainly responsible.' }
+        ],
+        'young people are mostly responsible',
+        'young people are mainly responsible',
+        'คนหนุ่มสาวเป็นสาเหตุหลัก',
+        'disagree about ต้องฟังจุดที่ Leah ขัด Arun: young people are mostly responsible. คำหลอกคือ cheap clothes และ low prices เพราะสองคนนั้นเห็นด้วยว่าราคาถูกทำให้ทิ้งง่าย.'
+      ),
+      choiceQuestionFor(
+        TEXTILE_RECYCLING_PART3_SCRIPT,
+        'advanced-textile-recycling-p3-q23',
+        23,
+        'Leah says she sometimes donates clothes because',
+        'It\'s more because I buy things online and the size isn\'t quite right. I mean to return them, but then I miss the deadline.',
+        'A',
+        [
+          { key: 'A', text: 'she ordered the wrong size online.' },
+          { key: 'B', text: 'she no longer needs them for sport.' },
+          { key: 'C', text: 'her friends have similar clothes.' }
+        ],
+        'buy things online and the size isn\'t quite right',
+        'ordered the wrong size online',
+        'สั่งออนไลน์แล้วไซซ์ไม่พอดี',
+        'because ในโจทย์ตรงกับ because ในสคริปต์ และ size isn\'t quite right = wrong size. คำหลอกคือ out of fashion เพราะ Arun ถาม แต่ Leah ปฏิเสธว่า Not usually.'
+      ),
+      choiceQuestionFor(
+        TEXTILE_RECYCLING_PART3_SCRIPT,
+        'advanced-textile-recycling-p3-q24',
+        24,
+        'What statistic in the article confused Arun?',
+        'The number of clothing banks has increased, but the percentage of clothing that actually gets reused has fallen.',
+        'B',
+        [
+          { key: 'A', text: 'More clothes are now bought online than in shops.' },
+          { key: 'B', text: 'Less clothing is reused although more donation points exist.' },
+          { key: 'C', text: 'Manufacturing costs have fallen in recent years.' }
+        ],
+        'clothing banks has increased, but the percentage ... reused has fallen',
+        'Less clothing is reused although more donation points exist',
+        'มีจุดรับบริจาคมากขึ้นแต่เสื้อผ้าถูกใช้ซ้ำน้อยลง',
+        'statistic confused Arun ตามด้วยตัวเลขสองฝั่ง: banks increased แต่ reused has fallen. คำว่า but เป็น transition สำคัญที่ทำให้เห็นความขัดแย้งในสถิติ.'
+      ),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q25', 25, 'winter coat', 'the main zip wouldn\'t close. That made it impossible to sell.', 'D', 'zip wouldn\'t close', 'zip was broken', 'ซิปเสีย', 'wouldn\'t close = broken. คำหลอกคือ fabric was clean แปลว่าไม่ใช่ stained.'),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q26', 26, 'cotton curtains', 'Those had paint marks across one side. The fabric itself was strong, but the stains were too obvious.', 'A', 'stains were too obvious', 'fabric was too badly stained', 'ผ้าเปื้อนมากเกินไป', 'paint marks และ stains were too obvious = badly stained. คำหลอกคือ fabric itself was strong เพราะไม่ได้ถูกปฏิเสธเพราะวัสดุเสีย.'),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q27', 27, 'wool jumper', 'It had shrunk so much that the sleeves were far too short.', 'C', 'shrunk so much', 'material had shrunk', 'วัสดุหด', 'shrunk ในสคริปต์ตรงกับ material had shrunk ในตัวเลือก จึงตอบ C.'),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q28', 28, 'sports bag', 'it was still wet when it arrived, so they rejected it straight away.', 'E', 'still wet when it arrived', 'item was damp', 'ของชื้น/เปียก', 'still wet = damp. คำว่า rejected it straight away ยืนยันว่าเป็นเหตุผลที่ถูกปฏิเสธ.'),
+      choiceQuestionFor(
+        TEXTILE_RECYCLING_PART3_SCRIPT,
+        'advanced-textile-recycling-p3-q29',
+        29,
+        'Why did the project to make new clothes from old fabric fail?',
+        'The problem was that the pieces of fabric they received were too inconsistent: different weights, different colours, different levels of wear.',
+        'A',
+        [
+          { key: 'A', text: 'The supply of material was too inconsistent.' },
+          { key: 'B', text: 'Customers disliked the recycled label.' },
+          { key: 'C', text: 'Designers found the process too slow.' }
+        ],
+        'fabric ... too inconsistent',
+        'supply of material was too inconsistent',
+        'วัสดุที่ได้มาไม่สม่ำเสมอ',
+        'problem was เป็น signal ไปคำตอบจริง: fabric too inconsistent. คำหลอกคือ customers disliked เพราะสคริปต์บอก customers were actually open to that.'
+      ),
+      choiceQuestionFor(
+        TEXTILE_RECYCLING_PART3_SCRIPT,
+        'advanced-textile-recycling-p3-q30',
+        30,
+        'Leah and Arun agree that their presentation should focus on',
+        'The interesting part is what happens after people donate clothes: sorting, rejection, reuse, export, landfill. Yes, that\'s the hidden process most people know nothing about.',
+        'A',
+        [
+          { key: 'A', text: 'what happens after people donate clothes.' },
+          { key: 'B', text: 'the behaviour of individual shoppers.' },
+          { key: 'C', text: 'the environmental policies of fashion brands.' }
+        ],
+        'what happens after people donate clothes',
+        'focus on what happens after people donate clothes',
+        'สิ่งที่เกิดขึ้นหลังบริจาคเสื้อผ้า',
+        'agree เห็นจาก Leah ตอบ Yes หลัง Arun สรุป focus. คำหลอกคือ shoppers และ fashion brands เพราะทั้งคู่บอกว่า shouldn\'t just talk about those.'
+      )
+    ]
+  },
+  {
+    id: 'advanced-listening-vertical-farming-part-4',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 4 - Vertical Farming',
+    section: 4,
+    levelLabel: 'ADVANCED LISTENING · Part 4 lecture · target Band 7+',
+    audioCacheKey: 'advanced-listening-vertical-farming-part-4',
+    audioscript: VERTICAL_FARMING_PART4_SCRIPT,
+    questions: [
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q31', 31, 'Crops are grown in stacked 31 ____ inside buildings.', 'crops are grown indoors in stacked layers', 'layers', ['buildings', 'fields', 'trays'], 'stacked layers', 'stacked', 'ชั้น', 'stacked ในโจทย์ช่วย locate และสคริปต์เติมว่า stacked layers จึงตอบ layers.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q32', 32, 'Many vertical farms are set up in unused 32 ____.', 'Many vertical farms are established in unused warehouses', 'warehouses', ['cities', 'factories', 'markets'], 'unused warehouses', 'unused', 'โกดัง', 'set up = established และ unused warehouses คือสถานที่ตั้ง จึงตอบ warehouses.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q33', 33, 'Plants receive artificial 33 ____ from LEDs.', 'they are given artificial light, usually from LED systems', 'light', ['heat', 'water', 'energy'], 'artificial light', 'artificial from LEDs', 'แสง', 'receive = are given และ from LEDs ชี้ไปที่ artificial light.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q34', 34, 'Roots grow in nutrient-rich 34 ____.', 'Their roots grow in nutrient-rich water', 'water', ['soil', 'air', 'liquid'], 'nutrient-rich water', 'roots grow in nutrient-rich', 'น้ำ', 'โจทย์กับสคริปต์แทบตรงกัน: roots grow in nutrient-rich water. คำหลอกคือ soil เพราะสคริปต์บอก plants are not grown in soil.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q35', 35, 'Computer systems monitor 35 ____ and temperature.', 'Computer systems monitor humidity and temperature', 'humidity', ['light', 'growth', 'water'], 'monitor humidity and temperature', 'monitor and temperature', 'ความชื้นในอากาศ', 'monitor ... and temperature ตรงกับสคริปต์ คำตอบที่อยู่ก่อน and คือ humidity.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q36', 36, 'There is less need for 36 ____.', 'farmers often need far fewer pesticides than they would in outdoor agriculture', 'pesticides', ['soil', 'workers', 'machines'], 'far fewer pesticides', 'less need for', 'ยาฆ่าแมลง', 'less need for = need far fewer. คำหลอกคือ pests เพราะเป็นสาเหตุ แต่ช่องว่างต้องเป็นสิ่งที่ใช้น้อยลงคือ pesticides.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q37', 37, 'Farms near city consumers can reduce 37 ____.', 'there is less need for long-distance transport from rural farms to city supermarkets', 'transport', ['distance', 'costs', 'waste'], 'less need for long-distance transport', 'reduce', 'การขนส่ง', 'reduce ในโจทย์ถูก paraphrase เป็น less need for และคำตอบคือ transport.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q38', 38, 'The system uses a lot of 38 ____.', 'the amount of electricity needed for lighting, heating, cooling and computer control systems', 'electricity', ['lighting', 'energy', 'equipment'], 'electricity needed', 'uses a lot of', 'ไฟฟ้า', 'uses a lot of ถูกพูดเป็น amount of electricity needed. lighting/heating/cooling เป็นตัวอย่างการใช้ไฟ ไม่ใช่คำตอบรวม.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q39', 39, 'Crops such as 39 ____ are difficult to produce profitably.', 'crops such as wheat are much harder to produce profitably', 'wheat', ['lettuce', 'vegetables', 'rice'], 'crops such as wheat', 'crops such as', 'ข้าวสาลี', 'คำหลอกคือ lettuce เพราะ works well แต่หลัง but พาไปคำตอบจริงคือ wheat ซึ่ง produce profitably ยากกว่า.'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q40', 40, 'Farms need reliable 40 ____ with buyers.', 'vertical farms need reliable contracts with supermarkets, restaurants or other buyers', 'contracts', ['markets', 'customers', 'prices'], 'reliable contracts with buyers', 'reliable with buyers', 'สัญญา', 'need reliable ... with buyers ตรงกับ reliable contracts with supermarkets/restaurants/buyers จึงตอบ contracts.')
+    ]
+  },
+  {
+    id: 'advanced-listening-sleep-university-life-part-3',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 3 - Sleep and University Life',
+    section: 3,
+    levelLabel: 'ADVANCED LISTENING · Part 3 dialogue · target Band 7+',
+    audioCacheKey: 'advanced-listening-sleep-university-life-part-3',
+    audioscript: SLEEP_UNIVERSITY_PART3_SCRIPT,
+    questions: [
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q21', 21, 'Which TWO factors do the students both believe are major causes of poor sleep among university students?', 'Screen use seems much more significant. Students work on laptops, message friends, and watch videos late at night. Yes, and the light from screens can delay sleep.', 'A', sleepCauseOptions, 'Screen use seems much more significant', 'late-night screen use', 'ใช้หน้าจอตอนดึก', 'both believe เห็นจาก Dana ตอบ Yes หลัง Sam พูด screen use. คำหลอกคือ noisy accommodation เพราะ studies did not treat it as major.', sleepCauseQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q22', 22, 'Which TWO factors do the students both believe are major causes of poor sleep among university students?', 'Students who work evening shifts often get home late and then still have assignments to finish. I agree.', 'C', sleepCauseOptions, 'work evening shifts', 'part-time employment', 'งานพาร์ตไทม์', 'part-time employment ถูก paraphrase เป็น work evening shifts. I agree เป็น consensus marker ว่าทั้งคู่เห็นด้วย.', sleepCauseQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q23', 23, 'Which TWO effects of poor sleep do the students agree are supported by strong evidence?', 'students who slept badly found it harder to focus in seminars and lectures', 'A', sleepEffectOptions, 'harder to focus', 'reduced concentration', 'สมาธิลดลง', 'harder to focus = reduced concentration. คำหลอกคือ creativity เพราะ Sam บอก claim นั้น doubtful.', sleepEffectQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q24', 24, 'Which TWO effects of poor sleep do the students agree are supported by strong evidence?', 'The stronger evidence is about memory. Sleep seems to help students process and store what they\'ve learned.', 'C', sleepEffectOptions, 'stronger evidence is about memory', 'poorer memory', 'ความจำแย่ลง', 'stronger evidence เป็น key phrase ตรงกับ supported by strong evidence และ memory ตรงกับ poorer memory.', sleepEffectQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q25', 25, 'Which TWO opinions do the students both express about sleep-tracking apps?', 'they might make some people anxious. If students keep checking their sleep score every morning, they may become stressed about it. I thought the same.', 'A', sleepAppOptions, 'make some people anxious', 'may make users anxious', 'ทำให้ผู้ใช้กังวล', 'I thought the same แสดงว่าทั้งคู่เห็นด้วย. anxious/stressed ตรงกับ users anxious.', sleepAppQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q26', 26, 'Which TWO opinions do the students both express about sleep-tracking apps?', 'more independent research is needed. A lot of the evidence comes from the companies that make the apps. Yes, that\'s a really important point.', 'E', sleepAppOptions, 'more independent research is needed', 'need more independent research', 'ต้องมีงานวิจัยอิสระเพิ่ม', 'ข้อความตรงมาก: more independent research is needed. คำหลอกคือ cost เพราะ Dana บอก cost is not the main issue.', sleepAppQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q27', 27, 'When discussing the term "sleep hygiene", the students decide to', 'We could define it first, then give examples like having a regular bedtime and avoiding screens late at night. That makes sense.', 'B', [
+        { key: 'A', text: 'avoid it because it sounds too technical.' },
+        { key: 'B', text: 'define it before giving examples.' },
+        { key: 'C', text: 'use it only at the end of the presentation.' }
+      ], 'define it first, then give examples', 'define it before giving examples', 'นิยามก่อนแล้วยกตัวอย่าง', 'คำหลอกคือ it sounds strange แต่หลัง True, but พาไปคำตอบจริง: define it first, then give examples.'),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q28', 28, 'Why do the students decide to start with a personal example?', 'Most students will recognise that situation, even if they don\'t talk about it.', 'A', [
+        { key: 'A', text: 'to make the topic relatable for students' },
+        { key: 'B', text: 'to show that sleep problems affect grades' },
+        { key: 'C', text: 'to criticise university accommodation' }
+      ], 'Most students will recognise that situation', 'make the topic relatable', 'ทำให้หัวข้อใกล้ตัวนักศึกษา', 'recognise that situation = relatable. คำหลอกคือ grades/accommodation เพราะไม่ได้เป็นเหตุผลในการเริ่มด้วย personal example.'),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q29', 29, 'The students agree that daytime naps are useful only if', 'short naps can help, but long ones can make it harder to sleep at night. So the key point is that naps are useful only if they aren\'t too long.', 'A', [
+        { key: 'A', text: 'they are not too long.' },
+        { key: 'B', text: 'they happen in the evening.' },
+        { key: 'C', text: 'they replace a full night\'s sleep.' }
+      ], 'aren\'t too long', 'not too long', 'ไม่ยาวเกินไป', 'คำว่า but หลัง short naps can help ตัด long naps ออก และสรุปตรงว่า only if they aren\'t too long.'),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q30', 30, 'What surprises the students about university advice on sleep?', 'The health centre says one thing, academic departments say another, and accommodation teams send different information again. Yes, it\'s not coordinated.', 'A', [
+        { key: 'A', text: 'It is not coordinated across departments.' },
+        { key: 'B', text: 'It focuses too much on diet.' },
+        { key: 'C', text: 'It is based on old research.' }
+      ], 'not coordinated', 'not coordinated across departments', 'ไม่ประสานกันระหว่างหน่วยงาน', 'ตัวอย่าง health centre / academic departments / accommodation teams ชี้ว่า advice มาจากหลายฝ่าย และ Sam สรุปว่า not coordinated.')
+    ]
+  },
+  {
+    id: 'advanced-listening-seed-banks-crop-diversity-part-4',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · Part 4 - Seed Banks and Crop Diversity',
+    section: 4,
+    levelLabel: 'ADVANCED LISTENING · Part 4 lecture · target Band 7+',
+    audioCacheKey: 'advanced-listening-seed-banks-crop-diversity-part-4',
+    audioscript: SEED_BANKS_PART4_SCRIPT,
+    questions: [
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q31', 31, 'Seed banks help protect agricultural 31 ____.', 'One of its main purposes is to protect agricultural diversity', 'diversity', ['seeds', 'crops', 'farming'], 'protect agricultural diversity', 'protect agricultural', 'ความหลากหลาย', 'โจทย์และสคริปต์ตรงกัน: protect agricultural diversity.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q32', 32, 'Older local 32 ____ may disappear when farmers use commercial crops.', 'farmers grew many local varieties ... when farmers change to commercial crops, these older varieties may disappear', 'varieties', ['seeds', 'plants', 'species'], 'older varieties may disappear', 'older local may disappear', 'สายพันธุ์ท้องถิ่น', 'older local ในโจทย์ถูกพูดเป็น local varieties และ these older varieties may disappear.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q33', 33, 'Seeds are dried to remove 33 ____.', 'seeds are cleaned and dried to remove moisture', 'moisture', ['water', 'dust', 'insects'], 'dried to remove moisture', 'dried to remove', 'ความชื้น', 'dried to remove ในโจทย์ตรงกับสคริปต์ และคำตอบคือ moisture.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q34', 34, 'Most seeds are kept at a low 34 ____.', 'most seeds are kept at a low temperature', 'temperature', ['level', 'humidity', 'pressure'], 'low temperature', 'kept at a low', 'อุณหภูมิ', 'kept at a low ตรงกับ low temperature จึงตอบ temperature.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q35', 35, 'Each sample is sealed in special 35 ____.', 'Each seed sample is placed in sealed containers', 'containers', ['bags', 'rooms', 'boxes'], 'sealed containers', 'sealed in special', 'ภาชนะบรรจุ', 'sealed ในโจทย์ตรงกับ sealed containers. special เป็น paraphrase ของภาชนะที่ protect seeds.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q36', 36, 'Collections can help when crops are damaged by 36 ____.', 'If a crop is damaged by disease, researchers can search stored collections', 'disease', ['drought', 'floods', 'insects'], 'crop is damaged by disease', 'crops are damaged by', 'โรค', 'collections ในโจทย์ตรงกับ stored collections และ damaged by disease คือคำตอบ.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q37', 37, 'Scientists use samples to develop drought 37 ____.', 'Plant breeders also use seed banks to develop crops with greater resistance to drought', 'resistance', ['protection', 'tolerance', 'diversity'], 'greater resistance to drought', 'develop drought', 'ความต้านทาน', 'develop drought resistance เป็น noun phrase จากสคริปต์ greater resistance to drought.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q38', 38, 'Farmers may need replacement seeds after 38 ____.', 'support farmers after extreme events such as floods, when stored seed for the next planting season may have been destroyed', 'floods', ['storms', 'disease', 'fires'], 'after extreme events such as floods', 'after', 'น้ำท่วม', 'after ในโจทย์ตรงกับ after extreme events such as floods. replacement seeds ถูก paraphrase จาก stored seed destroyed.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q39', 39, 'Some seeds cannot survive 39 ____.', 'Some seeds are difficult to store because they cannot survive drying', 'drying', ['storage', 'testing', 'freezing'], 'cannot survive drying', 'cannot survive', 'การทำให้แห้ง', 'cannot survive ในโจทย์ตามด้วย drying ในสคริปต์. คำหลอกคือ storage เพราะเป็นหัวข้อใหญ่ ไม่ใช่สิ่งที่เมล็ดบางชนิดทนไม่ได้.'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q40', 40, 'Seeds need regular 40 ____ to check whether they can still grow.', 'Banks must carry out regular testing to check whether samples can still germinate', 'testing', ['collection', 'drying', 'cataloguing'], 'regular testing', 'regular to check', 'การทดสอบ', 'regular testing ตรงกับโจทย์ และ can still grow ถูก paraphrase เป็น can still germinate.')
     ]
   }
 ]
