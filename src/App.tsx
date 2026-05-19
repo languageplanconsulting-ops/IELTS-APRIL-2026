@@ -29,6 +29,7 @@ import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './l
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
+import { ADVANCED_PART34_LISTENING_SETS } from './listeningAdvancedPart34Data'
 import { SpeakingPart2SampleBadge, SpeakingPart2SamplePanel } from './SpeakingPart2SampleVideo'
 import { resolveSpeakingPart2SampleVideo } from './speakingPart2SampleVideos'
 import {
@@ -79,8 +80,21 @@ const ALL_LISTENING_FOUNDATION_SETS = [
   ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
   ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
-  ...CAMBRIDGE_17_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced')
+  ...CAMBRIDGE_17_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
+  ...ADVANCED_PART34_LISTENING_SETS
 ]
+
+const LISTENING_FOUNDATION_CATEGORY_LABELS: Record<ListeningFoundationCategory, string> = {
+  essential: 'Essential',
+  advanced: 'Advanced',
+  'advanced-listening': 'ADVANCED LISTENING - Part 3,4 สำหรับคนที่อยากได้ 7+'
+}
+
+const LISTENING_FOUNDATION_CATEGORY_DESCRIPTIONS: Record<ListeningFoundationCategory, string> = {
+  essential: 'Core vocabulary · target below Band 6',
+  advanced: 'Mid-high vocabulary · target Band 6.5-7',
+  'advanced-listening': 'IELTS-style Part 3 dialogue + Part 4 lecture · target Band 7+'
+}
 
 type Role = 'student' | 'admin' | 'trial'
 type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
@@ -12013,6 +12027,25 @@ function App() {
         await playListeningSectionAudioFromUrl(activeListeningFoundationSet.audioUrl)
         return
       }
+      if (activeListeningFoundationSet.audioCacheKey && authSession?.accessToken) {
+        const payload = await fetchJson<{ audioUrl: string; cached?: boolean }>('/api/tts/listening-section-audio', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authSession.accessToken}`
+          },
+          body: JSON.stringify({
+            cacheKey: activeListeningFoundationSet.audioCacheKey,
+            topicId: activeListeningFoundationSet.id,
+            topicTitle: activeListeningFoundationSet.title,
+            section: activeListeningFoundationSet.section,
+            text: activeListeningFoundationSet.audioscript || activeListeningFoundationScriptText || spokenText
+          })
+        })
+        if (payload.audioUrl) {
+          await playListeningSectionAudioFromUrl(payload.audioUrl)
+          return
+        }
+      }
       playListeningScriptWithSpeech(
         spokenText,
         'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ'
@@ -13327,6 +13360,16 @@ function App() {
                 <button
                   type="button"
                   className="listeningModeChoiceCard listeningModeChoiceCardPractice"
+                  onClick={() => openListeningFoundationCategory('advanced-listening')}
+                >
+                  <span>02</span>
+                  <strong>ADVANCED LISTENING - Part 3,4</strong>
+                  <p>สำหรับคนที่อยากได้ 7+ · Deepgram audio, dialogue script, evidence highlight.</p>
+                  <em className="listeningModeChoiceHint">Part 3 dialogue + Part 4 lecture</em>
+                </button>
+                <button
+                  type="button"
+                  className="listeningModeChoiceCard listeningModeChoiceCardPractice"
                   onClick={() => {
                     setListeningLabMode('builder')
                     setListeningBankBookFilter('all')
@@ -13334,7 +13377,7 @@ function App() {
                     setActivePage('listening')
                   }}
                 >
-                  <span>02</span>
+                  <span>03</span>
                   <strong>Paraphrase Builder</strong>
                   <p>Cambridge 10–18 · Sections 2 &amp; 4 · highlight then answer.</p>
                 </button>
@@ -13343,7 +13386,7 @@ function App() {
                   className="listeningModeChoiceCard listeningModeChoiceCardPractice"
                   onClick={openListeningPracticeBank}
                 >
-                  <span>03</span>
+                  <span>04</span>
                   <strong>Full Practice Sets</strong>
                   <p>Audio + questions + scored report with transcript evidence.</p>
                 </button>
@@ -13360,18 +13403,14 @@ function App() {
                 <span aria-hidden="true">/</span>
                 <span>Foundation</span>
                 <span aria-hidden="true">/</span>
-                <span>{listeningFoundationCategory === 'advanced' ? 'Advanced' : 'Essential'}</span>
+                <span>{LISTENING_FOUNDATION_CATEGORY_LABELS[listeningFoundationCategory]}</span>
               </nav>
 
               <section className="listeningFoundationMission">
                 <div>
                   <span>Vocabulary Foundation</span>
-                  <h2>{listeningFoundationCategory === 'advanced' ? 'Advanced level' : 'Essential level'}</h2>
-                  <p>
-                    {listeningFoundationCategory === 'advanced'
-                      ? 'Mid–high vocabulary · target Band 6.5–7'
-                      : 'Core vocabulary · target below Band 6'}
-                  </p>
+                  <h2>{LISTENING_FOUNDATION_CATEGORY_LABELS[listeningFoundationCategory]}</h2>
+                  <p>{LISTENING_FOUNDATION_CATEGORY_DESCRIPTIONS[listeningFoundationCategory]}</p>
                 </div>
                 <div className="listeningFoundationProgress">
                   <span>Category progress</span>
@@ -13405,13 +13444,24 @@ function App() {
                 >
                   Advanced ({ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced').length} sets)
                 </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={listeningFoundationCategory === 'advanced-listening'}
+                  className={listeningFoundationCategory === 'advanced-listening' ? 'active' : ''}
+                  onClick={() => handleListeningFoundationCategoryChange('advanced-listening')}
+                >
+                  ADVANCED LISTENING ({ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced-listening').length} sets)
+                </button>
               </div>
 
               {foundationBooksInCategory.length > 0 &&
                 renderListeningBookFilter(foundationBooksInCategory, 'Filter foundation sets by book')}
 
               <p className="listeningFoundationBankHint meta">
-                Choose <strong>book → test → section</strong>, then start. Questions on the left, audio script on the right — answer and highlight evidence for each question.
+                {listeningFoundationCategory === 'advanced-listening'
+                  ? <>Choose a Part 3 or Part 4 set, then listen, answer, and highlight the evidence. Part 3 scripts are shown as two-speaker dialogue turns.</>
+                  : <>Choose <strong>book → test → section</strong>, then start. Questions on the left, audio script on the right — answer and highlight evidence for each question.</>}
               </p>
 
               <div className="listeningFoundationBankGrouped">
@@ -13426,7 +13476,7 @@ function App() {
                   foundationSetsByBook.map(({ book, sets }) => (
                     <section key={`foundation-book-${book}`} className="listeningBookGroup">
                       <header className="listeningBookGroupHeader">
-                        <h3>Cambridge {book}</h3>
+                        <h3>{book ? `Cambridge ${book}` : 'Advanced Listening Sets'}</h3>
                         <span>{sets.length} tests</span>
                       </header>
                       <div className="listeningSetCardGrid">

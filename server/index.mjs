@@ -1069,7 +1069,12 @@ const normalizeQuestionAudioItemInput = (value = {}) => {
   const text = String(value?.text || value?.question || '').trim()
   const cacheKey = slugifyAudioSegment(value?.cacheKey || value?.key || '')
   if (!text || !cacheKey) return null
-  const section = /part\s*3/i.test(String(value?.section || '')) ? 'part3' : 'part1'
+  const rawSection = String(value?.section || '').trim()
+  const section = /part\s*3/i.test(rawSection)
+    ? 'part3'
+    : /part\s*1/i.test(rawSection)
+      ? 'part1'
+      : slugifyAudioSegment(rawSection, 'part1')
   const topicId = slugifyAudioSegment(value?.topicId || value?.topicTitle || section)
   const topicTitle = String(value?.topicTitle || value?.topicId || section).trim() || section
   return {
@@ -1485,7 +1490,7 @@ const persistReadingPdoyProgressForUser = async ({ userId, profile, progress }) 
   return summary
 }
 
-const generateDeepgramTtsAudioBuffer = async (text) => {
+const generateDeepgramTtsAudioBuffer = async (text, modelOverride) => {
   const apiKey = String(process.env.DEEPGRAM_API_KEY || '').trim()
   if (!apiKey) {
     const error = new Error('Missing DEEPGRAM_API_KEY on backend environment')
@@ -1493,16 +1498,15 @@ const generateDeepgramTtsAudioBuffer = async (text) => {
     throw error
   }
 
-  const model = String(process.env.DEEPGRAM_TTS_MODEL || 'aura-2-asteria-en').trim()
-  const response = await safeFetch('https://api.deepgram.com/v1/speak', {
+  const model = String(modelOverride || process.env.DEEPGRAM_TTS_MODEL || 'aura-2-asteria-en').trim()
+  const response = await safeFetch(`https://api.deepgram.com/v1/speak?model=${encodeURIComponent(model)}&encoding=mp3`, {
     method: 'POST',
     headers: {
       Authorization: `Token ${apiKey}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      text,
-      model
+      text
     })
   })
 
@@ -1514,6 +1518,56 @@ const generateDeepgramTtsAudioBuffer = async (text) => {
   }
 
   return Buffer.from(await response.arrayBuffer())
+}
+
+const TTS_SPEAKER_LINE = /^([A-Z][A-Z0-9\s]{0,22}):\s*(.*)$/
+
+const parseListeningTtsSegments = (text) => {
+  const segments = []
+  const lines = String(text || '')
+    .replace(/\r\n/g, '\n')
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+  for (const line of lines) {
+    const match = line.match(TTS_SPEAKER_LINE)
+    if (match) {
+      segments.push({
+        speaker: match[1].trim(),
+        text: match[2].trim()
+      })
+      continue
+    }
+    if (segments.length) {
+      segments[segments.length - 1].text = `${segments[segments.length - 1].text} ${line}`.trim()
+    } else {
+      segments.push({ speaker: '', text: line })
+    }
+  }
+
+  return segments.filter((segment) => segment.text)
+}
+
+const generateListeningSectionTtsAudioBuffer = async ({ text, section }) => {
+  const segments = parseListeningTtsSegments(text)
+  const hasDialogue = segments.filter((segment) => segment.speaker).length >= 2
+  const maleModel = String(process.env.DEEPGRAM_TTS_DIALOGUE_MALE_MODEL || 'aura-2-draco-en').trim()
+  const femaleModel = String(process.env.DEEPGRAM_TTS_DIALOGUE_FEMALE_MODEL || 'aura-2-pandora-en').trim()
+  const lectureModel = String(process.env.DEEPGRAM_TTS_LECTURE_MODEL || 'aura-2-pandora-en').trim()
+
+  if (Number(section) === 3 && hasDialogue) {
+    const buffers = []
+    for (const segment of segments) {
+      const speakerKey = segment.speaker.toLowerCase()
+      const model = /lily|maya|mia|alice|woman|female|student b/.test(speakerKey) ? femaleModel : maleModel
+      buffers.push(await generateDeepgramTtsAudioBuffer(segment.text, model))
+    }
+    return Buffer.concat(buffers)
+  }
+
+  const lectureText = segments.map((segment) => segment.text).join(' ')
+  return generateDeepgramTtsAudioBuffer(lectureText || text, lectureModel)
 }
 
 const uploadQuestionAudioBuffer = async ({ objectPath, audioBuffer }) => {
@@ -1540,7 +1594,10 @@ const questionAudioObjectExists = async (objectPath) => {
   return Boolean(response?.ok)
 }
 
-const getOrCreateQuestionAudioAsset = async (rawItem, { allowGenerate = true, force = false } = {}) => {
+const getOrCreateQuestionAudioAsset = async (
+  rawItem,
+  { allowGenerate = true, force = false, audioBufferFactory } = {}
+) => {
   const item = normalizeQuestionAudioItemInput(rawItem)
   if (!item) {
     const error = new Error('Question audio item is missing key or text.')
@@ -1594,7 +1651,9 @@ const getOrCreateQuestionAudioAsset = async (rawItem, { allowGenerate = true, fo
     throw error
   }
 
-  const audioBuffer = await generateDeepgramTtsAudioBuffer(item.text)
+  const audioBuffer = audioBufferFactory
+    ? await audioBufferFactory(item)
+    : await generateDeepgramTtsAudioBuffer(item.text)
   await uploadQuestionAudioBuffer({ objectPath, audioBuffer })
   const nextEntry = {
     cacheKey: item.cacheKey,
@@ -10510,6 +10569,50 @@ app.post('/api/tts/question-audio', requireAuth, async (req, res) => {
         status: error?.status || 500,
         type: 'tts_question_audio_error',
         message: error instanceof Error ? error.message : 'Could not prepare question audio.'
+      }
+    })
+  }
+})
+
+app.post('/api/tts/listening-section-audio', requireAuth, async (req, res) => {
+  try {
+    const text = String(req.body?.text || '').trim()
+    const section = Number(req.body?.section || 0)
+    const cacheKey = String(req.body?.cacheKey || req.body?.key || '').trim()
+    if (!text || !cacheKey || !section) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'cacheKey, section, and text are required for listening section audio.'
+        }
+      })
+    }
+
+    const asset = await getOrCreateQuestionAudioAsset(
+      {
+        cacheKey,
+        text,
+        section: `listening-section-${section}`,
+        topicId: req.body?.topicId || cacheKey,
+        topicTitle: req.body?.topicTitle || `Listening Section ${section}`
+      },
+      {
+        allowGenerate: true,
+        audioBufferFactory: () => generateListeningSectionTtsAudioBuffer({ text, section })
+      }
+    )
+
+    return res.json({
+      audioUrl: asset.audioUrl,
+      cached: asset.cached
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'listening_section_tts_error',
+        message: error instanceof Error ? error.message : 'Could not prepare listening section audio.'
       }
     })
   }

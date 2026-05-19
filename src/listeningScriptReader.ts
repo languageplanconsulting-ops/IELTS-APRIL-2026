@@ -109,8 +109,8 @@ export const getListeningSpeakerTone = (speaker: string | null): string => {
   if (!speaker) return 'neutral'
   const key = speaker.toLowerCase().replace(/\s+/g, '-')
   if (key.includes('interview') || key.includes('narrator') || key.includes('presenter')) return 'host'
-  if (key.includes('alice') || key.includes('joy') || key.includes('mia')) return 'a'
-  if (key.includes('rob') || key.includes('david') || key.includes('dexter') || key.includes('mike')) return 'b'
+  if (key.includes('alice') || key.includes('joy') || key.includes('mia') || key.includes('lily') || key.includes('maya')) return 'a'
+  if (key.includes('rob') || key.includes('david') || key.includes('dexter') || key.includes('mike') || key.includes('leo')) return 'b'
   return 'neutral'
 }
 

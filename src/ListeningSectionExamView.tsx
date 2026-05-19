@@ -7,6 +7,7 @@ import type {
   ListeningSectionExamQuestion
 } from './listeningSectionExamModel'
 import {
+  getListeningSpeakerTone,
   listeningScriptHasDialogue,
   parseListeningScriptSegments,
   type ListeningScriptSegment
@@ -300,14 +301,17 @@ export function ListeningSectionExamView({
     )
   }
 
-  const renderScriptTurn = (segment: ListeningScriptSegment) => (
-    <article key={segment.id} className="listeningSectionExamScriptTurn">
-      {segment.speaker ? <span className="listeningSectionExamScriptSpeaker">{segment.speaker}</span> : null}
-      <p className="listeningSectionExamScriptBody" onMouseUp={handleScriptMouseUp}>
-        {renderSegmentBody(segment.text, config.passage, decorations)}
-      </p>
-    </article>
-  )
+  const renderScriptTurn = (segment: ListeningScriptSegment) => {
+    const tone = getListeningSpeakerTone(segment.speaker)
+    return (
+      <article key={segment.id} className={`listeningSectionExamScriptTurn tone-${tone}`}>
+        {segment.speaker ? <span className="listeningSectionExamScriptSpeaker">{segment.speaker}</span> : null}
+        <p className="listeningSectionExamScriptBody" onMouseUp={handleScriptMouseUp}>
+          {renderSegmentBody(segment.text, config.passage, decorations)}
+        </p>
+      </article>
+    )
+  }
 
   const bridgeQuestion = config.questions.find(
     (item) => attempts[item.id]?.completed && !attempts[item.id]?.bridgeDismissed

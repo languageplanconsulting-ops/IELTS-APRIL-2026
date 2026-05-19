@@ -1,6 +1,6 @@
 import { CAM10_TEST1_SECTION3_SCRIPT } from './listeningFoundationSectionScripts'
 
-export type ListeningFoundationCategory = 'essential' | 'advanced'
+export type ListeningFoundationCategory = 'essential' | 'advanced' | 'advanced-listening'
 
 export type ListeningFoundationQuestion = {
   id: string
@@ -27,6 +27,7 @@ export type ListeningFoundationSet = {
   section: number
   levelLabel: string
   audioUrl?: string
+  audioCacheKey?: string
   /** Full section audioscript for the exam UI (optional; resolved automatically when omitted). */
   audioscript?: string
   questions: ListeningFoundationQuestion[]

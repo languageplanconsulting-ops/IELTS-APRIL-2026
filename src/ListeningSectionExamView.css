@@ -224,6 +224,26 @@
   gap: 0.2rem;
 }
 
+.listeningSectionExamScriptTurns.is-dialogue .listeningSectionExamScriptTurn {
+  width: min(88%, 34rem);
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--lse-border);
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.listeningSectionExamScriptTurns.is-dialogue .listeningSectionExamScriptTurn.tone-a {
+  align-self: flex-start;
+  border-color: #bfdbfe;
+  background: #eff6ff;
+}
+
+.listeningSectionExamScriptTurns.is-dialogue .listeningSectionExamScriptTurn.tone-b {
+  align-self: flex-end;
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
 .listeningSectionExamScriptSpeaker {
   font-size: 0.72rem;
   font-weight: 800;
