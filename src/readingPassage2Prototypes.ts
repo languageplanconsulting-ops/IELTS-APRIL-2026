@@ -5,6 +5,7 @@ export const READING_PASSAGE_2_PROTOTYPE_PATTERN_NOTES = `Passage 2 prototype pa
 - Tone is IELTS Academic mid-difficulty: explanatory, discursive, research/process based, and more abstract than Passage 1 but less argumentative than Passage 3.
 - Paragraphs usually develop one clear function each: context/problem, mechanism/cause, examples, stakeholder views, evidence, consequences, solution or debate.
 - Question numbers run 14-26. Common mixes are matching information first, then ONE WORD ONLY completion and/or choose TWO letters. Matching information is not chronological; completion questions are usually chronological.
+- For matching information and matching headings, the first question in the group must never target paragraphs A or B (intro sections). Start with paragraph C or later, or place A/B items later in the group.
 - Good Passage 2 models use whole-paragraph understanding, causes/effects, opposing views, named people or institutions, and local factual detail.`
 
 export const READING_PASSAGE_2_PROTOTYPES: ReadingPassagePrototype[] = [

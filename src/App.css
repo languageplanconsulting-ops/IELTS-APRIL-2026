@@ -8741,6 +8741,7 @@ body,
   font-weight: 600;
   line-height: 1.55;
   letter-spacing: -0.01em;
+  white-space: pre-wrap;
 }
 
 .readingAnswerField input,
@@ -8774,6 +8775,91 @@ body,
 
 .readingFillQuestionGroup {
   gap: 16px;
+}
+
+.readingChooseTwoGroup {
+  display: grid;
+  gap: 16px;
+}
+
+.readingChooseTwoGroupHeader h4 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.08rem;
+}
+
+.readingChooseTwoInstruction {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #334155;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.readingChooseTwoOptionList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.readingChooseTwoOptionList li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  line-height: 1.5;
+}
+
+.readingChooseTwoOptionList strong {
+  min-width: 1.4rem;
+  color: #1d4ed8;
+}
+
+.readingChooseTwoAnswers {
+  display: grid;
+  gap: 12px;
+}
+
+.readingChooseTwoAnswerRow {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.readingChooseTwoAnswerRow.is-active {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+.readingChooseTwoAnswerLabel {
+  font-weight: 700;
+  color: #111827;
+}
+
+.readingChooseTwoAnswerControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.readingChooseTwoAnswerControls select {
+  flex: 1 1 220px;
+  min-width: 0;
 }
 
 .readingFillGroupHeader {
@@ -13611,7 +13697,7 @@ select:focus,
 
 .readingPage .readingEntryChooser {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
 }
 
@@ -13663,6 +13749,12 @@ select:focus,
   background:
     linear-gradient(135deg, rgba(0, 74, 173, 0.24), transparent 44%),
     linear-gradient(160deg, rgba(239, 68, 68, 0.14), transparent 64%);
+}
+
+.readingPage .readingEntryCard-monthly::before {
+  background:
+    linear-gradient(135deg, rgba(16, 185, 129, 0.22), transparent 44%),
+    linear-gradient(160deg, rgba(0, 74, 173, 0.14), transparent 64%);
 }
 
 .readingPage .readingEntryCard:hover {

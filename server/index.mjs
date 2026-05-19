@@ -19,8 +19,8 @@ const app = express()
 const port = process.env.PORT || 8787
 const assessmentJobs = new Map()
 const ASSESSMENT_JOB_TTL_MS = 1000 * 60 * 30
-const DEFAULT_FEEDBACK_CREDITS = 50
-const DEFAULT_FULL_MOCK_CREDITS = 15
+const DEFAULT_FEEDBACK_CREDITS = 20
+const DEFAULT_FULL_MOCK_CREDITS = 10
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024 } })
 const ADMIN_PANEL_CODE = String(process.env.ADMIN_PANEL_CODE || 'englishplanforeover').trim()
 const ADMIN_CODE_TOKEN_PREFIX = 'admin-code:'
@@ -32,12 +32,19 @@ const indexHtmlPath = path.join(distDir, 'index.html')
 const isDirectRun = process.argv[1] ? path.resolve(process.argv[1]) === __filename : false
 const JAN_2026_MUSIC_BRAIN_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-2-music-and-brain.json')
 const JAN_2026_MEDIEVAL_CASTLES_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-2-medieval-castles.json')
+const JAN_2026_PRODUCTIVE_BOREDOM_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-3-productive-power-of-boredom.json')
+const JAN_2026_URBAN_EVOLUTION_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-3-urban-evolution.json')
+const JAN_2026_COGNITIVE_COST_GPS_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-jan-2026-passage-3-cognitive-cost-of-gps.json')
 const FEB_2026_BRITISH_ARISTOCRACY_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-2-british-aristocracy.json')
 const FEB_2026_VAQUITA_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-2-saving-the-vaquita.json')
 const FEB_2026_ADHD_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json')
 const FEB_2026_DIGITAL_NOMADS_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-rise-of-digital-nomads.json')
 const FEB_2026_MOVIE_THEATRES_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json')
 const FEB_2026_SPANISH_ARMADA_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-1-spanish-armada.json')
+const FEB_2026_EIGHT_HOUR_SLEEP_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-3-myth-of-eight-hour-sleep.json')
+const FEB_2026_WOOD_WIDE_WEB_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-3-wood-wide-web.json')
+const FEB_2026_DIGITAL_NATIVE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-3-myth-of-digital-native.json')
+const FEB_2026_PRODUCTIVE_UNEASE_BOREDOM_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-feb-2026-passage-3-productive-unease-of-boredom.json')
 const APRIL_2024_TRAUMA_LANGUAGE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2024-passage-2-trauma-language-popular-culture.json')
 const APRIL_2026_BALD_EAGLE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-1-bald-eagle.json')
 const APRIL_2026_HABSBURG_JAW_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json')
@@ -47,6 +54,9 @@ const APRIL_2026_HOUSE_OF_WINDSOR_READING_EXAMS = requireJson('../cambridge-read
 const APRIL_2026_SOCIAL_MEDIA_POLARIZATION_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-2-social-media-algorithms-polarization.json')
 const APRIL_2026_CANCEL_CULTURE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-2-psychology-cancel-culture.json')
 const APRIL_2026_DELAYED_ADULTHOOD_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-2-delayed-adulthood.json')
+const APRIL_2026_UNCERTAIN_PREDICTION_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-3-uncertain-science-of-prediction.json')
+const APRIL_2026_URBAN_DARKNESS_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-3-case-for-urban-darkness.json')
+const APRIL_2026_WHAT_IS_RESTORATION_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-april-2026-passage-3-what-is-restoration.json')
 const MARCH_2026_NATURAL_WATER_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json')
 const MARCH_2026_CRITICAL_THINKING_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-2-critical-thinking.json')
 const MARCH_2026_HISTORY_AI_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-2-history-education-ai.json')
@@ -54,6 +64,9 @@ const MARCH_2026_ARTISTS_AI_READING_EXAMS = requireJson('../cambridge-reading-im
 const MARCH_2026_GREEN_ARCHITECTURE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-1-future-green-architecture.json')
 const MARCH_2026_DEVELOPING_ENVIRONMENT_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-1-environmental-problems-developing-countries.json')
 const MARCH_2026_WOOD_CYCAD_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-1-saving-the-wood-cycad.json')
+const MARCH_2026_QUIET_SKILL_FORGETTING_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-3-quiet-skill-of-forgetting.json')
+const MARCH_2026_IMPERFECT_DESIGN_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-3-imperfect-design.json')
+const MARCH_2026_GOOD_ARCHIVE_READING_EXAMS = requireJson('../cambridge-reading-imports/ielts-academic-reading-march-2026-passage-3-good-archive.json')
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
@@ -1549,6 +1562,46 @@ const parseListeningTtsSegments = (text) => {
   return segments.filter((segment) => segment.text)
 }
 
+const TTS_FEMALE_SPEAKER_NAMES = new Set([
+  'alice',
+  'dana',
+  'emma',
+  'joy',
+  'laura',
+  'leah',
+  'lily',
+  'maya',
+  'mia',
+  'nina',
+  'woman',
+  'female',
+  'student b'
+])
+
+const TTS_MALE_SPEAKER_NAMES = new Set([
+  'arun',
+  'david',
+  'dexter',
+  'leo',
+  'mark',
+  'mike',
+  'oscar',
+  'ravi',
+  'rob',
+  'sam',
+  'tim',
+  'man',
+  'male',
+  'student a'
+])
+
+const getListeningTtsSpeakerModel = ({ speaker, speakerIndex, maleModel, femaleModel }) => {
+  const speakerKey = String(speaker || '').trim().toLowerCase()
+  if (TTS_FEMALE_SPEAKER_NAMES.has(speakerKey)) return femaleModel
+  if (TTS_MALE_SPEAKER_NAMES.has(speakerKey)) return maleModel
+  return speakerIndex % 2 === 0 ? maleModel : femaleModel
+}
+
 const generateListeningSectionTtsAudioBuffer = async ({ text, section }) => {
   const segments = parseListeningTtsSegments(text)
   const hasDialogue = segments.filter((segment) => segment.speaker).length >= 2
@@ -1558,9 +1611,15 @@ const generateListeningSectionTtsAudioBuffer = async ({ text, section }) => {
 
   if (Number(section) === 3 && hasDialogue) {
     const buffers = []
+    const speakerOrder = new Map()
     for (const segment of segments) {
-      const speakerKey = segment.speaker.toLowerCase()
-      const model = /lily|maya|mia|alice|woman|female|student b/.test(speakerKey) ? femaleModel : maleModel
+      if (!speakerOrder.has(segment.speaker)) speakerOrder.set(segment.speaker, speakerOrder.size)
+      const model = getListeningTtsSpeakerModel({
+        speaker: segment.speaker,
+        speakerIndex: speakerOrder.get(segment.speaker) || 0,
+        maleModel,
+        femaleModel
+      })
       buffers.push(await generateDeepgramTtsAudioBuffer(segment.text, model))
     }
     return Buffer.concat(buffers)
@@ -1759,10 +1818,12 @@ const persistAssessmentReportForUser = async ({ userId, profile, requestBody, re
 
 const sendEmailWithResend = async ({ to, subject, html, text }) => {
   if (!RESEND_API_KEY) {
+    console.warn('Resend email skipped: RESEND_API_KEY is not configured.')
     return { skipped: true, reason: 'missing_resend_api_key' }
   }
   const recipients = (Array.isArray(to) ? to : [to]).map((item) => normalizeEmail(item)).filter(Boolean)
   if (recipients.length === 0) {
+    console.warn('Resend email skipped: recipient is missing.')
     return { skipped: true, reason: 'missing_recipient' }
   }
 
@@ -1861,10 +1922,27 @@ const sendAccessGrantedEmail = async ({ learner }) => {
   })
 }
 
+const applyInitialAccessCredits = ({ isActivating, feedbackCredits, fullMockCredits }) => ({
+  feedbackCredits:
+    isActivating && Math.max(0, Number(feedbackCredits ?? 0)) <= 0
+      ? DEFAULT_FEEDBACK_CREDITS
+      : feedbackCredits,
+  fullMockCredits:
+    isActivating && Math.max(0, Number(fullMockCredits ?? 0)) <= 0
+      ? DEFAULT_FULL_MOCK_CREDITS
+      : fullMockCredits
+})
+
 const activateLearnerAccess = async ({ userId }) => {
   const before = await loadUserProfileWithAccess(userId)
   if (!before) throw new Error('Learner profile not found.')
   const activatedWindow = buildDefaultAccessWindow(new Date().toISOString())
+  const wasActive = String(before?.learner_access?.status || 'inactive') === 'active'
+  const initialCredits = applyInitialAccessCredits({
+    isActivating: !wasActive,
+    feedbackCredits: before?.learner_access?.feedback_credits ?? 0,
+    fullMockCredits: before?.learner_access?.full_mock_credits ?? 0
+  })
 
   await supabaseRequest('/rest/v1/learner_access', {
     method: 'POST',
@@ -1875,15 +1953,14 @@ const activateLearnerAccess = async ({ userId }) => {
         status: 'active',
         startsAt: activatedWindow.startsAt,
         expiresAt: before?.learner_access?.expires_at || activatedWindow.expiresAt,
-        feedbackCredits: before?.learner_access?.feedback_credits ?? 0,
-        fullMockCredits: before?.learner_access?.full_mock_credits ?? 0
+        feedbackCredits: initialCredits.feedbackCredits,
+        fullMockCredits: initialCredits.fullMockCredits
       })
     )
   })
 
   const after = await loadUserProfileWithAccess(userId)
   if (!after) throw new Error('Learner profile not found after activation.')
-  const wasActive = String(before?.learner_access?.status || 'inactive') === 'active'
   const emailResult = !wasActive ? await sendAccessGrantedEmail({ learner: after }) : { skipped: true, reason: 'already_active' }
   return {
     learner: after,
@@ -4822,6 +4899,42 @@ const mapBuiltInReadingExam = (exam, timestamps) => ({
 })
 
 const BUILT_IN_READING_BANK_EXAMS = [
+  ...APRIL_2026_UNCERTAIN_PREDICTION_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-april-2026-passage-3-uncertain-science-of-prediction',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...APRIL_2026_URBAN_DARKNESS_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-april-2026-passage-3-case-for-urban-darkness',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...APRIL_2026_WHAT_IS_RESTORATION_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-april-2026-passage-3-what-is-restoration',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
   ...APRIL_2026_DELAYED_ADULTHOOD_READING_EXAMS.map((exam) =>
     mapBuiltInReadingExam(
       {
@@ -5014,6 +5127,42 @@ const BUILT_IN_READING_BANK_EXAMS = [
       }
     )
   ),
+  ...MARCH_2026_QUIET_SKILL_FORGETTING_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-3-quiet-skill-of-forgetting',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_IMPERFECT_DESIGN_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-3-imperfect-design',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...MARCH_2026_GOOD_ARCHIVE_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-march-2026-passage-3-good-archive',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
   ...FEB_2026_DIGITAL_NOMADS_READING_EXAMS.map((exam) =>
     mapBuiltInReadingExam(
       {
@@ -5086,6 +5235,54 @@ const BUILT_IN_READING_BANK_EXAMS = [
       }
     )
   ),
+  ...FEB_2026_EIGHT_HOUR_SLEEP_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-3-myth-of-eight-hour-sleep',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_WOOD_WIDE_WEB_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-3-wood-wide-web',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_DIGITAL_NATIVE_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-3-myth-of-digital-native',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...FEB_2026_PRODUCTIVE_UNEASE_BOREDOM_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-feb-2026-passage-3-productive-unease-of-boredom',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
   ...JAN_2026_MUSIC_BRAIN_READING_EXAMS.map((exam) =>
     mapBuiltInReadingExam(
       {
@@ -5107,6 +5304,42 @@ const BUILT_IN_READING_BANK_EXAMS = [
       {
         createdAt: '2026-05-18T00:00:00.000Z',
         updatedAt: '2026-05-18T00:00:00.000Z'
+      }
+    )
+  ),
+  ...JAN_2026_PRODUCTIVE_BOREDOM_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-jan-2026-passage-3-productive-power-of-boredom',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...JAN_2026_URBAN_EVOLUTION_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-jan-2026-passage-3-urban-evolution',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
+      }
+    )
+  ),
+  ...JAN_2026_COGNITIVE_COST_GPS_READING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(
+      {
+        id: 'builtin-reading-jan-2026-passage-3-cognitive-cost-of-gps',
+        ...exam
+      },
+      {
+        createdAt: '2026-05-19T00:00:00.000Z',
+        updatedAt: '2026-05-19T00:00:00.000Z'
       }
     )
   ),
@@ -9734,6 +9967,11 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
     const activatingNow = previousStatus !== 'active' && requestedStatus === 'active'
     const activationWindow =
       activatingNow && !req.body?.expiresAt ? buildDefaultAccessWindow(new Date().toISOString()) : null
+    const requestedCredits = applyInitialAccessCredits({
+      isActivating: activatingNow,
+      feedbackCredits: req.body?.feedbackCredits,
+      fullMockCredits: req.body?.fullMockCredits
+    })
     const profilePatch = {}
     if (req.body?.name) profilePatch.full_name = String(req.body.name).trim()
     if (req.body?.email) profilePatch.email = normalizeEmail(req.body.email)
@@ -9768,8 +10006,8 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
         status: requestedStatus,
         startsAt: activationWindow?.startsAt || req.body?.startsAt,
         expiresAt: req.body?.expiresAt || activationWindow?.expiresAt || null,
-        feedbackCredits: req.body?.feedbackCredits,
-        fullMockCredits: req.body?.fullMockCredits
+        feedbackCredits: requestedCredits.feedbackCredits,
+        fullMockCredits: requestedCredits.fullMockCredits
       }))
     })
 

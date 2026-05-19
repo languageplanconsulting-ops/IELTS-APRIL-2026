@@ -54,6 +54,11 @@ import {
   READING_PASSAGE_2_PROTOTYPES,
   READING_PASSAGE_2_PROTOTYPE_PATTERN_NOTES
 } from './readingPassage2Prototypes'
+import {
+  READING_PASSAGE_3_PROTOTYPES,
+  READING_PASSAGE_3_PROTOTYPE_PATTERN_NOTES,
+  type ReadingPassage3Prototype
+} from './readingPassage3Prototypes'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -102,6 +107,7 @@ type AdminWorkspaceSection = 'landing' | 'reading' | 'learners' | 'support' | 'a
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
 type ReadingBankCategory = 'normal' | 'advanced'
+type ReadingEntryView = 'levels' | 'monthly'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
 type ReadingPdoyLessonType = 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'fill-in-the-blank'
 type ReadingPdoyLessonStep = 'intro' | 'evidence' | 'decide' | 'result' | 'complete'
@@ -269,6 +275,15 @@ type ReadingFillQuestionGroup = {
   end: number
   instruction: string
   displayLines: ReadingFillDisplayLine[]
+  questions: ReadingQuestion[]
+}
+
+type ReadingChooseTwoGroup = {
+  id: string
+  start: number
+  end: number
+  instruction: string
+  choiceOptions: ReadingPdoyMultipleChoiceOption[]
   questions: ReadingQuestion[]
 }
 
@@ -3062,8 +3077,8 @@ const READING_ATTEMPTS_KEY = 'ielts-reading-attempts'
 const LISTENING_ATTEMPTS_KEY = 'ielts-listening-attempts'
 const READING_PDOY_PROGRESS_KEY = 'ielts-reading-pdoy-progress'
 const AUTH_SESSION_KEY = 'english-plan-auth-session'
-const DEFAULT_FEEDBACK_CREDITS = 50
-const DEFAULT_FULL_MOCK_CREDITS = 15
+const DEFAULT_FEEDBACK_CREDITS = 20
+const DEFAULT_FULL_MOCK_CREDITS = 10
 
 type CreditProfile = {
   name: string
@@ -3316,6 +3331,7 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
   'matching-heading': [
     'Focus: identifying the main idea or core theme of an entire paragraph.',
     'Order: not chronological.',
+    'The first question in the group must not target paragraph/section A or B. Begin with C or later, or place A/B later in the numbered set.',
     'Headings should be short, around 2-12 words.',
     'The correct heading usually requires synthesizing the topic sentence, conclusion, or sentences after major transitions such as but/however/therefore.',
     'Use more headings than paragraphs so there are plausible unused headings.',
@@ -3325,6 +3341,7 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
   'matching-information': [
     'Focus: locating specific details, examples, reasons, or descriptions.',
     'Order: not chronological.',
+    'The first question in the group must not be answered by paragraph A or B. Use paragraph C or later for question 1, or reorder statements so A/B answers appear later.',
     'Format prompts as noun phrases, e.g. "a reference to...", "an explanation of...", "examples of...".',
     'Allow paragraph letters to be used more than once when appropriate, and include "NB You may use any letter more than once" if reused.',
     'Each answer must be a paragraph letter and supported by one exact passage portion.',
@@ -3373,6 +3390,10 @@ const pickRandomReadingPassage1Prototype = (): ReadingPassagePrototype =>
 const pickRandomReadingPassage2Prototype = (): ReadingPassagePrototype =>
   READING_PASSAGE_2_PROTOTYPES[Math.floor(Math.random() * READING_PASSAGE_2_PROTOTYPES.length)] ??
   READING_PASSAGE_2_PROTOTYPES[0]
+
+const pickRandomReadingPassage3Prototype = (): ReadingPassage3Prototype =>
+  READING_PASSAGE_3_PROTOTYPES[Math.floor(Math.random() * READING_PASSAGE_3_PROTOTYPES.length)] ??
+  READING_PASSAGE_3_PROTOTYPES[0]
 
 const stripQuotedReadingPortion = (value: string) =>
   String(value || '')
@@ -4266,10 +4287,11 @@ const resolveReadingEvidenceNeedleInPassage = (
 
 const buildReadingMatchingHintNeedles = (
   passage: ReadingPassageRecord | null,
-  question: ReadingQuestion | null
+  question: ReadingQuestion | null,
+  allQuestions: ReadingQuestion[] = []
 ) => {
   if (!passage || !question) return []
-  const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question)
+  const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question, allQuestions)
   const portions = [correctText, ...distractors.slice(0, 3)].filter(Boolean)
   return portions
     .map((portion) => resolveReadingEvidenceNeedleInPassage(passage, portion))
@@ -4279,7 +4301,34 @@ const buildReadingMatchingHintNeedles = (
     })
 }
 
+const READING_QUESTION_SECTION_HEADER_REGEX =
+  /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
+
+const extractReadingQuestionSectionBlock = (
+  questionSectionText: string,
+  start: number,
+  end: number
+) => {
+  const source = String(questionSectionText || '')
+  READING_QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
+  const matches = [...source.matchAll(READING_QUESTION_SECTION_HEADER_REGEX)]
+  const matchIndex = matches.findIndex((match) => {
+    const rangeStart = Number(match[1])
+    const rangeEnd = Number(match[2] || match[3] || match[1])
+    const min = Math.min(rangeStart, rangeEnd)
+    const max = Math.max(rangeStart, rangeEnd)
+    return start >= min && end <= max
+  })
+  if (matchIndex < 0) return ''
+  const current = matches[matchIndex]
+  const next = matches[matchIndex + 1]
+  return source.slice(current.index ?? 0, next?.index ?? source.length).trim()
+}
+
 const extractReadingQuestionRangeBlock = (questionSectionText: string, start: number, end: number) => {
+  const sectionBlock = extractReadingQuestionSectionBlock(questionSectionText, start, end)
+  if (sectionBlock) return sectionBlock
+
   const lines = String(questionSectionText || '').split('\n')
   const startPattern = new RegExp(`^\\s*${start}\\s`)
   const endPattern = new RegExp(`^\\s*${end + 1}\\s`)
@@ -4331,7 +4380,10 @@ const isReadingMatchingHeadingQuestion = (
     return false
   }
 
-  if (/^heading for paragraph/i.test(prompt) || /^heading paragraph/i.test(prompt)) {
+  if (
+    /^heading for (?:paragraph|section)/i.test(prompt) ||
+    /^heading (?:paragraph|section)/i.test(prompt)
+  ) {
     return true
   }
   if (/choose the correct heading/i.test(prompt)) {
@@ -4339,7 +4391,7 @@ const isReadingMatchingHeadingQuestion = (
   }
   if (
     READING_ROMAN_HEADING_PATTERN.test(answer) &&
-    (/^paragraph\s+[A-G]\b/i.test(prompt) || /^section\s+[A-Z]\b/i.test(prompt))
+    (/^(?:paragraph|section)\s+[A-G]\b/i.test(prompt))
   ) {
     return true
   }
@@ -4348,7 +4400,7 @@ const isReadingMatchingHeadingQuestion = (
 }
 
 const getReadingParagraphAnswerLetters = (sectionText: string) => {
-  const rangeMatch = String(sectionText || '').match(/write\s+([A-Z])\s*[-–—]\s*([A-Z])\b/i)
+  const rangeMatch = String(sectionText || '').match(/\b([A-Z])\s*[-–—]\s*([A-Z])\b/i)
   if (!rangeMatch) return null
   const startCode = rangeMatch[1].toUpperCase().charCodeAt(0)
   const endCode = rangeMatch[2].toUpperCase().charCodeAt(0)
@@ -4479,7 +4531,11 @@ const extractReadingMatchingGroupInstruction = (
   if (kind === 'information') {
     const instructionLines = lines.filter(
       (line) =>
-        /which (?:paragraph|section) contains/i.test(line) || /^write\s+[A-Z]/i.test(line) || /^nb\b/i.test(line)
+        /reading passage \d+ has/i.test(line) ||
+        /which (?:paragraph|section) contains/i.test(line) ||
+        /^write\s+the\s+correct\s+letter/i.test(line) ||
+        /^write\s+[A-Z]/i.test(line) ||
+        /^nb\b/i.test(line)
     )
     if (instructionLines.length) return instructionLines.join('\n')
   }
@@ -4512,7 +4568,16 @@ const getReadingMatchingQuestionStatement = (
   question: ReadingQuestion,
   kind: ReadingMatchingGroupKind
 ) => {
-  const fromBlock = extractReadingQuestionBlock(passage?.questionSectionText || '', question.number)
+  const range = findReadingQuestionRange(passage, question)
+  const scopedSection = extractReadingQuestionRangeBlock(
+    passage?.questionSectionText || '',
+    range.start,
+    range.end
+  )
+  const fromBlock = extractReadingQuestionBlock(
+    scopedSection || passage?.questionSectionText || '',
+    question.number
+  )
   if (fromBlock) return fromBlock.trim()
 
   const prompt = String(question.prompt || '').trim()
@@ -4581,6 +4646,25 @@ const buildReadingMatchingGroups = (
 
   return groups
 }
+
+const isFirstReadingMatchingGroupQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null,
+  allQuestions: ReadingQuestion[] = []
+) => {
+  if (!passage || !question) return false
+  const group = buildReadingMatchingGroups(passage, allQuestions).find(
+    (item) => question.number >= item.start && question.number <= item.end
+  )
+  return group ? question.number === group.start : false
+}
+
+const getReadingMatchingExcludedParagraphIndices = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null,
+  allQuestions: ReadingQuestion[] = []
+) =>
+  isFirstReadingMatchingGroupQuestion(passage, question, allQuestions) ? [0, 1] : []
 
 const READING_FILL_SECTION_PATTERN =
   /complete the (?:notes|sentences|summary|table)|choose (?:one|no more than)|write one word only|each gap|fill in the/i
@@ -4739,6 +4823,85 @@ const buildReadingFillQuestionGroups = (
   return groups.sort((first, second) => first.start - second.start)
 }
 
+const READING_CHOOSE_TWO_SECTION_PATTERN = /choose\s+two\s+letters?/i
+
+const isReadingChooseTwoSectionBlock = (block: string) => READING_CHOOSE_TWO_SECTION_PATTERN.test(block)
+
+const isReadingChooseTwoQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!question || question.answerType !== 'multiple-choice' || !passage) return false
+  const range = findReadingQuestionRange(passage, question)
+  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+  return isReadingChooseTwoSectionBlock(block)
+}
+
+const extractReadingLetterOptionsFromBlock = (block: string) =>
+  String(block || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const match = line.match(/^([A-H])\s+(.+)$/i)
+      if (!match) return null
+      return { letter: match[1].toUpperCase(), text: match[2].trim() }
+    })
+    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+
+const extractReadingChooseTwoGroupInstruction = (block: string) => {
+  const lines = String(block || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const instructionLines = lines.filter(
+    (line) =>
+      !/^[A-H]\s+/i.test(line) &&
+      !/^\d+\s/.test(line) &&
+      !/^\d+\.\s/.test(line)
+  )
+  return instructionLines.join('\n').trim()
+}
+
+const buildReadingChooseTwoGroups = (
+  passage: ReadingPassageRecord | null,
+  questions: ReadingQuestion[]
+): ReadingChooseTwoGroup[] => {
+  if (!passage) return []
+
+  const groups: ReadingChooseTwoGroup[] = []
+  const ranges = passage.questionRanges?.length ? passage.questionRanges : []
+
+  ranges.forEach((range) => {
+    const block = extractReadingQuestionRangeBlock(
+      passage.questionSectionText || '',
+      range.start,
+      range.end
+    )
+    if (!block || !isReadingChooseTwoSectionBlock(block)) return
+
+    const rangeQuestions = questions.filter(
+      (question) =>
+        question.number >= range.start &&
+        question.number <= range.end &&
+        isReadingChooseTwoQuestion(passage, question)
+    )
+    if (rangeQuestions.length < 2) return
+
+    const choiceOptions = extractReadingLetterOptionsFromBlock(block)
+    groups.push({
+      id: `${passage.number}-choose-two-${range.start}-${range.end}`,
+      start: range.start,
+      end: range.end,
+      instruction: extractReadingChooseTwoGroupInstruction(block),
+      choiceOptions,
+      questions: [...rangeQuestions]
+    })
+  })
+
+  return groups.sort((first, second) => first.start - second.start)
+}
+
 const isReadingJudgementQuestion = (question: ReadingQuestion | null) =>
   question?.answerType === 'true-false-not-given' || question?.answerType === 'yes-no-not-given'
 
@@ -4880,8 +5043,19 @@ const extractReadingMultipleChoiceOptions = (
     }))
   }
 
+  const range = findReadingQuestionRange(passage, question)
+  const sectionBlock = extractReadingQuestionRangeBlock(
+    passage.questionSectionText || '',
+    range.start,
+    range.end
+  )
+  if (sectionBlock && isReadingChooseTwoSectionBlock(sectionBlock)) {
+    const fromSection = extractReadingLetterOptionsFromBlock(sectionBlock)
+    if (fromSection.length) return fromSection
+  }
+
   const block = extractReadingQuestionBlock(passage.questionSectionText, question.number)
-  const optionSource = block || passage.questionSectionText
+  const optionSource = block || sectionBlock || passage.questionSectionText
   const lines = optionSource
     .split('\n')
     .map((line) => line.trim())
@@ -4944,14 +5118,19 @@ const scoreReadingEvidenceDistractor = (candidate: string, question: ReadingQues
 
 const buildReadingMatchingEvidencePortions = (
   passage: ReadingPassageRecord | null,
-  question: ReadingQuestion | null
+  question: ReadingQuestion | null,
+  allQuestions: ReadingQuestion[] = []
 ) => {
   const hintNeedles = buildReadingHintNeedles(question?.exactPortion || '')
   const correctText = hintNeedles[0] || String(question?.exactPortion || '').trim()
   const correctNormalized = normalizeTextForLooseMatch(correctText)
   const focusIndex = passage && question ? findReadingEvidenceParagraphIndex(passage, question.exactPortion) : -1
+  const excludedParagraphIndices = new Set(
+    getReadingMatchingExcludedParagraphIndices(passage, question, allQuestions)
+  )
   const paragraphs = passage?.bodyParagraphs || []
   const useParagraphLabels = isReadingMatchingQuestion(passage, question)
+  const isParagraphExcluded = (index: number) => excludedParagraphIndices.has(index)
 
   const pickTrapSentenceSnippet = (paragraph: string, index: number) => {
     const prefix = useParagraphLabels ? `Paragraph ${getReadingPassageLabel(index)}: ` : ''
@@ -4979,7 +5158,7 @@ const buildReadingMatchingEvidencePortions = (
   }
 
   const sentenceCandidates = paragraphs.flatMap((paragraph, index) => {
-    if (index === focusIndex) return []
+    if (index === focusIndex || isParagraphExcluded(index)) return []
     const prefix = useParagraphLabels ? `Paragraph ${getReadingPassageLabel(index)}: ` : ''
     return String(paragraph || '')
       .split(/(?<=[.!?])\s+/)
@@ -4998,7 +5177,7 @@ const buildReadingMatchingEvidencePortions = (
       snippet: pickTrapSentenceSnippet(paragraph, index),
       trapScore: scoreReadingEvidenceDistractor(paragraph, question)
     }))
-    .filter((entry) => entry.index !== focusIndex)
+    .filter((entry) => entry.index !== focusIndex && !isParagraphExcluded(entry.index))
     .sort((a, b) => b.trapScore - a.trapScore)
 
   const rankedCandidates = [...sentenceCandidates, ...paragraphCandidates].sort(
@@ -5263,14 +5442,15 @@ const isReadingAnswerCorrect = (
 
 const buildReadingEvidenceOptions = (
   passage: ReadingPassageRecord | null,
-  question: ReadingQuestion | null
+  question: ReadingQuestion | null,
+  allQuestions: ReadingQuestion[] = []
 ): ReadingPdoyEvidenceOption[] => {
   if (!question) return []
 
   const isMatchingQuestion = isReadingMatchingQuestion(passage, question)
 
   if (isMatchingQuestion) {
-    const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question)
+    const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question, allQuestions)
     const safeDistractors = [...distractors]
     while (safeDistractors.length < 3) {
       safeDistractors.push(
@@ -6296,6 +6476,7 @@ function App() {
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
   const [readingExams, setReadingExams] = useState<ReadingExamRecord[]>([])
   const [readingWorkspaceMode, setReadingWorkspaceMode] = useState<ReadingWorkspaceMode>('bank')
+  const [readingEntryView, setReadingEntryView] = useState<ReadingEntryView>('levels')
   const [readingEntryCategory, setReadingEntryCategory] = useState<ReadingBankCategory | null>(null)
   const [selectedReadingCategory, setSelectedReadingCategory] = useState<ReadingBankCategory>('normal')
   const [selectedReadingCollection, setSelectedReadingCollection] = useState('all')
@@ -6794,7 +6975,7 @@ function App() {
     2
   )
   const activeAdminReadingGeneratorPassages = useMemo(
-    () => adminReadingGeneratorPassages.filter((passage, index) => passage.sourcePassage.trim() || index === 0),
+    () => adminReadingGeneratorPassages.filter((passage, index) => passage.sourcePassage.trim() || index <= 2),
     [adminReadingGeneratorPassages]
   )
   const activeAdminWorkspaceSection =
@@ -6854,6 +7035,19 @@ function App() {
     setAdminPanelMessage(`Loaded Passage 2 prototype: ${prototype.title}.`)
   }
 
+  const applyRandomReadingPassage3Prototype = (passageId: string) => {
+    const prototype = pickRandomReadingPassage3Prototype()
+    updateAdminReadingGeneratorPassage(passageId, {
+      title: prototype.title,
+      sourcePassage: prototype.text,
+      category: 'advanced',
+      questionTypes: prototype.questionTypes as AdminReadingGeneratorQuestionType[],
+      questionCount: '14',
+      requirements: prototype.requirements
+    })
+    setAdminPanelMessage(`Loaded Passage 3 model: ${prototype.title}.`)
+  }
+
   const buildAdminReadingGeneratorBrief = () => {
     setAdminPanelMessage('')
     setAuthError('')
@@ -6867,6 +7061,10 @@ function App() {
       adminReadingGeneratorPassages[1] && !adminReadingGeneratorPassages[1].sourcePassage.trim()
         ? pickRandomReadingPassage2Prototype()
         : null
+    const passage3Prototype =
+      adminReadingGeneratorPassages[2] && !adminReadingGeneratorPassages[2].sourcePassage.trim()
+        ? pickRandomReadingPassage3Prototype()
+        : null
     const passages = adminReadingGeneratorPassages
       .map((passage, originalIndex) => {
         const prototype =
@@ -6874,13 +7072,21 @@ function App() {
             ? passage1Prototype
             : originalIndex === 1 && !passage.sourcePassage.trim()
               ? passage2Prototype
-              : null
-        const prototypeKind = originalIndex === 0 ? 'Passage 1' : originalIndex === 1 ? 'Passage 2' : ''
+              : originalIndex === 2 && !passage.sourcePassage.trim()
+                ? passage3Prototype
+                : null
+        const prototypeKind =
+          originalIndex === 0 ? 'Passage 1' : originalIndex === 1 ? 'Passage 2' : originalIndex === 2 ? 'Passage 3' : ''
+        const prototypeQuestionTypes =
+          originalIndex === 2 && prototype && 'questionTypes' in prototype
+            ? ((prototype as ReadingPassage3Prototype).questionTypes as AdminReadingGeneratorQuestionType[])
+            : null
         return {
           passage,
           originalIndex,
           prototype,
           prototypeKind,
+          effectiveQuestionTypes: prototypeQuestionTypes || passage.questionTypes,
           sourcePassage: passage.sourcePassage.trim() || prototype?.text || ''
         }
       })
@@ -6892,7 +7098,7 @@ function App() {
 
     const typeRequirements = ADMIN_READING_GENERATOR_QUESTION_TYPES
       .map((type) => {
-        const used = passages.some(({ passage }) => passage.questionTypes.includes(type.id))
+        const used = passages.some(({ effectiveQuestionTypes }) => effectiveQuestionTypes.includes(type.id))
         if (!used) return ''
         return `${type.label}\n${ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS[type.id]}`
       })
@@ -6900,8 +7106,12 @@ function App() {
       .join('\n\n')
 
     const passageBriefs = passages
-      .map(({ passage, prototype, prototypeKind, sourcePassage }, index) => {
-        const selectedTypes = passage.questionTypes.map(getAdminReadingGeneratorTypeLabel).join(', ') || 'Admin will define later'
+      .map(({ passage, prototype, prototypeKind, effectiveQuestionTypes, sourcePassage }, index) => {
+        const selectedTypes = effectiveQuestionTypes.map(getAdminReadingGeneratorTypeLabel).join(', ') || 'Admin will define later'
+        const passage3PrototypeRequirements =
+          prototypeKind === 'Passage 3' && prototype && 'requirements' in prototype
+            ? `Saved Passage 3 model requirements:\n${(prototype as ReadingPassage3Prototype).requirements}`
+            : ''
         return [
           `SOURCE PASSAGE ${index + 1}`,
           `Working title: ${passage.title.trim() || `Generated Reading Passage ${index + 1}`}`,
@@ -6911,10 +7121,12 @@ function App() {
           `Target question count: ${passage.questionCount.trim() || 'Match the source passage pattern.'}`,
           `Question types needed: ${selectedTypes}`,
           passage.requirements.trim() ? `Extra admin requirements:\n${passage.requirements.trim()}` : '',
+          passage3PrototypeRequirements,
           prototype
             ? `Saved ${prototypeKind} prototype randomly selected by the app: ${prototype.title}. Use this only as a structural model and change the generated topic completely.`
             : '',
           prototypeKind === 'Passage 2' ? READING_PASSAGE_2_PROTOTYPE_PATTERN_NOTES : '',
+          prototypeKind === 'Passage 3' ? READING_PASSAGE_3_PROTOTYPE_PATTERN_NOTES : '',
           'Original passage to imitate for length, difficulty, paragraph organization, and IELTS academic style:',
           sourcePassage.trim()
         ].filter(Boolean).join('\n')
@@ -7351,6 +7563,10 @@ function App() {
     setScriptReviewModal(null)
     pendingAssessmentRef.current = null
     setReadingWorkspaceMode('bank')
+    setReadingEntryView('levels')
+    setReadingEntryCategory(null)
+    setSelectedReadingCategory('normal')
+    setSelectedReadingCollection('all')
     setSelectedReadingPdoyLessonId('')
     setReadingPdoySessionActive(false)
     setReadingPdoyStep('intro')
@@ -8037,6 +8253,10 @@ function App() {
     () => bankReadingExams.filter((exam) => isMonthlyReadingCollection(exam)),
     [bankReadingExams]
   )
+  const leveledReadingExams = useMemo(
+    () => bankReadingExams.filter((exam) => !isMonthlyReadingCollection(exam)),
+    [bankReadingExams]
+  )
   const readingMonthGroups = useMemo(() => {
     const groups = new Map<string, ReadingExamRecord[]>()
     monthlyReadingExams.forEach((exam) => {
@@ -8053,19 +8273,19 @@ function App() {
   }, [monthlyReadingExams])
   const filteredReadingExams = useMemo(
     () =>
-      bankReadingExams.filter(
+      leveledReadingExams.filter(
         (exam) =>
           exam.category === selectedReadingCategory &&
           (selectedReadingCollection === 'all' || getReadingExamCollectionTitle(exam) === selectedReadingCollection)
       ),
-    [bankReadingExams, selectedReadingCategory, selectedReadingCollection]
+    [leveledReadingExams, selectedReadingCategory, selectedReadingCollection]
   )
   const readingCollectionsByCategory = useMemo(
     () =>
       (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).reduce(
         (collectionMap, category) => {
           const counts = new Map<string, number>()
-          bankReadingExams
+          leveledReadingExams
             .filter((exam) => exam.category === category)
             .forEach((exam) => {
               const collection = getReadingExamCollectionTitle(exam)
@@ -8078,7 +8298,7 @@ function App() {
         },
         {} as Record<ReadingBankCategory, Array<{ title: string; count: number }>>
       ),
-    [bankReadingExams]
+    [leveledReadingExams]
   )
   const readingAttemptByExamId = useMemo(() => readingAttemptHistory, [readingAttemptHistory])
   const readingExamCountsByCategory = useMemo(
@@ -8086,10 +8306,10 @@ function App() {
       (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => ({
         category,
         label: READING_CATEGORY_LABELS[category],
-        count: bankReadingExams.filter((exam) => exam.category === category).length,
-        exams: bankReadingExams.filter((exam) => exam.category === category).slice(0, 6)
+        count: leveledReadingExams.filter((exam) => exam.category === category).length,
+        exams: leveledReadingExams.filter((exam) => exam.category === category).slice(0, 6)
       })),
-    [bankReadingExams]
+    [leveledReadingExams]
   )
   const readingExamGroupsByCollection = useMemo(() => {
     const groups = new Map<string, ReadingExamRecord[]>()
@@ -8257,7 +8477,11 @@ function App() {
     () =>
       activeReadingPdoyLesson?.lessonType === 'fill-in-the-blank'
         ? buildReadingFillPortionOptions(activeReadingPdoyPassage, activeReadingPdoyQuestion)
-        : buildReadingEvidenceOptions(activeReadingPdoyPassage, activeReadingPdoyQuestion),
+        : buildReadingEvidenceOptions(
+            activeReadingPdoyPassage,
+            activeReadingPdoyQuestion,
+            activeReadingPdoyPassage?.questions || []
+          ),
     [activeReadingPdoyLesson?.lessonType, activeReadingPdoyPassage, activeReadingPdoyQuestion]
   )
   const activeReadingPdoyFillGrammarOptions = useMemo(
@@ -8385,7 +8609,8 @@ function App() {
     if (!hintPassage || hintPassage.number !== activeReadingPassage.number) return []
 
     if (isReadingMatchingQuestion(hintPassage, activeReadingHint)) {
-      return buildReadingMatchingHintNeedles(hintPassage, activeReadingHint)
+      const hintQuestions = hintPassage.questions || []
+      return buildReadingMatchingHintNeedles(hintPassage, activeReadingHint, hintQuestions)
     }
 
     const excerpt = getReadingQuestionHintExcerpt(hintPassage, activeReadingHint)
@@ -8416,6 +8641,17 @@ function App() {
     })
     return lookup
   }, [activeReadingFillQuestionGroups])
+  const activeReadingChooseTwoGroups = useMemo(
+    () => buildReadingChooseTwoGroups(activeReadingPassage, activeReadingQuestions),
+    [activeReadingPassage, activeReadingQuestions]
+  )
+  const activeReadingChooseTwoGroupByQuestionNumber = useMemo(() => {
+    const lookup = new Map<number, ReadingChooseTwoGroup>()
+    activeReadingChooseTwoGroups.forEach((group) => {
+      group.questions.forEach((question) => lookup.set(question.number, group))
+    })
+    return lookup
+  }, [activeReadingChooseTwoGroups])
   const activeReadingAllQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
   const visibleReadingReportItems =
     readingAttemptStage === 'review' ? readingReportItems.filter((item) => !item.isCorrect) : readingReportItems
@@ -12180,6 +12416,50 @@ function App() {
     showPracticeNotebookToast()
   }
 
+  const openReadingLanding = (view: ReadingEntryView = 'levels') => {
+    setReadingWorkspaceMode('bank')
+    setReadingEntryView(view)
+    setReadingEntryCategory(null)
+    setSelectedReadingCategory('normal')
+    setSelectedReadingCollection('all')
+    setReadingAttemptStage('bank')
+    setReadingHintQuestionNumber(null)
+    setReadingExamError('')
+    setActivePage('reading')
+  }
+
+  const openReadingCategoryBank = (category: ReadingBankCategory) => {
+    setReadingWorkspaceMode('bank')
+    setReadingEntryView('levels')
+    setReadingEntryCategory(category)
+    setSelectedReadingCategory(category)
+    setSelectedReadingCollection('all')
+    setReadingAttemptStage('bank')
+    setReadingHintQuestionNumber(null)
+    setReadingExamError('')
+  }
+
+  const openReadingMonthlyBank = () => {
+    setReadingWorkspaceMode('bank')
+    setReadingEntryView('monthly')
+    setReadingEntryCategory(null)
+    setSelectedReadingCategory('normal')
+    setSelectedReadingCollection('all')
+    setReadingAttemptStage('bank')
+    setReadingHintQuestionNumber(null)
+    setReadingExamError('')
+  }
+
+  const returnToReadingBank = (exam: ReadingExamRecord) => {
+    setReadingAttemptStage('bank')
+    setReadingExamError('')
+    if (isMonthlyReadingCollection(exam)) {
+      openReadingMonthlyBank()
+      return
+    }
+    openReadingCategoryBank(exam.category)
+  }
+
   const openListeningVocabularyBuilderPack = (packId: string) => {
     stopListeningPlayback()
     resetListeningBuilderExamDrill()
@@ -12210,8 +12490,10 @@ function App() {
   const startReadingExam = (examId: string) => {
     const exam = bankReadingExams.find((item) => item.id === examId) || null
     if (!exam) return
+    const isMonthlyExam = isMonthlyReadingCollection(exam)
     setReadingWorkspaceMode('bank')
-    setReadingEntryCategory(exam.category)
+    setReadingEntryView(isMonthlyExam ? 'monthly' : 'levels')
+    setReadingEntryCategory(isMonthlyExam ? null : exam.category)
     setSelectedReadingCategory(exam.category)
     setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
@@ -12463,8 +12745,10 @@ function App() {
     const exam = bankReadingExams.find((item) => item.id === examId) || null
     const savedAttempt = readingAttemptByExamId[examId]
     if (!exam || !savedAttempt) return
+    const isMonthlyExam = isMonthlyReadingCollection(exam)
     setReadingWorkspaceMode('bank')
-    setReadingEntryCategory(exam.category)
+    setReadingEntryView(isMonthlyExam ? 'monthly' : 'levels')
+    setReadingEntryCategory(isMonthlyExam ? null : exam.category)
     setSelectedReadingCategory(exam.category)
     setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
@@ -12776,6 +13060,87 @@ function App() {
     )
   }
 
+  const renderReadingChooseTwoGroup = (group: ReadingChooseTwoGroup) => {
+    const letterChoices =
+      group.choiceOptions.length > 0
+        ? group.choiceOptions
+        : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map((letter) => ({ letter, text: letter }))
+
+    return (
+      <article key={`reading-choose-two-${group.id}`} className="readingQuestionCard readingChooseTwoGroup">
+        <div className="readingChooseTwoGroupHeader">
+          <p className="readingQuestionNumber">
+            Questions {group.start} and {group.end}
+          </p>
+          <h4>Choose TWO letters</h4>
+        </div>
+        {group.instruction && <pre className="readingChooseTwoInstruction">{group.instruction}</pre>}
+        {letterChoices.length > 0 && (
+          <ul className="readingChooseTwoOptionList" aria-label="Answer options">
+            {letterChoices.map((option) => (
+              <li key={`${group.id}-option-${option.letter}`}>
+                <strong>{option.letter}</strong>
+                <span>{option.text}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="readingChooseTwoAnswers">
+          {group.questions.map((question) => {
+            const isHinting = readingHintQuestionNumber === question.number
+            return (
+              <div
+                key={`reading-choose-two-answer-${question.number}`}
+                id={`reading-question-${question.number}`}
+                className={`readingChooseTwoAnswerRow ${isHinting ? 'is-active' : ''}`.trim()}
+              >
+                <label className="readingChooseTwoAnswerLabel" htmlFor={`reading-choose-two-select-${question.number}`}>
+                  Question {question.number}
+                </label>
+                <div className="readingChooseTwoAnswerControls">
+                  <select
+                    id={`reading-choose-two-select-${question.number}`}
+                    value={readingAnswers[question.number] || ''}
+                    onChange={(event) =>
+                      setReadingAnswers((current) => ({
+                        ...current,
+                        [question.number]: event.target.value
+                      }))
+                    }
+                    className="readingMatchingInfoSelect"
+                  >
+                    <option value="">Select letter</option>
+                    {letterChoices.map((option) => (
+                      <option key={`${question.number}-${option.letter}`} value={option.letter}>
+                        {option.letter}. {option.text}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    className="secondary readingFillHintBtn"
+                    onClick={() => {
+                      setReadingHintQuestionNumber((current) =>
+                        current === question.number ? null : question.number
+                      )
+                    }}
+                  >
+                    {isHinting ? 'Hide hint' : 'Show hint'}
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        {group.questions.some((question) => question.number === readingHintQuestionNumber) && (
+          <div className="readingHintBox">
+            <strong>Hint:</strong> evidence highlighted in the passage.
+          </div>
+        )}
+      </article>
+    )
+  }
+
   const renderReadingAnswerField = (
     question: ReadingQuestion,
     passage: ReadingPassageRecord | null = activeReadingPassage
@@ -13010,12 +13375,7 @@ function App() {
                 <button
                   className={activePage === 'reading' ? 'active' : ''}
                   onClick={() => {
-                    setReadingEntryCategory(null)
-                    setReadingWorkspaceMode('bank')
-                    setSelectedReadingCategory('normal')
-                    setReadingAttemptStage('bank')
-                    setReadingHintQuestionNumber(null)
-                    setActivePage('reading')
+                    openReadingLanding()
                   }}
                   type="button"
                 >
@@ -13121,12 +13481,7 @@ function App() {
                   <button
                     type="button"
                     onClick={() => {
-                      setReadingEntryCategory(null)
-                      setReadingWorkspaceMode('bank')
-                      setSelectedReadingCategory('normal')
-                      setReadingAttemptStage('bank')
-                      setReadingHintQuestionNumber(null)
-                      setActivePage('reading')
+                      openReadingLanding()
                     }}
                   >
                     Reading
@@ -14019,16 +14374,59 @@ function App() {
           <div className="readingPageHeader">
             <div>
               <p className="sectionLabel">IELTS Reading</p>
-              <h2>{selectedReadingEntryChoice ? selectedReadingEntryChoice.title : 'Reading by Month'}</h2>
+              <h2>
+                {selectedReadingEntryChoice
+                  ? selectedReadingEntryChoice.title
+                  : readingEntryView === 'monthly'
+                    ? 'Monthly Exams'
+                    : 'Choose Reading Practice'}
+              </h2>
               <p>
                 {selectedReadingEntryChoice
                   ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
-                  : '2026 reading sets, grouped by month.'}
+                  : readingEntryView === 'monthly'
+                    ? '2026 reading sets, grouped by month.'
+                    : 'Normal Reading, Advanced Reading, and Monthly Exams are separate banks.'}
               </p>
             </div>
           </div>
 
-          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && (
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && readingEntryView === 'levels' && (
+            <div className="readingEntryShell">
+              <div className="readingEntryChooser">
+                {READING_ENTRY_CHOICES.map((choice) => {
+                  const categoryCount = readingExamCountsByCategory.find((group) => group.category === choice.category)?.count || 0
+                  return (
+                    <button
+                      key={choice.category}
+                      type="button"
+                      className={`readingEntryCard readingEntryCard-${choice.category}`}
+                      onClick={() => openReadingCategoryBank(choice.category)}
+                    >
+                      <span className="readingEntryLabel">{choice.tone}</span>
+                      <strong>{choice.title}</strong>
+                      <span className="readingEntrySubtitle">{choice.subtitle}</span>
+                      <small>{choice.detail} · ด่านฝึกตามชุดเดิม</small>
+                      <span className="readingEntryCount">{categoryCount} exams</span>
+                    </button>
+                  )
+                })}
+                <button
+                  type="button"
+                  className="readingEntryCard readingEntryCard-monthly"
+                  onClick={openReadingMonthlyBank}
+                >
+                  <span className="readingEntryLabel">Monthly</span>
+                  <strong>Monthly Exams</strong>
+                  <span className="readingEntrySubtitle">ข้อสอบรายเดือน</span>
+                  <small>ชุดข้อสอบ IELTS Academic Reading แยกตามเดือน</small>
+                  <span className="readingEntryCount">{monthlyReadingExams.length} exams</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && readingEntryView === 'monthly' && (
             <div className="readingEntryShell">
               <div className="readingMonthBank">
                 <div className="readingBankWindowHeader">
@@ -14039,6 +14437,13 @@ function App() {
                   </div>
                   <div className="readingBankWindowActions">
                     <span className="readingEntryCount">{monthlyReadingExams.length} exams</span>
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => openReadingLanding('levels')}
+                    >
+                      Back to Categories
+                    </button>
                   </div>
                 </div>
                 {readingMonthGroups.length === 0 ? (
@@ -14117,13 +14522,10 @@ function App() {
                     type="button"
                     className="secondary"
                     onClick={() => {
-                      setReadingEntryCategory(null)
-                      setReadingAttemptStage('bank')
-                      setSelectedReadingCollection('all')
-                      setReadingExamError('')
+                      openReadingLanding('levels')
                     }}
                   >
-                    Back to Levels
+                    Back to Categories
                   </button>
                 </div>
               </div>
@@ -14186,9 +14588,9 @@ function App() {
                     <section key={`reading-month-${readingEntryCategory}-${group.title}`} className="readingStagePanel readingMonthPanel">
                       <div className="readingStageHeader">
                         <div>
-                          <p className="sectionLabel">Monthly Reading</p>
+                          <p className="sectionLabel">{READING_CATEGORY_LABELS[readingEntryCategory]}</p>
                           <h4>{group.title}</h4>
-                          <p>{group.exams.length} exams · open anytime</p>
+                          <p>{group.exams.length} exams · ด่านฝึกตามชุด</p>
                         </div>
                       </div>
 
@@ -14792,8 +15194,7 @@ function App() {
                     type="button"
                     className="secondary"
                     onClick={() => {
-                      setReadingAttemptStage('bank')
-                      setReadingEntryCategory(null)
+                      returnToReadingBank(activeReadingExam)
                     }}
                   >
                     Back to Bank
@@ -14952,6 +15353,12 @@ function App() {
                           ? renderReadingFillQuestionGroup(fillGroup)
                           : null
                       }
+                      const chooseTwoGroup = activeReadingChooseTwoGroupByQuestionNumber.get(question.number)
+                      if (chooseTwoGroup) {
+                        return chooseTwoGroup.questions[0]?.number === question.number
+                          ? renderReadingChooseTwoGroup(chooseTwoGroup)
+                          : null
+                      }
                       const isHinting = readingHintQuestionNumber === question.number
                       const isNotGivenQuestion =
                         isReadingJudgementQuestion(question) &&
@@ -15017,8 +15424,7 @@ function App() {
                     type="button"
                     className="secondary"
                     onClick={() => {
-                      setReadingAttemptStage('bank')
-                      setReadingEntryCategory(null)
+                      returnToReadingBank(activeReadingExam)
                     }}
                   >
                     Back to Bank
@@ -16008,7 +16414,15 @@ function App() {
                                 className="secondary"
                                 onClick={() =>
                                   void handleAdminQuickUpdate(learner, {
-                                    status: learner.status === 'active' ? 'inactive' : 'active'
+                                    status: learner.status === 'active' ? 'inactive' : 'active',
+                                    ...(learner.status === 'active'
+                                      ? {}
+                                      : {
+                                          feedbackRemaining:
+                                            learner.feedbackRemaining > 0 ? learner.feedbackRemaining : DEFAULT_FEEDBACK_CREDITS,
+                                          fullMockRemaining:
+                                            learner.fullMockRemaining > 0 ? learner.fullMockRemaining : DEFAULT_FULL_MOCK_CREDITS
+                                        })
                                   })
                                 }
                               >
@@ -16355,7 +16769,7 @@ function App() {
                           onClick={() => setAdminReadingGeneratorActiveIndex(index)}
                         >
                           <span>Passage {index + 1}</span>
-                          <small>{passage.sourcePassage.trim() ? 'Ready' : index === 0 ? 'Prototype' : 'Empty'}</small>
+                          <small>{passage.sourcePassage.trim() ? 'Ready' : index <= 2 ? 'Prototype' : 'Empty'}</small>
                         </button>
                       ))}
                     </div>
@@ -16450,7 +16864,7 @@ function App() {
                               rows={8}
                             />
                           </label>
-                          {(originalIndex === 0 || originalIndex === 1) && (
+                          {originalIndex <= 2 && (
                             <div className="adminGeneratorPrototypeTools">
                               <p className="meta">
                                 Passage {originalIndex + 1} can be left blank. BUILD CODEX PROMPT will randomly use one saved
@@ -16462,7 +16876,9 @@ function App() {
                                 onClick={() =>
                                   originalIndex === 0
                                     ? applyRandomReadingPassage1Prototype(passage.id)
-                                    : applyRandomReadingPassage2Prototype(passage.id)
+                                    : originalIndex === 1
+                                      ? applyRandomReadingPassage2Prototype(passage.id)
+                                      : applyRandomReadingPassage3Prototype(passage.id)
                                 }
                               >
                                 USE RANDOM PASSAGE {originalIndex + 1} PROTOTYPE
