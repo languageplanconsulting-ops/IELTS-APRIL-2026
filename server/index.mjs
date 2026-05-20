@@ -1154,6 +1154,14 @@ const loadQuestionAudioManifest = async ({ forceRefresh = false } = {}) => {
     questionAudioManifestCache = { items: {} }
     return questionAudioManifestCache
   }
+  if (response.status === 400) {
+    const body = await response.text().catch(() => '')
+    if (/bucket not found|not found|resource/i.test(body)) {
+      questionAudioManifestCache = { items: {} }
+      return questionAudioManifestCache
+    }
+    throw new Error(`Could not load TTS audio manifest (${response.status}).`)
+  }
   if (!response.ok) {
     throw new Error(`Could not load TTS audio manifest (${response.status}).`)
   }
