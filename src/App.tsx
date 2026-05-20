@@ -25,11 +25,12 @@ import { CAMBRIDGE_17_SECTION_2_EXAM_SET } from './listeningBuilderCambridge17Se
 import { CAMBRIDGE_17_SECTION_4_EXAM_SET } from './listeningBuilderCambridge17Section4'
 import { CAMBRIDGE_17_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge17Data'
 import { CAMBRIDGE_18_SECTION_2_EXAM_SET } from './listeningBuilderCambridge18Section2'
-import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory } from './listeningFoundationData'
+import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory, type ListeningFoundationSet } from './listeningFoundationData'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
 import { ADVANCED_PART34_LISTENING_SETS } from './listeningAdvancedPart34Data'
+import { resolveListeningFoundationAudioscript } from './listeningFoundationAudioscript'
 import { SpeakingPart2SampleBadge, SpeakingPart2SamplePanel } from './SpeakingPart2SampleVideo'
 import { resolveSpeakingPart2SampleVideo } from './speakingPart2SampleVideos'
 import {
@@ -59,6 +60,21 @@ import {
   READING_PASSAGE_3_PROTOTYPE_PATTERN_NOTES,
   type ReadingPassage3Prototype
 } from './readingPassage3Prototypes'
+import {
+  READING_JOURNEY_PROGRESS_KEY,
+  READING_JOURNEY_UNLOCK_PERCENT,
+  buildJourneyExamRecords,
+  buildJourneyStageDefinitions,
+  didPassReadingJourneyStage,
+  getDefaultReadingJourneyProgress,
+  getJourneyStageTypeSummary,
+  getNextJourneyUnlockStage,
+  isReadingJourneyExamId,
+  isReadingJourneyStageUnlocked,
+  normalizeReadingJourneyProgress,
+  parseReadingJourneyStageNumber,
+  type ReadingJourneyProgress
+} from './readingJourney'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -89,6 +105,9 @@ const ALL_LISTENING_FOUNDATION_SETS = [
   ...ADVANCED_PART34_LISTENING_SETS
 ]
 
+const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
+  set.audioCacheKey || `listening-foundation-${set.id}`
+
 const LISTENING_FOUNDATION_CATEGORY_LABELS: Record<ListeningFoundationCategory, string> = {
   essential: 'Essential',
   advanced: 'Advanced',
@@ -107,7 +126,7 @@ type AdminWorkspaceSection = 'landing' | 'reading' | 'learners' | 'support' | 'a
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
 type ReadingBankCategory = 'normal' | 'advanced'
-type ReadingEntryView = 'levels' | 'monthly'
+type ReadingEntryView = 'levels' | 'monthly' | 'journey'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
 type ReadingPdoyLessonType = 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'fill-in-the-blank'
 type ReadingPdoyLessonStep = 'intro' | 'evidence' | 'decide' | 'result' | 'complete'
@@ -3314,6 +3333,7 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
     'Focus: scanning for specific details and understanding local context.',
     'Order: usually chronological, except sometimes in tables or flowcharts.',
     'Surround every blank with paraphrased text.',
+    'Do not echo passage phrases immediately before or after the gap (e.g. "genetic ____" for genetic sampling, or "habitat ____" for corridors).',
     'The answer must be the exact word from the generated passage with no tense, singular/plural, or word-form change.',
     'Respect the word limit literally, e.g. ONE WORD ONLY means "the manatees" is wrong if the answer is "manatees".',
     'Include the original IELTS-style instruction block above the questions.'
@@ -3322,6 +3342,8 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
     'Focus: understanding a concentrated section of the text.',
     'Order: chronological within the specific section summarized.',
     'Type A, no word bank: exact passage words must be extracted, like fill in the blanks.',
+    'Paraphrase the summary line around each blank: do NOT copy passage wording before/after the gap (e.g. avoid "genetic ____" when the passage says "genetic sampling"; avoid "sea ____" when the answer is "ice" from "sea ice").',
+    'The answer must still be ONE exact word from the passage with no word-form change.',
     'Type B, with word bank: answer must be a letter corresponding to the word box; test secondary vocabulary and paraphrase.',
     'For word banks, include grammatically plausible but factually wrong distractors.',
     'Also include exact words from the text that do not fit the grammar or meaning of the paraphrased summary.'
@@ -3366,6 +3388,7 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
     'Focus: connecting specific theories, discoveries, claims, quotes, places, eras, or people to the features that produced them.',
     'Order: not chronological.',
     'Give a list of statements and a list of proper nouns or feature labels, usually capitalized names.',
+    'Each statement must be heavily paraphrased from the evidence clause; do not reuse the same wording (e.g. "talk about private distress" vs "describe distress they would otherwise keep private").',
     'The correct answer must be a heavily paraphrased version of a direct quote or reported speech clause in the text.',
     'Use Scattered Expert traps: place quotes or claims from the same expert/feature in different paragraphs so scanning the name once is not enough.'
   ].join('\n'),
@@ -3374,6 +3397,7 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
     'Order: not chronological.',
     'The first question in the group must not target paragraph/section A or B. Begin with C or later, or place A/B later in the numbered set.',
     'Headings should be short, around 2-12 words.',
+    'The correct heading must paraphrase the paragraph main idea; do not lift the same phrases from the paragraph opening (wrong: "different from alternatives" for a paragraph that says "differs from many alternatives").',
     'The correct heading usually requires synthesizing the topic sentence, conclusion, or sentences after major transitions such as but/however/therefore.',
     'Use more headings than paragraphs so there are plausible unused headings.',
     'Use Overly Specific Heading traps: a distractor accurately describes one sentence but not the whole paragraph.',
@@ -3384,6 +3408,7 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
     'Order: not chronological.',
     'The first question in the group must not be answered by paragraph A or B. Use paragraph C or later for question 1, or reorder statements so A/B answers appear later.',
     'Format prompts as noun phrases, e.g. "a reference to...", "an explanation of...", "examples of...".',
+    'Paraphrase every prompt: do NOT repeat the same content words that appear in the passage evidence (e.g. "denial of involvement" must not match "denied any involvement"; use "rejecting accusations of supporting the raiders" instead).',
     'Allow paragraph letters to be used more than once when appropriate, and include "NB You may use any letter more than once" if reused.',
     'Each answer must be a paragraph letter and supported by one exact passage portion.',
     'Use plural traps: if the prompt asks for plural outcomes/examples/reasons, the paragraph must contain more than one; a paragraph with only one is a trap.',
@@ -6249,6 +6274,15 @@ const parseStoredScores = (value: string | null): Record<string, number> => {
   }
 }
 
+const parseStoredReadingJourneyProgress = (value: string | null): ReadingJourneyProgress => {
+  if (!value) return getDefaultReadingJourneyProgress()
+  try {
+    return normalizeReadingJourneyProgress(JSON.parse(value))
+  } catch {
+    return getDefaultReadingJourneyProgress()
+  }
+}
+
 const parseStoredReadingAttempts = (value: string | null): Record<string, ReadingAttemptSummary> => {
   if (!value) return {}
   try {
@@ -6533,6 +6567,9 @@ function App() {
   const [readingAttemptStage, setReadingAttemptStage] = useState<'bank' | 'exam' | 'report' | 'review'>('bank')
   const [readingReportItems, setReadingReportItems] = useState<ReadingReportItem[]>([])
   const [readingAttemptHistory, setReadingAttemptHistory] = useState<Record<string, ReadingAttemptSummary>>({})
+  const [readingJourneyProgress, setReadingJourneyProgress] = useState<ReadingJourneyProgress>(
+    getDefaultReadingJourneyProgress()
+  )
   const [readingActivePassageNumber, setReadingActivePassageNumber] = useState(1)
   const [readingSelectionText, setReadingSelectionText] = useState('')
   const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string }>>([])
@@ -7477,6 +7514,7 @@ function App() {
     const scopedReadingAttemptsKey = makeScopedStorageKey(READING_ATTEMPTS_KEY, session.email)
     const scopedListeningAttemptsKey = makeScopedStorageKey(LISTENING_ATTEMPTS_KEY, session.email)
     const scopedReadingPdoyProgressKey = makeScopedStorageKey(READING_PDOY_PROGRESS_KEY, session.email)
+    const scopedReadingJourneyProgressKey = makeScopedStorageKey(READING_JOURNEY_PROGRESS_KEY, session.email)
 
     const localEntries = parseStoredNotebookEntries(localStorage.getItem(scopedEntriesKey))
     const localSections = parseStoredCustomSections(localStorage.getItem(scopedSectionsKey))
@@ -7484,6 +7522,9 @@ function App() {
     const localReadingAttempts = parseStoredReadingAttempts(localStorage.getItem(scopedReadingAttemptsKey))
     const localListeningAttempts = parseStoredListeningAttempts(localStorage.getItem(scopedListeningAttemptsKey))
     const localReadingPdoyProgress = parseStoredReadingPdoyProgress(localStorage.getItem(scopedReadingPdoyProgressKey))
+    const localReadingJourneyProgress = parseStoredReadingJourneyProgress(
+      localStorage.getItem(scopedReadingJourneyProgressKey)
+    )
     const applyReadingPdoyProgressSnapshot = (snapshot: ReadingPdoyProgressSnapshot | null) => {
       const normalizedSnapshot = snapshot ? normalizeReadingPdoySnapshotForStage(snapshot) : null
       setSelectedReadingPdoyLessonId(normalizedSnapshot?.lessonId || '')
@@ -7505,6 +7546,7 @@ function App() {
 
     setLatestScoresByTest(localScores)
     setReadingAttemptHistory(localReadingAttempts)
+    setReadingJourneyProgress(localReadingJourneyProgress)
     setListeningAttemptHistory(localListeningAttempts)
     applyReadingPdoyProgressSnapshot(localReadingPdoyProgress)
     const hydrateReadingAttemptsFromRemote = async () => {
@@ -8171,18 +8213,24 @@ function App() {
   const listeningSectionAudioCatalog = useMemo<QuestionAudioCatalogItem[]>(
     () =>
       ALL_LISTENING_FOUNDATION_SETS
-        .filter((set) => set.audioCacheKey && set.audioscript)
-        .map((set) => ({
-          key: set.audioCacheKey || `listening-section-${set.section}-${set.id}`,
-          cacheKey: set.audioCacheKey || `listening-section-${set.section}-${set.id}`,
-          section: `Listening Section ${set.section}`,
-          audioKind: 'listening-section' as const,
-          sectionNumber: set.section,
-          topicId: set.id,
-          topicTitle: set.title,
-          question: set.audioscript || '',
-          audioUrl: ''
-        })),
+        .flatMap((set) => {
+          const audioscript = resolveListeningFoundationAudioscript(set)
+          if (!audioscript.trim()) return []
+          const cacheKey = getListeningFoundationAudioCacheKey(set)
+          return [
+            {
+              key: cacheKey,
+              cacheKey,
+              section: `Listening Section ${set.section}`,
+              audioKind: 'listening-section' as const,
+              sectionNumber: set.section,
+              topicId: set.id,
+              topicTitle: set.title,
+              question: audioscript,
+              audioUrl: ''
+            }
+          ]
+        }),
     []
   )
   const filteredManagedLearners = useMemo(() => {
@@ -8316,6 +8364,25 @@ function App() {
     () => bankReadingExams.filter((exam) => !isMonthlyReadingCollection(exam)),
     [bankReadingExams]
   )
+  const readingJourneySourcePool = useMemo(
+    () => [
+      ...leveledReadingExams.filter((exam) => exam.category === 'normal'),
+      ...pdoyReadingExams.filter((exam) => exam.category === 'normal')
+    ],
+    [leveledReadingExams, pdoyReadingExams]
+  )
+  const readingJourneyStageDefinitions = useMemo(
+    () => buildJourneyStageDefinitions(readingJourneySourcePool, 30),
+    [readingJourneySourcePool]
+  )
+  const readingJourneyExams = useMemo(
+    () => buildJourneyExamRecords(readingJourneySourcePool, 30),
+    [readingJourneySourcePool]
+  )
+  const practiceReadingExams = useMemo(
+    () => [...bankReadingExams, ...readingJourneyExams],
+    [bankReadingExams, readingJourneyExams]
+  )
   const readingMonthGroups = useMemo(() => {
     const groups = new Map<string, ReadingExamRecord[]>()
     monthlyReadingExams.forEach((exam) => {
@@ -8360,6 +8427,30 @@ function App() {
     [leveledReadingExams]
   )
   const readingAttemptByExamId = useMemo(() => readingAttemptHistory, [readingAttemptHistory])
+  const readingJourneyGameStats = useMemo(() => {
+    const total = readingJourneyStageDefinitions.length
+    let cleared = 0
+    let bestAccuracy = 0
+    let activeMission = 0
+    for (const stage of readingJourneyStageDefinitions) {
+      const attempt =
+        readingAttemptByExamId[stage.id] || readingJourneyProgress.attempts[stage.id]
+      const passed = attempt ? didPassReadingJourneyStage(attempt.accuracy) : false
+      if (passed) cleared += 1
+      if (attempt) bestAccuracy = Math.max(bestAccuracy, attempt.accuracy)
+      if (
+        activeMission === 0 &&
+        isReadingJourneyStageUnlocked(stage.stageNumber, readingJourneyProgress) &&
+        !passed
+      ) {
+        activeMission = stage.stageNumber
+      }
+    }
+    if (activeMission === 0 && total > 0) {
+      activeMission = cleared >= total ? total : 1
+    }
+    return { total, cleared, bestAccuracy, activeMission }
+  }, [readingAttemptByExamId, readingJourneyProgress, readingJourneyStageDefinitions])
   const readingExamCountsByCategory = useMemo(
     () =>
       (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => ({
@@ -8391,7 +8482,7 @@ function App() {
   )
   const recentStudentSupportReports = useMemo(() => mySupportReports.slice(0, 4), [mySupportReports])
   const activeReadingExam =
-    bankReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
+    practiceReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
     filteredReadingExams[0] ??
     null
   const activeReadingPassages = activeReadingExam?.parsedPayload?.passages || []
@@ -8770,6 +8861,9 @@ function App() {
     null
   const activeListeningFoundationScriptText = useMemo(() => {
     if (!activeListeningFoundationSet) return activeListeningFoundationQuestion?.passage || ''
+
+    const resolvedScript = resolveListeningFoundationAudioscript(activeListeningFoundationSet)
+    if (resolvedScript.trim()) return resolvedScript
 
     const uniquePassages = Array.from(
       new Set(
@@ -9473,7 +9567,7 @@ function App() {
   }, [authSession?.accessToken])
 
   useEffect(() => {
-    if (selectedReadingExamId && bankReadingExams.some((exam) => exam.id === selectedReadingExamId)) return
+    if (selectedReadingExamId && practiceReadingExams.some((exam) => exam.id === selectedReadingExamId)) return
     if (!filteredReadingExams.length) {
       setSelectedReadingExamId('')
       return
@@ -9481,7 +9575,7 @@ function App() {
     if (!filteredReadingExams.some((exam) => exam.id === selectedReadingExamId)) {
       setSelectedReadingExamId(filteredReadingExams[0].id)
     }
-  }, [bankReadingExams, filteredReadingExams, selectedReadingExamId])
+  }, [filteredReadingExams, practiceReadingExams, selectedReadingExamId])
 
   useEffect(() => {
     if (!readingPdoyLessons.length) {
@@ -9617,6 +9711,14 @@ function App() {
     if (!authSession?.email) return
     localStorage.setItem(makeScopedStorageKey(READING_ATTEMPTS_KEY, authSession.email), JSON.stringify(readingAttemptHistory))
   }, [authSession, readingAttemptHistory])
+
+  useEffect(() => {
+    if (!authSession?.email || isNotebookHydrating) return
+    localStorage.setItem(
+      makeScopedStorageKey(READING_JOURNEY_PROGRESS_KEY, authSession.email),
+      JSON.stringify(readingJourneyProgress)
+    )
+  }, [authSession, isNotebookHydrating, readingJourneyProgress])
 
   useEffect(() => {
     if (!authSession?.accessToken || !authSession.email || authSession.role === 'admin' || isNotebookHydrating || !notebookLoadedRef.current) return
@@ -12341,6 +12443,7 @@ function App() {
   const playListeningFoundationPassage = async () => {
     if (!activeListeningFoundationSet) return
     setListeningFoundationAudioPlayed(true)
+    const audioCacheKey = getListeningFoundationAudioCacheKey(activeListeningFoundationSet)
     const spokenText = activeListeningFoundationScriptSegments.length
       ? activeListeningFoundationScriptSegments
           .map((segment) => (segment.speaker ? `${segment.speaker}: ${segment.text}` : segment.text))
@@ -12352,18 +12455,18 @@ function App() {
         await playListeningSectionAudioFromUrl(activeListeningFoundationSet.audioUrl)
         return
       }
-      if (activeListeningFoundationSet.audioCacheKey && authSession?.accessToken) {
+      if (audioCacheKey && authSession?.accessToken) {
         const payload = await fetchJson<{ audioUrl: string; cached?: boolean }>('/api/tts/listening-section-audio', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${authSession.accessToken}`
           },
           body: JSON.stringify({
-            cacheKey: activeListeningFoundationSet.audioCacheKey,
+            cacheKey: audioCacheKey,
             topicId: activeListeningFoundationSet.id,
             topicTitle: activeListeningFoundationSet.title,
             section: activeListeningFoundationSet.section,
-            text: activeListeningFoundationSet.audioscript || activeListeningFoundationScriptText || spokenText
+            text: activeListeningFoundationScriptText || spokenText
           })
         })
         if (payload.audioUrl) {
@@ -12489,13 +12592,28 @@ function App() {
 
   const openReadingCategoryBank = (category: ReadingBankCategory) => {
     setReadingWorkspaceMode('bank')
-    setReadingEntryView('levels')
+    setReadingEntryView(category === 'normal' ? 'journey' : 'levels')
     setReadingEntryCategory(category)
     setSelectedReadingCategory(category)
     setSelectedReadingCollection('all')
     setReadingAttemptStage('bank')
     setReadingHintQuestionNumber(null)
     setReadingExamError('')
+  }
+
+  const openReadingNormalCollections = () => {
+    setReadingWorkspaceMode('bank')
+    setReadingEntryView('levels')
+    setReadingEntryCategory('normal')
+    setSelectedReadingCategory('normal')
+    setSelectedReadingCollection('all')
+    setReadingAttemptStage('bank')
+    setReadingHintQuestionNumber(null)
+    setReadingExamError('')
+  }
+
+  const openReadingJourneyBank = () => {
+    openReadingCategoryBank('normal')
   }
 
   const openReadingMonthlyBank = () => {
@@ -12514,6 +12632,10 @@ function App() {
     setReadingExamError('')
     if (isMonthlyReadingCollection(exam)) {
       openReadingMonthlyBank()
+      return
+    }
+    if (isReadingJourneyExamId(exam.id)) {
+      openReadingJourneyBank()
       return
     }
     openReadingCategoryBank(exam.category)
@@ -12547,7 +12669,7 @@ function App() {
   }
 
   const startReadingExam = (examId: string) => {
-    const exam = bankReadingExams.find((item) => item.id === examId) || null
+    const exam = practiceReadingExams.find((item) => item.id === examId) || null
     if (!exam) return
     const isMonthlyExam = isMonthlyReadingCollection(exam)
     setReadingWorkspaceMode('bank')
@@ -12801,12 +12923,13 @@ function App() {
   }
 
   const openReadingReview = (examId: string, stage: 'review' | 'report' = 'review') => {
-    const exam = bankReadingExams.find((item) => item.id === examId) || null
+    const exam = practiceReadingExams.find((item) => item.id === examId) || null
     const savedAttempt = readingAttemptByExamId[examId]
     if (!exam || !savedAttempt) return
     const isMonthlyExam = isMonthlyReadingCollection(exam)
+    const isJourneyExam = isReadingJourneyExamId(examId)
     setReadingWorkspaceMode('bank')
-    setReadingEntryView(isMonthlyExam ? 'monthly' : 'levels')
+    setReadingEntryView(isMonthlyExam ? 'monthly' : isJourneyExam ? 'journey' : 'levels')
     setReadingEntryCategory(isMonthlyExam ? null : exam.category)
     setSelectedReadingCategory(exam.category)
     setSelectedReadingCollection('all')
@@ -12829,6 +12952,8 @@ function App() {
     const results = scoreReadingQuestions(allQuestions, readingAnswers)
     const correctCount = results.filter((item) => item.isCorrect).length
     const totalQuestions = results.length
+    const accuracy = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0
+    const completedAt = new Date().toISOString()
     setReadingAttemptHistory((current) => ({
       ...current,
       [activeReadingExam.id]: {
@@ -12837,12 +12962,24 @@ function App() {
         category: activeReadingExam.category,
         correctCount,
         totalQuestions,
-        accuracy: totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0,
+        accuracy,
         wrongCount: Math.max(0, totalQuestions - correctCount),
-        completedAt: new Date().toISOString(),
+        completedAt,
         reportItems: results
       }
     }))
+    if (isReadingJourneyExamId(activeReadingExam.id)) {
+      const stageNumber = parseReadingJourneyStageNumber(activeReadingExam.id)
+      if (stageNumber) {
+        setReadingJourneyProgress((current) => ({
+          unlockedThroughStage: getNextJourneyUnlockStage(stageNumber, accuracy, current),
+          attempts: {
+            ...current.attempts,
+            [activeReadingExam.id]: { accuracy, completedAt }
+          }
+        }))
+      }
+    }
     setReadingReportItems(results)
     setReadingAttemptStage('report')
     setReadingHintQuestionNumber(null)
@@ -14434,18 +14571,22 @@ function App() {
             <div>
               <p className="sectionLabel">IELTS Reading</p>
               <h2>
-                {selectedReadingEntryChoice
-                  ? selectedReadingEntryChoice.title
-                  : readingEntryView === 'monthly'
-                    ? 'Monthly Exams'
-                    : 'Choose Reading Practice'}
+                {readingEntryView === 'journey'
+                  ? 'Reading Quest Log'
+                  : selectedReadingEntryChoice
+                    ? selectedReadingEntryChoice.title
+                    : readingEntryView === 'monthly'
+                      ? 'Monthly Exams'
+                      : 'Choose Reading Practice'}
               </h2>
               <p>
-                {selectedReadingEntryChoice
-                  ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
-                  : readingEntryView === 'monthly'
-                    ? '2026 reading sets, grouped by month.'
-                    : 'Normal Reading, Advanced Reading, and Monthly Exams are separate banks.'}
+                {readingEntryView === 'journey'
+                  ? 'สมุดภารกิจ Reading — เคลียร์แต่ละด่านที่ 80%+ เพื่อเปิดด่านถัดไป'
+                  : selectedReadingEntryChoice
+                    ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
+                    : readingEntryView === 'monthly'
+                      ? '2026 reading sets, grouped by month.'
+                      : 'Normal Reading, Advanced Reading, and Monthly Exams are separate banks.'}
               </p>
             </div>
           </div>
@@ -14465,7 +14606,11 @@ function App() {
                       <span className="readingEntryLabel">{choice.tone}</span>
                       <strong>{choice.title}</strong>
                       <span className="readingEntrySubtitle">{choice.subtitle}</span>
-                      <small>{choice.detail} · ด่านฝึกตามชุดเดิม</small>
+                      <small>
+                        {choice.category === 'normal'
+                          ? `${choice.detail} · Quest Log ด่านล่าด่าน · ปลดล็อก ${READING_JOURNEY_UNLOCK_PERCENT}%+`
+                          : `${choice.detail} · ด่านฝึกตามชุดเดิม`}
+                      </small>
                       <span className="readingEntryCount">{categoryCount} exams</span>
                     </button>
                   )
@@ -14565,7 +14710,154 @@ function App() {
             </div>
           )}
 
-          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && readingEntryCategory && (
+          {readingWorkspaceMode === 'bank' &&
+            readingAttemptStage === 'bank' &&
+            readingEntryCategory === 'normal' &&
+            readingEntryView === 'journey' && (
+              <div className="readingJourneyGame">
+                <nav className="readingJourneyBreadcrumb" aria-label="Reading quest navigation">
+                  <button type="button" className="readingJourneyBreadcrumbLink" onClick={() => openReadingLanding('levels')}>
+                    Reading
+                  </button>
+                  <span aria-hidden="true">›</span>
+                  <span>Quest Log</span>
+                </nav>
+
+                <section className="readingJourneyJournal">
+                  <div className="readingJourneyJournalMain">
+                    <span className="readingJourneyJournalTag">Normal · Mission Mode</span>
+                    <h3 className="readingJourneyJournalTitle">สมุดภารกิจ Reading</h3>
+                    <p className="readingJourneyJournalLead">
+                      แต่ละด่าน = 3 scrolls (Passage 1–3) · มี Fill · TFNG/YNNG · Matching — เคลียร์ที่{' '}
+                      <strong>{READING_JOURNEY_UNLOCK_PERCENT}%+</strong> ถึงจะเปิดด่านถัดไป
+                    </p>
+                    <div className="readingJourneyJournalChips">
+                      <span>📝 Fill</span>
+                      <span>⚖️ TFNG / YNNG</span>
+                      <span>🧩 Matching</span>
+                    </div>
+                  </div>
+                  <div className="readingJourneyJournalStats">
+                    <div className="readingJourneyStatBox">
+                      <span>Cleared</span>
+                      <strong>
+                        {readingJourneyGameStats.cleared}/{readingJourneyGameStats.total}
+                      </strong>
+                    </div>
+                    <div className="readingJourneyStatBox">
+                      <span>Active mission</span>
+                      <strong>#{String(readingJourneyGameStats.activeMission).padStart(2, '0')}</strong>
+                    </div>
+                    <div className="readingJourneyStatBox">
+                      <span>Best score</span>
+                      <strong>{readingJourneyGameStats.bestAccuracy ? `${readingJourneyGameStats.bestAccuracy}%` : '—'}</strong>
+                    </div>
+                  </div>
+                </section>
+
+                <div className="readingJourneyToolbar">
+                  <button type="button" className="readingJourneyBtn readingJourneyBtn-ghost" onClick={() => openReadingLanding('levels')}>
+                    ← กลับหมวด Reading
+                  </button>
+                  <button type="button" className="readingJourneyBtn readingJourneyBtn-ghost" onClick={openReadingNormalCollections}>
+                    📚 โหมดชุดข้อสอบเดิม
+                  </button>
+                </div>
+
+                {readingJourneyStageDefinitions.length === 0 ? (
+                  <div className="readingJourneyEmpty">
+                    <p>ยังไม่มีภารกิจในเล่มนี้</p>
+                    <p className="meta">ต้องมีข้อสอบ Normal ที่มี Fill + Judgement + Matching ก่อนครับ</p>
+                  </div>
+                ) : (
+                  <div className="readingJourneyTrail" role="list">
+                    {readingJourneyStageDefinitions.map((stage, index) => {
+                      const exam = readingJourneyExams.find((item) => item.id === stage.id) || null
+                      const attempt =
+                        readingAttemptByExamId[stage.id] || readingJourneyProgress.attempts[stage.id]
+                      const unlocked = isReadingJourneyStageUnlocked(stage.stageNumber, readingJourneyProgress)
+                      const passed = attempt ? didPassReadingJourneyStage(attempt.accuracy) : false
+                      const isActive =
+                        unlocked &&
+                        !passed &&
+                        stage.stageNumber === readingJourneyGameStats.activeMission
+                      const statusLabel = passed ? 'Cleared' : unlocked ? (isActive ? 'Go!' : 'Ready') : 'Locked'
+                      const statusIcon = passed ? '★' : unlocked ? (isActive ? '▶' : '○') : '🔒'
+                      return (
+                        <div
+                          key={stage.id}
+                          className={`readingJourneyTrailRow ${index % 2 === 1 ? 'is-alt' : ''}`}
+                          role="listitem"
+                        >
+                          <div className="readingJourneyTrailSpine" aria-hidden="true">
+                            {index > 0 ? <div className="readingJourneyTrailLine" /> : null}
+                            <div
+                              className={`readingJourneyTrailDot ${passed ? 'is-cleared' : ''} ${isActive ? 'is-active' : ''} ${!unlocked ? 'is-locked' : ''}`}
+                            >
+                              {statusIcon}
+                            </div>
+                          </div>
+                          <article
+                            className={`readingJourneyMissionCard ${unlocked ? 'is-unlocked' : 'is-locked'} ${passed ? 'is-cleared' : ''} ${isActive ? 'is-active' : ''}`}
+                          >
+                            <header className="readingJourneyMissionHeader">
+                              <span className="readingJourneyMissionNo">
+                                MISSION {String(stage.stageNumber).padStart(2, '0')}
+                              </span>
+                              <span className={`readingJourneyMissionStatus ${passed ? 'is-cleared' : ''} ${!unlocked ? 'is-locked' : ''}`}>
+                                {statusLabel}
+                              </span>
+                            </header>
+                            <h4 className="readingJourneyMissionName">ด่าน {stage.stageNumber}</h4>
+                            <p className="readingJourneyMissionObjective">
+                              {exam
+                                ? getJourneyStageTypeSummary(exam).replace('3 passages · ', '')
+                                : 'Fill · TFNG/YNNG · Matching'}
+                            </p>
+                            <ul className="readingJourneyMissionLoot">
+                              <li>📜 3 passages</li>
+                              <li>🎯 เป้า {READING_JOURNEY_UNLOCK_PERCENT}%+</li>
+                              {attempt ? <li>📊 ล่าสุด {attempt.accuracy}%</li> : <li>✨ ยังไม่ลอง</li>}
+                            </ul>
+                            <div className="readingJourneyMissionActions">
+                              {unlocked ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="readingJourneyBtn readingJourneyBtn-play"
+                                    onClick={() => startReadingExam(stage.id)}
+                                  >
+                                    {attempt ? '↻ เล่นใหม่' : '▶ เริ่มภารกิจ'}
+                                  </button>
+                                  {attempt ? (
+                                    <button
+                                      type="button"
+                                      className="readingJourneyBtn readingJourneyBtn-ghost"
+                                      onClick={() => openReadingReview(stage.id, 'report')}
+                                    >
+                                      📋 สรุปผล
+                                    </button>
+                                  ) : null}
+                                </>
+                              ) : (
+                                <button type="button" className="readingJourneyBtn" disabled>
+                                  🔒 เคลียร์ด่าน {stage.stageNumber - 1} ก่อน ({READING_JOURNEY_UNLOCK_PERCENT}%+)
+                                </button>
+                              )}
+                            </div>
+                          </article>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+          {readingWorkspaceMode === 'bank' &&
+            readingAttemptStage === 'bank' &&
+            readingEntryCategory &&
+            readingEntryView !== 'journey' && (
             <div className="readingBankWindow">
               <div className="readingBankWindowHeader">
                 <div>
@@ -15419,9 +15711,7 @@ function App() {
                           : null
                       }
                       const isHinting = readingHintQuestionNumber === question.number
-                      const isNotGivenQuestion =
-                        isReadingJudgementQuestion(question) &&
-                        isReadingNotGivenAnswer(question.correctAnswer)
+                      const isJudgementQuestion = isReadingJudgementQuestion(question)
                       return (
                         <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
                           <div className="readingQuestionCardTop">
@@ -15439,12 +15729,7 @@ function App() {
                               {isHinting ? 'ซ่อนคำใบ้' : 'ดูคำใบ้'}
                             </button>
                           </div>
-                          {isHinting && isNotGivenQuestion && (
-                            <div className="readingHintBox">
-                              <strong>Hint:</strong> the related passage portion is highlighted on the left — it mentions the topic but does not confirm TRUE/FALSE (or YES/NO).
-                            </div>
-                          )}
-                          {isHinting && !isNotGivenQuestion && (
+                          {isHinting && !isJudgementQuestion && (
                             <div className="readingHintBox">
                               <strong>Hint:</strong> evidence highlighted in the passage.
                             </div>

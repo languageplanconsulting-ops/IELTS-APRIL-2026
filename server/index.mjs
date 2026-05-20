@@ -1514,6 +1514,57 @@ const persistReadingPdoyProgressForUser = async ({ userId, profile, progress }) 
   return summary
 }
 
+const DEEPGRAM_TTS_MAX_CHARS = 1800
+
+const splitTtsTextIntoChunks = (text, maxChars = DEEPGRAM_TTS_MAX_CHARS) => {
+  const normalizedText = String(text || '').replace(/\s+/g, ' ').trim()
+  if (!normalizedText) return []
+  if (normalizedText.length <= maxChars) return [normalizedText]
+
+  const chunks = []
+  const pushChunk = (value) => {
+    const chunk = String(value || '').trim()
+    if (chunk) chunks.push(chunk)
+  }
+  const splitLongPiece = (piece) => {
+    const words = String(piece || '').split(/\s+/).filter(Boolean)
+    let current = ''
+    for (const word of words) {
+      const next = current ? `${current} ${word}` : word
+      if (next.length > maxChars) {
+        pushChunk(current)
+        current = word
+      } else {
+        current = next
+      }
+    }
+    pushChunk(current)
+  }
+
+  const sentences = normalizedText.match(/[^.!?]+(?:[.!?]+["']?|$)/g) || [normalizedText]
+  let current = ''
+  for (const sentence of sentences) {
+    const piece = sentence.trim()
+    if (!piece) continue
+    if (piece.length > maxChars) {
+      pushChunk(current)
+      current = ''
+      splitLongPiece(piece)
+      continue
+    }
+
+    const next = current ? `${current} ${piece}` : piece
+    if (next.length > maxChars) {
+      pushChunk(current)
+      current = piece
+    } else {
+      current = next
+    }
+  }
+  pushChunk(current)
+  return chunks
+}
+
 const generateDeepgramTtsAudioBuffer = async (text, modelOverride) => {
   const apiKey = String(process.env.DEEPGRAM_API_KEY || '').trim()
   if (!apiKey) {
@@ -1523,25 +1574,36 @@ const generateDeepgramTtsAudioBuffer = async (text, modelOverride) => {
   }
 
   const model = String(modelOverride || process.env.DEEPGRAM_TTS_MODEL || 'aura-2-asteria-en').trim()
-  const response = await safeFetch(`https://api.deepgram.com/v1/speak?model=${encodeURIComponent(model)}&encoding=mp3`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Token ${apiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      text
-    })
-  })
-
-  if (!response.ok) {
-    const body = await response.text().catch(() => '')
-    const error = new Error(`Deepgram TTS failed: ${body.slice(0, 180)}`)
-    error.status = response.status
+  const chunks = splitTtsTextIntoChunks(text)
+  if (!chunks.length) {
+    const error = new Error('TTS text is empty.')
+    error.status = 400
     throw error
   }
 
-  return Buffer.from(await response.arrayBuffer())
+  const buffers = await Promise.all(chunks.map(async (chunk) => {
+    const response = await safeFetch(`https://api.deepgram.com/v1/speak?model=${encodeURIComponent(model)}&encoding=mp3`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: chunk
+      })
+    })
+
+    if (!response.ok) {
+      const body = await response.text().catch(() => '')
+      const error = new Error(`Deepgram TTS failed: ${body.slice(0, 180)}`)
+      error.status = response.status
+      throw error
+    }
+
+    return Buffer.from(await response.arrayBuffer())
+  }))
+
+  return Buffer.concat(buffers)
 }
 
 const TTS_SPEAKER_LINE = /^([A-Z][A-Z0-9\s]{0,22}):\s*(.*)$/

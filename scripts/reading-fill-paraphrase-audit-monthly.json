@@ -1,0 +1,283 @@
+{
+  "scannedAt": "2026-05-20T12:32:51.307Z",
+  "totalFillQuestions": 153,
+  "issueCount": 4,
+  "bySeverity": {
+    "critical": 0,
+    "moderate": 1,
+    "minor": 3
+  },
+  "examsScanned": [
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 7,
+      "issueCount": 1
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-what-is-restoration.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - What Is Restoration?",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 3,
+      "issueCount": 1
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-wood-wide-web.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Wood Wide Web: The Myth of the Altruistic Forest",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 3,
+      "issueCount": 1
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-medieval-castles.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Preserving Britain's Medieval Castles",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "fillCount": 5,
+      "issueCount": 1
+    },
+    {
+      "file": "ielts-academic-reading-april-2024-passage-2-trauma-language-popular-culture.json",
+      "title": "IELTS Academic Reading April 2024 Passage 2 - Trauma Language in Popular Culture",
+      "collectionTitle": "IELTS Academic Reading April 2024",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-bald-eagle.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Return of the Bald Eagle",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 7,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-polar-bears.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Polar Bears on Thinner Ice",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 7,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-primary-education-ai.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Primary Education in the Age of AI",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-psychology-cancel-culture.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The Psychology of Cancel Culture",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-social-media-algorithms-polarization.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - Social Media Algorithms and Polarization",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Disappearance of Movie Theatres",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-rise-of-digital-nomads.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Rise of Digital Nomads",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-spanish-armada.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Spanish Armada",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 7,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Is ADHD Innate or Caused by Upbringing?",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 3,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-british-aristocracy.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Preserving the British Aristocracy",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 3,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-saving-the-vaquita.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Saving the Vaquita",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 3,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-digital-native.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Digital Native",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-eight-hour-sleep.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Eight-Hour Sleep",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-diet-and-mental-health.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Diet and Mental Health",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-music-and-brain.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Music and the Brain",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "fillCount": 5,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-architecture-of-forgetting.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Architecture of Forgetting",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "fillCount": 5,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-cognitive-cost-of-gps.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Cognitive Cost of GPS: Are We Losing Our Internal Compass?",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-productive-power-of-boredom.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Productive Power of Boredom",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-urban-evolution.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - Urban Evolution: When Cities Become the New Galapagos",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "fillCount": 4,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-future-green-architecture.json",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - The Future of Green Architecture",
+      "collectionTitle": "IELTS Academic Reading March 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "collectionTitle": "IELTS Academic Reading March 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "collectionTitle": "IELTS Academic Reading March 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "collectionTitle": "IELTS Academic Reading March 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "collectionTitle": "IELTS Academic Reading March 2026",
+      "fillCount": 6,
+      "issueCount": 0
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-good-archive.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - What Makes a Good Archive?",
+      "collectionTitle": "IELTS Academic Reading March 2026",
+      "fillCount": 3,
+      "issueCount": 0
+    }
+  ],
+  "issues": [
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "question": 10,
+      "answer": "relatives",
+      "prompt": "When closely related royals reproduced, recessive traits were more likely to come from both .................... .",
+      "exactPortion": "When close relatives have children, the same recessive variants are more likely to be inherited from both parents.",
+      "flags": [
+        "weak_paraphrase_pair:both parents=both parents"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-what-is-restoration.json",
+      "collectionTitle": "IELTS Academic Reading April 2026",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - What Is Restoration?",
+      "question": 39,
+      "answer": "injury",
+      "prompt": "Responsible restoration should let viewers witness both .................... and careful treatment.",
+      "exactPortion": "It should allow viewers to see both injury and care.",
+      "flags": [
+        "weak_paraphrase_pair:careful treatment=care"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-wood-wide-web.json",
+      "collectionTitle": "IELTS Academic Reading Feb 2026",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Wood Wide Web: The Myth of the Altruistic Forest",
+      "question": 34,
+      "answer": "altruism",
+      "prompt": "governed by fungal self-interest rather than plant .................... .",
+      "exactPortion": "completely devoid of any biological altruism.",
+      "flags": [
+        "weak_paraphrase_pair:fungal self-interest=fungal self-interest"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-medieval-castles.json",
+      "collectionTitle": "IELTS Academic Reading Jan 2026",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Preserving Britain's Medieval Castles",
+      "question": 22,
+      "answer": "subsidence",
+      "prompt": "Weakened bases may cause ground ...................., a hazard that can eventually undermine walls and towers.",
+      "exactPortion": "undermined foundations can lead to subsidence, a serious problem that may eventually cause cracks, tilting walls and collapse",
+      "flags": [
+        "high_overlap_after_blank_63pct"
+      ],
+      "severity": "moderate"
+    }
+  ]
+}

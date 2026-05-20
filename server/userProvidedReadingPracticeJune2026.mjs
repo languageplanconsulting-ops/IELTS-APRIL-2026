@@ -239,11 +239,11 @@ Write the correct letter, A–G, in boxes 14–19 on your answer sheet.
 
 NB You may use any letter more than once.
 
-14 a reference to a denial of involvement in raiding
+14 a reference to a ruler rejecting accusations of supporting the raiders
 15 details of how a campaign to stop raiding was organised
 16 a mention of the circumstances in which ancient states would make use of raiders
-17 a reference to how people today commonly imagine ancient trade routes
-18 an explanation of how some raiders were encouraged not to return to raiding
+17 a reference to modern stereotypes of how East–West commerce is pictured
+18 an explanation of how former attackers were persuaded to settle as farmers instead
 19 a mention of the need for many caravans to stay close to places where water was available
 
 Questions 20 and 21
@@ -285,14 +285,14 @@ Write your answers in boxes 24–26 on your answer sheet.
 The eastern empire and raiding
 
 Raiding caused difficulties for the eastern empire, but it also produced some advantages. For example, captured animals were sold in markets, while prisoners were used as workers on farms and building projects. However, attacks on caravans transporting 24………………… to frontier garrisons led officials to demand 25………………… for the raiders responsible. Later, some raiders captured important envoys and demanded a 26………………… before allowing them to return.`,
-    rawAnswerKey: `Question 14: a reference to a denial of involvement in raiding
+    rawAnswerKey: `Question 14: a reference to a ruler rejecting accusations of supporting the raiders
 
 Correct Answer: D
 Accepted Answers: D
 Answer Group: IELTS Academic Reading June 2026 Passage 2 - The raiders of the ancient trade routes
 Exact Portion: "The ruler of Yutian denied any involvement and insisted that none of his officials had helped the raiders."
 Short Thai Explanation: คำตอบคือ D เพราะย่อหน้านี้พูดถึงผู้ปกครอง Yutian ปฏิเสธว่าไม่ได้เกี่ยวข้องกับ raiding.
-Paraphrased Vocabulary: denial of involvement = denied any involvement
+Paraphrased Vocabulary: rejecting accusations = denied any involvement; supporting raiders = helped the raiders; answer signal = D
 
 Question 15: details of how a campaign to stop raiding was organised
 
@@ -312,7 +312,7 @@ Exact Portion: "During wars, rulers sometimes hired them as scouts, guides or mo
 Short Thai Explanation: คำตอบคือ C เพราะบอกว่าในช่วงสงคราม รัฐโบราณบางครั้งใช้ raiders เป็น scout, guide หรือ mounted fighter.
 Paraphrased Vocabulary: make use of = hired; circumstances = during wars
 
-Question 17: a reference to how people today commonly imagine ancient trade routes
+Question 17: a reference to modern stereotypes of how East–West commerce is pictured
 
 Correct Answer: A
 Accepted Answers: A
@@ -321,7 +321,7 @@ Exact Portion: "When people imagine the ancient trade routes between East and We
 Short Thai Explanation: คำตอบคือ A เพราะประโยคแรกพูดถึงภาพที่คนมักนึกถึงเกี่ยวกับเส้นทางการค้าโบราณ.
 Paraphrased Vocabulary: commonly imagine = often picture
 
-Question 18: an explanation of how some raiders were encouraged not to return to raiding
+Question 18: an explanation of how former attackers were persuaded to settle as farmers instead
 
 Correct Answer: G
 Accepted Answers: G
@@ -642,12 +642,12 @@ Write the correct letter, A–G, in boxes 14–19 on your answer sheet.
 
 NB You may use any letter more than once.
 
-14 a reference to a denial of involvement in banditry
+14 a reference to a ruler rejecting accusations of supporting the bandits
 15 details of how a campaign to stop banditry was organised
 16 a mention of the circumstances in which ancient states would make use of bandits
-17 a reference to how people today commonly imagine ancient trade routes
-18 an explanation of how some bandits were encouraged not to return to banditry
-19 a mention of the need for many caravans to use a limited number of mountain routes
+17 a reference to modern stereotypes of how East–West commerce is pictured
+18 an explanation of how former attackers were persuaded to settle as farmers instead
+19 a mention of why traders had to follow only a few paths through the mountains
 
 Questions 20 and 21
 
@@ -688,14 +688,14 @@ Write your answers in boxes 24–26 on your answer sheet.
 The eastern empire and banditry
 
 Banditry caused difficulties for the eastern empire, but it also brought some benefits. For example, captured animals were sold in markets, while prisoners were used as workers on farms and road-building projects. However, attacks on convoys transporting 24………………… to the capital led officials to demand 25………………… for the bandits responsible. Later, some bandits captured important envoys and demanded a 26………………… before releasing them.`,
-    rawAnswerKey: `Question 14: a reference to a denial of involvement in banditry
+    rawAnswerKey: `Question 14: a reference to a ruler rejecting accusations of supporting the bandits
 
 Correct Answer: D
 Accepted Answers: D
 Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
 Exact Portion: "The ruler of Aramon denied any involvement and insisted that none of his officials had helped the bandits."
 Short Thai Explanation: คำตอบคือ D เพราะย่อหน้านี้พูดถึง ruler of Aramon ที่ปฏิเสธว่าไม่ได้เกี่ยวข้องกับ banditry.
-Paraphrased Vocabulary: denial of involvement = denied any involvement
+Paraphrased Vocabulary: rejecting accusations = denied any involvement; supporting raiders = helped the raiders; answer signal = D
 
 Question 15: details of how a campaign to stop banditry was organised
 
@@ -715,7 +715,7 @@ Exact Portion: "During wartime, rulers sometimes used them as scouts, guides or 
 Short Thai Explanation: คำตอบคือ C เพราะในช่วงสงคราม rulers บางครั้งใช้ bandits เป็น scouts, guides หรือ fighters.
 Paraphrased Vocabulary: circumstances = during wartime; make use of = used
 
-Question 17: a reference to how people today commonly imagine ancient trade routes
+Question 17: a reference to modern stereotypes of how East–West commerce is pictured
 
 Correct Answer: A
 Accepted Answers: A
@@ -724,7 +724,7 @@ Exact Portion: "When people think of ancient trade, they often imagine peaceful 
 Short Thai Explanation: คำตอบคือ A เพราะย่อหน้าแรกพูดถึงภาพที่คนมักนึกถึงเมื่อคิดถึง ancient trade.
 Paraphrased Vocabulary: commonly imagine = often imagine
 
-Question 18: an explanation of how some bandits were encouraged not to return to banditry
+Question 18: an explanation of how former attackers were persuaded to settle as farmers instead
 
 Correct Answer: G
 Accepted Answers: G
@@ -733,7 +733,7 @@ Exact Portion: "many others were offered land in lowland farming areas far from 
 Short Thai Explanation: คำตอบคือ G เพราะ bandits บางคนได้รับที่ดินทำเกษตรไกลจากถนนภูเขา เพื่อให้เลิก raiding และไม่กลับไปเป็น bandits.
 Paraphrased Vocabulary: encouraged not to return = reduced the chance that they would return; banditry = banditry
 
-Question 19: a mention of the need for many caravans to use a limited number of mountain routes
+Question 19: a mention of why traders had to follow only a few paths through the mountains
 
 Correct Answer: B
 Accepted Answers: B
@@ -804,5 +804,196 @@ Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the an
 Exact Portion: "kidnapping important envoys, demanding a ransom before releasing them."
 Short Thai Explanation: คำตอบคือ ransom เพราะ bandits เรียกค่าไถ่ก่อนปล่อย envoys.
 Paraphrased Vocabulary: before releasing them = before releasing them`
+  },
+  {
+    id: 'builtin-reading-june-2026-passage-2-urban-soundscapes',
+    title: 'IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise',
+    category: 'normal',
+    collectionTitle: 'IELTS Academic Reading June 2026',
+    releaseAt: '2026-06-19T17:00:00.000Z',
+    rawPassageText: `READING PASSAGE 2
+
+You should spend about 20 minutes on Questions 14–26, which are based on Reading Passage 2 below.
+
+Urban Soundscapes: The Hidden Impact of Noise
+An environmental psychologist explains why we ignore urban noise and how it affects our biology
+
+A
+Noise pollution is often considered an inevitable byproduct of modern city life, usually overshadowed by more visible environmental concerns like air or water quality. We all experience it daily. We might be listening to the distant wail of an ambulance, or trying to converse over the roar of construction work; we do our best to tune out the disturbance, but subconsciously our bodies are reacting to it. Unfortunately, ignoring the clamour won't stop it from affecting us. In fact, it is one of the worst coping mechanisms we can adopt. This matters because, as environmental psychologists note, urban noise doesn't just cause annoyance, but is actually linked to systemic physiological issues, too.
+
+B
+Contrary to popular belief, humans do not simply adapt to chronic noise exposure over time. Scientific studies suggest acoustic stress is, in fact, processed continuously by the body's threat-detection centre. This makes sense if we consider that early humans relied on sound to detect approaching predators. If a sudden noise threatens our sense of safety or startles us, we will experience a rapid spike in stress hormones. Research involving brain imaging has found that areas of the brain linked to adrenaline production and emotion regulation remain hyperactive in people who live near busy roads compared to those who reside in quieter neighbourhoods.
+
+C
+Environments that are acoustically overloaded, such as schools near flight paths, are prime candidates for psychological strain. Children with developing auditory processing skills are more likely to suffer cognitively. Another group of people who tend to be severely affected are hospital patients, who find their recovery hindered by ward noise. We know that if we don't achieve deep sleep or complete uninterrupted focus, then our biological restoration can't take place effectively. When we are exposed to constant drone, we experience the negative physiological changes associated with it. This is exhausting, and it conditions us to use mental filtering to block our environment. If we wear noise-cancelling headphones instead, we get a temporary relief. In the long run, however, avoidance isn't an effective way of managing urban environments. The 'acoustic repair' we experience is artificial. Afterwards, people tend to be left with a heightened sensitivity that not only increases their irritability, but also reinforces their reliance on artificial silence.
+
+D
+So why is this such a problem? When most people think of the costs of noise pollution, they think of the toll on hearing. For example, studies have shown that industrial noise negatively impacts on auditory health. But putting up with traffic sounds and mechanical hums may affect other areas of citizens' lives. In one study of over 3,000 German residents over a six-month period, those who reported living with high traffic noise were also more likely to engage in conflict-related behaviours, such as arguing with neighbours. But the behaviour that noise exposure was most closely linked with was taking sick leave. Other research shows that office workers on average lose almost a quarter of their productive focus distracted by background chatter. In fact, in one UK survey of over 22,000 employees, participants who said they regularly worked in loud offices had less job satisfaction and less employment stability. For every ten-decibel increase on a measure of chronic noise, productivity decreased significantly.
+
+E
+Noise exposure also correlates with serious health and well-being problems. A tendency to endure loud environments is linked to poor cardiovascular health, including higher levels of hypertension and heart disease. Across numerous studies, researchers have found people who regularly experience nighttime noise report a greater number of health issues, such as migraines and digestive issues. They also experience higher levels of stress and poor sleep quality. They are less likely to achieve restorative sleep cycles, and use destructive coping strategies to manage their fatigue. In one study of over 700 people, scientists found individuals prone to residential noise had a 63% greater risk of poor heart health after accounting for other lifestyle traits and demographics.
+
+F
+Finding better ways of managing our acoustic environment is one route out of the vicious cycle of noise pollution. An important first step is to manage our urban planning and how we view soundscapes. There are a number of evidence-based strategies that can help us introduce natural sounds that can occupy our minds when we want to mask the industrial noises we cannot escape. For example, introducing water features to public squares can increase positive feelings towards the space. Designing buildings with acoustic dampening materials can help break the noise reverberation cycle. We should admit that cities are loud, but not be overly accepting of poor acoustic design. We should remind ourselves that we're not the first generation to face urban noise. Doing this can take the edge off the negative psychological toll we experience when we live in chaotic environments. This can all make it easier to reclaim our urban tranquility.
+
+Questions 14–16
+Reading Passage 2 has six paragraphs, A–F.
+Which paragraph contains the following information?
+Write the correct letter, A–F, in boxes 14–16 on your answer sheet.
+NB   You may use any letter more than once.
+
+14   a mistaken belief that people eventually get used to ongoing noise
+15   recognition that earlier city dwellers also faced loud environments
+16   brain-scan findings linking sound-related strain with neural activity
+
+Questions 17–22
+Complete the summary below.
+Choose ONE WORD ONLY from the passage for each answer.
+Write your answers in boxes 17–22 on your answer sheet.
+
+What makes us stressed by noise?
+Many people think that our response to noise is simply something we adapt to over time. But scientific studies suggest that acoustic stress is actually processed continuously by our 17………………… detection centre. The sounds we are most likely to react to are those that could damage our sense of 18………………… when we hear them. Research comparing urban residents with other people even found differences in the brain regions associated with regulating emotions and adrenaline production.
+
+Acoustically overloaded and difficult environments often cause us to suffer. Recovering in a 19………………… might be a typical example of one such environment. People who are likely to be severely affected tend to be either 20………………… or children with developing skills.
+
+Using headphones is only a short-term measure for managing sound. It's often followed by a heightened 21…………………, which worsens our mood and leads to more 22………………… on artificial silence.
+
+Questions 23 and 24
+Choose TWO letters, A–E.
+Write the correct letters in boxes 23 and 24 on your answer sheet.
+
+Which TWO comparisons between employees who work in loud environments and those who do not are mentioned in the text?
+A   Their salaries are lower.
+B   The quality of their work is inferior.
+C   They don't keep their jobs for as long.
+D   They don't enjoy their working lives as much.
+E   They have poorer relationships with colleagues.
+
+Questions 25 and 26
+Choose TWO letters, A–E.
+Write the correct letters in boxes 25 and 26 on your answer sheet.
+
+Which TWO recommendations for getting out of a cycle of noise pollution does the writer give?
+A   not judging ourselves harshly for feeling stressed
+B   setting ourselves manageable aims for quiet time
+C   incorporating water features into public spaces
+D   prioritising tasks according to their noise levels
+E   using specific materials to reduce sound reverberation`,
+    rawAnswerKey: `Question 14: a mistaken belief that people eventually get used to ongoing noise
+
+Correct Answer: B
+Accepted Answers: B
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "Contrary to popular belief, humans do not simply adapt to chronic noise exposure over time."
+Short Thai Explanation: คำตอบคือ B เพราะย่อหน้านี้ปฏิเสธความเชื่อที่ว่ามนุษย์จะชินกับเสียงรบกวนเรื้อรังเมื่อเวลาผ่านไป.
+Paraphrased Vocabulary: mistaken belief = popular belief; get used to ongoing noise = adapt to chronic noise exposure
+
+Question 15: recognition that earlier city dwellers also faced loud environments
+
+Correct Answer: F
+Accepted Answers: F
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "We should remind ourselves that we're not the first generation to face urban noise."
+Short Thai Explanation: คำตอบคือ F เพราะผู้เขียนบอกให้ระลึกว่าเราไม่ใช่รุ่นแรกที่ต้องเผชิญเสียงในเมือง.
+Paraphrased Vocabulary: earlier city dwellers = not the first generation; faced loud environments = face urban noise
+
+Question 16: brain-scan findings linking sound-related strain with neural activity
+
+Correct Answer: B
+Accepted Answers: B
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "Research involving brain imaging has found that areas of the brain linked to adrenaline production and emotion regulation remain hyperactive in people who live near busy roads"
+Short Thai Explanation: คำตอบคือ B เพราะมีการอ้าง brain imaging ว่าส่วนของสมองที่เกี่ยวกับอะดรีนาลินและการควบคุมอารมณ์ยังทำงานมากเกินไปในผู้ที่อยู่ใกล้ถนนที่จราจรหนาแน่น.
+Paraphrased Vocabulary: brain-scan findings = brain imaging; sound-related strain = acoustic stress; neural activity = areas of the brain remain hyperactive
+
+Question 17: Many people think that our response to noise is simply something we adapt to over time. But scientific studies suggest that acoustic stress is actually processed continuously by our 17………………… detection centre.
+
+Correct Answer: threat
+Accepted Answers: threat
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "processed continuously by the body's threat-detection centre"
+Short Thai Explanation: คำตอบคือ threat เพราะ passage ใช้คำว่า threat-detection centre.
+Paraphrased Vocabulary: detection centre = threat-detection centre
+
+Question 18: The sounds we are most likely to react to are those that could damage our sense of 18………………… when we hear them.
+
+Correct Answer: safety
+Accepted Answers: safety
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "If a sudden noise threatens our sense of safety or startles us"
+Short Thai Explanation: คำตอบคือ safety เพราะเสียงที่ทำให้ตกใจคุกคามความรู้สึกปลอดภัยของเรา.
+Paraphrased Vocabulary: damage our sense of = threatens our sense of
+
+Question 19: Recovering in a 19………………… might be a typical example of one such environment.
+
+Correct Answer: hospital
+Accepted Answers: hospital
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "hospital patients, who find their recovery hindered by ward noise"
+Short Thai Explanation: คำตอบคือ hospital เพราะผู้ป่วยในโรงพยาบาลฟื้นตัวช้าลงเพราะเสียงในหอผู้ป่วย.
+Paraphrased Vocabulary: Recovering = recovery; environment = ward
+
+Question 20: People who are likely to be severely affected tend to be either 20………………… or children with developing skills.
+
+Correct Answer: patients
+Accepted Answers: patients
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "Another group of people who tend to be severely affected are hospital patients"
+Short Thai Explanation: คำตอบคือ patients เพราะกลุ่มที่ได้รับผลกระทบรุนแรงรวมถึงผู้ป่วยในโรงพยาบาล.
+Paraphrased Vocabulary: severely affected = severely affected; children with developing skills = children with developing auditory processing skills
+
+Question 21: It's often followed by a heightened 21…………………, which worsens our mood
+
+Correct Answer: sensitivity
+Accepted Answers: sensitivity
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "people tend to be left with a heightened sensitivity that not only increases their irritability"
+Short Thai Explanation: คำตอบคือ sensitivity เพราะหลังใช้หูฟังตัดเสียง คนจะไวต่อเสียงมากขึ้น.
+Paraphrased Vocabulary: heightened = heightened; worsens our mood = increases their irritability
+
+Question 22: which worsens our mood and leads to more 22………………… on artificial silence.
+
+Correct Answer: reliance
+Accepted Answers: reliance
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "reinforces their reliance on artificial silence"
+Short Thai Explanation: คำตอบคือ reliance เพราะทำให้พึ่งพาเสียงเงียบเทียมมากขึ้น.
+Paraphrased Vocabulary: leads to more = reinforces; artificial silence = artificial silence
+
+Question 23: Which TWO comparisons between employees who work in loud environments and those who do not are mentioned in the text?
+
+Correct Answer: C
+Accepted Answers: C
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "participants who said they regularly worked in loud offices had less job satisfaction and less employment stability"
+Short Thai Explanation: ข้อ C ถูก เพราะคนที่ทำงานในห้องที่เสียงดังมีความมั่นคงในการทำงานน้อยกว่า (less employment stability).
+Paraphrased Vocabulary: don't keep their jobs for as long = less employment stability
+
+Question 24: Which TWO comparisons between employees who work in loud environments and those who do not are mentioned in the text?
+
+Correct Answer: D
+Accepted Answers: D
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "participants who said they regularly worked in loud offices had less job satisfaction and less employment stability"
+Short Thai Explanation: ข้อ D ถูก เพราะผู้ที่ทำงานในสำนักงานเสียงดังมีความพึงพอใจในงานน้อยกว่า (less job satisfaction).
+Paraphrased Vocabulary: don't enjoy their working lives as much = less job satisfaction
+
+Question 25: Which TWO recommendations for getting out of a cycle of noise pollution does the writer give?
+
+Correct Answer: C
+Accepted Answers: C
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "introducing water features to public squares can increase positive feelings towards the space"
+Short Thai Explanation: ข้อ C ถูก เพราะผู้เขียนแนะนำให้มีน้ำตกหรือลานน้ำในพื้นที่สาธารณะ.
+Paraphrased Vocabulary: incorporating water features = introducing water features to public squares
+
+Question 26: Which TWO recommendations for getting out of a cycle of noise pollution does the writer give?
+
+Correct Answer: E
+Accepted Answers: E
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - Urban Soundscapes: The Hidden Impact of Noise
+Exact Portion: "Designing buildings with acoustic dampening materials can help break the noise reverberation cycle"
+Short Thai Explanation: ข้อ E ถูก เพราะแนะนำใช้วัสดุลดการสะท้อนเสียงในอาคาร.
+Paraphrased Vocabulary: using specific materials = acoustic dampening materials; reduce sound reverberation = break the noise reverberation cycle`
   }
 ]

@@ -1,0 +1,1909 @@
+{
+  "scannedAt": "2026-05-20T12:20:15.140Z",
+  "issues": [
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 1 Passage 1 - Cork",
+      "question": 6,
+      "answer": "taste",
+      "prompt": "Advantages of aluminium screw caps: do not affect the … of the bottle contents",
+      "exactPortion": "\"The tiniest concentrations – as little as three or four parts to a trillion – can spoil the taste o",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 1 Passage 1 - Cork",
+      "question": 12,
+      "answer": "biodiversity",
+      "prompt": "cork forests aid …",
+      "exactPortion": "\"Moreover, cork forests are a resource which support local biodiversity, and prevent desertification",
+      "flags": [
+        "high_overlap_before_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 1 Passage 1 - Cork",
+      "question": 13,
+      "answer": "desertification",
+      "prompt": "cork forests stop … happening",
+      "exactPortion": "\"Moreover, cork forests are a resource which support local biodiversity, and prevent desertification",
+      "flags": [
+        "high_overlap_before_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 1 Passage 2 - Collecting as a Hobby",
+      "question": 15,
+      "answer": "triumph",
+      "prompt": "Collectors may get a feeling of … from buying and selling items.",
+      "exactPortion": "\"But there may well be a psychological element, too – buying cheap and selling dear can give the col",
+      "flags": [
+        "high_overlap_after_blank_60pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 1 Passage 2 - Collecting as a Hobby",
+      "question": 18,
+      "answer": "desire",
+      "prompt": "Collecting sometimes involves a life-long … for a special item.",
+      "exactPortion": "\"Another motive for collecting is the desire to find something special, or a particular example of t",
+      "flags": [
+        "high_overlap_after_blank_75pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 3 Passage 2 - The Intersection of Health Sciences and Geography",
+      "question": 20,
+      "answer": "vaccinations",
+      "prompt": "diseases disappeared thanks to better … and healthcare",
+      "exactPortion": "\"The Intersection of Health Sciences and Geography A While many diseases that affect humans have bee",
+      "flags": [
+        "high_overlap_after_blank_100pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 3 Passage 2 - The Intersection of Health Sciences and Geography",
+      "question": 22,
+      "answer": "mosquitoes",
+      "prompt": "Disease-causing … in hot, damp regions",
+      "exactPortion": "\"Perhaps one of the most obvious examples of this idea is malaria-prone areas, which are usually tro",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 4 Passage 1 - The History of Glass",
+      "question": 2,
+      "answer": "spears",
+      "prompt": "… of their spears",
+      "exactPortion": "\"Historians have discovered that a type of natural glass – obsidian – formed in places such as the m",
+      "flags": [
+        "answer_substring_already_in_prompt"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 4 Passage 1 - The History of Glass",
+      "question": 3,
+      "answer": "beads",
+      "prompt": "4000 BC: … made of stone were covered in glass",
+      "exactPortion": "\"Archaeologists have even found evidence of man-made glass which dates back to 4000 BC; this took th",
+      "flags": [
+        "summary_before_blank_appears_verbatim_near_answer_in_passage"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 4 Passage 1 - The History of Glass",
+      "question": 4,
+      "answer": "impurities",
+      "prompt": "First century BC: glass was coloured because of the … in the material",
+      "exactPortion": "\"The glass made during this time was highly coloured due to the impurities of the raw material.\"",
+      "flags": [
+        "high_overlap_after_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 4 Passage 1 - The History of Glass",
+      "question": 5,
+      "answer": "Romans",
+      "prompt": "Until 476 AD: Only the … knew how to make glass",
+      "exactPortion": "\"However, they guarded the skills and technology required to make glass very closely, and it was not",
+      "flags": [
+        "high_overlap_before_blank_60pct"
+      ]
+    },
+    {
+      "file": "cambridge-12-reading-import.json",
+      "title": "Cambridge 12 Test 4 Passage 1 - The History of Glass",
+      "question": 7,
+      "answer": "clouding",
+      "prompt": "to avoid the occurrence of … in blown glass",
+      "exactPortion": "\"He attempted to counter the effect of clouding that sometimes occurred in blown glass by introducin",
+      "flags": [
+        "summary_after_blank_appears_verbatim_near_answer_in_passage",
+        "high_overlap_after_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 1 Passage 1 - Case Study: Tourism New Zealand Website",
+      "question": 1,
+      "answer": "update",
+      "prompt": "Database of tourism services — allowed businesses to … information regularly",
+      "exactPortion": "\"In addition, because participating businesses were able to update the details they gave on a regula",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 1 Passage 1 - Case Study: Tourism New Zealand Website",
+      "question": 6,
+      "answer": "accommodation",
+      "prompt": "Travel Planner — map, public transport and local …",
+      "exactPortion": "\"Later a Travel Planner feature was added, which allowed visitors to click and ‘bookmark’ : paces or",
+      "flags": [
+        "high_overlap_before_blank_57pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 2 Passage 1 - Bringing Cinnamon to Europe",
+      "question": 2,
+      "answer": "friendship",
+      "prompt": "Biblical times — used to show … between people",
+      "exactPortion": "\"It was known in biblical times, and is mentioned in several books of the Bible, both as an ingredie",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 2 Passage 1 - Bringing Cinnamon to Europe",
+      "question": 5,
+      "answer": "indigestion",
+      "prompt": "Middle Ages — known as a treatment for … and other health problems",
+      "exactPortion": "\"Cinnamon was also reported to have health benefits, and was thought to cure various ailments, such ",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 2 Passage 2 - Oxytocin",
+      "question": 26,
+      "answer": "names",
+      "prompt": "Oxytocin research — familiar … had more positive associations than foreign ones",
+      "exactPortion": "\"Meanwhile, Carsten De Dreu at the University of Amsterdam in the Netherlands discovered that volunt",
+      "flags": [
+        "high_overlap_after_blank_57pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 3 Passage 1 - The Coconut Palm",
+      "question": 6,
+      "answer": "hormones",
+      "prompt": "Coconut water — a source of … for other plants",
+      "exactPortion": "\"Initially, the endosperm is a sweetish liquid, coconut water, which is enjoyed as a drink, but also",
+      "flags": [
+        "high_overlap_after_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 3 Passage 1 - The Coconut Palm",
+      "question": 7,
+      "answer": "cosmetics",
+      "prompt": "Coconut flesh — oil and milk for cooking and …",
+      "exactPortion": "\"Dried coconut flesh, ‘copra’, is made into coconut oil and coconut milk, which are widely used in c",
+      "flags": [
+        "high_overlap_before_blank_88pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 3 Passage 2 - How Baby Talk Gives Infant Brains a Boost",
+      "question": 19,
+      "answer": "fathers",
+      "prompt": "Baby talk research — … tended not to modify their ordinary speech patterns",
+      "exactPortion": "\"The typical way of talking to a baby – high-pitched, exaggerated and repetitious – is a source of f",
+      "flags": [
+        "high_overlap_before_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 3 Passage 2 - How Baby Talk Gives Infant Brains a Boost",
+      "question": 23,
+      "answer": "vocabulary",
+      "prompt": "Baby talk research — babies who heard more baby talk had a larger … at age two",
+      "exactPortion": "\"And when researchers saw the same babies at age two, they found that frequent baby talk had dramati",
+      "flags": [
+        "summary_after_blank_appears_verbatim_near_answer_in_passage",
+        "high_overlap_after_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 3 Passage 3 - Whatever Happened to the Harappan Civilisation?",
+      "question": 32,
+      "answer": "shells",
+      "prompt": "Climate change evidence — collecting the … of snails",
+      "exactPortion": "\"The researchers gathered shells of Melanoides tuberculate snails from the sediments of an ancient l",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 3 Passage 3 - Whatever Happened to the Harappan Civilisation?",
+      "question": 33,
+      "answer": "lake",
+      "prompt": "Climate change evidence — water levels in a … in the region",
+      "exactPortion": "\"The researchers gathered shells of Melanoides tuberculate snails from the sediments of an ancient l",
+      "flags": [
+        "high_overlap_after_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 3 Passage 3 - Whatever Happened to the Harappan Civilisation?",
+      "question": 34,
+      "answer": "rainfall",
+      "prompt": "Climate change evidence — less … than evaporation",
+      "exactPortion": "\"‘But we have observed that there was an abrupt change about 4,100 years ago, when the amount of eva",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 4 Passage 1 - Cutty Sark: The Fastest Sailing Ship of All Time",
+      "question": 10,
+      "answer": "navigator",
+      "prompt": "As a captain and …………………………., Woodget was very skilled.",
+      "exactPortion": "\"The ship’s next captain, Richard Woodget, was an excellent navigator, who got the best out of both ",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 4 Passage 2 - Saving the Soil",
+      "question": 15,
+      "answer": "carbon",
+      "prompt": "Soil degradation — soil stores … and affects the climate",
+      "exactPortion": "\"Soil is also an ally against climate change: as microorganisms within soil digest dead animals and ",
+      "flags": [
+        "high_overlap_after_blank_75pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 4 Passage 3 - Book Review",
+      "question": 30,
+      "answer": "F",
+      "prompt": "Jeremy Bentham — technology to improve … for government departments",
+      "exactPortion": "\"In the 1790s, he wrote to the Home Office suggesting that the departments of government be linked t",
+      "flags": [
+        "high_overlap_after_blank_100pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 4 Passage 3 - Book Review",
+      "question": 33,
+      "answer": "E",
+      "prompt": "Jeremy Bentham — prison design allowed the … of prisoners",
+      "exactPortion": "\"His celebrated design for a prison to be known as a ‘Panopticon’, in which prisoners would be kept ",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-13-reading-import.json",
+      "title": "Cambridge 13 Test 4 Passage 3 - Book Review",
+      "question": 34,
+      "answer": "A",
+      "prompt": "Jeremy Bentham — investigated possibilities for the … of happiness",
+      "exactPortion": "\"The Happiness Industry: How the Government and Big Business Sold Us Well-Being – By William Davies ",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-17-reading-import.json",
+      "title": "Cambridge 17 Test 1 Passage 1 - The development of the London underground railway",
+      "question": 1,
+      "answer": "population",
+      "prompt": "The 1 …………………… of London increased rapidly between 1800 and 1850",
+      "exactPortion": "\"In the first half of the 1800s, London's population grew at an astonishing rate, and the central ar",
+      "flags": [
+        "summary_before_blank_appears_verbatim_near_answer_in_passage"
+      ]
+    },
+    {
+      "file": "cambridge-17-reading-import.json",
+      "title": "Cambridge 17 Test 1 Passage 1 - The development of the London underground railway",
+      "question": 4,
+      "answer": "funding",
+      "prompt": "The company initially had problems getting the 4 …………………… needed for the project",
+      "exactPortion": "\"The organisation had difficulty in raising the funding for such a radical and expensive scheme, not",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-17-reading-import.json",
+      "title": "Cambridge 17 Test 4 Passage 1 - Bats to the rescue",
+      "question": 11,
+      "answer": "unclean",
+      "prompt": "the buildings where they roost become …",
+      "exactPortion": "\"And as well as roosting in trees, the bats sometimes roost in buildings, but are not welcomed there",
+      "flags": [
+        "high_overlap_before_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 1 Passage 1 - How tennis rackets have changed",
+      "question": 9,
+      "answer": "topspin",
+      "prompt": "Players were not allowed to use the spaghetti-strung racket because of the amount of … it created.",
+      "exactPortion": "\"It created a string bed that generated so much topspin that it was quickly banned by the Internatio",
+      "flags": [
+        "summary_after_blank_appears_verbatim_near_answer_in_passage",
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 1 Passage 1 - How tennis rackets have changed",
+      "question": 13,
+      "answer": "grips",
+      "prompt": "Gonçalo Oliveira changed the … on his racket handles.",
+      "exactPortion": "\"The professional Portuguese player Gonçalo Oliveira replaced the original grips of his rackets with",
+      "flags": [
+        "high_overlap_before_blank_80pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 1 Passage 2 - The pirates of the ancient Mediterranean",
+      "question": 26,
+      "answer": "ransom",
+      "prompt": "pirates demanding a … for the return of Roman officials",
+      "exactPortion": "\"By the 1st century BCE, emboldened pirates kidnapped prominent Roman dignitaries, asking for a larg",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 1 Passage 3 - The persistence and peril of misinformation",
+      "question": 31,
+      "answer": "G",
+      "prompt": "Although people have … to misinformation",
+      "exactPortion": "\"the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and ac",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 1 Passage 3 - The persistence and peril of misinformation",
+      "question": 32,
+      "answer": "J",
+      "prompt": "Descartes and Spinoza had … about how people engage with information",
+      "exactPortion": "\"st between how the 17th-century philosophers René Descartes and Baruch Spinoza described human info",
+      "flags": [
+        "high_overlap_before_blank_75pct",
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 1 Passage 3 - The persistence and peril of misinformation",
+      "question": 36,
+      "answer": "C",
+      "prompt": "resources for scepticism and the resources for perceiving and encoding are in … in the brain",
+      "exactPortion": "\"rent part of the brain than the resources used in perceiving and encoding.\"",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "high_overlap_after_blank_67pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 2 Passage 1 - The Industrial Revolution in Britain",
+      "question": 1,
+      "answer": "piston",
+      "prompt": "In Watt and Boulton's steam engine, the movement of the … was linked to a gear system.",
+      "exactPortion": "\"Watt later worked with the English manufacturer Matthew Boulton to invent a new steam engine driven",
+      "flags": [
+        "high_overlap_before_blank_63pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 2 Passage 1 - The Industrial Revolution in Britain",
+      "question": 4,
+      "answer": "labour",
+      "prompt": "Not as much … was needed to produce cloth once the spinning jenny and power loom were invented.",
+      "exactPortion": "\"With these machines, relatively little labour was required to produce cloth, and the new, mechanise",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 3 Passage 1 - Archaeologists discover evidence of prehistoric island settlers",
+      "question": 8,
+      "answer": "caves",
+      "prompt": "Excavations of rock shelters inside … near Kelo",
+      "exactPortion": "\"Just inland from the village of Kelo on Obi’s northern coast, Shipton and his colleagues found two ",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "cambridge-19-reading-import.json",
+      "title": "Cambridge 19 Test 3 Passage 1 - Archaeologists discover evidence of prehistoric island settlers",
+      "question": 12,
+      "answer": "pottery",
+      "prompt": "had … as well as items made out of metal",
+      "exactPortion": "\"Whatever the reason for the departure, there is no evidence for use of the Kelo shelters after this",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2024-passage-2-trauma-language-popular-culture.json",
+      "title": "IELTS Academic Reading April 2024 Passage 2 - Trauma Language in Popular Culture",
+      "question": 23,
+      "answer": "checklists",
+      "prompt": "On social media, psychological ideas are often turned into quizzes and personal .................... .",
+      "exactPortion": "Short videos often translate complicated psychological ideas into memorable phrases, quizzes and per",
+      "flags": [
+        "high_overlap_before_blank_75pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-bald-eagle.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Return of the Bald Eagle",
+      "question": 8,
+      "answer": "eggshells",
+      "prompt": "This substance became concentrated in fish-eating birds and made their .................... thinner.",
+      "exactPortion": "The chemical moved through food chains and built up in the bodies of fish-eating birds. It did not u",
+      "flags": [
+        "high_overlap_before_blank_75pct",
+        "high_overlap_after_blank_100pct",
+        "weak_paraphrase_pair:fish-eating birds=fish-eating birds",
+        "weak_paraphrase_pair:thinner=thinner"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-bald-eagle.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Return of the Bald Eagle",
+      "question": 9,
+      "answer": "bans",
+      "prompt": "Later, restrictions and .................... on the chemical reduced this pressure.",
+      "exactPortion": "Restrictions and later bans on DDT removed the most damaging chemical pressure.",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:later=later"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-bald-eagle.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Return of the Bald Eagle",
+      "question": 10,
+      "answer": "hacking",
+      "prompt": "In some areas, young eagles were returned through a method known as .................... .",
+      "exactPortion": "This reintroduction work often used a method called hacking",
+      "flags": [
+        "weak_paraphrase_pair:young eagles=young eagles"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-bald-eagle.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Return of the Bald Eagle",
+      "question": 11,
+      "answer": "platforms",
+      "prompt": "They were raised on artificial .................... or towers before they could fly.",
+      "exactPortion": "young eagles were raised in artificial platforms or towers until they were ready to fly.",
+      "flags": [
+        "high_overlap_before_blank_80pct",
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:artificial platforms=artificial platforms",
+        "weak_paraphrase_pair:raised=raised"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-bald-eagle.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Return of the Bald Eagle",
+      "question": 12,
+      "answer": "lead",
+      "prompt": "Today, one continuing danger is poisoning from .................... in carcasses.",
+      "exactPortion": "Eagles can be poisoned when they eat carcasses containing fragments of lead ammunition.",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "question": 7,
+      "answer": "jaw",
+      "prompt": "The phrase Habsburg jaw usually describes a prominent lower .................... and related facial features.",
+      "exactPortion": "It usually refers to a prominent lower jaw, a protruding lower lip and, in some portraits, a long na",
+      "flags": [
+        "answer_substring_already_in_prompt",
+        "weak_paraphrase_pair:prominent lower=prominent lower"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "question": 8,
+      "answer": "branch",
+      "prompt": "It is especially connected with the Spanish .................... of the family.",
+      "exactPortion": "The feature is most often discussed in relation to the Spanish branch of the House of Habsburg",
+      "flags": [
+        "weak_paraphrase_pair:Spanish branch=Spanish branch"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "question": 9,
+      "answer": "territories",
+      "prompt": "Habsburg rulers often used marriage to keep .................... and titles within the dynasty.",
+      "exactPortion": "rulers could keep territories, titles and claims inside the family.",
+      "flags": [
+        "high_overlap_after_blank_60pct",
+        "weak_paraphrase_pair:keep=keep"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "question": 10,
+      "answer": "relatives",
+      "prompt": "When close .................... had children, recessive variants were more likely to come from both parents.",
+      "exactPortion": "When close relatives have children, the same recessive variants are more likely to be inherited from",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "high_overlap_after_blank_63pct",
+        "weak_paraphrase_pair:recessive variants=recessive variants"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "question": 12,
+      "answer": "stylised",
+      "prompt": "However, portraits are imperfect evidence because artists sometimes .................... royal faces.",
+      "exactPortion": "Artists sometimes stylised faces to show rank, family resemblance or personal dignity.",
+      "flags": [
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:sometimes=sometimes"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-habsburg-jaw.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - The Habsburg Jaw",
+      "question": 13,
+      "answer": "politics",
+      "prompt": "The topic is now treated as a lesson about dynastic .................... .",
+      "exactPortion": "the subject is less a curiosity about appearance than a lesson about dynastic politics, inheritance ",
+      "flags": [
+        "weak_paraphrase_pair:dynastic politics=dynastic politics"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-polar-bears.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Polar Bears on Thinner Ice",
+      "question": 9,
+      "answer": "fasting",
+      "prompt": "When ice-free seasons last longer, some bears are forced onto land and spend more time .................... .",
+      "exactPortion": "Longer ice-free seasons force some bears to spend more time fasting on land.",
+      "flags": [
+        "weak_paraphrase_pair:spend more time=spend more time"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-polar-bears.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Polar Bears on Thinner Ice",
+      "question": 10,
+      "answer": "cubs",
+      "prompt": "Females emerging from snow dens must have fat reserves to feed their .................... .",
+      "exactPortion": "This is especially difficult for females with cubs, because they need enough fat reserves to nurse t",
+      "flags": [
+        "weak_paraphrase_pair:fat reserves=enough fat reserves"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-primary-education-ai.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Primary Education in the Age of AI",
+      "question": 8,
+      "answer": "literacy",
+      "prompt": "A careful approach to AI in primary schools keeps foundational ...................., numeracy and handwriting at the cen",
+      "exactPortion": "the first principle is that foundational literacy, numeracy and handwriting should remain central.",
+      "flags": [
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:foundational=foundational"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-primary-education-ai.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Primary Education in the Age of AI",
+      "question": 9,
+      "answer": "levels",
+      "prompt": "AI may give pupils practice at different ...................., and it can help teachers draft feedback for parents or pu",
+      "exactPortion": "An AI system can provide extra practice at different levels",
+      "flags": [
+        "weak_paraphrase_pair:practice=extra practice"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-primary-education-ai.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Primary Education in the Age of AI",
+      "question": 10,
+      "answer": "feedback",
+      "prompt": "AI may give pupils practice at different levels, and it can help teachers draft .................... for parents or pupi",
+      "exactPortion": "A program can help sort quiz results, suggest reading materials, draft feedback or translate a messa",
+      "flags": [
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:can help teachers=can help",
+        "weak_paraphrase_pair:draft=draft"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-primary-education-ai.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Primary Education in the Age of AI",
+      "question": 11,
+      "answer": "movement",
+      "prompt": "However, children also learn through talk, .................... and play, so screen-based answers are not enough.",
+      "exactPortion": "Young children learn through talk, movement and play, not only through answers on a screen.",
+      "flags": [
+        "high_overlap_before_blank_67pct",
+        "high_overlap_after_blank_63pct",
+        "weak_paraphrase_pair:children=young children",
+        "weak_paraphrase_pair:talk and play=talk and play"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-primary-education-ai.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Primary Education in the Age of AI",
+      "question": 12,
+      "answer": "bias",
+      "prompt": "Schools need rules about privacy and .................... before using AI widely.",
+      "exactPortion": "Before primary schools use such systems widely, they need clear rules about data, bias and the kinds",
+      "flags": [
+        "high_overlap_before_blank_83pct",
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:privacy=data / privacy controls",
+        "weak_paraphrase_pair:rules=clear rules"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-1-primary-education-ai.json",
+      "title": "IELTS Academic Reading April 2026 Passage 1 - Primary Education in the Age of AI",
+      "question": 13,
+      "answer": "process",
+      "prompt": "Future assessment may ask pupils to explain the .................... they followed.",
+      "exactPortion": "questions that ask children to describe the process they followed.",
+      "flags": [
+        "high_overlap_after_blank_100pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "question": 21,
+      "answer": "Albert",
+      "prompt": "Before 1917, the British royal family used a name inherited through Prince .................... .",
+      "exactPortion": "a name inherited through Queen Victoria's husband, Prince Albert.",
+      "flags": [
+        "weak_paraphrase_pair:before 1917=Before 1917",
+        "weak_paraphrase_pair:used a name inherited through=a name inherited through"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "question": 22,
+      "answer": "residence",
+      "prompt": "George V selected Windsor because it was connected with a famous .................... .",
+      "exactPortion": "The new name was taken from Windsor Castle, a famous royal residence.",
+      "flags": [
+        "weak_paraphrase_pair:famous=famous"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "question": 23,
+      "answer": "crown",
+      "prompt": "The new name helped protect the .................... from suspicion during wartime.",
+      "exactPortion": "It was a wartime act designed to protect the crown from suspicion",
+      "flags": [
+        "high_overlap_after_blank_75pct",
+        "weak_paraphrase_pair:from suspicion=from suspicion"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "question": 24,
+      "answer": "problem",
+      "prompt": "Later, Edward VIII's wish to marry Wallis Simpson created a constitutional .................... .",
+      "exactPortion": "a private choice by a monarch could become a public constitutional problem.",
+      "flags": [
+        "weak_paraphrase_pair:constitutional problem=public constitutional problem"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "question": 25,
+      "answer": "colonies",
+      "prompt": "Under Elizabeth II, the monarchy had to adjust as many former .................... became independent.",
+      "exactPortion": "By the middle of Elizabeth II's reign, many former colonies had become independent states",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-psychology-cancel-culture.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The Psychology of Cancel Culture",
+      "question": 21,
+      "answer": "punishment",
+      "prompt": "Cancel culture usually involves public judgement and visible social .................... .",
+      "exactPortion": "Online platforms also make social punishment visible.",
+      "flags": [
+        "weak_paraphrase_pair:public judgement=public judgement"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-psychology-cancel-culture.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The Psychology of Cancel Culture",
+      "question": 22,
+      "answer": "loyalty",
+      "prompt": "Moral outrage may signal .................... to a group.",
+      "exactPortion": "Public outrage may also signal loyalty to a group",
+      "flags": [
+        "high_overlap_before_blank_75pct",
+        "weak_paraphrase_pair:may signal=may signal",
+        "weak_paraphrase_pair:to a group=to a group"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-psychology-cancel-culture.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The Psychology of Cancel Culture",
+      "question": 23,
+      "answer": "situation",
+      "prompt": "However, online records can travel without the original .................... that shaped their meaning.",
+      "exactPortion": "digital records often travel without the tone, relationship or situation that originally shaped thei",
+      "flags": [
+        "high_overlap_after_blank_100pct",
+        "weak_paraphrase_pair:travel without=travel without",
+        "weak_paraphrase_pair:shaped their meaning=originally shaped their meaning"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-psychology-cancel-culture.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The Psychology of Cancel Culture",
+      "question": 24,
+      "answer": "safest",
+      "prompt": "Some bystanders hide their private doubts and publicly support the opinion that seems .................... .",
+      "exactPortion": "people hide their private doubts and publicly support the opinion that seems safest.",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "weak_paraphrase_pair:publicly support=publicly support"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-social-media-algorithms-polarization.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - Social Media Algorithms and Polarization",
+      "question": 21,
+      "answer": "engagement",
+      "prompt": "Many platforms rank posts by predicting .................... .",
+      "exactPortion": "Most large platforms use ranking systems that predict engagement.",
+      "flags": [
+        "weak_paraphrase_pair:predicting=predict"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-social-media-algorithms-polarization.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - Social Media Algorithms and Polarization",
+      "question": 22,
+      "answer": "shares",
+      "prompt": "They learn from signals such as clicks, watch time, comments and .................... .",
+      "exactPortion": "These systems learn from signals such as clicks, watch time, comments and shares.",
+      "flags": [
+        "high_overlap_before_blank_88pct",
+        "weak_paraphrase_pair:learn from signals=learn from signals",
+        "weak_paraphrase_pair:comments and shares=comments and shares"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-social-media-algorithms-polarization.json",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - Social Media Algorithms and Polarization",
+      "question": 23,
+      "answer": "loops",
+      "prompt": "When users continue to interact with similar material, this can create feedback .................... .",
+      "exactPortion": "this can create feedback loops in which user behaviour shapes recommendations, and recommendations t",
+      "flags": [
+        "weak_paraphrase_pair:create feedback loops=create feedback loops"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-case-for-urban-darkness.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - The Case for Urban Darkness",
+      "question": 31,
+      "answer": "A",
+      "prompt": "darkness can act as a form of .................... for many animals.",
+      "exactPortion": "Many animals use darkness as a form of information.",
+      "flags": [
+        "high_overlap_after_blank_67pct",
+        "weak_paraphrase_pair:form of ___=form of information"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-case-for-urban-darkness.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - The Case for Urban Darkness",
+      "question": 32,
+      "answer": "B",
+      "prompt": "move towards the brightest .................... .",
+      "exactPortion": "Young sea turtles move towards the brightest horizon, which under natural conditions is often the mo",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "weak_paraphrase_pair:brightest ___=brightest horizon"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-case-for-urban-darkness.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - The Case for Urban Darkness",
+      "question": 33,
+      "answer": "C",
+      "prompt": "affected by bright urban .................... .",
+      "exactPortion": "Migrating birds can become disoriented by bright urban glow",
+      "flags": [
+        "weak_paraphrase_pair:urban ___=urban glow"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-uncertain-science-of-prediction.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - The Uncertain Science of Prediction",
+      "question": 32,
+      "answer": "A",
+      "prompt": "before they see the .................... .",
+      "exactPortion": "Before observing the result, they write what they expect to happen",
+      "flags": [
+        "high_overlap_before_blank_75pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-uncertain-science-of-prediction.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - The Uncertain Science of Prediction",
+      "question": 36,
+      "answer": "E",
+      "prompt": "identify a weak .................... .",
+      "exactPortion": "A wrong forecast can be informative if it reveals which assumption was weak.",
+      "flags": [
+        "weak_paraphrase_pair:weak ___=assumption was weak"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-what-is-restoration.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - What Is Restoration?",
+      "question": 39,
+      "answer": "injury",
+      "prompt": "see both .................... and care.",
+      "exactPortion": "It should allow viewers to see both injury and care.",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "high_overlap_after_blank_100pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-what-is-restoration.json",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - What Is Restoration?",
+      "question": 40,
+      "answer": "public memory",
+      "prompt": "how restoration should influence .................... .",
+      "exactPortion": "how restoration should shape public memory.",
+      "flags": [
+        "high_overlap_before_blank_75pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Disappearance of Movie Theatres",
+      "question": 8,
+      "answer": "multiplexes",
+      "prompt": "Older single-screen theatres were often replaced by suburban .................... that could show several films in one l",
+      "exactPortion": "suburban multiplexes replaced many older single-screen theatres, offering several films under one ro",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "weak_paraphrase_pair:older single-screen theatres=older single-screen theatres"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Disappearance of Movie Theatres",
+      "question": 9,
+      "answer": "costs",
+      "prompt": "Today, cinema operators face high ...................., including rent, electricity and staff wages.",
+      "exactPortion": "Operators must pay rent, electricity, staff wages, cleaning costs and fees to film distributors.",
+      "flags": [
+        "high_overlap_after_blank_83pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Disappearance of Movie Theatres",
+      "question": 10,
+      "answer": "distributors",
+      "prompt": "They must also pay fees to film .................... .",
+      "exactPortion": "Operators must pay rent, electricity, staff wages, cleaning costs and fees to film distributors.",
+      "flags": [
+        "high_overlap_before_blank_57pct",
+        "weak_paraphrase_pair:film=film"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Disappearance of Movie Theatres",
+      "question": 12,
+      "answer": "developers",
+      "prompt": "In city centres, old theatres may be attractive to property .................... .",
+      "exactPortion": "Many old theatres occupy central sites that are attractive to developers.",
+      "flags": [
+        "weak_paraphrase_pair:old theatres=old theatres",
+        "weak_paraphrase_pair:attractive=attractive"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-disappearance-of-movie-theatres.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Disappearance of Movie Theatres",
+      "question": 13,
+      "answer": "atmosphere",
+      "prompt": "However, some independent cinemas survive by creating a social .................... that cannot be copied at home.",
+      "exactPortion": "Some also serve food and drinks, creating a social atmosphere that home viewing cannot reproduce.",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-spanish-armada.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Spanish Armada",
+      "question": 1,
+      "answer": "fleet",
+      "prompt": "Philip II sent a large .................... towards England in 1588.",
+      "exactPortion": "In 1588, King Philip II of Spain sent a large fleet towards England.",
+      "flags": [
+        "high_overlap_before_blank_60pct",
+        "high_overlap_after_blank_75pct",
+        "weak_paraphrase_pair:sent=sent",
+        "weak_paraphrase_pair:large=large"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-spanish-armada.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Spanish Armada",
+      "question": 2,
+      "answer": "army",
+      "prompt": "He wanted it to join Parma's .................... in the Netherlands before carrying troops to England.",
+      "exactPortion": "He wanted the Armada to sail through the English Channel, join the army of the Duke of Parma in the ",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-spanish-armada.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Spanish Armada",
+      "question": 3,
+      "answer": "crescent",
+      "prompt": "The Armada sailed in a defensive .................... formation, but this made it harder to change direction quickly.",
+      "exactPortion": "Spanish commanders hoped to keep the fleet together in a defensive crescent formation",
+      "flags": [
+        "weak_paraphrase_pair:formation=formation"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-1-spanish-armada.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 1 - The Spanish Armada",
+      "question": 5,
+      "answer": "Channel",
+      "prompt": "After Gravelines, the Armada could not return through the .................... .",
+      "exactPortion": "Bad weather and shortage of supplies made it impossible for the Spanish to return through the Channe",
+      "flags": [
+        "weak_paraphrase_pair:return=return"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Is ADHD Innate or Caused by Upbringing?",
+      "question": 24,
+      "answer": "methods",
+      "prompt": "The research is often done by adapting .................... that have already been used to compare relatives.",
+      "exactPortion": "The research is often done by adapting methods that have already been used to compare relatives",
+      "flags": [
+        "high_overlap_before_blank_71pct",
+        "high_overlap_after_blank_88pct",
+        "weak_paraphrase_pair:have already been used=already been used",
+        "weak_paraphrase_pair:relatives=relatives"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Is ADHD Innate or Caused by Upbringing?",
+      "question": 25,
+      "answer": "stigma",
+      "prompt": "Many researchers believe that inherited risk plays an important role in ADHD. They also say that this can be explained t",
+      "exactPortion": "genetic findings can be explained to families without producing much stigma",
+      "flags": [
+        "high_overlap_before_blank_75pct",
+        "weak_paraphrase_pair:without producing much=without producing much"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Is ADHD Innate or Caused by Upbringing?",
+      "question": 26,
+      "answer": "blame",
+      "prompt": "However, concerned specialists strongly believe that .................... is a serious problem because families may be w",
+      "exactPortion": "Professor Helen Monroe, a developmental psychologist, is concerned about a different problem: blame",
+      "flags": [
+        "weak_paraphrase_pair:serious problem=problem"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-british-aristocracy.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Preserving the British Aristocracy",
+      "question": 25,
+      "answer": "techniques",
+      "prompt": "The work is often done by adapting conservation .................... that have already been used in museums and archives",
+      "exactPortion": "\"adapting conservation techniques already used in museums and archives\"",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-british-aristocracy.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Preserving the British Aristocracy",
+      "question": 26,
+      "answer": "scrutiny",
+      "prompt": "However, concerned groups strongly believe that .................... is necessary when public money or tax benefits are ",
+      "exactPortion": "\"public scrutiny is necessary when tax relief or public grants are involved\"",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-saving-the-vaquita.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Saving the Vaquita",
+      "question": 25,
+      "answer": "gear",
+      "prompt": "The work is often done by adapting fishing .................... that has already been tested in other small-scale fisher",
+      "exactPortion": "adapting fishing gear already tested in other small-scale fisheries",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-saving-the-vaquita.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Saving the Vaquita",
+      "question": 26,
+      "answer": "enforcement",
+      "prompt": "However, concerned groups strongly believe that .................... is necessary because illegal nets may still enter t",
+      "exactPortion": "concerned groups argue that enforcement remains necessary because illegal nets may still enter the v",
+      "flags": [
+        "high_overlap_after_blank_88pct",
+        "weak_paraphrase_pair:illegal nets may still enter=illegal nets may still enter"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-digital-native.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Digital Native",
+      "question": 33,
+      "answer": "appification",
+      "prompt": "the .................... of software hides the underlying code from the user.",
+      "exactPortion": "He attributes this shift to the appification of software.",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "weak_paraphrase_pair:___ of software=appification of software"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-digital-native.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Digital Native",
+      "question": 34,
+      "answer": "search",
+      "prompt": "retrieved using a universal .................... .",
+      "exactPortion": "retrieved via a universal search bar",
+      "flags": [
+        "weak_paraphrase_pair:universal ___=universal search bar",
+        "weak_paraphrase_pair:retrieved=retrieved via"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-digital-native.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Digital Native",
+      "question": 35,
+      "answer": "information",
+      "prompt": "unable to critically evaluate the .................... presented to them online.",
+      "exactPortion": "they cannot critically evaluate the information presented to them.",
+      "flags": [
+        "high_overlap_before_blank_60pct",
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:critically evaluate=critically evaluate",
+        "weak_paraphrase_pair:presented to them online=presented to them"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-eight-hour-sleep.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Eight-Hour Sleep",
+      "question": 36,
+      "answer": "light",
+      "prompt": "the introduction of artificial .................... altered human behavior and pushed bedtimes later.",
+      "exactPortion": "the widespread introduction of artificial light. Gas lamps and, subsequently, electric bulbs allowed",
+      "flags": [
+        "high_overlap_before_blank_75pct",
+        "weak_paraphrase_pair:artificial ___=artificial light"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-eight-hour-sleep.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Eight-Hour Sleep",
+      "question": 37,
+      "answer": "demands",
+      "prompt": "modern humans experience much higher cognitive .................... than our ancestors.",
+      "exactPortion": "Today, humans face unprecedented, relentless cognitive demands,\" Vance asserts.",
+      "flags": [
+        "weak_paraphrase_pair:cognitive ___=cognitive demands"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-myth-of-eight-hour-sleep.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Myth of the Eight-Hour Sleep",
+      "question": 39,
+      "answer": "fatigue",
+      "prompt": "could leave people vulnerable to chronic .................... .",
+      "exactPortion": "attempting a segmented sleep schedule will leave them highly vulnerable to chronic fatigue.",
+      "flags": [
+        "weak_paraphrase_pair:chronic ___=chronic fatigue",
+        "weak_paraphrase_pair:vulnerable=highly vulnerable"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-productive-unease-of-boredom.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Productive Unease of Boredom",
+      "question": 32,
+      "answer": "B",
+      "prompt": "Some teachers have introduced short periods of .................... before giving students an explanation.",
+      "exactPortion": "they create brief pauses in which students must stay with an unresolved problem before receiving an ",
+      "flags": [
+        "high_overlap_after_blank_60pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-productive-unease-of-boredom.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Productive Unease of Boredom",
+      "question": 33,
+      "answer": "A",
+      "prompt": "These pauses are not intended to make lessons .................... .",
+      "exactPortion": "They do not aim to make lessons tedious; rather, they create brief pauses in which students must sta",
+      "flags": [
+        "weak_paraphrase_pair:make lessons ___=make lessons tedious"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-productive-unease-of-boredom.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Productive Unease of Boredom",
+      "question": 35,
+      "answer": "E",
+      "prompt": "students who were initially .................... later noticed several important details in a photograph.",
+      "exactPortion": "Several students were restless at first. Yet when discussion began, they noticed details that would ",
+      "flags": [
+        "weak_paraphrase_pair:noticed details=noticed details in a photograph"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-3-wood-wide-web.json",
+      "title": "IELTS Academic Reading Feb 2026 Passage 3 - The Wood Wide Web: The Myth of the Altruistic Forest",
+      "question": 34,
+      "answer": "altruism",
+      "prompt": "governed by fungal self-interest rather than plant .................... .",
+      "exactPortion": "completely devoid of any biological altruism.",
+      "flags": [
+        "weak_paraphrase_pair:plant ___=biological altruism / plant empathy",
+        "weak_paraphrase_pair:fungal self-interest=fungal self-interest"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-diet-and-mental-health.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Diet and Mental Health",
+      "question": 18,
+      "answer": "signals",
+      "prompt": "organisms in the digestive system can produce chemical .................... that communicate with the brain.",
+      "exactPortion": "These organisms help produce chemical signals that communicate with the brain",
+      "flags": [
+        "high_overlap_after_blank_100pct",
+        "weak_paraphrase_pair:organisms=bacteria and other organisms"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-diet-and-mental-health.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Diet and Mental Health",
+      "question": 19,
+      "answer": "symptoms",
+      "prompt": "Some studies connect varied, fibre-rich meals with lower levels of depressive .................... .",
+      "exactPortion": "associations between varied, fibre-rich meals and lower rates of depressive symptoms",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "weak_paraphrase_pair:meals=meals"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-diet-and-mental-health.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Diet and Mental Health",
+      "question": 21,
+      "answer": "comfort",
+      "prompt": "people may choose sweet or fatty foods because they provide immediate .................... .",
+      "exactPortion": "sweet or fatty foods because these offer immediate comfort",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "weak_paraphrase_pair:immediate=immediate"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-diet-and-mental-health.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Diet and Mental Health",
+      "question": 22,
+      "answer": "irritability",
+      "prompt": "this effect does not usually last and may be followed by greater .................... .",
+      "exactPortion": "it can be followed by a slump in energy and greater irritability",
+      "flags": [
+        "weak_paraphrase_pair:followed by=followed by",
+        "weak_paraphrase_pair:greater=greater"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-medieval-castles.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Preserving Britain's Medieval Castles",
+      "question": 18,
+      "answer": "mortar",
+      "prompt": "Rainwater trapped in castle walls can weaken the original .................... that holds the stones together.",
+      "exactPortion": "Rainwater trapped inside a wall can weaken the original mortar that holds the stones together.",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "high_overlap_after_blank_100pct",
+        "weak_paraphrase_pair:weaken=weaken",
+        "weak_paraphrase_pair:holds the stones together=holds the stones together"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-medieval-castles.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Preserving Britain's Medieval Castles",
+      "question": 19,
+      "answer": "plants",
+      "prompt": "When roofs and floors have gone, .................... are more likely to grow in the stonework.",
+      "exactPortion": "When roofs and floors have disappeared, plants are more likely to grow in the stonework",
+      "flags": [
+        "high_overlap_before_blank_83pct",
+        "high_overlap_after_blank_75pct",
+        "weak_paraphrase_pair:grow in the stonework=grow in the stonework",
+        "weak_paraphrase_pair:more likely=more likely"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-medieval-castles.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Preserving Britain's Medieval Castles",
+      "question": 20,
+      "answer": "fabric",
+      "prompt": "Repairs using hard cement may destroy the .................... of historic stonework.",
+      "exactPortion": "destroyed the fabric of historic stonework",
+      "flags": [
+        "high_overlap_after_blank_67pct",
+        "weak_paraphrase_pair:historic stonework=historic stonework"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-medieval-castles.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Preserving Britain's Medieval Castles",
+      "question": 21,
+      "answer": "channels",
+      "prompt": "Conservators sometimes direct water away through .................... cut or installed beside walls.",
+      "exactPortion": "direct water away through narrow channels cut or installed beside walls",
+      "flags": [
+        "high_overlap_before_blank_67pct",
+        "high_overlap_after_blank_80pct",
+        "weak_paraphrase_pair:water away=water away",
+        "weak_paraphrase_pair:cut or installed beside walls=cut or installed beside walls"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-medieval-castles.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Preserving Britain's Medieval Castles",
+      "question": 22,
+      "answer": "subsidence",
+      "prompt": "Undermined foundations can lead to ...................., a serious problem that may eventually cause cracks and collapse",
+      "exactPortion": "undermined foundations can lead to subsidence, a serious problem that may eventually cause cracks, t",
+      "flags": [
+        "high_overlap_before_blank_80pct",
+        "high_overlap_after_blank_88pct",
+        "weak_paraphrase_pair:can lead to=can lead to",
+        "weak_paraphrase_pair:serious problem=serious problem"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-music-and-brain.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Music and the Brain",
+      "question": 18,
+      "answer": "predictions",
+      "prompt": "When listening to music, the brain forms .................... about what it may hear next.",
+      "exactPortion": "forms predictions about what is likely to happen next",
+      "flags": [
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:forms=forms"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-music-and-brain.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Music and the Brain",
+      "question": 19,
+      "answer": "reward",
+      "prompt": "Music can activate the brain's .................... system, which is connected with motivation and pleasure.",
+      "exactPortion": "Music also engages the reward system, a set of circuits involved in motivation and pleasure.",
+      "flags": [
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:motivation and pleasure=motivation and pleasure"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-music-and-brain.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Music and the Brain",
+      "question": 20,
+      "answer": "speech",
+      "prompt": "Some stroke patients may use singing as a step towards recovering ordinary .................... .",
+      "exactPortion": "gradually moving from melody back towards normal speech",
+      "flags": [
+        "weak_paraphrase_pair:singing=melody / singing simple sentences"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-2-music-and-brain.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 2 - Music and the Brain",
+      "question": 21,
+      "answer": "memories",
+      "prompt": "Familiar songs can sometimes help people with dementia bring back .................... .",
+      "exactPortion": "familiar music can sometimes bring back memories",
+      "flags": [
+        "weak_paraphrase_pair:bring back=bring back"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-architecture-of-forgetting.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Architecture of Forgetting",
+      "question": 40,
+      "answer": "signal",
+      "prompt": "More generally, the passage concludes that a healthy brain filters the noise from the 40 .................... .",
+      "exactPortion": "A healthy brain is not one that remembers everything, but one that effectively filters the noise fro",
+      "flags": [
+        "high_overlap_before_blank_88pct",
+        "weak_paraphrase_pair:healthy brain=healthy brain",
+        "weak_paraphrase_pair:answer signal=signal"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-cognitive-cost-of-gps.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Cognitive Cost of GPS: Are We Losing Our Internal Compass?",
+      "question": 39,
+      "answer": "landscape",
+      "prompt": "isolates the user from the physical .................... they are traveling through.",
+      "exactPortion": "entirely disconnected from the physical landscape around them",
+      "flags": [
+        "high_overlap_before_blank_67pct",
+        "weak_paraphrase_pair:physical ___=physical landscape"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-urban-evolution.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - Urban Evolution: When Cities Become the New Galapagos",
+      "question": 37,
+      "answer": "mutation",
+      "prompt": "these birds have developed a genetic .................... that suppresses their cortisol levels.",
+      "exactPortion": "discovered a permanent genetic mutation in the urban birds. This mutation suppresses their baseline ",
+      "flags": [
+        "high_overlap_after_blank_60pct",
+        "weak_paraphrase_pair:genetic ___=permanent genetic mutation"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-urban-evolution.json",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - Urban Evolution: When Cities Become the New Galapagos",
+      "question": 39,
+      "answer": "debate",
+      "prompt": "cities are sparking a fierce .................... among scientists about how we should manage and design future conserva",
+      "exactPortion": "These findings are sparking a fierce debate regarding the future of environmental conservation.",
+      "flags": [
+        "high_overlap_before_blank_60pct",
+        "weak_paraphrase_pair:fierce ___=fierce debate"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-future-green-architecture.json",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - The Future of Green Architecture",
+      "question": 8,
+      "answer": "orientation",
+      "prompt": "Correct .................... can reduce the need for artificial cooling, while insulation can keep indoor temperatures s",
+      "exactPortion": "A building's orientation may reduce the need for artificial cooling.",
+      "flags": [
+        "high_overlap_after_blank_75pct",
+        "weak_paraphrase_pair:reduce the need=reduce the need",
+        "weak_paraphrase_pair:artificial cooling=artificial cooling"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-future-green-architecture.json",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - The Future of Green Architecture",
+      "question": 9,
+      "answer": "insulation",
+      "prompt": "Correct orientation can reduce the need for artificial cooling, while .................... can keep indoor temperatures ",
+      "exactPortion": "insulation can keep indoor temperatures stable",
+      "flags": [
+        "high_overlap_after_blank_100pct",
+        "weak_paraphrase_pair:keep=keep",
+        "weak_paraphrase_pair:indoor temperatures stable=indoor temperatures stable"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-future-green-architecture.json",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - The Future of Green Architecture",
+      "question": 10,
+      "answer": "carbon",
+      "prompt": "Architects are also choosing materials with lower embodied .................... .",
+      "exactPortion": "choosing materials with lower embodied carbon",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "weak_paraphrase_pair:choosing materials=choosing materials",
+        "weak_paraphrase_pair:lower embodied carbon=lower embodied carbon"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-future-green-architecture.json",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - The Future of Green Architecture",
+      "question": 11,
+      "answer": "rainwater",
+      "prompt": "Some buildings collect .................... from roofs, and others treat greywater for reuse.",
+      "exactPortion": "Some new buildings collect rainwater from roofs",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "weak_paraphrase_pair:collect from roofs=collect from roofs"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-future-green-architecture.json",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - The Future of Green Architecture",
+      "question": 12,
+      "answer": "quality",
+      "prompt": "Inside buildings, sensors may monitor air .................... .",
+      "exactPortion": "sensors to monitor temperature, humidity and air quality",
+      "flags": [
+        "weak_paraphrase_pair:monitor=monitor",
+        "weak_paraphrase_pair:air quality=air quality"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-future-green-architecture.json",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - The Future of Green Architecture",
+      "question": 13,
+      "answer": "use",
+      "prompt": "Designers are also creating buildings that can change .................... instead of being demolished.",
+      "exactPortion": "design buildings that can change use rather than being demolished",
+      "flags": [
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:demolished=demolished"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "question": 21,
+      "answer": "intention",
+      "prompt": "The artist begins by writing a clear .................... .",
+      "exactPortion": "Lessons in the method begin with an artist writing a clear intention",
+      "flags": [
+        "high_overlap_before_blank_57pct",
+        "weak_paraphrase_pair:clear intention=clear intention"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "question": 22,
+      "answer": "constraints",
+      "prompt": "The AI is then given visual .................... , such as a limited palette or a source photograph.",
+      "exactPortion": "The artist gives the AI a set of visual constraints, such as a limited palette, a source photograph ",
+      "flags": [
+        "high_overlap_after_blank_50pct",
+        "weak_paraphrase_pair:visual constraints=visual constraints"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "question": 23,
+      "answer": "drafts",
+      "prompt": "It produces several rough .................... .",
+      "exactPortion": "The system then produces several rough drafts",
+      "flags": [
+        "high_overlap_before_blank_75pct",
+        "weak_paraphrase_pair:produces=produces",
+        "weak_paraphrase_pair:several rough drafts=several rough drafts"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "question": 24,
+      "answer": "edits",
+      "prompt": "The artist selects one version and makes manual .................... .",
+      "exactPortion": "The artist chooses one version, makes manual edits and records each major decision",
+      "flags": [
+        "high_overlap_before_blank_88pct",
+        "weak_paraphrase_pair:manual edits=manual edits"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "question": 25,
+      "answer": "log",
+      "prompt": "Each major decision is recorded in a process .................... .",
+      "exactPortion": "records each major decision in a process log",
+      "flags": [
+        "weak_paraphrase_pair:each major decision=each major decision"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "question": 26,
+      "answer": "authorship",
+      "prompt": "Finally, the work should reveal human .................... .",
+      "exactPortion": "It should also reveal human authorship",
+      "flags": [
+        "weak_paraphrase_pair:human authorship=human authorship"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "question": 21,
+      "answer": "question",
+      "prompt": "The method begins with a claim, which students turn into a precise .................... .",
+      "exactPortion": "Students turn the claim into a precise question",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "weak_paraphrase_pair:claim into a precise=turn the claim into a precise"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "question": 22,
+      "answer": "sources",
+      "prompt": "They then compare several .................... .",
+      "exactPortion": "compare several sources",
+      "flags": [
+        "weak_paraphrase_pair:then compare=compare",
+        "weak_paraphrase_pair:several sources=several sources"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "question": 23,
+      "answer": "assumptions",
+      "prompt": "For each one, they separate evidence from hidden .................... .",
+      "exactPortion": "separate evidence from hidden assumptions",
+      "flags": [
+        "weak_paraphrase_pair:separate=separate",
+        "weak_paraphrase_pair:hidden assumptions=hidden assumptions"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "question": 24,
+      "answer": "scorecard",
+      "prompt": "Students record their judgement on a shared .................... .",
+      "exactPortion": "record their judgement on a shared scorecard",
+      "flags": [
+        "high_overlap_before_blank_57pct",
+        "weak_paraphrase_pair:record their judgement=record their judgement",
+        "weak_paraphrase_pair:shared=shared"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "question": 25,
+      "answer": "feedback",
+      "prompt": "The teacher then gives short .................... , and students revise their conclusion before moving on.",
+      "exactPortion": "The teacher then gives short feedback",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "weak_paraphrase_pair:teacher gives=teacher gives",
+        "weak_paraphrase_pair:short feedback=short feedback"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "question": 26,
+      "answer": "conclusion",
+      "prompt": "The teacher then gives short feedback, and students revise their .................... before moving on.",
+      "exactPortion": "students revise their conclusion before moving to the next topic",
+      "flags": [
+        "high_overlap_after_blank_67pct",
+        "weak_paraphrase_pair:revise their=revise their"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "question": 21,
+      "answer": "paragraph",
+      "prompt": "Lessons often begin with an AI-generated .................... about a historical event.",
+      "exactPortion": "Lessons often begin with an AI-generated paragraph about a historical event",
+      "flags": [
+        "high_overlap_before_blank_71pct",
+        "high_overlap_after_blank_75pct",
+        "weak_paraphrase_pair:begin with=begin with",
+        "weak_paraphrase_pair:AI-generated paragraph=AI-generated paragraph"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "question": 22,
+      "answer": "claim",
+      "prompt": "Students identify the central .................... and compare it with primary sources.",
+      "exactPortion": "Students identify the central claim",
+      "flags": [
+        "high_overlap_before_blank_100pct",
+        "weak_paraphrase_pair:identify=identify",
+        "weak_paraphrase_pair:central claim=central claim"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "question": 23,
+      "answer": "sources",
+      "prompt": "Students identify the central claim and compare it with primary .................... .",
+      "exactPortion": "compare it with two or three primary sources",
+      "flags": [
+        "weak_paraphrase_pair:compare it with=compare it with",
+        "weak_paraphrase_pair:primary sources=primary sources"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "question": 25,
+      "answer": "uncertainty",
+      "prompt": "They also mark any .................... before they revise their account.",
+      "exactPortion": "mark any uncertainty",
+      "flags": [
+        "weak_paraphrase_pair:mark any=mark any",
+        "weak_paraphrase_pair:uncertainty=uncertainty"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "question": 26,
+      "answer": "account",
+      "prompt": "They also mark any uncertainty before they revise their .................... .",
+      "exactPortion": "revise their account before the class moves on",
+      "flags": [
+        "weak_paraphrase_pair:revise their=revise their"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "question": 22,
+      "answer": "sand",
+      "prompt": "The water then passes through layers of .................... and charcoal.",
+      "exactPortion": "moringa powder is combined with layers of sand and charcoal",
+      "flags": [
+        "high_overlap_after_blank_100pct",
+        "weak_paraphrase_pair:charcoal=charcoal"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "question": 23,
+      "answer": "sediment",
+      "prompt": "This makes small particles join together into larger clumps, and some of these sink as .................... .",
+      "exactPortion": "it first helps dirt, organic matter and some microbes gather into larger clumps, which can then sink",
+      "flags": [
+        "high_overlap_before_blank_63pct",
+        "weak_paraphrase_pair:larger clumps=gather into larger clumps",
+        "weak_paraphrase_pair:sink as=sink as"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "question": 24,
+      "answer": "dose",
+      "prompt": "A measured .................... is mixed with untreated water in a bucket.",
+      "exactPortion": "Each sachet gives a clear dose for a standard bucket",
+      "flags": [
+        "weak_paraphrase_pair:bucket=standard bucket"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "question": 25,
+      "answer": "container",
+      "prompt": "To keep the treated water safe, it should be kept in a covered .................... .",
+      "exactPortion": "the treated water is kept in a covered container after filtration",
+      "flags": [
+        "weak_paraphrase_pair:kept=kept",
+        "weak_paraphrase_pair:treated water=treated water",
+        "weak_paraphrase_pair:covered container=covered container"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-good-archive.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - What Makes a Good Archive?",
+      "question": 38,
+      "answer": "ordinary people",
+      "prompt": "he is attracted to records of .................... .",
+      "exactPortion": "I am drawn to the records of ordinary people: shopping lists, school notebooks, marginal comments, r",
+      "flags": [
+        "weak_paraphrase_pair:records of ___=records of ordinary people"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-good-archive.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - What Makes a Good Archive?",
+      "question": 39,
+      "answer": "digital abundance",
+      "prompt": "the age of .................... has changed the work of archives.",
+      "exactPortion": "The age of digital abundance has not removed the need for archives; it has changed the difficulty.",
+      "flags": [
+        "high_overlap_before_blank_67pct",
+        "high_overlap_after_blank_67pct",
+        "weak_paraphrase_pair:age of ___=age of digital abundance"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-good-archive.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - What Makes a Good Archive?",
+      "question": 40,
+      "answer": "interpretation",
+      "prompt": "the central challenge is now not only preservation, but .................... .",
+      "exactPortion": "The central challenge is no longer only preservation, but interpretation.",
+      "flags": [
+        "high_overlap_before_blank_63pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-imperfect-design.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Case for Imperfect Design",
+      "question": 31,
+      "answer": "A",
+      "prompt": "they completed the first task with less .................... .",
+      "exactPortion": "The first group assembled the lamp more quickly and reported less frustration.",
+      "flags": [
+        "weak_paraphrase_pair:less ___=less frustration"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-imperfect-design.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Case for Imperfect Design",
+      "question": 32,
+      "answer": "B",
+      "prompt": "the second group had to deal with visible parts and a .................... that could be fixed.",
+      "exactPortion": "a minor wiring error that could be corrected by following a diagram.",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-imperfect-design.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Case for Imperfect Design",
+      "question": 33,
+      "answer": "C",
+      "prompt": "This helped them develop a more .................... understanding of the object.",
+      "exactPortion": "limited, recoverable friction can help users develop a practical understanding of an object.",
+      "flags": [
+        "high_overlap_after_blank_50pct"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-imperfect-design.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Case for Imperfect Design",
+      "question": 34,
+      "answer": "D",
+      "prompt": "can make them better at detecting .................... .",
+      "exactPortion": "users who were shown a brief explanation of how the software classified expenses were slower at firs",
+      "flags": [
+        "weak_paraphrase_pair:detecting ___=detecting later errors"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-imperfect-design.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Case for Imperfect Design",
+      "question": 35,
+      "answer": "E",
+      "prompt": "a small interruption to smoothness can create .................... .",
+      "exactPortion": "The explanation acted like a visible screw: it interrupted smoothness, but it also created understan",
+      "flags": [
+        "weak_paraphrase_pair:create ___=created understanding"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-quiet-skill-of-forgetting.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Quiet Skill of Forgetting",
+      "question": 32,
+      "answer": "A",
+      "prompt": "learning should not be seen only as the .................... of new facts.",
+      "exactPortion": "Learning is often described as the addition of new facts",
+      "flags": [
+        "high_overlap_after_blank_67pct",
+        "weak_paraphrase_pair:___ of new facts=addition of new facts",
+        "weak_paraphrase_pair:answer signal=A"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-quiet-skill-of-forgetting.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Quiet Skill of Forgetting",
+      "question": 34,
+      "answer": "E",
+      "prompt": "teachers ask students to identify the .................... in their first explanation.",
+      "exactPortion": "first ask students to mark the contradictions in their original explanation.",
+      "flags": [
+        "high_overlap_after_blank_75pct",
+        "weak_paraphrase_pair:answer signal=E"
+      ]
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-3-quiet-skill-of-forgetting.json",
+      "title": "IELTS Academic Reading March 2026 Passage 3 - The Quiet Skill of Forgetting",
+      "question": 35,
+      "answer": "D",
+      "prompt": "This makes the old idea available for .................... .",
+      "exactPortion": "make the old idea available for revision.",
+      "flags": [
+        "high_overlap_before_blank_71pct",
+        "weak_paraphrase_pair:available for ___=available for revision"
+      ]
+    }
+  ]
+}

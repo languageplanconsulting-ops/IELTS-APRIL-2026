@@ -13881,6 +13881,379 @@ select:focus,
   color: #123f91;
 }
 
+.readingPage .readingJourneyGame {
+  display: grid;
+  gap: 18px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4px 0 32px;
+}
+
+.readingPage .readingJourneyBreadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.readingPage .readingJourneyBreadcrumbLink {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #004aad;
+  font-weight: 850;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.readingPage .readingJourneyJournal {
+  display: grid;
+  gap: 20px;
+  padding: 22px 22px 20px;
+  border: 3px solid #0f172a;
+  border-radius: 16px;
+  background: #ffcc00;
+  box-shadow: 5px 5px 0 #0f172a;
+}
+
+@media (min-width: 700px) {
+  .readingPage .readingJourneyJournal {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+}
+
+.readingPage .readingJourneyJournalTag {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.readingPage .readingJourneyJournalTitle {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.readingPage .readingJourneyJournalLead {
+  margin: 8px 0 12px;
+  color: #334155;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.readingPage .readingJourneyJournalLead strong {
+  color: #004aad;
+}
+
+.readingPage .readingJourneyJournalChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.readingPage .readingJourneyJournalChips span {
+  padding: 6px 10px;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  background: #fffdfa;
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.readingPage .readingJourneyJournalStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.readingPage .readingJourneyStatBox {
+  min-width: 88px;
+  padding: 10px 12px;
+  border: 2px solid #0f172a;
+  border-radius: 10px;
+  background: #fffdfa;
+  box-shadow: 3px 3px 0 #0f172a;
+  text-align: center;
+}
+
+.readingPage .readingJourneyStatBox span {
+  display: block;
+  margin-bottom: 2px;
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.readingPage .readingJourneyStatBox strong {
+  color: #004aad;
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.readingPage .readingJourneyToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.readingPage .readingJourneyBtn {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 2px solid #0f172a;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 3px 3px 0 #0f172a;
+  font-weight: 850;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.readingPage .readingJourneyBtn:hover:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.readingPage .readingJourneyBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.readingPage .readingJourneyBtn-ghost {
+  background: #fffdfa;
+  color: #004aad;
+}
+
+.readingPage .readingJourneyBtn-play {
+  background: #ffcc00;
+  color: #0f172a;
+}
+
+.readingPage .readingJourneyEmpty {
+  padding: 28px 20px;
+  border: 3px dashed #94a3b8;
+  border-radius: 14px;
+  background: #fffdfa;
+  text-align: center;
+}
+
+.readingPage .readingJourneyEmpty p {
+  margin: 0 0 6px;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.readingPage .readingJourneyTrail {
+  display: grid;
+  gap: 0;
+  padding: 8px 0 12px;
+}
+
+.readingPage .readingJourneyTrailRow {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.readingPage .readingJourneyTrailRow.is-alt .readingJourneyMissionCard {
+  transform: rotate(-0.4deg);
+}
+
+.readingPage .readingJourneyTrailSpine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+}
+
+.readingPage .readingJourneyTrailLine {
+  flex: 1;
+  width: 4px;
+  min-height: 12px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    180deg,
+    #0f172a 0,
+    #0f172a 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  opacity: 0.35;
+}
+
+.readingPage .readingJourneyTrailDot {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #0f172a;
+  border-radius: 50%;
+  background: #fffdfa;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow: 3px 3px 0 #0f172a;
+  flex-shrink: 0;
+}
+
+.readingPage .readingJourneyTrailDot.is-cleared {
+  background: #86efac;
+  color: #14532d;
+}
+
+.readingPage .readingJourneyTrailDot.is-active {
+  background: #ffcc00;
+  animation: readingJourneyPulse 1.4s ease-in-out infinite;
+}
+
+.readingPage .readingJourneyTrailDot.is-locked {
+  background: #e2e8f0;
+  opacity: 0.85;
+}
+
+@keyframes readingJourneyPulse {
+  0%,
+  100% {
+    box-shadow: 3px 3px 0 #0f172a;
+  }
+  50% {
+    box-shadow: 4px 4px 0 #0f172a, 0 0 0 4px rgba(255, 204, 0, 0.45);
+  }
+}
+
+.readingPage .readingJourneyMissionCard {
+  margin-bottom: 16px;
+  padding: 16px 16px 14px;
+  border: 3px solid #0f172a;
+  border-radius: 14px;
+  background: #fffdfa;
+  box-shadow: 4px 4px 0 #0f172a;
+  transform: rotate(0.25deg);
+}
+
+.readingPage .readingJourneyMissionCard.is-locked {
+  opacity: 0.72;
+  background: #f1f5f9;
+  box-shadow: 2px 2px 0 #94a3b8;
+  border-color: #94a3b8;
+}
+
+.readingPage .readingJourneyMissionCard.is-cleared {
+  border-color: #166534;
+  background: #f0fdf4;
+  box-shadow: 4px 4px 0 #166534;
+}
+
+.readingPage .readingJourneyMissionCard.is-active {
+  border-color: #004aad;
+  box-shadow: 5px 5px 0 #004aad;
+}
+
+.readingPage .readingJourneyMissionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.readingPage .readingJourneyMissionNo {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: #64748b;
+}
+
+.readingPage .readingJourneyMissionStatus {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 2px solid #0f172a;
+  background: #ffcc00;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.readingPage .readingJourneyMissionStatus.is-cleared {
+  background: #86efac;
+  border-color: #166534;
+  color: #14532d;
+}
+
+.readingPage .readingJourneyMissionStatus.is-locked {
+  background: #e2e8f0;
+  border-color: #64748b;
+  color: #475569;
+}
+
+.readingPage .readingJourneyMissionName {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.readingPage .readingJourneyMissionObjective {
+  margin: 0 0 10px;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.readingPage .readingJourneyMissionLoot {
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.readingPage .readingJourneyMissionLoot li {
+  margin: 0;
+}
+
+.readingPage .readingJourneyMissionActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 520px) {
+  .readingPage .readingJourneyTrailRow {
+    grid-template-columns: 44px 1fr;
+    gap: 8px;
+  }
+
+  .readingPage .readingJourneyJournal {
+    padding: 16px;
+  }
+}
+
 .readingPage .readingStageBoard {
   display: grid;
   gap: 22px;

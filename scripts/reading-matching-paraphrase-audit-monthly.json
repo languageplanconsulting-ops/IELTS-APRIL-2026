@@ -1,0 +1,525 @@
+{
+  "scannedAt": "2026-05-20T12:41:49.808Z",
+  "totalMatching": 212,
+  "issueCount": 37,
+  "issues": [
+    {
+      "file": "ielts-academic-reading-april-2024-passage-2-trauma-language-popular-culture.json",
+      "source": "import",
+      "title": "IELTS Academic Reading April 2024 Passage 2 - Trauma Language in Popular Culture",
+      "type": "matching-headings",
+      "question": 14,
+      "answer": "iii",
+      "prompt": "Paragraph C",
+      "exactPortion": "Used lazily, however, trauma becomes a shortcut",
+      "flags": [
+        "weak_paraphrase_pair:shortcut=trauma becomes a shortcut | commercial/popular culture=popular culture"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-delayed-adulthood.json",
+      "source": "import",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - Delayed Adulthood",
+      "type": "matching-information",
+      "question": 15,
+      "answer": "B",
+      "prompt": "reference to education extending the period before long-term commitments",
+      "exactPortion": "More young adults now spend their early twenties completing degrees, professional training or unpaid internships.",
+      "flags": [
+        "weak_paraphrase_pair:before commitments=before taking on long-term commitments"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "source": "import",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "type": "matching-headings",
+      "question": 17,
+      "answer": "viii",
+      "prompt": "Section D",
+      "exactPortion": "The greatest early crisis came in 1936, when Edward VIII chose to give up the throne in order to marry Wallis Simpson",
+      "flags": [
+        "weak_paraphrase_pair:crisis=greatest early crisis"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-house-of-windsor.json",
+      "source": "import",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The History of the House of Windsor",
+      "type": "matching-headings",
+      "question": 20,
+      "answer": "v",
+      "prompt": "Section G",
+      "exactPortion": "In 1960, it was announced that most descendants who needed a surname would use Mountbatten-Windsor.",
+      "flags": [
+        "weak_paraphrase_pair:marriage=Elizabeth II married Prince Philip"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-psychology-cancel-culture.json",
+      "source": "import",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - The Psychology of Cancel Culture",
+      "type": "matching-information",
+      "question": 20,
+      "answer": "G",
+      "prompt": "suggestion that lengthier processes may yield fairer and more balanced results",
+      "exactPortion": "These slower procedures can feel unsatisfying in fast-moving online spaces, but they may reduce mistakes and make learning possible. The aim is not to remove co",
+      "flags": [
+        "weak_paraphrase_pair:more accurate consequences=consequences more accurate, proportionate and useful"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-2-social-media-algorithms-polarization.json",
+      "source": "import",
+      "title": "IELTS Academic Reading April 2026 Passage 2 - Social Media Algorithms and Polarization",
+      "type": "matching-information",
+      "question": 17,
+      "answer": "D",
+      "prompt": "an example of two audiences being shown contrasting readings of one incident",
+      "exactPortion": "one set of users may repeatedly receive posts describing the event as evidence of corruption, while another set may see posts presenting the same event as a nor",
+      "flags": [
+        "weak_paraphrase_pair:same event=the same event"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-april-2026-passage-3-what-is-restoration.json",
+      "source": "import",
+      "title": "IELTS Academic Reading April 2026 Passage 3 - What Is Restoration?",
+      "type": "matching-features",
+      "question": 32,
+      "answer": "C",
+      "prompt": "In the final paragraph, the writer says he is interested in restoration that",
+      "exactPortion": "A restored place or object should not pretend that damage never occurred. It should allow viewers to see both injury and care.",
+      "flags": [
+        "weak_paraphrase_pair:honest repair=what I call honest repair"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json",
+      "source": "import",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Is ADHD Innate or Caused by Upbringing?",
+      "type": "matching-information",
+      "question": 18,
+      "answer": "A",
+      "prompt": "Shifting focus beyond upbringing alone as the cause is presented as worthwhile",
+      "exactPortion": "Professor Daniel Koh, a genetic epidemiologist, argues that a move away from explanations based only on parenting is a good idea",
+      "flags": [
+        "weak_paraphrase_pair:parenting=parenting | good idea=good idea"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-feb-2026-passage-2-adhd-innate-or-upbringing.json",
+      "source": "import",
+      "title": "IELTS Academic Reading Feb 2026 Passage 2 - Is ADHD Innate or Caused by Upbringing?",
+      "type": "matching-information",
+      "question": 21,
+      "answer": "E",
+      "prompt": "Clinical knowledge of the condition in male pupils exceeds that for females identified in adulthood",
+      "exactPortion": "Dr Nadia Lewis, who studies adult diagnosis, notes that more is known about ADHD in school-age boys than about ADHD in adult women",
+      "flags": [
+        "weak_paraphrase_pair:more is known=more is known | adult women=adult women"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-architecture-of-forgetting.json",
+      "source": "import",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Architecture of Forgetting",
+      "type": "matching-information",
+      "question": 28,
+      "answer": "B",
+      "prompt": "an example of an experiment involving animal navigation and food retrieval",
+      "exactPortion": "Ryan's team placed mice in a maze where the location of a food reward was changed daily.",
+      "flags": [
+        "weak_paraphrase_pair:experiment=series of experiments"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-cognitive-cost-of-gps.json",
+      "source": "import",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Cognitive Cost of GPS: Are We Losing Our Internal Compass?",
+      "type": "matching-information",
+      "question": 31,
+      "answer": "B",
+      "prompt": "an explanation of the specific brain region that evolved to process geographic relationships",
+      "exactPortion": "Dr. Hugo Spiers, a cognitive neuroscientist, studies the hippocampus-a seahorse-shaped structure deep within the brain responsible for spatial navigation and me",
+      "flags": [
+        "weak_paraphrase_pair:evolved=hippocampus evolved"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-productive-power-of-boredom.json",
+      "source": "import",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - The Productive Power of Boredom",
+      "type": "matching-information",
+      "question": 31,
+      "answer": "B",
+      "prompt": "a reference to idea human",
+      "exactPortion": "According to Vartanian, if early humans had been perfectly content staring at the walls of a cave day after day, they would never have felt the psychological fr",
+      "flags": [
+        "prompt_evidence_overlap_43pct"
+      ],
+      "severity": "moderate"
+    },
+    {
+      "file": "ielts-academic-reading-jan-2026-passage-3-urban-evolution.json",
+      "source": "import",
+      "title": "IELTS Academic Reading Jan 2026 Passage 3 - Urban Evolution: When Cities Become the New Galapagos",
+      "type": "matching-information",
+      "question": 28,
+      "answer": "D",
+      "prompt": "a warning about the long-term vulnerability of highly specialized, city-dwelling creatures",
+      "exactPortion": "this dramatic loss of genetic variation leaves them incredibly vulnerable. If the urban environment changes abruptly, they no longer have the genetic tools to a",
+      "flags": [
+        "weak_paraphrase_pair:highly specialized=highly specialized to a man-made environment"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-environmental-problems-developing-countries.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - Environmental Problems in Developing Countries",
+      "type": "matching-headings",
+      "question": 2,
+      "answer": "vi",
+      "prompt": "Section B",
+      "exactPortion": "Air pollution therefore becomes an economic problem as well as a health problem.",
+      "flags": [
+        "weak_paraphrase_pair:polluted air=air pollution | health and economic effects=health problem and economic problem"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-environmental-problems-developing-countries.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - Environmental Problems in Developing Countries",
+      "type": "matching-headings",
+      "question": 3,
+      "answer": "v",
+      "prompt": "Section C",
+      "exactPortion": "This inequality makes water pollution both an environmental and a social issue.",
+      "flags": [
+        "weak_paraphrase_pair:water pollution=water pollution"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-environmental-problems-developing-countries.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - Environmental Problems in Developing Countries",
+      "type": "matching-headings",
+      "question": 5,
+      "answer": "i",
+      "prompt": "Section E",
+      "exactPortion": "The most successful efforts are usually practical, gradual and locally managed.",
+      "flags": [
+        "weak_paraphrase_pair:locally practical solutions=practical, gradual and locally managed efforts"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-1-saving-the-wood-cycad.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 1 - Saving the Wood Cycad",
+      "type": "matching-headings",
+      "question": 3,
+      "answer": "iv",
+      "prompt": "Section C",
+      "exactPortion": "One part of the rescue effort is the search for a female plant.",
+      "flags": [
+        "weak_paraphrase_pair:searching=search"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "type": "matching-headings",
+      "question": 14,
+      "answer": "v",
+      "prompt": "Section C",
+      "exactPortion": "The method differs from many alternatives because it does not treat AI as either a forbidden machine or a complete substitute for the artist",
+      "flags": [
+        "weak_paraphrase_pair:different from alternatives=differs from many alternatives"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "type": "matching-headings",
+      "question": 18,
+      "answer": "iv",
+      "prompt": "Section E",
+      "exactPortion": "The potential users of the approach are wider than its founders first expected",
+      "flags": [
+        "weak_paraphrase_pair:potential users=potential users"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "type": "matching-headings",
+      "question": 19,
+      "answer": "vii",
+      "prompt": "Section F",
+      "exactPortion": "To overcome these difficulties, the method slows the process down",
+      "flags": [
+        "weak_paraphrase_pair:overcoming=to overcome"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-artists-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Can Artists Still Create Art in the Age of AI?",
+      "type": "matching-headings",
+      "question": 20,
+      "answer": "viii",
+      "prompt": "Section G",
+      "exactPortion": "The project has attracted interest from technology companies, but AI is not the primary artist",
+      "flags": [
+        "weak_paraphrase_pair:AI not primary artist=AI is not the primary artist"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "type": "matching-headings",
+      "question": 14,
+      "answer": "v",
+      "prompt": "Section C",
+      "exactPortion": "The routine differs from many alternatives because it does not treat critical thinking as a separate subject or a list of clever debating tricks",
+      "flags": [
+        "weak_paraphrase_pair:different from alternatives=differs from many alternatives"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "type": "matching-headings",
+      "question": 17,
+      "answer": "vi",
+      "prompt": "Section D",
+      "exactPortion": "A central feature of the programme is the range of sources students must examine",
+      "flags": [
+        "weak_paraphrase_pair:range of sources=range of sources students must examine"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "type": "matching-headings",
+      "question": 18,
+      "answer": "iv",
+      "prompt": "Section E",
+      "exactPortion": "The potential users of the routine are broader than the designers first expected",
+      "flags": [
+        "weak_paraphrase_pair:potential users=potential users"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "type": "matching-headings",
+      "question": 19,
+      "answer": "vii",
+      "prompt": "Section F",
+      "exactPortion": "To overcome these classroom difficulties, the programme now gives teachers short scripts, timed discussion roles and examples of weak and strong reasoning",
+      "flags": [
+        "weak_paraphrase_pair:overcoming=to overcome | classroom difficulties=classroom difficulties"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-critical-thinking.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Bringing Back Critical Thinking",
+      "type": "matching-headings",
+      "question": 20,
+      "answer": "viii",
+      "prompt": "Section G",
+      "exactPortion": "The project has attracted attention from examination boards, but grades are not the primary goal",
+      "flags": [
+        "weak_paraphrase_pair:grades not the primary goal=grades are not the primary goal"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "type": "matching-headings",
+      "question": 14,
+      "answer": "v",
+      "prompt": "Section C",
+      "exactPortion": "The routine differs from many alternatives because it does not begin by asking whether artificial intelligence is good or bad",
+      "flags": [
+        "weak_paraphrase_pair:different from alternatives=differs from many alternatives"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "type": "matching-headings",
+      "question": 17,
+      "answer": "vi",
+      "prompt": "Section D",
+      "exactPortion": "Students work with sources from different periods and formats: letters, maps, speeches, photographs, census tables, oral histories and museum labels",
+      "flags": [
+        "weak_paraphrase_pair:different periods and formats=different periods and formats"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "type": "matching-headings",
+      "question": 19,
+      "answer": "vii",
+      "prompt": "Section F",
+      "exactPortion": "To overcome these classroom difficulties, the programme now gives teachers short source packs, timing guides and model questions",
+      "flags": [
+        "weak_paraphrase_pair:overcoming=to overcome | classroom difficulties=classroom difficulties"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-history-education-ai.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - History Education in the Age of AI",
+      "type": "matching-headings",
+      "question": 20,
+      "answer": "viii",
+      "prompt": "Section G",
+      "exactPortion": "The project has attracted attention from technology companies, but AI is not the primary teacher",
+      "flags": [
+        "weak_paraphrase_pair:AI not primary teacher=AI is not the primary teacher | technology companies=technology companies"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "type": "matching-headings",
+      "question": 14,
+      "answer": "v",
+      "prompt": "Section C",
+      "exactPortion": "The method differs from many alternatives because it does not try to kill every organism immediately with a strong chemical",
+      "flags": [
+        "weak_paraphrase_pair:different from alternatives=differs from many alternatives"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "type": "matching-headings",
+      "question": 19,
+      "answer": "vii",
+      "prompt": "Section F",
+      "exactPortion": "To overcome these production difficulties, the team now dries the seeds under controlled conditions, grinds them into a fine powder and packs the powder in meas",
+      "flags": [
+        "weak_paraphrase_pair:overcoming=to overcome | production difficulties=production difficulties"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "ielts-academic-reading-march-2026-passage-2-natural-water-cleaning.json",
+      "source": "import",
+      "title": "IELTS Academic Reading March 2026 Passage 2 - Natural Ways to Clean Water",
+      "type": "matching-headings",
+      "question": 20,
+      "answer": "viii",
+      "prompt": "Section G",
+      "exactPortion": "The project has attracted commercial interest, but its founders say profit is not the primary goal",
+      "flags": [
+        "weak_paraphrase_pair:profit not the primary goal=profit is not the primary goal | commercial interest=attracted commercial interest"
+      ],
+      "severity": "minor"
+    },
+    {
+      "file": "server/userProvidedReadingPracticeJune2026.mjs",
+      "source": "june-2026-server",
+      "title": "IELTS Academic Reading June 2026 Passage 2 - The raiders of the ancient trade routes",
+      "type": "matching-information",
+      "question": 14,
+      "answer": "D",
+      "prompt": "a reference to a ruler rejecting accusations of supporting the raiders",
+      "exactPortion": "The ruler of Yutian denied any involvement and insisted that none of his officials had helped the raiders.",
+      "flags": [
+        "prompt_evidence_overlap_40pct"
+      ],
+      "severity": "moderate"
+    },
+    {
+      "file": "server/userProvidedReadingPracticeJune2026.mjs",
+      "source": "june-2026-server",
+      "title": "IELTS Academic Reading June 2026 Passage 2 - The raiders of the ancient trade routes",
+      "type": "matching-information",
+      "question": 17,
+      "answer": "A",
+      "prompt": "a reference to modern stereotypes of how East–West commerce is pictured",
+      "exactPortion": "When people imagine the ancient trade routes between East and West, they often picture peaceful caravans of camels carrying silk, spices and precious stones acr",
+      "flags": [
+        "prompt_evidence_overlap_48pct"
+      ],
+      "severity": "moderate"
+    },
+    {
+      "file": "server/userProvidedReadingPracticeJune2026.mjs",
+      "source": "june-2026-server",
+      "title": "IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads",
+      "type": "matching-information",
+      "question": 14,
+      "answer": "D",
+      "prompt": "a reference to a ruler rejecting accusations of supporting the bandits",
+      "exactPortion": "The ruler of Aramon denied any involvement and insisted that none of his officials had helped the bandits.",
+      "flags": [
+        "prompt_evidence_overlap_40pct"
+      ],
+      "severity": "moderate"
+    },
+    {
+      "file": "server/userProvidedReadingPracticeJune2026.mjs",
+      "source": "june-2026-server",
+      "title": "IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads",
+      "type": "matching-information",
+      "question": 18,
+      "answer": "G",
+      "prompt": "an explanation of how former attackers were persuaded to settle as farmers instead",
+      "exactPortion": "many others were offered land in lowland farming areas far from the mountain roads. This policy encouraged them to abandon raiding and reduced the chance that t",
+      "flags": [
+        "weak_paraphrase_pair:banditry=banditry"
+      ],
+      "severity": "minor"
+    }
+  ]
+}
