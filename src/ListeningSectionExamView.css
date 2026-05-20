@@ -364,15 +364,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.25rem;
-  height: 1.25rem;
+  min-height: 1.25rem;
   margin-right: 0.35rem;
+  padding: 0.1rem 0.45rem;
   border-radius: 999px;
   background: var(--lse-good);
   color: #fff;
   font-size: 0.68rem;
   font-weight: 800;
   vertical-align: middle;
+}
+
+.listeningSectionExamEvidenceMark.is-wrong .listeningSectionExamEvidenceBadge {
+  background: var(--lse-bad);
 }
 
 .listeningSectionExamQuestionsPane {
@@ -405,6 +409,332 @@
   background: var(--lse-ink);
   color: #fff;
   border-color: var(--lse-ink);
+}
+
+.listeningSectionExamSubmitPanel,
+.listeningSectionExamFinalReport {
+  border: 1px solid var(--lse-border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.listeningSectionExamSubmitPanel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+  padding: 0.9rem;
+}
+
+.listeningSectionExamSubmitPanel.is-correcting {
+  border-color: rgba(37, 99, 235, 0.28);
+  background: #eff6ff;
+}
+
+.listeningSectionExamSubmitEyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--lse-muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.listeningSectionExamSubmitPanel h3,
+.listeningSectionExamFinalReport h3 {
+  margin: 0;
+  color: var(--lse-ink);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.listeningSectionExamSubmitPanel p,
+.listeningSectionExamFinalReport header p {
+  margin: 0.25rem 0 0;
+  color: var(--lse-muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.listeningSectionExamSubmitFeedback {
+  color: #1d4ed8 !important;
+  font-weight: 750;
+}
+
+.listeningSectionExamSubmitActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.45rem;
+  flex: 0 0 auto;
+}
+
+.listeningSectionExamSubmitActions span {
+  color: var(--lse-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.listeningSectionExamSubmitAll {
+  border: none;
+  border-radius: 999px;
+  padding: 0.62rem 1rem;
+  background: linear-gradient(135deg, #0f172a, #2563eb);
+  color: #fff;
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+}
+
+.listeningSectionExamSubmitAll:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.listeningSectionExamFinalReport {
+  padding: 0;
+  overflow: hidden;
+}
+
+.listeningSectionExamReportHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--lse-border);
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+}
+
+.listeningSectionExamReportHero h3 {
+  font-size: 1.15rem;
+}
+
+.listeningSectionExamReportScore {
+  display: grid;
+  place-items: center;
+  min-width: 6rem;
+  min-height: 5rem;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.08);
+}
+
+.listeningSectionExamReportScore strong {
+  color: var(--lse-ink);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.listeningSectionExamReportScore span {
+  color: var(--lse-muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.listeningSectionExamReportSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  padding: 0.85rem 1rem 0;
+}
+
+.listeningSectionExamReportSummary div {
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--lse-border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.listeningSectionExamReportSummary span {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--lse-muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.listeningSectionExamReportSummary strong {
+  color: var(--lse-ink);
+  font-size: 1.05rem;
+}
+
+.listeningSectionExamReportGrid {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.listeningSectionExamReportItem {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #dbe4f0;
+  border-radius: 14px;
+  padding: 0.95rem;
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+}
+
+.listeningSectionExamReportItem::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--lse-good);
+}
+
+.listeningSectionExamReportItem.is-first-wrong {
+  border-color: rgba(245, 158, 11, 0.38);
+}
+
+.listeningSectionExamReportItem.is-first-wrong::before {
+  background: #f59e0b;
+}
+
+.listeningSectionExamReportTop {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.listeningSectionExamReportTop h4 {
+  margin: 0;
+  color: var(--lse-ink);
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.listeningSectionExamReportTop p {
+  margin: 0.2rem 0 0;
+  color: var(--lse-muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.listeningSectionExamReportTitleLine {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.listeningSectionExamReportStatus {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.listeningSectionExamReportStatus.is-clean {
+  background: var(--lse-good-bg);
+  color: #065f46;
+}
+
+.listeningSectionExamReportStatus.is-corrected {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.listeningSectionExamReportTeachingGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0.75rem 0;
+}
+
+.listeningSectionExamReportTeachingGrid div {
+  padding: 0.65rem 0.7rem;
+  border-radius: 10px;
+  background: var(--lse-panel);
+}
+
+.listeningSectionExamReportTeachingGrid div.is-wide {
+  grid-column: 1 / -1;
+}
+
+.listeningSectionExamReportItem dt {
+  margin-bottom: 0.18rem;
+  color: var(--lse-muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.listeningSectionExamReportItem dd {
+  margin: 0;
+  color: var(--lse-ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.listeningSectionExamReportEvidence {
+  margin: 0.75rem 0 0;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  background: #eff6ff;
+}
+
+.listeningSectionExamReportEvidence span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.listeningSectionExamReportEvidence p {
+  margin: 0;
+  color: #1e3a8a;
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.listeningSectionExamReportSave {
+  margin-top: 0.75rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  background: var(--lse-ink);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .listeningSectionExamReportHero,
+  .listeningSectionExamReportSummary,
+  .listeningSectionExamReportTeachingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .listeningSectionExamReportScore {
+    min-height: auto;
+    padding: 0.75rem;
+    justify-items: start;
+  }
+
+  .listeningSectionExamReportTitleLine {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .listeningSectionExamQuestionsScroll {
@@ -729,6 +1059,12 @@
   color: #7f1d1d;
 }
 
+.listeningSectionExamGapItem input.is-correct {
+  border-color: var(--lse-good);
+  background: var(--lse-good-bg);
+  color: #065f46;
+}
+
 .listeningSectionExamMatchingPrompt {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -823,6 +1159,11 @@
   color: #065f46;
 }
 
+.listeningSectionExamStepPills span.is-wrong {
+  background: var(--lse-bad-bg);
+  color: #991b1b;
+}
+
 .listeningSectionExamFeedback {
   margin: 0 0 0.45rem;
   font-size: 0.82rem;
@@ -850,6 +1191,17 @@
 .listeningSectionExamSubmit:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.listeningSectionExamRemoveEvidence {
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 0.42rem 0.65rem;
+  background: #fff;
+  color: #991b1b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .listeningSectionExamDoneTag {

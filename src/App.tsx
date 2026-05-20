@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import './App.css'
-import { ListeningSectionExamView } from './ListeningSectionExamView'
+import { ListeningSectionExamView, type ListeningNotebookSavePayload } from './ListeningSectionExamView'
 import {
   buildListeningSectionExamGroups,
   builderTaskToExamQuestion,
@@ -75,6 +75,12 @@ import {
   parseReadingJourneyStageNumber,
   type ReadingJourneyProgress
 } from './readingJourney'
+import {
+  buildReadingFillQuestionGroups,
+  isReadingFillQuestion,
+  parseFillContextFromPrompt,
+  type ReadingFillQuestionGroup
+} from './readingFillDisplay'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -280,23 +286,6 @@ type ReadingMatchingGroup = {
   instruction: string
   choiceLabel: string
   choiceOptions: ReadingPdoyMultipleChoiceOption[]
-  questions: ReadingQuestion[]
-}
-
-type ReadingFillLineSegment =
-  | { kind: 'text' | 'heading' | 'clue'; text: string }
-  | { kind: 'blank'; questionNumber: number; before: string; after: string }
-
-type ReadingFillDisplayLine = {
-  segments: ReadingFillLineSegment[]
-}
-
-type ReadingFillQuestionGroup = {
-  id: string
-  start: number
-  end: number
-  instruction: string
-  displayLines: ReadingFillDisplayLine[]
   questions: ReadingQuestion[]
 }
 
@@ -4739,163 +4728,6 @@ const getReadingMatchingExcludedParagraphIndices = (
 ) =>
   isFirstReadingMatchingGroupQuestion(passage, question, allQuestions) ? [0, 1] : []
 
-const READING_FILL_SECTION_PATTERN =
-  /complete the (?:notes|sentences|summary|table)|choose (?:one|no more than)|write one word only|each gap|fill in the/i
-
-const READING_FILL_BLANK_IN_LINE = /\b(\d+)\s*([.．…⋯·•_\-–—]{2,})/g
-
-const isReadingFillSectionBlock = (block: string) => READING_FILL_SECTION_PATTERN.test(block)
-
-const isReadingFillQuestion = (
-  passage: ReadingPassageRecord | null,
-  question: ReadingQuestion | null
-) => {
-  if (!question || question.answerType !== 'text') return false
-  if (isReadingMatchingQuestion(passage, question)) return false
-  if (!passage) return false
-  const range = findReadingQuestionRange(passage, question)
-  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
-  return isReadingFillSectionBlock(block)
-}
-
-const extractReadingFillGroupInstruction = (block: string) => {
-  const lines = block
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-  const instructionLines = lines.filter((line) =>
-    /complete the|choose (?:one|no more)|write one word|write your answers|from the passage|each gap/i.test(line)
-  )
-  return instructionLines.join('\n').trim()
-}
-
-const isReadingFillBoilerplateLine = (line: string) =>
-  /^Questions \d+/i.test(line) ||
-  /^Complete the (?:notes|sentences|summary|table)/i.test(line) ||
-  /^Choose (?:ONE WORD|NO MORE THAN)/i.test(line) ||
-  /^Write your answers in boxes/i.test(line) ||
-  /^Write the correct/i.test(line) ||
-  /^Reading Passage \d+/i.test(line) ||
-  /^In boxes \d+/i.test(line)
-
-const parseReadingFillLineSegments = (line: string, questionNumbers: Set<number>): ReadingFillLineSegment[] => {
-  const matches = [...line.matchAll(READING_FILL_BLANK_IN_LINE)].filter((match) =>
-    questionNumbers.has(Number(match[1]))
-  )
-
-  if (!matches.length) {
-    const text = line.trim()
-    const withoutBullet = text.replace(/^[•\-\*]\s*/, '').trim()
-    if (
-      withoutBullet.length > 0 &&
-      withoutBullet.length < 80 &&
-      /^[A-Z]/.test(withoutBullet) &&
-      !withoutBullet.includes('.') &&
-      !/^\d+\s/.test(withoutBullet)
-    ) {
-      return [{ kind: 'heading', text: withoutBullet }]
-    }
-    if (/^[•\-\*]/.test(text) || /^(?:must|should|need|have to)\b/i.test(withoutBullet)) {
-      return [{ kind: 'clue', text }]
-    }
-    return text ? [{ kind: 'text', text }] : []
-  }
-
-  const segments: ReadingFillLineSegment[] = []
-  let lastIndex = 0
-
-  matches.forEach((match, index) => {
-    const questionNumber = Number(match[1])
-    const start = match.index ?? 0
-    const end = start + match[0].length
-    const nextStart = matches[index + 1]?.index ?? line.length
-
-    if (start > lastIndex) {
-      const beforeText = line.slice(lastIndex, start).trim()
-      if (beforeText) {
-        segments.push({ kind: 'text', text: beforeText })
-      }
-    }
-
-    const after = line.slice(end, nextStart).trim()
-    segments.push({ kind: 'blank', questionNumber, before: '', after })
-    lastIndex = nextStart
-  })
-
-  if (lastIndex < line.length) {
-    const tail = line.slice(lastIndex).trim()
-    if (tail) {
-      segments.push({ kind: 'text', text: tail })
-    }
-  }
-
-  return segments
-}
-
-const extractReadingFillDisplayLines = (
-  block: string,
-  questionNumbers: Set<number>
-): ReadingFillDisplayLine[] => {
-  const contentLines = block
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .filter((line) => !isReadingFillBoilerplateLine(line))
-
-  const displayLines = contentLines
-    .map((line) => ({
-      segments: parseReadingFillLineSegments(line, questionNumbers)
-    }))
-    .filter((line) => line.segments.length > 0)
-
-  if (displayLines.length) return displayLines
-
-  return [...questionNumbers]
-    .sort((first, second) => first - second)
-    .map((questionNumber) => ({
-      segments: [{ kind: 'blank' as const, questionNumber, before: '', after: '' }]
-    }))
-}
-
-const buildReadingFillQuestionGroups = (
-  passage: ReadingPassageRecord | null,
-  questions: ReadingQuestion[]
-): ReadingFillQuestionGroup[] => {
-  if (!passage) return []
-
-  const groups: ReadingFillQuestionGroup[] = []
-  const ranges = passage.questionRanges?.length ? passage.questionRanges : [{ start: 1, end: 999 }]
-
-  ranges.forEach((range) => {
-    const block = extractReadingQuestionRangeBlock(
-      passage.questionSectionText || '',
-      range.start,
-      range.end
-    )
-    if (!block || !isReadingFillSectionBlock(block)) return
-
-    const rangeQuestions = questions.filter(
-      (question) =>
-        question.number >= range.start &&
-        question.number <= range.end &&
-        isReadingFillQuestion(passage, question)
-    )
-    if (!rangeQuestions.length) return
-
-    const questionNumbers = new Set(rangeQuestions.map((question) => question.number))
-    groups.push({
-      id: `${passage.number}-fill-${range.start}-${range.end}`,
-      start: range.start,
-      end: range.end,
-      instruction: extractReadingFillGroupInstruction(block),
-      displayLines: extractReadingFillDisplayLines(block, questionNumbers),
-      questions: [...rangeQuestions]
-    })
-  })
-
-  return groups.sort((first, second) => first.start - second.start)
-}
-
 const READING_CHOOSE_TWO_SECTION_PATTERN = /choose\s+two\s+letters?/i
 
 const isReadingChooseTwoSectionBlock = (block: string) => READING_CHOOSE_TWO_SECTION_PATTERN.test(block)
@@ -8802,7 +8634,8 @@ function App() {
     return lookup
   }, [activeReadingMatchingGroups])
   const activeReadingFillQuestionGroups = useMemo(
-    () => buildReadingFillQuestionGroups(activeReadingPassage, activeReadingQuestions),
+    () =>
+      buildReadingFillQuestionGroups(activeReadingPassage, activeReadingQuestions, isReadingMatchingQuestion),
     [activeReadingPassage, activeReadingQuestions]
   )
   const activeReadingFillGroupByQuestionNumber = useMemo(() => {
@@ -13136,6 +12969,85 @@ function App() {
   }
 
 
+  const renderReadingFillBlankSlot = (
+    question: Pick<ReadingQuestion, 'number'>,
+    segment: { before: string; after: string },
+    slotKey: string
+  ) => {
+    const isHinting = readingHintQuestionNumber === question.number
+    return (
+      <span
+        key={slotKey}
+        id={`reading-question-${question.number}`}
+        className={`readingFillBlankSlot ${isHinting ? 'is-active' : ''}`.trim()}
+      >
+        {segment.before && <span className="readingFillBlankPrefix">{segment.before} </span>}
+        <span className="readingFillBlankInputWrap">
+          <span className="readingFillBlankNumber">{question.number}</span>
+          <input
+            type="text"
+            value={readingAnswers[question.number] || ''}
+            onChange={(event) =>
+              setReadingAnswers((current) => ({
+                ...current,
+                [question.number]: event.target.value
+              }))
+            }
+            placeholder="answer"
+            className="readingFillBlankInput"
+            aria-label={`Question ${question.number}`}
+          />
+          <button
+            type="button"
+            className="secondary readingFillHintBtn"
+            title={isHinting ? 'Hide hint' : 'Show hint in passage'}
+            aria-label={isHinting ? 'Hide hint' : 'Show hint in passage'}
+            onClick={() => {
+              setReadingHintQuestionNumber((current) => (current === question.number ? null : question.number))
+            }}
+          >
+            {isHinting ? '×' : '?'}
+          </button>
+        </span>
+        {segment.after && <span className="readingFillBlankSuffix">{segment.after}</span>}
+      </span>
+    )
+  }
+
+  const renderReadingFillFallbackQuestion = (question: ReadingQuestion) => {
+    const context =
+      parseFillContextFromPrompt(question.prompt, question.number) || { before: '', after: '' }
+    const isHinting = readingHintQuestionNumber === question.number
+
+    return (
+      <article
+        key={`reading-fill-fallback-${question.number}`}
+        className="readingQuestionCard readingFillQuestionGroup readingFillFallbackRow"
+      >
+        <div className="readingFillGroupHeader">
+          <div>
+            <p className="readingQuestionNumber">Question {question.number}</p>
+            <h4>Fill in the blank</h4>
+          </div>
+        </div>
+        <div className="readingFillOriginalBlock">
+          <p className="readingFillLine">
+            {renderReadingFillBlankSlot(
+              question,
+              context,
+              `reading-fill-fallback-slot-${question.number}`
+            )}
+          </p>
+        </div>
+        {isHinting && (
+          <div className="readingHintBox">
+            <strong>Hint:</strong> evidence highlighted in the passage.
+          </div>
+        )}
+      </article>
+    )
+  }
+
   const renderReadingFillQuestionGroup = (group: ReadingFillQuestionGroup) => {
     const questionByNumber = new Map(group.questions.map((question) => [question.number, question]))
 
@@ -13194,43 +13106,11 @@ function App() {
 
                   const question = questionByNumber.get(segment.questionNumber)
                   if (!question) return null
-                  const isHinting = readingHintQuestionNumber === question.number
 
-                  return (
-                    <span
-                      key={`reading-fill-slot-${group.id}-${segment.questionNumber}`}
-                      id={`reading-question-${question.number}`}
-                      className={`readingFillBlankSlot ${isHinting ? 'is-active' : ''}`.trim()}
-                    >
-                      {segment.before && <span className="readingFillBlankPrefix">{segment.before} </span>}
-                      <label>
-                        <span>{question.number}</span>
-                        <input
-                          type="text"
-                          value={readingAnswers[question.number] || ''}
-                          onChange={(event) =>
-                            setReadingAnswers((current) => ({
-                              ...current,
-                              [question.number]: event.target.value
-                            }))
-                          }
-                          placeholder="Answer"
-                          className="readingFillBlankInput"
-                        />
-                      </label>
-                      {segment.after && <span className="readingFillBlankSuffix"> {segment.after}</span>}
-                      <button
-                        type="button"
-                        className="secondary readingFillHintBtn"
-                        onClick={() => {
-                          setReadingHintQuestionNumber((current) =>
-                            current === question.number ? null : question.number
-                          )
-                        }}
-                      >
-                        {isHinting ? 'Hide hint' : 'Show hint'}
-                      </button>
-                    </span>
+                  return renderReadingFillBlankSlot(
+                    { number: question.number },
+                    { before: segment.before, after: segment.after },
+                    `reading-fill-slot-${group.id}-${segment.questionNumber}`
                   )
                 })}
               </p>
@@ -14550,13 +14430,13 @@ function App() {
                 onQuestionComplete={(questionId) => {
                   setListeningFoundationAnswerState((current) => ({ ...current, [questionId]: 'correct' }))
                 }}
-                onSaveNotebook={(question) => {
+                onSaveNotebook={(question, payload?: ListeningNotebookSavePayload) => {
                   handlePracticeSaveToNotebook(() =>
                     savePlanToNotebook({
-                      criterion: 'Listening Foundation',
-                      quote: `Q${question.number}: ${question.stem}`,
-                      fix: `${question.passageKeyword} = ${question.questionKeyword}`,
-                      thaiMeaning: question.thaiMeaning,
+                      criterion: payload?.criterion || 'Listening Foundation',
+                      quote: payload?.quote || `Q${question.number}: ${question.stem}`,
+                      fix: payload?.fix || `${question.passageKeyword} = ${question.questionKeyword}`,
+                      thaiMeaning: payload?.thaiMeaning || question.thaiMeaning,
                       preferredSection: 'listening',
                       successNotice: 'Added to notebook · saved to #listening'
                     })
@@ -14624,13 +14504,13 @@ function App() {
                   setListeningBuilderExamAudioPlayed(false)
                   stopListeningPlayback()
                 }}
-                onSaveNotebook={(question) => {
+                onSaveNotebook={(question, payload?: ListeningNotebookSavePayload) => {
                   handlePracticeSaveToNotebook(() =>
                     savePlanToNotebook({
-                      criterion: 'Listening Paraphrase Drill',
-                      quote: `${listeningBuilderExamConfig.title} · Q${question.number} · ${question.questionKeyword}`,
-                      fix: `${question.questionKeyword} = ${question.evidence}`,
-                      thaiMeaning: question.thaiMeaning || question.explanationThai || '',
+                      criterion: payload?.criterion || 'Listening Paraphrase Drill',
+                      quote: payload?.quote || `${listeningBuilderExamConfig.title} · Q${question.number} · ${question.questionKeyword}`,
+                      fix: payload?.fix || `${question.questionKeyword} = ${question.evidence}`,
+                      thaiMeaning: payload?.thaiMeaning || question.thaiMeaning || question.explanationThai || '',
                       preferredSection: 'listening',
                       successNotice: 'Added to notebook · saved to #listening'
                     })
@@ -15821,6 +15701,9 @@ function App() {
                         return fillGroup.questions[0]?.number === question.number
                           ? renderReadingFillQuestionGroup(fillGroup)
                           : null
+                      }
+                      if (isReadingFillQuestion(activeReadingPassage, question, isReadingMatchingQuestion)) {
+                        return renderReadingFillFallbackQuestion(question)
                       }
                       const chooseTwoGroup = activeReadingChooseTwoGroupByQuestionNumber.get(question.number)
                       if (chooseTwoGroup) {

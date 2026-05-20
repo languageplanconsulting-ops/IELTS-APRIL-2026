@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react'
-import { ListeningParaphraseBridgeModal } from './ListeningParaphraseBridgeModal'
 import { getListeningHighlightMatch } from './listeningHighlightMatch'
 import type {
   ListeningSectionExamConfig,
@@ -23,6 +22,20 @@ type QuestionAttempt = {
   completed: boolean
   bridgeDismissed: boolean
   feedback: string
+}
+
+type FirstAttemptReview = {
+  answer: string
+  evidence: string
+  answerOk: boolean
+  evidenceOk: boolean
+}
+
+export type ListeningNotebookSavePayload = {
+  criterion: string
+  quote: string
+  fix: string
+  thaiMeaning: string
 }
 
 const defaultAttempt = (): QuestionAttempt => ({
@@ -74,7 +87,7 @@ const buildPassageDecorations = (
   for (const question of questions) {
     const attempt = attempts[question.id] || defaultAttempt()
     const highlightText = attempt.completed
-      ? question.evidence
+      ? attempt.evidenceDraft || question.evidence
       : attempt.evidenceStatus === 'wrong'
         ? attempt.wrongEvidence || attempt.evidenceDraft
         : attempt.evidenceDraft
@@ -131,8 +144,10 @@ const renderDecoratedPassage = (
             : (event) => onHighlightContextMenu(event, decoration)
         }
       >
-        {decoration.kind === 'correct' ? (
-          <span className="listeningSectionExamEvidenceBadge">{decoration.questionNumber}</span>
+        {decoration.kind !== 'draft' ? (
+          <span className="listeningSectionExamEvidenceBadge">
+            Q{decoration.questionNumber} {decoration.kind === 'correct' ? 'correct evidence' : 'wrong evidence'}
+          </span>
         ) : null}
         {slice}
       </mark>
@@ -177,7 +192,7 @@ export type ListeningSectionExamViewProps = {
   onTogglePlay: () => void
   onSeek: (seconds: number) => void
   onBack: () => void
-  onSaveNotebook: (question: ListeningSectionExamQuestion) => void
+  onSaveNotebook: (question: ListeningSectionExamQuestion, payload?: ListeningNotebookSavePayload) => void
   onQuestionComplete?: (questionId: string) => void
   onKnewIt?: () => void
   testTabs?: Array<{ id: string; label: string }>
@@ -197,7 +212,6 @@ export function ListeningSectionExamView({
   onBack,
   onSaveNotebook,
   onQuestionComplete,
-  onKnewIt,
   testTabs,
   activeTestId,
   onTestChange
@@ -205,6 +219,9 @@ export function ListeningSectionExamView({
   const scriptBodyRef = useRef<HTMLDivElement | null>(null)
   const [activeQuestionId, setActiveQuestionId] = useState(config.questions[0]?.id || '')
   const [attempts, setAttempts] = useState<Record<string, QuestionAttempt>>({})
+  const [examStage, setExamStage] = useState<'answering' | 'correcting' | 'report'>('answering')
+  const [firstAttemptReview, setFirstAttemptReview] = useState<Record<string, FirstAttemptReview>>({})
+  const [examFeedback, setExamFeedback] = useState('')
   const [latestEvidenceSelection, setLatestEvidenceSelection] = useState<LatestEvidenceSelection | null>(null)
   const [highlightMenu, setHighlightMenu] = useState<HighlightMenuState | null>(null)
   const [scriptCollapsed, setScriptCollapsed] = useState(false)
@@ -212,6 +229,9 @@ export function ListeningSectionExamView({
   useEffect(() => {
     setActiveQuestionId(config.questions[0]?.id || '')
     setAttempts({})
+    setExamStage('answering')
+    setFirstAttemptReview({})
+    setExamFeedback('')
     setLatestEvidenceSelection(null)
     setHighlightMenu(null)
   }, [config.title, config.passage])
@@ -243,6 +263,13 @@ export function ListeningSectionExamView({
   )
 
   const completedCount = config.questions.filter((item) => attempts[item.id]?.completed).length
+  const answeredCount = config.questions.filter((item) => attempts[item.id]?.answer.trim()).length
+  const evidenceCount = config.questions.filter((item) => attempts[item.id]?.evidenceDraft.trim()).length
+  const isExamReadyToSubmit = answeredCount === config.questions.length && evidenceCount === config.questions.length
+  const needsCorrectionCount = config.questions.filter((item) => {
+    const attempt = attempts[item.id] || defaultAttempt()
+    return (attempt.answerStatus === 'wrong' || attempt.evidenceStatus === 'wrong') && !attempt.completed
+  }).length
 
   const updateAttempt = useCallback((questionId: string, patch: Partial<QuestionAttempt>) => {
     setAttempts((current) => ({
@@ -442,65 +469,97 @@ export function ListeningSectionExamView({
     setHighlightMenu(null)
   }
 
-  const handleSubmitQuestion = (question: ListeningSectionExamQuestion) => {
-    const attempt = attempts[question.id] || defaultAttempt()
-    if (!attempt.answer.trim()) {
-      updateAttempt(question.id, {
-        feedback: 'เลือกคำตอบในข้อนี้ก่อนกด Submit ครับ'
-      })
-      return
-    }
-    if (!attempt.evidenceDraft.trim()) {
-      updateAttempt(question.id, {
-        feedback: 'ไฮไลต์ประโยคหลักฐานในสคริปต์ทางซ้ายก่อนกด Submit ครับ'
-      })
-      return
-    }
-
-    const answerOk = attempt.answer.trim().toUpperCase() === question.correctAnswer.trim().toUpperCase()
-    const matchKind = getListeningHighlightMatch(attempt.evidenceDraft, question.evidence)
-    const evidenceOk = matchKind !== 'none'
-
-    if (!answerOk && !evidenceOk) {
-      updateAttempt(question.id, {
-        answerStatus: 'wrong',
-        evidenceStatus: 'wrong',
-        wrongEvidence: attempt.evidenceDraft,
-        feedback:
-          'คำตอบและไฮไลต์ยังไม่ถูกครับ — ไฮไลต์ใหม่ในสคริปต์ (ส่วนที่ทับกับหลักฐานอย่างน้อย 50%) และเลือกคำตอบใหม่'
-      })
-      return
-    }
-
-    if (!evidenceOk) {
-      updateAttempt(question.id, {
-        answerStatus: answerOk ? 'correct' : attempt.answerStatus,
-        evidenceStatus: 'wrong',
-        wrongEvidence: attempt.evidenceDraft,
-        feedback:
-          'ไฮไลต์ยังไม่ตรงหลักฐานครับ — เลือกส่วนในสคริปต์ที่ paraphrase คำถาม (ต้องทับอย่างน้อย 50% ของหลักฐาน)'
-      })
-      return
-    }
-
-    if (!answerOk) {
-      updateAttempt(question.id, {
-        answerStatus: 'wrong',
-        evidenceStatus: matchKind,
-        wrongEvidence: '',
-        feedback: 'คำตอบยังไม่ถูกครับ — เลือกตัวเลือกใหม่ทางขวา'
-      })
-      return
-    }
-
-    updateAttempt(question.id, {
-      answerStatus: 'correct',
-      evidenceStatus: matchKind === 'exact' ? 'exact' : 'partial',
-      wrongEvidence: '',
-      completed: true,
-      feedback: 'ถูกต้องครบทั้งคำตอบและหลักฐาน!'
+  const handleSubmitExamRound = () => {
+    const missingQuestions = config.questions.filter((question) => {
+      const attempt = attempts[question.id] || defaultAttempt()
+      return !attempt.answer.trim() || !attempt.evidenceDraft.trim()
     })
-    onQuestionComplete?.(question.id)
+
+    if (missingQuestions.length > 0) {
+      setExamFeedback('ตอบคำถามและไฮไลต์หลักฐานให้ครบทุกข้อก่อนส่งครับ')
+      setAttempts((current) => {
+        const next = { ...current }
+        missingQuestions.forEach((question) => {
+          const attempt = next[question.id] || defaultAttempt()
+          next[question.id] = {
+            ...attempt,
+            feedback: !attempt.answer.trim()
+              ? 'เลือกคำตอบก่อนครับ'
+              : 'ไฮไลต์หลักฐานในสคริปต์ทางซ้ายก่อนครับ'
+          }
+        })
+        return next
+      })
+      return
+    }
+
+    const firstRound = Object.keys(firstAttemptReview).length === 0
+    const firstSnapshot: Record<string, FirstAttemptReview> = {}
+    const newlyCompleted: string[] = []
+    let allCorrect = true
+    let roundCorrect = 0
+
+    const nextAttempts: Record<string, QuestionAttempt> = { ...attempts }
+
+    config.questions.forEach((question) => {
+      const attempt = attempts[question.id] || defaultAttempt()
+      const answerOk = attempt.answer.trim().toUpperCase() === question.correctAnswer.trim().toUpperCase()
+      const matchKind = getListeningHighlightMatch(attempt.evidenceDraft, question.evidence, 0.4)
+      const evidenceOk = matchKind !== 'none'
+
+      if (firstRound) {
+        firstSnapshot[question.id] = {
+          answer: attempt.answer,
+          evidence: attempt.evidenceDraft,
+          answerOk,
+          evidenceOk
+        }
+      }
+
+      if (answerOk && evidenceOk) {
+        roundCorrect += 1
+        if (!attempt.completed) newlyCompleted.push(question.id)
+        nextAttempts[question.id] = {
+          ...attempt,
+          answerStatus: 'correct',
+          evidenceStatus: matchKind === 'exact' ? 'exact' : 'partial',
+          wrongEvidence: '',
+          completed: true,
+          feedback: 'คำตอบและหลักฐานถูกต้องครับ'
+        }
+        return
+      }
+
+      allCorrect = false
+      nextAttempts[question.id] = {
+        ...attempt,
+        answerStatus: answerOk ? 'correct' : 'wrong',
+        evidenceStatus: evidenceOk ? matchKind : 'wrong',
+        wrongEvidence: evidenceOk ? '' : attempt.evidenceDraft,
+        completed: false,
+        feedback: !answerOk && !evidenceOk
+          ? 'คำตอบและหลักฐานยังไม่ถูกครับ แก้คำตอบ และลบ highlight นี้แล้วเลือกหลักฐานจริงใหม่'
+          : !answerOk
+            ? 'คำตอบยังไม่ถูกครับ เลือกคำตอบใหม่ แต่หลักฐานนี้ใช้ได้'
+            : 'หลักฐานยังไม่ตรงครับ ลบ highlight นี้แล้วเลือกหลักฐานจริงใหม่'
+      }
+    })
+
+    setAttempts(nextAttempts)
+
+    if (firstRound) setFirstAttemptReview(firstSnapshot)
+    newlyCompleted.forEach((questionId) => onQuestionComplete?.(questionId))
+
+    if (allCorrect) {
+      setExamStage('report')
+      setExamFeedback('ครบ 100% แล้วครับ ดู report card พร้อม keyword, paraphrase และ distractor ได้เลย')
+      return
+    }
+
+    setExamStage('correcting')
+    setExamFeedback(
+      `${roundCorrect}/${config.questions.length} ข้อถูกครบทั้งคำตอบและหลักฐานแล้ว แก้ข้อที่ยังผิด แล้วกด Submit corrections อีกครั้งครับ`
+    )
   }
 
   const renderScript = () => {
@@ -531,9 +590,163 @@ export function ListeningSectionExamView({
     )
   }
 
-  const bridgeQuestion = config.questions.find(
-    (item) => attempts[item.id]?.completed && !attempts[item.id]?.bridgeDismissed
+  const getOptionLabel = (question: ListeningSectionExamQuestion, key: string) => {
+    const option = question.options.find((item) => item.key.toUpperCase() === key.trim().toUpperCase())
+    return option ? `${option.key}. ${option.text}` : key || 'No answer'
+  }
+
+  const renderExamControlPanel = () => (
+    <article className={`listeningSectionExamSubmitPanel is-${examStage}`}>
+      <div>
+        <p className="listeningSectionExamSubmitEyebrow">
+          {examStage === 'correcting' ? 'Correction round' : 'One-time section submit'}
+        </p>
+        <h3>
+          {examStage === 'correcting'
+            ? 'Fix the questions that are still not 100%'
+            : 'Answer every question and highlight every evidence first'}
+        </h3>
+        <p>
+          {answeredCount}/{config.questions.length} answered · {evidenceCount}/{config.questions.length} evidence highlighted
+        </p>
+        {examFeedback ? <p className="listeningSectionExamSubmitFeedback">{examFeedback}</p> : null}
+      </div>
+      <div className="listeningSectionExamSubmitActions">
+        {examStage === 'correcting' ? (
+          <span>{needsCorrectionCount} need correction</span>
+        ) : (
+          <span>{config.questions.length - Math.min(answeredCount, evidenceCount)} left</span>
+        )}
+        <button
+          type="button"
+          className="listeningSectionExamSubmitAll"
+          disabled={!isExamReadyToSubmit}
+          onClick={handleSubmitExamRound}
+        >
+          {examStage === 'correcting' ? 'Submit corrections' : 'Submit all answers'}
+        </button>
+      </div>
+    </article>
   )
+
+  const renderFinalReportCard = () => {
+    const firstAttemptCorrectCount = config.questions.filter((question) => {
+      const first = firstAttemptReview[question.id]
+      if (!first) return attempts[question.id]?.completed
+      return first.answerOk && first.evidenceOk
+    }).length
+    const correctedCount = config.questions.length - firstAttemptCorrectCount
+
+    return (
+      <article className="listeningSectionExamFinalReport">
+        <header className="listeningSectionExamReportHero">
+          <div>
+            <p className="listeningSectionExamSubmitEyebrow">Report card</p>
+            <h3>Listening section mastered</h3>
+            <p>ครบ 100% แล้วครับ ด้านล่างคือ keyword, passage response, Thai explanation และ distractor จากคำตอบรอบแรก</p>
+          </div>
+          <div className="listeningSectionExamReportScore">
+            <strong>{config.questions.length}/{config.questions.length}</strong>
+            <span>final score</span>
+          </div>
+        </header>
+
+        <div className="listeningSectionExamReportSummary">
+          <div>
+            <span>First attempt</span>
+            <strong>{firstAttemptCorrectCount}/{config.questions.length}</strong>
+          </div>
+          <div>
+            <span>Corrected</span>
+            <strong>{correctedCount}</strong>
+          </div>
+          <div>
+            <span>Evidence rule</span>
+            <strong>40%</strong>
+          </div>
+        </div>
+
+        <div className="listeningSectionExamReportGrid">
+          {config.questions.map((question) => {
+            const first = firstAttemptReview[question.id] || {
+              answer: attempts[question.id]?.answer || '',
+              evidence: attempts[question.id]?.evidenceDraft || '',
+              answerOk: attempts[question.id]?.answerStatus === 'correct',
+              evidenceOk: attempts[question.id]?.evidenceStatus === 'exact' || attempts[question.id]?.evidenceStatus === 'partial'
+            }
+            const firstCorrect = first.answerOk && first.evidenceOk
+            const distractor =
+              first.answer && !first.answerOk
+                ? getOptionLabel(question, first.answer)
+                : ''
+            const notebookPayload: ListeningNotebookSavePayload = {
+              criterion: 'Listening Report',
+              quote: `Q${question.number}: ${question.stem || question.questionText}`,
+              fix: [
+                `Keyword in question: ${question.questionKeyword || question.stem}`,
+                `Passage response: ${question.passageKeyword || question.evidence}`,
+                `Evidence: ${question.evidence}`,
+                `Distractor: ${distractor || 'ไม่มีจากคำตอบรอบแรก'}`
+              ].join('\n'),
+              thaiMeaning: question.explanationThai || question.thaiMeaning || ''
+            }
+            return (
+              <section
+                key={`listening-report-${question.id}`}
+                className={`listeningSectionExamReportItem ${firstCorrect ? 'is-first-correct' : 'is-first-wrong'}`}
+              >
+                <div className="listeningSectionExamReportTop">
+                  <span className="listeningSectionExamQNum">{question.number}</span>
+                  <div>
+                    <div className="listeningSectionExamReportTitleLine">
+                      <h4>{question.stem || question.questionText}</h4>
+                      <span className={`listeningSectionExamReportStatus ${firstCorrect ? 'is-clean' : 'is-corrected'}`}>
+                        {firstCorrect ? 'First try' : 'Corrected'}
+                      </span>
+                    </div>
+                    <p>{firstCorrect ? 'ตอบถูกตั้งแต่รอบแรก' : 'เคยพลาดในรอบแรก จึงเก็บเป็นจุดเรียนรู้'}</p>
+                  </div>
+                </div>
+
+                <dl className="listeningSectionExamReportTeachingGrid">
+                  <div>
+                    <dt>Keyword in question</dt>
+                    <dd>{question.questionKeyword || question.stem}</dd>
+                  </div>
+                  <div>
+                    <dt>Passage response</dt>
+                    <dd>{question.passageKeyword || question.evidence}</dd>
+                  </div>
+                  <div className="is-wide">
+                    <dt>Thai explanation</dt>
+                    <dd>{question.explanationThai || question.thaiMeaning}</dd>
+                  </div>
+                  <div className="is-wide">
+                    <dt>Distractor</dt>
+                    <dd>{distractor || 'ไม่มีจากคำตอบรอบแรก'}</dd>
+                  </div>
+                </dl>
+
+                <div className="listeningSectionExamReportEvidence">
+                  <span>Evidence</span>
+                  <p>{question.evidence}</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="listeningSectionExamReportSave"
+                  onClick={() => onSaveNotebook(question, notebookPayload)}
+                >
+                  Save teaching note
+                </button>
+              </section>
+            )
+          })}
+        </div>
+      </article>
+    )
+  }
+
   const playbackPercent = playbackDuration > 0 ? Math.min(100, (playbackPosition / playbackDuration) * 100) : 0
   const playbackStatus =
     playbackState === 'playing'
@@ -665,28 +878,17 @@ export function ListeningSectionExamView({
           ) : null}
 
           <div className="listeningSectionExamQuestionsScroll script-scroll">
-            {config.groups.map((group) => renderGroup(group))}
+            {examStage === 'report' ? (
+              renderFinalReportCard()
+            ) : (
+              <>
+                {renderExamControlPanel()}
+                {config.groups.map((group) => renderGroup(group))}
+              </>
+            )}
           </div>
         </section>
       </div>
-
-      {bridgeQuestion ? (
-        <ListeningParaphraseBridgeModal
-          passageKeyword={bridgeQuestion.passageKeyword}
-          questionKeyword={bridgeQuestion.questionKeyword}
-          thaiMeaning={bridgeQuestion.thaiMeaning}
-          explanationThai={bridgeQuestion.explanationThai}
-          onKnewIt={() => {
-            onKnewIt?.()
-            updateAttempt(bridgeQuestion.id, { bridgeDismissed: true })
-          }}
-          onSaveToNotebook={() => {
-            onSaveNotebook(bridgeQuestion)
-            updateAttempt(bridgeQuestion.id, { bridgeDismissed: true })
-          }}
-          onClose={() => updateAttempt(bridgeQuestion.id, { bridgeDismissed: true })}
-        />
-      ) : null}
 
       {highlightMenu ? (
         <div
@@ -877,7 +1079,7 @@ export function ListeningSectionExamView({
             {options.map((option) => {
               const selected = attempt.answer === option.key
               const wrong = attempt.answerStatus === 'wrong' && selected
-              const correct = attempt.completed && selected
+              const correct = attempt.answerStatus === 'correct' && selected
               return (
                 <li key={`${question.id}-${option.key}`}>
                   <button
@@ -953,7 +1155,7 @@ export function ListeningSectionExamView({
           {question.options.map((option) => {
             const selected = attempt.answer === option.key
             const wrong = attempt.answerStatus === 'wrong' && selected
-            const correct = attempt.completed && selected
+            const correct = attempt.answerStatus === 'correct' && selected
             return (
               <li key={`${question.id}-${option.key}`}>
                 <button
@@ -1005,7 +1207,7 @@ export function ListeningSectionExamView({
           autoCapitalize="off"
           autoComplete="off"
           spellCheck={false}
-          className={attempt.answerStatus === 'wrong' ? 'is-wrong' : ''}
+          className={attempt.answerStatus === 'wrong' ? 'is-wrong' : attempt.answerStatus === 'correct' ? 'is-correct' : ''}
           onClick={(event) => event.stopPropagation()}
           onChange={(event) => {
             activateQuestion(question.id, true)
@@ -1026,12 +1228,18 @@ export function ListeningSectionExamView({
     attempt: QuestionAttempt,
     compact = false
   ) {
-    const canSubmit = Boolean(attempt.answer.trim() && attempt.evidenceDraft.trim() && !attempt.completed)
+    const answerDone = attempt.answerStatus === 'correct' || attempt.completed
+    const evidenceDone =
+      attempt.evidenceStatus === 'exact' || attempt.evidenceStatus === 'partial' || attempt.completed
     return (
       <footer className={`listeningSectionExamQuestionFooter ${compact ? 'is-compact' : ''}`}>
         <div className="listeningSectionExamStepPills">
-          <span className={attempt.answer.trim() ? 'is-done' : ''}>Answer</span>
-          <span className={attempt.evidenceDraft.trim() ? 'is-done' : ''}>Evidence</span>
+          <span className={`${attempt.answer.trim() ? 'is-done' : ''} ${attempt.answerStatus === 'wrong' ? 'is-wrong' : ''}`}>
+            {answerDone ? 'Answer correct' : attempt.answerStatus === 'wrong' ? 'Answer wrong' : 'Answer'}
+          </span>
+          <span className={`${attempt.evidenceDraft.trim() ? 'is-done' : ''} ${attempt.evidenceStatus === 'wrong' ? 'is-wrong' : ''}`}>
+            {evidenceDone ? 'Evidence correct' : attempt.evidenceStatus === 'wrong' ? 'Evidence wrong' : 'Evidence'}
+          </span>
         </div>
         {attempt.feedback ? (
           <p
@@ -1046,22 +1254,21 @@ export function ListeningSectionExamView({
             {attempt.feedback}
           </p>
         ) : null}
-        {!attempt.completed ? (
+        {attempt.evidenceStatus === 'wrong' && !attempt.completed ? (
           <button
             type="button"
-            className="listeningSectionExamSubmit"
-            disabled={!canSubmit}
+            className="listeningSectionExamRemoveEvidence"
             onClick={(event) => {
               event.stopPropagation()
-              activateQuestion(question.id)
-              handleSubmitQuestion(question)
+              removeListeningHighlight(question.id)
             }}
           >
-            Submit
+            ลบ evidence นี้ แล้วเลือกหลักฐานจริงใหม่
           </button>
-        ) : (
+        ) : null}
+        {attempt.completed ? (
           <span className="listeningSectionExamDoneTag">✓ Complete</span>
-        )}
+        ) : null}
       </footer>
     )
   }
