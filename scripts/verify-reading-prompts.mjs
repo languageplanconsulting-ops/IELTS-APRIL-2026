@@ -1,10 +1,12 @@
 import { buildReadingExamPayload } from '../server/readingImportUtils.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from '../server/userProvidedReadingPracticeCambridge12.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from '../server/userProvidedReadingPracticeCambridge13.mjs'
+import { USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS } from '../server/userProvidedReadingPracticeJune2026.mjs'
 
 const EXAMS = [
   ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS,
-  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS,
+  ...USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS
 ]
 
 const isBadPrompt = (question) => {
@@ -13,6 +15,12 @@ const isBadPrompt = (question) => {
   if (/^Question\s+\d+$/i.test(prompt)) return 'generic Question X prompt'
   if (/^(?:Correct Answer|Accepted Answers|Answer Group|Exact Portion|Short Thai Explanation|Paraphrased Vocabulary):/im.test(prompt)) {
     return 'answer-key metadata leaked into prompt'
+  }
+  if (
+    ['true-false-not-given', 'yes-no-not-given'].includes(question.answerType) &&
+    /\bwriter\b/i.test(prompt)
+  ) {
+    return 'writer framing in T/F/NG or Y/N/NG prompt'
   }
   return ''
 }

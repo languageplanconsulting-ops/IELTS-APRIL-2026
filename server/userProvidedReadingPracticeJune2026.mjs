@@ -252,7 +252,7 @@ Choose TWO letters, A–E.
 
 Write the correct letters in boxes 20 and 21 on your answer sheet.
 
-Which TWO of the following statements are made about inhabitants of Central Asia in the ancient world?
+Which TWO of the following statements does the writer make about inhabitants of Central Asia in the ancient world?
 
 A. They often used stolen camels to carry out attacks on caravans.
 B. They were able to avoid soldiers because they knew the local area very well.
@@ -266,7 +266,7 @@ Choose TWO letters, A–E.
 
 Write the correct letters in boxes 22 and 23 on your answer sheet.
 
-Which TWO of the following statements are made about attitudes towards raiding?
+Which TWO of the following statements does the writer make about attitudes towards raiding?
 
 A. All ancient states agreed that raiding should be completely eliminated.
 B. Desert communities quickly abandoned their admiration for successful raiders.
@@ -339,7 +339,7 @@ Exact Portion: "They were forced to remain close to established wells and oases"
 Short Thai Explanation: คำตอบคือ B เพราะ caravans ต้องอยู่ใกล้ wells และ oases ซึ่งเป็นแหล่งน้ำ.
 Paraphrased Vocabulary: places where water was available = wells and oases; need to stay close = forced to remain close
 
-Question 20: Which statement is made about inhabitants of Central Asia in the ancient world?
+Question 20: Which TWO statements does the writer make about inhabitants of Central Asia in the ancient world?
 
 Correct Answer: B
 Accepted Answers: B
@@ -348,7 +348,7 @@ Exact Portion: "If soldiers were sent after the raiders, local knowledge helped 
 Short Thai Explanation: ข้อ B ถูก เพราะความรู้พื้นที่ท้องถิ่นช่วยให้พวกเขาหนีการจับกุมจาก soldiers ได้.
 Paraphrased Vocabulary: knew the local area very well = local knowledge; avoid soldiers = escape capture
 
-Question 21: Which statement is made about inhabitants of Central Asia in the ancient world?
+Question 21: Which TWO statements does the writer make about inhabitants of Central Asia in the ancient world?
 
 Correct Answer: D
 Accepted Answers: D
@@ -357,7 +357,7 @@ Exact Portion: "many communities depended more heavily on herding, hunting and t
 Short Thai Explanation: ข้อ D ถูก เพราะบาง communities พึ่งพา herding, hunting และ trade มากกว่า agriculture.
 Paraphrased Vocabulary: relied more on = depended more heavily on; farming = agriculture
 
-Question 22: Which statement is made about attitudes towards raiding?
+Question 22: Which TWO statements does the writer make about attitudes towards raiding?
 
 Correct Answer: C
 Accepted Answers: C
@@ -366,7 +366,7 @@ Exact Portion: "a governor responsible for protecting a trade road once left his
 Short Thai Explanation: ข้อ C ถูก เพราะ governor ซึ่งเป็นเจ้าหน้าที่ระดับสูงก็เคยออกไปจับ caravan เพื่อผลประโยชน์ของตัวเอง.
 Paraphrased Vocabulary: high-ranking official = governor; take part in raiding = capture a merchant caravan
 
-Question 23: Which statement is made about attitudes towards raiding?
+Question 23: Which TWO statements does the writer make about attitudes towards raiding?
 
 Correct Answer: E
 Accepted Answers: E
@@ -655,7 +655,7 @@ Choose TWO letters, A–E.
 
 Write the correct letters in boxes 20 and 21 on your answer sheet.
 
-Which TWO of the following statements are made about inhabitants of the mountain region in the ancient world?
+Which TWO of the following statements does the writer make about inhabitants of the mountain region in the ancient world?
 
 A. They often used stolen pack animals to attack merchant caravans.
 B. They were able to escape soldiers because they knew the local area well.
@@ -669,7 +669,7 @@ Choose TWO letters, A–E.
 
 Write the correct letters in boxes 22 and 23 on your answer sheet.
 
-Which TWO of the following statements are made about attitudes towards banditry?
+Which TWO of the following statements does the writer make about attitudes towards banditry?
 
 A. All ancient governments considered banditry unacceptable in every situation.
 B. Mountain communities quickly stopped admiring successful bandits.
@@ -742,7 +742,7 @@ Exact Portion: "Pack animals could not cross every ridge, so traders were forced
 Short Thai Explanation: คำตอบคือ B เพราะ caravans/traders ต้องใช้ known passes จำนวนจำกัด เนื่องจาก pack animals ข้าม ridge ได้ไม่หมด.
 Paraphrased Vocabulary: limited number of mountain routes = small number of known passes; need to use = forced to use
 
-Question 20: Which statement is made about inhabitants of the mountain region in the ancient world?
+Question 20: Which TWO statements does the writer make about inhabitants of the mountain region in the ancient world?
 
 Correct Answer: B
 Accepted Answers: B
@@ -751,7 +751,7 @@ Exact Portion: "When soldiers arrived, the bandits often escaped because they un
 Short Thai Explanation: ข้อ B ถูก เพราะ bandits หนี soldiers ได้จากความรู้พื้นที่ท้องถิ่น.
 Paraphrased Vocabulary: knew the local area well = understood the local landscape so well; escape soldiers = escaped when soldiers arrived
 
-Question 21: Which statement is made about inhabitants of the mountain region in the ancient world?
+Question 21: Which TWO statements does the writer make about inhabitants of the mountain region in the ancient world?
 
 Correct Answer: D
 Accepted Answers: D
@@ -760,7 +760,7 @@ Exact Portion: "many local communities depended more on herding, woodcutting and
 Short Thai Explanation: ข้อ D ถูก เพราะ communities บางส่วนพึ่ง herding และ trade มากกว่า agriculture.
 Paraphrased Vocabulary: relied more on = depended more on; farming = agriculture
 
-Question 22: Which statement is made about attitudes towards banditry?
+Question 22: Which TWO statements does the writer make about attitudes towards banditry?
 
 Correct Answer: C
 Accepted Answers: C
@@ -769,7 +769,7 @@ Exact Portion: "a tax inspector responsible for protecting a road once left his 
 Short Thai Explanation: ข้อ C ถูก เพราะ official อย่าง tax inspector เคยออกนอกเส้นทางเพื่อจับ merchant caravan เอากำไรเอง.
 Paraphrased Vocabulary: officials = tax inspector; take part in banditry = capture a merchant caravan for his own profit
 
-Question 23: Which statement is made about attitudes towards banditry?
+Question 23: Which TWO statements does the writer make about attitudes towards banditry?
 
 Correct Answer: E
 Accepted Answers: E

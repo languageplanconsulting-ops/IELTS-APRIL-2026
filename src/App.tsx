@@ -7214,6 +7214,7 @@ function App() {
       '- Every answer must have one exact portion from the generated passage.',
       '- TRUE/FALSE/NOT GIVEN and YES/NO/NOT GIVEN must be balanced or very similar in count.',
       '- NOT GIVEN items must use an anchor portion containing exact words from the question, but the claim itself must remain unstated or irrelevant.',
+      '- The word "writer" is allowed in multiple choice, matching, summary labels, and normal IELTS instruction text. Avoid writer-framing only inside the individual TRUE/FALSE/NOT GIVEN or YES/NO/NOT GIVEN statement prompts.',
       '- Fill in the blank answers must be ONE WORD ONLY and must be copied exactly from the passage.',
       '- Questions must be chronological unless the IELTS type normally asks paragraph scanning, such as matching information.',
       '- Each question should rely on only one passage portion.',
