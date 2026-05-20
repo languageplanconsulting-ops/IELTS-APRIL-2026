@@ -401,5 +401,408 @@ Answer Group: IELTS Academic Reading June 2026 Passage 2 - The raiders of the an
 Exact Portion: "kidnapping important envoys and demanding a ransom before releasing them"
 Short Thai Explanation: คำตอบคือ ransom เพราะ raiders เรียกค่าไถ่ก่อนปล่อย envoys.
 Paraphrased Vocabulary: allowing them to return = releasing them`
+  },
+  {
+    id: 'builtin-reading-june-2026-passage-1-racing-bicycles',
+    title: 'IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed',
+    category: 'normal',
+    collectionTitle: 'IELTS Academic Reading June 2026',
+    releaseAt: '2026-06-19T17:00:00.000Z',
+    rawPassageText: `READING PASSAGE 1
+
+How racing bicycles have changed
+
+You should spend about 20 minutes on Questions 1–13, which are based on Reading Passage 1 below.
+
+In 2020, the fictional French cyclist Maya Laurent won the most important road race of her career. It was a remarkable achievement, not only because of the quality of the riders she defeated, but also because only a few years earlier she had been seen as a promising competitor who often reached the final stages of major races but rarely looked likely to win them.
+
+Several changes helped explain Laurent’s improvement. One was obvious: in 2017, she began working with a former world champion who redesigned her training programme and taught her to conserve energy more effectively during long climbs. Another change was much less visible. For most of her career, Laurent had used traditional clincher tyres, which require an inner tube. In 2018, however, she changed to a tubeless tyre system fitted to a deeper carbon wheel. This small alteration attracted little public attention, but her mechanics believed it reduced rolling resistance and improved control on rougher road surfaces.
+
+Laurent’s decision is just one example of the many ways professional cyclists adapt their equipment. “The bicycle a professional rider uses is not simply taken from a shop and ridden in a race,” says Adrian Cole, a British race mechanic. “At elite level, every detail is adjusted to the rider’s body, strength and style.” Consequently, the bicycles used by leading cyclists are often different from the models sold to ordinary customers, even when they appear almost identical.
+
+The Dutch brothers Erik and Jonas Vermeer, for instance, are known for being extremely exact about their bicycle specifications. “We are very particular about the way our bikes are prepared,” they say. “The frames are made by our sponsor, but they are then sent to a specialist workshop where the wheel stiffness, saddle position and handlebar width are checked.” They have adjusted not only the length of the crank arms, but also experimented with different kinds of paint on the wheel rims. Their current bicycles are slightly heavier than the average professional model and have a denser spoke pattern in the rear wheel.
+
+The reason for these modifications is simple: the difference between success and failure in professional cycling can be extremely small. A rider may win or lose because of a few seconds on a climb, a slightly faster corner, or a more efficient position on the bicycle. As a result, riders and their teams are increasingly willing to make minor changes if these can provide even a small competitive advantage.
+
+Bicycle modification has a long history. In the early twentieth century, some riders began changing the shape of their handlebars to improve comfort during long races. Later, in the 1930s, an amateur Italian cyclist named Carlo Berti competed on a bicycle with an unusual cork-filled tyre. The tyre created so much bounce that race officials soon banned it, arguing that it gave the rider an unfair advantage on poor roads. However, within a few decades, bicycle customisation had become an ordinary part of the sport.
+
+Today, many coaches regard equipment adjustment as being just as important as nutrition or training. Bicycle modifications can be divided into two broad categories: changes to the rolling system and changes to the frame. The rolling system includes tyres, wheels and tyre pressure. This is the area most professional teams adjust most often. Riders may change tyre pressure depending on the road surface, the weather and the type of race. A wet road may require more grip, while a smooth, dry road may allow a harder tyre pressure.
+
+At one time, most racing bicycles had wheels with rims made from wood. These were relatively light, but they could be damaged by water and were not always reliable under heavy braking. Aluminium later became common because it was stronger and more predictable. More recently, carbon fibre has become the preferred material for many racing wheels. It allows designers to create deeper wheel shapes that can reduce air resistance, especially at high speeds.
+
+Of all recent developments, tubeless tyres have attracted particular interest. Because they do not contain an inner tube, they can sometimes be ridden at lower pressure without the same risk of sudden punctures. This can improve comfort and grip, especially on uneven roads. Studies carried out by several racing teams suggest that, when combined with a suitable wheel, tubeless tyres can reduce the effort required to maintain speed. In this sense, modern tyre systems have changed not only racing equipment but also racing tactics.
+
+Some riders make even more personal adjustments. The American cyclist Eli Grant was famous for descending mountains at exceptional speed. Part of his stability was attributed to the addition of small lead weights inside the lower section of his bicycle frame. Today, similar adjustments are often made during the manufacturing process rather than added later. Other riders focus on comfort. The Portuguese rider Lucia Ramos replaced the original handlebar tape on her bicycle with a thinner version because the standard tape made her hands ache during long races.
+
+Bicycle customisation has pushed professional cycling to a level that would have been difficult to imagine when riders competed on heavy steel frames and wooden wheels. As materials continue to develop, further innovations are likely, although race officials will continue to decide which changes are acceptable and which give athletes too much assistance.
+
+Questions 1–7
+
+Do the following statements agree with the information given in Reading Passage 1?
+
+In boxes 1–7 on your answer sheet, write
+
+TRUE if the statement agrees with the information
+FALSE if the statement contradicts the information
+NOT GIVEN if there is no information on this
+
+1 People had expected Maya Laurent to win the most important race of her career for several years before 2020.
+2 The change Maya Laurent made to her tyres received a great deal of public attention.
+3 Most professional cyclists travel with the same race mechanic throughout the season.
+4 Erik and Jonas Vermeer use bicycles that are lighter than most professional models.
+5 Carlo Berti designed the cork-filled tyre that he used in competition.
+6 Weather conditions can affect the way professional teams adjust tyre pressure.
+7 It was believed that Eli Grant’s frame modification helped him remain stable when descending mountains.
+
+Questions 8–13
+
+Complete the notes below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 8–13 on your answer sheet.
+
+The racing bicycle and how it has changed
+
+● Erik and Jonas Vermeer experimented with different kinds of 8………………… on their wheel rims.
+
+● Carlo Berti’s unusual tyre was banned because of the amount of 9………………… it created.
+
+● Equipment adjustment is now considered as important as nutrition or 10………………… .
+
+● Early racing wheels often had rims made from 11………………… .
+
+● Eli Grant had lead 12………………… added inside part of his bicycle frame.
+
+● Lucia Ramos changed the handlebar 13………………… on her bicycle because the original version was uncomfortable.`,
+    rawAnswerKey: `Question 1: People had expected Maya Laurent to win the most important race of her career for several years before 2020.
+
+Correct Answer: FALSE
+Accepted Answers: FALSE
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "only a few years earlier she had been seen as a promising competitor who often reached the final stages of major races but rarely looked likely to win them."
+Short Thai Explanation: ข้อนี้ผิด เพราะก่อนปี 2020 เธอถูกมองว่า promising แต่แทบไม่ดูเหมือนจะชนะรายการใหญ่.
+Paraphrased Vocabulary: expected to win = looked likely to win; contradicts "rarely looked likely"
+
+Question 2: The change Maya Laurent made to her tyres received a great deal of public attention.
+
+Correct Answer: FALSE
+Accepted Answers: FALSE
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "This small alteration attracted little public attention"
+Short Thai Explanation: ข้อนี้ผิด เพราะการเปลี่ยน tyre system ได้รับความสนใจจากสาธารณะน้อย ไม่ใช่มาก.
+Paraphrased Vocabulary: a great deal of public attention = public attention; contradicts "little"
+
+Question 3: Most professional cyclists travel with the same race mechanic throughout the season.
+
+Correct Answer: NOT GIVEN
+Accepted Answers: NOT GIVEN
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "says Adrian Cole, a British race mechanic"
+Short Thai Explanation: passage มีการพูดถึง race mechanic แต่ไม่ได้บอกว่านักปั่นส่วนใหญ่เดินทางกับ mechanic คนเดิมตลอดฤดูกาล.
+Paraphrased Vocabulary: race mechanic = race mechanic; travel throughout the season = not stated
+
+Question 4: Erik and Jonas Vermeer use bicycles that are lighter than most professional models.
+
+Correct Answer: FALSE
+Accepted Answers: FALSE
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "Their current bicycles are slightly heavier than the average professional model"
+Short Thai Explanation: ข้อนี้ผิด เพราะจักรยานของพวกเขาหนักกว่า average professional model เล็กน้อย ไม่ใช่เบากว่า.
+Paraphrased Vocabulary: lighter than most professional models = opposite of "heavier than the average professional model"
+
+Question 5: Carlo Berti designed the cork-filled tyre that he used in competition.
+
+Correct Answer: NOT GIVEN
+Accepted Answers: NOT GIVEN
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "Carlo Berti competed on a bicycle with an unusual cork-filled tyre."
+Short Thai Explanation: passage บอกว่า Carlo Berti ใช้ tyre แบบ cork-filled ในการแข่งขัน แต่ไม่ได้บอกว่าเขาเป็นคนออกแบบเอง.
+Paraphrased Vocabulary: used in competition = competed on; designed = not stated
+
+Question 6: Weather conditions can affect the way professional teams adjust tyre pressure.
+
+Correct Answer: TRUE
+Accepted Answers: TRUE
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "Riders may change tyre pressure depending on the road surface, the weather and the type of race."
+Short Thai Explanation: ข้อนี้ถูก เพราะ passage บอกชัดว่า weather เป็นหนึ่งในปัจจัยที่มีผลต่อการเปลี่ยน tyre pressure.
+Paraphrased Vocabulary: affect = may change depending on; weather conditions = the weather
+
+Question 7: It was believed that Eli Grant’s frame modification helped him remain stable when descending mountains.
+
+Correct Answer: TRUE
+Accepted Answers: TRUE
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "Part of his stability was attributed to the addition of small lead weights inside the lower section of his bicycle frame."
+Short Thai Explanation: ข้อนี้ถูก เพราะ stability ของเขาถูกเชื่อมโยงกับการเพิ่ม lead weights ใน bicycle frame.
+Paraphrased Vocabulary: helped him remain stable = stability was attributed to; frame modification = lead weights inside the frame
+
+Question 8: Erik and Jonas Vermeer experimented with different kinds of ______ on their wheel rims.
+
+Correct Answer: paint
+Accepted Answers: paint
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "experimented with different kinds of paint on the wheel rims."
+Short Thai Explanation: คำตอบคือ paint เพราะโจทย์ถามสิ่งที่ทดลองใช้บน wheel rims.
+Paraphrased Vocabulary: different kinds = different kinds; wheel rims = wheel rims
+
+Question 9: Carlo Berti’s unusual tyre was banned because of the amount of ______ it created.
+
+Correct Answer: bounce
+Accepted Answers: bounce
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "The tyre created so much bounce that race officials soon banned it"
+Short Thai Explanation: คำตอบคือ bounce เพราะยางถูกแบนเนื่องจากเกิด bounce มากเกินไป.
+Paraphrased Vocabulary: amount of = so much; banned = banned it
+
+Question 10: Equipment adjustment is now considered as important as nutrition or ______ .
+
+Correct Answer: training
+Accepted Answers: training
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "Today, many coaches regard equipment adjustment as being just as important as nutrition or training."
+Short Thai Explanation: คำตอบคือ training เพราะ passage เทียบ equipment adjustment กับ nutrition และ training.
+Paraphrased Vocabulary: now = today; considered as important as = regard as being just as important as
+
+Question 11: Early racing wheels often had rims made from ______ .
+
+Correct Answer: wood
+Accepted Answers: wood
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "At one time, most racing bicycles had wheels with rims made from wood."
+Short Thai Explanation: คำตอบคือ wood เพราะ racing wheels สมัยก่อนมักมี rims ทำจากไม้.
+Paraphrased Vocabulary: early = at one time; often = most
+
+Question 12: Eli Grant had lead ______ added inside part of his bicycle frame.
+
+Correct Answer: weights
+Accepted Answers: weights
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "the addition of small lead weights inside the lower section of his bicycle frame."
+Short Thai Explanation: คำตอบคือ weights เพราะเขาเพิ่ม lead weights เข้าไปในส่วนล่างของ bicycle frame.
+Paraphrased Vocabulary: added = addition; inside part of frame = inside the lower section of his bicycle frame
+
+Question 13: Lucia Ramos changed the handlebar ______ on her bicycle because the original version was uncomfortable.
+
+Correct Answer: tape
+Accepted Answers: tape
+Answer Group: IELTS Academic Reading June 2026 Passage 1 - How racing bicycles have changed
+Exact Portion: "Lucia Ramos replaced the original handlebar tape on her bicycle with a thinner version because the standard tape made her hands ache during long races."
+Short Thai Explanation: คำตอบคือ tape เพราะเธอเปลี่ยน handlebar tape เดิมเนื่องจากทำให้มือปวด.
+Paraphrased Vocabulary: changed = replaced; uncomfortable = made her hands ache`
+  },
+  {
+    id: 'builtin-reading-june-2026-passage-2-ancient-mountain-bandits',
+    title: 'IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads',
+    category: 'normal',
+    collectionTitle: 'IELTS Academic Reading June 2026',
+    releaseAt: '2026-06-19T17:00:00.000Z',
+    rawPassageText: `READING PASSAGE 2
+
+The bandits of the ancient mountain roads
+
+In the first centuries BCE and CE, bandits threatened travellers and merchants on the mountain routes linking inland cities with coastal ports.
+
+A
+
+When people think of ancient trade, they often imagine peaceful lines of pack animals carrying cloth, metalwork and spices through dramatic mountain scenery. Yet for many travellers, these journeys were dangerous. Bandits watched the roads from high ground, attacked slow-moving caravans and then vanished into valleys where regular armies struggled to follow them. Despite repeated attempts by ancient states to control the problem, banditry continued for centuries. Only when attacks began to damage tax income and threaten official communications did one major empire organise a large campaign to secure the mountain roads.
+
+B
+
+The geography of the region made banditry difficult to prevent. The roads passed through narrow valleys, steep forests and rocky passes. Some villages had small areas of farmland, but many local communities depended more on herding, woodcutting and trade than on agriculture. Their knowledge of springs, hidden tracks and seasonal paths was far greater than that of outsiders. Merchant caravans, by contrast, had limited choices. Pack animals could not cross every ridge, so traders were forced to use a small number of known passes. This made their movements predictable. When soldiers arrived, the bandits often escaped because they understood the local landscape so well.
+
+C
+
+It should also be remembered that ancient governments did not always treat bandits as enemies. During wartime, rulers sometimes used them as scouts, guides or irregular fighters. Their ability to move quickly through difficult terrain made them useful during the early stages of a campaign. Some frontier towns even allowed bandit groups to remain nearby. In return, the bandits brought stolen animals and goods to local markets, which increased trade and brought extra income to the townspeople.
+
+D
+
+One of the earliest written references to a named group of mountain bandits appears in letters exchanged between an imperial governor and the ruler of the small kingdom of Aramon. The governor complained that a group known as the Red Pass Riders had attacked caravans carrying official tax money. He also accused Aramon of secretly giving them shelter. The ruler of Aramon denied any involvement and insisted that none of his officials had helped the bandits. He promised to punish any subject who could be shown to have assisted them.
+
+E
+
+Attitudes towards banditry were not the same everywhere. In large cities, bandits were usually condemned as criminals who disrupted trade and made travel unsafe. However, in some mountain communities, successful raids were sometimes admired as signs of bravery and independence. Several ancient songs praise riders who crossed dangerous passes, seized wealthy caravans and returned with honour. Even government officials were not always innocent. According to one later historian, a tax inspector responsible for protecting a road once left his official route in order to capture a merchant caravan for his own profit.
+
+F
+
+The growing power of the eastern empire eventually made the problem impossible to ignore. At first, the state had benefited indirectly from banditry. Captured animals were sold in border markets, and some prisoners were forced to work on farms and road-building projects. This arrangement could continue only while the bandits avoided imperial interests. When they began attacking convoys carrying silver to the capital, officials demanded punishment for those responsible. Even then, the government was slow to act. By the first century CE, bandits had become bolder and were kidnapping important envoys, demanding a ransom before releasing them.
+
+G
+
+A new law finally gave General Marcellus Varro the authority and money needed to deal with the threat. Instead of sending one large army into the mountains, Varro divided the main road system into eleven districts. Each district was given a commander, a small force of soldiers and responsibility for guarding nearby passes and water sources. Once one district had been cleared, its soldiers moved on to help in the next. Although some bandits were killed in fighting, many others were offered land in lowland farming areas far from the mountain roads. This policy encouraged them to abandon raiding and reduced the chance that they would return to banditry.
+
+Questions 14–19
+
+Reading Passage 2 has seven paragraphs, A–G.
+
+Which paragraph contains the following information?
+
+Write the correct letter, A–G, in boxes 14–19 on your answer sheet.
+
+NB You may use any letter more than once.
+
+14 a reference to a denial of involvement in banditry
+15 details of how a campaign to stop banditry was organised
+16 a mention of the circumstances in which ancient states would make use of bandits
+17 a reference to how people today commonly imagine ancient trade routes
+18 an explanation of how some bandits were encouraged not to return to banditry
+19 a mention of the need for many caravans to use a limited number of mountain routes
+
+Questions 20 and 21
+
+Choose TWO letters, A–E.
+
+Write the correct letters in boxes 20 and 21 on your answer sheet.
+
+Which TWO of the following statements are made about inhabitants of the mountain region in the ancient world?
+
+A. They often used stolen pack animals to attack merchant caravans.
+B. They were able to escape soldiers because they knew the local area well.
+C. They paid traders for information about the safest mountain routes.
+D. Some relied more on herding and trade than on agriculture.
+E. They stored most stolen goods in forests until they could be sold.
+
+Questions 22 and 23
+
+Choose TWO letters, A–E.
+
+Write the correct letters in boxes 22 and 23 on your answer sheet.
+
+Which TWO of the following statements are made about attitudes towards banditry?
+
+A. All ancient governments considered banditry unacceptable in every situation.
+B. Mountain communities quickly stopped admiring successful bandits.
+C. Some officials were known to take part in banditry.
+D. Ancient songs always criticised attacks on merchant caravans.
+E. A positive view of banditry can be found in some ancient songs.
+
+Questions 24–26
+
+Complete the summary below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 24–26 on your answer sheet.
+
+The eastern empire and banditry
+
+Banditry caused difficulties for the eastern empire, but it also brought some benefits. For example, captured animals were sold in markets, while prisoners were used as workers on farms and road-building projects. However, attacks on convoys transporting 24………………… to the capital led officials to demand 25………………… for the bandits responsible. Later, some bandits captured important envoys and demanded a 26………………… before releasing them.`,
+    rawAnswerKey: `Question 14: a reference to a denial of involvement in banditry
+
+Correct Answer: D
+Accepted Answers: D
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "The ruler of Aramon denied any involvement and insisted that none of his officials had helped the bandits."
+Short Thai Explanation: คำตอบคือ D เพราะย่อหน้านี้พูดถึง ruler of Aramon ที่ปฏิเสธว่าไม่ได้เกี่ยวข้องกับ banditry.
+Paraphrased Vocabulary: denial of involvement = denied any involvement
+
+Question 15: details of how a campaign to stop banditry was organised
+
+Correct Answer: G
+Accepted Answers: G
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "Varro divided the main road system into eleven districts. Each district was given a commander, a small force of soldiers and responsibility for guarding nearby passes and water sources."
+Short Thai Explanation: คำตอบคือ G เพราะย่อหน้านี้อธิบายการจัด campaign เช่นแบ่ง road system เป็น 11 districts และมอบหน้าที่ให้ commander.
+Paraphrased Vocabulary: campaign organised = divided into districts; stop banditry = deal with the threat
+
+Question 16: a mention of the circumstances in which ancient states would make use of bandits
+
+Correct Answer: C
+Accepted Answers: C
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "During wartime, rulers sometimes used them as scouts, guides or irregular fighters."
+Short Thai Explanation: คำตอบคือ C เพราะในช่วงสงคราม rulers บางครั้งใช้ bandits เป็น scouts, guides หรือ fighters.
+Paraphrased Vocabulary: circumstances = during wartime; make use of = used
+
+Question 17: a reference to how people today commonly imagine ancient trade routes
+
+Correct Answer: A
+Accepted Answers: A
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "When people think of ancient trade, they often imagine peaceful lines of pack animals carrying cloth, metalwork and spices through dramatic mountain scenery."
+Short Thai Explanation: คำตอบคือ A เพราะย่อหน้าแรกพูดถึงภาพที่คนมักนึกถึงเมื่อคิดถึง ancient trade.
+Paraphrased Vocabulary: commonly imagine = often imagine
+
+Question 18: an explanation of how some bandits were encouraged not to return to banditry
+
+Correct Answer: G
+Accepted Answers: G
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "many others were offered land in lowland farming areas far from the mountain roads. This policy encouraged them to abandon raiding and reduced the chance that they would return to banditry."
+Short Thai Explanation: คำตอบคือ G เพราะ bandits บางคนได้รับที่ดินทำเกษตรไกลจากถนนภูเขา เพื่อให้เลิก raiding และไม่กลับไปเป็น bandits.
+Paraphrased Vocabulary: encouraged not to return = reduced the chance that they would return; banditry = banditry
+
+Question 19: a mention of the need for many caravans to use a limited number of mountain routes
+
+Correct Answer: B
+Accepted Answers: B
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "Pack animals could not cross every ridge, so traders were forced to use a small number of known passes."
+Short Thai Explanation: คำตอบคือ B เพราะ caravans/traders ต้องใช้ known passes จำนวนจำกัด เนื่องจาก pack animals ข้าม ridge ได้ไม่หมด.
+Paraphrased Vocabulary: limited number of mountain routes = small number of known passes; need to use = forced to use
+
+Question 20: Which statement is made about inhabitants of the mountain region in the ancient world?
+
+Correct Answer: B
+Accepted Answers: B
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "When soldiers arrived, the bandits often escaped because they understood the local landscape so well."
+Short Thai Explanation: ข้อ B ถูก เพราะ bandits หนี soldiers ได้จากความรู้พื้นที่ท้องถิ่น.
+Paraphrased Vocabulary: knew the local area well = understood the local landscape so well; escape soldiers = escaped when soldiers arrived
+
+Question 21: Which statement is made about inhabitants of the mountain region in the ancient world?
+
+Correct Answer: D
+Accepted Answers: D
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "many local communities depended more on herding, woodcutting and trade than on agriculture."
+Short Thai Explanation: ข้อ D ถูก เพราะ communities บางส่วนพึ่ง herding และ trade มากกว่า agriculture.
+Paraphrased Vocabulary: relied more on = depended more on; farming = agriculture
+
+Question 22: Which statement is made about attitudes towards banditry?
+
+Correct Answer: C
+Accepted Answers: C
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "a tax inspector responsible for protecting a road once left his official route in order to capture a merchant caravan for his own profit."
+Short Thai Explanation: ข้อ C ถูก เพราะ official อย่าง tax inspector เคยออกนอกเส้นทางเพื่อจับ merchant caravan เอากำไรเอง.
+Paraphrased Vocabulary: officials = tax inspector; take part in banditry = capture a merchant caravan for his own profit
+
+Question 23: Which statement is made about attitudes towards banditry?
+
+Correct Answer: E
+Accepted Answers: E
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "Several ancient songs praise riders who crossed dangerous passes, seized wealthy caravans and returned with honour."
+Short Thai Explanation: ข้อ E ถูก เพราะ ancient songs บางเพลงชื่นชม riders ที่ปล้น caravans และกลับมาอย่างมีเกียรติ.
+Paraphrased Vocabulary: positive view = praise; ancient songs = ancient songs
+
+Question 24: attacks on convoys transporting ______ to the capital
+
+Correct Answer: silver
+Accepted Answers: silver
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "When they began attacking convoys carrying silver to the capital"
+Short Thai Explanation: คำตอบคือ silver เพราะ convoys ที่ถูกโจมตีขน silver ไปเมืองหลวง.
+Paraphrased Vocabulary: transporting = carrying
+
+Question 25: officials demanded ______ for the bandits responsible
+
+Correct Answer: punishment
+Accepted Answers: punishment
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "officials demanded punishment for those responsible."
+Short Thai Explanation: คำตอบคือ punishment เพราะ officials ต้องการให้ลงโทษผู้รับผิดชอบ.
+Paraphrased Vocabulary: demanded = demanded; bandits responsible = those responsible
+
+Question 26: demanded a ______ before releasing them
+
+Correct Answer: ransom
+Accepted Answers: ransom
+Answer Group: IELTS Academic Reading June 2026 Passage 2 - The bandits of the ancient mountain roads
+Exact Portion: "kidnapping important envoys, demanding a ransom before releasing them."
+Short Thai Explanation: คำตอบคือ ransom เพราะ bandits เรียกค่าไถ่ก่อนปล่อย envoys.
+Paraphrased Vocabulary: before releasing them = before releasing them`
   }
 ]
