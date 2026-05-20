@@ -1127,7 +1127,9 @@ const ensureQuestionAudioBucket = async () => {
       })
     }
   } catch (error) {
-    if (error?.status !== 404) throw error
+    if (error?.status !== 404 && !(error?.status === 400 && /bucket not found|not found/i.test(String(error?.message || '')))) {
+      throw error
+    }
     await supabaseRequest('/storage/v1/bucket', {
       method: 'POST',
       headers: buildSupabaseHeaders({ serviceRole: true }),
