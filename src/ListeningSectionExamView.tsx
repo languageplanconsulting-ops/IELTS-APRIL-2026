@@ -56,6 +56,13 @@ type HighlightMenuState = {
   y: number
 }
 
+const formatListeningPlaybackTime = (seconds: number) => {
+  if (!Number.isFinite(seconds) || seconds <= 0) return '0:00'
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = Math.floor(seconds % 60)
+  return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`
+}
+
 const buildPassageDecorations = (
   passage: string,
   questions: ListeningSectionExamQuestion[],
@@ -163,9 +170,12 @@ const renderSegmentBody = (
 export type ListeningSectionExamViewProps = {
   config: ListeningSectionExamConfig
   excerptDrill?: boolean
-  playbackState: 'idle' | 'playing' | 'ended' | 'error'
+  playbackState: 'idle' | 'playing' | 'paused' | 'ended' | 'error'
+  playbackPosition: number
+  playbackDuration: number
   audioPlayed: boolean
   onTogglePlay: () => void
+  onSeek: (seconds: number) => void
   onBack: () => void
   onSaveNotebook: (question: ListeningSectionExamQuestion) => void
   onQuestionComplete?: (questionId: string) => void
@@ -179,8 +189,11 @@ export function ListeningSectionExamView({
   config,
   excerptDrill = false,
   playbackState,
+  playbackPosition,
+  playbackDuration,
   audioPlayed,
   onTogglePlay,
+  onSeek,
   onBack,
   onSaveNotebook,
   onQuestionComplete,
@@ -237,6 +250,87 @@ export function ListeningSectionExamView({
       [questionId]: { ...(current[questionId] || defaultAttempt()), ...patch }
     }))
   }, [])
+
+  const getChooseTwoSelection = (group: Extract<ListeningSectionExamGroup, { kind: 'choice-block' }>) =>
+    group.questions
+      .map((question) => attempts[question.id]?.answer || '')
+      .filter((answer) => answer.trim())
+
+  const getChooseTwoAssignedQuestion = (
+    group: Extract<ListeningSectionExamGroup, { kind: 'choice-block' }>,
+    optionKey: string
+  ) => group.questions.find((question) => attempts[question.id]?.answer === optionKey)
+
+  const buildChooseTwoAssignments = (
+    group: Extract<ListeningSectionExamGroup, { kind: 'choice-block' }>,
+    selectedKeys: string[]
+  ) => {
+    const assignments = new Map<string, string>()
+    const usedKeys = new Set<string>()
+
+    group.questions.forEach((question) => {
+      assignments.set(question.id, '')
+      const attempt = attempts[question.id] || defaultAttempt()
+      if (attempt.completed && attempt.answer) {
+        assignments.set(question.id, attempt.answer)
+        usedKeys.add(attempt.answer)
+      }
+    })
+
+    group.questions.forEach((question) => {
+      if (assignments.get(question.id)) return
+      const correctKey = selectedKeys.find(
+        (key) => !usedKeys.has(key) && key.toUpperCase() === question.correctAnswer.toUpperCase()
+      )
+      if (!correctKey) return
+      assignments.set(question.id, correctKey)
+      usedKeys.add(correctKey)
+    })
+
+    group.questions.forEach((question) => {
+      if (assignments.get(question.id)) return
+      const nextKey = selectedKeys.find((key) => !usedKeys.has(key))
+      if (!nextKey) return
+      assignments.set(question.id, nextKey)
+      usedKeys.add(nextKey)
+    })
+
+    return assignments
+  }
+
+  const handleChooseTwoToggle = (
+    group: Extract<ListeningSectionExamGroup, { kind: 'choice-block' }>,
+    optionKey: string
+  ) => {
+    const selectedKeys = getChooseTwoSelection(group)
+    const assignedQuestion = getChooseTwoAssignedQuestion(group, optionKey)
+    if (assignedQuestion && attempts[assignedQuestion.id]?.completed) return
+
+    const isSelected = selectedKeys.includes(optionKey)
+    if (!isSelected && selectedKeys.length >= group.pickCount) return
+
+    const nextSelectedKeys = isSelected
+      ? selectedKeys.filter((key) => key !== optionKey)
+      : [...selectedKeys, optionKey]
+    const assignments = buildChooseTwoAssignments(group, nextSelectedKeys)
+    const targetQuestion =
+      group.questions.find((question) => assignments.get(question.id) === optionKey) ||
+      assignedQuestion ||
+      group.questions.find((question) => !attempts[question.id]?.completed) ||
+      group.questions[0]
+
+    if (targetQuestion) activateQuestion(targetQuestion.id, true)
+
+    group.questions.forEach((question) => {
+      const attempt = attempts[question.id] || defaultAttempt()
+      if (attempt.completed) return
+      updateAttempt(question.id, {
+        answer: assignments.get(question.id) || '',
+        answerStatus: 'idle',
+        feedback: ''
+      })
+    })
+  }
 
   const claimLatestEvidenceForQuestion = useCallback((questionId: string) => {
     if (!latestEvidenceSelection?.text.trim()) return
@@ -440,6 +534,28 @@ export function ListeningSectionExamView({
   const bridgeQuestion = config.questions.find(
     (item) => attempts[item.id]?.completed && !attempts[item.id]?.bridgeDismissed
   )
+  const playbackPercent = playbackDuration > 0 ? Math.min(100, (playbackPosition / playbackDuration) * 100) : 0
+  const playbackStatus =
+    playbackState === 'playing'
+      ? 'Playing'
+      : playbackState === 'paused'
+        ? 'Paused'
+        : playbackState === 'ended'
+          ? 'Finished'
+          : playbackState === 'error'
+            ? 'Error'
+            : audioPlayed
+              ? 'Ready to replay'
+              : 'Ready'
+  const playbackButtonLabel =
+    playbackState === 'playing'
+      ? 'Pause'
+      : playbackState === 'paused'
+        ? 'Resume'
+        : playbackState === 'ended'
+          ? 'Replay'
+          : 'Play'
+  const playbackButtonIcon = playbackState === 'playing' ? 'Ⅱ' : '▶'
 
   return (
     <div className="listeningSectionExam">
@@ -465,25 +581,39 @@ export function ListeningSectionExamView({
           <div className="listeningSectionExamAudio">
             <div className="listeningSectionExamAudioMeta">
               <span>Part {config.sectionNumber}</span>
-              <span>
-                {playbackState === 'playing'
-                  ? 'Playing…'
-                  : audioPlayed
-                    ? 'Replay anytime'
-                    : 'Press play to start'}
+              <span>{playbackStatus}</span>
+            </div>
+            <div className="listeningSectionAudioPlayer">
+              <button
+                type="button"
+                className="listeningSectionExamPlayBtn"
+                aria-label={`${playbackButtonLabel} audio`}
+                onClick={onTogglePlay}
+              >
+                <span aria-hidden>{playbackButtonIcon}</span>
+                <span>{playbackButtonLabel}</span>
+              </button>
+              <div className="listeningSectionExamTimeline">
+                <div
+                  className="listeningSectionExamTimelineFill"
+                  style={{ width: `${playbackPercent}%` }}
+                  aria-hidden="true"
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max={Math.max(1, Math.floor(playbackDuration || 0))}
+                  step="1"
+                  value={Math.min(Math.floor(playbackPosition || 0), Math.max(1, Math.floor(playbackDuration || 0)))}
+                  disabled={!playbackDuration}
+                  aria-label="Audio progress"
+                  onChange={(event) => onSeek(Number(event.target.value))}
+                />
+              </div>
+              <span className="listeningSectionExamTime">
+                {formatListeningPlaybackTime(playbackPosition)} / {formatListeningPlaybackTime(playbackDuration)}
               </span>
             </div>
-            <button
-              type="button"
-              className="listeningSectionExamPlayBtn"
-              aria-label={playbackState === 'playing' ? 'Stop audio' : 'Play audio'}
-              onClick={onTogglePlay}
-            >
-              {playbackState === 'playing' ? '■ Stop' : '▶ Play section'}
-            </button>
-            {config.audioUrl ? (
-              <audio className="listeningSectionExamNativeAudio" controls src={config.audioUrl} />
-            ) : null}
           </div>
 
           <div className="listeningSectionExamScriptCard">
@@ -633,17 +763,90 @@ export function ListeningSectionExamView({
             </p>
           ))}
         </header>
-        {group.options.length > 0 && group.questions.length > 1 && group.pickCount === 2 ? (
-          <ul className="listeningSectionExamSharedOptions">
-            {group.options.map((option) => (
-              <li key={`${group.id}-${option.key}`}>
-                <b>{option.key}</b> {option.text}
-              </li>
-            ))}
-          </ul>
-        ) : null}
-        {group.questions.map((question) => renderChoiceQuestion(question, group))}
+        {group.pickCount === 2 && group.questions.length > 1
+          ? renderChooseTwoChecklist(group)
+          : group.questions.map((question) => renderChoiceQuestion(question, group))}
       </article>
+    )
+  }
+
+  function renderChooseTwoChecklist(group: Extract<ListeningSectionExamGroup, { kind: 'choice-block' }>) {
+    const selectedKeys = getChooseTwoSelection(group)
+    const completedSlots = group.questions.filter((question) => attempts[question.id]?.completed).length
+    const isFull = selectedKeys.length >= group.pickCount
+    const options = group.options.length > 0 ? group.options : group.questions.flatMap((question) => question.options)
+
+    return (
+      <div className="listeningSectionExamChooseTwo">
+        <div className="listeningSectionExamChooseTwoSummary">
+          <strong>Choose {group.pickCount} options</strong>
+          <span>
+            Selected {selectedKeys.length}/{group.pickCount}
+          </span>
+        </div>
+        <ul className="listeningSectionExamChooseTwoOptions">
+          {options.map((option) => {
+            const assignedQuestion = getChooseTwoAssignedQuestion(group, option.key)
+            const isSelected = selectedKeys.includes(option.key)
+            const isLocked = Boolean(assignedQuestion && attempts[assignedQuestion.id]?.completed)
+            const isDisabled = isLocked || (!isSelected && isFull)
+            return (
+              <li key={`${group.id}-${option.key}`}>
+                <label
+                  className={`listeningSectionExamChooseTwoOption ${isSelected ? 'is-selected' : ''} ${
+                    isDisabled ? 'is-disabled' : ''
+                  }`}
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    disabled={isDisabled}
+                    onChange={() => handleChooseTwoToggle(group, option.key)}
+                  />
+                  <span className="listeningSectionExamChooseTwoLetter">{option.key}</span>
+                  <span>{option.text}</span>
+                </label>
+              </li>
+            )
+          })}
+        </ul>
+        {isFull ? null : (
+          <p className="listeningSectionExamChooseTwoNote">
+            Tick {group.pickCount - selectedKeys.length} more option{group.pickCount - selectedKeys.length === 1 ? '' : 's'}.
+          </p>
+        )}
+        <div className="listeningSectionExamChooseTwoSlots" aria-label="Answer slots">
+          {group.questions.map((question) => {
+            const attempt = attempts[question.id] || defaultAttempt()
+            const isActive = question.id === activeQuestionId
+            const optionText = options.find((option) => option.key === attempt.answer)?.text
+            return (
+              <div
+                key={question.id}
+                className={`listeningSectionExamChooseTwoSlot ${isActive ? 'is-active' : ''} ${
+                  attempt.completed ? 'is-complete' : ''
+                }`}
+                onClick={() => activateQuestion(question.id, true)}
+              >
+                <div className="listeningSectionExamChooseTwoSlotHead">
+                  <span className="listeningSectionExamQNum">{question.number}</span>
+                  <div>
+                    <p>{question.stem || question.questionKeyword}</p>
+                    <span className="listeningSectionExamChooseTwoSlotAnswer">
+                      {attempt.answer ? `${attempt.answer}. ${optionText || ''}` : 'Choose from the checklist above'}
+                    </span>
+                  </div>
+                </div>
+                {renderQuestionFooter(question, attempt)}
+              </div>
+            )
+          })}
+        </div>
+        {completedSlots > 0 && completedSlots < group.questions.length ? (
+          <p className="listeningSectionExamChooseTwoNote">Completed answers stay locked while you finish the pair.</p>
+        ) : null}
+      </div>
     )
   }
 
@@ -742,29 +945,40 @@ export function ListeningSectionExamView({
         }`}
         onClick={() => activateQuestion(question.id, true)}
       >
-        <span className="listeningSectionExamQNum">{question.number}</span>
-        <span className="listeningSectionExamMatchingLabel">{question.rowLabel || question.stem}</span>
-        <select
-          value={attempt.answer}
-          disabled={attempt.completed}
-          className={attempt.answerStatus === 'wrong' ? 'is-wrong' : ''}
-          onClick={(event) => event.stopPropagation()}
-          onChange={(event) => {
-            activateQuestion(question.id, true)
-            updateAttempt(question.id, {
-              answer: event.target.value,
-              answerStatus: 'idle',
-              feedback: ''
-            })
-          }}
-        >
-          <option value="">{question.number}</option>
-          {question.options.map((option) => (
-            <option key={`${question.id}-${option.key}`} value={option.key}>
-              {option.key}
-            </option>
-          ))}
-        </select>
+        <div className="listeningSectionExamMatchingPrompt">
+          <span className="listeningSectionExamQNum">{question.number}</span>
+          <span className="listeningSectionExamMatchingLabel">{question.rowLabel || question.stem}</span>
+        </div>
+        <ul className="listeningSectionExamMatchingChoices">
+          {question.options.map((option) => {
+            const selected = attempt.answer === option.key
+            const wrong = attempt.answerStatus === 'wrong' && selected
+            const correct = attempt.completed && selected
+            return (
+              <li key={`${question.id}-${option.key}`}>
+                <button
+                  type="button"
+                  className={`listeningSectionExamMatchingChoice ${selected ? 'is-selected' : ''} ${
+                    wrong ? 'is-wrong' : ''
+                  } ${correct ? 'is-correct' : ''}`}
+                  disabled={attempt.completed}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    activateQuestion(question.id, true)
+                    updateAttempt(question.id, {
+                      answer: option.key,
+                      answerStatus: 'idle',
+                      feedback: ''
+                    })
+                  }}
+                >
+                  <span>{option.key}</span>
+                  <span>{option.text}</span>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
         {renderQuestionFooter(question, attempt, true)}
       </li>
     )
@@ -783,27 +997,25 @@ export function ListeningSectionExamView({
       >
         <span className="listeningSectionExamQNum">{question.number}</span>
         <p>{question.stem}</p>
-        <select
+        <input
+          type="text"
           value={attempt.answer}
           disabled={attempt.completed}
+          placeholder={`Q${question.number}`}
+          autoCapitalize="off"
+          autoComplete="off"
+          spellCheck={false}
           className={attempt.answerStatus === 'wrong' ? 'is-wrong' : ''}
           onClick={(event) => event.stopPropagation()}
           onChange={(event) => {
             activateQuestion(question.id, true)
             updateAttempt(question.id, {
-              answer: event.target.value,
+              answer: event.target.value.trimStart(),
               answerStatus: 'idle',
               feedback: ''
             })
           }}
-        >
-          <option value="">[{question.number}]</option>
-          {question.options.map((option) => (
-            <option key={`${question.id}-${option.key}`} value={option.key}>
-              {option.text}
-            </option>
-          ))}
-        </select>
+        />
         {renderQuestionFooter(question, attempt, true)}
       </li>
     )

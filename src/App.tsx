@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import './App.css'
 import { ListeningSectionExamView } from './ListeningSectionExamView'
 import {
@@ -6594,8 +6594,10 @@ function App() {
   const [listeningAnswers, setListeningAnswers] = useState<Record<number, string>>({})
   const [listeningReportItems, setListeningReportItems] = useState<ListeningReportItem[]>([])
   const [listeningAttemptHistory, setListeningAttemptHistory] = useState<Record<string, ListeningAttemptSummary>>({})
-  const [listeningPlaybackState, setListeningPlaybackState] = useState<'idle' | 'playing' | 'ended' | 'error'>('idle')
+  const [listeningPlaybackState, setListeningPlaybackState] = useState<'idle' | 'playing' | 'paused' | 'ended' | 'error'>('idle')
   const [listeningPlaybackRate, setListeningPlaybackRate] = useState<'normal' | 'slow'>('normal')
+  const [listeningPlaybackPosition, setListeningPlaybackPosition] = useState(0)
+  const [listeningPlaybackDuration, setListeningPlaybackDuration] = useState(0)
   const [listeningExerciseError, setListeningExerciseError] = useState('')
   const [selectedListeningBuilderPackId, setSelectedListeningBuilderPackId] = useState('')
   const [selectedListeningBuilderExamTestId, setSelectedListeningBuilderExamTestId] = useState('')
@@ -8365,11 +8367,11 @@ function App() {
     [bankReadingExams]
   )
   const readingJourneySourcePool = useMemo(
-    () => [
-      ...leveledReadingExams.filter((exam) => exam.category === 'normal'),
-      ...pdoyReadingExams.filter((exam) => exam.category === 'normal')
-    ],
-    [leveledReadingExams, pdoyReadingExams]
+    () =>
+      bankReadingExams.filter(
+        (exam) => exam.category === 'normal' && !isReadingPdoyExercise(exam.id)
+      ),
+    [bankReadingExams]
   )
   const readingJourneyStageDefinitions = useMemo(
     () => buildJourneyStageDefinitions(readingJourneySourcePool, 30),
@@ -8451,6 +8453,25 @@ function App() {
     }
     return { total, cleared, bestAccuracy, activeMission }
   }, [readingAttemptByExamId, readingJourneyProgress, readingJourneyStageDefinitions])
+  const readingViewTransitionKey = useMemo(
+    () =>
+      [
+        readingWorkspaceMode,
+        readingEntryView,
+        readingEntryCategory ?? 'none',
+        readingAttemptStage,
+        selectedReadingExamId ?? 'none',
+        selectedReadingCollection
+      ].join(':'),
+    [
+      readingWorkspaceMode,
+      readingEntryView,
+      readingEntryCategory,
+      readingAttemptStage,
+      selectedReadingExamId,
+      selectedReadingCollection
+    ]
+  )
   const readingExamCountsByCategory = useMemo(
     () =>
       (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => ({
@@ -12283,8 +12304,14 @@ function App() {
     audio.currentTime = 0
     audio.onended = null
     audio.onerror = null
+    audio.onplay = null
+    audio.onpause = null
+    audio.ontimeupdate = null
+    audio.onloadedmetadata = null
     audio.src = ''
     listeningSectionAudioRef.current = null
+    setListeningPlaybackPosition(0)
+    setListeningPlaybackDuration(0)
   }
 
   const stopListeningPlayback = () => {
@@ -12294,14 +12321,52 @@ function App() {
     }
     listeningSpeechRef.current = null
     setListeningPlaybackState('idle')
+    setListeningPlaybackPosition(0)
+    setListeningPlaybackDuration(0)
+  }
+
+  const pauseListeningPlayback = () => {
+    const audio = listeningSectionAudioRef.current
+    if (audio && !audio.paused) {
+      audio.pause()
+      setListeningPlaybackPosition(audio.currentTime || 0)
+      setListeningPlaybackState('paused')
+      return
+    }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window && listeningSpeechRef.current) {
+      window.speechSynthesis.pause()
+      setListeningPlaybackState('paused')
+    }
+  }
+
+  const resumeListeningPlayback = () => {
+    const audio = listeningSectionAudioRef.current
+    if (audio) {
+      audio.play().catch(() => setListeningPlaybackState('error'))
+      return
+    }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window && listeningSpeechRef.current) {
+      window.speechSynthesis.resume()
+      setListeningPlaybackState('playing')
+    }
+  }
+
+  const seekListeningPlayback = (seconds: number) => {
+    const audio = listeningSectionAudioRef.current
+    const nextTime = Math.max(0, Math.min(seconds, listeningPlaybackDuration || seconds))
+    if (audio) {
+      audio.currentTime = nextTime
+    }
+    setListeningPlaybackPosition(nextTime)
   }
 
   const playListeningSectionAudioFromUrl = async (sourceUrl: string) => {
-    stopListeningSectionAudio()
     stopListeningPlayback()
     await new Promise<void>((resolve, reject) => {
       const audio = new Audio(sourceUrl)
       listeningSectionAudioRef.current = audio
+      setListeningPlaybackPosition(0)
+      setListeningPlaybackDuration(0)
       let completed = false
       const cleanup = () => {
         if (completed) return
@@ -12309,12 +12374,32 @@ function App() {
         audio.onended = null
         audio.onerror = null
         audio.onplay = null
+        audio.onpause = null
+        audio.ontimeupdate = null
+        audio.onloadedmetadata = null
         if (listeningSectionAudioRef.current === audio) {
           listeningSectionAudioRef.current = null
         }
       }
-      audio.onplay = () => setListeningPlaybackState('playing')
+      const syncAudioTime = () => {
+        setListeningPlaybackPosition(audio.currentTime || 0)
+        if (Number.isFinite(audio.duration) && audio.duration > 0) {
+          setListeningPlaybackDuration(audio.duration)
+        }
+      }
+      audio.onloadedmetadata = syncAudioTime
+      audio.ontimeupdate = syncAudioTime
+      audio.onplay = () => {
+        syncAudioTime()
+        setListeningPlaybackState('playing')
+      }
+      audio.onpause = () => {
+        if (completed || audio.ended) return
+        syncAudioTime()
+        setListeningPlaybackState('paused')
+      }
       audio.onended = () => {
+        syncAudioTime()
         cleanup()
         setListeningPlaybackState('ended')
         resolve()
@@ -14443,14 +14528,19 @@ function App() {
                 }}
                 excerptDrill={Boolean(listeningFoundationExamConfig.excerptDrill)}
                 playbackState={listeningPlaybackState}
+                playbackPosition={listeningPlaybackPosition}
+                playbackDuration={listeningPlaybackDuration}
                 audioPlayed={listeningFoundationAudioPlayed}
                 onTogglePlay={() => {
                   if (listeningPlaybackState === 'playing') {
-                    stopListeningPlayback()
+                    pauseListeningPlayback()
+                  } else if (listeningPlaybackState === 'paused') {
+                    resumeListeningPlayback()
                   } else {
                     void playListeningFoundationPassage()
                   }
                 }}
+                onSeek={seekListeningPlayback}
                 onBack={() => {
                   stopListeningPlayback()
                   setListeningLabMode('foundation')
@@ -14505,14 +14595,19 @@ function App() {
               <ListeningSectionExamView
                 config={listeningBuilderExamConfig}
                 playbackState={listeningPlaybackState}
+                playbackPosition={listeningPlaybackPosition}
+                playbackDuration={listeningPlaybackDuration}
                 audioPlayed={listeningBuilderExamAudioPlayed}
                 onTogglePlay={() => {
                   if (listeningPlaybackState === 'playing') {
-                    stopListeningPlayback()
+                    pauseListeningPlayback()
+                  } else if (listeningPlaybackState === 'paused') {
+                    resumeListeningPlayback()
                   } else {
                     void playListeningBuilderExamSection()
                   }
                 }}
+                onSeek={seekListeningPlayback}
                 onBack={openListeningLanding}
                 onKnewIt={showPracticeKnewItToast}
                 onQuestionComplete={(questionId) => {
@@ -14565,8 +14660,15 @@ function App() {
         <section
           className={`panel full readingPage${
             readingWorkspaceMode === 'bank' && readingAttemptStage === 'exam' ? ' readingPage-examActive' : ''
+          }${
+            readingWorkspaceMode === 'bank' &&
+            readingAttemptStage === 'bank' &&
+            readingEntryView === 'journey'
+              ? ' readingPage-journey'
+              : ''
           }`}
         >
+          <div key={readingViewTransitionKey} className="readingViewStage">
           <div className="readingPageHeader">
             <div>
               <p className="sectionLabel">IELTS Reading</p>
@@ -14601,6 +14703,12 @@ function App() {
                       key={choice.category}
                       type="button"
                       className={`readingEntryCard readingEntryCard-${choice.category}`}
+                      style={
+                        {
+                          '--motion-stagger':
+                            choice.category === 'normal' ? 0 : choice.category === 'advanced' ? 1 : 2
+                        } as CSSProperties
+                      }
                       onClick={() => openReadingCategoryBank(choice.category)}
                     >
                       <span className="readingEntryLabel">{choice.tone}</span>
@@ -14618,6 +14726,7 @@ function App() {
                 <button
                   type="button"
                   className="readingEntryCard readingEntryCard-monthly"
+                  style={{ '--motion-stagger': 3 } as CSSProperties}
                   onClick={openReadingMonthlyBank}
                 >
                   <span className="readingEntryLabel">Monthly</span>
@@ -14728,13 +14837,13 @@ function App() {
                     <span className="readingJourneyJournalTag">Normal · Mission Mode</span>
                     <h3 className="readingJourneyJournalTitle">สมุดภารกิจ Reading</h3>
                     <p className="readingJourneyJournalLead">
-                      แต่ละด่าน = 3 scrolls (Passage 1–3) · มี Fill · TFNG/YNNG · Matching — เคลียร์ที่{' '}
+                      แต่ละด่าน = 3 passages สุ่มจากชุดที่อัปโหลด · ต้องมี Fill · TFNG/YNNG · Matching headings — เคลียร์ที่{' '}
                       <strong>{READING_JOURNEY_UNLOCK_PERCENT}%+</strong> ถึงจะเปิดด่านถัดไป
                     </p>
                     <div className="readingJourneyJournalChips">
                       <span>📝 Fill</span>
                       <span>⚖️ TFNG / YNNG</span>
-                      <span>🧩 Matching</span>
+                      <span>🧩 Matching headings</span>
                     </div>
                   </div>
                   <div className="readingJourneyJournalStats">
@@ -14767,7 +14876,9 @@ function App() {
                 {readingJourneyStageDefinitions.length === 0 ? (
                   <div className="readingJourneyEmpty">
                     <p>ยังไม่มีภารกิจในเล่มนี้</p>
-                    <p className="meta">ต้องมีข้อสอบ Normal ที่มี Fill + Judgement + Matching ก่อนครับ</p>
+                    <p className="meta">
+                      ต้องมีข้อสอบ Normal ที่อัปโหลดแล้ว ครบ Fill · TFNG/YNNG · Matching (headings หรือ information) ก่อนครับ
+                    </p>
                   </div>
                 ) : (
                   <div className="readingJourneyTrail" role="list">
@@ -14787,6 +14898,7 @@ function App() {
                         <div
                           key={stage.id}
                           className={`readingJourneyTrailRow ${index % 2 === 1 ? 'is-alt' : ''}`}
+                          style={{ '--motion-stagger': index } as CSSProperties}
                           role="listitem"
                         >
                           <div className="readingJourneyTrailSpine" aria-hidden="true">
@@ -14812,10 +14924,10 @@ function App() {
                             <p className="readingJourneyMissionObjective">
                               {exam
                                 ? getJourneyStageTypeSummary(exam).replace('3 passages · ', '')
-                                : 'Fill · TFNG/YNNG · Matching'}
+                                : 'Fill · TFNG/YNNG · Matching headings'}
                             </p>
                             <ul className="readingJourneyMissionLoot">
-                              <li>📜 3 passages</li>
+                              <li>📜 3 passages สุ่ม</li>
                               <li>🎯 เป้า {READING_JOURNEY_UNLOCK_PERCENT}%+</li>
                               {attempt ? <li>📊 ล่าสุด {attempt.accuracy}%</li> : <li>✨ ยังไม่ลอง</li>}
                             </ul>
@@ -15587,7 +15699,10 @@ function App() {
               )}
 
               <div className="readingExamLayout readingExamLayout-bank">
-                <section className="readingPassagePanel readingPassagePanel-exam">
+                <section
+                  key={readingActivePassageNumber}
+                  className="readingPassagePanel readingPassagePanel-exam"
+                >
                   <div className="readingPassageHeader">
                     <div>
                       <p className="sectionLabel">Passage {activeReadingPassage.number}</p>
@@ -15650,7 +15765,10 @@ function App() {
                   </div>
                 </section>
 
-                <section className="readingQuestionsPanel readingQuestionsPanel-exam">
+                <section
+                  key={`questions-${readingActivePassageNumber}`}
+                  className="readingQuestionsPanel readingQuestionsPanel-exam"
+                >
                   <div className="readingQuestionsHeader">
                     <div>
                       <p className="sectionLabel">Questions</p>
@@ -15908,6 +16026,7 @@ function App() {
               </div>
             </div>
           )}
+          </div>
         </section>
       ) : activePage === 'admin' ? (
           <section className="adminPanelPage" data-admin-section={adminWorkspaceSection}>

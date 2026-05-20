@@ -5,6 +5,21 @@
   --bc-white: #ffffff;
   --bc-yellow: #ffcc00;
   --bc-black: #0d0d0d;
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-luxury-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-luxury-fast: 420ms;
+  --duration-luxury: 580ms;
+  --duration-luxury-slow: 760ms;
+  --duration-view: 680ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-luxury-fast: 1ms;
+    --duration-luxury: 1ms;
+    --duration-luxury-slow: 1ms;
+    --duration-view: 1ms;
+  }
 }
 
 html,
@@ -58,12 +73,12 @@ body,
   border: 3px solid var(--bc-black) !important;
   box-shadow: 4px 4px 0 var(--bc-black) !important;
   transition:
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 220ms ease,
-    border-color 220ms ease,
-    opacity 220ms ease;
-  animation: card-settle 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    opacity var(--duration-luxury-fast) var(--ease-luxury-soft);
+  animation: card-settle var(--duration-luxury-slow) var(--ease-luxury) both;
 }
 
 .thumbnailCard,
@@ -84,11 +99,12 @@ body,
   font-family: Inter, system-ui, sans-serif !important;
   font-weight: 700 !important;
   transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 180ms ease,
-    color 180ms ease,
-    filter 180ms ease;
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    filter var(--duration-luxury-fast) var(--ease-luxury-soft),
+    opacity var(--duration-luxury-fast) var(--ease-luxury-soft);
   will-change: transform;
 }
 
@@ -235,7 +251,7 @@ body,
   border: 3px solid var(--bc-black);
   box-shadow: 4px 4px 0 var(--bc-black);
   padding: 24px;
-  animation: screen-fade-up 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: screen-fade-up var(--duration-view) var(--ease-luxury) both;
 }
 
 .homeCard h1 {
@@ -268,11 +284,11 @@ body,
   font-size: 1rem;
   cursor: pointer;
   transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 180ms ease,
-    color 180ms ease,
-    filter 180ms ease;
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    filter var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 .homeGrid button:hover {
@@ -301,7 +317,7 @@ body,
   background: #fffef7;
   box-shadow: 4px 4px 0 var(--bc-black);
   padding: 18px;
-  animation: screen-fade-up 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: screen-fade-up var(--duration-view) var(--ease-luxury) both;
 }
 
 .authPanelAdmin {
@@ -2471,7 +2487,7 @@ body,
 @keyframes screen-fade-up {
   0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(18px);
   }
   100% {
     opacity: 1;
@@ -2482,11 +2498,44 @@ body,
 @keyframes card-settle {
   0% {
     opacity: 0;
-    transform: translateY(8px) scale(0.995);
+    transform: translateY(14px) scale(0.992);
   }
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes luxuryViewEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes luxuryCardEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes luxuryContentSwap {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -6420,6 +6469,30 @@ body,
   gap: 18px;
 }
 
+.readingViewStage {
+  display: grid;
+  gap: inherit;
+  animation: luxuryViewEnter var(--duration-view) var(--ease-luxury) both;
+}
+
+.readingPageHeader {
+  transition:
+    opacity var(--duration-luxury-fast) var(--ease-luxury-soft),
+    transform var(--duration-luxury-fast) var(--ease-luxury-soft);
+}
+
+.readingPageHeader h2,
+.readingPageHeader p {
+  transition:
+    opacity var(--duration-luxury) var(--ease-luxury-soft),
+    transform var(--duration-luxury) var(--ease-luxury);
+}
+
+.readingPassagePanel-exam,
+.readingQuestionsPanel-exam {
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury) both;
+}
+
 .readingPage-pdoy {
   gap: 22px;
 }
@@ -9092,6 +9165,25 @@ body,
 .readingPage input,
 .readingPage select {
   touch-action: manipulation;
+}
+
+.readingPage button:not(.readingJourneyBreadcrumbLink) {
+  transition:
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    opacity var(--duration-luxury-fast) var(--ease-luxury-soft);
+}
+
+.readingWorkspaceTabs button,
+.readingCategoryTabs button,
+.readingPassageTabs button {
+  transition:
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 @media (max-width: 1100px) {
@@ -13718,9 +13810,12 @@ select:focus,
   cursor: pointer;
   isolation: isolate;
   transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease;
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
+  animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 90ms);
 }
 
 .readingPage .readingEntryCard::before {
@@ -13758,9 +13853,14 @@ select:focus,
 }
 
 .readingPage .readingEntryCard:hover {
-  transform: translateY(-3px) !important;
+  transform: translateY(-5px) !important;
   border-color: #9fb4d6 !important;
   box-shadow: 0 30px 70px rgba(0, 51, 122, 0.18) !important;
+}
+
+.readingPage .readingEntryCard:active {
+  transform: translateY(-1px) scale(0.995) !important;
+  transition-duration: var(--duration-luxury-fast);
 }
 
 .readingPage .readingEntrySubtitle {
@@ -13884,9 +13984,81 @@ select:focus,
 .readingPage .readingJourneyGame {
   display: grid;
   gap: 18px;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 4px 0 32px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 4px clamp(12px, 2.5vw, 32px) 32px;
+  box-sizing: border-box;
+}
+
+.readingPage-journey,
+.workspace:has(.readingPage-journey) {
+  min-height: 100dvh;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+.workspace:has(.readingPage-journey) {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.workspace:has(.readingPage-journey) > .topbar {
+  flex-shrink: 0;
+}
+
+.readingPage-journey {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: calc(100dvh - 92px);
+  max-height: none;
+  gap: 10px;
+  overflow: visible;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.readingPage-journey .readingPageHeader {
+  display: none;
+}
+
+.readingPage-journey .readingJourneyGame {
+  flex: 1 1 auto;
+}
+
+.readingPage .readingJourneyJournal {
+  width: 100%;
+}
+
+.readingPage .readingJourneyTrail {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 960px) {
+  .readingPage .readingJourneyTrail {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    align-items: stretch;
+  }
+
+  .readingPage .readingJourneyTrailRow {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .readingPage .readingJourneyTrailSpine {
+    display: none;
+  }
+
+  .readingPage .readingJourneyMissionCard {
+    flex: 1 1 auto;
+    height: 100%;
+  }
 }
 
 .readingPage .readingJourneyBreadcrumb {
@@ -14024,12 +14196,22 @@ select:focus,
   box-shadow: 3px 3px 0 #0f172a;
   font-weight: 850;
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition:
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    opacity var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 .readingPage .readingJourneyBtn:hover:not(:disabled) {
-  transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 #0f172a;
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #0f172a;
+}
+
+.readingPage .readingJourneyBtn:active:not(:disabled) {
+  transform: translate(3px, 3px) scale(0.985);
+  box-shadow: none;
+  transition-duration: var(--duration-luxury-fast);
 }
 
 .readingPage .readingJourneyBtn:disabled {
@@ -14073,6 +14255,8 @@ select:focus,
   grid-template-columns: 52px 1fr;
   gap: 12px;
   align-items: stretch;
+  animation: luxuryCardEnter calc(var(--duration-view) + 120ms) var(--ease-luxury) both;
+  animation-delay: calc(160ms + (var(--motion-stagger, 0) * 85ms));
 }
 
 .readingPage .readingJourneyTrailRow.is-alt .readingJourneyMissionCard {
@@ -14123,7 +14307,7 @@ select:focus,
 
 .readingPage .readingJourneyTrailDot.is-active {
   background: #ffcc00;
-  animation: readingJourneyPulse 1.4s ease-in-out infinite;
+  animation: readingJourneyPulse 2.4s var(--ease-luxury-soft) infinite;
 }
 
 .readingPage .readingJourneyTrailDot.is-locked {
@@ -14149,6 +14333,17 @@ select:focus,
   background: #fffdfa;
   box-shadow: 4px 4px 0 #0f172a;
   transform: rotate(0.25deg);
+  transition:
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    opacity var(--duration-luxury-fast) var(--ease-luxury-soft);
+}
+
+.readingPage .readingJourneyMissionCard:hover {
+  transform: rotate(0.25deg) translateY(-3px);
+  box-shadow: 6px 6px 0 #0f172a;
 }
 
 .readingPage .readingJourneyMissionCard.is-locked {
@@ -14347,6 +14542,16 @@ select:focus,
   border-radius: 16px;
   background: #ffffff;
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.07);
+  transition:
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
+}
+
+.readingPage .readingStageExamCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
 }
 
 .readingPage .readingStageExamCard.is-perfect {

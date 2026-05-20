@@ -43,10 +43,13 @@ export const READING_JOURNEY_UNLOCK_PERCENT = 80
 export const READING_JOURNEY_EXAM_ID_PREFIX = 'journey-normal-stage-'
 export const READING_JOURNEY_PROGRESS_KEY = 'ielts-reading-journey-progress'
 
+const ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
+
 export type ReadingJourneyPassageStats = {
   fill: number
   tfng: number
   ynng: number
+  matchingHeadings: number
   matching: number
   judgement: number
 }
@@ -77,11 +80,45 @@ export const parseReadingJourneyStageNumber = (examId: string) => {
 export const isReadingJourneyExamId = (examId: string) =>
   String(examId || '').startsWith(READING_JOURNEY_EXAM_ID_PREFIX)
 
+const isMatchingHeadingQuestion = (question: ReadingQuestion, sectionText: string) => {
+  const answer = String(question.correctAnswer || '').trim()
+  const prompt = String(question.prompt || '')
+  const context = `${sectionText}\n${prompt}`
+  if (ROMAN_HEADING_PATTERN.test(answer)) return true
+  if (/heading/i.test(context) && !/which (?:paragraph|section) contains/i.test(context)) return true
+  return false
+}
+
+const isMatchingInformationQuestion = (question: ReadingQuestion, sectionText: string) => {
+  const answer = String(question.correctAnswer || '').trim()
+  const prompt = String(question.prompt || '')
+  const context = `${sectionText}\n${prompt}`
+  return (
+    /^[A-G]$/i.test(answer) &&
+    /which (?:paragraph|section) contains|contains the following information|match each statement with the correct/i.test(
+      context
+    )
+  )
+}
+
+const isMatchingFeaturesQuestion = (question: ReadingQuestion, sectionText: string) => {
+  const answer = String(question.correctAnswer || '').trim()
+  const prompt = String(question.prompt || '')
+  const context = `${sectionText}\n${prompt}`
+  return /^[A-G]$/i.test(answer) && /match each .* with the correct|list of (?:people|researchers|experts|features)/i.test(context)
+}
+
+const isAnyMatchingQuestion = (question: ReadingQuestion, sectionText: string) =>
+  isMatchingHeadingQuestion(question, sectionText) ||
+  isMatchingInformationQuestion(question, sectionText) ||
+  isMatchingFeaturesQuestion(question, sectionText)
+
 export const classifyPassageForJourney = (passage: ReadingPassageRecord): ReadingJourneyPassageStats => {
   const sectionText = String(passage.questionSectionText || '')
   let fill = 0
   let tfng = 0
   let ynng = 0
+  let matchingHeadings = 0
   let matching = 0
 
   for (const question of passage.questions || []) {
@@ -98,17 +135,12 @@ export const classifyPassageForJourney = (passage: ReadingPassageRecord): Readin
       continue
     }
     if (question.answerType !== 'multiple-choice') continue
-
-    const answer = String(question.correctAnswer || '').trim()
-    const prompt = String(question.prompt || '')
-    const isLetter = /^[A-G]$/i.test(answer)
-    const isRoman = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i.test(answer)
-    const isMatchingInfo =
-      isLetter && /which (?:paragraph|section) contains|contains the following information/i.test(sectionText + prompt)
-    const isMatchingHeading =
-      isRoman || (/heading/i.test(sectionText + prompt) && (isLetter || isRoman))
-    const isMatchingStatement = isLetter && /match\s+each/i.test(sectionText)
-    if (isMatchingInfo || isMatchingHeading || isMatchingStatement) {
+    if (isMatchingHeadingQuestion(question, sectionText)) {
+      matchingHeadings += 1
+      matching += 1
+      continue
+    }
+    if (isAnyMatchingQuestion(question, sectionText)) {
       matching += 1
     }
   }
@@ -117,42 +149,43 @@ export const classifyPassageForJourney = (passage: ReadingPassageRecord): Readin
     fill,
     tfng,
     ynng,
+    matchingHeadings,
     matching,
     judgement: tfng + ynng
   }
 }
 
-const passageCoverageScore = (stats: ReadingJourneyPassageStats) =>
-  (stats.fill >= 1 ? 1 : 0) + (stats.judgement >= 1 ? 1 : 0) + (stats.matching >= 1 ? 1 : 0)
+export const passageHasFill = (passage: ReadingPassageRecord) => classifyPassageForJourney(passage).fill >= 1
+export const passageHasJudgement = (passage: ReadingPassageRecord) =>
+  classifyPassageForJourney(passage).judgement >= 1
+export const passageHasMatching = (passage: ReadingPassageRecord) =>
+  classifyPassageForJourney(passage).matching >= 1
+export const passageHasMatchingHeadings = (passage: ReadingPassageRecord) =>
+  classifyPassageForJourney(passage).matchingHeadings >= 1
 
-/** Each passage covers at least two of: fill, judgement, matching. */
+/** Each passage must contribute at least one journey skill. */
 export const passageMeetsJourneyRequirements = (passage: ReadingPassageRecord) =>
-  passageCoverageScore(classifyPassageForJourney(passage)) >= 2
+  passageHasFill(passage) || passageHasJudgement(passage) || passageHasMatching(passage)
 
 export const stageMeetsJourneyRequirements = (passages: ReadingPassageRecord[]) => {
   if (passages.length !== 3) return false
-  if (!passages.every(passageMeetsJourneyRequirements)) return false
 
   const totals = passages.reduce(
     (acc, passage) => {
       const stats = classifyPassageForJourney(passage)
       acc.fill += stats.fill
-      acc.tfng += stats.tfng
-      acc.ynng += stats.ynng
-      acc.matching += stats.matching
       acc.judgement += stats.judgement
+      acc.matching += stats.matching
+      acc.matchingHeadings += stats.matchingHeadings
       return acc
     },
-    { fill: 0, tfng: 0, ynng: 0, matching: 0, judgement: 0 }
+    { fill: 0, judgement: 0, matching: 0, matchingHeadings: 0 }
   )
 
-  return (
-    totals.fill >= 3 &&
-    totals.tfng >= 1 &&
-    totals.ynng >= 1 &&
-    totals.matching >= 3 &&
-    totals.judgement >= 3
-  )
+  const hasMatching =
+    totals.matchingHeadings >= 1 || totals.matching >= 1
+
+  return totals.fill >= 1 && totals.judgement >= 1 && hasMatching
 }
 
 const getQuestionNumberBounds = (passage: ReadingPassageRecord) => {
@@ -167,8 +200,8 @@ const inferPassageSlot = (exam: ReadingExamRecord): 1 | 2 | 3 => {
   const { min, max } = getQuestionNumberBounds(passage)
   if (min >= 27 || max >= 27) return 3
   if (min >= 14 || max >= 14) return 2
-  if (/passage\s*2/i.test(exam.title)) return 2
   if (/passage\s*3/i.test(exam.title)) return 3
+  if (/passage\s*2/i.test(exam.title)) return 2
   if (/exercise\s*[3-8]/i.test(exam.title)) return 3
   return 1
 }
@@ -206,7 +239,11 @@ const remapPassageForSlot = (
     ...passage,
     number: nextPassageNumber,
     questions: remappedQuestions,
-    questionRanges: ranges?.length ? ranges : remappedQuestions.length ? [{ start: remappedQuestions[0].number, end: remappedQuestions[remappedQuestions.length - 1].number }] : [],
+    questionRanges: ranges?.length
+      ? ranges
+      : remappedQuestions.length
+        ? [{ start: remappedQuestions[0].number, end: remappedQuestions[remappedQuestions.length - 1].number }]
+        : [],
     questionSectionText
   }
 }
@@ -266,42 +303,82 @@ export const mergeExamsIntoJourneyExam = (
   }
 }
 
-const isJourneyCandidateExam = (exam: ReadingExamRecord) => {
+export const isReadingJourneySourceExam = (exam: ReadingExamRecord) => {
   if (exam.category !== 'normal') return false
+  if (isReadingJourneyExamId(exam.id)) return false
   const passage = exam.parsedPayload?.passages?.[0]
   if (!passage || (exam.parsedPayload?.passages?.length || 0) !== 1) return false
+  if (!(passage.questions?.length || 0)) return false
   return passageMeetsJourneyRequirements(passage)
+}
+
+const pickDistinctExam = (
+  list: ReadingExamRecord[],
+  index: number,
+  usedIds: Set<string>,
+  fallback: ReadingExamRecord[]
+) => {
+  if (!list.length) return null
+  for (let offset = 0; offset < list.length; offset += 1) {
+    const candidate = list[(index + offset) % list.length]
+    if (!usedIds.has(candidate.id)) return candidate
+  }
+  const backup = fallback[(index + usedIds.size) % Math.max(fallback.length, 1)]
+  return backup && !usedIds.has(backup.id) ? backup : backup || null
+}
+
+const buildStageTrio = (
+  candidates: ReadingExamRecord[],
+  stageNumber: number
+): [ReadingExamRecord, ReadingExamRecord, ReadingExamRecord] | null => {
+  const fillPool = candidates.filter((exam) => passageHasFill(exam.parsedPayload.passages[0]))
+  const judgementPool = candidates.filter((exam) => passageHasJudgement(exam.parsedPayload.passages[0]))
+  const matchingHeadingPool = candidates.filter((exam) =>
+    passageHasMatchingHeadings(exam.parsedPayload.passages[0])
+  )
+  const matchingPool = candidates.filter((exam) => passageHasMatching(exam.parsedPayload.passages[0]))
+
+  const matchPool = matchingHeadingPool.length ? matchingHeadingPool : matchingPool
+  if (!fillPool.length || !judgementPool.length || !matchPool.length) return null
+
+  const usedIds = new Set<string>()
+  const fillExam = pickDistinctExam(fillPool, stageNumber * 3, usedIds, candidates)
+  if (!fillExam) return null
+  usedIds.add(fillExam.id)
+
+  const judgementExam = pickDistinctExam(judgementPool, stageNumber * 5 + 1, usedIds, candidates)
+  if (!judgementExam) return null
+  usedIds.add(judgementExam.id)
+
+  const matchingExam = pickDistinctExam(matchPool, stageNumber * 7 + 2, usedIds, candidates)
+  if (!matchingExam) return null
+
+  return [fillExam, judgementExam, matchingExam]
 }
 
 export const buildJourneyStageDefinitions = (
   poolExams: ReadingExamRecord[],
   minimumStages = 24
 ): ReadingJourneyStageDefinition[] => {
-  const candidates = poolExams.filter(Boolean).filter(isJourneyCandidateExam)
+  const candidates = poolExams.filter(Boolean).filter(isReadingJourneySourceExam)
   if (!candidates.length) return []
 
-  const slot1 = candidates.filter((exam) => inferPassageSlot(exam) === 1)
-  const slot2 = candidates.filter((exam) => inferPassageSlot(exam) === 2)
-  const slot3 = candidates.filter((exam) => inferPassageSlot(exam) === 3)
-  const fallback = candidates.filter((exam) => !slot1.includes(exam) && !slot2.includes(exam) && !slot3.includes(exam))
+  const maxStages = Math.max(
+    minimumStages,
+    Math.floor(candidates.length / 3),
+    Math.min(
+      candidates.filter((exam) => passageHasFill(exam.parsedPayload.passages[0])).length,
+      candidates.filter((exam) => passageHasJudgement(exam.parsedPayload.passages[0])).length,
+      candidates.filter((exam) => passageHasMatching(exam.parsedPayload.passages[0])).length
+    )
+  )
 
-  const pick = (list: ReadingExamRecord[], index: number) => {
-    if (list.length) return list[index % list.length]
-    return fallback[index % Math.max(fallback.length, 1)] || candidates[index % candidates.length]
-  }
-
-  const maxLength = Math.max(slot1.length, slot2.length, slot3.length, candidates.length, 1)
-  const targetCount = Math.max(minimumStages, maxLength)
   const stages: ReadingJourneyStageDefinition[] = []
 
-  for (let index = 0; index < targetCount; index += 1) {
+  for (let index = 0; index < maxStages; index += 1) {
     const stageNumber = index + 1
-    const trio: [ReadingExamRecord, ReadingExamRecord, ReadingExamRecord] = [
-      pick(slot1.length ? slot1 : candidates, index),
-      pick(slot2.length ? slot2 : candidates, index + 1),
-      pick(slot3.length ? slot3 : candidates, index + 2)
-    ]
-    if (trio.some((exam) => !exam)) continue
+    const trio = buildStageTrio(candidates, stageNumber)
+    if (!trio) break
     const merged = mergeExamsIntoJourneyExam(stageNumber, trio)
     if (!merged) continue
     stages.push({
@@ -381,9 +458,12 @@ export const getJourneyStageTypeSummary = (exam: ReadingExamRecord) => {
       acc.tfng += stats.tfng
       acc.ynng += stats.ynng
       acc.matching += stats.matching
+      acc.matchingHeadings += stats.matchingHeadings
       return acc
     },
-    { fill: 0, tfng: 0, ynng: 0, matching: 0 }
+    { fill: 0, tfng: 0, ynng: 0, matching: 0, matchingHeadings: 0 }
   )
-  return `3 passages · Fill ${totals.fill} · TFNG ${totals.tfng} · Y/N/NG ${totals.ynng} · Matching ${totals.matching}`
+  const matchingLabel =
+    totals.matchingHeadings > 0 ? `Matching headings ${totals.matchingHeadings}` : `Matching ${totals.matching}`
+  return `3 passages · Fill ${totals.fill} · TFNG ${totals.tfng} · Y/N/NG ${totals.ynng} · ${matchingLabel}`
 }
