@@ -14,7 +14,8 @@ export const READING_PASSAGE_3_PROTOTYPE_PATTERN_NOTES = `Passage 3 prototype pa
   - YES/NO/NOT GIVEN + Summary Completion with word bank + Multiple Choice.
   - Matching Experts/Features + Matching Sentence Endings + Multiple Choice.
   - Matching Information + Matching People/Features + ONE WORD ONLY summary completion.
-- Good Passage 3 models test writer claims, implications, paragraph purpose, expert stance, and logical relationships. Avoid Passage 1-style scanning unless it is part of a final summary completion set.
+- Good Passage 3 models test claims, implications, paragraph purpose, expert stance, and logical relationships. Avoid Passage 1-style scanning unless it is part of a final summary completion set.
+- For TRUE/FALSE/NOT GIVEN and YES/NO/NOT GIVEN, write each statement as a direct claim. Never use "writer", "the writer believes/says/suggests", or similar author-framing in the question text.
 - Distractors should be intelligent: true details answering the wrong question, extreme versions of qualified claims, real-world facts not claimed by the writer, or paraphrases attached to the wrong expert/paragraph.
 - Keep the final paragraph rhetorically useful. It should resolve the debate, show a broader implication, or offer a cautious optimistic/negative conclusion.`
 

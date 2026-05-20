@@ -227,7 +227,7 @@ Write YES, NO or NOT GIVEN.
 37 It is difficult to attract students onto courses that do not focus on a career.
 38 The 'Arson for Profit' course would be useful for people intending to set fire to buildings.
 39 Fire science courses are too academic to help people to be good at the job of firefighting.
-40 The writer's fire science students provided a detailed definition of the purpose of their studies.`
+40 Fire science students provided a detailed definition of the purpose of their studies.`
 
 const exams = [
   exam({
@@ -297,7 +297,7 @@ const exams = [
       [37, 'It is difficult to attract students onto courses that do not focus on a career.', 'NOT GIVEN', 'career in resort management', 'ไม่ได้พูดถึงความยากในการดึงดูดนักศึกษา', 'difficult to attract = not mentioned'],
       [38, "The 'Arson for Profit' course would be useful for people intending to set fire to buildings.", 'YES', 'destructive, dangerous, reckless activity', 'ความรู้เดียวกันใช้ทำลายได้', 'useful = same knowledge = destructive activity'],
       [39, 'Fire science courses are too academic to help people to be good at the job of firefighting.', 'NO', 'professionalization of this and many other occupations', 'หลักสูตรช่วยให้เป็นมืออาชีพ ไม่ได้ว่าไร้ประโยชน์', 'too academic = professionalization (negated)'],
-      [40, "The writer's fire science students provided a detailed definition of the purpose of their studies.", 'NO', 'eventually generalize to something like', 'พวกเขา generalize เท่านั้น ไม่ได้ให้คำจำกัดความละเอียด', 'detailed = generalize (negated)']
+      [40, 'Fire science students provided a detailed definition of the purpose of their studies.', 'NO', 'eventually generalize to something like', 'พวกเขา generalize เท่านั้น ไม่ได้ให้คำจำกัดความละเอียด', 'detailed = generalize (negated)']
     ])
   })
 ]

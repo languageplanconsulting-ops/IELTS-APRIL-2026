@@ -3299,6 +3299,7 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
   'true-false-not-given': [
     'Focus: identifying specific factual information.',
     'Order: chronological.',
+    'Write each statement as a direct claim about the passage topic. Never use "writer", "the writer believes/says/suggests", or similar author-framing in the question text.',
     'TRUE: statement perfectly matches factual meaning but uses heavy paraphrasing and synonyms.',
     'FALSE: statement explicitly contradicts or states the opposite of the fact in the text.',
     'NOT GIVEN: information is irrelevant, incomplete, or simply not mentioned.',
@@ -3307,12 +3308,13 @@ const ADMIN_READING_GENERATOR_DEFAULT_REQUIREMENTS: Record<AdminReadingGenerator
     'TRUE, FALSE, and NOT GIVEN counts must be the same or very similar.'
   ].join('\n'),
   'yes-no-not-given': [
-    'Focus: identifying the writer’s claims, views, or opinions, usually Passage 3.',
+    'Focus: identifying claims, views, or opinions expressed in the passage, usually Passage 3.',
     'Order: chronological.',
-    'YES: statement agrees with the writer’s specific opinion.',
-    'NO: statement contradicts the writer’s specific opinion.',
-    'NOT GIVEN: impossible to say what the writer thinks about it.',
-    'Use Real-World Fact traps: statements may be true in real life, but if the writer has not explicitly claimed it, answer is NOT GIVEN.',
+    'Write each statement as a direct claim. Never use "writer", "the writer believes/says/suggests", or similar author-framing in the question text.',
+    'YES: statement agrees with a specific view expressed in the passage.',
+    'NO: statement contradicts a specific view expressed in the passage.',
+    'NOT GIVEN: impossible to tell from the passage whether that view is held.',
+    'Use Real-World Fact traps: statements may be true in real life, but if the passage has not explicitly claimed it, answer is NOT GIVEN.',
     'YES, NO, and NOT GIVEN counts must be the same or very similar.'
   ].join('\n'),
   'matching-statements': [
