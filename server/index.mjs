@@ -12,6 +12,7 @@ import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvide
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvidedReadingPracticeCambridge13.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS } from './userProvidedReadingPracticeCambridge17.mjs'
+import { USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS } from './userProvidedReadingPracticeJune2026.mjs'
 
 dotenv.config()
 
@@ -2446,7 +2447,71 @@ const normalizeReadingParsedPayload = (payload) => ({
   questionCount: Number(payload?.questionCount || 0)
 })
 
-const buildReadingExamPayload = ({ title, category, collectionTitle, rawPassageText, rawAnswerKey }) => {
+const READING_MONTH_RELEASES = {
+  jan: 0,
+  january: 0,
+  feb: 1,
+  february: 1,
+  mar: 2,
+  march: 2,
+  apr: 3,
+  april: 3,
+  may: 4,
+  jun: 5,
+  june: 5,
+  jul: 6,
+  july: 6,
+  aug: 7,
+  august: 7,
+  sep: 8,
+  sept: 8,
+  september: 8,
+  oct: 9,
+  october: 9,
+  nov: 10,
+  november: 10,
+  dec: 11,
+  december: 11
+}
+
+const normalizeReadingReleaseAt = (value) => {
+  const text = String(value || '').trim()
+  if (!text) return ''
+  const date = new Date(text)
+  return Number.isNaN(date.getTime()) ? '' : date.toISOString()
+}
+
+const getReadingReleaseAtFromMonthlyTitle = (value) => {
+  const match = String(value || '').match(
+    /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{4})\b/i
+  )
+  if (!match) return ''
+  const monthIndex = READING_MONTH_RELEASES[String(match[1] || '').toLowerCase()]
+  const year = Number(match[2])
+  if (!Number.isInteger(monthIndex) || !Number.isInteger(year) || year < 2020 || year > 2100) return ''
+  return new Date(Date.UTC(year, monthIndex, 19, 17, 0, 0, 0)).toISOString()
+}
+
+const resolveReadingReleaseAt = ({ releaseAt, collectionTitle, title } = {}) =>
+  normalizeReadingReleaseAt(releaseAt) ||
+  getReadingReleaseAtFromMonthlyTitle(collectionTitle) ||
+  getReadingReleaseAtFromMonthlyTitle(title)
+
+const getReadingExamReleaseAt = (exam) =>
+  normalizeReadingReleaseAt(exam?.releaseAt || exam?.parsedPayload?.releaseAt || exam?.parsed_payload?.releaseAt)
+
+const getReadingViewerRole = (req) =>
+  String(req?.auth?.profile?.role || req?.auth?.role || 'student')
+    .trim()
+    .toLowerCase()
+
+const canViewReadingExam = (exam, role, now = new Date()) => {
+  if (role === 'admin') return true
+  const releaseAt = getReadingExamReleaseAt(exam)
+  return !releaseAt || Date.parse(releaseAt) <= now.getTime()
+}
+
+const buildReadingExamPayload = ({ title, category, collectionTitle, releaseAt, rawPassageText, rawAnswerKey }) => {
   const passages = parseReadingPassages(rawPassageText)
   const questions = parseReadingAnswerKey(rawAnswerKey)
   const passagesWithQuestions = passages.map((passage) => ({
@@ -2485,6 +2550,9 @@ const buildReadingExamPayload = ({ title, category, collectionTitle, rawPassageT
     category: normalizeReadingCategory(category),
     ...(normalizeReadingCollectionTitle(collectionTitle)
       ? { collectionTitle: normalizeReadingCollectionTitle(collectionTitle) }
+      : {}),
+    ...(resolveReadingReleaseAt({ releaseAt, collectionTitle, title })
+      ? { releaseAt: resolveReadingReleaseAt({ releaseAt, collectionTitle, title }) }
       : {}),
     passages: passagesWithQuestions,
     questionCount: questions.length
@@ -4894,6 +4962,7 @@ const isReadingBankExamRecord = (exam) =>
 const mapBuiltInReadingExam = (exam, timestamps) => ({
   ...exam,
   parsedPayload: buildReadingExamPayload(exam),
+  ...(resolveReadingReleaseAt(exam) ? { releaseAt: resolveReadingReleaseAt(exam) } : {}),
   createdAt: timestamps.createdAt,
   updatedAt: timestamps.updatedAt
 })
@@ -5349,6 +5418,12 @@ const BUILT_IN_READING_BANK_EXAMS = [
       updatedAt: '2026-05-16T00:00:00.000Z'
     })
   ),
+  ...USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-20T00:00:00.000Z',
+      updatedAt: '2026-05-20T00:00:00.000Z'
+    })
+  ),
   ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS.map((exam) =>
     mapBuiltInReadingExam(exam, {
       createdAt: '2026-05-16T00:00:00.000Z',
@@ -5500,11 +5575,17 @@ const mapReadingExamRecord = (row) => {
     parsedPayload: storedPayload,
     parsed_payload: row?.parsed_payload
   })
+  const releaseAt = resolveReadingReleaseAt({
+    releaseAt: storedPayload?.releaseAt || row?.parsed_payload?.releaseAt,
+    collectionTitle,
+    title: row?.title
+  })
   const exam = {
     id: String(row?.id || ''),
     title: String(row?.title || 'Reading exam'),
     category: normalizeReadingCategory(row?.category),
     ...(collectionTitle ? { collectionTitle } : {}),
+    ...(releaseAt ? { releaseAt } : {}),
     rawPassageText: String(row?.raw_passage_text || ''),
     rawAnswerKey: String(row?.raw_answer_key || ''),
     createdAt: row?.created_at || null,
@@ -5515,10 +5596,17 @@ const mapReadingExamRecord = (row) => {
     parsedPayload:
       exam.rawPassageText && exam.rawAnswerKey
         ? {
-            ...buildReadingExamPayload(exam),
-            ...(collectionTitle ? { collectionTitle } : {})
+            ...buildReadingExamPayload({
+              ...exam,
+              releaseAt
+            }),
+            ...(collectionTitle ? { collectionTitle } : {}),
+            ...(releaseAt ? { releaseAt } : {})
           }
-        : storedPayload
+        : {
+            ...storedPayload,
+            ...(releaseAt ? { releaseAt } : {})
+          }
   }
 }
 
@@ -10471,6 +10559,8 @@ app.get('/api/admin/assessment-reports/:reportId', requireAdmin, async (req, res
 
 app.get('/api/reading/exams', requireAuth, async (req, res) => {
   try {
+    const viewerRole = getReadingViewerRole(req)
+    const now = new Date()
     const rows = await fetchSupabaseJson(
       '/rest/v1/reading_exams?select=id,category,title,raw_passage_text,raw_answer_key,parsed_payload,created_at,updated_at&order=created_at.desc',
       {
@@ -10480,8 +10570,12 @@ app.get('/api/reading/exams', requireAuth, async (req, res) => {
     const uploadedExams = (Array.isArray(rows) ? rows : [])
       .map(mapReadingExamRecord)
       .filter(isReadingBankExamRecord)
+      .filter((exam) => canViewReadingExam(exam, viewerRole, now))
     return res.json({
-      exams: [...BUILT_IN_READING_EXAMS, ...uploadedExams]
+      exams: [
+        ...BUILT_IN_READING_EXAMS.filter((exam) => canViewReadingExam(exam, viewerRole, now)),
+        ...uploadedExams
+      ]
     })
   } catch (error) {
     return res.status(error?.status || 500).json({
@@ -10501,6 +10595,11 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
     const rawAnswerKey = String(req.body?.rawAnswerKey || '').trim()
     const category = normalizeReadingCategory(req.body?.category)
     const collectionTitle = normalizeReadingCollectionTitle(req.body?.collectionTitle) || 'IELTS Academic Reading May 2026'
+    const releaseAt = resolveReadingReleaseAt({
+      releaseAt: req.body?.releaseAt,
+      collectionTitle,
+      title
+    })
     if (!title || !rawPassageText || !rawAnswerKey) {
       return res.status(400).json({
         error: {
@@ -10515,6 +10614,7 @@ app.post('/api/admin/reading/exams', requireAdmin, async (req, res) => {
       title,
       category,
       collectionTitle,
+      releaseAt,
       rawPassageText,
       rawAnswerKey
     })
@@ -10576,6 +10676,11 @@ app.post('/api/admin/reading/exams/validate-bulk', requireAdmin, async (req, res
       const rawAnswerKey = String(item?.rawAnswerKey || '').trim()
       const category = normalizeReadingCategory(item?.category)
       const collectionTitle = normalizeReadingCollectionTitle(item?.collectionTitle) || 'IELTS Academic Reading May 2026'
+      const releaseAt = resolveReadingReleaseAt({
+        releaseAt: item?.releaseAt,
+        collectionTitle,
+        title
+      })
 
       try {
         if (!rawPassageText || !rawAnswerKey) {
@@ -10585,6 +10690,7 @@ app.post('/api/admin/reading/exams/validate-bulk', requireAdmin, async (req, res
           title,
           category,
           collectionTitle,
+          releaseAt,
           rawPassageText,
           rawAnswerKey
         })
@@ -10593,6 +10699,7 @@ app.post('/api/admin/reading/exams/validate-bulk', requireAdmin, async (req, res
           title,
           category,
           collectionTitle,
+          releaseAt,
           ok: true,
           passageCount: Array.isArray(parsedPayload?.passages) ? parsedPayload.passages.length : 0,
           questionCount: Number(parsedPayload?.questionCount || 0)
@@ -10661,6 +10768,11 @@ app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
       const rawAnswerKey = String(item?.rawAnswerKey || '').trim()
       const category = normalizeReadingCategory(item?.category)
       const collectionTitle = normalizeReadingCollectionTitle(item?.collectionTitle) || 'IELTS Academic Reading May 2026'
+      const releaseAt = resolveReadingReleaseAt({
+        releaseAt: item?.releaseAt,
+        collectionTitle,
+        title
+      })
 
       if (!title || !rawPassageText || !rawAnswerKey) {
         throw new Error(
@@ -10677,6 +10789,7 @@ app.post('/api/admin/reading/exams/bulk', requireAdmin, async (req, res) => {
           title,
           category,
           collectionTitle,
+          releaseAt,
           rawPassageText,
           rawAnswerKey
         }),

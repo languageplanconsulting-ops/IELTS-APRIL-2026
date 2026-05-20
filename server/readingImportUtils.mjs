@@ -4,6 +4,8 @@ const normalizeReadingCategory = (value) => {
   return 'normal'
 }
 
+const normalizeReadingCollectionTitle = (value) => String(value || '').trim()
+
 const normalizeReadingAnswer = (value) =>
   String(value || '')
     .trim()
@@ -203,7 +205,57 @@ const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
   }
 }
 
-export const buildReadingExamPayload = ({ title, category, rawPassageText, rawAnswerKey }) => {
+const READING_MONTH_RELEASES = {
+  jan: 0,
+  january: 0,
+  feb: 1,
+  february: 1,
+  mar: 2,
+  march: 2,
+  apr: 3,
+  april: 3,
+  may: 4,
+  jun: 5,
+  june: 5,
+  jul: 6,
+  july: 6,
+  aug: 7,
+  august: 7,
+  sep: 8,
+  sept: 8,
+  september: 8,
+  oct: 9,
+  october: 9,
+  nov: 10,
+  november: 10,
+  dec: 11,
+  december: 11
+}
+
+const normalizeReadingReleaseAt = (value) => {
+  const text = String(value || '').trim()
+  if (!text) return ''
+  const date = new Date(text)
+  return Number.isNaN(date.getTime()) ? '' : date.toISOString()
+}
+
+const getReadingReleaseAtFromMonthlyTitle = (value) => {
+  const match = String(value || '').match(
+    /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{4})\b/i
+  )
+  if (!match) return ''
+  const monthIndex = READING_MONTH_RELEASES[String(match[1] || '').toLowerCase()]
+  const year = Number(match[2])
+  if (!Number.isInteger(monthIndex) || !Number.isInteger(year) || year < 2020 || year > 2100) return ''
+  return new Date(Date.UTC(year, monthIndex, 19, 17, 0, 0, 0)).toISOString()
+}
+
+const resolveReadingReleaseAt = ({ releaseAt, collectionTitle, title } = {}) =>
+  normalizeReadingReleaseAt(releaseAt) ||
+  getReadingReleaseAtFromMonthlyTitle(collectionTitle) ||
+  getReadingReleaseAtFromMonthlyTitle(title)
+
+export const buildReadingExamPayload = ({ title, category, collectionTitle, releaseAt, rawPassageText, rawAnswerKey }) => {
   const passages = parseReadingPassages(rawPassageText)
   const questions = parseReadingAnswerKey(rawAnswerKey)
   const passagesWithQuestions = passages.map((passage) => ({
@@ -242,6 +294,12 @@ export const buildReadingExamPayload = ({ title, category, rawPassageText, rawAn
   return {
     title: String(title || '').trim(),
     category: normalizeReadingCategory(category),
+    ...(normalizeReadingCollectionTitle(collectionTitle)
+      ? { collectionTitle: normalizeReadingCollectionTitle(collectionTitle) }
+      : {}),
+    ...(resolveReadingReleaseAt({ releaseAt, collectionTitle, title })
+      ? { releaseAt: resolveReadingReleaseAt({ releaseAt, collectionTitle, title }) }
+      : {}),
     passages: passagesWithQuestions,
     questionCount: questions.length
   }

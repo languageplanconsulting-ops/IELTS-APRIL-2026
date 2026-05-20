@@ -139,6 +139,7 @@ type ReadingParsedPayload = {
   title: string
   category: ReadingBankCategory
   collectionTitle?: string
+  releaseAt?: string
   passages: ReadingPassageRecord[]
   questionCount: number
 }
@@ -148,6 +149,7 @@ type ReadingExamRecord = {
   title: string
   category: ReadingBankCategory
   collectionTitle?: string
+  releaseAt?: string
   rawPassageText: string
   rawAnswerKey: string
   parsedPayload: ReadingParsedPayload
@@ -159,6 +161,7 @@ type ReadingBulkUploadInput = {
   title: string
   category?: ReadingBankCategory
   collectionTitle?: string
+  releaseAt?: string
   rawPassageText: string
   rawAnswerKey: string
 }
@@ -3132,6 +3135,8 @@ type ReadingBulkValidationItem = {
   index: number
   title: string
   category: ReadingBankCategory
+  collectionTitle?: string
+  releaseAt?: string
   ok: boolean
   passageCount: number
   questionCount: number
@@ -3208,6 +3213,40 @@ const READING_COLLECTION_OPTIONS = [
 ]
 
 const DEFAULT_READING_COLLECTION_TITLE = 'IELTS Academic Reading May 2026'
+const READING_RELEASE_TIME_ZONE = 'Asia/Bangkok'
+
+const normalizeReadingReleaseAtInput = (value: string) => {
+  const text = String(value || '').trim()
+  if (!text) return ''
+  const date = new Date(text)
+  return Number.isNaN(date.getTime()) ? '' : date.toISOString()
+}
+
+const getReadingExamReleaseAt = (exam: Pick<ReadingExamRecord, 'releaseAt' | 'parsedPayload'>) =>
+  String(exam.releaseAt || exam.parsedPayload?.releaseAt || '').trim()
+
+const formatReadingReleaseDate = (value: string) => {
+  const text = String(value || '').trim()
+  if (!text) return ''
+  const date = new Date(text)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: READING_RELEASE_TIME_ZONE,
+    timeZoneName: 'short'
+  }).format(date)
+}
+
+const getReadingReleaseBadge = (exam: Pick<ReadingExamRecord, 'releaseAt' | 'parsedPayload'>) => {
+  const releaseAt = getReadingExamReleaseAt(exam)
+  const formatted = formatReadingReleaseDate(releaseAt)
+  if (!formatted) return ''
+  return Date.parse(releaseAt) > Date.now() ? `Scheduled: ${formatted}` : `Released: ${formatted}`
+}
 
 const ADMIN_WORKSPACE_SECTIONS: Array<{
   id: AdminWorkspaceSection
@@ -3741,6 +3780,7 @@ const READING_JSON_TEMPLATE_ITEMS: Record<ReadingBankCategory, ReadingBulkUpload
       title: 'Normal Reading Template',
       category: 'normal',
       collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
+      releaseAt: '',
       rawPassageText: `READING PASSAGE 1
 PASTE NORMAL READING TITLE HERE
 
@@ -3765,6 +3805,7 @@ Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
       title: 'Advanced Reading Template',
       category: 'advanced',
       collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
+      releaseAt: '',
       rawPassageText: `READING PASSAGE 3
 PASTE ADVANCED READING TITLE HERE
 
@@ -4097,12 +4138,17 @@ const splitCombinedReadingImport = (value: string) => {
 
 const attachReadingCollectionToBulkItems = (
   exams: ReadingBulkUploadInput[],
-  collectionTitle: string
+  collectionTitle: string,
+  releaseAt: string
 ): ReadingBulkUploadInput[] => {
   const fallbackCollection = String(collectionTitle || DEFAULT_READING_COLLECTION_TITLE).trim()
+  const normalizedReleaseAt = normalizeReadingReleaseAtInput(releaseAt)
   return exams.map((exam) => ({
     ...exam,
-    collectionTitle: String(exam.collectionTitle || fallbackCollection).trim()
+    collectionTitle: String(exam.collectionTitle || fallbackCollection).trim(),
+    ...(normalizedReleaseAt || exam.releaseAt
+      ? { releaseAt: normalizedReleaseAt || normalizeReadingReleaseAtInput(String(exam.releaseAt || '')) || exam.releaseAt }
+      : {})
   }))
 }
 
@@ -6527,6 +6573,7 @@ function App() {
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('normal')
   const [adminReadingCollectionInput, setAdminReadingCollectionInput] = useState(DEFAULT_READING_COLLECTION_TITLE)
+  const [adminReadingReleaseAtInput, setAdminReadingReleaseAtInput] = useState('')
   const [adminReadingSmartPasteInput, setAdminReadingSmartPasteInput] = useState('')
   const [adminReadingPassageInput, setAdminReadingPassageInput] = useState('')
   const [adminReadingAnswerKeyInput, setAdminReadingAnswerKeyInput] = useState('')
@@ -7142,9 +7189,9 @@ function App() {
       'Do not copy names, facts, examples, topic, or sentence wording from the original passage unless a common word is unavoidable.',
       '',
       'Return ONLY valid JSON. No Markdown fences. The JSON must be an array of ReadingBulkUploadInput objects.',
-      'Each object must have exactly these fields: title, category, collectionTitle, rawPassageText, rawAnswerKey.',
+      'Each object must have these fields: title, category, collectionTitle, rawPassageText, rawAnswerKey. Optional field: releaseAt.',
       'category must be either "normal" or "advanced".',
-      'collectionTitle must be the monthly bank name, for example "IELTS Academic Reading Jan 2026".',
+      'collectionTitle must be the monthly bank name, for example "IELTS Academic Reading Jan 2026". If releaseAt is omitted, the app auto-releases monthly collections to learners on the 20th of that month.',
       'Important JSON formatting rule: output JSON.stringify-safe strings only. Escape all internal quotation marks as \\" and represent line breaks as \\n. Do not put literal unescaped line breaks inside string values.',
       '',
       'rawPassageText format:',
@@ -7243,7 +7290,7 @@ function App() {
 
       const parsed = JSON.parse(adminReadingGeneratorDraftInput)
       const exams = Array.isArray(parsed) ? parsed : parsed.exams
-      setAdminReadingBulkJsonInput(JSON.stringify(attachReadingCollectionToBulkItems(exams, adminReadingCollectionInput), null, 2))
+      setAdminReadingBulkJsonInput(JSON.stringify(attachReadingCollectionToBulkItems(exams, adminReadingCollectionInput, adminReadingReleaseAtInput), null, 2))
       setAdminReadingBulkValidation(null)
       setAdminReadingGeneratorValidation(validation)
       setAdminPanelMessage('Loaded the generated JSON into Bulk JSON Import. Check server format, then upload to the Reading Bank.')
@@ -7308,7 +7355,11 @@ function App() {
         throw new Error('Bulk JSON must be an array, or an object with an "exams" array.')
       }
 
-      const examsWithCollection = attachReadingCollectionToBulkItems(exams as ReadingBulkUploadInput[], adminReadingCollectionInput)
+      const examsWithCollection = attachReadingCollectionToBulkItems(
+        exams as ReadingBulkUploadInput[],
+        adminReadingCollectionInput,
+        adminReadingReleaseAtInput
+      )
       setAdminReadingBulkJsonInput(JSON.stringify(examsWithCollection, null, 2))
 
       const payload = await fetchJson<{ validation: ReadingBulkValidationResult }>('/api/admin/reading/exams/validate-bulk', {
@@ -7353,6 +7404,7 @@ function App() {
           title: adminReadingTitleInput,
           category: adminReadingCategoryInput,
           collectionTitle: adminReadingCollectionInput,
+          releaseAt: normalizeReadingReleaseAtInput(adminReadingReleaseAtInput) || undefined,
           rawPassageText: adminReadingPassageInput,
           rawAnswerKey: adminReadingAnswerKeyInput
         })
@@ -7389,7 +7441,11 @@ function App() {
         throw new Error('Bulk JSON must be an array, or an object with an "exams" array.')
       }
 
-      const examsWithCollection = attachReadingCollectionToBulkItems(exams as ReadingBulkUploadInput[], adminReadingCollectionInput)
+      const examsWithCollection = attachReadingCollectionToBulkItems(
+        exams as ReadingBulkUploadInput[],
+        adminReadingCollectionInput,
+        adminReadingReleaseAtInput
+      )
       const payload = await fetchJson<{ exams: ReadingExamRecord[] }>('/api/admin/reading/exams/bulk', {
         method: 'POST',
         headers: getAuthHeaders(),
@@ -17058,7 +17114,19 @@ function App() {
                           placeholder={DEFAULT_READING_COLLECTION_TITLE}
                         />
                       </label>
+                      <label>
+                        Release date override
+                        <input
+                          type="datetime-local"
+                          value={adminReadingReleaseAtInput}
+                          onChange={(event) => setAdminReadingReleaseAtInput(event.target.value)}
+                        />
+                      </label>
                     </div>
+                    <p className="meta">
+                      Leave release date blank to use the automatic monthly rule: learners see each month on the 20th,
+                      while admins can see it immediately.
+                    </p>
                     <label>
                       Reading Passage Text
                       <textarea
@@ -17096,6 +17164,7 @@ function App() {
                             {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
                           </p>
                           <p className="meta">{getReadingExamCollectionTitle(exam)}</p>
+                          {getReadingReleaseBadge(exam) && <p className="meta">{getReadingReleaseBadge(exam)}</p>}
                         </article>
                       ))}
                     </div>
@@ -17122,6 +17191,18 @@ function App() {
                       placeholder={DEFAULT_READING_COLLECTION_TITLE}
                     />
                   </label>
+                  <label className="adminSearchField">
+                    Release date override (optional)
+                    <input
+                      type="datetime-local"
+                      value={adminReadingReleaseAtInput}
+                      onChange={(event) => setAdminReadingReleaseAtInput(event.target.value)}
+                    />
+                  </label>
+                  <p className="meta">
+                    Leave blank for the monthly bank rule. Example: June 2026 is hidden from learners until 20 June,
+                    but admins can preview it before then.
+                  </p>
                   <label>
                     Bulk JSON Payload
                     <textarea
@@ -17130,7 +17211,7 @@ function App() {
                         setAdminReadingBulkJsonInput(event.target.value)
                         setAdminReadingBulkValidation(null)
                       }}
-                      placeholder={`[\n  {\n    "title": "IELTS Academic Reading Jan 2026 Passage 1",\n    "category": "normal",\n    "collectionTitle": "IELTS Academic Reading Jan 2026",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "IELTS Academic Reading Jan 2026 Passage 3",\n    "category": "advanced",\n    "collectionTitle": "IELTS Academic Reading Jan 2026",\n    "rawPassageText": "READING PASSAGE 3\\n...",\n    "rawAnswerKey": "Question 27: ..."\n  }\n]`}
+                      placeholder={`[\n  {\n    "title": "IELTS Academic Reading June 2026 Passage 1",\n    "category": "normal",\n    "collectionTitle": "IELTS Academic Reading June 2026",\n    "releaseAt": "2026-06-19T17:00:00.000Z",\n    "rawPassageText": "READING PASSAGE 1\\n...",\n    "rawAnswerKey": "Question 1: ..."\n  },\n  {\n    "title": "IELTS Academic Reading June 2026 Passage 3",\n    "category": "advanced",\n    "collectionTitle": "IELTS Academic Reading June 2026",\n    "rawPassageText": "READING PASSAGE 3\\n...",\n    "rawAnswerKey": "Question 27: ..."\n  }\n]`}
                       rows={10}
                     />
                   </label>
@@ -17178,7 +17259,7 @@ function App() {
                       Upload to Reading Bank
                     </button>
                     <p className="meta">
-                      Each item needs: <code>title</code>, <code>category</code>, <code>rawPassageText</code>, and <code>rawAnswerKey</code>.
+                      Each item needs: <code>title</code>, <code>category</code>, <code>rawPassageText</code>, and <code>rawAnswerKey</code>. <code>releaseAt</code> is optional.
                     </p>
                   </div>
                   {adminReadingBulkValidation && (
@@ -17201,6 +17282,7 @@ function App() {
                                 <p className="meta">
                                   {item.passageCount} passages · {item.questionCount} questions
                                 </p>
+                                {item.releaseAt && <p className="meta">Scheduled: {formatReadingReleaseDate(item.releaseAt)}</p>}
                               </>
                             ) : (
                               <>
