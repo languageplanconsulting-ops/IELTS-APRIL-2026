@@ -4627,6 +4627,7 @@ body,
 .adminMainColumn > .adminOnly-landing,
 .adminMainColumn > .adminOnly-reading,
 .adminMainColumn > .adminOnly-audio,
+.adminMainColumn > .adminOnly-videos,
 .adminSideColumn.adminOnly-settings {
   display: none;
 }
@@ -4638,6 +4639,7 @@ body,
 .adminPanelPage[data-admin-section='reports'] .adminOnly-reports,
 .adminPanelPage[data-admin-section='reading'] .adminOnly-reading,
 .adminPanelPage[data-admin-section='audio'] .adminOnly-audio,
+.adminPanelPage[data-admin-section='videos'] .adminOnly-videos,
 .adminPanelPage[data-admin-section='settings'] .adminOnly-settings {
   display: grid;
 }
@@ -6327,6 +6329,12 @@ body,
   width: 100%;
 }
 
+.adminAudioCard video {
+  width: 100%;
+  border-radius: 12px;
+  background: #020617;
+}
+
 .adminAudioEyebrow {
   margin: 0;
   font-size: 0.72rem;
@@ -6426,6 +6434,1030 @@ body,
 
 .adminQuestionHint {
   margin: 0;
+}
+
+.adminVideoStudio {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(340px, 1.1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.adminVideoQuestionPicker,
+.adminVideoRecorderPanel {
+  display: grid;
+  gap: 14px;
+}
+
+.adminVideoDeviceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.adminRefreshDevicesBtn {
+  justify-self: start;
+}
+
+.adminVideoBlurToggle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #d8e4f7;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminVideoBlurToggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+}
+
+.adminVideoBlurToggle span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.adminVideoBlurToggle strong {
+  color: #0f172a;
+  font-size: 0.88rem;
+}
+
+.adminVideoBlurToggle small {
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.adminSearchField select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 9px 11px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 700;
+}
+
+.adminVideoPromptCard {
+  background: #f8fbff;
+}
+
+.adminVideoCueList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.adminVideoPreviewFrame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #c8d7f3;
+  border-radius: 18px;
+  background: #020617;
+  aspect-ratio: 16 / 9;
+}
+
+.adminVideoPreviewFrame-tablet {
+  max-width: 520px;
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+}
+
+.adminVideoPreviewFrame-mobile {
+  max-width: 330px;
+  margin-inline: auto;
+  aspect-ratio: 9 / 16;
+}
+
+.adminVideoPreview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #020617;
+  object-fit: contain;
+}
+
+.adminVideoPreviewEmpty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  color: #cbd5e1;
+  font-weight: 800;
+  text-align: center;
+}
+
+.adminVideoSubtitleOverlay {
+  position: absolute;
+  left: var(--subtitle-x);
+  top: var(--subtitle-y);
+  width: var(--subtitle-box-width);
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  z-index: 3;
+}
+
+.adminVideoSubtitleOverlayButton {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: text;
+}
+
+.adminVideoSubtitleOverlay span {
+  max-width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--subtitle-background-color);
+  color: var(--subtitle-text-color);
+  font-family: var(--subtitle-font-family);
+  font-size: var(--subtitle-font-size);
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: var(--subtitle-text-align);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.42);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.adminVideoSubtitleOverlayButton:focus-visible span {
+  outline: 3px solid rgba(96, 165, 250, 0.9);
+  outline-offset: 4px;
+}
+
+.adminVideoSafeAreaGuides {
+  position: absolute;
+  inset: 8%;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px dashed rgba(255, 255, 255, 0.72);
+  box-shadow:
+    inset 0 33.33% 0 rgba(255, 255, 255, 0.08),
+    inset 0 66.66% 0 rgba(255, 255, 255, 0.08);
+}
+
+.adminVideoSafeAreaGuides span {
+  position: absolute;
+  inset: 16% 10%;
+  border: 1px dashed rgba(96, 165, 250, 0.78);
+}
+
+.adminVideoPreviewModes,
+.adminSubtitleUtilityBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.adminVideoPreviewModes {
+  padding: 8px;
+  border: 1px solid #dbe4f3;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminVideoPreviewModes button {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.adminVideoPreviewModes button.active,
+.adminVideoPreviewModes button:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.adminVideoRecorderMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.adminVideoRecorderMeta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.adminVideoSourceSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.adminVideoSourceSummary span,
+.adminVideoCardSources {
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid #dbe4f3;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.adminVideoLiveSubtitle {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  background: #eff6ff;
+}
+
+.adminVideoLiveSubtitle span {
+  color: #1d4ed8;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminVideoLiveSubtitle p {
+  margin: 0;
+  color: #0f172a;
+  line-height: 1.45;
+}
+
+.adminVideoCardSources {
+  margin: 0;
+}
+
+.adminVideoUploadProgress {
+  position: relative;
+  overflow: hidden;
+  min-height: 34px;
+  border: 1px solid #b6c8ee;
+  border-radius: 999px;
+  background: #eff6ff;
+}
+
+.adminVideoUploadProgressWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.adminVideoUploadProgress div {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+  transition: width 160ms ease;
+}
+
+.adminVideoUploadProgress span {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 34px;
+  color: #0f172a;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.adminVideoTrimPanel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #d8e4f7;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.adminVideoTrimPanel .adminReadyDot {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.adminSubtitleEditor {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #d8e4f7;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.adminSubtitleUtilityBar {
+  padding: 9px;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminSubtitleUtilityBar .active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.adminSubtitleVersionBar,
+.adminSubtitleBulkBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminSubtitleVersionBar > span,
+.adminSubtitleBulkBar > span {
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminSubtitleDraftMessage,
+.adminVideoReplaceNotice {
+  padding: 9px 11px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+}
+
+.adminSubtitleQualityBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.adminSubtitleQualityBar span {
+  min-height: 28px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.adminSubtitleQualityBar .ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.adminSubtitleQualityBar .warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.adminSubtitleTranscriptBox {
+  display: grid;
+  gap: 8px;
+}
+
+.adminSubtitleTranscriptBox span,
+.adminSubtitleCueRow label span {
+  color: #1d4ed8;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminSubtitleTranscriptBox textarea {
+  min-height: 96px;
+}
+
+.adminSubtitleLineEditor textarea {
+  min-height: 132px;
+  line-height: 1.55;
+}
+
+.adminSubtitleReadPanel {
+  display: grid;
+  gap: 8px;
+  max-height: 260px;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminSubtitleReadPanel button {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adminSubtitleReadPanel button.active,
+.adminSubtitleReadPanel button:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.adminSubtitleReadPanel span {
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminSubtitleReadPanel strong {
+  font-size: 0.96rem;
+  line-height: 1.45;
+}
+
+.adminSubtitleFindPanel,
+.adminSubtitlePlayheadTools,
+.adminSubtitleInspector,
+.adminSubtitleImportExport {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminSubtitleFindPanel {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.adminSubtitlePlayheadTools,
+.adminSubtitleInspector {
+  grid-template-columns: minmax(180px, 1fr) auto auto auto auto auto;
+  align-items: center;
+}
+
+.adminSubtitleFindPanel label,
+.adminSubtitlePlayheadTools label,
+.adminSubtitleImportExport label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.adminSubtitleFindPanel span,
+.adminSubtitlePlayheadTools span,
+.adminSubtitleInspector span,
+.adminSubtitleImportExport span {
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminSubtitleFindPanel input,
+.adminSubtitleImportExport textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 700;
+}
+
+.adminSubtitleFindPanel input {
+  min-height: 38px;
+  padding: 7px 9px;
+}
+
+.adminSubtitlePlayheadTools input {
+  width: 100%;
+  accent-color: #2563eb;
+}
+
+.adminSubtitlePlayheadTools code,
+.adminSubtitleInspector strong {
+  white-space: nowrap;
+  color: #334155;
+  font-weight: 900;
+}
+
+.adminSubtitleInspector {
+  grid-template-columns: minmax(190px, 1fr) repeat(7, auto);
+}
+
+.adminSubtitleInspector > div {
+  display: grid;
+  gap: 4px;
+}
+
+.adminSubtitleImportExport textarea {
+  min-height: 92px;
+  padding: 8px 10px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.adminSubtitleImportActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.adminSubtitleTimeline {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminSubtitleTimelineHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  color: #1d4ed8;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminSubtitleTimelineHeader strong {
+  color: #334155;
+}
+
+.adminSubtitleTimelineZoom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.adminSubtitleTimelineZoom label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.adminSubtitleTimelineZoom span {
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminSubtitleTimelineZoom input {
+  width: 100%;
+  accent-color: #2563eb;
+}
+
+.adminSubtitleTimelineViewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+}
+
+.adminSubtitleTimelineTrack {
+  position: relative;
+  width: 100%;
+  min-height: 132px;
+  overflow: hidden;
+  border: 1px solid #c7d2fe;
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, rgba(37, 99, 235, 0.11) 1px, transparent 1px) 0 0 / 10% 100%,
+    #ffffff;
+}
+
+.adminSubtitleThumbnailStrip {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 44px;
+  opacity: 0.48;
+  pointer-events: none;
+}
+
+.adminSubtitleThumbnailStrip img {
+  position: absolute;
+  top: 4px;
+  width: 70px;
+  height: 38px;
+  transform: translateX(-50%);
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.adminSubtitleWaveform {
+  position: absolute;
+  inset: 46px 0 42px;
+  pointer-events: none;
+  opacity: 0.78;
+}
+
+.adminSubtitleWaveform span {
+  position: absolute;
+  bottom: 50%;
+  width: 2px;
+  min-height: 4px;
+  transform: translate(-50%, 50%);
+  border-radius: 999px;
+  background: #60a5fa;
+}
+
+.adminSubtitleTimelinePlayhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-1px);
+  background: #ef4444;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.adminSubtitleTimelinePlayhead::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 2px;
+  background: #ef4444;
+}
+
+.adminSubtitleTimelineTrim {
+  position: absolute;
+  inset-block: 0;
+  border-inline: 2px solid rgba(37, 99, 235, 0.32);
+  background: rgba(219, 234, 254, 0.38);
+}
+
+.adminSubtitleTimelineCue {
+  position: absolute;
+  top: 82px;
+  min-width: 28px;
+  height: 42px;
+  border: 1px solid #93c5fd;
+  border-radius: 10px;
+  background: #dbeafe;
+  color: #1e3a8a;
+  cursor: grab;
+  touch-action: none;
+}
+
+.adminSubtitleTimelineCue.active {
+  border-color: #2563eb;
+  background: #bfdbfe;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+}
+
+.adminSubtitleTimelineCue.warning {
+  border-color: #f59e0b;
+  background: #fef3c7;
+  color: #78350f;
+}
+
+.adminSubtitleTimelineCue:active {
+  cursor: grabbing;
+}
+
+.adminSubtitleTimelineCue strong {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: 0.78rem;
+}
+
+.adminSubtitleTimelineHandle {
+  position: absolute;
+  top: 6px;
+  width: 7px;
+  height: 28px;
+  border-radius: 999px;
+  background: #2563eb;
+  cursor: ew-resize;
+}
+
+.adminSubtitleTimelineHandle.start {
+  left: 4px;
+}
+
+.adminSubtitleTimelineHandle.end {
+  right: 4px;
+}
+
+.adminSubtitleStylePanel {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #d8e4f7;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminSubtitlePresetGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.adminSubtitlePresetGrid button {
+  min-height: 48px;
+  padding: 7px 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: inset 0 -18px 24px rgba(0, 0, 0, 0.05);
+}
+
+.adminSubtitlePresetGrid button:hover {
+  border-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.adminSubtitleFontGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.adminSubtitleFontGrid button {
+  min-height: 44px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.88rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.adminSubtitleFontGrid button.active,
+.adminSubtitleFontGrid button:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.adminSubtitleStyleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.adminSubtitleStyleGrid label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.adminSubtitleStyleGrid span {
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminSubtitleStyleGrid input[type='color'] {
+  width: 100%;
+  height: 38px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 2px;
+  background: #ffffff;
+}
+
+.adminSubtitleStyleGrid input[type='range'] {
+  width: 100%;
+  accent-color: #2563eb;
+}
+
+.adminSubtitleStyleGrid select {
+  min-height: 38px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 7px 9px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 800;
+}
+
+.adminSubtitleCueList {
+  display: grid;
+  gap: 10px;
+  max-height: 440px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.adminSubtitleCueRow {
+  display: grid;
+  grid-template-columns: auto auto auto 76px 76px minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fbff;
+}
+
+.adminSubtitleCueRow.active {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.adminSubtitleCueRow.selected {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.adminSubtitleCueRow.lowConfidence {
+  background: #fffbeb;
+}
+
+.adminSubtitleCueSelect {
+  display: grid;
+  place-items: center;
+  min-height: 38px;
+}
+
+.adminSubtitleCueSelect input {
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+}
+
+.adminSubtitleCueRow strong {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  min-height: 38px;
+  color: #334155;
+  font-size: 0.82rem;
+}
+
+.adminSubtitleCueRow label {
+  display: grid;
+  gap: 5px;
+}
+
+.adminSubtitleCueRow input,
+.adminSubtitleCueRow textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 700;
+}
+
+.adminSubtitleCueRow input {
+  min-height: 38px;
+  padding: 7px 8px;
+}
+
+.adminSubtitleCueRow textarea {
+  min-height: 64px;
+  padding: 8px 10px;
+  resize: vertical;
+  line-height: 1.35;
+}
+
+.adminSubtitleCueTools {
+  display: grid;
+  gap: 6px;
+}
+
+.adminSubtitleCueTools span {
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.adminVideoTrimGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.adminVideoTrimGrid label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.adminVideoTrimGrid label > span {
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1d4ed8;
+}
+
+.adminVideoTrimGrid input[type='range'] {
+  width: 100%;
+  accent-color: #2563eb;
+}
+
+.adminVideoTrimGrid input[type='number'] {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 800;
+}
+
+.adminVideoStatus-recording {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+.adminVideoStatus-preview {
+  background: #dbeafe !important;
+  color: #1d4ed8 !important;
+}
+
+.adminVideoStatus-uploading {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+.adminVideoSavedCard video {
+  width: 100%;
+  border-radius: 14px;
+  background: #020617;
+}
+
+.adminVideoSourceGrid {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.28fr) minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: baseline;
+  font-size: 0.86rem;
+}
+
+.adminVideoSourceGrid span {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.adminVideoSourceGrid code,
+.adminVideoSourceGrid a {
+  overflow-wrap: anywhere;
 }
 
 .adminTopicList {
@@ -9434,7 +10466,20 @@ body,
   }
 
   .adminStatGrid,
-  .adminLayout {
+  .adminLayout,
+  .adminVideoStudio,
+  .adminVideoSourceGrid,
+  .adminVideoDeviceGrid,
+  .adminVideoSourceSummary,
+  .adminVideoTrimGrid,
+  .adminVideoUploadProgressWrap,
+  .adminSubtitlePresetGrid,
+  .adminSubtitleFontGrid,
+  .adminSubtitleStyleGrid,
+  .adminSubtitleFindPanel,
+  .adminSubtitlePlayheadTools,
+  .adminSubtitleInspector,
+  .adminSubtitleCueRow {
     grid-template-columns: 1fr;
   }
 

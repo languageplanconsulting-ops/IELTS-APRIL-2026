@@ -4,6 +4,7 @@ import express from 'express'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
 import fs from 'node:fs'
 import { createRequire } from 'node:module'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import multer from 'multer'
@@ -23,6 +24,14 @@ const ASSESSMENT_JOB_TTL_MS = 1000 * 60 * 30
 const DEFAULT_FEEDBACK_CREDITS = 20
 const DEFAULT_FULL_MOCK_CREDITS = 10
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024 } })
+const MAX_SPEAKING_SAMPLE_VIDEO_BYTES = Number(process.env.SPEAKING_SAMPLE_VIDEO_MAX_BYTES || 220 * 1024 * 1024)
+const videoUpload = multer({
+  storage: multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, os.tmpdir()),
+    filename: (_req, file, cb) => cb(null, `ielts-speaking-sample-${Date.now()}-${randomUUID()}${path.extname(file.originalname || '')}`)
+  }),
+  limits: { fileSize: MAX_SPEAKING_SAMPLE_VIDEO_BYTES }
+})
 const ADMIN_PANEL_CODE = String(process.env.ADMIN_PANEL_CODE || 'englishplanforeover').trim()
 const ADMIN_CODE_TOKEN_PREFIX = 'admin-code:'
 const __filename = fileURLToPath(import.meta.url)
@@ -276,6 +285,17 @@ const createApiUsageTracker = () => {
   }
 }
 
+const PART2_FLUENCY_WORD_COUNT_REDUCTION = 0.87
+
+const PART2_FLUENCY_WORD_COUNTS = {
+  band9Min: 310,
+  band8Min: Math.round(238 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
+  band7Min: Math.round(213 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
+  band6Min: Math.round(170 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
+  band6Max: Math.round(212 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
+  band5Floor: Math.round(128 * PART2_FLUENCY_WORD_COUNT_REDUCTION)
+}
+
 const buildBucketRubricTh = (testMode = 'part2') => `
 ไวยากรณ์ (Grammar)
 Band 9: ใช้ conditionals, perfect tense, past tense ไม่มีข้อผิดพลาด ใช้ subordinating conjunction และถ้าเป็น Part 3 ต้องใช้ passive voice ถูกต้องอย่างน้อย 3 ครั้ง
@@ -302,12 +322,12 @@ Band 5: collocation ส่วนใหญ่ A2-B1 มีคำผิดบ่�
 Band 4: collocation ส่วนใหญ่ A1-B1 มีคำผิดบ่อยและมีประโยคเข้าใจไม่ได้มากกว่า 3 ประโยค
 
 ความคล่องแคล่ว (Fluency)
-Band 9: referencing > 4 ถูกต้องทั้งหมด พูด >= 310 คำ ลื่นไหลต่อเนื่อง (hesitation ตามธรรมชาติเล็กน้อยยอมรับได้)
-Band 8: referencing > 3 ถูกต้อง พูด >= 238 คำ มี self-correction ได้ถ้าทำให้ความหมายชัดขึ้น
-Band 7: พูด >= 213 คำ ใช้ referencing อย่างน้อย 2 ครั้งถูกต้อง มี pause/filler ตามธรรมชาติได้
-Band 6: พูด 170-212 คำ referencing ไม่มีหรือผิดบางครั้ง มี hesitation/filler ได้หากไม่รบกวนความเข้าใจ
-Band 5: พูด < 170 คำ referencing ไม่มีหรือผิดบ่อย ความลื่นไหลสะดุดจนกระทบความเข้าใจ
-Band 4: พูด < 170 คำ referencing ไม่มีหรือผิดแทบทั้งหมด ความลื่นไหลสะดุดรุนแรงและรบกวนความเข้าใจชัดเจน
+Band 9: referencing > 4 ถูกต้องทั้งหมด พูด >= ${PART2_FLUENCY_WORD_COUNTS.band9Min} คำ ลื่นไหลต่อเนื่อง (hesitation ตามธรรมชาติเล็กน้อยยอมรับได้)
+Band 8: referencing > 3 ถูกต้อง พูด >= ${PART2_FLUENCY_WORD_COUNTS.band8Min} คำ มี self-correction ได้ถ้าทำให้ความหมายชัดขึ้น
+Band 7: พูด >= ${PART2_FLUENCY_WORD_COUNTS.band7Min} คำ ใช้ referencing อย่างน้อย 2 ครั้งถูกต้อง มี pause/filler ตามธรรมชาติได้
+Band 6: พูด ${PART2_FLUENCY_WORD_COUNTS.band6Min}-${PART2_FLUENCY_WORD_COUNTS.band6Max} คำ referencing ไม่มีหรือผิดบางครั้ง มี hesitation/filler ได้หากไม่รบกวนความเข้าใจ
+Band 5: พูด < ${PART2_FLUENCY_WORD_COUNTS.band6Min} คำ referencing ไม่มีหรือผิดบ่อย ความลื่นไหลสะดุดจนกระทบความเข้าใจ
+Band 4: พูด < ${PART2_FLUENCY_WORD_COUNTS.band6Min} คำ referencing ไม่มีหรือผิดแทบทั้งหมด ความลื่นไหลสะดุดรุนแรงและรบกวนความเข้าใจชัดเจน
 `
 
 const punctuationPrompt = ({ rawTranscript }) => `
@@ -978,6 +998,16 @@ const SUPABASE_TTS_BUCKET = String(process.env.SUPABASE_TTS_BUCKET || 'speaking-
 const QUESTION_AUDIO_MANIFEST_PATH = '_manifests/question-audio.json'
 let questionAudioBucketReady = false
 let questionAudioManifestCache = null
+const SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET = String(
+  process.env.SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET || 'speaking-sample-videos'
+).trim()
+const SPEAKING_SAMPLE_VIDEO_SIGNED_URL_SECONDS = Math.max(
+  300,
+  Number(process.env.SPEAKING_SAMPLE_VIDEO_SIGNED_URL_SECONDS || 60 * 60 * 6)
+)
+const SPEAKING_SAMPLE_VIDEO_MANIFEST_PATH = '_manifests/speaking-sample-videos.json'
+let speakingSampleVideoBucketReady = false
+let speakingSampleVideoManifestCache = null
 const SUPABASE_REPORTS_BUCKET = String(process.env.SUPABASE_REPORTS_BUCKET || 'assessment-report-history').trim()
 const ASSESSMENT_REPORT_INDEX_PATH = '_manifests/assessment-reports.json'
 let assessmentReportsBucketReady = false
@@ -1105,6 +1135,447 @@ const buildQuestionAudioObjectPath = (item) => {
   return {
     textHash,
     objectPath: `${item.section}/${item.topicId}/${item.cacheKey}-${textHash}.mp3`
+  }
+}
+
+const getVideoExtensionFromMimeType = (mimeType) => {
+  const normalized = String(mimeType || '').toLowerCase()
+  if (normalized.includes('mp4')) return 'mp4'
+  if (normalized.includes('ogg')) return 'ogv'
+  return 'webm'
+}
+
+const isMissingSupabaseRelationError = (error) => {
+  const text = `${error?.message || ''} ${JSON.stringify(error?.payload || {})}`.toLowerCase()
+  return error?.status === 404 || /relation .* does not exist|schema cache|could not find the table|pgrst205/.test(text)
+}
+
+const normalizeSignedStorageUrl = (signedUrl) => {
+  const value = String(signedUrl || '').trim()
+  if (!value) return ''
+  if (/^https?:\/\//i.test(value)) return value
+  return `${SUPABASE_URL}${value.startsWith('/') ? '' : '/'}${value}`
+}
+
+const looksLikeVideoFile = (filePath, mimeType = '') => {
+  const normalized = String(mimeType || '').toLowerCase()
+  const fd = fs.openSync(filePath, 'r')
+  try {
+    const buffer = Buffer.alloc(16)
+    const bytesRead = fs.readSync(fd, buffer, 0, buffer.length, 0)
+    const signature = buffer.subarray(0, bytesRead)
+    const ascii = signature.toString('ascii')
+    const hasKnownVideoSignature =
+      (signature[0] === 0x1a && signature[1] === 0x45 && signature[2] === 0xdf && signature[3] === 0xa3) ||
+      ascii.includes('ftyp') ||
+      ascii.startsWith('OggS')
+    return hasKnownVideoSignature && /^video\/(webm|mp4|ogg|quicktime|x-matroska)/.test(normalized)
+  } finally {
+    fs.closeSync(fd)
+  }
+}
+
+const normalizeSpeakingSampleVideoInput = (body = {}) => {
+  const topicId = slugifyAudioSegment(body.topicId || body.topic_id || '')
+  const topicTitle = String(body.topicTitle || body.topic_title || '').trim()
+  const prompt = String(body.prompt || '').trim()
+  const durationSeconds = Math.max(0, Math.round(Number(body.durationSeconds || body.duration_seconds || 0) || 0))
+  const trimStartSeconds = Math.min(durationSeconds || Number.MAX_SAFE_INTEGER, Math.max(0, Number(body.trimStartSeconds || body.trim_start_seconds || 0) || 0))
+  const requestedTrimEnd = Number(body.trimEndSeconds || body.trim_end_seconds || 0) || 0
+  const trimEndSeconds = Math.min(
+    durationSeconds || Number.MAX_SAFE_INTEGER,
+    Math.max(trimStartSeconds, requestedTrimEnd || durationSeconds || trimStartSeconds)
+  )
+  const videoDeviceLabel = String(body.videoDeviceLabel || body.video_device_label || '').trim().slice(0, 500)
+  const audioDeviceLabel = String(body.audioDeviceLabel || body.audio_device_label || '').trim().slice(0, 500)
+  const backgroundBlurEnabled = String(body.backgroundBlurEnabled || body.background_blur_enabled || '').toLowerCase() === 'true'
+  const transcript = String(body.transcript || '').trim().slice(0, 50000)
+  const subtitles = normalizeSpeakingSampleSubtitles(body.subtitlesJson || body.subtitles || '')
+  const subtitleStyle = normalizeSpeakingSampleSubtitleStyle(body.subtitleStyleJson || body.subtitle_style || body.subtitleStyle || '')
+  if (!topicId || !topicTitle) return null
+  return {
+    topicId,
+    topicTitle,
+    prompt,
+    durationSeconds,
+    trimStartSeconds,
+    trimEndSeconds,
+    videoDeviceLabel,
+    audioDeviceLabel,
+    backgroundBlurEnabled,
+    transcript,
+    subtitles,
+    subtitleStyle
+  }
+}
+
+const normalizeSpeakingSampleSubtitles = (value) => {
+  let raw = value
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim()
+    if (!trimmed) return []
+    try {
+      raw = JSON.parse(trimmed)
+    } catch {
+      return []
+    }
+  }
+  const items = Array.isArray(raw) ? raw : []
+  return items
+    .slice(0, 200)
+    .map((item, index) => {
+      const startSeconds = Math.max(0, Number(item?.startSeconds ?? item?.start_seconds ?? 0) || 0)
+      const endSeconds = Math.max(startSeconds + 0.25, Number(item?.endSeconds ?? item?.end_seconds ?? startSeconds + 3) || startSeconds + 3)
+      const text = String(item?.text || '').trim().slice(0, 1000)
+      const confidence = Number(item?.confidence)
+      return {
+        id: String(item?.id || `cue-${index + 1}`).slice(0, 80),
+        startSeconds: Number(startSeconds.toFixed(2)),
+        endSeconds: Number(endSeconds.toFixed(2)),
+        text,
+        ...(Number.isFinite(confidence) ? { confidence: Math.max(0, Math.min(1, confidence)) } : {})
+      }
+    })
+    .filter((item) => item.text)
+}
+
+const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', trimStartSeconds = 0, trimEndSeconds = 0 }) => {
+  const usableWords = Array.isArray(words)
+    ? words
+        .map((item) => ({
+          word: String(item?.word || '').trim(),
+          start: Math.max(0, Number(item?.start || 0) || 0),
+          end: Math.max(0, Number(item?.end || 0) || 0),
+          confidence: Math.max(0, Math.min(1, Number(item?.confidence ?? 0.75) || 0.75))
+        }))
+        .filter((item) => item.word)
+    : []
+  if (!usableWords.length) {
+    const rawWords = String(transcript || '').trim().split(/\s+/).filter(Boolean)
+    const duration = Math.max(6, (trimEndSeconds > trimStartSeconds ? trimEndSeconds - trimStartSeconds : rawWords.length / 2.4) || 6)
+    const chunks = []
+    for (let index = 0; index < rawWords.length; index += 8) {
+      chunks.push(rawWords.slice(index, index + 8).join(' '))
+    }
+    const cueDuration = duration / Math.max(1, chunks.length)
+    return chunks.map((text, index) => ({
+      id: `cue-${index + 1}`,
+      startSeconds: Number((trimStartSeconds + index * cueDuration).toFixed(2)),
+      endSeconds: Number((trimStartSeconds + Math.min(duration, (index + 1) * cueDuration)).toFixed(2)),
+      text,
+      confidence: 0.6
+    }))
+  }
+
+  const cues = []
+  let currentWords = []
+  let currentStart = usableWords[0].start
+  usableWords.forEach((word, index) => {
+    const previous = usableWords[index - 1]
+    const gap = previous ? word.start - previous.end : 0
+    const textIfAdded = [...currentWords, word.word].join(' ')
+    const shouldBreak =
+      currentWords.length >= 8 ||
+      gap > 0.75 ||
+      /[.!?]$/.test(previous?.word || '') ||
+      textIfAdded.length > 62
+    if (currentWords.length && shouldBreak) {
+      const cueWords = usableWords.slice(index - currentWords.length, index)
+      const confidence =
+        cueWords.reduce((sum, item) => sum + item.confidence, 0) / Math.max(1, cueWords.length)
+      cues.push({
+        id: `cue-${cues.length + 1}`,
+        startSeconds: Number((trimStartSeconds + currentStart).toFixed(2)),
+        endSeconds: Number((trimStartSeconds + (previous?.end || word.start)).toFixed(2)),
+        text: currentWords.join(' '),
+        confidence: Number(confidence.toFixed(2))
+      })
+      currentWords = []
+      currentStart = word.start
+    }
+    currentWords.push(word.word)
+  })
+  if (currentWords.length) {
+    const cueWords = usableWords.slice(-currentWords.length)
+    const confidence =
+      cueWords.reduce((sum, item) => sum + item.confidence, 0) / Math.max(1, cueWords.length)
+    cues.push({
+      id: `cue-${cues.length + 1}`,
+      startSeconds: Number((trimStartSeconds + currentStart).toFixed(2)),
+      endSeconds: Number((trimStartSeconds + (cueWords[cueWords.length - 1]?.end || currentStart + 2)).toFixed(2)),
+      text: currentWords.join(' '),
+      confidence: Number(confidence.toFixed(2))
+    })
+  }
+  const boundedTrimEnd = Number(trimEndSeconds || 0)
+  return cues.map((cue) => ({
+    ...cue,
+    endSeconds: boundedTrimEnd > 0 ? Math.min(boundedTrimEnd, Math.max(cue.startSeconds + 0.25, cue.endSeconds)) : cue.endSeconds
+  }))
+}
+
+const normalizeSpeakingSampleSubtitleStyle = (value) => {
+  let raw = value
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim()
+    if (!trimmed) return {}
+    try {
+      raw = JSON.parse(trimmed)
+    } catch {
+      return {}
+    }
+  }
+  if (!raw || typeof raw !== 'object') return {}
+  const colorPattern = /^#[0-9a-f]{6}$/i
+  const textAlign = ['left', 'center', 'right'].includes(String(raw.textAlign || ''))
+    ? String(raw.textAlign)
+    : 'center'
+  return {
+    fontFamily: String(raw.fontFamily || '').slice(0, 300),
+    textColor: colorPattern.test(String(raw.textColor || '')) ? String(raw.textColor) : '#ffffff',
+    backgroundColor: colorPattern.test(String(raw.backgroundColor || '')) ? String(raw.backgroundColor) : '#0f172a',
+    fontSize: Math.min(42, Math.max(14, Number(raw.fontSize || 22) || 22)),
+    boxWidthPercent: Math.min(96, Math.max(35, Number(raw.boxWidthPercent || 78) || 78)),
+    verticalPositionPercent: Math.min(92, Math.max(12, Number(raw.verticalPositionPercent || 82) || 82)),
+    horizontalPositionPercent: Math.min(90, Math.max(10, Number(raw.horizontalPositionPercent || 50) || 50)),
+    textAlign
+  }
+}
+
+const ensureSpeakingSampleVideoBucket = async () => {
+  if (speakingSampleVideoBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    const bucket = await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+    if (bucket && bucket.public !== false) {
+      await supabaseRequest(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}`, {
+        method: 'PUT',
+        headers: buildSupabaseHeaders({ serviceRole: true }),
+        body: JSON.stringify({
+          id: SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET,
+          name: SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET,
+          public: false
+        })
+      })
+    }
+  } catch (error) {
+    if (error?.status !== 404 && !(error?.status === 400 && /bucket not found|not found/i.test(String(error?.message || '')))) {
+      throw error
+    }
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        id: SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET,
+        name: SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET,
+        public: false
+      })
+    })
+  }
+  speakingSampleVideoBucketReady = true
+}
+
+const loadSpeakingSampleVideoManifest = async ({ forceRefresh = false } = {}) => {
+  if (speakingSampleVideoManifestCache && !forceRefresh) return speakingSampleVideoManifestCache
+  await ensureSpeakingSampleVideoBucket()
+  let response
+  try {
+    response = await supabaseRequest(
+      `/storage/v1/object/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(
+        SPEAKING_SAMPLE_VIDEO_MANIFEST_PATH
+      )}`,
+      {
+        method: 'GET',
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      },
+      { timeoutMs: 10000, retries: 0 }
+    )
+  } catch (error) {
+    if (error?.status !== 404 && !(error?.status === 400 && /bucket not found|not found|resource/i.test(String(error?.message || '')))) {
+      throw error
+    }
+    speakingSampleVideoManifestCache = { items: {} }
+    return speakingSampleVideoManifestCache
+  }
+  const payload = await parseJsonSafe(response)
+  speakingSampleVideoManifestCache = payload && typeof payload === 'object' ? payload : { items: {} }
+  if (!speakingSampleVideoManifestCache.items || typeof speakingSampleVideoManifestCache.items !== 'object') {
+    speakingSampleVideoManifestCache.items = {}
+  }
+  return speakingSampleVideoManifestCache
+}
+
+const saveSpeakingSampleVideoManifest = async (manifest) => {
+  await ensureSpeakingSampleVideoBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(
+      SPEAKING_SAMPLE_VIDEO_MANIFEST_PATH
+    )}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '3600'
+      },
+      body: JSON.stringify(manifest)
+    }
+  )
+  speakingSampleVideoManifestCache = manifest
+}
+
+const uploadSpeakingSampleVideoFile = async ({ objectPath, filePath, mimeType }) => {
+  await ensureSpeakingSampleVideoBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': mimeType || 'video/webm',
+        'x-upsert': 'true',
+        'cache-control': '31536000'
+      },
+      body: fs.createReadStream(filePath),
+      duplex: 'half'
+    },
+    { timeoutMs: 120000, retries: 0 }
+  )
+}
+
+const hashFileSha256 = (filePath) =>
+  new Promise((resolve, reject) => {
+    const hash = createHash('sha256')
+    const stream = fs.createReadStream(filePath)
+    stream.on('data', (chunk) => hash.update(chunk))
+    stream.on('error', reject)
+    stream.on('end', () => resolve(hash.digest('hex')))
+  })
+
+const deleteSpeakingSampleVideoObject = async (objectPath) => {
+  const normalized = String(objectPath || '').trim()
+  if (!normalized) return
+  await ensureSpeakingSampleVideoBucket()
+  await supabaseRequest(`/storage/v1/object/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}`, {
+    method: 'DELETE',
+    headers: buildSupabaseHeaders({ serviceRole: true }),
+    body: JSON.stringify({ prefixes: [normalized] })
+  })
+}
+
+const signSpeakingSampleVideoObject = async (objectPath) => {
+  const normalized = String(objectPath || '').trim()
+  if (!normalized) return ''
+  await ensureSpeakingSampleVideoBucket()
+  const payload = await fetchSupabaseJson(
+    `/storage/v1/object/sign/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(normalized)}`,
+    {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ expiresIn: SPEAKING_SAMPLE_VIDEO_SIGNED_URL_SECONDS })
+    }
+  )
+  return normalizeSignedStorageUrl(payload?.signedURL || payload?.signedUrl || payload?.url)
+}
+
+const mapSpeakingSampleVideoDbRecord = (row = {}) => ({
+  id: String(row.topic_id || row.id || ''),
+  topicId: String(row.topic_id || row.id || ''),
+  topicTitle: String(row.topic_title || ''),
+  prompt: String(row.prompt || ''),
+  objectPath: String(row.object_path || ''),
+  videoUrl: String(row.video_url || ''),
+  mimeType: String(row.mime_type || 'video/webm'),
+  sizeBytes: Number(row.size_bytes || 0),
+  durationSeconds: Number(row.duration_seconds || 0),
+  trimStartSeconds: Number(row.trim_start_seconds || 0),
+  trimEndSeconds: Number(row.trim_end_seconds || row.duration_seconds || 0),
+  videoDeviceLabel: String(row.video_device_label || ''),
+  audioDeviceLabel: String(row.audio_device_label || ''),
+  backgroundBlurEnabled: row.background_blur_enabled === true,
+  transcript: String(row.transcript || ''),
+  subtitles: normalizeSpeakingSampleSubtitles(row.subtitles || []),
+  subtitleStyle: normalizeSpeakingSampleSubtitleStyle(row.subtitle_style || {}),
+  version: Number(row.version || 1),
+  storageProvider: String(row.storage_provider || 'supabase'),
+  checksumSha256: String(row.checksum_sha256 || ''),
+  isActive: row.is_active !== false,
+  createdAt: String(row.created_at || ''),
+  updatedAt: String(row.updated_at || row.created_at || ''),
+  uploadedBy: String(row.created_by_email || '')
+})
+
+const signSpeakingSampleVideoItem = async (item) => {
+  const signedUrl = await signSpeakingSampleVideoObject(item.objectPath)
+  return {
+    ...item,
+    videoUrl: signedUrl,
+    isPrivate: true,
+    signedUrlExpiresAt: new Date(Date.now() + SPEAKING_SAMPLE_VIDEO_SIGNED_URL_SECONDS * 1000).toISOString()
+  }
+}
+
+const loadSpeakingSampleVideoRecords = async ({ forceRefresh = false } = {}) => {
+  try {
+    const rows = await fetchSupabaseJson(
+      '/rest/v1/speaking_sample_videos?select=topic_id,topic_title,prompt,object_path,mime_type,size_bytes,duration_seconds,trim_start_seconds,trim_end_seconds,video_device_label,audio_device_label,background_blur_enabled,transcript,subtitles,subtitle_style,version,storage_provider,checksum_sha256,is_active,created_by_email,created_at,updated_at&is_active=eq.true&deleted_at=is.null&order=topic_title.asc',
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+    return Array.isArray(rows) ? rows.map(mapSpeakingSampleVideoDbRecord) : []
+  } catch (error) {
+    if (!isMissingSupabaseRelationError(error)) throw error
+    const manifest = await loadSpeakingSampleVideoManifest({ forceRefresh })
+    return Object.values(manifest.items || {})
+  }
+}
+
+const saveSpeakingSampleVideoRecord = async (item, { createdBy } = {}) => {
+  try {
+    const previousRows = await fetchSupabaseJson(
+      `/rest/v1/speaking_sample_videos?select=version,object_path&topic_id=eq.${encodeURIComponent(item.topicId)}&limit=1`,
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+    const previous = Array.isArray(previousRows) ? previousRows[0] || null : null
+    const rows = await fetchSupabaseJson('/rest/v1/speaking_sample_videos', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=representation' }),
+      body: JSON.stringify({
+        topic_id: item.topicId,
+        topic_title: item.topicTitle,
+        prompt: item.prompt,
+        object_path: item.objectPath,
+        mime_type: item.mimeType,
+        size_bytes: item.sizeBytes,
+        duration_seconds: item.durationSeconds,
+        trim_start_seconds: item.trimStartSeconds,
+        trim_end_seconds: item.trimEndSeconds,
+        video_device_label: item.videoDeviceLabel,
+        audio_device_label: item.audioDeviceLabel,
+        background_blur_enabled: item.backgroundBlurEnabled === true,
+        transcript: item.transcript,
+        subtitles: item.subtitles,
+        subtitle_style: item.subtitleStyle,
+        version: Number(previous?.version || 0) + 1,
+        storage_provider: 'supabase',
+        checksum_sha256: item.checksumSha256,
+        is_active: true,
+        created_by: createdBy || null,
+        created_by_email: item.uploadedBy,
+        deleted_at: null
+      })
+    })
+    const saved = mapSpeakingSampleVideoDbRecord(Array.isArray(rows) ? rows[0] || {} : rows || {})
+    return { item: saved, previousObjectPath: previous?.object_path || '' }
+  } catch (error) {
+    if (!isMissingSupabaseRelationError(error)) throw error
+    return { item, previousObjectPath: '' }
   }
 }
 
@@ -6037,11 +6508,11 @@ const generateFallbackAssessment = ({ punctuatedTranscript, topic, providerReaso
 
   const isPart2 = String(testMode || 'part2') === 'part2'
   const fluency = isPart2
-    ? wordCount >= 213
+    ? wordCount >= PART2_FLUENCY_WORD_COUNTS.band7Min
       ? 7
-      : wordCount >= 170
+      : wordCount >= PART2_FLUENCY_WORD_COUNTS.band6Min
         ? 6
-        : wordCount >= 128
+        : wordCount >= PART2_FLUENCY_WORD_COUNTS.band5Floor
           ? 5
           : 4
     : wordCount >= 250
@@ -6860,7 +7331,7 @@ const CHECKLIST_GUIDE_BANK = {
     ],
     6: [
       {
-        quote: 'Target: Band 6 needs around 170-212 words with understandable flow.',
+        quote: `Target: Band 6 needs around ${PART2_FLUENCY_WORD_COUNTS.band6Min}-${PART2_FLUENCY_WORD_COUNTS.band6Max} words with understandable flow.`,
         fix: 'For each cue point, add one reason and one short example before moving on.'
       },
       {
@@ -6870,7 +7341,7 @@ const CHECKLIST_GUIDE_BANK = {
     ],
     7: [
       {
-        quote: 'Target: Band 7 needs about 213+ words with at least 2 clear references used correctly.',
+        quote: `Target: Band 7 needs about ${PART2_FLUENCY_WORD_COUNTS.band7Min}+ words with at least 2 clear references used correctly.`,
         fix: 'Stretch each point with "One reason is...", "What stood out to me was...", "Because of that..."'
       },
       {
@@ -6884,7 +7355,7 @@ const CHECKLIST_GUIDE_BANK = {
     ],
     8: [
       {
-        quote: 'Target: Band 8 needs roughly 238+ words with strong continuity and natural self-correction.',
+        quote: `Target: Band 8 needs roughly ${PART2_FLUENCY_WORD_COUNTS.band8Min}+ words with strong continuity and natural self-correction.`,
         fix: 'Link ideas across the whole story: "That shift eventually led to...", "What reinforced this was..."'
       },
       {
@@ -6898,7 +7369,7 @@ const CHECKLIST_GUIDE_BANK = {
     ],
     9: [
       {
-        quote: 'Target: Band 9 needs 310+ words with effortless flow and very strong cohesion.',
+        quote: `Target: Band 9 needs ${PART2_FLUENCY_WORD_COUNTS.band9Min}+ words with effortless flow and very strong cohesion.`,
         fix: 'Sound reflective and connected: "In hindsight...", "What is particularly striking is...", "That is precisely why..."'
       },
       {
@@ -7014,16 +7485,16 @@ const CHECKLIST_THAI_TEXT = {
     'ลดจังหวะหยุดตายด้วยการเตรียม bridge phrases ไว้ล่วงหน้า',
   'Useful bridges: "The main reason is...", "What I mean is...", "For example..."':
     'bridge phrases ที่ใช้ได้: "The main reason is...", "What I mean is...", "For example..."',
-  'Target: Band 6 needs around 170-212 words with understandable flow.':
-    'เป้าหมาย: Band 6 ควรพูดได้ราว 170-212 คำ และยังคงความลื่นไหลที่ฟังเข้าใจง่าย',
+  [`Target: Band 6 needs around ${PART2_FLUENCY_WORD_COUNTS.band6Min}-${PART2_FLUENCY_WORD_COUNTS.band6Max} words with understandable flow.`]:
+    `เป้าหมาย: Band 6 ควรพูดได้ราว ${PART2_FLUENCY_WORD_COUNTS.band6Min}-${PART2_FLUENCY_WORD_COUNTS.band6Max} คำ และยังคงความลื่นไหลที่ฟังเข้าใจง่าย`,
   'For each cue point, add one reason and one short example before moving on.':
     'ในแต่ละ cue point ให้เติม 1 เหตุผลและ 1 ตัวอย่างสั้น ๆ ก่อนเปลี่ยนไปประเด็นถัดไป',
   'Use referencing words more deliberately.':
     'ใช้คำอ้างอิง (referencing) ให้ตั้งใจและชัดเจนมากขึ้น',
   'Useful words: "this book", "that idea", "it", "this advice", "that experience".':
     'คำที่ใช้ได้ดี: "this book", "that idea", "it", "this advice", "that experience"',
-  'Target: Band 7 needs about 213+ words with at least 2 clear references used correctly.':
-    'เป้าหมาย: Band 7 ต้องพูดได้ประมาณ 213+ คำ และใช้ reference อย่างน้อย 2 จุดได้ถูกต้อง',
+  [`Target: Band 7 needs about ${PART2_FLUENCY_WORD_COUNTS.band7Min}+ words with at least 2 clear references used correctly.`]:
+    `เป้าหมาย: Band 7 ต้องพูดได้ประมาณ ${PART2_FLUENCY_WORD_COUNTS.band7Min}+ คำ และใช้ reference อย่างน้อย 2 จุดได้ถูกต้อง`,
   'Stretch each point with "One reason is...", "What stood out to me was...", "Because of that..."':
     'ขยายแต่ละประเด็นด้วย "One reason is...", "What stood out to me was...", "Because of that..."',
   'Add a mini follow-up sentence after every main statement.':
@@ -7034,8 +7505,8 @@ const CHECKLIST_THAI_TEXT = {
     'ทำให้ transitions ได้ยินชัด เพื่อให้คำตอบฟังเหมือนมีคนนำทาง',
   'Useful transitions: "to begin with", "on top of that", "as a result", "looking back".':
     'transitions ที่ใช้ได้: "to begin with", "on top of that", "as a result", "looking back"',
-  'Target: Band 8 needs roughly 238+ words with strong continuity and natural self-correction.':
-    'เป้าหมาย: Band 8 ต้องพูดได้ราว 238+ คำ มี continuity ที่แน่น และ self-correction อย่างเป็นธรรมชาติ',
+  [`Target: Band 8 needs roughly ${PART2_FLUENCY_WORD_COUNTS.band8Min}+ words with strong continuity and natural self-correction.`]:
+    `เป้าหมาย: Band 8 ต้องพูดได้ราว ${PART2_FLUENCY_WORD_COUNTS.band8Min}+ คำ มี continuity ที่แน่น และ self-correction อย่างเป็นธรรมชาติ`,
   'Link ideas across the whole story: "That shift eventually led to...", "What reinforced this was..."':
     'เชื่อมไอเดียตลอดทั้งเรื่อง เช่น "That shift eventually led to...", "What reinforced this was..."',
   'Develop each idea fully before switching topics.':
@@ -7599,30 +8070,30 @@ const STANDARD_CHECKLIST_REQUIREMENTS = {
     9: [
       'ใช้ referencing มากกว่า 4 ครั้งและถูกต้อง',
       'ไม่มี hesitation หรือ self-correction',
-      'พูดได้อย่างน้อย 310 คำ'
+      `พูดได้อย่างน้อย ${PART2_FLUENCY_WORD_COUNTS.band9Min} คำ`
     ],
     8: [
       'ใช้ referencing มากกว่า 3 ครั้งและถูกต้อง',
       'ถ้ามี self-correction ต้องแก้ได้ถูกต้อง',
-      'พูดได้อย่างน้อย 238 คำ'
+      `พูดได้อย่างน้อย ${PART2_FLUENCY_WORD_COUNTS.band8Min} คำ`
     ],
     7: [
-      'พูดได้อย่างน้อย 213 คำ',
+      `พูดได้อย่างน้อย ${PART2_FLUENCY_WORD_COUNTS.band7Min} คำ`,
       'ใช้ referencing อย่างน้อย 2 ครั้งได้อย่างถูกต้อง',
       'ถ้ามี self-correction ต้องแก้ได้ถูกต้อง'
     ],
     6: [
-      'พูดได้ 170-212 คำ',
+      `พูดได้ ${PART2_FLUENCY_WORD_COUNTS.band6Min}-${PART2_FLUENCY_WORD_COUNTS.band6Max} คำ`,
       'ไม่มี referencing หรือใช้แล้วยังผิดบางครั้ง',
       'ถ้ามี self-correction บางครั้งยังแก้ผิดอยู่'
     ],
     5: [
-      'พูดได้น้อยกว่า 170 คำ',
+      `พูดได้น้อยกว่า ${PART2_FLUENCY_WORD_COUNTS.band6Min} คำ`,
       'ไม่มี referencing หรือใช้แล้วผิดบ่อย',
       'self-correction ส่วนใหญ่ยังผิดอยู่มากกว่า 50%'
     ],
     4: [
-      'พูดได้น้อยกว่า 170 คำ',
+      `พูดได้น้อยกว่า ${PART2_FLUENCY_WORD_COUNTS.band6Min} คำ`,
       'ไม่มี referencing หรือใช้แล้วผิดแทบทั้งหมด',
       'self-correction มักผิดมากกว่า 70%'
     ]
@@ -10926,6 +11397,237 @@ app.get('/api/health', (_, res) => {
   res.json({ ok: true })
 })
 
+app.get('/api/speaking-sample-videos', requireAuth, async (_req, res) => {
+  try {
+    const records = await loadSpeakingSampleVideoRecords()
+    const items = await Promise.all(
+      records
+        .filter((item) => item?.objectPath)
+        .sort((a, b) => String(a.topicTitle || '').localeCompare(String(b.topicTitle || '')))
+        .map(signSpeakingSampleVideoItem)
+    )
+    return res.json({ items })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'speaking_sample_video_catalog_error',
+        message: error instanceof Error ? error.message : 'Could not load speaking sample videos.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/speaking-sample-videos', requireAdmin, async (_req, res) => {
+  try {
+    const records = await loadSpeakingSampleVideoRecords({ forceRefresh: true })
+    const items = await Promise.all(
+      records
+        .filter((item) => item?.objectPath)
+        .sort((a, b) => String(a.topicTitle || '').localeCompare(String(b.topicTitle || '')))
+        .map(signSpeakingSampleVideoItem)
+    )
+    return res.json({ items })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_speaking_sample_video_catalog_error',
+        message: error instanceof Error ? error.message : 'Could not load speaking sample videos.'
+      }
+    })
+  }
+})
+
+app.post('/api/admin/speaking-sample-videos/transcribe', requireAdmin, videoUpload.single('video'), async (req, res) => {
+  const tempFilePath = req.file?.path
+  try {
+    const file = req.file
+    if (!file?.path || Number(file.size || 0) < 1024) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Recorded video is missing or too short for transcription.'
+        }
+      })
+    }
+    const mimeType = String(file.mimetype || 'video/webm')
+    if (!mimeType.startsWith('video/') && !mimeType.startsWith('audio/')) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Please upload an audio or video recording for transcription.'
+        }
+      })
+    }
+    if (mimeType.startsWith('video/') && !looksLikeVideoFile(file.path, mimeType)) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Please upload a valid video recording.'
+        }
+      })
+    }
+
+    const buffer = await fs.promises.readFile(file.path)
+    const transcription = await transcribeWithBestProvider({
+      audioBase64: buffer.toString('base64'),
+      audioMimeType: mimeType
+    })
+    const transcript = String(transcription?.result?.whisperTranscript || '').trim()
+    if (!transcript) {
+      return res.status(502).json({
+        error: {
+          status: 502,
+          type: 'empty_transcript',
+          message: 'Backend transcription returned empty text.'
+        }
+      })
+    }
+    const trimStartSeconds = Math.max(0, Number(req.body?.trimStartSeconds || 0) || 0)
+    const trimEndSeconds = Math.max(trimStartSeconds, Number(req.body?.trimEndSeconds || 0) || 0)
+    const subtitles = buildSpeakingSampleSubtitlesFromWords({
+      words: transcription?.result?.words || [],
+      transcript,
+      trimStartSeconds,
+      trimEndSeconds
+    })
+
+    return res.json({
+      provider: String(transcription?.provider || 'unknown'),
+      model: String(transcription?.engine || transcription?.result?.model || 'unknown'),
+      confidenceQuality: Number(transcription?.quality || 0),
+      transcript,
+      subtitles,
+      words: transcription?.result?.words || []
+    })
+  } catch (error) {
+    const status = Number(error?.status) || 500
+    const message = error?.error?.message || error?.message || 'Could not transcribe speaking sample video.'
+    return res.status(status).json({
+      error: {
+        status,
+        type: error?.type || 'speaking_sample_video_transcription_error',
+        message
+      }
+    })
+  } finally {
+    if (tempFilePath) {
+      fs.promises.unlink(tempFilePath).catch(() => undefined)
+    }
+  }
+})
+
+app.post('/api/admin/speaking-sample-videos', requireAdmin, videoUpload.single('video'), async (req, res) => {
+  const tempFilePath = req.file?.path
+  try {
+    const normalized = normalizeSpeakingSampleVideoInput(req.body || {})
+    const file = req.file
+    if (!normalized) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'topicId and topicTitle are required before uploading a speaking sample video.'
+        }
+      })
+    }
+    if (!file?.path || Number(file.size || 0) < 1024) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Recorded video is missing or too short.'
+        }
+      })
+    }
+    const mimeType = String(file.mimetype || 'video/webm')
+    if (!mimeType.startsWith('video/') || !looksLikeVideoFile(file.path, mimeType)) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'Please upload a video recording.'
+        }
+      })
+    }
+
+    const now = new Date().toISOString()
+    const extension = getVideoExtensionFromMimeType(mimeType)
+    const objectPath = `part2/${normalized.topicId}/${Date.now()}-${randomUUID()}.${extension}`
+    const checksumSha256 = await hashFileSha256(file.path)
+    await uploadSpeakingSampleVideoFile({
+      objectPath,
+      filePath: file.path,
+      mimeType
+    })
+
+    const manifest = await loadSpeakingSampleVideoManifest({ forceRefresh: true })
+    const previous = manifest.items?.[normalized.topicId]
+    const item = {
+      id: normalized.topicId,
+      topicId: normalized.topicId,
+      topicTitle: normalized.topicTitle,
+      prompt: normalized.prompt,
+      objectPath,
+      videoUrl: '',
+      mimeType,
+      sizeBytes: Number(file.size || 0),
+      durationSeconds: normalized.durationSeconds,
+      trimStartSeconds: normalized.trimStartSeconds,
+      trimEndSeconds: normalized.trimEndSeconds,
+      videoDeviceLabel: normalized.videoDeviceLabel,
+      audioDeviceLabel: normalized.audioDeviceLabel,
+      backgroundBlurEnabled: normalized.backgroundBlurEnabled,
+      transcript: normalized.transcript,
+      subtitles: normalized.subtitles,
+      subtitleStyle: normalized.subtitleStyle,
+      version: Number(previous?.version || 0) + 1,
+      storageProvider: 'supabase',
+      checksumSha256,
+      isActive: true,
+      createdAt: previous?.createdAt || now,
+      updatedAt: now,
+      uploadedBy: req.auth?.user?.email || req.auth?.profile?.email || 'admin'
+    }
+    const saved = await saveSpeakingSampleVideoRecord(item, {
+      createdBy: normalizeOptionalUuid(req.auth?.profile?.id || req.auth?.user?.id)
+    })
+    const savedItem = {
+      ...item,
+      ...saved.item,
+      createdAt: saved.item.createdAt || item.createdAt,
+      updatedAt: saved.item.updatedAt || item.updatedAt,
+      uploadedBy: saved.item.uploadedBy || item.uploadedBy
+    }
+    manifest.items[normalized.topicId] = savedItem
+    await saveSpeakingSampleVideoManifest(manifest)
+    const previousObjectPath = saved.previousObjectPath || previous?.objectPath || ''
+    if (previousObjectPath && previousObjectPath !== objectPath) {
+      deleteSpeakingSampleVideoObject(previousObjectPath).catch((cleanupError) => {
+        console.error('Could not delete replaced speaking sample video:', cleanupError)
+      })
+    }
+
+    return res.json({ item: await signSpeakingSampleVideoItem(savedItem) })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'speaking_sample_video_upload_error',
+        message: error instanceof Error ? error.message : 'Could not upload speaking sample video.'
+      }
+    })
+  } finally {
+    if (tempFilePath) {
+      fs.promises.unlink(tempFilePath).catch(() => undefined)
+    }
+  }
+})
+
 app.get('/api/admin/tts/catalog', requireAdmin, async (_req, res) => {
   try {
     const manifest = await loadQuestionAudioManifest()
@@ -11633,7 +12335,18 @@ app.get('/api/assess/status/:jobId', requireAuth, (req, res) => {
 app.use((error, _req, res, next) => {
   if (error?.type === 'entity.too.large') {
     return res.status(413).json({
-      error: `Audio payload is too large. Current server limit is ${requestBodyLimit}.`
+      error: `Upload payload is too large. Current JSON request limit is ${requestBodyLimit}.`
+    })
+  }
+  if (error?.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({
+      error: {
+        status: 413,
+        type: 'upload_too_large',
+        message: `Uploaded file is too large. Speaking sample videos must be under ${Math.round(
+          MAX_SPEAKING_SAMPLE_VIDEO_BYTES / (1024 * 1024)
+        )} MB.`
+      }
     })
   }
   return next(error)

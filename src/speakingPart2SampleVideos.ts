@@ -1,10 +1,36 @@
 export type SpeakingPart2SampleVideo = {
-  id: 'building' | 'old-person' | 'workplace'
+  id: string
   shortLabel: string
   topicLabel: string
-  driveFileId: string
+  driveFileId?: string
+  videoUrl?: string
+  sourceLabel?: string
+  uploadedAt?: string
+  trimStartSeconds?: number
+  trimEndSeconds?: number
+  transcript?: string
+  subtitles?: SpeakingPart2SampleSubtitleCue[]
+  subtitleStyle?: SpeakingPart2SampleSubtitleStyle
   topicIds: string[]
   matchPatterns: RegExp[]
+}
+
+export type SpeakingPart2SampleSubtitleCue = {
+  id: string
+  startSeconds: number
+  endSeconds: number
+  text: string
+}
+
+export type SpeakingPart2SampleSubtitleStyle = {
+  fontFamily?: string
+  textColor?: string
+  backgroundColor?: string
+  fontSize?: number
+  boxWidthPercent?: number
+  verticalPositionPercent?: number
+  horizontalPositionPercent?: number
+  textAlign?: 'left' | 'center' | 'right'
 }
 
 export const SPEAKING_PART2_SAMPLE_VIDEOS: SpeakingPart2SampleVideo[] = [
@@ -45,6 +71,42 @@ export const getSpeakingPart2SampleEmbedUrl = (fileId: string) =>
 
 export const getSpeakingPart2SampleThumbUrl = (fileId: string) =>
   `https://drive.google.com/thumbnail?id=${fileId}&sz=w960`
+
+export const createUploadedSpeakingPart2SampleVideo = ({
+  topicId,
+  topicTitle,
+  videoUrl,
+  uploadedAt,
+  trimStartSeconds,
+  trimEndSeconds,
+  transcript,
+  subtitles,
+  subtitleStyle
+}: {
+  topicId: string
+  topicTitle: string
+  videoUrl: string
+  uploadedAt?: string
+  trimStartSeconds?: number
+  trimEndSeconds?: number
+  transcript?: string
+  subtitles?: SpeakingPart2SampleSubtitleCue[]
+  subtitleStyle?: SpeakingPart2SampleSubtitleStyle
+}): SpeakingPart2SampleVideo => ({
+  id: `uploaded-${topicId}`,
+  shortLabel: 'Admin sample',
+  topicLabel: topicTitle,
+  videoUrl,
+  sourceLabel: 'Uploaded admin sample',
+  uploadedAt,
+  trimStartSeconds,
+  trimEndSeconds,
+  transcript,
+  subtitles,
+  subtitleStyle,
+  topicIds: [topicId],
+  matchPatterns: []
+})
 
 export const resolveSpeakingPart2SampleVideo = (topic: SpeakingPart2TopicRef): SpeakingPart2SampleVideo | null => {
   const haystack = `${topic.id} ${topic.title || ''} ${topic.prompt || ''}`.trim()

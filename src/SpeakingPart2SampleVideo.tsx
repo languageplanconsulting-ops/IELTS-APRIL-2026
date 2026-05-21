@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useMemo, useRef, useState, type CSSProperties } from 'react'
 import {
   getSpeakingPart2SampleEmbedUrl,
   getSpeakingPart2SampleThumbUrl,
   type SpeakingPart2SampleVideo
 } from './speakingPart2SampleVideos'
 import './SpeakingPart2SampleVideo.css'
+
+const DEFAULT_SAMPLE_SUBTITLE_STYLE = {
+  fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  textColor: '#ffffff',
+  backgroundColor: '#0f172a',
+  fontSize: 22,
+  boxWidthPercent: 78,
+  verticalPositionPercent: 82,
+  horizontalPositionPercent: 50,
+  textAlign: 'center' as const
+}
 
 export function SpeakingPart2SampleBadge() {
   return (
@@ -27,8 +38,61 @@ type SpeakingPart2SamplePanelProps = {
 export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [thumbFailed, setThumbFailed] = useState(false)
-  const embedUrl = getSpeakingPart2SampleEmbedUrl(sample.driveFileId)
-  const thumbUrl = getSpeakingPart2SampleThumbUrl(sample.driveFileId)
+  const [videoTime, setVideoTime] = useState(0)
+  const uploadedVideoRef = useRef<HTMLVideoElement | null>(null)
+  const embedUrl = sample.driveFileId ? getSpeakingPart2SampleEmbedUrl(sample.driveFileId) : ''
+  const thumbUrl = sample.driveFileId ? getSpeakingPart2SampleThumbUrl(sample.driveFileId) : ''
+  const hasUploadedVideo = Boolean(sample.videoUrl)
+  const uploadedSubtitles = useMemo(
+    () =>
+      (sample.subtitles || [])
+        .filter((cue) => cue.text && cue.endSeconds > cue.startSeconds)
+        .sort((a, b) => a.startSeconds - b.startSeconds),
+    [sample.subtitles]
+  )
+  const trimStartSeconds = Math.max(0, Number(sample.trimStartSeconds || 0))
+  const trimEndSeconds = Math.max(trimStartSeconds, Number(sample.trimEndSeconds || 0))
+  const hasTrim = Boolean(hasUploadedVideo && trimEndSeconds > trimStartSeconds)
+  const activeSubtitleCue = uploadedSubtitles.find(
+    (cue) => videoTime >= cue.startSeconds && videoTime <= cue.endSeconds
+  )
+  const subtitleStyle = {
+    ...DEFAULT_SAMPLE_SUBTITLE_STYLE,
+    ...(sample.subtitleStyle || {})
+  }
+  const subtitleOverlayStyle = {
+    '--subtitle-font-family': subtitleStyle.fontFamily,
+    '--subtitle-text-color': subtitleStyle.textColor,
+    '--subtitle-background-color': subtitleStyle.backgroundColor,
+    '--subtitle-font-size': `${subtitleStyle.fontSize}px`,
+    '--subtitle-box-width': `${subtitleStyle.boxWidthPercent}%`,
+    '--subtitle-y': `${subtitleStyle.verticalPositionPercent}%`,
+    '--subtitle-x': `${subtitleStyle.horizontalPositionPercent}%`,
+    '--subtitle-text-align': subtitleStyle.textAlign
+  } as CSSProperties
+
+  const syncUploadedVideoTrim = () => {
+    const video = uploadedVideoRef.current
+    if (!video || !hasTrim) return
+    if (video.currentTime < trimStartSeconds || video.currentTime >= trimEndSeconds) {
+      video.currentTime = trimStartSeconds
+      setVideoTime(trimStartSeconds)
+      if (video.currentTime >= trimEndSeconds) {
+        video.pause()
+      }
+    }
+  }
+
+  const stopAtTrimEnd = () => {
+    const video = uploadedVideoRef.current
+    if (video) setVideoTime(video.currentTime)
+    if (!video || !hasTrim) return
+    if (video.currentTime >= trimEndSeconds) {
+      video.pause()
+      video.currentTime = trimStartSeconds
+      setVideoTime(trimStartSeconds)
+    }
+  }
 
   return (
     <section
@@ -37,7 +101,7 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
       onContextMenu={(event) => event.preventDefault()}
     >
       <div className="speakingP2SamplePanelHeader">
-        <span className="speakingP2SampleKicker">พี่ดอย · P&apos;Doy</span>
+        <span className="speakingP2SampleKicker">{sample.sourceLabel || 'พี่ดอย · P&apos;Doy'}</span>
         <span className="speakingP2SampleTopicPill">{sample.shortLabel}</span>
       </div>
       <h4 className="speakingP2SampleTitle">{sample.topicLabel}</h4>
@@ -46,7 +110,28 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
       </p>
 
       <div className="speakingP2SampleFrame">
-        {!isPlaying ? (
+        {hasUploadedVideo ? (
+          <>
+            <video
+              ref={uploadedVideoRef}
+              className="speakingP2SampleVideo"
+              src={sample.videoUrl}
+              controls
+              preload="metadata"
+              controlsList="nodownload"
+              onLoadedMetadata={syncUploadedVideoTrim}
+              onPlay={syncUploadedVideoTrim}
+              onTimeUpdate={stopAtTrimEnd}
+              onSeeked={(event) => setVideoTime(event.currentTarget.currentTime)}
+              onContextMenu={(event) => event.preventDefault()}
+            />
+            {activeSubtitleCue?.text ? (
+              <div className="speakingP2SampleSubtitleOverlay" style={subtitleOverlayStyle}>
+                <span>{activeSubtitleCue.text}</span>
+              </div>
+            ) : null}
+          </>
+        ) : !isPlaying ? (
           <button
             type="button"
             className="speakingP2SampleLaunch"
@@ -86,8 +171,10 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
       <div className="speakingP2SampleFooter">
         <p className="speakingP2SampleNotice">
           For learning inside English Plan only. Streaming preview — not downloadable.
+          {sample.uploadedAt ? ` Uploaded ${new Date(sample.uploadedAt).toLocaleDateString()}.` : ''}
+          {hasTrim ? ` Trimmed to ${Math.round(trimEndSeconds - trimStartSeconds)}s.` : ''}
         </p>
-        {isPlaying ? (
+        {isPlaying && !hasUploadedVideo ? (
           <button type="button" className="speakingP2SampleReplay" onClick={() => setIsPlaying(false)}>
             Close player
           </button>
