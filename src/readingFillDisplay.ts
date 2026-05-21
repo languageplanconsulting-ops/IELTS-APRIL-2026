@@ -214,7 +214,8 @@ export const extractReadingFillDisplayLines = (
     .filter((line) => line.segments.length > 0)
 
   if (displayLines.length) {
-    return enrichFillDisplayLines(displayLines, questions)
+    const enriched = enrichFillDisplayLines(displayLines, questions)
+    return supplementMissingFillDisplayLines(enriched, questionNumbers, questions)
   }
 
   return [...questionNumbers]
@@ -233,6 +234,42 @@ export const extractReadingFillDisplayLines = (
         ]
       }
     })
+}
+
+const supplementMissingFillDisplayLines = (
+  displayLines: ReadingFillDisplayLine[],
+  questionNumbers: Set<number>,
+  questions: FillQuestion[]
+): ReadingFillDisplayLine[] => {
+  const coveredNumbers = new Set<number>()
+  for (const line of displayLines) {
+    for (const segment of line.segments) {
+      if (segment.kind === 'blank') coveredNumbers.add(segment.questionNumber)
+    }
+  }
+
+  const missingNumbers = [...questionNumbers]
+    .filter((questionNumber) => !coveredNumbers.has(questionNumber))
+    .sort((first, second) => first - second)
+  if (!missingNumbers.length) return displayLines
+
+  const byNumber = new Map(questions.map((question) => [question.number, question]))
+  const supplementalLines: ReadingFillDisplayLine[] = missingNumbers.map((questionNumber) => {
+    const question = byNumber.get(questionNumber)
+    const context = question ? parseFillContextFromPrompt(question.prompt, questionNumber) : null
+    return {
+      segments: [
+        {
+          kind: 'blank' as const,
+          questionNumber,
+          before: context?.before || '',
+          after: context?.after || ''
+        }
+      ]
+    }
+  })
+
+  return [...displayLines, ...supplementalLines]
 }
 
 export const enrichFillDisplayLines = (
