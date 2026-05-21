@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { getListeningHighlightMatch } from './listeningHighlightMatch'
+import { isListeningPart1AnswerCorrect } from './listeningPart1AnswerCheck'
+import type { Part1ExamForm, Part1FormLine } from './listeningPart1FormLayout'
 import type {
   ListeningSectionExamConfig,
   ListeningSectionExamGroup,
@@ -254,8 +256,25 @@ export function ListeningSectionExamView({
   )
   const hasDialogue = useMemo(() => listeningScriptHasDialogue(segments), [segments])
 
+  const questionByNumber = useMemo(() => {
+    const map = new Map<number, ListeningSectionExamQuestion>()
+    config.questions.forEach((question) => map.set(question.number, question))
+    return map
+  }, [config.questions])
+
   const activeQuestion = config.questions.find((item) => item.id === activeQuestionId) || config.questions[0]
   const activeAttempt = attempts[activeQuestion?.id || ''] || defaultAttempt()
+  const answerOnlyMode = Boolean(config.answerOnlyMode)
+
+  const isQuestionAnswerCorrect = useCallback(
+    (question: ListeningSectionExamQuestion, answer: string) => {
+      if (answerOnlyMode && question.layout === 'gap-fill') {
+        return isListeningPart1AnswerCorrect(answer, question.correctAnswer, question.acceptedAnswers)
+      }
+      return answer.trim().toUpperCase() === question.correctAnswer.trim().toUpperCase()
+    },
+    [answerOnlyMode]
+  )
 
   const decorations = useMemo(
     () => buildPassageDecorations(config.passage, config.questions, attempts),
@@ -265,9 +284,12 @@ export function ListeningSectionExamView({
   const completedCount = config.questions.filter((item) => attempts[item.id]?.completed).length
   const answeredCount = config.questions.filter((item) => attempts[item.id]?.answer.trim()).length
   const evidenceCount = config.questions.filter((item) => attempts[item.id]?.evidenceDraft.trim()).length
-  const isExamReadyToSubmit = answeredCount === config.questions.length && evidenceCount === config.questions.length
+  const isExamReadyToSubmit = answerOnlyMode
+    ? answeredCount === config.questions.length
+    : answeredCount === config.questions.length && evidenceCount === config.questions.length
   const needsCorrectionCount = config.questions.filter((item) => {
     const attempt = attempts[item.id] || defaultAttempt()
+    if (answerOnlyMode) return attempt.answerStatus === 'wrong' && !attempt.completed
     return (attempt.answerStatus === 'wrong' || attempt.evidenceStatus === 'wrong') && !attempt.completed
   }).length
 
@@ -421,6 +443,7 @@ export function ListeningSectionExamView({
   }
 
   const handleScriptMouseUp = () => {
+    if (answerOnlyMode) return
     if (!activeQuestion) return
     if (attempts[activeQuestion.id]?.completed) return
 
@@ -472,20 +495,27 @@ export function ListeningSectionExamView({
   const handleSubmitExamRound = () => {
     const missingQuestions = config.questions.filter((question) => {
       const attempt = attempts[question.id] || defaultAttempt()
+      if (answerOnlyMode) return !attempt.answer.trim()
       return !attempt.answer.trim() || !attempt.evidenceDraft.trim()
     })
 
     if (missingQuestions.length > 0) {
-      setExamFeedback('ตอบคำถามและไฮไลต์หลักฐานให้ครบทุกข้อก่อนส่งครับ')
+      setExamFeedback(
+        answerOnlyMode
+          ? 'ตอบให้ครบทุกช่องก่อนส่งครับ'
+          : 'ตอบคำถามและไฮไลต์หลักฐานให้ครบทุกข้อก่อนส่งครับ'
+      )
       setAttempts((current) => {
         const next = { ...current }
         missingQuestions.forEach((question) => {
           const attempt = next[question.id] || defaultAttempt()
           next[question.id] = {
             ...attempt,
-            feedback: !attempt.answer.trim()
-              ? 'เลือกคำตอบก่อนครับ'
-              : 'ไฮไลต์หลักฐานในสคริปต์ทางซ้ายก่อนครับ'
+            feedback: answerOnlyMode
+              ? 'กรอกคำตอบก่อนครับ'
+              : !attempt.answer.trim()
+                ? 'เลือกคำตอบก่อนครับ'
+                : 'ไฮไลต์หลักฐานในสคริปต์ทางซ้ายก่อนครับ'
           }
         })
         return next
@@ -503,9 +533,11 @@ export function ListeningSectionExamView({
 
     config.questions.forEach((question) => {
       const attempt = attempts[question.id] || defaultAttempt()
-      const answerOk = attempt.answer.trim().toUpperCase() === question.correctAnswer.trim().toUpperCase()
-      const matchKind = getListeningHighlightMatch(attempt.evidenceDraft, question.evidence, 0.4)
-      const evidenceOk = matchKind !== 'none'
+      const answerOk = isQuestionAnswerCorrect(question, attempt.answer)
+      const matchKind = answerOnlyMode
+        ? 'exact'
+        : getListeningHighlightMatch(attempt.evidenceDraft, question.evidence, 0.4)
+      const evidenceOk = answerOnlyMode ? true : matchKind !== 'none'
 
       if (firstRound) {
         firstSnapshot[question.id] = {
@@ -522,10 +554,10 @@ export function ListeningSectionExamView({
         nextAttempts[question.id] = {
           ...attempt,
           answerStatus: 'correct',
-          evidenceStatus: matchKind === 'exact' ? 'exact' : 'partial',
+          evidenceStatus: answerOnlyMode ? 'exact' : matchKind === 'exact' ? 'exact' : 'partial',
           wrongEvidence: '',
           completed: true,
-          feedback: 'คำตอบและหลักฐานถูกต้องครับ'
+          feedback: answerOnlyMode ? 'คำตอบถูกต้องครับ' : 'คำตอบและหลักฐานถูกต้องครับ'
         }
         return
       }
@@ -534,14 +566,22 @@ export function ListeningSectionExamView({
       nextAttempts[question.id] = {
         ...attempt,
         answerStatus: answerOk ? 'correct' : 'wrong',
-        evidenceStatus: evidenceOk ? matchKind : 'wrong',
-        wrongEvidence: evidenceOk ? '' : attempt.evidenceDraft,
+        evidenceStatus: answerOnlyMode
+          ? 'idle'
+          : evidenceOk
+            ? matchKind === 'exact'
+              ? 'exact'
+              : 'partial'
+            : 'wrong',
+        wrongEvidence: answerOnlyMode || evidenceOk ? '' : attempt.evidenceDraft,
         completed: false,
-        feedback: !answerOk && !evidenceOk
-          ? 'คำตอบและหลักฐานยังไม่ถูกครับ แก้คำตอบ และลบ highlight นี้แล้วเลือกหลักฐานจริงใหม่'
-          : !answerOk
-            ? 'คำตอบยังไม่ถูกครับ เลือกคำตอบใหม่ แต่หลักฐานนี้ใช้ได้'
-            : 'หลักฐานยังไม่ตรงครับ ลบ highlight นี้แล้วเลือกหลักฐานจริงใหม่'
+        feedback: answerOnlyMode
+          ? `คำตอบยังไม่ถูกครับ — ในสคริปต์: "${question.evidence.length > 90 ? `${question.evidence.slice(0, 87)}…` : question.evidence}"`
+          : !answerOk && !evidenceOk
+            ? 'คำตอบและหลักฐานยังไม่ถูกครับ แก้คำตอบ และลบ highlight นี้แล้วเลือกหลักฐานจริงใหม่'
+            : !answerOk
+              ? 'คำตอบยังไม่ถูกครับ เลือกคำตอบใหม่ แต่หลักฐานนี้ใช้ได้'
+              : 'หลักฐานยังไม่ตรงครับ ลบ highlight นี้แล้วเลือกหลักฐานจริงใหม่'
       }
     })
 
@@ -552,13 +592,19 @@ export function ListeningSectionExamView({
 
     if (allCorrect) {
       setExamStage('report')
-      setExamFeedback('ครบ 100% แล้วครับ ดู report card พร้อม keyword, paraphrase และ distractor ได้เลย')
+      setExamFeedback(
+        answerOnlyMode
+          ? 'ครบ 100% แล้วครับ ดู report card พร้อมคำอธิบายภาษาไทยได้เลย'
+          : 'ครบ 100% แล้วครับ ดู report card พร้อม keyword, paraphrase และ distractor ได้เลย'
+      )
       return
     }
 
     setExamStage('correcting')
     setExamFeedback(
-      `${roundCorrect}/${config.questions.length} ข้อถูกครบทั้งคำตอบและหลักฐานแล้ว แก้ข้อที่ยังผิด แล้วกด Submit corrections อีกครั้งครับ`
+      answerOnlyMode
+        ? `${roundCorrect}/${config.questions.length} ข้อถูกแล้ว แก้ข้อที่ยังผิด แล้วกด Submit corrections อีกครั้งครับ`
+        : `${roundCorrect}/${config.questions.length} ข้อถูกครบทั้งคำตอบและหลักฐานแล้ว แก้ข้อที่ยังผิด แล้วกด Submit corrections อีกครั้งครับ`
     )
   }
 
@@ -604,10 +650,14 @@ export function ListeningSectionExamView({
         <h3>
           {examStage === 'correcting'
             ? 'Fix the questions that are still not 100%'
-            : 'Answer every question and highlight every evidence first'}
+            : answerOnlyMode
+              ? 'Answer every question before you submit'
+              : 'Answer every question and highlight every evidence first'}
         </h3>
         <p>
-          {answeredCount}/{config.questions.length} answered · {evidenceCount}/{config.questions.length} evidence highlighted
+          {answerOnlyMode
+            ? `${answeredCount}/${config.questions.length} answered`
+            : `${answeredCount}/${config.questions.length} answered · ${evidenceCount}/${config.questions.length} evidence highlighted`}
         </p>
         {examFeedback ? <p className="listeningSectionExamSubmitFeedback">{examFeedback}</p> : null}
       </div>
@@ -615,7 +665,11 @@ export function ListeningSectionExamView({
         {examStage === 'correcting' ? (
           <span>{needsCorrectionCount} need correction</span>
         ) : (
-          <span>{config.questions.length - Math.min(answeredCount, evidenceCount)} left</span>
+          <span>
+            {answerOnlyMode
+              ? `${config.questions.length - answeredCount} left`
+              : `${config.questions.length - Math.min(answeredCount, evidenceCount)} left`}
+          </span>
         )}
         <button
           type="button"
@@ -633,7 +687,7 @@ export function ListeningSectionExamView({
     const firstAttemptCorrectCount = config.questions.filter((question) => {
       const first = firstAttemptReview[question.id]
       if (!first) return attempts[question.id]?.completed
-      return first.answerOk && first.evidenceOk
+      return answerOnlyMode ? first.answerOk : first.answerOk && first.evidenceOk
     }).length
     const correctedCount = config.questions.length - firstAttemptCorrectCount
 
@@ -643,7 +697,11 @@ export function ListeningSectionExamView({
           <div>
             <p className="listeningSectionExamSubmitEyebrow">Report card</p>
             <h3>Listening section mastered</h3>
-            <p>ครบ 100% แล้วครับ ด้านล่างคือ keyword, passage response, Thai explanation และ distractor จากคำตอบรอบแรก</p>
+            <p>
+              {answerOnlyMode
+                ? 'ครบ 100% แล้วครับ ด้านล่างคือคำตอบที่ถูก คำอธิบายภาษาไทย และประโยคจาก audioscript'
+                : 'ครบ 100% แล้วครับ ด้านล่างคือ keyword, passage response, Thai explanation และ distractor จากคำตอบรอบแรก'}
+            </p>
           </div>
           <div className="listeningSectionExamReportScore">
             <strong>{config.questions.length}/{config.questions.length}</strong>
@@ -660,10 +718,12 @@ export function ListeningSectionExamView({
             <span>Corrected</span>
             <strong>{correctedCount}</strong>
           </div>
-          <div>
-            <span>Evidence rule</span>
-            <strong>40%</strong>
-          </div>
+          {!answerOnlyMode ? (
+            <div>
+              <span>Evidence rule</span>
+              <strong>40%</strong>
+            </div>
+          ) : null}
         </div>
 
         <div className="listeningSectionExamReportGrid">
@@ -674,7 +734,7 @@ export function ListeningSectionExamView({
               answerOk: attempts[question.id]?.answerStatus === 'correct',
               evidenceOk: attempts[question.id]?.evidenceStatus === 'exact' || attempts[question.id]?.evidenceStatus === 'partial'
             }
-            const firstCorrect = first.answerOk && first.evidenceOk
+            const firstCorrect = answerOnlyMode ? first.answerOk : first.answerOk && first.evidenceOk
             const distractor =
               first.answer && !first.answerOk
                 ? getOptionLabel(question, first.answer)
@@ -708,29 +768,54 @@ export function ListeningSectionExamView({
                   </div>
                 </div>
 
-                <dl className="listeningSectionExamReportTeachingGrid">
-                  <div>
-                    <dt>Keyword in question</dt>
-                    <dd>{question.questionKeyword || question.stem}</dd>
-                  </div>
-                  <div>
-                    <dt>Passage response</dt>
-                    <dd>{question.passageKeyword || question.evidence}</dd>
-                  </div>
-                  <div className="is-wide">
-                    <dt>Thai explanation</dt>
-                    <dd>{question.explanationThai || question.thaiMeaning}</dd>
-                  </div>
-                  <div className="is-wide">
-                    <dt>Distractor</dt>
-                    <dd>{distractor || 'ไม่มีจากคำตอบรอบแรก'}</dd>
-                  </div>
+                <dl className={`listeningSectionExamReportTeachingGrid ${answerOnlyMode ? 'is-part1' : ''}`}>
+                  {answerOnlyMode ? (
+                    <>
+                      <div>
+                        <dt>Your first answer</dt>
+                        <dd>{first.answer || '—'}</dd>
+                      </div>
+                      <div>
+                        <dt>Correct answer</dt>
+                        <dd>{question.correctAnswer}</dd>
+                      </div>
+                      <div className="is-wide">
+                        <dt>Audioscript</dt>
+                        <dd>{question.evidence}</dd>
+                      </div>
+                      <div className="is-wide">
+                        <dt>Thai explanation</dt>
+                        <dd>{question.explanationThai || question.thaiMeaning}</dd>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <dt>Keyword in question</dt>
+                        <dd>{question.questionKeyword || question.stem}</dd>
+                      </div>
+                      <div>
+                        <dt>Passage response</dt>
+                        <dd>{question.passageKeyword || question.evidence}</dd>
+                      </div>
+                      <div className="is-wide">
+                        <dt>Thai explanation</dt>
+                        <dd>{question.explanationThai || question.thaiMeaning}</dd>
+                      </div>
+                      <div className="is-wide">
+                        <dt>Distractor</dt>
+                        <dd>{distractor || 'ไม่มีจากคำตอบรอบแรก'}</dd>
+                      </div>
+                    </>
+                  )}
                 </dl>
 
-                <div className="listeningSectionExamReportEvidence">
-                  <span>Evidence</span>
-                  <p>{question.evidence}</p>
-                </div>
+                {!answerOnlyMode ? (
+                  <div className="listeningSectionExamReportEvidence">
+                    <span>Evidence</span>
+                    <p>{question.evidence}</p>
+                  </div>
+                ) : null}
 
                 <button
                   type="button"
@@ -844,9 +929,11 @@ export function ListeningSectionExamView({
                 <p className="listeningSectionExamScriptHint">
                   {excerptDrill
                     ? 'Practice script: all study excerpts for this drill are shown below (condensed format).'
-                    : activeQuestion
-                      ? `Q${activeQuestion.number}: highlight evidence in the script, then answer on the right. Order does not matter.`
-                      : 'Select a question on the right, then highlight evidence here.'}
+                    : answerOnlyMode
+                      ? 'Audioscript for reference while you listen. Fill each gap on the right — no highlighting needed.'
+                      : activeQuestion
+                        ? `Q${activeQuestion.number}: highlight evidence in the script, then answer on the right. Order does not matter.`
+                        : 'Select a question on the right, then highlight evidence here.'}
                 </p>
                 <div
                   ref={scriptBodyRef}
@@ -883,7 +970,9 @@ export function ListeningSectionExamView({
             ) : (
               <>
                 {renderExamControlPanel()}
-                {config.groups.map((group) => renderGroup(group))}
+                {answerOnlyMode && config.part1Form
+                  ? renderPart1Form(config.part1Form)
+                  : config.groups.map((group) => renderGroup(group))}
               </>
             )}
           </div>
@@ -904,6 +993,89 @@ export function ListeningSectionExamView({
       ) : null}
     </div>
   )
+
+  function renderPart1Form(form: Part1ExamForm) {
+    const renderLine = (line: Part1FormLine, index: number) => {
+      if (line.kind === 'heading') {
+        return (
+          <p key={`part1-h-${index}`} className="listeningSectionExamPart1Heading">
+            {line.text}
+          </p>
+        )
+      }
+      if (line.kind === 'static') {
+        return (
+          <p key={`part1-s-${index}`} className="listeningSectionExamPart1Static">
+            {line.text}
+          </p>
+        )
+      }
+      const question = questionByNumber.get(line.questionNumber)
+      if (!question) return null
+      return renderPart1GapInput(question, line, index)
+    }
+
+    return (
+      <article className="listeningSectionExamPart1Form">
+        <header className="listeningSectionExamPart1FormHeader">
+          <h3>{form.title}</h3>
+          <p className="listeningSectionExamInstruction">{form.instruction}</p>
+          <p className="listeningSectionExamInstruction is-word-limit">{form.wordLimit}</p>
+        </header>
+        <div className="listeningSectionExamPart1Body">{form.lines.map(renderLine)}</div>
+      </article>
+    )
+  }
+
+  function renderPart1GapInput(
+    question: ListeningSectionExamQuestion,
+    line: Extract<Part1FormLine, { kind: 'gap' }>,
+    index: number
+  ) {
+    const attempt = attempts[question.id] || defaultAttempt()
+    const isActive = question.id === activeQuestionId
+    return (
+      <div
+        key={`part1-g-${index}`}
+        className={`listeningSectionExamPart1GapRow ${isActive ? 'is-active' : ''} ${
+          attempt.completed ? 'is-complete' : ''
+        }`}
+        onClick={() => activateQuestion(question.id, false)}
+      >
+        <span className="listeningSectionExamQNum">{question.number}</span>
+        <label className="listeningSectionExamPart1GapLabel">
+          {line.prefix ? <span>{line.prefix}</span> : null}
+          <input
+            type="text"
+            value={attempt.answer}
+            disabled={attempt.completed}
+            placeholder={`Q${question.number}`}
+            autoCapitalize="off"
+            autoComplete="off"
+            spellCheck={false}
+            className={
+              attempt.answerStatus === 'wrong'
+                ? 'is-wrong'
+                : attempt.answerStatus === 'correct'
+                  ? 'is-correct'
+                  : ''
+            }
+            onClick={(event) => event.stopPropagation()}
+            onChange={(event) => {
+              activateQuestion(question.id, false)
+              updateAttempt(question.id, {
+                answer: event.target.value.trimStart(),
+                answerStatus: 'idle',
+                feedback: ''
+              })
+            }}
+          />
+          {line.suffix ? <span>{line.suffix}</span> : null}
+        </label>
+        {renderQuestionFooter(question, attempt, true)}
+      </div>
+    )
+  }
 
   function renderGroup(group: ListeningSectionExamGroup) {
     if (group.kind === 'matching-block') {
@@ -1195,7 +1367,7 @@ export function ListeningSectionExamView({
         className={`listeningSectionExamGapItem ${isActive ? 'is-active' : ''} ${
           attempt.completed ? 'is-complete' : ''
         }`}
-        onClick={() => activateQuestion(question.id, true)}
+        onClick={() => activateQuestion(question.id, !answerOnlyMode)}
       >
         <span className="listeningSectionExamQNum">{question.number}</span>
         <p>{question.stem}</p>
@@ -1210,7 +1382,7 @@ export function ListeningSectionExamView({
           className={attempt.answerStatus === 'wrong' ? 'is-wrong' : attempt.answerStatus === 'correct' ? 'is-correct' : ''}
           onClick={(event) => event.stopPropagation()}
           onChange={(event) => {
-            activateQuestion(question.id, true)
+            activateQuestion(question.id, !answerOnlyMode)
             updateAttempt(question.id, {
               answer: event.target.value.trimStart(),
               answerStatus: 'idle',
@@ -1237,9 +1409,11 @@ export function ListeningSectionExamView({
           <span className={`${attempt.answer.trim() ? 'is-done' : ''} ${attempt.answerStatus === 'wrong' ? 'is-wrong' : ''}`}>
             {answerDone ? 'Answer correct' : attempt.answerStatus === 'wrong' ? 'Answer wrong' : 'Answer'}
           </span>
-          <span className={`${attempt.evidenceDraft.trim() ? 'is-done' : ''} ${attempt.evidenceStatus === 'wrong' ? 'is-wrong' : ''}`}>
-            {evidenceDone ? 'Evidence correct' : attempt.evidenceStatus === 'wrong' ? 'Evidence wrong' : 'Evidence'}
-          </span>
+          {!answerOnlyMode ? (
+            <span className={`${attempt.evidenceDraft.trim() ? 'is-done' : ''} ${attempt.evidenceStatus === 'wrong' ? 'is-wrong' : ''}`}>
+              {evidenceDone ? 'Evidence correct' : attempt.evidenceStatus === 'wrong' ? 'Evidence wrong' : 'Evidence'}
+            </span>
+          ) : null}
         </div>
         {attempt.feedback ? (
           <p
@@ -1254,7 +1428,7 @@ export function ListeningSectionExamView({
             {attempt.feedback}
           </p>
         ) : null}
-        {attempt.evidenceStatus === 'wrong' && !attempt.completed ? (
+        {!answerOnlyMode && attempt.evidenceStatus === 'wrong' && !attempt.completed ? (
           <button
             type="button"
             className="listeningSectionExamRemoveEvidence"

@@ -11,7 +11,9 @@
     "start": "node server/index.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "verify:reading": "node scripts/verify-reading-prompts.mjs"
+    "verify:reading": "node scripts/verify-reading-prompts.mjs",
+    "verify:listening-part1-audio": "node scripts/verify-part1-audio-urls.mjs",
+    "audit:listening-part1": "node scripts/audit-part1-foundation.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -84,6 +84,7 @@ export const filterFoundationSetsForSkillTrack = (
   track: ListeningSkillTrack,
   part34Subcategory: ListeningPart34Subcategory = 'skill-practice'
 ) => {
+  if (track === 'part1-detail') return sets.filter((set) => set.category === 'part1-detail')
   if (track === 'part2-mc') return sets.filter((set) => set.category === 'essential')
   if (track === 'part34-advanced') {
     return sets.filter((set) => set.category === foundationCategoryForPart34Subcategory(part34Subcategory))
@@ -95,6 +96,7 @@ export const countFoundationSetsForTrack = (
   sets: ListeningFoundationSet[],
   track: ListeningSkillTrack
 ): number => {
+  if (track === 'part1-detail') return sets.filter((set) => set.category === 'part1-detail').length
   if (track === 'part2-mc') return sets.filter((set) => set.category === 'essential').length
   if (track === 'part34-advanced') {
     return sets.filter((set) => set.category === 'advanced-listening' || set.category === 'advanced').length

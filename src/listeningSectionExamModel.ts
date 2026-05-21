@@ -1,3 +1,8 @@
+import {
+  CAMBRIDGE_PART1_FORM_BY_TEST,
+  part1FormKeyFromSetId,
+  type Part1ExamForm
+} from './listeningPart1FormLayout'
 import type { ListeningBuilderExamTask } from './listeningBuilderCambridge18Section2'
 import {
   isListeningExcerptDrillSet,
@@ -19,6 +24,7 @@ export type ListeningSectionExamQuestion = {
   contextLines: string[]
   options: Array<{ key: string; text: string }>
   correctAnswer: string
+  acceptedAnswers?: string[]
   evidence: string
   passageKeyword: string
   questionKeyword: string
@@ -65,6 +71,10 @@ export type ListeningSectionExamConfig = {
   audioUrl?: string
   passage: string
   excerptDrill?: boolean
+  /** Part 1 gap-fill: grade answers only — no script evidence highlight. */
+  answerOnlyMode?: boolean
+  /** Official Cambridge Part 1 notes form layout. */
+  part1Form?: Part1ExamForm
   questions: ListeningSectionExamQuestion[]
   groups: ListeningSectionExamGroup[]
 }
@@ -194,6 +204,7 @@ export const foundationQuestionToExamQuestion = (
     contextLines: parsed.contextLines,
     options: question.options,
     correctAnswer: question.correctAnswer,
+    acceptedAnswers: question.acceptedAnswers,
     evidence: question.evidence,
     passageKeyword: question.passageKeyword,
     questionKeyword: question.questionKeyword,
@@ -207,6 +218,7 @@ export const foundationQuestionToExamQuestion = (
 export const foundationSetToExamConfig = (set: ListeningFoundationSet): ListeningSectionExamConfig => {
   const questions = set.questions.map(foundationQuestionToExamQuestion)
   const passage = resolveListeningFoundationAudioscript(set)
+  const formKey = set.category === 'part1-detail' ? part1FormKeyFromSetId(set.id) : ''
   return {
     title: set.title,
     subtitle: set.levelLabel,
@@ -214,6 +226,8 @@ export const foundationSetToExamConfig = (set: ListeningFoundationSet): Listenin
     audioUrl: set.audioUrl,
     passage,
     excerptDrill: isListeningExcerptDrillSet(set),
+    answerOnlyMode: set.category === 'part1-detail',
+    part1Form: formKey ? CAMBRIDGE_PART1_FORM_BY_TEST[formKey] : undefined,
     questions,
     groups: buildListeningSectionExamGroups(questions)
   }

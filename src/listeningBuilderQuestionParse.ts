@@ -48,7 +48,7 @@ export const parseListeningBuilderExamQuestion = (questionText: string) => {
   const isGapFill =
     optionLines.length === 0 &&
     (stem.includes('____') ||
-      /____/.test(questionText) ||
+      /_{2,}/.test(questionText) ||
       /complete the notes/i.test(questionText) ||
       /complete the table/i.test(questionText) ||
       /complete the summary/i.test(questionText))

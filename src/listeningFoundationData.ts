@@ -1,6 +1,6 @@
 import { CAM10_TEST1_SECTION3_SCRIPT } from './listeningFoundationSectionScripts'
 
-export type ListeningFoundationCategory = 'essential' | 'advanced' | 'advanced-listening'
+export type ListeningFoundationCategory = 'part1-detail' | 'essential' | 'advanced' | 'advanced-listening'
 
 export type ListeningFoundationQuestion = {
   id: string
@@ -10,6 +10,8 @@ export type ListeningFoundationQuestion = {
   passage: string
   evidence: string
   correctAnswer: string
+  /** Alternate spellings / formats from the official answer key (e.g. harbour / harbor). */
+  acceptedAnswers?: string[]
   options: Array<{ key: string; text: string }>
   passageKeyword: string
   questionKeyword: string

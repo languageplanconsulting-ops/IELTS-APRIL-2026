@@ -1065,6 +1065,94 @@
   color: #065f46;
 }
 
+.listeningSectionExamPart1Form {
+  margin-top: 0.75rem;
+  border: 1px solid var(--lse-border);
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.listeningSectionExamPart1FormHeader {
+  padding: 1rem 1.1rem 0.75rem;
+  border-bottom: 1px solid var(--lse-border);
+  background: #f8fafc;
+}
+
+.listeningSectionExamPart1FormHeader h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.listeningSectionExamPart1FormHeader .is-word-limit {
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+.listeningSectionExamPart1Body {
+  padding: 0.85rem 1.1rem 1rem;
+}
+
+.listeningSectionExamPart1Heading {
+  margin: 0.85rem 0 0.35rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.listeningSectionExamPart1Static {
+  margin: 0.2rem 0;
+  color: #334155;
+}
+
+.listeningSectionExamPart1GapRow {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.55rem;
+  align-items: start;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--lse-border);
+  cursor: pointer;
+}
+
+.listeningSectionExamPart1GapRow.is-active {
+  background: #eff6ff;
+  border-radius: 8px;
+  padding-inline: 0.35rem;
+}
+
+.listeningSectionExamPart1GapLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 1.5;
+}
+
+.listeningSectionExamPart1GapLabel input {
+  min-width: 5.5rem;
+  max-width: 100%;
+  border: 1px solid var(--lse-border);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  font-weight: 700;
+}
+
+.listeningSectionExamPart1GapLabel input.is-wrong {
+  border-color: var(--lse-bad);
+  background: var(--lse-bad-bg);
+  color: #7f1d1d;
+}
+
+.listeningSectionExamPart1GapLabel input.is-correct {
+  border-color: var(--lse-good);
+  background: var(--lse-good-bg);
+  color: #065f46;
+}
+
+.listeningSectionExamReportTeachingGrid.is-part1 {
+  grid-template-columns: 1fr 1fr;
+}
+
 .listeningSectionExamMatchingPrompt {
   display: grid;
   grid-template-columns: auto 1fr;

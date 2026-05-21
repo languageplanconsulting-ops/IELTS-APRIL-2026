@@ -17,6 +17,7 @@ const scriptFromBuilderTest = (examSet: ListeningBuilderExamSet, testNumber: num
 
 /** Minimum expected audioscript length by section (full IELTS sections are usually 1500+ chars). */
 export const LISTENING_SECTION_MIN_SCRIPT_CHARS: Record<number, number> = {
+  1: 900,
   2: 1280,
   3: 1200,
   4: 1400

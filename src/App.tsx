@@ -27,6 +27,7 @@ import { CAMBRIDGE_17_LISTENING_FOUNDATION_SETS } from './listeningFoundationCam
 import { CAMBRIDGE_18_SECTION_2_EXAM_SET } from './listeningBuilderCambridge18Section2'
 import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory, type ListeningFoundationSet } from './listeningFoundationData'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
+import { LISTENING_PART1_FOUNDATION_SETS } from './listeningPart1FromWorkbook'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
 import { ADVANCED_PART34_LISTENING_SETS } from './listeningAdvancedPart34Data'
@@ -115,6 +116,7 @@ const LISTENING_BUILDER_EXAM_SETS = [
 ]
 
 const ALL_LISTENING_FOUNDATION_SETS = [
+  ...LISTENING_PART1_FOUNDATION_SETS,
   ...LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
   ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential'),
@@ -8699,6 +8701,9 @@ function App() {
     : 0
   const listeningUnansweredCount = listeningReportItems.filter((item) => !String(item.userAnswer || '').trim()).length
   const visibleListeningFoundationSets = useMemo(() => {
+    if (listeningSkillTrack === 'part1-detail') {
+      return filterFoundationSetsForSkillTrack(ALL_LISTENING_FOUNDATION_SETS, 'part1-detail')
+    }
     if (listeningSkillTrack === 'part2-mc') {
       return filterFoundationSetsForSkillTrack(ALL_LISTENING_FOUNDATION_SETS, 'part2-mc')
     }
@@ -12385,8 +12390,12 @@ function App() {
 
     try {
       if (activeListeningFoundationSet.audioUrl) {
-        await playListeningSectionAudioFromUrl(activeListeningFoundationSet.audioUrl)
-        return
+        try {
+          await playListeningSectionAudioFromUrl(activeListeningFoundationSet.audioUrl)
+          return
+        } catch {
+          // External Cambridge audio unavailable — fall back to cached section TTS below.
+        }
       }
       if (audioCacheKey && authSession?.accessToken) {
         const payload = await fetchJson<{ audioUrl: string; cached?: boolean }>('/api/tts/listening-section-audio', {
@@ -12455,8 +12464,12 @@ function App() {
     setListeningSkillTrack(track)
     setListeningBankBookFilter('all')
     if (track === 'part1-detail') {
-      setListeningLabMode('practice')
-      setListeningAttemptStage('bank')
+      setListeningLabMode('foundation')
+      setListeningFoundationCategory('part1-detail')
+      const firstSet = ALL_LISTENING_FOUNDATION_SETS.find((set) => set.category === 'part1-detail')
+      setSelectedListeningFoundationSetId(firstSet?.id || '')
+      setListeningFoundationQuestionIndex(0)
+      resetListeningFoundationQuestion()
     } else if (track === 'part2-mc') {
       setListeningLabMode('foundation')
       setListeningFoundationCategory('essential')
@@ -13940,9 +13953,7 @@ function App() {
                 <div className="listeningSkillCardGrid">
                   {LISTENING_SKILL_CARDS.map((card, index) => {
                     const setCount =
-                      card.track === 'part1-detail'
-                        ? LISTENING_EXERCISES.length
-                        : countFoundationSetsForTrack(ALL_LISTENING_FOUNDATION_SETS, card.track)
+                      countFoundationSetsForTrack(ALL_LISTENING_FOUNDATION_SETS, card.track)
 
                     return (
                       <button
@@ -14032,11 +14043,13 @@ function App() {
                 renderListeningBookFilter(foundationBooksInCategory, 'Filter listening sets by book')}
 
               <p className="listeningFoundationBankHint meta">
-                {listeningSkillTrack === 'part34-advanced' && listeningPart34Subcategory === 'skill-practice'
-                  ? <>Choose a Part 3 or Part 4 set, listen, answer, and highlight the evidence. Part 3 scripts are shown as two-speaker dialogue turns.</>
-                  : listeningSkillTrack === 'part34-advanced'
-                    ? <>Choose <strong>book → test → section</strong> from Cambridge Part 3–4 drills, then start. Questions on the left, audio script on the right.</>
-                    : <>Choose <strong>book → test → section</strong>, then start. Questions on the left, audio script on the right — answer and highlight evidence for each question.</>}
+                {listeningSkillTrack === 'part1-detail'
+                  ? <>Choose <strong>Cambridge book → test</strong> for Part 1 notes completion. Listen to the real Section 1 audio and fill each gap — just like the real exam.</>
+                  : listeningSkillTrack === 'part34-advanced' && listeningPart34Subcategory === 'skill-practice'
+                    ? <>Choose a Part 3 or Part 4 set, listen, answer, and highlight the evidence. Part 3 scripts are shown as two-speaker dialogue turns.</>
+                    : listeningSkillTrack === 'part34-advanced'
+                      ? <>Choose <strong>book → test → section</strong> from Cambridge Part 3–4 drills, then start. Questions on the left, audio script on the right.</>
+                      : <>Choose <strong>book → test → section</strong>, then start. Questions on the left, audio script on the right — answer and highlight evidence for each question.</>}
               </p>
 
               <div className="listeningFoundationBankGrouped">
