@@ -35,6 +35,79 @@ const normalize = (value: string) =>
     .replace(/\s+/g, ' ')
     .trim()
 
+const splitPassageSentences = (passage: string) =>
+  passage
+    .split(/\n+|(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+
+const resolveEvidenceInPassage = (
+  passage: string,
+  task: ListeningBuilderExamTask,
+  resolvedAnswer: string
+): string => {
+  const target = String(task.targetText || '').trim()
+  if (target && passage.includes(target)) return target
+
+  const sentences = splitPassageSentences(passage)
+  const keywordSource = [task.questionWordPhrase, target].filter(Boolean).join(' ')
+  const keywords = normalize(keywordSource)
+    .split(' ')
+    .filter((word) => word.length > 3)
+
+  if (keywords.length) {
+    let bestSentence = ''
+    let bestScore = 0
+    for (const sentence of sentences) {
+      const normalizedSentence = normalize(sentence)
+      const score = keywords.filter((word) => normalizedSentence.includes(word)).length
+      if (score > bestScore) {
+        bestScore = score
+        bestSentence = sentence
+      }
+    }
+    if (bestScore >= Math.min(2, keywords.length) && bestSentence) return bestSentence
+  }
+
+  const answerWord = String(resolvedAnswer)
+    .replace(/\(s\)/gi, 's')
+    .replace(/[^a-z0-9\s]/gi, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .pop()
+
+  const answerStems = [
+    normalize(String(resolvedAnswer).replace(/\(s\)/gi, 's')),
+    answerWord ? normalize(answerWord) : ''
+  ].filter((stem) => stem.length >= 3)
+
+  for (const stem of answerStems) {
+    for (const sentence of sentences) {
+      if (normalize(sentence).includes(stem)) return sentence
+    }
+  }
+
+  if (target) {
+    const targetWords = normalize(target)
+      .split(' ')
+      .filter((word) => word.length > 3)
+    let bestSentence = ''
+    let bestScore = 0
+    for (const sentence of sentences) {
+      const normalizedSentence = normalize(sentence)
+      const score = targetWords.filter((word) => normalizedSentence.includes(word)).length
+      if (score > bestScore) {
+        bestScore = score
+        bestSentence = sentence
+      }
+    }
+    if (bestScore >= 2 && bestSentence) return bestSentence
+  }
+
+  return target || task.questionWordPhrase
+}
+
 const builderTaskToFoundationQuestion = (
   setKey: string,
   testId: string,
@@ -67,6 +140,9 @@ const builderTaskToFoundationQuestion = (
       : options.find((option) => normalize(option.text) === normalize(String(task.targetText || resolvedAnswer)))
           ?.key || 'A')
 
+  const correctOptionText =
+    options.find((option) => option.key === answerKey)?.text || task.targetText || String(resolvedAnswer)
+
   const parsedLines = normalizeListeningBuilderQuestionText(task.questionText)
     .split('\n')
     .map((line) => line.trim())
@@ -81,16 +157,18 @@ const builderTaskToFoundationQuestion = (
   const rowLabel =
     isMatching && parsedStem && !parsedStem.includes('?') && parsedStem.length <= 64 ? parsedStem : undefined
 
+  const evidence = resolveEvidenceInPassage(passage, task, correctOptionText)
+
   return {
     id: `${setKey}-${task.id}`,
     number: task.questionNumber,
     section,
     question: displayQuestion,
     passage,
-    evidence: task.targetText,
+    evidence,
     correctAnswer: answerKey,
     options,
-    passageKeyword: task.targetText.slice(0, 80),
+    passageKeyword: evidence.slice(0, 80),
     questionKeyword: task.questionWordPhrase,
     thaiMeaning: task.thaiMeaning,
     explanationThai: task.explanationThai,

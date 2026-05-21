@@ -30,6 +30,21 @@ import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationC
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
 import { ADVANCED_PART34_LISTENING_SETS } from './listeningAdvancedPart34Data'
+import {
+  LISTENING_JOURNEY_BAND_GOALS,
+  LISTENING_JOURNEY_LEAD,
+  LISTENING_JOURNEY_TITLE,
+  LISTENING_PART34_SUBCATEGORY_DESCRIPTIONS,
+  LISTENING_PART34_SUBCATEGORY_LABELS,
+  LISTENING_SKILL_CARDS,
+  LISTENING_SKILL_TRACK_DESCRIPTIONS,
+  LISTENING_SKILL_TRACK_LABELS,
+  countFoundationSetsForTrack,
+  filterFoundationSetsForSkillTrack,
+  foundationCategoryForPart34Subcategory,
+  type ListeningPart34Subcategory,
+  type ListeningSkillTrack
+} from './listeningJourney'
 import { resolveListeningFoundationAudioscript } from './listeningFoundationAudioscript'
 import { SpeakingPart2SampleBadge, SpeakingPart2SamplePanel } from './SpeakingPart2SampleVideo'
 import { resolveSpeakingPart2SampleVideo } from './speakingPart2SampleVideos'
@@ -113,18 +128,6 @@ const ALL_LISTENING_FOUNDATION_SETS = [
 
 const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
   set.audioCacheKey || `listening-foundation-${set.id}`
-
-const LISTENING_FOUNDATION_CATEGORY_LABELS: Record<ListeningFoundationCategory, string> = {
-  essential: 'Essential',
-  advanced: 'Advanced',
-  'advanced-listening': 'ADVANCED LISTENING - Part 3,4 สำหรับคนที่อยากได้ 7+'
-}
-
-const LISTENING_FOUNDATION_CATEGORY_DESCRIPTIONS: Record<ListeningFoundationCategory, string> = {
-  essential: 'Core vocabulary · target below Band 6',
-  advanced: 'Mid-high vocabulary · target Band 6.5-7',
-  'advanced-listening': 'IELTS-style Part 3 dialogue + Part 4 lecture · target Band 7+'
-}
 
 type Role = 'student' | 'admin' | 'trial'
 type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
@@ -6422,6 +6425,9 @@ function App() {
   const [readingPdoyFillMeaningOptionId, setReadingPdoyFillMeaningOptionId] = useState('')
   const [selectedListeningExerciseId, setSelectedListeningExerciseId] = useState('')
   const [listeningLabMode, setListeningLabMode] = useState<'landing' | 'practice' | 'builder' | 'foundation'>('landing')
+  const [listeningSkillTrack, setListeningSkillTrack] = useState<ListeningSkillTrack | null>(null)
+  const [listeningPart34Subcategory, setListeningPart34Subcategory] =
+    useState<ListeningPart34Subcategory>('skill-practice')
   const [listeningAttemptStage, setListeningAttemptStage] = useState<'bank' | 'exam' | 'report'>('bank')
   const [listeningAnswers, setListeningAnswers] = useState<Record<number, string>>({})
   const [listeningReportItems, setListeningReportItems] = useState<ListeningReportItem[]>([])
@@ -8692,10 +8698,19 @@ function App() {
     ? Math.round((listeningReportItems.filter((item) => item.isCorrect).length / listeningReportItems.length) * 100)
     : 0
   const listeningUnansweredCount = listeningReportItems.filter((item) => !String(item.userAnswer || '').trim()).length
-  const visibleListeningFoundationSets = useMemo(
-    () => ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === listeningFoundationCategory),
-    [listeningFoundationCategory]
-  )
+  const visibleListeningFoundationSets = useMemo(() => {
+    if (listeningSkillTrack === 'part2-mc') {
+      return filterFoundationSetsForSkillTrack(ALL_LISTENING_FOUNDATION_SETS, 'part2-mc')
+    }
+    if (listeningSkillTrack === 'part34-advanced') {
+      return filterFoundationSetsForSkillTrack(
+        ALL_LISTENING_FOUNDATION_SETS,
+        'part34-advanced',
+        listeningPart34Subcategory
+      )
+    }
+    return ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === listeningFoundationCategory)
+  }, [listeningSkillTrack, listeningPart34Subcategory, listeningFoundationCategory])
   const foundationBooksInCategory = useMemo(
     () => listFoundationBooks(visibleListeningFoundationSets),
     [visibleListeningFoundationSets]
@@ -12427,36 +12442,53 @@ function App() {
     setActivePage('listening_foundation_exam')
   }
 
-  const openListeningFoundationCategory = (category: ListeningFoundationCategory) => {
-    stopListeningPlayback()
-    setListeningLabMode('foundation')
-    handleListeningFoundationCategoryChange(category)
-    setActivePage('listening')
-  }
-
-  const openListeningPracticeBank = () => {
-    stopListeningPlayback()
-    setListeningLabMode('practice')
-    setListeningAttemptStage('bank')
-    setListeningPlaybackState('idle')
-    setListeningExerciseError('')
-    setActivePage('listening')
-  }
-
-  const openListeningLanding = () => {
+  const openListeningJourney = () => {
     stopListeningPlayback()
     setListeningLabMode('landing')
+    setListeningSkillTrack(null)
     setListeningAttemptStage('bank')
     setActivePage('listening')
   }
 
-  const handleListeningFoundationCategoryChange = (category: ListeningFoundationCategory) => {
-    const firstSet = ALL_LISTENING_FOUNDATION_SETS.find((set) => set.category === category)
-    setListeningFoundationCategory(category)
+  const openListeningSkillTrack = (track: ListeningSkillTrack) => {
+    stopListeningPlayback()
+    setListeningSkillTrack(track)
     setListeningBankBookFilter('all')
+    if (track === 'part1-detail') {
+      setListeningLabMode('practice')
+      setListeningAttemptStage('bank')
+    } else if (track === 'part2-mc') {
+      setListeningLabMode('foundation')
+      setListeningFoundationCategory('essential')
+      const firstSet = ALL_LISTENING_FOUNDATION_SETS.find((set) => set.category === 'essential')
+      setSelectedListeningFoundationSetId(firstSet?.id || '')
+      setListeningFoundationQuestionIndex(0)
+      resetListeningFoundationQuestion()
+    } else {
+      setListeningLabMode('foundation')
+      setListeningPart34Subcategory('skill-practice')
+      setListeningFoundationCategory('advanced-listening')
+      const firstSet = ALL_LISTENING_FOUNDATION_SETS.find((set) => set.category === 'advanced-listening')
+      setSelectedListeningFoundationSetId(firstSet?.id || '')
+      setListeningFoundationQuestionIndex(0)
+      resetListeningFoundationQuestion()
+    }
+    setActivePage('listening')
+  }
+
+  const handleListeningPart34SubcategoryChange = (subcategory: ListeningPart34Subcategory) => {
+    const category = foundationCategoryForPart34Subcategory(subcategory)
+    setListeningPart34Subcategory(subcategory)
+    setListeningBankBookFilter('all')
+    setListeningFoundationCategory(category)
+    const firstSet = ALL_LISTENING_FOUNDATION_SETS.find((set) => set.category === category)
     setSelectedListeningFoundationSetId(firstSet?.id || '')
     setListeningFoundationQuestionIndex(0)
     resetListeningFoundationQuestion()
+  }
+
+  const openListeningLanding = () => {
+    openListeningJourney()
   }
 
   const renderListeningBookFilter = (books: number[], ariaLabel: string) => (
@@ -13870,96 +13902,96 @@ function App() {
         </section>
       ) : activePage === 'listening' ? (
         canAccessListening ? (
-        <section className="panel full readingPage listeningPage">
+        <section className={`panel full readingPage listeningPage ${listeningLabMode === 'landing' ? 'listeningPage-journey' : ''}`}>
           <div className="readingPageHeader listeningLabHeader">
             <div>
-              <h2>Listening Lab</h2>
-              <p>เลือกโหมดฝึก Listening ที่เหมาะกับระดับตอนนี้</p>
+              <h2>{LISTENING_JOURNEY_TITLE}</h2>
+              <p>{listeningLabMode === 'landing' ? LISTENING_JOURNEY_LEAD : 'เลือกชุดฝึกที่เหมาะกับทักษะและเป้าคะแนนของคุณ'}</p>
             </div>
             {listeningLabMode !== 'landing' && (
               <button
                 type="button"
                 className="secondary listeningBackChoiceButton"
-                onClick={openListeningLanding}
+                onClick={openListeningJourney}
               >
-                Back to Listening Choices
+                Back to Listening Practice
               </button>
             )}
           </div>
 
           {listeningLabMode === 'landing' && (
-            <div className="listeningBankLanding">
-              <p className="listeningBankLandingLead meta">
-                Pick one path. Foundation and Paraphrase drills are organised by <strong>Cambridge book → test → section</strong>.
-              </p>
-              <div className="listeningModeChoiceGrid listeningModeChoiceGrid--three">
-                <button
-                  type="button"
-                  className="listeningModeChoiceCard"
-                  onClick={() => openListeningFoundationCategory('essential')}
-                >
-                  <span>01</span>
-                  <strong>Vocabulary Foundation</strong>
-                  <p>Read the script, highlight evidence, answer MCQ. Best below Band 6–7.</p>
-                  <em className="listeningModeChoiceHint">Essential &amp; Advanced inside</em>
-                </button>
-                <button
-                  type="button"
-                  className="listeningModeChoiceCard listeningModeChoiceCardPractice"
-                  onClick={() => openListeningFoundationCategory('advanced-listening')}
-                >
-                  <span>02</span>
-                  <strong>ADVANCED LISTENING - Part 3,4</strong>
-                  <p>สำหรับคนที่อยากได้ 7+ · Deepgram audio, dialogue script, evidence highlight.</p>
-                  <em className="listeningModeChoiceHint">Part 3 dialogue + Part 4 lecture</em>
-                </button>
-                <button
-                  type="button"
-                  className="listeningModeChoiceCard listeningModeChoiceCardPractice"
-                  onClick={() => {
-                    setListeningLabMode('builder')
-                    setListeningBankBookFilter('all')
-                    setListeningAttemptStage('bank')
-                    setActivePage('listening')
-                  }}
-                >
-                  <span>03</span>
-                  <strong>Paraphrase Builder</strong>
-                  <p>Cambridge 10–18 · Sections 2 &amp; 4 · highlight then answer.</p>
-                </button>
-                <button
-                  type="button"
-                  className="listeningModeChoiceCard listeningModeChoiceCardPractice"
-                  onClick={openListeningPracticeBank}
-                >
-                  <span>04</span>
-                  <strong>Full Practice Sets</strong>
-                  <p>Audio + questions + scored report with transcript evidence.</p>
-                </button>
-              </div>
+            <div className="listeningJourneyShell">
+              <section className="listeningJourneyIntro">
+                <p className="listeningJourneyLead">{LISTENING_JOURNEY_LEAD}</p>
+                <div className="listeningJourneyBandGoals">
+                  {LISTENING_JOURNEY_BAND_GOALS.map((goal) => (
+                    <article key={goal.target} className="listeningJourneyBandGoal">
+                      <span className="listeningJourneyBandTarget">ถ้าเป้าคุณคือ {goal.target}</span>
+                      <p>{goal.advice}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="listeningJourneySkills">
+                <div className="listeningJourneySkillsHeader">
+                  <h3>Practice by Skill</h3>
+                </div>
+                <div className="listeningSkillCardGrid">
+                  {LISTENING_SKILL_CARDS.map((card, index) => {
+                    const setCount =
+                      card.track === 'part1-detail'
+                        ? LISTENING_EXERCISES.length
+                        : countFoundationSetsForTrack(ALL_LISTENING_FOUNDATION_SETS, card.track)
+
+                    return (
+                      <button
+                        key={card.track}
+                        type="button"
+                        className={`listeningSkillCard ${index === 2 ? 'listeningSkillCard-advanced' : ''}`}
+                        style={{ '--motion-stagger': index } as CSSProperties}
+                        onClick={() => openListeningSkillTrack(card.track)}
+                      >
+                        <span className="listeningSkillCardLabel">Skill {index + 1}</span>
+                        <strong>{card.title}</strong>
+                        <p className="listeningSkillCardSubtitle">{card.subtitle}</p>
+                        <small>{card.detail}</small>
+                        <span className="listeningSkillCardCount">{setCount} sets</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </section>
             </div>
           )}
 
-          {listeningLabMode === 'foundation' && (
+          {listeningLabMode === 'foundation' && listeningSkillTrack && (
             <div className="listeningFoundationPage">
               <nav className="listeningBankBreadcrumb" aria-label="Listening navigation">
-                <button type="button" className="listeningBankBreadcrumbLink" onClick={openListeningLanding}>
-                  Listening
+                <button type="button" className="listeningBankBreadcrumbLink" onClick={openListeningJourney}>
+                  Listening Practice
                 </button>
                 <span aria-hidden="true">/</span>
-                <span>Foundation</span>
-                <span aria-hidden="true">/</span>
-                <span>{LISTENING_FOUNDATION_CATEGORY_LABELS[listeningFoundationCategory]}</span>
+                <span>{LISTENING_SKILL_TRACK_LABELS[listeningSkillTrack]}</span>
+                {listeningSkillTrack === 'part34-advanced' && (
+                  <>
+                    <span aria-hidden="true">/</span>
+                    <span>{LISTENING_PART34_SUBCATEGORY_LABELS[listeningPart34Subcategory]}</span>
+                  </>
+                )}
               </nav>
 
               <section className="listeningFoundationMission">
                 <div>
-                  <span>Vocabulary Foundation</span>
-                  <h2>{LISTENING_FOUNDATION_CATEGORY_LABELS[listeningFoundationCategory]}</h2>
-                  <p>{LISTENING_FOUNDATION_CATEGORY_DESCRIPTIONS[listeningFoundationCategory]}</p>
+                  <span>Practice by Skill</span>
+                  <h2>{LISTENING_SKILL_TRACK_LABELS[listeningSkillTrack]}</h2>
+                  <p>{LISTENING_SKILL_TRACK_DESCRIPTIONS[listeningSkillTrack]}</p>
+                  {listeningSkillTrack === 'part34-advanced' && (
+                    <p className="meta">{LISTENING_PART34_SUBCATEGORY_DESCRIPTIONS[listeningPart34Subcategory]}</p>
+                  )}
                 </div>
                 <div className="listeningFoundationProgress">
-                  <span>Category progress</span>
+                  <span>Track progress</span>
                   <strong>
                     {listeningFoundationCategoryQuestionTotal
                       ? Math.round(
@@ -13971,58 +14003,53 @@ function App() {
                 </div>
               </section>
 
-              <div className="listeningFoundationCategories" role="tablist" aria-label="Foundation level">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={listeningFoundationCategory === 'essential'}
-                  className={listeningFoundationCategory === 'essential' ? 'active' : ''}
-                  onClick={() => handleListeningFoundationCategoryChange('essential')}
-                >
-                  Essential ({ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'essential').length} sets)
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={listeningFoundationCategory === 'advanced'}
-                  className={listeningFoundationCategory === 'advanced' ? 'active' : ''}
-                  onClick={() => handleListeningFoundationCategoryChange('advanced')}
-                >
-                  Advanced ({ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced').length} sets)
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={listeningFoundationCategory === 'advanced-listening'}
-                  className={listeningFoundationCategory === 'advanced-listening' ? 'active' : ''}
-                  onClick={() => handleListeningFoundationCategoryChange('advanced-listening')}
-                >
-                  ADVANCED LISTENING ({ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced-listening').length} sets)
-                </button>
-              </div>
+              {listeningSkillTrack === 'part34-advanced' && (
+                <div className="listeningFoundationCategories" role="tablist" aria-label="Advanced listening type">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={listeningPart34Subcategory === 'skill-practice'}
+                    className={listeningPart34Subcategory === 'skill-practice' ? 'active' : ''}
+                    onClick={() => handleListeningPart34SubcategoryChange('skill-practice')}
+                  >
+                    Skill Practice (
+                    {ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced-listening').length} sets)
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={listeningPart34Subcategory === 'cambridge-exam'}
+                    className={listeningPart34Subcategory === 'cambridge-exam' ? 'active' : ''}
+                    onClick={() => handleListeningPart34SubcategoryChange('cambridge-exam')}
+                  >
+                    Cambridge exam (
+                    {ALL_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced').length} sets)
+                  </button>
+                </div>
+              )}
 
               {foundationBooksInCategory.length > 0 &&
-                renderListeningBookFilter(foundationBooksInCategory, 'Filter foundation sets by book')}
+                renderListeningBookFilter(foundationBooksInCategory, 'Filter listening sets by book')}
 
               <p className="listeningFoundationBankHint meta">
-                {listeningFoundationCategory === 'advanced-listening'
-                  ? <>Choose a Part 3 or Part 4 set, then listen, answer, and highlight the evidence. Part 3 scripts are shown as two-speaker dialogue turns.</>
-                  : <>Choose <strong>book → test → section</strong>, then start. Questions on the left, audio script on the right — answer and highlight evidence for each question.</>}
+                {listeningSkillTrack === 'part34-advanced' && listeningPart34Subcategory === 'skill-practice'
+                  ? <>Choose a Part 3 or Part 4 set, listen, answer, and highlight the evidence. Part 3 scripts are shown as two-speaker dialogue turns.</>
+                  : listeningSkillTrack === 'part34-advanced'
+                    ? <>Choose <strong>book → test → section</strong> from Cambridge Part 3–4 drills, then start. Questions on the left, audio script on the right.</>
+                    : <>Choose <strong>book → test → section</strong>, then start. Questions on the left, audio script on the right — answer and highlight evidence for each question.</>}
               </p>
 
               <div className="listeningFoundationBankGrouped">
                 {foundationSetsByBook.length === 0 ? (
                   <div className="listeningFoundationBankEmpty">
-                    <p>No drills in this category yet.</p>
-                    <p className="meta">
-                      Switch Essential / Advanced above, or pick another book filter.
-                    </p>
+                    <p>No drills in this track yet.</p>
+                    <p className="meta">Try another subcategory or book filter.</p>
                   </div>
                 ) : (
                   foundationSetsByBook.map(({ book, sets }) => (
                     <section key={`foundation-book-${book}`} className="listeningBookGroup">
                       <header className="listeningBookGroupHeader">
-                        <h3>{book ? `Cambridge ${book}` : 'Advanced Listening Sets'}</h3>
+                        <h3>{book ? `Cambridge ${book}` : listeningPart34Subcategory === 'skill-practice' ? 'Skill Practice Sets' : 'Cambridge Sets'}</h3>
                         <span>{sets.length} tests</span>
                       </header>
                       <div className="listeningSetCardGrid">
@@ -14059,6 +14086,21 @@ function App() {
 
           {listeningLabMode === 'practice' && listeningAttemptStage === 'bank' && (
             <>
+              <nav className="listeningBankBreadcrumb" aria-label="Listening navigation">
+                <button type="button" className="listeningBankBreadcrumbLink" onClick={openListeningJourney}>
+                  Listening Practice
+                </button>
+                <span aria-hidden="true">/</span>
+                <span>{LISTENING_SKILL_TRACK_LABELS['part1-detail']}</span>
+              </nav>
+
+              <section className="listeningFoundationMission">
+                <div>
+                  <span>Practice by Skill</span>
+                  <h2>{LISTENING_SKILL_TRACK_LABELS['part1-detail']}</h2>
+                  <p>{LISTENING_SKILL_TRACK_DESCRIPTIONS['part1-detail']}</p>
+                </div>
+              </section>
               <div className="readingSummaryStrip listeningOfficialStrip">
                 {LISTENING_OFFICIAL_RESOURCES.map((resource) => (
                   <article key={resource.id} className="readingSummaryCard listeningReferenceCard">

@@ -15809,6 +15809,130 @@ select:focus,
   margin: 0 auto;
 }
 
+.listeningPage-journey,
+.workspace:has(.listeningPage-journey) {
+  max-width: none;
+}
+
+.listeningPage-journey {
+  display: grid;
+  gap: 28px;
+}
+
+.listeningJourneyShell {
+  display: grid;
+  gap: 32px;
+  max-width: 980px;
+}
+
+.listeningJourneyIntro {
+  display: grid;
+  gap: 20px;
+}
+
+.listeningJourneyLead {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: #0f172a;
+}
+
+.listeningJourneyBandGoals {
+  display: grid;
+  gap: 14px;
+}
+
+.listeningJourneyBandGoal {
+  padding: 16px 18px;
+  border: 2px solid #dbeafe;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+}
+
+.listeningJourneyBandTarget {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #004aad;
+}
+
+.listeningJourneyBandGoal p {
+  margin: 0;
+  line-height: 1.65;
+  color: #334155;
+}
+
+.listeningJourneySkillsHeader h3 {
+  margin: 0 0 16px;
+  font-size: 1.35rem;
+}
+
+.listeningSkillCardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.listeningSkillCard {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-height: 260px;
+  padding: 22px;
+  border: 3px solid #0f172a;
+  border-radius: 24px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--duration-luxury, 420ms) var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1)),
+    box-shadow var(--duration-luxury, 420ms) var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1));
+  animation: readingViewStageEnter 720ms var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1)) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 90ms);
+}
+
+.listeningSkillCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+.listeningSkillCard-advanced {
+  background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+  border-color: #ea580c;
+}
+
+.listeningSkillCardLabel {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.listeningSkillCard strong {
+  font-size: 1.2rem;
+  line-height: 1.35;
+}
+
+.listeningSkillCardSubtitle {
+  margin: 0;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.listeningSkillCard small {
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.listeningSkillCardCount {
+  margin-top: auto;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #004aad;
+}
+
 .listeningModeChoiceGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -17560,12 +17684,14 @@ section.panel.full.speakingFlowTheme > h2 {
 @media (max-width: 720px) {
   .speakingFlowTheme .speakingEntryChooser,
   .speakingFlowTheme .providerTabs.speakingPartTabs,
-  .readingPage .readingEntryChooser {
+  .readingPage .readingEntryChooser,
+  .listeningSkillCardGrid {
     grid-template-columns: 1fr;
   }
 
   .speakingFlowTheme .speakingEntryCard,
-  .readingPage .readingEntryCard {
+  .readingPage .readingEntryCard,
+  .listeningSkillCard {
     min-height: 198px;
     padding: 18px !important;
   }

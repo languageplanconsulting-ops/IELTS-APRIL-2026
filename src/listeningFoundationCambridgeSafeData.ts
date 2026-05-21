@@ -1,8 +1,45 @@
 import type { ListeningFoundationQuestion, ListeningFoundationSet } from './listeningFoundationData'
+import { CAMBRIDGE_10_SECTION_2_EXAM_SET } from './listeningBuilderCambridge10Section2'
+import { CAMBRIDGE_10_SECTION_4_EXAM_SET } from './listeningBuilderCambridge10Section4'
+import { builderExamSetToFoundationSets } from './listeningFoundationFromBuilder'
 import {
   CAM10_TEST4_SECTION3_SCRIPT,
   CAM20_TEST1_SECTION2_POTTERY_SCRIPT
 } from './listeningFoundationSectionScripts'
+
+const withFoundationId = (
+  set: ListeningFoundationSet,
+  id: string,
+  title: string
+): ListeningFoundationSet => ({
+  ...set,
+  id,
+  title
+})
+
+const builderSetForTest = (
+  examSet: Parameters<typeof builderExamSetToFoundationSets>[0],
+  category: 'essential' | 'advanced',
+  testNumber: number
+) => {
+  const set = builderExamSetToFoundationSets(examSet, category).find((item) =>
+    item.title.includes(`Test ${testNumber}`)
+  )
+  if (!set) throw new Error(`Missing builder foundation set for test ${testNumber}`)
+  return set
+}
+
+const MANHAM_PORT_DRILL = withFoundationId(
+  builderSetForTest(CAMBRIDGE_10_SECTION_2_EXAM_SET, 'essential', 4),
+  'foundation-essential-cam10-test4-section2-port-drill',
+  'Cam 10 Test 4 · Section 2 - Manham Port Skill Drill'
+)
+
+const NANOTECHNOLOGY_DRILL = withFoundationId(
+  builderSetForTest(CAMBRIDGE_10_SECTION_4_EXAM_SET, 'advanced', 4),
+  'foundation-advanced-cam10-test4-section4-nanotechnology-drill',
+  'Cam 10 Test 4 · Section 4 - Nanotechnology Skill Drill'
+)
 
 const q = (
   setKey: string,
@@ -40,26 +77,7 @@ const audio = (test: string, section: number) =>
   `https://ieltstrainingonline.com/wp-content/uploads/2021/07/${test}-Section${section}.mp3`
 
 export const CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
-  {
-    id: 'foundation-essential-cam10-test4-section2-port-drill',
-    category: 'essential',
-    title: 'Cam 10 Test 4 · Section 2 - Manham Port Skill Drill',
-    section: 2,
-    levelLabel: 'Essential · Cam 10 Test 4 style',
-    audioUrl: audio('Cam10-Test4', 2),
-    questions: [
-      q('cam10t4-port', 2, 11, 'The speaker says the port originally served _____.', 'The harbour first grew because local fishermen needed a safe place to land their catch and repair their boats.', 'local fishermen needed a safe place', 'A', [{ key: 'A', text: 'fishermen' }, { key: 'B', text: 'tourists' }, { key: 'C', text: 'factory workers' }, { key: 'D', text: 'students' }], 'local fishermen', 'originally served', 'ชาวประมงท้องถิ่น', 'Originally served asks who used it first; the passage says local fishermen.'),
-      q('cam10t4-port', 2, 12, 'The old storehouses have recently been turned into _____.', 'Several former warehouses beside the water are now used as small galleries, craft shops and cafes.', 'former warehouses beside the water are now used as small galleries', 'C', [{ key: 'A', text: 'apartments' }, { key: 'B', text: 'offices' }, { key: 'C', text: 'galleries and shops' }, { key: 'D', text: 'classrooms' }], 'former warehouses', 'old storehouses', 'โกดังเก่า', 'Warehouses are old storehouses, and galleries and shops describe the new use.'),
-      q('cam10t4-port', 2, 13, 'Visitors can learn about the port by following a _____.', 'A marked walking trail takes visitors past the main historic buildings, with signs explaining what happened there.', 'a marked walking trail', 'B', [{ key: 'A', text: 'boat tour' }, { key: 'B', text: 'walking trail' }, { key: 'C', text: 'cycle lane' }, { key: 'D', text: 'bus route' }], 'marked walking trail', 'following a trail', 'เส้นทางเดินชม', 'Following a trail matches a marked walking trail.'),
-      q('cam10t4-port', 2, 14, 'The best view of the harbour is from the _____.', 'If you climb the old lighthouse steps, you get the clearest view across the harbour mouth.', 'the clearest view across the harbour mouth', 'D', [{ key: 'A', text: 'museum roof' }, { key: 'B', text: 'market square' }, { key: 'C', text: 'ferry terminal' }, { key: 'D', text: 'lighthouse' }], 'clearest view', 'best view', 'มุมมองที่ดีที่สุด', 'Clearest view paraphrases best view.'),
-      q('cam10t4-port', 2, 15, 'The museum display includes tools used for _____.', 'Inside the museum, one case shows hooks, knives and nets that were once used to prepare fish for sale.', 'used to prepare fish for sale', 'A', [{ key: 'A', text: 'processing fish' }, { key: 'B', text: 'building boats' }, { key: 'C', text: 'measuring weather' }, { key: 'D', text: 'loading coal' }], 'prepare fish for sale', 'processing fish', 'แปรรูปปลา', 'Preparing fish for sale is processing fish.'),
-      q('cam10t4-port', 2, 16, 'The port festival is held in _____.', 'The annual harbour festival takes place in late July, when the evenings are usually warm enough for outdoor music.', 'takes place in late July', 'C', [{ key: 'A', text: 'April' }, { key: 'B', text: 'June' }, { key: 'C', text: 'July' }, { key: 'D', text: 'September' }], 'late July', 'held in July', 'เดือนกรกฎาคม', 'Takes place in late July means held in July.'),
-      q('cam10t4-port', 2, 17, 'Festival visitors should book early because places are _____.', 'The evening boat trips are popular, but the boats are small, so the number of passengers is limited.', 'the number of passengers is limited', 'B', [{ key: 'A', text: 'expensive' }, { key: 'B', text: 'limited' }, { key: 'C', text: 'uncomfortable' }, { key: 'D', text: 'far away' }], 'limited', 'book early', 'มีจำนวนจำกัด', 'If places are limited, people should book early.'),
-      q('cam10t4-port', 2, 18, 'Children can join a workshop about _____.', 'For younger visitors there is a practical workshop where they make simple model boats from recycled wood.', 'make simple model boats', 'D', [{ key: 'A', text: 'painting maps' }, { key: 'B', text: 'cooking seafood' }, { key: 'C', text: 'taking photographs' }, { key: 'D', text: 'making boats' }], 'make model boats', 'workshop about boats', 'ทำเรือจำลอง', 'Making model boats is a workshop about making boats.'),
-      q('cam10t4-port', 2, 19, 'The new visitor centre was paid for by _____.', 'Most of the money for the visitor centre came from a regional heritage fund, with a smaller contribution from local businesses.', 'came from a regional heritage fund', 'A', [{ key: 'A', text: 'a heritage fund' }, { key: 'B', text: 'school groups' }, { key: 'C', text: 'fishing families' }, { key: 'D', text: 'international tourists' }], 'came from', 'paid for by', 'ได้รับเงินสนับสนุนจาก', 'Came from a fund means paid for by that fund.'),
-      q('cam10t4-port', 2, 20, 'The speaker recommends visitors bring _____.', 'The paths near the harbour can be uneven after rain, so visitors are advised to wear strong shoes.', 'advised to wear strong shoes', 'C', [{ key: 'A', text: 'a camera' }, { key: 'B', text: 'a packed lunch' }, { key: 'C', text: 'strong shoes' }, { key: 'D', text: 'a notebook' }], 'advised to wear', 'recommends visitors bring', 'แนะนำให้นำ/สวมใส่', 'Being advised to wear strong shoes means visitors should bring them.')
-    ]
-  },
+  MANHAM_PORT_DRILL,
   {
     id: 'foundation-advanced-cam10-test4-section3-work-placement-drill',
     category: 'advanced',
@@ -68,7 +86,7 @@ export const CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] 
     levelLabel: 'Advanced · Cam 10 Test 4 style',
     audioUrl: audio('Cam10-Test4', 3),
     questions: [
-      q('cam10t4-placement', 3, 21, 'Laura says she improved her ability to manage time and _____.', CAM10_TEST4_SECTION3_SCRIPT, 'got better at managing your time and prioritizing things', 'A', [{ key: 'A', text: 'prioritise tasks' }, { key: 'B', text: 'design brochures' }, { key: 'C', text: 'take photographs' }], 'managing your time and prioritizing', 'prioritise tasks', 'จัดลำดับความสำคัญ', 'Managing time and prioritizing things means prioritising tasks.'),
+      q('cam10t4-placement', 3, 21, 'Laura says she improved her ability to manage time and _____.', CAM10_TEST4_SECTION3_SCRIPT, 'any better at managing your time and prioritizing things', 'A', [{ key: 'A', text: 'prioritise tasks' }, { key: 'B', text: 'design brochures' }, { key: 'C', text: 'take photographs' }], 'managing your time and prioritizing', 'prioritise tasks', 'จัดลำดับความสำคัญ', 'Managing time and prioritizing things means prioritising tasks.'),
       q('cam10t4-placement', 3, 22, 'Laura also got better at explaining things and _____.', CAM10_TEST4_SECTION3_SCRIPT, 'explaining things and asserting my opinions', 'B', [{ key: 'A', text: 'cutting costs' }, { key: 'B', text: 'asserting her opinions' }, { key: 'C', text: 'using new software' }], 'asserting my opinions', 'asserting opinions', 'แสดงความคิดเห็นอย่างมั่นใจ', 'Asserting opinions is stated directly in the script.'),
       q('cam10t4-placement', 3, 23, 'The company saved money because Laura’s work cost much less than using _____.', CAM10_TEST4_SECTION3_SCRIPT, 'if they’d used a professional advertising agency to produce their brochure instead of doing it in-house, presumably they’d have paid a lot more', 'A', [{ key: 'A', text: 'an advertising agency' }, { key: 'B', text: 'a photographer' }, { key: 'C', text: 'university staff' }], 'professional advertising agency', 'advertising agency', 'บริษัทโฆษณา', 'The comparison is with a professional advertising agency.'),
       q('cam10t4-placement', 3, 24, 'Laura thought the new brochure would help the company by improving its _____.', CAM10_TEST4_SECTION3_SCRIPT, 'The new brochure looks really professional; it enhances the image of the company straight away.', 'B', [{ key: 'A', text: 'staff numbers' }, { key: 'B', text: 'public image' }, { key: 'C', text: 'office location' }], 'enhances the image', 'public image', 'ภาพลักษณ์ต่อสาธารณะ', 'Enhances the image means improves the public image.'),
@@ -80,26 +98,7 @@ export const CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] 
       q('cam10t4-placement', 3, 30, 'Tim should ask his _____. to provide a reference.', CAM10_TEST4_SECTION3_SCRIPT, 'that’s something you should ask your own tutor to provide', 'C', [{ key: 'A', text: 'mentor' }, { key: 'B', text: 'career officer' }, { key: 'C', text: 'tutor' }, { key: 'D', text: 'employer' }], 'your own tutor', 'tutor', 'อาจารย์ที่ปรึกษา', 'Laura says the tutor should provide the reference.')
     ]
   },
-  {
-    id: 'foundation-advanced-cam10-test4-section4-nanotechnology-drill',
-    category: 'advanced',
-    title: 'Cam 10 Test 4 · Section 4 - Nanotechnology Skill Drill',
-    section: 4,
-    levelLabel: 'Advanced · Cam 10 Test 4 style',
-    audioUrl: audio('Cam10-Test4', 4),
-    questions: [
-      q('cam10t4-nano', 4, 31, 'Nanotechnology works with materials at the scale of _____.', 'Nanotechnology deals with structures so tiny that they are measured in nanometres.', 'measured in nanometres', 'A', [{ key: 'A', text: 'nanometres' }, { key: 'B', text: 'centimetres' }, { key: 'C', text: 'kilometres' }, { key: 'D', text: 'litres' }], 'nanometres', 'scale', 'ระดับนาโนเมตร', 'The scale is measured in nanometres.'),
-      q('cam10t4-nano', 4, 32, 'One medical use is delivering _____ directly to diseased cells.', 'Researchers are developing tiny carriers that can take drugs straight to cells that need treatment.', 'take drugs straight to cells', 'C', [{ key: 'A', text: 'heat' }, { key: 'B', text: 'water' }, { key: 'C', text: 'drugs' }, { key: 'D', text: 'light' }], 'take drugs straight to cells', 'delivering drugs', 'ส่งยาโดยตรง', 'Taking drugs straight to cells means delivering drugs directly.'),
-      q('cam10t4-nano', 4, 33, 'Nanoparticles can improve the strength of _____.', 'When nanoparticles are added to certain plastics, the material can become much stronger without becoming heavy.', 'added to certain plastics', 'B', [{ key: 'A', text: 'glass' }, { key: 'B', text: 'plastics' }, { key: 'C', text: 'cotton' }, { key: 'D', text: 'paper' }], 'plastics', 'material', 'พลาสติก', 'The passage states plastics can become stronger.'),
-      q('cam10t4-nano', 4, 34, 'Some clothing can resist stains because of a special _____.', 'A very thin surface coating can stop liquids from soaking into fabric.', 'thin surface coating', 'D', [{ key: 'A', text: 'thread' }, { key: 'B', text: 'button' }, { key: 'C', text: 'colour' }, { key: 'D', text: 'coating' }], 'surface coating', 'special coating', 'สารเคลือบพิเศษ', 'A surface coating helps clothing resist stains.'),
-      q('cam10t4-nano', 4, 35, 'In food packaging, sensors may show when food is _____.', 'Future packaging may include nanosensors that change colour when food has started to spoil.', 'food has started to spoil', 'A', [{ key: 'A', text: 'spoiled' }, { key: 'B', text: 'frozen' }, { key: 'C', text: 'imported' }, { key: 'D', text: 'organic' }], 'started to spoil', 'spoiled', 'เสีย / บูด', 'Started to spoil means spoiled or no longer fresh.'),
-      q('cam10t4-nano', 4, 36, 'Scientists are worried about possible effects on _____.', 'Some scientists are concerned that nanoparticles could enter rivers or soil and damage the environment.', 'damage the environment', 'C', [{ key: 'A', text: 'prices' }, { key: 'B', text: 'fashion' }, { key: 'C', text: 'the environment' }, { key: 'D', text: 'transport' }], 'damage the environment', 'effects on environment', 'ผลกระทบต่อสิ่งแวดล้อม', 'Damage to rivers or soil is an environmental effect.'),
-      q('cam10t4-nano', 4, 37, 'Nanoparticles may be difficult to remove because they are _____.', 'Their extremely small size means normal filters may not be able to catch them.', 'normal filters may not be able to catch them', 'B', [{ key: 'A', text: 'expensive' }, { key: 'B', text: 'too small' }, { key: 'C', text: 'too bright' }, { key: 'D', text: 'natural' }], 'extremely small size', 'too small', 'เล็กเกินไป', 'If filters cannot catch them because of size, they are too small.'),
-      q('cam10t4-nano', 4, 38, 'Public discussion is needed before products are widely _____.', 'Experts argue that there should be open debate before nano-products become common in everyday shops.', 'before nano-products become common in everyday shops', 'D', [{ key: 'A', text: 'tested' }, { key: 'B', text: 'washed' }, { key: 'C', text: 'hidden' }, { key: 'D', text: 'sold' }], 'common in everyday shops', 'widely sold', 'ขายอย่างแพร่หลาย', 'Products common in shops are widely sold.'),
-      q('cam10t4-nano', 4, 39, 'Regulation should be based on scientific _____.', 'Any rules should rely on careful evidence rather than fear or advertising claims.', 'careful evidence', 'A', [{ key: 'A', text: 'evidence' }, { key: 'B', text: 'profit' }, { key: 'C', text: 'fashion' }, { key: 'D', text: 'luck' }], 'careful evidence', 'scientific evidence', 'หลักฐานทางวิทยาศาสตร์', 'Scientific rules should be based on careful evidence.'),
-      q('cam10t4-nano', 4, 40, 'The lecturer says the field requires more _____.', 'The speaker concludes that the field is promising, but more long-term research is still needed.', 'more long-term research is still needed', 'C', [{ key: 'A', text: 'marketing' }, { key: 'B', text: 'tourism' }, { key: 'C', text: 'research' }, { key: 'D', text: 'competition' }], 'research is still needed', 'requires research', 'ต้องการการวิจัยเพิ่มเติม', 'Requires more research means more research is still needed.')
-    ]
-  },
+  NANOTECHNOLOGY_DRILL,
   {
     id: 'foundation-essential-cam20-test1-section2-pottery-drill',
     category: 'essential',
