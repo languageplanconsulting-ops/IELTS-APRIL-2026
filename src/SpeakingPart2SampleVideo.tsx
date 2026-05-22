@@ -249,7 +249,7 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
       </div>
       <h4 className="speakingP2SampleTitle">{sample.topicLabel}</h4>
       <p className="speakingP2SampleLead">
-        Watch a model Part 2 answer while you plan. Use it for ideas, structure, and natural linking — then speak in your own words.
+        Watch a model answer while you plan. Use it for ideas, structure, and natural linking — then speak in your own words.
       </p>
 
       <div className="speakingP2SampleFrame">
@@ -275,8 +275,15 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
             ) : null}
             {visibleSubtitleNotes.length > 0 ? (
               <div className="speakingP2SampleKnowledgeStack" aria-label="Vocabulary notes">
-                {visibleSubtitleNotes.map((note) => (
-                  <article key={`${note.cueId}-${note.id}`} className="speakingP2SampleKnowledgeCard">
+                {visibleSubtitleNotes.map((note, index) => (
+                  <article
+                    key={`${note.cueId}-${note.id}`}
+                    className="speakingP2SampleKnowledgeCard"
+                    style={{
+                      animationDelay: `${Math.min(index, 8) * 70}ms`,
+                      zIndex: visibleSubtitleNotes.length - index
+                    }}
+                  >
                     <strong>{note.phrase}</strong>
                     <p>{note.detail}</p>
                   </article>

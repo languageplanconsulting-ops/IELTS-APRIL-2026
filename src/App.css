@@ -6893,6 +6893,55 @@ body,
   align-items: start;
 }
 
+.adminVideoCoverageGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.adminVideoCoverageCard {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminVideoCoverageCard > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.adminVideoCoverageCard span,
+.adminVideoCoverageCard small {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.adminVideoCoverageCard strong {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.adminVideoCoverageBar {
+  overflow: hidden;
+  height: 8px;
+  border-radius: 999px;
+  background: #dbeafe;
+}
+
+.adminVideoCoverageBar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #22c55e);
+}
+
 .adminVideoQuestionPicker,
 .adminVideoRecorderPanel {
   display: grid;
@@ -6956,7 +7005,37 @@ body,
 }
 
 .adminVideoPromptCard {
-  background: #f8fbff;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #bfdbfe;
+  background: linear-gradient(135deg, #f8fbff 0%, #eef6ff 100%);
+}
+
+.adminVideoPromptCard::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #2563eb, #0ea5e9);
+}
+
+.adminVideoPromptCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.adminVideoPromptCardHeader span {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .adminVideoCueList {
@@ -6964,6 +7043,238 @@ body,
   padding-left: 18px;
   color: #475569;
   line-height: 1.45;
+}
+
+.adminVideoTargetPanel {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.adminVideoTargetPanel > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+.adminVideoTargetPanel strong {
+  color: #0f172a;
+  font-size: 0.88rem;
+  font-weight: 950;
+}
+
+.adminVideoTargetPanel span {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.adminVideoSegmented {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.adminVideoSegmented button {
+  min-height: 36px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 900;
+}
+
+.adminVideoSegmented button.active {
+  border-color: #2563eb;
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.adminRecordingReadinessCard {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.adminRecordingReadinessHeader,
+.adminPostRecordingReportHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.adminRecordingReadinessHeader > div,
+.adminPostRecordingReportHeader > div {
+  display: grid;
+  gap: 2px;
+}
+
+.adminRecordingReadinessHeader strong,
+.adminPostRecordingReportHeader strong {
+  color: #0f172a;
+  font-size: 0.92rem;
+  font-weight: 950;
+}
+
+.adminRecordingReadinessHeader span,
+.adminPostRecordingReportHeader span {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.adminRecordingReadinessCard ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adminRecordingReadinessCard li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 9px;
+  align-items: start;
+  padding: 8px;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.adminRecordingReadinessCard li > span,
+.adminPostRecordingReportGrid article > span {
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.adminRecordingReadinessCard li.ok > span,
+.adminPostRecordingReportGrid article.ok > span {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.adminRecordingReadinessCard li.warning > span,
+.adminPostRecordingReportGrid article.warning > span {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.adminRecordingReadinessCard li strong {
+  display: block;
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.adminRecordingReadinessCard li small {
+  display: block;
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+
+.adminVideoReadAlongCard {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid #c7d2fe;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.98)),
+    #ffffff;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.09);
+}
+
+.adminVideoReadAlongCard::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: #2563eb;
+}
+
+.adminVideoReadAlongCard.is-recording::before {
+  background: #dc2626;
+}
+
+.adminVideoReadAlongHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.adminVideoReadAlongHeader span {
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.adminVideoReadAlongHeader strong {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #e0ecff;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.adminVideoReadAlongCard.is-recording .adminVideoReadAlongHeader strong {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.adminVideoReadAlongQuestion {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+  font-weight: 900;
+  line-height: 1.24;
+}
+
+.adminVideoReadAlongCues {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: #334155;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.adminVideoTeleprompterCueRail {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.adminVideoTeleprompterCueRail span {
+  flex: 0 0 min(260px, 78%);
+  padding: 9px 10px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 0.8rem;
+  font-weight: 850;
+  line-height: 1.3;
 }
 
 .adminVideoPreviewFrame {
@@ -6998,6 +7309,13 @@ body,
 
 .adminVideoPreview.is-flipped {
   transform: scaleX(-1);
+}
+
+.adminVideoPreview.is-flipped::-webkit-media-controls,
+.adminVideoPreview.is-flipped::-webkit-media-controls-enclosure,
+.adminVideoPreview.is-flipped::-webkit-media-controls-panel {
+  transform: scaleX(-1);
+  transform-origin: center;
 }
 
 .adminVideoPreviewEmpty {
@@ -7100,6 +7418,61 @@ body,
   border-color: #2563eb;
   background: #eff6ff;
   color: #1d4ed8;
+}
+
+.adminPostRecordingReport {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #dbe4f3;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.adminPostRecordingReportGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.adminPostRecordingReportGrid article {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.adminPostRecordingReportGrid article.ok {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.adminPostRecordingReportGrid article.warning {
+  border-color: #fecaca;
+  background: #fff7f7;
+}
+
+.adminPostRecordingReportGrid article strong {
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.adminPostRecordingReportGrid article em {
+  color: #334155;
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.adminPostRecordingReportGrid article p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.72rem;
+  line-height: 1.35;
 }
 
 .adminVideoRecorderMeta {
@@ -7290,6 +7663,159 @@ body,
   font-weight: 900;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.adminVideoPart2TimerOverlay {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-areas:
+    "label label"
+    "clock note";
+  column-gap: 12px;
+  row-gap: 2px;
+  align-items: end;
+  min-width: 190px;
+  padding: 12px 14px 11px 18px;
+  border: 1px solid rgba(255, 204, 0, 0.46);
+  border-radius: 22px;
+  background: rgba(15, 23, 42, 0.86);
+  color: #ffffff;
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(12px);
+}
+
+.adminVideoPart2TimerOverlay::before {
+  content: '';
+  position: absolute;
+  inset: 12px auto 12px 10px;
+  width: 5px;
+  border-radius: 999px;
+  background: #ffcc00;
+}
+
+.adminVideoPart2TimerOverlay span {
+  grid-area: label;
+  color: #ffcc00;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.adminVideoPart2TimerOverlay strong {
+  grid-area: clock;
+  color: #ffffff;
+  font-size: clamp(1.55rem, 4vw, 2.4rem);
+  font-weight: 950;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.adminVideoPart2TimerOverlay small {
+  grid-area: note;
+  align-self: center;
+  color: #bfdbfe;
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+.adminVideoPart2TimerOverlay.is-urgent {
+  border-color: rgba(254, 202, 202, 0.72);
+  background: rgba(127, 29, 29, 0.9);
+}
+
+.adminVideoPart2TimerOverlay.is-urgent small {
+  color: #fecaca;
+}
+
+.adminVideoWordCountOverlay {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto minmax(112px, 1fr);
+  grid-template-areas:
+    "label label"
+    "count status"
+    "count hint";
+  column-gap: 14px;
+  row-gap: 2px;
+  align-items: center;
+  min-width: 250px;
+  padding: 12px 15px 12px 18px;
+  border: 1px solid rgba(254, 202, 202, 0.72);
+  border-radius: 22px;
+  background: rgba(127, 29, 29, 0.9);
+  color: #ffffff;
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(12px);
+}
+
+.adminVideoWordCountOverlay::before {
+  content: '';
+  position: absolute;
+  inset: 12px auto 12px 10px;
+  width: 5px;
+  border-radius: 999px;
+  background: #fecaca;
+}
+
+.adminVideoWordCountOverlay.is-good {
+  border-color: rgba(134, 239, 172, 0.72);
+  background: rgba(20, 83, 45, 0.9);
+}
+
+.adminVideoWordCountOverlay.is-good::before {
+  background: #86efac;
+}
+
+.adminVideoWordCountOverlay span {
+  grid-area: label;
+  color: #fecaca;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.adminVideoWordCountOverlay.is-good span {
+  color: #bbf7d0;
+}
+
+.adminVideoWordCountOverlay strong {
+  grid-area: count;
+  color: #ffffff;
+  font-size: clamp(2rem, 4.8vw, 3.15rem);
+  font-weight: 950;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.adminVideoWordCountOverlay small {
+  grid-area: status;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.adminVideoWordCountOverlay em {
+  grid-area: hint;
+  color: #fee2e2;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.adminVideoWordCountOverlay.is-good em {
+  color: #dcfce7;
 }
 
 .adminVideoCountdownOverlay {
@@ -7922,6 +8448,59 @@ body,
   inset-block: 0;
   border-inline: 2px solid rgba(37, 99, 235, 0.32);
   background: rgba(219, 234, 254, 0.38);
+}
+
+.adminSubtitleTimelineSelection {
+  position: absolute;
+  inset-block: 0;
+  z-index: 3;
+  min-width: 4px;
+  border-inline: 2px solid #f59e0b;
+  background: rgba(251, 191, 36, 0.26);
+  pointer-events: none;
+}
+
+.adminSubtitleTimelineSelection span {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: max-content;
+  padding: 3px 7px;
+  border: 1px solid rgba(146, 64, 14, 0.35);
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 0.68rem;
+  font-weight: 950;
+}
+
+.adminSubtitleTimelineVolume {
+  display: grid;
+  grid-template-columns: auto minmax(90px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.adminSubtitleTimelineVolume div {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #fde68a;
+}
+
+.adminSubtitleTimelineVolume i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #f59e0b);
 }
 
 .adminSubtitleTimelineCue {
@@ -20187,6 +20766,13 @@ textarea {
   transform: scaleX(-1) !important;
 }
 
+.workspace .adminOnly-videos .adminVideoPreview.is-flipped::-webkit-media-controls,
+.workspace .adminOnly-videos .adminVideoPreview.is-flipped::-webkit-media-controls-enclosure,
+.workspace .adminOnly-videos .adminVideoPreview.is-flipped::-webkit-media-controls-panel {
+  transform: scaleX(-1) !important;
+  transform-origin: center !important;
+}
+
 .workspace .adminOnly-videos .adminSubtitlePresetButton {
   border-radius: 12px !important;
 }
@@ -20223,13 +20809,33 @@ textarea {
   top: 16px;
   left: 16px;
   z-index: 5;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 10px;
   width: min(36%, 360px);
-  pointer-events: none;
+  max-height: calc(100% - 32px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 8px 8px 0;
+  pointer-events: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.35) transparent;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeStack::-webkit-scrollbar {
+  width: 6px;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeStack::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.34);
 }
 
 .workspace .adminOnly-videos .adminVideoKnowledgeCard {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
   padding: 12px 14px !important;
   border: 1px solid rgba(15, 23, 42, 0.92) !important;
   border-radius: 16px !important;
@@ -20240,6 +20846,7 @@ textarea {
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), 4px 4px 0 rgba(15, 23, 42, 0.9) !important;
   transform-origin: top left;
   animation: subtitle-note-fly-home 820ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  pointer-events: none;
 }
 
 .workspace .adminOnly-videos .adminVideoKnowledgeCard:nth-child(2) {
