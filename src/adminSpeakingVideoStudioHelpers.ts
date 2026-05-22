@@ -92,7 +92,7 @@ export const buildUploadChecklist = (input: {
     id: 'subtitles',
     label: input.subtitleCount > 0 ? `${input.subtitleCount} subtitle lines` : 'Subtitles recommended',
     ok: input.subtitleCount > 0,
-    hint: 'Use Auto-sync from video or add lines manually.'
+    hint: 'Use free local auto-sync or add lines manually.'
   },
   {
     id: 'timing',

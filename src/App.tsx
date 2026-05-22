@@ -12963,7 +12963,7 @@ function App() {
     if (!adminShouldGenerateSubtitlesRef.current || durationSeconds <= 0) return
     adminPendingBackendSubtitleSyncRef.current = durationSeconds
     adminBackendSubtitleSyncStartedRef.current = false
-    setAdminSubtitleDraftMessage('Recording saved. Auto-syncing subtitles from your speech…')
+    setAdminSubtitleDraftMessage('Recording saved. Matching subtitles locally (free, no API cost)…')
   }
 
   const runAdminBackendSubtitleSyncIfReady = (knownDuration?: number) => {
@@ -12982,11 +12982,56 @@ function App() {
     if (duration <= 0) return
     adminBackendSubtitleSyncStartedRef.current = true
     adminPendingBackendSubtitleSyncRef.current = 0
-    void generateAdminSubtitlesFromBackend({
+    void generateAdminSubtitlesLocally({
       trimStartSeconds: 0,
       trimEndSeconds: duration,
       durationSeconds: duration
     })
+  }
+
+  const generateAdminSubtitlesLocally = async (options?: {
+    trimStartSeconds?: number
+    trimEndSeconds?: number
+    durationSeconds?: number
+  }) => {
+    const sourceVideoBlob = adminRecordedVideoBlobRef.current
+    if (!sourceVideoBlob) return
+    setIsAdminBackendTranscribing(true)
+    setAdminSubtitleDraftMessage('Starting free local subtitle sync…')
+    try {
+      const trimStartSeconds = options?.trimStartSeconds ?? adminVideoTrimStart
+      const trimEndSeconds =
+        options?.trimEndSeconds ?? (adminVideoTrimEnd || adminRecordedVideoActualDuration || adminRecordedVideoDuration)
+      const { transcribeRecordingLocally } = await import('./adminLocalSubtitleTranscriber')
+      const result = await transcribeRecordingLocally(sourceVideoBlob, {
+        trimStartSeconds,
+        trimEndSeconds,
+        onProgress: (message) => setAdminSubtitleDraftMessage(message)
+      })
+      const nextSubtitles = result.subtitles.flatMap((cue) =>
+        splitAdminCueIntoTimedOneLineCues({
+          id: cue.id,
+          startSeconds: cue.startSeconds,
+          endSeconds: cue.endSeconds,
+          text: cue.text,
+          confidence: cue.confidence
+        })
+      )
+      rememberAdminSubtitleEdit()
+      setAdminSubtitleTranscriptSafe(result.transcript)
+      setAdminSubtitleCuesSafe(nextSubtitles)
+      setAdminSubtitleDraftMessage(
+        `Free local sync ready — ${result.words.length} timed words · ${nextSubtitles.length} subtitle lines. Edit anything before publish.`
+      )
+      setAdminVideoRecorderMessage('')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Local subtitle sync failed.'
+      setAdminSubtitleDraftMessage(message)
+      setAdminVideoRecorderMessage(`${message} You can still add or edit subtitles manually.`)
+      adminBackendSubtitleSyncStartedRef.current = false
+    } finally {
+      setIsAdminBackendTranscribing(false)
+    }
   }
 
   const generateAdminSubtitlesFromBackend = async (options?: {
@@ -14301,7 +14346,7 @@ function App() {
         })
       } else {
         setAdminSubtitleStatus('idle')
-        setAdminSubtitleDraftMessage('Recording… subtitles will auto-sync from your speech when you stop.')
+        setAdminSubtitleDraftMessage('Recording… free local subtitle sync runs when you stop.')
       }
       overlayRecordingRenderer?.startClock()
       recorder.start(1000)
@@ -22664,13 +22709,13 @@ function App() {
                           disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
                         />
                         <span>
-                          <strong>Auto-sync subtitles</strong>
+                          <strong>Auto-sync subtitles (free)</strong>
                           <small>
                             {isAdminBackendTranscribing
-                              ? 'Transcribing your recording with word-level timing…'
+                              ? 'Matching subtitles to your voice on this device…'
                               : adminShouldGenerateSubtitles
-                                ? 'After you stop, subtitles are generated from the recording audio (recommended). Live mic draft is off to avoid mic conflicts.'
-                                : 'Off — add subtitles manually or use the live draft mode below.'}
+                                ? 'After you stop, subtitles are generated locally in your browser — no API cost. First sync downloads a small speech model (~40 MB), then it is cached.'
+                                : 'Off — add subtitles manually in the Subtitles step.'}
                           </small>
                         </span>
                       </label>
@@ -23163,14 +23208,12 @@ function App() {
                         <span>
                           Subtitles:{' '}
                           {isAdminBackendTranscribing
-                            ? 'Auto-syncing…'
-                            : adminSubtitleStatus === 'listening'
-                              ? 'Live draft'
-                              : adminSubtitleCues.length
-                                ? `${adminSubtitleCues.length} lines`
-                                : adminShouldGenerateSubtitles
-                                  ? 'Auto-sync after stop'
-                                  : 'Manual/off'}
+                            ? 'Syncing locally…'
+                            : adminSubtitleCues.length
+                              ? `${adminSubtitleCues.length} lines`
+                              : adminShouldGenerateSubtitles
+                                ? 'Free sync after stop'
+                                : 'Manual/off'}
                         </span>
                         <span>Video flip: {adminSubtitleStyle.videoFlipHorizontal ? 'Mirrored' : 'Normal'}</span>
                       </div>
@@ -23293,10 +23336,10 @@ function App() {
                             <button
                               type="button"
                               className="secondary adminStudioButton-primary"
-                              onClick={() => void generateAdminSubtitlesFromBackend()}
+                              onClick={() => void generateAdminSubtitlesLocally()}
                               disabled={isAdminBackendTranscribing || !adminRecordedVideoUrl}
                             >
-                              {isAdminBackendTranscribing ? 'Syncing…' : 'Auto-sync from video'}
+                              {isAdminBackendTranscribing ? 'Syncing…' : 'Auto-sync (free, local)'}
                             </button>
                             <button type="button" className="secondary" onClick={regenerateAdminSubtitlesFromTranscript}>
                               Generate from transcript
@@ -23349,6 +23392,15 @@ function App() {
                             </button>
                             <button type="button" className="secondary" onClick={balanceAdminSubtitleTiming} disabled={adminSubtitleCues.length === 0}>
                               Balance timing
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary"
+                              onClick={() => void generateAdminSubtitlesFromBackend()}
+                              disabled={isAdminBackendTranscribing || !adminRecordedVideoUrl}
+                              title="Uses Deepgram/Gemini API credits on the server"
+                            >
+                              Cloud sync (paid API)
                             </button>
                             </div>
                           ) : null}
