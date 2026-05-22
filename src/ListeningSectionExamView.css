@@ -21,6 +21,10 @@
 }
 
 .listeningSectionExam {
+  --lse-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --lse-ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --lse-duration: 420ms;
+  --lse-duration-fast: 280ms;
   --lse-ink: #111827;
   --lse-muted: #6b7280;
   --lse-border: #e5e7eb;
@@ -50,6 +54,15 @@
   gap: 1rem;
   padding: 0 0.25rem;
   flex-shrink: 0;
+  animation: luxuryContentSwap var(--lse-duration) var(--lse-ease-soft) both;
+}
+
+.listeningSectionExamLayout {
+  animation: luxuryViewEnter 680ms var(--lse-ease) 80ms both;
+}
+
+.listeningSectionExam[data-stage='report'] .listeningSectionExamLayout {
+  animation: luxuryContentSwap var(--lse-duration) var(--lse-ease-soft) both;
 }
 
 .listeningSectionExamBack {
@@ -61,6 +74,7 @@
   cursor: pointer;
   padding: 0;
   margin-bottom: 0.35rem;
+  transition: color var(--lse-duration-fast) var(--lse-ease-soft), opacity var(--lse-duration-fast) var(--lse-ease-soft);
 }
 
 .listeningSectionExamEyebrow {
@@ -437,6 +451,11 @@
   padding: 0.35rem 0.75rem;
   font-size: 0.8rem;
   cursor: pointer;
+  transition:
+    background-color var(--lse-duration-fast) var(--lse-ease-soft),
+    border-color var(--lse-duration-fast) var(--lse-ease-soft),
+    color var(--lse-duration-fast) var(--lse-ease-soft),
+    transform var(--lse-duration-fast) var(--lse-ease);
 }
 
 .listeningSectionExamTestTabs button.is-active {
@@ -451,6 +470,7 @@
   border-radius: 14px;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  animation: luxuryContentSwap var(--lse-duration) var(--lse-ease-soft) both;
 }
 
 .listeningSectionExamSubmitPanel {
@@ -885,7 +905,11 @@
   border-radius: 10px;
   background: #fff;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+  transition:
+    border-color var(--lse-duration-fast) var(--lse-ease-soft),
+    background-color var(--lse-duration-fast) var(--lse-ease-soft),
+    opacity var(--lse-duration-fast) var(--lse-ease-soft),
+    transform var(--lse-duration-fast) var(--lse-ease);
 }
 
 .listeningSectionExamChooseTwoOption input {
@@ -926,7 +950,11 @@
   padding: 0.7rem;
   background: #fff;
   cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color var(--lse-duration-fast) var(--lse-ease-soft),
+    box-shadow var(--lse-duration-fast) var(--lse-ease-soft),
+    background-color var(--lse-duration-fast) var(--lse-ease-soft),
+    transform var(--lse-duration-fast) var(--lse-ease);
 }
 
 .listeningSectionExamChooseTwoSlot.is-active {
@@ -966,7 +994,11 @@
   padding: 0.75rem;
   margin-top: 0.65rem;
   cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color var(--lse-duration-fast) var(--lse-ease-soft),
+    box-shadow var(--lse-duration-fast) var(--lse-ease-soft),
+    background-color var(--lse-duration-fast) var(--lse-ease-soft),
+    transform var(--lse-duration-fast) var(--lse-ease);
 }
 
 .listeningSectionExamQuestionCard.is-active {
@@ -1026,6 +1058,10 @@
   background: #fff;
   padding: 0.55rem 0.65rem;
   cursor: pointer;
+  transition:
+    border-color var(--lse-duration-fast) var(--lse-ease-soft),
+    background-color var(--lse-duration-fast) var(--lse-ease-soft),
+    transform var(--lse-duration-fast) var(--lse-ease);
 }
 
 .listeningSectionExamOption span:first-child {

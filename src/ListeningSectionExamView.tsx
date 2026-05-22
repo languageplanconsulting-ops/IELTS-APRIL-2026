@@ -4,7 +4,7 @@ import {
   ListeningEvidenceTutorial
 } from './ListeningEvidenceTutorial'
 import { getListeningHighlightMatch } from './listeningHighlightMatch'
-import { isListeningPart1AnswerCorrect } from './listeningPart1AnswerCheck'
+import { isListeningGapFillAnswerCorrect } from './listeningPart1AnswerCheck'
 import type { Part1ExamForm, Part1FormLine } from './listeningPart1FormLayout'
 import type {
   ListeningSectionExamConfig,
@@ -290,12 +290,16 @@ export function ListeningSectionExamView({
 
   const isQuestionAnswerCorrect = useCallback(
     (question: ListeningSectionExamQuestion, answer: string) => {
-      if (answerOnlyMode && question.layout === 'gap-fill') {
-        return isListeningPart1AnswerCorrect(answer, question.correctAnswer, question.acceptedAnswers)
+      if (question.layout === 'gap-fill') {
+        return isListeningGapFillAnswerCorrect(answer, {
+          correctAnswer: question.correctAnswer,
+          acceptedAnswers: question.acceptedAnswers,
+          options: question.options
+        })
       }
       return answer.trim().toUpperCase() === question.correctAnswer.trim().toUpperCase()
     },
-    [answerOnlyMode]
+    []
   )
 
   const decorations = useMemo(
@@ -885,7 +889,7 @@ export function ListeningSectionExamView({
   const playbackButtonIcon = playbackState === 'playing' ? 'Ⅱ' : '▶'
 
   return (
-    <div className="listeningSectionExam">
+    <div className="listeningSectionExam" data-stage={examStage}>
       <header className="listeningSectionExamHeader">
         <div>
           <button type="button" className="listeningSectionExamBack" onClick={onBack}>
@@ -1017,7 +1021,7 @@ export function ListeningSectionExamView({
             </div>
           ) : null}
 
-          <div className="listeningSectionExamQuestionsScroll script-scroll">
+          <div key={examStage} className="listeningSectionExamQuestionsScroll script-scroll listeningFlowSwap">
             {examStage === 'report' ? (
               renderFinalReportCard()
             ) : (
@@ -1417,9 +1421,17 @@ export function ListeningSectionExamView({
     )
   }
 
+  function formatGapFillStem(stem: string, number: number) {
+    return String(stem || '')
+      .replace(new RegExp(`^\\[?${number}\\]?\\s*`, 'i'), '')
+      .replace(new RegExp(`\\b${number}\\s+(?=_{2,}|____)`, 'i'), '')
+      .trim()
+  }
+
   function renderGapItem(question: ListeningSectionExamQuestion) {
     const attempt = attempts[question.id] || defaultAttempt()
     const isActive = question.id === activeQuestionId
+    const displayStem = formatGapFillStem(question.stem, question.number)
     return (
       <li
         key={question.id}
@@ -1429,7 +1441,7 @@ export function ListeningSectionExamView({
         onClick={() => activateQuestion(question.id, !answerOnlyMode)}
       >
         <span className="listeningSectionExamQNum">{question.number}</span>
-        <p>{question.stem}</p>
+        <p>{displayStem}</p>
         <input
           type="text"
           value={attempt.answer}

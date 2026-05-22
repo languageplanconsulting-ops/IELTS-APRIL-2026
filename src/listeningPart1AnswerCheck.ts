@@ -250,3 +250,40 @@ export const isListeningPart1AnswerCorrect = (
 
   return variants.some((variant) => answersMatch(userAnswer, variant))
 }
+
+/** Gap-fill packs sometimes store the option key (A) instead of the word — resolve to text. */
+export const resolveListeningGapFillAnswer = (input: {
+  correctAnswer: string
+  acceptedAnswers?: string[]
+  options?: Array<{ key: string; text: string }>
+}) => {
+  const key = String(input.correctAnswer || '').trim()
+  const optionMatch =
+    key.length === 1 && /^[A-Z]$/i.test(key)
+      ? input.options?.find((option) => option.key.toUpperCase() === key.toUpperCase())
+      : undefined
+
+  const textAnswer = optionMatch?.text || key
+  const acceptedAnswers =
+    input.acceptedAnswers && input.acceptedAnswers.length > 0
+      ? input.acceptedAnswers
+      : optionMatch
+        ? [optionMatch.text]
+        : textAnswer.includes('/')
+          ? parseListeningAcceptedAnswers(textAnswer)
+          : [textAnswer]
+
+  return { correctAnswer: textAnswer, acceptedAnswers }
+}
+
+export const isListeningGapFillAnswerCorrect = (
+  userAnswer: string,
+  input: {
+    correctAnswer: string
+    acceptedAnswers?: string[]
+    options?: Array<{ key: string; text: string }>
+  }
+) => {
+  const resolved = resolveListeningGapFillAnswer(input)
+  return isListeningPart1AnswerCorrect(userAnswer, resolved.correctAnswer, resolved.acceptedAnswers)
+}

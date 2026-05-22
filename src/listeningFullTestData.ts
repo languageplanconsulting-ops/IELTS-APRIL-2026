@@ -24,7 +24,10 @@ export const TOTAL_FULL_LISTENING_TESTS = LISTENING_FULL_TEST_BOOKS.length * FUL
 
 export const LISTENING_FULL_TEST_LABEL = 'Full Test'
 export const LISTENING_FULL_TEST_LEAD =
-  'Complete Cambridge listening tests section by section — 10 questions, audio, and audioscript per part, just like the real exam flow.'
+  'สอบเต็ม Listening จาก Cambridge — 4 sections · 40 ข้อ เหมือนข้อสอบ IELTS จริง'
+
+export const LISTENING_FULL_TEST_DETAIL_TH =
+  'Full Test คือการทำข้อสอบ Listening Academic แบบเต็มชุดจากหนังสือ Cambridge IELTS (เล่ม 15–17, 19–20) ทำทีละ Section 1–4 (section ละ 10 ข้อ พร้อม audio และ audioscript) ในรูปแบบเดียวกับข้อสอบ official จริง หลังทำเสร็จจะได้ report พร้อมคำอธิบายเต็มและ tips จากพี่ดอย เพื่อให้เห็นจุดอ่อนและรู้ว่าต้องปรับปรุงตรงไหน'
 
 export const LISTENING_FULL_TEST_CATALOG_SUMMARY = `${TOTAL_FULL_LISTENING_TESTS} tests · ${FULL_TESTS_PER_BOOK} per book · Cambridge 15–17, 19–20`
 

@@ -21,7 +21,10 @@ export const TOTAL_FULL_READING_TESTS = READING_FULL_TEST_BOOKS.length * FULL_RE
 
 export const READING_FULL_TEST_LABEL = 'Full Exam'
 export const READING_FULL_TEST_LEAD =
-  'Complete Cambridge reading tests — 3 passages, 40 questions, 60 minutes, just like the real IELTS Academic Reading paper.'
+  'สอบเต็ม Reading จาก Cambridge — 3 passages · 40 ข้อ เหมือนข้อสอบ IELTS Academic จริง'
+
+export const READING_FULL_TEST_DETAIL_TH =
+  'Full Exam คือการทำข้อสอบ Reading Academic แบบเต็มชุดจากหนังสือ Cambridge IELTS (เล่ม 11–17, 19) แต่ละเล่มมี 4 tests (Test 1–4) รวม 3 passages และ 40 ข้อต่อ test ในรูปแบบเดียวกับข้อสอบ IELTS Academic Reading จริง แนะนำให้นักเรียนที่ต้องการฝึกด้วยข้อสอบ official จาก Cambridge ใช้โหมดนี้เพื่อจำลองวันสอบจริงให้ใกล้เคียงที่สุด'
 
 export const READING_FULL_TEST_CATALOG_SUMMARY = `${TOTAL_FULL_READING_TESTS} tests · ${FULL_READING_TESTS_PER_BOOK} per book · Cambridge 11–17, 19`
 

@@ -9,6 +9,7 @@ import {
 import {
   LISTENING_FULL_TEST_LABEL,
   LISTENING_FULL_TEST_LEAD,
+  LISTENING_FULL_TEST_DETAIL_TH,
   LISTENING_FULL_TEST_CATALOG_SUMMARY,
   LISTENING_FULL_TEST_SPECS,
   FULL_TESTS_PER_BOOK,
@@ -20,6 +21,7 @@ import './ListeningFullTestView.css'
 import {
   READING_FULL_TEST_LABEL,
   READING_FULL_TEST_LEAD,
+  READING_FULL_TEST_DETAIL_TH,
   READING_FULL_TEST_CATALOG_SUMMARY,
   READING_FULL_TEST_SPECS,
   FULL_READING_TESTS_PER_BOOK,
@@ -3623,6 +3625,12 @@ const ADMIN_WORKSPACE_SECTIONS: Array<{
   { id: 'videos', label: 'Speaking Videos', description: 'Record Part 2 samples' },
   { id: 'settings', label: 'Settings', description: 'Topics and QA tools' }
 ]
+
+const READING_MONTHLY_EXAM_LEAD =
+  'ชุดข้อสอบ Reading Academic ล่าสุด (Recent Exam) — เปิดให้ฝึก 4 ชุดต่อเดือน เริ่ม January 2026'
+
+const READING_MONTHLY_EXAM_DETAIL_TH =
+  'Monthly Exam คือชุดข้อสอบ Reading Academic แบบล่าสุดที่ทีมคัดให้ทุกเดือน ไม่ใช่ข้อสอบ Cambridge แต่เป็นข้อสอบสมัยใหม่ในรูปแบบ IELTS Academic Reading จริง เริ่มตั้งแต่ January 2026 จะมีให้ฝึก 4 ชุดต่อเดือน หากทำ Cambridge Reading ครบทุกเล่มแล้ว แนะนำให้มาฝึกชุดนี้เป็นประจำเพื่อรักษาฟอร์มและคุ้นเคยกับข้อสอบสไตล์ใหม่'
 
 const READING_ENTRY_CHOICES: Array<{
   category: ReadingBankCategory
@@ -8803,6 +8811,50 @@ function App() {
       selectedReadingCollection
     ]
   )
+  const listeningViewTransitionKey = useMemo(
+    () =>
+      [
+        listeningLabMode,
+        listeningSkillTrack ?? 'none',
+        listeningPart34Subcategory,
+        listeningFoundationCategory,
+        listeningAttemptStage,
+        selectedListeningExerciseId || 'none',
+        listeningFullTestStage,
+        selectedListeningFullTestId || 'none'
+      ].join(':'),
+    [
+      listeningLabMode,
+      listeningSkillTrack,
+      listeningPart34Subcategory,
+      listeningFoundationCategory,
+      listeningAttemptStage,
+      selectedListeningExerciseId,
+      listeningFullTestStage,
+      selectedListeningFullTestId
+    ]
+  )
+  const listeningExamViewTransitionKey = useMemo(
+    () =>
+      [
+        activePage,
+        selectedListeningFoundationSetId || 'none',
+        selectedListeningFullTestId || 'none',
+        listeningFullTestSectionIndex,
+        listeningFullTestStage,
+        selectedListeningBuilderPackId || 'none',
+        selectedListeningBuilderExamTestId || 'none'
+      ].join(':'),
+    [
+      activePage,
+      selectedListeningFoundationSetId,
+      selectedListeningFullTestId,
+      listeningFullTestSectionIndex,
+      listeningFullTestStage,
+      selectedListeningBuilderPackId,
+      selectedListeningBuilderExamTestId
+    ]
+  )
   const readingExamCountsByCategory = useMemo(
     () =>
       (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => ({
@@ -10014,6 +10066,26 @@ function App() {
     : isQuestionByQuestionMode
       ? questionPrepNotes[String(currentQuestionIndex)] || ''
       : prepNotePart2
+  const speakingFlowContentKey = useMemo(() => {
+    if (isFullExamMode) {
+      if (fullExamPhase === 'part1') return `full-p1-${fullExamPart1Index}`
+      if (fullExamPhase === 'part3') return `full-p3-${fullExamPart3Index}`
+      if (fullExamPhase === 'part2_prep') return 'full-p2-prep'
+      if (fullExamPhase === 'part2_speaking') return 'full-p2-speak'
+      if (fullExamPhase === 'rest') return 'full-rest'
+      return `full-${fullExamPhase}`
+    }
+    if (isQuestionByQuestionMode) return `${selectedTestMode}-q-${currentQuestionIndex}`
+    return `${selectedTestMode}-standalone`
+  }, [
+    currentQuestionIndex,
+    fullExamPart1Index,
+    fullExamPart3Index,
+    fullExamPhase,
+    isFullExamMode,
+    isQuestionByQuestionMode,
+    selectedTestMode
+  ])
   const standalonePart2Recommendations = useMemo(
     () => (selectedTestMode === 'part2' && activeTopic ? getPart2Recommendations(activeTopic.prompt, activeTopic.cues) : []),
     [selectedTestMode, activeTopic]
@@ -11965,7 +12037,7 @@ function App() {
       const bannerX = (width - maxBannerWidth) / 2
       const topY = 22 * scale
       const ageMs = performance.now() - banner.changedAt
-      const animMs = 460
+      const animMs = 680
       const progress = Math.min(1, ageMs / animMs)
       const eased = 1 - Math.pow(1 - progress, 3)
       const slideOffset = (1 - eased) * 16 * scale
@@ -15244,7 +15316,7 @@ function App() {
     startQuestionCountdown(label)
   }
 
-  const showFullExamAnnouncement = (message: string, holdMs = 2200) => {
+  const showFullExamAnnouncement = (message: string, holdMs = 2800) => {
     if (fullExamAnnouncementTimeoutRef.current) {
       window.clearTimeout(fullExamAnnouncementTimeoutRef.current)
       fullExamAnnouncementTimeoutRef.current = null
@@ -15300,14 +15372,14 @@ function App() {
           window.setTimeout(() => {
             setQuestionCountdown(null)
             setQuestionCountdownLabel('')
-          }, 220)
+          }, 520)
           return 0
         }
         const next = current - 1
         if (next > 0) playCountdownBeep(next)
         return next
       })
-    }, 900)
+    }, 1000)
   }
 
   const checkAssessmentApiReady = async () => {
@@ -17507,6 +17579,43 @@ function App() {
   }
 
 
+  const renderReadingHintToggleButton = (
+    questionNumber: number,
+    isHinting: boolean,
+    options?: { compact?: boolean; label?: 'en' | 'th' }
+  ) => {
+    const compact = Boolean(options?.compact)
+    const labelMode = options?.label ?? 'en'
+    const label =
+      labelMode === 'th' ? (isHinting ? 'ซ่อนคำใบ้' : 'ดูคำใบ้') : isHinting ? 'Hide hint' : 'Show hint'
+
+    return (
+      <button
+        type="button"
+        className={`readingHintBtn ${compact ? 'readingHintBtn-compact' : ''} ${isHinting ? 'is-active' : ''}`.trim()}
+        title={isHinting ? 'Hide hint in passage' : 'Show hint in passage'}
+        aria-label={isHinting ? 'Hide hint in passage' : 'Show hint in passage'}
+        aria-pressed={isHinting}
+        onClick={() => {
+          setReadingHintQuestionNumber((current) => (current === questionNumber ? null : questionNumber))
+        }}
+      >
+        {compact ? (
+          <span className="readingHintBtnGlyph" aria-hidden="true">
+            {isHinting ? '×' : '?'}
+          </span>
+        ) : (
+          <>
+            <span className="readingHintBtnIcon" aria-hidden="true">
+              {isHinting ? '◆' : '✦'}
+            </span>
+            <span className="readingHintBtnLabel">{label}</span>
+          </>
+        )}
+      </button>
+    )
+  }
+
   const renderReadingFillBlankSlot = (
     question: Pick<ReadingQuestion, 'number'>,
     segment: { before: string; after: string },
@@ -17535,17 +17644,7 @@ function App() {
             className="readingFillBlankInput"
             aria-label={`Question ${question.number}`}
           />
-          <button
-            type="button"
-            className="secondary readingFillHintBtn"
-            title={isHinting ? 'Hide hint' : 'Show hint in passage'}
-            aria-label={isHinting ? 'Hide hint' : 'Show hint in passage'}
-            onClick={() => {
-              setReadingHintQuestionNumber((current) => (current === question.number ? null : question.number))
-            }}
-          >
-            {isHinting ? '×' : '?'}
-          </button>
+          {renderReadingHintToggleButton(question.number, isHinting, { compact: true })}
         </span>
         {segment.after && <span className="readingFillBlankSuffix">{segment.after}</span>}
       </span>
@@ -17729,17 +17828,7 @@ function App() {
                       </option>
                     ))}
                   </select>
-                  <button
-                    type="button"
-                    className="secondary readingFillHintBtn"
-                    onClick={() => {
-                      setReadingHintQuestionNumber((current) =>
-                        current === question.number ? null : question.number
-                      )
-                    }}
-                  >
-                    {isHinting ? 'Hide hint' : 'Show hint'}
-                  </button>
+                  {renderReadingHintToggleButton(question.number, isHinting)}
                 </div>
                 {isHinting && (
                   <p className="readingMatchingInfoHintNote">
@@ -17815,17 +17904,7 @@ function App() {
                       </option>
                     ))}
                   </select>
-                  <button
-                    type="button"
-                    className="secondary readingFillHintBtn"
-                    onClick={() => {
-                      setReadingHintQuestionNumber((current) =>
-                        current === question.number ? null : question.number
-                      )
-                    }}
-                  >
-                    {isHinting ? 'Hide hint' : 'Show hint'}
-                  </button>
+                  {renderReadingHintToggleButton(question.number, isHinting)}
                 </div>
               </div>
             )
@@ -18466,6 +18545,7 @@ function App() {
             )}
           </div>
 
+          <div key={listeningViewTransitionKey} className="listeningViewStage">
           {listeningLabMode === 'landing' && (
             <div className="listeningJourneyShell">
               <section className="listeningJourneyIntro">
@@ -18516,8 +18596,8 @@ function App() {
                 <button type="button" className="listeningSkillCard listeningSkillCard-fullTest" onClick={openListeningFullTestBank}>
                   <span className="listeningSkillCardLabel">Cambridge 15–17, 19–20</span>
                   <strong>Full Listening Test</strong>
-                  <p className="listeningSkillCardSubtitle">40 questions · 4 sections · one part at a time</p>
-                  <small>Cambridge 15, 16, 17, 19 & 20 — each book has Tests 1–4 (40 Q each).</small>
+                  <p className="listeningSkillCardSubtitle">Cambridge · 4 sections · 40 ข้อ · official exam flow</p>
+                  <small>{LISTENING_FULL_TEST_LEAD}</small>
                   <span className="listeningSkillCardCount">{LISTENING_FULL_TEST_CATALOG_SUMMARY}</span>
                 </button>
               </section>
@@ -18614,7 +18694,7 @@ function App() {
                         <span>{sets.length} tests</span>
                       </header>
                       <div className="listeningSetCardGrid">
-                        {sets.map((set) => {
+                        {sets.map((set, setIndex) => {
                           const meta = parseListeningFoundationSetMeta(set)
                           const setCompletedCount = set.questions.filter(
                             (question) => listeningFoundationAnswerState[question.id] === 'correct'
@@ -18623,6 +18703,7 @@ function App() {
                             <article
                               key={set.id}
                               className={`listeningSetCard ${selectedListeningFoundationSetId === set.id ? 'active' : ''}`}
+                              style={{ '--motion-stagger': setIndex % 8 } as CSSProperties}
                             >
                               <p className="listeningSetCardEyebrow">Section {meta.section}</p>
                               <h4>{meta.cardTitle}</h4>
@@ -18663,9 +18744,14 @@ function App() {
                 </div>
               </section>
 
+              <div className="readingMonthlyIntro listeningFullTestIntro">
+                <p className="readingMonthlyIntroEyebrow">Full Test คืออะไร?</p>
+                <p>{LISTENING_FULL_TEST_DETAIL_TH}</p>
+              </div>
+
               <p className="listeningFoundationBankHint meta">
-                Each Cambridge book has <strong>4 full tests</strong> (Tests 1–4). Pick one — you will complete{' '}
-                <strong>Section 1 → 2 → 3 → 4</strong> in order (10 questions + audio + audioscript per section).
+                แต่ละเล่มมี <strong>4 full tests</strong> (Test 1–4) เลือก 1 test แล้วทำครบ{' '}
+                <strong>Section 1 → 2 → 3 → 4</strong> ต่อเนื่อง (section ละ 10 ข้อ + audio + audioscript) เหมือนวันสอบจริง
               </p>
 
               <div className="listeningFoundationBankGrouped">
@@ -18679,13 +18765,14 @@ function App() {
                       </span>
                     </header>
                     <div className="listeningFullTestBankGrid">
-                      {tests.map((spec) => {
+                      {tests.map((spec, testIndex) => {
                         const ready = isFullTestComplete(spec.bookNumber, spec.testNumber)
                         return (
                         <button
                           key={spec.id}
                           type="button"
                           className={`listeningFullTestCard ${ready ? '' : 'is-unavailable'}`}
+                          style={{ '--motion-stagger': testIndex % 8 } as CSSProperties}
                           disabled={!ready}
                           onClick={() => startListeningFullTest(spec.id)}
                         >
@@ -18741,8 +18828,12 @@ function App() {
               </div>
 
               <div className="readingBankGrid listeningExerciseGrid">
-                {LISTENING_EXERCISES.map((exercise) => (
-                  <article key={exercise.id} className="readingBankCard listeningExerciseCard">
+                {LISTENING_EXERCISES.map((exercise, exerciseIndex) => (
+                  <article
+                    key={exercise.id}
+                    className="readingBankCard listeningExerciseCard"
+                    style={{ '--motion-stagger': exerciseIndex } as CSSProperties}
+                  >
                     <p className="promptPill">{exercise.label}</p>
                     <h3>{exercise.title}</h3>
                     <p className="meta">{exercise.formatLabel}</p>
@@ -18775,7 +18866,7 @@ function App() {
           )}
 
           {listeningLabMode === 'practice' && listeningAttemptStage === 'exam' && activeListeningExercise && (
-            <div className="readingExamWrap listeningExamWrap">
+            <div className="readingExamWrap listeningExamWrap listeningFlowSwap">
               <div className="readingAttemptToolbar">
                 <div>
                   <p className="sectionLabel">{activeListeningExercise.label}</p>
@@ -18878,7 +18969,7 @@ function App() {
           )}
 
           {listeningLabMode === 'practice' && listeningAttemptStage === 'report' && activeListeningExercise && (
-            <div className="readingReportWrap listeningReportWrap">
+            <div className="readingReportWrap listeningReportWrap listeningFlowSwap">
               <div className="readingAttemptToolbar">
                 <div>
                   <p className="sectionLabel">{activeListeningExercise.label}</p>
@@ -19045,6 +19136,7 @@ function App() {
               </div>
             </div>
           )}
+          </div>
         </section>
         ) : (
           <section className="panel full">
@@ -19061,6 +19153,7 @@ function App() {
         canAccessListening ? (
           <section className="panel full listeningFoundationPage listeningFoundationExamPage listeningSectionExamHost">
             {listeningFoundationExamConfig && activeListeningFoundationSet ? (
+              <div key={listeningExamViewTransitionKey} className="listeningExamViewStage">
               <ListeningSectionExamView
                 config={{
                   ...listeningFoundationExamConfig,
@@ -19102,6 +19195,7 @@ function App() {
                   })
                 }}
               />
+              </div>
             ) : (
               <div className="emptyNotebook">
                 <p>No Listening Foundation exam is selected yet.</p>
@@ -19130,8 +19224,9 @@ function App() {
       ) : activePage === 'listening_full_test_exam' ? (
         canAccessListening ? (
           <section className="panel full listeningFoundationPage listeningFoundationExamPage listeningSectionExamHost listeningFullTestHost">
+            <div key={listeningExamViewTransitionKey} className="listeningExamViewStage">
             {listeningFullTestStage === 'complete' && activeListeningFullTestSpec ? (
-              <article className="listeningFullTestSummary">
+              <article className="listeningFullTestSummary listeningFlowSwap">
                 <header className="listeningFullTestSummaryHero">
                   <div>
                     <p className="listeningFullTestCardEyebrow">Full test complete</p>
@@ -19237,6 +19332,7 @@ function App() {
                 </button>
               </div>
             )}
+            </div>
           </section>
         ) : (
           <section className="panel full">
@@ -19252,6 +19348,7 @@ function App() {
         canAccessListening ? (
           <section className="panel full listeningBuilderExamPage listeningSectionExamHost">
             {listeningBuilderExamConfig && activeListeningBuilderExamSet ? (
+              <div key={listeningExamViewTransitionKey} className="listeningExamViewStage">
               <ListeningSectionExamView
                 config={listeningBuilderExamConfig}
                 playbackState={listeningPlaybackState}
@@ -19295,6 +19392,7 @@ function App() {
                   })
                 }}
               />
+              </div>
             ) : (
               <div className="emptyNotebook">
                 <p>No detailed exam card is ready for this pack yet.</p>
@@ -19349,7 +19447,7 @@ function App() {
                   : selectedReadingEntryChoice
                     ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
                     : readingEntryView === 'monthly'
-                      ? '2026 reading sets, grouped by month.'
+                      ? READING_MONTHLY_EXAM_LEAD
                       : 'Normal Reading, Advanced Reading, and Monthly Exams are separate banks.'}
               </p>
             </div>
@@ -19393,8 +19491,8 @@ function App() {
                 >
                   <span className="readingEntryLabel">Monthly</span>
                   <strong>Monthly Exams</strong>
-                  <span className="readingEntrySubtitle">ข้อสอบรายเดือน</span>
-                  <small>ชุดข้อสอบ IELTS Academic Reading แยกตามเดือน</small>
+                  <span className="readingEntrySubtitle">ข้อสอบรายเดือน · Recent Exam</span>
+                  <small>{READING_MONTHLY_EXAM_LEAD}</small>
                   <span className="readingEntryCount">{monthlyReadingExams.length} exams</span>
                 </button>
                 <button
@@ -19405,7 +19503,7 @@ function App() {
                 >
                   <span className="readingEntryLabel">Full Exam</span>
                   <strong>{READING_FULL_TEST_LABEL}</strong>
-                  <span className="readingEntrySubtitle">สอบเต็ม 3 passages · 40 ข้อ</span>
+                  <span className="readingEntrySubtitle">Cambridge · สอบเต็ม 3 passages · 40 ข้อ</span>
                   <small>{READING_FULL_TEST_LEAD}</small>
                   <span className="readingEntryCount">{READING_FULL_TEST_CATALOG_SUMMARY}</span>
                 </button>
@@ -19431,9 +19529,13 @@ function App() {
                     </button>
                   </div>
                 </div>
-                <p className="meta">
-                  Each book has <strong>4 full tests</strong> (Tests 1–4). Pick one — you will answer all{' '}
-                  <strong>40 questions across 3 passages</strong> in one sitting, like the real exam.
+                <div className="readingMonthlyIntro readingFullTestIntro">
+                  <p className="readingMonthlyIntroEyebrow">Full Exam คืออะไร?</p>
+                  <p>{READING_FULL_TEST_DETAIL_TH}</p>
+                </div>
+                <p className="meta readingFullTestMeta">
+                  แต่ละเล่มมี <strong>4 full tests</strong> (Test 1–4) เลือก 1 test แล้วทำครบ{' '}
+                  <strong>40 ข้อใน 3 passages</strong> ในครั้งเดียว เหมือนวันสอบจริง
                 </p>
                 <div className="listeningFoundationBankGrouped">
                   {readingFullTestsByBook.map(({ book, tests }) => (
@@ -19496,7 +19598,7 @@ function App() {
                   <div>
                     <span className="readingEntryLabel">Monthly Bank</span>
                     <h3>IELTS Academic Reading</h3>
-                    <p>Free-pick practice sets organized by release month.</p>
+                    <p>{READING_MONTHLY_EXAM_LEAD}</p>
                   </div>
                   <div className="readingBankWindowActions">
                     <span className="readingEntryCount">{monthlyReadingExams.length} exams</span>
@@ -19509,9 +19611,13 @@ function App() {
                     </button>
                   </div>
                 </div>
+                <div className="readingMonthlyIntro">
+                  <p className="readingMonthlyIntroEyebrow">Monthly Exam คืออะไร?</p>
+                  <p>{READING_MONTHLY_EXAM_DETAIL_TH}</p>
+                </div>
                 {readingMonthGroups.length === 0 ? (
                   <div className="emptyNotebook">
-                    <p>No monthly reading sets are ready yet.</p>
+                    <p>ยังไม่มีชุด Monthly Reading ในระบบ — ชุดแรกจะเริ่ม January 2026 (4 ชุดต่อเดือน)</p>
                   </div>
                 ) : (
                   <div className="readingStageBoard readingMonthBoard">
@@ -20590,15 +20696,7 @@ function App() {
                               <p className="readingQuestionNumber">Question {question.number}</p>
                               <p className="readingQuestionPrompt">{question.prompt}</p>
                             </div>
-                            <button
-                              type="button"
-                              className="secondary"
-                              onClick={() => {
-                                setReadingHintQuestionNumber((current) => (current === question.number ? null : question.number))
-                              }}
-                            >
-                              {isHinting ? 'ซ่อนคำใบ้' : 'ดูคำใบ้'}
-                            </button>
+                            {renderReadingHintToggleButton(question.number, isHinting, { label: 'th' })}
                           </div>
                           {isHinting && !isJudgementQuestion && (
                             <div className="readingHintBox">
@@ -24910,7 +25008,7 @@ function App() {
           )}
 
           {attemptStage !== 'idle' && activeTopic && (
-            <div className="attemptFlow">
+            <div className="attemptFlow" data-stage={attemptStage}>
               {attemptStage !== 'speaking' && <div className="card">
                 <p className="category">{activeTopic.category}</p>
                 <h3>{activeTopic.prompt}</h3>
@@ -25309,6 +25407,7 @@ function App() {
                     <div className="speakingPanelLayout">
                     <section className="speakingPromptCard">
                       <p className="promptPill">{activeTopic.category}</p>
+                      <div key={speakingFlowContentKey} className="speakingFlowSwap">
                       {isFullExamMode ? (
                         isTrialSpeakingFlow ? (
                         <>
@@ -25513,6 +25612,7 @@ function App() {
                         <p className="handNoteText">
                           {activeSpeakingNote || 'No note yet. Add a quick note in preparation time.'}
                         </p>
+                      </div>
                       </div>
                     </section>
 
@@ -26563,18 +26663,21 @@ function App() {
         </div>
       )}
       {(isFullExamMode && fullExamAnnouncement) && (
-        <div className="fullExamOverlay" role="status" aria-live="assertive">
-          <div className="fullExamOverlayCard">
+        <div className="fullExamOverlay speakingFlowOverlay" role="status" aria-live="assertive">
+          <div className="fullExamOverlayCard speakingFlowOverlayCard">
             <p className="fullExamOverlayEyebrow">English Plan Full Mock</p>
             <p className="fullExamOverlayMessage">{fullExamAnnouncement}</p>
           </div>
         </div>
       )}
       {questionCountdown !== null && attemptStage === 'speaking' && (
-        <div className="questionCountdownOverlay" role="status" aria-live="assertive">
-          <div className="questionCountdownCard">
+        <div className="questionCountdownOverlay speakingFlowOverlay" role="status" aria-live="assertive">
+          <div className={`questionCountdownCard speakingFlowOverlayCard ${questionCountdown === 0 ? 'questionCountdownCard-go' : ''}`}>
             <p className="questionCountdownLabel">{questionCountdownLabel}</p>
-            <p className="questionCountdownNumber">{questionCountdown === 0 ? 'GO' : questionCountdown}</p>
+            <p key={`countdown-${questionCountdown}`} className="questionCountdownNumber">
+              {questionCountdown === 0 ? 'GO' : questionCountdown}
+            </p>
+            {questionCountdown === 0 ? <p className="questionCountdownSub">Begin your answer</p> : null}
           </div>
         </div>
       )}

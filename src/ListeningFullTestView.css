@@ -15,6 +15,7 @@
   border-radius: 16px;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.04), rgba(59, 130, 246, 0.08));
   border: 1px solid rgba(148, 163, 184, 0.25);
+  animation: luxuryContentSwap 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .listeningFullTestProgressCopy span {
@@ -56,6 +57,12 @@
   background: #fff;
   font-size: 0.78rem;
   color: #64748b;
+  transition:
+    border-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .listeningFullTestSectionChip.is-active {
@@ -63,6 +70,8 @@
   background: rgba(37, 99, 235, 0.08);
   color: #1d4ed8;
   font-weight: 600;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
 }
 
 .listeningFullTestSectionChip.is-done {
@@ -82,6 +91,7 @@
   border-radius: 18px;
   border: 1px solid rgba(148, 163, 184, 0.3);
   background: #fff;
+  animation: luxuryViewEnter 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .listeningFullTestSummaryHero {
@@ -90,6 +100,7 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.25rem;
+  animation: luxuryContentSwap 420ms cubic-bezier(0.22, 1, 0.36, 1) 90ms both;
 }
 
 .listeningFullTestSummaryHero h3 {
@@ -117,6 +128,24 @@
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.9);
   border: 1px solid rgba(226, 232, 240, 0.9);
+  animation: luxuryCardEnter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+}
+
+.listeningFullTestSummaryGrid article:nth-child(1) {
+  --motion-stagger: 0;
+}
+
+.listeningFullTestSummaryGrid article:nth-child(2) {
+  --motion-stagger: 1;
+}
+
+.listeningFullTestSummaryGrid article:nth-child(3) {
+  --motion-stagger: 2;
+}
+
+.listeningFullTestSummaryGrid article:nth-child(4) {
+  --motion-stagger: 3;
 }
 
 .listeningFullTestSummaryGrid span {
@@ -144,12 +173,18 @@
   border: 1px solid rgba(148, 163, 184, 0.35);
   background: #fff;
   text-align: left;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  animation: luxuryCardEnter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+  transition:
+    border-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .listeningFullTestCard:hover {
   border-color: #2563eb;
-  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 14px 36px rgba(37, 99, 235, 0.12);
+  transform: translateY(-3px);
 }
 
 .listeningFullTestCard.is-unavailable {

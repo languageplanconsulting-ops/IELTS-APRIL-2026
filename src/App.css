@@ -1540,15 +1540,35 @@ body,
   margin-top: 12px;
 }
 
-.speakingPanelLayout {
-  display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: 16px;
+.attemptFlow[data-stage='prep'] .prepStageV2,
+.attemptFlow[data-stage='assessing'] .loadingStageCard,
+.attemptFlow[data-stage='result'] .resultCard {
+  animation: luxuryViewEnter var(--duration-luxury-slow) var(--ease-luxury) both;
+}
+
+.attemptFlow[data-stage='speaking'] .speakingStageWrap {
+  animation: luxuryViewEnter var(--duration-luxury-slow) var(--ease-luxury) both;
+}
+
+.speakingFlowSwap {
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) both;
+}
+
+.speakingFlowSwap > h3,
+.speakingFlowSwap > p:not(.promptSub):not(.sectionLabel):not(.handNoteText):not(.questionNotePrompt),
+.speakingFlowSwap .part2BigQuestion {
+  animation: luxuryQuestionReveal var(--duration-luxury) var(--ease-luxury-soft) 80ms both;
 }
 
 .speakingStageWrap {
   display: grid;
   gap: 14px;
+}
+
+.speakingPanelLayout {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 16px;
 }
 
 .speakingTopToolbar {
@@ -1576,6 +1596,10 @@ body,
   box-shadow:
     inset 0 1px 0 rgba(255, 204, 0, 0.45),
     0 10px 32px rgba(15, 23, 42, 0.06);
+  transition:
+    opacity var(--duration-luxury) var(--ease-luxury-soft),
+    filter var(--duration-luxury) var(--ease-luxury-soft),
+    transform var(--duration-luxury) var(--ease-luxury-soft);
 }
 
 .speakingExamLane .speakingPanelLayout {
@@ -1683,9 +1707,15 @@ body,
   pointer-events: none;
 }
 
+.speakingFlowOverlay {
+  animation: luxuryOverlayBackdropIn var(--duration-luxury) var(--ease-luxury) both;
+}
+
 .fullExamOverlay {
-  background: rgba(2, 6, 23, 0.3);
-  backdrop-filter: blur(4px);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 204, 0, 0.12), transparent 34%),
+    rgba(2, 6, 23, 0.42);
+  backdrop-filter: blur(10px);
 }
 
 .fullExamOverlayCard,
@@ -1693,7 +1723,10 @@ body,
   border: 3px solid var(--bc-black);
   box-shadow: 8px 8px 0 var(--bc-black);
   text-align: center;
-  animation: full-exam-pop 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.speakingFlowOverlayCard {
+  animation: luxuryOverlayCardIn var(--duration-luxury-slow) var(--ease-luxury) both;
 }
 
 .fullExamOverlayCard {
@@ -1719,23 +1752,31 @@ body,
   letter-spacing: 0.04em;
   color: #0d0d0d;
   text-transform: uppercase;
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) 120ms both;
 }
 
 .questionCountdownOverlay {
   background:
-    radial-gradient(circle at top, rgba(251, 191, 36, 0.2), transparent 28%),
-    rgba(2, 6, 23, 0.62);
-  backdrop-filter: blur(6px);
+    radial-gradient(circle at top, rgba(251, 191, 36, 0.24), transparent 32%),
+    radial-gradient(circle at bottom, rgba(0, 74, 173, 0.18), transparent 38%),
+    rgba(2, 6, 23, 0.64);
+  backdrop-filter: blur(12px);
 }
 
 .questionCountdownCard {
   min-width: min(460px, 100%);
   background: linear-gradient(135deg, #fff9dd 0%, #fff0ae 100%);
-  padding: 30px 24px;
+  padding: 30px 24px 26px;
 }
 
 .questionCountdownCard-go {
   background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+  box-shadow:
+    8px 8px 0 var(--bc-black),
+    0 0 0 0 rgba(255, 204, 0, 0.45);
+  animation:
+    luxuryOverlayCardIn var(--duration-luxury-slow) var(--ease-luxury) both,
+    luxuryGoPulse 680ms var(--ease-luxury-soft) 180ms both;
 }
 
 .questionCountdownLabel {
@@ -1745,6 +1786,7 @@ body,
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #0f2e85;
+  animation: luxuryContentSwap var(--duration-luxury-fast) var(--ease-luxury-soft) both;
 }
 
 .questionCountdownNumber {
@@ -1754,7 +1796,12 @@ body,
   line-height: 0.9;
   color: var(--bc-blue);
   text-shadow: 4px 4px 0 rgba(13, 13, 13, 0.12);
-  animation: countdown-pulse 700ms ease-in-out infinite;
+  animation: luxuryCountdownTick var(--duration-luxury) var(--ease-luxury) both;
+}
+
+.questionCountdownCard-go .questionCountdownNumber {
+  color: #0f2e85;
+  animation: luxuryGoNumber var(--duration-luxury-slow) var(--ease-luxury) both;
 }
 
 .questionCountdownSub {
@@ -1762,6 +1809,7 @@ body,
   font-size: 0.92rem;
   font-weight: 700;
   color: #334155;
+  animation: luxuryContentSwap var(--duration-luxury-fast) var(--ease-luxury-soft) 220ms both;
 }
 
 .answerReviewOverlay {
@@ -2359,7 +2407,10 @@ body,
   border-radius: 28px;
   padding: 24px;
   box-shadow: 0 12px 40px rgba(15, 23, 42, 0.05);
-  animation: screen-fade-up 340ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    transform var(--duration-luxury) var(--ease-luxury);
 }
 
 .promptPill {
@@ -2931,7 +2982,7 @@ body,
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, #004aad 0%, #3b82f6 70%, #93c5fd 100%);
-  transition: width 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width var(--duration-luxury-slow) var(--ease-luxury);
 }
 
 @keyframes screen-fade-up {
@@ -2986,6 +3037,87 @@ body,
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes luxuryOverlayBackdropIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes luxuryOverlayCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes luxuryCountdownTick {
+  0% {
+    opacity: 0;
+    transform: scale(0.82) translateY(10px);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.06) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes luxuryGoNumber {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+    letter-spacing: 0.08em;
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+    letter-spacing: 0.18em;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    letter-spacing: 0.12em;
+  }
+}
+
+@keyframes luxuryGoPulse {
+  0% {
+    box-shadow:
+      8px 8px 0 var(--bc-black),
+      0 0 0 0 rgba(255, 204, 0, 0.42);
+  }
+  100% {
+    box-shadow:
+      8px 8px 0 var(--bc-black),
+      0 0 0 18px rgba(255, 204, 0, 0);
+  }
+}
+
+@keyframes luxuryQuestionReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -7803,7 +7935,7 @@ body,
   width: min(88%, 760px);
   transform: translateX(-50%);
   pointer-events: none;
-  animation: adminQuestionBannerIn 460ms var(--ease-luxury-soft) both;
+  animation: adminQuestionBannerIn var(--duration-luxury-slow) var(--ease-luxury-soft) both;
 }
 
 .adminVideoQuestionBannerGlow {
@@ -7918,11 +8050,13 @@ body,
 @keyframes adminQuestionBannerIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(-14px);
+    transform: translateX(-50%) translateY(-18px) scale(0.985);
+    filter: blur(5px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 
@@ -9089,6 +9223,24 @@ body,
   animation: luxuryViewEnter var(--duration-view) var(--ease-luxury) both;
 }
 
+.listeningViewStage,
+.listeningExamViewStage {
+  display: grid;
+  gap: inherit;
+  animation: luxuryViewEnter var(--duration-view) var(--ease-luxury) both;
+}
+
+.listeningFlowSwap {
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) both;
+}
+
+.listeningLabHeader h2,
+.listeningLabHeader p {
+  transition:
+    opacity var(--duration-luxury) var(--ease-luxury-soft),
+    transform var(--duration-luxury) var(--ease-luxury);
+}
+
 .readingPageHeader {
   transition:
     opacity var(--duration-luxury-fast) var(--ease-luxury-soft),
@@ -9599,6 +9751,21 @@ body,
 .listeningExerciseCard {
   display: grid;
   gap: 12px;
+  animation: luxuryCardEnter var(--duration-luxury) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 75ms);
+  transition:
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury);
+}
+
+.listeningExamWrap,
+.listeningReportWrap {
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) both;
+}
+
+.listeningFullTestIntro,
+.listeningBuilderBankIntro {
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) 90ms both;
 }
 
 .listeningExamLayout {
@@ -10535,11 +10702,19 @@ body,
 
 .readingHintBox {
   max-width: 420px;
-  padding: 10px 12px;
-  border: 2px solid var(--bc-black);
-  background: #fff3bf;
+  padding: 12px 14px;
+  border: 1px solid rgba(0, 74, 173, 0.16);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 249, 237, 0.96) 0%, rgba(239, 246, 255, 0.96) 100%);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
   font-size: 0.88rem;
   line-height: 1.5;
+  color: #334155;
+}
+
+.readingHintBox strong {
+  color: #0f3480;
 }
 
 .readingPdoyZoomCard {
@@ -11285,6 +11460,10 @@ body,
   gap: 10px;
 }
 
+.readingMatchingInfoControls .readingHintBtn {
+  margin-left: auto;
+}
+
 .readingMatchingInfoSelect {
   min-width: 180px;
   flex: 1 1 180px;
@@ -11409,6 +11588,11 @@ body,
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
+}
+
+.readingQuestionCardTop .readingHintBtn {
+  flex: 0 0 auto;
+  align-self: center;
 }
 
 .readingQuestionNumber {
@@ -11544,6 +11728,10 @@ body,
   align-items: center;
 }
 
+.readingChooseTwoAnswerControls .readingHintBtn {
+  margin-left: auto;
+}
+
 .readingChooseTwoAnswerControls select {
   flex: 1 1 220px;
   min-width: 0;
@@ -11677,27 +11865,100 @@ body,
   line-height: 1;
 }
 
-.readingFillHintBtn {
+.readingFillHintBtn,
+.readingHintBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   flex: 0 0 auto;
-  min-height: 22px !important;
-  min-width: 22px !important;
-  padding: 0 !important;
-  border: 1px solid #cbd5e1 !important;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid rgba(0, 74, 173, 0.2) !important;
   border-radius: 999px !important;
-  background: #f8fafc !important;
-  box-shadow: none !important;
-  color: #475569 !important;
-  font-size: 0.82rem !important;
-  font-weight: 900 !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 251, 255, 0.98) 100%) !important;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  color: #0f3480 !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   line-height: 1 !important;
+  cursor: pointer;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury-soft),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury-soft),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    background var(--duration-luxury-fast) var(--ease-luxury-soft),
+    color var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
-.readingFillHintBtn:hover {
-  background: #eff6ff !important;
-  border-color: #93c5fd !important;
-  color: #1d4ed8 !important;
-  transform: none !important;
-  box-shadow: none !important;
+.readingHintBtnIcon,
+.readingHintBtnGlyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  color: #bf8b30;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.readingHintBtnLabel {
+  white-space: nowrap;
+}
+
+.readingHintBtn-compact {
+  min-height: 24px !important;
+  min-width: 24px !important;
+  width: 24px;
+  height: 24px;
+  padding: 0 !important;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.readingHintBtn-compact .readingHintBtnGlyph {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #004aad;
+}
+
+.readingHintBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(255, 204, 0, 0.55) !important;
+  background:
+    linear-gradient(180deg, #fffef8 0%, #fff9e8 100%) !important;
+  color: #004aad !important;
+  box-shadow:
+    0 10px 22px rgba(0, 74, 173, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.readingHintBtn.is-active {
+  border-color: rgba(0, 74, 173, 0.72) !important;
+  background: linear-gradient(135deg, #004aad 0%, #123f91 58%, #0f3480 100%) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 12px 26px rgba(0, 74, 173, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+.readingHintBtn.is-active .readingHintBtnIcon,
+.readingHintBtn.is-active .readingHintBtnGlyph {
+  color: #ffcc00;
+}
+
+.readingHintBtn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.readingHintBtn:focus-visible {
+  outline: 2px solid rgba(255, 204, 0, 0.85);
+  outline-offset: 2px;
 }
 
 .readingFillBlankInput {
@@ -14455,8 +14716,8 @@ body,
 .globalProgressFill {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #16a34a 0%, #22c55e 100%);
-  transition: width 0.5s ease;
+  background: linear-gradient(90deg, #004aad 0%, #16a34a 42%, #22c55e 100%);
+  transition: width var(--duration-luxury-slow) var(--ease-luxury);
 }
 
 .globalProgressLabel {
@@ -14514,11 +14775,15 @@ body,
   position: fixed;
   inset: 0;
   z-index: 150;
-  background: rgba(0, 0, 0, 0.7);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 204, 0, 0.1), transparent 34%),
+    rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
+  animation: luxuryOverlayBackdropIn var(--duration-luxury) var(--ease-luxury) both;
 }
 
 .examPausedCard {
@@ -14528,6 +14793,7 @@ body,
   padding: 32px;
   text-align: center;
   max-width: 400px;
+  animation: luxuryOverlayCardIn var(--duration-luxury-slow) var(--ease-luxury) both;
 }
 
 .examPausedCard h3 {
@@ -14551,7 +14817,9 @@ body,
 }
 
 .examPaused .speakingExamLane {
-  opacity: 0.3;
+  opacity: 0.72;
+  filter: blur(1px) saturate(0.92);
+  transform: scale(0.996);
   pointer-events: none;
 }
 
@@ -14887,12 +15155,12 @@ body,
 /* Low time warning */
 .bigTimerLow {
   color: #dc2626 !important;
-  animation: pulse-timer 0.5s infinite;
+  animation: pulse-timer 1.2s var(--ease-luxury-soft) infinite;
 }
 
 @keyframes pulse-timer {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  50% { transform: scale(1.025); }
 }
 
 .lowTimeWarning {
@@ -14903,12 +15171,12 @@ body,
   color: #dc2626;
   font-weight: 800;
   text-align: center;
-  animation: pulse-warning 1s infinite;
+  animation: pulse-warning 1.6s var(--ease-luxury-soft) infinite;
 }
 
 @keyframes pulse-warning {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%, 100% { opacity: 1; transform: translateY(0); }
+  50% { opacity: 0.82; transform: translateY(-1px); }
 }
 
 /* Primary next button */
@@ -14918,6 +15186,20 @@ body,
   padding: 14px 24px !important;
   font-size: 1rem !important;
   flex: 1;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury-soft),
+    filter var(--duration-luxury-fast) var(--ease-luxury-soft),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury-soft),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
+}
+
+.primaryNextBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.primaryNextBtn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.992);
 }
 
 .transcriptionRetryBtn {
@@ -16252,11 +16534,11 @@ select:focus,
 }
 
 .readingHintBox {
-  border: 1px solid var(--ep-line) !important;
+  border: 1px solid rgba(0, 74, 173, 0.14) !important;
   border-radius: 14px !important;
-  background: #eef3f8 !important;
-  color: var(--ep-muted) !important;
-  box-shadow: none !important;
+  background: linear-gradient(135deg, rgba(255, 249, 237, 0.96) 0%, rgba(239, 246, 255, 0.96) 100%) !important;
+  color: #334155 !important;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06) !important;
 }
 
 .readingHintMark {
@@ -16650,6 +16932,51 @@ select:focus,
   margin: 0;
   color: #516078;
   font-weight: 750;
+}
+
+.readingMonthlyIntro {
+  max-width: 920px;
+  margin: 0 0 8px;
+  padding: 16px 18px;
+  border: 1px solid rgba(0, 74, 173, 0.16);
+  border-left: 4px solid #004aad;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(239, 246, 255, 0.96) 0%, rgba(255, 249, 237, 0.92) 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.readingMonthlyIntroEyebrow {
+  margin: 0 0 8px;
+  color: #004aad;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.readingMonthlyIntro p:last-child {
+  margin: 0;
+  color: #334155;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  font-weight: 650;
+}
+
+.readingFullTestIntro {
+  border-left-color: #ffcc00;
+  background:
+    linear-gradient(135deg, rgba(255, 249, 237, 0.96) 0%, rgba(239, 246, 255, 0.92) 100%);
+}
+
+.readingFullTestIntro .readingMonthlyIntroEyebrow {
+  color: #7c5a00;
+}
+
+.readingFullTestMeta {
+  max-width: 920px;
+  margin: 0 0 12px;
+  line-height: 1.6;
 }
 
 .readingPage .readingBankWindowActions {
@@ -18489,6 +18816,20 @@ select:focus,
   border: 2px solid #dbeafe;
   border-radius: 18px;
   background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  animation: luxuryCardEnter var(--duration-luxury) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 80ms);
+}
+
+.listeningJourneyBandGoals .listeningJourneyBandGoal:nth-child(1) {
+  --motion-stagger: 0;
+}
+
+.listeningJourneyBandGoals .listeningJourneyBandGoal:nth-child(2) {
+  --motion-stagger: 1;
+}
+
+.listeningJourneyBandGoals .listeningJourneyBandGoal:nth-child(3) {
+  --motion-stagger: 2;
 }
 
 .listeningJourneyBandTarget {
@@ -18529,8 +18870,9 @@ select:focus,
   cursor: pointer;
   transition:
     transform var(--duration-luxury, 420ms) var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1)),
-    box-shadow var(--duration-luxury, 420ms) var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1));
-  animation: readingViewStageEnter 720ms var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1)) both;
+    box-shadow var(--duration-luxury, 420ms) var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft);
+  animation: luxuryCardEnter var(--duration-luxury-slow) var(--ease-luxury) both;
   animation-delay: calc(var(--motion-stagger, 0) * 90ms);
 }
 
@@ -18626,6 +18968,7 @@ select:focus,
   font-size: 0.92rem;
   font-weight: 700;
   color: #64748b;
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) both;
 }
 
 .listeningBankBreadcrumbLink {
@@ -18637,6 +18980,9 @@ select:focus,
   font-weight: 800;
   cursor: pointer;
   text-decoration: underline;
+  transition:
+    color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    opacity var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 .listeningBookFilter {
@@ -18653,6 +18999,12 @@ select:focus,
   font-size: 0.88rem;
   font-weight: 800;
   cursor: pointer;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 .listeningBookFilter button.active {
@@ -18669,6 +19021,8 @@ select:focus,
 .listeningBookGroup {
   display: grid;
   gap: 14px;
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 60ms);
 }
 
 .listeningBookGroupHeader {
@@ -18691,6 +19045,22 @@ select:focus,
   color: #64748b;
 }
 
+.listeningFoundationBankGrouped .listeningBookGroup:nth-child(1) {
+  --motion-stagger: 0;
+}
+
+.listeningFoundationBankGrouped .listeningBookGroup:nth-child(2) {
+  --motion-stagger: 1;
+}
+
+.listeningFoundationBankGrouped .listeningBookGroup:nth-child(3) {
+  --motion-stagger: 2;
+}
+
+.listeningFoundationBankGrouped .listeningBookGroup:nth-child(4) {
+  --motion-stagger: 3;
+}
+
 .listeningSetCardGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -18705,6 +19075,18 @@ select:focus,
   background: #fffdfa;
   box-shadow: 4px 4px 0 #0f172a;
   padding: 16px;
+  animation: luxuryCardEnter var(--duration-luxury) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+  transition:
+    transform var(--duration-luxury) var(--ease-luxury),
+    box-shadow var(--duration-luxury) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
+}
+
+.listeningSetCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 6px 8px 0 #0f172a;
 }
 
 .listeningSetCard.active {
@@ -18754,6 +19136,10 @@ select:focus,
   padding: 10px 12px;
   font-weight: 900;
   cursor: pointer;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 .listeningBuilderBankIntro h3 {
@@ -18784,7 +19170,10 @@ select:focus,
   text-align: left;
   font-family: Inter, system-ui, sans-serif;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 .listeningModeChoiceCard:hover {
@@ -18850,6 +19239,10 @@ select:focus,
   box-shadow: 3px 3px 0 #0f172a !important;
   font-family: Inter, system-ui, sans-serif !important;
   font-weight: 850 !important;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft) !important;
 }
 
 .listeningFoundationMission {
@@ -18862,6 +19255,7 @@ select:focus,
   border-radius: 14px;
   background: #ffcc00;
   box-shadow: 4px 4px 0 #0f172a;
+  animation: luxuryContentSwap var(--duration-luxury) var(--ease-luxury-soft) 70ms both;
 }
 
 .listeningFoundationMission span {
@@ -18956,7 +19350,10 @@ select:focus,
   color: #0f172a;
   box-shadow: 2px 2px 0 #0f172a;
   font-weight: 850;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury),
+    background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
 }
 
 .listeningFoundationCategories button.active,
