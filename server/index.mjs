@@ -1161,26 +1161,56 @@ const normalizeSignedStorageUrl = (signedUrl) => {
   return `${SUPABASE_URL}${value.startsWith('/') ? '' : '/'}${value}`
 }
 
-const looksLikeVideoFile = (filePath, mimeType = '') => {
-  const normalized = String(mimeType || '').toLowerCase()
+const readVideoFileSignature = (filePath) => {
   const fd = fs.openSync(filePath, 'r')
   try {
     const buffer = Buffer.alloc(16)
     const bytesRead = fs.readSync(fd, buffer, 0, buffer.length, 0)
     const signature = buffer.subarray(0, bytesRead)
     const ascii = signature.toString('ascii')
-    const hasKnownVideoSignature =
-      (signature[0] === 0x1a && signature[1] === 0x45 && signature[2] === 0xdf && signature[3] === 0xa3) ||
-      ascii.includes('ftyp') ||
-      ascii.startsWith('OggS')
-    return hasKnownVideoSignature && /^video\/(webm|mp4|ogg|quicktime|x-matroska)/.test(normalized)
+    if (signature[0] === 0x1a && signature[1] === 0x45 && signature[2] === 0xdf && signature[3] === 0xa3) {
+      return { isVideo: true, mimeType: 'video/webm' }
+    }
+    if (ascii.includes('ftyp')) {
+      return { isVideo: true, mimeType: 'video/mp4' }
+    }
+    if (ascii.startsWith('OggS')) {
+      return { isVideo: true, mimeType: 'video/ogg' }
+    }
+    return { isVideo: false, mimeType: '' }
   } finally {
     fs.closeSync(fd)
   }
 }
 
+const looksLikeVideoFile = (filePath, mimeType = '') => {
+  const normalized = String(mimeType || '').toLowerCase()
+  const signature = readVideoFileSignature(filePath)
+  return signature.isVideo && (
+    /^video\/(webm|mp4|ogg|quicktime|x-matroska)/.test(normalized) ||
+    normalized === 'application/octet-stream' ||
+    normalized === 'binary/octet-stream' ||
+    !normalized
+  )
+}
+
+const normalizeUploadedVideoMimeType = (file) => {
+  const rawMimeType = String(file?.mimetype || '').toLowerCase()
+  const originalName = String(file?.originalname || '').toLowerCase()
+  const signature = file?.path ? readVideoFileSignature(file.path) : { isVideo: false, mimeType: '' }
+  if (!signature.isVideo) return { mimeType: rawMimeType || 'application/octet-stream', isVideo: false }
+  if (/^video\/(webm|mp4|ogg|quicktime|x-matroska)/.test(rawMimeType)) {
+    return { mimeType: rawMimeType, isVideo: true }
+  }
+  if (originalName.endsWith('.mp4') || signature.mimeType === 'video/mp4') return { mimeType: 'video/mp4', isVideo: true }
+  if (originalName.endsWith('.ogv') || originalName.endsWith('.ogg') || signature.mimeType === 'video/ogg') {
+    return { mimeType: 'video/ogg', isVideo: true }
+  }
+  return { mimeType: signature.mimeType || 'video/webm', isVideo: true }
+}
+
 const normalizeSpeakingSampleVideoInput = (body = {}) => {
-  const topicId = slugifyAudioSegment(body.topicId || body.topic_id || '')
+  const topicId = String(body.topicId || body.topic_id || '').trim().slice(0, 240)
   const topicTitle = String(body.topicTitle || body.topic_title || '').trim()
   const prompt = String(body.prompt || '').trim()
   const durationSeconds = Math.max(0, Math.round(Number(body.durationSeconds || body.duration_seconds || 0) || 0))
@@ -1287,8 +1317,8 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
     const rawWords = String(transcript || '').trim().split(/\s+/).filter(Boolean)
     const duration = Math.max(6, (trimEndSeconds > trimStartSeconds ? trimEndSeconds - trimStartSeconds : rawWords.length / 2.4) || 6)
     const chunks = []
-    for (let index = 0; index < rawWords.length; index += 8) {
-      chunks.push(rawWords.slice(index, index + 8).join(' '))
+    for (let index = 0; index < rawWords.length; index += 4) {
+      chunks.push(rawWords.slice(index, index + 4).join(' '))
     }
     const cueDuration = duration / Math.max(1, chunks.length)
     return chunks.map((text, index) => ({
@@ -1306,20 +1336,23 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
   usableWords.forEach((word, index) => {
     const previous = usableWords[index - 1]
     const gap = previous ? word.start - previous.end : 0
+    const currentDuration = Math.max(0, (previous?.end || word.end) - currentStart)
     const textIfAdded = [...currentWords, word.word].join(' ')
     const shouldBreak =
-      currentWords.length >= 5 ||
-      gap > 0.75 ||
+      currentWords.length >= 3 ||
+      currentDuration >= 1.25 ||
+      gap > 0.38 ||
       /[.!?]$/.test(previous?.word || '') ||
-      textIfAdded.length > 34
+      textIfAdded.length > 26
     if (currentWords.length && shouldBreak) {
       const cueWords = usableWords.slice(index - currentWords.length, index)
       const confidence =
         cueWords.reduce((sum, item) => sum + item.confidence, 0) / Math.max(1, cueWords.length)
+      const cueEnd = Math.max(currentStart + 0.16, previous?.end || word.start)
       cues.push({
         id: `cue-${cues.length + 1}`,
-        startSeconds: roundSpeakingSampleSubtitleSeconds(currentStart),
-        endSeconds: roundSpeakingSampleSubtitleSeconds(previous?.end || word.start),
+        startSeconds: roundSpeakingSampleSubtitleSeconds(Math.max(0, currentStart - 0.035)),
+        endSeconds: roundSpeakingSampleSubtitleSeconds(cueEnd + 0.045),
         text: currentWords.join(' '),
         confidence: Number(confidence.toFixed(2))
       })
@@ -1332,10 +1365,11 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
     const cueWords = usableWords.slice(-currentWords.length)
     const confidence =
       cueWords.reduce((sum, item) => sum + item.confidence, 0) / Math.max(1, cueWords.length)
+    const cueEnd = Math.max(currentStart + 0.16, cueWords[cueWords.length - 1]?.end || currentStart + 0.45)
     cues.push({
       id: `cue-${cues.length + 1}`,
-      startSeconds: roundSpeakingSampleSubtitleSeconds(currentStart),
-      endSeconds: roundSpeakingSampleSubtitleSeconds(cueWords[cueWords.length - 1]?.end || currentStart + 2),
+      startSeconds: roundSpeakingSampleSubtitleSeconds(Math.max(0, currentStart - 0.035)),
+      endSeconds: roundSpeakingSampleSubtitleSeconds(cueEnd + 0.045),
       text: currentWords.join(' '),
       confidence: Number(confidence.toFixed(2))
     })
@@ -9117,6 +9151,9 @@ const normalizeAudioMimeType = (rawMimeType) => {
     .split(';')[0]
     .trim()
   if (!value) return 'audio/webm'
+  if (value.startsWith('video/webm') || value.startsWith('video/x-matroska')) return 'audio/webm'
+  if (value.startsWith('video/mp4') || value.startsWith('video/quicktime')) return 'audio/mp4'
+  if (value.startsWith('video/ogg')) return 'audio/ogg'
   if (value === 'audio/mp3') return 'audio/mpeg'
   if (value === 'audio/x-wav') return 'audio/wav'
   if (value === 'audio/m4a') return 'audio/mp4'
@@ -9124,13 +9161,20 @@ const normalizeAudioMimeType = (rawMimeType) => {
 }
 
 const transcriptionMimeCandidates = (rawMimeType) => {
+  const raw = String(rawMimeType || '')
+    .trim()
+    .toLowerCase()
+    .split(';')[0]
+    .trim()
   const normalized = normalizeAudioMimeType(rawMimeType)
   const candidates = [normalized]
-  if (normalized === 'audio/webm') candidates.push('audio/ogg')
-  if (normalized === 'audio/mp4') candidates.push('audio/mpeg')
+  if (raw.startsWith('video/') && raw !== normalized) candidates.unshift(raw)
+  if (normalized === 'audio/webm') candidates.push('audio/ogg', 'video/webm')
+  if (normalized === 'audio/mp4') candidates.push('audio/mpeg', 'video/mp4')
   if (normalized === 'audio/mpeg') candidates.push('audio/mp4')
   if (normalized === 'audio/wav') candidates.push('audio/webm')
-  return [...new Set(candidates)]
+  if (normalized === 'audio/ogg') candidates.push('video/ogg')
+  return [...new Set(candidates.filter(Boolean))]
 }
 
 const normalizeBase64AudioPayload = (value) =>
@@ -9160,45 +9204,57 @@ const transcribeWithDeepgram = async ({ audioBase64, audioMimeType }) => {
   if (!audioBuffer || audioBuffer.byteLength < 1024) {
     throw new Error('Audio payload too short for transcription')
   }
-  const mimeType = normalizeAudioMimeType(audioMimeType)
+  const mimeCandidates = transcriptionMimeCandidates(audioMimeType)
   const model = String(process.env.DEEPGRAM_STT_MODEL || 'nova-3').trim()
-  const response = await safeFetch(
-    `https://api.deepgram.com/v1/listen?model=${encodeURIComponent(
-      model
-    )}&smart_format=true&punctuate=true`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${apiKey}`,
-        'Content-Type': mimeType
-      },
-      body: audioBuffer
-    },
-    { timeoutMs: 65000, retries: 1, retryDelayMs: 900 }
-  )
-  if (!response.ok) {
-    const body = await response.text().catch(() => '')
-    throw new Error(`Deepgram failed: ${response.status} ${body.slice(0, 180)}`)
+  const errors = []
+  for (const mimeType of mimeCandidates) {
+    try {
+      const response = await safeFetch(
+        `https://api.deepgram.com/v1/listen?model=${encodeURIComponent(
+          model
+        )}&smart_format=true&punctuate=true&utterances=true&filler_words=true`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Token ${apiKey}`,
+            'Content-Type': mimeType
+          },
+          body: audioBuffer
+        },
+        { timeoutMs: 65000, retries: 1, retryDelayMs: 900 }
+      )
+      if (!response.ok) {
+        const body = await response.text().catch(() => '')
+        errors.push(`${mimeType}: ${response.status} ${body.slice(0, 120)}`)
+        continue
+      }
+      const payload = await response.json()
+      const alt = payload?.results?.channels?.[0]?.alternatives?.[0] || {}
+      const transcriptText = normalizeTextOutput(alt?.transcript)
+      if (!transcriptText) {
+        errors.push(`${mimeType}: empty transcript`)
+        continue
+      }
+      const words = Array.isArray(alt?.words)
+        ? alt.words.map((item) => ({
+            word: String(item?.punctuated_word || item?.word || '').replace(/^[^a-zA-Z']+|[^a-zA-Z']+$/g, ''),
+            confidence: Math.max(0.01, Math.min(0.99, Number(item?.confidence ?? 0.5))),
+            start: Number(item?.start ?? 0),
+            end: Number(item?.end ?? 0)
+          }))
+        : []
+      return {
+        raw: payload,
+        whisperTranscript: transcriptText,
+        pronunciationSignalBand: 6,
+        model,
+        words
+      }
+    } catch (error) {
+      errors.push(`${mimeType}: ${error instanceof Error ? error.message : String(error)}`)
+    }
   }
-  const payload = await response.json()
-  const alt = payload?.results?.channels?.[0]?.alternatives?.[0] || {}
-  const transcriptText = normalizeTextOutput(alt?.transcript)
-  if (!transcriptText) throw new Error('Deepgram returned empty transcript')
-  const words = Array.isArray(alt?.words)
-    ? alt.words.map((item) => ({
-        word: String(item?.punctuated_word || item?.word || '').replace(/^[^a-zA-Z']+|[^a-zA-Z']+$/g, ''),
-        confidence: Math.max(0.01, Math.min(0.99, Number(item?.confidence ?? 0.5))),
-        start: Number(item?.start ?? 0),
-        end: Number(item?.end ?? 0)
-      }))
-    : []
-  return {
-    raw: payload,
-    whisperTranscript: transcriptText,
-    pronunciationSignalBand: 6,
-    model,
-    words
-  }
+  throw new Error(`Deepgram failed for all mime types. ${errors.join(' | ')}`)
 }
 
 const buildIFlytekAuthUrl = ({ host, path }) => {
@@ -9450,10 +9506,29 @@ const scoreTranscriptionConfidenceQuality = ({ transcript, words }) => {
   return Number((coverage * 0.55 + avg * 0.3 + (1 - criticalRate) * 0.15).toFixed(4))
 }
 
-const transcribeWithEmergencyFallback = async ({ audioBase64, audioMimeType, primaryError, usageTracker }) => {
+const transcribeWithEmergencyFallback = async ({ audioBase64, audioMimeType, primaryError, usageTracker, preferWordTimestamps = false }) => {
   const errors = primaryError
     ? [`english-plan: ${primaryError instanceof Error ? primaryError.message : String(primaryError || 'unknown error')}`]
     : []
+  if (preferWordTimestamps && process.env.DEEPGRAM_API_KEY) {
+    try {
+      const deepgram = await transcribeWithDeepgram({ audioBase64, audioMimeType })
+      const quality = scoreTranscriptionConfidenceQuality({
+        transcript: deepgram.whisperTranscript,
+        words: deepgram.words || []
+      })
+      return {
+        provider: 'deepgram-word-timing',
+        engine: `deepgram-${deepgram.model}-word-timing`,
+        quality,
+        result: deepgram,
+        diagnostics: [{ provider: 'deepgram-word-timing', engine: `deepgram-${deepgram.model}-word-timing`, quality }],
+        errors
+      }
+    } catch (error) {
+      errors.push(`deepgram-word-timing: ${error instanceof Error ? error.message : String(error)}`)
+    }
+  }
   if (process.env.GEMINI_API_KEY) {
     try {
       const google = await transcribeWithGoogle({ audioBase64, audioMimeType, usageTracker })
@@ -9497,13 +9572,14 @@ const transcribeWithEmergencyFallback = async ({ audioBase64, audioMimeType, pri
   throw new Error(errors.join(' | '))
 }
 
-const transcribeWithBestProvider = async ({ audioBase64, audioMimeType, usageTracker }) => {
+const transcribeWithBestProvider = async ({ audioBase64, audioMimeType, usageTracker, preferWordTimestamps = false }) => {
   // Runtime STT is intentionally Gemini/Deepgram-first. ENGLISH PLAN is used for pronunciation service status.
   return await transcribeWithEmergencyFallback({
     audioBase64,
     audioMimeType,
     primaryError: null,
-    usageTracker
+    usageTracker,
+    preferWordTimestamps
   })
 }
 
@@ -11512,7 +11588,8 @@ app.post('/api/admin/speaking-sample-videos/transcribe', requireAdmin, videoUplo
         }
       })
     }
-    const mimeType = String(file.mimetype || 'video/webm')
+    const uploadType = normalizeUploadedVideoMimeType(file)
+    const mimeType = uploadType.mimeType
     if (!mimeType.startsWith('video/') && !mimeType.startsWith('audio/')) {
       return res.status(400).json({
         error: {
@@ -11522,7 +11599,7 @@ app.post('/api/admin/speaking-sample-videos/transcribe', requireAdmin, videoUplo
         }
       })
     }
-    if (mimeType.startsWith('video/') && !looksLikeVideoFile(file.path, mimeType)) {
+    if (mimeType.startsWith('video/') && !uploadType.isVideo) {
       return res.status(400).json({
         error: {
           status: 400,
@@ -11535,7 +11612,8 @@ app.post('/api/admin/speaking-sample-videos/transcribe', requireAdmin, videoUplo
     const buffer = await fs.promises.readFile(file.path)
     const transcription = await transcribeWithBestProvider({
       audioBase64: buffer.toString('base64'),
-      audioMimeType: mimeType
+      audioMimeType: mimeType,
+      preferWordTimestamps: true
     })
     const transcript = String(transcription?.result?.whisperTranscript || '').trim()
     if (!transcript) {
@@ -11548,7 +11626,14 @@ app.post('/api/admin/speaking-sample-videos/transcribe', requireAdmin, videoUplo
       })
     }
     const trimStartSeconds = Math.max(0, Number(req.body?.trimStartSeconds || 0) || 0)
-    const trimEndSeconds = Math.max(trimStartSeconds, Number(req.body?.trimEndSeconds || 0) || 0)
+    const requestedTrimEnd = Math.max(trimStartSeconds, Number(req.body?.trimEndSeconds || 0) || 0)
+    const durationHint = Math.max(0, Number(req.body?.durationSeconds || 0) || 0)
+    const trimEndSeconds =
+      requestedTrimEnd > trimStartSeconds
+        ? requestedTrimEnd
+        : durationHint > trimStartSeconds
+          ? durationHint
+          : requestedTrimEnd
     const subtitles = buildSpeakingSampleSubtitlesFromWords({
       words: transcription?.result?.words || [],
       transcript,
@@ -11604,8 +11689,9 @@ app.post('/api/admin/speaking-sample-videos', requireAdmin, videoUpload.single('
         }
       })
     }
-    const mimeType = String(file.mimetype || 'video/webm')
-    if (!mimeType.startsWith('video/') || !looksLikeVideoFile(file.path, mimeType)) {
+    const uploadType = normalizeUploadedVideoMimeType(file)
+    const mimeType = uploadType.mimeType
+    if (!uploadType.isVideo || !looksLikeVideoFile(file.path, mimeType)) {
       return res.status(400).json({
         error: {
           status: 400,
@@ -11617,7 +11703,7 @@ app.post('/api/admin/speaking-sample-videos', requireAdmin, videoUpload.single('
 
     const now = new Date().toISOString()
     const extension = getVideoExtensionFromMimeType(mimeType)
-    const objectPath = `part2/${normalized.topicId}/${Date.now()}-${randomUUID()}.${extension}`
+    const objectPath = `part2/${slugifyAudioSegment(normalized.topicId)}/${Date.now()}-${randomUUID()}.${extension}`
     const checksumSha256 = await hashFileSha256(file.path)
     await uploadSpeakingSampleVideoFile({
       objectPath,
