@@ -9,8 +9,12 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import WebSocket from 'ws'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS } from './userProvidedReadingPracticeCambridge11.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvidedReadingPracticeCambridge12.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvidedReadingPracticeCambridge13.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS } from './userProvidedReadingPracticeCambridge14.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS } from './userProvidedReadingPracticeCambridge15.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS } from './userProvidedReadingPracticeCambridge16.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS } from './userProvidedReadingPracticeCambridge17.mjs'
 import { USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS } from './userProvidedReadingPracticeJune2026.mjs'
@@ -1209,6 +1213,24 @@ const normalizeSpeakingSampleVideoInput = (body = {}) => {
   }
 }
 
+const roundSpeakingSampleSubtitleSeconds = (seconds) =>
+  Number((Number.isFinite(Number(seconds)) ? Number(seconds) : 0).toFixed(3))
+
+const normalizeSpeakingSampleSubtitleNoteText = (value) =>
+  String(value || '').trim().replace(/\s+/g, ' ')
+
+const normalizeSpeakingSampleSubtitleNotes = (value) => {
+  const items = Array.isArray(value) ? value : []
+  return items
+    .slice(0, 12)
+    .map((item, index) => ({
+      id: String(item?.id || `note-${index + 1}`).slice(0, 120),
+      phrase: normalizeSpeakingSampleSubtitleNoteText(item?.phrase || item?.word || item?.term || '').slice(0, 160),
+      detail: String(item?.detail || item?.explanation || item?.description || '').trim().slice(0, 800)
+    }))
+    .filter((item) => item.phrase && item.detail)
+}
+
 const normalizeSpeakingSampleSubtitles = (value) => {
   let raw = value
   if (typeof raw === 'string') {
@@ -1225,14 +1247,16 @@ const normalizeSpeakingSampleSubtitles = (value) => {
     .slice(0, 200)
     .map((item, index) => {
       const startSeconds = Math.max(0, Number(item?.startSeconds ?? item?.start_seconds ?? 0) || 0)
-      const endSeconds = Math.max(startSeconds + 0.25, Number(item?.endSeconds ?? item?.end_seconds ?? startSeconds + 3) || startSeconds + 3)
+      const endSeconds = Math.max(startSeconds + 0.12, Number(item?.endSeconds ?? item?.end_seconds ?? startSeconds + 3) || startSeconds + 3)
       const text = String(item?.text || '').trim().slice(0, 1000)
       const confidence = Number(item?.confidence)
+      const notes = normalizeSpeakingSampleSubtitleNotes(item?.notes || item?.details || [])
       return {
         id: String(item?.id || `cue-${index + 1}`).slice(0, 80),
-        startSeconds: Number(startSeconds.toFixed(2)),
-        endSeconds: Number(endSeconds.toFixed(2)),
+        startSeconds: roundSpeakingSampleSubtitleSeconds(startSeconds),
+        endSeconds: roundSpeakingSampleSubtitleSeconds(endSeconds),
         text,
+        ...(notes.length ? { notes } : {}),
         ...(Number.isFinite(confidence) ? { confidence: Math.max(0, Math.min(1, confidence)) } : {})
       }
     })
@@ -1240,7 +1264,7 @@ const normalizeSpeakingSampleSubtitles = (value) => {
 }
 
 const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', trimStartSeconds = 0, trimEndSeconds = 0 }) => {
-  const usableWords = Array.isArray(words)
+  const rawTimedWords = Array.isArray(words)
     ? words
         .map((item) => ({
           word: String(item?.word || '').trim(),
@@ -1250,6 +1274,15 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
         }))
         .filter((item) => item.word)
     : []
+  const hasTrimRange = trimEndSeconds > trimStartSeconds
+  const usableWords = rawTimedWords
+    .filter((item) => !hasTrimRange || (item.end >= trimStartSeconds && item.start <= trimEndSeconds))
+    .map((item) => ({
+      ...item,
+      start: hasTrimRange ? Math.max(trimStartSeconds, item.start) : item.start,
+      end: hasTrimRange ? Math.min(trimEndSeconds, Math.max(item.end, item.start)) : item.end
+    }))
+    .filter((item) => item.end > item.start)
   if (!usableWords.length) {
     const rawWords = String(transcript || '').trim().split(/\s+/).filter(Boolean)
     const duration = Math.max(6, (trimEndSeconds > trimStartSeconds ? trimEndSeconds - trimStartSeconds : rawWords.length / 2.4) || 6)
@@ -1260,8 +1293,8 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
     const cueDuration = duration / Math.max(1, chunks.length)
     return chunks.map((text, index) => ({
       id: `cue-${index + 1}`,
-      startSeconds: Number((trimStartSeconds + index * cueDuration).toFixed(2)),
-      endSeconds: Number((trimStartSeconds + Math.min(duration, (index + 1) * cueDuration)).toFixed(2)),
+      startSeconds: roundSpeakingSampleSubtitleSeconds(trimStartSeconds + index * cueDuration),
+      endSeconds: roundSpeakingSampleSubtitleSeconds(trimStartSeconds + Math.min(duration, (index + 1) * cueDuration)),
       text,
       confidence: 0.6
     }))
@@ -1275,18 +1308,18 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
     const gap = previous ? word.start - previous.end : 0
     const textIfAdded = [...currentWords, word.word].join(' ')
     const shouldBreak =
-      currentWords.length >= 8 ||
+      currentWords.length >= 5 ||
       gap > 0.75 ||
       /[.!?]$/.test(previous?.word || '') ||
-      textIfAdded.length > 62
+      textIfAdded.length > 34
     if (currentWords.length && shouldBreak) {
       const cueWords = usableWords.slice(index - currentWords.length, index)
       const confidence =
         cueWords.reduce((sum, item) => sum + item.confidence, 0) / Math.max(1, cueWords.length)
       cues.push({
         id: `cue-${cues.length + 1}`,
-        startSeconds: Number((trimStartSeconds + currentStart).toFixed(2)),
-        endSeconds: Number((trimStartSeconds + (previous?.end || word.start)).toFixed(2)),
+        startSeconds: roundSpeakingSampleSubtitleSeconds(currentStart),
+        endSeconds: roundSpeakingSampleSubtitleSeconds(previous?.end || word.start),
         text: currentWords.join(' '),
         confidence: Number(confidence.toFixed(2))
       })
@@ -1301,8 +1334,8 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
       cueWords.reduce((sum, item) => sum + item.confidence, 0) / Math.max(1, cueWords.length)
     cues.push({
       id: `cue-${cues.length + 1}`,
-      startSeconds: Number((trimStartSeconds + currentStart).toFixed(2)),
-      endSeconds: Number((trimStartSeconds + (cueWords[cueWords.length - 1]?.end || currentStart + 2)).toFixed(2)),
+      startSeconds: roundSpeakingSampleSubtitleSeconds(currentStart),
+      endSeconds: roundSpeakingSampleSubtitleSeconds(cueWords[cueWords.length - 1]?.end || currentStart + 2),
       text: currentWords.join(' '),
       confidence: Number(confidence.toFixed(2))
     })
@@ -1310,7 +1343,9 @@ const buildSpeakingSampleSubtitlesFromWords = ({ words = [], transcript = '', tr
   const boundedTrimEnd = Number(trimEndSeconds || 0)
   return cues.map((cue) => ({
     ...cue,
-    endSeconds: boundedTrimEnd > 0 ? Math.min(boundedTrimEnd, Math.max(cue.startSeconds + 0.25, cue.endSeconds)) : cue.endSeconds
+    endSeconds: roundSpeakingSampleSubtitleSeconds(
+      boundedTrimEnd > 0 ? Math.min(boundedTrimEnd, Math.max(cue.startSeconds + 0.12, cue.endSeconds)) : cue.endSeconds
+    )
   }))
 }
 
@@ -1338,7 +1373,8 @@ const normalizeSpeakingSampleSubtitleStyle = (value) => {
     boxWidthPercent: Math.min(96, Math.max(35, Number(raw.boxWidthPercent || 78) || 78)),
     verticalPositionPercent: Math.min(92, Math.max(12, Number(raw.verticalPositionPercent || 82) || 82)),
     horizontalPositionPercent: Math.min(90, Math.max(10, Number(raw.horizontalPositionPercent || 50) || 50)),
-    textAlign
+    textAlign,
+    videoFlipHorizontal: raw.videoFlipHorizontal === true || String(raw.videoFlipHorizontal || '').toLowerCase() === 'true'
   }
 }
 
@@ -5490,9 +5526,9 @@ const isCambridgeBookReadingExamRecord = (exam) => {
   const id = String(exam?.id || '').toLowerCase()
   const title = String(exam?.title || '').toLowerCase()
   return (
-    /^cambridge-(1[2-3]|17|19)-/.test(id) ||
-    /\bcambridge\s*(1[2-3]|17|19)\b/.test(title) ||
-    /^c(12|13|17|19)\s/.test(title)
+    /^cambridge-(1[1-7]|19)-/.test(id) ||
+    /\bcambridge\s*(1[1-7]|19)\b/.test(title) ||
+    /^c(1[1-7]|19)\s/.test(title)
   )
 }
 
@@ -5983,6 +6019,30 @@ const BUILT_IN_READING_BANK_EXAMS = [
     mapBuiltInReadingExam(exam, {
       createdAt: '2026-05-15T00:00:00.000Z',
       updatedAt: '2026-05-15T00:00:00.000Z'
+    })
+  ),
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-22T00:00:00.000Z',
+      updatedAt: '2026-05-22T00:00:00.000Z'
+    })
+  ),
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-22T00:00:00.000Z',
+      updatedAt: '2026-05-22T00:00:00.000Z'
+    })
+  ),
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-22T00:00:00.000Z',
+      updatedAt: '2026-05-22T00:00:00.000Z'
+    })
+  ),
+  ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-22T00:00:00.000Z',
+      updatedAt: '2026-05-22T00:00:00.000Z'
     })
   )
 ]
@@ -11625,6 +11685,171 @@ app.post('/api/admin/speaking-sample-videos', requireAdmin, videoUpload.single('
     if (tempFilePath) {
       fs.promises.unlink(tempFilePath).catch(() => undefined)
     }
+  }
+})
+
+app.get('/api/admin/speaking-sample-videos/:topicId/blob', requireAdmin, async (req, res) => {
+  try {
+    const topicId = String(req.params?.topicId || '').trim()
+    if (!topicId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'topicId is required.' }
+      })
+    }
+    const records = await loadSpeakingSampleVideoRecords({ forceRefresh: true })
+    const existing = records.find((item) => String(item.topicId) === topicId)
+    if (!existing?.objectPath) {
+      return res.status(404).json({
+        error: { status: 404, type: 'not_found', message: 'No speaking sample video found for this topic.' }
+      })
+    }
+    const response = await supabaseRequest(
+      `/storage/v1/object/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(existing.objectPath)}`,
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      },
+      { timeoutMs: 120000, retries: 0 }
+    )
+    const buffer = Buffer.from(await response.arrayBuffer())
+    res.setHeader('Content-Type', existing.mimeType || 'video/webm')
+    res.setHeader('Content-Length', String(buffer.length))
+    res.setHeader('Cache-Control', 'private, max-age=60')
+    return res.send(buffer)
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'speaking_sample_video_blob_error',
+        message: error instanceof Error ? error.message : 'Could not load speaking sample video.'
+      }
+    })
+  }
+})
+
+app.patch('/api/admin/speaking-sample-videos/:topicId', requireAdmin, async (req, res) => {
+  try {
+    const topicId = String(req.params?.topicId || '').trim()
+    if (!topicId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'topicId is required.' }
+      })
+    }
+    const records = await loadSpeakingSampleVideoRecords({ forceRefresh: true })
+    const existing = records.find((item) => String(item.topicId) === topicId)
+    if (!existing?.objectPath) {
+      return res.status(404).json({
+        error: { status: 404, type: 'not_found', message: 'No speaking sample video found for this topic.' }
+      })
+    }
+
+    const trimStartSeconds = Math.max(0, Number(req.body?.trimStartSeconds ?? existing.trimStartSeconds ?? 0) || 0)
+    const trimEndSeconds = Math.max(
+      trimStartSeconds,
+      Number(req.body?.trimEndSeconds ?? existing.trimEndSeconds ?? existing.durationSeconds ?? 0) || 0
+    )
+    const transcript = String(req.body?.transcript ?? existing.transcript ?? '').slice(0, 50000)
+    const subtitles = req.body?.subtitlesJson
+      ? normalizeSpeakingSampleSubtitles(req.body.subtitlesJson)
+      : existing.subtitles || []
+    const subtitleStyle = req.body?.subtitleStyleJson
+      ? normalizeSpeakingSampleSubtitleStyle(req.body.subtitleStyleJson)
+      : existing.subtitleStyle || {}
+
+    const now = new Date().toISOString()
+    const item = {
+      ...existing,
+      trimStartSeconds,
+      trimEndSeconds,
+      transcript,
+      subtitles,
+      subtitleStyle,
+      version: Number(existing.version || 0) + 1,
+      updatedAt: now
+    }
+
+    try {
+      await supabaseRequest(`/rest/v1/speaking_sample_videos?topic_id=eq.${encodeURIComponent(topicId)}`, {
+        method: 'PATCH',
+        headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+        body: JSON.stringify({
+          trim_start_seconds: trimStartSeconds,
+          trim_end_seconds: trimEndSeconds,
+          transcript,
+          subtitles,
+          subtitle_style: subtitleStyle,
+          version: item.version,
+          updated_at: now
+        })
+      })
+    } catch (error) {
+      if (!isMissingSupabaseRelationError(error)) throw error
+    }
+
+    const manifest = await loadSpeakingSampleVideoManifest({ forceRefresh: true })
+    manifest.items[topicId] = item
+    await saveSpeakingSampleVideoManifest(manifest)
+
+    return res.json({ item: await signSpeakingSampleVideoItem(item) })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'speaking_sample_video_update_error',
+        message: error instanceof Error ? error.message : 'Could not update speaking sample video.'
+      }
+    })
+  }
+})
+
+app.delete('/api/admin/speaking-sample-videos/:topicId', requireAdmin, async (req, res) => {
+  try {
+    const topicId = String(req.params?.topicId || '').trim()
+    if (!topicId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'topicId is required.' }
+      })
+    }
+    const records = await loadSpeakingSampleVideoRecords({ forceRefresh: true })
+    const existing = records.find((item) => String(item.topicId) === topicId)
+    if (!existing?.objectPath) {
+      return res.status(404).json({
+        error: { status: 404, type: 'not_found', message: 'No speaking sample video found for this topic.' }
+      })
+    }
+
+    const now = new Date().toISOString()
+    try {
+      await supabaseRequest(`/rest/v1/speaking_sample_videos?topic_id=eq.${encodeURIComponent(topicId)}`, {
+        method: 'PATCH',
+        headers: buildSupabaseHeaders({ serviceRole: true }),
+        body: JSON.stringify({
+          is_active: false,
+          deleted_at: now,
+          updated_at: now
+        })
+      })
+    } catch (error) {
+      if (!isMissingSupabaseRelationError(error)) throw error
+    }
+
+    const manifest = await loadSpeakingSampleVideoManifest({ forceRefresh: true })
+    if (manifest.items?.[topicId]) {
+      delete manifest.items[topicId]
+      await saveSpeakingSampleVideoManifest(manifest)
+    }
+    deleteSpeakingSampleVideoObject(existing.objectPath).catch((cleanupError) => {
+      console.error('Could not delete speaking sample video object:', cleanupError)
+    })
+
+    return res.json({ ok: true, topicId })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'speaking_sample_video_delete_error',
+        message: error instanceof Error ? error.message : 'Could not delete speaking sample video.'
+      }
+    })
   }
 })
 

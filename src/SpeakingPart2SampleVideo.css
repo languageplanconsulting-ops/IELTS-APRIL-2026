@@ -191,6 +191,11 @@
   height: 100%;
   background: #000;
   object-fit: contain;
+  transition: transform 180ms ease;
+}
+
+.speakingP2SampleVideo.is-flipped {
+  transform: scaleX(-1);
 }
 
 .speakingP2SampleSubtitleOverlay {
@@ -221,12 +226,100 @@
   overflow-wrap: anywhere;
 }
 
+.speakingP2SampleSubtitleMark {
+  border-radius: 6px !important;
+  background: #ffcc00 !important;
+  color: #111827 !important;
+  padding: 0 0.16em !important;
+  text-shadow: none;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.speakingP2SampleKnowledgeStack {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 5;
+  display: grid;
+  gap: 10px;
+  width: min(36%, 360px);
+  pointer-events: none;
+}
+
+.speakingP2SampleKnowledgeCard {
+  padding: 12px 14px !important;
+  border: 1px solid rgba(15, 23, 42, 0.92) !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 55%),
+    #ffcc00 !important;
+  color: #111827 !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), 4px 4px 0 rgba(15, 23, 42, 0.9) !important;
+  transform-origin: top left;
+  animation: speaking-sample-note-fly-home 820ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.speakingP2SampleKnowledgeCard:nth-child(2) {
+  animation-delay: 45ms;
+}
+
+.speakingP2SampleKnowledgeCard:nth-child(3) {
+  animation-delay: 90ms;
+}
+
+.speakingP2SampleKnowledgeCard strong {
+  display: block;
+  color: #111827;
+  font-size: 0.86rem;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.speakingP2SampleKnowledgeCard p {
+  margin: 4px 0 0;
+  color: #1f2937;
+  font-size: 0.76rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+@keyframes speaking-sample-note-fly-home {
+  0% {
+    opacity: 0;
+    transform: translate(calc(50vw - 40px), 120px) scale(0.72);
+    filter: blur(8px);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translate(calc(50vw - 220px), 86px) scale(1.08);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
 .speakingP2SampleFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   margin-top: 10px;
+}
+
+@media (max-width: 640px) {
+  .speakingP2SampleKnowledgeStack {
+    width: min(72%, 320px);
+  }
+
+  .speakingP2SampleKnowledgeCard {
+    padding: 8px 10px;
+  }
 }
 
 .speakingP2SampleNotice {

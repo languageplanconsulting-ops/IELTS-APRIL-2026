@@ -11,6 +11,7 @@ export type SpeakingPart2SampleVideo = {
   transcript?: string
   subtitles?: SpeakingPart2SampleSubtitleCue[]
   subtitleStyle?: SpeakingPart2SampleSubtitleStyle
+  videoFlipHorizontal?: boolean
   topicIds: string[]
   matchPatterns: RegExp[]
 }
@@ -20,6 +21,13 @@ export type SpeakingPart2SampleSubtitleCue = {
   startSeconds: number
   endSeconds: number
   text: string
+  notes?: SpeakingPart2SampleSubtitleNote[]
+}
+
+export type SpeakingPart2SampleSubtitleNote = {
+  id: string
+  phrase: string
+  detail: string
 }
 
 export type SpeakingPart2SampleSubtitleStyle = {
@@ -31,6 +39,7 @@ export type SpeakingPart2SampleSubtitleStyle = {
   verticalPositionPercent?: number
   horizontalPositionPercent?: number
   textAlign?: 'left' | 'center' | 'right'
+  videoFlipHorizontal?: boolean
 }
 
 export const SPEAKING_PART2_SAMPLE_VIDEOS: SpeakingPart2SampleVideo[] = [
@@ -81,7 +90,8 @@ export const createUploadedSpeakingPart2SampleVideo = ({
   trimEndSeconds,
   transcript,
   subtitles,
-  subtitleStyle
+  subtitleStyle,
+  videoFlipHorizontal
 }: {
   topicId: string
   topicTitle: string
@@ -92,6 +102,7 @@ export const createUploadedSpeakingPart2SampleVideo = ({
   transcript?: string
   subtitles?: SpeakingPart2SampleSubtitleCue[]
   subtitleStyle?: SpeakingPart2SampleSubtitleStyle
+  videoFlipHorizontal?: boolean
 }): SpeakingPart2SampleVideo => ({
   id: `uploaded-${topicId}`,
   shortLabel: 'Admin sample',
@@ -104,6 +115,7 @@ export const createUploadedSpeakingPart2SampleVideo = ({
   transcript,
   subtitles,
   subtitleStyle,
+  videoFlipHorizontal: Boolean(videoFlipHorizontal || subtitleStyle?.videoFlipHorizontal),
   topicIds: [topicId],
   matchPatterns: []
 })

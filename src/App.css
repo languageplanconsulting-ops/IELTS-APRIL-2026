@@ -13,6 +13,456 @@
   --duration-view: 680ms;
 }
 
+/* Admin video studio polish: scoped override for the global exam button style. */
+.adminOnly-videos {
+  --studio-ink: #172033;
+  --studio-muted: #667085;
+  --studio-line: #d8e0ea;
+  --studio-line-strong: #b8c6d9;
+  --studio-surface: #ffffff;
+  --studio-soft: #f6f8fb;
+  --studio-blue: #2459d6;
+  --studio-blue-soft: #edf4ff;
+  --studio-danger: #be123c;
+  --studio-danger-soft: #fff1f2;
+  --studio-success: #15803d;
+  --studio-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  --studio-shadow-hover: 0 16px 34px rgba(15, 23, 42, 0.12);
+  background:
+    linear-gradient(180deg, rgba(248, 250, 252, 0.88), rgba(255, 255, 255, 0.96)),
+    #ffffff !important;
+  border: 1px solid var(--studio-line) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--studio-shadow) !important;
+  color: var(--studio-ink) !important;
+}
+
+.adminOnly-videos :where(
+  .adminVideoQuestionPicker,
+  .adminVideoRecorderPanel,
+  .adminVideoExistingActions,
+  .adminVideoTrimPanel,
+  .adminSubtitleEditor,
+  .adminSubtitleUtilityBar,
+  .adminSubtitleVersionBar,
+  .adminSubtitleBulkBar,
+  .adminSubtitleReadPanel,
+  .adminSubtitleFindPanel,
+  .adminSubtitlePlayheadTools,
+  .adminSubtitleInspector,
+  .adminSubtitleImportExport,
+  .adminSubtitleTimeline,
+  .adminSubtitleStylePanel,
+  .adminVideoModal,
+  .adminVideoStudentPreviewModal
+) {
+  border-color: var(--studio-line) !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+}
+
+.adminOnly-videos :where(
+  button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton)
+) {
+  min-height: 38px !important;
+  padding: 0 13px !important;
+  border: 1px solid var(--studio-line-strong) !important;
+  border-radius: 10px !important;
+  background: var(--studio-surface) !important;
+  color: var(--studio-ink) !important;
+  box-shadow: none !important;
+  font-family: Inter, system-ui, sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.15 !important;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease !important;
+}
+
+.adminOnly-videos :where(button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton):hover:not(:disabled)) {
+  transform: translateY(-1px) !important;
+  border-color: #9fb0c6 !important;
+  background: #fbfdff !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1) !important;
+  filter: none !important;
+}
+
+.adminOnly-videos :where(button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton):active:not(:disabled)) {
+  transform: translateY(0) !important;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08) !important;
+}
+
+.adminOnly-videos :where(button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton):focus-visible) {
+  outline: 3px solid rgba(36, 89, 214, 0.22) !important;
+  outline-offset: 2px !important;
+}
+
+.adminOnly-videos :where(button:disabled) {
+  opacity: 0.46 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.adminOnly-videos :where(.adminStudioButton-primary),
+.adminOnly-videos :where(.adminVideoPrimaryActions button:first-child:not(.adminStudioButton-danger)),
+.adminOnly-videos :where(.adminVideoPublishActions button),
+.adminOnly-videos :where(.adminVideoModal .adminActionRow button:last-child) {
+  border-color: #1d4ed8 !important;
+  background: linear-gradient(180deg, #2f6ef3 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 9px 18px rgba(37, 99, 235, 0.22) !important;
+}
+
+.adminOnly-videos :where(.adminStudioButton-primary:hover:not(:disabled)),
+.adminOnly-videos :where(.adminVideoPrimaryActions button:first-child:not(.adminStudioButton-danger):hover:not(:disabled)),
+.adminOnly-videos :where(.adminVideoPublishActions button:hover:not(:disabled)),
+.adminOnly-videos :where(.adminVideoModal .adminActionRow button:last-child:hover:not(:disabled)) {
+  border-color: #1e40af !important;
+  background: linear-gradient(180deg, #2459d6 0%, #1e40af 100%) !important;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28) !important;
+}
+
+.adminOnly-videos :where(.adminStudioButton-soft),
+.adminOnly-videos :where(.adminSubtitleUtilityBar .active),
+.adminOnly-videos :where(.adminVideoPreviewModes button.active) {
+  border-color: rgba(36, 89, 214, 0.34) !important;
+  background: var(--studio-blue-soft) !important;
+  color: #1d4ed8 !important;
+  box-shadow: none !important;
+}
+
+.adminOnly-videos :where(.adminStudioButton-danger) {
+  border-color: #fecdd3 !important;
+  background: var(--studio-danger-soft) !important;
+  color: var(--studio-danger) !important;
+  box-shadow: none !important;
+}
+
+.adminOnly-videos :where(.adminStudioButton-danger:hover:not(:disabled)) {
+  border-color: #fb7185 !important;
+  background: #ffe4e6 !important;
+  color: #9f1239 !important;
+}
+
+.adminOnly-videos :where(.adminActionRow),
+.adminOnly-videos :where(.adminVideoPrimaryActions),
+.adminOnly-videos :where(.adminVideoPublishActions),
+.adminOnly-videos :where(.adminSubtitleImportActions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.adminOnly-videos :where(.adminVideoPrimaryActions, .adminVideoPublishActions) {
+  padding: 12px !important;
+  border: 1px solid var(--studio-line) !important;
+  border-radius: 16px !important;
+  background: rgba(248, 250, 252, 0.88) !important;
+}
+
+.adminOnly-videos :where(.adminVideoPrimaryActions button, .adminVideoPublishActions button) {
+  min-height: 44px !important;
+  padding-inline: 18px !important;
+}
+
+.adminOnly-videos .adminVideoWizardSteps {
+  gap: 10px !important;
+  margin-bottom: 16px !important;
+}
+
+.adminOnly-videos .adminVideoWizardStep {
+  min-height: 64px !important;
+  padding: 10px 12px !important;
+  border: 1px solid var(--studio-line) !important;
+  border-radius: 14px !important;
+  background: var(--studio-surface) !important;
+  box-shadow: none !important;
+}
+
+.adminOnly-videos .adminVideoWizardStep:hover:not(:disabled) {
+  border-color: #b6c4d6 !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.07) !important;
+}
+
+.adminOnly-videos .adminVideoWizardStep.active {
+  border-color: rgba(36, 89, 214, 0.42) !important;
+  background: #f0f6ff !important;
+}
+
+.adminOnly-videos .adminVideoWizardStep.complete {
+  border-color: rgba(21, 128, 61, 0.28) !important;
+  background: #f1fbf5 !important;
+}
+
+.adminOnly-videos .adminVideoWizardStepIndex {
+  border-radius: 999px !important;
+  background: #e9eef5 !important;
+}
+
+.adminOnly-videos .adminVideoWizardStep.active .adminVideoWizardStepIndex {
+  background: var(--studio-blue) !important;
+}
+
+.adminOnly-videos .adminVideoWizardStep.complete .adminVideoWizardStepIndex {
+  background: var(--studio-success) !important;
+}
+
+.adminOnly-videos .adminVideoPreviewFrame {
+  border: 1px solid #c7d3e4 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 20px 42px rgba(15, 23, 42, 0.18) !important;
+}
+
+.adminOnly-videos .adminVideoPreviewModes {
+  display: flex;
+  gap: 6px;
+  padding: 6px !important;
+  border: 1px solid var(--studio-line) !important;
+  border-radius: 14px !important;
+  background: #eef3f8 !important;
+}
+
+.adminOnly-videos .adminVideoPreviewModes button {
+  min-height: 34px !important;
+  padding: 0 11px !important;
+  border-color: transparent !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  color: #46566f !important;
+  box-shadow: none !important;
+  font-size: 0.8rem !important;
+}
+
+.adminOnly-videos .adminVideoPreviewModes button:hover:not(:disabled),
+.adminOnly-videos .adminVideoPreviewModes button.active {
+  border-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1d4ed8 !important;
+  box-shadow: 0 5px 14px rgba(15, 23, 42, 0.1) !important;
+}
+
+.adminOnly-videos :where(.adminVideoRecorderMeta span, .adminVideoSourceSummary span, .adminVideoCardSources, .adminReadyDot) {
+  border-radius: 999px !important;
+  border-color: var(--studio-line) !important;
+}
+
+.adminOnly-videos .adminVideoSourceSummary {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)) !important;
+}
+
+.adminOnly-videos .adminVideoSourceSummary span {
+  padding: 10px 12px !important;
+  background: #f8fafc !important;
+  font-size: 0.78rem !important;
+}
+
+.adminOnly-videos .adminVideoPostProcessPanel {
+  border-color: var(--studio-line) !important;
+  border-radius: 16px !important;
+  background: linear-gradient(180deg, #ffffff, #f8fbff) !important;
+}
+
+.adminOnly-videos :where(.adminSubtitleUtilityBar, .adminSubtitleVersionBar, .adminSubtitleBulkBar) {
+  gap: 7px !important;
+  padding: 8px !important;
+  border: 1px solid var(--studio-line) !important;
+  background: #f8fafc !important;
+}
+
+.adminOnly-videos .adminSubtitleUtilityBar-primary {
+  position: sticky;
+  top: 8px;
+  z-index: 3;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+}
+
+.adminOnly-videos :where(.adminSubtitleUtilityBar button, .adminSubtitleVersionBar button, .adminSubtitleBulkBar button, .adminSubtitlePlayheadTools button, .adminSubtitleInspector button, .adminSubtitleImportActions button, .adminSubtitleCueTools button) {
+  min-height: 34px !important;
+  padding-inline: 10px !important;
+  font-size: 0.8rem !important;
+}
+
+.adminOnly-videos .adminSubtitlePlayheadTools,
+.adminOnly-videos .adminSubtitleInspector {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.adminOnly-videos .adminSubtitlePlayheadTools label {
+  flex: 1 1 260px;
+}
+
+.adminOnly-videos .adminSubtitleInspector > div {
+  flex: 1 1 220px;
+}
+
+.adminOnly-videos :where(.adminSubtitleFindPanel input, .adminSubtitleImportExport textarea, .adminSubtitleTranscriptBox textarea, .adminSubtitleLineEditor textarea, .adminSubtitleCueRow input, .adminSubtitleCueRow textarea, .adminVideoTrimGrid input[type='number'], .adminSearchField select, .adminSubtitleStyleGrid select) {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  color: var(--studio-ink) !important;
+  font-weight: 650 !important;
+}
+
+.adminOnly-videos :where(.adminSubtitleFindPanel input, .adminSubtitleImportExport textarea, .adminSubtitleTranscriptBox textarea, .adminSubtitleLineEditor textarea, .adminSubtitleCueRow input, .adminSubtitleCueRow textarea, .adminVideoTrimGrid input[type='number'], .adminSearchField select, .adminSubtitleStyleGrid select):focus {
+  border-color: rgba(36, 89, 214, 0.72) !important;
+  box-shadow: 0 0 0 4px rgba(36, 89, 214, 0.12) !important;
+  outline: none !important;
+  transform: none !important;
+}
+
+.adminOnly-videos :where(input[type='range']) {
+  accent-color: var(--studio-blue);
+}
+
+.adminOnly-videos .adminSubtitleCueList {
+  gap: 8px !important;
+}
+
+.adminOnly-videos .adminSubtitleCueRow {
+  grid-template-columns: auto auto auto 82px 82px minmax(240px, 1fr) auto auto !important;
+  border: 1px solid var(--studio-line) !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04) !important;
+}
+
+.adminOnly-videos .adminSubtitleCueRow.active {
+  border-color: rgba(36, 89, 214, 0.45) !important;
+  background: #f5f9ff !important;
+}
+
+.adminOnly-videos .adminSubtitleCueRow.selected {
+  box-shadow: 0 0 0 3px rgba(36, 89, 214, 0.12) !important;
+}
+
+.adminOnly-videos .adminSubtitleCueRow.lowConfidence {
+  border-color: #facc15 !important;
+  background: #fffbeb !important;
+}
+
+.adminOnly-videos .adminSubtitleReadPanel button {
+  min-height: auto !important;
+  padding: 10px 12px !important;
+  border-color: transparent !important;
+  border-radius: 11px !important;
+  background: #ffffff !important;
+  text-align: left !important;
+}
+
+.adminOnly-videos .adminSubtitleReadPanel button:hover:not(:disabled),
+.adminOnly-videos .adminSubtitleReadPanel button.active {
+  border-color: rgba(36, 89, 214, 0.28) !important;
+  background: var(--studio-blue-soft) !important;
+  box-shadow: none !important;
+}
+
+.adminOnly-videos .adminSubtitlePresetButton {
+  min-height: 48px !important;
+  border: 1px solid rgba(15, 23, 42, 0.16) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 -18px 24px rgba(0, 0, 0, 0.05) !important;
+  font-size: 0.78rem !important;
+  font-weight: 900 !important;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease !important;
+}
+
+.adminOnly-videos .adminSubtitlePresetButton:hover:not(:disabled) {
+  transform: translateY(-1px) !important;
+  border-color: rgba(36, 89, 214, 0.6) !important;
+  box-shadow: inset 0 -18px 24px rgba(0, 0, 0, 0.05), 0 8px 18px rgba(15, 23, 42, 0.12) !important;
+}
+
+.adminOnly-videos .adminSubtitleFontGrid button,
+.adminOnly-videos .adminSubtitleStyleGrid label,
+.adminOnly-videos .adminVideoBlurToggle,
+.adminOnly-videos .adminUploadChecklist li {
+  border-radius: 12px !important;
+}
+
+.adminOnly-videos .adminSubtitleTimelineTrack,
+.adminOnly-videos .adminSubtitleTimelineCue,
+.adminOnly-videos .adminSubtitleThumbnailStrip img,
+.adminOnly-videos .adminVideoUploadProgress,
+.adminOnly-videos .adminMicLevelTrack,
+.adminOnly-videos .adminMicLevelFill,
+.adminOnly-videos .adminVideoLibraryDuration {
+  border-radius: 12px !important;
+}
+
+.adminOnly-videos .adminVideoSubtitleOverlayButton {
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.adminOnly-videos .adminVideoSubtitleOverlayButton:hover {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.adminOnly-videos .adminVideoSubtitleOverlay span {
+  border-radius: 10px !important;
+}
+
+@media (max-width: 980px) {
+  .adminOnly-videos .adminVideoWizardSteps {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .adminOnly-videos .adminSubtitleCueRow {
+    grid-template-columns: auto auto auto 1fr 1fr !important;
+  }
+
+  .adminOnly-videos .adminSubtitleCueRow textarea,
+  .adminOnly-videos .adminSubtitleCueTools {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .adminOnly-videos .adminVideoWizardSteps,
+  .adminOnly-videos .adminVideoDeviceGrid,
+  .adminOnly-videos .adminSubtitlePresetGrid,
+  .adminOnly-videos .adminSubtitleFontGrid,
+  .adminOnly-videos .adminSubtitleStyleGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .adminOnly-videos .adminVideoPreviewModes,
+  .adminOnly-videos .adminVideoPrimaryActions,
+  .adminOnly-videos .adminVideoPublishActions,
+  .adminOnly-videos .adminActionRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .adminOnly-videos :where(.adminVideoPreviewModes button, .adminVideoPrimaryActions button, .adminVideoPublishActions button, .adminActionRow button) {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-luxury-fast: 1ms;
@@ -6543,6 +6993,11 @@ body,
   height: 100%;
   background: #020617;
   object-fit: contain;
+  transition: transform 180ms ease;
+}
+
+.adminVideoPreview.is-flipped {
+  transform: scaleX(-1);
 }
 
 .adminVideoPreviewEmpty {
@@ -6685,6 +7140,32 @@ body,
   overflow-wrap: anywhere;
 }
 
+.adminVideoPostProcessPanel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminVideoPostProcessPanel strong {
+  display: block;
+  color: #172033;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.adminVideoPostProcessPanel p {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .adminVideoLiveSubtitle {
   display: grid;
   gap: 6px;
@@ -6706,6 +7187,299 @@ body,
   margin: 0;
   color: #0f172a;
   line-height: 1.45;
+}
+
+.adminVideoWizardSteps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.adminVideoWizardStep {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 14px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adminVideoWizardStep.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+}
+
+.adminVideoWizardStep.complete {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.adminVideoWizardStepIndex {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.adminVideoWizardStep.active .adminVideoWizardStepIndex {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.adminVideoWizardStep.complete .adminVideoWizardStepIndex {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.adminVideoWizardStepCopy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.adminVideoWizardStepCopy strong {
+  color: #0f172a;
+  font-size: 0.86rem;
+}
+
+.adminVideoWizardStepCopy small {
+  color: #64748b;
+  font-size: 0.74rem;
+}
+
+.adminVideoWizardStep.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.adminVideoWizardStep:disabled {
+  cursor: not-allowed;
+}
+
+.adminVideoStudio-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.adminVideoRecorderPanel-main {
+  position: sticky;
+  top: 12px;
+  z-index: 2;
+}
+
+.adminVideoPreviewLiveBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 4;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(220, 38, 38, 0.92);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.adminVideoCountdownOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 23, 0.55);
+  color: #ffffff;
+  font-size: clamp(3rem, 12vw, 6rem);
+  font-weight: 900;
+}
+
+.adminVideoEditBadge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.adminMicLevelMeter {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid #dbe4f3;
+  border-radius: 12px;
+  background: #f8fbff;
+}
+
+.adminMicLevelTrack {
+  overflow: hidden;
+  height: 10px;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.adminMicLevelFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+  transition: width 120ms linear;
+}
+
+.adminVideoExistingActions {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  background: #fafafa;
+}
+
+.adminSubtitleUtilityBar-primary {
+  padding: 8px;
+  border: 1px solid #dbe4f3;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.adminVideoPrimaryActions,
+.adminVideoPublishActions {
+  padding-top: 4px;
+}
+
+.adminVideoShortcutHint {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.78rem;
+}
+
+.adminVideoModalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.adminVideoModalBackdrop-dark {
+  background: rgba(2, 6, 23, 0.82);
+}
+
+.adminVideoModal,
+.adminVideoStudentPreviewModal {
+  width: min(560px, 100%);
+  max-height: min(90vh, 900px);
+  overflow: auto;
+  padding: 18px;
+  border: 1px solid #dbe4f3;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+.adminVideoStudentPreviewModal {
+  width: min(920px, 100%);
+}
+
+.adminVideoStudentPreviewHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.adminUploadChecklist {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adminUploadChecklist li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.adminUploadChecklist li.ok {
+  background: #f0fdf4;
+}
+
+.adminUploadChecklist li.pending {
+  background: #fff7ed;
+}
+
+.adminUploadChecklist li span {
+  font-weight: 900;
+}
+
+.adminUploadChecklist li small {
+  display: block;
+  margin-top: 2px;
+  color: #64748b;
+}
+
+.adminVideoLibraryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.adminVideoLibraryCard {
+  overflow: hidden;
+  border: 1px solid #dbe4f3;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.adminVideoLibraryCardMedia {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #020617;
+}
+
+.adminVideoLibraryCardMedia video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.adminVideoLibraryDuration {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.adminVideoLibraryCardBody {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
 }
 
 .adminVideoCardSources {
@@ -7010,6 +7784,7 @@ body,
   justify-content: space-between;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
   color: #1d4ed8;
   font-size: 0.74rem;
   font-weight: 900;
@@ -7017,8 +7792,25 @@ body,
   text-transform: uppercase;
 }
 
+.adminSubtitleTimelineHeader > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+
 .adminSubtitleTimelineHeader strong {
   color: #334155;
+}
+
+.adminSubtitleTimelineActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.adminSubtitleTimelineActions button {
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 0.72rem;
 }
 
 .adminSubtitleTimelineZoom {
@@ -7059,6 +7851,7 @@ body,
   width: 100%;
   min-height: 132px;
   overflow: hidden;
+  cursor: crosshair;
   border: 1px solid #c7d2fe;
   border-radius: 12px;
   background:
@@ -10263,6 +11056,17 @@ body,
   border-radius: 20px;
 }
 
+.readingParaphraseCard-report {
+  margin-top: 14px;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+}
+
+.readingReportCard .readingParaphraseCard-report .paraphraseBridgeActions--report {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 2px;
+}
+
 .readingPage button,
 .readingPage input,
 .readingPage select {
@@ -10467,8 +11271,12 @@ body,
 
   .adminStatGrid,
   .adminLayout,
+  .adminVideoWizardSteps {
+    grid-template-columns: 1fr;
+  }
+
   .adminVideoStudio,
-  .adminVideoSourceGrid,
+  .adminVideoWizardSteps,
   .adminVideoDeviceGrid,
   .adminVideoSourceSummary,
   .adminVideoTrimGrid,
@@ -16947,6 +17755,19 @@ select:focus,
   border-color: #ea580c;
 }
 
+.listeningSkillCard-fullTest,
+.listeningFullTestLanding .listeningSkillCard {
+  width: 100%;
+  max-width: 720px;
+  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+  border-color: #2563eb;
+  text-align: left;
+}
+
+.listeningFullTestLanding {
+  margin-top: 0.5rem;
+}
+
 .listeningSkillCardLabel {
   font-size: 0.82rem;
   font-weight: 800;
@@ -19254,6 +20075,444 @@ textarea {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* Final admin video studio guard: keep these after the global button theme. */
+.workspace .adminOnly-videos,
+.workspace .panel.adminOnly-videos {
+  background:
+    linear-gradient(180deg, rgba(248, 250, 252, 0.88), rgba(255, 255, 255, 0.96)),
+    #ffffff !important;
+  border: 1px solid var(--studio-line, #d8e0ea) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--studio-shadow, 0 12px 28px rgba(15, 23, 42, 0.08)) !important;
+}
+
+.workspace .adminOnly-videos button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton) {
+  min-height: 38px !important;
+  padding: 0 13px !important;
+  border: 1px solid var(--studio-line-strong, #b8c6d9) !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  color: var(--studio-ink, #172033) !important;
+  box-shadow: none !important;
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  transform: none !important;
+}
+
+.workspace .adminOnly-videos button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton):hover:not(:disabled) {
+  transform: translateY(-1px) !important;
+  border-color: #9fb0c6 !important;
+  background: #fbfdff !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1) !important;
+  filter: none !important;
+}
+
+.workspace .adminOnly-videos .adminStudioButton-primary,
+.workspace .adminOnly-videos .adminVideoPrimaryActions button:first-child:not(.adminStudioButton-danger),
+.workspace .adminOnly-videos .adminVideoPublishActions button,
+.workspace .adminOnly-videos .adminVideoModal .adminActionRow button:last-child {
+  border-color: #1d4ed8 !important;
+  background: linear-gradient(180deg, #2f6ef3 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 9px 18px rgba(37, 99, 235, 0.22) !important;
+}
+
+.workspace .adminOnly-videos .adminStudioButton-primary:hover:not(:disabled),
+.workspace .adminOnly-videos .adminVideoPrimaryActions button:first-child:not(.adminStudioButton-danger):hover:not(:disabled),
+.workspace .adminOnly-videos .adminVideoPublishActions button:hover:not(:disabled),
+.workspace .adminOnly-videos .adminVideoModal .adminActionRow button:last-child:hover:not(:disabled) {
+  border-color: #1e40af !important;
+  background: linear-gradient(180deg, #2459d6 0%, #1e40af 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28) !important;
+}
+
+.workspace .adminOnly-videos .adminStudioButton-soft,
+.workspace .adminOnly-videos .adminSubtitleUtilityBar .active,
+.workspace .adminOnly-videos .adminVideoPreviewModes button.active {
+  border-color: rgba(36, 89, 214, 0.34) !important;
+  background: var(--studio-blue-soft, #edf4ff) !important;
+  color: #1d4ed8 !important;
+  box-shadow: none !important;
+}
+
+.workspace .adminOnly-videos .adminStudioButton-danger {
+  border-color: #fecdd3 !important;
+  background: var(--studio-danger-soft, #fff1f2) !important;
+  color: var(--studio-danger, #be123c) !important;
+  box-shadow: none !important;
+}
+
+.workspace .adminOnly-videos .adminStudioButton-danger:hover:not(:disabled) {
+  border-color: #fb7185 !important;
+  background: #ffe4e6 !important;
+  color: #9f1239 !important;
+}
+
+.workspace .adminOnly-videos .adminVideoPreviewModes button {
+  min-height: 34px !important;
+  border-color: transparent !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  color: #46566f !important;
+  box-shadow: none !important;
+}
+
+.workspace .adminOnly-videos .adminVideoPreviewModes button:hover:not(:disabled),
+.workspace .adminOnly-videos .adminVideoPreviewModes button.active {
+  border-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1d4ed8 !important;
+  box-shadow: 0 5px 14px rgba(15, 23, 42, 0.1) !important;
+}
+
+.workspace .adminOnly-videos .adminVideoSubtitleOverlayButton,
+.workspace .adminOnly-videos .adminVideoSubtitleOverlayButton:hover {
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translate(-50%, -50%) !important;
+  filter: none !important;
+}
+
+.workspace .adminOnly-videos .adminVideoPreview.is-flipped {
+  transform: scaleX(-1) !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitlePresetButton {
+  border-radius: 12px !important;
+}
+
+.workspace .adminOnly-videos button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton) {
+  position: relative;
+  overflow: hidden;
+}
+
+.workspace .adminOnly-videos button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton)::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 120%;
+  aspect-ratio: 1;
+  border-radius: 999px !important;
+  background: rgba(36, 89, 214, 0.08);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.2);
+  transition:
+    opacity 180ms ease,
+    transform 260ms ease !important;
+  pointer-events: none;
+}
+
+.workspace .adminOnly-videos button:not(.adminVideoSubtitleOverlayButton):not(.adminSubtitlePresetButton):active::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  transition-duration: 80ms !important;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeStack {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 5;
+  display: grid;
+  gap: 10px;
+  width: min(36%, 360px);
+  pointer-events: none;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeCard {
+  padding: 12px 14px !important;
+  border: 1px solid rgba(15, 23, 42, 0.92) !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 55%),
+    #ffcc00 !important;
+  color: #111827 !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), 4px 4px 0 rgba(15, 23, 42, 0.9) !important;
+  transform-origin: top left;
+  animation: subtitle-note-fly-home 820ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeCard:nth-child(2) {
+  animation-delay: 45ms;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeCard:nth-child(3) {
+  animation-delay: 90ms;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeCard strong,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeItem strong {
+  display: block;
+  color: #111827 !important;
+  font-size: 0.86rem !important;
+  font-weight: 950 !important;
+  line-height: 1.2 !important;
+}
+
+.workspace .adminOnly-videos .adminVideoKnowledgeCard p,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeItem p {
+  margin: 4px 0 0 !important;
+  color: #1f2937 !important;
+  font-size: 0.76rem !important;
+  font-weight: 750 !important;
+  line-height: 1.35 !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeMark {
+  border-radius: 6px !important;
+  background: #ffcc00 !important;
+  color: #111827 !important;
+  padding: 0 0.16em !important;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgePanel {
+  display: grid;
+  gap: 14px;
+  padding: 14px !important;
+  border: 1px solid rgba(234, 179, 8, 0.38) !important;
+  border-radius: 18px !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 204, 0, 0.22), transparent 32%),
+    linear-gradient(180deg, #fffdf0 0%, #ffffff 72%) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgePanel .adminTtsLibraryHeader {
+  align-items: center;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeHeaderActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.38fr) minmax(260px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm span,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeSelection span {
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm input,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm textarea {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  color: #172033 !important;
+  font: inherit;
+  font-weight: 700;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  transition:
+    border-color 160ms ease,
+    box-shadow 180ms ease,
+    background-color 160ms ease !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm input:focus,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm textarea:focus {
+  border-color: rgba(245, 158, 11, 0.92) !important;
+  box-shadow: 0 0 0 4px rgba(255, 204, 0, 0.22) !important;
+  outline: none !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm input {
+  padding: 8px 10px;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeForm textarea {
+  min-height: 74px;
+  padding: 9px 10px;
+  resize: vertical;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeActions {
+  display: grid;
+  gap: 8px;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeActions button {
+  white-space: nowrap;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeSelection,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeHint,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeEmpty {
+  border-radius: 14px !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeSelection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 11px;
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  background: rgba(255, 204, 0, 0.2);
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeSelection strong {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  border-radius: 999px !important;
+  background: #ffcc00;
+  color: #111827;
+  font-size: 0.9rem;
+  font-weight: 950;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeHint,
+.workspace .adminOnly-videos .adminSubtitleKnowledgeEmpty {
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border: 1px dashed rgba(100, 116, 139, 0.3) !important;
+  background: rgba(248, 250, 252, 0.78) !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeEmpty strong {
+  color: #172033 !important;
+  font-size: 0.9rem !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeEmpty p {
+  margin: 3px 0 0 !important;
+  color: #667085 !important;
+  font-size: 0.82rem !important;
+  font-weight: 650 !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeList,
+.workspace .adminOnly-videos .adminSubtitleCueNotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 12px !important;
+  border: 1px solid rgba(15, 23, 42, 0.2) !important;
+  border-radius: 14px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.32), transparent 58%),
+    #ffcc00 !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08) !important;
+  transition:
+    transform 160ms ease,
+    box-shadow 180ms ease !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeItem:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12) !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleKnowledgeItem > div:last-child {
+  display: flex;
+  gap: 6px;
+}
+
+.workspace .adminOnly-videos .adminSubtitleCueNotes {
+  grid-column: 6 / 7;
+  margin-top: -2px;
+}
+
+.workspace .adminOnly-videos .adminSubtitleCueNotes button {
+  min-height: 28px !important;
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent),
+    #ffcc00 !important;
+  color: #111827 !important;
+  font-size: 0.74rem !important;
+  box-shadow: none !important;
+}
+
+.workspace .adminOnly-videos .adminSubtitleCueNotes button:hover:not(:disabled) {
+  border-color: rgba(15, 23, 42, 0.34) !important;
+  background: #ffcc00 !important;
+  color: #111827 !important;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1) !important;
+}
+
+@keyframes subtitle-note-fly-home {
+  0% {
+    opacity: 0;
+    transform: translate(calc(50vw - 40px), 120px) scale(0.72);
+    filter: blur(8px);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translate(calc(50vw - 220px), 86px) scale(1.08);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@media (max-width: 980px) {
+  .workspace .adminOnly-videos .adminSubtitleKnowledgeForm {
+    grid-template-columns: 1fr !important;
+  }
+
+  .workspace .adminOnly-videos .adminSubtitleCueNotes {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .workspace .adminOnly-videos .adminVideoKnowledgeStack {
+    width: min(72%, 320px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workspace .adminOnly-videos *,
+  .workspace .adminOnly-videos *::before,
+  .workspace .adminOnly-videos *::after {
     transition-duration: 1ms !important;
   }
 }

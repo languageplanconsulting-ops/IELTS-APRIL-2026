@@ -303,6 +303,61 @@ export const mergeExamsIntoJourneyExam = (
   }
 }
 
+export const mergeExamsIntoFullReadingExam = (
+  sourceExams: [ReadingExamRecord, ReadingExamRecord, ReadingExamRecord]
+): ReadingExamRecord | null => {
+  const ordered = [...sourceExams].sort(
+    (first, second) => inferPassageSlot(first) - inferPassageSlot(second)
+  ) as [ReadingExamRecord, ReadingExamRecord, ReadingExamRecord]
+
+  const passages = ordered.map((exam, index) => {
+    const slot = (index + 1) as 1 | 2 | 3
+    const sourcePassage = exam.parsedPayload?.passages?.[0]
+    if (!sourcePassage) return null
+    const targetStart = QUESTION_START_BY_PASSAGE_SLOT[slot - 1]
+    const { min } = getQuestionNumberBounds(sourcePassage)
+    const questionOffset = min > 0 ? targetStart - min : targetStart - 1
+    return remapPassageForSlot(sourcePassage, slot, questionOffset)
+  })
+
+  if (passages.some((passage) => !passage)) return null
+  const typedPassages = passages as ReadingPassageRecord[]
+
+  const questionCount = typedPassages.reduce((sum, passage) => sum + (passage.questions?.length || 0), 0)
+  if (questionCount !== 40) return null
+
+  const now = new Date().toISOString()
+
+  return {
+    id: 'reading-full-test-placeholder',
+    title: 'Cambridge Full Reading',
+    category: 'normal',
+    collectionTitle: 'Cambridge Full Reading',
+    rawPassageText: typedPassages
+      .map(
+        (passage, index) =>
+          `READING PASSAGE ${index + 1}\n\n${passage.title}\n\n${passage.bodyParagraphs.join('\n\n')}\n\n${passage.questionSectionText}`
+      )
+      .join('\n\n'),
+    rawAnswerKey: typedPassages
+      .flatMap((passage) => passage.questions || [])
+      .map(
+        (question) =>
+          `Question ${question.number}: ${question.prompt}\n\nCorrect Answer: ${question.correctAnswer}`
+      )
+      .join('\n\n'),
+    parsedPayload: {
+      title: 'Cambridge Full Reading',
+      category: 'normal',
+      collectionTitle: 'Cambridge Full Reading',
+      passages: typedPassages,
+      questionCount
+    },
+    createdAt: now,
+    updatedAt: now
+  }
+}
+
 export const isReadingJourneySourceExam = (exam: ReadingExamRecord) => {
   if (exam.category !== 'normal') return false
   if (isReadingJourneyExamId(exam.id)) return false

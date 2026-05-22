@@ -1,4 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react'
+import {
+  hasSeenListeningEvidenceTutorial,
+  ListeningEvidenceTutorial
+} from './ListeningEvidenceTutorial'
 import { getListeningHighlightMatch } from './listeningHighlightMatch'
 import { isListeningPart1AnswerCorrect } from './listeningPart1AnswerCheck'
 import type { Part1ExamForm, Part1FormLine } from './listeningPart1FormLayout'
@@ -200,6 +204,8 @@ export type ListeningSectionExamViewProps = {
   testTabs?: Array<{ id: string; label: string }>
   activeTestId?: string
   onTestChange?: (testId: string) => void
+  continueAfterReportLabel?: string
+  onContinueAfterReport?: () => void
 }
 
 export function ListeningSectionExamView({
@@ -216,7 +222,9 @@ export function ListeningSectionExamView({
   onQuestionComplete,
   testTabs,
   activeTestId,
-  onTestChange
+  onTestChange,
+  continueAfterReportLabel,
+  onContinueAfterReport
 }: ListeningSectionExamViewProps) {
   const scriptBodyRef = useRef<HTMLDivElement | null>(null)
   const [activeQuestionId, setActiveQuestionId] = useState(config.questions[0]?.id || '')
@@ -227,6 +235,9 @@ export function ListeningSectionExamView({
   const [latestEvidenceSelection, setLatestEvidenceSelection] = useState<LatestEvidenceSelection | null>(null)
   const [highlightMenu, setHighlightMenu] = useState<HighlightMenuState | null>(null)
   const [scriptCollapsed, setScriptCollapsed] = useState(false)
+  const [evidenceTutorialOpen, setEvidenceTutorialOpen] = useState(false)
+  const [evidenceTutorialStep, setEvidenceTutorialStep] = useState(0)
+  const answerOnlyMode = Boolean(config.answerOnlyMode)
 
   useEffect(() => {
     setActiveQuestionId(config.questions[0]?.id || '')
@@ -236,7 +247,19 @@ export function ListeningSectionExamView({
     setExamFeedback('')
     setLatestEvidenceSelection(null)
     setHighlightMenu(null)
+    setEvidenceTutorialOpen(false)
+    setEvidenceTutorialStep(0)
   }, [config.title, config.passage])
+
+  useEffect(() => {
+    if (answerOnlyMode || examStage !== 'answering') {
+      setEvidenceTutorialOpen(false)
+      return
+    }
+    if (hasSeenListeningEvidenceTutorial()) return
+    const timer = window.setTimeout(() => setEvidenceTutorialOpen(true), 480)
+    return () => window.clearTimeout(timer)
+  }, [answerOnlyMode, examStage, config.title])
 
   useEffect(() => {
     if (!highlightMenu || typeof window === 'undefined') return undefined
@@ -264,7 +287,6 @@ export function ListeningSectionExamView({
 
   const activeQuestion = config.questions.find((item) => item.id === activeQuestionId) || config.questions[0]
   const activeAttempt = attempts[activeQuestion?.id || ''] || defaultAttempt()
-  const answerOnlyMode = Boolean(config.answerOnlyMode)
 
   const isQuestionAnswerCorrect = useCallback(
     (question: ListeningSectionExamQuestion, answer: string) => {
@@ -828,6 +850,13 @@ export function ListeningSectionExamView({
             )
           })}
         </div>
+        {continueAfterReportLabel && onContinueAfterReport ? (
+          <div className="listeningSectionExamReportContinue">
+            <button type="button" className="listeningSectionExamSubmitAll" onClick={onContinueAfterReport}>
+              {continueAfterReportLabel}
+            </button>
+          </div>
+        ) : null}
       </article>
     )
   }
@@ -867,6 +896,20 @@ export function ListeningSectionExamView({
           <p className="listeningSectionExamSubtitle">{config.subtitle}</p>
         </div>
         <div className="listeningSectionExamProgress">
+          {!answerOnlyMode ? (
+            <button
+              type="button"
+              className="listeningSectionExamHelpBtn"
+              aria-label="เปิดคำแนะนำ Evidence mode"
+              title="วิธีใช้ Evidence mode"
+              onClick={() => {
+                setEvidenceTutorialStep(0)
+                setEvidenceTutorialOpen(true)
+              }}
+            >
+              ?
+            </button>
+          ) : null}
           <span>Completed</span>
           <strong>
             {completedCount}/{config.questions.length}
@@ -875,7 +918,11 @@ export function ListeningSectionExamView({
       </header>
 
       <div className="listeningSectionExamLayout">
-        <aside className="listeningSectionExamScriptPane">
+        <aside
+          className={`listeningSectionExamScriptPane ${
+            evidenceTutorialOpen && evidenceTutorialStep === 2 ? 'is-tutorial-highlight' : ''
+          }`}
+        >
           <div className="listeningSectionExamAudio">
             <div className="listeningSectionExamAudioMeta">
               <span>Part {config.sectionNumber}</span>
@@ -948,7 +995,13 @@ export function ListeningSectionExamView({
           </div>
         </aside>
 
-        <section className="listeningSectionExamQuestionsPane">
+        <section
+          className={`listeningSectionExamQuestionsPane ${
+            evidenceTutorialOpen && (evidenceTutorialStep === 1 || evidenceTutorialStep === 3)
+              ? 'is-tutorial-highlight'
+              : ''
+          }`}
+        >
           {testTabs && testTabs.length > 1 ? (
             <div className="listeningSectionExamTestTabs">
               {testTabs.map((tab) => (
@@ -991,6 +1044,12 @@ export function ListeningSectionExamView({
           </button>
         </div>
       ) : null}
+
+      <ListeningEvidenceTutorial
+        open={evidenceTutorialOpen}
+        onClose={() => setEvidenceTutorialOpen(false)}
+        onStepChange={setEvidenceTutorialStep}
+      />
     </div>
   )
 

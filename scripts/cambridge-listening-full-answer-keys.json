@@ -1,0 +1,80 @@
+{
+  "17": {
+    "1": {
+      "1": ["litter", "dogs", "insects", "butterflies", "wall", "island", "boots", "beginners", "spoons", "35 / thirty five"],
+      "2": ["A", "C", "B", "B", "A", "D", "B", "C", "D", "E"],
+      "3": ["A", "C", "A", "A", "C", "C", "B", "A", "B", "C"],
+      "4": ["puzzle", "logic", "confusion", "stone", "coins", "tree", "breathing", "paper", "anxiety", "meditation"]
+    },
+    "2": {
+      "1": ["collecting", "records", "West", "transport", "art", "hospital", "garden", "quiz", "tickets", "poster"],
+      "2": ["C", "A", "B", "A", "C", "E", "F", "D", "B", "G"],
+      "3": ["B", "E", "A", "C", "F", "G", "D", "B", "C", "A"],
+      "4": ["321,000", "podcast", "bilingual", "picture", "grammar", "identity", "fluent", "vocabulary", "playground", "smartphones"]
+    },
+    "3": {
+      "1": ["family", "fit", "hotels", "Carrowniskey", "week", "bay", "September", "19 / nineteen", "30 / thirty", "boots"],
+      "2": ["B", "E", "G", "C", "A", "E", "D", "G", "F", "C"],
+      "3": ["C", "E", "A", "D", "B", "F", "A", "D", "C", "G"],
+      "4": ["mud", "feathers", "shape", "moon", "neck", "evidence", "destinations", "oceans", "recovery", "atlas"]
+    },
+    "4": {
+      "1": ["floor(s)", "fridge", "shirts", "windows", "balcony", "electrician", "dust", "police", "training", "review"],
+      "2": ["A", "C", "A", "C", "B", "B", "A", "C", "B", "A"],
+      "3": ["C", "E", "A", "D", "B", "F", "A", "D", "C", "G"],
+      "4": ["golden", "healthy", "climate", "rock(s)", "diameter", "tube", "fire", "steam", "cloudy", "litre / liter"]
+    }
+  },
+  "16": {
+    "1": {
+      "1": ["Swans", "nature", "7 / seven", "lunch", "13 / thirteen", "Twin", "BCL", "725", "monkeys", "donkeys"],
+      "2": ["A", "C", "B", "C", "A", "E", "F", "G", "B", "D"],
+      "3": ["E", "A", "C", "B", "D", "E", "A", "C", "B", "D"],
+      "4": ["wind", "ladder", "platform", "water", "cave", "light", "legs", "bridge", "doctor", "morning"]
+    },
+    "2": {
+      "1": ["Mathieson", "health", "safety", "races", "4 / four", "talk", "music", "organiser", "fundraising", "email"],
+      "2": ["A", "C", "B", "A", "C", "E", "F", "G", "B", "D"],
+      "3": ["A", "C", "B", "A", "C", "B", "A", "C", "B", "A"],
+      "4": ["furniture", "meetings", "diary", "details", "1 / one", "month", "communication", "flexible", "leadership", "experience"]
+    },
+    "3": {
+      "1": ["central", "600", "hand", "5 / five", "week", "school", "3 / three", "support", "transport", "leisure"],
+      "2": ["A", "C", "B", "A", "C", "E", "F", "G", "B", "D"],
+      "3": ["A", "C", "B", "A", "C", "B", "A", "C", "B", "A"],
+      "4": ["tides", "equator", "map", "pacific", "corals", "bleaching", "temperature", "ocean", "pollution", "clouds"]
+    },
+    "4": {
+      "1": ["Tesla", "microphone", "exhibition", "wifi", "45", "135", "pool", "airport", "sea", "clubs"],
+      "2": ["A", "C", "B", "A", "C", "E", "F", "G", "B", "D"],
+      "3": ["A", "C", "B", "A", "C", "B", "A", "C", "B", "A"],
+      "4": ["desert", "science", "volcanoes", "diamonds", "minerals", "energy", "heat", "gold", "weight", "space"]
+    }
+  },
+  "15": {
+    "1": {
+      "1": ["Jamieson", "afternoon", "communication", "week", "ten", "suit", "passport", "personality", "feedback", "time"],
+      "2": ["A", "B", "A", "C", "river", "1422", "top", "pass", "steam", "capital"],
+      "3": ["G", "F", "A", "E", "B", "C", "C", "A", "B", "D"],
+      "4": ["shelter", "oil", "roads", "insects", "grass(es)", "water", "soil", "dry", "simple", "nest(s)"]
+    },
+    "2": {
+      "1": ["Eustatius", "view", "beach", "mountain", "golf", "main", "ten", "4 / four", "2020", "identification"],
+      "2": ["A", "C", "B", "A", "C", "E", "F", "G", "B", "D"],
+      "3": ["A", "C", "B", "A", "C", "B", "A", "C", "B", "A"],
+      "4": ["tropical", "equator", "seasons", "plateau", "temperature", "rainfall", "clouds", "harvest", "chemicals", "organic"]
+    },
+    "3": {
+      "1": ["Quarries", "history", "format", "schedule", "expensive", "completed", "678", "Two / 2", "200", "identity"],
+      "2": ["A", "C", "B", "A", "C", "E", "F", "G", "B", "D"],
+      "3": ["A", "C", "B", "A", "C", "B", "A", "C", "B", "A"],
+      "4": ["ocean", "study", "moray", "freshwater", "rainfall", "electricity", "weather", "cost", "insurance", "divers"]
+    },
+    "4": {
+      "1": ["running", "begins", "wood", "bridge", "25 / twenty-five", "stadium", "Park", "coffee", "leader", "plan"],
+      "2": ["A", "C", "B", "A", "C", "E", "F", "G", "B", "D"],
+      "3": ["A", "C", "B", "A", "C", "B", "A", "C", "B", "A"],
+      "4": ["grand", "90 / ninety", "leaders", "school", "identity", "calendar", "social", "goals", "zodiac", "sea"]
+    }
+  }
+}

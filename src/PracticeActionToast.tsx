@@ -41,6 +41,7 @@ type ParaphraseBridgeActionsProps = {
   knewLabel?: string
   saveLabel?: string
   className?: string
+  variant?: 'default' | 'report'
 }
 
 export function ParaphraseBridgeActions({
@@ -48,14 +49,20 @@ export function ParaphraseBridgeActions({
   onSaveToNotebook,
   knewLabel = 'Yes, I knew it',
   saveLabel = 'Save to Notebook',
-  className = ''
+  className = '',
+  variant = 'default'
 }: ParaphraseBridgeActionsProps) {
   return (
-    <div className={`paraphraseBridgeActions ${className}`.trim()}>
-      <button type="button" className="secondary" onClick={onKnewIt}>
+    <div
+      className={`paraphraseBridgeActions ${variant === 'report' ? 'paraphraseBridgeActions--report' : ''} ${className}`.trim()}
+    >
+      <button type="button" className="paraphraseBridgeActionsKnew secondary" onClick={onKnewIt}>
         {knewLabel}
       </button>
-      <button type="button" onClick={onSaveToNotebook}>
+      <button type="button" className="paraphraseBridgeActionsSave" onClick={onSaveToNotebook}>
+        <span className="paraphraseBridgeActionsSaveIcon" aria-hidden="true">
+          ✦
+        </span>
         {saveLabel}
       </button>
     </div>

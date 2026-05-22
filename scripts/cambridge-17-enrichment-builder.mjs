@@ -169,9 +169,21 @@ export const buildThaiComprehensive = (answer, prompt, exact) => {
   if (a === 'NO') {
     return `มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า "${q}" โดยเฉพาะจากข้อความ "${snippet}" จึงตอบ NO`
   }
-  if (/^[A-H]$/.test(a)) {
+  if (/^(I|II|III|IV|V|VI|VII|VIII|IX|X)$/i.test(a)) {
+    if (/drop heading|heading|paragraph/i.test(prompt)) {
+      return `ในข้อให้เติมหัวข้อ: "${q}" บทความมีถ้อยคำที่ตรงกันคือ "${snippet}" จึงคำตอบคือ "${String(answer).toLowerCase()}" (paraphrase จากข้อความใน passage)`
+    }
+    return `ข้อความในข้อว่า "${q}" ตรงกับรายการ ${String(answer).toLowerCase()} ในบทความ เพราะบทความระบุว่า "${snippet}" จึงตอบ ${String(answer).toUpperCase()}`
+  }
+  if (/^[A-E]$/.test(a) && /which two/i.test(prompt)) {
+    return `คำถามถามว่า "${q}" ตัวเลือก ${a} มีหลักฐานในบทความ (เช่น "${snippet}") จึงเลือก ${a} เป็นหนึ่งในสองคำตอบ`
+  }
+  if (/^[A-H]$/.test(a) && /paragraph|heading|section/i.test(prompt)) {
     const topic = q.replace(/^reading passage \d+.*$/i, '').trim() || q
     return `ย่อหน้า ${a} มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (${topic}) โดยเฉพาะประโยค "${snippet}" จึงเลือก ${a}`
+  }
+  if (/^[A-H]$/.test(a)) {
+    return `คำถาม: "${q}" หลักฐานในบทความคือ "${snippet}" ซึ่งสนับสนุนตัวเลือก ${a} มากที่สุด จึงตอบ ${a}`
   }
   if (/^[A-J]$/.test(a)) {
     if (/complete the summary/i.test(prompt) || /list of phrases/i.test(prompt)) {
@@ -182,11 +194,24 @@ export const buildThaiComprehensive = (answer, prompt, exact) => {
     }
     return `ข้อความในบทความ "${snippet}" ตรงกับวลี ${a} ในรายการมากที่สุด จึงตอบ ${a}`
   }
-  if (/^[A-E]$/.test(a) && /which two/i.test(prompt)) {
-    return `คำถามถามว่า "${q}" ตัวเลือก ${a} มีหลักฐานในบทความ (เช่น "${snippet}") จึงเลือก ${a} เป็นหนึ่งในสองคำตอบ`
-  }
 
   if (/…/.test(prompt) || /\d+\s*…/.test(prompt)) {
+    return `ในข้อให้เติมคำในช่องว่าง: "${q}" บทความมีถ้อยคำที่ตรงกันคือ "${snippet}" จึงคำตอบคือ "${answer}" (paraphrase จากข้อความใน passage)`
+  }
+
+  if (/label the diagram|one word only|complete the summary|complete using words/i.test(prompt)) {
+    return `ในข้อให้เติมคำในช่องว่าง: "${q}" บทความมีถ้อยคำที่ตรงกันคือ "${snippet}" จึงคำตอบคือ "${answer}" (paraphrase จากข้อความใน passage)`
+  }
+
+  const isWordFillAnswer =
+    answer.length > 0 &&
+    answer.length <= 45 &&
+    !/^(TRUE|FALSE|NOT GIVEN|YES|NO)$/i.test(a) &&
+    !/^[A-H]$/.test(a) &&
+    !/^[A-J]$/.test(a) &&
+    !/^(I|II|III|IV|V|VI|VII|VIII|IX|X)$/.test(a)
+
+  if (isWordFillAnswer) {
     return `ในข้อให้เติมคำในช่องว่าง: "${q}" บทความมีถ้อยคำที่ตรงกันคือ "${snippet}" จึงคำตอบคือ "${answer}" (paraphrase จากข้อความใน passage)`
   }
 

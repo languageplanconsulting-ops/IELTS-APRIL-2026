@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
 import './App.css'
 import { ListeningSectionExamView, type ListeningNotebookSavePayload } from './ListeningSectionExamView'
 import {
@@ -6,6 +6,28 @@ import {
   builderTaskToExamQuestion,
   foundationSetToExamConfig
 } from './listeningSectionExamModel'
+import {
+  LISTENING_FULL_TEST_LABEL,
+  LISTENING_FULL_TEST_LEAD,
+  LISTENING_FULL_TEST_CATALOG_SUMMARY,
+  LISTENING_FULL_TEST_SPECS,
+  FULL_TESTS_PER_BOOK,
+  getFullTestSectionSets,
+  groupFullTestsByBook,
+  isFullTestComplete
+} from './listeningFullTestData'
+import './ListeningFullTestView.css'
+import {
+  READING_FULL_TEST_LABEL,
+  READING_FULL_TEST_LEAD,
+  READING_FULL_TEST_CATALOG_SUMMARY,
+  READING_FULL_TEST_SPECS,
+  FULL_READING_TESTS_PER_BOOK,
+  buildReadingFullTestExam,
+  groupFullReadingTestsByBook,
+  isFullReadingTestComplete,
+  isReadingFullTestExamId
+} from './readingFullTestData'
 import { ParaphraseBridgeActions, PracticeActionToast, type PracticeActionToastState } from './PracticeActionToast'
 import { parseListeningScriptSegments } from './listeningScriptReader'
 import listeningWorkbookRaw from '../cambridge-listening-transcript-first-workbook.md?raw'
@@ -53,6 +75,17 @@ import {
   resolveSpeakingPart2SampleVideo,
   type SpeakingPart2SampleVideo
 } from './speakingPart2SampleVideos'
+import {
+  ADMIN_VIDEO_STUDIO_STEPS,
+  buildUploadChecklist,
+  canAccessAdminStudioStep,
+  canPublishFromChecklist,
+  getAdminVideoStatusLabel,
+  getPreviewModeDescription,
+  shouldEnforceTrimInPreview,
+  shouldShowSubtitleOverlay,
+  type AdminVideoStudioStep
+} from './adminSpeakingVideoStudioHelpers'
 import {
   CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
   CAMBRIDGE_12_SPEAKING_PART1_TOPICS,
@@ -136,7 +169,7 @@ const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
   set.audioCacheKey || `listening-foundation-${set.id}`
 
 type Role = 'student' | 'admin' | 'trial'
-type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
+type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
 type AdminWorkspaceSection =
   | 'landing'
   | 'reading'
@@ -150,7 +183,7 @@ type AdminWorkspaceSection =
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
 type ReadingBankCategory = 'normal' | 'advanced'
-type ReadingEntryView = 'levels' | 'monthly' | 'journey'
+type ReadingEntryView = 'levels' | 'monthly' | 'journey' | 'full-test'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
 type ReadingPdoyLessonType = 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'fill-in-the-blank'
 type ReadingPdoyLessonStep = 'intro' | 'evidence' | 'decide' | 'result' | 'complete'
@@ -546,6 +579,36 @@ type AdminSubtitleCue = {
   endSeconds: number
   text: string
   confidence?: number
+  notes?: AdminSubtitleNote[]
+}
+
+type AdminSubtitleNote = {
+  id: string
+  phrase: string
+  detail: string
+}
+
+const normalizeSubtitleNoteTimingText = (value: string) => String(value || '').trim().replace(/\s+/g, ' ')
+
+const estimateSubtitleNoteRevealSeconds = (
+  cue: { startSeconds: number; endSeconds: number; text: string },
+  phrase: string
+) => {
+  const text = normalizeSubtitleNoteTimingText(cue.text)
+  const normalizedPhrase = normalizeSubtitleNoteTimingText(phrase)
+  const duration = Math.max(0.12, cue.endSeconds - cue.startSeconds)
+  if (!text || !normalizedPhrase) return cue.startSeconds
+  const phraseIndex = text.toLowerCase().indexOf(normalizedPhrase.toLowerCase())
+  if (phraseIndex < 0) return cue.startSeconds
+  const phraseProgress = Math.min(0.95, Math.max(0, phraseIndex / Math.max(1, text.length)))
+  return cue.startSeconds + duration * phraseProgress
+}
+
+type AdminSubtitleNoteDraft = {
+  cueId: string
+  noteId: string
+  phrase: string
+  detail: string
 }
 
 type AdminSubtitleStyle = {
@@ -557,6 +620,7 @@ type AdminSubtitleStyle = {
   verticalPositionPercent: number
   horizontalPositionPercent: number
   textAlign: 'left' | 'center' | 'right'
+  videoFlipHorizontal?: boolean
 }
 
 type AdminSubtitleEditorSnapshot = {
@@ -608,7 +672,8 @@ const DEFAULT_ADMIN_SUBTITLE_STYLE: AdminSubtitleStyle = {
   boxWidthPercent: 78,
   verticalPositionPercent: 82,
   horizontalPositionPercent: 50,
-  textAlign: 'center'
+  textAlign: 'center',
+  videoFlipHorizontal: false
 }
 const ADMIN_SUBTITLE_STYLE_PRESETS: Array<{ id: string; label: string; style: AdminSubtitleStyle }> = [
   {
@@ -4172,9 +4237,9 @@ const isCambridgeBookReadingExam = (exam: Pick<ReadingExamRecord, 'id' | 'title'
   const id = String(exam.id || '').toLowerCase()
   const title = String(exam.title || '').toLowerCase()
   return (
-    /^cambridge-(1[2-3]|17|19)-/.test(id) ||
-    /\bcambridge\s*(1[2-3]|17|19)\b/.test(title) ||
-    /^c(12|13|17|19)\s/.test(title)
+    /^cambridge-(1[1-7]|19)-/.test(id) ||
+    /\bcambridge\s*(1[1-7]|19)\b/.test(title) ||
+    /^c(1[1-7]|19)\s/.test(title)
   )
 }
 
@@ -6604,7 +6669,7 @@ function App() {
   const [readingPdoyDecisionAttempts, setReadingPdoyDecisionAttempts] = useState(0)
   const [readingPdoyFillMeaningOptionId, setReadingPdoyFillMeaningOptionId] = useState('')
   const [selectedListeningExerciseId, setSelectedListeningExerciseId] = useState('')
-  const [listeningLabMode, setListeningLabMode] = useState<'landing' | 'practice' | 'builder' | 'foundation'>('landing')
+  const [listeningLabMode, setListeningLabMode] = useState<'landing' | 'practice' | 'builder' | 'foundation' | 'full-test'>('landing')
   const [listeningSkillTrack, setListeningSkillTrack] = useState<ListeningSkillTrack | null>(null)
   const [listeningPart34Subcategory, setListeningPart34Subcategory] =
     useState<ListeningPart34Subcategory>('skill-practice')
@@ -6627,6 +6692,11 @@ function App() {
   const [listeningFoundationQuestionIndex, setListeningFoundationQuestionIndex] = useState(0)
   const [listeningFoundationAudioPlayed, setListeningFoundationAudioPlayed] = useState(false)
   const [listeningFoundationAnswerState, setListeningFoundationAnswerState] = useState<Record<string, 'correct'>>({})
+  const [selectedListeningFullTestId, setSelectedListeningFullTestId] = useState('')
+  const [listeningFullTestSectionIndex, setListeningFullTestSectionIndex] = useState(0)
+  const [listeningFullTestStage, setListeningFullTestStage] = useState<'bank' | 'exam' | 'complete'>('bank')
+  const [listeningFullTestSectionScores, setListeningFullTestSectionScores] = useState<number[]>([])
+  const [listeningFullTestAudioPlayed, setListeningFullTestAudioPlayed] = useState(false)
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('normal')
   const [adminReadingCollectionInput, setAdminReadingCollectionInput] = useState(DEFAULT_READING_COLLECTION_TITLE)
@@ -6711,6 +6781,8 @@ function App() {
   const [adminActiveAudioSourceLabel, setAdminActiveAudioSourceLabel] = useState('')
   const [adminShouldBlurBackground, setAdminShouldBlurBackground] = useState(false)
   const [adminBackgroundBlurState, setAdminBackgroundBlurState] = useState<'off' | 'requested' | 'enabled' | 'unsupported'>('off')
+  const [adminIsPostProcessingBlur, setAdminIsPostProcessingBlur] = useState(false)
+  const [adminPostProcessingBlurProgress, setAdminPostProcessingBlurProgress] = useState(0)
   const [adminShouldGenerateSubtitles, setAdminShouldGenerateSubtitles] = useState(true)
   const [adminSubtitleStatus, setAdminSubtitleStatus] = useState<'idle' | 'listening' | 'unsupported' | 'error'>('idle')
   const [adminSubtitleTranscript, setAdminSubtitleTranscript] = useState('')
@@ -6738,8 +6810,26 @@ function App() {
   const [adminSelectedSubtitleCueIds, setAdminSelectedSubtitleCueIds] = useState<string[]>([])
   const [adminSubtitleAutosaveLabel, setAdminSubtitleAutosaveLabel] = useState('')
   const [adminSubtitleVersions, setAdminSubtitleVersions] = useState<AdminSubtitleVersion[]>([])
+  const [adminSubtitleNoteDraft, setAdminSubtitleNoteDraft] = useState<AdminSubtitleNoteDraft>({
+    cueId: '',
+    noteId: '',
+    phrase: '',
+    detail: ''
+  })
   const [isAdminBackendTranscribing, setIsAdminBackendTranscribing] = useState(false)
   const [adminVideoRecorderMessage, setAdminVideoRecorderMessage] = useState('')
+  const [adminVideoStudioStep, setAdminVideoStudioStep] = useState<AdminVideoStudioStep>('setup')
+  const [adminShowAdvancedSubtitleTools, setAdminShowAdvancedSubtitleTools] = useState(false)
+  const [adminUploadChecklistOpen, setAdminUploadChecklistOpen] = useState(false)
+  const [adminStudentPreviewOpen, setAdminStudentPreviewOpen] = useState(false)
+  const [adminPreviewedAsStudent, setAdminPreviewedAsStudent] = useState(false)
+  const [adminRecordCountdown, setAdminRecordCountdown] = useState<number | null>(null)
+  const [adminMicLevel, setAdminMicLevel] = useState(0)
+  const [adminCameraPreviewActive, setAdminCameraPreviewActive] = useState(false)
+  const [adminVideoEditMode, setAdminVideoEditMode] = useState<'fresh' | 'existing'>('fresh')
+  const [adminIsLoadingExistingVideo, setAdminIsLoadingExistingVideo] = useState(false)
+  const [adminIsSavingMetadata, setAdminIsSavingMetadata] = useState(false)
+  const [adminIsDeletingVideo, setAdminIsDeletingVideo] = useState(false)
   const [adminPasteText, setAdminPasteText] = useState('')
   const [prepNotePart2, setPrepNotePart2] = useState('')
   const [questionPrepNotes, setQuestionPrepNotes] = useState<Record<string, string>>({})
@@ -6782,7 +6872,9 @@ function App() {
   const adminVideoChunksRef = useRef<Blob[]>([])
   const adminRecordedVideoBlobRef = useRef<Blob | null>(null)
   const adminVideoPreviewRef = useRef<HTMLVideoElement | null>(null)
+  const adminVideoPreviewFrameRef = useRef<{ id: number; type: 'animation' | 'video' } | null>(null)
   const adminVideoElapsedIntervalRef = useRef<number | null>(null)
+  const adminVideoStartedAtRef = useRef(0)
   const adminVideoUploadXhrRef = useRef<XMLHttpRequest | null>(null)
   const adminSubtitleRecognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const adminSubtitleStartedAtRef = useRef(0)
@@ -6793,6 +6885,9 @@ function App() {
   const adminSubtitleStyleRef = useRef<AdminSubtitleStyle>(DEFAULT_ADMIN_SUBTITLE_STYLE)
   const adminSubtitleUndoRef = useRef<AdminSubtitleEditorSnapshot[]>([])
   const adminSubtitleRedoRef = useRef<AdminSubtitleEditorSnapshot[]>([])
+  const adminCameraPreviewStreamRef = useRef<MediaStream | null>(null)
+  const adminMicAnalyserRef = useRef<{ context: AudioContext; interval: number } | null>(null)
+  const adminRecordCountdownRef = useRef<number | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const latestAudioBlobRef = useRef<Blob | null>(null)
   const recordingStopResolverRef = useRef<((blob: Blob | null) => void) | null>(null)
@@ -8494,9 +8589,17 @@ function App() {
     () => buildJourneyExamRecords(readingJourneySourcePool, 30),
     [readingJourneySourcePool]
   )
+  const readingFullTestExams = useMemo(
+    () =>
+      READING_FULL_TEST_SPECS.map((spec) => buildReadingFullTestExam(spec, bankReadingExams)).filter(
+        (exam): exam is NonNullable<typeof exam> => Boolean(exam)
+      ),
+    [bankReadingExams]
+  )
+  const readingFullTestsByBook = useMemo(() => groupFullReadingTestsByBook(), [])
   const practiceReadingExams = useMemo(
-    () => [...bankReadingExams, ...readingJourneyExams],
-    [bankReadingExams, readingJourneyExams]
+    () => [...bankReadingExams, ...readingJourneyExams, ...readingFullTestExams],
+    [bankReadingExams, readingJourneyExams, readingFullTestExams]
   )
   const readingMonthGroups = useMemo(() => {
     const groups = new Map<string, ReadingExamRecord[]>()
@@ -9033,6 +9136,39 @@ function App() {
     () => (activeListeningFoundationSet ? foundationSetToExamConfig(activeListeningFoundationSet) : null),
     [activeListeningFoundationSet]
   )
+  const activeListeningFullTestSpec = useMemo(
+    () => LISTENING_FULL_TEST_SPECS.find((spec) => spec.id === selectedListeningFullTestId) ?? null,
+    [selectedListeningFullTestId]
+  )
+  const activeListeningFullTestSections = useMemo(
+    () =>
+      activeListeningFullTestSpec
+        ? getFullTestSectionSets(activeListeningFullTestSpec.bookNumber, activeListeningFullTestSpec.testNumber)
+        : [],
+    [activeListeningFullTestSpec]
+  )
+  const activeListeningFullTestSectionSet =
+    activeListeningFullTestSections[listeningFullTestSectionIndex] ?? activeListeningFullTestSections[0] ?? null
+  const activeListeningFullTestScriptText = useMemo(() => {
+    if (!activeListeningFullTestSectionSet) return ''
+    const resolvedScript = resolveListeningFoundationAudioscript(activeListeningFullTestSectionSet)
+    if (resolvedScript.trim()) return resolvedScript
+    return activeListeningFullTestSectionSet.questions[0]?.passage || ''
+  }, [activeListeningFullTestSectionSet])
+  const activeListeningFullTestScriptSegments = useMemo(
+    () =>
+      activeListeningFullTestScriptText ? parseListeningScriptSegments(activeListeningFullTestScriptText) : [],
+    [activeListeningFullTestScriptText]
+  )
+  const listeningFullTestExamConfig = useMemo(() => {
+    if (!activeListeningFullTestSectionSet) return null
+    const config = foundationSetToExamConfig(activeListeningFullTestSectionSet)
+    if (activeListeningFullTestSectionSet.section === 1) {
+      config.answerOnlyMode = true
+    }
+    return config
+  }, [activeListeningFullTestSectionSet])
+  const listeningFullTestsByBook = useMemo(() => groupFullTestsByBook(), [])
   const listeningFoundationCategoryCompletedCount = useMemo(
     () =>
       visibleListeningFoundationSets.reduce(
@@ -9289,11 +9425,25 @@ function App() {
   const adminTrimDurationLabel = `${String(Math.floor(adminTrimDuration / 60)).padStart(2, '0')}:${String(
     Math.round(adminTrimDuration % 60)
   ).padStart(2, '0')}`
-  const adminActiveSubtitleCue =
+  const isAdminSubtitleCueVisibleAtTime = (cue: AdminSubtitleCue, seconds: number) =>
+    Boolean(cue.text.trim()) &&
+    seconds >= cue.startSeconds - 0.01 &&
+    seconds <= cue.endSeconds + 0.01
+  const adminActiveSubtitleCandidates = adminSubtitleCues.filter((cue) =>
+    isAdminSubtitleCueVisibleAtTime(cue, adminVideoPreviewTime)
+  )
+  const adminSelectedSubtitleCueAtPlayhead =
     adminSubtitleCues.find(
-      (cue) => adminVideoPreviewTime >= cue.startSeconds && adminVideoPreviewTime <= cue.endSeconds
-    ) ||
-    (adminSubtitleCues.length && adminVideoRecorderStatus !== 'recording' ? adminSubtitleCues[0] : null)
+      (cue) => cue.id === adminSelectedSubtitleCueId && isAdminSubtitleCueVisibleAtTime(cue, adminVideoPreviewTime)
+    ) || null
+  const adminActiveSubtitleCue =
+    adminSelectedSubtitleCueAtPlayhead ||
+    adminActiveSubtitleCandidates.reduce<AdminSubtitleCue | null>((bestCue, cue) => {
+      if (!bestCue) return cue
+      if (cue.startSeconds > bestCue.startSeconds) return cue
+      if (cue.startSeconds === bestCue.startSeconds && cue.endSeconds < bestCue.endSeconds) return cue
+      return bestCue
+    }, null)
   const adminSubtitleOverlayStyle: CSSProperties = {
     '--subtitle-font-family': adminSubtitleStyle.fontFamily,
     '--subtitle-text-color': adminSubtitleStyle.textColor,
@@ -9304,10 +9454,33 @@ function App() {
     '--subtitle-x': `${adminSubtitleStyle.horizontalPositionPercent}%`,
     '--subtitle-text-align': adminSubtitleStyle.textAlign
   } as CSSProperties
-  const shouldShowAdminSubtitleOverlay =
-    Boolean(adminRecordedVideoUrl && adminActiveSubtitleCue?.text) &&
+  const shouldShowAdminSubtitleOverlay = shouldShowSubtitleOverlay(
+    adminVideoPreviewMode,
+    Boolean(adminActiveSubtitleCue?.text),
+    Boolean(adminRecordedVideoUrl)
+  )
+  const shouldShowAdminSubtitleKnowledgeNotes =
+    Boolean(adminRecordedVideoUrl) &&
     adminVideoPreviewMode !== 'source' &&
-    adminVideoPreviewMode !== 'noSubtitles'
+    adminVideoPreviewMode !== 'noSubtitles' &&
+    adminVideoPreviewMode !== 'trimmed'
+  const adminVisibleSubtitleNotes = shouldShowAdminSubtitleKnowledgeNotes
+    ? adminSubtitleCues.flatMap((cue) =>
+        (cue.notes || [])
+          .filter((note) => {
+            if (!note.phrase || !note.detail) return false
+            const revealSeconds = estimateSubtitleNoteRevealSeconds(cue, note.phrase)
+            return adminVideoPreviewTime >= revealSeconds - 0.02
+          })
+          .map((note) => ({
+            ...note,
+            cueId: cue.id,
+            startSeconds: cue.startSeconds,
+            revealSeconds: estimateSubtitleNoteRevealSeconds(cue, note.phrase)
+          }))
+      )
+    : []
+  const adminVideoStatusLabel = getAdminVideoStatusLabel(adminVideoRecorderStatus, adminRecordCountdown)
   const adminSubtitleTimelineDuration = Math.max(
     adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0,
     ...adminSubtitleCues.map((cue) => cue.endSeconds),
@@ -9348,6 +9521,19 @@ function App() {
     },
     { overlaps: 0, longGaps: 0, outsideTrim: 0 }
   )
+  const adminUploadChecklistItems = buildUploadChecklist({
+    hasVideo: Boolean(adminRecordedVideoUrl),
+    trimDuration: adminTrimDuration,
+    subtitleCount: adminSubtitleCues.length,
+    timingIssues: adminSubtitleTimingIssues,
+    qualityIssues: {
+      longLines: adminSubtitleQuality.longLines,
+      tooFast: adminSubtitleQuality.tooFast
+    },
+    previewedAsStudent: adminPreviewedAsStudent,
+    editMode: adminVideoEditMode
+  })
+  const adminCanPublish = canPublishFromChecklist(adminUploadChecklistItems)
   const selectedVideoDeviceLabel =
     adminVideoInputDevices.find((device) => device.deviceId === adminSelectedVideoDeviceId)?.label ||
     adminActiveVideoSourceLabel ||
@@ -9372,7 +9558,8 @@ function App() {
         trimEndSeconds: uploaded.trimEndSeconds,
         transcript: uploaded.transcript,
         subtitles: uploaded.subtitles,
-        subtitleStyle: uploaded.subtitleStyle
+        subtitleStyle: uploaded.subtitleStyle,
+        videoFlipHorizontal: Boolean(uploaded.subtitleStyle?.videoFlipHorizontal)
       })
     }
     return resolveSpeakingPart2SampleVideo({
@@ -9821,11 +10008,184 @@ function App() {
   useEffect(() => {
     return () => {
       stopAdminVideoPreviewStream()
+      stopAdminCameraPreview()
       if (adminRecordedVideoUrl) {
         URL.revokeObjectURL(adminRecordedVideoUrl)
       }
     }
   }, [adminRecordedVideoUrl])
+
+  useEffect(() => {
+    if (authSession?.role !== 'admin' || adminWorkspaceSection !== 'videos') {
+      stopAdminCameraPreview()
+      return
+    }
+    const wantsLivePreview =
+      (adminVideoStudioStep === 'setup' || adminVideoStudioStep === 'record') &&
+      !adminRecordedVideoUrl &&
+      adminVideoRecorderStatus === 'idle'
+    if (!wantsLivePreview) {
+      stopAdminCameraPreview()
+      return
+    }
+    void startAdminCameraPreview()
+    return () => {
+      stopAdminCameraPreview()
+    }
+  }, [
+    authSession?.role,
+    adminWorkspaceSection,
+    adminVideoStudioStep,
+    adminRecordedVideoUrl,
+    adminVideoRecorderStatus,
+    adminSelectedVideoDeviceId,
+    adminSelectedAudioDeviceId,
+    adminShouldBlurBackground
+  ])
+
+  useEffect(() => {
+    if (authSession?.role !== 'admin' || adminWorkspaceSection !== 'videos' || !authSession.accessToken) return
+    void loadSpeakingSampleVideoCatalog(authSession.accessToken)
+  }, [authSession?.role, authSession?.accessToken, adminWorkspaceSection])
+
+  useEffect(() => {
+    if (adminRecordCountdown === null || adminRecordCountdown <= 0) return
+    const timeoutId = window.setTimeout(() => {
+      const next = adminRecordCountdown - 1
+      if (next <= 0) {
+        setAdminRecordCountdown(null)
+        adminRecordCountdownRef.current = null
+        void startAdminVideoRecording()
+        return
+      }
+      setAdminRecordCountdown(next)
+      adminRecordCountdownRef.current = next
+    }, 1000)
+    return () => window.clearTimeout(timeoutId)
+  }, [adminRecordCountdown])
+
+  useEffect(() => {
+    if (authSession?.role !== 'admin' || adminWorkspaceSection !== 'videos') return
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      const target = event.target as HTMLElement | null
+      const tag = target?.tagName?.toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.isContentEditable) return
+      if (!adminRecordedVideoUrl) return
+      if (event.code === 'Space') {
+        event.preventDefault()
+        const video = adminVideoPreviewRef.current
+        if (!video) return
+        if (video.paused) playAdminVideoWithTrim()
+        else video.pause()
+      }
+      if (event.key === 'j' || event.key === 'J') {
+        event.preventDefault()
+        seekAdminVideoTo(Math.max(0, adminVideoPreviewTime - 0.05))
+      }
+      if (event.key === 'l' || event.key === 'L') {
+        event.preventDefault()
+        seekAdminVideoTo(Math.min(adminSubtitleTimelineDuration, adminVideoPreviewTime + 0.05))
+      }
+      if (event.key === 'k' || event.key === 'K') {
+        event.preventDefault()
+        adminVideoPreviewRef.current?.pause()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [
+    authSession?.role,
+    adminWorkspaceSection,
+    adminRecordedVideoUrl,
+    adminVideoPreviewTime,
+    adminSubtitleTimelineDuration
+  ])
+
+  useEffect(() => {
+    if (adminVideoPreviewMode === 'student' && adminRecordedVideoUrl) {
+      setAdminPreviewedAsStudent(true)
+    }
+  }, [adminVideoPreviewMode, adminRecordedVideoUrl])
+
+  useEffect(() => {
+    if (adminStudentPreviewOpen) {
+      setAdminPreviewedAsStudent(true)
+    }
+  }, [adminStudentPreviewOpen])
+
+  useEffect(() => {
+    if (!adminRecordedVideoUrl) return
+    let canceled = false
+
+    const cancelScheduledFrame = () => {
+      const scheduled = adminVideoPreviewFrameRef.current
+      const video = adminVideoPreviewRef.current as
+        | (HTMLVideoElement & { cancelVideoFrameCallback?: (id: number) => void })
+        | null
+      if (!scheduled) return
+      if (scheduled.type === 'video' && video?.cancelVideoFrameCallback) {
+        video.cancelVideoFrameCallback(scheduled.id)
+      } else {
+        window.cancelAnimationFrame(scheduled.id)
+      }
+      adminVideoPreviewFrameRef.current = null
+    }
+
+    const syncPreviewClock = (mediaTime?: number) => {
+      const video = adminVideoPreviewRef.current
+      if (!video) return
+      const currentTime = typeof mediaTime === 'number' ? mediaTime : video.currentTime
+      if (shouldEnforceTrimInPreview(adminVideoPreviewMode) && adminVideoTrimEnd > adminVideoTrimStart) {
+        if (currentTime < adminVideoTrimStart) {
+          video.currentTime = adminVideoTrimStart
+          setAdminVideoPreviewTime(adminVideoTrimStart)
+          return
+        }
+        if (currentTime >= adminVideoTrimEnd) {
+          video.pause()
+          video.currentTime = adminVideoTrimEnd
+          setAdminVideoPreviewTime(adminVideoTrimEnd)
+          return
+        }
+      }
+      setAdminVideoPreviewTime((current) => {
+        const roundedTime = Number(currentTime.toFixed(3))
+        return Math.abs(current - roundedTime) >= 0.001 ? roundedTime : current
+      })
+    }
+
+    const schedulePreviewClock = () => {
+      if (canceled) return
+      const video = adminVideoPreviewRef.current as
+        | (HTMLVideoElement & {
+            requestVideoFrameCallback?: (
+              callback: (now: number, metadata: { mediaTime: number }) => void
+            ) => number
+          })
+        | null
+      if (video?.requestVideoFrameCallback && !video.paused && !video.ended) {
+        const id = video.requestVideoFrameCallback((_now, metadata) => {
+          adminVideoPreviewFrameRef.current = null
+          syncPreviewClock(metadata.mediaTime)
+          schedulePreviewClock()
+        })
+        adminVideoPreviewFrameRef.current = { id, type: 'video' }
+        return
+      }
+      const id = window.requestAnimationFrame(() => {
+        adminVideoPreviewFrameRef.current = null
+        syncPreviewClock()
+        schedulePreviewClock()
+      })
+      adminVideoPreviewFrameRef.current = { id, type: 'animation' }
+    }
+
+    schedulePreviewClock()
+    return () => {
+      canceled = true
+      cancelScheduledFrame()
+    }
+  }, [adminRecordedVideoUrl, adminVideoPreviewMode, adminVideoTrimEnd, adminVideoTrimStart])
 
   useEffect(() => {
     if (!adminSubtitleVersionKey) {
@@ -9863,23 +10223,8 @@ function App() {
     const hasParagraphCue = adminSubtitleCues.some((cue) => cue.text.includes('\n') || cue.text.length > 42)
     if (!hasParagraphCue) return
     const timeoutId = window.setTimeout(() => {
-      const sourceText = adminSubtitleCuesRef.current.map((cue) => cue.text).join(' ')
-      const duration =
-        adminVideoTrimEnd > adminVideoTrimStart
-          ? adminVideoTrimEnd - adminVideoTrimStart
-          : adminRecordedVideoActualDuration || adminRecordedVideoDuration || adminSubtitleTimelineDuration
-      const startOffset = adminVideoTrimEnd > adminVideoTrimStart ? adminVideoTrimStart : 0
-      const chunks = splitAdminTextIntoOneLineChunks(sourceText)
-      const cueDuration = Math.max(1.15, duration / Math.max(1, chunks.length))
-      setAdminSubtitleCuesSafe(
-        chunks.map((chunk, index) => ({
-          id: createAdminSubtitleCueId(),
-          startSeconds: Number((startOffset + index * cueDuration).toFixed(2)),
-          endSeconds: Number((startOffset + Math.min(duration, (index + 1) * cueDuration)).toFixed(2)),
-          text: chunk
-        }))
-      )
-      setAdminSubtitleDraftMessage('Long captions were automatically rebuilt into one-line subtitles.')
+      setAdminSubtitleCuesSafe((current) => current.flatMap(splitAdminCueIntoTimedOneLineCues))
+      setAdminSubtitleDraftMessage('Long captions were automatically rebuilt into one-line subtitles without changing speech timing.')
     }, 250)
     return () => window.clearTimeout(timeoutId)
   }, [
@@ -10011,11 +10356,11 @@ function App() {
       }
       if (event.key === 'ArrowLeft' && adminSelectedSubtitleCueId) {
         event.preventDefault()
-        nudgeAdminSubtitleCue(adminSelectedSubtitleCueId, event.shiftKey ? -0.5 : -0.1)
+        nudgeAdminSubtitleCue(adminSelectedSubtitleCueId, event.shiftKey ? -0.01 : -0.001)
       }
       if (event.key === 'ArrowRight' && adminSelectedSubtitleCueId) {
         event.preventDefault()
-        nudgeAdminSubtitleCue(adminSelectedSubtitleCueId, event.shiftKey ? 0.5 : 0.1)
+        nudgeAdminSubtitleCue(adminSelectedSubtitleCueId, event.shiftKey ? 0.01 : 0.001)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -10428,7 +10773,8 @@ function App() {
     fix,
     thaiMeaning,
     preferredSection,
-    successNotice = 'Added to notebook'
+    successNotice = 'Added to notebook',
+    suppressNotice = false
   }: {
     criterion: string
     quote: string
@@ -10436,6 +10782,7 @@ function App() {
     thaiMeaning?: string
     preferredSection?: NotebookSection | string
     successNotice?: string
+    suppressNotice?: boolean
   }) => {
     const chosenSection =
       preferredSection ||
@@ -10467,11 +10814,13 @@ function App() {
       preferredSection === 'reading' || section === 'reading'
         ? 'Added to notebook · saved to #reading'
         : successNotice
-    setNotebookSaveNotice(resolvedSuccessNotice)
+    if (!suppressNotice) {
+      setNotebookSaveNotice(resolvedSuccessNotice)
+    }
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: customSectionsRef.current,
-      successNotice: resolvedSuccessNotice
+      successNotice: suppressNotice ? undefined : resolvedSuccessNotice
     })
   }
 
@@ -11033,27 +11382,249 @@ function App() {
     return 'webm'
   }
 
+  const getAdminPostBlurMimeType = () => {
+    const candidates = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm']
+    return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || ''
+  }
+
+  const applyAdminPostRecordingBackgroundBlur = async () => {
+    const sourceBlob = adminRecordedVideoBlobRef.current
+    if (!sourceBlob || !adminRecordedVideoUrl) {
+      setAdminVideoRecorderMessage('Record or load a video before applying background blur.')
+      return
+    }
+    if (typeof MediaRecorder === 'undefined') {
+      setAdminVideoRecorderMessage('This browser cannot process video blur after recording.')
+      return
+    }
+
+    const canvas = document.createElement('canvas')
+    const canvasCaptureStream = canvas.captureStream?.bind(canvas)
+    if (!canvasCaptureStream) {
+      setAdminVideoRecorderMessage('This browser cannot export a processed video from canvas.')
+      return
+    }
+
+    const sourceUrl = URL.createObjectURL(sourceBlob)
+    const video = document.createElement('video')
+    const captureSourceStream =
+      (video as HTMLVideoElement & { captureStream?: () => MediaStream; mozCaptureStream?: () => MediaStream }).captureStream ||
+      (video as HTMLVideoElement & { captureStream?: () => MediaStream; mozCaptureStream?: () => MediaStream }).mozCaptureStream
+
+    if (!captureSourceStream) {
+      URL.revokeObjectURL(sourceUrl)
+      setAdminVideoRecorderMessage('This browser cannot keep the original audio while processing video blur.')
+      return
+    }
+
+    setAdminIsPostProcessingBlur(true)
+    setAdminPostProcessingBlurProgress(0)
+    setAdminVideoRecorderMessage('Applying background blur to the recorded video...')
+
+    let animationFrameId = 0
+    let sourceStream: MediaStream | null = null
+    const cleanup = () => {
+      if (animationFrameId) window.cancelAnimationFrame(animationFrameId)
+      sourceStream?.getTracks().forEach((track) => track.stop())
+      URL.revokeObjectURL(sourceUrl)
+    }
+
+    try {
+      video.src = sourceUrl
+      video.playsInline = true
+      video.preload = 'auto'
+      video.volume = 0
+      await new Promise<void>((resolve, reject) => {
+        video.onloadedmetadata = () => resolve()
+        video.onerror = () => reject(new Error('Could not read the recorded video for background blur.'))
+      })
+
+      const width = Math.max(320, video.videoWidth || 1280)
+      const height = Math.max(180, video.videoHeight || 720)
+      canvas.width = width
+      canvas.height = height
+      const context = canvas.getContext('2d')
+      if (!context) throw new Error('Could not start the video blur renderer.')
+
+      const subjectCanvas = document.createElement('canvas')
+      subjectCanvas.width = width
+      subjectCanvas.height = height
+      const subjectContext = subjectCanvas.getContext('2d')
+      if (!subjectContext) throw new Error('Could not start the subject mask renderer.')
+
+      sourceStream = captureSourceStream.call(video)
+      const processedStream = canvasCaptureStream(30)
+      sourceStream.getAudioTracks().forEach((track) => processedStream.addTrack(track))
+
+      const mimeType = getAdminPostBlurMimeType()
+      const recorder = new MediaRecorder(processedStream, mimeType ? { mimeType } : undefined)
+      const chunks: Blob[] = []
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunks.push(event.data)
+      }
+
+      type DetectedFaceBox = { x: number; y: number; width: number; height: number }
+      let detectedFace: DetectedFaceBox | null = null
+      let faceDetectionFrame = 0
+      let isDetectingFace = false
+      const FaceDetectorCtor = (window as Window & { FaceDetector?: new (options?: unknown) => { detect: (source: CanvasImageSource) => Promise<Array<{ boundingBox?: DetectedFaceBox }>> } }).FaceDetector
+      const faceDetector = FaceDetectorCtor ? new FaceDetectorCtor({ fastMode: true, maxDetectedFaces: 1 }) : null
+      const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+
+      const drawSubjectMask = () => {
+        const face = detectedFace
+        const centerX = face ? clamp(face.x + face.width / 2, width * 0.2, width * 0.8) : width * 0.5
+        const centerY = face ? clamp(face.y + face.height * 1.65, height * 0.2, height * 0.72) : height * 0.46
+        const radiusX = face ? clamp(face.width * 2.5, width * 0.24, width * 0.44) : width * 0.34
+        const radiusY = face ? clamp(face.height * 3.35, height * 0.36, height * 0.62) : height * 0.54
+
+        subjectContext.save()
+        subjectContext.globalCompositeOperation = 'destination-in'
+        subjectContext.translate(centerX, centerY)
+        subjectContext.scale(radiusX, radiusY)
+        const gradient = subjectContext.createRadialGradient(0, 0, 0.68, 0, 0, 1)
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
+        gradient.addColorStop(0.76, 'rgba(255, 255, 255, 0.96)')
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+        subjectContext.fillStyle = gradient
+        subjectContext.beginPath()
+        subjectContext.arc(0, 0, 1, 0, Math.PI * 2)
+        subjectContext.fill()
+        subjectContext.restore()
+        subjectContext.globalCompositeOperation = 'source-over'
+      }
+
+      const drawFrame = () => {
+        if (video.ended || video.paused) return
+        context.clearRect(0, 0, width, height)
+        context.filter = 'blur(18px)'
+        context.drawImage(video, -24, -24, width + 48, height + 48)
+        context.filter = 'none'
+
+        subjectContext.clearRect(0, 0, width, height)
+        subjectContext.drawImage(video, 0, 0, width, height)
+        drawSubjectMask()
+        context.drawImage(subjectCanvas, 0, 0)
+
+        const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : adminRecordedVideoDuration
+        if (duration > 0) {
+          setAdminPostProcessingBlurProgress(Math.min(99, Math.round((video.currentTime / duration) * 100)))
+        }
+
+        if (faceDetector && !isDetectingFace && faceDetectionFrame % 12 === 0) {
+          isDetectingFace = true
+          faceDetector
+            .detect(video)
+            .then((faces) => {
+              const nextFace = faces.find((face) => face.boundingBox)?.boundingBox || null
+              if (nextFace) detectedFace = nextFace
+            })
+            .catch(() => {
+              detectedFace = null
+            })
+            .finally(() => {
+              isDetectingFace = false
+            })
+        }
+        faceDetectionFrame += 1
+        animationFrameId = window.requestAnimationFrame(drawFrame)
+      }
+
+      const processedBlob = await new Promise<Blob>((resolve, reject) => {
+        recorder.onerror = () => reject(new Error('Background blur processing failed.'))
+        recorder.onstop = () => {
+          const outputType = recorder.mimeType || mimeType || 'video/webm'
+          resolve(new Blob(chunks, { type: outputType }))
+        }
+        video.onended = () => {
+          if (recorder.state !== 'inactive') recorder.stop()
+        }
+        recorder.start(1000)
+        void video.play().then(() => {
+          drawFrame()
+        }).catch(() => {
+          if (recorder.state !== 'inactive') recorder.stop()
+          reject(new Error('Could not play the recording for background blur processing.'))
+        })
+      })
+
+      if (!processedBlob.size) throw new Error('Background blur did not create a usable video.')
+      const previousUrl = adminRecordedVideoUrl
+      adminRecordedVideoBlobRef.current = processedBlob
+      setAdminRecordedVideoSizeBytes(processedBlob.size)
+      setAdminBackgroundBlurState('enabled')
+      setAdminPostProcessingBlurProgress(100)
+      const nextUrl = URL.createObjectURL(processedBlob)
+      setAdminRecordedVideoUrl(nextUrl)
+      setAdminVideoRecorderMessage('Background blur applied. Review the preview, then publish when ready.')
+      window.setTimeout(() => URL.revokeObjectURL(previousUrl), 0)
+    } catch (error) {
+      setAdminVideoRecorderMessage(error instanceof Error ? error.message : 'Could not apply background blur after recording.')
+    } finally {
+      cleanup()
+      setAdminIsPostProcessingBlur(false)
+    }
+  }
+
   const createAdminSubtitleCueId = () =>
     typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
       : `subtitle-${Date.now()}-${Math.random().toString(16).slice(2)}`
 
+  const createAdminSubtitleNoteId = () => `note-${createAdminSubtitleCueId()}`
+
+  const roundAdminSubtitleSeconds = (seconds: number) => {
+    const safeSeconds = Number.isFinite(seconds) ? seconds : 0
+    return Number(safeSeconds.toFixed(3))
+  }
+
   const formatAdminSubtitleTime = (seconds: number) => {
-    const safeSeconds = Math.max(0, Number(seconds) || 0)
-    const minutes = Math.floor(safeSeconds / 60)
-    const wholeSeconds = Math.floor(safeSeconds % 60)
-    const tenths = Math.floor((safeSeconds % 1) * 10)
-    return `${String(minutes).padStart(2, '0')}:${String(wholeSeconds).padStart(2, '0')}.${tenths}`
+    const totalMilliseconds = Math.max(0, Math.round((Number(seconds) || 0) * 1000))
+    const minutes = Math.floor(totalMilliseconds / 60000)
+    const wholeSeconds = Math.floor((totalMilliseconds % 60000) / 1000)
+    const milliseconds = totalMilliseconds % 1000
+    return `${String(minutes).padStart(2, '0')}:${String(wholeSeconds).padStart(2, '0')}.${String(milliseconds).padStart(3, '0')}`
   }
 
   const formatAdminSrtTime = (seconds: number) => {
-    const safeSeconds = Math.max(0, Number(seconds) || 0)
-    const hours = Math.floor(safeSeconds / 3600)
-    const minutes = Math.floor((safeSeconds % 3600) / 60)
-    const wholeSeconds = Math.floor(safeSeconds % 60)
-    const milliseconds = Math.round((safeSeconds % 1) * 1000)
+    const totalMilliseconds = Math.max(0, Math.round((Number(seconds) || 0) * 1000))
+    const hours = Math.floor(totalMilliseconds / 3600000)
+    const minutes = Math.floor((totalMilliseconds % 3600000) / 60000)
+    const wholeSeconds = Math.floor((totalMilliseconds % 60000) / 1000)
+    const milliseconds = totalMilliseconds % 1000
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(wholeSeconds).padStart(2, '0')},${String(milliseconds).padStart(3, '0')}`
   }
+
+  const normalizeAdminSubtitleNoteText = (value: string) =>
+    String(value || '').trim().replace(/\s+/g, ' ')
+
+  const normalizeAdminSubtitleNotes = (notes: AdminSubtitleNote[] | undefined): AdminSubtitleNote[] =>
+    Array.isArray(notes)
+      ? notes
+          .map((note) => ({
+            id: String(note.id || createAdminSubtitleNoteId()).slice(0, 120),
+            phrase: normalizeAdminSubtitleNoteText(note.phrase).slice(0, 160),
+            detail: String(note.detail || '').trim().slice(0, 800)
+          }))
+          .filter((note) => note.phrase && note.detail)
+          .slice(0, 12)
+      : []
+
+  const filterAdminSubtitleNotesForText = (notes: AdminSubtitleNote[] | undefined, text: string) => {
+    const normalizedText = normalizeAdminSubtitleNoteText(text).toLowerCase()
+    return normalizeAdminSubtitleNotes(notes).filter((note) =>
+      normalizedText.includes(normalizeAdminSubtitleNoteText(note.phrase).toLowerCase())
+    )
+  }
+
+  const copyAdminSubtitleNotes = (notes: AdminSubtitleNote[] | undefined) =>
+    normalizeAdminSubtitleNotes(notes).map((note) => ({ ...note }))
+
+  const cloneAdminSubtitleNotes = (notes: AdminSubtitleNote[] | undefined) =>
+    normalizeAdminSubtitleNotes(notes).map((note) => ({
+      ...note,
+      id: createAdminSubtitleNoteId()
+    }))
 
   const parseAdminSubtitleTimestamp = (value: string) => {
     const match = value.trim().match(/(?:(\d+):)?(\d{1,2}):(\d{1,2})(?:[,.](\d{1,3}))?/)
@@ -11068,19 +11639,20 @@ function App() {
   const normalizeAdminSubtitleCue = (cue: AdminSubtitleCue, maxDuration = 0): AdminSubtitleCue => {
     const upperBound = maxDuration > 0 ? maxDuration : Number.MAX_SAFE_INTEGER
     const startSeconds = Math.min(upperBound, Math.max(0, Number(cue.startSeconds) || 0))
-    const endSeconds = Math.min(upperBound, Math.max(startSeconds + 0.25, Number(cue.endSeconds) || startSeconds + 3))
+    const endSeconds = Math.min(upperBound, Math.max(startSeconds + 0.12, Number(cue.endSeconds) || startSeconds + 3))
     return {
       id: cue.id || createAdminSubtitleCueId(),
-      startSeconds: Number(startSeconds.toFixed(2)),
-      endSeconds: Number(endSeconds.toFixed(2)),
+      startSeconds: roundAdminSubtitleSeconds(startSeconds),
+      endSeconds: roundAdminSubtitleSeconds(endSeconds),
       text: String(cue.text || '').trim(),
+      notes: normalizeAdminSubtitleNotes(cue.notes),
       ...(Number.isFinite(Number(cue.confidence)) ? { confidence: Math.max(0, Math.min(1, Number(cue.confidence))) } : {})
     }
   }
 
   const snapAdminSubtitleSeconds = (seconds: number) => {
     const normalized = Math.max(0, Number(seconds) || 0)
-    if (!adminSubtitleSnapEnabled) return Number(normalized.toFixed(2))
+    if (!adminSubtitleSnapEnabled) return roundAdminSubtitleSeconds(normalized)
     const snapPoints = [
       0,
       adminVideoTrimStart,
@@ -11092,12 +11664,15 @@ function App() {
       (best, point) => (Math.abs(point - normalized) < Math.abs(best - normalized) ? point : best),
       normalized
     )
-    return Number((Math.abs(closest - normalized) <= 0.18 ? closest : normalized).toFixed(2))
+    return roundAdminSubtitleSeconds(Math.abs(closest - normalized) <= 0.04 ? closest : normalized)
   }
 
   const cloneAdminSubtitleSnapshot = (): AdminSubtitleEditorSnapshot => ({
     transcript: adminSubtitleTranscriptRef.current,
-    cues: adminSubtitleCuesRef.current.map((cue) => ({ ...cue })),
+    cues: adminSubtitleCuesRef.current.map((cue) => ({
+      ...cue,
+      notes: copyAdminSubtitleNotes(cue.notes)
+    })),
     style: { ...adminSubtitleStyleRef.current }
   })
 
@@ -11138,7 +11713,10 @@ function App() {
     rememberAdminSubtitleEdit()
     restoreAdminSubtitleSnapshot({
       transcript: version.transcript,
-      cues: version.cues.map((cue) => ({ ...cue })),
+      cues: version.cues.map((cue) => ({
+        ...cue,
+        notes: copyAdminSubtitleNotes(cue.notes)
+      })),
       style: { ...DEFAULT_ADMIN_SUBTITLE_STYLE, ...version.style }
     })
     if (typeof version.trimStartSeconds === 'number') setAdminVideoTrimStart(version.trimStartSeconds)
@@ -11148,10 +11726,18 @@ function App() {
 
   const restoreAdminSubtitleSnapshot = (snapshot: AdminSubtitleEditorSnapshot) => {
     adminSubtitleTranscriptRef.current = snapshot.transcript
-    adminSubtitleCuesRef.current = snapshot.cues.map((cue) => ({ ...cue }))
+    adminSubtitleCuesRef.current = snapshot.cues.map((cue) => ({
+      ...cue,
+      notes: normalizeAdminSubtitleNotes(cue.notes)
+    }))
     adminSubtitleStyleRef.current = { ...snapshot.style }
     setAdminSubtitleTranscript(snapshot.transcript)
-    setAdminSubtitleCues(snapshot.cues.map((cue) => ({ ...cue })))
+    setAdminSubtitleCues(
+      snapshot.cues.map((cue) => ({
+        ...cue,
+        notes: normalizeAdminSubtitleNotes(cue.notes)
+      }))
+    )
     setAdminSubtitleStyle({ ...snapshot.style })
   }
 
@@ -11204,6 +11790,101 @@ function App() {
     }
   }
 
+  const captureAdminSubtitleNoteSelection = (cueId: string, target: HTMLTextAreaElement) => {
+    const start = target.selectionStart ?? 0
+    const end = target.selectionEnd ?? 0
+    if (end <= start) return false
+    const phrase = normalizeAdminSubtitleNoteText(target.value.slice(start, end))
+    if (!phrase) return false
+    setAdminSelectedSubtitleCueId(cueId)
+    setAdminSubtitleNoteDraft((current) => ({
+      ...current,
+      cueId,
+      noteId: '',
+      phrase
+    }))
+    return true
+  }
+
+  const useSelectedSubtitleTextForNote = () => {
+    const cueId = adminSelectedSubtitleCue?.id || ''
+    if (!cueId) return
+    const textarea = document.getElementById(`admin-subtitle-text-${cueId}`) as HTMLTextAreaElement | null
+    if (textarea) {
+      const captured = captureAdminSubtitleNoteSelection(cueId, textarea)
+      textarea.focus()
+      if (!captured) {
+        setAdminSubtitleDraftMessage('Highlight a word or phrase inside the selected subtitle line first.')
+      }
+      return
+    }
+    setAdminSubtitleNoteDraft((current) => ({
+      ...current,
+      cueId,
+      noteId: '',
+      phrase: normalizeAdminSubtitleNoteText(adminSelectedSubtitleCue?.text || current.phrase)
+    }))
+  }
+
+  const saveAdminSubtitleKnowledgeNote = () => {
+    const cueId = adminSubtitleNoteDraft.cueId || adminSelectedSubtitleCue?.id || ''
+    const phrase = normalizeAdminSubtitleNoteText(adminSubtitleNoteDraft.phrase).slice(0, 160)
+    const detail = String(adminSubtitleNoteDraft.detail || '').trim().slice(0, 800)
+    if (!cueId || !phrase || !detail) {
+      setAdminSubtitleDraftMessage('Select a subtitle phrase and add detail before saving the note.')
+      return
+    }
+    rememberAdminSubtitleEdit()
+    const noteId = adminSubtitleNoteDraft.noteId || createAdminSubtitleNoteId()
+    setAdminSubtitleCuesSafe((current) =>
+      current.map((cue) => {
+        if (cue.id !== cueId) return cue
+        const notes = normalizeAdminSubtitleNotes(cue.notes)
+        const existingIndex = notes.findIndex((note) => note.id === noteId)
+        const nextNote: AdminSubtitleNote = { id: noteId, phrase, detail }
+        const nextNotes =
+          existingIndex >= 0
+            ? notes.map((note) => (note.id === noteId ? nextNote : note))
+            : [...notes, nextNote]
+        return {
+          ...cue,
+          notes: nextNotes.slice(0, 12)
+        }
+      })
+    )
+    setAdminSelectedSubtitleCueId(cueId)
+    setAdminSubtitleNoteDraft({ cueId, noteId: '', phrase: '', detail: '' })
+    setAdminSubtitleDraftMessage(`Detail saved for "${phrase}".`)
+  }
+
+  const editAdminSubtitleKnowledgeNote = (cueId: string, note: AdminSubtitleNote) => {
+    setAdminSelectedSubtitleCueId(cueId)
+    setAdminSubtitleNoteDraft({
+      cueId,
+      noteId: note.id,
+      phrase: note.phrase,
+      detail: note.detail
+    })
+  }
+
+  const removeAdminSubtitleKnowledgeNote = (cueId: string, noteId: string) => {
+    rememberAdminSubtitleEdit()
+    setAdminSubtitleCuesSafe((current) =>
+      current.map((cue) =>
+        cue.id === cueId
+          ? {
+              ...cue,
+              notes: normalizeAdminSubtitleNotes(cue.notes).filter((note) => note.id !== noteId)
+            }
+          : cue
+      )
+    )
+    if (adminSubtitleNoteDraft.noteId === noteId) {
+      setAdminSubtitleNoteDraft({ cueId, noteId: '', phrase: '', detail: '' })
+    }
+    setAdminSubtitleDraftMessage('Subtitle detail removed.')
+  }
+
   const applyAdminSubtitleStylePreset = (style: AdminSubtitleStyle) => {
     rememberAdminSubtitleEdit()
     adminSubtitleStyleRef.current = { ...style }
@@ -11229,6 +11910,30 @@ function App() {
     return chunks
   }
 
+  const splitAdminCueIntoTimedOneLineCues = (cue: AdminSubtitleCue) => {
+    const chunks = splitAdminTextIntoOneLineChunks(cue.text)
+    if (chunks.length <= 1) {
+      return [{ ...cue, text: chunks[0] || cue.text.replace(/\s+/g, ' ').trim() }]
+    }
+    const duration = Math.max(0.35, cue.endSeconds - cue.startSeconds)
+    const totalCharacters = chunks.reduce((sum, chunk) => sum + Math.max(8, chunk.length), 0)
+    let cursor = cue.startSeconds
+    return chunks.map((chunk, index) => {
+      const isLast = index === chunks.length - 1
+      const chunkDuration = duration * (Math.max(8, chunk.length) / Math.max(1, totalCharacters))
+      const endSeconds = isLast ? cue.endSeconds : Math.min(cue.endSeconds, cursor + chunkDuration)
+      const nextCue = {
+        ...cue,
+        id: index === 0 ? cue.id : createAdminSubtitleCueId(),
+        startSeconds: roundAdminSubtitleSeconds(cursor),
+        endSeconds: roundAdminSubtitleSeconds(Math.max(cursor + 0.12, endSeconds)),
+        text: chunk
+      }
+      cursor = nextCue.endSeconds
+      return nextCue
+    })
+  }
+
   const buildAdminSubtitleCuesFromText = (text: string, durationSeconds: number): AdminSubtitleCue[] => {
     const chunks = splitAdminTextIntoOneLineChunks(text)
     if (!chunks.length) return []
@@ -11236,8 +11941,8 @@ function App() {
     const cueDuration = usableDuration / chunks.length
     return chunks.map((chunk, index) => ({
       id: createAdminSubtitleCueId(),
-      startSeconds: Number((index * cueDuration).toFixed(2)),
-      endSeconds: Number(Math.min(usableDuration, (index + 1) * cueDuration).toFixed(2)),
+      startSeconds: roundAdminSubtitleSeconds(index * cueDuration),
+      endSeconds: roundAdminSubtitleSeconds(Math.min(usableDuration, (index + 1) * cueDuration)),
       text: chunk
     }))
   }
@@ -11317,8 +12022,8 @@ function App() {
       const endSeconds = index === lines.length - 1 ? startOffset + duration : cursor + cueDuration
       const cue = {
         id: createAdminSubtitleCueId(),
-        startSeconds: Number(cursor.toFixed(2)),
-        endSeconds: Number(endSeconds.toFixed(2)),
+        startSeconds: roundAdminSubtitleSeconds(cursor),
+        endSeconds: roundAdminSubtitleSeconds(endSeconds),
         text: line
       }
       cursor = endSeconds
@@ -11339,8 +12044,8 @@ function App() {
     setAdminSubtitleCuesSafe(
       chunks.map((chunk, index) => ({
         id: createAdminSubtitleCueId(),
-        startSeconds: Number((index * cueDuration).toFixed(2)),
-        endSeconds: Number(Math.min(duration || (index + 1) * cueDuration, (index + 1) * cueDuration).toFixed(2)),
+        startSeconds: roundAdminSubtitleSeconds(index * cueDuration),
+        endSeconds: roundAdminSubtitleSeconds(Math.min(duration || (index + 1) * cueDuration, (index + 1) * cueDuration)),
         text: chunk
       }))
     )
@@ -11348,9 +12053,16 @@ function App() {
   }
 
   const makeAdminSubtitlesOneLine = () => {
-    const sourceText = adminSubtitleCuesRef.current.map((cue) => cue.text).join(' ') || adminSubtitleTranscriptRef.current
+    const currentCues = adminSubtitleCuesRef.current
+    const sourceText = currentCues.map((cue) => cue.text).join(' ') || adminSubtitleTranscriptRef.current
     if (!sourceText.trim()) return
     rememberAdminSubtitleEdit()
+    if (currentCues.length) {
+      setAdminSubtitleCuesSafe(currentCues.flatMap(splitAdminCueIntoTimedOneLineCues))
+      setAdminSubtitleTranscriptSafe(sourceText.replace(/\s+/g, ' ').trim())
+      setAdminSubtitleDraftMessage('Captions rebuilt as one-line subtitles while preserving speech timing.')
+      return
+    }
     const duration =
       adminVideoTrimEnd > adminVideoTrimStart
         ? adminVideoTrimEnd - adminVideoTrimStart
@@ -11361,8 +12073,8 @@ function App() {
     setAdminSubtitleCuesSafe(
       chunks.map((chunk, index) => ({
         id: createAdminSubtitleCueId(),
-        startSeconds: Number((startOffset + index * cueDuration).toFixed(2)),
-        endSeconds: Number((startOffset + Math.min(duration, (index + 1) * cueDuration)).toFixed(2)),
+        startSeconds: roundAdminSubtitleSeconds(startOffset + index * cueDuration),
+        endSeconds: roundAdminSubtitleSeconds(startOffset + Math.min(duration, (index + 1) * cueDuration)),
         text: chunk
       }))
     )
@@ -11406,8 +12118,8 @@ function App() {
       cursor = endSeconds
       return {
         ...cue,
-        startSeconds: Number(startSeconds.toFixed(2)),
-        endSeconds: Number(endSeconds.toFixed(2))
+        startSeconds: roundAdminSubtitleSeconds(startSeconds),
+        endSeconds: roundAdminSubtitleSeconds(endSeconds)
       }
     })
     setAdminSubtitleCuesSafe(balanced)
@@ -11591,24 +12303,27 @@ function App() {
       cursor = endSeconds + 0.08
       return {
         ...cue,
-        startSeconds: Number(startSeconds.toFixed(2)),
-        endSeconds: Number(endSeconds.toFixed(2))
+        startSeconds: roundAdminSubtitleSeconds(startSeconds),
+        endSeconds: roundAdminSubtitleSeconds(endSeconds)
       }
     })
     setAdminSubtitleCuesSafe(fixed)
     setAdminSubtitleDraftMessage('Overlaps, long gaps, and trim range issues were normalized.')
   }
 
-  const generateAdminSubtitlesFromBackend = async () => {
+  const generateAdminSubtitlesFromBackend = async (options?: { trimStartSeconds?: number; trimEndSeconds?: number }) => {
     const videoBlob = adminRecordedVideoBlobRef.current
     if (!authSession?.accessToken || authSession.role !== 'admin' || !videoBlob) return
     setIsAdminBackendTranscribing(true)
     setAdminSubtitleDraftMessage('Sending recording for backend transcription...')
     try {
+      const trimStartSeconds = options?.trimStartSeconds ?? adminVideoTrimStart
+      const trimEndSeconds =
+        options?.trimEndSeconds ?? (adminVideoTrimEnd || adminRecordedVideoActualDuration || adminRecordedVideoDuration)
       const formData = new FormData()
       formData.append('video', videoBlob, `speaking-sample.${getAdminVideoFileExtension(videoBlob.type)}`)
-      formData.append('trimStartSeconds', String(adminVideoTrimStart))
-      formData.append('trimEndSeconds', String(adminVideoTrimEnd || adminRecordedVideoActualDuration || adminRecordedVideoDuration))
+      formData.append('trimStartSeconds', String(roundAdminSubtitleSeconds(trimStartSeconds)))
+      formData.append('trimEndSeconds', String(roundAdminSubtitleSeconds(trimEndSeconds)))
       const response = await fetch('/api/admin/speaking-sample-videos/transcribe', {
         method: 'POST',
         headers: {
@@ -11626,12 +12341,7 @@ function App() {
         : []
       const nextSubtitles =
         backendSubtitles.length > 0
-          ? buildAdminSubtitleCuesFromText(
-              backendSubtitles.map((cue) => cue.text).join(' '),
-              adminVideoTrimEnd > adminVideoTrimStart
-                ? adminVideoTrimEnd - adminVideoTrimStart
-                : adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0
-            )
+          ? backendSubtitles.flatMap(splitAdminCueIntoTimedOneLineCues)
           : []
       if (!nextTranscript || !nextSubtitles.length) {
         throw new Error('Backend transcription returned no usable subtitles.')
@@ -11640,7 +12350,7 @@ function App() {
       setAdminSubtitleTranscriptSafe(nextTranscript)
       setAdminSubtitleCuesSafe(nextSubtitles)
       setAdminSubtitleDraftMessage(
-        `Backend subtitles ready via ${String(payload?.provider || 'transcription service')} (${Math.round(Number(payload?.confidenceQuality || 0) * 100)}% confidence signal).`
+        `Speech-timed backend subtitles ready via ${String(payload?.provider || 'transcription service')} (${Math.round(Number(payload?.confidenceQuality || 0) * 100)}% confidence signal).`
       )
     } catch (error) {
       setAdminSubtitleDraftMessage(error instanceof Error ? error.message : 'Backend transcription failed.')
@@ -11713,14 +12423,15 @@ function App() {
         const endSeconds = Math.max(startSeconds + 0.5, elapsedSeconds)
         adminSubtitleLastCueEndRef.current = endSeconds
         setAdminSubtitleTranscriptSafe((current) => `${current.trim()} ${trimmedFinal}`.trim())
+        const speechTimedCues = splitAdminCueIntoTimedOneLineCues({
+          id: createAdminSubtitleCueId(),
+          startSeconds,
+          endSeconds,
+          text: trimmedFinal
+        })
         setAdminSubtitleCuesSafe((current) => [
           ...current,
-          {
-            id: createAdminSubtitleCueId(),
-            startSeconds,
-            endSeconds,
-            text: trimmedFinal
-          }
+          ...speechTimedCues
         ])
       }
       const normalizedInterim = interimText.trim()
@@ -11930,6 +12641,274 @@ function App() {
       window.clearInterval(adminVideoElapsedIntervalRef.current)
       adminVideoElapsedIntervalRef.current = null
     }
+    adminVideoStartedAtRef.current = 0
+  }
+
+  const stopAdminMicAnalyser = () => {
+    if (!adminMicAnalyserRef.current) return
+    window.clearInterval(adminMicAnalyserRef.current.interval)
+    void adminMicAnalyserRef.current.context.close().catch(() => undefined)
+    adminMicAnalyserRef.current = null
+  }
+
+  const attachAdminLivePreviewStream = (stream: MediaStream | null) => {
+    const video = adminVideoPreviewRef.current
+    if (!video || !stream) return false
+    if (video.srcObject !== stream) {
+      video.srcObject = stream
+    }
+    video.muted = true
+    video.autoplay = true
+    video.playsInline = true
+    const playPreview = () => {
+      void video.play().catch(() => {
+        setAdminVideoRecorderMessage('Camera is ready. Click Record again if the browser paused the preview.')
+      })
+    }
+    if (video.readyState >= 1) {
+      playPreview()
+    } else {
+      video.onloadedmetadata = playPreview
+    }
+    return true
+  }
+
+  const bindAdminVideoPreviewElement = (element: HTMLVideoElement | null) => {
+    adminVideoPreviewRef.current = element
+    if (!element || adminRecordedVideoUrl) return
+    attachAdminLivePreviewStream(adminVideoStreamRef.current || adminCameraPreviewStreamRef.current)
+  }
+
+  const stopAdminCameraPreview = () => {
+    stopAdminMicAnalyser()
+    adminCameraPreviewStreamRef.current?.getTracks().forEach((track) => track.stop())
+    adminCameraPreviewStreamRef.current = null
+    setAdminMicLevel(0)
+    setAdminCameraPreviewActive(false)
+    if (adminVideoPreviewRef.current && !adminRecordedVideoUrl) {
+      adminVideoPreviewRef.current.srcObject = null
+    }
+  }
+
+  const startAdminCameraPreview = async () => {
+    if (
+      adminRecordedVideoUrl ||
+      adminVideoRecorderStatus === 'recording' ||
+      adminVideoRecorderStatus === 'uploading' ||
+      !navigator.mediaDevices?.getUserMedia
+    ) {
+      return
+    }
+    stopAdminCameraPreview()
+    try {
+      const stream = await requestAdminRecorderStream()
+      adminCameraPreviewStreamRef.current = stream
+      const videoTrack = stream.getVideoTracks()[0]
+      const audioTrack = stream.getAudioTracks()[0]
+      setAdminActiveVideoSourceLabel(videoTrack?.label || selectedVideoDeviceLabel)
+      setAdminActiveAudioSourceLabel(audioTrack?.label || selectedAudioDeviceLabel)
+      if (adminShouldBlurBackground) {
+        await applyAdminBackgroundBlurPreference(stream)
+      }
+      attachAdminLivePreviewStream(stream)
+      const AudioContextConstructor =
+        window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+      if (AudioContextConstructor && stream.getAudioTracks().length > 0) {
+        const context = new AudioContextConstructor()
+        const source = context.createMediaStreamSource(stream)
+        const analyser = context.createAnalyser()
+        analyser.fftSize = 256
+        source.connect(analyser)
+        const data = new Uint8Array(analyser.frequencyBinCount)
+        const interval = window.setInterval(() => {
+          analyser.getByteFrequencyData(data)
+          const average = data.reduce((sum, value) => sum + value, 0) / Math.max(1, data.length)
+          setAdminMicLevel(Math.min(100, Math.round(average / 2.2)))
+        }, 120)
+        adminMicAnalyserRef.current = { context, interval }
+      }
+      setAdminCameraPreviewActive(true)
+    } catch (error) {
+      setAdminVideoRecorderMessage(getAdminRecorderErrorMessage(error))
+    }
+  }
+
+  const loadExistingVideoIntoStudio = async (asset: SpeakingSampleVideoAsset) => {
+    if (!asset.topicId || !authSession?.accessToken) return
+    setAdminIsLoadingExistingVideo(true)
+    setAdminVideoRecorderMessage('Loading saved video into the editor…')
+    try {
+      clearAdminRecordedVideo()
+      stopAdminCameraPreview()
+      const response = await fetch(`/api/admin/speaking-sample-videos/${encodeURIComponent(asset.topicId)}/blob`, {
+        headers: { Authorization: `Bearer ${authSession.accessToken}` }
+      })
+      if (!response.ok) {
+        throw new Error('Could not fetch the saved video. Try refreshing the catalog.')
+      }
+      const blob = await response.blob()
+      adminRecordedVideoBlobRef.current = blob
+      setAdminRecordedVideoSizeBytes(blob.size)
+      const nextUrl = URL.createObjectURL(blob)
+      setAdminRecordedVideoUrl(nextUrl)
+      setAdminRecordedVideoDuration(asset.durationSeconds || 0)
+      setAdminRecordedVideoActualDuration(0)
+      setAdminVideoTrimStart(Number(asset.trimStartSeconds || 0))
+      setAdminVideoTrimEnd(Number(asset.trimEndSeconds || asset.durationSeconds || 0))
+      restoreAdminSubtitleSnapshot({
+        transcript: asset.transcript || '',
+        cues: (asset.subtitles || []).map((cue) => ({ ...cue })),
+        style: { ...DEFAULT_ADMIN_SUBTITLE_STYLE, ...(asset.subtitleStyle || {}) }
+      })
+      setAdminVideoEditMode('existing')
+      setAdminVideoStudioStep('review')
+      setAdminVideoRecorderStatus('preview')
+      setAdminPreviewedAsStudent(false)
+      setAdminVideoRecorderMessage('Loaded saved video. Edit trim and subtitles, then publish changes.')
+    } catch (error) {
+      setAdminVideoRecorderMessage(error instanceof Error ? error.message : 'Could not load saved video.')
+    } finally {
+      setAdminIsLoadingExistingVideo(false)
+    }
+  }
+
+  const saveExistingVideoMetadata = async () => {
+    if (!authSession?.accessToken || authSession.role !== 'admin' || !adminSelectedVideoTopic) return
+    if ((adminVideoTrimEnd || adminRecordedVideoDuration) <= adminVideoTrimStart) {
+      setAdminVideoRecorderMessage('Choose a valid trim segment before saving.')
+      return
+    }
+    setAdminIsSavingMetadata(true)
+    setAdminVideoRecorderMessage('Saving subtitle and trim changes…')
+    try {
+      const payload = await fetchJson<{ item: SpeakingSampleVideoAsset }>(
+        `/api/admin/speaking-sample-videos/${encodeURIComponent(adminSelectedVideoTopic.id)}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${authSession.accessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            trimStartSeconds: roundAdminSubtitleSeconds(adminVideoTrimStart),
+            trimEndSeconds: roundAdminSubtitleSeconds(adminVideoTrimEnd || adminRecordedVideoDuration),
+            transcript: adminSubtitleTranscript.trim(),
+            subtitlesJson: JSON.stringify(adminSubtitleCues),
+            subtitleStyleJson: JSON.stringify(adminSubtitleStyle)
+          })
+        }
+      )
+      if (payload.item?.topicId) {
+        setSpeakingSampleVideoAssets((current) => ({
+          ...current,
+          [payload.item.topicId]: payload.item
+        }))
+      }
+      setAdminVideoRecorderMessage('Changes saved. Students will see the updated sample.')
+      setAdminVideoStudioStep('setup')
+      setAdminVideoEditMode('fresh')
+      if (adminRecordedVideoUrl) {
+        URL.revokeObjectURL(adminRecordedVideoUrl)
+      }
+      adminRecordedVideoBlobRef.current = null
+      setAdminRecordedVideoUrl('')
+      setAdminRecordedVideoActualDuration(0)
+      setAdminRecordedVideoSizeBytes(0)
+      setAdminVideoTrimStart(0)
+      setAdminVideoTrimEnd(0)
+      setAdminVideoRecorderStatus('idle')
+    } catch (error) {
+      setAdminVideoRecorderMessage(error instanceof Error ? error.message : 'Could not save changes.')
+    } finally {
+      setAdminIsSavingMetadata(false)
+    }
+  }
+
+  const deleteAdminSpeakingSampleVideo = async (topicId: string, topicTitle: string) => {
+    if (!authSession?.accessToken || authSession.role !== 'admin') return
+    if (!window.confirm(`Remove the saved sample video for "${topicTitle}"? This cannot be undone.`)) return
+    setAdminIsDeletingVideo(true)
+    try {
+      await fetchJson(`/api/admin/speaking-sample-videos/${encodeURIComponent(topicId)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${authSession.accessToken}` }
+      })
+      setSpeakingSampleVideoAssets((current) => {
+        const next = { ...current }
+        delete next[topicId]
+        return next
+      })
+      if (adminSelectedVideoTopicId === topicId) {
+        clearAdminRecordedVideo()
+        setAdminVideoEditMode('fresh')
+        setAdminVideoStudioStep('setup')
+      }
+      setAdminVideoRecorderMessage('Sample video removed.')
+    } catch (error) {
+      setAdminVideoRecorderMessage(error instanceof Error ? error.message : 'Could not delete video.')
+    } finally {
+      setAdminIsDeletingVideo(false)
+    }
+  }
+
+  const requestAdminVideoRecording = () => {
+    if (adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading') return
+    if (!adminRecordedVideoUrl && !adminCameraPreviewStreamRef.current) {
+      setAdminVideoRecorderMessage('Starting camera preview…')
+      void startAdminCameraPreview()
+    } else if (adminCameraPreviewStreamRef.current) {
+      attachAdminLivePreviewStream(adminCameraPreviewStreamRef.current)
+    }
+    setAdminRecordCountdown(3)
+    adminRecordCountdownRef.current = 3
+  }
+
+  const openAdminUploadChecklist = () => {
+    if (!adminRecordedVideoUrl) {
+      setAdminVideoRecorderMessage('Record or load a video before publishing.')
+      return
+    }
+    setAdminUploadChecklistOpen(true)
+  }
+
+  const confirmAdminUploadFromChecklist = () => {
+    setAdminUploadChecklistOpen(false)
+    if (adminVideoEditMode === 'existing') {
+      void saveExistingVideoMetadata()
+      return
+    }
+    void uploadAdminRecordedVideo()
+  }
+
+  const goToAdminStudioStep = (step: AdminVideoStudioStep) => {
+    if (adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading') return
+    if (!canAccessAdminStudioStep(step, Boolean(adminRecordedVideoUrl))) {
+      setAdminVideoRecorderMessage('Record or load a video before opening that step.')
+      return
+    }
+    setAdminVideoStudioStep(step)
+  }
+
+  const handleAdminVideoTopicChange = (topicId: string) => {
+    if (
+      adminRecordedVideoUrl &&
+      topicId !== adminSelectedVideoTopicId &&
+      !window.confirm('Switch questions? Any unsaved work in the editor will be lost.')
+    ) {
+      return
+    }
+    if (topicId !== adminSelectedVideoTopicId && adminRecordedVideoUrl) {
+      clearAdminRecordedVideo()
+      setAdminVideoStudioStep('setup')
+    }
+    setAdminSelectedVideoTopicId(topicId)
+    setAdminVideoRecorderMessage('')
+  }
+
+  const advanceAdminStudioStep = () => {
+    const currentIndex = ADMIN_VIDEO_STUDIO_STEPS.findIndex((item) => item.id === adminVideoStudioStep)
+    const next = ADMIN_VIDEO_STUDIO_STEPS[currentIndex + 1]
+    if (next) setAdminVideoStudioStep(next.id)
   }
 
   const clearAdminRecordedVideo = () => {
@@ -11944,6 +12923,7 @@ function App() {
     setAdminVideoTrimStart(0)
     setAdminVideoTrimEnd(0)
     setAdminVideoUploadProgress(0)
+    setAdminPostProcessingBlurProgress(0)
     setAdminVideoRecorderStatus('idle')
     setAdminVideoPreviewTime(0)
     setAdminBackgroundBlurState(adminShouldBlurBackground ? 'requested' : 'off')
@@ -11964,6 +12944,10 @@ function App() {
     setAdminTimelineAnalysisStatus('idle')
     setAdminSelectedSubtitleCueIds([])
     setAdminSubtitleAutosaveLabel('')
+    setAdminVideoEditMode('fresh')
+    setAdminPreviewedAsStudent(false)
+    setAdminUploadChecklistOpen(false)
+    setAdminStudentPreviewOpen(false)
     adminSubtitleTranscriptRef.current = ''
     adminSubtitleInterimRef.current = ''
     adminSubtitleCuesRef.current = []
@@ -11975,7 +12959,7 @@ function App() {
     const video = adminVideoPreviewRef.current
     if (!video) return
     const duration = Number.isFinite(video.duration) ? Math.max(0, video.duration) : adminRecordedVideoDuration
-    const roundedDuration = Number(duration.toFixed(2))
+    const roundedDuration = roundAdminSubtitleSeconds(duration)
     setAdminRecordedVideoActualDuration(roundedDuration)
     setAdminVideoTrimStart((current) => Math.min(Math.max(0, current), roundedDuration))
     setAdminVideoTrimEnd((current) => {
@@ -12001,18 +12985,35 @@ function App() {
     const video = adminVideoPreviewRef.current
     if (!video || !adminRecordedVideoUrl) return
     video.currentTime = adminVideoTrimStart
+    setAdminVideoPreviewTime(roundAdminSubtitleSeconds(adminVideoTrimStart))
+    void video.play().catch(() => undefined)
+  }
+
+  const playAdminVideoWithTrim = () => {
+    const video = adminVideoPreviewRef.current
+    if (!video || !adminRecordedVideoUrl) return
+    if (shouldEnforceTrimInPreview(adminVideoPreviewMode) && adminVideoTrimEnd > adminVideoTrimStart) {
+      if (video.currentTime < adminVideoTrimStart || video.currentTime >= adminVideoTrimEnd) {
+        video.currentTime = adminVideoTrimStart
+        setAdminVideoPreviewTime(roundAdminSubtitleSeconds(adminVideoTrimStart))
+      }
+    }
     void video.play().catch(() => undefined)
   }
 
   const stopAdminPreviewAtTrimEnd = () => {
     const video = adminVideoPreviewRef.current
     if (!video || !adminRecordedVideoUrl || adminVideoTrimEnd <= adminVideoTrimStart) return
-    setAdminVideoPreviewTime(video.currentTime)
-    if (adminVideoPreviewMode === 'source') return
+    setAdminVideoPreviewTime(roundAdminSubtitleSeconds(video.currentTime))
+    if (!shouldEnforceTrimInPreview(adminVideoPreviewMode)) return
+    if (video.currentTime < adminVideoTrimStart) {
+      video.currentTime = adminVideoTrimStart
+      setAdminVideoPreviewTime(roundAdminSubtitleSeconds(adminVideoTrimStart))
+    }
     if (video.currentTime >= adminVideoTrimEnd) {
       video.pause()
-      video.currentTime = adminVideoTrimStart
-      setAdminVideoPreviewTime(adminVideoTrimStart)
+      video.currentTime = adminVideoTrimEnd
+      setAdminVideoPreviewTime(roundAdminSubtitleSeconds(adminVideoTrimEnd))
     }
   }
 
@@ -12073,8 +13074,12 @@ function App() {
   const previewAdminSubtitleCue = (cue: AdminSubtitleCue) => {
     const video = adminVideoPreviewRef.current
     if (!video || !adminRecordedVideoUrl) return
+    if (adminVideoPreviewMode === 'source' || adminVideoPreviewMode === 'trimmed' || adminVideoPreviewMode === 'noSubtitles') {
+      setAdminVideoPreviewMode('student')
+    }
     setAdminSelectedSubtitleCueId(cue.id)
     video.currentTime = Math.max(0, cue.startSeconds)
+    setAdminVideoPreviewTime(roundAdminSubtitleSeconds(Math.max(0, cue.startSeconds)))
     void video.play().catch(() => undefined)
   }
 
@@ -12082,11 +13087,21 @@ function App() {
     const video = adminVideoPreviewRef.current
     const duration = adminRecordedVideoActualDuration || adminRecordedVideoDuration || adminSubtitleTimelineDuration
     const nextTime = Math.min(Math.max(0, seconds), duration)
-    setAdminVideoPreviewTime(nextTime)
+    setAdminVideoPreviewTime(roundAdminSubtitleSeconds(nextTime))
     if (video && adminRecordedVideoUrl) {
       video.currentTime = nextTime
     }
   }
+
+  const findAdminSubtitleCueAtSeconds = (seconds: number) =>
+    adminSubtitleCuesRef.current
+      .filter((cue) => isAdminSubtitleCueVisibleAtTime(cue, seconds))
+      .reduce<AdminSubtitleCue | null>((bestCue, cue) => {
+        if (!bestCue) return cue
+        if (cue.startSeconds > bestCue.startSeconds) return cue
+        if (cue.startSeconds === bestCue.startSeconds && cue.endSeconds < bestCue.endSeconds) return cue
+        return bestCue
+      }, null)
 
   const addAdminSubtitleCueAtPlayhead = () => {
     const duration = adminRecordedVideoActualDuration || adminRecordedVideoDuration || adminSubtitleTimelineDuration
@@ -12125,13 +13140,15 @@ function App() {
               {
                 ...item,
                 endSeconds: adminVideoPreviewTime,
-                text: words.slice(0, splitAt).join(' ') || item.text
+                text: words.slice(0, splitAt).join(' ') || item.text,
+                notes: filterAdminSubtitleNotesForText(item.notes, words.slice(0, splitAt).join(' ') || item.text)
               },
               {
                 id: createAdminSubtitleCueId(),
                 startSeconds: adminVideoPreviewTime,
                 endSeconds: item.endSeconds,
-                text: words.slice(splitAt).join(' ') || 'New subtitle line'
+                text: words.slice(splitAt).join(' ') || 'New subtitle line',
+                notes: cloneAdminSubtitleNotes(filterAdminSubtitleNotesForText(item.notes, words.slice(splitAt).join(' ') || ''))
               }
             ]
           : item
@@ -12152,7 +13169,8 @@ function App() {
         ...cue,
         id: newCueId,
         startSeconds,
-        endSeconds: startSeconds + duration
+        endSeconds: startSeconds + duration,
+        notes: cloneAdminSubtitleNotes(cue.notes)
       }
     ])
     setAdminSelectedSubtitleCueId(newCueId)
@@ -12191,17 +13209,23 @@ function App() {
     const splitAt = Math.max(1, Math.floor(words.length / 2))
     const firstText = words.slice(0, splitAt).join(' ') || cue.text
     const secondText = words.slice(splitAt).join(' ') || 'New subtitle line'
-    const midpoint = Number(((cue.startSeconds + cue.endSeconds) / 2).toFixed(2))
+    const midpoint = roundAdminSubtitleSeconds((cue.startSeconds + cue.endSeconds) / 2)
     setAdminSubtitleCuesSafe((current) =>
       current.flatMap((item) =>
         item.id === cueId
           ? [
-              { ...item, endSeconds: midpoint, text: firstText },
+              {
+                ...item,
+                endSeconds: midpoint,
+                text: firstText,
+                notes: filterAdminSubtitleNotesForText(item.notes, firstText)
+              },
               {
                 id: createAdminSubtitleCueId(),
                 startSeconds: midpoint,
                 endSeconds: cue.endSeconds,
-                text: secondText
+                text: secondText,
+                notes: cloneAdminSubtitleNotes(filterAdminSubtitleNotesForText(item.notes, secondText))
               }
             ]
           : item
@@ -12220,7 +13244,8 @@ function App() {
           return {
             ...item,
             endSeconds: nextCue.endSeconds,
-            text: `${item.text.trim()} ${nextCue.text.trim()}`.trim()
+            text: `${item.text.trim()} ${nextCue.text.trim()}`.trim(),
+            notes: [...copyAdminSubtitleNotes(item.notes), ...copyAdminSubtitleNotes(nextCue.notes)].slice(0, 12)
           }
         }
         if (index === cueIndex + 1) return []
@@ -12255,6 +13280,21 @@ function App() {
     const bounds = track.getBoundingClientRect()
     const ratio = Math.min(1, Math.max(0, (event.clientX - bounds.left) / Math.max(1, bounds.width)))
     return snapAdminSubtitleSeconds(ratio * adminSubtitleTimelineDuration)
+  }
+
+  const seekAdminTimelineFromPointer = (event: PointerEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement | null
+    if (target?.closest('.adminSubtitleTimelineCue')) return
+    const seconds = getAdminTimelineSeconds(event, event.currentTarget)
+    if (adminVideoPreviewMode === 'source' || adminVideoPreviewMode === 'trimmed' || adminVideoPreviewMode === 'noSubtitles') {
+      setAdminVideoPreviewMode('student')
+    }
+    seekAdminVideoTo(seconds)
+    const cueAtPlayhead = findAdminSubtitleCueAtSeconds(seconds)
+    if (cueAtPlayhead) {
+      setAdminSelectedSubtitleCueId(cueAtPlayhead.id)
+    }
+    setAdminSubtitleDraftMessage(`Playhead moved to ${formatAdminSubtitleTime(seconds)}.`)
   }
 
   const startAdminSubtitleTimelineDrag = (
@@ -12297,9 +13337,10 @@ function App() {
     }
     const handleUp = () => {
       window.removeEventListener('pointermove', handleMove)
+      window.removeEventListener('pointerup', handleUp)
     }
     window.addEventListener('pointermove', handleMove)
-    window.addEventListener('pointerup', handleUp, { once: true })
+    window.addEventListener('pointerup', handleUp)
   }
 
   const startAdminVideoRecording = async () => {
@@ -12315,14 +13356,29 @@ function App() {
 
     try {
       clearAdminRecordedVideo()
+      setAdminVideoEditMode('fresh')
       setAdminVideoRecorderMessage('')
       setAdminVideoUploadProgress(0)
-      const stream = await requestAdminRecorderStream()
+      const previewStream = adminCameraPreviewStreamRef.current
+      const canReusePreviewStream =
+        Boolean(previewStream) &&
+        previewStream?.getVideoTracks().some((track) => track.readyState === 'live') &&
+        previewStream?.getAudioTracks().some((track) => track.readyState === 'live')
+      stopAdminMicAnalyser()
+      const stream = canReusePreviewStream && previewStream ? previewStream : await requestAdminRecorderStream()
+      if (canReusePreviewStream) {
+        adminCameraPreviewStreamRef.current = null
+        setAdminCameraPreviewActive(false)
+      } else {
+        stopAdminCameraPreview()
+      }
       const videoTrack = stream.getVideoTracks()[0]
       const audioTrack = stream.getAudioTracks()[0]
       setAdminActiveVideoSourceLabel(videoTrack?.label || selectedVideoDeviceLabel)
       setAdminActiveAudioSourceLabel(audioTrack?.label || selectedAudioDeviceLabel)
-      const backgroundBlurEnabled = await applyAdminBackgroundBlurPreference(stream)
+      const backgroundBlurEnabled = canReusePreviewStream
+        ? adminBackgroundBlurState === 'enabled'
+        : await applyAdminBackgroundBlurPreference(stream)
       void loadAdminMediaDevices()
       const mimeType = getAdminVideoRecorderMimeType()
       const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined)
@@ -12330,11 +13386,7 @@ function App() {
       adminVideoStreamRef.current = stream
       adminVideoMediaRecorderRef.current = recorder
 
-      if (adminVideoPreviewRef.current) {
-        adminVideoPreviewRef.current.srcObject = stream
-        adminVideoPreviewRef.current.muted = true
-        void adminVideoPreviewRef.current.play().catch(() => undefined)
-      }
+      attachAdminLivePreviewStream(stream)
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -12343,6 +13395,11 @@ function App() {
       }
       recorder.onstop = () => {
         stopAdminSubtitleCapture()
+        const measuredDuration = roundAdminSubtitleSeconds(
+          adminVideoStartedAtRef.current > 0
+            ? (performance.now() - adminVideoStartedAtRef.current) / 1000
+            : adminRecordedVideoDuration
+        )
         const recordedMimeType = recorder.mimeType || mimeType || 'video/webm'
         const videoBlob = new Blob(adminVideoChunksRef.current, { type: recordedMimeType })
         adminRecordedVideoBlobRef.current = videoBlob
@@ -12351,24 +13408,38 @@ function App() {
         const subtitleText = `${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim()
         if (subtitleText && adminSubtitleCuesRef.current.length === 0) {
           setAdminSubtitleTranscriptSafe(subtitleText)
-          setAdminSubtitleCuesSafe(buildAdminSubtitleCuesFromText(subtitleText, adminRecordedVideoDuration))
+          setAdminSubtitleCuesSafe(buildAdminSubtitleCuesFromText(subtitleText, measuredDuration))
         }
         setAdminVideoTrimStart(0)
-        setAdminVideoTrimEnd(Math.max(0, adminRecordedVideoDuration))
+        setAdminVideoTrimEnd(Math.max(0, measuredDuration))
+        setAdminRecordedVideoDuration(measuredDuration)
         const nextUrl = URL.createObjectURL(videoBlob)
         setAdminRecordedVideoUrl(nextUrl)
         setAdminVideoPreviewTime(0)
         setAdminVideoRecorderStatus('preview')
+        setAdminVideoStudioStep('review')
         stopAdminVideoPreviewStream()
+        if (adminShouldGenerateSubtitles) {
+          window.setTimeout(
+            () =>
+              void generateAdminSubtitlesFromBackend({
+                trimStartSeconds: 0,
+                trimEndSeconds: measuredDuration
+              }),
+            350
+          )
+        }
       }
 
       startAdminSubtitleCapture()
       recorder.start(1000)
       setAdminVideoRecorderStatus('recording')
+      setAdminVideoStudioStep('record')
       setAdminRecordedVideoDuration(0)
+      adminVideoStartedAtRef.current = performance.now()
       adminVideoElapsedIntervalRef.current = window.setInterval(() => {
-        setAdminRecordedVideoDuration((seconds) => {
-          const nextSeconds = seconds + 1
+        setAdminRecordedVideoDuration(() => {
+          const nextSeconds = roundAdminSubtitleSeconds((performance.now() - adminVideoStartedAtRef.current) / 1000)
           if (nextSeconds >= ADMIN_VIDEO_MAX_RECORDING_SECONDS) {
             window.setTimeout(() => {
               stopAdminVideoRecording()
@@ -12438,8 +13509,8 @@ function App() {
       formData.append('topicTitle', adminSelectedVideoTopic.title)
       formData.append('prompt', adminSelectedVideoTopic.prompt)
       formData.append('durationSeconds', String(adminRecordedVideoDuration))
-      formData.append('trimStartSeconds', String(Number(adminVideoTrimStart.toFixed(2))))
-      formData.append('trimEndSeconds', String(Number((adminVideoTrimEnd || adminRecordedVideoDuration).toFixed(2))))
+      formData.append('trimStartSeconds', String(roundAdminSubtitleSeconds(adminVideoTrimStart)))
+      formData.append('trimEndSeconds', String(roundAdminSubtitleSeconds(adminVideoTrimEnd || adminRecordedVideoDuration)))
       formData.append('videoDeviceLabel', adminActiveVideoSourceLabel || selectedVideoDeviceLabel)
       formData.append('audioDeviceLabel', adminActiveAudioSourceLabel || selectedAudioDeviceLabel)
       formData.append('backgroundBlurEnabled', String(adminBackgroundBlurState === 'enabled'))
@@ -12493,7 +13564,9 @@ function App() {
         }))
       }
       setAdminVideoUploadProgress(100)
-      setAdminVideoRecorderMessage('Video uploaded and linked to this speaking question.')
+      setAdminVideoRecorderMessage('Sample published — students can now watch it during Part 2 prep.')
+      setAdminVideoStudioStep('setup')
+      setAdminVideoEditMode('fresh')
       if (adminRecordedVideoUrl) {
         URL.revokeObjectURL(adminRecordedVideoUrl)
       }
@@ -14556,7 +15629,94 @@ function App() {
     setListeningLabMode('landing')
     setListeningSkillTrack(null)
     setListeningAttemptStage('bank')
+    setListeningFullTestStage('bank')
     setActivePage('listening')
+  }
+
+  const openListeningFullTestBank = () => {
+    stopListeningPlayback()
+    setListeningLabMode('full-test')
+    setListeningFullTestStage('bank')
+    setListeningBankBookFilter('all')
+    setActivePage('listening')
+  }
+
+  const startListeningFullTest = (specId: string) => {
+    const spec = LISTENING_FULL_TEST_SPECS.find((item) => item.id === specId)
+    if (!spec || !isFullTestComplete(spec.bookNumber, spec.testNumber)) return
+    stopListeningPlayback()
+    setSelectedListeningFullTestId(specId)
+    setListeningFullTestSectionIndex(0)
+    setListeningFullTestSectionScores([])
+    setListeningFullTestAudioPlayed(false)
+    setListeningFullTestStage('exam')
+    setListeningLabMode('full-test')
+    setActivePage('listening_full_test_exam')
+  }
+
+  const playListeningFullTestSection = async () => {
+    if (!activeListeningFullTestSectionSet) return
+    setListeningFullTestAudioPlayed(true)
+    const audioCacheKey = `listening-full-test-${activeListeningFullTestSectionSet.id}`
+    const spokenText = activeListeningFullTestScriptSegments.length
+      ? activeListeningFullTestScriptSegments
+          .map((segment) => (segment.speaker ? `${segment.speaker}: ${segment.text}` : segment.text))
+          .join(' ')
+      : activeListeningFullTestScriptText
+
+    try {
+      if (activeListeningFullTestSectionSet.audioUrl) {
+        try {
+          await playListeningSectionAudioFromUrl(activeListeningFullTestSectionSet.audioUrl)
+          return
+        } catch {
+          // fall through to TTS
+        }
+      }
+      if (audioCacheKey && authSession?.accessToken) {
+        const payload = await fetchJson<{ audioUrl: string; cached?: boolean }>('/api/tts/listening-section-audio', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authSession.accessToken}`
+          },
+          body: JSON.stringify({
+            cacheKey: audioCacheKey,
+            topicId: activeListeningFullTestSectionSet.id,
+            topicTitle: activeListeningFullTestSectionSet.title,
+            section: activeListeningFullTestSectionSet.section,
+            text: activeListeningFullTestScriptText || spokenText
+          })
+        })
+        if (payload.audioUrl) {
+          await playListeningSectionAudioFromUrl(payload.audioUrl)
+          return
+        }
+      }
+      playListeningScriptWithSpeech(
+        spokenText,
+        'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ'
+      )
+    } catch {
+      setListeningExerciseError('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
+    }
+  }
+
+  const advanceListeningFullTestAfterSection = () => {
+    const currentSet = activeListeningFullTestSectionSet
+    if (!currentSet || !activeListeningFullTestSpec) return
+
+    const sectionScore = currentSet.questions.length
+    stopListeningPlayback()
+    setListeningFullTestAudioPlayed(false)
+
+    if (listeningFullTestSectionIndex >= activeListeningFullTestSections.length - 1) {
+      setListeningFullTestSectionScores((prev) => [...prev, sectionScore])
+      setListeningFullTestStage('complete')
+      return
+    }
+
+    setListeningFullTestSectionScores((prev) => [...prev, sectionScore])
+    setListeningFullTestSectionIndex(listeningFullTestSectionIndex + 1)
   }
 
   const openListeningSkillTrack = (track: ListeningSkillTrack) => {
@@ -14632,13 +15792,21 @@ function App() {
     setPracticeActionToast({ id: Date.now(), message: 'ดีมากครับ', variant: 'celebrate' })
   }
 
-  const showPracticeNotebookToast = () => {
-    setPracticeActionToast({ id: Date.now(), message: 'อย่าลืมทบทวนด้วยนะ :)', variant: 'notebook' })
-  }
-
-  const handlePracticeSaveToNotebook = (saveFn: () => void) => {
-    saveFn()
-    showPracticeNotebookToast()
+  const handlePracticeSaveToNotebook = (
+    payload: Parameters<typeof savePlanToNotebook>[0]
+  ) => {
+    savePlanToNotebook({ ...payload, suppressNotice: true })
+    const isReadingSave = payload.preferredSection === 'reading'
+    const isListeningSave = payload.preferredSection === 'listening'
+    setPracticeActionToast({
+      id: Date.now(),
+      message: isReadingSave
+        ? 'บันทึกลง #reading แล้ว — อย่าลืมทบทวนนะ :)'
+        : isListeningSave
+          ? 'บันทึกลง #listening แล้ว — อย่าลืมทบทวนนะ :)'
+          : 'อย่าลืมทบทวนด้วยนะ :)',
+      variant: 'notebook'
+    })
   }
 
   const openReadingLanding = (view: ReadingEntryView = 'levels') => {
@@ -14690,6 +15858,29 @@ function App() {
     setReadingExamError('')
   }
 
+  const openReadingFullTestBank = () => {
+    setReadingWorkspaceMode('bank')
+    setReadingEntryView('full-test')
+    setReadingEntryCategory(null)
+    setSelectedReadingCategory('normal')
+    setSelectedReadingCollection('all')
+    setReadingAttemptStage('bank')
+    setReadingHintQuestionNumber(null)
+    setReadingExamError('')
+    setActivePage('reading')
+  }
+
+  const startReadingFullTest = (specId: string) => {
+    const spec = READING_FULL_TEST_SPECS.find((item) => item.id === specId)
+    if (!spec) return
+    const exam = buildReadingFullTestExam(spec, bankReadingExams)
+    if (!exam) {
+      setReadingExamError('This full reading test is not ready yet.')
+      return
+    }
+    startReadingExam(exam.id)
+  }
+
   const returnToReadingBank = (exam: ReadingExamRecord) => {
     setReadingAttemptStage('bank')
     setReadingExamError('')
@@ -14699,6 +15890,10 @@ function App() {
     }
     if (isReadingJourneyExamId(exam.id)) {
       openReadingJourneyBank()
+      return
+    }
+    if (isReadingFullTestExamId(exam.id)) {
+      openReadingFullTestBank()
       return
     }
     openReadingCategoryBank(exam.category)
@@ -14735,8 +15930,10 @@ function App() {
     const exam = practiceReadingExams.find((item) => item.id === examId) || null
     if (!exam) return
     const isMonthlyExam = isMonthlyReadingCollection(exam)
+    const isFullTestExam = isReadingFullTestExamId(examId)
+    const isJourneyExam = isReadingJourneyExamId(examId)
     setReadingWorkspaceMode('bank')
-    setReadingEntryView(isMonthlyExam ? 'monthly' : 'levels')
+    setReadingEntryView(isMonthlyExam ? 'monthly' : isFullTestExam ? 'full-test' : isJourneyExam ? 'journey' : 'levels')
     setReadingEntryCategory(isMonthlyExam ? null : exam.category)
     setSelectedReadingCategory(exam.category)
     setSelectedReadingCollection('all')
@@ -14991,15 +16188,24 @@ function App() {
     if (!exam || !savedAttempt) return
     const isMonthlyExam = isMonthlyReadingCollection(exam)
     const isJourneyExam = isReadingJourneyExamId(examId)
+    const isFullTestExam = isReadingFullTestExamId(examId)
     setReadingWorkspaceMode('bank')
-    setReadingEntryView(isMonthlyExam ? 'monthly' : isJourneyExam ? 'journey' : 'levels')
-    setReadingEntryCategory(isMonthlyExam ? null : exam.category)
+    setReadingEntryView(
+      isMonthlyExam ? 'monthly' : isFullTestExam ? 'full-test' : isJourneyExam ? 'journey' : 'levels'
+    )
+    setReadingEntryCategory(isMonthlyExam || isFullTestExam ? null : exam.category)
     setSelectedReadingCategory(exam.category)
     setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
+    if (savedAttempt.reportItems.length !== savedAttempt.totalQuestions) {
+      const allQuestions = (exam.parsedPayload?.passages || []).flatMap((passage) => passage.questions || [])
+      const answers = Object.fromEntries(savedAttempt.reportItems.map((item) => [item.number, item.userAnswer]))
+      setReadingReportItems(scoreReadingQuestions(allQuestions, answers))
+    } else {
+      setReadingReportItems(savedAttempt.reportItems)
+    }
     setReadingAnswers(Object.fromEntries(savedAttempt.reportItems.map((item) => [item.number, item.userAnswer])))
-    setReadingReportItems(savedAttempt.reportItems)
     setReadingAttemptStage(stage)
     setReadingHintQuestionNumber(null)
     setReadingExamError('')
@@ -15447,6 +16653,46 @@ function App() {
     )
   }
 
+  const renderAdminSubtitleTextWithNotes = (
+    text: string,
+    notes: AdminSubtitleNote[] | undefined
+  ): ReactNode => {
+    const normalizedText = String(text || '')
+    const normalizedNotes = normalizeAdminSubtitleNotes(notes)
+    if (!normalizedText || normalizedNotes.length === 0) return normalizedText
+
+    const lowerText = normalizedText.toLowerCase()
+    const matches = normalizedNotes
+      .map((note) => {
+        const phrase = normalizeAdminSubtitleNoteText(note.phrase)
+        return {
+          id: note.id,
+          phrase,
+          start: lowerText.indexOf(phrase.toLowerCase())
+        }
+      })
+      .filter((match) => match.phrase && match.start >= 0)
+      .sort((a, b) => a.start - b.start || b.phrase.length - a.phrase.length)
+
+    const pieces: ReactNode[] = []
+    let cursor = 0
+    matches.forEach((match) => {
+      if (match.start < cursor) return
+      if (match.start > cursor) {
+        pieces.push(normalizedText.slice(cursor, match.start))
+      }
+      const end = match.start + match.phrase.length
+      pieces.push(
+        <mark key={`${match.id}-${match.start}`} className="adminSubtitleKnowledgeMark">
+          {normalizedText.slice(match.start, end)}
+        </mark>
+      )
+      cursor = end
+    })
+    if (cursor < normalizedText.length) pieces.push(normalizedText.slice(cursor))
+    return pieces.length ? pieces : normalizedText
+  }
+
   const renderReadingAnswerField = (
     question: ReadingQuestion,
     passage: ReadingPassageRecord | null = activeReadingPassage
@@ -15666,6 +16912,7 @@ function App() {
                     className={
                       activePage === 'listening' ||
                       activePage === 'listening_foundation_exam' ||
+                      activePage === 'listening_full_test_exam' ||
                       activePage === 'listening_builder_exam'
                         ? 'active'
                         : ''
@@ -16073,6 +17320,20 @@ function App() {
                   })}
                 </div>
               </section>
+
+              <section className="listeningJourneySkills listeningFullTestLanding">
+                <div className="listeningJourneySkillsHeader">
+                  <h3>{LISTENING_FULL_TEST_LABEL}</h3>
+                  <p className="meta">{LISTENING_FULL_TEST_LEAD}</p>
+                </div>
+                <button type="button" className="listeningSkillCard listeningSkillCard-fullTest" onClick={openListeningFullTestBank}>
+                  <span className="listeningSkillCardLabel">Cambridge 15–17, 19–20</span>
+                  <strong>Full Listening Test</strong>
+                  <p className="listeningSkillCardSubtitle">40 questions · 4 sections · one part at a time</p>
+                  <small>Cambridge 15, 16, 17, 19 & 20 — each book has Tests 1–4 (40 Q each).</small>
+                  <span className="listeningSkillCardCount">{LISTENING_FULL_TEST_CATALOG_SUMMARY}</span>
+                </button>
+              </section>
             </div>
           )}
 
@@ -16194,6 +17455,66 @@ function App() {
                 )}
               </div>
 
+            </div>
+          )}
+
+          {listeningLabMode === 'full-test' && listeningFullTestStage === 'bank' && (
+            <div className="listeningFoundationPage">
+              <nav className="listeningBankBreadcrumb" aria-label="Listening navigation">
+                <button type="button" className="listeningBankBreadcrumbLink" onClick={openListeningJourney}>
+                  Listening Practice
+                </button>
+                <span aria-hidden="true">/</span>
+                <span>{LISTENING_FULL_TEST_LABEL}</span>
+              </nav>
+
+              <section className="listeningFoundationMission">
+                <div>
+                  <span>Cambridge Full Test</span>
+                  <h2>{LISTENING_FULL_TEST_LABEL}</h2>
+                  <p>{LISTENING_FULL_TEST_LEAD}</p>
+                </div>
+              </section>
+
+              <p className="listeningFoundationBankHint meta">
+                Each Cambridge book has <strong>4 full tests</strong> (Tests 1–4). Pick one — you will complete{' '}
+                <strong>Section 1 → 2 → 3 → 4</strong> in order (10 questions + audio + audioscript per section).
+              </p>
+
+              <div className="listeningFoundationBankGrouped">
+                {listeningFullTestsByBook.map(({ book, tests }) => (
+                  <section key={`full-test-book-${book}`} className="listeningBookGroup">
+                    <header className="listeningBookGroupHeader">
+                      <h3>Cambridge {book}</h3>
+                      <span>
+                        {tests.filter((spec) => isFullTestComplete(spec.bookNumber, spec.testNumber)).length}/
+                        {FULL_TESTS_PER_BOOK} tests ready
+                      </span>
+                    </header>
+                    <div className="listeningFullTestBankGrid">
+                      {tests.map((spec) => {
+                        const ready = isFullTestComplete(spec.bookNumber, spec.testNumber)
+                        return (
+                        <button
+                          key={spec.id}
+                          type="button"
+                          className={`listeningFullTestCard ${ready ? '' : 'is-unavailable'}`}
+                          disabled={!ready}
+                          onClick={() => startListeningFullTest(spec.id)}
+                        >
+                          <p className="listeningFullTestCardEyebrow">Test {spec.testNumber}</p>
+                          <h4>{spec.title}</h4>
+                          <p>{spec.subtitle}</p>
+                          <span className="listeningFullTestCardMeta">
+                            {ready ? 'Section 1 → 4 · 40 questions' : 'Content incomplete'}
+                          </span>
+                        </button>
+                        )
+                      })}
+                    </div>
+                  </section>
+                ))}
+              </div>
             </div>
           )}
 
@@ -16474,16 +17795,14 @@ function App() {
                         <ParaphraseBridgeActions
                           onKnewIt={showPracticeKnewItToast}
                           onSaveToNotebook={() =>
-                            handlePracticeSaveToNotebook(() =>
-                              savePlanToNotebook({
-                                criterion: 'Listening Paraphrase',
-                                quote: `Q${item.number}: ${item.prompt}`,
-                                fix: item.paraphrasedVocabulary || item.correctAnswer,
-                                thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
-                                preferredSection: 'listening',
-                                successNotice: 'Added to notebook'
-                              })
-                            )
+                            handlePracticeSaveToNotebook({
+                              criterion: 'Listening Paraphrase',
+                              quote: `Q${item.number}: ${item.prompt}`,
+                              fix: item.paraphrasedVocabulary || item.correctAnswer,
+                              thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
+                              preferredSection: 'listening',
+                              successNotice: 'Added to notebook'
+                            })
                           }
                         />
                       </div>
@@ -16586,16 +17905,14 @@ function App() {
                   setListeningFoundationAnswerState((current) => ({ ...current, [questionId]: 'correct' }))
                 }}
                 onSaveNotebook={(question, payload?: ListeningNotebookSavePayload) => {
-                  handlePracticeSaveToNotebook(() =>
-                    savePlanToNotebook({
-                      criterion: payload?.criterion || 'Listening Foundation',
-                      quote: payload?.quote || `Q${question.number}: ${question.stem}`,
-                      fix: payload?.fix || `${question.passageKeyword} = ${question.questionKeyword}`,
-                      thaiMeaning: payload?.thaiMeaning || question.thaiMeaning,
-                      preferredSection: 'listening',
-                      successNotice: 'Added to notebook · saved to #listening'
-                    })
-                  )
+                  handlePracticeSaveToNotebook({
+                    criterion: payload?.criterion || 'Listening Foundation',
+                    quote: payload?.quote || `Q${question.number}: ${question.stem}`,
+                    fix: payload?.fix || `${question.passageKeyword} = ${question.questionKeyword}`,
+                    thaiMeaning: payload?.thaiMeaning || question.thaiMeaning,
+                    preferredSection: 'listening',
+                    successNotice: 'Added to notebook · saved to #listening'
+                  })
                 }}
               />
             ) : (
@@ -16609,6 +17926,127 @@ function App() {
                   }}
                 >
                   Back to Exam Bank
+                </button>
+              </div>
+            )}
+          </section>
+        ) : (
+          <section className="panel full">
+            <div className="emptyNotebook">
+              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
+      ) : activePage === 'listening_full_test_exam' ? (
+        canAccessListening ? (
+          <section className="panel full listeningFoundationPage listeningFoundationExamPage listeningSectionExamHost listeningFullTestHost">
+            {listeningFullTestStage === 'complete' && activeListeningFullTestSpec ? (
+              <article className="listeningFullTestSummary">
+                <header className="listeningFullTestSummaryHero">
+                  <div>
+                    <p className="listeningFullTestCardEyebrow">Full test complete</p>
+                    <h3>{activeListeningFullTestSpec.title}</h3>
+                    <p className="meta">You finished all 4 sections — 40 questions total.</p>
+                  </div>
+                  <div className="listeningFullTestSummaryScore">
+                    <strong>{listeningFullTestSectionScores.reduce((sum, n) => sum + n, 0)}/40</strong>
+                    <span>sections mastered</span>
+                  </div>
+                </header>
+                <div className="listeningFullTestSummaryGrid">
+                  {activeListeningFullTestSections.map((sectionSet, index) => (
+                    <article key={sectionSet.id}>
+                      <span>Section {sectionSet.section}</span>
+                      <strong>{listeningFullTestSectionScores[index] ?? 0}/10</strong>
+                    </article>
+                  ))}
+                </div>
+                <button type="button" className="secondary" onClick={openListeningFullTestBank}>
+                  Back to Full Tests
+                </button>
+              </article>
+            ) : listeningFullTestExamConfig && activeListeningFullTestSectionSet && activeListeningFullTestSpec ? (
+              <>
+                <div className="listeningFullTestProgress">
+                  <div className="listeningFullTestProgressCopy">
+                    <span>{activeListeningFullTestSpec.title}</span>
+                    <strong>
+                      Section {activeListeningFullTestSectionSet.section} of 4
+                    </strong>
+                    <p>
+                      Questions {activeListeningFullTestSectionSet.section === 1 ? '1–10' : activeListeningFullTestSectionSet.section === 2 ? '11–20' : activeListeningFullTestSectionSet.section === 3 ? '21–30' : '31–40'}
+                      {' · '}
+                      Complete this part, review the audioscript, then continue.
+                    </p>
+                  </div>
+                  <div className="listeningFullTestSectionRail" aria-label="Full test progress">
+                    {activeListeningFullTestSections.map((sectionSet, index) => (
+                      <div
+                        key={sectionSet.id}
+                        className={`listeningFullTestSectionChip ${
+                          index === listeningFullTestSectionIndex ? 'is-active' : ''
+                        } ${index < listeningFullTestSectionIndex ? 'is-done' : ''}`}
+                      >
+                        <span>Part {sectionSet.section}</span>
+                        <small>Q{sectionSet.section === 1 ? '1–10' : sectionSet.section === 2 ? '11–20' : sectionSet.section === 3 ? '21–30' : '31–40'}</small>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <ListeningSectionExamView
+                  config={{
+                    ...listeningFullTestExamConfig,
+                    title: `Section ${activeListeningFullTestSectionSet.section}`,
+                    subtitle: activeListeningFullTestSectionSet.title
+                  }}
+                  excerptDrill={Boolean(listeningFullTestExamConfig.excerptDrill)}
+                  playbackState={listeningPlaybackState}
+                  playbackPosition={listeningPlaybackPosition}
+                  playbackDuration={listeningPlaybackDuration}
+                  audioPlayed={listeningFullTestAudioPlayed}
+                  onTogglePlay={() => {
+                    if (listeningPlaybackState === 'playing') {
+                      pauseListeningPlayback()
+                    } else if (listeningPlaybackState === 'paused') {
+                      resumeListeningPlayback()
+                    } else {
+                      void playListeningFullTestSection()
+                    }
+                  }}
+                  onSeek={seekListeningPlayback}
+                  onBack={() => {
+                    stopListeningPlayback()
+                    openListeningFullTestBank()
+                  }}
+                  onQuestionComplete={(questionId) => {
+                    setListeningFoundationAnswerState((current) => ({ ...current, [questionId]: 'correct' }))
+                  }}
+                  onSaveNotebook={(question, payload?: ListeningNotebookSavePayload) => {
+                    handlePracticeSaveToNotebook({
+                      criterion: payload?.criterion || 'Listening Full Test',
+                      quote: payload?.quote || `Q${question.number}: ${question.stem}`,
+                      fix: payload?.fix || `${question.passageKeyword} = ${question.questionKeyword}`,
+                      thaiMeaning: payload?.thaiMeaning || question.thaiMeaning,
+                      preferredSection: 'listening',
+                      successNotice: 'Added to notebook · saved to #listening'
+                    })
+                  }}
+                  continueAfterReportLabel={
+                    listeningFullTestSectionIndex >= activeListeningFullTestSections.length - 1
+                      ? 'Finish full test · View summary'
+                      : `Continue to Section ${activeListeningFullTestSections[listeningFullTestSectionIndex + 1]?.section ?? listeningFullTestSectionIndex + 2}`
+                  }
+                  onContinueAfterReport={advanceListeningFullTestAfterSection}
+                />
+              </>
+            ) : (
+              <div className="emptyNotebook">
+                <p>No full listening test is selected yet.</p>
+                <button type="button" onClick={openListeningFullTestBank}>
+                  Back to Full Tests
                 </button>
               </div>
             )}
@@ -16660,16 +18098,14 @@ function App() {
                   stopListeningPlayback()
                 }}
                 onSaveNotebook={(question, payload?: ListeningNotebookSavePayload) => {
-                  handlePracticeSaveToNotebook(() =>
-                    savePlanToNotebook({
-                      criterion: payload?.criterion || 'Listening Paraphrase Drill',
-                      quote: payload?.quote || `${listeningBuilderExamConfig.title} · Q${question.number} · ${question.questionKeyword}`,
-                      fix: payload?.fix || `${question.questionKeyword} = ${question.evidence}`,
-                      thaiMeaning: payload?.thaiMeaning || question.thaiMeaning || question.explanationThai || '',
-                      preferredSection: 'listening',
-                      successNotice: 'Added to notebook · saved to #listening'
-                    })
-                  )
+                  handlePracticeSaveToNotebook({
+                    criterion: payload?.criterion || 'Listening Paraphrase Drill',
+                    quote: payload?.quote || `${listeningBuilderExamConfig.title} · Q${question.number} · ${question.questionKeyword}`,
+                    fix: payload?.fix || `${question.questionKeyword} = ${question.evidence}`,
+                    thaiMeaning: payload?.thaiMeaning || question.thaiMeaning || question.explanationThai || '',
+                    preferredSection: 'listening',
+                    successNotice: 'Added to notebook · saved to #listening'
+                  })
                 }}
               />
             ) : (
@@ -16710,6 +18146,8 @@ function App() {
               <h2>
                 {readingEntryView === 'journey'
                   ? 'Reading Quest Log'
+                  : readingEntryView === 'full-test'
+                    ? READING_FULL_TEST_LABEL
                   : selectedReadingEntryChoice
                     ? selectedReadingEntryChoice.title
                     : readingEntryView === 'monthly'
@@ -16719,6 +18157,8 @@ function App() {
               <p>
                 {readingEntryView === 'journey'
                   ? 'สมุดภารกิจ Reading — เคลียร์แต่ละด่านที่ 80%+ เพื่อเปิดด่านถัดไป'
+                  : readingEntryView === 'full-test'
+                    ? READING_FULL_TEST_LEAD
                   : selectedReadingEntryChoice
                     ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
                     : readingEntryView === 'monthly'
@@ -16770,6 +18210,94 @@ function App() {
                   <small>ชุดข้อสอบ IELTS Academic Reading แยกตามเดือน</small>
                   <span className="readingEntryCount">{monthlyReadingExams.length} exams</span>
                 </button>
+                <button
+                  type="button"
+                  className="readingEntryCard readingEntryCard-fullTest"
+                  style={{ '--motion-stagger': 4 } as CSSProperties}
+                  onClick={openReadingFullTestBank}
+                >
+                  <span className="readingEntryLabel">Full Exam</span>
+                  <strong>{READING_FULL_TEST_LABEL}</strong>
+                  <span className="readingEntrySubtitle">สอบเต็ม 3 passages · 40 ข้อ</span>
+                  <small>{READING_FULL_TEST_LEAD}</small>
+                  <span className="readingEntryCount">{READING_FULL_TEST_CATALOG_SUMMARY}</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && readingEntryView === 'full-test' && (
+            <div className="readingEntryShell">
+              <div className="readingMonthBank">
+                <div className="readingBankWindowHeader">
+                  <div>
+                    <span className="readingEntryLabel">{READING_FULL_TEST_LABEL}</span>
+                    <h3>Cambridge Full Reading</h3>
+                    <p>{READING_FULL_TEST_LEAD}</p>
+                  </div>
+                  <div className="readingBankWindowActions">
+                    <span className="readingEntryCount">
+                      {readingFullTestExams.length}/{READING_FULL_TEST_SPECS.length} tests ready
+                    </span>
+                    <button type="button" className="secondary" onClick={() => openReadingLanding('levels')}>
+                      Back to Categories
+                    </button>
+                  </div>
+                </div>
+                <p className="meta">
+                  Each book has <strong>4 full tests</strong> (Tests 1–4). Pick one — you will answer all{' '}
+                  <strong>40 questions across 3 passages</strong> in one sitting, like the real exam.
+                </p>
+                <div className="listeningFoundationBankGrouped">
+                  {readingFullTestsByBook.map(({ book, tests }) => (
+                    <section key={`reading-full-test-book-${book}`} className="listeningBookGroup">
+                      <header className="listeningBookGroupHeader">
+                        <h3>Cambridge {book}</h3>
+                        <span>
+                          {tests.filter((spec) => isFullReadingTestComplete(spec.bookNumber, spec.testNumber, bankReadingExams)).length}/
+                          {FULL_READING_TESTS_PER_BOOK} tests ready
+                        </span>
+                      </header>
+                      <div className="listeningFullTestBankGrid">
+                        {tests.map((spec) => {
+                          const ready = isFullReadingTestComplete(spec.bookNumber, spec.testNumber, bankReadingExams)
+                          const attempt = readingAttemptByExamId[spec.id]
+                          return (
+                            <article
+                              key={spec.id}
+                              className={`listeningFullTestCard ${ready ? '' : 'is-unavailable'}`}
+                            >
+                              <p className="listeningFullTestCardEyebrow">Test {spec.testNumber}</p>
+                              <h4>{spec.title}</h4>
+                              <p>{spec.subtitle}</p>
+                              <span className="listeningFullTestCardMeta">
+                                {ready
+                                  ? attempt
+                                    ? `${attempt.correctCount}/${attempt.totalQuestions} correct · ${attempt.accuracy}%`
+                                    : '3 passages · 40 questions'
+                                  : 'Content incomplete'}
+                              </span>
+                              <div className="readingStageExamActions">
+                                <button type="button" disabled={!ready} onClick={() => startReadingFullTest(spec.id)}>
+                                  {attempt ? 'Retry Exam' : 'Open Exam'}
+                                </button>
+                                {attempt && (
+                                  <button
+                                    type="button"
+                                    className="secondary"
+                                    onClick={() => openReadingReview(spec.id, 'report')}
+                                  >
+                                    ดู report
+                                  </button>
+                                )}
+                              </div>
+                            </article>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -17917,6 +19445,9 @@ function App() {
                   <h3>{activeReadingExam.title} {readingAttemptStage === 'review' ? 'Mistake Review' : 'Report'}</h3>
                   <p className="meta">
                     Score: {readingReportItems.filter((item) => item.isCorrect).length}/{readingReportItems.length}
+                    {isReadingFullTestExamId(activeReadingExam.id)
+                      ? ` · ${activeReadingPassages.length} passages · 40 questions total`
+                      : ''}
                   </p>
                 </div>
                 <div className="controls">
@@ -17967,22 +19498,6 @@ function App() {
                   </article>
                 ))}
               </div>
-
-              {notebookSaveNotice && (
-                <div className="notebookSaveToast" role="status" aria-live="polite">
-                  <span className="notebookSaveToastSparkle" aria-hidden="true">
-                    ✦
-                  </span>
-                  <div>
-                    <p className="notebookSaveToastTitle">
-                      {notebookSaveNotice.includes('#reading') ? 'Added to notebook' : 'Added to notebook'}
-                    </p>
-                    <p className="notebookSaveToastText">
-                      {notebookSaveNotice.includes('#reading') ? 'Saved in #reading with your vocab notes.' : 'Saved in your Reading notebook.'}
-                    </p>
-                  </div>
-                </div>
-              )}
 
               {readingAttemptStage === 'review' && visibleReadingReportItems.length === 0 && (
                 <div className="emptyNotebook">
@@ -18036,28 +19551,38 @@ function App() {
                         )}
                         <blockquote>{reportBlockquote}</blockquote>
                       </div>
-                      {(item.paraphrasedVocabulary || vocabSupport || paraphraseEquation) && (
-                        <div className="readingParaphraseCard">
-                          <p className="sectionLabel">Important vocab / phrase</p>
-                          {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
-                          {vocabSupport?.meaning && <p className="meta">TH: {vocabSupport.meaning}</p>}
-                          <ParaphraseBridgeActions
-                            onKnewIt={showPracticeKnewItToast}
-                            onSaveToNotebook={() =>
-                              handlePracticeSaveToNotebook(() =>
-                                savePlanToNotebook({
-                                  criterion: 'Reading Paraphrase',
-                                  quote: `Q${item.number}: ${item.prompt}`,
-                                  fix: item.paraphrasedVocabulary || vocabSupport?.notebookFix || item.correctAnswer,
-                                  thaiMeaning: paraphraseEquation?.thaiMeaning || vocabSupport?.meaning || item.explanationThai,
-                                  preferredSection: 'reading',
-                                  successNotice: 'Added to notebook'
-                                })
-                              )
-                            }
-                          />
-                        </div>
-                    )}
+                      <div className="readingParaphraseCard readingParaphraseCard-report">
+                        {(item.paraphrasedVocabulary || vocabSupport?.meaning) && (
+                          <>
+                            <p className="sectionLabel">Important vocab / phrase</p>
+                            {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
+                            {vocabSupport?.meaning && <p className="meta">TH: {vocabSupport.meaning}</p>}
+                          </>
+                        )}
+                        <ParaphraseBridgeActions
+                          variant="report"
+                          knewLabel="Yes, I knew it"
+                          saveLabel="Add to Notebook"
+                          onKnewIt={showPracticeKnewItToast}
+                          onSaveToNotebook={() =>
+                            handlePracticeSaveToNotebook({
+                              criterion: 'Reading Paraphrase',
+                              quote: `Q${item.number}: ${item.prompt}`,
+                              fix:
+                                item.paraphrasedVocabulary ||
+                                vocabSupport?.notebookFix ||
+                                paraphraseEquation?.passageKeyword ||
+                                item.correctAnswer,
+                              thaiMeaning:
+                                paraphraseEquation?.thaiMeaning ||
+                                vocabSupport?.meaning ||
+                                item.explanationThai,
+                              preferredSection: 'reading',
+                              successNotice: 'Added to notebook'
+                            })
+                          }
+                        />
+                      </div>
                     </article>
                   )
                 })}
@@ -20017,30 +21542,44 @@ function App() {
                   <div className="adminSectionHeader">
                     <div>
                       <p className="sectionLabel">Speaking Sample Videos</p>
-                      <h3>Record Part 2 Samples</h3>
+                      <h3>Sample Video Studio</h3>
                     </div>
                     <span className="adminInlineStatus">
-                      {isLoadingSpeakingSampleVideos ? 'Loading...' : `${uploadedSpeakingSampleVideoCount} uploaded`}
+                      {isLoadingSpeakingSampleVideos ? 'Loading...' : `${uploadedSpeakingSampleVideoCount} published`}
                     </span>
                   </div>
-                  <div className="adminWorkflowCard">
-                    <h4>Phase 4 Recorder</h4>
-                    <ol className="adminWorkflowList">
-                      <li>Choose a Part 2 question.</li>
-                      <li>Choose the camera and microphone source before recording.</li>
-                      <li>Optionally request native background blur, then record, trim, preview, and upload to private storage.</li>
-                    </ol>
+                  <div className="adminVideoWizardSteps" aria-label="Studio workflow">
+                    {ADMIN_VIDEO_STUDIO_STEPS.map((step, index) => {
+                      const currentIndex = ADMIN_VIDEO_STUDIO_STEPS.findIndex((item) => item.id === adminVideoStudioStep)
+                      const isComplete = index < currentIndex
+                      const isActive = step.id === adminVideoStudioStep
+                      const isLocked = !canAccessAdminStudioStep(step.id, Boolean(adminRecordedVideoUrl))
+                      return (
+                        <button
+                          key={step.id}
+                          type="button"
+                          className={`adminVideoWizardStep ${isActive ? 'active' : ''} ${isComplete ? 'complete' : ''} ${isLocked ? 'locked' : ''}`}
+                          onClick={() => goToAdminStudioStep(step.id)}
+                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading' || isLocked}
+                          title={isLocked ? 'Record or load a video first' : step.description}
+                        >
+                          <span className="adminVideoWizardStepIndex">{index + 1}</span>
+                          <span className="adminVideoWizardStepCopy">
+                            <strong>{step.label}</strong>
+                            <small>{step.description}</small>
+                          </span>
+                        </button>
+                      )
+                    })}
                   </div>
-                  <div className="adminVideoStudio">
+                  <div className="adminVideoStudio adminVideoStudio-layout">
+                    {(adminVideoStudioStep === 'setup' || adminVideoStudioStep === 'record') ? (
                     <div className="adminVideoQuestionPicker">
                       <label className="adminSearchField">
                         <span>Part 2 question</span>
                         <select
                           value={adminSelectedVideoTopic?.id || ''}
-                          onChange={(event) => {
-                            setAdminSelectedVideoTopicId(event.target.value)
-                            setAdminVideoRecorderMessage('')
-                          }}
+                          onChange={(event) => handleAdminVideoTopicChange(event.target.value)}
                           disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
                         >
                           {topics.map((topic) => (
@@ -20128,6 +21667,18 @@ function App() {
                       <label className="adminVideoBlurToggle">
                         <input
                           type="checkbox"
+                          checked={Boolean(adminSubtitleStyle.videoFlipHorizontal)}
+                          onChange={(event) => updateAdminSubtitleStyle({ videoFlipHorizontal: event.target.checked })}
+                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
+                        />
+                        <span>
+                          <strong>Flip video</strong>
+                          <small>Mirror the camera horizontally in admin preview and student playback.</small>
+                        </span>
+                      </label>
+                      <label className="adminVideoBlurToggle">
+                        <input
+                          type="checkbox"
                           checked={adminShouldGenerateSubtitles}
                           onChange={(event) => {
                             const enabled = event.target.checked
@@ -20161,31 +21712,73 @@ function App() {
                           ) : null}
                         </div>
                       ) : null}
+                      {adminSelectedVideoAsset ? (
+                        <div className="adminVideoExistingActions">
+                          <p className="meta">This question already has a published sample.</p>
+                          <div className="adminActionRow">
+                            <button
+                              type="button"
+                              className="secondary"
+                              onClick={() => void loadExistingVideoIntoStudio(adminSelectedVideoAsset)}
+                              disabled={adminIsLoadingExistingVideo || adminVideoRecorderStatus === 'recording'}
+                            >
+                              {adminIsLoadingExistingVideo ? 'Loading…' : 'Edit existing sample'}
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary adminStudioButton-danger"
+                              onClick={() =>
+                                void deleteAdminSpeakingSampleVideo(adminSelectedVideoAsset.topicId, adminSelectedVideoAsset.topicTitle)
+                              }
+                              disabled={adminIsDeletingVideo}
+                            >
+                              {adminIsDeletingVideo ? 'Removing…' : 'Remove sample'}
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
+                      {adminVideoStudioStep === 'setup' ? (
+                        <div className="adminActionRow">
+                            <button type="button" className="adminStudioButton-primary" onClick={advanceAdminStudioStep} disabled={!adminSelectedVideoTopic}>
+                              Continue to Record
+                            </button>
+                        </div>
+                      ) : null}
                     </div>
-                    <div className="adminVideoRecorderPanel">
+                    ) : null}
+                    <div className="adminVideoRecorderPanel adminVideoRecorderPanel-main">
                       <div className={`adminVideoPreviewFrame adminVideoPreviewFrame-${adminResponsivePreviewMode}`}>
                         {adminRecordedVideoUrl ? (
                           <video
-                            ref={adminVideoPreviewRef}
-                            className="adminVideoPreview"
+                            ref={bindAdminVideoPreviewElement}
+                            className={`adminVideoPreview ${adminSubtitleStyle.videoFlipHorizontal ? 'is-flipped' : ''}`.trim()}
                             src={adminRecordedVideoUrl}
                             controls
                             preload="metadata"
                             onLoadedMetadata={handleAdminRecordedVideoMetadata}
                             onTimeUpdate={stopAdminPreviewAtTrimEnd}
-                            onSeeked={(event) => setAdminVideoPreviewTime(event.currentTarget.currentTime)}
+                            onSeeked={(event) => setAdminVideoPreviewTime(roundAdminSubtitleSeconds(event.currentTarget.currentTime))}
+                            onPause={(event) => setAdminVideoPreviewTime(roundAdminSubtitleSeconds(event.currentTarget.currentTime))}
                           />
                         ) : (
                           <video
-                            ref={adminVideoPreviewRef}
-                            className="adminVideoPreview"
+                            ref={bindAdminVideoPreviewElement}
+                            className={`adminVideoPreview ${adminSubtitleStyle.videoFlipHorizontal ? 'is-flipped' : ''}`.trim()}
                             playsInline
                             muted
                             autoPlay
                           />
                         )}
-                        {adminVideoRecorderStatus === 'idle' && !adminRecordedVideoUrl ? (
-                          <div className="adminVideoPreviewEmpty">Camera preview appears here after Record.</div>
+                        {adminVideoRecorderStatus === 'idle' && !adminRecordedVideoUrl && adminCameraPreviewActive ? (
+                          <div className="adminVideoPreviewLiveBadge">Live camera preview</div>
+                        ) : null}
+                        {adminRecordCountdown !== null && adminRecordCountdown > 0 ? (
+                          <div className="adminVideoCountdownOverlay" aria-live="assertive">
+                            {adminRecordCountdown}
+                          </div>
+                        ) : null}
+                        {adminVideoRecorderStatus === 'idle' && !adminRecordedVideoUrl && !adminCameraPreviewActive && adminRecordCountdown === null ? (
+                          <div className="adminVideoPreviewEmpty">Allow camera access, then your live preview appears here.</div>
                         ) : null}
                         {adminShowSafeAreas && adminRecordedVideoUrl ? (
                           <div className="adminVideoSafeAreaGuides" aria-hidden="true">
@@ -20200,28 +21793,51 @@ function App() {
                             onClick={() => focusAdminSubtitleCueEditor(adminActiveSubtitleCue.id)}
                             aria-label="Edit active subtitle line"
                           >
-                            <span>{adminActiveSubtitleCue.text}</span>
+                            <span>{renderAdminSubtitleTextWithNotes(adminActiveSubtitleCue.text, adminActiveSubtitleCue.notes)}</span>
                           </button>
+                        ) : null}
+                        {adminVisibleSubtitleNotes.length > 0 ? (
+                          <div className="adminVideoKnowledgeStack" aria-label="Highlighted subtitle details">
+                            {adminVisibleSubtitleNotes.map((note) => (
+                              <article key={`${note.cueId}-${note.id}`} className="adminVideoKnowledgeCard">
+                                <strong>{note.phrase}</strong>
+                                <p>{note.detail}</p>
+                              </article>
+                            ))}
+                          </div>
                         ) : null}
                       </div>
                       {adminRecordedVideoUrl ? (
                         <div className="adminVideoPreviewModes" aria-label="Video preview mode">
-                          {[
-                            ['student', 'Student view'],
-                            ['source', 'Source'],
-                            ['trimmed', 'Trimmed'],
-                            ['noSubtitles', 'No subtitles'],
-                            ['styledSubtitles', 'Styled']
-                          ].map(([mode, label]) => (
+                          {(
+                            [
+                              ['student', 'Student view'],
+                              ['source', 'Source'],
+                              ['trimmed', 'Trimmed'],
+                              ['noSubtitles', 'No subtitles'],
+                              ['styledSubtitles', 'Styled']
+                            ] as const
+                          ).map(([mode, label]) => (
                             <button
                               key={mode}
                               type="button"
                               className={adminVideoPreviewMode === mode ? 'active' : ''}
-                              onClick={() => setAdminVideoPreviewMode(mode as AdminVideoPreviewMode)}
+                              title={getPreviewModeDescription(mode)}
+                              onClick={() => setAdminVideoPreviewMode(mode)}
                             >
                               {label}
                             </button>
                           ))}
+                          <button
+                            type="button"
+                            className="secondary"
+                            onClick={() => {
+                              setAdminVideoPreviewMode('student')
+                              setAdminStudentPreviewOpen(true)
+                            }}
+                          >
+                            Full-screen student preview
+                          </button>
                           <button
                             type="button"
                             className={adminShowSafeAreas ? 'active' : ''}
@@ -20241,13 +21857,158 @@ function App() {
                           ))}
                         </div>
                       ) : null}
+                      {adminRecordedVideoUrl && adminSubtitleCues.length > 0 ? (
+                        <div className="adminSubtitleTimeline adminSubtitleTimeline-underPreview" aria-label="Subtitle timeline">
+                          <div className="adminSubtitleTimelineHeader">
+                            <div>
+                              <span>Visual timeline</span>
+                              <strong>{formatAdminSubtitleTime(adminSubtitleTimelineDuration)}</strong>
+                            </div>
+                            <div className="adminSubtitleTimelineActions">
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() => adminSelectedSubtitleCue && setAdminSubtitleCueEdgeToPlayhead(adminSelectedSubtitleCue.id, 'start')}
+                                disabled={!adminSelectedSubtitleCue}
+                              >
+                                Start here
+                              </button>
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() => adminSelectedSubtitleCue && setAdminSubtitleCueEdgeToPlayhead(adminSelectedSubtitleCue.id, 'end')}
+                                disabled={!adminSelectedSubtitleCue}
+                              >
+                                End here
+                              </button>
+                            </div>
+                          </div>
+                          <div className="adminSubtitleTimelineZoom">
+                            <label>
+                              <span>Zoom</span>
+                              <input
+                                type="range"
+                                min="1"
+                                max="4"
+                                step="0.25"
+                                value={adminSubtitleTimelineZoom}
+                                onChange={(event) => setAdminSubtitleTimelineZoom(Number(event.target.value))}
+                              />
+                            </label>
+                            <code>{adminSubtitleTimelineZoom.toFixed(2)}x</code>
+                          </div>
+                          <div className="adminSubtitleTimelineViewport">
+                            <div
+                              className="adminSubtitleTimelineTrack"
+                              style={{ width: `${adminSubtitleTimelineZoom * 100}%` }}
+                              onPointerDown={seekAdminTimelineFromPointer}
+                            >
+                              {adminTimelineThumbnails.length > 0 ? (
+                                <div className="adminSubtitleThumbnailStrip" aria-hidden="true">
+                                  {adminTimelineThumbnails.map((thumbnail) => (
+                                    <img
+                                      key={`thumb-${thumbnail.time.toFixed(2)}`}
+                                      src={thumbnail.dataUrl}
+                                      alt=""
+                                      style={{ left: `${(thumbnail.time / adminSubtitleTimelineDuration) * 100}%` }}
+                                    />
+                                  ))}
+                                </div>
+                              ) : null}
+                              {adminSubtitleWaveformSamples.length > 0 ? (
+                                <div className="adminSubtitleWaveform" aria-hidden="true">
+                                  {adminSubtitleWaveformSamples.map((sample, index) => (
+                                    <span
+                                      key={`wave-${index}`}
+                                      style={{
+                                        height: `${Math.max(10, sample * 48)}%`,
+                                        left: `${(index / Math.max(1, adminSubtitleWaveformSamples.length - 1)) * 100}%`
+                                      }}
+                                    />
+                                  ))}
+                                </div>
+                              ) : null}
+                              <div
+                                className="adminSubtitleTimelinePlayhead"
+                                style={{ left: `${Math.min(100, (adminVideoPreviewTime / adminSubtitleTimelineDuration) * 100)}%` }}
+                              />
+                              {adminVideoTrimEnd > adminVideoTrimStart ? (
+                                <div
+                                  className="adminSubtitleTimelineTrim"
+                                  style={{
+                                    left: `${(adminVideoTrimStart / adminSubtitleTimelineDuration) * 100}%`,
+                                    width: `${((adminVideoTrimEnd - adminVideoTrimStart) / adminSubtitleTimelineDuration) * 100}%`
+                                  }}
+                                />
+                              ) : null}
+                              {adminSubtitleCues.map((cue, index) => {
+                                const left = Math.max(0, (cue.startSeconds / adminSubtitleTimelineDuration) * 100)
+                                const width = Math.max(1.5, ((cue.endSeconds - cue.startSeconds) / adminSubtitleTimelineDuration) * 100)
+                                const qualityWarning =
+                                  cue.text.trim().split(/\s+/).filter(Boolean).length > 10 ||
+                                  cue.text.trim().length / Math.max(0.25, cue.endSeconds - cue.startSeconds) > 20
+                                return (
+                                  <button
+                                    key={`timeline-${cue.id}`}
+                                    type="button"
+                                    className={`adminSubtitleTimelineCue ${cue.id === adminSelectedSubtitleCueId ? 'active' : ''} ${qualityWarning ? 'warning' : ''}`}
+                                    style={{ left: `${left}%`, width: `${Math.min(100 - left, width)}%` }}
+                                    onClick={() => previewAdminSubtitleCue(cue)}
+                                    onPointerDown={(event) => {
+                                      event.stopPropagation()
+                                      startAdminSubtitleTimelineDrag(cue.id, 'move', event)
+                                    }}
+                                    title={`${index + 1}. ${cue.text}`}
+                                  >
+                                    <span
+                                      className="adminSubtitleTimelineHandle start"
+                                      onPointerDown={(event) => {
+                                        event.stopPropagation()
+                                        startAdminSubtitleTimelineDrag(cue.id, 'start', event)
+                                      }}
+                                    />
+                                    <strong>{index + 1}</strong>
+                                    <span
+                                      className="adminSubtitleTimelineHandle end"
+                                      onPointerDown={(event) => {
+                                        event.stopPropagation()
+                                        startAdminSubtitleTimelineDrag(cue.id, 'end', event)
+                                      }}
+                                    />
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          <p className="meta">
+                            Timeline media:{' '}
+                            {adminTimelineAnalysisStatus === 'working'
+                              ? 'analyzing waveform and thumbnails...'
+                              : adminTimelineAnalysisStatus === 'ready'
+                                ? 'waveform / thumbnail strip ready'
+                                : adminTimelineAnalysisStatus === 'error'
+                                  ? 'video thumbnails ready where supported; waveform may be unavailable for this browser codec'
+                                  : 'waiting for recorded media'}
+                          </p>
+                        </div>
+                      ) : null}
                       <div className="adminVideoRecorderMeta">
                         <span className={`adminVideoStatus adminVideoStatus-${adminVideoRecorderStatus}`}>
-                          {adminVideoRecorderStatus}
+                          {adminVideoStatusLabel}
                         </span>
                         <span>{adminRecordedVideoTimeLabel}</span>
                         {adminRecordedVideoSizeLabel ? <span>{adminRecordedVideoSizeLabel}</span> : null}
+                        {adminVideoEditMode === 'existing' ? <span className="adminVideoEditBadge">Editing published sample</span> : null}
                       </div>
+                      {(adminCameraPreviewActive || adminVideoRecorderStatus === 'recording') ? (
+                        <div className="adminMicLevelMeter" aria-label="Microphone level">
+                          <span>Mic level</span>
+                          <div className="adminMicLevelTrack">
+                            <div className="adminMicLevelFill" style={{ width: `${adminMicLevel}%` }} />
+                          </div>
+                          <code>{adminMicLevel}%</code>
+                        </div>
+                      ) : null}
                       <div className="adminVideoSourceSummary">
                         <span>Video: {adminActiveVideoSourceLabel || selectedVideoDeviceLabel}</span>
                         <span>Audio: {adminActiveAudioSourceLabel || selectedAudioDeviceLabel}</span>
@@ -20271,7 +22032,26 @@ function App() {
                                 ? 'Ready'
                                 : 'Manual/off'}
                         </span>
+                        <span>Video flip: {adminSubtitleStyle.videoFlipHorizontal ? 'Mirrored' : 'Normal'}</span>
                       </div>
+                      {adminRecordedVideoUrl ? (
+                        <div className="adminVideoPostProcessPanel">
+                          <div>
+                            <strong>Background blur after recording</strong>
+                            <p>
+                              Applies a local blur pass to the recorded video while keeping the original audio.
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            className="secondary"
+                            onClick={() => void applyAdminPostRecordingBackgroundBlur()}
+                            disabled={adminIsPostProcessingBlur || adminVideoRecorderStatus === 'uploading'}
+                          >
+                            {adminIsPostProcessingBlur ? `Blurring ${adminPostProcessingBlurProgress}%` : 'Apply blur now'}
+                          </button>
+                        </div>
+                      ) : null}
                       {(adminSubtitleTranscript || adminSubtitleInterim || adminSubtitleStatus === 'listening') ? (
                         <div className="adminVideoLiveSubtitle">
                           <span>{adminSubtitleStatus === 'listening' ? 'Live subtitle draft' : 'Subtitle draft'}</span>
@@ -20281,12 +22061,14 @@ function App() {
                           </p>
                         </div>
                       ) : null}
-                      {adminRecordedVideoUrl ? (
+                      {adminRecordedVideoUrl && (adminVideoStudioStep === 'review' || adminVideoStudioStep === 'subtitles' || adminVideoStudioStep === 'publish') ? (
                         <div className="adminVideoTrimPanel">
                           <div className="adminTtsLibraryHeader">
                             <div>
                               <h4>Trim Segment</h4>
-                              <p className="meta">Saved playback will start and stop at these points.</p>
+                              <p className="meta">
+                                Playback trim only — the full file is kept, but students start and stop at these points.
+                              </p>
                             </div>
                             <span className="adminReadyDot">{adminTrimDurationLabel}</span>
                           </div>
@@ -20297,7 +22079,7 @@ function App() {
                                 type="range"
                                 min="0"
                                 max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.1"
+                                step="0.001"
                                 value={adminVideoTrimStart}
                                 onChange={(event) => handleAdminTrimStartChange(Number(event.target.value))}
                               />
@@ -20305,8 +22087,8 @@ function App() {
                                 type="number"
                                 min="0"
                                 max={adminVideoTrimEnd || adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.1"
-                                value={Number(adminVideoTrimStart.toFixed(1))}
+                                step="0.001"
+                                value={roundAdminSubtitleSeconds(adminVideoTrimStart)}
                                 onChange={(event) => handleAdminTrimStartChange(Number(event.target.value))}
                               />
                             </label>
@@ -20316,7 +22098,7 @@ function App() {
                                 type="range"
                                 min="0"
                                 max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.1"
+                                step="0.001"
                                 value={adminVideoTrimEnd}
                                 onChange={(event) => handleAdminTrimEndChange(Number(event.target.value))}
                               />
@@ -20324,8 +22106,8 @@ function App() {
                                 type="number"
                                 min={adminVideoTrimStart}
                                 max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.1"
-                                value={Number(adminVideoTrimEnd.toFixed(1))}
+                                step="0.001"
+                                value={roundAdminSubtitleSeconds(adminVideoTrimEnd)}
                                 onChange={(event) => handleAdminTrimEndChange(Number(event.target.value))}
                               />
                             </label>
@@ -20344,19 +22126,54 @@ function App() {
                             >
                               Reset Trim
                             </button>
+                            {adminVideoStudioStep === 'review' ? (
+                              <button type="button" className="adminStudioButton-primary" onClick={() => setAdminVideoStudioStep('subtitles')}>
+                                Continue to Subtitles
+                              </button>
+                            ) : null}
                           </div>
                         </div>
                       ) : null}
-                      {adminRecordedVideoUrl ? (
+                      {adminRecordedVideoUrl && (adminVideoStudioStep === 'subtitles' || adminVideoStudioStep === 'publish') ? (
                         <div className="adminSubtitleEditor">
                           <div className="adminTtsLibraryHeader">
                             <div>
                               <h4>Subtitle Editor</h4>
-                              <p className="meta">Correct the generated transcript and timing before saving with the video.</p>
+                              <p className="meta">Sync captions to your speech, then style how learners read along.</p>
                             </div>
                             <span className="adminReadyDot">{adminSubtitleCues.length} lines</span>
                           </div>
-                          <div className="adminSubtitleUtilityBar">
+                          <div className="adminSubtitleUtilityBar adminSubtitleUtilityBar-primary">
+                            <button type="button" className="secondary" onClick={undoAdminSubtitleEdit} disabled={adminSubtitleUndoCount === 0}>
+                              Undo
+                            </button>
+                            <button type="button" className="secondary" onClick={redoAdminSubtitleEdit} disabled={adminSubtitleRedoCount === 0}>
+                              Redo
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary adminStudioButton-primary"
+                              onClick={() => void generateAdminSubtitlesFromBackend()}
+                              disabled={isAdminBackendTranscribing || !adminRecordedVideoUrl}
+                            >
+                              {isAdminBackendTranscribing ? 'Syncing…' : 'Auto-sync from video'}
+                            </button>
+                            <button type="button" className="secondary" onClick={regenerateAdminSubtitlesFromTranscript}>
+                              Generate from transcript
+                            </button>
+                            <button type="button" className="secondary" onClick={fixAdminSubtitleTimingIssues} disabled={adminSubtitleCues.length === 0}>
+                              Fix timing issues
+                            </button>
+                            <button
+                              type="button"
+                              className={adminShowAdvancedSubtitleTools ? 'secondary active' : 'secondary'}
+                              onClick={() => setAdminShowAdvancedSubtitleTools((current) => !current)}
+                            >
+                              {adminShowAdvancedSubtitleTools ? 'Hide pro tools' : 'Show pro tools'}
+                            </button>
+                          </div>
+                          {adminShowAdvancedSubtitleTools ? (
+                            <div className="adminSubtitleUtilityBar">
                             <button type="button" className="secondary" onClick={undoAdminSubtitleEdit} disabled={adminSubtitleUndoCount === 0}>
                               Undo
                             </button>
@@ -20381,7 +22198,20 @@ function App() {
                             <button type="button" className="secondary" onClick={() => saveAdminSubtitleVersion('Manual checkpoint')}>
                               Save Version
                             </button>
-                          </div>
+                            <button type="button" className="secondary" onClick={shortenAdminSubtitleLines} disabled={adminSubtitleCues.length === 0 && !adminSubtitleTranscript}>
+                              Shorten lines
+                            </button>
+                            <button type="button" className="secondary" onClick={makeAdminSubtitlesOneLine} disabled={adminSubtitleCues.length === 0 && !adminSubtitleTranscript}>
+                              One-line captions
+                            </button>
+                            <button type="button" className="secondary" onClick={mergeTinyAdminSubtitleLines} disabled={adminSubtitleCues.length < 2}>
+                              Merge tiny lines
+                            </button>
+                            <button type="button" className="secondary" onClick={balanceAdminSubtitleTiming} disabled={adminSubtitleCues.length === 0}>
+                              Balance timing
+                            </button>
+                            </div>
+                          ) : null}
                           {adminSubtitleDraftMessage || adminSubtitleAutosaveLabel ? (
                             <p className="meta adminSubtitleDraftMessage">
                               {adminSubtitleDraftMessage || adminSubtitleAutosaveLabel}
@@ -20416,12 +22246,10 @@ function App() {
                               placeholder="Auto-generated transcript appears here. You can paste or correct it before regenerating subtitles."
                             />
                           </label>
+                          {adminShowAdvancedSubtitleTools ? (
                           <div className="adminActionRow">
                             <button type="button" className="secondary" onClick={regenerateAdminSubtitlesFromTranscript}>
                               Auto-generate subtitles
-                            </button>
-                            <button type="button" className="secondary" onClick={() => void generateAdminSubtitlesFromBackend()} disabled={isAdminBackendTranscribing || !adminRecordedVideoUrl}>
-                              {isAdminBackendTranscribing ? 'Transcribing...' : 'Backend subtitles'}
                             </button>
                             <button type="button" className="secondary" onClick={smartGenerateAdminSubtitles} disabled={!adminSubtitleTranscript.trim()}>
                               Smart auto subtitles
@@ -20439,23 +22267,8 @@ function App() {
                               Auto punctuation
                             </button>
                           </div>
-                          <div className="adminActionRow">
-                            <button type="button" className="secondary" onClick={shortenAdminSubtitleLines} disabled={adminSubtitleCues.length === 0 && !adminSubtitleTranscript}>
-                              Shorten lines
-                            </button>
-                            <button type="button" className="secondary" onClick={makeAdminSubtitlesOneLine} disabled={adminSubtitleCues.length === 0 && !adminSubtitleTranscript}>
-                              One-line captions
-                            </button>
-                            <button type="button" className="secondary" onClick={mergeTinyAdminSubtitleLines} disabled={adminSubtitleCues.length < 2}>
-                              Merge tiny lines
-                            </button>
-                            <button type="button" className="secondary" onClick={balanceAdminSubtitleTiming} disabled={adminSubtitleCues.length === 0}>
-                              Balance timing
-                            </button>
-                            <button type="button" className="secondary" onClick={fixAdminSubtitleTimingIssues} disabled={adminSubtitleCues.length === 0}>
-                              Fix gaps / overlaps
-                            </button>
-                          </div>
+                          ) : null}
+                          {adminShowAdvancedSubtitleTools ? (
                           <div className="adminSubtitleFindPanel">
                             <label>
                               <span>Find</span>
@@ -20479,6 +22292,7 @@ function App() {
                               Replace All
                             </button>
                           </div>
+                          ) : null}
                           <div className="adminSubtitlePlayheadTools">
                             <label>
                               <span>Playhead</span>
@@ -20486,17 +22300,17 @@ function App() {
                                 type="range"
                                 min="0"
                                 max={adminSubtitleTimelineDuration}
-                                step="0.05"
+                                step="0.001"
                                 value={Math.min(adminVideoPreviewTime, adminSubtitleTimelineDuration)}
                                 onChange={(event) => seekAdminVideoTo(Number(event.target.value))}
                               />
                             </label>
                             <code>{formatAdminSubtitleTime(adminVideoPreviewTime)}</code>
-                            <button type="button" className="secondary" onClick={() => seekAdminVideoTo(adminVideoPreviewTime - 0.25)}>
-                              -0.25s
+                            <button type="button" className="secondary" onClick={() => seekAdminVideoTo(adminVideoPreviewTime - 0.001)}>
+                              -1ms
                             </button>
-                            <button type="button" className="secondary" onClick={() => seekAdminVideoTo(adminVideoPreviewTime + 0.25)}>
-                              +0.25s
+                            <button type="button" className="secondary" onClick={() => seekAdminVideoTo(adminVideoPreviewTime + 0.001)}>
+                              +1ms
                             </button>
                             <button type="button" className="secondary" onClick={addAdminSubtitleCueAtPlayhead}>
                               Add at Playhead
@@ -20506,114 +22320,6 @@ function App() {
                             </button>
                           </div>
                           {adminSubtitleCues.length > 0 ? (
-                            <div className="adminSubtitleTimeline" aria-label="Subtitle timeline">
-                              <div className="adminSubtitleTimelineHeader">
-                                <span>Visual timeline</span>
-                                <strong>{formatAdminSubtitleTime(adminSubtitleTimelineDuration)}</strong>
-                              </div>
-                              <div className="adminSubtitleTimelineZoom">
-                                <label>
-                                  <span>Zoom</span>
-                                  <input
-                                    type="range"
-                                    min="1"
-                                    max="4"
-                                    step="0.25"
-                                    value={adminSubtitleTimelineZoom}
-                                    onChange={(event) => setAdminSubtitleTimelineZoom(Number(event.target.value))}
-                                  />
-                                </label>
-                                <code>{adminSubtitleTimelineZoom.toFixed(2)}x</code>
-                              </div>
-                              <div className="adminSubtitleTimelineViewport">
-                                <div className="adminSubtitleTimelineTrack" style={{ width: `${adminSubtitleTimelineZoom * 100}%` }}>
-                                  {adminTimelineThumbnails.length > 0 ? (
-                                    <div className="adminSubtitleThumbnailStrip" aria-hidden="true">
-                                      {adminTimelineThumbnails.map((thumbnail) => (
-                                        <img
-                                          key={`thumb-${thumbnail.time.toFixed(2)}`}
-                                          src={thumbnail.dataUrl}
-                                          alt=""
-                                          style={{ left: `${(thumbnail.time / adminSubtitleTimelineDuration) * 100}%` }}
-                                        />
-                                      ))}
-                                    </div>
-                                  ) : null}
-                                  {adminSubtitleWaveformSamples.length > 0 ? (
-                                    <div className="adminSubtitleWaveform" aria-hidden="true">
-                                      {adminSubtitleWaveformSamples.map((sample, index) => (
-                                        <span
-                                          key={`wave-${index}`}
-                                          style={{
-                                            height: `${Math.max(10, sample * 48)}%`,
-                                            left: `${(index / Math.max(1, adminSubtitleWaveformSamples.length - 1)) * 100}%`
-                                          }}
-                                        />
-                                      ))}
-                                    </div>
-                                  ) : null}
-                                  <div
-                                    className="adminSubtitleTimelinePlayhead"
-                                    style={{ left: `${Math.min(100, (adminVideoPreviewTime / adminSubtitleTimelineDuration) * 100)}%` }}
-                                  />
-                                  {adminVideoTrimEnd > adminVideoTrimStart ? (
-                                    <div
-                                      className="adminSubtitleTimelineTrim"
-                                      style={{
-                                        left: `${(adminVideoTrimStart / adminSubtitleTimelineDuration) * 100}%`,
-                                        width: `${((adminVideoTrimEnd - adminVideoTrimStart) / adminSubtitleTimelineDuration) * 100}%`
-                                      }}
-                                    />
-                                  ) : null}
-                                  {adminSubtitleCues.map((cue, index) => {
-                                    const left = Math.max(0, (cue.startSeconds / adminSubtitleTimelineDuration) * 100)
-                                    const width = Math.max(1.5, ((cue.endSeconds - cue.startSeconds) / adminSubtitleTimelineDuration) * 100)
-                                    const qualityWarning =
-                                      cue.text.trim().split(/\s+/).filter(Boolean).length > 10 ||
-                                      cue.text.trim().length / Math.max(0.25, cue.endSeconds - cue.startSeconds) > 20
-                                    return (
-                                      <button
-                                        key={`timeline-${cue.id}`}
-                                        type="button"
-                                        className={`adminSubtitleTimelineCue ${cue.id === adminSelectedSubtitleCueId ? 'active' : ''} ${qualityWarning ? 'warning' : ''}`}
-                                        style={{ left: `${left}%`, width: `${Math.min(100 - left, width)}%` }}
-                                        onClick={() => previewAdminSubtitleCue(cue)}
-                                        onPointerDown={(event) => startAdminSubtitleTimelineDrag(cue.id, 'move', event)}
-                                        title={`${index + 1}. ${cue.text}`}
-                                      >
-                                        <span
-                                          className="adminSubtitleTimelineHandle start"
-                                          onPointerDown={(event) => {
-                                            event.stopPropagation()
-                                            startAdminSubtitleTimelineDrag(cue.id, 'start', event)
-                                          }}
-                                        />
-                                        <strong>{index + 1}</strong>
-                                        <span
-                                          className="adminSubtitleTimelineHandle end"
-                                          onPointerDown={(event) => {
-                                            event.stopPropagation()
-                                            startAdminSubtitleTimelineDrag(cue.id, 'end', event)
-                                          }}
-                                        />
-                                      </button>
-                                    )
-                                  })}
-                                </div>
-                              </div>
-                              <p className="meta">
-                                Timeline media:{' '}
-                                {adminTimelineAnalysisStatus === 'working'
-                                  ? 'analyzing waveform and thumbnails...'
-                                  : adminTimelineAnalysisStatus === 'ready'
-                                    ? 'waveform / thumbnail strip ready'
-                                    : adminTimelineAnalysisStatus === 'error'
-                                      ? 'video thumbnails ready where supported; waveform may be unavailable for this browser codec'
-                                      : 'waiting for recorded media'}
-                              </p>
-                            </div>
-                          ) : null}
-                          {adminSubtitleCues.length > 0 ? (
                             <div className="adminSubtitleBulkBar">
                               <span>{adminBulkSelectedSubtitleCues.length} selected</span>
                               <button type="button" className="secondary" onClick={selectAllAdminSubtitleCues}>
@@ -20622,13 +22328,13 @@ function App() {
                               <button type="button" className="secondary" onClick={clearAdminSubtitleCueSelection} disabled={!adminSelectedSubtitleCueIds.length}>
                                 Clear
                               </button>
-                              <button type="button" className="secondary" onClick={() => nudgeSelectedAdminSubtitleCues(-0.1)} disabled={!adminSelectedSubtitleCueIds.length}>
-                                Move -0.1
+                              <button type="button" className="secondary" onClick={() => nudgeSelectedAdminSubtitleCues(-0.001)} disabled={!adminSelectedSubtitleCueIds.length}>
+                                Move -1ms
                               </button>
-                              <button type="button" className="secondary" onClick={() => nudgeSelectedAdminSubtitleCues(0.1)} disabled={!adminSelectedSubtitleCueIds.length}>
-                                Move +0.1
+                              <button type="button" className="secondary" onClick={() => nudgeSelectedAdminSubtitleCues(0.001)} disabled={!adminSelectedSubtitleCueIds.length}>
+                                Move +1ms
                               </button>
-                              <button type="button" className="secondary" onClick={deleteSelectedAdminSubtitleCues} disabled={!adminSelectedSubtitleCueIds.length}>
+                              <button type="button" className="secondary adminStudioButton-danger" onClick={deleteSelectedAdminSubtitleCues} disabled={!adminSelectedSubtitleCueIds.length}>
                                 Delete Selected
                               </button>
                             </div>
@@ -20661,11 +22367,11 @@ function App() {
                               <button type="button" className="secondary" onClick={() => previewAdminSubtitleCue(adminSelectedSubtitleCue)}>
                                 Play Line
                               </button>
-                              <button type="button" className="secondary" onClick={() => nudgeAdminSubtitleCue(adminSelectedSubtitleCue.id, -0.1)}>
-                                Nudge -0.1
+                              <button type="button" className="secondary" onClick={() => nudgeAdminSubtitleCue(adminSelectedSubtitleCue.id, -0.001)}>
+                                Nudge -1ms
                               </button>
-                              <button type="button" className="secondary" onClick={() => nudgeAdminSubtitleCue(adminSelectedSubtitleCue.id, 0.1)}>
-                                Nudge +0.1
+                              <button type="button" className="secondary" onClick={() => nudgeAdminSubtitleCue(adminSelectedSubtitleCue.id, 0.001)}>
+                                Nudge +1ms
                               </button>
                               <button type="button" className="secondary" onClick={() => setAdminSubtitleCueEdgeToPlayhead(adminSelectedSubtitleCue.id, 'start')}>
                                 Start = Playhead
@@ -20678,6 +22384,122 @@ function App() {
                               </button>
                             </div>
                           ) : null}
+                          {adminSelectedSubtitleCue ? (
+                            <div className="adminSubtitleKnowledgePanel">
+                              <div className="adminTtsLibraryHeader">
+                                <div>
+                                  <h4>Highlighted Details</h4>
+                                  <p className="meta">These yellow notes appear in the upper-left when the phrase arrives.</p>
+                                </div>
+                                <div className="adminSubtitleKnowledgeHeaderActions">
+                                  <span className="adminReadyDot">{adminSelectedSubtitleCue.notes?.length || 0} details</span>
+                                  <button type="button" className="secondary adminStudioButton-soft" onClick={useSelectedSubtitleTextForNote}>
+                                    Use selected text
+                                  </button>
+                                </div>
+                              </div>
+                              {adminSubtitleNoteDraft.cueId === adminSelectedSubtitleCue.id && adminSubtitleNoteDraft.phrase ? (
+                                <div className="adminSubtitleKnowledgeSelection">
+                                  <span>Selected phrase</span>
+                                  <strong>{adminSubtitleNoteDraft.phrase}</strong>
+                                </div>
+                              ) : (
+                                <p className="meta adminSubtitleKnowledgeHint">
+                                  Highlight a word or phrase inside a subtitle line, then click Use selected text.
+                                </p>
+                              )}
+                              <div className="adminSubtitleKnowledgeForm">
+                                <label>
+                                  <span>Phrase</span>
+                                  <input
+                                    type="text"
+                                    value={adminSubtitleNoteDraft.cueId === adminSelectedSubtitleCue.id ? adminSubtitleNoteDraft.phrase : ''}
+                                    onChange={(event) =>
+                                      setAdminSubtitleNoteDraft((current) => ({
+                                        ...current,
+                                        cueId: adminSelectedSubtitleCue.id,
+                                        noteId: current.cueId === adminSelectedSubtitleCue.id ? current.noteId : '',
+                                        phrase: event.target.value
+                                      }))
+                                    }
+                                    placeholder="technology-oriented"
+                                  />
+                                </label>
+                                <label>
+                                  <span>Detail</span>
+                                  <textarea
+                                    value={adminSubtitleNoteDraft.cueId === adminSelectedSubtitleCue.id ? adminSubtitleNoteDraft.detail : ''}
+                                    onChange={(event) =>
+                                      setAdminSubtitleNoteDraft((current) => ({
+                                        ...current,
+                                        cueId: adminSelectedSubtitleCue.id,
+                                        noteId: current.cueId === adminSelectedSubtitleCue.id ? current.noteId : '',
+                                        detail: event.target.value
+                                      }))
+                                    }
+                                    placeholder="Good vocabulary: means comfortable with technology."
+                                  />
+                                </label>
+                                <div className="adminSubtitleKnowledgeActions">
+                                  <button
+                                    type="button"
+                                    className="adminStudioButton-primary"
+                                    onClick={saveAdminSubtitleKnowledgeNote}
+                                    disabled={
+                                      adminSubtitleNoteDraft.cueId !== adminSelectedSubtitleCue.id ||
+                                      !adminSubtitleNoteDraft.phrase.trim() ||
+                                      !adminSubtitleNoteDraft.detail.trim()
+                                    }
+                                  >
+                                    {adminSubtitleNoteDraft.noteId ? 'Save Detail' : 'Add Detail'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="secondary adminStudioButton-soft"
+                                    onClick={() =>
+                                      setAdminSubtitleNoteDraft({
+                                        cueId: adminSelectedSubtitleCue.id,
+                                        noteId: '',
+                                        phrase: '',
+                                        detail: ''
+                                      })
+                                    }
+                                  >
+                                    Clear
+                                  </button>
+                                </div>
+                              </div>
+                              {adminSelectedSubtitleCue.notes?.length ? (
+                                <div className="adminSubtitleKnowledgeList">
+                                  {adminSelectedSubtitleCue.notes.map((note) => (
+                                    <article key={note.id} className="adminSubtitleKnowledgeItem">
+                                      <div>
+                                        <strong>{note.phrase}</strong>
+                                        <p>{note.detail}</p>
+                                      </div>
+                                      <div>
+                                        <button type="button" className="secondary" onClick={() => editAdminSubtitleKnowledgeNote(adminSelectedSubtitleCue.id, note)}>
+                                          Edit
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="secondary adminStudioButton-danger"
+                                          onClick={() => removeAdminSubtitleKnowledgeNote(adminSelectedSubtitleCue.id, note.id)}
+                                        >
+                                          Delete
+                                        </button>
+                                      </div>
+                                    </article>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="adminSubtitleKnowledgeEmpty">
+                                  <strong>No details on this line yet</strong>
+                                  <p>Select useful vocabulary, a correction, or a phrase worth explaining.</p>
+                                </div>
+                              )}
+                            </div>
+                          ) : null}
                           <label className="adminSubtitleTranscriptBox adminSubtitleLineEditor">
                             <span>Quick edit subtitle lines</span>
                             <textarea
@@ -20687,6 +22509,7 @@ function App() {
                               placeholder="Edit one subtitle per line. Timings stay in order."
                             />
                           </label>
+                          {adminShowAdvancedSubtitleTools ? (
                           <div className="adminSubtitleImportExport">
                             <label>
                               <span>Import SRT / VTT</span>
@@ -20717,6 +22540,7 @@ function App() {
                               </label>
                             ) : null}
                           </div>
+                          ) : null}
                           <div className="adminSubtitleStylePanel">
                             <div className="adminTtsLibraryHeader">
                               <div>
@@ -20730,6 +22554,7 @@ function App() {
                                 <button
                                   key={preset.id}
                                   type="button"
+                                  className="adminSubtitlePresetButton"
                                   style={{
                                     fontFamily: preset.style.fontFamily,
                                     color: preset.style.textColor,
@@ -20857,8 +22682,8 @@ function App() {
                                       type="number"
                                       min="0"
                                       max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                      step="0.1"
-                                      value={Number(cue.startSeconds.toFixed(1))}
+                                      step="0.001"
+                                      value={roundAdminSubtitleSeconds(cue.startSeconds)}
                                       onFocus={rememberAdminSubtitleEdit}
                                       onChange={(event) => updateAdminSubtitleCue(cue.id, { startSeconds: Number(event.target.value) })}
                                     />
@@ -20869,8 +22694,8 @@ function App() {
                                       type="number"
                                       min={cue.startSeconds}
                                       max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                      step="0.1"
-                                      value={Number(cue.endSeconds.toFixed(1))}
+                                      step="0.001"
+                                      value={roundAdminSubtitleSeconds(cue.endSeconds)}
                                       onFocus={rememberAdminSubtitleEdit}
                                       onChange={(event) => updateAdminSubtitleCue(cue.id, { endSeconds: Number(event.target.value) })}
                                     />
@@ -20882,9 +22707,25 @@ function App() {
                                       rememberAdminSubtitleEdit()
                                       setAdminSelectedSubtitleCueId(cue.id)
                                     }}
+                                    onMouseUp={(event) => captureAdminSubtitleNoteSelection(cue.id, event.currentTarget)}
+                                    onKeyUp={(event) => captureAdminSubtitleNoteSelection(cue.id, event.currentTarget)}
                                     onChange={(event) => updateAdminSubtitleCue(cue.id, { text: event.target.value })}
                                     aria-label={`Subtitle line ${index + 1}`}
                                   />
+                                  {cue.notes?.length ? (
+                                    <div className="adminSubtitleCueNotes">
+                                      {cue.notes.map((note) => (
+                                        <button
+                                          key={note.id}
+                                          type="button"
+                                          className="secondary"
+                                          onClick={() => editAdminSubtitleKnowledgeNote(cue.id, note)}
+                                        >
+                                          {note.phrase}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  ) : null}
                                   <div className="adminSubtitleCueTools">
                                     <span>
                                       {Math.round(cue.text.length / Math.max(0.25, cue.endSeconds - cue.startSeconds))} CPS
@@ -20902,7 +22743,7 @@ function App() {
                                       Merge
                                     </button>
                                   </div>
-                                  <button type="button" className="secondary" onClick={() => removeAdminSubtitleCue(cue.id)}>
+                                  <button type="button" className="secondary adminStudioButton-danger" onClick={() => removeAdminSubtitleCue(cue.id)}>
                                     Delete
                                   </button>
                                 </article>
@@ -20911,6 +22752,13 @@ function App() {
                           ) : (
                             <p className="meta adminEmptyState">No subtitle lines yet. Generate from the transcript or add lines manually.</p>
                           )}
+                          {adminVideoStudioStep === 'subtitles' ? (
+                            <div className="adminActionRow">
+                              <button type="button" className="adminStudioButton-primary" onClick={() => setAdminVideoStudioStep('publish')}>
+                                Continue to Publish
+                              </button>
+                            </div>
+                          ) : null}
                         </div>
                       ) : null}
                       {adminVideoRecorderStatus === 'uploading' ? (
@@ -20924,41 +22772,66 @@ function App() {
                           </button>
                         </div>
                       ) : null}
-                      {adminRecordedVideoUrl && adminSelectedVideoAsset ? (
+                      {adminRecordedVideoUrl && adminSelectedVideoAsset && adminVideoEditMode === 'fresh' ? (
                         <p className="meta adminVideoReplaceNotice">
-                          Uploading this recording will replace the current saved video for this question after confirmation.
+                          Publishing will replace the current saved video for this question.
                         </p>
                       ) : null}
-                      <div className="adminActionRow">
+                      {(adminVideoStudioStep === 'record' || adminVideoStudioStep === 'setup' || adminRecordedVideoUrl) ? (
+                      <div className="adminActionRow adminVideoPrimaryActions">
                         {adminVideoRecorderStatus === 'recording' ? (
-                          <button type="button" onClick={stopAdminVideoRecording}>
-                            Stop
+                          <button type="button" className="adminStudioButton-danger" onClick={stopAdminVideoRecording}>
+                            Stop Recording
                           </button>
                         ) : (
                           <button
                             type="button"
-                            onClick={() => void startAdminVideoRecording()}
-                            disabled={adminVideoRecorderStatus === 'uploading'}
+                            className={adminRecordedVideoUrl ? 'adminStudioButton-soft' : 'adminStudioButton-primary'}
+                            onClick={requestAdminVideoRecording}
+                            disabled={adminIsPostProcessingBlur || adminVideoRecorderStatus === 'uploading' || !adminSelectedVideoTopic || adminRecordCountdown !== null}
                           >
                             {adminRecordedVideoUrl ? 'Retake' : 'Record'}
                           </button>
                         )}
                         <button
                           type="button"
-                          className="secondary"
+                          className="secondary adminStudioButton-danger"
                           onClick={clearAdminRecordedVideo}
-                          disabled={!adminRecordedVideoUrl || adminVideoRecorderStatus === 'uploading'}
+                          disabled={adminIsPostProcessingBlur || !adminRecordedVideoUrl || adminVideoRecorderStatus === 'uploading'}
                         >
                           Discard
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => void uploadAdminRecordedVideo()}
-                          disabled={!adminRecordedVideoUrl || adminVideoRecorderStatus === 'uploading' || adminTrimDuration <= 0}
-                        >
-                          {adminVideoRecorderStatus === 'uploading' ? 'Uploading...' : 'Upload'}
-                        </button>
+                        {adminRecordedVideoUrl && adminVideoStudioStep !== 'record' ? (
+                          <button type="button" className="secondary" onClick={() => setAdminVideoStudioStep('publish')}>
+                            Go to Publish
+                          </button>
+                        ) : null}
                       </div>
+                      ) : null}
+                      {(adminVideoStudioStep === 'publish' || adminRecordedVideoUrl) ? (
+                      <div className="adminActionRow adminVideoPublishActions">
+                        {adminVideoEditMode === 'existing' ? (
+                          <button
+                            type="button"
+                            className="adminStudioButton-primary"
+                            onClick={openAdminUploadChecklist}
+                            disabled={adminIsPostProcessingBlur || !adminRecordedVideoUrl || adminIsSavingMetadata || adminVideoRecorderStatus === 'uploading'}
+                          >
+                            {adminIsSavingMetadata ? 'Saving…' : 'Save changes'}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="adminStudioButton-primary"
+                            onClick={openAdminUploadChecklist}
+                            disabled={adminIsPostProcessingBlur || !adminRecordedVideoUrl || adminVideoRecorderStatus === 'uploading' || adminTrimDuration <= 0}
+                          >
+                            {adminVideoRecorderStatus === 'uploading' ? 'Uploading…' : 'Publish sample'}
+                          </button>
+                        )}
+                      </div>
+                      ) : null}
+                      <p className="meta adminVideoShortcutHint">Shortcuts while reviewing: Space play/pause · J/L seek · K pause</p>
                       {adminVideoRecorderMessage ? (
                         <p className={`meta ${adminVideoRecorderMessage.includes('uploaded') ? 'authSuccess' : ''}`}>
                           {adminVideoRecorderMessage}
@@ -20966,86 +22839,145 @@ function App() {
                       ) : null}
                     </div>
                   </div>
-                  {adminSelectedVideoAsset ? (
+                  {adminUploadChecklistOpen ? (
+                    <div className="adminVideoModalBackdrop" role="presentation" onClick={() => setAdminUploadChecklistOpen(false)}>
+                      <div
+                        className="adminVideoModal"
+                        role="dialog"
+                        aria-labelledby="admin-upload-checklist-title"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <h4 id="admin-upload-checklist-title">Pre-publish checklist</h4>
+                        <p className="meta">Confirm everything looks right before students see this sample.</p>
+                        <ul className="adminUploadChecklist">
+                          {adminUploadChecklistItems.map((item) => (
+                            <li key={item.id} className={item.ok ? 'ok' : 'pending'}>
+                              <span>{item.ok ? '✓' : '○'}</span>
+                              <div>
+                                <strong>{item.label}</strong>
+                                {!item.ok && item.hint ? <small>{item.hint}</small> : null}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="adminActionRow">
+                          <button type="button" className="secondary" onClick={() => setAdminUploadChecklistOpen(false)}>
+                            Back to editing
+                          </button>
+                          <button type="button" className="adminStudioButton-primary" onClick={confirmAdminUploadFromChecklist} disabled={!adminCanPublish}>
+                            {adminVideoEditMode === 'existing' ? 'Save changes' : 'Publish now'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                  {adminStudentPreviewOpen && adminRecordedVideoUrl && adminSelectedVideoTopic ? (
+                    <div className="adminVideoModalBackdrop adminVideoModalBackdrop-dark" role="presentation" onClick={() => setAdminStudentPreviewOpen(false)}>
+                      <div
+                        className="adminVideoStudentPreviewModal"
+                        role="dialog"
+                        aria-label="Student preview"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <div className="adminVideoStudentPreviewHeader">
+                          <div>
+                            <strong>Student preview</strong>
+                            <p>{adminSelectedVideoTopic.title}</p>
+                          </div>
+                          <button type="button" className="secondary" onClick={() => setAdminStudentPreviewOpen(false)}>
+                            Close
+                          </button>
+                        </div>
+                        <SpeakingPart2SamplePanel
+                          sample={createUploadedSpeakingPart2SampleVideo({
+                            topicId: adminSelectedVideoTopic.id,
+                            topicTitle: adminSelectedVideoTopic.title,
+                            videoUrl: adminRecordedVideoUrl,
+                            trimStartSeconds: adminVideoTrimStart,
+                            trimEndSeconds: adminVideoTrimEnd,
+                            transcript: adminSubtitleTranscript,
+                            subtitles: adminSubtitleCues,
+                            subtitleStyle: adminSubtitleStyle,
+                            videoFlipHorizontal: Boolean(adminSubtitleStyle.videoFlipHorizontal)
+                          })}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+                  {adminSelectedVideoAsset && !adminRecordedVideoUrl ? (
                     <div className="adminWorkflowCard adminVideoSavedCard">
                       <div className="adminTtsLibraryHeader">
                         <div>
-                          <h4>Saved Video Source</h4>
+                          <h4>Published sample</h4>
                           <p className="meta">
-                            Uploaded {new Date(adminSelectedVideoAsset.updatedAt).toLocaleString()} ·{' '}
-                            {(adminSelectedVideoAsset.sizeBytes / (1024 * 1024)).toFixed(1)} MB
+                            Updated {new Date(adminSelectedVideoAsset.updatedAt).toLocaleString()} ·{' '}
+                            {(adminSelectedVideoAsset.sizeBytes / (1024 * 1024)).toFixed(1)} MB ·{' '}
+                            {adminSelectedVideoAsset.subtitles?.length || 0} subtitle lines
                           </p>
                         </div>
-                        <span className="adminReadyDot">Ready</span>
+                        <span className="adminReadyDot">Live</span>
                       </div>
                       <video controls src={adminSelectedVideoAsset.videoUrl} preload="metadata" />
-                      <div className="adminVideoSourceGrid">
-                        <span>Storage URL</span>
-                        <a href={adminSelectedVideoAsset.videoUrl} target="_blank" rel="noreferrer">
-                          Open signed video
-                        </a>
-                        <span>Object path</span>
-                        <code>{adminSelectedVideoAsset.objectPath}</code>
-                        <span>Storage</span>
-                        <code>{adminSelectedVideoAsset.isPrivate ? 'Private signed URL' : adminSelectedVideoAsset.storageProvider || 'Supabase'}</code>
-                        <span>MIME type</span>
-                        <code>{adminSelectedVideoAsset.mimeType}</code>
-                        <span>Version</span>
-                        <code>{adminSelectedVideoAsset.version || 1}</code>
-                        <span>SHA-256</span>
-                        <code>{adminSelectedVideoAsset.checksumSha256 ? `${adminSelectedVideoAsset.checksumSha256.slice(0, 16)}...` : 'Not stored'}</code>
-                        <span>Signed URL expires</span>
-                        <code>
-                          {adminSelectedVideoAsset.signedUrlExpiresAt
-                            ? new Date(adminSelectedVideoAsset.signedUrlExpiresAt).toLocaleString()
-                            : 'Unknown'}
-                        </code>
-                        <span>Trim</span>
-                        <code>
-                          {Number(adminSelectedVideoAsset.trimStartSeconds || 0).toFixed(1)}s -{' '}
-                          {Number(adminSelectedVideoAsset.trimEndSeconds || adminSelectedVideoAsset.durationSeconds || 0).toFixed(1)}s
-                        </code>
-                        <span>Video source</span>
-                        <code>{adminSelectedVideoAsset.videoDeviceLabel || 'Unknown camera'}</code>
-                        <span>Audio source</span>
-                        <code>{adminSelectedVideoAsset.audioDeviceLabel || 'Unknown microphone'}</code>
-                        <span>Background blur</span>
-                        <code>{adminSelectedVideoAsset.backgroundBlurEnabled ? 'Enabled' : 'Off or unsupported'}</code>
-                        <span>Subtitles</span>
-                        <code>{adminSelectedVideoAsset.subtitles?.length || 0} lines</code>
-                        <span>Subtitle style</span>
-                        <code>
-                          {ADMIN_SUBTITLE_FONT_PRESETS.find(
-                            (font) => font.family === adminSelectedVideoAsset.subtitleStyle?.fontFamily
-                          )?.label || 'Default'}
-                        </code>
+                      <div className="adminActionRow">
+                        <button
+                          type="button"
+                          onClick={() => void loadExistingVideoIntoStudio(adminSelectedVideoAsset)}
+                          disabled={adminIsLoadingExistingVideo}
+                        >
+                          {adminIsLoadingExistingVideo ? 'Loading…' : 'Edit sample'}
+                        </button>
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() =>
+                            void deleteAdminSpeakingSampleVideo(adminSelectedVideoAsset.topicId, adminSelectedVideoAsset.topicTitle)
+                          }
+                          disabled={adminIsDeletingVideo}
+                        >
+                          Remove
+                        </button>
                       </div>
                     </div>
-                  ) : (
-                    <p className="meta adminEmptyState">No sample video uploaded for this question yet.</p>
-                  )}
+                  ) : adminSelectedVideoTopic && !adminRecordedVideoUrl ? (
+                    <p className="meta adminEmptyState">No sample video published for this question yet.</p>
+                  ) : null}
                   {uploadedSpeakingSampleVideoCount > 0 ? (
-                    <div className="adminAudioLibraryGrid">
+                    <div className="adminVideoLibraryGrid">
                       {Object.values(speakingSampleVideoAssets).map((item) => (
-                        <article key={`speaking-video-${item.topicId}`} className="adminAudioCard">
-                          <p className="adminAudioEyebrow">Part 2 Sample</p>
-                          <h4>{item.topicTitle}</h4>
-                          <p>{item.prompt}</p>
-                          <p className="adminVideoCardSources">
-                            Video: {item.videoDeviceLabel || 'Unknown camera'} · Audio:{' '}
-                            {item.audioDeviceLabel || 'Unknown microphone'}
-                          </p>
-                          <p className="adminVideoCardSources">
-                            Blur: {item.backgroundBlurEnabled ? 'Enabled' : 'Off or unsupported'}
-                          </p>
-                          <p className="adminVideoCardSources">
-                            Subtitles: {item.subtitles?.length || 0} lines
-                          </p>
-                          <p className="adminVideoCardSources">
-                            Trim: {Number(item.trimStartSeconds || 0).toFixed(1)}s -{' '}
-                            {Number(item.trimEndSeconds || item.durationSeconds || 0).toFixed(1)}s
-                          </p>
-                          <video controls src={item.videoUrl} preload="metadata" />
+                        <article key={`speaking-video-${item.topicId}`} className="adminVideoLibraryCard">
+                          <div className="adminVideoLibraryCardMedia">
+                            <video muted preload="metadata" src={item.videoUrl} />
+                            <span className="adminVideoLibraryDuration">
+                              {formatAdminSubtitleTime(Number(item.trimEndSeconds || item.durationSeconds || 0) - Number(item.trimStartSeconds || 0))}
+                            </span>
+                          </div>
+                          <div className="adminVideoLibraryCardBody">
+                            <p className="adminAudioEyebrow">Part 2 Sample</p>
+                            <h4>{item.topicTitle}</h4>
+                            <p className="adminVideoCardSources">
+                              {item.subtitles?.length || 0} subtitles · v{item.version || 1}
+                            </p>
+                            <div className="adminActionRow">
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() => {
+                                  setAdminSelectedVideoTopicId(item.topicId)
+                                  void loadExistingVideoIntoStudio(item)
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() => void deleteAdminSpeakingSampleVideo(item.topicId, item.topicTitle)}
+                                disabled={adminIsDeletingVideo}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
                         </article>
                       ))}
                     </div>
