@@ -127,12 +127,13 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
   const visibleSubtitleNotes = uploadedSubtitles.flatMap((cue) =>
     normalizeSampleSubtitleNotes(cue.notes)
       .filter((note) => videoTime >= estimateSampleSubtitleNoteRevealSeconds(cue, note.phrase) - 0.02)
+      .filter(() => videoTime <= cue.endSeconds + 0.45)
       .map((note) => ({
         ...note,
         cueId: cue.id,
         revealSeconds: estimateSampleSubtitleNoteRevealSeconds(cue, note.phrase)
       }))
-  )
+  ).sort((a, b) => b.revealSeconds - a.revealSeconds).slice(0, 3)
   const subtitleStyle = {
     ...DEFAULT_SAMPLE_SUBTITLE_STYLE,
     ...(sample.subtitleStyle || {})

@@ -7,7 +7,7 @@ export const ADMIN_VIDEO_STUDIO_STEPS: Array<{
   label: string
   description: string
 }> = [
-  { id: 'setup', label: 'Setup', description: 'Question & devices' },
+  { id: 'setup', label: 'Setup', description: 'Topic & devices' },
   { id: 'record', label: 'Record', description: 'Capture your take' },
   { id: 'review', label: 'Review', description: 'Trim & preview' },
   { id: 'subtitles', label: 'Subtitles', description: 'Captions & style' },

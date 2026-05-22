@@ -539,6 +539,14 @@ type SpeakingVideoSampleTarget = SpeakingTopic & {
   questionIndex?: number
 }
 
+type AdminTopicQuestionBannerState = {
+  questionText: string
+  questionIndex: number
+  totalQuestions: number
+  part: 'part1' | 'part3'
+  changedAt: number
+}
+
 type QuestionAudioCatalogItem = {
   key: string
   cacheKey: string
@@ -613,6 +621,34 @@ const estimateSubtitleNoteRevealSeconds = (
 
 const buildSpeakingSampleQuestionId = (part: 'part1' | 'part3', topicId: string, questionIndex: number) =>
   `${part}-${topicId}-${questionIndex}`
+
+const buildSpeakingSampleTopicId = (part: 'part1' | 'part3', topicId: string) => `${part}-topic-${topicId}`
+
+const normalizeSpeakingTopicQuestion = (value: string) =>
+  String(value || '')
+    .replace(/^Part\s*[13]\s*-\s*/i, '')
+    .trim()
+
+const getSpeakingTopicQuestionList = (target: Pick<SpeakingVideoSampleTarget, 'prompt' | 'cues'>) =>
+  [target.prompt, ...(target.cues || [])].map(normalizeSpeakingTopicQuestion).filter(Boolean)
+
+const wrapCanvasTextLines = (context: CanvasRenderingContext2D, text: string, maxWidth: number) => {
+  const words = String(text || '').trim().split(/\s+/).filter(Boolean)
+  if (!words.length) return []
+  const lines: string[] = []
+  let line = words[0] || ''
+  for (let index = 1; index < words.length; index += 1) {
+    const candidate = `${line} ${words[index]}`
+    if (context.measureText(candidate).width > maxWidth && line) {
+      lines.push(line)
+      line = words[index] || ''
+    } else {
+      line = candidate
+    }
+  }
+  if (line) lines.push(line)
+  return lines
+}
 
 const normalizeSpeakingSampleLookupId = (value: string) =>
   String(value || '')
@@ -6896,6 +6932,8 @@ function App() {
   const [adminStudentPreviewOpen, setAdminStudentPreviewOpen] = useState(false)
   const [adminPreviewedAsStudent, setAdminPreviewedAsStudent] = useState(false)
   const [adminRecordCountdown, setAdminRecordCountdown] = useState<number | null>(null)
+  const [adminTopicQuestionIndex, setAdminTopicQuestionIndex] = useState(-1)
+  const adminTopicQuestionBannerRef = useRef<AdminTopicQuestionBannerState | null>(null)
   const [adminMicLevel, setAdminMicLevel] = useState(0)
   const [adminCameraPreviewActive, setAdminCameraPreviewActive] = useState(false)
   const [adminVideoEditMode, setAdminVideoEditMode] = useState<'fresh' | 'existing'>('fresh')
@@ -6964,6 +7002,7 @@ function App() {
   const adminCameraPreviewStreamRef = useRef<MediaStream | null>(null)
   const adminMicAnalyserRef = useRef<{ context: AudioContext; interval: number } | null>(null)
   const adminRecordCountdownRef = useRef<number | null>(null)
+  const adminTopicSequenceCancelRef = useRef(false)
   const audioChunksRef = useRef<Blob[]>([])
   const latestAudioBlobRef = useRef<Blob | null>(null)
   const recordingStopResolverRef = useRef<((blob: Blob | null) => void) | null>(null)
@@ -9418,52 +9457,45 @@ function App() {
       ...CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
       ...CAMBRIDGE_13_SPEAKING_FULL_EXAM_TOPICS
     ]
-    const buildQuestionTargets = (
+    const buildTopicTargets = (
       part: 'part1' | 'part3',
       sourceTopics: SpeakingTopic[],
       categoryPrefix: string
     ): SpeakingVideoSampleTarget[] =>
-      sourceTopics.flatMap((topic) =>
-        [topic.prompt, ...topic.cues]
-          .filter((question) => String(question || '').trim())
-          .map((question, index) => ({
-            id: buildSpeakingSampleQuestionId(part, topic.id, index),
-            category: `${categoryPrefix} · ${topic.title}`,
-            title: `${part === 'part1' ? 'Part 1' : 'Part 3'} Q${index + 1}: ${topic.title}`,
-            prompt: String(question).replace(/^Part\s*[13]\s*-\s*/i, '').trim(),
-            cues: [],
+      sourceTopics.flatMap((topic) => {
+        const questions = getSpeakingTopicQuestionList(topic)
+        if (!questions.length) return []
+        return [
+          {
+            id: buildSpeakingSampleTopicId(part, topic.id),
+            category: `${categoryPrefix} · ${topic.category}`,
+            title: `${part === 'part1' ? 'Part 1' : 'Part 3'}: ${topic.title}`,
+            prompt: questions[0],
+            cues: questions.slice(1),
             samplePart: part,
             parentTopicId: topic.id,
-            parentTopicTitle: topic.title,
-            questionIndex: index
-          }))
-      )
-    const fullQuestionTargets = fullTopics.flatMap((topic) => {
+            parentTopicTitle: topic.title
+          }
+        ]
+      })
+    const fullTopicTargets = fullTopics.flatMap((topic) => {
       const plan = buildFullExamPlanFromPromptAndCues(topic.prompt, topic.cues)
-      return [
-        ...plan.part1Questions.map((question, index) => ({
-          id: buildSpeakingSampleQuestionId('part1', topic.id, index),
-          category: `Full mock Part 1 · ${topic.title}`,
-          title: `Full Part 1 Q${index + 1}: ${topic.title}`,
-          prompt: question,
-          cues: [],
-          samplePart: 'part1' as const,
-          parentTopicId: topic.id,
-          parentTopicTitle: topic.title,
-          questionIndex: index
-        })),
-        ...plan.part3Questions.map((question, index) => ({
-          id: buildSpeakingSampleQuestionId('part3', topic.id, index),
-          category: `Full mock Part 3 · ${topic.title}`,
-          title: `Full Part 3 Q${index + 1}: ${topic.title}`,
-          prompt: question,
-          cues: [],
-          samplePart: 'part3' as const,
-          parentTopicId: topic.id,
-          parentTopicTitle: topic.title,
-          questionIndex: index
-        }))
-      ]
+      return (['part1', 'part3'] as const).flatMap((part) => {
+        const questions = part === 'part1' ? plan.part1Questions : plan.part3Questions
+        if (!questions.length) return []
+        return [
+          {
+            id: buildSpeakingSampleTopicId(part, topic.id),
+            category: `Full mock ${part === 'part1' ? 'Part 1' : 'Part 3'} · ${topic.title}`,
+            title: `${part === 'part1' ? 'Part 1' : 'Part 3'}: ${topic.title}`,
+            prompt: questions[0],
+            cues: questions.slice(1),
+            samplePart: part,
+            parentTopicId: topic.id,
+            parentTopicTitle: topic.title
+          } satisfies SpeakingVideoSampleTarget
+        ]
+      })
     })
     const part2Targets: SpeakingVideoSampleTarget[] = part2AvailableTopics.map((topic) => ({
       ...topic,
@@ -9472,10 +9504,10 @@ function App() {
     }))
     const seen = new Set<string>()
     return [
-      ...buildQuestionTargets('part1', part1Topics, 'Part 1'),
+      ...buildTopicTargets('part1', part1Topics, 'Part 1'),
       ...part2Targets,
-      ...buildQuestionTargets('part3', part3Topics, 'Part 3'),
-      ...fullQuestionTargets
+      ...buildTopicTargets('part3', part3Topics, 'Part 3'),
+      ...fullTopicTargets
     ].filter((target) => {
       if (seen.has(target.id)) return false
       seen.add(target.id)
@@ -9578,6 +9610,12 @@ function App() {
     adminRecordedVideoDuration % 60
   ).padStart(2, '0')}`
   const adminIsPart2VideoTarget = adminSelectedVideoTopic?.samplePart === 'part2'
+  const adminIsTopicSequenceTarget =
+    adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
+  const adminSelectedTopicQuestionList = adminSelectedVideoTopic
+    ? getSpeakingTopicQuestionList(adminSelectedVideoTopic)
+    : []
+  const adminTopicQuestionCount = adminIsTopicSequenceTarget ? Math.max(1, adminSelectedTopicQuestionList.length) : 1
   const adminPart2RecordingRemainingSeconds = adminIsPart2VideoTarget
     ? Math.max(0, ADMIN_PART2_SAMPLE_RECORDING_SECONDS - adminRecordedVideoDuration)
     : 0
@@ -9644,7 +9682,7 @@ function App() {
           .filter((note) => {
             if (!note.phrase || !note.detail) return false
             const revealSeconds = estimateSubtitleNoteRevealSeconds(cue, note.phrase)
-            return adminVideoPreviewTime >= revealSeconds - 0.02
+            return adminVideoPreviewTime >= revealSeconds - 0.02 && adminVideoPreviewTime <= cue.endSeconds + 0.45
           })
           .map((note) => ({
             ...note,
@@ -9652,7 +9690,7 @@ function App() {
             startSeconds: cue.startSeconds,
             revealSeconds: estimateSubtitleNoteRevealSeconds(cue, note.phrase)
           }))
-      )
+      ).sort((a, b) => b.revealSeconds - a.revealSeconds).slice(0, 3)
     : []
   const adminVideoStatusLabel = getAdminVideoStatusLabel(adminVideoRecorderStatus, adminRecordCountdown)
   const adminSubtitleTimelineDuration = Math.max(
@@ -9794,7 +9832,26 @@ function App() {
   const adminReviewWordCount = countAdminSpokenWords(adminReviewTranscriptText)
   const adminReviewWordFeedback =
     adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
-      ? getAdminWordCountFeedback(adminSelectedVideoTopic.samplePart, adminReviewWordCount, adminWordCountPreset)
+      ? (() => {
+          const base = getAdminWordCountFeedback(
+            adminSelectedVideoTopic.samplePart,
+            adminReviewWordCount,
+            adminWordCountPreset
+          )
+          if (adminTopicQuestionCount <= 1) return base
+          return {
+            ...base,
+            target: {
+              ...base.target,
+              min: base.target.min * adminTopicQuestionCount,
+              max: base.target.max * adminTopicQuestionCount
+            },
+            hint:
+              base.isGood
+                ? `Full topic (${adminTopicQuestionCount} questions) fits the target range`
+                : base.hint
+          }
+        })()
       : null
   const adminPostRecordingReportItems = [
     {
@@ -9883,6 +9940,13 @@ function App() {
     question: string
   ): SpeakingPart2SampleVideo | null => {
     if (!topic || !question) return null
+    const topicTitle = `${part === 'part1' ? 'Part 1' : 'Part 3'}: ${topic.title}`
+    const topicSample = getUploadedSpeakingSampleForQuestion(
+      buildSpeakingSampleTopicId(part, topic.id),
+      topicTitle,
+      question
+    )
+    if (topicSample) return topicSample
     return getUploadedSpeakingSampleForQuestion(
       buildSpeakingSampleQuestionId(part, topic.id, questionIndex),
       `${part === 'part1' ? 'Part 1' : 'Part 3'} Q${questionIndex + 1}: ${topic.title}`,
@@ -11854,7 +11918,7 @@ function App() {
       const badgeWidth = 310 * scale
       const badgeHeight = 104 * scale
       const x = width - badgeWidth - padding
-      const y = padding
+      const y = height - badgeHeight - padding
       const radius = 24 * scale
       const targetText = `${feedback.target.min}-${feedback.target.max} target`
       const helperText = feedback.isGood
@@ -11892,6 +11956,103 @@ function App() {
       context.restore()
     }
 
+    const drawQuestionBannerOverlay = () => {
+      const banner = adminTopicQuestionBannerRef.current
+      if (!banner?.questionText) return
+
+      const scale = Math.max(0.75, Math.min(1.35, width / 1280))
+      const maxBannerWidth = Math.min(width * 0.88, 980 * scale)
+      const bannerX = (width - maxBannerWidth) / 2
+      const topY = 22 * scale
+      const ageMs = performance.now() - banner.changedAt
+      const animMs = 460
+      const progress = Math.min(1, ageMs / animMs)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      const slideOffset = (1 - eased) * 16 * scale
+
+      context.save()
+      context.globalAlpha = 0.18 + eased * 0.82
+
+      const partLabel = banner.part === 'part1' ? 'PART 1' : 'PART 3'
+      const progressLabel = `Question ${banner.questionIndex + 1} of ${banner.totalQuestions}`
+      const metaFont = `900 ${13 * scale}px Inter, Arial, sans-serif`
+      const questionFont = `800 ${Math.round(28 * scale)}px Inter, Arial, sans-serif`
+      const lineHeight = 36 * scale
+      const innerPaddingX = 28 * scale
+      const innerPaddingY = 22 * scale
+      const accentWidth = 7 * scale
+
+      context.font = questionFont
+      const questionLines = wrapCanvasTextLines(context, banner.questionText, maxBannerWidth - innerPaddingX * 2 - accentWidth - 8 * scale)
+      const metaHeight = 28 * scale
+      const questionBlockHeight = Math.max(lineHeight, questionLines.length * lineHeight)
+      const bannerHeight = innerPaddingY * 2 + metaHeight + 12 * scale + questionBlockHeight
+      const bannerY = topY + slideOffset
+
+      const gradient = context.createLinearGradient(bannerX, bannerY, bannerX + maxBannerWidth, bannerY + bannerHeight)
+      gradient.addColorStop(0, 'rgba(0, 74, 173, 0.94)')
+      gradient.addColorStop(0.55, 'rgba(12, 42, 112, 0.93)')
+      gradient.addColorStop(1, 'rgba(15, 32, 80, 0.92)')
+
+      context.shadowColor = 'rgba(15, 23, 42, 0.38)'
+      context.shadowBlur = 28 * scale
+      context.shadowOffsetY = 14 * scale
+      drawRoundRect(bannerX, bannerY, maxBannerWidth, bannerHeight, 22 * scale)
+      context.fillStyle = gradient
+      context.fill()
+      context.shadowColor = 'transparent'
+
+      context.strokeStyle = 'rgba(255, 204, 0, 0.42)'
+      context.lineWidth = 1.5 * scale
+      context.stroke()
+
+      context.fillStyle = '#ffcc00'
+      drawRoundRect(bannerX + 14 * scale, bannerY + 16 * scale, accentWidth, bannerHeight - 32 * scale, 4 * scale)
+      context.fill()
+
+      const contentX = bannerX + innerPaddingX + accentWidth + 4 * scale
+      let cursorY = bannerY + innerPaddingY + 4 * scale
+
+      context.font = metaFont
+      const partWidth = context.measureText(partLabel).width
+      const pillPadX = 12 * scale
+      const pillHeight = 24 * scale
+      drawRoundRect(contentX, cursorY, partWidth + pillPadX * 2, pillHeight, 999)
+      context.fillStyle = 'rgba(255, 204, 0, 0.18)'
+      context.fill()
+      context.strokeStyle = 'rgba(255, 204, 0, 0.55)'
+      context.lineWidth = 1 * scale
+      context.stroke()
+      context.fillStyle = '#ffcc00'
+      context.fillText(partLabel, contentX + pillPadX, cursorY + 17 * scale)
+
+      context.fillStyle = 'rgba(219, 234, 254, 0.92)'
+      context.font = `800 ${12 * scale}px Inter, Arial, sans-serif`
+      context.fillText(progressLabel, contentX + partWidth + pillPadX * 2 + 14 * scale, cursorY + 17 * scale)
+
+      cursorY += metaHeight + 10 * scale
+      context.font = questionFont
+      context.fillStyle = '#ffffff'
+      questionLines.forEach((line, index) => {
+        context.fillText(line, contentX, cursorY + lineHeight * (index + 0.82))
+      })
+
+      const underlineY = bannerY + bannerHeight - 10 * scale
+      const underlineGradient = context.createLinearGradient(bannerX, underlineY, bannerX + maxBannerWidth, underlineY)
+      underlineGradient.addColorStop(0, 'rgba(255, 204, 0, 0)')
+      underlineGradient.addColorStop(0.2, 'rgba(255, 204, 0, 0.85)')
+      underlineGradient.addColorStop(0.8, 'rgba(255, 204, 0, 0.85)')
+      underlineGradient.addColorStop(1, 'rgba(255, 204, 0, 0)')
+      context.strokeStyle = underlineGradient
+      context.lineWidth = 2 * scale
+      context.beginPath()
+      context.moveTo(bannerX + 24 * scale, underlineY)
+      context.lineTo(bannerX + maxBannerWidth - 24 * scale, underlineY)
+      context.stroke()
+
+      context.restore()
+    }
+
     const renderFrame = () => {
       if (!isActive) return
       context.clearRect(0, 0, width, height)
@@ -11905,7 +12066,8 @@ function App() {
       const elapsedSeconds = startedAt > 0 ? (performance.now() - startedAt) / 1000 : 0
       if (samplePart === 'part2') {
         drawTimerOverlay(Math.max(0, ADMIN_PART2_SAMPLE_RECORDING_SECONDS - elapsedSeconds))
-      } else {
+      } else if (samplePart === 'part1' || samplePart === 'part3') {
+        drawQuestionBannerOverlay()
         drawWordCountOverlay(
           samplePart,
           countAdminSpokenWords(`${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim())
@@ -13693,7 +13855,7 @@ function App() {
     if (
       adminRecordedVideoUrl &&
       topicId !== adminSelectedVideoTopicId &&
-      !window.confirm('Switch questions? Any unsaved work in the editor will be lost.')
+      !window.confirm('Switch topics? Any unsaved work in the editor will be lost.')
     ) {
       return
     }
@@ -13747,6 +13909,7 @@ function App() {
     setAdminSubtitleAutosaveLabel('')
     setAdminVideoEditMode('fresh')
     setAdminPreviewedAsStudent(false)
+    cancelAdminTopicQuestionSequence()
     setAdminUploadChecklistOpen(false)
     setAdminStudentPreviewOpen(false)
     adminSubtitleTranscriptRef.current = ''
@@ -14248,7 +14411,7 @@ function App() {
       return
     }
     if (!adminSelectedVideoTopic) {
-      setAdminVideoRecorderMessage('Choose a speaking question before recording.')
+      setAdminVideoRecorderMessage('Choose a speaking topic before recording.')
       return
     }
 
@@ -14285,7 +14448,7 @@ function App() {
         setAdminVideoRecorderMessage(
           isPart2TimedRecording
             ? 'Part 2 timer will show in the studio, but this browser cannot burn it into the saved video.'
-            : 'Word count will show in the studio, but this browser cannot burn it into the saved video.'
+            : 'Question banner and word count will show in the studio, but this browser cannot burn them into the saved video.'
         )
       }
       const recordingStream = overlayRecordingRenderer?.stream || stream
@@ -14353,6 +14516,9 @@ function App() {
       setAdminVideoRecorderStatus('recording')
       setAdminVideoStudioStep('record')
       setAdminRecordedVideoDuration(0)
+      if (adminSelectedVideoTopic.samplePart === 'part1' || adminSelectedVideoTopic.samplePart === 'part3') {
+        initializeAdminTopicQuestionRecording(adminSelectedVideoTopic)
+      }
       const recordingLimitSeconds = isPart2TimedRecording ? ADMIN_PART2_SAMPLE_RECORDING_SECONDS : ADMIN_VIDEO_MAX_RECORDING_SECONDS
       adminVideoElapsedIntervalRef.current = window.setInterval(() => {
         setAdminRecordedVideoDuration(() => {
@@ -14378,6 +14544,7 @@ function App() {
   }
 
   const stopAdminVideoRecording = () => {
+    cancelAdminTopicQuestionSequence()
     const recorder = adminVideoMediaRecorderRef.current
     if (!recorder || recorder.state === 'inactive') {
       stopAdminVideoPreviewStream()
@@ -14397,7 +14564,7 @@ function App() {
   const uploadAdminRecordedVideo = async () => {
     if (!authSession?.accessToken || authSession.role !== 'admin') return
     if (!adminSelectedVideoTopic) {
-      setAdminVideoRecorderMessage('Choose a speaking question before uploading.')
+      setAdminVideoRecorderMessage('Choose a speaking topic before uploading.')
       return
     }
     let videoBlob = adminRecordedVideoBlobRef.current
@@ -14999,6 +15166,71 @@ function App() {
     if (browserTtsWorked) return
 
     await playPromptWithServerTts(content)
+  }
+
+  const cancelAdminTopicQuestionSequence = () => {
+    adminTopicSequenceCancelRef.current = true
+    adminTopicQuestionBannerRef.current = null
+    setAdminTopicQuestionIndex(-1)
+  }
+
+  const syncAdminTopicQuestionBanner = (index: number, target: SpeakingVideoSampleTarget) => {
+    const questions = getSpeakingTopicQuestionList(target)
+    if (
+      index < 0 ||
+      index >= questions.length ||
+      (target.samplePart !== 'part1' && target.samplePart !== 'part3')
+    ) {
+      adminTopicQuestionBannerRef.current = null
+      setAdminTopicQuestionIndex(-1)
+      return
+    }
+    adminTopicQuestionBannerRef.current = {
+      questionText: questions[index] || '',
+      questionIndex: index,
+      totalQuestions: questions.length,
+      part: target.samplePart,
+      changedAt: performance.now()
+    }
+    setAdminTopicQuestionIndex(index)
+  }
+
+  const initializeAdminTopicQuestionRecording = (target: SpeakingVideoSampleTarget) => {
+    adminTopicSequenceCancelRef.current = false
+    syncAdminTopicQuestionBanner(0, target)
+    const total = getSpeakingTopicQuestionList(target).length
+    setAdminVideoRecorderMessage(
+      `Question 1 of ${total} is on screen — click Read aloud, answer, then Next question.`
+    )
+  }
+
+  const advanceAdminTopicQuestion = () => {
+    if (!adminSelectedVideoTopic || adminTopicQuestionIndex < 0) return
+    const questions = getSpeakingTopicQuestionList(adminSelectedVideoTopic)
+    const nextIndex = adminTopicQuestionIndex + 1
+    if (nextIndex >= questions.length) {
+      setAdminVideoRecorderMessage('All questions shown — press Stop when you are finished.')
+      return
+    }
+    syncAdminTopicQuestionBanner(nextIndex, adminSelectedVideoTopic)
+    setAdminVideoRecorderMessage(
+      `Question ${nextIndex + 1} of ${questions.length} — click Read aloud when ready.`
+    )
+  }
+
+  const readAdminTopicQuestionAloud = async () => {
+    if (!adminSelectedVideoTopic || adminTopicQuestionIndex < 0) return
+    const questions = getSpeakingTopicQuestionList(adminSelectedVideoTopic)
+    const text = questions[adminTopicQuestionIndex]
+    if (!text) return
+    try {
+      setIsPromptTtsPlaying(true)
+      await speakPrompt(text)
+    } catch {
+      // Ignore TTS failures; the banner still shows the question.
+    } finally {
+      setIsPromptTtsPlaying(false)
+    }
   }
 
   const runPromptThenCountdown = async (label: string, promptText: string) => {
@@ -22547,14 +22779,19 @@ function App() {
                     {(adminVideoStudioStep === 'setup' || adminVideoStudioStep === 'record') ? (
                     <div className="adminVideoQuestionPicker">
                       <label className="adminSearchField">
-                        <span>Speaking sample question</span>
+                        <span>Speaking sample topic</span>
                         <select
                           value={adminSelectedVideoTopic?.id || ''}
                           onChange={(event) => handleAdminVideoTopicChange(event.target.value)}
                           disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
                         >
                           {(['part1', 'part2', 'part3'] as const).map((part) => {
-                            const label = part === 'part1' ? 'Part 1 questions' : part === 'part2' ? 'Part 2 prompts' : 'Part 3 questions'
+                            const label =
+                              part === 'part1'
+                                ? 'Part 1 topics'
+                                : part === 'part2'
+                                  ? 'Part 2 prompts'
+                                  : 'Part 3 topics'
                             const targets = adminSpeakingVideoTargets.filter((topic) => topic.samplePart === part)
                             return (
                               <optgroup key={`video-target-group-${part}`} label={label}>
@@ -22573,15 +22810,34 @@ function App() {
                         <div className="adminQuestionCard compact adminVideoPromptCard">
                           <div className="adminVideoPromptCardHeader">
                             <p className="adminAudioEyebrow">{adminSelectedVideoTopic.category}</p>
-                            <span>{adminSelectedVideoTopic.samplePart === 'part2' ? 'Prompt' : 'Question'}</span>
+                            <span>
+                              {adminSelectedVideoTopic.samplePart === 'part2'
+                                ? 'Prompt'
+                                : `${adminSelectedTopicQuestionList.length} questions · one recording`}
+                            </span>
                           </div>
-                          <p className="adminQuestionText">{adminSelectedVideoTopic.prompt}</p>
-                          {adminSelectedVideoTopic.cues.length > 0 ? (
+                          {adminSelectedVideoTopic.samplePart === 'part2' ? (
+                            <p className="adminQuestionText">{adminSelectedVideoTopic.prompt}</p>
+                          ) : (
+                            <ol className="adminVideoCueList adminVideoTopicQuestionList">
+                              {adminSelectedTopicQuestionList.map((question, index) => (
+                                <li key={`video-topic-q-${adminSelectedVideoTopic.id}-${index}`}>
+                                  <strong>Q{index + 1}.</strong> {question}
+                                </li>
+                              ))}
+                            </ol>
+                          )}
+                          {adminSelectedVideoTopic.samplePart === 'part2' && adminSelectedVideoTopic.cues.length > 0 ? (
                             <ul className="adminVideoCueList">
                               {adminSelectedVideoTopic.cues.map((cue) => (
                                 <li key={`video-cue-${adminSelectedVideoTopic.id}-${cue}`}>{cue}</li>
                               ))}
                             </ul>
+                          ) : null}
+                          {adminIsTopicSequenceTarget ? (
+                            <p className="adminVideoTopicSequenceHint">
+                              Record one continuous take — use Read aloud and Next question to change the on-screen banner for each question.
+                            </p>
                           ) : null}
                         </div>
                       ) : null}
@@ -22762,7 +23018,7 @@ function App() {
                       </div>
                       {adminSelectedVideoAsset ? (
                         <div className="adminVideoExistingActions">
-                          <p className="meta">This question already has a published sample.</p>
+                          <p className="meta">This topic already has a published sample.</p>
                           <div className="adminActionRow">
                             <button
                               type="button"
@@ -22798,17 +23054,39 @@ function App() {
                       {adminTeleprompterMode && adminSelectedVideoTopic && !adminRecordedVideoUrl && (adminVideoStudioStep === 'setup' || adminVideoStudioStep === 'record') ? (
                         <div className={`adminVideoReadAlongCard ${adminVideoRecorderStatus === 'recording' ? 'is-recording' : ''}`}>
                           <div className="adminVideoReadAlongHeader">
-                            <span>{adminVideoRecorderStatus === 'recording' ? 'Recording this question' : 'Read this while recording'}</span>
+                            <span>
+                              {adminVideoRecorderStatus === 'recording'
+                                ? adminIsTopicSequenceTarget && adminTopicQuestionIndex >= 0
+                                  ? `Question ${adminTopicQuestionIndex + 1} of ${adminSelectedTopicQuestionList.length}`
+                                  : 'Recording this topic'
+                                : 'All questions in this topic'}
+                            </span>
                             <strong>{adminSelectedVideoTopic.samplePart === 'part2' ? 'Part 2 sample' : adminSelectedVideoTopic.samplePart === 'part1' ? 'Part 1 sample' : 'Part 3 sample'}</strong>
                           </div>
-                          <p className="adminVideoReadAlongQuestion">{adminSelectedVideoTopic.prompt}</p>
-                          {adminSelectedVideoTopic.cues.length > 0 ? (
-                            <ul className="adminVideoReadAlongCues">
-                              {adminSelectedVideoTopic.cues.map((cue) => (
-                                <li key={`readalong-cue-${adminSelectedVideoTopic.id}-${cue}`}>{cue}</li>
+                          {adminSelectedVideoTopic.samplePart === 'part2' ? (
+                            <>
+                              <p className="adminVideoReadAlongQuestion">{adminSelectedVideoTopic.prompt}</p>
+                              {adminSelectedVideoTopic.cues.length > 0 ? (
+                                <ul className="adminVideoReadAlongCues">
+                                  {adminSelectedVideoTopic.cues.map((cue) => (
+                                    <li key={`readalong-cue-${adminSelectedVideoTopic.id}-${cue}`}>{cue}</li>
+                                  ))}
+                                </ul>
+                              ) : null}
+                            </>
+                          ) : adminVideoRecorderStatus === 'recording' && adminTopicQuestionIndex >= 0 ? (
+                            <p className="adminVideoReadAlongQuestion">
+                              {adminSelectedTopicQuestionList[adminTopicQuestionIndex]}
+                            </p>
+                          ) : (
+                            <ol className="adminVideoReadAlongCues adminVideoTopicQuestionList">
+                              {adminSelectedTopicQuestionList.map((question, index) => (
+                                <li key={`readalong-topic-q-${adminSelectedVideoTopic.id}-${index}`}>
+                                  <strong>Q{index + 1}.</strong> {question}
+                                </li>
                               ))}
-                            </ul>
-                          ) : null}
+                            </ol>
+                          )}
                           {adminSelectedVideoTopic.samplePart === 'part2' && adminSelectedVideoTopic.cues.length > 0 ? (
                             <div className="adminVideoTeleprompterCueRail" aria-label="Part 2 cue cards">
                               {adminSelectedVideoTopic.cues.map((cue, index) => (
@@ -22844,6 +23122,28 @@ function App() {
                         )}
                         {adminVideoRecorderStatus === 'idle' && !adminRecordedVideoUrl && adminCameraPreviewActive ? (
                           <div className="adminVideoPreviewLiveBadge">Live camera preview</div>
+                        ) : null}
+                        {adminVideoRecorderStatus === 'recording' && adminIsTopicSequenceTarget && adminTopicQuestionIndex >= 0 ? (
+                          <div
+                            key={`question-banner-${adminTopicQuestionIndex}`}
+                            className="adminVideoQuestionBanner"
+                            aria-live="polite"
+                          >
+                            <div className="adminVideoQuestionBannerGlow" aria-hidden="true" />
+                            <div className="adminVideoQuestionBannerInner">
+                              <div className="adminVideoQuestionBannerMeta">
+                                <span className="adminVideoQuestionBannerPart">
+                                  {adminSelectedVideoTopic?.samplePart === 'part1' ? 'Part 1' : 'Part 3'}
+                                </span>
+                                <span className="adminVideoQuestionBannerProgress">
+                                  Question {adminTopicQuestionIndex + 1} of {adminSelectedTopicQuestionList.length}
+                                </span>
+                              </div>
+                              <p className="adminVideoQuestionBannerText">
+                                {adminSelectedTopicQuestionList[adminTopicQuestionIndex]}
+                              </p>
+                            </div>
+                          </div>
                         ) : null}
                         {adminVideoRecorderStatus === 'recording' && adminIsPart2VideoTarget ? (
                           <div
@@ -23581,7 +23881,7 @@ function App() {
                               <div className="adminTtsLibraryHeader">
                                 <div>
                                   <h4>Highlighted Details</h4>
-                                  <p className="meta">These yellow notes appear in the upper-left when the phrase arrives.</p>
+                                  <p className="meta">These yellow notes pop up in the center when the selected phrase arrives.</p>
                                 </div>
                                 <div className="adminSubtitleKnowledgeHeaderActions">
                                   <span className="adminReadyDot">{adminSelectedSubtitleCue.notes?.length || 0} details</span>
@@ -23597,7 +23897,7 @@ function App() {
                                 </div>
                               ) : (
                                 <p className="meta adminSubtitleKnowledgeHint">
-                                  Highlight a word or phrase inside a subtitle line, then click Use selected text.
+                                  Highlight a word or phrase inside a subtitle line, then click Use selected text. Students see it in a #FFC000 card above the subtitle.
                                 </p>
                               )}
                               <div className="adminSubtitleKnowledgeForm">
@@ -23614,7 +23914,7 @@ function App() {
                                         phrase: event.target.value
                                       }))
                                     }
-                                    placeholder="technology-oriented"
+                                    placeholder="tech savvy"
                                   />
                                 </label>
                                 <label>
@@ -23629,7 +23929,7 @@ function App() {
                                         detail: event.target.value
                                       }))
                                     }
-                                    placeholder="Good vocabulary: means comfortable with technology."
+                                    placeholder="tech savvy (adj.) good with technology"
                                   />
                                 </label>
                                 <div className="adminSubtitleKnowledgeActions">
@@ -23971,6 +24271,29 @@ function App() {
                       ) : null}
                       {(adminVideoStudioStep === 'record' || adminVideoStudioStep === 'setup' || adminRecordedVideoUrl) ? (
                       <div className="adminActionRow adminVideoPrimaryActions">
+                        {adminVideoRecorderStatus === 'recording' && adminIsTopicSequenceTarget ? (
+                          <div className="adminVideoTopicControls">
+                            <button
+                              type="button"
+                              className="adminStudioButton-primary"
+                              onClick={() => void readAdminTopicQuestionAloud()}
+                              disabled={adminTopicQuestionIndex < 0 || isPromptTtsPlaying}
+                            >
+                              {isPromptTtsPlaying ? 'Reading…' : 'Read aloud'}
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary adminVideoNextQuestionBtn"
+                              onClick={advanceAdminTopicQuestion}
+                              disabled={
+                                adminTopicQuestionIndex < 0 ||
+                                adminTopicQuestionIndex >= adminSelectedTopicQuestionList.length - 1
+                              }
+                            >
+                              Next question
+                            </button>
+                          </div>
+                        ) : null}
                         {adminVideoRecorderStatus === 'recording' ? (
                           <button type="button" className="adminStudioButton-danger" onClick={stopAdminVideoRecording}>
                             Stop Recording
@@ -24490,12 +24813,22 @@ function App() {
                             selectedTestMode === 'part2'
                               ? Boolean(getSpeakingSampleForTopic(topic))
                               : selectedTestMode === 'part1' || selectedTestMode === 'part3'
-                                ? [topic.prompt, ...topic.cues].some((question, index) =>
-                                    Boolean(question && getUploadedSpeakingSampleForQuestion(
-                                      buildSpeakingSampleQuestionId(selectedTestMode, topic.id, index),
-                                      `${selectedTestMode === 'part1' ? 'Part 1' : 'Part 3'} Q${index + 1}: ${topic.title}`,
-                                      question
-                                    ))
+                                ? Boolean(
+                                    getUploadedSpeakingSampleForQuestion(
+                                      buildSpeakingSampleTopicId(selectedTestMode, topic.id),
+                                      `${selectedTestMode === 'part1' ? 'Part 1' : 'Part 3'}: ${topic.title}`,
+                                      topic.prompt
+                                    ) ||
+                                      [topic.prompt, ...topic.cues].some((question, index) =>
+                                        Boolean(
+                                          question &&
+                                            getUploadedSpeakingSampleForQuestion(
+                                              buildSpeakingSampleQuestionId(selectedTestMode, topic.id, index),
+                                              `${selectedTestMode === 'part1' ? 'Part 1' : 'Part 3'} Q${index + 1}: ${topic.title}`,
+                                              question
+                                            )
+                                        )
+                                      )
                                   )
                                 : false
                           return (
