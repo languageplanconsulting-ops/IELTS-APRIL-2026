@@ -26,6 +26,8 @@ export type LocalTranscriptionResult = {
   subtitles: LocalSubtitleCue[]
 }
 
+const WHISPER_SAMPLE_RATE = 16000
+
 const roundSeconds = (seconds: number) =>
   Number((Number.isFinite(Number(seconds)) ? Number(seconds) : 0).toFixed(3))
 
@@ -45,6 +47,203 @@ const ensureTranscriber = async (onProgress?: (message: string) => void) => {
     } as Record<string, unknown>)
   }
   return transcriberPromise
+}
+
+const measureAudioRms = (samples: Float32Array) => {
+  if (!samples.length) return 0
+  let sum = 0
+  for (let index = 0; index < samples.length; index += 1) {
+    sum += samples[index] * samples[index]
+  }
+  return Math.sqrt(sum / samples.length)
+}
+
+const mixToMono = (buffer: AudioBuffer): Float32Array => {
+  if (buffer.numberOfChannels <= 1) {
+    return new Float32Array(buffer.getChannelData(0))
+  }
+  const left = buffer.getChannelData(0)
+  const right = buffer.getChannelData(1)
+  const mono = new Float32Array(left.length)
+  const scale = Math.sqrt(2)
+  for (let index = 0; index < left.length; index += 1) {
+    mono[index] = (scale * (left[index] + right[index])) / 2
+  }
+  return mono
+}
+
+const resampleTo16k = (samples: Float32Array, inputRate: number) => {
+  if (!samples.length || inputRate === WHISPER_SAMPLE_RATE) return samples
+  const outputLength = Math.max(1, Math.ceil(samples.length * (WHISPER_SAMPLE_RATE / inputRate)))
+  const output = new Float32Array(outputLength)
+  const ratio = inputRate / WHISPER_SAMPLE_RATE
+  for (let index = 0; index < outputLength; index += 1) {
+    const position = index * ratio
+    const baseIndex = Math.floor(position)
+    const fraction = position - baseIndex
+    const current = samples[baseIndex] || 0
+    const next = samples[baseIndex + 1] ?? current
+    output[index] = current + (next - current) * fraction
+  }
+  return output
+}
+
+const trimAudioSamples = (samples: Float32Array, trimStartSeconds: number, trimEndSeconds: number) => {
+  const startIndex = Math.max(0, Math.floor(trimStartSeconds * WHISPER_SAMPLE_RATE))
+  const endIndex =
+    trimEndSeconds > trimStartSeconds
+      ? Math.min(samples.length, Math.ceil(trimEndSeconds * WHISPER_SAMPLE_RATE))
+      : samples.length
+  if (startIndex <= 0 && endIndex >= samples.length) return samples
+  return samples.slice(startIndex, Math.max(startIndex + 1, endIndex))
+}
+
+const normalizeAudioForWhisper = (samples: Float32Array, targetRms = 0.08) => {
+  const rms = measureAudioRms(samples)
+  if (rms <= 0) return samples
+  const gain = Math.min(24, targetRms / rms)
+  if (gain <= 1.05) return samples
+  const normalized = new Float32Array(samples.length)
+  for (let index = 0; index < samples.length; index += 1) {
+    normalized[index] = Math.max(-1, Math.min(1, samples[index] * gain))
+  }
+  return normalized
+}
+
+const waitForVideoMetadata = (video: HTMLVideoElement) =>
+  new Promise<void>((resolve, reject) => {
+    if (video.readyState >= 1 && Number.isFinite(video.duration)) {
+      resolve()
+      return
+    }
+    video.onloadedmetadata = () => resolve()
+    video.onerror = () =>
+      reject(new Error('Could not load your recording. Reload the video or record again, then sync subtitles.'))
+  })
+
+const waitForVideoSeek = (video: HTMLVideoElement) =>
+  new Promise<void>((resolve) => {
+    video.onseeked = () => resolve()
+  })
+
+/**
+ * WebM/MP4 recordings from MediaRecorder are video containers. decodeAudioData()
+ * often fails or returns silence on those files, so we render the audio track
+ * through a hidden video element instead.
+ */
+const extractMonoAudioFromVideoBlob = async (
+  blob: Blob,
+  trimStartSeconds: number,
+  trimEndSeconds: number
+): Promise<Float32Array> => {
+  const video = document.createElement('video')
+  video.preload = 'auto'
+  video.playsInline = true
+  video.muted = false
+  video.crossOrigin = 'anonymous'
+  const objectUrl = URL.createObjectURL(blob)
+  video.src = objectUrl
+
+  try {
+    await waitForVideoMetadata(video)
+    const totalDuration = Number.isFinite(video.duration) ? video.duration : 0
+    if (totalDuration <= 0) {
+      throw new Error('Your recording has no playable duration. Re-record the clip and sync again.')
+    }
+
+    const trimStart = Math.min(Math.max(0, trimStartSeconds), Math.max(0, totalDuration - 0.05))
+    const trimEnd =
+      trimEndSeconds > trimStart ? Math.min(trimEndSeconds, totalDuration) : totalDuration
+    const segmentDuration = Math.max(0.05, trimEnd - trimStart)
+    const frameCount = Math.max(1, Math.ceil(segmentDuration * WHISPER_SAMPLE_RATE))
+
+    video.currentTime = trimStart
+    await waitForVideoSeek(video)
+
+    const offline = new OfflineAudioContext(1, frameCount, WHISPER_SAMPLE_RATE)
+    const source = (offline as unknown as AudioContext).createMediaElementSource(video)
+    source.connect(offline.destination)
+
+    const renderedPromise = offline.startRendering()
+    await video.play()
+    const rendered = await renderedPromise
+    video.pause()
+
+    return mixToMono(rendered)
+  } finally {
+    video.pause()
+    video.removeAttribute('src')
+    video.load()
+    URL.revokeObjectURL(objectUrl)
+  }
+}
+
+const decodeAudioBlobDirect = async (blob: Blob): Promise<Float32Array | null> => {
+  const AudioContextConstructor =
+    window.AudioContext ||
+    (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+  if (!AudioContextConstructor) return null
+
+  const context = new AudioContextConstructor()
+  try {
+    const decoded = await context.decodeAudioData((await blob.arrayBuffer()).slice(0))
+    const mono = mixToMono(decoded)
+    return resampleTo16k(mono, decoded.sampleRate)
+  } catch {
+    return null
+  } finally {
+    await context.close().catch(() => undefined)
+  }
+}
+
+const prepareWhisperAudio = async (
+  videoBlob: Blob,
+  trimStartSeconds: number,
+  trimEndSeconds: number,
+  onProgress?: (message: string) => void
+): Promise<Float32Array> => {
+  onProgress?.('Extracting audio from your recording…')
+
+  const isLikelyVideo = /^video\//i.test(videoBlob.type) || videoBlob.type.includes('webm')
+  let samples: Float32Array | null = null
+
+  if (isLikelyVideo) {
+    try {
+      samples = await extractMonoAudioFromVideoBlob(videoBlob, trimStartSeconds, trimEndSeconds)
+    } catch (error) {
+      const fallback = await decodeAudioBlobDirect(videoBlob)
+      if (fallback?.length) {
+        samples = trimAudioSamples(fallback, trimStartSeconds, trimEndSeconds)
+      } else {
+        throw error
+      }
+    }
+  } else {
+    samples = await decodeAudioBlobDirect(videoBlob)
+    if (samples?.length) {
+      samples = trimAudioSamples(samples, trimStartSeconds, trimEndSeconds)
+    }
+  }
+
+  if (!samples?.length) {
+    throw new Error(
+      'Could not read audio from this recording. Check that your microphone is selected in Setup, record again, then sync subtitles.'
+    )
+  }
+
+  const rms = measureAudioRms(samples)
+  if (rms < 0.00035) {
+    throw new Error(
+      'This recording has no usable audio track. Select the correct microphone in Setup before recording, then try Auto-sync again.'
+    )
+  }
+
+  if (rms < 0.02) {
+    onProgress?.('Boosting quiet audio before transcription…')
+    samples = normalizeAudioForWhisper(samples)
+  }
+
+  return samples
 }
 
 const mapWhisperWords = (output: unknown): LocalTimedWord[] => {
@@ -192,15 +391,15 @@ export const transcribeRecordingLocally = async (
 
   onProgress?.('Preparing your recording for free local transcription…')
   const transcriber = await ensureTranscriber(onProgress)
-  const audioUrl = URL.createObjectURL(videoBlob)
+  const audioSamples = await prepareWhisperAudio(videoBlob, trimStartSeconds, trimEndSeconds, onProgress)
 
   try {
     onProgress?.('Matching subtitles to your voice (runs on your device, no API cost)…')
     const runTranscriber = transcriber as (
-      input: string,
+      input: Float32Array,
       options?: Record<string, unknown>
     ) => Promise<{ text?: string; chunks?: Array<{ text?: string; timestamp?: [number, number | null] }> }>
-    const output = await runTranscriber(audioUrl, {
+    const output = await runTranscriber(audioSamples, {
       return_timestamps: 'word',
       chunk_length_s: 28,
       stride_length_s: 4,
@@ -211,7 +410,9 @@ export const transcribeRecordingLocally = async (
     const transcript = String((output as { text?: string })?.text || '').trim()
     const words = mapWhisperWords(output)
     if (!transcript) {
-      throw new Error('Local transcription could not detect any speech. Try speaking closer to the mic and sync again.')
+      throw new Error(
+        'Speech was found in the recording but Whisper could not transcribe it clearly. Try trimming silence at the start/end, then sync again.'
+      )
     }
 
     const subtitles = buildLocalSubtitlesFromWords({
@@ -226,7 +427,11 @@ export const transcribeRecordingLocally = async (
     }
 
     return { transcript, words, subtitles }
-  } finally {
-    URL.revokeObjectURL(audioUrl)
+  } catch (error) {
+    if (error instanceof Error && /speech was found/i.test(error.message)) {
+      throw error
+    }
+    const message = error instanceof Error ? error.message : 'Local subtitle sync failed.'
+    throw new Error(message)
   }
 }
