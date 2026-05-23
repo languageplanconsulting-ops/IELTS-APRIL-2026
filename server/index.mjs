@@ -18,6 +18,7 @@ import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS } from './userProvide
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS } from './userProvidedReadingPracticeCambridge17.mjs'
 import { USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS } from './userProvidedReadingPracticeJune2026.mjs'
+import { buildReadingExamPayload, resolveReadingPassageBodyParagraphs } from './readingImportUtils.mjs'
 
 dotenv.config()
 
@@ -2896,6 +2897,42 @@ const inferReadingAnswerType = (correctAnswer, questionSectionText = '') => {
   return guessReadingAnswerType(correctAnswer)
 }
 
+const sanitizeReadingJudgementPrompt = (prompt, answerType) => {
+  const text = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (answerType !== 'true-false-not-given' && answerType !== 'yes-no-not-given') return text
+
+  const stripped = text
+    .replace(
+      /^(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers)\s+(?:believes?|claims?|argues?|suggests?|states?|says?|thinks?|maintains?|contends?|implies?|feels?|considers?|indicates?|holds?|asserts?)\s+(?:that\s+)?/i,
+      ''
+    )
+    .replace(
+      /^(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers)(?:'s|’s)\s+(?:view|opinion|belief|claim|argument|suggestion|position)\s+(?:is|was)\s+(?:that\s+)?/i,
+      ''
+    )
+    .replace(
+      /^(?:according to|in the view of|in the opinion of)\s+(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers),?\s*/i,
+      ''
+    )
+    .trim()
+
+  return stripped || text
+}
+
+const sanitizeReadingQuestionPrompt = (prompt, correctAnswer) => {
+  const text = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (/^drop heading here/i.test(text)) {
+    return 'Choose the correct heading for this section.'
+  }
+  if (/^drop answer here/i.test(text)) {
+    return 'Complete the summary below.'
+  }
+  if (READING_ROMAN_HEADING_PATTERN.test(String(correctAnswer || '').trim()) && /^paragraph\s+[a-h]\b/i.test(text)) {
+    return text
+  }
+  return text
+}
+
 const QUESTION_SECTION_HEADER_REGEX =
   /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
 const QUESTION_SECTION_MARKER_REGEX = /(?:^|\n)\s*Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
@@ -3040,10 +3077,15 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
 
 const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
   const correctAnswer = canonicalizeReadingCorrectAnswer(question?.correctAnswer || '')
+  const answerType = inferReadingAnswerType(correctAnswer, questionSectionText)
   return {
     ...question,
+    prompt: sanitizeReadingQuestionPrompt(
+      sanitizeReadingJudgementPrompt(question?.prompt, answerType),
+      correctAnswer
+    ),
     correctAnswer,
-    answerType: inferReadingAnswerType(correctAnswer, questionSectionText)
+    answerType
   }
 }
 
@@ -3052,6 +3094,7 @@ const normalizeReadingParsedPayload = (payload) => ({
   passages: Array.isArray(payload?.passages)
     ? payload.passages.map((passage) => ({
         ...passage,
+        bodyParagraphs: resolveReadingPassageBodyParagraphs(passage?.title, passage?.bodyParagraphs),
         questions: Array.isArray(passage?.questions)
           ? passage.questions.map((question) => normalizeReadingQuestionRecord(question))
           : []
@@ -3122,54 +3165,6 @@ const canViewReadingExam = (exam, role, now = new Date()) => {
   if (role === 'admin') return true
   const releaseAt = getReadingExamReleaseAt(exam)
   return !releaseAt || Date.parse(releaseAt) <= now.getTime()
-}
-
-const buildReadingExamPayload = ({ title, category, collectionTitle, releaseAt, rawPassageText, rawAnswerKey }) => {
-  const passages = parseReadingPassages(rawPassageText)
-  const questions = parseReadingAnswerKey(rawAnswerKey)
-  const passagesWithQuestions = passages.map((passage) => ({
-    ...passage,
-    questions: questions
-      .filter((question) =>
-        passage.questionRanges.some((range) => question.number >= range.start && question.number <= range.end)
-      )
-      .map((question) =>
-        normalizeReadingQuestionRecord(question, getQuestionSectionTextForNumber(passage.questionSectionText, question.number))
-      )
-  }))
-
-  if (passagesWithQuestions.length === 0) {
-    throw new Error('The passage parser could not find any READING PASSAGE blocks. Please keep the "READING PASSAGE 1/2/3" headings in your upload.')
-  }
-
-  if (questions.length === 0) {
-    throw new Error('The answer key parser could not find any "Question X:" blocks. Please keep the Question / Correct Answer / Exact Portion format.')
-  }
-
-  const questionsMissingPassage = questions.filter(
-    (question) => !passagesWithQuestions.some((passage) => passage.questions.some((item) => item.number === question.number))
-  )
-  if (questionsMissingPassage.length > 0) {
-    throw new Error(
-      `Some questions could not be matched to a passage range: ${questionsMissingPassage
-        .slice(0, 10)
-        .map((question) => question.number)
-        .join(', ')}`
-    )
-  }
-
-  return {
-    title: String(title || '').trim(),
-    category: normalizeReadingCategory(category),
-    ...(normalizeReadingCollectionTitle(collectionTitle)
-      ? { collectionTitle: normalizeReadingCollectionTitle(collectionTitle) }
-      : {}),
-    ...(resolveReadingReleaseAt({ releaseAt, collectionTitle, title })
-      ? { releaseAt: resolveReadingReleaseAt({ releaseAt, collectionTitle, title }) }
-      : {}),
-    passages: passagesWithQuestions,
-    questionCount: questions.length
-  }
 }
 
 const READING_FULL_TEST_PART2_PASSAGE_TEXT = `READING PASSAGE 1

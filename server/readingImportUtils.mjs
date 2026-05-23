@@ -1,3 +1,5 @@
+import { READING_PASSAGE_BODY_FIXTURES } from './readingPassageBodyFixtures.mjs'
+
 const normalizeReadingCategory = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
@@ -54,6 +56,42 @@ const inferReadingAnswerType = (correctAnswer, questionSectionText = '') => {
   return guessReadingAnswerType(correctAnswer)
 }
 
+const sanitizeReadingJudgementPrompt = (prompt, answerType) => {
+  const text = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (answerType !== 'true-false-not-given' && answerType !== 'yes-no-not-given') return text
+
+  const stripped = text
+    .replace(
+      /^(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers)\s+(?:believes?|claims?|argues?|suggests?|states?|says?|thinks?|maintains?|contends?|implies?|feels?|considers?|indicates?|holds?|asserts?)\s+(?:that\s+)?/i,
+      ''
+    )
+    .replace(
+      /^(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers)(?:'s|’s)\s+(?:view|opinion|belief|claim|argument|suggestion|position)\s+(?:is|was)\s+(?:that\s+)?/i,
+      ''
+    )
+    .replace(
+      /^(?:according to|in the view of|in the opinion of)\s+(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers),?\s*/i,
+      ''
+    )
+    .trim()
+
+  return stripped || text
+}
+
+const sanitizeReadingQuestionPrompt = (prompt, correctAnswer) => {
+  const text = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (/^drop heading here/i.test(text)) {
+    return 'Choose the correct heading for this section.'
+  }
+  if (/^drop answer here/i.test(text)) {
+    return 'Complete the summary below.'
+  }
+  if (READING_ROMAN_HEADING_PATTERN.test(String(correctAnswer || '').trim()) && /^paragraph\s+[a-h]\b/i.test(text)) {
+    return text
+  }
+  return text
+}
+
 const QUESTION_SECTION_HEADER_REGEX =
   /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
 const QUESTION_SECTION_MARKER_REGEX = /(?:^|\n)\s*Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
@@ -86,6 +124,64 @@ const getQuestionSectionTextForNumber = (text, questionNumber) => {
   return source.slice(current.index, next ? next.index : source.length)
 }
 
+const isJunkReadingPassageParagraph = (paragraph) => {
+  const text = String(paragraph || '').trim()
+  if (!text) return true
+  if (/^<\w+/i.test(text)) return true
+  if (/^\d*Drop heading here<input/i.test(text)) return true
+  if (/^\d+Drop heading here[A-H]\.?$/i.test(text)) return true
+  if (/^Questions?\s+\d+/i.test(text)) return true
+  if (/^Drag and drop an option/i.test(text)) return true
+  if (/^hidden"\s*form=/i.test(text)) return true
+  if (/form="\s*$/i.test(text)) return true
+  if (text.length < 50 && /[<>"'=]/.test(text)) return true
+  return false
+}
+
+const normalizeReadingPassageParagraph = (paragraph) =>
+  String(paragraph || '')
+    .replace(/\r/g, '')
+    .replace(/\n+/g, ' ')
+    .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
+    .replace(/^\d+Drop heading here<input[\s\S]*$/i, '')
+    .replace(/Drop heading here[^.]*\.\.\.\s*/gi, '')
+    .replace(/<[^>]*$/g, '')
+    .replace(/hidden"\s*form="?\s*$/i, '')
+    .trim()
+
+export const cleanReadingPassageParagraphs = (paragraphs = []) =>
+  (Array.isArray(paragraphs) ? paragraphs : [])
+    .map(normalizeReadingPassageParagraph)
+    .filter((paragraph) => !isJunkReadingPassageParagraph(paragraph))
+
+export const isCorruptReadingPassageBody = (paragraphs = []) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  if (!cleaned.length) return true
+  const substantial = cleaned.filter((paragraph) => paragraph.length >= 80)
+  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
+  if (substantial.length >= 2 && totalLength >= 500) return false
+  return cleaned.some((paragraph) => /drop heading here|drop answer here|<input|form="|type="hidden/i.test(paragraph)) || totalLength < 500
+}
+
+const findReadingPassageFixture = (title) => {
+  const normalizedTitle = String(title || '')
+    .trim()
+    .replace(/^['"]|['"]$/g, '')
+    .toLowerCase()
+  const fixtureKey = Object.keys(READING_PASSAGE_BODY_FIXTURES).find((key) => {
+    const normalizedKey = key.toLowerCase()
+    return normalizedTitle.includes(normalizedKey) || normalizedKey.includes(normalizedTitle)
+  })
+  return fixtureKey ? READING_PASSAGE_BODY_FIXTURES[fixtureKey] : null
+}
+
+export const resolveReadingPassageBodyParagraphs = (title, paragraphs = []) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  if (!isCorruptReadingPassageBody(cleaned)) return cleaned
+  const fixture = findReadingPassageFixture(title)
+  return fixture ? [...fixture] : cleaned
+}
+
 const stripWrappedQuotes = (value) => {
   const text = String(value || '').replace(/\r/g, '').trim()
   if (!text) return ''
@@ -114,7 +210,7 @@ const splitReadingTitleAndBody = (value, fallbackTitle) => {
 
   return {
     title,
-    bodyParagraphs
+    bodyParagraphs: resolveReadingPassageBodyParagraphs(title, bodyParagraphs)
   }
 }
 
@@ -198,10 +294,15 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
 
 const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
   const correctAnswer = canonicalizeReadingCorrectAnswer(question?.correctAnswer || '')
+  const answerType = inferReadingAnswerType(correctAnswer, questionSectionText)
   return {
     ...question,
+    prompt: sanitizeReadingQuestionPrompt(
+      sanitizeReadingJudgementPrompt(question?.prompt, answerType),
+      correctAnswer
+    ),
     correctAnswer,
-    answerType: inferReadingAnswerType(correctAnswer, questionSectionText)
+    answerType
   }
 }
 

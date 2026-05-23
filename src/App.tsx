@@ -5697,6 +5697,47 @@ const canonicalizeReadingCorrectAnswer = (value: string) => {
   return String(value || '').trim()
 }
 
+const sanitizeReadingJudgementPrompt = (
+  prompt: string,
+  answerType: ReadingQuestion['answerType'] | string
+) => {
+  const text = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (answerType !== 'true-false-not-given' && answerType !== 'yes-no-not-given') return text
+
+  const stripped = text
+    .replace(
+      /^(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers)\s+(?:believes?|claims?|argues?|suggests?|states?|says?|thinks?|maintains?|contends?|implies?|feels?|considers?|indicates?|holds?|asserts?)\s+(?:that\s+)?/i,
+      ''
+    )
+    .replace(
+      /^(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers)(?:'s|’s)\s+(?:view|opinion|belief|claim|argument|suggestion|position)\s+(?:is|was)\s+(?:that\s+)?/i,
+      ''
+    )
+    .replace(
+      /^(?:according to|in the view of|in the opinion of)\s+(?:the\s+)?(?:writer|writers|author|authors|passage writer|passage writers),?\s*/i,
+      ''
+    )
+    .trim()
+
+  return stripped || text
+}
+
+const normalizeReadingQuestionForDisplay = (question: ReadingQuestion): ReadingQuestion => ({
+  ...question,
+  prompt: sanitizeReadingJudgementPrompt(question.prompt, question.answerType)
+})
+
+const normalizeReadingExamForDisplay = (exam: ReadingExamRecord): ReadingExamRecord => ({
+  ...exam,
+  parsedPayload: {
+    ...exam.parsedPayload,
+    passages: (exam.parsedPayload?.passages || []).map((passage) => ({
+      ...passage,
+      questions: (passage.questions || []).map(normalizeReadingQuestionForDisplay)
+    }))
+  }
+})
+
 const normalizeReadingScoredAnswer = (value: string) => {
   const canonical = canonicalizeReadingCorrectAnswer(value)
   return canonical ? normalizeReadingAnswer(canonical) : normalizeReadingAnswer(value)
@@ -6491,22 +6532,25 @@ const parseStoredReadingAttempts = (value: string | null): Record<string, Readin
     return Object.fromEntries(
       Object.entries(parsed).map(([examId, attempt]) => {
         const reportItems = Array.isArray(attempt?.reportItems)
-          ? attempt.reportItems.map((item) => ({
-              ...item,
-              number: Number(item?.number || 0),
-              prompt: String(item?.prompt || ''),
-              correctAnswer: String(item?.correctAnswer || ''),
-              answerType: item?.answerType || 'text',
-              exactPortion: String(item?.exactPortion || ''),
-              explanationThai: String(item?.explanationThai || ''),
-              paraphrasedVocabulary: String(item?.paraphrasedVocabulary || ''),
-              userAnswer: String(item?.userAnswer || ''),
-              isCorrect: Boolean(item?.isCorrect),
-              acceptedAnswers: Array.isArray(item?.acceptedAnswers)
-                ? item.acceptedAnswers.map((answer) => String(answer || ''))
-                : undefined,
-              answerGroup: item?.answerGroup ? String(item.answerGroup) : undefined
-            }))
+          ? attempt.reportItems.map((item) => {
+              const answerType = item?.answerType || 'text'
+              return {
+                ...item,
+                number: Number(item?.number || 0),
+                prompt: sanitizeReadingJudgementPrompt(String(item?.prompt || ''), answerType),
+                correctAnswer: String(item?.correctAnswer || ''),
+                answerType,
+                exactPortion: String(item?.exactPortion || ''),
+                explanationThai: String(item?.explanationThai || ''),
+                paraphrasedVocabulary: String(item?.paraphrasedVocabulary || ''),
+                userAnswer: String(item?.userAnswer || ''),
+                isCorrect: Boolean(item?.isCorrect),
+                acceptedAnswers: Array.isArray(item?.acceptedAnswers)
+                  ? item.acceptedAnswers.map((answer) => String(answer || ''))
+                  : undefined,
+                answerGroup: item?.answerGroup ? String(item.answerGroup) : undefined
+              }
+            })
           : []
         const rescoredReportItems = scoreReadingQuestions(
           reportItems,
@@ -7225,7 +7269,7 @@ function App() {
         Authorization: `Bearer ${accessToken}`
       }
     })
-    setReadingExams(Array.isArray(payload.exams) ? payload.exams : [])
+    setReadingExams(Array.isArray(payload.exams) ? payload.exams.map(normalizeReadingExamForDisplay) : [])
   }
 
   const loadAdminTtsCatalog = async (accessToken = authSession?.accessToken) => {
@@ -7791,7 +7835,8 @@ function App() {
           rawAnswerKey: adminReadingAnswerKeyInput
         })
       })
-      setReadingExams((current) => [payload.exam, ...current.filter((item) => item.id !== payload.exam.id)])
+      const normalizedExam = normalizeReadingExamForDisplay(payload.exam)
+      setReadingExams((current) => [normalizedExam, ...current.filter((item) => item.id !== normalizedExam.id)])
       setAdminReadingTitleInput('')
       setAdminReadingCategoryInput('normal')
       setAdminReadingPassageInput('')
@@ -7836,7 +7881,7 @@ function App() {
         })
       })
 
-      const created = Array.isArray(payload.exams) ? payload.exams : []
+      const created = Array.isArray(payload.exams) ? payload.exams.map(normalizeReadingExamForDisplay) : []
       setReadingExams((current) => {
         const incoming = new Map(created.map((exam) => [exam.id, exam]))
         const retained = current.filter((exam) => !incoming.has(exam.id))
