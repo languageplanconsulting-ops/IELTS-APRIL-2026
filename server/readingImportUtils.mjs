@@ -85,6 +85,30 @@ const stripReadingDragDropUiText = (text) =>
     .replace(/\s*Questions?\s+\d+(?:\s*[–-]\s*\d+)?[\s\S]*$/i, '')
     .trim()
 
+const isReadingDragDropPlaceholderLine = (line) =>
+  /^\d+\.\s*Drop heading here\s*(?:…|\.{2,})?\s*$/i.test(String(line || '').trim())
+
+const sanitizeReadingQuestionSectionLine = (line) => {
+  const trimmed = String(line || '').trim()
+  if (!trimmed) return ''
+  if (isReadingDragDropPlaceholderLine(trimmed)) return ''
+  return trimmed
+    .replace(/^(\d+)\.\s*Drop answer here\s*(?:…|\.{2,})?\s*/i, '$1. ')
+    .replace(/^(\d+)\.\s*Drop heading here\s*(?:…|\.{2,})?\s*/i, '$1. ')
+    .trim()
+}
+
+export const sanitizeReadingQuestionSectionText = (text) =>
+  String(text || '')
+    .replace(/\r/g, '')
+    .replace(/\s*Drag and drop an option[\s\S]*?(?=\nQuestions?\s+\d|\n\s*\d+\.\s|$)/gi, '\n')
+    .replace(/<(?:form|input|div|span|script)\b[\s\S]*?(?=\n|$)/gi, '')
+    .split('\n')
+    .map((line) => sanitizeReadingQuestionSectionLine(line))
+    .filter(Boolean)
+    .join('\n')
+    .trim()
+
 const stripReadingMatchingListFromPrompt = (text) =>
   String(text || '')
     .replace(
@@ -301,7 +325,9 @@ const parseReadingPassages = (rawPassageText) => {
     const passageBodyRaw = stripReadingPassageSourceHtml(
       questionMarker >= 0 ? block.slice(0, questionMarker).trim() : block.trim()
     )
-    const questionSectionText = questionMarker >= 0 ? block.slice(questionMarker).trim() : ''
+    const questionSectionText = sanitizeReadingQuestionSectionText(
+      questionMarker >= 0 ? block.slice(questionMarker).trim() : ''
+    )
     const { title, bodyParagraphs } = splitReadingTitleAndBody(passageBodyRaw, `Passage ${current[1]}`)
     passages.push({
       number: Number(current[1]),
@@ -317,7 +343,9 @@ const parseReadingPassages = (rawPassageText) => {
     const fallbackPassageBodyRaw = stripReadingPassageSourceHtml(
       fallbackQuestionMarker >= 0 ? source.slice(0, fallbackQuestionMarker).trim() : source.trim()
     )
-    const fallbackQuestionSectionText = fallbackQuestionMarker >= 0 ? source.slice(fallbackQuestionMarker).trim() : ''
+    const fallbackQuestionSectionText = sanitizeReadingQuestionSectionText(
+      fallbackQuestionMarker >= 0 ? source.slice(fallbackQuestionMarker).trim() : ''
+    )
     const { title: fallbackTitle, bodyParagraphs: fallbackBodyParagraphs } = splitReadingTitleAndBody(
       fallbackPassageBodyRaw,
       'Passage 1'

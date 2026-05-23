@@ -109,7 +109,9 @@ const isReadingFillBoilerplateLine = (line: string) =>
   /^Write the correct/i.test(line) ||
   /^Reading Passage \d+/i.test(line) ||
   /^In boxes \d+/i.test(line) ||
-  /^[A-J]\s+/.test(line)
+  /^[A-J]\s+/.test(line) ||
+  /^\d+\.\s*Drop heading here/i.test(line) ||
+  /^\d+\.\s*Drop answer here\s*(?:…|\.{2,})?\s*$/i.test(line)
 
 export const parseReadingFillLineSegments = (
   line: string,

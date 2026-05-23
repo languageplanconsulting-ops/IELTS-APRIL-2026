@@ -5002,6 +5002,7 @@ const extractReadingMatchingGroupInstruction = (
         /paragraphs?,\s*[A-Z]/i.test(line)
     )
     if (instructionLines.length) return instructionLines.join('\n')
+    return 'Choose the correct heading for each paragraph from the list below.'
   }
 
   if (kind === 'statement') {
@@ -5018,10 +5019,28 @@ const extractReadingMatchingGroupInstruction = (
   return block.trim()
 }
 
+const getReadingHeadingParagraphStatement = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion,
+  groupQuestions: ReadingQuestion[] = []
+) => {
+  const pool = groupQuestions.length
+    ? groupQuestions
+    : (passage?.questions || []).filter((item) => isReadingMatchingHeadingQuestion(passage, item))
+  const index = pool.findIndex((item) => item.number === question.number)
+  const paragraphs = passage?.bodyParagraphs || []
+  const paragraphText = index >= 0 ? String(paragraphs[index] || '').trim() : ''
+  const letterMatch = paragraphText.match(/^([A-I])[\.)]/i)
+  if (letterMatch) return `Paragraph ${letterMatch[1].toUpperCase()}`
+  if (index >= 0) return `Paragraph ${String.fromCharCode(65 + index)}`
+  return 'Choose the correct heading for this section.'
+}
+
 const getReadingMatchingQuestionStatement = (
   passage: ReadingPassageRecord | null,
   question: ReadingQuestion,
-  kind: ReadingMatchingGroupKind
+  kind: ReadingMatchingGroupKind,
+  groupQuestions: ReadingQuestion[] = []
 ) => {
   const range = findReadingQuestionRange(passage, question)
   const scopedSection = extractReadingQuestionRangeBlock(
@@ -5033,11 +5052,15 @@ const getReadingMatchingQuestionStatement = (
     scopedSection || passage?.questionSectionText || '',
     question.number
   )
-  if (fromBlock) return fromBlock.trim()
+  if (fromBlock && !isReadingDragDropPlaceholderText(fromBlock)) return fromBlock.trim()
 
   const prompt = String(question.prompt || '').trim()
   if (kind === 'heading') {
-    return prompt.replace(/^heading (?:for )?paragraph\s*/i, '').trim() || prompt
+    const headingPrompt = prompt.replace(/^heading (?:for )?paragraph\s*/i, '').trim()
+    if (headingPrompt && !/^choose the correct heading/i.test(headingPrompt)) {
+      return headingPrompt
+    }
+    return getReadingHeadingParagraphStatement(passage, question, groupQuestions)
   }
   if (kind === 'information') {
     return prompt.replace(/^which paragraph:\s*/i, '').trim() || prompt
@@ -5754,6 +5777,35 @@ const stripReadingDragDropUiText = (text: string) =>
     .replace(/\s*Questions?\s+\d+(?:\s*[–-]\s*\d+)?[\s\S]*$/i, '')
     .trim()
 
+const isReadingDragDropPlaceholderLine = (line: string) =>
+  /^\d+\.\s*Drop heading here\s*(?:…|\.{2,})?\s*$/i.test(String(line || '').trim())
+
+const isReadingDragDropPlaceholderText = (text: string) => {
+  const normalized = String(text || '').replace(/\s+/g, ' ').trim()
+  return /^(?:drop heading here|drop answer here)\b/i.test(normalized)
+}
+
+const sanitizeReadingQuestionSectionLineForDisplay = (line: string) => {
+  const trimmed = String(line || '').trim()
+  if (!trimmed) return ''
+  if (isReadingDragDropPlaceholderLine(trimmed)) return ''
+  return trimmed
+    .replace(/^(\d+)\.\s*Drop answer here\s*(?:…|\.{2,})?\s*/i, '$1. ')
+    .replace(/^(\d+)\.\s*Drop heading here\s*(?:…|\.{2,})?\s*/i, '$1. ')
+    .trim()
+}
+
+const sanitizeReadingQuestionSectionTextForDisplay = (text: string) =>
+  String(text || '')
+    .replace(/\r/g, '')
+    .replace(/\s*Drag and drop an option[\s\S]*?(?=\nQuestions?\s+\d|\n\s*\d+\.\s|$)/gi, '\n')
+    .replace(/<(?:form|input|div|span|script)\b[\s\S]*?(?=\n|$)/gi, '')
+    .split('\n')
+    .map((line) => sanitizeReadingQuestionSectionLineForDisplay(line))
+    .filter(Boolean)
+    .join('\n')
+    .trim()
+
 const stripReadingMatchingListFromPrompt = (text: string) =>
   String(text || '')
     .replace(
@@ -5850,6 +5902,7 @@ const normalizeReadingExamForDisplay = (exam: ReadingExamRecord): ReadingExamRec
     passages: (exam.parsedPayload?.passages || []).map((passage) => ({
       ...passage,
       bodyParagraphs: cleanReadingPassageParagraphsForDisplay(passage.bodyParagraphs || []),
+      questionSectionText: sanitizeReadingQuestionSectionTextForDisplay(passage.questionSectionText || ''),
       questions: (passage.questions || []).map(normalizeReadingQuestionForDisplay)
     }))
   }
@@ -18032,7 +18085,8 @@ function App() {
             const statement = getReadingMatchingQuestionStatement(
               activeReadingPassage,
               question,
-              group.kind
+              group.kind,
+              group.questions
             )
             const isHinting = readingHintQuestionNumber === question.number
             const selectPlaceholder =
