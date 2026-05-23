@@ -5722,9 +5722,60 @@ const sanitizeReadingJudgementPrompt = (
   return stripped || text
 }
 
+const stripReadingDragDropUiText = (text: string) =>
+  String(text || '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*Drag and drop an option[\s\S]*?(?=Questions?\s+\d|$)/i, '')
+    .replace(/\s*Questions?\s+\d+(?:\s*[–-]\s*\d+)?[\s\S]*$/i, '')
+    .trim()
+
+const sanitizeReadingQuestionPromptForDisplay = (prompt: string, _correctAnswer: string) => {
+  const raw = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (/^drop heading here/i.test(raw)) {
+    const remainder = stripReadingDragDropUiText(raw.replace(/^drop heading here\s*…?\s*/i, ''))
+    return remainder || 'Choose the correct heading for this section.'
+  }
+  if (/^drop answer here/i.test(raw)) {
+    const remainder = stripReadingDragDropUiText(
+      raw
+        .replace(/^drop answer here\s*…?\s*/i, '')
+        .replace(/^[\.\•]\s*/, '')
+    )
+    return remainder || 'Complete the summary below.'
+  }
+  return stripReadingDragDropUiText(raw) || raw
+}
+
+const isJunkReadingPassageParagraphForDisplay = (paragraph: string) => {
+  const text = String(paragraph || '').trim()
+  if (!text) return true
+  if (/^<\w+/i.test(text)) return true
+  if (/^\d*Drop heading here<input/i.test(text)) return true
+  if (/^\d+Drop heading here[A-H]\.?$/i.test(text)) return true
+  if (/^hidden"\s*form=/i.test(text)) return true
+  if (text.length < 50 && /[<>"'=]/.test(text)) return true
+  return false
+}
+
+const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) =>
+  (Array.isArray(paragraphs) ? paragraphs : [])
+    .map((paragraph) =>
+      String(paragraph || '')
+        .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
+        .replace(/^\d+Drop heading here<input[\s\S]*$/i, '')
+        .replace(/Drop heading here[^.]*\.\.\.\s*/gi, '')
+        .replace(/<[^>]*$/g, '')
+        .replace(/hidden"\s*form="?\s*$/i, '')
+        .trim()
+    )
+    .filter((paragraph) => !isJunkReadingPassageParagraphForDisplay(paragraph))
+
 const normalizeReadingQuestionForDisplay = (question: ReadingQuestion): ReadingQuestion => ({
   ...question,
-  prompt: sanitizeReadingJudgementPrompt(question.prompt, question.answerType)
+  prompt: sanitizeReadingQuestionPromptForDisplay(
+    sanitizeReadingJudgementPrompt(question.prompt, question.answerType),
+    question.correctAnswer
+  )
 })
 
 const normalizeReadingExamForDisplay = (exam: ReadingExamRecord): ReadingExamRecord => ({
@@ -5733,6 +5784,7 @@ const normalizeReadingExamForDisplay = (exam: ReadingExamRecord): ReadingExamRec
     ...exam.parsedPayload,
     passages: (exam.parsedPayload?.passages || []).map((passage) => ({
       ...passage,
+      bodyParagraphs: cleanReadingPassageParagraphsForDisplay(passage.bodyParagraphs || []),
       questions: (passage.questions || []).map(normalizeReadingQuestionForDisplay)
     }))
   }

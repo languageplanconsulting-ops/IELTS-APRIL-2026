@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "verify:reading": "node scripts/verify-reading-prompts.mjs",
+    "audit:reading-passages": "node scripts/audit-reading-passage-bodies.mjs",
     "verify:listening-part1-audio": "node scripts/verify-part1-audio-urls.mjs",
     "audit:listening-part1": "node scripts/audit-part1-foundation.mjs"
   },

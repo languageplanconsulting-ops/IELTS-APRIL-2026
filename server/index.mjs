@@ -2919,18 +2919,31 @@ const sanitizeReadingJudgementPrompt = (prompt, answerType) => {
   return stripped || text
 }
 
+const stripReadingDragDropUiText = (text) =>
+  String(text || '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*Drag and drop an option[\s\S]*?(?=Questions?\s+\d|$)/i, '')
+    .replace(/\s*Questions?\s+\d+(?:\s*[–-]\s*\d+)?[\s\S]*$/i, '')
+    .trim()
+
 const sanitizeReadingQuestionPrompt = (prompt, correctAnswer) => {
-  const text = String(prompt || '').replace(/\s+/g, ' ').trim()
-  if (/^drop heading here/i.test(text)) {
-    return 'Choose the correct heading for this section.'
+  const raw = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (/^drop heading here/i.test(raw)) {
+    const remainder = stripReadingDragDropUiText(raw.replace(/^drop heading here\s*…?\s*/i, ''))
+    return remainder || 'Choose the correct heading for this section.'
   }
-  if (/^drop answer here/i.test(text)) {
-    return 'Complete the summary below.'
+  if (/^drop answer here/i.test(raw)) {
+    const remainder = stripReadingDragDropUiText(
+      raw
+        .replace(/^drop answer here\s*…?\s*/i, '')
+        .replace(/^[\.\•]\s*/, '')
+    )
+    return remainder || 'Complete the summary below.'
   }
-  if (READING_ROMAN_HEADING_PATTERN.test(String(correctAnswer || '').trim()) && /^paragraph\s+[a-h]\b/i.test(text)) {
-    return text
+  if (READING_ROMAN_HEADING_PATTERN.test(String(correctAnswer || '').trim()) && /^paragraph\s+[a-h]\b/i.test(raw)) {
+    return raw
   }
-  return text
+  return stripReadingDragDropUiText(raw) || raw
 }
 
 const QUESTION_SECTION_HEADER_REGEX =
