@@ -9120,6 +9120,7 @@ function App() {
     activeReadingPassages.find((passage) => passage.number === readingActivePassageNumber) ??
     activeReadingPassages[0] ??
     null
+  const isAdvancedReadingExam = activeReadingExam?.category === 'advanced'
   const readingPdoyLessons = useMemo<ReadingPdoyLesson[]>(() => {
     const lessons: ReadingPdoyLesson[] = []
     pdoyReadingExams.forEach((exam) => {
@@ -17905,9 +17906,44 @@ function App() {
   const renderReadingFillBlankSlot = (
     question: Pick<ReadingQuestion, 'number'>,
     segment: { before: string; after: string },
-    slotKey: string
+    slotKey: string,
+    options?: { advancedLayout?: boolean }
   ) => {
     const isHinting = readingHintQuestionNumber === question.number
+    const advancedLayout = Boolean(options?.advancedLayout)
+
+    if (advancedLayout) {
+      return (
+        <span
+          key={slotKey}
+          id={`reading-question-${question.number}`}
+          className={`readingFillBlankSlot readingFillBlankSlot-advanced ${isHinting ? 'is-active' : ''}`.trim()}
+        >
+          {segment.before && <span className="readingFillBlankPrefix">{segment.before} </span>}
+          <span className="readingFillBlankGap-advanced">
+            <span className="readingFillBlankNumber">{question.number}</span>
+            <input
+              type="text"
+              value={readingAnswers[question.number] || ''}
+              onChange={(event) =>
+                setReadingAnswers((current) => ({
+                  ...current,
+                  [question.number]: event.target.value
+                }))
+              }
+              placeholder="…"
+              className="readingFillBlankInput"
+              aria-label={`Question ${question.number}`}
+            />
+          </span>
+          <span className="readingFillBlankHint-advanced">
+            {renderReadingHintToggleButton(question.number, isHinting, { compact: true })}
+          </span>
+          {segment.after && <span className="readingFillBlankSuffix"> {segment.after}</span>}
+        </span>
+      )
+    }
+
     return (
       <span
         key={slotKey}
@@ -17937,6 +17973,16 @@ function App() {
     )
   }
 
+  const getReadingFillGroupTitle = (instruction: string, advanced: boolean) => {
+    if (!advanced) return 'Fill in the blanks'
+    const ins = String(instruction || '').toLowerCase()
+    if (ins.includes('summary')) return 'Complete the summary'
+    if (ins.includes('notes')) return 'Complete the notes'
+    if (ins.includes('sentences')) return 'Complete the sentences'
+    if (ins.includes('table')) return 'Complete the table'
+    return 'Fill in the blanks'
+  }
+
   const renderReadingFillFallbackQuestion = (question: ReadingQuestion) => {
     const context =
       parseFillContextFromPrompt(question.prompt, question.number) || { before: '', after: '' }
@@ -17945,12 +17991,12 @@ function App() {
     return (
       <article
         key={`reading-fill-fallback-${question.number}`}
-        className="readingQuestionCard readingFillQuestionGroup readingFillFallbackRow"
+        className={`readingQuestionCard readingFillQuestionGroup readingFillFallbackRow ${isAdvancedReadingExam ? 'readingFillQuestionGroup-advanced' : ''}`.trim()}
       >
         <div className="readingFillGroupHeader">
           <div>
             <p className="readingQuestionNumber">Question {question.number}</p>
-            <h4>Fill in the blank</h4>
+            <h4>{isAdvancedReadingExam ? 'Fill in the blank' : 'Fill in the blank'}</h4>
           </div>
         </div>
         <div className="readingFillOriginalBlock">
@@ -17958,7 +18004,8 @@ function App() {
             {renderReadingFillBlankSlot(
               question,
               context,
-              `reading-fill-fallback-slot-${question.number}`
+              `reading-fill-fallback-slot-${question.number}`,
+              { advancedLayout: isAdvancedReadingExam }
             )}
           </p>
         </div>
@@ -17975,16 +18022,23 @@ function App() {
     const questionByNumber = new Map(group.questions.map((question) => [question.number, question]))
 
     return (
-      <article key={`reading-fill-group-${group.id}`} className="readingQuestionCard readingFillQuestionGroup">
+      <article
+        key={`reading-fill-group-${group.id}`}
+        className={`readingQuestionCard readingFillQuestionGroup ${isAdvancedReadingExam ? 'readingFillQuestionGroup-advanced' : ''}`.trim()}
+      >
         <div className="readingFillGroupHeader">
           <div>
             <p className="readingQuestionNumber">
               Questions {group.start}-{group.end}
             </p>
-            <h4>Fill in the blanks</h4>
+            <h4>{getReadingFillGroupTitle(group.instruction, isAdvancedReadingExam)}</h4>
           </div>
         </div>
-        {group.instruction && <pre className="readingFillInstruction">{group.instruction}</pre>}
+        {group.instruction && (
+          <pre className={`readingFillInstruction ${isAdvancedReadingExam ? 'readingFillInstruction-advanced' : ''}`.trim()}>
+            {group.instruction}
+          </pre>
+        )}
         <div className="readingFillOriginalBlock">
           {group.displayLines.map((line, lineIndex) => {
             const onlySegment = line.segments.length === 1 ? line.segments[0] : null
@@ -18033,7 +18087,8 @@ function App() {
                   return renderReadingFillBlankSlot(
                     { number: question.number },
                     { before: segment.before, after: segment.after },
-                    `reading-fill-slot-${group.id}-${segment.questionNumber}`
+                    `reading-fill-slot-${group.id}-${segment.questionNumber}`,
+                    { advancedLayout: isAdvancedReadingExam }
                   )
                 })}
               </p>

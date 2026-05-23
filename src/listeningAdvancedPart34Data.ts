@@ -467,32 +467,32 @@ Choose TWO letters, A-E.
 Which TWO benefits of repair cafés do the students agree are most important?
 A creating more paid jobs in the local area
 B reducing the amount of electrical waste
-C teaching people practical repair skills
-D replacing ordinary recycling services
+C helping people learn hands-on fixing skills
+D replacing standard recycling services
 E making new products less expensive`
 
 const repairProblemsQuestionText = `Questions 23 and 24
 Choose TWO letters, A-E.
 Which TWO problems do the students agree repair cafés often face?
-A not having enough volunteers
+A too few skilled helpers
 B high insurance costs
 C people bringing unsafe electrical items
-D difficulty finding spare parts
+D problems obtaining replacement components
 E difficulty attracting older people`
 
 const repairMcOptions = [
   { key: 'A', text: 'creating more paid jobs in the local area' },
   { key: 'B', text: 'reducing the amount of electrical waste' },
-  { key: 'C', text: 'teaching people practical repair skills' },
-  { key: 'D', text: 'replacing ordinary recycling services' },
+  { key: 'C', text: 'helping people learn hands-on fixing skills' },
+  { key: 'D', text: 'replacing standard recycling services' },
   { key: 'E', text: 'making new products less expensive' }
 ]
 
 const repairProblemOptions = [
-  { key: 'A', text: 'not having enough volunteers' },
+  { key: 'A', text: 'too few skilled helpers' },
   { key: 'B', text: 'high insurance costs' },
   { key: 'C', text: 'people bringing unsafe electrical items' },
-  { key: 'D', text: 'difficulty finding spare parts' },
+  { key: 'D', text: 'problems obtaining replacement components' },
   { key: 'E', text: 'difficulty attracting older people' }
 ]
 
@@ -530,21 +530,21 @@ Choose SIX answers from the box and write the correct letter, A-H.
 A This should be included in formal education.
 B This may have disappointing results.
 C This could create legal complications.
-D This already seems to be common.
+D This is no longer a new idea.
 E Better evidence is needed before this is expanded.
-F This could reach people who are currently excluded.
+F This could serve people who are usually left out.
 G This might be too expensive to operate.
-H This would strengthen community relationships.`
+H This would build stronger local ties.`
 
 const repairIdeaOptions = [
   { key: 'A', text: 'This should be included in formal education.' },
   { key: 'B', text: 'This may have disappointing results.' },
   { key: 'C', text: 'This could create legal complications.' },
-  { key: 'D', text: 'This already seems to be common.' },
+  { key: 'D', text: 'This is no longer a new idea.' },
   { key: 'E', text: 'Better evidence is needed before this is expanded.' },
-  { key: 'F', text: 'This could reach people who are currently excluded.' },
+  { key: 'F', text: 'This could serve people who are usually left out.' },
   { key: 'G', text: 'This might be too expensive to operate.' },
-  { key: 'H', text: 'This would strengthen community relationships.' }
+  { key: 'H', text: 'This would build stronger local ties.' }
 ]
 
 const repairMatchQuestion = (
@@ -698,19 +698,19 @@ const gapQuestionFor = (
 const textileSortingQuestionText = `Questions 25-28
 What reason did the sorting centre give for rejecting each item?
 Choose FOUR answers from the box and write the correct letter, A-F.
-A the fabric was too badly stained
+A there were very visible marks
 B the fibre label was missing
-C the material had shrunk
-D the zip was broken
-E the item was damp
+C the garment had become too small
+D the fastening would not close
+E the item was not dry
 F the seams had torn`
 
 const textileSortingOptions = [
-  { key: 'A', text: 'the fabric was too badly stained' },
+  { key: 'A', text: 'there were very visible marks' },
   { key: 'B', text: 'the fibre label was missing' },
-  { key: 'C', text: 'the material had shrunk' },
-  { key: 'D', text: 'the zip was broken' },
-  { key: 'E', text: 'the item was damp' },
+  { key: 'C', text: 'the garment had become too small' },
+  { key: 'D', text: 'the fastening would not close' },
+  { key: 'E', text: 'the item was not dry' },
   { key: 'F', text: 'the seams had torn' }
 ]
 
@@ -735,11 +735,11 @@ E skin problems`
 const sleepAppQuestionText = `Questions 25 and 26
 Choose TWO letters, A-E.
 Which TWO opinions do the students both express about sleep-tracking apps?
-A They may make users anxious.
+A They may increase worry about rest.
 B They are too expensive for most students.
 C They can replace professional advice.
 D They should be required by universities.
-E They need more independent research.`
+E More impartial studies are required.`
 
 const sleepCauseOptions = [
   { key: 'A', text: 'late-night screen use' },
@@ -758,20 +758,20 @@ const sleepEffectOptions = [
 ]
 
 const sleepAppOptions = [
-  { key: 'A', text: 'They may make users anxious.' },
+  { key: 'A', text: 'They may increase worry about rest.' },
   { key: 'B', text: 'They are too expensive for most students.' },
   { key: 'C', text: 'They can replace professional advice.' },
   { key: 'D', text: 'They should be required by universities.' },
-  { key: 'E', text: 'They need more independent research.' }
+  { key: 'E', text: 'More impartial studies are required.' }
 ]
 
 const communityBenefitsQuestionText = `Questions 21 and 22
 Choose TWO letters, A-E.
 Which TWO advantages of community gardens do the students agree are most important?
 A They make fresh food cheaper for everyone.
-B They give residents practical gardening skills.
+B They help locals learn hands-on growing skills.
 C They reduce pressure on public parks.
-D They improve relationships between neighbours.
+D They build stronger neighbour connections.
 E They provide full-time employment for local people.`
 
 const communityProblemsQuestionText = `Questions 23 and 24
@@ -780,7 +780,7 @@ Which TWO problems do the students agree community gardens often face?
 A lack of long-term funding
 B poor soil quality
 C too many young volunteers
-D difficulty getting permission to use land
+D difficulty obtaining land approval
 E complaints about noise`
 
 const communityIdeaQuestionText = `Questions 25-30
@@ -788,18 +788,18 @@ What is the students' opinion about each idea for improving community gardens?
 Choose SIX answers from the box and write the correct letter, A-H.
 A This could attract people who do not usually take part.
 B This might create safety problems.
-C This should be organised by schools.
+C Schools should be responsible for this.
 D This may not be worth the cost.
-E This already seems to be successful.
-F This needs clearer rules.
-G This would help people learn from each other.
-H This could damage the original purpose of the gardens.`
+E This appears to be working already.
+F This requires tighter management.
+G This would encourage local knowledge-sharing.
+H This could undermine the gardens' original aim.`
 
 const communityBenefitOptions = [
   { key: 'A', text: 'They make fresh food cheaper for everyone.' },
-  { key: 'B', text: 'They give residents practical gardening skills.' },
+  { key: 'B', text: 'They help locals learn hands-on growing skills.' },
   { key: 'C', text: 'They reduce pressure on public parks.' },
-  { key: 'D', text: 'They improve relationships between neighbours.' },
+  { key: 'D', text: 'They build stronger neighbour connections.' },
   { key: 'E', text: 'They provide full-time employment for local people.' }
 ]
 
@@ -807,38 +807,38 @@ const communityProblemOptions = [
   { key: 'A', text: 'lack of long-term funding' },
   { key: 'B', text: 'poor soil quality' },
   { key: 'C', text: 'too many young volunteers' },
-  { key: 'D', text: 'difficulty getting permission to use land' },
+  { key: 'D', text: 'difficulty obtaining land approval' },
   { key: 'E', text: 'complaints about noise' }
 ]
 
 const communityIdeaOptions = [
   { key: 'A', text: 'This could attract people who do not usually take part.' },
   { key: 'B', text: 'This might create safety problems.' },
-  { key: 'C', text: 'This should be organised by schools.' },
+  { key: 'C', text: 'Schools should be responsible for this.' },
   { key: 'D', text: 'This may not be worth the cost.' },
-  { key: 'E', text: 'This already seems to be successful.' },
-  { key: 'F', text: 'This needs clearer rules.' },
-  { key: 'G', text: 'This would help people learn from each other.' },
-  { key: 'H', text: 'This could damage the original purpose of the gardens.' }
+  { key: 'E', text: 'This appears to be working already.' },
+  { key: 'F', text: 'This requires tighter management.' },
+  { key: 'G', text: 'This would encourage local knowledge-sharing.' },
+  { key: 'H', text: "This could undermine the gardens' original aim." }
 ]
 
 const digitalMethodQuestionText = `Questions 25-28
 What reason did the students give for rejecting each research method?
 Choose FOUR answers from the box and write the correct letter, A-F.
-A The sample would be too small.
-B The results would be hard to measure.
+A The group would be too limited.
+B The outcomes would be difficult to assess.
 C It would take too much time.
 D Students might change their normal behaviour.
 E The equipment would be too expensive.
-F It would need special permission.`
+F It would require extra approval.`
 
 const digitalMethodOptions = [
-  { key: 'A', text: 'The sample would be too small.' },
-  { key: 'B', text: 'The results would be hard to measure.' },
+  { key: 'A', text: 'The group would be too limited.' },
+  { key: 'B', text: 'The outcomes would be difficult to assess.' },
   { key: 'C', text: 'It would take too much time.' },
   { key: 'D', text: 'Students might change their normal behaviour.' },
   { key: 'E', text: 'The equipment would be too expensive.' },
-  { key: 'F', text: 'It would need special permission.' }
+  { key: 'F', text: 'It would require extra approval.' }
 ]
 
 export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
@@ -998,13 +998,13 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioscript: GINKGO_PART4_SCRIPT,
     questions: [
       gapQuestion('advanced-ginkgo-p4-q31', 31, 'One reason the species outlived ancient crises is its ability to withstand 31 ____.', 'survived several major extinction events is its remarkable resistance to disease', 'disease', ['pollution', 'insects', 'soil'], 'resistance to disease', 'ability to withstand', 'โรค', 'outlived ancient crises paraphrase survived major extinction events · ability to withstand = resistance to · คำตอบคือ disease'),
-      gapQuestion('advanced-ginkgo-p4-q32', 32, 'The tree was long thought extinct in the wild until small populations were found at a Chinese 32 ____.', 'small wild populations were identified in a monastery in China', 'monastery', ['forest', 'garden', 'museum'], 'monastery in China', 'long thought extinct found at a Chinese', 'วัด / อาราม', 'long thought extinct = believed vanished from the wild · small populations = wild populations · found = identified · คำตอบคือ monastery'),
-      gapQuestion('advanced-ginkgo-p4-q33', 33, 'Fan-shaped leaves turn a vivid 33 ____ shade before falling each autumn.', 'in autumn they turn a bright yellow colour', 'yellow', ['green', 'golden', 'orange'], 'bright yellow colour', 'vivid shade', 'สีเหลืองสด', 'vivid shade paraphrase bright colour — คำตอบคือ yellow'),
+      gapQuestion('advanced-ginkgo-p4-q32', 32, 'The tree was long thought extinct in the wild until isolated groups were found at a Chinese 32 ____.', 'small wild populations were identified in a monastery in China', 'monastery', ['forest', 'garden', 'museum'], 'monastery in China', 'long thought extinct found at a Chinese', 'วัด / อาราม', 'long thought extinct = believed vanished from the wild · isolated groups = small wild populations · found = identified · คำตอบคือ monastery'),
+      gapQuestion('advanced-ginkgo-p4-q33', 33, 'Fan-shaped leaves turn a vivid 33 ____ shade before falling near the end of the year.', 'in autumn they turn a bright yellow colour', 'yellow', ['green', 'golden', 'orange'], 'bright yellow colour', 'vivid shade', 'สีเหลืองสด', 'vivid shade paraphrase bright colour — คำตอบคือ yellow'),
       gapQuestion('advanced-ginkgo-p4-q34', 34, 'It can thrive even where the ground has poor-quality 34 ____.', 'survive in environments with poor soil', 'soil', ['light', 'water', 'drainage'], 'poor soil', 'poor-quality', 'ดินไม่ดี', 'poor-quality paraphrase poor · thrive = survive in difficult sites · คำตอบคือ soil'),
-      gapQuestion('advanced-ginkgo-p4-q35', 35, 'A chemical in the leaves discourages 35 ____ from feeding on the foliage.', 'a compound that discourages insects from eating them', 'insects', ['birds', 'fungi', 'humans'], 'discourages insects from eating', 'discourages from feeding on foliage', 'แมลง', 'chemical = compound · feeding on foliage = eating them · คำตอบคือ insects'),
+      gapQuestion('advanced-ginkgo-p4-q35', 35, 'A chemical in the leaves deters 35 ____ from feeding on the foliage.', 'a compound that discourages insects from eating them', 'insects', ['birds', 'fungi', 'humans'], 'discourages insects from eating', 'deters from feeding on foliage', 'แมลง', 'chemical = compound · deters = discourages · feeding on foliage = eating them · คำตอบคือ insects'),
       gapQuestion('advanced-ginkgo-p4-q36', 36, 'The tree is often chosen for city streets because it can cope with heavy 36 ____.', 'tolerates high levels of pollution', 'pollution', ['noise', 'heat', 'traffic'], 'high levels of pollution', 'cope with heavy', 'มลพิษ', 'cope with heavy paraphrase tolerates high levels of · คำตอบคือ pollution'),
       gapQuestion('advanced-ginkgo-p4-q37', 37, 'Female trees bear fruit that gives off an unpleasant 37 ____.', 'it releases a foul smell', 'smell', ['taste', 'liquid', 'colour'], 'foul smell', 'unpleasant', 'กลิ่นเหม็น', 'gives off an unpleasant paraphrase releases a foul'),
-      gapQuestion('advanced-ginkgo-p4-q38', 38, 'Because fallen fruit smells bad, urban planners now grow mainly male trees to preserve 38 ____.', 'plant male trees almost exclusively, especially in areas where cleanliness is important', 'cleanliness', ['shade', 'growth', 'diversity'], 'cleanliness is important', 'preserve', 'ความสะอาด', 'fallen fruit smells bad = foul smell when fruit falls · mainly male trees = plant male trees almost exclusively · preserve = areas where cleanliness is important · คำตอบคือ cleanliness'),
+      gapQuestion('advanced-ginkgo-p4-q38', 38, 'Because fallen fruit smells bad, urban planners now grow mainly male specimens to preserve 38 ____.', 'plant male trees almost exclusively, especially in areas where cleanliness is important', 'cleanliness', ['shade', 'growth', 'diversity'], 'cleanliness is important', 'preserve', 'ความสะอาด', 'fallen fruit smells bad = foul smell when fruit falls · male specimens = male trees · preserve = areas where cleanliness is important · คำตอบคือ cleanliness'),
       gapQuestion('advanced-ginkgo-p4-q39', 39, 'Extracts from its leaves are sold as herbal remedies said to boost 39 ____.', 'traditional medicine and are commonly claimed to improve memory', 'memory', ['vision', 'sleep', 'energy'], 'improve memory', 'herbal remedies said to boost', 'ความจำ', 'herbal remedies paraphrase traditional medicine · boost = improve · คำตอบคือ memory'),
       gapQuestion('advanced-ginkgo-p4-q40', 40, 'Prepared correctly, the nuts may appear in a festive 40 ____ on ceremonial days.', 'often added to a traditional soup served on special occasions', 'soup', ['tea', 'cake', 'sauce'], 'traditional soup', 'festive on ceremonial days', 'ซุป', 'festive = traditional · ceremonial days = special occasions · appear in = added to · คำตอบคือ soup')
     ]
@@ -1038,9 +1038,9 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'C',
         repairMcOptions,
         'pick up basic repair skills',
-        'teaching people practical repair skills',
+        'helping people learn hands-on fixing skills',
         'สอนทักษะซ่อมของจริง',
-        'pick up basic repair skills = teaching practical repair skills. คำหลอกคือ replace recycling เพราะทั้งคู่บอกว่า unrealistic และ recycling still has a role.'
+        'pick up basic repair skills = helping people learn hands-on fixing skills. คำหลอกคือ replace recycling เพราะทั้งคู่บอกว่า unrealistic และ recycling still has a role.'
       ),
       repairMcQuestion(
         'advanced-repair-cafes-p3-q23',
@@ -1050,9 +1050,9 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'A',
         repairProblemOptions,
         'finding enough people with the right skills',
-        'not having enough volunteers',
+        'too few skilled helpers',
         'มีอาสาสมัครไม่พอ',
-        'finding enough people with the right skills ตรงกับ not having enough volunteers. คำหลอกคือ insurance เพราะ policy already covered most events.'
+        'finding enough people with the right skills = too few skilled helpers. คำหลอกคือ insurance เพราะ policy already covered most events.'
       ),
       repairMcQuestion(
         'advanced-repair-cafes-p3-q24',
@@ -1062,9 +1062,9 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'D',
         repairProblemOptions,
         'the exact part is impossible to get',
-        'difficulty finding spare parts',
+        'problems obtaining replacement components',
         'หาอะไหล่ยาก',
-        'spare parts ในโจทย์ตรงกับ the exact part ในสคริปต์ และ impossible to get = difficulty finding. คำหลอกคือ unsafe electrical items เพราะ cafés check first and refuse dangerous items.'
+        'replacement components = spare parts และ impossible to get = problems obtaining. คำหลอกคือ unsafe electrical items เพราะ cafés check first and refuse dangerous items.'
       ),
       repairMatchQuestion(
         'advanced-repair-cafes-p3-q25',
@@ -1073,9 +1073,9 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'They\'re a good idea, but they don\'t feel new. Lots of towns already have them',
         'D',
         'Lots of towns already have them',
-        'already seems to be common',
+        'no longer a new idea',
         'พบได้ทั่วไปแล้ว',
-        'คำเชื่อม but สำคัญ เพราะเปลี่ยนจาก good idea ไปคำตอบจริง: don\'t feel new / already have them = already common.'
+        'คำเชื่อม but สำคัญ เพราะเปลี่ยนจาก good idea ไปคำตอบจริง: don\'t feel new / already have them = no longer a new idea.'
       ),
       repairMatchQuestion(
         'advanced-repair-cafes-p3-q26',
@@ -1084,9 +1084,9 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'They could visit villages or housing estates where people don\'t have transport. So they\'d reach people who are excluded',
         'F',
         'reach people who are excluded',
-        'reach people currently excluded',
+        'serve people usually left out',
         'เข้าถึงคนที่ถูกกันออกจากระบบเดิม',
-        'where people don\'t have transport อธิบายกลุ่มที่เข้าไม่ถึง service เดิม และ Leo สรุปตรงว่า reach people who are excluded.'
+        'where people don\'t have transport อธิบายกลุ่มที่เข้าไม่ถึง service เดิม และ Leo สรุปว่า reach people who are excluded = serve people usually left out.'
       ),
       repairMatchQuestion(
         'advanced-repair-cafes-p3-q27',
@@ -1127,10 +1127,10 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'Holding sessions in neighbourhood cafés',
         'People might stay afterwards, talk to others, and feel more connected locally. Exactly. It\'s not just about fixing objects; it could strengthen community relationships.',
         'H',
-        'strengthen community relationships',
+        'build stronger local ties',
         'strengthen community relationships',
         'ทำให้ความสัมพันธ์ในชุมชนแน่นแฟ้นขึ้น',
-        'keyword ตรงมาก: strengthen community relationships. คำว่า not just about fixing objects เป็น transition บอกว่าคำตอบอยู่ที่ผลทางสังคม ไม่ใช่การซ่อมของ.'
+        'build stronger local ties = strengthen community relationships. คำว่า not just about fixing objects เป็น transition บอกว่าคำตอบอยู่ที่ผลทางสังคม ไม่ใช่การซ่อมของ.'
       )
     ]
   },
@@ -1143,13 +1143,13 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioCacheKey: 'advanced-listening-biochar-soil-restoration-part-4',
     audioscript: BIOCHAR_PART4_SCRIPT,
     questions: [
-      biocharGapQuestion('advanced-biochar-p4-q31', 31, 'The material resembles ordinary 31 ____, but is produced specifically for adding to soil.', 'Biochar looks rather like ordinary charcoal', 'charcoal', ['soil', 'fuel', 'ash'], 'ordinary charcoal', 'resembles ordinary produced for adding to soil', 'ถ่านไม้', 'resembles = looks rather like · produced for adding to soil = made specifically to be added to soil · คำตอบคือ charcoal'),
+      biocharGapQuestion('advanced-biochar-p4-q31', 31, 'The material resembles common 31 ____, but is produced specifically for adding to soil.', 'Biochar looks rather like ordinary charcoal', 'charcoal', ['soil', 'fuel', 'ash'], 'ordinary charcoal', 'resembles common produced for adding to soil', 'ถ่านไม้', 'common = ordinary · resembles = looks rather like · produced for adding to soil = made specifically to be added to soil · คำตอบคือ charcoal'),
       biocharGapQuestion('advanced-biochar-p4-q32', 32, 'Scientists traced unusually rich black earth in the 32 ____ to early agricultural practices.', 'very dark and fertile soils in parts of the Amazon. These soils appear to have been created by ancient farming communities', 'Amazon', ['desert', 'Andes', 'forest'], 'parts of the Amazon', 'rich black earth in early agricultural practices', 'แอมะซอน', 'rich black earth = very dark and fertile soils · early agricultural practices = ancient farming communities · คำตอบคือ Amazon'),
       biocharGapQuestion('advanced-biochar-p4-q33', 33, 'Biochar may keep 33 ____ locked in the ground for centuries.', 'it may help to store carbon', 'carbon', ['water', 'nutrients', 'oxygen'], 'store carbon', 'keep locked in the ground', 'คาร์บอน', 'keep locked paraphrase store for hundreds/thousands of years'),
-      biocharGapQuestion('advanced-biochar-p4-q34', 34, 'Crop residues are heated with almost no 34 ____ present.', 'heating plant material, such as wood, straw or crop waste, but with very little oxygen', 'oxygen', ['water', 'carbon', 'ash'], 'very little oxygen', 'almost no present', 'ออกซิเจน', 'Crop residues = plant material/crop waste · almost no present = with very little · คำตอบคือ oxygen'),
-      biocharGapQuestion('advanced-biochar-p4-q35', 35, 'The structure contains countless tiny 35 ____ that hold air and water.', 'it contains a huge number of tiny pores. These spaces allow the material to hold water and air', 'pores', ['minerals', 'roots', 'microbes'], 'tiny pores', 'countless tiny that hold air and water', 'รูพรุน', 'countless tiny = huge number of tiny · hold = allow the material to hold · คำตอบคือ pores'),
-      biocharGapQuestion('advanced-biochar-p4-q36', 36, 'It can stop valuable 36 ____ leaking out of sandy soil when rain is heavy.', 'helps prevent nutrients from being washed away by heavy rain', 'nutrients', ['sand', 'carbon', 'roots'], 'nutrients from being washed away', 'stop valuable leaking out when rain is heavy', 'สารอาหาร', 'leaking out = washed away · rain is heavy = heavy rain · valuable = valuable minerals in sandy soils · คำตอบคือ nutrients'),
-      biocharGapQuestion('advanced-biochar-p4-q37', 37, 'In dry spells, enriched soil retains more 37 ____ where plants draw water up.', 'During dry periods, soils containing biochar may keep more moisture near the roots of plants', 'moisture', ['oxygen', 'heat', 'carbon'], 'keep more moisture', 'In dry spells retains more', 'ความชื้น', 'dry spells = dry periods · retains = keep · where plants draw water up = near the roots of plants · คำตอบคือ moisture'),
+      biocharGapQuestion('advanced-biochar-p4-q34', 34, 'Crop residues are processed with almost no 34 ____ present.', 'heating plant material, such as wood, straw or crop waste, but with very little oxygen', 'oxygen', ['water', 'carbon', 'ash'], 'very little oxygen', 'almost no present', 'ออกซิเจน', 'Crop residues = plant material/crop waste · processed = heated · almost no present = with very little · คำตอบคือ oxygen'),
+      biocharGapQuestion('advanced-biochar-p4-q35', 35, 'The structure has countless tiny 35 ____ that retain air and moisture.', 'it contains a huge number of tiny pores. These spaces allow the material to hold water and air', 'pores', ['minerals', 'roots', 'microbes'], 'tiny pores', 'countless tiny that retain air and moisture', 'รูพรุน', 'countless tiny = huge number of tiny · retain = allow the material to hold · moisture = water · คำตอบคือ pores'),
+      biocharGapQuestion('advanced-biochar-p4-q36', 36, 'It can stop valuable 36 ____ leaking out of sandy soil during downpours.', 'helps prevent nutrients from being washed away by heavy rain', 'nutrients', ['sand', 'carbon', 'roots'], 'nutrients from being washed away', 'stop valuable leaking out during downpours', 'สารอาหาร', 'leaking out = washed away · downpours = heavy rain · valuable = valuable minerals in sandy soils · คำตอบคือ nutrients'),
+      biocharGapQuestion('advanced-biochar-p4-q37', 37, 'In dry spells, enriched soil retains more 37 ____ near the root zone.', 'During dry periods, soils containing biochar may keep more moisture near the roots of plants', 'moisture', ['oxygen', 'heat', 'carbon'], 'keep more moisture', 'In dry spells retains more near root zone', 'ความชื้น', 'dry spells = dry periods · retains = keep · near the root zone = near the roots of plants · คำตอบคือ moisture'),
       biocharGapQuestion('advanced-biochar-p4-q38', 38, 'Tiny spaces inside biochar offer a home for helpful 38 ____.', 'provide shelter for microbes, including bacteria and fungi', 'microbes', ['plants', 'insects', 'chemicals'], 'shelter for microbes', 'offer a home for helpful', 'จุลินทรีย์', 'offer a home paraphrase provide shelter'),
       biocharGapQuestion('advanced-biochar-p4-q39', 39, 'If manufacturing 39 ____ climb too high, desired traits may disappear.', 'If the production temperatures are too high, some of the useful chemical properties may be lost', 'temperatures', ['costs', 'methods', 'volumes'], 'production temperatures are too high', 'manufacturing climb too high desired traits disappear', 'อุณหภูมิ', 'manufacturing = production · climb too high = are too high · desired traits disappear = useful chemical properties may be lost · คำตอบคือ temperatures'),
       biocharGapQuestion('advanced-biochar-p4-q40', 40, 'Untested waste inputs may lead to soil 40 ____.', 'If these are not tested carefully, the final product could cause contamination', 'contamination', ['erosion', 'pollution', 'decay'], 'cause contamination', 'Untested waste inputs', 'การปนเปื้อน', 'not tested carefully paraphrase untested waste inputs')
@@ -1173,13 +1173,13 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'B',
         [
           { key: 'A', text: 'technical.' },
-          { key: 'B', text: 'broad.' },
+          { key: 'B', text: 'too wide-ranging.' },
           { key: 'C', text: 'familiar.' }
         ],
         'too broad for our presentation',
-        'too broad',
+        'too wide-ranging',
         'กว้างเกินไป',
-        'keyword ในโจทย์คือ At first และ too. Arun พูดตรงว่า might be too broad. คำหลอกคือรายการ clothes, curtains, carpets, shoes ที่อธิบายว่าทำไมกว้าง ไม่ใช่คำตอบอื่น.'
+        'too wide-ranging = too broad. Arun พูดรายการ clothes, curtains, carpets, shoes เพื่ออธิบายว่าหัวข้อกว้างเกินไป ไม่ใช่คำตอบอื่น.'
       ),
       choiceQuestionFor(
         TEXTILE_RECYCLING_PART3_SCRIPT,
@@ -1191,12 +1191,12 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         [
           { key: 'A', text: 'whether cheap clothes are usually badly made.' },
           { key: 'B', text: 'whether low prices encourage waste.' },
-          { key: 'C', text: 'whether young people are mainly responsible.' }
+          { key: 'C', text: 'whether younger consumers cause most of it.' }
         ],
         'young people are mostly responsible',
-        'young people are mainly responsible',
+        'younger consumers cause most of it',
         'คนหนุ่มสาวเป็นสาเหตุหลัก',
-        'disagree about ต้องฟังจุดที่ Leah ขัด Arun: young people are mostly responsible. คำหลอกคือ cheap clothes และ low prices เพราะสองคนนั้นเห็นด้วยว่าราคาถูกทำให้ทิ้งง่าย.'
+        'younger consumers cause most of it = young people are mostly responsible. คำหลอกคือ cheap clothes และ low prices เพราะสองคนนั้นเห็นด้วยว่าราคาถูกทำให้ทิ้งง่าย.'
       ),
       choiceQuestionFor(
         TEXTILE_RECYCLING_PART3_SCRIPT,
@@ -1206,14 +1206,14 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'It\'s more because I buy things online and the size isn\'t quite right. I mean to return them, but then I miss the deadline.',
         'A',
         [
-          { key: 'A', text: 'she ordered the wrong size online.' },
+          { key: 'A', text: 'a delivery purchase did not fit.' },
           { key: 'B', text: 'she no longer needs them for sport.' },
           { key: 'C', text: 'her friends have similar clothes.' }
         ],
         'buy things online and the size isn\'t quite right',
-        'ordered the wrong size online',
+        'delivery purchase did not fit',
         'สั่งออนไลน์แล้วไซซ์ไม่พอดี',
-        'because ในโจทย์ตรงกับ because ในสคริปต์ และ size isn\'t quite right = wrong size. คำหลอกคือ out of fashion เพราะ Arun ถาม แต่ Leah ปฏิเสธว่า Not usually.'
+        'because ในโจทย์ตรงกับ because ในสคริปต์ และ delivery purchase did not fit = buy things online and the size isn\'t quite right. คำหลอกคือ out of fashion เพราะ Arun ถาม แต่ Leah ปฏิเสธว่า Not usually.'
       ),
       choiceQuestionFor(
         TEXTILE_RECYCLING_PART3_SCRIPT,
@@ -1224,18 +1224,18 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'B',
         [
           { key: 'A', text: 'More clothes are now bought online than in shops.' },
-          { key: 'B', text: 'Less clothing is reused although more donation points exist.' },
+          { key: 'B', text: 'A smaller share gets a second life although more drop-off points exist.' },
           { key: 'C', text: 'Manufacturing costs have fallen in recent years.' }
         ],
         'clothing banks has increased, but the percentage ... reused has fallen',
-        'Less clothing is reused although more donation points exist',
+        'smaller share gets a second life although more drop-off points exist',
         'มีจุดรับบริจาคมากขึ้นแต่เสื้อผ้าถูกใช้ซ้ำน้อยลง',
-        'statistic confused Arun ตามด้วยตัวเลขสองฝั่ง: banks increased แต่ reused has fallen. คำว่า but เป็น transition สำคัญที่ทำให้เห็นความขัดแย้งในสถิติ.'
+        'smaller share gets a second life = percentage reused has fallen และ more drop-off points = clothing banks has increased. คำว่า but เป็น transition สำคัญที่ทำให้เห็นความขัดแย้งในสถิติ.'
       ),
-      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q25', 25, 'winter coat', 'the main zip wouldn\'t close. That made it impossible to sell.', 'D', 'zip wouldn\'t close', 'zip was broken', 'ซิปเสีย', 'wouldn\'t close = broken. คำหลอกคือ fabric was clean แปลว่าไม่ใช่ stained.'),
-      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q26', 26, 'cotton curtains', 'Those had paint marks across one side. The fabric itself was strong, but the stains were too obvious.', 'A', 'stains were too obvious', 'fabric was too badly stained', 'ผ้าเปื้อนมากเกินไป', 'paint marks และ stains were too obvious = badly stained. คำหลอกคือ fabric itself was strong เพราะไม่ได้ถูกปฏิเสธเพราะวัสดุเสีย.'),
-      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q27', 27, 'wool jumper', 'It had shrunk so much that the sleeves were far too short.', 'C', 'shrunk so much', 'material had shrunk', 'วัสดุหด', 'shrunk ในสคริปต์ตรงกับ material had shrunk ในตัวเลือก จึงตอบ C.'),
-      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q28', 28, 'sports bag', 'it was still wet when it arrived, so they rejected it straight away.', 'E', 'still wet when it arrived', 'item was damp', 'ของชื้น/เปียก', 'still wet = damp. คำว่า rejected it straight away ยืนยันว่าเป็นเหตุผลที่ถูกปฏิเสธ.'),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q25', 25, 'winter coat', 'the main zip wouldn\'t close. That made it impossible to sell.', 'D', 'zip wouldn\'t close', 'fastening would not close', 'ซิปเสีย', 'fastening would not close = zip wouldn\'t close. คำหลอกคือ fabric was clean แปลว่าไม่ใช่ stained.'),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q26', 26, 'cotton curtains', 'Those had paint marks across one side. The fabric itself was strong, but the stains were too obvious.', 'A', 'stains were too obvious', 'very visible marks', 'ผ้าเปื้อนมากเกินไป', 'paint marks และ stains were too obvious = very visible marks. คำหลอกคือ fabric itself was strong เพราะไม่ได้ถูกปฏิเสธเพราะวัสดุเสีย.'),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q27', 27, 'wool jumper', 'It had shrunk so much that the sleeves were far too short.', 'C', 'shrunk so much', 'garment had become too small', 'วัสดุหด', 'garment had become too small = shrunk so much.'),
+      matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q28', 28, 'sports bag', 'it was still wet when it arrived, so they rejected it straight away.', 'E', 'still wet when it arrived', 'item was not dry', 'ของชื้น/เปียก', 'not dry = still wet. คำว่า rejected it straight away ยืนยันว่าเป็นเหตุผลที่ถูกปฏิเสธ.'),
       choiceQuestionFor(
         TEXTILE_RECYCLING_PART3_SCRIPT,
         'advanced-textile-recycling-p3-q29',
@@ -1244,14 +1244,14 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'The problem was that the pieces of fabric they received were too inconsistent: different weights, different colours, different levels of wear.',
         'A',
         [
-          { key: 'A', text: 'The supply of material was too inconsistent.' },
+          { key: 'A', text: 'The supplied materials varied too much.' },
           { key: 'B', text: 'Customers disliked the recycled label.' },
           { key: 'C', text: 'Designers found the process too slow.' }
         ],
         'fabric ... too inconsistent',
-        'supply of material was too inconsistent',
+        'supplied materials varied too much',
         'วัสดุที่ได้มาไม่สม่ำเสมอ',
-        'problem was เป็น signal ไปคำตอบจริง: fabric too inconsistent. คำหลอกคือ customers disliked เพราะสคริปต์บอก customers were actually open to that.'
+        'supplied materials varied too much = pieces of fabric were too inconsistent. คำหลอกคือ customers disliked เพราะสคริปต์บอก customers were actually open to that.'
       ),
       choiceQuestionFor(
         TEXTILE_RECYCLING_PART3_SCRIPT,
@@ -1261,14 +1261,14 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'The interesting part is what happens after people donate clothes: sorting, rejection, reuse, export, landfill. Yes, that\'s the hidden process most people know nothing about.',
         'A',
         [
-          { key: 'A', text: 'what happens after people donate clothes.' },
+          { key: 'A', text: 'the hidden journey after donation.' },
           { key: 'B', text: 'the behaviour of individual shoppers.' },
           { key: 'C', text: 'the environmental policies of fashion brands.' }
         ],
         'what happens after people donate clothes',
-        'focus on what happens after people donate clothes',
+        'focus on the hidden journey after donation',
         'สิ่งที่เกิดขึ้นหลังบริจาคเสื้อผ้า',
-        'agree เห็นจาก Leah ตอบ Yes หลัง Arun สรุป focus. คำหลอกคือ shoppers และ fashion brands เพราะทั้งคู่บอกว่า shouldn\'t just talk about those.'
+        'hidden journey after donation = what happens after people donate clothes. Agree เห็นจาก Leah ตอบ Yes หลัง Arun สรุป focus. คำหลอกคือ shoppers และ fashion brands เพราะทั้งคู่บอกว่า shouldn\'t just talk about those.'
       )
     ]
   },
@@ -1281,16 +1281,16 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioCacheKey: 'advanced-listening-vertical-farming-part-4',
     audioscript: VERTICAL_FARMING_PART4_SCRIPT,
     questions: [
-      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q31', 31, 'In this method, plants are arranged in stacked 31 ____ inside buildings.', 'crops are grown indoors in stacked layers', 'layers', ['buildings', 'fields', 'trays'], 'stacked layers', 'arranged in stacked inside buildings', 'ชั้น', 'arranged in stacked = grown indoors in stacked · คำตอบคือ layers'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q31', 31, 'In this method, plants are arranged in multiple 31 ____ inside buildings.', 'crops are grown indoors in stacked layers', 'layers', ['buildings', 'fields', 'trays'], 'stacked layers', 'arranged in multiple inside buildings', 'ชั้น', 'multiple layers = stacked layers · inside buildings = grown indoors · คำตอบคือ layers'),
       gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q32', 32, 'Facilities are often set up in disused 32 ____ where city land is costly.', 'Many vertical farms are established in unused warehouses', 'warehouses', ['cities', 'factories', 'markets'], 'unused warehouses', 'disused where city land is costly', 'โกดัง', 'disused = unused · set up = established · costly city land = cities where land is expensive · คำตอบคือ warehouses'),
       gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q33', 33, 'Without sunlight, crops rely on synthetic 33 ____ supplied by LED units.', 'they are given artificial light, usually from LED systems', 'light', ['heat', 'water', 'energy'], 'artificial light', 'synthetic supplied by LED units', 'แสง', 'synthetic = artificial · rely on = given · LED units = LED systems · คำตอบคือ light'),
-      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q34', 34, 'Roots develop in mineral-rich 34 ____ rather than soil.', 'Their roots grow in nutrient-rich water', 'water', ['soil', 'air', 'liquid'], 'nutrient-rich water', 'mineral-rich rather than soil', 'น้ำ', 'mineral-rich paraphrase nutrient-rich และ not in soil'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q34', 34, 'The plant base develops in mineral-rich 34 ____ rather than soil.', 'Their roots grow in nutrient-rich water', 'water', ['soil', 'air', 'liquid'], 'nutrient-rich water', 'plant base develops in mineral-rich rather than soil', 'น้ำ', 'plant base develops = roots grow · mineral-rich paraphrase nutrient-rich และ not in soil'),
       gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q35', 35, 'Automated controls measure air 35 ____ along with heat levels.', 'Computer systems monitor humidity and temperature', 'humidity', ['light', 'growth', 'water'], 'humidity and temperature', 'measure air along with heat levels', 'ความชื้นในอากาศ', 'Automated controls = Computer systems · measure = monitor · heat levels = temperature · คำตอบก่อน temperature คือ humidity'),
-      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q36', 36, 'Because pests are easier to control indoors, farmers need fewer 36 ____.', 'farmers often need far fewer pesticides than they would in outdoor agriculture', 'pesticides', ['soil', 'workers', 'machines'], 'far fewer pesticides', 'farmers need fewer indoors', 'ยาฆ่าแมลง', 'pests easier to control indoors = advantage of indoor farming · need fewer = need far fewer · คำตอบคือ pesticides'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q36', 36, 'Because pests are easier to control indoors, growers use a smaller amount of 36 ____.', 'farmers often need far fewer pesticides than they would in outdoor agriculture', 'pesticides', ['soil', 'workers', 'machines'], 'far fewer pesticides', 'growers use a smaller amount indoors', 'ยาฆ่าแมลง', 'growers = farmers · use a smaller amount = need far fewer · คำตอบคือ pesticides'),
       gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q37', 37, 'Growing food near buyers reduces the need for lengthy food 37 ____.', 'there is less need for long-distance transport from rural farms to city supermarkets', 'transport', ['distance', 'costs', 'waste'], 'long-distance transport', 'lengthy food reduces need for', 'การขนส่ง', 'near buyers = close to people who buy it · lengthy food = long-distance · reduces need = less need for · คำตอบคือ transport'),
       gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q38', 38, 'Production requires large amounts of 38 ____.', 'the amount of electricity needed for lighting, heating, cooling and computer control systems', 'electricity', ['lighting', 'energy', 'equipment'], 'electricity needed', 'large amounts of', 'ไฟฟ้า', 'large amounts paraphrase amount needed for lighting/heating/cooling'),
-      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q39', 39, 'Salad crops succeed indoors, but staples like 39 ____ rarely turn a profit.', 'crops such as wheat are much harder to produce profitably', 'wheat', ['lettuce', 'vegetables', 'rice'], 'wheat harder to produce profitably', 'staples like rarely turn a profit', 'ข้าวสาลี', 'Salad crops = leafy vegetables such as lettuce · staples = wheat-type crops · rarely turn a profit = harder to produce profitably · คำตอบคือ wheat'),
-      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q40', 40, 'Without stable 40 ____ with buyers, covering equipment costs is difficult.', 'vertical farms need reliable contracts with supermarkets, restaurants or other buyers', 'contracts', ['markets', 'customers', 'prices'], 'reliable contracts with buyers', 'Without stable with buyers', 'สัญญา', 'Without stable = need reliable · with buyers = with supermarkets, restaurants or other buyers · คำตอบคือ contracts')
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q39', 39, 'Leafy produce succeeds indoors, but staples like 39 ____ rarely turn a profit.', 'crops such as wheat are much harder to produce profitably', 'wheat', ['lettuce', 'vegetables', 'rice'], 'wheat harder to produce profitably', 'staples like rarely turn a profit', 'ข้าวสาลี', 'Leafy produce = salad crops · staples = wheat-type crops · rarely turn a profit = harder to produce profitably · คำตอบคือ wheat'),
+      gapQuestionFor(VERTICAL_FARMING_PART4_SCRIPT, 'advanced-vertical-farming-p4-q40', 40, 'Without stable 40 ____ with retail partners, covering equipment costs is difficult.', 'vertical farms need reliable contracts with supermarkets, restaurants or other buyers', 'contracts', ['markets', 'customers', 'prices'], 'reliable contracts with buyers', 'Without stable with retail partners', 'สัญญา', 'Without stable = need reliable · retail partners = supermarkets, restaurants or other buyers · คำตอบคือ contracts')
     ]
   },
   {
@@ -1306,8 +1306,8 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
       choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q22', 22, 'Which TWO factors do the students both believe are major causes of poor sleep among university students?', 'Students who work evening shifts often get home late and then still have assignments to finish. I agree.', 'C', sleepCauseOptions, 'work evening shifts', 'part-time employment', 'งานพาร์ตไทม์', 'part-time employment ถูก paraphrase เป็น work evening shifts. I agree เป็น consensus marker ว่าทั้งคู่เห็นด้วย.', sleepCauseQuestionText),
       choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q23', 23, 'Which TWO effects of poor sleep do the students agree are supported by strong evidence?', 'students who slept badly found it harder to focus in seminars and lectures', 'A', sleepEffectOptions, 'harder to focus', 'reduced concentration', 'สมาธิลดลง', 'harder to focus = reduced concentration. คำหลอกคือ creativity เพราะ Sam บอก claim นั้น doubtful.', sleepEffectQuestionText),
       choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q24', 24, 'Which TWO effects of poor sleep do the students agree are supported by strong evidence?', 'The stronger evidence is about memory. Sleep seems to help students process and store what they\'ve learned.', 'C', sleepEffectOptions, 'stronger evidence is about memory', 'poorer memory', 'ความจำแย่ลง', 'stronger evidence เป็น key phrase ตรงกับ supported by strong evidence และ memory ตรงกับ poorer memory.', sleepEffectQuestionText),
-      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q25', 25, 'Which TWO opinions do the students both express about sleep-tracking apps?', 'they might make some people anxious. If students keep checking their sleep score every morning, they may become stressed about it. I thought the same.', 'A', sleepAppOptions, 'make some people anxious', 'may make users anxious', 'ทำให้ผู้ใช้กังวล', 'I thought the same แสดงว่าทั้งคู่เห็นด้วย. anxious/stressed ตรงกับ users anxious.', sleepAppQuestionText),
-      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q26', 26, 'Which TWO opinions do the students both express about sleep-tracking apps?', 'more independent research is needed. A lot of the evidence comes from the companies that make the apps. Yes, that\'s a really important point.', 'E', sleepAppOptions, 'more independent research is needed', 'need more independent research', 'ต้องมีงานวิจัยอิสระเพิ่ม', 'ข้อความตรงมาก: more independent research is needed. คำหลอกคือ cost เพราะ Dana บอก cost is not the main issue.', sleepAppQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q25', 25, 'Which TWO opinions do the students both express about sleep-tracking apps?', 'they might make some people anxious. If students keep checking their sleep score every morning, they may become stressed about it. I thought the same.', 'A', sleepAppOptions, 'make some people anxious', 'increase worry about rest', 'ทำให้ผู้ใช้กังวล', 'increase worry = make anxious/stressed. I thought the same แสดงว่าทั้งคู่เห็นด้วย.', sleepAppQuestionText),
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q26', 26, 'Which TWO opinions do the students both express about sleep-tracking apps?', 'more independent research is needed. A lot of the evidence comes from the companies that make the apps. Yes, that\'s a really important point.', 'E', sleepAppOptions, 'more independent research is needed', 'more impartial studies are required', 'ต้องมีงานวิจัยอิสระเพิ่ม', 'impartial studies = independent research และ required = needed. คำหลอกคือ cost เพราะ Dana บอก cost is not the main issue.', sleepAppQuestionText),
       choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q27', 27, 'When discussing the term "sleep hygiene", the students decide to', 'We could define it first, then give examples like having a regular bedtime and avoiding screens late at night. That makes sense.', 'B', [
         { key: 'A', text: 'avoid it because it sounds too technical.' },
         { key: 'B', text: 'define it before giving examples.' },
@@ -1340,15 +1340,15 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioscript: SEED_BANKS_PART4_SCRIPT,
     questions: [
       gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q31', 31, 'These collections help safeguard crop 31 ____ for the future.', 'One of its main purposes is to protect agricultural diversity', 'diversity', ['seeds', 'crops', 'farming'], 'protect agricultural diversity', 'safeguard crop for the future', 'ความหลากหลาย', 'safeguard = protect · crop diversity = agricultural diversity · คำตอบคือ diversity'),
-      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q32', 32, 'Older crop 32 ____ may disappear when farmers switch to mass-market crops.', 'when farmers change to commercial crops, these older varieties may disappear', 'varieties', ['seeds', 'plants', 'species'], 'older varieties may disappear', 'Older crop may disappear when farmers switch to mass-market crops', 'สายพันธุ์ท้องถิ่น', 'Older crop = older varieties · switch to mass-market crops = change to commercial crops · disappear ตรงกับสคริปต์ · คำตอบคือ varieties'),
-      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q33', 33, 'Before storage, seeds are treated to remove 33 ____.', 'seeds are cleaned and dried to remove moisture', 'moisture', ['water', 'dust', 'insects'], 'remove moisture', 'Before storage treated to remove', 'ความชื้น', 'Before storage = cleaned and dried before storage · treated to remove = dried to remove · คำตอบคือ moisture'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q32', 32, 'Traditional crop 32 ____ may be lost when growers switch to mass-market produce.', 'when farmers change to commercial crops, these older varieties may disappear', 'varieties', ['seeds', 'plants', 'species'], 'older varieties may disappear', 'Traditional crop may be lost when growers switch to mass-market produce', 'สายพันธุ์ท้องถิ่น', 'Traditional crop = older varieties · growers switch = farmers change · mass-market produce = commercial crops · may be lost = may disappear · คำตอบคือ varieties'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q33', 33, 'Before storage, each batch is treated to get rid of 33 ____.', 'seeds are cleaned and dried to remove moisture', 'moisture', ['water', 'dust', 'insects'], 'remove moisture', 'Before storage treated to get rid of', 'ความชื้น', 'each batch = seeds · treated to get rid of = cleaned and dried to remove · คำตอบคือ moisture'),
       gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q34', 34, 'Refrigeration slows ageing by keeping samples at a reduced 34 ____.', 'most seeds are kept at a low temperature', 'temperature', ['level', 'humidity', 'pressure'], 'low temperature', 'Refrigeration slows ageing at reduced', 'อุณหภูมิ', 'Refrigeration = kept at low temperature · slows ageing = slows down the natural ageing process · reduced = low · คำตอบคือ temperature'),
-      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q35', 35, 'Each sample goes into airtight 35 ____.', 'Each seed sample is placed in sealed containers', 'containers', ['bags', 'rooms', 'boxes'], 'sealed containers', 'airtight', 'ภาชนะบรรจุ', 'airtight paraphrase sealed containers'),
-      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q36', 36, 'Stored samples can help when crops are hit by 36 ____.', 'If a crop is damaged by disease, researchers can search stored collections', 'disease', ['drought', 'floods', 'insects'], 'damaged by disease', 'hit by', 'โรค', 'hit by paraphrase damaged by disease'),
-      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q37', 37, 'Researchers aim to increase 37 ____ to lack of rainfall in new crops.', 'Plant breeders also use seed banks to develop crops with greater resistance to drought', 'resistance', ['protection', 'tolerance', 'diversity'], 'greater resistance to drought', 'increase to lack of rainfall', 'ความต้านทาน', 'lack of rainfall paraphrase drought — คำตอบคือ resistance ไม่ใช่ drought'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q35', 35, 'Every batch goes into airtight 35 ____.', 'Each seed sample is placed in sealed containers', 'containers', ['bags', 'rooms', 'boxes'], 'sealed containers', 'airtight', 'ภาชนะบรรจุ', 'Every batch = Each seed sample · airtight paraphrase sealed containers'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q36', 36, 'Archived material can help when harvests are hit by 36 ____.', 'If a crop is damaged by disease, researchers can search stored collections', 'disease', ['drought', 'floods', 'insects'], 'damaged by disease', 'Archived material help when harvests are hit by', 'โรค', 'Archived material = stored collections · harvests are hit by = crop is damaged by · คำตอบคือ disease'),
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q37', 37, 'Breeding work aims to increase 37 ____ to lack of rainfall in new plants.', 'Plant breeders also use seed banks to develop crops with greater resistance to drought', 'resistance', ['protection', 'tolerance', 'diversity'], 'greater resistance to drought', 'increase to lack of rainfall in new plants', 'ความต้านทาน', 'Breeding work = Plant breeders develop · lack of rainfall paraphrase drought — คำตอบคือ resistance ไม่ใช่ drought'),
       gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q38', 38, 'Deposits can help growers rebuild after catastrophes such as 38 ____.', 'support farmers after extreme events such as floods, when stored seed for the next planting season may have been destroyed', 'floods', ['storms', 'disease', 'fires'], 'extreme events such as floods', 'rebuild after catastrophes such as', 'น้ำท่วม', 'Deposits = seed banks · growers = farmers · catastrophes = extreme events · คำตอบคือ floods'),
       gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q39', 39, 'Some tropical species perish if the 39 ____ step is applied during preparation.', 'Some seeds are difficult to store because they cannot survive drying', 'drying', ['storage', 'testing', 'freezing'], 'cannot survive drying', 'perish if step is applied', 'การทำให้แห้ง', 'perish = cannot survive · drying step = drying during storage prep · คำหลอกคือ storage เพราะเป็นหัวข้อใหญ่ · คำตอบคือ drying'),
-      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q40', 40, 'Periodic 40 ____ confirms whether archived seeds can still sprout.', 'Banks must carry out regular testing to check whether samples can still germinate', 'testing', ['collection', 'drying', 'cataloguing'], 'regular testing', 'Periodic confirms whether can still sprout', 'การทดสอบ', 'Periodic = regular · archived seeds = stored samples · sprout = germinate · confirms = check whether · คำตอบคือ testing')
+      gapQuestionFor(SEED_BANKS_PART4_SCRIPT, 'advanced-seed-banks-p4-q40', 40, 'Routine 40 ____ checks if archived seeds remain able to sprout.', 'Banks must carry out regular testing to check whether samples can still germinate', 'testing', ['collection', 'drying', 'cataloguing'], 'regular testing', 'Routine checks if remain able to sprout', 'การทดสอบ', 'Routine = regular · archived seeds = stored samples · sprout = germinate · checks = check whether · คำตอบคือ testing')
     ]
   },
   {
@@ -1360,16 +1360,16 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioCacheKey: 'advanced-listening-community-gardens-part-3',
     audioscript: COMMUNITY_GARDENS_PART3_SCRIPT,
     questions: [
-      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q21', 21, 'Which TWO advantages of community gardens do the students agree are most important?', 'What seemed more important was the way people learn practical skills. Some residents had never grown anything before, and now they know about planting, watering and composting. I agree.', 'B', communityBenefitOptions, 'learn practical skills', 'practical gardening skills', 'ทักษะการทำสวนจริง', 'most important ต้องฟังหลัง cheaper food ถูกลดความสำคัญด้วย but. practical skills และ I agree ยืนยันว่าทั้งคู่เห็นด้วย.', communityBenefitsQuestionText),
-      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q22', 22, 'Which TWO advantages of community gardens do the students agree are most important?', 'the other big benefit is social. People who had lived in the same street for years finally started talking to each other. Yes, that was convincing.', 'D', communityBenefitOptions, 'people ... finally started talking to each other', 'improve relationships between neighbours', 'ความสัมพันธ์ระหว่างเพื่อนบ้านดีขึ้น', 'social benefit และ started talking to each other = improve relationships between neighbours. คำว่า Yes เป็น agreement marker.', communityBenefitsQuestionText),
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q21', 21, 'Which TWO advantages of community gardens do the students agree are most important?', 'What seemed more important was the way people learn practical skills. Some residents had never grown anything before, and now they know about planting, watering and composting. I agree.', 'B', communityBenefitOptions, 'learn practical skills', 'hands-on growing skills', 'ทักษะการทำสวนจริง', 'hands-on growing skills = practical gardening skills. I agree ยืนยันว่าทั้งคู่เห็นด้วย.', communityBenefitsQuestionText),
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q22', 22, 'Which TWO advantages of community gardens do the students agree are most important?', 'the other big benefit is social. People who had lived in the same street for years finally started talking to each other. Yes, that was convincing.', 'D', communityBenefitOptions, 'people ... finally started talking to each other', 'stronger neighbour connections', 'ความสัมพันธ์ระหว่างเพื่อนบ้านดีขึ้น', 'stronger neighbour connections = improve relationships between neighbours. คำว่า Yes เป็น agreement marker.', communityBenefitsQuestionText),
       choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q23', 23, 'Which TWO problems do the students agree community gardens often face?', 'Some gardens begin with a grant, but after two or three years they struggle to pay for water, insurance and equipment. Yes, that\'s a serious issue.', 'A', communityProblemOptions, 'struggle to pay for water, insurance and equipment', 'lack of long-term funding', 'ขาดเงินทุนระยะยาว', 'begin with a grant แต่หลังสองสามปี struggle to pay = lack of long-term funding. คำว่า serious issue ยืนยันว่าเป็นปัญหาหลัก.', communityProblemsQuestionText),
-      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q24', 24, 'Which TWO problems do the students agree community gardens often face?', 'Getting permission to use land seems more difficult. If the land belongs to the council or a private owner, groups may wait months before they can start. Agreed.', 'D', communityProblemOptions, 'Getting permission to use land seems more difficult', 'difficulty getting permission to use land', 'ขออนุญาตใช้ที่ดินยาก', 'keyword ตรงมาก: getting permission to use land. Agreed เป็น consensus marker. คำหลอกคือ soil quality เพราะแก้ด้วย raised beds ได้.', communityProblemsQuestionText),
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q24', 24, 'Which TWO problems do the students agree community gardens often face?', 'Getting permission to use land seems more difficult. If the land belongs to the council or a private owner, groups may wait months before they can start. Agreed.', 'D', communityProblemOptions, 'Getting permission to use land seems more difficult', 'difficulty obtaining land approval', 'ขออนุญาตใช้ที่ดินยาก', 'obtaining land approval = getting permission to use land. Agreed เป็น consensus marker. คำหลอกคือ soil quality เพราะแก้ด้วย raised beds ได้.', communityProblemsQuestionText),
       matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q25', 25, 'evening gardening sessions', 'People who work during the day could come after work, so it would attract people who don\'t usually take part.', 'A', 'attract people who don\'t usually take part', 'attract people who do not usually take part', 'ดึงดูดคนที่ปกติไม่เข้าร่วม', 'after work อธิบายกลุ่มที่มาไม่ได้ตอนกลางวัน และสรุปตรงว่า attract people who do not usually take part.'),
       matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q26', 26, 'shared tool cupboards', 'there need to be rules. Tools can go missing, or people may not return them clean. So clearer rules are needed.', 'F', 'clearer rules are needed', 'needs clearer rules', 'ต้องมีกฎชัดเจนขึ้น', 'Useful เป็นคำหลอกเชิงบวก แต่หลัง but พาไปคำตอบจริงว่า need clearer rules.'),
       matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q27', 27, 'cooking events using garden produce', 'people cooked together and exchanged recipes. It seems to help people learn from each other.', 'G', 'help people learn from each other', 'help people learn from each other', 'ช่วยให้คนเรียนรู้จากกันและกัน', 'exchanged recipes เป็นตัวอย่าง และคำตอบตรงคือ help people learn from each other.'),
-      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q28', 28, 'school vegetable plots', 'I think schools should organise those. Teachers can connect them with science lessons and healthy eating.', 'C', 'schools should organise those', 'should be organised by schools', 'ควรจัดโดยโรงเรียน', 'schools should organise those ตรงกับ should be organised by schools. Teachers เป็น clue เสริม.'),
-      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q29', 29, 'selling produce to restaurants', 'Once money becomes the main focus, the garden may stop being a community space. So it could damage the original purpose.', 'H', 'damage the original purpose', 'damage the original purpose of the gardens', 'ทำลายจุดประสงค์เดิมของสวน', 'worried และ money becomes the main focus เป็น warning ก่อนคำตอบตรง: damage the original purpose.'),
-      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q30', 30, 'online advice groups', 'several gardens already use them well. People post photos of plant diseases or ask when to harvest things. Yes, that already seems to be successful.', 'E', 'already seems to be successful', 'already seems to be successful', 'ดูเหมือนสำเร็จอยู่แล้ว', 'already use them well และ already seems to be successful ตรงกับตัวเลือก E.')
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q28', 28, 'school vegetable plots', 'I think schools should organise those. Teachers can connect them with science lessons and healthy eating.', 'C', 'schools should organise those', 'schools responsible for this', 'ควรจัดโดยโรงเรียน', 'Schools should be responsible for this = schools should organise those. Teachers เป็น clue เสริม.'),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q29', 29, 'selling produce to restaurants', 'Once money becomes the main focus, the garden may stop being a community space. So it could damage the original purpose.', 'H', 'damage the original purpose', 'undermine the original aim', 'ทำลายจุดประสงค์เดิมของสวน', 'undermine the original aim = damage the original purpose.'),
+      matchQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, communityIdeaOptions, communityIdeaQuestionText, 'advanced-community-gardens-p3-q30', 30, 'online advice groups', 'several gardens already use them well. People post photos of plant diseases or ask when to harvest things. Yes, that already seems to be successful.', 'E', 'already seems to be successful', 'appears to be working already', 'ดูเหมือนสำเร็จอยู่แล้ว', 'appears to be working already = already seems to be successful.')
     ]
   },
   {
@@ -1381,16 +1381,16 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioCacheKey: 'advanced-listening-coral-reef-restoration-part-4',
     audioscript: CORAL_REEF_PART4_SCRIPT,
     questions: [
-      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q31', 31, 'Reefs are home to a wide range of marine 31 ____.', 'support such a high level of marine diversity', 'diversity', ['life', 'animals', 'shelter'], 'high level of marine diversity', 'wide range of marine', 'ความหลากหลายทางทะเล', 'wide range paraphrase high level of marine diversity'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q31', 31, 'Reefs are home to a wide range of ocean 31 ____.', 'support such a high level of marine diversity', 'diversity', ['life', 'animals', 'shelter'], 'high level of marine diversity', 'wide range of ocean', 'ความหลากหลายทางทะเล', 'ocean = marine · wide range paraphrase high level of marine diversity'),
       gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q32', 32, 'Shorelines gain protection when reefs weaken incoming 32 ____.', 'the structure of the reef reduces the force of the waves before they reach land', 'waves', ['storms', 'water', 'wind'], 'reduces the force of the waves', 'weaken incoming', 'คลื่น', 'Shorelines gain protection = protect coastal areas · weaken incoming = reduces the force of the waves · คำตอบคือ waves'),
-      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q33', 33, 'Loss of coral colour has been connected with warmer 33 ____ in the sea.', 'Bleaching is often linked to warmer water', 'water', ['weather', 'oceans', 'temperatures'], 'linked to warmer water', 'Loss of colour connected with warmer in the sea', 'น้ำ', 'Loss of coral colour = bleaching · connected with = linked to · warmer in the sea = warmer water · คำตอบคือ water'),
-      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q34', 34, 'Young corals are grown in underwater 34 ____ before being moved to damaged areas.', 'growing small pieces of coral in underwater nurseries', 'nurseries', ['gardens', 'frames', 'cages'], 'underwater nurseries', 'underwater before being moved to damaged areas', 'แหล่งเพาะเลี้ยง', 'Young corals = small pieces of coral · underwater = underwater · before being moved = before they are moved back to damaged reefs · คำตอบคือ nurseries'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q33', 33, 'Loss of coral colour has been connected with hotter 33 ____ in the sea.', 'Bleaching is often linked to warmer water', 'water', ['weather', 'oceans', 'temperatures'], 'linked to warmer water', 'Loss of colour connected with hotter in the sea', 'น้ำ', 'Loss of coral colour = bleaching · connected with = linked to · hotter = warmer · คำตอบคือ water'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q34', 34, 'Young corals are grown in submerged 34 ____ before being moved to damaged areas.', 'growing small pieces of coral in underwater nurseries', 'nurseries', ['gardens', 'frames', 'cages'], 'underwater nurseries', 'submerged before being moved to damaged areas', 'แหล่งเพาะเลี้ยง', 'Young corals = small pieces of coral · submerged = underwater · before being moved = before they are moved back to damaged reefs · คำตอบคือ nurseries'),
       gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q35', 35, 'Broken reefs may be rebuilt using steel 35 ____.', 'scientists may use metal frames. These create a stable structure', 'frames', ['cages', 'tools', 'pipes'], 'metal frames', 'rebuilt using steel', 'โครงโลหะ', 'rebuilt using steel paraphrase use metal frames'),
-      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q36', 36, 'Underwater workers use special 36 ____ to hold coral pieces in position.', 'divers use a special glue to hold the fragments in position', 'glue', ['ropes', 'cement', 'clips'], 'special glue', 'Underwater workers use special to hold in position', 'กาว', 'Underwater workers = divers · coral pieces = fragments · hold in position ตรงกับสคริปต์ · คำตอบคือ glue'),
-      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q37', 37, 'Newly planted corals are fragile and may be wrecked by 37 ____.', 'Young corals are delicate, and storms can break or bury them', 'storms', ['divers', 'boats', 'waves'], 'storms can break or bury them', 'fragile and may be wrecked by', 'พายุ', 'fragile = delicate · newly planted = young · wrecked = break or bury · คำตอบคือ storms'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q36', 36, 'Underwater workers use a particular 36 ____ to fix coral pieces in place.', 'divers use a special glue to hold the fragments in position', 'glue', ['ropes', 'cement', 'clips'], 'special glue', 'Underwater workers use particular to fix in place', 'กาว', 'Underwater workers = divers · coral pieces = fragments · fix in place = hold in position · คำตอบคือ glue'),
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q37', 37, 'New transplants are fragile and may be wrecked by 37 ____.', 'Young corals are delicate, and storms can break or bury them', 'storms', ['divers', 'boats', 'waves'], 'storms can break or bury them', 'fragile and may be wrecked by', 'พายุ', 'New transplants = Young corals · fragile = delicate · wrecked = break or bury · คำตอบคือ storms'),
       gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q38', 38, 'Runoff pollution can cause 38 ____ to colonise the reef surface.', 'If too many nutrients enter the water, algae may grow quickly and cover the reef', 'algae', ['plants', 'bacteria', 'organisms'], 'algae may grow quickly', 'Runoff pollution cause to colonise reef surface', 'สาหร่าย', 'Runoff pollution = too many nutrients enter the water · colonise the reef surface = grow quickly and cover the reef · คำตอบคือ algae'),
       gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q39', 39, 'Restoration is costly because it depends on trained 39 ____.', 'It requires boats, diving equipment and skilled divers who can work carefully underwater', 'divers', ['scientists', 'workers', 'teams'], 'skilled divers', 'depends on trained', 'นักดำน้ำ', 'trained paraphrase skilled divers'),
-      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q40', 40, 'Research targets strains showing greater 40 ____ to rising ocean heat.', 'studying corals that show greater heat tolerance', 'tolerance', ['resistance', 'protection', 'survival'], 'greater heat tolerance', 'greater to rising ocean heat', 'ความทนทาน', 'strains = corals · rising ocean heat = heat tolerance context · คำตอบคือ tolerance')
+      gapQuestionFor(CORAL_REEF_PART4_SCRIPT, 'advanced-coral-reef-p4-q40', 40, 'Research targets strains with stronger 40 ____ to rising ocean heat.', 'studying corals that show greater heat tolerance', 'tolerance', ['resistance', 'protection', 'survival'], 'greater heat tolerance', 'stronger to rising ocean heat', 'ความทนทาน', 'strains = corals · stronger = greater · rising ocean heat = heat tolerance context · คำตอบคือ tolerance')
     ]
   },
   {
@@ -1403,10 +1403,10 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioscript: DIGITAL_NOTE_TAKING_PART3_SCRIPT,
     questions: [
       choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q21', 21, 'At first, Ravi thought digital note-taking would be', 'I thought the topic might be too ordinary, everyone already knows students use laptops and tablets.', 'A', [
-        { key: 'A', text: 'too ordinary as a research topic.' },
+        { key: 'A', text: 'not original enough as a research topic.' },
         { key: 'B', text: 'too difficult to test fairly.' },
         { key: 'C', text: 'too technical for their audience.' }
-      ], 'too ordinary', 'too ordinary as a research topic', 'ธรรมดาเกินไปเป็นหัวข้อวิจัย', 'At first เป็น signal และ Ravi พูดตรงว่า might be too ordinary. คำหลอกคือ technical เพราะพูดถึง laptops/tablets แต่ไม่ได้บอกว่ายากเชิงเทคนิค.'),
+      ], 'too ordinary', 'not original enough as a research topic', 'ธรรมดาเกินไปเป็นหัวข้อวิจัย', 'not original enough = too ordinary. At first เป็น signal และ Ravi พูดว่า might be too ordinary. คำหลอกคือ technical เพราะพูดถึง laptops/tablets แต่ไม่ได้บอกว่ายากเชิงเทคนิค.'),
       choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q22', 22, 'When discussing laptops in lectures, Emma and Ravi disagree about', 'I think laptops can distract people sitting nearby ... I\'m not sure that\'s a major problem.', 'B', [
         { key: 'A', text: 'whether they help students organise information.' },
         { key: 'B', text: 'whether they distract other students nearby.' },

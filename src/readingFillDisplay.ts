@@ -31,8 +31,160 @@ export type ReadingFillQuestionGroup = {
 const READING_FILL_SECTION_PATTERN =
   /complete the (?:notes|sentences|summary|table)|choose (?:one|no more than)|write one word only|each gap|fill in the/i
 
-/** Number followed by dot-like blank markers (single … or multiple dots/underscores). */
-export const READING_FILL_BLANK_IN_LINE = /\b(\d+)\s*([.．…⋯·•_\-–—]+)/g
+/** Number followed by dot-like blank markers or OCR garbage tokens. */
+export const READING_FILL_BLANK_IN_LINE =
+  /\b(\d+)\s*(?:[.．…⋯·•_\-–—]+(?:[a-z0-9]*)?|[a-z]{2,}[a-z0-9]{3,})/gi
+
+const TRAILING_OCR_GARBAGE = /\s+([a-z]{6,})\s*$/i
+
+const lineContainsBlankMarker = (line: string, questionNumbers: Set<number>) => {
+  const normalized = normalizeOcrFillLine(line, questionNumbers)
+  READING_FILL_BLANK_IN_LINE.lastIndex = 0
+  if ([...normalized.matchAll(READING_FILL_BLANK_IN_LINE)].length > 0) return true
+  return lineHasTrailingOcrGarbage(normalized)
+}
+
+const isLikelyOcrGarbageWord = (word: string) => {
+  const value = String(word || '').toLowerCase()
+  if (value.length < 8) return false
+  if (/(.)\1{3,}/.test(value)) return true
+  if (!/[aeiou]/.test(value)) return true
+  if (/[bcdfghjklmnpqrstvwxyz]{5,}/i.test(value)) return true
+  if (/[nm]{4,}|[c]{3,}|[s]{4,}/.test(value)) return true
+  return false
+}
+
+const lineHasTrailingOcrGarbage = (line: string) => {
+  const match = line.match(TRAILING_OCR_GARBAGE)
+  return Boolean(match && isLikelyOcrGarbageWord(match[1]))
+}
+
+const cleanFillSegmentText = (text: string) =>
+  String(text || '')
+    .replace(/\s*[.．…⋯·•_\-–—]{2,}[a-z0-9]*\s*$/i, '')
+    .replace(TRAILING_OCR_GARBAGE, (match, word: string) =>
+      isLikelyOcrGarbageWord(word) ? '' : match
+    )
+    .replace(/^([a-z0-9]{4,})\s+/i, (match, word: string) =>
+      isLikelyOcrGarbageWord(word) ? '' : match
+    )
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const normalizeOcrFillQuestionNumber = (value: string, questionNumbers: Set<number>) => {
+  const numeric = Number(value)
+  if (questionNumbers.has(numeric)) return numeric
+  if (numeric > 100 && questionNumbers.has(numeric % 100)) return numeric % 100
+  if (numeric > 10 && questionNumbers.has(Number(String(numeric).slice(-2)))) {
+    const tail = Number(String(numeric).slice(-2))
+    if (questionNumbers.has(tail)) return tail
+  }
+  return numeric
+}
+
+const normalizeOcrFillLine = (line: string, questionNumbers: Set<number>) => {
+  let result = line.trim()
+  if (!result) return result
+
+  if (questionNumbers.has(12)) {
+    result = result.replace(/\b212\b/g, '12')
+  }
+
+  const numbers = [...questionNumbers].sort((first, second) => second - first)
+  for (const questionNumber of numbers) {
+    result = result.replace(
+      new RegExp(
+        `\\b${questionNumber}\\s+(?:[.．…⋯·•_\\-–—]+)?([a-z0-9]{4,})`,
+        'gi'
+      ),
+      `${questionNumber} …`
+    )
+    result = result.replace(
+      new RegExp(`\\b${questionNumber}\\s+([a-z]{2,}[a-z0-9]{3,})`, 'gi'),
+      `${questionNumber} …`
+    )
+  }
+
+  return result.replace(/\s+/g, ' ').trim()
+}
+
+const assignImplicitBlankNumbers = (
+  lines: string[],
+  questionNumbers: Set<number>
+): string[] => {
+  const sortedNumbers = [...questionNumbers].sort((first, second) => first - second)
+  const coveredNumbers = new Set<number>()
+  let nextIndex = 0
+
+  return lines.map((line) => {
+    READING_FILL_BLANK_IN_LINE.lastIndex = 0
+    for (const match of line.matchAll(READING_FILL_BLANK_IN_LINE)) {
+      const questionNumber = normalizeOcrFillQuestionNumber(match[1], questionNumbers)
+      if (questionNumbers.has(questionNumber)) coveredNumbers.add(questionNumber)
+    }
+
+    if (!lineHasTrailingOcrGarbage(line)) return line
+    if (/\b\d+\s*(?:[.．…⋯·•_\-–—]|…)/.test(line)) return line
+
+    while (nextIndex < sortedNumbers.length && coveredNumbers.has(sortedNumbers[nextIndex])) {
+      nextIndex += 1
+    }
+    if (nextIndex >= sortedNumbers.length) return line
+
+    const questionNumber = sortedNumbers[nextIndex]
+    coveredNumbers.add(questionNumber)
+    nextIndex += 1
+    return line.replace(TRAILING_OCR_GARBAGE, ` ${questionNumber} …`)
+  })
+}
+
+const coalesceFillLineSegments = (segments: ReadingFillLineSegment[]): ReadingFillLineSegment[] => {
+  const result: ReadingFillLineSegment[] = []
+
+  for (let index = 0; index < segments.length; index += 1) {
+    const segment = segments[index]
+    const next = segments[index + 1]
+
+    if (segment.kind === 'text' && next?.kind === 'blank') {
+      result.push({
+        ...next,
+        before: cleanFillSegmentText([segment.text, next.before].filter(Boolean).join(' '))
+      })
+      index += 1
+      continue
+    }
+
+    if (segment.kind === 'blank') {
+      result.push({
+        ...segment,
+        before: cleanFillSegmentText(segment.before),
+        after: cleanFillSegmentText(segment.after)
+      })
+      continue
+    }
+
+    result.push(segment)
+  }
+
+  return result
+}
+
+const findFillSourceLineForQuestion = (block: string, questionNumber: number) => {
+  const lines = block
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !isReadingFillBoilerplateLine(line))
+
+  const direct = lines.find((line) => new RegExp(`\\b${questionNumber}\\b`).test(line))
+  if (direct) return direct
+
+  const normalizedLines = assignImplicitBlankNumbers(
+    lines.map((line) => normalizeOcrFillLine(line, new Set([questionNumber]))),
+    new Set([questionNumber])
+  )
+  return normalizedLines.find((line) => new RegExp(`\\b${questionNumber}\\s`).test(line)) || null
+}
 
 const stripFillPromptPrefix = (value: string) =>
   String(value || '')
@@ -111,47 +263,75 @@ const isReadingFillBoilerplateLine = (line: string) =>
   /^In boxes \d+/i.test(line) ||
   /^[A-J]\s+/.test(line) ||
   /^\d+\.\s*Drop heading here/i.test(line) ||
-  /^\d+\.\s*Drop answer here\s*(?:…|\.{2,})?\s*$/i.test(line)
+  /^\d+\.\s*Drop answer here\s*(?:…|\.{2,})?\s*$/i.test(line) ||
+  /^>\|\s*p\.\s*\d+/i.test(line)
 
 export const parseReadingFillLineSegments = (
   line: string,
   questionNumbers: Set<number>
 ): ReadingFillLineSegment[] => {
-  const trimmed = line.trim()
+  const trimmed = normalizeOcrFillLine(line, questionNumbers)
+  if (!trimmed) return []
 
   const leadingBlank = trimmed.match(/^(\d+)\s*([.．…⋯·•_\-–—]+)\s+(.+)$/)
-  if (leadingBlank && questionNumbers.has(Number(leadingBlank[1]))) {
-    return [
-      {
-        kind: 'blank',
-        questionNumber: Number(leadingBlank[1]),
-        before: '',
-        after: leadingBlank[3].trim()
-      }
-    ]
+  if (leadingBlank) {
+    const questionNumber = normalizeOcrFillQuestionNumber(leadingBlank[1], questionNumbers)
+    if (questionNumbers.has(questionNumber)) {
+      return coalesceFillLineSegments([
+        {
+          kind: 'blank',
+          questionNumber,
+          before: '',
+          after: leadingBlank[3].trim()
+        }
+      ])
+    }
+  }
+
+  const leadingOcrBlank = trimmed.match(/^(\d+)\s+([a-z0-9]{4,})\s+(.+)$/i)
+  if (leadingOcrBlank) {
+    const questionNumber = normalizeOcrFillQuestionNumber(leadingOcrBlank[1], questionNumbers)
+    if (questionNumbers.has(questionNumber)) {
+      return coalesceFillLineSegments([
+        {
+          kind: 'blank',
+          questionNumber,
+          before: '',
+          after: leadingOcrBlank[3].trim()
+        }
+      ])
+    }
   }
 
   const trailingBlank = trimmed.match(/^(\d+)\s+(.+?)\s*([.．…⋯·•_\-–—]+)\s*\.?\s*$/)
-  if (trailingBlank && questionNumbers.has(Number(trailingBlank[1]))) {
-    return [
-      {
-        kind: 'blank',
-        questionNumber: Number(trailingBlank[1]),
-        before: trailingBlank[2].trim(),
-        after: ''
-      }
-    ]
+  if (trailingBlank) {
+    const questionNumber = normalizeOcrFillQuestionNumber(trailingBlank[1], questionNumbers)
+    if (questionNumbers.has(questionNumber)) {
+      return coalesceFillLineSegments([
+        {
+          kind: 'blank',
+          questionNumber,
+          before: trailingBlank[2].trim(),
+          after: ''
+        }
+      ])
+    }
   }
 
   READING_FILL_BLANK_IN_LINE.lastIndex = 0
-  const matches = [...trimmed.matchAll(READING_FILL_BLANK_IN_LINE)].filter((match) =>
-    questionNumbers.has(Number(match[1]))
-  )
+  const matches = [...trimmed.matchAll(READING_FILL_BLANK_IN_LINE)]
+    .map((match) => ({
+      match,
+      questionNumber: normalizeOcrFillQuestionNumber(match[1], questionNumbers)
+    }))
+    .filter(({ questionNumber }) => questionNumbers.has(questionNumber))
 
   if (!matches.length) {
     const text = trimmed
     const withoutBullet = text.replace(/^[•\-\*]\s*/, '').trim()
+    const hasQuestionMarker = lineContainsBlankMarker(text, questionNumbers)
     if (
+      !hasQuestionMarker &&
       withoutBullet.length > 0 &&
       withoutBullet.length < 80 &&
       /^[A-Z]/.test(withoutBullet) &&
@@ -169,11 +349,10 @@ export const parseReadingFillLineSegments = (
   const segments: ReadingFillLineSegment[] = []
   let lastIndex = 0
 
-  matches.forEach((match, index) => {
-    const questionNumber = Number(match[1])
+  matches.forEach(({ match, questionNumber }, index) => {
     const start = match.index ?? 0
     const end = start + match[0].length
-    const nextStart = matches[index + 1]?.index ?? trimmed.length
+    const nextStart = matches[index + 1]?.match.index ?? trimmed.length
 
     if (start > lastIndex) {
       const beforeText = trimmed.slice(lastIndex, start).trim()
@@ -194,7 +373,7 @@ export const parseReadingFillLineSegments = (
     }
   }
 
-  return segments
+  return coalesceFillLineSegments(segments)
 }
 
 export const extractReadingFillDisplayLines = (
@@ -203,11 +382,15 @@ export const extractReadingFillDisplayLines = (
   questions: FillQuestion[] = []
 ): ReadingFillDisplayLine[] => {
   const byNumber = new Map(questions.map((question) => [question.number, question]))
-  const contentLines = block
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .filter((line) => !isReadingFillBoilerplateLine(line))
+  const contentLines = assignImplicitBlankNumbers(
+    block
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .filter((line) => !isReadingFillBoilerplateLine(line))
+      .map((line) => normalizeOcrFillLine(line, questionNumbers)),
+    questionNumbers
+  )
 
   const displayLines = contentLines
     .map((line) => ({
@@ -217,14 +400,15 @@ export const extractReadingFillDisplayLines = (
 
   if (displayLines.length) {
     const enriched = enrichFillDisplayLines(displayLines, questions)
-    return supplementMissingFillDisplayLines(enriched, questionNumbers, questions)
+    const merged = mergeFillDisplayLineContinuations(enriched)
+    return supplementMissingFillDisplayLines(merged, questionNumbers, questions, block)
   }
 
   return [...questionNumbers]
     .sort((first, second) => first - second)
     .map((questionNumber) => {
       const question = byNumber.get(questionNumber)
-      const context = question ? parseFillContextFromPrompt(question.prompt, questionNumber) : null
+      const context = question ? resolveFillContext(block, question, questionNumber) : null
       return {
         segments: [
           {
@@ -238,10 +422,41 @@ export const extractReadingFillDisplayLines = (
     })
 }
 
+const resolveFillContext = (block: string, question: FillQuestion, questionNumber: number) => {
+  const sourceLine = findFillSourceLineForQuestion(block, questionNumber)
+  if (sourceLine) {
+    const questionSet = new Set([questionNumber])
+    const segments = parseReadingFillLineSegments(sourceLine, questionSet)
+    const blank = segments.find(
+      (segment): segment is Extract<ReadingFillLineSegment, { kind: 'blank' }> =>
+        segment.kind === 'blank' && segment.questionNumber === questionNumber
+    )
+    if (blank && (blank.before || blank.after)) {
+      return { before: blank.before, after: blank.after }
+    }
+
+    const normalized = normalizeOcrFillLine(sourceLine, questionSet)
+    const rawMatch = normalized.match(
+      new RegExp(
+        `^(.*?)\\b${questionNumber}\\s*(?:[.．…⋯·•_\\-–—…]+|[a-z0-9]{4,})(.*)$`,
+        'i'
+      )
+    )
+    if (rawMatch) {
+      const before = cleanFillSegmentText(rawMatch[1])
+      const after = cleanFillSegmentText(rawMatch[2])
+      if (before || after) return { before, after }
+    }
+  }
+
+  return parseFillContextFromPrompt(question.prompt, questionNumber)
+}
+
 const supplementMissingFillDisplayLines = (
   displayLines: ReadingFillDisplayLine[],
   questionNumbers: Set<number>,
-  questions: FillQuestion[]
+  questions: FillQuestion[],
+  block: string
 ): ReadingFillDisplayLine[] => {
   const coveredNumbers = new Set<number>()
   for (const line of displayLines) {
@@ -256,10 +471,11 @@ const supplementMissingFillDisplayLines = (
   if (!missingNumbers.length) return displayLines
 
   const byNumber = new Map(questions.map((question) => [question.number, question]))
-  const supplementalLines: ReadingFillDisplayLine[] = missingNumbers.map((questionNumber) => {
+  const supplementalLines: ReadingFillDisplayLine[] = []
+  for (const questionNumber of missingNumbers) {
     const question = byNumber.get(questionNumber)
-    const context = question ? parseFillContextFromPrompt(question.prompt, questionNumber) : null
-    return {
+    const context = question ? resolveFillContext(block, question, questionNumber) : null
+    supplementalLines.push({
       segments: [
         {
           kind: 'blank' as const,
@@ -268,10 +484,83 @@ const supplementMissingFillDisplayLines = (
           after: context?.after || ''
         }
       ]
-    }
-  })
+    })
+  }
 
   return [...displayLines, ...supplementalLines]
+}
+
+const shouldMergeTextIntoFollowingBlank = (text: string) => {
+  const trimmed = text.trim()
+  if (!trimmed || /[.!?]["']?\s*$/.test(trimmed)) return false
+  if (/[:;]\s*$/.test(trimmed)) return false
+  if (/^Reasons why\b/i.test(trimmed)) return false
+  const lastWord = trimmed.split(/\s+/).pop() || ''
+  if (/^(?:where|a|an|the|of|to|as|and|or|in|on|at|by|for|with|from|their|its|his|her|some|such)$/i.test(lastWord)) {
+    return true
+  }
+  if (/[a-z]{4,}$/.test(lastWord) && !/[.!?]$/.test(trimmed)) {
+    return /(?:tion|ment|ing|ity|ness|ship|hood|ence|ance|able|ible|ful|less|ous|ive|al|ed|es|ed)$/i.test(lastWord)
+  }
+  return false
+}
+
+const mergeFillDisplayLineContinuations = (
+  displayLines: ReadingFillDisplayLine[]
+): ReadingFillDisplayLine[] => {
+  const merged: ReadingFillDisplayLine[] = []
+
+  for (const line of displayLines) {
+    const previous = merged[merged.length - 1]
+    const previousTextSegment =
+      previous?.segments.length === 1 && previous.segments[0].kind === 'text'
+        ? previous.segments[0]
+        : null
+    const lastPreviousSegment = previous?.segments[previous.segments.length - 1]
+    const onlySegment = line.segments.length === 1 ? line.segments[0] : null
+    const firstSegment = line.segments[0]
+
+    if (
+      previousTextSegment &&
+      firstSegment?.kind === 'blank' &&
+      shouldMergeTextIntoFollowingBlank(previousTextSegment.text)
+    ) {
+      merged[merged.length - 1] = {
+        segments: [
+          {
+            ...firstSegment,
+            before: cleanFillSegmentText(
+              [previousTextSegment.text, firstSegment.before].filter(Boolean).join(' ')
+            )
+          },
+          ...line.segments.slice(1)
+        ]
+      }
+      continue
+    }
+
+    if (
+      previous &&
+      lastPreviousSegment?.kind === 'blank' &&
+      onlySegment?.kind === 'text' &&
+      !/^[e•\-*]\s/.test(onlySegment.text.trim()) &&
+      onlySegment.text.trim().length <= 48 &&
+      /^[a-z(]/.test(onlySegment.text.trim())
+    ) {
+      previous.segments = previous.segments.map((segment, index, segments) => {
+        if (index !== segments.length - 1 || segment.kind !== 'blank') return segment
+        return {
+          ...segment,
+          after: cleanFillSegmentText([segment.after, onlySegment.text].filter(Boolean).join(' '))
+        }
+      })
+      continue
+    }
+
+    merged.push(line)
+  }
+
+  return merged
 }
 
 export const enrichFillDisplayLines = (

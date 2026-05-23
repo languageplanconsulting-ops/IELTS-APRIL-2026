@@ -12039,6 +12039,158 @@ body,
   margin: 0;
 }
 
+/* Advanced reading — cleaner IELTS-style summary / gap-fill layout */
+.readingFillQuestionGroup-advanced {
+  gap: 18px;
+}
+
+.readingFillInstruction-advanced {
+  border-left: 4px solid #2563eb;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
+  color: #1e3a5f;
+  font-size: 0.9rem;
+}
+
+.readingFillQuestionGroup-advanced .readingFillOriginalBlock {
+  padding: 20px 22px;
+  border-radius: 16px;
+  background: #fafbfc;
+  border-color: #dbeafe;
+  font-size: 1.04rem;
+  font-weight: 450;
+  line-height: 2;
+  letter-spacing: 0.01em;
+}
+
+.readingFillQuestionGroup-advanced .readingFillLine {
+  margin: 0 0 0.65em;
+  line-height: 2.15;
+}
+
+.readingFillQuestionGroup-advanced .readingFillLine:last-child {
+  margin-bottom: 0;
+}
+
+.readingFillQuestionGroup-advanced .readingFillSectionHeading {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed #cbd5e1;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.readingFillQuestionGroup-advanced .readingFillClueLine {
+  margin: 8px 0 12px;
+  padding: 8px 12px;
+  border-left: 3px solid #93c5fd;
+  border-radius: 0 8px 8px 0;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.94rem;
+  font-weight: 550;
+}
+
+.readingFillQuestionGroup-advanced .readingFillClueLine::before {
+  content: none;
+}
+
+.readingFillBlankSlot-advanced {
+  display: inline;
+  white-space: normal;
+  scroll-margin: 140px;
+}
+
+.readingFillBlankGap-advanced {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  justify-items: center;
+  gap: 2px;
+  margin: 0 0.35em;
+  padding: 0 2px 2px;
+  vertical-align: baseline;
+  border-bottom: 2px solid #64748b;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 245, 249, 0.6) 100%);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.readingFillBlankSlot-advanced.is-active .readingFillBlankGap-advanced {
+  border-bottom-color: #2563eb;
+  box-shadow: 0 3px 0 -1px rgba(37, 99, 235, 0.25);
+}
+
+.readingFillBlankGap-advanced .readingFillBlankNumber {
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 3px;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.readingFillBlankGap-advanced .readingFillBlankInput {
+  min-width: 6.5rem;
+  max-width: 12rem;
+  min-height: 26px !important;
+  padding: 0 4px 1px !important;
+  border: none !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  text-align: center;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.readingFillBlankGap-advanced .readingFillBlankInput:focus {
+  outline: none;
+}
+
+.readingFillBlankGap-advanced .readingFillBlankInput::placeholder {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.readingFillBlankHint-advanced {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 0.15em;
+}
+
+.readingFillBlankHint-advanced .readingHintBtn-compact {
+  min-height: 24px;
+  min-width: 24px;
+  padding: 0;
+  border-color: rgba(148, 163, 184, 0.45) !important;
+  background: #fff !important;
+}
+
+.readingFillQuestionGroup-advanced .readingFillBlankPrefix,
+.readingFillQuestionGroup-advanced .readingFillBlankSuffix {
+  font-weight: 480;
+  color: #1e293b;
+}
+
+@media (max-width: 720px) {
+  .readingFillQuestionGroup-advanced .readingFillOriginalBlock {
+    padding: 16px 14px;
+    font-size: 1rem;
+    line-height: 1.95;
+  }
+
+  .readingFillBlankGap-advanced .readingFillBlankInput {
+    min-width: 5.5rem;
+    max-width: 9rem;
+  }
+}
+
 .readingReportCard {
   display: grid;
   gap: 12px;
