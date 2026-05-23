@@ -2926,6 +2926,14 @@ const stripReadingDragDropUiText = (text) =>
     .replace(/\s*Questions?\s+\d+(?:\s*[–-]\s*\d+)?[\s\S]*$/i, '')
     .trim()
 
+const stripReadingMatchingListFromPrompt = (text) =>
+  String(text || '')
+    .replace(
+      /(?:\.\s*|\s+)List of (?:Headings|Ideas|Researchers|People|Statements)\b[\s\S]*$/i,
+      ''
+    )
+    .trim()
+
 const sanitizeReadingQuestionPrompt = (prompt, correctAnswer) => {
   const raw = String(prompt || '').replace(/\s+/g, ' ').trim()
   if (/^drop heading here/i.test(raw)) {
@@ -2943,7 +2951,7 @@ const sanitizeReadingQuestionPrompt = (prompt, correctAnswer) => {
   if (READING_ROMAN_HEADING_PATTERN.test(String(correctAnswer || '').trim()) && /^paragraph\s+[a-h]\b/i.test(raw)) {
     return raw
   }
-  return stripReadingDragDropUiText(raw) || raw
+  return stripReadingMatchingListFromPrompt(stripReadingDragDropUiText(raw) || raw)
 }
 
 const QUESTION_SECTION_HEADER_REGEX =

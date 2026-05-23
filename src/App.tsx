@@ -4742,14 +4742,30 @@ const extractReadingQuestionSectionBlock = (
   const source = String(questionSectionText || '')
   READING_QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
   const matches = [...source.matchAll(READING_QUESTION_SECTION_HEADER_REGEX)]
-  const matchIndex = matches.findIndex((match) => {
-    const rangeStart = Number(match[1])
-    const rangeEnd = Number(match[2] || match[3] || match[1])
-    const min = Math.min(rangeStart, rangeEnd)
-    const max = Math.max(rangeStart, rangeEnd)
-    return start >= min && end <= max
+  const matchingIndices = matches
+    .map((match, index) => {
+      const rangeStart = Number(match[1])
+      const rangeEnd = Number(match[2] || match[3] || match[1])
+      const min = Math.min(rangeStart, rangeEnd)
+      const max = Math.max(rangeStart, rangeEnd)
+      return start >= min && end <= max ? index : -1
+    })
+    .filter((index) => index >= 0)
+
+  if (!matchingIndices.length) return ''
+
+  const matchIndex = matchingIndices.reduce((bestIndex, currentIndex) => {
+    const best = matches[bestIndex]
+    const current = matches[currentIndex]
+    const bestStart = Number(best[1])
+    const bestEnd = Number(best[2] || best[3] || best[1])
+    const currentStart = Number(current[1])
+    const currentEnd = Number(current[2] || current[3] || current[1])
+    const bestSpan = Math.max(bestStart, bestEnd) - Math.min(bestStart, bestEnd)
+    const currentSpan = Math.max(currentStart, currentEnd) - Math.min(currentStart, currentEnd)
+    return currentSpan < bestSpan ? currentIndex : bestIndex
   })
-  if (matchIndex < 0) return ''
+
   const current = matches[matchIndex]
   const next = matches[matchIndex + 1]
   return source.slice(current.index ?? 0, next?.index ?? source.length).trim()
@@ -4775,10 +4791,16 @@ const extractReadingQuestionRangeBlock = (questionSectionText: string, start: nu
 
 const findReadingQuestionRange = (passage: ReadingPassageRecord | null, question: ReadingQuestion) => {
   const ranges = passage?.questionRanges || []
-  const match = ranges.find(
+  const matches = ranges.filter(
     (range) => question.number >= range.start && question.number <= range.end
   )
-  if (match) return match
+  if (matches.length) {
+    return matches.reduce((best, range) => {
+      const bestSpan = best.end - best.start
+      const rangeSpan = range.end - range.start
+      return rangeSpan < bestSpan ? range : best
+    })
+  }
   return { start: question.number, end: question.number }
 }
 
@@ -4844,13 +4866,14 @@ const isReadingMatchingInformationQuestion = (
   passage: ReadingPassageRecord | null,
   question: ReadingQuestion | null
 ) => {
-  if (!question) return false
-  const sectionText = String(passage?.questionSectionText || '')
-  if (!/which (?:paragraph|section) contains|contains the following information/i.test(sectionText)) {
+  if (!question || !passage) return false
+  const range = findReadingQuestionRange(passage, question)
+  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+  if (!/which (?:paragraph|section) contains|contains the following information/i.test(block)) {
     return false
   }
   const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
-  const allowedLetters = getReadingParagraphAnswerLetters(sectionText)
+  const allowedLetters = getReadingParagraphAnswerLetters(block)
   if (allowedLetters?.length) {
     return allowedLetters.includes(answer.toUpperCase())
   }
@@ -4927,6 +4950,7 @@ const getReadingMatchingAnswerOptions = (
 
   if (kind === 'information') {
     const letters =
+      getReadingParagraphAnswerLetters(block) ||
       getReadingParagraphAnswerLetters(passage.questionSectionText || '') ||
       (passage.bodyParagraphs || [])
         .map((paragraph) => String(paragraph || '').trim())
@@ -5017,7 +5041,7 @@ const getReadingMatchingQuestionStatement = (
   if (kind === 'information') {
     return prompt.replace(/^which paragraph:\s*/i, '').trim() || prompt
   }
-  return prompt
+  return stripReadingMatchingListFromPrompt(prompt) || prompt
 }
 
 const buildReadingMatchingGroupFromQuestions = (
@@ -5729,6 +5753,14 @@ const stripReadingDragDropUiText = (text: string) =>
     .replace(/\s*Questions?\s+\d+(?:\s*[–-]\s*\d+)?[\s\S]*$/i, '')
     .trim()
 
+const stripReadingMatchingListFromPrompt = (text: string) =>
+  String(text || '')
+    .replace(
+      /(?:\.\s*|\s+)List of (?:Headings|Ideas|Researchers|People|Statements)\b[\s\S]*$/i,
+      ''
+    )
+    .trim()
+
 const sanitizeReadingQuestionPromptForDisplay = (prompt: string, _correctAnswer: string) => {
   const raw = String(prompt || '').replace(/\s+/g, ' ').trim()
   if (/^drop heading here/i.test(raw)) {
@@ -5743,7 +5775,7 @@ const sanitizeReadingQuestionPromptForDisplay = (prompt: string, _correctAnswer:
     )
     return remainder || 'Complete the summary below.'
   }
-  return stripReadingDragDropUiText(raw) || raw
+  return stripReadingMatchingListFromPrompt(stripReadingDragDropUiText(raw) || raw)
 }
 
 const isJunkReadingPassageParagraphForDisplay = (paragraph: string) => {
@@ -17963,7 +17995,13 @@ function App() {
       group.kind === 'heading'
         ? 'List of headings'
         : group.kind === 'statement'
-          ? 'Answer choices'
+          ? /list of researchers/i.test(group.instruction)
+            ? 'List of Researchers'
+            : /list of people/i.test(group.instruction)
+              ? 'List of People'
+              : /list of ideas/i.test(group.instruction)
+                ? 'List of Ideas'
+                : 'Answer choices'
           : 'Paragraphs'
 
     return (
