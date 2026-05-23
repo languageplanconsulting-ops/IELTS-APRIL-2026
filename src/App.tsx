@@ -5760,8 +5760,8 @@ const isJunkReadingPassageParagraphForDisplay = (paragraph: string) => {
   return false
 }
 
-const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) =>
-  (Array.isArray(paragraphs) ? paragraphs : [])
+const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
+  const cleaned = (Array.isArray(paragraphs) ? paragraphs : [])
     .map((paragraph) =>
       String(paragraph || '')
         .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
@@ -5773,6 +5773,34 @@ const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) =>
         .trim()
     )
     .filter((paragraph) => !isJunkReadingPassageParagraphForDisplay(paragraph))
+
+  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
+  if (cleaned.length > 2 || totalLength < 3000) return cleaned
+
+  const source = cleaned.join('\n\n')
+  const sectionParts = source
+    .split(/(?=(?:^|\s)([A-G])\s+(?=[A-Z"'(]))/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+  if (sectionParts.length >= 3) {
+    return sectionParts.map((part) => part.replace(/^\s*([A-G])\s+/, '$1. '))
+  }
+
+  const sentences = source.match(/[^.!?]+[.!?]+(?:['"]|\s+|$)|[^.!?]+$/g) || [source]
+  const chunks: string[] = []
+  let current = ''
+  for (const sentence of sentences) {
+    const next = `${current}${sentence}`.trim()
+    if (current && next.length > 900) {
+      chunks.push(current.trim())
+      current = sentence
+    } else {
+      current = next
+    }
+  }
+  if (current.trim()) chunks.push(current.trim())
+  return chunks.length >= 2 ? chunks : cleaned
+}
 
 const normalizeReadingQuestionForDisplay = (question: ReadingQuestion): ReadingQuestion => ({
   ...question,

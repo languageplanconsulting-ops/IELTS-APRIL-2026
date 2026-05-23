@@ -178,6 +178,43 @@ export const cleanReadingPassageParagraphs = (paragraphs = []) =>
     .map(normalizeReadingPassageParagraph)
     .filter((paragraph) => !isJunkReadingPassageParagraph(paragraph))
 
+const splitLongReadingPassageText = (text) => {
+  const source = String(text || '').trim()
+  if (!source) return []
+
+  const sectionParts = source
+    .split(/(?=(?:^|\s)([A-G])\s+(?=[A-Z"'(]))/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+  if (sectionParts.length >= 3) {
+    return sectionParts.map((part) => part.replace(/^\s*([A-G])\s+/, '$1. '))
+  }
+
+  if (source.length < 2500) return [source]
+
+  const sentences = source.match(/[^.!?]+[.!?]+(?:['"]|\s+|$)|[^.!?]+$/g) || [source]
+  const chunks = []
+  let current = ''
+  for (const sentence of sentences) {
+    const next = `${current}${sentence}`.trim()
+    if (current && next.length > 900) {
+      chunks.push(current.trim())
+      current = sentence
+    } else {
+      current = next
+    }
+  }
+  if (current.trim()) chunks.push(current.trim())
+  return chunks.length >= 2 ? chunks : [source]
+}
+
+export const reflowReadingPassageParagraphs = (paragraphs = []) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
+  if (cleaned.length > 2 || totalLength < 3000) return cleaned
+  return splitLongReadingPassageText(cleaned.join('\n\n'))
+}
+
 export const isCorruptReadingPassageBody = (paragraphs = []) => {
   const cleaned = cleanReadingPassageParagraphs(paragraphs)
   if (!cleaned.length) return true
@@ -201,9 +238,12 @@ const findReadingPassageFixture = (title) => {
 
 export const resolveReadingPassageBodyParagraphs = (title, paragraphs = []) => {
   const cleaned = cleanReadingPassageParagraphs(paragraphs)
-  if (!isCorruptReadingPassageBody(cleaned)) return cleaned
-  const fixture = findReadingPassageFixture(title)
-  return fixture ? [...fixture] : cleaned
+  const resolved = !isCorruptReadingPassageBody(cleaned)
+    ? cleaned
+    : findReadingPassageFixture(title)
+      ? [...findReadingPassageFixture(title)]
+      : cleaned
+  return reflowReadingPassageParagraphs(resolved)
 }
 
 const stripWrappedQuotes = (value) => {
