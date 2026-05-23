@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "verify:reading": "node scripts/verify-reading-prompts.mjs",
     "audit:reading-passages": "node scripts/audit-reading-passage-bodies.mjs",
+    "rebuild:reading-payloads": "node scripts/rebuild-cambridge-reading-parsed-payloads.mjs",
     "verify:listening-part1-audio": "node scripts/verify-part1-audio-urls.mjs",
     "audit:listening-part1": "node scripts/audit-part1-foundation.mjs"
   },

@@ -146,8 +146,8 @@ const isJunkReadingPassageParagraph = (paragraph) => {
   if (/^Questions?\s+\d+/i.test(text)) return true
   if (/^Drag and drop an option/i.test(text)) return true
   if (/^hidden"\s*form=/i.test(text)) return true
-  if (/^<(?:form|input)\b/i.test(text)) return true
-  if (/<(?:form|input)\b/i.test(text) && text.replace(/\s/g, '').length < 24) return true
+  if (/^<(?:form|input|div|span|script)\b/i.test(text)) return true
+  if (/<(?:form|input|div|span|script)\b/i.test(text) && text.replace(/\s/g, '').length < 24) return true
   if (/form="\s*$/i.test(text)) return true
   if (text.length < 50 && /[<>"'=]/.test(text)) return true
   return false
@@ -156,8 +156,9 @@ const isJunkReadingPassageParagraph = (paragraph) => {
 const stripReadingPassageSourceHtml = (value) =>
   String(value || '')
     .replace(/\r/g, '')
-    .replace(/[\t ]*\n[\t ]*<(?:form|input)\b[\s\S]*?(?=\n\s*Questions?\s+\d|\s*$)/gi, '\n')
-    .replace(/[\t ]*<(?:form|input)\b[\s\S]*?(?=\n\s*Questions?\s+\d|\s*$)/gi, '')
+    .replace(/[\t ]*\n[\t ]*<(?:form|input|div|span|script)\b[\s\S]*?(?=\n\s*Questions?\s+\d|\s*$)/gi, '\n')
+    .replace(/[\t ]*<(?:form|input|div|span|script)\b[\s\S]*?(?=\n\s*Questions?\s+\d|\s*$)/gi, '')
+    .replace(/^\d+Drop heading here<input[\s\S]*?(?=\n\s*Questions?\s+\d|\s*$)/im, '')
     .trim()
 
 const normalizeReadingPassageParagraph = (paragraph) =>
@@ -167,7 +168,7 @@ const normalizeReadingPassageParagraph = (paragraph) =>
     .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
     .replace(/^\d+Drop heading here<input[\s\S]*$/i, '')
     .replace(/Drop heading here[^.]*\.\.\.\s*/gi, '')
-    .replace(/<(?:form|input)\b[\s\S]*$/i, '')
+    .replace(/<(?:form|input|div|span|script)\b[\s\S]*$/i, '')
     .replace(/<[^>]*$/g, '')
     .replace(/hidden"\s*form="?\s*$/i, '')
     .trim()
