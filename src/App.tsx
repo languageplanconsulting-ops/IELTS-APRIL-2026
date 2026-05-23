@@ -31,6 +31,7 @@ import {
   isReadingFullTestExamId
 } from './readingFullTestData'
 import { ParaphraseBridgeActions, PracticeActionToast, type PracticeActionToastState } from './PracticeActionToast'
+import { convertSpeakingRecordingToMp3 } from './speakingRecordingMp3'
 import { parseListeningScriptSegments } from './listeningScriptReader'
 import listeningWorkbookRaw from '../cambridge-listening-transcript-first-workbook.md?raw'
 import listeningSectionBankRaw from '../cambridge-listening-sections-2-4-bank.md?raw'
@@ -6524,9 +6525,9 @@ const SPEAKING_LENGTH_THRESHOLDS: Record<'part1' | 'part2' | 'part3', Array<{ ba
     { band: 'Band 9', minWords: 70 }
   ],
   part2: [
-    { band: 'Band 6', minWords: 148 },
-    { band: 'Band 7', minWords: 185 },
-    { band: 'Band 8', minWords: 207 },
+    { band: 'Band 6', minWords: 160 },
+    { band: 'Band 7', minWords: 200 },
+    { band: 'Band 8', minWords: 224 },
     { band: 'Band 9', minWords: 310 }
   ],
   part3: [
@@ -11534,24 +11535,30 @@ function App() {
   const handleDownloadCurrentRecording = async () => {
     if (!audioUrl) return
     try {
-      const response = await fetch(audioUrl)
-      const blob = await response.blob()
-      const objectUrl = URL.createObjectURL(blob)
+      let sourceBlob: Blob | null = latestAudioBlobRef.current
+      if (!sourceBlob) {
+        sourceBlob = await fetch(audioUrl).then((response) => response.blob())
+      }
+      if (!sourceBlob) {
+        throw new Error('No recording available to download.')
+      }
+      const mp3Blob = await convertSpeakingRecordingToMp3(sourceBlob)
+      const objectUrl = URL.createObjectURL(mp3Blob)
       const link = document.createElement('a')
       const topicSlug = String(activeTopic?.title || 'english-plan-speaking')
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '')
       link.href = objectUrl
-      link.download = `${topicSlug || 'english-plan-speaking'}-recording.webm`
+      link.download = `${topicSlug || 'english-plan-speaking'}-recording.mp3`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(objectUrl)
       setReportActionToast({
         icon: '🎧',
-        title: 'Audio downloaded',
-        text: "โหลดเสียงเรียบร้อยแล้วครับ เก็บไว้ส่งให้พี่ดอยใช้ประกอบการ consult ต่อได้เลย"
+        title: 'MP3 downloaded',
+        text: "โหลดไฟล์ MP3 เรียบร้อยแล้วครับ เก็บไว้ส่งให้พี่ดอยใช้ประกอบการ consult ต่อได้เลย"
       })
     } catch {
       setNotebookSaveNotice('Could not download the recording right now.')

@@ -291,14 +291,18 @@ const createApiUsageTracker = () => {
 }
 
 const PART2_FLUENCY_WORD_COUNT_REDUCTION = 0.87
+const PART2_FLUENCY_WORD_COUNT_INCREASE = 1.08
+
+const scalePart2FluencyWordCount = (base) =>
+  Math.round(base * PART2_FLUENCY_WORD_COUNT_REDUCTION * PART2_FLUENCY_WORD_COUNT_INCREASE)
 
 const PART2_FLUENCY_WORD_COUNTS = {
   band9Min: 310,
-  band8Min: Math.round(238 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
-  band7Min: Math.round(213 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
-  band6Min: Math.round(170 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
-  band6Max: Math.round(212 * PART2_FLUENCY_WORD_COUNT_REDUCTION),
-  band5Floor: Math.round(128 * PART2_FLUENCY_WORD_COUNT_REDUCTION)
+  band8Min: scalePart2FluencyWordCount(238),
+  band7Min: scalePart2FluencyWordCount(213),
+  band6Min: scalePart2FluencyWordCount(170),
+  band6Max: scalePart2FluencyWordCount(212),
+  band5Floor: scalePart2FluencyWordCount(128)
 }
 
 const buildBucketRubricTh = (testMode = 'part2') => `
