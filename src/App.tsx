@@ -5750,9 +5750,12 @@ const isJunkReadingPassageParagraphForDisplay = (paragraph: string) => {
   const text = String(paragraph || '').trim()
   if (!text) return true
   if (/^<\w+/i.test(text)) return true
+  if (/^<(?:form|input)\b/i.test(text)) return true
+  if (/<(?:form|input)\b/i.test(text) && text.replace(/\s/g, '').length < 24) return true
   if (/^\d*Drop heading here<input/i.test(text)) return true
   if (/^\d+Drop heading here[A-H]\.?$/i.test(text)) return true
   if (/^hidden"\s*form=/i.test(text)) return true
+  if (/form="\s*$/i.test(text)) return true
   if (text.length < 50 && /[<>"'=]/.test(text)) return true
   return false
 }
@@ -5764,6 +5767,7 @@ const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) =>
         .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
         .replace(/^\d+Drop heading here<input[\s\S]*$/i, '')
         .replace(/Drop heading here[^.]*\.\.\.\s*/gi, '')
+        .replace(/<(?:form|input)\b[\s\S]*$/i, '')
         .replace(/<[^>]*$/g, '')
         .replace(/hidden"\s*form="?\s*$/i, '')
         .trim()

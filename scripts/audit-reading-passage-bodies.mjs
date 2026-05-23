@@ -26,7 +26,7 @@ const EXAM_SOURCES = [
 ]
 
 const PASSAGE_GARBAGE_PATTERN =
-  /drop heading here|drop answer here|<input|form="hidden|hidden"\s*form=|drag and drop an option/i
+  /drop heading here|drop answer here|<input|<form\b|form="hidden|hidden"\s*form=|drag and drop an option/i
 
 const PROMPT_GARBAGE_PATTERN =
   /drop heading here|drop answer here|<input|drag and drop an option/i

@@ -146,10 +146,19 @@ const isJunkReadingPassageParagraph = (paragraph) => {
   if (/^Questions?\s+\d+/i.test(text)) return true
   if (/^Drag and drop an option/i.test(text)) return true
   if (/^hidden"\s*form=/i.test(text)) return true
+  if (/^<(?:form|input)\b/i.test(text)) return true
+  if (/<(?:form|input)\b/i.test(text) && text.replace(/\s/g, '').length < 24) return true
   if (/form="\s*$/i.test(text)) return true
   if (text.length < 50 && /[<>"'=]/.test(text)) return true
   return false
 }
+
+const stripReadingPassageSourceHtml = (value) =>
+  String(value || '')
+    .replace(/\r/g, '')
+    .replace(/[\t ]*\n[\t ]*<(?:form|input)\b[\s\S]*?(?=\n\s*Questions?\s+\d|\s*$)/gi, '\n')
+    .replace(/[\t ]*<(?:form|input)\b[\s\S]*?(?=\n\s*Questions?\s+\d|\s*$)/gi, '')
+    .trim()
 
 const normalizeReadingPassageParagraph = (paragraph) =>
   String(paragraph || '')
@@ -158,6 +167,7 @@ const normalizeReadingPassageParagraph = (paragraph) =>
     .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
     .replace(/^\d+Drop heading here<input[\s\S]*$/i, '')
     .replace(/Drop heading here[^.]*\.\.\.\s*/gi, '')
+    .replace(/<(?:form|input)\b[\s\S]*$/i, '')
     .replace(/<[^>]*$/g, '')
     .replace(/hidden"\s*form="?\s*$/i, '')
     .trim()
@@ -173,7 +183,7 @@ export const isCorruptReadingPassageBody = (paragraphs = []) => {
   const substantial = cleaned.filter((paragraph) => paragraph.length >= 80)
   const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
   if (substantial.length >= 2 && totalLength >= 500) return false
-  return cleaned.some((paragraph) => /drop heading here|drop answer here|<input|form="|type="hidden/i.test(paragraph)) || totalLength < 500
+  return cleaned.some((paragraph) => /drop heading here|drop answer here|<input|<form\b|form="|type="hidden/i.test(paragraph)) || totalLength < 500
 }
 
 const findReadingPassageFixture = (title) => {
@@ -239,7 +249,9 @@ const parseReadingPassages = (rawPassageText) => {
       .replace(/^\s*READING PASSAGE\s+\d+\s*/i, '')
       .trim()
     const questionMarker = block.search(QUESTION_SECTION_MARKER_REGEX)
-    const passageBodyRaw = questionMarker >= 0 ? block.slice(0, questionMarker).trim() : block.trim()
+    const passageBodyRaw = stripReadingPassageSourceHtml(
+      questionMarker >= 0 ? block.slice(0, questionMarker).trim() : block.trim()
+    )
     const questionSectionText = questionMarker >= 0 ? block.slice(questionMarker).trim() : ''
     const { title, bodyParagraphs } = splitReadingTitleAndBody(passageBodyRaw, `Passage ${current[1]}`)
     passages.push({
@@ -253,7 +265,9 @@ const parseReadingPassages = (rawPassageText) => {
 
   if (passages.length === 0 && source.trim()) {
     const fallbackQuestionMarker = source.search(QUESTION_SECTION_MARKER_REGEX)
-    const fallbackPassageBodyRaw = fallbackQuestionMarker >= 0 ? source.slice(0, fallbackQuestionMarker).trim() : source.trim()
+    const fallbackPassageBodyRaw = stripReadingPassageSourceHtml(
+      fallbackQuestionMarker >= 0 ? source.slice(0, fallbackQuestionMarker).trim() : source.trim()
+    )
     const fallbackQuestionSectionText = fallbackQuestionMarker >= 0 ? source.slice(fallbackQuestionMarker).trim() : ''
     const { title: fallbackTitle, bodyParagraphs: fallbackBodyParagraphs } = splitReadingTitleAndBody(
       fallbackPassageBodyRaw,
