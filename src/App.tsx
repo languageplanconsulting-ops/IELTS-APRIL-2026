@@ -89,6 +89,13 @@ import {
   type AdminVideoStudioStep
 } from './adminSpeakingVideoStudioHelpers'
 import {
+  downloadAdminExportedVideo,
+  exportEditedSpeakingVideo,
+  getAdminVideoExportExtension,
+  isAdminVideoExportFormatSupported,
+  type AdminVideoExportFormat
+} from './adminVideoExport'
+import {
   CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
   CAMBRIDGE_12_SPEAKING_PART1_TOPICS,
   CAMBRIDGE_12_SPEAKING_PART3_TOPICS,
@@ -6932,6 +6939,10 @@ function App() {
   })
   const [isAdminBackendTranscribing, setIsAdminBackendTranscribing] = useState(false)
   const [adminVideoRecorderMessage, setAdminVideoRecorderMessage] = useState('')
+  const [adminVideoExportStatus, setAdminVideoExportStatus] = useState<'idle' | 'exporting'>('idle')
+  const [adminVideoExportProgress, setAdminVideoExportProgress] = useState(0)
+  const [adminVideoExportFormat, setAdminVideoExportFormat] = useState<AdminVideoExportFormat | null>(null)
+  const adminVideoExportAbortRef = useRef<AbortController | null>(null)
   const [adminVideoStudioStep, setAdminVideoStudioStep] = useState<AdminVideoStudioStep>('setup')
   const [adminWordCountPreset, setAdminWordCountPreset] = useState<AdminWordCountPreset>('band7')
   const [adminTeleprompterMode, setAdminTeleprompterMode] = useState(true)
@@ -13070,6 +13081,60 @@ function App() {
     setAdminSubtitleExportText(project)
     void navigator.clipboard?.writeText(project).catch(() => undefined)
     setAdminSubtitleDraftMessage('Subtitle project JSON copied and shown below.')
+  }
+
+  const cancelAdminEditedVideoExport = () => {
+    adminVideoExportAbortRef.current?.abort()
+    adminVideoExportAbortRef.current = null
+    setAdminVideoExportStatus('idle')
+    setAdminVideoExportProgress(0)
+    setAdminVideoExportFormat(null)
+    setAdminVideoRecorderMessage('Video export cancelled.')
+  }
+
+  const exportAdminEditedVideo = async (format: AdminVideoExportFormat) => {
+    const sourceBlob = adminRecordedVideoBlobRef.current
+    if (!sourceBlob || adminTrimDuration <= 0 || adminVideoExportStatus === 'exporting') return
+    if (!isAdminVideoExportFormatSupported(format)) {
+      setAdminVideoRecorderMessage(
+        format === 'mp4'
+          ? 'MP4 export is not supported in this browser. Try Safari or download WebM instead.'
+          : 'WebM export is not supported in this browser.'
+      )
+      return
+    }
+
+    const abortController = new AbortController()
+    adminVideoExportAbortRef.current = abortController
+    setAdminVideoExportStatus('exporting')
+    setAdminVideoExportProgress(0)
+    setAdminVideoExportFormat(format)
+    setAdminVideoRecorderMessage(`Exporting edited video as ${format.toUpperCase()}…`)
+
+    try {
+      const blob = await exportEditedSpeakingVideo({
+        sourceBlob,
+        trimStartSeconds: adminVideoTrimStart,
+        trimEndSeconds: adminVideoTrimEnd,
+        cues: adminSubtitleCuesRef.current,
+        style: adminSubtitleStyleRef.current,
+        includeSubtitles: adminSubtitleCuesRef.current.length > 0,
+        format,
+        onProgress: setAdminVideoExportProgress,
+        signal: abortController.signal
+      })
+      const slug = normalizeSpeakingSampleLookupId(adminSelectedVideoTopic?.title || 'speaking-sample')
+      downloadAdminExportedVideo(blob, `${slug}-sample.${getAdminVideoExportExtension(format)}`)
+      setAdminVideoRecorderMessage(`Downloaded edited video (${format.toUpperCase()}, ${(blob.size / (1024 * 1024)).toFixed(1)} MB).`)
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return
+      setAdminVideoRecorderMessage(error instanceof Error ? error.message : 'Video export failed.')
+    } finally {
+      adminVideoExportAbortRef.current = null
+      setAdminVideoExportStatus('idle')
+      setAdminVideoExportProgress(0)
+      setAdminVideoExportFormat(null)
+    }
   }
 
   const importAdminSubtitlesFromSrt = () => {
@@ -24420,6 +24485,72 @@ function App() {
                           </button>
                         ) : null}
                       </div>
+                      ) : null}
+                      {adminRecordedVideoUrl &&
+                      (adminVideoStudioStep === 'review' ||
+                        adminVideoStudioStep === 'subtitles' ||
+                        adminVideoStudioStep === 'publish') ? (
+                        <div className="adminVideoExportPanel">
+                          <div className="adminTtsLibraryHeader">
+                            <div>
+                              <h4>Export Edited Video</h4>
+                              <p className="meta">
+                                Download the trimmed segment with styled subtitles burned in — same as student view.
+                              </p>
+                            </div>
+                            <span className="adminReadyDot">{adminTrimDurationLabel}</span>
+                          </div>
+                          <div className="adminActionRow">
+                            <button
+                              type="button"
+                              className="adminStudioButton-primary"
+                              onClick={() => void exportAdminEditedVideo('mp4')}
+                              disabled={
+                                adminIsPostProcessingBlur ||
+                                adminVideoRecorderStatus === 'uploading' ||
+                                adminVideoExportStatus === 'exporting' ||
+                                adminTrimDuration <= 0 ||
+                                !isAdminVideoExportFormatSupported('mp4')
+                              }
+                              title={
+                                isAdminVideoExportFormatSupported('mp4')
+                                  ? 'Export trimmed video with subtitles as MP4'
+                                  : 'MP4 export is not supported in this browser. Try Safari or use WebM.'
+                              }
+                            >
+                              {adminVideoExportStatus === 'exporting' && adminVideoExportFormat === 'mp4'
+                                ? `Exporting MP4 ${Math.round(adminVideoExportProgress)}%`
+                                : 'Download MP4'}
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary"
+                              onClick={() => void exportAdminEditedVideo('webm')}
+                              disabled={
+                                adminIsPostProcessingBlur ||
+                                adminVideoRecorderStatus === 'uploading' ||
+                                adminVideoExportStatus === 'exporting' ||
+                                adminTrimDuration <= 0 ||
+                                !isAdminVideoExportFormatSupported('webm')
+                              }
+                              title="Export trimmed video with subtitles as WebM"
+                            >
+                              {adminVideoExportStatus === 'exporting' && adminVideoExportFormat === 'webm'
+                                ? `Exporting WebM ${Math.round(adminVideoExportProgress)}%`
+                                : 'Download WebM'}
+                            </button>
+                            {adminVideoExportStatus === 'exporting' ? (
+                              <button type="button" className="secondary adminStudioButton-danger" onClick={cancelAdminEditedVideoExport}>
+                                Cancel export
+                              </button>
+                            ) : null}
+                          </div>
+                          {adminVideoExportStatus === 'exporting' ? (
+                            <div className="adminVideoExportProgress" aria-label="Export progress">
+                              <span style={{ width: `${Math.max(4, adminVideoExportProgress)}%` }} />
+                            </div>
+                          ) : null}
+                        </div>
                       ) : null}
                       {(adminVideoStudioStep === 'publish' || adminRecordedVideoUrl) ? (
                       <div className="adminActionRow adminVideoPublishActions">
