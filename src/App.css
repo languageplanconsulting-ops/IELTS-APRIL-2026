@@ -9253,9 +9253,18 @@ body,
   animation: luxuryViewEnter var(--duration-view) var(--ease-luxury) both;
 }
 
-.listeningViewStage,
-.listeningExamViewStage {
+.listeningViewStage {
   display: grid;
+  gap: inherit;
+  animation: luxuryViewEnter var(--duration-view) var(--ease-luxury) both;
+}
+
+.listeningExamViewStage {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
   gap: inherit;
   animation: luxuryViewEnter var(--duration-view) var(--ease-luxury) both;
 }
@@ -18806,6 +18815,19 @@ select:focus,
   gap: 24px;
   max-width: 1280px;
   margin: 0 auto;
+}
+
+.listeningFoundationPage.listeningSectionExamHost,
+.listeningBuilderExamPage.listeningSectionExamHost {
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  gap: 0;
+  overflow: hidden;
 }
 
 .listeningPage-journey,
