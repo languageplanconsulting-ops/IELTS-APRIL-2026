@@ -12035,6 +12035,21 @@ body,
   scroll-margin: 140px;
 }
 
+.readingFillFallbackHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.readingFillFallbackHeader .readingQuestionNumber {
+  margin: 0;
+}
+
+.readingFillOriginalBlock-compact {
+  padding: 12px 14px;
+}
+
 .readingFillFallbackRow .readingFillLine {
   margin: 0;
 }

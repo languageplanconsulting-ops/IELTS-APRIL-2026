@@ -141,6 +141,7 @@ import {
 import {
   buildReadingFillQuestionGroups,
   isReadingFillQuestion,
+  isReadingFillStylePrompt,
   parseFillContextFromPrompt,
   type ReadingFillQuestionGroup
 } from './readingFillDisplay'
@@ -17991,15 +17992,14 @@ function App() {
     return (
       <article
         key={`reading-fill-fallback-${question.number}`}
-        className={`readingQuestionCard readingFillQuestionGroup readingFillFallbackRow ${isAdvancedReadingExam ? 'readingFillQuestionGroup-advanced' : ''}`.trim()}
+        className={`readingQuestionCard readingFillQuestionGroup readingFillFallbackRow ${isAdvancedReadingExam ? 'readingFillQuestionGroup-advanced' : ''} ${isHinting ? 'is-active' : ''}`.trim()}
+        id={`reading-question-${question.number}`}
       >
-        <div className="readingFillGroupHeader">
-          <div>
-            <p className="readingQuestionNumber">Question {question.number}</p>
-            <h4>{isAdvancedReadingExam ? 'Fill in the blank' : 'Fill in the blank'}</h4>
-          </div>
+        <div className="readingFillFallbackHeader">
+          <p className="readingQuestionNumber">Question {question.number}</p>
+          {renderReadingHintToggleButton(question.number, isHinting, { label: 'th' })}
         </div>
-        <div className="readingFillOriginalBlock">
+        <div className="readingFillOriginalBlock readingFillOriginalBlock-compact">
           <p className="readingFillLine">
             {renderReadingFillBlankSlot(
               question,
@@ -21027,6 +21027,12 @@ function App() {
                           : null
                       }
                       if (isReadingFillQuestion(activeReadingPassage, question, isReadingMatchingQuestion)) {
+                        return renderReadingFillFallbackQuestion(question)
+                      }
+                      if (
+                        question.answerType === 'text' &&
+                        isReadingFillStylePrompt(question.prompt, question.number)
+                      ) {
                         return renderReadingFillFallbackQuestion(question)
                       }
                       const chooseTwoGroup = activeReadingChooseTwoGroupByQuestionNumber.get(question.number)

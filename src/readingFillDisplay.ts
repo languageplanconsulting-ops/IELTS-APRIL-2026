@@ -97,11 +97,13 @@ const normalizeOcrFillLine = (line: string, questionNumbers: Set<number>) => {
         `\\b${questionNumber}\\s+(?:[.．…⋯·•_\\-–—]+)?([a-z0-9]{4,})`,
         'gi'
       ),
-      `${questionNumber} …`
+      (match, word: string) =>
+        isLikelyOcrGarbageWord(word) ? `${questionNumber} …` : match
     )
     result = result.replace(
       new RegExp(`\\b${questionNumber}\\s+([a-z]{2,}[a-z0-9]{3,})`, 'gi'),
-      `${questionNumber} …`
+      (match, word: string) =>
+        isLikelyOcrGarbageWord(word) ? `${questionNumber} …` : match
     )
   }
 
@@ -228,6 +230,9 @@ export const parseFillContextFromPrompt = (
   return null
 }
 
+export const isReadingFillStylePrompt = (prompt: string, questionNumber: number) =>
+  parseFillContextFromPrompt(prompt, questionNumber) !== null
+
 export const isReadingFillSectionBlock = (block: string) => READING_FILL_SECTION_PATTERN.test(block)
 
 export const isReadingLetterSummaryFill = (block: string, question: FillQuestion) => {
@@ -266,12 +271,64 @@ const isReadingFillBoilerplateLine = (line: string) =>
   /^\d+\.\s*Drop answer here\s*(?:…|\.{2,})?\s*$/i.test(line) ||
   /^>\|\s*p\.\s*\d+/i.test(line)
 
+const READING_FILL_EMBEDDED_GAP = /[.．…⋯·•_\-–—]{3,}/g
+
+const parseEmbeddedGapFillLine = (
+  trimmed: string,
+  questionNumbers: Set<number>
+): ReadingFillLineSegment[] | null => {
+  const lineMatch = trimmed.match(/^(\d+)\s+([\s\S]+)$/)
+  if (!lineMatch) return null
+
+  const firstNumber = normalizeOcrFillQuestionNumber(lineMatch[1], questionNumbers)
+  if (!questionNumbers.has(firstNumber)) return null
+
+  const body = lineMatch[2]
+  READING_FILL_EMBEDDED_GAP.lastIndex = 0
+  const gaps = [...body.matchAll(READING_FILL_EMBEDDED_GAP)]
+  if (!gaps.length) return null
+
+  const sortedNumbers = [...questionNumbers].sort((first, second) => first - second)
+  const startIndex = sortedNumbers.indexOf(firstNumber)
+  if (startIndex < 0) return null
+
+  const segments: ReadingFillLineSegment[] = []
+
+  gaps.forEach((gap, gapIndex) => {
+    const questionNumber = sortedNumbers[startIndex + gapIndex]
+    if (!questionNumber) return
+
+    const beforeStart = gapIndex === 0 ? 0 : (gaps[gapIndex - 1].index ?? 0) + gaps[gapIndex - 1][0].length
+    const before =
+      gapIndex === 0
+        ? cleanFillSegmentText(body.slice(beforeStart, gap.index).trim())
+        : ''
+    const afterStart = (gap.index ?? 0) + gap[0].length
+    const afterEnd = gaps[gapIndex + 1]?.index ?? body.length
+    const after = cleanFillSegmentText(body.slice(afterStart, afterEnd).trim())
+
+    segments.push({
+      kind: 'blank',
+      questionNumber,
+      before,
+      after
+    })
+  })
+
+  if (!segments.length) return null
+
+  return coalesceFillLineSegments(segments)
+}
+
 export const parseReadingFillLineSegments = (
   line: string,
   questionNumbers: Set<number>
 ): ReadingFillLineSegment[] => {
   const trimmed = normalizeOcrFillLine(line, questionNumbers)
   if (!trimmed) return []
+
+  const embeddedGapSegments = parseEmbeddedGapFillLine(trimmed, questionNumbers)
+  if (embeddedGapSegments?.length) return embeddedGapSegments
 
   const leadingBlank = trimmed.match(/^(\d+)\s*([.．…⋯·•_\-–—]+)\s+(.+)$/)
   if (leadingBlank) {
@@ -612,8 +669,18 @@ export const buildReadingFillQuestionGroups = <P extends FillPassage, Q extends 
 
   const groups: ReadingFillQuestionGroup[] = []
   const ranges = passage.questionRanges?.length ? passage.questionRanges : [{ start: 1, end: 999 }]
+  const leafRanges = ranges.filter(
+    (range) =>
+      !ranges.some(
+        (other) =>
+          other !== range &&
+          other.start >= range.start &&
+          other.end <= range.end &&
+          other.end - other.start < range.end - range.start
+      )
+  )
 
-  ranges.forEach((range) => {
+  leafRanges.forEach((range) => {
     const block = extractReadingQuestionRangeBlock(
       passage.questionSectionText || '',
       range.start,
@@ -645,10 +712,16 @@ export const buildReadingFillQuestionGroups = <P extends FillPassage, Q extends 
 
 const findReadingQuestionRange = (passage: FillPassage, question: FillQuestion) => {
   const ranges = passage.questionRanges || []
-  const match = ranges.find(
+  const matches = ranges.filter(
     (range) => question.number >= range.start && question.number <= range.end
   )
-  if (match) return match
+  if (matches.length) {
+    return matches.reduce((best, range) => {
+      const bestSpan = best.end - best.start
+      const rangeSpan = range.end - range.start
+      return rangeSpan < bestSpan ? range : best
+    })
+  }
   return { start: question.number, end: question.number }
 }
 
@@ -663,14 +736,30 @@ const extractReadingQuestionSectionBlock = (
   const source = String(questionSectionText || '')
   QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
   const matches = [...source.matchAll(QUESTION_SECTION_HEADER_REGEX)]
-  const matchIndex = matches.findIndex((match) => {
-    const rangeStart = Number(match[1])
-    const rangeEnd = Number(match[2] || match[3] || match[1])
-    const min = Math.min(rangeStart, rangeEnd)
-    const max = Math.max(rangeStart, rangeEnd)
-    return start >= min && end <= max
+  const matchingIndices = matches
+    .map((match, index) => {
+      const rangeStart = Number(match[1])
+      const rangeEnd = Number(match[2] || match[3] || match[1])
+      const min = Math.min(rangeStart, rangeEnd)
+      const max = Math.max(rangeStart, rangeEnd)
+      return start >= min && end <= max ? index : -1
+    })
+    .filter((index) => index >= 0)
+
+  if (!matchingIndices.length) return ''
+
+  const matchIndex = matchingIndices.reduce((bestIndex, currentIndex) => {
+    const best = matches[bestIndex]
+    const current = matches[currentIndex]
+    const bestStart = Number(best[1])
+    const bestEnd = Number(best[2] || best[3] || best[1])
+    const currentStart = Number(current[1])
+    const currentEnd = Number(current[2] || current[3] || current[1])
+    const bestSpan = Math.max(bestStart, bestEnd) - Math.min(bestStart, bestEnd)
+    const currentSpan = Math.max(currentStart, currentEnd) - Math.min(currentStart, currentEnd)
+    return currentSpan < bestSpan ? currentIndex : bestIndex
   })
-  if (matchIndex < 0) return ''
+
   const current = matches[matchIndex]
   const next = matches[matchIndex + 1]
   return source.slice(current.index ?? 0, next?.index ?? source.length).trim()

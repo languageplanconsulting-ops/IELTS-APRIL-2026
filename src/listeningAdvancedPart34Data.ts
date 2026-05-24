@@ -467,7 +467,7 @@ Choose TWO letters, A-E.
 Which TWO benefits of repair cafés do the students agree are most important?
 A creating more paid jobs in the local area
 B reducing the amount of electrical waste
-C helping people learn hands-on fixing skills
+C helping people develop hands-on repair abilities
 D replacing standard recycling services
 E making new products less expensive`
 
@@ -483,7 +483,7 @@ E difficulty attracting older people`
 const repairMcOptions = [
   { key: 'A', text: 'creating more paid jobs in the local area' },
   { key: 'B', text: 'reducing the amount of electrical waste' },
-  { key: 'C', text: 'helping people learn hands-on fixing skills' },
+  { key: 'C', text: 'helping people develop hands-on repair abilities' },
   { key: 'D', text: 'replacing standard recycling services' },
   { key: 'E', text: 'making new products less expensive' }
 ]
@@ -528,7 +528,7 @@ const repairIdeaQuestionText = `Questions 25-30
 What is the students' opinion about each of the following ideas for developing repair cafés?
 Choose SIX answers from the box and write the correct letter, A-H.
 A This should be included in formal education.
-B This may have disappointing results.
+B This may not work well.
 C This could create legal complications.
 D This is no longer a new idea.
 E Better evidence is needed before this is expanded.
@@ -538,7 +538,7 @@ H This would build stronger local ties.`
 
 const repairIdeaOptions = [
   { key: 'A', text: 'This should be included in formal education.' },
-  { key: 'B', text: 'This may have disappointing results.' },
+  { key: 'B', text: 'This may not work well.' },
   { key: 'C', text: 'This could create legal complications.' },
   { key: 'D', text: 'This is no longer a new idea.' },
   { key: 'E', text: 'Better evidence is needed before this is expanded.' },
@@ -769,7 +769,7 @@ const communityBenefitsQuestionText = `Questions 21 and 22
 Choose TWO letters, A-E.
 Which TWO advantages of community gardens do the students agree are most important?
 A They make fresh food cheaper for everyone.
-B They help locals learn hands-on growing skills.
+B They help locals develop hands-on growing abilities.
 C They reduce pressure on public parks.
 D They build stronger neighbour connections.
 E They provide full-time employment for local people.`
@@ -797,7 +797,7 @@ H This could undermine the gardens' original aim.`
 
 const communityBenefitOptions = [
   { key: 'A', text: 'They make fresh food cheaper for everyone.' },
-  { key: 'B', text: 'They help locals learn hands-on growing skills.' },
+  { key: 'B', text: 'They help locals develop hands-on growing abilities.' },
   { key: 'C', text: 'They reduce pressure on public parks.' },
   { key: 'D', text: 'They build stronger neighbour connections.' },
   { key: 'E', text: 'They provide full-time employment for local people.' }
@@ -1038,9 +1038,9 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'C',
         repairMcOptions,
         'pick up basic repair skills',
-        'helping people learn hands-on fixing skills',
+        'helping people develop hands-on repair abilities',
         'สอนทักษะซ่อมของจริง',
-        'pick up basic repair skills = helping people learn hands-on fixing skills. คำหลอกคือ replace recycling เพราะทั้งคู่บอกว่า unrealistic และ recycling still has a role.'
+        'pick up basic repair skills = helping people develop hands-on repair abilities. คำหลอกคือ replace recycling เพราะทั้งคู่บอกว่า unrealistic และ recycling still has a role.'
       ),
       repairMcQuestion(
         'advanced-repair-cafes-p3-q23',
@@ -1091,13 +1091,13 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
       repairMatchQuestion(
         'advanced-repair-cafes-p3-q27',
         27,
-        'Online booking systems',
+        'Web-based booking systems',
         'People may book a slot and then not come, or they might describe the problem badly online. So the results could be disappointing.',
         'B',
         'results could be disappointing',
-        'disappointing results',
+        'may not work well',
         'ผลลัพธ์อาจน่าผิดหวัง',
-        'คำหลอกคือ article was very enthusiastic แต่คำเชื่อม but/I\'m not sure พาไปข้อเสีย: no-show หรือบรรยายปัญหาผิด จึงตอบ disappointing results.'
+        'may not work well = results could be disappointing. คำหลอกคือ article was very enthusiastic แต่คำเชื่อม but/I\'m not sure พาไปข้อเสีย: no-show หรือบรรยายปัญหาผิด.'
       ),
       repairMatchQuestion(
         'advanced-repair-cafes-p3-q28',
@@ -1223,14 +1223,14 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         'The number of clothing banks has increased, but the percentage of clothing that actually gets reused has fallen.',
         'B',
         [
-          { key: 'A', text: 'More clothes are now bought online than in shops.' },
-          { key: 'B', text: 'A smaller share gets a second life although more drop-off points exist.' },
+          { key: 'A', text: 'More garments are now bought through websites than in shops.' },
+          { key: 'B', text: 'A smaller share of garments gets a second life although more drop-off points exist.' },
           { key: 'C', text: 'Manufacturing costs have fallen in recent years.' }
         ],
         'clothing banks has increased, but the percentage ... reused has fallen',
-        'smaller share gets a second life although more drop-off points exist',
+        'smaller share of garments gets a second life although more drop-off points exist',
         'มีจุดรับบริจาคมากขึ้นแต่เสื้อผ้าถูกใช้ซ้ำน้อยลง',
-        'smaller share gets a second life = percentage reused has fallen และ more drop-off points = clothing banks has increased. คำว่า but เป็น transition สำคัญที่ทำให้เห็นความขัดแย้งในสถิติ.'
+        'smaller share of garments gets a second life = percentage reused has fallen และ more drop-off points = clothing banks has increased. คำว่า but เป็น transition สำคัญที่ทำให้เห็นความขัดแย้งในสถิติ.'
       ),
       matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q25', 25, 'winter coat', 'the main zip wouldn\'t close. That made it impossible to sell.', 'D', 'zip wouldn\'t close', 'fastening would not close', 'ซิปเสีย', 'fastening would not close = zip wouldn\'t close. คำหลอกคือ fabric was clean แปลว่าไม่ใช่ stained.'),
       matchQuestionFor(TEXTILE_RECYCLING_PART3_SCRIPT, textileSortingOptions, textileSortingQuestionText, 'advanced-textile-recycling-p3-q26', 26, 'cotton curtains', 'Those had paint marks across one side. The fabric itself was strong, but the stains were too obvious.', 'A', 'stains were too obvious', 'very visible marks', 'ผ้าเปื้อนมากเกินไป', 'paint marks และ stains were too obvious = very visible marks. คำหลอกคือ fabric itself was strong เพราะไม่ได้ถูกปฏิเสธเพราะวัสดุเสีย.'),
@@ -1318,11 +1318,11 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         { key: 'B', text: 'to show that sleep problems affect grades' },
         { key: 'C', text: 'to criticise university accommodation' }
       ], 'Most students will recognise that situation', 'make the topic relatable', 'ทำให้หัวข้อใกล้ตัวนักศึกษา', 'recognise that situation = relatable. คำหลอกคือ grades/accommodation เพราะไม่ได้เป็นเหตุผลในการเริ่มด้วย personal example.'),
-      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q29', 29, 'The students agree that daytime naps are useful only if', 'short naps can help, but long ones can make it harder to sleep at night. So the key point is that naps are useful only if they aren\'t too long.', 'A', [
+      choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q29', 29, 'The students agree that daytime naps are beneficial only when', 'short naps can help, but long ones can make it harder to sleep at night. So the key point is that naps are useful only if they aren\'t too long.', 'A', [
         { key: 'A', text: 'they are not too long.' },
         { key: 'B', text: 'they happen in the evening.' },
         { key: 'C', text: 'they replace a full night\'s sleep.' }
-      ], 'aren\'t too long', 'not too long', 'ไม่ยาวเกินไป', 'คำว่า but หลัง short naps can help ตัด long naps ออก และสรุปตรงว่า only if they aren\'t too long.'),
+      ], 'aren\'t too long', 'not too long', 'ไม่ยาวเกินไป', 'beneficial only when = useful only if. คำว่า but หลัง short naps can help ตัด long naps ออก และสรุปตรงว่า only if they aren\'t too long.'),
       choiceQuestionFor(SLEEP_UNIVERSITY_PART3_SCRIPT, 'advanced-sleep-university-p3-q30', 30, 'What surprises the students about university advice on sleep?', 'The health centre says one thing, academic departments say another, and accommodation teams send different information again. Yes, it\'s not coordinated.', 'A', [
         { key: 'A', text: 'It is not coordinated across departments.' },
         { key: 'B', text: 'It focuses too much on diet.' },
@@ -1360,7 +1360,7 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioCacheKey: 'advanced-listening-community-gardens-part-3',
     audioscript: COMMUNITY_GARDENS_PART3_SCRIPT,
     questions: [
-      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q21', 21, 'Which TWO advantages of community gardens do the students agree are most important?', 'What seemed more important was the way people learn practical skills. Some residents had never grown anything before, and now they know about planting, watering and composting. I agree.', 'B', communityBenefitOptions, 'learn practical skills', 'hands-on growing skills', 'ทักษะการทำสวนจริง', 'hands-on growing skills = practical gardening skills. I agree ยืนยันว่าทั้งคู่เห็นด้วย.', communityBenefitsQuestionText),
+      choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q21', 21, 'Which TWO advantages of community gardens do the students agree are most important?', 'What seemed more important was the way people learn practical skills. Some residents had never grown anything before, and now they know about planting, watering and composting. I agree.', 'B', communityBenefitOptions, 'learn practical skills', 'hands-on growing abilities', 'ทักษะการทำสวนจริง', 'hands-on growing abilities = practical gardening skills. I agree ยืนยันว่าทั้งคู่เห็นด้วย.', communityBenefitsQuestionText),
       choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q22', 22, 'Which TWO advantages of community gardens do the students agree are most important?', 'the other big benefit is social. People who had lived in the same street for years finally started talking to each other. Yes, that was convincing.', 'D', communityBenefitOptions, 'people ... finally started talking to each other', 'stronger neighbour connections', 'ความสัมพันธ์ระหว่างเพื่อนบ้านดีขึ้น', 'stronger neighbour connections = improve relationships between neighbours. คำว่า Yes เป็น agreement marker.', communityBenefitsQuestionText),
       choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q23', 23, 'Which TWO problems do the students agree community gardens often face?', 'Some gardens begin with a grant, but after two or three years they struggle to pay for water, insurance and equipment. Yes, that\'s a serious issue.', 'A', communityProblemOptions, 'struggle to pay for water, insurance and equipment', 'lack of long-term funding', 'ขาดเงินทุนระยะยาว', 'begin with a grant แต่หลังสองสามปี struggle to pay = lack of long-term funding. คำว่า serious issue ยืนยันว่าเป็นปัญหาหลัก.', communityProblemsQuestionText),
       choiceQuestionFor(COMMUNITY_GARDENS_PART3_SCRIPT, 'advanced-community-gardens-p3-q24', 24, 'Which TWO problems do the students agree community gardens often face?', 'Getting permission to use land seems more difficult. If the land belongs to the council or a private owner, groups may wait months before they can start. Agreed.', 'D', communityProblemOptions, 'Getting permission to use land seems more difficult', 'difficulty obtaining land approval', 'ขออนุญาตใช้ที่ดินยาก', 'obtaining land approval = getting permission to use land. Agreed เป็น consensus marker. คำหลอกคือ soil quality เพราะแก้ด้วย raised beds ได้.', communityProblemsQuestionText),
@@ -1423,19 +1423,19 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
         { key: 'C', text: 'Students preferred printed lecture slides to digital copies.' }
       ], 'typed notes ... more words ... didn\'t always mean they understood better', 'typed more words did not always understand more', 'พิมพ์ได้มากกว่าแต่ไม่ได้เข้าใจมากกว่าเสมอไป', 'finding that surprised me เป็น signal ของคำตอบ และ but แสดงความขัดแย้ง: more words ไม่เท่ากับ more understanding.'),
       matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q25', 25, 'filming students during lectures', 'we\'d need special permission. Some students wouldn\'t want to be recorded.', 'F', 'need special permission', 'need special permission', 'ต้องขออนุญาตพิเศษ', 'recorded เป็นเหตุผลว่าทำไมต้อง special permission.'),
-      matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q26', 26, 'comparing exam results', 'Too many other things affect exam results: revision, attendance, background knowledge. The results would be hard to measure properly.', 'B', 'results would be hard to measure properly', 'results would be hard to measure', 'วัดผลยาก', 'Too many other things affect exam results คือเหตุผลว่าทำไมวัดผลยาก.'),
+      matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q26', 26, 'comparing final marks', 'Too many other things affect exam results: revision, attendance, background knowledge. The results would be hard to measure properly.', 'B', 'results would be hard to measure properly', 'outcomes would be difficult to assess', 'วัดผลยาก', 'final marks = exam results และ outcomes would be difficult to assess = results would be hard to measure.'),
       matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q27', 27, 'interviewing five classmates', 'Five people isn\'t enough. The sample would be too small to tell us much.', 'A', 'sample would be too small', 'sample would be too small', 'กลุ่มตัวอย่างเล็กเกินไป', 'five classmates ตรงกับ Five people และคำตอบชัดคือ sample too small.'),
       matchQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, digitalMethodOptions, digitalMethodQuestionText, 'advanced-digital-note-taking-p3-q28', 28, 'lending tablets to volunteers', 'That would cost too much unless we already had the tablets.', 'E', 'cost too much', 'equipment would be too expensive', 'อุปกรณ์แพงเกินไป', 'tablets เป็น equipment และ cost too much = too expensive.'),
       choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q29', 29, 'Why do Emma and Ravi decide to include a short memory test?', 'That won\'t prove one method is better forever, but it would give us some simple data of our own.', 'A', [
-        { key: 'A', text: 'It will give them some simple data of their own.' },
+        { key: 'A', text: 'It will give them some basic data of their own.' },
         { key: 'B', text: 'It will prove that handwriting is better than typing.' },
         { key: 'C', text: 'It will make their presentation more entertaining.' }
-      ], 'give us some simple data of our own', 'simple data of their own', 'ข้อมูลของตัวเองแบบง่ายๆ', 'คำหลอกคือ prove handwriting is better เพราะ Ravi พูดชัดว่า won\'t prove one method is better forever.'),
+      ], 'give us some simple data of our own', 'basic data of their own', 'ข้อมูลของตัวเองแบบง่ายๆ', 'basic data = simple data. คำหลอกคือ prove handwriting is better เพราะ Ravi พูดชัดว่า won\'t prove one method is better forever.'),
       choiceQuestionFor(DIGITAL_NOTE_TAKING_PART3_SCRIPT, 'advanced-digital-note-taking-p3-q30', 30, 'Emma and Ravi agree that their presentation should focus on', 'It depends on the task. Typing may be useful for organised lecture notes, but handwriting may help with diagrams or problem-solving. So our presentation should explain when different methods are useful.', 'B', [
         { key: 'A', text: 'recommending one best note-taking method.' },
-        { key: 'B', text: 'explaining when different methods are useful.' },
+        { key: 'B', text: 'explaining when different methods are appropriate.' },
         { key: 'C', text: 'criticising students who rely on technology.' }
-      ], 'explain when different methods are useful', 'when different methods are useful', 'อธิบายว่าแต่ละวิธีเหมาะเมื่อไร', 'Agreed และ balanced angle ชี้ว่าทั้งคู่ไม่เลือกวิธีเดียวดีที่สุด แต่จะอธิบายว่าแต่ละวิธีใช้เมื่อไร.')
+      ], 'explain when different methods are useful', 'when different methods are appropriate', 'อธิบายว่าแต่ละวิธีเหมาะเมื่อไร', 'appropriate = useful in context. Agreed และ balanced angle ชี้ว่าทั้งคู่ไม่เลือกวิธีเดียวดีที่สุด แต่จะอธิบายว่าแต่ละวิธีใช้เมื่อไร.')
     ]
   },
   {
@@ -1447,16 +1447,16 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
     audioCacheKey: 'advanced-listening-light-pollution-part-4',
     audioscript: LIGHT_POLLUTION_PART4_SCRIPT,
     questions: [
-      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q31', 31, 'The problem comes from artificial 31 ____ that is too bright or poorly directed.', 'Light pollution is caused by artificial light that is unnecessary', 'light', ['lighting', 'energy', 'lamps'], 'artificial light that is unnecessary', 'too bright or poorly directed', 'แสง', 'too bright or poorly directed ขยายจาก unnecessary/wrong direction — คำตอบคือ light'),
-      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q32', 32, 'It is especially widespread in big 32 ____.', 'This problem is especially common in large cities', 'cities', ['towns', 'areas', 'streets'], 'common in large cities', 'especially widespread in big', 'เมือง', 'widespread in big paraphrase common in large cities'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q31', 31, 'The problem comes from man-made 31 ____ that is too bright or poorly directed.', 'Light pollution is caused by artificial light that is unnecessary', 'light', ['lighting', 'energy', 'lamps'], 'artificial light that is unnecessary', 'too bright or poorly directed', 'แสง', 'man-made = artificial · too bright or poorly directed ขยายจาก unnecessary/wrong direction — คำตอบคือ light'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q32', 32, 'It is particularly widespread in big 32 ____.', 'This problem is especially common in large cities', 'cities', ['towns', 'areas', 'streets'], 'common in large cities', 'particularly widespread in big', 'เมือง', 'particularly = especially · widespread in big paraphrase common in large cities'),
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q33', 33, 'It makes it harder to observe 33 ____ at night.', 'people can no longer see many stars in the night sky', 'stars', ['clouds', 'planets', 'lights'], 'see many stars in the night sky', 'observe at night', 'ดวงดาว', 'observe paraphrase see many stars in the night sky'),
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q34', 34, 'Coastal lights can divert newborn turtles from reaching the 34 ____.', 'artificial lights near beaches can lead them away from the water', 'water', ['ocean', 'beach', 'sea'], 'lead them away from the water', 'divert newborn turtles from reaching', 'น้ำ', 'divert from reaching = lead away from · newborn turtles = young sea turtles after hatching · คำตอบคือ water ไม่ใช่ ocean'),
-      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q35', 35, 'Birds travelling long distances may become lost near brightly lit towers during 35 ____.', 'Many species travel long distances during migration, and bright lights from buildings can confuse them', 'migration', ['weather', 'night', 'travel'], 'during migration', 'travelling long distances lost near brightly lit towers during', 'การอพยพย้ายถิ่น', 'travelling long distances = travel long distances · become lost = confuse them · brightly lit towers = bright lights from buildings · คำตอบคือ migration'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q35', 35, 'Birds on extended journeys may become lost near illuminated towers during 35 ____.', 'Many species travel long distances during migration, and bright lights from buildings can confuse them', 'migration', ['weather', 'night', 'travel'], 'during migration', 'extended journeys lost near illuminated towers during', 'การอพยพย้ายถิ่น', 'extended journeys = travel long distances · become lost = confuse them · illuminated towers = bright lights from buildings · คำตอบคือ migration'),
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q36', 36, 'Night lights may trap insects that should be locating 36 ____.', 'Instead of finding food or mates, they often gather around lamps', 'food', ['shelter', 'water', 'light'], 'finding food or mates', 'trap insects that should be locating', 'อาหาร', 'trap around lamps = gather around lamps · should be locating = instead of finding · คำตอบคือ food'),
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q37', 37, 'Strong illumination after dark may interfere with natural 37 ____ cycles.', 'Bright light at night can disturb sleep patterns', 'sleep', ['rest', 'body', 'health'], 'disturb sleep patterns', 'Strong illumination after dark interfere with natural cycles', 'การนอน', 'Strong illumination after dark = Bright light at night · interfere with = disturb · natural cycles = sleep patterns · คำตอบคือ sleep'),
-      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q38', 38, 'Badly designed street lighting can produce 38 ____ for motorists.', 'Poorly designed lights can create glare, making it harder for drivers to see clearly', 'glare', ['danger', 'reflections', 'brightness'], 'create glare', 'produce for motorists', 'แสงจ้าแยงตา', 'motorists paraphrase drivers และ produce glare = create glare'),
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q38', 38, 'Badly planned street lighting can produce 38 ____ for motorists.', 'Poorly designed lights can create glare, making it harder for drivers to see clearly', 'glare', ['danger', 'reflections', 'brightness'], 'create glare', 'produce for motorists', 'แสงจ้าแยงตา', 'Badly planned = Poorly designed · motorists paraphrase drivers และ produce glare = create glare'),
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q39', 39, 'Beams from outdoor fixtures should be angled 39 ____ rather than into the sky.', 'Streetlights should be designed to point downward', 'downward', ['inside', 'lower', 'roads'], 'point downward', 'angled rather than into the sky', 'ลงด้านล่าง', 'Beams from outdoor fixtures = Streetlights · angled downward = point downward · rather than into the sky = instead of escaping into the sky · คำตอบคือ downward'),
-      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q40', 40, 'Some towns reduce outdoor lighting after 40 ____.', 'Some towns also reduce lighting after midnight', 'midnight', ['dark', 'evening', 'hours'], 'reduce lighting after midnight', 'reduce outdoor lighting after', 'เที่ยงคืน', 'reduce outdoor lighting = reduce lighting · after ตรงกับสคริปต์ · คำตอบคือ midnight')
+      gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q40', 40, 'Some towns dim outdoor lighting after 40 ____.', 'Some towns also reduce lighting after midnight', 'midnight', ['dark', 'evening', 'hours'], 'reduce lighting after midnight', 'dim outdoor lighting after', 'เที่ยงคืน', 'dim = reduce · outdoor lighting = lighting · after ตรงกับสคริปต์ · คำตอบคือ midnight')
     ]
   }
 ]
