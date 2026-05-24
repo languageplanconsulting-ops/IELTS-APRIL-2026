@@ -213,6 +213,17 @@ type ReadingQuestion = {
   paraphrasedVocabulary: string
 }
 
+type ReadingPencilPoint = {
+  x: number
+  y: number
+}
+
+type ReadingPencilStroke = {
+  id: string
+  passageNumber: number
+  points: ReadingPencilPoint[]
+}
+
 type ReadingPassageRecord = {
   number: number
   title: string
@@ -6988,6 +6999,8 @@ function App() {
   const [readingActivePassageNumber, setReadingActivePassageNumber] = useState(1)
   const [readingSelectionText, setReadingSelectionText] = useState('')
   const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string }>>([])
+  const [readingSmartPencilMode, setReadingSmartPencilMode] = useState(false)
+  const [readingPencilStrokes, setReadingPencilStrokes] = useState<Record<number, ReadingPencilStroke[]>>({})
   const [readingHintQuestionNumber, setReadingHintQuestionNumber] = useState<number | null>(null)
   const [readingExamError, setReadingExamError] = useState('')
   const [selectedReadingPdoyLessonId, setSelectedReadingPdoyLessonId] = useState('')
@@ -7278,6 +7291,9 @@ function App() {
   const readingHintMarkRef = useRef<HTMLElement | null>(null)
   const readingPassagePanelRef = useRef<HTMLElement | null>(null)
   const readingPassageBodyRef = useRef<HTMLDivElement | null>(null)
+  const readingPencilStageRef = useRef<HTMLDivElement | null>(null)
+  const readingPencilCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const readingPencilDrawingRef = useRef<ReadingPencilStroke | null>(null)
   const readingCoachParagraphRef = useRef<HTMLParagraphElement | null>(null)
   const readingPdoyStagePanelRef = useRef<HTMLDivElement | null>(null)
   const part2TimerDelayUntilRef = useRef<number | null>(null)
@@ -11177,6 +11193,21 @@ function App() {
     }, 80)
     return () => window.clearTimeout(timeout)
   }, [readingHintQuestionNumber, readingActivePassageNumber, activeReadingPassage?.bodyParagraphs])
+
+  useEffect(() => {
+    if (!activeReadingPassage) return
+    redrawReadingPencilCanvas()
+    const stage = readingPencilStageRef.current
+    if (!stage || typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(() => redrawReadingPencilCanvas())
+    observer.observe(stage)
+    return () => observer.disconnect()
+  }, [
+    activeReadingPassage,
+    readingActivePassageNumber,
+    readingPencilStrokes,
+    readingSmartPencilMode
+  ])
 
   useEffect(() => {
     if (!activeReadingPdoyLesson || !activeReadingPdoyQuestion || !activeReadingPdoyPassage) return
@@ -17801,7 +17832,119 @@ function App() {
     setReadingHintQuestionNumber(null)
   }
 
+  function resizeReadingPencilCanvas() {
+    const canvas = readingPencilCanvasRef.current
+    const stage = readingPencilStageRef.current
+    if (!canvas || !stage) return null
+    const width = Math.max(1, stage.clientWidth)
+    const height = Math.max(1, stage.scrollHeight)
+    const ratio = window.devicePixelRatio || 1
+    const nextWidth = Math.round(width * ratio)
+    const nextHeight = Math.round(height * ratio)
+    if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+      canvas.width = nextWidth
+      canvas.height = nextHeight
+    }
+    canvas.style.width = `${width}px`
+    canvas.style.height = `${height}px`
+    const context = canvas.getContext('2d')
+    if (!context) return null
+    context.setTransform(ratio, 0, 0, ratio, 0, 0)
+    return { context, width, height }
+  }
+
+  function drawReadingPencilStroke(context: CanvasRenderingContext2D, stroke: ReadingPencilStroke) {
+    if (stroke.points.length < 1) return
+    context.save()
+    context.globalCompositeOperation = 'multiply'
+    context.strokeStyle = 'rgba(255, 207, 64, 0.56)'
+    context.lineWidth = 14
+    context.lineCap = 'round'
+    context.lineJoin = 'round'
+    context.beginPath()
+    context.moveTo(stroke.points[0].x, stroke.points[0].y)
+    stroke.points.slice(1).forEach((point) => context.lineTo(point.x, point.y))
+    if (stroke.points.length === 1) {
+      context.lineTo(stroke.points[0].x + 0.1, stroke.points[0].y + 0.1)
+    }
+    context.stroke()
+    context.restore()
+  }
+
+  function redrawReadingPencilCanvas() {
+    const canvasState = resizeReadingPencilCanvas()
+    if (!canvasState || !activeReadingPassage) return
+    const { context, width, height } = canvasState
+    context.clearRect(0, 0, width, height)
+    ;(readingPencilStrokes[activeReadingPassage.number] || []).forEach((stroke) => {
+      drawReadingPencilStroke(context, stroke)
+    })
+  }
+
+  const getReadingPencilPoint = (event: PointerEvent<HTMLCanvasElement>): ReadingPencilPoint | null => {
+    const canvas = readingPencilCanvasRef.current
+    if (!canvas) return null
+    const rect = canvas.getBoundingClientRect()
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    }
+  }
+
+  const shouldHandleReadingPencilPointer = (event: PointerEvent<HTMLCanvasElement>) =>
+    readingSmartPencilMode && (event.pointerType === 'pen' || event.pointerType === 'mouse')
+
+  const handleReadingPencilPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
+    if (!activeReadingPassage || !shouldHandleReadingPencilPointer(event)) return
+    const point = getReadingPencilPoint(event)
+    if (!point) return
+    event.preventDefault()
+    event.currentTarget.setPointerCapture(event.pointerId)
+    const stroke: ReadingPencilStroke = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      passageNumber: activeReadingPassage.number,
+      points: [point]
+    }
+    readingPencilDrawingRef.current = stroke
+    const canvasState = resizeReadingPencilCanvas()
+    if (canvasState) drawReadingPencilStroke(canvasState.context, stroke)
+  }
+
+  const handleReadingPencilPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
+    if (!activeReadingPassage || !shouldHandleReadingPencilPointer(event)) return
+    const activeStroke = readingPencilDrawingRef.current
+    if (!activeStroke) return
+    const point = getReadingPencilPoint(event)
+    if (!point) return
+    event.preventDefault()
+    activeStroke.points = [...activeStroke.points, point]
+    redrawReadingPencilCanvas()
+    const canvasState = resizeReadingPencilCanvas()
+    if (canvasState) drawReadingPencilStroke(canvasState.context, activeStroke)
+  }
+
+  const finishReadingPencilStroke = (event: PointerEvent<HTMLCanvasElement>) => {
+    if (!activeReadingPassage || !shouldHandleReadingPencilPointer(event)) return
+    const activeStroke = readingPencilDrawingRef.current
+    if (!activeStroke) return
+    event.preventDefault()
+    readingPencilDrawingRef.current = null
+    setReadingPencilStrokes((current) => ({
+      ...current,
+      [activeReadingPassage.number]: [...(current[activeReadingPassage.number] || []), activeStroke]
+    }))
+  }
+
+  const clearReadingPencilMarksForActivePassage = () => {
+    if (!activeReadingPassage) return
+    setReadingPencilStrokes((current) => ({
+      ...current,
+      [activeReadingPassage.number]: []
+    }))
+  }
+
   const handleReadingSelection = () => {
+    if (readingSmartPencilMode) return
     const selection = window.getSelection()
     const text = String(selection?.toString() || '').trim()
     setReadingSelectionText(text)
@@ -20921,12 +21064,43 @@ function App() {
 
                   <div className="readingHighlightToolbar">
                     <p className="meta">
-                      {readingSelectionText ? `Selected: "${readingSelectionText}"` : 'Select any passage text to highlight it for yourself.'}
+                      {readingSmartPencilMode
+                        ? 'Smart Pencil mode: draw highlights directly on the passage. The question panel stays active.'
+                        : readingSelectionText
+                          ? `Selected: "${readingSelectionText}"`
+                          : 'Select any passage text to highlight it for yourself.'}
                     </p>
                     <div className="controls">
-                      <button type="button" className="secondary" disabled={!readingSelectionText} onClick={addReadingHighlight}>
+                      <button
+                        type="button"
+                        className={`secondary ${readingSmartPencilMode ? 'active' : ''}`.trim()}
+                        aria-pressed={readingSmartPencilMode}
+                        onClick={() => {
+                          setReadingSmartPencilMode((current) => !current)
+                          setReadingSelectionText('')
+                          window.getSelection()?.removeAllRanges()
+                        }}
+                      >
+                        Smart Pencil
+                      </button>
+                      <button
+                        type="button"
+                        className="secondary"
+                        disabled={!readingSelectionText || readingSmartPencilMode}
+                        onClick={addReadingHighlight}
+                      >
                         Highlight selection
                       </button>
+                      {readingSmartPencilMode && (
+                        <button
+                          type="button"
+                          className="secondary"
+                          disabled={(readingPencilStrokes[activeReadingPassage.number] || []).length === 0}
+                          onClick={clearReadingPencilMarksForActivePassage}
+                        >
+                          Clear pencil
+                        </button>
+                      )}
                       {readingHintQuestionNumber !== null && (
                         <button type="button" className="secondary" onClick={() => setReadingHintQuestionNumber(null)}>
                           Clear hint
@@ -20949,23 +21123,38 @@ function App() {
                           >
                             {highlight.text}
                           </button>
-                        ))}
+                      ))}
                     </div>
                   )}
 
-                  <div className="readingPassageBody" onMouseUp={handleReadingSelection}>
-                    {activeReadingPassage.bodyParagraphs.map((paragraph, index) => (
-                      <p key={`reading-paragraph-${index}`}>
-                        {renderPassageParagraphWithHighlights(
-                          paragraph,
-                          activeReadingPassage.number,
-                          activeReadingHint &&
-                            activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
-                            ? activeReadingHintNeedles
-                            : ''
-                        )}
-                      </p>
-                    ))}
+                  <div
+                    className={`readingPassageBody ${readingSmartPencilMode ? 'readingPassageBody-pencilMode' : ''}`.trim()}
+                    onMouseUp={handleReadingSelection}
+                  >
+                    <div className="readingPencilStage" ref={readingPencilStageRef}>
+                      {activeReadingPassage.bodyParagraphs.map((paragraph, index) => (
+                        <p key={`reading-paragraph-${index}`}>
+                          {renderPassageParagraphWithHighlights(
+                            paragraph,
+                            activeReadingPassage.number,
+                            activeReadingHint &&
+                              activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
+                              ? activeReadingHintNeedles
+                              : ''
+                          )}
+                        </p>
+                      ))}
+                      <canvas
+                        ref={readingPencilCanvasRef}
+                        className={`readingPencilCanvas ${readingSmartPencilMode ? 'is-active' : ''}`.trim()}
+                        aria-hidden="true"
+                        onPointerDown={handleReadingPencilPointerDown}
+                        onPointerMove={handleReadingPencilPointerMove}
+                        onPointerUp={finishReadingPencilStroke}
+                        onPointerCancel={finishReadingPencilStroke}
+                        onPointerLeave={finishReadingPencilStroke}
+                      />
+                    </div>
                   </div>
                 </section>
 
