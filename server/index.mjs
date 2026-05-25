@@ -15,6 +15,7 @@ import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvide
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS } from './userProvidedReadingPracticeCambridge14.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS } from './userProvidedReadingPracticeCambridge15.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS } from './userProvidedReadingPracticeCambridge16.mjs'
+import { USER_PROVIDED_READING_PRACTICE_GENERAL_TRAINING_EXAMS } from './userProvidedReadingPracticeGeneralTraining.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS } from './userProvidedReadingPracticeCambridge17.mjs'
 import { USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS } from './userProvidedReadingPracticeJune2026.mjs'
@@ -2873,12 +2874,19 @@ const mapNotebookRecord = (row) => ({
 
 const normalizeReadingCategory = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
+  if (normalized === 'general-training' || normalized === 'general training' || normalized === 'gt') {
+    return 'general-training'
+  }
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
   return 'normal'
 }
 
-const toReadingDatabaseCategory = (value) =>
-  normalizeReadingCategory(value) === 'advanced' ? 'passage3' : 'passage1'
+const toReadingDatabaseCategory = (value) => {
+  const category = normalizeReadingCategory(value)
+  if (category === 'advanced') return 'passage3'
+  if (category === 'general-training') return 'general-training'
+  return 'passage1'
+}
 
 const normalizeReadingCollectionTitle = (value) =>
   String(value || '').trim().slice(0, 160)
@@ -6212,6 +6220,12 @@ const BUILT_IN_READING_BANK_EXAMS = [
     mapBuiltInReadingExam(exam, {
       createdAt: '2026-05-22T00:00:00.000Z',
       updatedAt: '2026-05-22T00:00:00.000Z'
+    })
+  ),
+  ...USER_PROVIDED_READING_PRACTICE_GENERAL_TRAINING_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-05-24T00:00:00.000Z',
+      updatedAt: '2026-05-24T00:00:00.000Z'
     })
   )
 ]

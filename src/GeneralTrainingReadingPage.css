@@ -1,0 +1,243 @@
+.gtReadingPage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 20px;
+  padding: clamp(16px, 2vw, 28px);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 255, 0.95) 42%, rgba(255, 252, 235, 0.92) 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 74, 173, 0.06),
+    0 24px 64px rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+
+.gtReadingAmbient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.gtReadingOrb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.45;
+}
+
+.gtReadingOrb-a {
+  top: -70px;
+  right: -20px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(255, 204, 0, 0.45), transparent 68%);
+}
+
+.gtReadingOrb-b {
+  bottom: -80px;
+  left: -40px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(0, 74, 173, 0.35), transparent 70%);
+}
+
+.gtReadingGridGlow {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 74, 173, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 74, 173, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 90%);
+}
+
+.gtReadingHeader,
+.gtReadingOverview,
+.gtReadingSectionGrid,
+.gtReadingExamGrid {
+  position: relative;
+  z-index: 1;
+}
+
+.gtReadingHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 74, 173, 0.12);
+}
+
+.gtReadingEyebrow {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #004aad;
+  font-weight: 700;
+}
+
+.gtReadingHeader h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  color: #0f172a;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+}
+
+.gtReadingLead {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  color: #334155;
+  line-height: 1.65;
+}
+
+.gtReadingHeaderActions {
+  flex-shrink: 0;
+}
+
+.gtReadingOverview {
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 74, 173, 0.14);
+  background: linear-gradient(135deg, rgba(0, 74, 173, 0.06) 0%, rgba(255, 204, 0, 0.08) 100%);
+}
+
+.gtReadingOverviewLabel {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #004aad;
+  font-weight: 700;
+}
+
+.gtReadingOverview p:last-child {
+  margin: 0;
+  color: #1e293b;
+  line-height: 1.7;
+}
+
+.gtReadingSectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.gtReadingSectionCard {
+  display: grid;
+  gap: 8px;
+  text-align: left;
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 74, 173, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.gtReadingSectionCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 74, 173, 0.35);
+  box-shadow: 0 16px 36px rgba(0, 74, 173, 0.12);
+}
+
+.gtReadingSectionCard strong {
+  font-size: 1.2rem;
+  color: #0f172a;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.gtReadingCardLabel {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #004aad;
+  font-weight: 700;
+}
+
+.gtReadingCardFocus {
+  margin: 0;
+  color: #475569;
+  font-size: 0.92rem;
+}
+
+.gtReadingSectionCard small {
+  color: #64748b;
+}
+
+.gtReadingSectionCard-full {
+  background: linear-gradient(145deg, rgba(0, 74, 173, 0.95) 0%, rgba(15, 52, 128, 0.98) 100%);
+  border-color: rgba(255, 204, 0, 0.45);
+}
+
+.gtReadingSectionCard-full .gtReadingCardLabel,
+.gtReadingSectionCard-full strong,
+.gtReadingSectionCard-full .gtReadingCardFocus,
+.gtReadingSectionCard-full small {
+  color: #fff;
+}
+
+.gtReadingExamGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.gtReadingExamCard {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 74, 173, 0.14);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.gtReadingExamCard-full {
+  border-left: 4px solid #ffcc00;
+}
+
+.gtReadingExamEyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #004aad;
+  font-weight: 700;
+}
+
+.gtReadingExamCard h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.gtReadingExamMeta,
+.gtReadingAttemptMeta {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.gtReadingExamActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.gtReadingExamActions button {
+  min-width: 110px;
+}
+
+@media (max-width: 720px) {
+  .gtReadingHeader {
+    flex-direction: column;
+  }
+}

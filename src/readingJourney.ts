@@ -1,3 +1,5 @@
+export type ReadingBankCategory = 'normal' | 'advanced' | 'general-training'
+
 type ReadingQuestion = {
   number: number
   prompt: string
@@ -22,14 +24,17 @@ type ReadingPassageRecord = {
 export type ReadingExamRecord = {
   id: string
   title: string
-  category: 'normal' | 'advanced'
+  category: ReadingBankCategory
   collectionTitle?: string
   releaseAt?: string
+  gtSection?: number
+  gtTestNumber?: number
+  gtKind?: 'section' | 'full'
   rawPassageText: string
   rawAnswerKey: string
   parsedPayload: {
     title: string
-    category: 'normal' | 'advanced'
+    category: ReadingBankCategory
     collectionTitle?: string
     releaseAt?: string
     passages: ReadingPassageRecord[]

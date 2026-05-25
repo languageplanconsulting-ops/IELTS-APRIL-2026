@@ -1,0 +1,12 @@
+# English Plan IELTS
+
+English Plan IELTS is an IELTS preparation app and learning space for Thai learners.
+
+Core pages:
+- https://www.englishplan-ielts.com/th/ - Thai IELTS prep hub
+- https://www.englishplan-ielts.com/th/ielts-speaking-practice/ - IELTS Speaking practice
+- https://www.englishplan-ielts.com/th/ielts-reading-practice/ - IELTS Reading practice
+- https://www.englishplan-ielts.com/th/ielts-writing-checker/ - IELTS Writing checker and guide
+- https://www.englishplan-ielts.com/th/ielts-mock-test/ - IELTS mock test workflow
+
+Official video channel: https://www.youtube.com/@DoyLanguagePlan

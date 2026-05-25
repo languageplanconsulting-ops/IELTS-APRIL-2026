@@ -11,6 +11,7 @@
     "start": "node server/index.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
+    "build:seo": "node scripts/build-seo-pages.mjs",
     "verify:reading": "node scripts/verify-reading-prompts.mjs",
     "audit:reading-passages": "node scripts/audit-reading-passage-bodies.mjs",
     "audit:advanced-reading": "node scripts/audit-advanced-reading.mjs",

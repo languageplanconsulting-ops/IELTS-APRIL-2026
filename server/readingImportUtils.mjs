@@ -2,6 +2,9 @@ import { READING_PASSAGE_BODY_FIXTURES } from './readingPassageBodyFixtures.mjs'
 
 const normalizeReadingCategory = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
+  if (normalized === 'general-training' || normalized === 'general training' || normalized === 'gt') {
+    return 'general-training'
+  }
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
   return 'normal'
 }

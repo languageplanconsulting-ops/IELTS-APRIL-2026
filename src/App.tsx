@@ -2,6 +2,17 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type Keyboard
 import './App.css'
 import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
+import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
+import {
+  GENERAL_TRAINING_READING_LABEL,
+  GENERAL_TRAINING_READING_LEAD,
+  type GeneralTrainingReadingSection,
+  type GeneralTrainingReadingView
+} from './generalTrainingReadingData'
+import {
+  buildAllGeneralTrainingSectionExams,
+  resolveGeneralTrainingExamMeta
+} from './generalTrainingReadingUtils'
 import { ListeningSectionExamView, type ListeningNotebookSavePayload } from './ListeningSectionExamView'
 import {
   buildListeningSectionExamGroups,
@@ -200,8 +211,8 @@ type AdminWorkspaceSection =
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
-type ReadingBankCategory = 'normal' | 'advanced'
-type ReadingEntryView = 'levels' | 'monthly' | 'journey' | 'full-test'
+type ReadingBankCategory = 'normal' | 'advanced' | 'general-training'
+type ReadingEntryView = 'levels' | 'monthly' | 'journey' | 'full-test' | 'general-training'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
 type ReadingPdoyLessonType = 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'fill-in-the-blank'
 type ReadingPdoyLessonStep = 'intro' | 'evidence' | 'decide' | 'result' | 'complete'
@@ -255,6 +266,9 @@ type ReadingExamRecord = {
   category: ReadingBankCategory
   collectionTitle?: string
   releaseAt?: string
+  gtSection?: number
+  gtTestNumber?: number
+  gtKind?: 'section' | 'full'
   rawPassageText: string
   rawAnswerKey: string
   parsedPayload: ReadingParsedPayload
@@ -691,57 +705,6 @@ const formatAdminCountdownClock = (seconds: number) => {
   const minutes = Math.floor(safeSeconds / 60)
   const wholeSeconds = safeSeconds % 60
   return `${String(minutes).padStart(2, '0')}:${String(wholeSeconds).padStart(2, '0')}`
-}
-
-const countAdminSpokenWords = (text: string) =>
-  (text.match(/[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)*/g) || []).length
-
-type AdminWordCountPreset = 'band6' | 'band7' | 'band8'
-
-const ADMIN_WORD_COUNT_PRESETS: Record<
-  'part1' | 'part3',
-  Record<AdminWordCountPreset, { min: number; max: number; label: string }>
-> = {
-  part1: {
-    band6: { min: 18, max: 35, label: 'Band 6 concise answer' },
-    band7: { min: 25, max: 50, label: 'Band 7 strong answer' },
-    band8: { min: 35, max: 65, label: 'Band 8 detailed answer' }
-  },
-  part3: {
-    band6: { min: 45, max: 75, label: 'Band 6 developed answer' },
-    band7: { min: 55, max: 95, label: 'Band 7 extended answer' },
-    band8: { min: 75, max: 120, label: 'Band 8 sophisticated answer' }
-  }
-}
-
-const getAdminWordCountTarget = (
-  part: 'part1' | 'part3',
-  preset: AdminWordCountPreset = 'band7',
-  questionMultiplier = 1
-) => {
-  const target = ADMIN_WORD_COUNT_PRESETS[part][preset]
-  const multiplier = Math.max(1, Math.round(questionMultiplier))
-  return {
-    ...target,
-    min: target.min * multiplier,
-    max: target.max * multiplier
-  }
-}
-
-const getAdminWordCountFeedback = (
-  part: 'part1' | 'part3',
-  count: number,
-  preset: AdminWordCountPreset = 'band7',
-  questionMultiplier = 1
-) => {
-  const target = getAdminWordCountTarget(part, preset, questionMultiplier)
-  if (count >= target.min && count <= target.max) {
-    return { target, isGood: true, label: 'Good length', hint: 'Fits the target range' }
-  }
-  if (count < target.min) {
-    return { target, isGood: false, label: 'Too short', hint: `${target.min - count} more words to target` }
-  }
-  return { target, isGood: false, label: 'Too long', hint: `${count - target.max} words over target` }
 }
 
 type AdminSubtitleNoteDraft = {
@@ -3606,7 +3569,8 @@ type AdminReadingGeneratorValidationResult = {
 
 const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   normal: 'Normal Reading',
-  advanced: 'Advanced Reading'
+  advanced: 'Advanced Reading',
+  'general-training': 'General Training Reading'
 }
 
 const READING_COLLECTION_OPTIONS = [
@@ -3707,6 +3671,9 @@ const READING_ENTRY_CHOICES: Array<{
 
 const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
   const normalized = String(value || '').trim().toLowerCase()
+  if (normalized === 'general-training' || normalized === 'general training' || normalized === 'gt') {
+    return 'general-training'
+  }
   if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
   return 'normal'
 }
@@ -4249,6 +4216,31 @@ Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษ
 
 Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ`
     }
+  ],
+  'general-training': [
+    {
+      title: 'General Training Reading Template',
+      category: 'general-training',
+      collectionTitle: 'IELTS General Training Reading',
+      releaseAt: '',
+      rawPassageText: `READING PASSAGE 1
+PASTE GT SECTION TEXT TITLE HERE
+
+PASTE THE FULL GENERAL TRAINING PASSAGE TEXT HERE
+
+Questions 1-14
+PASTE THE ORIGINAL QUESTION BLOCK HERE`,
+      rawAnswerKey: `READING PASSAGE 1: PASTE GT SECTION TEXT TITLE HERE
+Question 1: PASTE QUESTION 1 PROMPT HERE
+
+Correct Answer: TRUE / FALSE / NOT GIVEN / actual answer
+
+Exact Portion: "Paste the exact evidence from the passage here."
+
+Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
+
+Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ`
+    }
   ]
 }
 
@@ -4404,6 +4396,11 @@ const isCambridgeBookReadingExam = (exam: Pick<ReadingExamRecord, 'id' | 'title'
     /\bcambridge\s*(1[1-7]|19)\b/.test(title) ||
     /^c(1[1-7]|19)\s/.test(title)
   )
+}
+
+const isGeneralTrainingReadingExam = (exam: Pick<ReadingExamRecord, 'id' | 'category'>) => {
+  const id = String(exam.id || '').toLowerCase()
+  return exam.category === 'general-training' || /^gt-reading-/.test(id)
 }
 
 const getReadingExamCollectionTitle = (exam: Pick<ReadingExamRecord, 'title' | 'collectionTitle' | 'parsedPayload'>) => {
@@ -4916,6 +4913,21 @@ const getReadingMultipleChoicePromptStem = (
   return stripReadingMcqOptionsFromPrompt(String(question.prompt || ''))
 }
 
+const extractReadingPromptFromQuestionSection = (questionSectionText: string, number: number) => {
+  const lines = sanitizeReadingQuestionSectionTextForDisplay(String(questionSectionText || ''))
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  for (const line of lines) {
+    if (new RegExp(`\\b${number}\\s*[.…·]{2,}`).test(line)) {
+      return line.replace(/^●\s*/, '').trim()
+    }
+    const numbered = line.match(new RegExp(`^${number}\\s+(.+)$`))
+    if (numbered) return numbered[1].trim()
+  }
+  return ''
+}
+
 const getReadingQuestionDisplayPrompt = (
   passage: ReadingPassageRecord | null,
   question: ReadingQuestion
@@ -4985,6 +4997,13 @@ const isReadingLetterBankMatchingBlock = (block: string) => {
   if (/match\s+each/i.test(normalized)) return true
   if (/complete each sentence/i.test(normalized)) return true
   if (/complete the summary using the list of (?:words|phrases)/i.test(normalized)) return true
+  if (/for which (?:apartment|section|paragraph)/i.test(normalized)) return true
+  if (
+    /following statements? (?:are )?true/i.test(normalized) &&
+    /write the correct letter/i.test(normalized)
+  ) {
+    return true
+  }
   return extractSharedReadingLetterOptionBank(normalized).length >= 3
 }
 
@@ -5165,6 +5184,19 @@ const getReadingMatchingAnswerOptions = (
   const fromList = extractReadingMatchingListOptions(block || passage.questionSectionText || '')
   if (fromList.length) return fromList
 
+  if (kind === 'statement') {
+    const paragraphOptions = (passage.bodyParagraphs || [])
+      .map((paragraph, index, paragraphs) => {
+        const letter = String(paragraph || '').trim()
+        if (!/^[A-G]$/i.test(letter)) return null
+        const text = String(paragraphs[index + 1] || '').trim()
+        if (!text || /^[A-G]$/i.test(text)) return null
+        return { letter: letter.toUpperCase(), text }
+      })
+      .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+    if (paragraphOptions.length >= 3) return paragraphOptions
+  }
+
   const extractedOptions = extractReadingMultipleChoiceOptions(passage, question)
   if (extractedOptions.length) return extractedOptions
   return ['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((letter) => ({ letter, text: letter }))
@@ -5212,6 +5244,9 @@ const extractReadingMatchingGroupInstruction = (
         /match\s+each/i.test(line) ||
         /complete each sentence/i.test(line) ||
         /complete the summary using the list of (?:words|phrases)/i.test(line) ||
+        /for which (?:apartment|section|paragraph)/i.test(line) ||
+        /following statements? (?:are )?true/i.test(line) ||
+        /the text has (?:\w+\s+){0,3}sections?,?\s+[A-G]/i.test(line) ||
         /^write\s+the\s+correct\s+letter/i.test(line) ||
         /list of (?:ideas|researchers|people|statements|companies|dates|words|phrases)/i.test(line) ||
         /^nb\b/i.test(line)
@@ -6102,10 +6137,15 @@ const normalizeReadingQuestionForDisplay = (
     ),
     question.correctAnswer
   )
+  const fallbackPrompt =
+    /^Question\s+\d+$/i.test(sanitized) && passage?.questionSectionText
+      ? extractReadingPromptFromQuestionSection(passage.questionSectionText, question.number)
+      : ''
+  const resolvedPrompt = fallbackPrompt || sanitized
   const prompt =
     question.answerType === 'multiple-choice' && passage && !isReadingChooseTwoQuestion(passage, question)
-      ? getReadingMultipleChoicePromptStem(passage, { ...question, prompt: sanitized }) || sanitized
-      : sanitized
+      ? getReadingMultipleChoicePromptStem(passage, { ...question, prompt: resolvedPrompt }) || resolvedPrompt
+      : resolvedPrompt
   return { ...question, prompt }
 }
 
@@ -7190,6 +7230,8 @@ function App() {
   const [readingWorkspaceMode, setReadingWorkspaceMode] = useState<ReadingWorkspaceMode>('bank')
   const [readingEntryView, setReadingEntryView] = useState<ReadingEntryView>('levels')
   const [readingEntryCategory, setReadingEntryCategory] = useState<ReadingBankCategory | null>(null)
+  const [generalTrainingReadingView, setGeneralTrainingReadingView] = useState<GeneralTrainingReadingView>('hub')
+  const [generalTrainingSection, setGeneralTrainingSection] = useState<GeneralTrainingReadingSection | null>(null)
   const [selectedReadingCategory, setSelectedReadingCategory] = useState<ReadingBankCategory>('normal')
   const [selectedReadingCollection, setSelectedReadingCollection] = useState('all')
   const [selectedReadingExamId, setSelectedReadingExamId] = useState('')
@@ -7376,7 +7418,6 @@ function App() {
   const [adminVideoExportFormat, setAdminVideoExportFormat] = useState<AdminVideoExportFormat | null>(null)
   const adminVideoExportAbortRef = useRef<AbortController | null>(null)
   const [adminVideoStudioStep, setAdminVideoStudioStep] = useState<AdminVideoStudioStep>('setup')
-  const [adminWordCountPreset, setAdminWordCountPreset] = useState<AdminWordCountPreset>('band7')
   const [adminTeleprompterMode, setAdminTeleprompterMode] = useState(true)
   const [adminShowAdvancedSubtitleTools, setAdminShowAdvancedSubtitleTools] = useState(false)
   const [adminUploadChecklistOpen, setAdminUploadChecklistOpen] = useState(false)
@@ -7385,7 +7426,6 @@ function App() {
   const [adminRecordCountdown, setAdminRecordCountdown] = useState<number | null>(null)
   const [adminRecordedVideoHasBakedFlip, setAdminRecordedVideoHasBakedFlip] = useState(false)
   const [adminTopicQuestionIndex, setAdminTopicQuestionIndex] = useState(-1)
-  const [adminTopicQuestionStartWordCount, setAdminTopicQuestionStartWordCount] = useState(0)
   const adminTopicQuestionBannerRef = useRef<AdminTopicQuestionBannerState | null>(null)
   const [adminMicLevel, setAdminMicLevel] = useState(0)
   const [adminCameraPreviewActive, setAdminCameraPreviewActive] = useState(false)
@@ -7457,7 +7497,6 @@ function App() {
   const adminMicAnalyserRef = useRef<{ context: AudioContext; interval: number } | null>(null)
   const adminRecordCountdownRef = useRef<number | null>(null)
   const adminTopicSequenceCancelRef = useRef(false)
-  const adminTopicQuestionStartWordCountRef = useRef(0)
   const audioChunksRef = useRef<Blob[]>([])
   const latestAudioBlobRef = useRef<Blob | null>(null)
   const recordingStopResolverRef = useRef<((blob: Blob | null) => void) | null>(null)
@@ -9132,7 +9171,11 @@ function App() {
   const bankReadingExams = useMemo(
     () =>
       readingExams.filter(
-        (exam) => !isReadingPdoyExercise(exam.id) && (isCambridgeBookReadingExam(exam) || hasExplicitReadingCollection(exam))
+        (exam) =>
+          !isReadingPdoyExercise(exam.id) &&
+          (isCambridgeBookReadingExam(exam) ||
+            hasExplicitReadingCollection(exam) ||
+            isGeneralTrainingReadingExam(exam))
       ),
     [readingExams]
   )
@@ -9145,7 +9188,10 @@ function App() {
     [bankReadingExams]
   )
   const leveledReadingExams = useMemo(
-    () => bankReadingExams.filter((exam) => !isMonthlyReadingCollection(exam)),
+    () =>
+      bankReadingExams.filter(
+        (exam) => !isMonthlyReadingCollection(exam) && !isGeneralTrainingReadingExam(exam)
+      ),
     [bankReadingExams]
   )
   const readingJourneySourcePool = useMemo(
@@ -9170,10 +9216,54 @@ function App() {
       ),
     [bankReadingExams]
   )
+  const generalTrainingReadingExams = useMemo(
+    () => bankReadingExams.filter((exam) => isGeneralTrainingReadingExam(exam)),
+    [bankReadingExams]
+  )
+  const generalTrainingFullTestBankExams = useMemo(
+    () =>
+      generalTrainingReadingExams.filter(
+        (exam) => resolveGeneralTrainingExamMeta(exam).gtKind === 'full'
+      ),
+    [generalTrainingReadingExams]
+  )
+  const generalTrainingDerivedSectionExams = useMemo(
+    () => buildAllGeneralTrainingSectionExams(generalTrainingFullTestBankExams),
+    [generalTrainingFullTestBankExams]
+  )
+  const generalTrainingSectionExams = useMemo(
+    () =>
+      generalTrainingDerivedSectionExams.map((exam) => {
+        const meta = resolveGeneralTrainingExamMeta(exam)
+        return {
+          id: exam.id,
+          title: exam.title,
+          questionCount: exam.parsedPayload?.questionCount || 0,
+          passageCount: exam.parsedPayload?.passages?.length || 0,
+          gtTestNumber: meta.gtTestNumber,
+          gtSection: meta.gtSection
+        }
+      }),
+    [generalTrainingDerivedSectionExams]
+  )
+  const generalTrainingFullTestExams = useMemo(
+    () =>
+      generalTrainingFullTestBankExams.map((exam) => {
+        const meta = resolveGeneralTrainingExamMeta(exam)
+        return {
+          id: exam.id,
+          title: exam.title,
+          questionCount: exam.parsedPayload?.questionCount || 0,
+          passageCount: exam.parsedPayload?.passages?.length || 0,
+          gtTestNumber: meta.gtTestNumber
+        }
+      }),
+    [generalTrainingFullTestBankExams]
+  )
   const readingFullTestsByBook = useMemo(() => groupFullReadingTestsByBook(), [])
   const practiceReadingExams = useMemo(
-    () => [...bankReadingExams, ...readingJourneyExams, ...readingFullTestExams],
-    [bankReadingExams, readingJourneyExams, readingFullTestExams]
+    () => [...bankReadingExams, ...readingJourneyExams, ...readingFullTestExams, ...generalTrainingDerivedSectionExams],
+    [bankReadingExams, readingJourneyExams, readingFullTestExams, generalTrainingDerivedSectionExams]
   )
   const readingMonthGroups = useMemo(() => {
     const groups = new Map<string, ReadingExamRecord[]>()
@@ -9308,13 +9398,23 @@ function App() {
   )
   const readingExamCountsByCategory = useMemo(
     () =>
-      (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => ({
-        category,
-        label: READING_CATEGORY_LABELS[category],
-        count: leveledReadingExams.filter((exam) => exam.category === category).length,
-        exams: leveledReadingExams.filter((exam) => exam.category === category).slice(0, 6)
-      })),
-    [leveledReadingExams]
+      (Object.keys(READING_CATEGORY_LABELS) as ReadingBankCategory[]).map((category) => {
+        if (category === 'general-training') {
+          return {
+            category,
+            label: READING_CATEGORY_LABELS[category],
+            count: generalTrainingFullTestBankExams.length,
+            exams: generalTrainingFullTestBankExams.slice(0, 6)
+          }
+        }
+        return {
+          category,
+          label: READING_CATEGORY_LABELS[category],
+          count: leveledReadingExams.filter((exam) => exam.category === category).length,
+          exams: leveledReadingExams.filter((exam) => exam.category === category).slice(0, 6)
+        }
+      }),
+    [generalTrainingFullTestBankExams, leveledReadingExams]
   )
   const readingExamGroupsByCollection = useMemo(() => {
     const groups = new Map<string, ReadingExamRecord[]>()
@@ -10124,24 +10224,9 @@ function App() {
   const adminSelectedTopicQuestionList = adminSelectedVideoTopic
     ? getSpeakingTopicQuestionList(adminSelectedVideoTopic)
     : []
-  const adminTopicQuestionCount = adminIsTopicSequenceTarget ? Math.max(1, adminSelectedTopicQuestionList.length) : 1
   const adminPart2RecordingRemainingSeconds = adminIsPart2VideoTarget
     ? Math.max(0, ADMIN_PART2_SAMPLE_RECORDING_SECONDS - adminRecordedVideoDuration)
     : 0
-  const adminLiveSpokenWordCount = countAdminSpokenWords(
-    `${adminSubtitleTranscript.trim()} ${adminSubtitleInterim.trim()}`.trim()
-  )
-  const adminCurrentQuestionSpokenWordCount = adminIsTopicSequenceTarget
-    ? Math.max(0, adminLiveSpokenWordCount - adminTopicQuestionStartWordCount)
-    : adminLiveSpokenWordCount
-  const adminWordCountFeedback =
-    adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
-      ? getAdminWordCountFeedback(adminSelectedVideoTopic.samplePart, adminCurrentQuestionSpokenWordCount, adminWordCountPreset)
-      : null
-  const adminSelectedWordCountTarget =
-    adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
-      ? getAdminWordCountTarget(adminSelectedVideoTopic.samplePart, adminWordCountPreset)
-      : null
   const adminRecordedVideoSizeLabel = adminRecordedVideoSizeBytes
     ? `${(adminRecordedVideoSizeBytes / (1024 * 1024)).toFixed(1)} MB`
     : ''
@@ -10319,13 +10404,11 @@ function App() {
       hint: adminMicLevel >= 4 ? `${adminMicLevel}% input level` : 'Speak once to confirm the meter moves.'
     },
     {
-      label: adminIsPart2VideoTarget ? 'Part 2 timer overlay' : 'Word-count overlay',
+      label: adminIsPart2VideoTarget ? 'Part 2 timer overlay' : 'Question banner overlay',
       ok: Boolean(adminSelectedVideoTopic),
       hint: adminIsPart2VideoTarget
         ? '02:00 countdown will be burned into the video.'
-        : adminSelectedWordCountTarget
-          ? `${adminSelectedWordCountTarget.min}-${adminSelectedWordCountTarget.max} words for ${adminSelectedWordCountTarget.label}.`
-          : 'Choose a Part 1 or Part 3 question.'
+        : 'Question banners will be burned into the video.'
     },
     {
       label: 'Student preview style',
@@ -10347,17 +10430,6 @@ function App() {
       percent: total > 0 ? Math.round((ready / total) * 100) : 0
     }
   })
-  const adminReviewTranscriptText = adminSubtitleTranscript || adminSubtitleCues.map((cue) => cue.text).join(' ')
-  const adminReviewWordCount = countAdminSpokenWords(adminReviewTranscriptText)
-  const adminReviewWordFeedback =
-    adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
-      ? getAdminWordCountFeedback(
-          adminSelectedVideoTopic.samplePart,
-          adminReviewWordCount,
-          adminWordCountPreset,
-          adminTopicQuestionCount
-        )
-      : null
   const adminPostRecordingReportItems = [
     {
       label: 'Video length',
@@ -10368,12 +10440,10 @@ function App() {
       hint: adminIsPart2VideoTarget ? 'Part 2 should land close to 2 minutes.' : 'Trim is long enough for a sample.'
     },
     {
-      label: adminIsPart2VideoTarget ? 'Timer overlay' : 'Word-count target',
-      ok: adminIsPart2VideoTarget ? Boolean(adminRecordedVideoUrl) : Boolean(adminReviewWordFeedback?.isGood),
-      value: adminIsPart2VideoTarget
-        ? 'Burned in'
-        : `${adminReviewWordCount} words${adminReviewWordFeedback ? ` · ${adminReviewWordFeedback.label}` : ''}`,
-      hint: adminReviewWordFeedback?.hint || 'Overlay recorded into the video.'
+      label: adminIsPart2VideoTarget ? 'Timer overlay' : 'Question banner',
+      ok: Boolean(adminRecordedVideoUrl),
+      value: 'Burned in',
+      hint: adminIsPart2VideoTarget ? 'Timer recorded into the video.' : 'Question banner recorded into the video.'
     },
     {
       label: 'Subtitle quality',
@@ -12464,51 +12534,6 @@ function App() {
       context.restore()
     }
 
-    const drawWordCountOverlay = (part: 'part1' | 'part3', count: number) => {
-      const feedback = getAdminWordCountFeedback(part, count, adminWordCountPreset)
-      const scale = Math.max(0.75, Math.min(1.35, width / 1280))
-      const padding = 22 * scale
-      const badgeWidth = 310 * scale
-      const badgeHeight = 104 * scale
-      const x = width - badgeWidth - padding
-      const y = height - badgeHeight - padding
-      const radius = 24 * scale
-      const targetText = `${feedback.target.min}-${feedback.target.max} target`
-      const helperText = feedback.isGood
-        ? 'strong sample length'
-        : count < feedback.target.min
-          ? `${feedback.target.min - count} words to go`
-          : `${count - feedback.target.max} words over`
-
-      context.save()
-      context.shadowColor = 'rgba(15, 23, 42, 0.34)'
-      context.shadowBlur = 24 * scale
-      context.shadowOffsetY = 10 * scale
-      drawRoundRect(x, y, badgeWidth, badgeHeight, radius)
-      context.fillStyle = feedback.isGood ? 'rgba(20, 83, 45, 0.9)' : 'rgba(127, 29, 29, 0.9)'
-      context.fill()
-      context.shadowColor = 'transparent'
-
-      context.fillStyle = feedback.isGood ? '#86efac' : '#fecaca'
-      drawRoundRect(x + 12 * scale, y + 12 * scale, 7 * scale, badgeHeight - 24 * scale, 4 * scale)
-      context.fill()
-
-      context.fillStyle = feedback.isGood ? '#bbf7d0' : '#fecaca'
-      context.font = `900 ${13 * scale}px Inter, Arial, sans-serif`
-      context.fillText(`${part === 'part1' ? 'PART 1' : 'PART 3'} WORD COUNT`, x + 32 * scale, y + 30 * scale)
-
-      context.fillStyle = '#ffffff'
-      context.font = `950 ${42 * scale}px Inter, Arial, sans-serif`
-      context.fillText(String(count), x + 32 * scale, y + 75 * scale)
-
-      context.font = `900 ${14 * scale}px Inter, Arial, sans-serif`
-      context.fillText(feedback.label, x + 118 * scale, y + 62 * scale)
-      context.fillStyle = feedback.isGood ? '#dcfce7' : '#fee2e2'
-      context.font = `800 ${12 * scale}px Inter, Arial, sans-serif`
-      context.fillText(`${targetText} · ${helperText}`, x + 118 * scale, y + 82 * scale)
-      context.restore()
-    }
-
     const drawQuestionBannerOverlay = () => {
       const banner = adminTopicQuestionBannerRef.current
       if (!banner?.questionText) return
@@ -12622,13 +12647,6 @@ function App() {
         drawTimerOverlay(Math.max(0, ADMIN_PART2_SAMPLE_RECORDING_SECONDS - elapsedSeconds))
       } else if (samplePart === 'part1' || samplePart === 'part3') {
         drawQuestionBannerOverlay()
-        const totalWordCount = countAdminSpokenWords(
-          `${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim()
-        )
-        drawWordCountOverlay(
-          samplePart,
-          Math.max(0, totalWordCount - adminTopicQuestionStartWordCountRef.current)
-        )
       }
       animationFrameId = window.requestAnimationFrame(renderFrame)
     }
@@ -15155,7 +15173,7 @@ function App() {
         setAdminVideoRecorderMessage(
           isPart2TimedRecording
             ? 'Part 2 timer will show in the studio, but this browser cannot burn it into the saved video.'
-            : 'Question banner and word count will show in the studio, but this browser cannot burn them into the saved video.'
+            : 'Question banner will show in the studio, but this browser cannot burn it into the saved video.'
         )
       }
       const recordingStream = overlayRecordingRenderer?.stream || stream
@@ -15878,17 +15896,7 @@ function App() {
   const cancelAdminTopicQuestionSequence = () => {
     adminTopicSequenceCancelRef.current = true
     adminTopicQuestionBannerRef.current = null
-    adminTopicQuestionStartWordCountRef.current = 0
     setAdminTopicQuestionIndex(-1)
-    setAdminTopicQuestionStartWordCount(0)
-  }
-
-  const markAdminTopicQuestionWordStart = () => {
-    const count = countAdminSpokenWords(
-      `${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim()
-    )
-    adminTopicQuestionStartWordCountRef.current = count
-    setAdminTopicQuestionStartWordCount(count)
   }
 
   const syncAdminTopicQuestionBanner = (index: number, target: SpeakingVideoSampleTarget) => {
@@ -15914,8 +15922,6 @@ function App() {
 
   const initializeAdminTopicQuestionRecording = (target: SpeakingVideoSampleTarget) => {
     adminTopicSequenceCancelRef.current = false
-    adminTopicQuestionStartWordCountRef.current = 0
-    setAdminTopicQuestionStartWordCount(0)
     syncAdminTopicQuestionBanner(0, target)
     const total = getSpeakingTopicQuestionList(target).length
     setAdminVideoRecorderMessage(
@@ -15931,7 +15937,6 @@ function App() {
       setAdminVideoRecorderMessage('All questions shown — press Stop when you are finished.')
       return
     }
-    markAdminTopicQuestionWordStart()
     syncAdminTopicQuestionBanner(nextIndex, adminSelectedVideoTopic)
     setAdminVideoRecorderMessage(
       `Question ${nextIndex + 1} of ${questions.length} — click Read aloud when ready.`
@@ -17724,6 +17729,8 @@ function App() {
     setReadingWorkspaceMode('bank')
     setReadingEntryView(view)
     setReadingEntryCategory(null)
+    setGeneralTrainingReadingView('hub')
+    setGeneralTrainingSection(null)
     setSelectedReadingCategory('normal')
     setSelectedReadingCollection('all')
     setReadingAttemptStage('bank')
@@ -17781,6 +17788,40 @@ function App() {
     setActivePage('reading')
   }
 
+  const openGeneralTrainingReadingHub = () => {
+    setReadingWorkspaceMode('bank')
+    setReadingEntryView('general-training')
+    setReadingEntryCategory('general-training')
+    setGeneralTrainingReadingView('hub')
+    setGeneralTrainingSection(null)
+    setSelectedReadingCategory('general-training')
+    setSelectedReadingCollection('all')
+    setReadingAttemptStage('bank')
+    setReadingHintQuestionNumber(null)
+    setReadingExamError('')
+    setActivePage('reading')
+  }
+
+  const openGeneralTrainingReadingSection = (section: GeneralTrainingReadingSection) => {
+    setReadingEntryView('general-training')
+    setReadingEntryCategory('general-training')
+    setGeneralTrainingReadingView('section')
+    setGeneralTrainingSection(section)
+    setSelectedReadingCategory('general-training')
+    setReadingAttemptStage('bank')
+    setReadingExamError('')
+  }
+
+  const openGeneralTrainingFullTests = () => {
+    setReadingEntryView('general-training')
+    setReadingEntryCategory('general-training')
+    setGeneralTrainingReadingView('full-test')
+    setGeneralTrainingSection(null)
+    setSelectedReadingCategory('general-training')
+    setReadingAttemptStage('bank')
+    setReadingExamError('')
+  }
+
   const startReadingFullTest = (specId: string) => {
     const spec = READING_FULL_TEST_SPECS.find((item) => item.id === specId)
     if (!spec) return
@@ -17795,6 +17836,17 @@ function App() {
   const returnToReadingBank = (exam: ReadingExamRecord) => {
     setReadingAttemptStage('bank')
     setReadingExamError('')
+    if (isGeneralTrainingReadingExam(exam)) {
+      const meta = resolveGeneralTrainingExamMeta(exam)
+      if (meta.gtKind === 'full') {
+        openGeneralTrainingFullTests()
+      } else if (meta.gtSection) {
+        openGeneralTrainingReadingSection(meta.gtSection as GeneralTrainingReadingSection)
+      } else {
+        openGeneralTrainingReadingHub()
+      }
+      return
+    }
     if (isMonthlyReadingCollection(exam)) {
       openReadingMonthlyBank()
       return
@@ -17843,10 +17895,37 @@ function App() {
     const isMonthlyExam = isMonthlyReadingCollection(exam)
     const isFullTestExam = isReadingFullTestExamId(examId)
     const isJourneyExam = isReadingJourneyExamId(examId)
+    const isGeneralTrainingExam = isGeneralTrainingReadingExam(exam)
     setReadingWorkspaceMode('bank')
-    setReadingEntryView(isMonthlyExam ? 'monthly' : isFullTestExam ? 'full-test' : isJourneyExam ? 'journey' : 'levels')
-    setReadingEntryCategory(isMonthlyExam ? null : exam.category)
-    setSelectedReadingCategory(exam.category)
+    setReadingEntryView(
+      isGeneralTrainingExam
+        ? 'general-training'
+        : isMonthlyExam
+          ? 'monthly'
+          : isFullTestExam
+            ? 'full-test'
+            : isJourneyExam
+              ? 'journey'
+              : 'levels'
+    )
+    if (isGeneralTrainingExam) {
+      setReadingEntryCategory('general-training')
+      setSelectedReadingCategory('general-training')
+      const meta = resolveGeneralTrainingExamMeta(exam)
+      if (meta.gtKind === 'full') {
+        setGeneralTrainingReadingView('full-test')
+        setGeneralTrainingSection(null)
+      } else if (meta.gtSection) {
+        setGeneralTrainingReadingView('section')
+        setGeneralTrainingSection(meta.gtSection as GeneralTrainingReadingSection)
+      } else {
+        setGeneralTrainingReadingView('hub')
+        setGeneralTrainingSection(null)
+      }
+    } else {
+      setReadingEntryCategory(isMonthlyExam ? null : exam.category)
+      setSelectedReadingCategory(exam.category)
+    }
     setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
@@ -18100,12 +18179,37 @@ function App() {
     const isMonthlyExam = isMonthlyReadingCollection(exam)
     const isJourneyExam = isReadingJourneyExamId(examId)
     const isFullTestExam = isReadingFullTestExamId(examId)
+    const isGeneralTrainingExam = isGeneralTrainingReadingExam(exam)
     setReadingWorkspaceMode('bank')
     setReadingEntryView(
-      isMonthlyExam ? 'monthly' : isFullTestExam ? 'full-test' : isJourneyExam ? 'journey' : 'levels'
+      isGeneralTrainingExam
+        ? 'general-training'
+        : isMonthlyExam
+          ? 'monthly'
+          : isFullTestExam
+            ? 'full-test'
+            : isJourneyExam
+              ? 'journey'
+              : 'levels'
     )
-    setReadingEntryCategory(isMonthlyExam || isFullTestExam ? null : exam.category)
-    setSelectedReadingCategory(exam.category)
+    if (isGeneralTrainingExam) {
+      setReadingEntryCategory('general-training')
+      setSelectedReadingCategory('general-training')
+      const meta = resolveGeneralTrainingExamMeta(exam)
+      if (meta.gtKind === 'full') {
+        setGeneralTrainingReadingView('full-test')
+        setGeneralTrainingSection(null)
+      } else if (meta.gtSection) {
+        setGeneralTrainingReadingView('section')
+        setGeneralTrainingSection(meta.gtSection as GeneralTrainingReadingSection)
+      } else {
+        setGeneralTrainingReadingView('hub')
+        setGeneralTrainingSection(null)
+      }
+    } else {
+      setReadingEntryCategory(isMonthlyExam || isFullTestExam ? null : exam.category)
+      setSelectedReadingCategory(exam.category)
+    }
     setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
@@ -19485,6 +19589,24 @@ function App() {
 
               <section className="listeningJourneySkills">
                 <div className="listeningJourneySkillsHeader">
+                  <h3>General Training</h3>
+                  <p className="meta">Reading available now · Listening &amp; Writing coming soon</p>
+                </div>
+                <button
+                  type="button"
+                  className="listeningSkillCard listeningSkillCard-generalTraining"
+                  onClick={openGeneralTrainingReadingHub}
+                >
+                  <span className="listeningSkillCardLabel">IELTS GT</span>
+                  <strong>{GENERAL_TRAINING_READING_LABEL}</strong>
+                  <p className="listeningSkillCardSubtitle">Section 1 · 2 · 3 · Full Test · 40 questions</p>
+                  <small>{GENERAL_TRAINING_READING_LEAD}</small>
+                  <span className="listeningSkillCardCount">{generalTrainingFullTestExams.length} full tests</span>
+                </button>
+              </section>
+
+              <section className="listeningJourneySkills">
+                <div className="listeningJourneySkillsHeader">
                   <h3>Practice by Skill</h3>
                 </div>
                 <div className="listeningSkillCardGrid">
@@ -20348,6 +20470,11 @@ function App() {
           }`}
         >
           <div key={readingViewTransitionKey} className="readingViewStage">
+          {!(
+            readingWorkspaceMode === 'bank' &&
+            readingAttemptStage === 'bank' &&
+            readingEntryView === 'general-training'
+          ) && (
           <div className="readingPageHeader">
             <div>
               <p className="sectionLabel">IELTS Reading</p>
@@ -20356,6 +20483,8 @@ function App() {
                   ? 'Reading Quest Log'
                   : readingEntryView === 'full-test'
                     ? READING_FULL_TEST_LABEL
+                    : readingEntryView === 'general-training'
+                      ? GENERAL_TRAINING_READING_LABEL
                   : selectedReadingEntryChoice
                     ? selectedReadingEntryChoice.title
                     : readingEntryView === 'monthly'
@@ -20367,18 +20496,33 @@ function App() {
                   ? 'สมุดภารกิจ Reading — เคลียร์แต่ละด่านที่ 80%+ เพื่อเปิดด่านถัดไป'
                   : readingEntryView === 'full-test'
                     ? READING_FULL_TEST_LEAD
+                    : readingEntryView === 'general-training'
+                      ? GENERAL_TRAINING_READING_LEAD
                   : selectedReadingEntryChoice
                     ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
                     : readingEntryView === 'monthly'
                       ? READING_MONTHLY_EXAM_LEAD
-                      : 'Normal Reading, Advanced Reading, and Monthly Exams are separate banks.'}
+                      : 'Normal Reading, Advanced Reading, General Training, and Monthly Exams are separate banks.'}
               </p>
             </div>
           </div>
+          )}
 
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && readingEntryView === 'levels' && (
             <div className="readingEntryShell">
               <div className="readingEntryChooser">
+                <button
+                  type="button"
+                  className="readingEntryCard readingEntryCard-generalTraining"
+                  style={{ '--motion-stagger': 0 } as CSSProperties}
+                  onClick={openGeneralTrainingReadingHub}
+                >
+                  <span className="readingEntryLabel">General Training</span>
+                  <strong>{GENERAL_TRAINING_READING_LABEL}</strong>
+                  <span className="readingEntrySubtitle">GT Reading · Section 1–3 · Full Test</span>
+                  <small>{GENERAL_TRAINING_READING_LEAD}</small>
+                  <span className="readingEntryCount">{generalTrainingFullTestExams.length} full tests · Sections 1–3</span>
+                </button>
                 {READING_ENTRY_CHOICES.map((choice) => {
                   const categoryCount = readingExamCountsByCategory.find((group) => group.category === choice.category)?.count || 0
                   return (
@@ -20389,7 +20533,7 @@ function App() {
                       style={
                         {
                           '--motion-stagger':
-                            choice.category === 'normal' ? 0 : choice.category === 'advanced' ? 1 : 2
+                            choice.category === 'normal' ? 1 : choice.category === 'advanced' ? 2 : 3
                         } as CSSProperties
                       }
                       onClick={() => openReadingCategoryBank(choice.category)}
@@ -20409,7 +20553,7 @@ function App() {
                 <button
                   type="button"
                   className="readingEntryCard readingEntryCard-monthly"
-                  style={{ '--motion-stagger': 3 } as CSSProperties}
+                  style={{ '--motion-stagger': 4 } as CSSProperties}
                   onClick={openReadingMonthlyBank}
                 >
                   <span className="readingEntryLabel">Monthly</span>
@@ -20421,7 +20565,7 @@ function App() {
                 <button
                   type="button"
                   className="readingEntryCard readingEntryCard-fullTest"
-                  style={{ '--motion-stagger': 4 } as CSSProperties}
+                  style={{ '--motion-stagger': 5 } as CSSProperties}
                   onClick={openReadingFullTestBank}
                 >
                   <span className="readingEntryLabel">Full Exam</span>
@@ -20431,6 +20575,24 @@ function App() {
                   <span className="readingEntryCount">{READING_FULL_TEST_CATALOG_SUMMARY}</span>
                 </button>
               </div>
+            </div>
+          )}
+
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && readingEntryView === 'general-training' && (
+            <div className="readingEntryShell">
+              <GeneralTrainingReadingPage
+                view={generalTrainingReadingView}
+                selectedSection={generalTrainingSection}
+                sectionExams={generalTrainingSectionExams}
+                fullTestExams={generalTrainingFullTestExams}
+                attemptByExamId={readingAttemptByExamId}
+                onBackToReadingCategories={() => openReadingLanding('levels')}
+                onOpenHub={openGeneralTrainingReadingHub}
+                onOpenSection={openGeneralTrainingReadingSection}
+                onOpenFullTests={openGeneralTrainingFullTests}
+                onStartExam={startReadingExam}
+                onOpenReport={(examId) => openReadingReview(examId, 'report')}
+              />
             </div>
           )}
 
@@ -20748,7 +20910,8 @@ function App() {
           {readingWorkspaceMode === 'bank' &&
             readingAttemptStage === 'bank' &&
             readingEntryCategory &&
-            readingEntryView !== 'journey' && (
+            readingEntryView !== 'journey' &&
+            readingEntryView !== 'general-training' && (
             <div className="readingBankWindow">
               <div className="readingBankWindowHeader">
                 <div>
@@ -21785,7 +21948,11 @@ function App() {
                       <div className="readingReportHeader">
                         <div>
                           <p className="readingQuestionNumber">Question {item.number}</p>
-                          <p className="readingQuestionPrompt">{item.prompt}</p>
+                          <p className="readingQuestionPrompt">
+                            {reportPassage && isReadingMatchingHeadingQuestion(reportPassage, item)
+                              ? getReadingHeadingParagraphStatement(reportPassage, item)
+                              : getReadingQuestionDisplayPrompt(reportPassage, item) || item.prompt}
+                          </p>
                         </div>
                         <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
                           {item.isCorrect ? 'Correct' : 'Wrong'}
@@ -21855,7 +22022,19 @@ function App() {
         </section>
       ) : activePage === 'writing' ? (
         canAccessWriting ? (
-          <WritingGuidePage onBackHome={() => setActivePage('home')} />
+          <>
+            <section className="panel full gtWritingBridgePanel">
+              <div className="gtWritingBridgeCard">
+                <p className="sectionLabel">General Training</p>
+                <h3>{GENERAL_TRAINING_READING_LABEL}</h3>
+                <p>{GENERAL_TRAINING_READING_LEAD}</p>
+                <button type="button" onClick={openGeneralTrainingReadingHub}>
+                  Open GT Reading (Section 1–3 &amp; Full Test)
+                </button>
+              </div>
+            </section>
+            <WritingGuidePage onBackHome={() => setActivePage('home')} />
+          </>
         ) : (
           <section className="panel full">
             <div className="emptyState">
@@ -23930,31 +24109,6 @@ function App() {
                           ) : null}
                         </div>
                       ) : null}
-                      {adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3' ? (
-                        <div className="adminVideoTargetPanel">
-                          <div>
-                            <strong>Band target</strong>
-                            <span>
-                              {adminSelectedWordCountTarget
-                                ? `${adminSelectedWordCountTarget.min}-${adminSelectedWordCountTarget.max} words · ${adminSelectedWordCountTarget.label}`
-                                : 'Choose a target'}
-                            </span>
-                          </div>
-                          <div className="adminVideoSegmented">
-                            {(['band6', 'band7', 'band8'] as const).map((preset) => (
-                              <button
-                                key={`word-preset-${preset}`}
-                                type="button"
-                                className={adminWordCountPreset === preset ? 'active' : ''}
-                                onClick={() => setAdminWordCountPreset(preset)}
-                                disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                              >
-                                {preset.replace('band', 'Band ')}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ) : null}
                       <div className="adminVideoDeviceGrid">
                         <label className="adminSearchField">
                           <span>Camera source</span>
@@ -24242,21 +24396,6 @@ function App() {
                             <span>{adminPart2RecordingRemainingSeconds <= 10 ? 'Timeout soon' : 'Part 2 time left'}</span>
                             <strong>{formatAdminCountdownClock(adminPart2RecordingRemainingSeconds)}</strong>
                             <small>Auto stop at 00:00</small>
-                          </div>
-                        ) : null}
-                        {adminVideoRecorderStatus === 'recording' && adminWordCountFeedback ? (
-                          <div
-                            className={`adminVideoWordCountOverlay ${adminWordCountFeedback.isGood ? 'is-good' : 'is-alert'}`}
-                            aria-live="polite"
-                          >
-                            <span>
-                              {adminSelectedVideoTopic?.samplePart === 'part1' ? 'Part 1' : 'Part 3'} question word count
-                            </span>
-                            <strong>{adminCurrentQuestionSpokenWordCount}</strong>
-                            <small>
-                              {adminWordCountFeedback.label} · {adminWordCountFeedback.target.min}-{adminWordCountFeedback.target.max} target
-                            </small>
-                            <em>{adminWordCountFeedback.hint}</em>
                           </div>
                         ) : null}
                         {adminRecordCountdown !== null && adminRecordCountdown > 0 ? (
