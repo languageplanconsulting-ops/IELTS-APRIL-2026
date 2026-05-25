@@ -1,4 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { SpeakingSampleKnowledgeOverlay } from './SpeakingSampleKnowledgeOverlay'
+import {
+  enrichSpeakingSampleSubtitlesWithNotes,
+  getRevealedSpeakingSampleSubtitleNotes,
+  isSpeakingSampleSubtitlePhraseRevealed,
+  type SpeakingSampleSubtitleCue
+} from './speakingSampleSubtitleNotes'
 import {
   getSpeakingPart2SampleEmbedUrl,
   getSpeakingPart2SampleThumbUrl,
@@ -20,34 +27,27 @@ const DEFAULT_SAMPLE_SUBTITLE_STYLE = {
 
 const normalizeSampleSubtitleNoteText = (value: string) => String(value || '').trim().replace(/\s+/g, ' ')
 
-const estimateSampleSubtitleNoteRevealSeconds = (
-  cue: { startSeconds: number; endSeconds: number; text: string },
-  phrase: string
-) => {
-  const text = normalizeSampleSubtitleNoteText(cue.text)
-  const normalizedPhrase = normalizeSampleSubtitleNoteText(phrase)
-  const duration = Math.max(0.12, cue.endSeconds - cue.startSeconds)
-  if (!text || !normalizedPhrase) return cue.startSeconds
-  const phraseIndex = text.toLowerCase().indexOf(normalizedPhrase.toLowerCase())
-  if (phraseIndex < 0) return cue.startSeconds
-  const phraseProgress = Math.min(0.95, Math.max(0, phraseIndex / Math.max(1, text.length)))
-  return cue.startSeconds + duration * phraseProgress
-}
-
 const normalizeSampleSubtitleNotes = (notes: SpeakingPart2SampleSubtitleNote[] | undefined) =>
   Array.isArray(notes)
     ? notes
         .map((note) => ({
           id: String(note.id || note.phrase || '').slice(0, 120),
           phrase: normalizeSampleSubtitleNoteText(note.phrase).slice(0, 160),
-          detail: String(note.detail || '').trim().slice(0, 800)
+          detail: String(note.detail || '').trim().slice(0, 800),
+          kind: note.kind,
+          partOfSpeech: note.partOfSpeech,
+          thaiMeaning: note.thaiMeaning,
+          grammarRule: note.grammarRule,
+          exampleSentence: note.exampleSentence
         }))
-        .filter((note) => note.phrase && note.detail)
+        .filter((note) => note.phrase && (note.detail || note.thaiMeaning || note.grammarRule))
     : []
 
 const renderSampleSubtitleTextWithNotes = (
   text: string,
-  notes: SpeakingPart2SampleSubtitleNote[] | undefined
+  notes: SpeakingPart2SampleSubtitleNote[] | undefined,
+  cue?: Pick<SpeakingSampleSubtitleCue, 'startSeconds' | 'endSeconds' | 'text'>,
+  videoTime = 0
 ) => {
   const subtitleText = String(text || '')
   const normalizedNotes = normalizeSampleSubtitleNotes(notes)
@@ -60,10 +60,11 @@ const renderSampleSubtitleTextWithNotes = (
       return {
         id: note.id,
         phrase,
-        start: lowerText.indexOf(phrase.toLowerCase())
+        start: lowerText.indexOf(phrase.toLowerCase()),
+        revealed: cue ? isSpeakingSampleSubtitlePhraseRevealed(cue, phrase, videoTime) : true
       }
     })
-    .filter((match) => match.phrase && match.start >= 0)
+    .filter((match) => match.phrase && match.start >= 0 && match.revealed)
     .sort((a, b) => a.start - b.start || b.phrase.length - a.phrase.length)
 
   const pieces: ReactNode[] = []
@@ -112,29 +113,22 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
   const thumbUrl = sample.driveFileId ? getSpeakingPart2SampleThumbUrl(sample.driveFileId) : ''
   const hasUploadedVideo = Boolean(sample.videoUrl)
   const isVideoFlipped = Boolean(sample.videoFlipHorizontal || sample.subtitleStyle?.videoFlipHorizontal)
-  const uploadedSubtitles = useMemo(
-    () =>
-      (sample.subtitles || [])
-        .filter((cue) => cue.text && cue.endSeconds > cue.startSeconds)
-        .sort((a, b) => a.startSeconds - b.startSeconds),
-    [sample.subtitles]
-  )
+  const uploadedSubtitles = useMemo(() => {
+    const base = (sample.subtitles || [])
+      .filter((cue) => cue.text && cue.endSeconds > cue.startSeconds)
+      .sort((a, b) => a.startSeconds - b.startSeconds) as SpeakingSampleSubtitleCue[]
+    return enrichSpeakingSampleSubtitlesWithNotes(base, sample.transcript || '')
+  }, [sample.subtitles, sample.transcript])
   const trimStartSeconds = Math.max(0, Number(sample.trimStartSeconds || 0))
   const trimEndSeconds = Math.max(trimStartSeconds, Number(sample.trimEndSeconds || 0))
   const hasTrim = Boolean(hasUploadedVideo && trimEndSeconds > trimStartSeconds)
   const activeSubtitleCue = uploadedSubtitles.find(
     (cue) => videoTime >= cue.startSeconds && videoTime < cue.endSeconds
   )
-  const visibleSubtitleNotes = uploadedSubtitles.flatMap((cue) =>
-    normalizeSampleSubtitleNotes(cue.notes)
-      .filter((note) => videoTime >= estimateSampleSubtitleNoteRevealSeconds(cue, note.phrase) - 0.02)
-      .filter(() => videoTime <= cue.endSeconds + 0.45)
-      .map((note) => ({
-        ...note,
-        cueId: cue.id,
-        revealSeconds: estimateSampleSubtitleNoteRevealSeconds(cue, note.phrase)
-      }))
-  ).sort((a, b) => b.revealSeconds - a.revealSeconds).slice(0, 3)
+  const visibleSubtitleNotes = useMemo(
+    () => getRevealedSpeakingSampleSubtitleNotes(uploadedSubtitles, videoTime),
+    [uploadedSubtitles, videoTime]
+  )
   const subtitleStyle = {
     ...DEFAULT_SAMPLE_SUBTITLE_STYLE,
     ...(sample.subtitleStyle || {})
@@ -290,25 +284,22 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
             ) : null}
             {activeSubtitleCue?.text ? (
               <div className="speakingP2SampleSubtitleOverlay" style={subtitleOverlayStyle}>
-                <span>{renderSampleSubtitleTextWithNotes(activeSubtitleCue.text, activeSubtitleCue.notes)}</span>
+                <span>
+                  {renderSampleSubtitleTextWithNotes(
+                    activeSubtitleCue.text,
+                    activeSubtitleCue.notes,
+                    activeSubtitleCue,
+                    videoTime
+                  )}
+                </span>
               </div>
             ) : null}
             {visibleSubtitleNotes.length > 0 ? (
-              <div className="speakingP2SampleKnowledgeStack" aria-label="Vocabulary notes">
-                {visibleSubtitleNotes.map((note, index) => (
-                  <article
-                    key={`${note.cueId}-${note.id}`}
-                    className="speakingP2SampleKnowledgeCard"
-                    style={{
-                      animationDelay: `${Math.min(index, 8) * 70}ms`,
-                      zIndex: visibleSubtitleNotes.length - index
-                    }}
-                  >
-                    <strong>{note.phrase}</strong>
-                    <p>{note.detail}</p>
-                  </article>
-                ))}
-              </div>
+              <SpeakingSampleKnowledgeOverlay
+                notes={visibleSubtitleNotes}
+                className="speakingP2SampleKnowledgeStack"
+                cardClassName="speakingP2SampleKnowledgeCard"
+              />
             ) : null}
           </>
         ) : !isPlaying ? (

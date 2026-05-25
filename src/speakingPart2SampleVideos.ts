@@ -27,7 +27,12 @@ export type SpeakingPart2SampleSubtitleCue = {
 export type SpeakingPart2SampleSubtitleNote = {
   id: string
   phrase: string
-  detail: string
+  detail?: string
+  kind?: 'vocabulary' | 'grammar'
+  partOfSpeech?: string
+  thaiMeaning?: string
+  grammarRule?: string
+  exampleSentence?: string
 }
 
 export type SpeakingPart2SampleSubtitleStyle = {

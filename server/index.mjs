@@ -1278,9 +1278,18 @@ const normalizeSpeakingSampleSubtitleNotes = (value) => {
     .map((item, index) => ({
       id: String(item?.id || `note-${index + 1}`).slice(0, 120),
       phrase: normalizeSpeakingSampleSubtitleNoteText(item?.phrase || item?.word || item?.term || '').slice(0, 160),
-      detail: String(item?.detail || item?.explanation || item?.description || '').trim().slice(0, 800)
+      detail: String(item?.detail || item?.explanation || item?.description || '').trim().slice(0, 800),
+      kind: item?.kind === 'grammar' || item?.kind === 'vocabulary' ? item.kind : undefined,
+      partOfSpeech: String(item?.partOfSpeech || item?.part_of_speech || '').trim().slice(0, 40),
+      thaiMeaning: String(item?.thaiMeaning || item?.thai_meaning || '').trim().slice(0, 240),
+      grammarRule: String(item?.grammarRule || item?.grammar_rule || '').trim().slice(0, 120),
+      exampleSentence: String(item?.exampleSentence || item?.example_sentence || '').trim().slice(0, 240)
     }))
-    .filter((item) => item.phrase && item.detail)
+    .filter(
+      (item) =>
+        item.phrase &&
+        (item.detail || item.thaiMeaning || item.grammarRule || item.partOfSpeech)
+    )
 }
 
 const normalizeSpeakingSampleSubtitles = (value) => {

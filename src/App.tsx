@@ -86,11 +86,19 @@ import {
 } from './listeningJourney'
 import { resolveListeningFoundationAudioscript } from './listeningFoundationAudioscript'
 import { SpeakingPart2SampleBadge, SpeakingPart2SamplePanel } from './SpeakingPart2SampleVideo'
+import { SpeakingSampleKnowledgeOverlay } from './SpeakingSampleKnowledgeOverlay'
+import {
+  enrichSpeakingSampleSubtitlesWithNotes,
+  getRevealedSpeakingSampleSubtitleNotes,
+  isSpeakingSampleSubtitlePhraseRevealed,
+  suggestSpeakingSampleSubtitleNotes
+} from './speakingSampleSubtitleNotes'
 import {
   createUploadedSpeakingPart2SampleVideo,
   resolveSpeakingPart2SampleVideo,
   type SpeakingPart2SampleVideo
 } from './speakingPart2SampleVideos'
+import { speakingSampleSubtitleNotesToVocabularyGuideItems } from './speakingSampleSubtitleNotes'
 import {
   ADMIN_VIDEO_STUDIO_STEPS,
   buildUploadChecklist,
@@ -643,23 +651,12 @@ type AdminSubtitleCue = {
 type AdminSubtitleNote = {
   id: string
   phrase: string
-  detail: string
-}
-
-const normalizeSubtitleNoteTimingText = (value: string) => String(value || '').trim().replace(/\s+/g, ' ')
-
-const estimateSubtitleNoteRevealSeconds = (
-  cue: { startSeconds: number; endSeconds: number; text: string },
-  phrase: string
-) => {
-  const text = normalizeSubtitleNoteTimingText(cue.text)
-  const normalizedPhrase = normalizeSubtitleNoteTimingText(phrase)
-  const duration = Math.max(0.12, cue.endSeconds - cue.startSeconds)
-  if (!text || !normalizedPhrase) return cue.startSeconds
-  const phraseIndex = text.toLowerCase().indexOf(normalizedPhrase.toLowerCase())
-  if (phraseIndex < 0) return cue.startSeconds
-  const phraseProgress = Math.min(0.95, Math.max(0, phraseIndex / Math.max(1, text.length)))
-  return cue.startSeconds + duration * phraseProgress
+  detail?: string
+  kind?: 'vocabulary' | 'grammar'
+  partOfSpeech?: string
+  thaiMeaning?: string
+  grammarRule?: string
+  exampleSentence?: string
 }
 
 const buildSpeakingSampleQuestionId = (part: 'part1' | 'part3', topicId: string, questionIndex: number) =>
@@ -712,6 +709,11 @@ type AdminSubtitleNoteDraft = {
   noteId: string
   phrase: string
   detail: string
+  kind: 'vocabulary' | 'grammar'
+  partOfSpeech: string
+  thaiMeaning: string
+  grammarRule: string
+  exampleSentence: string
 }
 
 type AdminSubtitleStyle = {
@@ -1017,7 +1019,7 @@ type RecommendationItem = {
   level: RecommendationLevel
   phrase: string
   tip: string
-  source?: 'topic' | 'intent' | 'general'
+  source?: 'sample' | 'topic' | 'intent' | 'general'
 }
 
 type AnswerReviewModalState = {
@@ -3140,6 +3142,10 @@ const RECOMMENDATION_SOURCE_META: Record<
   NonNullable<RecommendationItem['source']>,
   { label: string; detail: string }
 > = {
+  sample: {
+    label: 'From sample answer',
+    detail: 'คำศัพท์และไวยากรณ์ที่ไฮไลต์ในวิดีโอตัวอย่าง'
+  },
   topic: {
     label: 'Topic-specific vocabulary',
     detail: 'คำ/วลีเฉพาะหัวข้อ'
@@ -3154,7 +3160,12 @@ const RECOMMENDATION_SOURCE_META: Record<
   }
 }
 
-const RECOMMENDATION_SOURCE_ORDER: Array<NonNullable<RecommendationItem['source']>> = ['topic', 'intent', 'general']
+const RECOMMENDATION_SOURCE_ORDER: Array<NonNullable<RecommendationItem['source']>> = [
+  'sample',
+  'topic',
+  'intent',
+  'general'
+]
 
 const dedupeRecommendations = (items: RecommendationItem[]) => {
   const seen = new Set<string>()
@@ -3214,6 +3225,18 @@ const getPart2Recommendations = (prompt: string, cues: string[] = []) => {
     ...markRecommendationSource(matched, 'topic'),
     ...markRecommendationSource(PART2_GENERIC_RECOMMENDATIONS, 'general')
   ]).slice(0, 14)
+}
+
+const mergePart2RecommendationsWithSample = (
+  base: RecommendationItem[],
+  sample: Pick<SpeakingPart2SampleVideo, 'subtitles'> | null
+) => {
+  const sampleItems = markRecommendationSource(
+    speakingSampleSubtitleNotesToVocabularyGuideItems(sample?.subtitles || []),
+    'sample'
+  )
+  if (!sampleItems.length) return base
+  return dedupeRecommendations([...sampleItems, ...base]).slice(0, 16)
 }
 
 const getPart1Recommendations = (question: string, extraContext: string[] = []) => {
@@ -7409,7 +7432,12 @@ function App() {
     cueId: '',
     noteId: '',
     phrase: '',
-    detail: ''
+    detail: '',
+    kind: 'vocabulary',
+    partOfSpeech: '',
+    thaiMeaning: '',
+    grammarRule: '',
+    exampleSentence: ''
   })
   const [isAdminBackendTranscribing, setIsAdminBackendTranscribing] = useState(false)
   const [adminVideoRecorderMessage, setAdminVideoRecorderMessage] = useState('')
@@ -10280,21 +10308,16 @@ function App() {
     adminVideoPreviewMode !== 'source' &&
     adminVideoPreviewMode !== 'noSubtitles' &&
     adminVideoPreviewMode !== 'trimmed'
+  const adminEnrichedSubtitleCues = useMemo(
+    () =>
+      enrichSpeakingSampleSubtitlesWithNotes(
+        adminSubtitleCues,
+        adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || ''
+      ),
+    [adminSubtitleCues, adminSubtitleTranscript, adminSelectedVideoAsset?.transcript]
+  )
   const adminVisibleSubtitleNotes = shouldShowAdminSubtitleKnowledgeNotes
-    ? adminSubtitleCues.flatMap((cue) =>
-        (cue.notes || [])
-          .filter((note) => {
-            if (!note.phrase || !note.detail) return false
-            const revealSeconds = estimateSubtitleNoteRevealSeconds(cue, note.phrase)
-            return adminVideoPreviewTime >= revealSeconds - 0.02 && adminVideoPreviewTime <= cue.endSeconds + 0.45
-          })
-          .map((note) => ({
-            ...note,
-            cueId: cue.id,
-            startSeconds: cue.startSeconds,
-            revealSeconds: estimateSubtitleNoteRevealSeconds(cue, note.phrase)
-          }))
-      ).sort((a, b) => b.revealSeconds - a.revealSeconds).slice(0, 3)
+    ? getRevealedSpeakingSampleSubtitleNotes(adminEnrichedSubtitleCues, adminVideoPreviewTime)
     : []
   const adminVideoStatusLabel = getAdminVideoStatusLabel(adminVideoRecorderStatus, adminRecordCountdown)
   const adminSubtitleTimelineDuration = Math.max(
@@ -10609,19 +10632,31 @@ function App() {
     isQuestionByQuestionMode,
     selectedTestMode
   ])
-  const standalonePart2Recommendations = useMemo(
-    () => (selectedTestMode === 'part2' && activeTopic ? getPart2Recommendations(activeTopic.prompt, activeTopic.cues) : []),
-    [selectedTestMode, activeTopic]
-  )
-  const fullExamPart2Recommendations = useMemo(
-    () => (isFullExamMode ? getPart2Recommendations(fullExamPlan.part2Prompt, activeTopic?.cues || []) : []),
-    [isFullExamMode, fullExamPlan.part2Prompt, activeTopic]
-  )
   const activePart2SampleVideo = useMemo(() => {
     if (!activeTopic) return null
     const prompt = isFullExamMode ? fullExamPlan.part2Prompt : activeTopic.prompt
     return getSpeakingSampleForTopic(activeTopic, prompt)
   }, [activeTopic, isFullExamMode, fullExamPlan.part2Prompt, speakingSampleVideoAssets])
+  const standalonePart2Recommendations = useMemo(
+    () =>
+      selectedTestMode === 'part2' && activeTopic
+        ? mergePart2RecommendationsWithSample(
+            getPart2Recommendations(activeTopic.prompt, activeTopic.cues),
+            activePart2SampleVideo
+          )
+        : [],
+    [selectedTestMode, activeTopic, activePart2SampleVideo]
+  )
+  const fullExamPart2Recommendations = useMemo(
+    () =>
+      isFullExamMode
+        ? mergePart2RecommendationsWithSample(
+            getPart2Recommendations(fullExamPlan.part2Prompt, activeTopic?.cues || []),
+            activePart2SampleVideo
+          )
+        : [],
+    [isFullExamMode, fullExamPlan.part2Prompt, activeTopic, activePart2SampleVideo]
+  )
   const activeQuestionSampleVideo = useMemo(() => {
     if (!activeTopic || !activeQuestion || !isQuestionByQuestionMode) return null
     if (selectedTestMode !== 'part1' && selectedTestMode !== 'part3') return null
@@ -13035,11 +13070,69 @@ function App() {
           .map((note) => ({
             id: String(note.id || createAdminSubtitleNoteId()).slice(0, 120),
             phrase: normalizeAdminSubtitleNoteText(note.phrase).slice(0, 160),
-            detail: String(note.detail || '').trim().slice(0, 800)
+            detail: String(note.detail || '').trim().slice(0, 800),
+            kind: note.kind,
+            partOfSpeech: String(note.partOfSpeech || '').trim().slice(0, 40),
+            thaiMeaning: String(note.thaiMeaning || '').trim().slice(0, 240),
+            grammarRule: String(note.grammarRule || '').trim().slice(0, 120),
+            exampleSentence: String(note.exampleSentence || '').trim().slice(0, 240)
           }))
-          .filter((note) => note.phrase && note.detail)
+          .filter(
+            (note) =>
+              note.phrase &&
+              (note.detail || note.thaiMeaning || note.grammarRule || note.partOfSpeech)
+          )
           .slice(0, 12)
       : []
+
+  const buildAdminSubtitleNoteDetail = (draft: AdminSubtitleNoteDraft) => {
+    if (draft.kind === 'grammar') {
+      const grammarRule = normalizeAdminSubtitleNoteText(draft.grammarRule)
+      const thai = String(draft.thaiMeaning || '').trim()
+      const example = normalizeAdminSubtitleNoteText(draft.exampleSentence || draft.phrase)
+      if (!grammarRule || !thai) return ''
+      return `${grammarRule} · ${thai}${example ? ` · "${example}"` : ''}`
+    }
+    const phrase = normalizeAdminSubtitleNoteText(draft.phrase)
+    const partOfSpeech = normalizeAdminSubtitleNoteText(draft.partOfSpeech)
+    const thai = String(draft.thaiMeaning || '').trim()
+    if (!phrase || !partOfSpeech || !thai) return String(draft.detail || '').trim()
+    return `${phrase} · ${partOfSpeech} · ${thai}`
+  }
+
+  const applyAutoSuggestedSubtitleNotes = () => {
+    if (!adminSubtitleCues.length) {
+      setAdminSubtitleDraftMessage('Add or generate subtitles first.')
+      return
+    }
+    rememberAdminSubtitleEdit()
+    const suggestions = suggestSpeakingSampleSubtitleNotes(
+      adminSubtitleCues,
+      adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || ''
+    )
+    if (!suggestions.length) {
+      setAdminSubtitleDraftMessage('No B1-B2 vocabulary or grammar highlights found in this transcript.')
+      return
+    }
+    const enriched = enrichSpeakingSampleSubtitlesWithNotes(
+      adminSubtitleCues,
+      adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || ''
+    )
+    setAdminSubtitleCuesSafe(
+      enriched.map((cue) => ({
+        ...cue,
+        notes: (cue.notes || []).map((note) => ({
+          ...note,
+          detail:
+            note.detail ||
+            (note.kind === 'grammar'
+              ? `${note.grammarRule || ''} · ${note.thaiMeaning || ''}`.trim()
+              : `${note.phrase} · ${note.partOfSpeech || ''} · ${note.thaiMeaning || ''}`.trim())
+        }))
+      })) as AdminSubtitleCue[]
+    )
+    setAdminSubtitleDraftMessage(`Added ${suggestions.length} auto-suggested B1-B2 notes. Review and edit before publish.`)
+  }
 
   const filterAdminSubtitleNotesForText = (notes: AdminSubtitleNote[] | undefined, text: string) => {
     const normalizedText = normalizeAdminSubtitleNoteText(text).toLowerCase()
@@ -13260,9 +13353,9 @@ function App() {
   const saveAdminSubtitleKnowledgeNote = () => {
     const cueId = adminSubtitleNoteDraft.cueId || adminSelectedSubtitleCue?.id || ''
     const phrase = normalizeAdminSubtitleNoteText(adminSubtitleNoteDraft.phrase).slice(0, 160)
-    const detail = String(adminSubtitleNoteDraft.detail || '').trim().slice(0, 800)
+    const detail = buildAdminSubtitleNoteDetail(adminSubtitleNoteDraft) || String(adminSubtitleNoteDraft.detail || '').trim().slice(0, 800)
     if (!cueId || !phrase || !detail) {
-      setAdminSubtitleDraftMessage('Select a subtitle phrase and add detail before saving the note.')
+      setAdminSubtitleDraftMessage('Select a subtitle phrase and complete the vocabulary or grammar fields before saving.')
       return
     }
     rememberAdminSubtitleEdit()
@@ -13272,7 +13365,16 @@ function App() {
         if (cue.id !== cueId) return cue
         const notes = normalizeAdminSubtitleNotes(cue.notes)
         const existingIndex = notes.findIndex((note) => note.id === noteId)
-        const nextNote: AdminSubtitleNote = { id: noteId, phrase, detail }
+        const nextNote: AdminSubtitleNote = {
+          id: noteId,
+          phrase,
+          detail,
+          kind: adminSubtitleNoteDraft.kind,
+          partOfSpeech: adminSubtitleNoteDraft.partOfSpeech,
+          thaiMeaning: adminSubtitleNoteDraft.thaiMeaning,
+          grammarRule: adminSubtitleNoteDraft.grammarRule,
+          exampleSentence: adminSubtitleNoteDraft.exampleSentence
+        }
         const nextNotes =
           existingIndex >= 0
             ? notes.map((note) => (note.id === noteId ? nextNote : note))
@@ -13284,7 +13386,17 @@ function App() {
       })
     )
     setAdminSelectedSubtitleCueId(cueId)
-    setAdminSubtitleNoteDraft({ cueId, noteId: '', phrase: '', detail: '' })
+    setAdminSubtitleNoteDraft({
+      cueId,
+      noteId: '',
+      phrase: '',
+      detail: '',
+      kind: 'vocabulary',
+      partOfSpeech: '',
+      thaiMeaning: '',
+      grammarRule: '',
+      exampleSentence: ''
+    })
     setAdminSubtitleDraftMessage(`Detail saved for "${phrase}".`)
   }
 
@@ -13294,7 +13406,12 @@ function App() {
       cueId,
       noteId: note.id,
       phrase: note.phrase,
-      detail: note.detail
+      detail: note.detail || '',
+      kind: note.kind || (note.grammarRule ? 'grammar' : 'vocabulary'),
+      partOfSpeech: note.partOfSpeech || '',
+      thaiMeaning: note.thaiMeaning || '',
+      grammarRule: note.grammarRule || '',
+      exampleSentence: note.exampleSentence || note.phrase
     })
   }
 
@@ -13311,7 +13428,17 @@ function App() {
       )
     )
     if (adminSubtitleNoteDraft.noteId === noteId) {
-      setAdminSubtitleNoteDraft({ cueId, noteId: '', phrase: '', detail: '' })
+      setAdminSubtitleNoteDraft({
+        cueId,
+        noteId: '',
+        phrase: '',
+        detail: '',
+        kind: 'vocabulary',
+        partOfSpeech: '',
+        thaiMeaning: '',
+        grammarRule: '',
+        exampleSentence: ''
+      })
     }
     setAdminSubtitleDraftMessage('Subtitle detail removed.')
   }
@@ -18909,7 +19036,9 @@ function App() {
 
   const renderAdminSubtitleTextWithNotes = (
     text: string,
-    notes: AdminSubtitleNote[] | undefined
+    notes: AdminSubtitleNote[] | undefined,
+    cue?: { startSeconds: number; endSeconds: number; text: string },
+    videoTime = 0
   ): ReactNode => {
     const normalizedText = String(text || '')
     const normalizedNotes = normalizeAdminSubtitleNotes(notes)
@@ -18922,10 +19051,11 @@ function App() {
         return {
           id: note.id,
           phrase,
-          start: lowerText.indexOf(phrase.toLowerCase())
+          start: lowerText.indexOf(phrase.toLowerCase()),
+          revealed: cue ? isSpeakingSampleSubtitlePhraseRevealed(cue, phrase, videoTime) : true
         }
       })
-      .filter((match) => match.phrase && match.start >= 0)
+      .filter((match) => match.phrase && match.start >= 0 && match.revealed)
       .sort((a, b) => a.start - b.start || b.phrase.length - a.phrase.length)
 
     const pieces: ReactNode[] = []
@@ -24419,25 +24549,22 @@ function App() {
                             onClick={() => focusAdminSubtitleCueEditor(adminActiveSubtitleCue.id)}
                             aria-label="Edit active subtitle line"
                           >
-                            <span>{renderAdminSubtitleTextWithNotes(adminActiveSubtitleCue.text, adminActiveSubtitleCue.notes)}</span>
+                            <span>
+                              {renderAdminSubtitleTextWithNotes(
+                                adminActiveSubtitleCue.text,
+                                adminActiveSubtitleCue.notes,
+                                adminActiveSubtitleCue,
+                                adminVideoPreviewTime
+                              )}
+                            </span>
                           </button>
                         ) : null}
                         {adminVisibleSubtitleNotes.length > 0 ? (
-                          <div className="adminVideoKnowledgeStack" aria-label="Highlighted subtitle details">
-                            {adminVisibleSubtitleNotes.map((note, index) => (
-                              <article
-                                key={`${note.cueId}-${note.id}`}
-                                className="adminVideoKnowledgeCard"
-                                style={{
-                                  animationDelay: `${Math.min(index, 8) * 70}ms`,
-                                  zIndex: adminVisibleSubtitleNotes.length - index
-                                }}
-                              >
-                                <strong>{note.phrase}</strong>
-                                <p>{note.detail}</p>
-                              </article>
-                            ))}
-                          </div>
+                          <SpeakingSampleKnowledgeOverlay
+                            notes={adminVisibleSubtitleNotes}
+                            className="adminVideoKnowledgeStack"
+                            cardClassName="adminVideoKnowledgeCard"
+                          />
                         ) : null}
                       </div>
                       {adminRecordedVideoUrl ? (
@@ -25121,10 +25248,13 @@ function App() {
                               <div className="adminTtsLibraryHeader">
                                 <div>
                                   <h4>Highlighted Details</h4>
-                                  <p className="meta">These yellow notes pop up in the center when the selected phrase arrives.</p>
+                                  <p className="meta">Yellow cards appear in the upper-left when the highlighted phrase is spoken.</p>
                                 </div>
                                 <div className="adminSubtitleKnowledgeHeaderActions">
                                   <span className="adminReadyDot">{adminSelectedSubtitleCue.notes?.length || 0} details</span>
+                                  <button type="button" className="secondary adminStudioButton-soft" onClick={applyAutoSuggestedSubtitleNotes}>
+                                    Auto B1-B2 notes
+                                  </button>
                                   <button type="button" className="secondary adminStudioButton-soft" onClick={useSelectedSubtitleTextForNote}>
                                     Use selected text
                                   </button>
@@ -25137,10 +25267,26 @@ function App() {
                                 </div>
                               ) : (
                                 <p className="meta adminSubtitleKnowledgeHint">
-                                  Highlight a word or phrase inside a subtitle line, then click Use selected text. Students see it in a #FFC000 card above the subtitle.
+                                  Highlight a word or phrase inside a subtitle line, choose Vocabulary or Grammar, then fill the fields below.
                                 </p>
                               )}
                               <div className="adminSubtitleKnowledgeForm">
+                                <label>
+                                  <span>Type</span>
+                                  <select
+                                    value={adminSubtitleNoteDraft.cueId === adminSelectedSubtitleCue.id ? adminSubtitleNoteDraft.kind : 'vocabulary'}
+                                    onChange={(event) =>
+                                      setAdminSubtitleNoteDraft((current) => ({
+                                        ...current,
+                                        cueId: adminSelectedSubtitleCue.id,
+                                        kind: event.target.value === 'grammar' ? 'grammar' : 'vocabulary'
+                                      }))
+                                    }
+                                  >
+                                    <option value="vocabulary">Vocabulary</option>
+                                    <option value="grammar">Grammar</option>
+                                  </select>
+                                </label>
                                 <label>
                                   <span>Phrase</span>
                                   <input
@@ -25154,11 +25300,91 @@ function App() {
                                         phrase: event.target.value
                                       }))
                                     }
-                                    placeholder="tech savvy"
+                                    placeholder="eye-catching"
                                   />
                                 </label>
+                                {adminSubtitleNoteDraft.cueId === adminSelectedSubtitleCue.id &&
+                                adminSubtitleNoteDraft.kind === 'vocabulary' ? (
+                                  <>
+                                    <label>
+                                      <span>Part of speech</span>
+                                      <input
+                                        type="text"
+                                        value={adminSubtitleNoteDraft.partOfSpeech}
+                                        onChange={(event) =>
+                                          setAdminSubtitleNoteDraft((current) => ({
+                                            ...current,
+                                            cueId: adminSelectedSubtitleCue.id,
+                                            partOfSpeech: event.target.value
+                                          }))
+                                        }
+                                        placeholder="adj."
+                                      />
+                                    </label>
+                                    <label>
+                                      <span>Thai meaning</span>
+                                      <textarea
+                                        value={adminSubtitleNoteDraft.thaiMeaning}
+                                        onChange={(event) =>
+                                          setAdminSubtitleNoteDraft((current) => ({
+                                            ...current,
+                                            cueId: adminSelectedSubtitleCue.id,
+                                            thaiMeaning: event.target.value
+                                          }))
+                                        }
+                                        placeholder="ดึงดูดสายตา / โดดเด่น"
+                                      />
+                                    </label>
+                                  </>
+                                ) : adminSubtitleNoteDraft.cueId === adminSelectedSubtitleCue.id ? (
+                                  <>
+                                    <label>
+                                      <span>Grammar rule</span>
+                                      <input
+                                        type="text"
+                                        value={adminSubtitleNoteDraft.grammarRule}
+                                        onChange={(event) =>
+                                          setAdminSubtitleNoteDraft((current) => ({
+                                            ...current,
+                                            cueId: adminSelectedSubtitleCue.id,
+                                            grammarRule: event.target.value
+                                          }))
+                                        }
+                                        placeholder="S + V2"
+                                      />
+                                    </label>
+                                    <label>
+                                      <span>Thai explanation</span>
+                                      <textarea
+                                        value={adminSubtitleNoteDraft.thaiMeaning}
+                                        onChange={(event) =>
+                                          setAdminSubtitleNoteDraft((current) => ({
+                                            ...current,
+                                            cueId: adminSelectedSubtitleCue.id,
+                                            thaiMeaning: event.target.value
+                                          }))
+                                        }
+                                        placeholder="past simple — พูดถึงอดีตปกติ"
+                                      />
+                                    </label>
+                                    <label>
+                                      <span>Example sentence</span>
+                                      <textarea
+                                        value={adminSubtitleNoteDraft.exampleSentence}
+                                        onChange={(event) =>
+                                          setAdminSubtitleNoteDraft((current) => ({
+                                            ...current,
+                                            cueId: adminSelectedSubtitleCue.id,
+                                            exampleSentence: event.target.value
+                                          }))
+                                        }
+                                        placeholder="I visited the workplace last year."
+                                      />
+                                    </label>
+                                  </>
+                                ) : null}
                                 <label>
-                                  <span>Detail</span>
+                                  <span>Preview detail</span>
                                   <textarea
                                     value={adminSubtitleNoteDraft.cueId === adminSelectedSubtitleCue.id ? adminSubtitleNoteDraft.detail : ''}
                                     onChange={(event) =>
@@ -25169,7 +25395,7 @@ function App() {
                                         detail: event.target.value
                                       }))
                                     }
-                                    placeholder="tech savvy (adj.) good with technology"
+                                    placeholder="Optional override: eye-catching · adj. · ดึงดูดสายตา"
                                   />
                                 </label>
                                 <div className="adminSubtitleKnowledgeActions">
@@ -25193,7 +25419,12 @@ function App() {
                                         cueId: adminSelectedSubtitleCue.id,
                                         noteId: '',
                                         phrase: '',
-                                        detail: ''
+                                        detail: '',
+                                        kind: 'vocabulary',
+                                        partOfSpeech: '',
+                                        thaiMeaning: '',
+                                        grammarRule: '',
+                                        exampleSentence: ''
                                       })
                                     }
                                   >
