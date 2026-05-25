@@ -105,6 +105,8 @@
 .speakingP2SampleFrame {
   position: relative;
   overflow: hidden;
+  width: min(100%, 820px);
+  margin-inline: auto;
   border-radius: 18px;
   border: 2px solid rgba(15, 23, 42, 0.88);
   background: #0b1220;
@@ -203,6 +205,33 @@
 .speakingP2SampleVideo.is-flipped::-webkit-media-controls-panel {
   transform: scaleX(-1);
   transform-origin: center;
+}
+
+.speakingP2SampleVideoError {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.86);
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+}
+
+.speakingP2SampleVideoError strong {
+  font-size: 0.98rem;
+  font-weight: 900;
+}
+
+.speakingP2SampleVideoError span {
+  max-width: 28rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .speakingP2SampleSubtitleOverlay {
@@ -335,14 +364,6 @@
     width: min(88%, 360px);
     padding: 11px 12px !important;
   }
-}
-
-.speakingP2SampleNotice {
-  margin: 0;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: #64748b;
-  font-weight: 600;
 }
 
 .speakingP2SampleReplay {

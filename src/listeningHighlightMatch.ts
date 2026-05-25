@@ -55,6 +55,103 @@ export const getListeningEvidenceOverlapRatio = (selectedRaw: string, expectedRa
 
 export type ListeningHighlightMatchKind = 'exact' | 'partial' | 'none'
 
+const tokenizeListeningWords = (text: string) =>
+  normalizeListeningHighlightText(text).split(/\s+/).filter(Boolean)
+
+const findAnswerPhraseIndex = (
+  passage: string,
+  phrase: string,
+  evidence?: string
+): number => {
+  if (!phrase) return -1
+  const normEvidence = evidence ? normalizeListeningHighlightText(evidence) : ''
+  const evidenceStart = normEvidence ? passage.indexOf(normEvidence) : -1
+  const evidenceEnd = evidenceStart >= 0 ? evidenceStart + normEvidence.length : -1
+
+  if (evidenceStart >= 0) {
+    let searchFrom = evidenceStart
+    while (searchFrom < evidenceEnd) {
+      const idx = passage.indexOf(phrase, searchFrom)
+      if (idx < 0 || idx >= evidenceEnd) break
+      return idx
+    }
+  }
+
+  return passage.indexOf(phrase)
+}
+
+/**
+ * Advanced Listening rule: highlight is correct when it includes the answer phrase
+ * from the script and the word immediately before that phrase.
+ */
+export const isListeningAnswerAnchorHighlight = (
+  selectedRaw: string,
+  passageRaw: string,
+  answerPhraseRaw: string,
+  evidenceRaw?: string
+): boolean => {
+  const selected = normalizeListeningHighlightText(selectedRaw)
+  if (!selected || !String(answerPhraseRaw || '').trim()) return false
+
+  const passage = normalizeListeningHighlightText(passageRaw)
+  if (!passage) return false
+
+  const phrases = [...new Set(buildListeningHighlightCandidates(answerPhraseRaw))].sort(
+    (first, second) => second.length - first.length
+  )
+
+  for (const phrase of phrases) {
+    const idx = findAnswerPhraseIndex(passage, phrase, evidenceRaw)
+    if (idx < 0 || !selected.includes(phrase)) continue
+
+    const beforeWords = tokenizeListeningWords(passage.slice(0, idx))
+    const wordBefore = beforeWords[beforeWords.length - 1]
+    if (!wordBefore) return true
+
+    const phraseWords = tokenizeListeningWords(phrase)
+    const firstPhraseWord = phraseWords[0]
+    if (!firstPhraseWord) continue
+
+    if (!selected.includes(`${wordBefore} ${firstPhraseWord}`)) continue
+    if (phraseWords.length === 1 || phraseWords.every((word) => selected.includes(word))) {
+      return true
+    }
+  }
+
+  return false
+}
+
+export const getListeningAnswerAnchorMatch = (
+  selectedRaw: string,
+  passageRaw: string,
+  answerPhraseRaw: string,
+  evidenceRaw?: string
+): ListeningHighlightMatchKind =>
+  isListeningAnswerAnchorHighlight(selectedRaw, passageRaw, answerPhraseRaw, evidenceRaw)
+    ? 'exact'
+    : 'none'
+
+export const getListeningEvidenceMatch = (
+  selectedRaw: string,
+  expectedRaw: string,
+  options?: {
+    anchorMode?: boolean
+    passageRaw?: string
+    answerPhraseRaw?: string
+    minOverlap?: number
+  }
+): ListeningHighlightMatchKind => {
+  if (options?.anchorMode && options.passageRaw && options.answerPhraseRaw) {
+    return getListeningAnswerAnchorMatch(
+      selectedRaw,
+      options.passageRaw,
+      options.answerPhraseRaw,
+      expectedRaw
+    )
+  }
+  return getListeningHighlightMatch(selectedRaw, expectedRaw, options?.minOverlap ?? 0.5)
+}
+
 export const getListeningHighlightMatch = (
   selectedRaw: string,
   expectedRaw: string,

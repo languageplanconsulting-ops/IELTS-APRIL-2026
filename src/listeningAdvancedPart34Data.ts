@@ -350,6 +350,131 @@ Some towns also reduce lighting after midnight, when fewer people are outside. T
 
 So the aim is not to remove outdoor lighting completely, but to use it more carefully.`
 
+const RECYCLED_FABRIC_PART3_SCRIPT = `JACK: I haven't seen you in the studio recently, Maya.
+MAYA: I know. I've been working on my final design project.
+JACK: That's the one using old clothes, isn't it?
+MAYA: Yes. I started with bags of shirts and jackets that charity shops couldn't sell. At first, I thought I'd just make simple tote bags, but the project became more interesting than that.
+JACK: Was it difficult to work with fabric that had already been used?
+MAYA: Not really. The basic stitching was quite simple, and I'd used the machines many times before. What I really enjoyed was trying out different surface effects - mixing rough denim with softer cotton, and using faded colours to make the final pieces look more attractive.
+JACK: And I suppose it must have felt good to turn unwanted clothes into something people could actually use.
+MAYA: Definitely. Some of those clothes would probably have gone to landfill, so making something useful from them was the best part.
+JACK: Have any clothing brands offered to help?
+MAYA: Not yet. I'm planning to send photos to a few companies, but that's still just an idea.
+JACK: I read something yesterday about smart labels being added to clothes.
+MAYA: You mean labels with tiny sensors?
+JACK: Yes. At the moment, they can give washing information through touch, which is useful for people with visual difficulties.
+MAYA: That's clever.
+JACK: The article said they're already being tested in shops to track how many items are on the shelves.
+MAYA: I can see other possibilities too. For example, the label could respond to temperature and suggest whether a jacket is suitable for cold or wet conditions.
+JACK: True. And it might also help with environmental claims. A customer could check whether the material really came from recycled sources, instead of just trusting the brand.
+MAYA: That would be useful, especially with so much green marketing around.
+JACK: I also found an article about fashion trends for the next few years.
+MAYA: Let me guess - more second-hand clothing?
+JACK: Yes. But even though people say they like the idea, a lot of shops still make it inconvenient. You have to search through messy racks, and sizing is unclear.
+MAYA: So retailers need to organise it better and make it less time-consuming.
+JACK: Exactly. Another trend was reducing plastic packaging.
+MAYA: Everyone knows that's important, but online orders still arrive wrapped in layers of plastic.
+JACK: The article said companies shouldn't just be encouraged. There needs to be actual legislation.
+MAYA: I agree.
+JACK: What about renting clothes for weddings and parties?
+MAYA: I think that's already normal for a lot of people I know. They don't want to buy something expensive and only wear it once.
+JACK: Same here.
+MAYA: I've noticed more celebrity-branded fashion collections too. You know, when a singer or actor puts their name on a clothing line.
+JACK: I bought a jacket from one last year. It looked great online, but the fabric felt cheap when it arrived.
+MAYA: That's the problem. The image can be more impressive than the actual product.
+JACK: Did the article mention fast-fashion brands using "sustainable" labels?
+MAYA: Yes, and it said customers often don't realise how vague those labels can be. A product can be described as eco-friendly even if only one small part of it is recycled.
+JACK: So people think they understand the claim, but they don't really.
+MAYA: Exactly.
+JACK: What about chemical dyes in low-cost clothing?
+MAYA: That worries me. Some factories use substances that can irritate skin or pollute water if they're not controlled properly.
+JACK: Yes, especially when the clothes are produced very cheaply.`
+
+const SKARA_BRAE_PART4_SCRIPT = `For my presentation today, I'm going to talk about Skara Brae, a Neolithic settlement in the Orkney Islands, north of Scotland. It is one of the best-preserved prehistoric villages in Europe, and it gives archaeologists a rare picture of daily life more than 5,000 years ago.
+
+The site became known in the middle of the nineteenth century. In 1850, a powerful storm hit the coast and stripped away a layer of sand that had been hiding the remains for centuries. After the storm, stone walls and the outlines of buildings could be seen clearly.
+
+The local landowner, William Watt, understood that these remains were much older than ordinary farm buildings. He informed people who were interested in antiquities, and the first investigations began soon afterwards. However, the early work was not easy. Several rooms were packed with soil, which had to be removed carefully before the walls and floors could be studied.
+
+One reason Skara Brae is so valuable is that many objects were preserved in unusually good condition. The buildings had been sealed under the ground, and there was very little air inside them. This reduced decay and helped protect tools, furniture, and household objects.
+
+The houses at Skara Brae were built close together. They were not separate huts standing far apart; instead, they were linked by narrow passages, which allowed people to move between them while staying protected from the weather.
+
+Because there were very few trees on Orkney, wood was not widely available. As a result, the inhabitants made much of their furniture from stone. Beds, shelves, and storage boxes were built into the walls, and some of these features can still be seen today.
+
+Archaeologists have also found areas that may have been used for preparing food. There are signs of hearths, containers, and tools that suggest cooking and storage were important parts of daily life.
+
+The settlement was not huge. It probably supported a small community, perhaps made up of several related families. These people lived by farming, fishing, and gathering local resources.
+
+Why was the village eventually abandoned? Archaeologists are not certain, but several explanations have been suggested. One possibility is that changes in the climate made life more difficult. Stormier weather may have affected farming and made the coastal location less secure.
+
+Another factor may have been the gradual movement of sand towards the houses. Over time, this could have made the settlement harder to live in, until the inhabitants finally left.`
+
+const ALGAE_PACKAGING_PART3_SCRIPT = `LINA: I haven't seen you in the design lab lately, Daniel.
+DANIEL: No, I've been spending most of my time in the materials room.
+LINA: Is that for your packaging project?
+DANIEL: Yes. I'm trying to make a thin wrapping film from algae. At the beginning, I thought the main challenge would be the equipment, but I'd already used most of it in last year's course.
+LINA: So what was the hardest part?
+DANIEL: Getting the sheet to hold together. The first versions tore as soon as I picked them up. I had to adjust the drying time and the amount of natural binder several times before it became flexible enough to fold without breaking. That was probably the most rewarding moment.
+LINA: Because it finally worked?
+DANIEL: Exactly. And I liked the fact that it wasn't just a decorative material. It could actually do the job of the kind of wrapping that is normally thrown away after one use.
+LINA: Have any supermarkets shown interest?
+DANIEL: Not yet. I'm going to include that possibility in my report, but I haven't contacted any companies.
+LINA: I read something related to waste reduction yesterday - smart bins.
+DANIEL: The ones that send a message when they're full?
+LINA: Yes. Some cities already use them for that, so workers don't have to check every bin manually.
+DANIEL: That makes sense.
+LINA: The article said the next stage could be more detailed. If a bin in one street filled up much faster than others, the council could use that data to plan better locations.
+DANIEL: That would be useful. I suppose they could also give people feedback at home - not just "the bin is full," but how much rubbish a household is actually producing each week.
+LINA: Right. That might make people more aware of their habits.
+DANIEL: Did it say they could sort the waste themselves?
+LINA: Not really. That's still a much more complicated technology.
+DANIEL: I've also been reading about urban living trends.
+LINA: Like community repair cafes?
+DANIEL: Yes. The idea is great, but in many areas, people don't know where to find them, and opening hours are limited.
+LINA: So councils should help with locations and publicity.
+DANIEL: Exactly. Otherwise only a small number of people will use them.
+LINA: What about reducing private car use in city centres?
+DANIEL: Everyone talks about it, but buses and cycle lanes often don't improve enough to make people change.
+LINA: So the result might be smaller than the promise.
+DANIEL: That's my feeling.
+LINA: Shared electric scooters are everywhere now.
+DANIEL: Yes, you see them outside stations, universities, shopping centres - they've become a normal part of the street in many cities.
+LINA: True, although not everyone likes them.
+DANIEL: What do you think about rooftop vegetable gardens?
+LINA: People imagine they're simple, but they're expensive to set up properly. The roof has to support extra weight, and someone has to manage watering and maintenance.
+DANIEL: So without money behind them, they won't spread very far.
+LINA: Exactly.
+DANIEL: Another trend is turning empty offices into apartments.
+LINA: That sounds easy, but a lot of people don't realise offices aren't automatically suitable for living. They may not have enough natural light, ventilation, or plumbing in the right places.
+DANIEL: So it's more complicated than it looks.
+LINA: Definitely.
+DANIEL: Did the article mention delivery robots?
+LINA: Yes. Small machines moving along pavements with food orders or parcels. I can see the convenience, but I'd worry about them around children, wheelchair users, or crowded streets.
+DANIEL: So cities would need to think carefully before allowing lots of them.`
+
+const XOCHIMILCO_PART4_SCRIPT = `For my presentation today, I'm going to talk about the floating gardens of Xochimilco, an agricultural system that developed in the lake region around what is now Mexico City. These gardens are often called floating gardens, although they were not really floating freely. They were carefully built platforms anchored in shallow water.
+
+The construction process began with a simple but effective frame. Farmers drove long wooden stakes down into the soft lakebed, creating the outline of each plot. They then filled the space inside with layers of lake mud, reeds, and other plant material. Over time, the surface rose above the level of the surrounding water, making it dry enough for planting.
+
+The edges had to be protected because the platforms could be damaged by movement in the canals. To prevent this, farmers planted trees whose roots gripped the sides and reduced the chance of the plots slowly drifting out of position.
+
+One reason the system was so productive was that it recycled material from the lake itself. Dead plants, mud, and organic matter broke down and returned useful nutrients to the soil. This meant farmers did not need to rely heavily on animal manure or imported fertilisers.
+
+The canals were not just part of the irrigation system. They also functioned as transport routes. Produce could be loaded into narrow boats and taken through the waterways instead of being carried along roads. This made it easier to move fresh vegetables to buyers quickly.
+
+Because the soil remained moist and fertile, farmers could grow food very intensively. In some cases, they were able to harvest several crops in a single year. This high productivity helped support a large urban population.
+
+The vegetables were not only eaten locally. Many were taken to nearby markets, where they were sold to people living in and around the city. So the system was connected not just to farming but also to trade.
+
+Today, however, Xochimilco faces several pressures. The expansion of Mexico City has reduced the amount of agricultural land that remains in use. Housing, roads, and other development have changed the landscape around the canals.
+
+Another problem is water pollution. Waste entering the canals has affected the quality of the water, making traditional farming more difficult in some areas. This has also harmed local wildlife.
+
+There are now conservation projects designed to protect the remaining gardens. One important aim is to involve younger farmers, because many older people still understand the traditional methods, but fewer young people see agriculture as a future career.
+
+So, although the floating gardens are ancient, their survival depends on whether they can remain useful in the modern city.`
+
 const mcQuestion = (
   id: string,
   number: number,
@@ -839,6 +964,120 @@ const digitalMethodOptions = [
   { key: 'D', text: 'Students might change their normal behaviour.' },
   { key: 'E', text: 'The equipment would be too expensive.' },
   { key: 'F', text: 'It would require extra approval.' }
+]
+
+const mayFashionRewardsQuestionText = `Questions 21 and 22
+Choose TWO letters, A-E.
+Which TWO things did Maya find most rewarding about her recycled fabric project?
+A receiving advice from fashion companies
+B giving discarded garments a new purpose
+C solving technical problems with the sewing machine
+D experimenting with texture and appearance
+E learning how to use digital design software`
+
+const maySmartLabelQuestionText = `Questions 23 and 24
+Choose TWO letters, A-E.
+Which TWO future uses do the students agree smart clothing labels could have?
+A helping people choose clothes for different weather conditions
+B warning customers when clothes are damaged
+C showing whether a product is genuinely sustainable
+D helping shops manage stock more efficiently
+E giving washing instructions to blind customers`
+
+const mayFashionTrendQuestionText = `Questions 25-30
+What is the students' opinion about each of the following fashion trends?
+Choose SIX answers from the box and write the correct letter, A-H.
+A This mostly appeals to older consumers.
+B This may not meet people's expectations.
+C This is already becoming common.
+D Retailers should remove barriers for customers.
+E This needs more investment to succeed.
+F Many consumers do not fully understand this.
+G There should be stronger rules about this.
+H This may create health or safety risks.`
+
+const mayFashionRewardOptions = [
+  { key: 'A', text: 'receiving advice from fashion companies' },
+  { key: 'B', text: 'giving discarded garments a new purpose' },
+  { key: 'C', text: 'solving technical problems with the sewing machine' },
+  { key: 'D', text: 'experimenting with texture and appearance' },
+  { key: 'E', text: 'learning how to use digital design software' }
+]
+
+const maySmartLabelOptions = [
+  { key: 'A', text: 'helping people choose clothes for different weather conditions' },
+  { key: 'B', text: 'warning customers when clothes are damaged' },
+  { key: 'C', text: 'showing whether a product is genuinely sustainable' },
+  { key: 'D', text: 'helping shops manage stock more efficiently' },
+  { key: 'E', text: 'giving washing instructions to blind customers' }
+]
+
+const mayFashionTrendOptions = [
+  { key: 'A', text: 'This mostly appeals to older consumers.' },
+  { key: 'B', text: "This may not meet people's expectations." },
+  { key: 'C', text: 'This is already becoming common.' },
+  { key: 'D', text: 'Retailers should remove barriers for customers.' },
+  { key: 'E', text: 'This needs more investment to succeed.' },
+  { key: 'F', text: 'Many consumers do not fully understand this.' },
+  { key: 'G', text: 'There should be stronger rules about this.' },
+  { key: 'H', text: 'This may create health or safety risks.' }
+]
+
+const mayUrbanProjectQuestionText = `Questions 21 and 22
+Choose TWO letters, A-E.
+Which TWO things did Daniel find most satisfying about his algae packaging project?
+A gaining backing from large food retailers
+B developing an alternative to throwaway wrapping
+C improving the film after repeated breakages
+D altering the material's colour and smell
+E becoming confident with specialist equipment`
+
+const maySmartBinsQuestionText = `Questions 23 and 24
+Choose TWO letters, A-E.
+Which TWO future uses do the students agree smart waste bins could have?
+A helping councils plan better bin locations
+B warning people when food waste is unsafe
+C separating recyclable materials automatically
+D showing families their weekly rubbish levels
+E helping elderly people remember collection days`
+
+const mayUrbanTrendQuestionText = `Questions 25-30
+What is the students' opinion about each of the following urban living trends?
+Choose SIX answers from the box and write the correct letter, A-H.
+A This is mostly useful for people with high incomes.
+B This may not deliver the expected impact.
+C This has become familiar in many urban areas.
+D Councils should lower practical barriers.
+E More funding is needed for this to grow.
+F Many people underestimate the practical difficulties.
+G There should be clearer rules about this.
+H This could create new safety problems.`
+
+const mayUrbanProjectOptions = [
+  { key: 'A', text: 'gaining backing from large food retailers' },
+  { key: 'B', text: 'developing an alternative to throwaway wrapping' },
+  { key: 'C', text: 'improving the film after repeated breakages' },
+  { key: 'D', text: "altering the material's colour and smell" },
+  { key: 'E', text: 'becoming confident with specialist equipment' }
+]
+
+const maySmartBinsOptions = [
+  { key: 'A', text: 'helping councils plan better bin locations' },
+  { key: 'B', text: 'warning people when food waste is unsafe' },
+  { key: 'C', text: 'separating recyclable materials automatically' },
+  { key: 'D', text: 'showing families their weekly rubbish levels' },
+  { key: 'E', text: 'helping elderly people remember collection days' }
+]
+
+const mayUrbanTrendOptions = [
+  { key: 'A', text: 'This is mostly useful for people with high incomes.' },
+  { key: 'B', text: 'This may not deliver the expected impact.' },
+  { key: 'C', text: 'This has become familiar in many urban areas.' },
+  { key: 'D', text: 'Councils should lower practical barriers.' },
+  { key: 'E', text: 'More funding is needed for this to grow.' },
+  { key: 'F', text: 'Many people underestimate the practical difficulties.' },
+  { key: 'G', text: 'There should be clearer rules about this.' },
+  { key: 'H', text: 'This could create new safety problems.' }
 ]
 
 export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
@@ -1457,6 +1696,90 @@ export const ADVANCED_PART34_LISTENING_SETS: ListeningFoundationSet[] = [
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q38', 38, 'Badly planned street lighting can produce 38 ____ for motorists.', 'Poorly designed lights can create glare, making it harder for drivers to see clearly', 'glare', ['danger', 'reflections', 'brightness'], 'create glare', 'produce for motorists', 'แสงจ้าแยงตา', 'Badly planned = Poorly designed · motorists paraphrase drivers และ produce glare = create glare'),
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q39', 39, 'Beams from outdoor fixtures should be angled 39 ____ rather than into the sky.', 'Streetlights should be designed to point downward', 'downward', ['inside', 'lower', 'roads'], 'point downward', 'angled rather than into the sky', 'ลงด้านล่าง', 'Beams from outdoor fixtures = Streetlights · angled downward = point downward · rather than into the sky = instead of escaping into the sky · คำตอบคือ downward'),
       gapQuestionFor(LIGHT_POLLUTION_PART4_SCRIPT, 'advanced-light-pollution-p4-q40', 40, 'Some towns dim outdoor lighting after 40 ____.', 'Some towns also reduce lighting after midnight', 'midnight', ['dark', 'evening', 'hours'], 'reduce lighting after midnight', 'dim outdoor lighting after', 'เที่ยงคืน', 'dim = reduce · outdoor lighting = lighting · after ตรงกับสคริปต์ · คำตอบคือ midnight')
+    ]
+  },
+  {
+    id: 'advanced-listening-may-2026-recycled-fabric-part-3',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · May 2026 · Part 3 - Recycled Fabric Project',
+    section: 3,
+    levelLabel: 'ADVANCED LISTENING · May 2026 · Part 3 dialogue · target Band 7+',
+    audioCacheKey: 'advanced-listening-may-2026-recycled-fabric-part-3',
+    audioscript: RECYCLED_FABRIC_PART3_SCRIPT,
+    questions: [
+      choiceQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, 'advanced-may-2026-recycled-fabric-p3-q21', 21, 'Which TWO things did Maya find most rewarding about her recycled fabric project?', 'What I really enjoyed was trying out different surface effects - mixing rough denim with softer cotton, and using faded colours to make the final pieces look more attractive.', 'D', mayFashionRewardOptions, 'trying out different surface effects', 'experimenting with texture and appearance', 'ทดลองพื้นผิวและรูปลักษณ์', 'What I really enjoyed เป็น signal คำตอบ · surface effects, denim/cotton และ faded colours = texture and appearance.', mayFashionRewardsQuestionText),
+      choiceQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, 'advanced-may-2026-recycled-fabric-p3-q22', 22, 'Which TWO things did Maya find most rewarding about her recycled fabric project?', 'Some of those clothes would probably have gone to landfill, so making something useful from them was the best part.', 'B', mayFashionRewardOptions, 'making something useful from them', 'giving discarded garments a new purpose', 'นำเสื้อผ้าไม่ใช้แล้วไปใช้จริง', 'the best part เป็น signal คำตอบ · discarded garments = clothes that would probably have gone to landfill · new purpose = making something useful.'),
+      choiceQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, 'advanced-may-2026-recycled-fabric-p3-q23', 23, 'Which TWO future uses do the students agree smart clothing labels could have?', 'the label could respond to temperature and suggest whether a jacket is suitable for cold or wet conditions.', 'A', maySmartLabelOptions, 'respond to temperature and suggest whether a jacket is suitable for cold or wet conditions', 'helping people choose clothes for different weather conditions', 'ช่วยเลือกเสื้อผ้าให้เหมาะกับสภาพอากาศ', 'respond to temperature และ cold or wet conditions = different weather conditions. could เป็น future use.', maySmartLabelQuestionText),
+      choiceQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, 'advanced-may-2026-recycled-fabric-p3-q24', 24, 'Which TWO future uses do the students agree smart clothing labels could have?', 'A customer could check whether the material really came from recycled sources, instead of just trusting the brand.', 'C', maySmartLabelOptions, 'check whether the material really came from recycled sources', 'showing whether a product is genuinely sustainable', 'ยืนยันว่าผลิตภัณฑ์ยั่งยืนจริงหรือไม่', 'really came from recycled sources = genuinely sustainable. คำหลอกคือ stock management และ washing instructions เพราะสคริปต์บอกว่าเป็น current/testing use ไม่ใช่ future use ที่ทั้งคู่เสนอ.', maySmartLabelQuestionText),
+      matchQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, mayFashionTrendOptions, mayFashionTrendQuestionText, 'advanced-may-2026-recycled-fabric-p3-q25', 25, 'Use of second-hand clothing', 'retailers need to organise it better and make it less time-consuming', 'D', 'organise it better and make it less time-consuming', 'Retailers should remove barriers for customers', 'ร้านค้าควรทำให้ง่ายขึ้น', 'remove barriers paraphrases organise it better, make it less time-consuming, clearer sizing and less messy racks.'),
+      matchQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, mayFashionTrendOptions, mayFashionTrendQuestionText, 'advanced-may-2026-recycled-fabric-p3-q26', 26, 'Reduction in plastic packaging', "companies shouldn't just be encouraged. There needs to be actual legislation.", 'G', 'actual legislation', 'stronger rules', 'ควรมีกฎที่เข้มขึ้น', 'actual legislation = stronger rules. encouraged เป็นคำหลอก เพราะ Jack บอกว่าไม่ควรแค่ encourage.'),
+      matchQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, mayFashionTrendOptions, mayFashionTrendQuestionText, 'advanced-may-2026-recycled-fabric-p3-q27', 27, 'Renting clothes for special occasions', "that's already normal for a lot of people I know", 'C', 'already normal', 'already becoming common', 'เริ่มเป็นเรื่องปกติแล้ว', 'becoming common paraphrases normal for a lot of people. special occasions = weddings and parties.'),
+      matchQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, mayFashionTrendOptions, mayFashionTrendQuestionText, 'advanced-may-2026-recycled-fabric-p3-q28', 28, 'Celebrity-branded fashion collections', 'It looked great online, but the fabric felt cheap when it arrived. The image can be more impressive than the actual product.', 'B', 'image can be more impressive than the actual product', "may not meet people's expectations", 'อาจไม่ตรงกับความคาดหวัง', 'looked great online แต่ fabric felt cheap = expectation ไม่ตรงกับของจริง.'),
+      matchQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, mayFashionTrendOptions, mayFashionTrendQuestionText, 'advanced-may-2026-recycled-fabric-p3-q29', 29, 'Use of sustainable labels by fast-fashion brands', 'customers often don\'t realise how vague those labels can be', 'F', 'vague labels can be misunderstood', 'Many consumers do not fully understand this', 'ผู้บริโภคจำนวนมากไม่เข้าใจเต็มที่', 'consumers paraphrases customers · do not fully understand paraphrases not realising how vague the labels can be.'),
+      matchQuestionFor(RECYCLED_FABRIC_PART3_SCRIPT, mayFashionTrendOptions, mayFashionTrendQuestionText, 'advanced-may-2026-recycled-fabric-p3-q30', 30, 'Use of chemical dyes in low-cost clothing', 'Some factories use substances that can irritate skin or pollute water if they\'re not controlled properly.', 'H', 'substances that can irritate skin or pollute water', 'may create health or safety risks', 'อาจเสี่ยงต่อสุขภาพหรือความปลอดภัย', 'irritate skin = health risk และ not controlled properly = safety/environmental risk.')
+    ]
+  },
+  {
+    id: 'advanced-listening-may-2026-skara-brae-part-4',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · May 2026 · Part 4 - Skara Brae',
+    section: 4,
+    levelLabel: 'ADVANCED LISTENING · May 2026 · Part 4 lecture · target Band 7+',
+    audioCacheKey: 'advanced-listening-may-2026-skara-brae-part-4',
+    audioscript: SKARA_BRAE_PART4_SCRIPT,
+    questions: [
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q31', 31, 'The settlement was exposed when storm waves swept away the 31 ____ above it.', 'a powerful storm hit the coast and stripped away a layer of sand that had been hiding the remains for centuries', 'sand', ['soil', 'stone', 'grass'], 'layer of sand', 'storm waves swept away above it', 'ทราย', 'storm waves swept away = powerful storm stripped away · above it paraphrases the material hiding the remains.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q32', 32, 'William Watt reported the discovery to specialists in 32 ____.', 'He informed people who were interested in antiquities', 'antiquities', ['archaeology', 'history', 'buildings'], 'interested in antiquities', 'specialists in', 'โบราณวัตถุ / สิ่งเก่าแก่', 'reported = informed · specialists paraphrases people who were interested in this old material.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q33', 33, 'Excavators first had to clear 33 ____ from several rooms.', 'Several rooms were packed with soil', 'soil', ['sand', 'water', 'stones'], 'packed with soil', 'had to clear from several rooms', 'ดิน', 'had to clear paraphrases the material that packed the rooms and had to be removed carefully.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q34', 34, 'Objects decayed slowly because almost no 34 ____ reached the interiors.', 'there was very little air inside them. This reduced decay and helped protect tools, furniture, and household objects.', 'air', ['light', 'water', 'dust'], 'very little air', 'almost no reached the interiors', 'อากาศ', 'objects decayed slowly paraphrases reduced decay · reached the interiors paraphrases inside the sealed buildings.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q35', 35, 'Residents could move between homes through sheltered 35 ____.', 'they were linked by narrow passages', 'passages', ['paths', 'corridors', 'tunnels'], 'linked by narrow passages', 'move between homes through sheltered', 'ทางเดินแคบ', 'move between homes paraphrases linked houses · sheltered comes from staying protected from the weather.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q36', 36, 'With little timber available, household fittings were built out of 36 ____.', 'the inhabitants made much of their furniture from stone', 'stone', ['wood', 'clay', 'bone'], 'furniture from stone', 'household fittings built out of', 'หิน', 'little timber available paraphrases few trees / wood not widely available · household fittings paraphrases furniture.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q37', 37, 'Hearths and containers suggest that certain areas were linked to 37 ____.', 'areas that may have been used for preparing food', 'food', ['meals', 'crops', 'storage'], 'preparing food', 'Hearths and containers suggest linked to', 'อาหาร', 'hearths, containers and tools are evidence for cooking/storage activity connected with the answer.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q38', 38, 'Several related families may have formed a 38 ____ at the site.', 'It probably supported a small community', 'community', ['population', 'village', 'family'], 'small community', 'Several related families may have formed at the site', 'ชุมชน', 'several related families paraphrases the speaker’s estimate of the people living at the site.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q39', 39, 'Life may have become harder as the local 39 ____ shifted.', 'changes in the climate made life more difficult. Stormier weather may have affected farming and made the coastal location less secure.', 'climate', ['weather', 'coast', 'farming'], 'changes in the climate', 'Life harder local shifted', 'ภูมิอากาศ', 'life became harder paraphrases made life more difficult · shifted paraphrases changes in.'),
+      gapQuestionFor(SKARA_BRAE_PART4_SCRIPT, 'advanced-may-2026-skara-brae-p4-q40', 40, 'The homes may also have been threatened by encroaching 40 ____.', 'the gradual movement of sand towards the houses', 'sand', ['water', 'soil', 'stone'], 'movement of sand towards the houses', 'encroaching threatened homes', 'ทราย', 'encroaching paraphrases gradual movement towards the houses · threatened homes paraphrases making the settlement harder to live in.')
+    ]
+  },
+  {
+    id: 'advanced-listening-may-2026-algae-packaging-part-3',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · May 2026 · Part 3 - Algae Packaging Project',
+    section: 3,
+    levelLabel: 'ADVANCED LISTENING · May 2026 · Part 3 dialogue · target Band 7+',
+    audioCacheKey: 'advanced-listening-may-2026-algae-packaging-part-3',
+    audioscript: ALGAE_PACKAGING_PART3_SCRIPT,
+    questions: [
+      choiceQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, 'advanced-may-2026-algae-packaging-p3-q21', 21, 'Which TWO things did Daniel find most satisfying about his algae packaging project?', 'I had to adjust the drying time and the amount of natural binder several times before it became flexible enough to fold without breaking. That was probably the most rewarding moment.', 'C', mayUrbanProjectOptions, 'became flexible enough to fold without breaking', 'improving the film after repeated breakages', 'ทำให้แผ่นฟิล์มแข็งแรงขึ้นหลังจากล้มเหลวหลายครั้ง', 'repeated breakages paraphrases first versions tore · improving the film paraphrases adjusting drying time and binder until it folded without breaking.', mayUrbanProjectQuestionText),
+      choiceQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, 'advanced-may-2026-algae-packaging-p3-q22', 22, 'Which TWO things did Daniel find most satisfying about his algae packaging project?', 'It could actually do the job of the kind of wrapping that is normally thrown away after one use.', 'B', mayUrbanProjectOptions, 'wrapping that is normally thrown away after one use', 'developing an alternative to throwaway wrapping', 'สร้างวัสดุแทนบรรจุภัณฑ์ใช้ครั้งเดียว', 'alternative paraphrases could do the job of · throwaway wrapping paraphrases normally thrown away after one use.', mayUrbanProjectQuestionText),
+      choiceQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, 'advanced-may-2026-algae-packaging-p3-q23', 23, 'Which TWO future uses do the students agree smart waste bins could have?', 'If a bin in one street filled up much faster than others, the council could use that data to plan better locations.', 'A', maySmartBinsOptions, 'use that data to plan better locations', 'helping councils plan better bin locations', 'ช่วยสภาเมืองวางตำแหน่งถังขยะให้ดีขึ้น', 'plan better bin locations paraphrases using fill-rate data to plan better locations.', maySmartBinsQuestionText),
+      choiceQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, 'advanced-may-2026-algae-packaging-p3-q24', 24, 'Which TWO future uses do the students agree smart waste bins could have?', 'how much rubbish a household is actually producing each week', 'D', maySmartBinsOptions, 'how much rubbish a household is actually producing each week', 'showing families their weekly rubbish levels', 'บอกปริมาณขยะรายสัปดาห์ของครัวเรือน', 'families paraphrases household · weekly rubbish levels paraphrases how much rubbish is produced each week.', maySmartBinsQuestionText),
+      matchQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, mayUrbanTrendOptions, mayUrbanTrendQuestionText, 'advanced-may-2026-algae-packaging-p3-q25', 25, 'Community repair cafes', 'councils should help with locations and publicity', 'D', 'help with locations and publicity', 'Councils should lower practical barriers', 'หน่วยงานท้องถิ่นควรช่วยลดอุปสรรค', 'lower practical barriers paraphrases help with locations and publicity plus limited opening hours/awareness.'),
+      matchQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, mayUrbanTrendOptions, mayUrbanTrendQuestionText, 'advanced-may-2026-algae-packaging-p3-q26', 26, 'Reducing private car use in city centres', 'the result might be smaller than the promise', 'B', 'result might be smaller than the promise', 'may not deliver the expected impact', 'ผลลัพธ์อาจไม่มากอย่างที่คาด', 'not deliver expected impact paraphrases result smaller than the promise.'),
+      matchQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, mayUrbanTrendOptions, mayUrbanTrendQuestionText, 'advanced-may-2026-algae-packaging-p3-q27', 27, 'Shared electric scooters', "they've become a normal part of the street in many cities", 'C', 'normal part of the street in many cities', 'has become familiar in many urban areas', 'เห็นได้ทั่วไปในหลายเมือง', 'familiar in many urban areas paraphrases normal part of the street in many cities.'),
+      matchQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, mayUrbanTrendOptions, mayUrbanTrendQuestionText, 'advanced-may-2026-algae-packaging-p3-q28', 28, 'Rooftop vegetable gardens', "without money behind them, they won't spread very far", 'E', 'without money behind them they will not spread very far', 'More funding is needed for this to grow', 'ต้องการเงินทุนเพิ่มเพื่อขยาย', 'funding needed paraphrases money behind them · grow paraphrases spread very far.'),
+      matchQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, mayUrbanTrendOptions, mayUrbanTrendQuestionText, 'advanced-may-2026-algae-packaging-p3-q29', 29, 'Converting offices into apartments', "a lot of people don't realise offices aren't automatically suitable for living", 'F', 'offices are not automatically suitable for living', 'Many people underestimate the practical difficulties', 'หลายคนประเมินความซับซ้อนต่ำไป', 'underestimate practical difficulties paraphrases not realising offices may lack light, ventilation or plumbing.'),
+      matchQuestionFor(ALGAE_PACKAGING_PART3_SCRIPT, mayUrbanTrendOptions, mayUrbanTrendQuestionText, 'advanced-may-2026-algae-packaging-p3-q30', 30, 'Using delivery robots on pavements', "I'd worry about them around children, wheelchair users, or crowded streets", 'H', 'worry around children, wheelchair users, or crowded streets', 'could create new safety problems', 'อาจสร้างปัญหาด้านความปลอดภัยใหม่', 'safety problems paraphrases worry around vulnerable pavement users and crowded streets.')
+    ]
+  },
+  {
+    id: 'advanced-listening-may-2026-xochimilco-part-4',
+    category: 'advanced-listening',
+    title: 'Advanced Listening · May 2026 · Part 4 - The Floating Gardens of Xochimilco',
+    section: 4,
+    levelLabel: 'ADVANCED LISTENING · May 2026 · Part 4 lecture · target Band 7+',
+    audioCacheKey: 'advanced-listening-may-2026-xochimilco-part-4',
+    audioscript: XOCHIMILCO_PART4_SCRIPT,
+    questions: [
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q31', 31, 'Farmers marked each plot by forcing 31 ____ into the soft lake floor.', 'Farmers drove long wooden stakes down into the soft lakebed', 'stakes', ['poles', 'posts', 'frames'], 'wooden stakes down into the lakebed', 'marked each plot soft lake floor', 'หลักไม้', 'marked each plot paraphrases creating the outline · forcing into the lake floor paraphrases drove down into the lakebed.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q32', 32, 'The raised beds became dry enough for planting because they stood higher than the 32 ____.', 'the surface rose above the level of the surrounding water', 'water', ['mud', 'canals', 'lake'], 'surface rose above surrounding water', 'raised beds dry enough stood higher than', 'น้ำ', 'stood higher than paraphrases rose above · dry enough for planting comes from the result of the raised surface.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q33', 33, 'Tree roots reduced the risk of the plots 33 ____ from their original place.', 'reduced the chance of the plots slowly drifting out of position', 'drifting', ['moving', 'sinking', 'breaking'], 'slowly drifting out of position', 'reduced risk original place', 'ลอย/เคลื่อนออกจากตำแหน่ง', 'reduced the risk paraphrases reduced the chance · original place paraphrases out of position.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q34', 34, 'Decayed lake material naturally enriched the soil with 34 ____.', 'Dead plants, mud, and organic matter broke down and returned useful nutrients to the soil', 'nutrients', ['fertilisers', 'minerals', 'matter'], 'returned useful nutrients to the soil', 'Decayed lake material enriched soil with', 'สารอาหาร', 'Decayed lake material paraphrases dead plants and organic matter broke down · enriched paraphrases returned useful material to soil.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q35', 35, 'Harvested vegetables were transported along canals using slim 35 ____.', 'Produce could be loaded into narrow boats and taken through the waterways', 'boats', ['canoes', 'barges', 'routes'], 'loaded into narrow boats', 'transported along canals using slim', 'เรือ', 'Harvested vegetables paraphrases produce · transported along canals paraphrases taken through the waterways · slim paraphrases narrow.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q36', 36, 'Farmers could collect repeated 36 ____ during a single year.', 'they were able to harvest several crops in a single year', 'crops', ['harvests', 'vegetables', 'foods'], 'harvest several crops in a single year', 'collect repeated during single year', 'พืชผล', 'collect repeated during a single year paraphrases harvest several in a single year.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q37', 37, 'Vegetables entered trade through city-side 37 ____.', 'Many were taken to nearby markets, where they were sold to people living in and around the city', 'markets', ['shops', 'streets', 'towns'], 'nearby markets', 'entered trade city-side', 'ตลาด', 'entered trade paraphrases sold · city-side paraphrases nearby and in/around the city.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q38', 38, 'Development has left less 38 ____ for cultivation.', 'The expansion of Mexico City has reduced the amount of agricultural land that remains in use', 'land', ['space', 'area', 'plots'], 'agricultural land remains in use', 'Development less for cultivation', 'ที่ดิน', 'Development paraphrases expansion/housing/roads · cultivation paraphrases agricultural use.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q39', 39, 'Pollution has made canal water less suitable for farming by lowering its 39 ____.', 'Waste entering the canals has affected the quality of the water', 'quality', ['cleanliness', 'levels', 'safety'], 'quality of the water', 'less suitable for farming lowering its', 'คุณภาพ', 'less suitable for farming comes from making traditional farming more difficult · lowering paraphrases affected in a pollution context.'),
+      gapQuestionFor(XOCHIMILCO_PART4_SCRIPT, 'advanced-may-2026-xochimilco-p4-q40', 40, 'Projects now try to attract the next generation of 40 ____.', 'One important aim is to involve younger farmers', 'farmers', ['workers', 'people', 'students'], 'involve younger farmers', 'next generation of', 'เกษตรกร', 'next generation paraphrases younger · attract paraphrases involve.')
     ]
   }
 ]

@@ -1,7 +1,7 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import { createHash, createHmac, randomUUID } from 'node:crypto'
+import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto'
 import fs from 'node:fs'
 import { createRequire } from 'node:module'
 import os from 'node:os'
@@ -1014,6 +1014,14 @@ const SPEAKING_SAMPLE_VIDEO_SIGNED_URL_SECONDS = Math.max(
   300,
   Number(process.env.SPEAKING_SAMPLE_VIDEO_SIGNED_URL_SECONDS || 60 * 60 * 6)
 )
+const SPEAKING_SAMPLE_VIDEO_PLAYBACK_SECONDS = Math.max(
+  300,
+  Number(process.env.SPEAKING_SAMPLE_VIDEO_PLAYBACK_SECONDS || 60 * 60 * 24)
+)
+const SPEAKING_SAMPLE_VIDEO_PROXY_CHUNK_BYTES = Math.min(
+  2 * 1024 * 1024,
+  Math.max(256 * 1024, Number(process.env.SPEAKING_SAMPLE_VIDEO_PROXY_CHUNK_BYTES || 1024 * 1024))
+)
 const SPEAKING_SAMPLE_VIDEO_MANIFEST_PATH = '_manifests/speaking-sample-videos.json'
 let speakingSampleVideoBucketReady = false
 let speakingSampleVideoManifestCache = null
@@ -1156,7 +1164,15 @@ const getVideoExtensionFromMimeType = (mimeType) => {
 
 const isMissingSupabaseRelationError = (error) => {
   const text = `${error?.message || ''} ${JSON.stringify(error?.payload || {})}`.toLowerCase()
-  return error?.status === 404 || /relation .* does not exist|schema cache|could not find the table|pgrst205/.test(text)
+  return (
+    error?.status === 404 ||
+    /relation .* does not exist|schema cache|could not find the table|pgrst205|not_found/.test(text)
+  )
+}
+
+const isSupabaseMissingResourceError = (error) => {
+  const text = `${error?.message || ''} ${JSON.stringify(error?.payload || {})}`.toLowerCase()
+  return error?.status === 404 || /bucket not[_ ]found|not[_ ]found|resource/.test(text)
 }
 
 const normalizeSignedStorageUrl = (signedUrl) => {
@@ -1436,7 +1452,7 @@ const ensureSpeakingSampleVideoBucket = async () => {
       })
     }
   } catch (error) {
-    if (error?.status !== 404 && !(error?.status === 400 && /bucket not found|not found/i.test(String(error?.message || '')))) {
+    if (!isSupabaseMissingResourceError(error)) {
       throw error
     }
     await supabaseRequest('/storage/v1/bucket', {
@@ -1468,7 +1484,7 @@ const loadSpeakingSampleVideoManifest = async ({ forceRefresh = false } = {}) =>
       { timeoutMs: 10000, retries: 0 }
     )
   } catch (error) {
-    if (error?.status !== 404 && !(error?.status === 400 && /bucket not found|not found|resource/i.test(String(error?.message || '')))) {
+    if (!isSupabaseMissingResourceError(error)) {
       throw error
     }
     speakingSampleVideoManifestCache = { items: {} }
@@ -1556,6 +1572,48 @@ const signSpeakingSampleVideoObject = async (objectPath) => {
   return normalizeSignedStorageUrl(payload?.signedURL || payload?.signedUrl || payload?.url)
 }
 
+const getSpeakingSampleVideoPlaybackSecret = () =>
+  String(process.env.SPEAKING_SAMPLE_VIDEO_PLAYBACK_SECRET || SUPABASE_SERVICE_ROLE_KEY || ADMIN_PANEL_CODE).trim()
+
+const createSpeakingSampleVideoPlaybackSignature = ({ topicId, objectPath, version, expiresAt }) =>
+  createHmac('sha256', getSpeakingSampleVideoPlaybackSecret())
+    .update([topicId, objectPath, version || 1, expiresAt].map((value) => String(value || '')).join('\n'))
+    .digest('hex')
+
+const createSpeakingSampleVideoPlaybackUrl = (item) => {
+  const topicId = String(item?.topicId || item?.id || '').trim()
+  const objectPath = String(item?.objectPath || '').trim()
+  if (!topicId || !objectPath) return ''
+  const expiresAt = Math.floor(Date.now() / 1000) + SPEAKING_SAMPLE_VIDEO_PLAYBACK_SECONDS
+  const version = Number(item?.version || 1) || 1
+  const params = new URLSearchParams({
+    v: String(version),
+    exp: String(expiresAt),
+    sig: createSpeakingSampleVideoPlaybackSignature({ topicId, objectPath, version, expiresAt })
+  })
+  return `/api/speaking-sample-videos/${encodeURIComponent(topicId)}/blob?${params.toString()}`
+}
+
+const verifySpeakingSampleVideoPlaybackSignature = (item, query = {}) => {
+  const expiresAt = Number(query.exp || 0)
+  const signature = String(query.sig || '').trim()
+  const version = Number(query.v || item?.version || 1) || 1
+  if (!expiresAt || !signature || expiresAt < Math.floor(Date.now() / 1000)) return false
+  const expected = createSpeakingSampleVideoPlaybackSignature({
+    topicId: item.topicId,
+    objectPath: item.objectPath,
+    version,
+    expiresAt
+  })
+  try {
+    const receivedBuffer = Buffer.from(signature, 'hex')
+    const expectedBuffer = Buffer.from(expected, 'hex')
+    return receivedBuffer.length === expectedBuffer.length && timingSafeEqual(receivedBuffer, expectedBuffer)
+  } catch {
+    return false
+  }
+}
+
 const mapSpeakingSampleVideoDbRecord = (row = {}) => ({
   id: String(row.topic_id || row.id || ''),
   topicId: String(row.topic_id || row.id || ''),
@@ -1584,13 +1642,70 @@ const mapSpeakingSampleVideoDbRecord = (row = {}) => ({
 })
 
 const signSpeakingSampleVideoItem = async (item) => {
-  const signedUrl = await signSpeakingSampleVideoObject(item.objectPath)
+  const playbackUrl = createSpeakingSampleVideoPlaybackUrl(item)
   return {
     ...item,
-    videoUrl: signedUrl,
+    videoUrl: playbackUrl,
     isPrivate: true,
-    signedUrlExpiresAt: new Date(Date.now() + SPEAKING_SAMPLE_VIDEO_SIGNED_URL_SECONDS * 1000).toISOString()
+    signedUrlExpiresAt: new Date(Date.now() + SPEAKING_SAMPLE_VIDEO_PLAYBACK_SECONDS * 1000).toISOString()
   }
+}
+
+const findSpeakingSampleVideoRecordByTopicId = async (topicId, { forceRefresh = false } = {}) => {
+  const normalizedTopicId = String(topicId || '').trim()
+  if (!normalizedTopicId) return null
+  const records = await loadSpeakingSampleVideoRecords({ forceRefresh })
+  return records.find((item) => String(item.topicId) === normalizedTopicId) || null
+}
+
+const parseHttpByteRange = (rangeHeader, totalSize) => {
+  const size = Math.max(0, Number(totalSize || 0) || 0)
+  if (!size) return null
+  const match = String(rangeHeader || '').match(/^bytes=(\d*)-(\d*)$/i)
+  if (!match) {
+    return { start: 0, end: Math.min(size - 1, SPEAKING_SAMPLE_VIDEO_PROXY_CHUNK_BYTES - 1) }
+  }
+  let start
+  let end
+  if (match[1] === '' && match[2] !== '') {
+    const suffixLength = Math.min(size, Math.max(1, Number(match[2]) || 1))
+    start = Math.max(0, size - suffixLength)
+    end = size - 1
+  } else {
+    start = Math.min(size - 1, Math.max(0, Number(match[1]) || 0))
+    end = match[2] !== '' ? Math.min(size - 1, Math.max(start, Number(match[2]) || start)) : size - 1
+  }
+  end = Math.min(end, start + SPEAKING_SAMPLE_VIDEO_PROXY_CHUNK_BYTES - 1)
+  return { start, end }
+}
+
+const sendSpeakingSampleVideoBlob = async (req, res, item) => {
+  const sizeBytes = Math.max(0, Number(item.sizeBytes || 0) || 0)
+  const requestedRange = String(req.headers.range || '').trim()
+  const boundedRange = parseHttpByteRange(requestedRange, sizeBytes)
+  const headers = buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+  if (boundedRange) headers.Range = `bytes=${boundedRange.start}-${boundedRange.end}`
+  const response = await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(item.objectPath)}`,
+    { headers },
+    { timeoutMs: 120000, retries: 0 }
+  )
+  const buffer = Buffer.from(await response.arrayBuffer())
+  const contentType = response.headers.get('content-type') || item.mimeType || 'video/webm'
+  if (boundedRange && sizeBytes > 0) {
+    res.status(206)
+    res.setHeader('Content-Range', `bytes ${boundedRange.start}-${boundedRange.start + buffer.length - 1}/${sizeBytes}`)
+  } else {
+    res.status(response.status === 206 ? 206 : 200)
+    const contentRange = response.headers.get('content-range')
+    if (contentRange) res.setHeader('Content-Range', contentRange)
+  }
+  res.setHeader('Content-Type', contentType)
+  res.setHeader('Content-Length', String(buffer.length))
+  res.setHeader('Accept-Ranges', 'bytes')
+  res.setHeader('Cache-Control', 'private, max-age=0, must-revalidate')
+  res.setHeader('X-Content-Type-Options', 'nosniff')
+  return res.send(buffer)
 }
 
 const loadSpeakingSampleVideoRecords = async ({ forceRefresh = false } = {}) => {
@@ -11574,6 +11689,37 @@ app.get('/api/speaking-sample-videos', requireAuth, async (_req, res) => {
   }
 })
 
+app.get('/api/speaking-sample-videos/:topicId/blob', async (req, res) => {
+  try {
+    const topicId = String(req.params?.topicId || '').trim()
+    if (!topicId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'topicId is required.' }
+      })
+    }
+    const existing = await findSpeakingSampleVideoRecordByTopicId(topicId)
+    if (!existing?.objectPath) {
+      return res.status(404).json({
+        error: { status: 404, type: 'not_found', message: 'No speaking sample video found for this topic.' }
+      })
+    }
+    if (!verifySpeakingSampleVideoPlaybackSignature(existing, req.query)) {
+      return res.status(403).json({
+        error: { status: 403, type: 'forbidden', message: 'This speaking sample video link has expired. Refresh the page and try again.' }
+      })
+    }
+    return sendSpeakingSampleVideoBlob(req, res, existing)
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'speaking_sample_video_blob_error',
+        message: error instanceof Error ? error.message : 'Could not load speaking sample video.'
+      }
+    })
+  }
+})
+
 app.get('/api/admin/speaking-sample-videos', requireAdmin, async (_req, res) => {
   try {
     const records = await loadSpeakingSampleVideoRecords({ forceRefresh: true })
@@ -11802,25 +11948,13 @@ app.get('/api/admin/speaking-sample-videos/:topicId/blob', requireAdmin, async (
         error: { status: 400, type: 'validation_error', message: 'topicId is required.' }
       })
     }
-    const records = await loadSpeakingSampleVideoRecords({ forceRefresh: true })
-    const existing = records.find((item) => String(item.topicId) === topicId)
+    const existing = await findSpeakingSampleVideoRecordByTopicId(topicId, { forceRefresh: true })
     if (!existing?.objectPath) {
       return res.status(404).json({
         error: { status: 404, type: 'not_found', message: 'No speaking sample video found for this topic.' }
       })
     }
-    const response = await supabaseRequest(
-      `/storage/v1/object/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(existing.objectPath)}`,
-      {
-        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
-      },
-      { timeoutMs: 120000, retries: 0 }
-    )
-    const buffer = Buffer.from(await response.arrayBuffer())
-    res.setHeader('Content-Type', existing.mimeType || 'video/webm')
-    res.setHeader('Content-Length', String(buffer.length))
-    res.setHeader('Cache-Control', 'private, max-age=60')
-    return res.send(buffer)
+    return sendSpeakingSampleVideoBlob(req, res, existing)
   } catch (error) {
     return res.status(error?.status || 500).json({
       error: {

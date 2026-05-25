@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
 import './App.css'
+import './ExpectedScoreModal.css'
+import { WritingGuidePage } from './WritingGuidePage'
 import { ListeningSectionExamView, type ListeningNotebookSavePayload } from './ListeningSectionExamView'
 import {
   buildListeningSectionExamGroups,
@@ -145,6 +147,11 @@ import {
   parseFillContextFromPrompt,
   type ReadingFillQuestionGroup
 } from './readingFillDisplay'
+import {
+  cleanReadingPassageParagraphs as cleanReadingPassageParagraphsShared,
+  sanitizeReadingPromptForDisplay as sanitizeReadingPromptForDisplayShared,
+  sanitizeReadingQuestionSectionTextForDisplay as sanitizeReadingQuestionSectionTextShared
+} from './readingOcrCleanup'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -180,7 +187,7 @@ const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
   set.audioCacheKey || `listening-foundation-${set.id}`
 
 type Role = 'student' | 'admin' | 'trial'
-type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'notebook' | 'admin'
+type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin'
 type AdminWorkspaceSection =
   | 'landing'
   | 'reading'
@@ -707,11 +714,27 @@ const ADMIN_WORD_COUNT_PRESETS: Record<
   }
 }
 
-const getAdminWordCountTarget = (part: 'part1' | 'part3', preset: AdminWordCountPreset = 'band7') =>
-  ADMIN_WORD_COUNT_PRESETS[part][preset]
+const getAdminWordCountTarget = (
+  part: 'part1' | 'part3',
+  preset: AdminWordCountPreset = 'band7',
+  questionMultiplier = 1
+) => {
+  const target = ADMIN_WORD_COUNT_PRESETS[part][preset]
+  const multiplier = Math.max(1, Math.round(questionMultiplier))
+  return {
+    ...target,
+    min: target.min * multiplier,
+    max: target.max * multiplier
+  }
+}
 
-const getAdminWordCountFeedback = (part: 'part1' | 'part3', count: number, preset: AdminWordCountPreset = 'band7') => {
-  const target = getAdminWordCountTarget(part, preset)
+const getAdminWordCountFeedback = (
+  part: 'part1' | 'part3',
+  count: number,
+  preset: AdminWordCountPreset = 'band7',
+  questionMultiplier = 1
+) => {
+  const target = getAdminWordCountTarget(part, preset, questionMultiplier)
   if (count >= target.min && count <= target.max) {
     return { target, isGood: true, label: 'Good length', hint: 'Fits the target range' }
   }
@@ -2676,6 +2699,13 @@ const EXPECTED_SCORE_OPTIONS: Array<{
     ]
   }
 ] as const
+
+const parsePdoyRecommendation = (example: string) => {
+  const normalized = String(example || '').trim()
+  const match = normalized.match(/^P['’]?Doy['’]?s Recommendation:\s*(.+)$/i)
+  if (match) return { tag: "P'Doy", text: match[1].trim() }
+  return { tag: null as string | null, text: normalized }
+}
 
 const PART1_GENERIC_RECOMMENDATIONS: RecommendationItem[] = [
   { level: 'B1', phrase: 'to be honest', tip: 'ใช้เปิดคำตอบให้ฟังเป็นธรรมชาติขึ้น' },
@@ -4820,17 +4850,148 @@ const findReadingQuestionRange = (passage: ReadingPassageRecord | null, question
 const extractReadingQuestionBlock = (questionSectionText: string, questionNumber: number) => {
   const escapedNumber = String(questionNumber).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const pattern = new RegExp(
-    `(?:^|\\n)\\s*${escapedNumber}\\s+([\\s\\S]*?)(?=\\n\\s*\\d+\\s+|$)`,
+    `(?:^|\\n)\\s*${escapedNumber}\\s*[.)]?\\s+([\\s\\S]*?)(?=\\n\\s*\\d+\\s*[.)]?\\s+|$)`,
     'i'
   )
   const match = String(questionSectionText || '').match(pattern)
   return String(match?.[1] || '').trim()
 }
 
+const stripReadingMcqOptionsFromPrompt = (prompt: string) => {
+  let text = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (!text) return text
+
+  text = stripReadingMatchingListFromPrompt(text)
+
+  if (/\s[A-G]\)\s+/i.test(text)) {
+    const cut = text.search(/\s[A-G]\)\s+/i)
+    if (cut > 20) text = text.slice(0, cut).trim()
+  }
+
+  if (/\s[A-G]\s+.+\s[B-G]\s+/.test(text)) {
+    const cut = text.search(/\s[A-G]\s+/i)
+    if (cut > 20) text = text.slice(0, cut).trim()
+  } else {
+    const cut = text.search(/\s[A-G]\s+[A-Z"'(]/)
+    if (cut > 20 && text.length - cut < 120) text = text.slice(0, cut).trim()
+  }
+
+  return text
+}
+
+const getReadingMultipleChoicePromptStem = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion
+) => {
+  const range = findReadingQuestionRange(passage, question)
+  const scopedSection = extractReadingQuestionRangeBlock(
+    passage?.questionSectionText || '',
+    range.start,
+    range.end
+  )
+  const block = extractReadingQuestionBlock(
+    scopedSection || passage?.questionSectionText || '',
+    question.number
+  )
+
+  if (block) {
+    const lines = block
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+    const stemLines: string[] = []
+    for (const line of lines) {
+      if (/^[A-G]\s+/.test(line)) break
+      stemLines.push(line)
+    }
+    if (stemLines.length) {
+      return stemLines.join(' ').replace(/^\d+\.\s*/, '').trim()
+    }
+
+    const inline = block.replace(/^\d+\.\s*/, '').trim()
+    const inlineCut = inline.search(/\s+[A-G][\).:\-]?\s+[A-Z"'(]/)
+    if (inlineCut > 20) return inline.slice(0, inlineCut).trim()
+  }
+
+  return stripReadingMcqOptionsFromPrompt(String(question.prompt || ''))
+}
+
+const getReadingQuestionDisplayPrompt = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion
+) => {
+  if (question.answerType === 'multiple-choice' && !isReadingChooseTwoQuestion(passage, question)) {
+    const stem = getReadingMultipleChoicePromptStem(passage, question)
+    if (stem) return stem
+  }
+  return question.prompt
+}
+
+const READING_LETTER_OPTION_LINE = /^([A-J])\s+(.+)$/i
+
+const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
+  const lines = String(sourceText || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+  for (let index = 0; index < lines.length; index += 1) {
+    if (!/^\d+[\.)]?\s+/.test(lines[index])) continue
+    let cursor = index + 1
+    while (cursor < lines.length && READING_LETTER_OPTION_LINE.test(lines[cursor])) {
+      cursor += 1
+    }
+    if (cursor > index + 1) return true
+  }
+
+  return false
+}
+
+const extractSharedReadingLetterOptionBank = (sourceText: string) => {
+  if (readingBlockHasPerQuestionLetterOptions(sourceText)) return []
+
+  const lines = String(sourceText || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const bankLines: string[] = []
+
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    if (READING_LETTER_OPTION_LINE.test(lines[index])) {
+      bankLines.unshift(lines[index])
+    } else if (bankLines.length >= 3) {
+      break
+    } else {
+      bankLines.length = 0
+    }
+  }
+
+  if (bankLines.length < 3) return []
+
+  return bankLines
+    .map((line) => {
+      const match = line.match(READING_LETTER_OPTION_LINE)
+      if (!match) return null
+      return { letter: match[1].toUpperCase(), text: match[2].trim() }
+    })
+    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+}
+
+const isReadingLetterBankMatchingBlock = (block: string) => {
+  const normalized = String(block || '')
+  if (/choose the correct letter,\s*A,\s*B,\s*C or D/i.test(normalized) && readingBlockHasPerQuestionLetterOptions(normalized)) {
+    return false
+  }
+  if (/match\s+each/i.test(normalized)) return true
+  if (/complete each sentence/i.test(normalized)) return true
+  if (/complete the summary using the list of (?:words|phrases)/i.test(normalized)) return true
+  return extractSharedReadingLetterOptionBank(normalized).length >= 3
+}
+
 const READING_ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
 
 const isReadingMatchingHeadingQuestion = (
-  _passage: ReadingPassageRecord | null,
+  passage: ReadingPassageRecord | null,
   question: ReadingQuestion | null
 ) => {
   if (!question) return false
@@ -4859,6 +5020,14 @@ const isReadingMatchingHeadingQuestion = (
     (/^(?:paragraph|section)\s+[A-G]\b/i.test(prompt))
   ) {
     return true
+  }
+
+  if (passage && READING_ROMAN_HEADING_PATTERN.test(answer)) {
+    const range = findReadingQuestionRange(passage, question)
+    const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+    if (/choose the correct heading|list of headings/i.test(block) && /paragraph\s+[A-F]/i.test(block)) {
+      return true
+    }
   }
 
   return false
@@ -4902,10 +5071,10 @@ const isReadingMatchingStatementQuestion = (
     return false
   }
   const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
-  if (!/^[A-G]$/.test(answer)) return false
+  if (!/^[A-J]$/i.test(answer)) return false
   const range = findReadingQuestionRange(passage, question)
   const block = extractReadingQuestionRangeBlock(passage?.questionSectionText || '', range.start, range.end)
-  return /match\s+each/i.test(block)
+  return isReadingLetterBankMatchingBlock(block)
 }
 
 const getReadingMatchingQuestionKind = (
@@ -4925,7 +5094,7 @@ const isReadingMatchingQuestion = (
 
 const extractReadingMatchingListOptions = (sourceText: string) => {
   const listMatch = sourceText.match(
-    /List of (?:Headings|Ideas|Researchers|People|Statements)\s*\n([\s\S]*?)(?=\n\s*\d+\s*(?:[.)]|\s)|\nQuestions\s+|\nNB\b|$)/i
+    /List of (?:Headings|Ideas|Researchers|People|Statements|Companies|Dates|Words|Phrases|Endings)\s*\n([\s\S]*?)(?=\n\s*\d+\s*(?:[.)]|\s)|\nQuestions?\s+|\nNB\b|$)/i
   )
   const listSource = listMatch?.[1] || ''
   const romanOptions = listSource
@@ -4940,16 +5109,36 @@ const extractReadingMatchingListOptions = (sourceText: string) => {
     .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
   if (romanOptions.length) return romanOptions
 
-  return listSource
+  const letterOptions = listSource
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const match = line.match(/^([A-G])\s+(.+)$/i)
+      const match = line.match(READING_LETTER_OPTION_LINE)
       if (!match) return null
       return { letter: match[1].toUpperCase(), text: match[2].trim() }
     })
     .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+  if (letterOptions.length) return letterOptions
+
+  const inlineBankMatch = sourceText.match(
+    /\n([A-J]\s+[^\n]+(?:\n[A-J]\s+[^\n]+){2,})\s*(?:\nQuestions?\s+|\n##|$)/i
+  )
+  if (inlineBankMatch?.[1]) {
+    const inlineOptions = inlineBankMatch[1]
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const match = line.match(READING_LETTER_OPTION_LINE)
+        if (!match) return null
+        return { letter: match[1].toUpperCase(), text: match[2].trim() }
+      })
+      .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+    if (inlineOptions.length >= 3) return inlineOptions
+  }
+
+  return extractSharedReadingLetterOptionBank(sourceText)
 }
 
 const getReadingMatchingAnswerOptions = (
@@ -5021,8 +5210,10 @@ const extractReadingMatchingGroupInstruction = (
     const instructionLines = lines.filter(
       (line) =>
         /match\s+each/i.test(line) ||
+        /complete each sentence/i.test(line) ||
+        /complete the summary using the list of (?:words|phrases)/i.test(line) ||
         /^write\s+the\s+correct\s+letter/i.test(line) ||
-        /list of (?:ideas|researchers|people|statements)/i.test(line) ||
+        /list of (?:ideas|researchers|people|statements|companies|dates|words|phrases)/i.test(line) ||
         /^nb\b/i.test(line)
     )
     if (instructionLines.length) return instructionLines.join('\n')
@@ -5046,6 +5237,21 @@ const getReadingHeadingParagraphStatement = (
   if (letterMatch) return `Paragraph ${letterMatch[1].toUpperCase()}`
   if (index >= 0) return `Paragraph ${String.fromCharCode(65 + index)}`
   return 'Choose the correct heading for this section.'
+}
+
+const extractReadingSummaryGapStatement = (block: string, questionNumber: number) => {
+  const escapedNumber = String(questionNumber).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const source = String(block || '')
+  const patterns = [
+    new RegExp(`(.{0,100}\\b${escapedNumber}\\s*(?:[.．…⋯]+|_{2,}).{0,100})`, 'i'),
+    new RegExp(`(.{0,100}\\b${escapedNumber}\\s+[A-Za-z]{1,10}\\s*[.．…⋯]??.{0,80})`, 'i'),
+    new RegExp(`(.{0,100}\\b(?:a|an|the|to|for|of|in|with)\\s+${escapedNumber}\\s+\\S.{0,80})`, 'i')
+  ]
+  for (const pattern of patterns) {
+    const gapMatch = source.match(pattern)
+    if (gapMatch?.[1]) return gapMatch[1].replace(/\s+/g, ' ').trim()
+  }
+  return ''
 }
 
 const getReadingMatchingQuestionStatement = (
@@ -5077,7 +5283,14 @@ const getReadingMatchingQuestionStatement = (
   if (kind === 'information') {
     return prompt.replace(/^which paragraph:\s*/i, '').trim() || prompt
   }
-  return stripReadingMatchingListFromPrompt(prompt) || prompt
+  const cleanedPrompt = stripReadingMatchingListFromPrompt(prompt) || prompt
+  if (cleanedPrompt) return cleanedPrompt
+  const summaryGap = extractReadingSummaryGapStatement(
+    scopedSection || passage?.questionSectionText || '',
+    question.number
+  )
+  if (summaryGap) return summaryGap
+  return `Question ${question.number}`
 }
 
 const buildReadingMatchingGroupFromQuestions = (
@@ -5387,7 +5600,10 @@ const extractReadingMultipleChoiceOptions = (
     if (fromSection.length) return fromSection
   }
 
-  const block = extractReadingQuestionBlock(passage.questionSectionText, question.number)
+  const block = extractReadingQuestionBlock(
+    sectionBlock || passage.questionSectionText,
+    question.number
+  )
   const optionSource = block || sectionBlock || passage.questionSectionText
   const lines = optionSource
     .split('\n')
@@ -5395,7 +5611,7 @@ const extractReadingMultipleChoiceOptions = (
     .filter(Boolean)
   return lines
     .map((line) => {
-      const match = line.match(/^([A-G])\s+(.+)$/i)
+      const match = line.match(/^([A-G])[\).:\-]?\s+(.+)$/i)
       if (!match) return null
       return {
         letter: match[1].toUpperCase(),
@@ -5808,20 +6024,21 @@ const sanitizeReadingQuestionSectionLineForDisplay = (line: string) => {
 }
 
 const sanitizeReadingQuestionSectionTextForDisplay = (text: string) =>
-  String(text || '')
-    .replace(/\r/g, '')
-    .replace(/\s*Drag and drop an option[\s\S]*?(?=\nQuestions?\s+\d|\n\s*\d+\.\s|$)/gi, '\n')
-    .replace(/<(?:form|input|div|span|script)\b[\s\S]*?(?=\n|$)/gi, '')
-    .split('\n')
-    .map((line) => sanitizeReadingQuestionSectionLineForDisplay(line))
-    .filter(Boolean)
-    .join('\n')
-    .trim()
+  sanitizeReadingQuestionSectionTextShared(
+    String(text || '')
+      .replace(/\r/g, '')
+      .replace(/\s*Drag and drop an option[\s\S]*?(?=\nQuestions?\s+\d|\n\s*\d+\.\s|$)/gi, '\n')
+      .replace(/<(?:form|input|div|span|script)\b[\s\S]*?(?=\n|$)/gi, '')
+      .split('\n')
+      .map((line) => sanitizeReadingQuestionSectionLineForDisplay(line))
+      .filter(Boolean)
+      .join('\n')
+  )
 
 const stripReadingMatchingListFromPrompt = (text: string) =>
   String(text || '')
     .replace(
-      /(?:\.\s*|\s+)List of (?:Headings|Ideas|Researchers|People|Statements)\b[\s\S]*$/i,
+      /(?:\.\s*|\s+)List of (?:Headings|Ideas|Researchers|People|Statements|Companies|Dates|Words|Phrases|Endings)\b[\s\S]*$/i,
       ''
     )
     .trim()
@@ -5840,37 +6057,13 @@ const sanitizeReadingQuestionPromptForDisplay = (prompt: string, _correctAnswer:
     )
     return remainder || 'Complete the summary below.'
   }
-  return stripReadingMatchingListFromPrompt(stripReadingDragDropUiText(raw) || raw)
-}
-
-const isJunkReadingPassageParagraphForDisplay = (paragraph: string) => {
-  const text = String(paragraph || '').trim()
-  if (!text) return true
-  if (/^<\w+/i.test(text)) return true
-  if (/^<(?:form|input|div|span|script)\b/i.test(text)) return true
-  if (/<(?:form|input|div|span|script)\b/i.test(text) && text.replace(/\s/g, '').length < 24) return true
-  if (/^\d*Drop heading here<input/i.test(text)) return true
-  if (/^\d+Drop heading here[A-H]\.?$/i.test(text)) return true
-  if (/^hidden"\s*form=/i.test(text)) return true
-  if (/form="\s*$/i.test(text)) return true
-  if (text.length < 50 && /[<>"'=]/.test(text)) return true
-  return false
+  return sanitizeReadingPromptForDisplayShared(
+    stripReadingMatchingListFromPrompt(stripReadingDragDropUiText(raw) || raw)
+  )
 }
 
 const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
-  const cleaned = (Array.isArray(paragraphs) ? paragraphs : [])
-    .map((paragraph) =>
-      String(paragraph || '')
-        .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
-        .replace(/^\d+Drop heading here<input[\s\S]*$/i, '')
-        .replace(/Drop heading here[^.]*\.\.\.\s*/gi, '')
-        .replace(/<(?:form|input|div|span|script)\b[\s\S]*$/i, '')
-        .replace(/<[^>]*$/g, '')
-        .replace(/hidden"\s*form="?\s*$/i, '')
-        .trim()
-    )
-    .filter((paragraph) => !isJunkReadingPassageParagraphForDisplay(paragraph))
-
+  const cleaned = cleanReadingPassageParagraphsShared(paragraphs)
   const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
   if (cleaned.length > 2 || totalLength < 3000) return cleaned
 
@@ -5899,13 +6092,22 @@ const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
   return chunks.length >= 2 ? chunks : cleaned
 }
 
-const normalizeReadingQuestionForDisplay = (question: ReadingQuestion): ReadingQuestion => ({
-  ...question,
-  prompt: sanitizeReadingQuestionPromptForDisplay(
-    sanitizeReadingJudgementPrompt(question.prompt, question.answerType),
+const normalizeReadingQuestionForDisplay = (
+  question: ReadingQuestion,
+  passage?: ReadingPassageRecord | null
+): ReadingQuestion => {
+  const sanitized = sanitizeReadingQuestionPromptForDisplay(
+    stripReadingMatchingListFromPrompt(
+      sanitizeReadingJudgementPrompt(question.prompt, question.answerType)
+    ),
     question.correctAnswer
   )
-})
+  const prompt =
+    question.answerType === 'multiple-choice' && passage && !isReadingChooseTwoQuestion(passage, question)
+      ? getReadingMultipleChoicePromptStem(passage, { ...question, prompt: sanitized }) || sanitized
+      : sanitized
+  return { ...question, prompt }
+}
 
 const normalizeReadingExamForDisplay = (exam: ReadingExamRecord): ReadingExamRecord => ({
   ...exam,
@@ -5915,7 +6117,9 @@ const normalizeReadingExamForDisplay = (exam: ReadingExamRecord): ReadingExamRec
       ...passage,
       bodyParagraphs: cleanReadingPassageParagraphsForDisplay(passage.bodyParagraphs || []),
       questionSectionText: sanitizeReadingQuestionSectionTextForDisplay(passage.questionSectionText || ''),
-      questions: (passage.questions || []).map(normalizeReadingQuestionForDisplay)
+      questions: (passage.questions || []).map((question) =>
+        normalizeReadingQuestionForDisplay(question, passage)
+      )
     }))
   }
 })
@@ -7179,7 +7383,9 @@ function App() {
   const [adminStudentPreviewOpen, setAdminStudentPreviewOpen] = useState(false)
   const [adminPreviewedAsStudent, setAdminPreviewedAsStudent] = useState(false)
   const [adminRecordCountdown, setAdminRecordCountdown] = useState<number | null>(null)
+  const [adminRecordedVideoHasBakedFlip, setAdminRecordedVideoHasBakedFlip] = useState(false)
   const [adminTopicQuestionIndex, setAdminTopicQuestionIndex] = useState(-1)
+  const [adminTopicQuestionStartWordCount, setAdminTopicQuestionStartWordCount] = useState(0)
   const adminTopicQuestionBannerRef = useRef<AdminTopicQuestionBannerState | null>(null)
   const [adminMicLevel, setAdminMicLevel] = useState(0)
   const [adminCameraPreviewActive, setAdminCameraPreviewActive] = useState(false)
@@ -7221,6 +7427,7 @@ function App() {
   }, [])
   const isTrialUser = authSession?.role === 'trial'
   const canAccessListening = authSession?.role === 'admin' || authSession?.role === 'student'
+  const canAccessWriting = authSession?.role === 'admin'
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -7250,6 +7457,7 @@ function App() {
   const adminMicAnalyserRef = useRef<{ context: AudioContext; interval: number } | null>(null)
   const adminRecordCountdownRef = useRef<number | null>(null)
   const adminTopicSequenceCancelRef = useRef(false)
+  const adminTopicQuestionStartWordCountRef = useRef(0)
   const audioChunksRef = useRef<Blob[]>([])
   const latestAudioBlobRef = useRef<Blob | null>(null)
   const recordingStopResolverRef = useRef<((blob: Blob | null) => void) | null>(null)
@@ -9430,8 +9638,13 @@ function App() {
   }, [activeReadingMatchingGroups])
   const activeReadingFillQuestionGroups = useMemo(
     () =>
-      buildReadingFillQuestionGroups(activeReadingPassage, activeReadingQuestions, isReadingMatchingQuestion),
-    [activeReadingPassage, activeReadingQuestions]
+      buildReadingFillQuestionGroups(
+        activeReadingPassage,
+        activeReadingQuestions,
+        isReadingMatchingQuestion,
+        activeReadingExam?.id
+      ),
+    [activeReadingPassage, activeReadingQuestions, activeReadingExam?.id]
   )
   const activeReadingFillGroupByQuestionNumber = useMemo(() => {
     const lookup = new Map<number, ReadingFillQuestionGroup>()
@@ -9918,9 +10131,12 @@ function App() {
   const adminLiveSpokenWordCount = countAdminSpokenWords(
     `${adminSubtitleTranscript.trim()} ${adminSubtitleInterim.trim()}`.trim()
   )
+  const adminCurrentQuestionSpokenWordCount = adminIsTopicSequenceTarget
+    ? Math.max(0, adminLiveSpokenWordCount - adminTopicQuestionStartWordCount)
+    : adminLiveSpokenWordCount
   const adminWordCountFeedback =
     adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
-      ? getAdminWordCountFeedback(adminSelectedVideoTopic.samplePart, adminLiveSpokenWordCount, adminWordCountPreset)
+      ? getAdminWordCountFeedback(adminSelectedVideoTopic.samplePart, adminCurrentQuestionSpokenWordCount, adminWordCountPreset)
       : null
   const adminSelectedWordCountTarget =
     adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
@@ -9967,6 +10183,13 @@ function App() {
     Boolean(adminActiveSubtitleCue?.text),
     Boolean(adminRecordedVideoUrl)
   )
+  const adminPreviewShouldFlipVideo = Boolean(
+    adminSubtitleStyle.videoFlipHorizontal && (!adminRecordedVideoUrl || !adminRecordedVideoHasBakedFlip)
+  )
+  const adminPlaybackSubtitleStyle: AdminSubtitleStyle = {
+    ...adminSubtitleStyle,
+    videoFlipHorizontal: Boolean(adminSubtitleStyle.videoFlipHorizontal && !adminRecordedVideoHasBakedFlip)
+  }
   const shouldShowAdminSubtitleKnowledgeNotes =
     Boolean(adminRecordedVideoUrl) &&
     adminVideoPreviewMode !== 'source' &&
@@ -10128,26 +10351,12 @@ function App() {
   const adminReviewWordCount = countAdminSpokenWords(adminReviewTranscriptText)
   const adminReviewWordFeedback =
     adminSelectedVideoTopic?.samplePart === 'part1' || adminSelectedVideoTopic?.samplePart === 'part3'
-      ? (() => {
-          const base = getAdminWordCountFeedback(
-            adminSelectedVideoTopic.samplePart,
-            adminReviewWordCount,
-            adminWordCountPreset
-          )
-          if (adminTopicQuestionCount <= 1) return base
-          return {
-            ...base,
-            target: {
-              ...base.target,
-              min: base.target.min * adminTopicQuestionCount,
-              max: base.target.max * adminTopicQuestionCount
-            },
-            hint:
-              base.isGood
-                ? `Full topic (${adminTopicQuestionCount} questions) fits the target range`
-                : base.hint
-          }
-        })()
+      ? getAdminWordCountFeedback(
+          adminSelectedVideoTopic.samplePart,
+          adminReviewWordCount,
+          adminWordCountPreset,
+          adminTopicQuestionCount
+        )
       : null
   const adminPostRecordingReportItems = [
     {
@@ -11115,6 +11324,13 @@ function App() {
       setActivePage('home')
     }
   }, [activePage, isStudentNotebookLocked])
+
+  useEffect(() => {
+    if (canAccessWriting) return
+    if (activePage === 'writing') {
+      setActivePage('home')
+    }
+  }, [activePage, canAccessWriting])
 
   useEffect(() => {
     if (!authSession?.accessToken) {
@@ -12122,11 +12338,11 @@ function App() {
 
   const getAdminVideoRecorderMimeType = () => {
     const candidates = [
+      'video/mp4;codecs=h264,aac',
+      'video/mp4',
       'video/webm;codecs=vp9,opus',
       'video/webm;codecs=vp8,opus',
-      'video/webm',
-      'video/mp4;codecs=h264,aac',
-      'video/mp4'
+      'video/webm'
     ]
     return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || ''
   }
@@ -12154,7 +12370,7 @@ function App() {
   }
 
   const getAdminPostBlurMimeType = () => {
-    const candidates = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm']
+    const candidates = ['video/mp4;codecs=h264,aac', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm']
     return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || ''
   }
 
@@ -12400,14 +12616,18 @@ function App() {
       }
       context.drawImage(sourceVideo, 0, 0, width, height)
       context.restore()
+      context.setTransform(1, 0, 0, 1, 0, 0)
       const elapsedSeconds = startedAt > 0 ? (performance.now() - startedAt) / 1000 : 0
       if (samplePart === 'part2') {
         drawTimerOverlay(Math.max(0, ADMIN_PART2_SAMPLE_RECORDING_SECONDS - elapsedSeconds))
       } else if (samplePart === 'part1' || samplePart === 'part3') {
         drawQuestionBannerOverlay()
+        const totalWordCount = countAdminSpokenWords(
+          `${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim()
+        )
         drawWordCountOverlay(
           samplePart,
-          countAdminSpokenWords(`${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim())
+          Math.max(0, totalWordCount - adminTopicQuestionStartWordCountRef.current)
         )
       }
       animationFrameId = window.requestAnimationFrame(renderFrame)
@@ -12464,9 +12684,14 @@ function App() {
     setAdminVideoRecorderMessage('Applying background blur to the recorded video...')
 
     let animationFrameId = 0
+    let videoFrameCallbackId = 0
     let sourceStream: MediaStream | null = null
     const cleanup = () => {
       if (animationFrameId) window.cancelAnimationFrame(animationFrameId)
+      const frameVideo = video as HTMLVideoElement & { cancelVideoFrameCallback?: (id: number) => void }
+      if (videoFrameCallbackId && frameVideo.cancelVideoFrameCallback) {
+        frameVideo.cancelVideoFrameCallback(videoFrameCallbackId)
+      }
       sourceStream?.getTracks().forEach((track) => track.stop())
       URL.revokeObjectURL(sourceUrl)
     }
@@ -12475,6 +12700,7 @@ function App() {
       video.src = sourceUrl
       video.playsInline = true
       video.preload = 'auto'
+      video.muted = false
       video.volume = 0
       await new Promise<void>((resolve, reject) => {
         video.onloadedmetadata = () => resolve()
@@ -12537,7 +12763,7 @@ function App() {
       }
 
       const drawFrame = () => {
-        if (video.ended || video.paused) return
+        if (video.ended || video.paused) return false
         context.clearRect(0, 0, width, height)
         context.filter = 'blur(18px)'
         context.drawImage(video, -24, -24, width + 48, height + 48)
@@ -12569,7 +12795,24 @@ function App() {
             })
         }
         faceDetectionFrame += 1
-        animationFrameId = window.requestAnimationFrame(drawFrame)
+        return true
+      }
+
+      const scheduleDrawFrame = () => {
+        const frameVideo = video as HTMLVideoElement & {
+          requestVideoFrameCallback?: (callback: (now: number, metadata: { mediaTime: number }) => void) => number
+        }
+        if (frameVideo.requestVideoFrameCallback) {
+          videoFrameCallbackId = frameVideo.requestVideoFrameCallback(() => {
+            videoFrameCallbackId = 0
+            if (drawFrame()) scheduleDrawFrame()
+          })
+          return
+        }
+        animationFrameId = window.requestAnimationFrame(() => {
+          animationFrameId = 0
+          if (drawFrame()) scheduleDrawFrame()
+        })
       }
 
       const processedBlob = await new Promise<Blob>((resolve, reject) => {
@@ -12581,9 +12824,9 @@ function App() {
         video.onended = () => {
           if (recorder.state !== 'inactive') recorder.stop()
         }
-        recorder.start(1000)
         void video.play().then(() => {
-          drawFrame()
+          recorder.start(1000)
+          scheduleDrawFrame()
         }).catch(() => {
           if (recorder.state !== 'inactive') recorder.stop()
           reject(new Error('Could not play the recording for background blur processing.'))
@@ -12631,9 +12874,14 @@ function App() {
     }
 
     let animationFrameId = 0
+    let videoFrameCallbackId = 0
     let sourceStream: MediaStream | null = null
     const cleanup = () => {
       if (animationFrameId) window.cancelAnimationFrame(animationFrameId)
+      const frameVideo = video as HTMLVideoElement & { cancelVideoFrameCallback?: (id: number) => void }
+      if (videoFrameCallbackId && frameVideo.cancelVideoFrameCallback) {
+        frameVideo.cancelVideoFrameCallback(videoFrameCallbackId)
+      }
       sourceStream?.getTracks().forEach((track) => track.stop())
       video.pause()
       video.removeAttribute('src')
@@ -12645,7 +12893,8 @@ function App() {
       video.src = sourceUrl
       video.playsInline = true
       video.preload = 'auto'
-      video.muted = true
+      video.muted = false
+      video.volume = 0
       await new Promise<void>((resolve, reject) => {
         video.onloadedmetadata = () => resolve()
         video.onerror = () => reject(new Error('Could not read the recorded video for upload compaction.'))
@@ -12677,14 +12926,31 @@ function App() {
       }
 
       const drawFrame = () => {
-        if (video.ended || video.paused) return
+        if (video.ended || video.paused) return false
         context.clearRect(0, 0, width, height)
         context.drawImage(video, 0, 0, width, height)
         const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : durationSeconds
         if (duration > 0) {
           setAdminVideoUploadProgress(Math.min(82, Math.max(5, Math.round((video.currentTime / duration) * 82))))
         }
-        animationFrameId = window.requestAnimationFrame(drawFrame)
+        return true
+      }
+
+      const scheduleDrawFrame = () => {
+        const frameVideo = video as HTMLVideoElement & {
+          requestVideoFrameCallback?: (callback: (now: number, metadata: { mediaTime: number }) => void) => number
+        }
+        if (frameVideo.requestVideoFrameCallback) {
+          videoFrameCallbackId = frameVideo.requestVideoFrameCallback(() => {
+            videoFrameCallbackId = 0
+            if (drawFrame()) scheduleDrawFrame()
+          })
+          return
+        }
+        animationFrameId = window.requestAnimationFrame(() => {
+          animationFrameId = 0
+          if (drawFrame()) scheduleDrawFrame()
+        })
       }
 
       const compactBlob = await new Promise<Blob>((resolve, reject) => {
@@ -12696,9 +12962,9 @@ function App() {
         video.onended = () => {
           if (recorder.state !== 'inactive') recorder.stop()
         }
-        recorder.start(1000)
         void video.play().then(() => {
-          drawFrame()
+          recorder.start(1000)
+          scheduleDrawFrame()
         }).catch(() => {
           if (recorder.state !== 'inactive') recorder.stop()
           reject(new Error('Could not play the recording while preparing it for upload.'))
@@ -13081,23 +13347,26 @@ function App() {
     })
   }
 
-  const buildAdminSubtitleCuesFromText = (text: string, durationSeconds: number): AdminSubtitleCue[] => {
+  const buildAdminSubtitleCuesFromText = (text: string, durationSeconds: number, startOffsetSeconds = 0): AdminSubtitleCue[] => {
     const chunks = splitAdminTextIntoOneLineChunks(text)
     if (!chunks.length) return []
+    const startOffset = Math.max(0, Number(startOffsetSeconds) || 0)
     const usableDuration = Math.max(durationSeconds || chunks.length * 4, chunks.length * 2)
     const cueDuration = usableDuration / chunks.length
     return chunks.map((chunk, index) => ({
       id: createAdminSubtitleCueId(),
-      startSeconds: roundAdminSubtitleSeconds(index * cueDuration),
-      endSeconds: roundAdminSubtitleSeconds(Math.min(usableDuration, (index + 1) * cueDuration)),
-      text: chunk
+      startSeconds: roundAdminSubtitleSeconds(startOffset + index * cueDuration),
+      endSeconds: roundAdminSubtitleSeconds(startOffset + Math.min(usableDuration, (index + 1) * cueDuration)),
+      text: chunk,
+      confidence: 0.55
     }))
   }
 
   const regenerateAdminSubtitlesFromTranscript = () => {
-    const duration = adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0
+    const hasTrim = adminVideoTrimEnd > adminVideoTrimStart
+    const duration = hasTrim ? adminVideoTrimEnd - adminVideoTrimStart : adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0
     rememberAdminSubtitleEdit()
-    setAdminSubtitleCuesSafe(buildAdminSubtitleCuesFromText(adminSubtitleTranscriptRef.current, duration))
+    setAdminSubtitleCuesSafe(buildAdminSubtitleCuesFromText(adminSubtitleTranscriptRef.current, duration, hasTrim ? adminVideoTrimStart : 0))
   }
 
   const syncAdminTranscriptFromCues = (cues = adminSubtitleCuesRef.current) => {
@@ -13107,21 +13376,24 @@ function App() {
   const updateAdminSubtitleTextLines = (value: string) => {
     rememberAdminSubtitleEdit()
     const lines = value.split('\n')
-    const duration = adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0
+    const hasTrim = adminVideoTrimEnd > adminVideoTrimStart
+    const startOffset = hasTrim ? adminVideoTrimStart : 0
+    const duration = hasTrim ? adminVideoTrimEnd - adminVideoTrimStart : adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0
     setAdminSubtitleCuesSafe((current) => {
       const baseDuration = duration || Math.max(6, lines.length * 3)
       const defaultCueDuration = Math.max(1.5, baseDuration / Math.max(1, lines.length))
+      const maxEnd = startOffset + baseDuration
       const nextCues = lines.map((line, index) => {
         const existing = current[index]
-        const previousEnd = index > 0 ? current[index - 1]?.endSeconds || index * defaultCueDuration : 0
+        const previousEnd = index > 0 ? current[index - 1]?.endSeconds || startOffset + index * defaultCueDuration : startOffset
         return {
           id: existing?.id || createAdminSubtitleCueId(),
           startSeconds: existing?.startSeconds ?? previousEnd,
-          endSeconds: existing?.endSeconds ?? Math.min(baseDuration, previousEnd + defaultCueDuration),
+          endSeconds: existing?.endSeconds ?? Math.min(maxEnd, previousEnd + defaultCueDuration),
           text: line
         }
       })
-      const normalized = nextCues.map((cue) => normalizeAdminSubtitleCue(cue, duration)).sort((a, b) => a.startSeconds - b.startSeconds)
+      const normalized = nextCues.map((cue) => normalizeAdminSubtitleCue(cue, startOffset + duration)).sort((a, b) => a.startSeconds - b.startSeconds)
       adminSubtitleCuesRef.current = normalized
       setAdminSubtitleTranscriptSafe(normalized.map((cue) => cue.text).filter(Boolean).join(' '))
       return normalized
@@ -13185,18 +13457,22 @@ function App() {
     const sourceText = adminSubtitleCuesRef.current.map((cue) => cue.text).join(' ') || adminSubtitleTranscriptRef.current
     if (!sourceText.trim()) return
     rememberAdminSubtitleEdit()
-    const duration = adminRecordedVideoActualDuration || adminRecordedVideoDuration || adminSubtitleTimelineDuration
+    const hasTrim = adminVideoTrimEnd > adminVideoTrimStart
+    const startOffset = hasTrim ? adminVideoTrimStart : 0
+    const duration = hasTrim ? adminVideoTrimEnd - adminVideoTrimStart : adminRecordedVideoActualDuration || adminRecordedVideoDuration || adminSubtitleTimelineDuration
     const chunks = splitAdminTextIntoOneLineChunks(sourceText)
     const cueDuration = Math.max(1.4, duration / Math.max(1, chunks.length))
     setAdminSubtitleCuesSafe(
       chunks.map((chunk, index) => ({
         id: createAdminSubtitleCueId(),
-        startSeconds: roundAdminSubtitleSeconds(index * cueDuration),
-        endSeconds: roundAdminSubtitleSeconds(Math.min(duration || (index + 1) * cueDuration, (index + 1) * cueDuration)),
-        text: chunk
+        startSeconds: roundAdminSubtitleSeconds(startOffset + index * cueDuration),
+        endSeconds: roundAdminSubtitleSeconds(startOffset + Math.min(duration || (index + 1) * cueDuration, (index + 1) * cueDuration)),
+        text: chunk,
+        confidence: 0.55
       }))
     )
     setAdminSubtitleTranscriptSafe(sourceText.replace(/\s+/g, ' ').trim())
+    setAdminSubtitleDraftMessage('Subtitle lines were shortened with estimated timing. Use Auto-sync subtitles for mouth-timed captions.')
   }
 
   const makeAdminSubtitlesOneLine = () => {
@@ -13222,11 +13498,12 @@ function App() {
         id: createAdminSubtitleCueId(),
         startSeconds: roundAdminSubtitleSeconds(startOffset + index * cueDuration),
         endSeconds: roundAdminSubtitleSeconds(startOffset + Math.min(duration, (index + 1) * cueDuration)),
-        text: chunk
+        text: chunk,
+        confidence: 0.55
       }))
     )
     setAdminSubtitleTranscriptSafe(sourceText.replace(/\s+/g, ' ').trim())
-    setAdminSubtitleDraftMessage('Captions rebuilt as one-line subtitles.')
+    setAdminSubtitleDraftMessage('Captions rebuilt as one-line subtitles with estimated timing. Use Auto-sync subtitles for mouth-timed captions.')
   }
 
   const mergeTinyAdminSubtitleLines = () => {
@@ -13371,7 +13648,9 @@ function App() {
         trimStartSeconds: adminVideoTrimStart,
         trimEndSeconds: adminVideoTrimEnd,
         cues: adminSubtitleCuesRef.current,
-        style: adminSubtitleStyleRef.current,
+        style: {
+          ...adminPlaybackSubtitleStyle
+        },
         includeSubtitles: adminSubtitleCuesRef.current.length > 0,
         format,
         onProgress: setAdminVideoExportProgress,
@@ -13579,6 +13858,13 @@ function App() {
       setAdminVideoRecorderMessage('')
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Local subtitle sync failed.'
+      if (authSession?.accessToken && authSession.role === 'admin') {
+        setAdminSubtitleDraftMessage(`${message} Trying cloud sync now…`)
+        setAdminVideoRecorderMessage('Local subtitle sync was unclear, so I am trying cloud sync automatically.')
+        adminBackendSubtitleSyncStartedRef.current = false
+        await generateAdminSubtitlesFromBackend(options)
+        return
+      }
       setAdminSubtitleDraftMessage(message)
       setAdminVideoRecorderMessage(`${message} You can still add or edit subtitles manually.`)
       adminBackendSubtitleSyncStartedRef.current = false
@@ -14098,6 +14384,7 @@ function App() {
         cues: (asset.subtitles || []).map((cue) => ({ ...cue })),
         style: { ...DEFAULT_ADMIN_SUBTITLE_STYLE, ...(asset.subtitleStyle || {}) }
       })
+      setAdminRecordedVideoHasBakedFlip(false)
       setAdminVideoEditMode('existing')
       setAdminVideoStudioStep('review')
       setAdminVideoRecorderStatus('preview')
@@ -14273,6 +14560,7 @@ function App() {
     setAdminRecordedVideoDuration(0)
     setAdminRecordedVideoActualDuration(0)
     setAdminRecordedVideoSizeBytes(0)
+    setAdminRecordedVideoHasBakedFlip(false)
     setAdminVideoTrimStart(0)
     setAdminVideoTrimEnd(0)
     setAdminVideoUploadProgress(0)
@@ -14608,6 +14896,33 @@ function App() {
     )
   }
 
+  const nudgeAllAdminSubtitleCues = (deltaSeconds: number) => {
+    if (!adminSubtitleCuesRef.current.length) return
+    const maxDuration = adminRecordedVideoActualDuration || adminRecordedVideoDuration || adminSubtitleTimelineDuration
+    const trimStart = adminVideoTrimEnd > adminVideoTrimStart ? adminVideoTrimStart : 0
+    const trimEnd = adminVideoTrimEnd > adminVideoTrimStart ? adminVideoTrimEnd : maxDuration
+    rememberAdminSubtitleEdit()
+    setAdminSubtitleCuesSafe((current) =>
+      current.map((cue) => {
+        const duration = Math.max(0.12, cue.endSeconds - cue.startSeconds)
+        const rawStart = cue.startSeconds + deltaSeconds
+        const lowerBound = trimStart > 0 ? trimStart : 0
+        const upperBound = trimEnd > trimStart ? Math.max(lowerBound, trimEnd - duration) : Math.max(lowerBound, maxDuration - duration)
+        const startSeconds = Math.min(Math.max(lowerBound, rawStart), upperBound)
+        return {
+          ...cue,
+          startSeconds: roundAdminSubtitleSeconds(startSeconds),
+          endSeconds: roundAdminSubtitleSeconds(startSeconds + duration)
+        }
+      })
+    )
+    setAdminSubtitleDraftMessage(
+      deltaSeconds < 0
+        ? `All subtitles moved ${Math.abs(deltaSeconds).toFixed(2)}s earlier.`
+        : `All subtitles moved ${deltaSeconds.toFixed(2)}s later.`
+    )
+  }
+
   const setAdminSubtitleCueEdgeToPlayhead = (cueId: string, edge: 'start' | 'end') => {
     const cue = adminSubtitleCues.find((item) => item.id === cueId)
     if (!cue) return
@@ -14835,6 +15150,7 @@ function App() {
       void loadAdminMediaDevices()
       const isPart2TimedRecording = adminSelectedVideoTopic.samplePart === 'part2'
       const overlayRecordingRenderer = await createAdminRecordingOverlayStream(stream, adminSelectedVideoTopic.samplePart)
+      const recordedVideoWillBakeFlip = Boolean(overlayRecordingRenderer && adminSubtitleStyle.videoFlipHorizontal)
       if (!overlayRecordingRenderer) {
         setAdminVideoRecorderMessage(
           isPart2TimedRecording
@@ -14871,6 +15187,7 @@ function App() {
         const videoBlob = new Blob(adminVideoChunksRef.current, { type: recordedMimeType })
         adminRecordedVideoBlobRef.current = videoBlob
         setAdminRecordedVideoSizeBytes(videoBlob.size)
+        setAdminRecordedVideoHasBakedFlip(recordedVideoWillBakeFlip)
         setAdminBackgroundBlurState(backgroundBlurEnabled ? 'enabled' : adminShouldBlurBackground ? 'unsupported' : 'off')
         const subtitleText = `${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim()
         if (subtitleText && adminSubtitleCuesRef.current.length === 0) {
@@ -14893,10 +15210,11 @@ function App() {
       }
 
       adminVideoStartedAtRef.current = performance.now()
-      // Live Web Speech fights MediaRecorder for the same microphone — use backend auto-sync instead.
-      if (!adminShouldGenerateSubtitlesRef.current) {
+      const needsLiveWordCount = adminSelectedVideoTopic.samplePart === 'part1' || adminSelectedVideoTopic.samplePart === 'part3'
+      // Part 1/3 samples need a live count baked into the video; backend sync can still replace subtitles after stop.
+      if (!adminShouldGenerateSubtitlesRef.current || needsLiveWordCount) {
         startAdminSubtitleCapture({
-          force: adminSelectedVideoTopic.samplePart === 'part1' || adminSelectedVideoTopic.samplePart === 'part3'
+          force: needsLiveWordCount
         })
       } else {
         setAdminSubtitleStatus('idle')
@@ -15019,10 +15337,7 @@ function App() {
       formData.append('backgroundBlurEnabled', String(adminBackgroundBlurState === 'enabled'))
       formData.append('transcript', adminSubtitleTranscript.trim())
       formData.append('subtitlesJson', JSON.stringify(adminSubtitleCues))
-      formData.append(
-        'subtitleStyleJson',
-        JSON.stringify({ ...adminSubtitleStyle, videoFlipHorizontal: false })
-      )
+      formData.append('subtitleStyleJson', JSON.stringify(adminPlaybackSubtitleStyle))
       formData.append('video', videoBlob, `${adminSelectedVideoTopic.id}-sample.${getAdminVideoFileExtension(videoBlob.type)}`)
 
       const payload = await new Promise<{ item: SpeakingSampleVideoAsset }>((resolve, reject) => {
@@ -15087,6 +15402,7 @@ function App() {
       setAdminRecordedVideoUrl('')
       setAdminRecordedVideoActualDuration(0)
       setAdminRecordedVideoSizeBytes(0)
+      setAdminRecordedVideoHasBakedFlip(false)
       setAdminVideoTrimStart(0)
       setAdminVideoTrimEnd(0)
       setAdminVideoRecorderStatus('idle')
@@ -15562,7 +15878,17 @@ function App() {
   const cancelAdminTopicQuestionSequence = () => {
     adminTopicSequenceCancelRef.current = true
     adminTopicQuestionBannerRef.current = null
+    adminTopicQuestionStartWordCountRef.current = 0
     setAdminTopicQuestionIndex(-1)
+    setAdminTopicQuestionStartWordCount(0)
+  }
+
+  const markAdminTopicQuestionWordStart = () => {
+    const count = countAdminSpokenWords(
+      `${adminSubtitleTranscriptRef.current.trim()} ${adminSubtitleInterimRef.current.trim()}`.trim()
+    )
+    adminTopicQuestionStartWordCountRef.current = count
+    setAdminTopicQuestionStartWordCount(count)
   }
 
   const syncAdminTopicQuestionBanner = (index: number, target: SpeakingVideoSampleTarget) => {
@@ -15588,6 +15914,8 @@ function App() {
 
   const initializeAdminTopicQuestionRecording = (target: SpeakingVideoSampleTarget) => {
     adminTopicSequenceCancelRef.current = false
+    adminTopicQuestionStartWordCountRef.current = 0
+    setAdminTopicQuestionStartWordCount(0)
     syncAdminTopicQuestionBanner(0, target)
     const total = getSpeakingTopicQuestionList(target).length
     setAdminVideoRecorderMessage(
@@ -15603,6 +15931,7 @@ function App() {
       setAdminVideoRecorderMessage('All questions shown — press Stop when you are finished.')
       return
     }
+    markAdminTopicQuestionWordStart()
     syncAdminTopicQuestionBanner(nextIndex, adminSelectedVideoTopic)
     setAdminVideoRecorderMessage(
       `Question ${nextIndex + 1} of ${questions.length} — click Read aloud when ready.`
@@ -17387,6 +17716,10 @@ function App() {
     })
   }
 
+  const openWritingLanding = () => {
+    setActivePage('writing')
+  }
+
   const openReadingLanding = (view: ReadingEntryView = 'levels') => {
     setReadingWorkspaceMode('bank')
     setReadingEntryView(view)
@@ -18182,42 +18515,44 @@ function App() {
             {group.instruction}
           </pre>
         )}
-        <div className="readingFillOriginalBlock">
-          {group.displayLines.map((line, lineIndex) => {
-            const onlySegment = line.segments.length === 1 ? line.segments[0] : null
-
-            if (onlySegment?.kind === 'clue') {
-              return (
-                <p key={`${group.id}-clue-${lineIndex}`} className="readingFillClueLine">
-                  {onlySegment.text}
-                </p>
-              )
+        <div
+          className={`readingFillOriginalBlock ${
+            group.displayLines.some((line) => line.procedure || line.procedureSegments?.length)
+              ? 'readingFillOriginalBlock-table'
+              : ''
+          }`.trim()}
+        >
+          <div
+            className={
+              group.displayLines.some((line) => line.procedure || line.procedureSegments?.length)
+                ? 'readingFillTable'
+                : undefined
             }
-
-            if (onlySegment?.kind === 'heading') {
-              return (
-                <p key={`${group.id}-heading-${lineIndex}`} className="readingFillSectionHeading">
-                  {onlySegment.text}
-                </p>
-              )
-            }
-
-            return (
-              <p key={`${group.id}-line-${lineIndex}`} className="readingFillLine">
-                {line.segments.map((segment, segmentIndex) => {
+          >
+            {group.displayLines.map((line, lineIndex) => {
+              const renderFillSegments = (segments = line.segments) =>
+                segments.map((segment, segmentIndex) => {
                   if (segment.kind === 'text') {
-                    return <span key={`${group.id}-text-${lineIndex}-${segmentIndex}`}>{segment.text} </span>
+                    return (
+                      <span key={`${group.id}-text-${lineIndex}-${segmentIndex}`}>{segment.text} </span>
+                    )
                   }
                   if (segment.kind === 'heading') {
                     return (
-                      <strong key={`${group.id}-heading-${lineIndex}-${segmentIndex}`} className="readingFillInlineHeading">
+                      <strong
+                        key={`${group.id}-heading-${lineIndex}-${segmentIndex}`}
+                        className="readingFillInlineHeading"
+                      >
                         {segment.text}{' '}
                       </strong>
                     )
                   }
                   if (segment.kind === 'clue') {
                     return (
-                      <span key={`${group.id}-clue-${lineIndex}-${segmentIndex}`} className="readingFillClueInline">
+                      <span
+                        key={`${group.id}-clue-${lineIndex}-${segmentIndex}`}
+                        className="readingFillClueInline"
+                      >
                         {segment.text}{' '}
                       </span>
                     )
@@ -18230,13 +18565,65 @@ function App() {
                   return renderReadingFillBlankSlot(
                     { number: question.number },
                     { before: segment.before, after: segment.after },
-                    `reading-fill-slot-${group.id}-${segment.questionNumber}`,
+                    `reading-fill-slot-${group.id}-${segment.questionNumber}-${lineIndex}-${segmentIndex}`,
                     { advancedLayout: isAdvancedReadingExam }
                   )
-                })}
-              </p>
-            )
-          })}
+                })
+
+              if (
+                line.segments.length === 2 &&
+                line.segments.every(
+                  (segment) =>
+                    segment.kind === 'heading' &&
+                    (segment.text === 'Procedure' || segment.text === 'Aim')
+                )
+              ) {
+                return (
+                  <div key={`${group.id}-table-header-${lineIndex}`} className="readingFillTableHeaderRow">
+                    <span className="readingFillTableHeaderCell">Procedure</span>
+                    <span className="readingFillTableHeaderCell">Aim</span>
+                  </div>
+                )
+              }
+
+              if (line.procedure || line.procedureSegments?.length) {
+                return (
+                  <div key={`${group.id}-table-row-${lineIndex}`} className="readingFillTableRow">
+                    <div className="readingFillTableProcedure">
+                      {line.procedureSegments?.length
+                        ? renderFillSegments(line.procedureSegments)
+                        : line.procedure}
+                    </div>
+                    <div className="readingFillTableAim">{renderFillSegments()}</div>
+                  </div>
+                )
+              }
+
+              const onlySegment = line.segments.length === 1 ? line.segments[0] : null
+
+              if (onlySegment?.kind === 'clue') {
+                return (
+                  <p key={`${group.id}-clue-${lineIndex}`} className="readingFillClueLine">
+                    {onlySegment.text}
+                  </p>
+                )
+              }
+
+              if (onlySegment?.kind === 'heading') {
+                return (
+                  <p key={`${group.id}-heading-${lineIndex}`} className="readingFillSectionHeading">
+                    {onlySegment.text}
+                  </p>
+                )
+              }
+
+              return (
+                <p key={`${group.id}-line-${lineIndex}`} className="readingFillLine">
+                  {renderFillSegments()}
+                </p>
+              )
+            })}
+          </div>
         </div>
         {group.questions.some((question) => question.number === readingHintQuestionNumber) && (
           <div className="readingHintBox">
@@ -18259,7 +18646,13 @@ function App() {
               ? 'List of People'
               : /list of ideas/i.test(group.instruction)
                 ? 'List of Ideas'
-                : 'Answer choices'
+                : /list of words/i.test(group.instruction)
+                  ? 'List of Words'
+                  : /list of phrases/i.test(group.instruction)
+                    ? 'List of Phrases'
+                    : /list of companies/i.test(group.instruction)
+                      ? 'List of Companies'
+                      : 'Answer choices'
           : 'Paragraphs'
 
     return (
@@ -18512,6 +18905,28 @@ function App() {
       )
     }
     if (question.answerType === 'multiple-choice') {
+      const options = extractReadingMultipleChoiceOptions(passage, question)
+      if (options.length) {
+        return (
+          <div className="listeningChoiceGrid" role="listbox" aria-label={`Answer options for question ${question.number}`}>
+            {options.map((option) => (
+              <button
+                key={`${question.number}-${option.letter}`}
+                type="button"
+                className={`listeningChoiceBtn ${value === option.letter ? 'active' : ''}`}
+                role="option"
+                aria-selected={value === option.letter}
+                onClick={() =>
+                  setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
+                }
+              >
+                <strong>{option.letter}</strong>
+                <span>{option.text}</span>
+              </button>
+            ))}
+          </div>
+        )
+      }
       return (
         <select
           value={value}
@@ -18691,6 +19106,17 @@ function App() {
                 >
                   Reading
                 </button>
+                {canAccessWriting && (
+                  <button
+                    className={activePage === 'writing' ? 'active' : ''}
+                    onClick={() => {
+                      openWritingLanding()
+                    }}
+                    type="button"
+                  >
+                    Writing
+                  </button>
+                )}
                 <button
                   className={activePage === 'notebook' ? 'active' : ''}
                   onClick={() => {
@@ -18796,9 +19222,15 @@ function App() {
                   >
                     Reading
                   </button>
-                  <button type="button" disabled>
-                    Writing (Coming Soon)
-                  </button>
+                  {canAccessWriting ? (
+                    <button type="button" onClick={() => openWritingLanding()}>
+                      Writing
+                    </button>
+                  ) : (
+                    <button type="button" disabled>
+                      Writing (Coming Soon)
+                    </button>
+                  )}
                   <button type="button" disabled>
                     Notebook (Coming Soon)
                   </button>
@@ -21237,7 +21669,9 @@ function App() {
                           <div className="readingQuestionCardTop">
                             <div>
                               <p className="readingQuestionNumber">Question {question.number}</p>
-                              <p className="readingQuestionPrompt">{question.prompt}</p>
+                              <p className="readingQuestionPrompt">
+                                {getReadingQuestionDisplayPrompt(activeReadingPassage, question)}
+                              </p>
                             </div>
                             {renderReadingHintToggleButton(question.number, isHinting, { label: 'th' })}
                           </div>
@@ -21419,6 +21853,20 @@ function App() {
           )}
           </div>
         </section>
+      ) : activePage === 'writing' ? (
+        canAccessWriting ? (
+          <WritingGuidePage onBackHome={() => setActivePage('home')} />
+        ) : (
+          <section className="panel full">
+            <div className="emptyState">
+              <h3>Writing is admin-only for now</h3>
+              <p>This section is not available on your account yet.</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
       ) : activePage === 'admin' ? (
           <section className="adminPanelPage" data-admin-section={adminWorkspaceSection}>
             <div className="adminHero">
@@ -23743,7 +24191,7 @@ function App() {
                         {adminRecordedVideoUrl ? (
                           <video
                             ref={bindAdminVideoPreviewElement}
-                            className="adminVideoPreview"
+                            className={`adminVideoPreview ${adminPreviewShouldFlipVideo ? 'is-flipped' : ''}`.trim()}
                             src={adminRecordedVideoUrl}
                             controls
                             preload="metadata"
@@ -23755,7 +24203,7 @@ function App() {
                         ) : (
                           <video
                             ref={bindAdminVideoPreviewElement}
-                            className={`adminVideoPreview ${adminSubtitleStyle.videoFlipHorizontal ? 'is-flipped' : ''}`.trim()}
+                            className={`adminVideoPreview ${adminPreviewShouldFlipVideo ? 'is-flipped' : ''}`.trim()}
                             playsInline
                             muted
                             autoPlay
@@ -23802,9 +24250,9 @@ function App() {
                             aria-live="polite"
                           >
                             <span>
-                              {adminSelectedVideoTopic?.samplePart === 'part1' ? 'Part 1' : 'Part 3'} word count
+                              {adminSelectedVideoTopic?.samplePart === 'part1' ? 'Part 1' : 'Part 3'} question word count
                             </span>
-                            <strong>{adminLiveSpokenWordCount}</strong>
+                            <strong>{adminCurrentQuestionSpokenWordCount}</strong>
                             <small>
                               {adminWordCountFeedback.label} · {adminWordCountFeedback.target.min}-{adminWordCountFeedback.target.max} target
                             </small>
@@ -24280,13 +24728,19 @@ function App() {
                               onClick={() => void generateAdminSubtitlesLocally()}
                               disabled={isAdminBackendTranscribing || !adminRecordedVideoUrl}
                             >
-                              {isAdminBackendTranscribing ? 'Syncing…' : 'Auto-sync (free, local)'}
+                              {isAdminBackendTranscribing ? 'Syncing…' : 'Auto-sync subtitles'}
                             </button>
                             <button type="button" className="secondary" onClick={regenerateAdminSubtitlesFromTranscript}>
                               Generate from transcript
                             </button>
                             <button type="button" className="secondary" onClick={fixAdminSubtitleTimingIssues} disabled={adminSubtitleCues.length === 0}>
                               Fix timing issues
+                            </button>
+                            <button type="button" className="secondary" onClick={() => nudgeAllAdminSubtitleCues(-0.1)} disabled={adminSubtitleCues.length === 0}>
+                              Subs -0.1s
+                            </button>
+                            <button type="button" className="secondary" onClick={() => nudgeAllAdminSubtitleCues(0.1)} disabled={adminSubtitleCues.length === 0}>
+                              Subs +0.1s
                             </button>
                             <button
                               type="button"
@@ -24465,7 +24919,13 @@ function App() {
                                 Move -1ms
                               </button>
                               <button type="button" className="secondary" onClick={() => nudgeSelectedAdminSubtitleCues(0.001)} disabled={!adminSelectedSubtitleCueIds.length}>
-                                Move +1ms
+                              Move +1ms
+                            </button>
+                              <button type="button" className="secondary" onClick={() => nudgeAllAdminSubtitleCues(-0.05)}>
+                                All -50ms
+                              </button>
+                              <button type="button" className="secondary" onClick={() => nudgeAllAdminSubtitleCues(0.05)}>
+                                All +50ms
                               </button>
                               <button type="button" className="secondary adminStudioButton-danger" onClick={deleteSelectedAdminSubtitleCues} disabled={!adminSelectedSubtitleCueIds.length}>
                                 Delete Selected
@@ -25119,8 +25579,8 @@ function App() {
                             trimEndSeconds: adminVideoTrimEnd,
                             transcript: adminSubtitleTranscript,
                             subtitles: adminSubtitleCues,
-                            subtitleStyle: { ...adminSubtitleStyle, videoFlipHorizontal: false },
-                            videoFlipHorizontal: false
+                            subtitleStyle: adminPlaybackSubtitleStyle,
+                            videoFlipHorizontal: Boolean(adminPlaybackSubtitleStyle.videoFlipHorizontal)
                           })}
                         />
                       </div>
@@ -27291,44 +27751,98 @@ function App() {
         </div>
       )}
       {pendingStartTopicId && (
-        <div className="expectedScoreOverlay">
+        <div className="expectedScoreOverlay" role="dialog" aria-modal="true" aria-labelledby="expected-score-title">
           <div className="expectedScoreCard">
-            <p className="expectedScoreEyebrow">English Plan Speaking</p>
-            <div className="expectedScoreHero">
-              <h3>เลือกระดับคะแนนที่คุณคาดหวัง</h3>
-              <p className="expectedScoreLead">Select Your Expected Score</p>
+            <div className="expectedScoreAmbient" aria-hidden="true">
+              <span className="expectedScoreOrb expectedScoreOrb-a" />
+              <span className="expectedScoreOrb expectedScoreOrb-b" />
+              <span className="expectedScoreGridGlow" />
             </div>
-            <div className="expectedScoreOptionGrid">
-              {EXPECTED_SCORE_OPTIONS.map((option) => (
-                <button
-                  key={option.id}
-                  type="button"
-                  className={`expectedScoreOption ${selectedExpectedScore === option.id ? 'expectedScoreOption-active' : ''}`}
-                  onClick={() => setSelectedExpectedScore(option.id)}
-                  aria-pressed={selectedExpectedScore === option.id}
-                >
-                  <div className="expectedScoreOptionTop">
-                    <p className="expectedScoreOptionTitle">{option.label}</p>
-                    <p className="expectedScoreOptionSubtitle">{option.subtitle}</p>
-                    <span className="expectedScoreOptionState">
-                      {selectedExpectedScore === option.id ? 'เลือกแล้ว' : 'กดเพื่อเลือก'}
+
+            <header className="expectedScoreHeader">
+              <p className="expectedScoreEyebrow">English Plan Speaking</p>
+              <div className="expectedScoreHero">
+                <h3 id="expected-score-title">เลือกระดับคะแนนที่คุณคาดหวัง</h3>
+                <p className="expectedScoreLead">Select Your Expected Score</p>
+                <p className="expectedScoreHint">เลือกเป้าหมายทางซ้าย แล้วอ่านเทคนิคที่ P&apos;Doy แนะนำทางขวา</p>
+              </div>
+            </header>
+
+            <div className="expectedScoreBody">
+              <div className="expectedScoreBandRail" role="listbox" aria-label="Expected IELTS band">
+                {EXPECTED_SCORE_OPTIONS.map((option) => {
+                  const isActive = selectedExpectedScore === option.id
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      role="option"
+                      aria-selected={isActive}
+                      className={`expectedScoreBandChip expectedScoreBandChip-${option.id} ${isActive ? 'is-active' : ''}`}
+                      onClick={() => setSelectedExpectedScore(option.id)}
+                    >
+                      <span className="expectedScoreBandChipGlow" aria-hidden="true" />
+                      <span className="expectedScoreBandChipMain">
+                        <span className="expectedScoreBandChipLabel">{option.label}</span>
+                        <span className="expectedScoreBandChipSub">{option.subtitle}</span>
+                      </span>
+                      <span className="expectedScoreBandChipState">{isActive ? 'เลือกแล้ว' : 'กดเพื่อเลือก'}</span>
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="expectedScoreDetailPanel">
+                {selectedExpectedScore ? (
+                  (() => {
+                    const option = EXPECTED_SCORE_OPTIONS.find((item) => item.id === selectedExpectedScore)
+                    if (!option) return null
+                    return (
+                      <>
+                        <div className="expectedScoreDetailHead">
+                          <p className="expectedScoreDetailEyebrow">เป้าหมายของคุณ</p>
+                          <h4>{option.label}</h4>
+                          <p>{option.subtitle}</p>
+                        </div>
+
+                        {'warning' in option && option.warning ? (
+                          <div className="expectedScoreWarningCard">
+                            <span className="expectedScoreWarningBadge">คำแนะนำจาก P&apos;Doy</span>
+                            <p>{option.warning.replace(/^P['’]?Doy['’]?s Recommendation:\s*/i, '')}</p>
+                          </div>
+                        ) : (
+                          <ul className="expectedScoreTipList">
+                            {(option.bullets || []).map((bullet) => {
+                              const recommendation = parsePdoyRecommendation(bullet.example)
+                              return (
+                                <li key={`${option.id}-${bullet.point}`} className="expectedScoreTipCard">
+                                  <p className="expectedScoreTipPoint">{bullet.point}</p>
+                                  <div className="expectedScoreTipExample">
+                                    {recommendation.tag ? (
+                                      <span className="expectedScoreTipTag">{recommendation.tag}</span>
+                                    ) : null}
+                                    <p>{recommendation.text}</p>
+                                  </div>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        )}
+                      </>
+                    )
+                  })()
+                ) : (
+                  <div className="expectedScoreDetailEmpty">
+                    <span className="expectedScoreDetailEmptyIcon" aria-hidden="true">
+                      ◈
                     </span>
+                    <h4>เลือกเป้าหมายคะแนนของคุณ</h4>
+                    <p>กดแถบทางซ้ายเพื่อดูเทคนิคจาก P&apos;Doy ก่อนเริ่มพูด</p>
                   </div>
-                  {'warning' in option && option.warning ? (
-                    <p className="expectedScoreWarning">{option.warning}</p>
-                  ) : (
-                    <ul className="expectedScoreBullets">
-                      {(option.bullets || []).map((bullet) => (
-                        <li key={`${option.id}-${bullet.point}`}>
-                          <strong>{bullet.point}</strong>
-                          <span>{bullet.example}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </button>
-              ))}
+                )}
+              </div>
             </div>
+
             <div className="expectedScoreActions">
               <button type="button" className="expectedScoreBackBtn" onClick={closeExpectedScoreModal}>
                 Back

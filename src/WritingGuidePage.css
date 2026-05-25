@@ -1,0 +1,1451 @@
+.writingGuidePage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 18px;
+  padding: clamp(16px, 2vw, 28px);
+  min-height: calc(100vh - 88px);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(246, 250, 255, 0.94) 45%, rgba(255, 252, 235, 0.9) 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 74, 173, 0.06),
+    0 24px 64px rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+
+.writingGuideAmbient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.writingGuideOrb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.5;
+  animation: writingGuideOrbFloat 10s var(--ease-luxury-soft) infinite alternate;
+}
+
+.writingGuideOrb-a {
+  top: -70px;
+  right: -20px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(255, 204, 0, 0.45), transparent 68%);
+}
+
+.writingGuideOrb-b {
+  bottom: -80px;
+  left: -40px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(0, 74, 173, 0.35), transparent 70%);
+  animation-delay: -4s;
+}
+
+.writingGuideGridGlow {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 74, 173, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 74, 173, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 90%);
+}
+
+@keyframes writingGuideOrbFloat {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -12px, 0); }
+}
+
+.writingGuideHeader,
+.writingGuideFlowStage,
+.writingGuideTaskSwitch,
+.writingGuideBody,
+.writingGuideTask2Grid {
+  position: relative;
+  z-index: 1;
+}
+
+.writingGuideFlowStage {
+  min-height: 0;
+}
+
+.writingGuideMegaShell,
+.writingGuideExamShell {
+  display: grid;
+  gap: 18px;
+}
+
+.writingGuideFlowHead {
+  display: grid;
+  gap: 12px;
+}
+
+.writingGuideFlowBack {
+  justify-self: start;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  color: #0f172a;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideFlowBack:hover {
+  transform: translateY(-1px);
+}
+
+.writingGuideFlowTitle {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  color: #0b1f44;
+  letter-spacing: -0.02em;
+}
+
+.writingGuideFlowSub {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.writingGuideMegaGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.writingGuideMegaGrid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 280px;
+}
+
+.writingGuideMegaGrid-categories {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.writingGuideMegaCard {
+  display: grid;
+  gap: 10px;
+  align-content: center;
+  min-height: 180px;
+  padding: 24px 22px;
+  text-align: left;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+  animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+  overflow: hidden;
+  position: relative;
+}
+
+.writingGuideMegaCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 204, 0, 0.16), transparent 42%),
+    linear-gradient(160deg, rgba(0, 74, 173, 0.1), transparent 60%);
+  pointer-events: none;
+}
+
+.writingGuideMegaCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 74, 173, 0.28);
+  box-shadow: 0 20px 44px rgba(0, 74, 173, 0.12);
+}
+
+.writingGuideMegaCard strong,
+.writingGuideMegaCard .writingGuideMegaSub,
+.writingGuideMegaCard small,
+.writingGuideMegaBadge {
+  position: relative;
+  z-index: 1;
+}
+
+.writingGuideMegaCard strong {
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  color: #0f172a;
+  line-height: 1.15;
+}
+
+.writingGuideMegaSub {
+  color: #475569;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.writingGuideMegaCard small {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.writingGuideMegaBadge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(0, 74, 173, 0.1);
+  color: var(--bc-blue);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.writingGuideMegaCard-task1.is-active,
+.writingGuideMegaCard-task1:hover {
+  border-color: rgba(0, 74, 173, 0.34);
+}
+
+.writingGuideMegaCard-task2:hover {
+  border-color: rgba(245, 158, 11, 0.34);
+}
+
+.writingGuideMegaCard-static {
+  cursor: default;
+}
+
+.writingGuideMegaCard-static:hover {
+  transform: none;
+}
+
+.writingGuideMegaList {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: #334155;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.writingGuideExamList {
+  display: grid;
+  gap: 12px;
+}
+
+.writingGuideExamListItem {
+  display: grid;
+  gap: 6px;
+  padding: 18px 20px;
+  text-align: left;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+  animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 60ms);
+}
+
+.writingGuideExamListItem:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 74, 173, 0.28);
+  box-shadow: 0 14px 32px rgba(0, 74, 173, 0.1);
+}
+
+.writingGuideExamListNum {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bc-blue);
+}
+
+.writingGuideExamListItem strong {
+  font-size: 1.02rem;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.writingGuideExamListMeta {
+  color: #64748b;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.writingGuideExamListAction {
+  margin-top: 4px;
+  color: var(--bc-blue);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.writingGuideExamToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.writingGuideExamToolbar-inline {
+  justify-content: flex-end;
+}
+
+.writingGuideComingSoon {
+  padding: 28px 24px;
+  border-radius: 18px;
+  border: 1px dashed rgba(0, 74, 173, 0.22);
+  background: rgba(248, 250, 252, 0.88);
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.writingGuideComingSoon p {
+  margin: 0 0 8px;
+}
+
+.writingGuideHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.writingGuideHeader h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: #0b1f44;
+  letter-spacing: -0.02em;
+}
+
+.writingGuideLead {
+  margin: 8px 0 0;
+  max-width: 62ch;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.writingGuideBackBtn {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  color: #0f172a;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideBackBtn:hover {
+  transform: translateY(-1px);
+}
+
+.writingGuideTaskSwitch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.writingGuideTaskBtn {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  text-align: left;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideTaskBtn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 74, 173, 0.22);
+}
+
+.writingGuideTaskBtn.is-active {
+  border-color: rgba(0, 74, 173, 0.38);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96));
+  box-shadow:
+    0 0 0 1px rgba(0, 74, 173, 0.1),
+    0 14px 32px rgba(0, 74, 173, 0.12);
+}
+
+.writingGuideTaskBtnLabel {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.writingGuideTaskBtnSub {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.writingGuideBody {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.writingGuideRail {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  overflow: auto;
+}
+
+.writingGuideRailChip {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideRailChip::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.55);
+  transition: background var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideRailChip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 74, 173, 0.24);
+}
+
+.writingGuideRailChip.is-active {
+  border-color: rgba(0, 74, 173, 0.34);
+  box-shadow: 0 12px 28px rgba(0, 74, 173, 0.1);
+}
+
+.writingGuideRailChipGlow {
+  position: absolute;
+  inset: auto -20% -50% auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 204, 0, 0.2), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideRailChip.is-active .writingGuideRailChipGlow {
+  opacity: 1;
+}
+
+.writingGuideRailChipTitle {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.writingGuideRailChipSub {
+  font-size: 0.74rem;
+  color: #64748b;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.writingGuideAccent-timeline.is-active::before,
+.writingGuidePanel.writingGuideAccent-timeline::before {
+  background: linear-gradient(180deg, var(--bc-yellow), #f59e0b);
+}
+
+.writingGuideAccent-chart.is-active::before,
+.writingGuidePanel.writingGuideAccent-chart::before {
+  background: linear-gradient(180deg, #60a5fa, var(--bc-blue));
+}
+
+.writingGuideAccent-map.is-active::before,
+.writingGuidePanel.writingGuideAccent-map::before {
+  background: linear-gradient(180deg, #34d399, #059669);
+}
+
+.writingGuideAccent-process.is-active::before,
+.writingGuidePanel.writingGuideAccent-process::before {
+  background: linear-gradient(180deg, #a78bfa, #6366f1);
+}
+
+.writingGuideAccent-all.is-active::before,
+.writingGuidePanel.writingGuideAccent-all::before {
+  background: linear-gradient(180deg, var(--bc-yellow), var(--bc-blue));
+}
+
+.writingGuidePanel {
+  position: relative;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 74, 173, 0.12);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.writingGuidePanel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--bc-blue), var(--bc-yellow));
+  opacity: 0.85;
+}
+
+.writingGuidePanelHead {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.writingGuidePanelEyebrow {
+  margin: 0 0 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bc-blue);
+}
+
+.writingGuidePanelHead h3 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  color: #0f172a;
+}
+
+.writingGuidePanelHead p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.writingGuideChipGroups {
+  display: grid;
+  gap: 12px;
+}
+
+.writingGuideChipGroup {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.72);
+}
+
+.writingGuideChipGroupHead h4 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.writingGuideChipGroupHead p {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.writingGuideChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.writingGuideChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 74, 173, 0.16);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.92));
+  color: #0f172a;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.3;
+  box-shadow: 0 6px 16px rgba(0, 74, 173, 0.06);
+}
+
+.writingGuideStructureBlock {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.writingGuideStructureEyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bc-blue);
+}
+
+.writingGuideStructureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.writingGuideStructureCard {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.writingGuideStructureLabel {
+  display: inline-flex;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 204, 0, 0.22);
+  color: #92400e;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.writingGuideStructureCard code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: #0f172a;
+  white-space: pre-wrap;
+}
+
+.writingGuideStructureCard p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.writingGuideCrossLink {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px dashed rgba(0, 74, 173, 0.22);
+  background: rgba(239, 246, 255, 0.6);
+}
+
+.writingGuideCrossLink p {
+  margin: 0;
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.writingGuideCrossLink button {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 74, 173, 0.24);
+  background: var(--bc-yellow);
+  color: #111827;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.writingGuideTask2Grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.writingGuideTask2Card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+}
+
+.writingGuideTask2Badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--bc-blue), #1a5fd4);
+  color: #fff;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.writingGuideTask2Card h3 {
+  margin: 0;
+  font-size: 1.12rem;
+  color: #0f172a;
+}
+
+.writingGuideTask2Sub {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.writingGuideTask2Card ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: #334155;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  font-weight: 600;
+}
+
+.writingGuidePracticeBlock {
+  margin-top: 20px;
+  display: grid;
+  gap: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.writingGuideTimelinePractice {
+  display: grid;
+  gap: 16px;
+}
+
+.writingGuideTimelineHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.writingGuideTimelineHead h4 {
+  margin: 6px 0 0;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.writingGuideTimelineHead p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.writingGuideHelperBtn {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 74, 173, 0.28);
+  background: linear-gradient(135deg, var(--bc-yellow) 0%, #ffd84d 100%);
+  color: #111827;
+  font-size: 0.92rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(255, 204, 0, 0.24);
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideHelperBtn:hover {
+  transform: translateY(-1px);
+}
+
+.writingGuideHelperBtn.is-open {
+  background: linear-gradient(135deg, var(--bc-blue), #1a5fd4);
+  color: #fff;
+  border-color: rgba(0, 74, 173, 0.4);
+  box-shadow: 0 10px 24px rgba(0, 74, 173, 0.22);
+}
+
+.writingGuideHelperPanel {
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 204, 0, 0.28);
+  background: linear-gradient(135deg, rgba(255, 251, 235, 0.96), rgba(255, 255, 255, 0.94));
+  animation: writingGuideHelperIn 0.35s var(--ease-luxury) both;
+}
+
+@keyframes writingGuideHelperIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.writingGuideHelperIntro {
+  margin: 0 0 12px;
+  color: #92400e;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.writingGuideQuestionPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.writingGuideQuestionChip {
+  display: grid;
+  gap: 2px;
+  min-width: 88px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.writingGuideQuestionChip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 74, 173, 0.24);
+}
+
+.writingGuideQuestionChip.is-active {
+  border-color: rgba(0, 74, 173, 0.38);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96));
+  box-shadow: 0 10px 24px rgba(0, 74, 173, 0.12);
+}
+
+.writingGuideQuestionChipNum {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.writingGuideQuestionChipType {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.writingIeltsPaper {
+  display: grid;
+  gap: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #111827;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.writingIeltsPaperHead {
+  padding: 18px 22px 14px;
+  border-bottom: 2px solid #111827;
+  background: #fff;
+}
+
+.writingIeltsTaskLabel {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #111827;
+}
+
+.writingIeltsTimeNote {
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #374151;
+}
+
+.writingIeltsPaperBody {
+  padding: 22px 24px 8px;
+  background: #fff;
+}
+
+.writingIeltsPromptLine {
+  margin: 0 0 14px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #111827;
+}
+
+.writingIeltsPromptLine-limit {
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.writingIeltsFigure {
+  margin: 18px 0 8px;
+  padding: 18px 16px 12px;
+  border: 1px solid #d1d5db;
+  background: #fafafa;
+}
+
+.writingIeltsFigure-table {
+  background: #fff;
+}
+
+.writingIeltsFigureCaption {
+  margin: 0 0 14px;
+  text-align: center;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.writingIeltsChartSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.writingIeltsChartGridLine {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+}
+
+.writingIeltsChartAxisLine {
+  stroke: #111827;
+  stroke-width: 1.5;
+}
+
+.writingIeltsChartLine {
+  fill: none;
+  stroke: #111827;
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.writingIeltsChartMarker {
+  fill: #111827;
+}
+
+.writingIeltsChartBar {
+  fill: #4b5563;
+}
+
+.writingIeltsChartTick {
+  font-size: 11px;
+  font-weight: 600;
+  fill: #374151;
+}
+
+.writingIeltsChartAxisTitle {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #111827;
+}
+
+.writingIeltsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  background: #fff;
+}
+
+.writingIeltsTable th,
+.writingIeltsTable td {
+  padding: 10px 12px;
+  text-align: center;
+  border: 1px solid #111827;
+}
+
+.writingIeltsTable thead th {
+  background: #f3f4f6;
+  font-weight: 800;
+}
+
+.writingIeltsTable tbody th {
+  background: #f9fafb;
+  font-weight: 800;
+  text-align: left;
+}
+
+.writingIeltsTable tbody td {
+  font-weight: 700;
+}
+
+.writingIeltsTableNote {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  color: #4b5563;
+  font-style: italic;
+}
+
+.writingIeltsAnswerSheet {
+  display: grid;
+  gap: 8px;
+  padding: 16px 22px 22px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.writingIeltsAnswerSheet span {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.writingIeltsAnswerSheet textarea {
+  width: 100%;
+  min-height: 220px;
+  padding: 14px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+  color: #111827;
+  font: inherit;
+  line-height: 1.65;
+  resize: vertical;
+}
+
+.writingIeltsAnswerSheet textarea:focus {
+  outline: 2px solid rgba(0, 74, 173, 0.25);
+  border-color: #94a3b8;
+}
+
+.writingGuideChartFrame {
+  padding: 12px 10px 8px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 74, 173, 0.12);
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.94));
+}
+
+.writingGuideChartSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.writingGuideChartGridLine {
+  stroke: rgba(148, 163, 184, 0.35);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.writingGuideChartLine {
+  fill: none;
+  stroke: var(--bc-blue);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.writingGuideChartDot {
+  fill: var(--bc-yellow);
+  stroke: var(--bc-blue);
+  stroke-width: 2.5;
+}
+
+.writingGuideChartAxisLabel,
+.writingGuideChartValueLabel,
+.writingGuideChartYearLabel {
+  font-size: 12px;
+  font-weight: 700;
+  fill: #475569;
+}
+
+.writingGuideChartValueLabel {
+  fill: #0f172a;
+  font-weight: 800;
+}
+
+.writingGuideChartYearLabel {
+  fill: #64748b;
+}
+
+.writingGuideChartCaption {
+  margin: 8px 0 0;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.writingGuideTableChart {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(16, 185, 129, 0.24);
+  background: linear-gradient(180deg, rgba(236, 253, 245, 0.72), rgba(255, 255, 255, 0.94));
+}
+
+.writingGuideTableChartHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.writingGuideTableChartHead strong {
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.writingGuideTableChartHead span {
+  color: #64748b;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.writingGuideTableChartGrid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.writingGuideTableChartGrid th,
+.writingGuideTableChartGrid td {
+  padding: 12px 14px;
+  text-align: center;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.writingGuideTableChartGrid thead th {
+  background: linear-gradient(180deg, rgba(0, 74, 173, 0.12), rgba(0, 74, 173, 0.06));
+  color: var(--bc-blue);
+  font-weight: 900;
+}
+
+.writingGuideTableChartGrid tbody th {
+  background: rgba(255, 204, 0, 0.16);
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.writingGuideTableChartGrid tbody td {
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.writingGuidePracticeHead h4 {
+  margin: 6px 0 0;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.writingGuidePracticeHead p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.writingGuidePracticeGroup {
+  display: grid;
+  gap: 12px;
+}
+
+.writingGuidePracticeGroup h5 {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bc-blue);
+}
+
+.writingGuidePromptList {
+  display: grid;
+  gap: 14px;
+}
+
+.writingGuidePromptCard {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.writingGuidePromptCard-line-graph {
+  border-color: rgba(245, 158, 11, 0.24);
+}
+
+.writingGuidePromptCard-bar-chart {
+  border-color: rgba(0, 74, 173, 0.22);
+}
+
+.writingGuidePromptCard-table {
+  border-color: rgba(16, 185, 129, 0.24);
+}
+
+.writingGuidePromptHead h4 {
+  margin: 8px 0 0;
+  font-size: 1.02rem;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.writingGuidePromptBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.writingGuidePromptNumber,
+.writingGuidePromptChartType {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.writingGuidePromptNumber {
+  background: rgba(0, 74, 173, 0.1);
+  color: var(--bc-blue);
+}
+
+.writingGuidePromptChartType {
+  background: rgba(255, 204, 0, 0.24);
+  color: #92400e;
+}
+
+.writingGuidePromptUnit {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.writingGuidePromptVisual {
+  display: none;
+}
+
+.writingGuideLineChart,
+.writingGuideBarChart {
+  display: none;
+}
+
+.writingGuidePromptTableWrap {
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.writingGuidePromptTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.writingGuidePromptTable th,
+.writingGuidePromptTable td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.writingGuidePromptTable thead th,
+.writingGuidePromptTable tbody th {
+  background: rgba(239, 246, 255, 0.88);
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.writingGuidePromptTable tbody td {
+  color: #334155;
+  font-weight: 700;
+}
+
+.writingGuidePromptInstruction {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 251, 235, 0.88);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  color: #78350f;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.writingGuidePromptWrite {
+  display: grid;
+  gap: 8px;
+}
+
+.writingGuidePromptWrite span {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bc-blue);
+}
+
+.writingGuidePromptWrite textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 74, 173, 0.18);
+  background: rgba(255, 255, 255, 0.96);
+  color: #0f172a;
+  font: inherit;
+  line-height: 1.6;
+  resize: vertical;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.writingGuidePromptWrite textarea:focus {
+  outline: none;
+  border-color: rgba(0, 74, 173, 0.42);
+  box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.12);
+}
+
+.writingGuidePromptTrend {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed rgba(0, 74, 173, 0.18);
+  background: rgba(248, 250, 252, 0.88);
+}
+
+.writingGuidePromptTrend summary {
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--bc-blue);
+}
+
+.writingGuidePromptTrend p {
+  margin: 10px 0 0;
+  color: #475569;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .writingGuideBody {
+    grid-template-columns: 1fr;
+  }
+
+  .writingGuideRail {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .writingGuidePage {
+    border-radius: 20px;
+    padding: 14px;
+  }
+
+  .writingGuideMegaGrid-2 {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .writingGuideMegaCard {
+    min-height: 150px;
+  }
+
+  .writingGuideTaskSwitch {
+    grid-template-columns: 1fr;
+  }
+
+  .writingGuideRail {
+    grid-template-columns: 1fr;
+  }
+
+  .writingGuideCrossLink {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .writingGuideCrossLink button {
+    width: 100%;
+  }
+
+  .writingGuideLineChart,
+  .writingGuideBarChart {
+    min-height: 150px;
+  }
+
+  .writingGuidePromptTable {
+    font-size: 0.76rem;
+  }
+}

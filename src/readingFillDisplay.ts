@@ -1,3 +1,5 @@
+import { READING_FILL_SECTION_OVERRIDES } from './readingFillSectionFixes'
+
 type FillPassage = {
   number: number
   questionSectionText: string
@@ -17,6 +19,8 @@ export type ReadingFillLineSegment =
 
 export type ReadingFillDisplayLine = {
   segments: ReadingFillLineSegment[]
+  procedure?: string
+  procedureSegments?: ReadingFillLineSegment[]
 }
 
 export type ReadingFillQuestionGroup = {
@@ -44,15 +48,7 @@ const lineContainsBlankMarker = (line: string, questionNumbers: Set<number>) => 
   return lineHasTrailingOcrGarbage(normalized)
 }
 
-const isLikelyOcrGarbageWord = (word: string) => {
-  const value = String(word || '').toLowerCase()
-  if (value.length < 8) return false
-  if (/(.)\1{3,}/.test(value)) return true
-  if (!/[aeiou]/.test(value)) return true
-  if (/[bcdfghjklmnpqrstvwxyz]{5,}/i.test(value)) return true
-  if (/[nm]{4,}|[c]{3,}|[s]{4,}/.test(value)) return true
-  return false
-}
+import { isGarbledOcrReadingLine, isLikelyOcrGarbageWord } from './readingOcrCleanup'
 
 const lineHasTrailingOcrGarbage = (line: string) => {
   const match = line.match(TRAILING_OCR_GARBAGE)
@@ -258,20 +254,59 @@ export const isReadingFillQuestion = <P extends FillPassage, Q extends FillQuest
   return true
 }
 
-const isReadingFillBoilerplateLine = (line: string) =>
-  /^Questions \d+/i.test(line) ||
-  /^Complete the (?:notes|sentences|summary|table)/i.test(line) ||
-  /^Choose (?:ONE WORD|NO MORE THAN)/i.test(line) ||
-  /^Write your answers in boxes/i.test(line) ||
-  /^Write the correct/i.test(line) ||
-  /^Reading Passage \d+/i.test(line) ||
-  /^In boxes \d+/i.test(line) ||
-  /^[A-J]\s+/.test(line) ||
-  /^\d+\.\s*Drop heading here/i.test(line) ||
-  /^\d+\.\s*Drop answer here\s*(?:…|\.{2,})?\s*$/i.test(line) ||
-  /^>\|\s*p\.\s*\d+/i.test(line)
+const isReadingFillTableHeaderLine = (line: string) => {
+  const trimmed = String(line || '').trim()
+  return /^Procedure\s+Aim$/i.test(trimmed) || /^Procedure\s*\|\s*Aim$/i.test(trimmed)
+}
 
-const READING_FILL_EMBEDDED_GAP = /[.．…⋯·•_\-–—]{3,}/g
+const isReadingFillBoilerplateLine = (line: string) => {
+  const trimmed = String(line || '').trim()
+  if (!trimmed) return true
+  if (isGarbledOcrReadingLine(trimmed)) return true
+  return (
+    /^Questions \d+/i.test(line) ||
+    /^Complete the (?:notes|sentences|summary|table)/i.test(line) ||
+    /^Choose (?:ONE WORD|NO MORE THAN)/i.test(line) ||
+    /^Write your answers in boxes/i.test(line) ||
+    /^Write the correct/i.test(line) ||
+    /^Reading Passage \d+/i.test(line) ||
+    /^In boxes \d+/i.test(line) ||
+    /^[A-J]\s+/.test(line) ||
+    /^\d+\.\s*Drop heading here/i.test(line) ||
+    /^\d+\.\s*Drop answer here\s*(?:…|\.{2,})?\s*$/i.test(line) ||
+    /^>\|\s*p\.\s*\d+/i.test(line)
+  )
+}
+
+const parseReadingFillTableRowLine = (
+  line: string,
+  questionNumbers: Set<number>
+): ReadingFillDisplayLine | null => {
+  const trimmed = line.trim()
+  if (!trimmed.includes('|') || isReadingFillTableHeaderLine(trimmed)) return null
+
+  const divider = trimmed.indexOf('|')
+  if (divider <= 0) return null
+
+  const procedure = trimmed.slice(0, divider).trim()
+  const aim = trimmed.slice(divider + 1).trim()
+  if (!procedure || !aim) return null
+
+  const procedureSegments = parseReadingFillLineSegments(procedure, questionNumbers)
+  const aimSegments = parseReadingFillLineSegments(aim, questionNumbers)
+  const hasProcedureBlanks = procedureSegments.some((segment) => segment.kind === 'blank')
+  const hasAimBlanks = aimSegments.some((segment) => segment.kind === 'blank')
+
+  if (!hasProcedureBlanks && !hasAimBlanks) return null
+
+  return {
+    procedure: hasProcedureBlanks ? undefined : procedure,
+    procedureSegments: hasProcedureBlanks ? procedureSegments : undefined,
+    segments: aimSegments.length ? aimSegments : [{ kind: 'text', text: aim }]
+  }
+}
+
+const READING_FILL_EMBEDDED_GAP = /(?:[.．⋯·•_\-–—]{3,}|…+|\.{2,})/g
 
 const parseEmbeddedGapFillLine = (
   trimmed: string,
@@ -320,6 +355,82 @@ const parseEmbeddedGapFillLine = (
   return coalesceFillLineSegments(segments)
 }
 
+const parseInlineNumberedGapsInLine = (
+  trimmed: string,
+  questionNumbers: Set<number>
+): ReadingFillLineSegment[] | null => {
+  if (/^\d+\s/.test(trimmed)) return null
+
+  const gapPattern = /\b(\d+)\s*(?:[.．…⋯·•_\-–—]+|…+|\s+\.{2,})/g
+  const matches = [...trimmed.matchAll(gapPattern)]
+    .map((match) => ({
+      match,
+      questionNumber: normalizeOcrFillQuestionNumber(match[1], questionNumbers)
+    }))
+    .filter(({ questionNumber }) => questionNumbers.has(questionNumber))
+
+  if (!matches.length) return null
+
+  const segments: ReadingFillLineSegment[] = []
+  let lastIndex = 0
+
+  matches.forEach(({ match, questionNumber }, index) => {
+    const start = match.index ?? 0
+    const end = start + match[0].length
+    const nextStart = matches[index + 1]?.match.index ?? trimmed.length
+
+    if (start > lastIndex) {
+      const beforeText = trimmed.slice(lastIndex, start).trim()
+      if (beforeText) segments.push({ kind: 'text', text: beforeText })
+    }
+
+    const after = trimmed.slice(end, nextStart).trim()
+    segments.push({ kind: 'blank', questionNumber, before: '', after })
+    lastIndex = nextStart
+  })
+
+  if (lastIndex < trimmed.length) {
+    const tail = trimmed.slice(lastIndex).trim()
+    if (tail) segments.push({ kind: 'text', text: tail })
+  }
+
+  return coalesceFillLineSegments(segments)
+}
+
+const isOrphanFillContinuationLine = (line: string, previous?: string) => {
+  const trimmed = line.trim()
+  if (!previous || !trimmed) return false
+  if (/^\d+\s/.test(trimmed)) return false
+  if (/(?:[.．…⋯]{2,}|…+)/.test(trimmed)) return false
+  if (trimmed.length > 40) return false
+  if (/^[A-Z][^.!?]*[.!?]\s/.test(trimmed)) return false
+  return /^[a-z][a-z\s-]*$/i.test(trimmed)
+}
+
+const mergeMultilineFillContentLines = (lines: string[]) => {
+  const merged: string[] = []
+
+  for (const line of lines) {
+    const previous = merged[merged.length - 1]
+    const dottedContinuation =
+      /^[a-z(]/i.test(line.trim()) &&
+      /(?:[.．…⋯]{2,}|…+)/.test(line) &&
+      previous &&
+      /^\d+\s+/.test(previous) &&
+      !/(?:[.．…⋯]{2,}|…+)/.test(previous)
+    const orphanContinuation = isOrphanFillContinuationLine(line, previous)
+
+    if (dottedContinuation || orphanContinuation) {
+      merged[merged.length - 1] = `${previous} ${line.trim()}`
+      continue
+    }
+
+    merged.push(line)
+  }
+
+  return merged
+}
+
 export const parseReadingFillLineSegments = (
   line: string,
   questionNumbers: Set<number>
@@ -329,6 +440,9 @@ export const parseReadingFillLineSegments = (
 
   const embeddedGapSegments = parseEmbeddedGapFillLine(trimmed, questionNumbers)
   if (embeddedGapSegments?.length) return embeddedGapSegments
+
+  const inlineNumberedSegments = parseInlineNumberedGapsInLine(trimmed, questionNumbers)
+  if (inlineNumberedSegments?.length) return inlineNumberedSegments
 
   const leadingBlank = trimmed.match(/^(\d+)\s*([.．…⋯·•_\-–—]+)\s+(.+)$/)
   if (leadingBlank) {
@@ -439,20 +553,36 @@ export const extractReadingFillDisplayLines = (
   questions: FillQuestion[] = []
 ): ReadingFillDisplayLine[] => {
   const byNumber = new Map(questions.map((question) => [question.number, question]))
+  const rawContentLines = block
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !isReadingFillBoilerplateLine(line))
+    .map((line) => normalizeOcrFillLine(line, questionNumbers))
+
   const contentLines = assignImplicitBlankNumbers(
-    block
-      .split('\n')
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .filter((line) => !isReadingFillBoilerplateLine(line))
-      .map((line) => normalizeOcrFillLine(line, questionNumbers)),
+    mergeMultilineFillContentLines(rawContentLines),
     questionNumbers
   )
 
   const displayLines = contentLines
-    .map((line) => ({
-      segments: parseReadingFillLineSegments(line, questionNumbers)
-    }))
+    .map((line) => {
+      if (isReadingFillTableHeaderLine(line)) {
+        return {
+          segments: [
+            { kind: 'heading' as const, text: 'Procedure' },
+            { kind: 'heading' as const, text: 'Aim' }
+          ]
+        }
+      }
+
+      const tableRow = parseReadingFillTableRowLine(line, questionNumbers)
+      if (tableRow) return tableRow
+
+      return {
+        segments: parseReadingFillLineSegments(line, questionNumbers)
+      }
+    })
     .filter((line) => line.segments.length > 0)
 
   if (displayLines.length) {
@@ -517,7 +647,7 @@ const supplementMissingFillDisplayLines = (
 ): ReadingFillDisplayLine[] => {
   const coveredNumbers = new Set<number>()
   for (const line of displayLines) {
-    for (const segment of line.segments) {
+    for (const segment of [...line.segments, ...(line.procedureSegments || [])]) {
       if (segment.kind === 'blank') coveredNumbers.add(segment.questionNumber)
     }
   }
@@ -568,7 +698,17 @@ const mergeFillDisplayLineContinuations = (
   const merged: ReadingFillDisplayLine[] = []
 
   for (const line of displayLines) {
+    if (line.procedure || line.procedureSegments?.length) {
+      merged.push(line)
+      continue
+    }
+
     const previous = merged[merged.length - 1]
+    if (previous?.procedure || previous?.procedureSegments?.length) {
+      merged.push(line)
+      continue
+    }
+
     const previousTextSegment =
       previous?.segments.length === 1 && previous.segments[0].kind === 'text'
         ? previous.segments[0]
@@ -583,6 +723,7 @@ const mergeFillDisplayLineContinuations = (
       shouldMergeTextIntoFollowingBlank(previousTextSegment.text)
     ) {
       merged[merged.length - 1] = {
+        ...line,
         segments: [
           {
             ...firstSegment,
@@ -627,6 +768,7 @@ export const enrichFillDisplayLines = (
   const byNumber = new Map(questions.map((question) => [question.number, question]))
 
   return displayLines.map((line) => ({
+    ...line,
     segments: line.segments.map((segment, index, segments) => {
       if (segment.kind !== 'blank') return segment
       if (segment.before || segment.after) return segment
@@ -660,12 +802,41 @@ const extractReadingFillGroupInstruction = (block: string) => {
   return instructionLines.join('\n').trim()
 }
 
+const resolveReadingFillRangeBlock = (
+  questionSectionText: string,
+  sectionOverride: string | undefined,
+  start: number,
+  end: number
+) => {
+  const fromPassage = extractReadingQuestionRangeBlock(questionSectionText, start, end)
+  if (!sectionOverride) return fromPassage
+
+  const fromOverride = extractReadingQuestionRangeBlock(sectionOverride, start, end)
+  if (fromOverride && isReadingFillSectionBlock(fromOverride)) {
+    const overrideHasBlanks = fromOverride.split('\n').some((line) =>
+      lineContainsBlankMarker(line, new Set(Array.from({ length: end - start + 1 }, (_, index) => start + index)))
+    )
+    const passageHasBlanks = fromPassage
+      ? fromPassage.split('\n').some((line) =>
+          lineContainsBlankMarker(line, new Set(Array.from({ length: end - start + 1 }, (_, index) => start + index)))
+        )
+      : false
+    if (overrideHasBlanks || !passageHasBlanks) return fromOverride
+  }
+
+  return fromPassage
+}
+
 export const buildReadingFillQuestionGroups = <P extends FillPassage, Q extends FillQuestion>(
   passage: P | null,
   questions: Q[],
-  isMatchingQuestion: (passage: P | null, question: Q | null) => boolean
+  isMatchingQuestion: (passage: P | null, question: Q | null) => boolean,
+  examId?: string | null
 ): ReadingFillQuestionGroup[] => {
   if (!passage) return []
+
+  const sectionOverride = examId ? READING_FILL_SECTION_OVERRIDES[examId] : undefined
+  const questionSectionText = passage.questionSectionText || ''
 
   const groups: ReadingFillQuestionGroup[] = []
   const ranges = passage.questionRanges?.length ? passage.questionRanges : [{ start: 1, end: 999 }]
@@ -681,11 +852,7 @@ export const buildReadingFillQuestionGroups = <P extends FillPassage, Q extends 
   )
 
   leafRanges.forEach((range) => {
-    const block = extractReadingQuestionRangeBlock(
-      passage.questionSectionText || '',
-      range.start,
-      range.end
-    )
+    const block = resolveReadingFillRangeBlock(questionSectionText, sectionOverride, range.start, range.end)
     if (!block || !isReadingFillSectionBlock(block)) return
 
     const rangeQuestions = questions.filter(

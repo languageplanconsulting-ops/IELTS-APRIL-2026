@@ -3,7 +3,7 @@ import {
   hasSeenListeningEvidenceTutorial,
   ListeningEvidenceTutorial
 } from './ListeningEvidenceTutorial'
-import { getListeningHighlightMatch } from './listeningHighlightMatch'
+import { getListeningEvidenceMatch } from './listeningHighlightMatch'
 import { isListeningGapFillAnswerCorrect } from './listeningPart1AnswerCheck'
 import type { Part1ExamForm, Part1FormLine } from './listeningPart1FormLayout'
 import type {
@@ -238,6 +238,14 @@ export function ListeningSectionExamView({
   const [evidenceTutorialOpen, setEvidenceTutorialOpen] = useState(false)
   const [evidenceTutorialStep, setEvidenceTutorialStep] = useState(0)
   const answerOnlyMode = Boolean(config.answerOnlyMode)
+  const evidenceAnchorMode = Boolean(config.evidenceAnchorMode)
+
+  const resolveListeningAnswerPhrase = useCallback((question: ListeningSectionExamQuestion) => {
+    if (question.layout === 'gap-fill') {
+      return question.correctAnswer || question.passageKeyword || question.evidence
+    }
+    return question.passageKeyword || question.correctAnswer || question.evidence
+  }, [])
 
   useEffect(() => {
     setActiveQuestionId(config.questions[0]?.id || '')
@@ -562,7 +570,12 @@ export function ListeningSectionExamView({
       const answerOk = isQuestionAnswerCorrect(question, attempt.answer)
       const matchKind = answerOnlyMode
         ? 'exact'
-        : getListeningHighlightMatch(attempt.evidenceDraft, question.evidence, 0.4)
+        : getListeningEvidenceMatch(attempt.evidenceDraft, question.evidence, {
+            anchorMode: evidenceAnchorMode,
+            passageRaw: config.passage,
+            answerPhraseRaw: resolveListeningAnswerPhrase(question),
+            minOverlap: 0.4
+          })
       const evidenceOk = answerOnlyMode ? true : matchKind !== 'none'
 
       if (firstRound) {
@@ -747,7 +760,7 @@ export function ListeningSectionExamView({
           {!answerOnlyMode ? (
             <div>
               <span>Evidence rule</span>
-              <strong>40%</strong>
+              <strong>{evidenceAnchorMode ? 'Answer + word before' : '40%'}</strong>
             </div>
           ) : null}
         </div>
@@ -982,9 +995,13 @@ export function ListeningSectionExamView({
                     ? 'Practice script: all study excerpts for this drill are shown below (condensed format).'
                     : answerOnlyMode
                       ? 'Audioscript for reference while you listen. Fill each gap on the right — no highlighting needed.'
-                      : activeQuestion
-                        ? `Q${activeQuestion.number}: highlight evidence in the script, then answer on the right. Order does not matter.`
-                        : 'Select a question on the right, then highlight evidence here.'}
+                      : evidenceAnchorMode
+                        ? activeQuestion
+                          ? `Q${activeQuestion.number}: highlight the answer phrase plus the word before it in the script.`
+                          : 'Highlight the answer phrase and the word immediately before it, then answer on the right.'
+                        : activeQuestion
+                          ? `Q${activeQuestion.number}: highlight evidence in the script, then answer on the right. Order does not matter.`
+                          : 'Select a question on the right, then highlight evidence here.'}
                 </p>
                 <div
                   ref={scriptBodyRef}

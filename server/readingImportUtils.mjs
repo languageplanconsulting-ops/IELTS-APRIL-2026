@@ -138,8 +138,8 @@ const sanitizeReadingQuestionPrompt = (prompt, correctAnswer) => {
 }
 
 const QUESTION_SECTION_HEADER_REGEX =
-  /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
-const QUESTION_SECTION_MARKER_REGEX = /(?:^|\n)\s*Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
+  /\bQuestions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
+const QUESTION_SECTION_MARKER_REGEX = /\bQuestions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
 
 const parseQuestionRangesFromText = (text) => {
   QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
@@ -313,7 +313,7 @@ const splitReadingTitleAndBody = (value, fallbackTitle) => {
 const parseReadingPassages = (rawPassageText) => {
   const source = stripWrappedQuotes(rawPassageText)
   const passages = []
-  const matches = [...source.matchAll(/(?:^|\n)\s*READING PASSAGE\s+(\d+)\s*$/gim)]
+  const matches = [...source.matchAll(/(?:^|\n)\s*READING PASSAGE\s+(\d+)\b/gim)]
   for (let index = 0; index < matches.length; index += 1) {
     const current = matches[index]
     const next = matches[index + 1]

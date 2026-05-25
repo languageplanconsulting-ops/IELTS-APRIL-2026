@@ -27,6 +27,13 @@ export type LocalTranscriptionResult = {
 }
 
 const WHISPER_SAMPLE_RATE = 16000
+const WHISPER_BASE_OPTIONS = {
+  chunk_length_s: 28,
+  stride_length_s: 4,
+  language: 'english',
+  task: 'transcribe',
+  sampling_rate: WHISPER_SAMPLE_RATE
+} as const
 
 const roundSeconds = (seconds: number) =>
   Number((Number.isFinite(Number(seconds)) ? Number(seconds) : 0).toFixed(3))
@@ -285,7 +292,12 @@ export const buildLocalSubtitlesFromWords = ({
   trimEndSeconds?: number
 }): LocalSubtitleCue[] => {
   const hasTrimRange = trimEndSeconds > trimStartSeconds
-  const usableWords = words
+  const absoluteWords = words.map((item) => ({
+    ...item,
+    start: item.start + trimStartSeconds,
+    end: item.end + trimStartSeconds
+  }))
+  const usableWords = absoluteWords
     .filter((item) => item.word)
     .filter((item) => !hasTrimRange || (item.end >= trimStartSeconds && item.start <= trimEndSeconds))
     .map((item) => ({
@@ -399,19 +411,22 @@ export const transcribeRecordingLocally = async (
       input: Float32Array,
       options?: Record<string, unknown>
     ) => Promise<{ text?: string; chunks?: Array<{ text?: string; timestamp?: [number, number | null] }> }>
-    const output = await runTranscriber(audioSamples, {
-      return_timestamps: 'word',
-      chunk_length_s: 28,
-      stride_length_s: 4,
-      language: 'english',
-      task: 'transcribe'
+    let output = await runTranscriber(audioSamples, {
+      ...WHISPER_BASE_OPTIONS,
+      return_timestamps: 'word'
     })
 
-    const transcript = String((output as { text?: string })?.text || '').trim()
-    const words = mapWhisperWords(output)
+    let transcript = String((output as { text?: string })?.text || '').trim()
+    let words = mapWhisperWords(output)
+    if (!transcript) {
+      onProgress?.('Retrying local transcription with a simpler Whisper pass…')
+      output = await runTranscriber(audioSamples, WHISPER_BASE_OPTIONS)
+      transcript = String((output as { text?: string })?.text || '').trim()
+      words = mapWhisperWords(output)
+    }
     if (!transcript) {
       throw new Error(
-        'Speech was found in the recording but Whisper could not transcribe it clearly. Try trimming silence at the start/end, then sync again.'
+        'Speech was found in the recording, but the browser speech model could not decode it clearly.'
       )
     }
 

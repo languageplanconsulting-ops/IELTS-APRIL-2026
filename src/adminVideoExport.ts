@@ -188,6 +188,17 @@ const waitForVideoEvent = (video: HTMLVideoElement, eventName: keyof HTMLMediaEl
     video.addEventListener('error', onError, { once: true })
   })
 
+type VideoFrameMetadata = {
+  mediaTime?: number
+}
+
+type VideoWithFrameCallback = HTMLVideoElement & {
+  requestVideoFrameCallback?: (
+    callback: (now: DOMHighResTimeStamp, metadata: VideoFrameMetadata) => void
+  ) => number
+  cancelVideoFrameCallback?: (handle: number) => void
+}
+
 export async function exportEditedSpeakingVideo(options: AdminVideoExportOptions): Promise<Blob> {
   const {
     sourceBlob,
@@ -252,12 +263,17 @@ export async function exportEditedSpeakingVideo(options: AdminVideoExportOptions
   }
 
   let animationFrameId = 0
+  let videoFrameCallbackId = 0
   let sourceStream: MediaStream | null = null
   let recorder: MediaRecorder | null = null
   let abortHandler: (() => void) | null = null
 
   const cleanup = () => {
     if (animationFrameId) window.cancelAnimationFrame(animationFrameId)
+    const frameVideo = video as VideoWithFrameCallback
+    if (videoFrameCallbackId && frameVideo.cancelVideoFrameCallback) {
+      frameVideo.cancelVideoFrameCallback(videoFrameCallbackId)
+    }
     if (abortHandler && signal) signal.removeEventListener('abort', abortHandler)
     if (recorder && recorder.state !== 'inactive') recorder.stop()
     sourceStream?.getTracks().forEach((track) => track.stop())
@@ -276,7 +292,8 @@ export async function exportEditedSpeakingVideo(options: AdminVideoExportOptions
     video.src = sourceUrl
     video.playsInline = true
     video.preload = 'auto'
-    video.muted = true
+    video.muted = false
+    video.volume = 0
     await waitForVideoEvent(video, 'loadedmetadata')
     throwIfAborted()
 
@@ -310,8 +327,10 @@ export async function exportEditedSpeakingVideo(options: AdminVideoExportOptions
     }
 
     const shouldMirror = Boolean(subtitleStyle.videoFlipHorizontal)
-    const drawFrame = () => {
+    const frameVideo = video as VideoWithFrameCallback
+    const drawFrameAtTime = (mediaTime?: number) => {
       throwIfAborted()
+      const currentTime = Number.isFinite(Number(mediaTime)) ? Number(mediaTime) : video.currentTime
       context.clearRect(0, 0, sourceWidth, sourceHeight)
       context.save()
       if (shouldMirror) {
@@ -322,19 +341,33 @@ export async function exportEditedSpeakingVideo(options: AdminVideoExportOptions
       context.restore()
 
       if (includeSubtitles && cues.length > 0) {
-        const activeCue = getActiveSubtitleCueAtTime(cues, video.currentTime)
+        const activeCue = getActiveSubtitleCueAtTime(cues, currentTime)
         if (activeCue) drawSubtitleOverlay(context, sourceWidth, sourceHeight, activeCue, subtitleStyle)
       }
 
-      const progress = Math.min(100, Math.max(0, ((video.currentTime - trimStart) / exportDuration) * 100))
+      const progress = Math.min(100, Math.max(0, ((currentTime - trimStart) / exportDuration) * 100))
       onProgress?.(progress)
 
-      if (video.currentTime >= trimEnd - 0.02 || video.ended) {
+      if (currentTime >= trimEnd - 0.02 || video.ended) {
         video.pause()
         if (recorder && recorder.state !== 'inactive') recorder.stop()
+        return false
+      }
+      return true
+    }
+
+    const scheduleDrawFrame = () => {
+      if (frameVideo.requestVideoFrameCallback) {
+        videoFrameCallbackId = frameVideo.requestVideoFrameCallback((_now, metadata) => {
+          videoFrameCallbackId = 0
+          if (drawFrameAtTime(metadata.mediaTime)) scheduleDrawFrame()
+        })
         return
       }
-      animationFrameId = window.requestAnimationFrame(drawFrame)
+      animationFrameId = window.requestAnimationFrame(() => {
+        animationFrameId = 0
+        if (drawFrameAtTime()) scheduleDrawFrame()
+      })
     }
 
     const exportBlob = await new Promise<Blob>((resolve, reject) => {
@@ -363,11 +396,14 @@ export async function exportEditedSpeakingVideo(options: AdminVideoExportOptions
       void waitForVideoEvent(video, 'seeked')
         .then(() => {
           throwIfAborted()
-          recorder?.start(1000)
+          drawFrameAtTime(video.currentTime)
           return video.play()
         })
         .then(() => {
-          drawFrame()
+          throwIfAborted()
+          recorder?.start(1000)
+          drawFrameAtTime(video.currentTime)
+          scheduleDrawFrame()
         })
         .catch((error) => {
           fail(error instanceof Error ? error : new Error('Could not play the video while exporting.'))

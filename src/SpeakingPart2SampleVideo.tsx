@@ -105,6 +105,7 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
   const [isPlaying, setIsPlaying] = useState(false)
   const [thumbFailed, setThumbFailed] = useState(false)
   const [videoTime, setVideoTime] = useState(0)
+  const [videoError, setVideoError] = useState('')
   const uploadedVideoRef = useRef<HTMLVideoElement | null>(null)
   const uploadedVideoFrameRef = useRef<{ id: number; type: 'animation' | 'video' } | null>(null)
   const embedUrl = sample.driveFileId ? getSpeakingPart2SampleEmbedUrl(sample.driveFileId) : ''
@@ -150,6 +151,11 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
   } as CSSProperties
 
   const roundVideoTime = (seconds: number) => Number((Number.isFinite(seconds) ? seconds : 0).toFixed(3))
+
+  useEffect(() => {
+    setVideoError('')
+    setVideoTime(0)
+  }, [sample.videoUrl])
 
   useEffect(() => {
     if (!hasUploadedVideo) return
@@ -261,14 +267,27 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
               className={`speakingP2SampleVideo ${isVideoFlipped ? 'is-flipped' : ''}`.trim()}
               src={sample.videoUrl}
               controls
+              playsInline
               preload="metadata"
               controlsList="nodownload"
-              onLoadedMetadata={syncUploadedVideoTrim}
+              onLoadedMetadata={() => {
+                setVideoError('')
+                syncUploadedVideoTrim()
+              }}
               onPlay={syncUploadedVideoTrim}
               onTimeUpdate={stopAtTrimEnd}
               onSeeked={(event) => setVideoTime(roundVideoTime(event.currentTarget.currentTime))}
+              onError={() => {
+                setVideoError('This sample video could not be loaded. Refresh the page, then try again.')
+              }}
               onContextMenu={(event) => event.preventDefault()}
             />
+            {videoError ? (
+              <div className="speakingP2SampleVideoError" role="alert">
+                <strong>Video unavailable</strong>
+                <span>{videoError}</span>
+              </div>
+            ) : null}
             {activeSubtitleCue?.text ? (
               <div className="speakingP2SampleSubtitleOverlay" style={subtitleOverlayStyle}>
                 <span>{renderSampleSubtitleTextWithNotes(activeSubtitleCue.text, activeSubtitleCue.notes)}</span>
@@ -329,18 +348,13 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
         )}
       </div>
 
-      <div className="speakingP2SampleFooter">
-        <p className="speakingP2SampleNotice">
-          For learning inside English Plan only. Streaming preview — not downloadable.
-          {sample.uploadedAt ? ` Uploaded ${new Date(sample.uploadedAt).toLocaleDateString()}.` : ''}
-          {hasTrim ? ` Trimmed to ${Math.round(trimEndSeconds - trimStartSeconds)}s.` : ''}
-        </p>
-        {isPlaying && !hasUploadedVideo ? (
+      {isPlaying && !hasUploadedVideo ? (
+        <div className="speakingP2SampleFooter">
           <button type="button" className="speakingP2SampleReplay" onClick={() => setIsPlaying(false)}>
             Close player
           </button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
     </section>
   )
 }
