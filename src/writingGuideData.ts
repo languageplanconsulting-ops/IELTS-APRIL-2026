@@ -318,6 +318,177 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   }
 ]
 
+// ── SEO landing page content ─────────────────────────────────────────
+
+export type WritingTask1TypeInfo = {
+  id: string
+  title: string
+  titleTh: string
+  descTh: string
+  badge: string
+}
+
+export const WRITING_TASK1_TYPE_INFO: WritingTask1TypeInfo[] = [
+  {
+    id: 'line-graph',
+    title: 'Line Graph',
+    titleTh: 'กราฟเส้น (Line Graph)',
+    descTh:
+      'อธิบายแนวโน้มข้อมูลตามช่วงเวลา เน้นคำกริยาแสดงการเพิ่ม–ลด ระดับความชัน และจุดสูงสุด–ต่ำสุด',
+    badge: 'Task 1'
+  },
+  {
+    id: 'bar-chart',
+    title: 'Bar Chart',
+    titleTh: 'กราฟแท่ง (Bar Chart)',
+    descTh:
+      'เปรียบเทียบค่าระหว่างหมวดหมู่หรือช่วงเวลา ใช้ภาษาแสดงสัดส่วนและการจัดอันดับ เช่น "account for", "the highest proportion"',
+    badge: 'Task 1'
+  },
+  {
+    id: 'pie-table',
+    title: 'Pie Chart / Table',
+    titleTh: 'Pie Chart / ตาราง',
+    descTh:
+      'นำเสนอสัดส่วนหรือข้อมูลหลายตัวแปรพร้อมกัน เลือกข้อมูลเด่นมาสรุป ไม่ต้องแปลทุกค่า',
+    badge: 'Task 1'
+  },
+  {
+    id: 'map',
+    title: 'Map',
+    titleTh: 'แผนที่ (Map)',
+    descTh:
+      'อธิบายการเปลี่ยนแปลงของสถานที่ระหว่างสองช่วงเวลา ใช้คำแสดงตำแหน่งและการเปลี่ยนแปลง เช่น "was replaced by", "was constructed to the north of"',
+    badge: 'Task 1'
+  },
+  {
+    id: 'process',
+    title: 'Process Diagram',
+    titleTh: 'ผังกระบวนการ (Process)',
+    descTh:
+      'อธิบายขั้นตอนการผลิตหรือวงจรธรรมชาติตามลำดับ ใช้ passive voice และ sequence markers เช่น "subsequently", "in the following stage"',
+    badge: 'Task 1'
+  }
+]
+
+export type WritingTask2TypeInfo = {
+  id: string
+  title: string
+  titleTh: string
+  descTh: string
+  focusTh: string[]
+}
+
+export const WRITING_TASK2_TYPE_INFO: WritingTask2TypeInfo[] = [
+  {
+    id: 'to-what-extent',
+    title: 'To What Extent',
+    titleTh: 'Opinion — To What Extent',
+    descTh:
+      'โจทย์บอกทัศนคติหรือข้ออ้างมาให้ แล้วถามว่าคุณเห็นด้วยมากน้อยแค่ไหน ต้องแสดงจุดยืนชัดเจนตั้งแต่ Introduction',
+    focusTh: [
+      'ระบุตำแหน่งของคุณชัดเจนใน Introduction',
+      'ใช้ extent language: largely, partly, to a large extent',
+      'สรุปยืนยัน stance อีกครั้งใน Conclusion'
+    ]
+  },
+  {
+    id: 'double-question',
+    title: 'Double Question',
+    titleTh: 'Two Direct Questions',
+    descTh:
+      'โจทย์ถามสองคำถามชัดเจน ต้องตอบทั้งคู่ให้ครบ ห้ามตอบแค่คำถามเดียวหรือรวมสองคำตอบไว้ในย่อหน้าเดียว',
+    focusTh: [
+      'แยก body paragraph ละ 1 คำถาม',
+      'พัฒนาแต่ละย่อหน้าเท่าๆ กัน',
+      'ห้ามรวมคำตอบสองข้อไว้ด้วยกัน'
+    ]
+  },
+  {
+    id: 'discuss-both-views',
+    title: 'Discuss Both Views',
+    titleTh: 'Discuss Both Views + Give Opinion',
+    descTh:
+      'นำเสนอสองฝ่ายแล้วสรุปความเห็นของตัวเอง ต้องใช้ภาษา contrast เช่น whereas, while, on the other hand เพื่อแยกฝ่ายให้ชัด',
+    focusTh: [
+      'หนึ่ง body paragraph ต่อหนึ่ง view',
+      'ใช้ contrast language อย่าง whereas, while',
+      'ระบุ opinion ใน Introduction และ Conclusion'
+    ]
+  },
+  {
+    id: 'advantages-disadvantages',
+    title: 'Advantages & Disadvantages',
+    titleTh: 'Advantages & Disadvantages',
+    descTh:
+      'วิเคราะห์ข้อดีและข้อเสียของปรากฏการณ์หรือประเด็นที่โจทย์ให้มา บางข้อถามเพียงด้านเดียว ให้อ่านโจทย์ให้ครบก่อนวางแผน',
+    focusTh: [
+      'จัดเรียงตามหัวข้อหรือตาม advantage/disadvantage blocks',
+      'ใช้คำประเมิน: outweigh, beneficial, problematic',
+      'อ่านโจทย์ให้ดีก่อน — บางข้อถามแค่ด้านเดียว'
+    ]
+  }
+]
+
+// ── Featured practice questions for the SEO landing ──────────────────
+
+export type WritingFeaturedTask1 = {
+  id: string
+  month: string
+  chartType: 'line-graph'
+  chartTypeLabel: string
+  promptLine: string
+  instruction: string
+  wordLimit: string
+  prompt: WritingTimelinePracticePrompt
+}
+
+export type WritingFeaturedTask2 = {
+  id: string
+  month: string
+  questionType: string
+  questionTypeTh: string
+  promptText: string
+  instruction: string
+  wordLimit: string
+}
+
+export const WRITING_FEATURED_TASK1: WritingFeaturedTask1 = {
+  id: 'featured-task1-june-2026-online-shopping',
+  month: 'June 2026',
+  chartType: 'line-graph',
+  chartTypeLabel: 'Line Graph',
+  promptLine: 'The line graph below shows the percentage of adults in three countries who made at least one online purchase per month between 2014 and 2024.',
+  instruction: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.',
+  wordLimit: 'Write at least 150 words.',
+  prompt: {
+    id: 'featured-task1-june-2026-online-shopping',
+    number: 1,
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title: 'Adults making at least one online purchase per month (%)',
+    chartCaption: 'Percentage of adults making at least one online purchase per month (2014–2024)',
+    subjectPhrase: 'the percentage of adults who made at least one online purchase per month',
+    unit: '% of adults',
+    yAxisLabel: 'Percentage (%)',
+    valueLabel: 'Percentage',
+    years: [2014, 2016, 2018, 2020, 2022, 2024],
+    values: [28, 38, 51, 72, 79, 86],
+    mainTrend: 'Online shopping increased steadily, rising sharply after 2018.'
+  }
+}
+
+export const WRITING_FEATURED_TASK2: WritingFeaturedTask2 = {
+  id: 'featured-task2-may-2026-ai-education',
+  month: 'May 2026',
+  questionType: 'Discuss Both Views + Give Opinion',
+  questionTypeTh: 'Discuss Both Views + Give Opinion',
+  promptText:
+    'Some people believe that artificial intelligence will have a largely positive impact on education, while others argue that it will cause more harm than good. Discuss both views and give your own opinion.',
+  instruction: 'Give reasons for your answer and include any relevant examples from your own knowledge or experience.',
+  wordLimit: 'Write at least 250 words.'
+}
+
 export const WRITING_TASK2_TYPES: WritingTask2Type[] = [
   {
     id: 'to-what-extent',

@@ -1,0 +1,1054 @@
+/* ══════════════════════════════════════════════════════════════
+   LandingSpeakingPage (lsp*)
+   Brand tokens: --ep-blue #0f2e85, --ep-yellow #ffcc00, --ep-gold #bf8b30
+   Authoritative + SEO-focused. No sell-first, resource-first.
+══════════════════════════════════════════════════════════════ */
+
+.lspShell {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 7vw, 80px);
+  padding: clamp(16px, 2vw, 28px);
+  padding-bottom: clamp(48px, 6vw, 72px);
+}
+
+/* ── Back button ───────────────────────────────────────────── */
+
+.lspBackBtn {
+  align-self: flex-start;
+  padding: 8px 18px;
+  border: 1px solid rgba(15, 46, 133, 0.2);
+  border-radius: 999px;
+  background: #fff;
+  color: #0f2e85;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+.lspBackBtn:hover {
+  background: #f0f5ff;
+  transform: translateX(-2px);
+}
+
+/* ── Hero ──────────────────────────────────────────────────── */
+
+.lspHero {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(36px, 6vw, 72px) clamp(20px, 4vw, 56px);
+  background: linear-gradient(155deg, #0f2e85 0%, #1a4cb5 55%, #2060d0 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(15, 46, 133, 0.3);
+}
+
+.lspKicker {
+  margin: 0;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 204, 0, 0.85);
+}
+
+.lspHeroH1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.18;
+  color: #fff;
+}
+
+.lspHeroLead {
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(0.92rem, 1.6vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.7;
+}
+
+.lspHeroMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 4px;
+}
+
+.lspDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+/* ── Section scaffold ──────────────────────────────────────── */
+
+.lspSection {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.lspSectionHead {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 58ch;
+}
+
+.lspSectionKicker {
+  margin: 0;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #bf8b30;
+}
+
+.lspSectionH2 {
+  margin: 0;
+  font-size: clamp(1.3rem, 3vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+  color: #0b1f44;
+}
+
+.lspSectionLead {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.65;
+}
+
+/* ── Part format grid ──────────────────────────────────────── */
+
+.lspPartGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.lspPartCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 20px;
+  background: #fff;
+  border: 1px solid rgba(15, 46, 133, 0.09);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(15, 46, 133, 0.06);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.lspPartCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 46, 133, 0.1);
+}
+
+.lspPartCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lspPartBadge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #0f2e85;
+  color: #fff;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.lspPartDuration {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.lspPartTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0b1f44;
+  letter-spacing: -0.01em;
+}
+
+.lspPartDesc {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.lspPartTip {
+  margin-top: auto;
+  padding: 10px 14px;
+  background: rgba(191, 139, 48, 0.07);
+  border-left: 3px solid #bf8b30;
+  border-radius: 0 8px 8px 0;
+}
+
+.lspPartTipLabel {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #bf8b30;
+  margin-bottom: 4px;
+}
+
+.lspPartTip p {
+  margin: 0;
+  font-size: 0.81rem;
+  color: #1e293b;
+  line-height: 1.55;
+}
+
+/* ── Scoring criteria ──────────────────────────────────────── */
+
+.lspSection-criteria {
+  background: linear-gradient(160deg, #f8faff 0%, #fff 100%);
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 18px;
+  border: 1px solid rgba(15, 46, 133, 0.07);
+}
+
+.lspCriteriaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.lspCriterionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 18px;
+  background: #fff;
+  border: 1px solid rgba(15, 46, 133, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(15, 46, 133, 0.05);
+}
+
+.lspCriterionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lspCriterionLabel {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f2e85;
+  letter-spacing: -0.01em;
+}
+
+.lspCriterionWeight {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #bf8b30;
+  background: rgba(191, 139, 48, 0.1);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.lspCriterionDesc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+/* ── Monthly questions accordion ──────────────────────────── */
+
+.lspMonthList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lspMonthBlock {
+  border: 1px solid rgba(15, 46, 133, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow 140ms ease;
+}
+
+.lspMonthBlock.is-open {
+  box-shadow: 0 4px 18px rgba(15, 46, 133, 0.1);
+}
+
+.lspMonthToggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 22px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 120ms ease;
+}
+
+.lspMonthToggle:hover {
+  background: #f8faff;
+}
+
+.lspMonthBlock.is-open .lspMonthToggle {
+  background: #f0f5ff;
+  border-bottom: 1px solid rgba(15, 46, 133, 0.1);
+}
+
+.lspMonthLabel {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0b1f44;
+  letter-spacing: -0.01em;
+}
+
+.lspMonthCount {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(15, 46, 133, 0.08);
+  color: #0f2e85;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.lspMonthChevron {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.lspMonthContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  background: #f8faff;
+}
+
+.lspTopicCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px;
+  background: #fff;
+  border: 1px solid rgba(15, 46, 133, 0.08);
+  border-radius: 12px;
+}
+
+.lspTopicCardHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lspTopicNum {
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lspTopicBadge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #0f2e85;
+  color: #fff;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.lspTopicPrompt {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0b1f44;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.lspCueList {
+  margin: 0;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lspCueList li {
+  font-size: 0.79rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.lspPart3Sample {
+  margin-top: 4px;
+  padding: 10px 12px;
+  background: rgba(191, 139, 48, 0.06);
+  border-radius: 8px;
+  border-left: 2px solid #bf8b30;
+}
+
+.lspPart3Label {
+  display: block;
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #bf8b30;
+  margin-bottom: 4px;
+}
+
+.lspPart3Sample p {
+  margin: 0;
+  font-size: 0.79rem;
+  color: #334155;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ── Sample answer section ─────────────────────────────────── */
+
+.lspSection-sample {
+  background: linear-gradient(165deg, #fffcf0 0%, #fff 70%);
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 18px;
+  border: 1px solid rgba(191, 139, 48, 0.15);
+  gap: 32px;
+}
+
+.lspSampleWrap {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Cue card */
+.lspCueCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 22px;
+  background: #0f2e85;
+  border-radius: 16px;
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(15, 46, 133, 0.28);
+}
+
+.lspCueCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lspCueCardLabel {
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.lspCueBand {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #ffcc00;
+  color: #0b1f44;
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.lspCueCardPrompt {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.lspCueCardInstruction {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.lspCueCardList {
+  margin: 0;
+  padding: 0 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lspCueCardList li {
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+}
+
+.lspCueMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Annotated transcript */
+.lspTranscriptWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lspTranscriptHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lspTranscriptLabel {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0b1f44;
+  letter-spacing: -0.01em;
+}
+
+.lspTranscriptHint {
+  margin: 0;
+  font-size: 0.73rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.lspTranscript {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid rgba(15, 46, 133, 0.09);
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(15, 46, 133, 0.05);
+}
+
+.lspSampleSegment {
+  margin: 0;
+  font-size: 0.93rem;
+  color: #1e293b;
+  line-height: 1.75;
+}
+
+/* Highlight chips (inline in text) */
+.lspHighlight {
+  display: inline;
+  cursor: pointer;
+  position: relative;
+}
+
+.lspHighlightPhrase {
+  border-bottom: 2px solid transparent;
+  transition: border-color 100ms;
+}
+
+.lspHighlight-vocabulary .lspHighlightPhrase {
+  border-bottom-color: #0f2e85;
+  color: #0f2e85;
+  font-weight: 600;
+}
+
+.lspHighlight-grammar .lspHighlightPhrase {
+  border-bottom-color: #bf8b30;
+  border-bottom-style: dashed;
+  color: #7a5a20;
+  font-weight: 600;
+}
+
+.lspHighlightPopover {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: absolute;
+  z-index: 20;
+  bottom: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  max-width: 300px;
+  padding: 10px 12px;
+  background: #0b1f44;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  font-size: 0.79rem;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.lspHighlightPopover strong {
+  font-size: 0.82rem;
+  color: #ffcc00;
+}
+
+.lspHighlightPopover em {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-style: italic;
+}
+
+/* Summary chips */
+.lspHighlightSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 0 0;
+  border-top: 1px solid rgba(15, 46, 133, 0.09);
+}
+
+.lspHighlightGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lspHighlightGroupLabel {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+}
+
+.lspHighlightChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lspSummaryChip {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.79rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.lspSummaryChip-vocab {
+  background: rgba(15, 46, 133, 0.08);
+  color: #0f2e85;
+}
+
+.lspSummaryChip-grammar {
+  background: rgba(191, 139, 48, 0.1);
+  color: #7a5a20;
+}
+
+.lspSummaryChipThai {
+  font-weight: 400;
+  font-size: 0.74rem;
+  opacity: 0.75;
+}
+
+/* ── Locked samples ────────────────────────────────────────── */
+
+.lspSection-locked {
+  gap: 32px;
+}
+
+.lspLockedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.lspLockedCard {
+  position: relative;
+  border: 1px solid rgba(15, 46, 133, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  min-height: 160px;
+}
+
+.lspLockedOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: default;
+}
+
+.lspLockIcon {
+  font-size: 1.4rem;
+}
+
+.lspLockedMsg {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0f2e85;
+  text-align: center;
+}
+
+.lspLockedSub {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.lspLockedCardInner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px;
+  filter: blur(2px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.lspLockedCardHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lspLockedBadge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #0f2e85;
+  color: #fff;
+  font-size: 0.63rem;
+  font-weight: 700;
+}
+
+.lspLockedBand {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #bf8b30;
+}
+
+.lspLockedTopic {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0b1f44;
+  line-height: 1.3;
+}
+
+.lspLockedDuration {
+  margin: 0;
+  font-size: 0.73rem;
+  color: #94a3b8;
+}
+
+.lspLockedBlurBar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(15, 46, 133, 0.1);
+}
+
+.lspLockedBlurBar-short {
+  width: 60%;
+}
+
+/* ── Upgrade CTA ───────────────────────────────────────────── */
+
+.lspUpgradeCta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+  padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 48px);
+  background: linear-gradient(130deg, #0f2e85 0%, #1a4cb5 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(15, 46, 133, 0.28);
+}
+
+.lspUpgradeCtaContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lspUpgradeKicker {
+  margin: 0;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 204, 0, 0.8);
+}
+
+.lspUpgradeH3 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #fff;
+}
+
+.lspUpgradeList {
+  margin: 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lspUpgradeList li {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.5;
+}
+
+.lspUpgradeBtn {
+  align-self: flex-start;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: #ffcc00;
+  color: #0b1f44;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  box-shadow: 0 4px 14px rgba(255, 204, 0, 0.4);
+}
+
+.lspUpgradeBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 204, 0, 0.5);
+}
+
+.lspUpgradeStats {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 32px;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.lspUpgradeStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.lspUpgradeStat strong {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #ffcc00;
+  letter-spacing: -0.02em;
+}
+
+.lspUpgradeStat span {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ── Real video path ──────────────────────────────────────── */
+
+.lspRealVideoWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lspVideoPlayer {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
+
+.lspVideoEl {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  background: #000;
+}
+
+/* Legend dots */
+.lspLegendDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.lspLegendDot-vocab { background: #0f2e85; }
+.lspLegendDot-grammar { background: #bf8b30; }
+
+/* Note panel (sticky explanation below transcript) */
+.lspNotePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  background: #0b1f44;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.lspNotePanelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lspNoteKindBadge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lspNoteKindBadge-vocabulary { background: rgba(255,255,255,0.15); color: #fff; }
+.lspNoteKindBadge-grammar { background: rgba(255, 204, 0, 0.2); color: #ffcc00; }
+
+.lspNotePanelClose {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 100ms;
+}
+
+.lspNotePanelClose:hover { background: rgba(255,255,255,0.1); }
+
+.lspNotePanelPhrase {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffcc00;
+}
+
+.lspNotePanelThai {
+  margin: 0;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.9);
+}
+
+.lspNotePanelDetail {
+  margin: 0;
+  font-size: 0.84rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.6;
+}
+
+.lspNotePanelExample {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  font-style: italic;
+}
+
+/* Summary chip as button */
+button.lspSummaryChip {
+  cursor: pointer;
+  border: none;
+  text-align: left;
+  transition: transform 100ms, opacity 100ms;
+}
+
+button.lspSummaryChip:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .lspSampleWrap {
+    grid-template-columns: 1fr;
+  }
+
+  .lspUpgradeCta {
+    grid-template-columns: 1fr;
+  }
+
+  .lspUpgradeStats {
+    flex-direction: row;
+    justify-content: center;
+    padding-left: 0;
+    padding-top: 20px;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}
+
+@media (max-width: 700px) {
+  .lspPartGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .lspCriteriaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .lspMonthContent {
+    grid-template-columns: 1fr;
+  }
+
+  .lspLockedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lspHeroH1 br {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .lspLockedGrid {
+    grid-template-columns: 1fr;
+  }
+}

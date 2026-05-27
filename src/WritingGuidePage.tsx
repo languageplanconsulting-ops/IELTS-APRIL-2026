@@ -4,6 +4,10 @@ import {
   WRITING_TASK1_SECTIONS,
   WRITING_TASK2_TYPES,
   WRITING_TIMELINE_PRACTICE_PROMPTS,
+  WRITING_TASK1_TYPE_INFO,
+  WRITING_TASK2_TYPE_INFO,
+  WRITING_FEATURED_TASK1,
+  WRITING_FEATURED_TASK2,
   IELTS_TASK1_SUMMARY_INSTRUCTION,
   IELTS_TASK1_TIME_NOTE,
   IELTS_TASK1_WORD_LIMIT,
@@ -384,53 +388,199 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
         <span className="writingGuideGridGlow" />
       </div>
 
-      <header className="writingGuideHeader">
-        <div>
-          <p className="sectionLabel">English Plan Writing</p>
-          <h2>IELTS Writing Practice</h2>
-          <p className="writingGuideLead">เลือก Task → หมวด → ข้อสอบ ทีละขั้น</p>
-        </div>
-        {flow.step === 'task-pick' ? (
-          <button type="button" className="writingGuideBackBtn" onClick={onBackHome}>
-            Back Home
-          </button>
-        ) : null}
-      </header>
+      {flow.step !== 'task-pick' ? (
+        <header className="writingGuideHeader">
+          <div>
+            <p className="sectionLabel">English Plan Writing</p>
+            <h2>IELTS Writing Practice</h2>
+            <p className="writingGuideLead">เลือก Task → หมวด → ข้อสอบ ทีละขั้น</p>
+          </div>
+        </header>
+      ) : null}
 
       <div className="writingGuideFlowStage">
         {flow.step === 'task-pick' ? (
-          <div className="writingGuideMegaShell">
-            <WritingFlowHead
-              eyebrow="Start here"
-              title="Choose your writing task"
-              subtitle="Select Task 1 or Task 2 to continue"
-              onBack={onBackHome}
-              backLabel="Home"
-            />
-            <div className="writingGuideMegaGrid writingGuideMegaGrid-2">
-              <button
-                type="button"
-                className="writingGuideMegaCard writingGuideMegaCard-task1"
-                style={{ '--motion-stagger': 0 } as CSSProperties}
-                onClick={() => setFlow({ step: 'task1-categories' })}
-              >
-                <span className="writingGuideMegaBadge">Academic</span>
-                <strong>Task 1</strong>
-                <span className="writingGuideMegaSub">Report · charts, maps &amp; processes</span>
-                <small>150 words · ~20 minutes</small>
-              </button>
-              <button
-                type="button"
-                className="writingGuideMegaCard writingGuideMegaCard-task2"
-                style={{ '--motion-stagger': 1 } as CSSProperties}
-                onClick={() => setFlow({ step: 'task2-types' })}
-              >
-                <span className="writingGuideMegaBadge">Academic</span>
-                <strong>Task 2</strong>
-                <span className="writingGuideMegaSub">Essay · opinion &amp; discussion</span>
-                <small>250 words · ~40 minutes</small>
-              </button>
-            </div>
+          <div className="wlpShell">
+
+            {/* ── Hero ─────────────────────────────────────── */}
+            <section className="wlpHero">
+              <p className="wlpKicker">IELTS Academic Writing · English Plan Institute</p>
+              <h1 className="wlpHeroH1">ฝึก IELTS Academic Writing<br />อย่างเป็นระบบ ตรงกับข้อสอบจริง</h1>
+              <p className="wlpHeroLead">
+                รวมโจทย์ Task 1 และ Task 2 จากการสอบจริง พร้อมคำอธิบายประเภทคำถาม
+                และโครงสร้างการเขียนที่ช่วยให้ได้คะแนน Band 7+
+              </p>
+              <div className="wlpHeroActions">
+                <button
+                  type="button"
+                  className="wlpBtn wlpBtn-primary"
+                  onClick={() => setFlow({ step: 'task1-categories' })}
+                >
+                  เริ่มฝึก Task 1
+                </button>
+                <button
+                  type="button"
+                  className="wlpBtn wlpBtn-secondary"
+                  onClick={() => setFlow({ step: 'task2-types' })}
+                >
+                  เริ่มฝึก Task 2
+                </button>
+              </div>
+              <div className="wlpHeroMeta">
+                <span>Task 1 · 150 คำ · ~20 นาที</span>
+                <span className="wlpHeroMetaDot" />
+                <span>Task 2 · 250 คำ · ~40 นาที</span>
+                <span className="wlpHeroMetaDot" />
+                <span>Academic Track</span>
+              </div>
+            </section>
+
+            {/* ── Task 1 — Question Types ──────────────────── */}
+            <section className="wlpSection">
+              <div className="wlpSectionHead">
+                <p className="wlpSectionKicker">Task 1 · Academic Writing</p>
+                <h2 className="wlpSectionH2">ประเภทคำถาม Task 1 ที่ออกสอบจริง</h2>
+                <p className="wlpSectionLead">
+                  Task 1 ให้เวลา 20 นาที เขียนอย่างน้อย 150 คำ บรรยายข้อมูลจากกราฟหรือแผนภาพที่กำหนดให้
+                </p>
+              </div>
+              <div className="wlpTypeGrid">
+                {WRITING_TASK1_TYPE_INFO.map((type) => (
+                  <article key={type.id} className="wlpTypeCard">
+                    <span className="wlpTypeTag">{type.badge}</span>
+                    <h3 className="wlpTypeTitle">{type.titleTh}</h3>
+                    <p className="wlpTypeDesc">{type.descTh}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            {/* ── Task 2 — Question Types ──────────────────── */}
+            <section className="wlpSection">
+              <div className="wlpSectionHead">
+                <p className="wlpSectionKicker">Task 2 · Academic Writing</p>
+                <h2 className="wlpSectionH2">ประเภทคำถาม Task 2 ที่ออกสอบจริง</h2>
+                <p className="wlpSectionLead">
+                  Task 2 ให้เวลา 40 นาที เขียนอย่างน้อย 250 คำ คิดเป็น 2 ใน 3 ของคะแนน Writing ทั้งหมด
+                </p>
+              </div>
+              <div className="wlpTypeGrid wlpTypeGrid-task2">
+                {WRITING_TASK2_TYPE_INFO.map((type) => (
+                  <article key={type.id} className="wlpTypeCard wlpTypeCard-task2">
+                    <span className="wlpTypeTag wlpTypeTag-task2">Task 2</span>
+                    <h3 className="wlpTypeTitle">{type.titleTh}</h3>
+                    <p className="wlpTypeDesc">{type.descTh}</p>
+                    <ul className="wlpTypeFocus">
+                      {type.focusTh.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            {/* ── Recent Practice Questions ─────────────────── */}
+            <section className="wlpSection wlpSection-recent">
+              <div className="wlpSectionHead">
+                <p className="wlpSectionKicker">โจทย์ประจำเดือน · January – June 2026</p>
+                <h2 className="wlpSectionH2">โจทย์จากการสอบจริง มกราคม – มิถุนายน 2566</h2>
+                <p className="wlpSectionLead">
+                  ตัวอย่างโจทย์ IELTS Academic Writing ที่รวบรวมจากการสอบในประเทศไทยและภูมิภาค APAC
+                </p>
+              </div>
+
+              <div className="wlpRecentGrid">
+
+                {/* Task 1 card */}
+                <article className="wlpRecentCard">
+                  <div className="wlpRecentCardHead">
+                    <span className="wlpRecentBadge wlpRecentBadge-task1">Task 1</span>
+                    <span className="wlpRecentChartBadge">{WRITING_FEATURED_TASK1.chartTypeLabel}</span>
+                    <span className="wlpRecentMonth">{WRITING_FEATURED_TASK1.month}</span>
+                  </div>
+                  <h3 className="wlpRecentTitle">{WRITING_FEATURED_TASK1.prompt.title}</h3>
+                  <p className="wlpRecentPrompt">{WRITING_FEATURED_TASK1.promptLine}</p>
+                  <p className="wlpRecentInstruction">{WRITING_FEATURED_TASK1.instruction}</p>
+                  <p className="wlpRecentWordLimit">{WRITING_FEATURED_TASK1.wordLimit}</p>
+
+                  {/* Inline line graph preview */}
+                  <div className="wlpChartWrap" aria-hidden="true">
+                    <WritingLineGraphSvg prompt={WRITING_FEATURED_TASK1.prompt} />
+                  </div>
+
+                  <button
+                    type="button"
+                    className="wlpRecentAction"
+                    onClick={() => {
+                      setFlow({ step: 'task1-categories' })
+                    }}
+                  >
+                    ฝึกทำ Task 1 →
+                  </button>
+                </article>
+
+                {/* Task 2 card */}
+                <article className="wlpRecentCard wlpRecentCard-task2">
+                  <div className="wlpRecentCardHead">
+                    <span className="wlpRecentBadge wlpRecentBadge-task2">Task 2</span>
+                    <span className="wlpRecentChartBadge">{WRITING_FEATURED_TASK2.questionTypeTh}</span>
+                    <span className="wlpRecentMonth">{WRITING_FEATURED_TASK2.month}</span>
+                  </div>
+                  <h3 className="wlpRecentTitle">Essay — Opinion &amp; Discussion</h3>
+                  <blockquote className="wlpRecentEssayPrompt">
+                    "{WRITING_FEATURED_TASK2.promptText}"
+                  </blockquote>
+                  <p className="wlpRecentInstruction">{WRITING_FEATURED_TASK2.instruction}</p>
+                  <p className="wlpRecentWordLimit">{WRITING_FEATURED_TASK2.wordLimit}</p>
+
+                  <div className="wlpTask2Hint">
+                    <p className="wlpTask2HintLabel">แนวทางการเขียน</p>
+                    <ul>
+                      <li>Introduction: แสดงจุดยืนชัดเจน + paraphrase โจทย์</li>
+                      <li>Body 1: View A พร้อม evidence</li>
+                      <li>Body 2: View B พร้อม evidence</li>
+                      <li>Conclusion: ยืนยัน opinion + สรุป</li>
+                    </ul>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="wlpRecentAction wlpRecentAction-task2"
+                    onClick={() => setFlow({ step: 'task2-types' })}
+                  >
+                    ดูประเภทคำถาม Task 2 →
+                  </button>
+                </article>
+
+              </div>
+            </section>
+
+            {/* ── CTA row ──────────────────────────────────── */}
+            <section className="wlpCtaRow">
+              <div className="wlpCtaInner">
+                <p className="wlpCtaKicker">English Plan IELTS Institute</p>
+                <h2 className="wlpCtaH2">พร้อมฝึกจริงแล้วหรือยัง?</h2>
+                <p className="wlpCtaLead">เลือก Task ที่ต้องการฝึกด้านล่าง แล้วเริ่มทำโจทย์ได้เลย</p>
+                <div className="wlpCtaActions">
+                  <button
+                    type="button"
+                    className="wlpBtn wlpBtn-primary"
+                    onClick={() => setFlow({ step: 'task1-categories' })}
+                  >
+                    Task 1 — กราฟและแผนภาพ
+                  </button>
+                  <button
+                    type="button"
+                    className="wlpBtn wlpBtn-secondary"
+                    onClick={() => setFlow({ step: 'task2-types' })}
+                  >
+                    Task 2 — เรียงความ
+                  </button>
+                </div>
+              </div>
+            </section>
+
           </div>
         ) : null}
 

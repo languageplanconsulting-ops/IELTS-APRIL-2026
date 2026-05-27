@@ -22272,7 +22272,28 @@ function App() {
 
                   <LandingPageDraft
                     readingMonthGroups={readingMonthGroups}
-                    onStartReadingExam={(exam) => startReadingExam(exam.id)}
+                    speakingSampleVideos={Object.values(speakingSampleVideoAssets)
+                      .filter((a) => a.videoUrl && Array.isArray(a.subtitles) && a.subtitles.length > 0)
+                      .map((a) => ({
+                        topicId: a.topicId,
+                        topicTitle: a.topicTitle,
+                        videoUrl: a.videoUrl,
+                        subtitles: (a.subtitles || []).map((c) => ({
+                          id: c.id,
+                          startSeconds: c.startSeconds,
+                          endSeconds: c.endSeconds,
+                          text: c.text,
+                          notes: (c.notes || []).map((n) => ({
+                            id: n.id,
+                            phrase: n.phrase,
+                            kind: n.kind,
+                            thaiMeaning: n.thaiMeaning,
+                            grammarRule: n.grammarRule,
+                            exampleSentence: n.exampleSentence,
+                            detail: n.detail
+                          }))
+                        }))
+                      }))}
                   />
                 </div>
                 <div className="panel adminSectionCard adminOnly-learners">

@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { LandingReadingAcademicPage } from './LandingReadingAcademicPage'
+import { LandingSpeakingPage, type LandingSpeakingVideoSample } from './LandingSpeakingPage'
+import { WritingGuidePage } from '../WritingGuidePage'
 import type { ReadingExamRecord } from '../readingJourney'
 import './LandingPageDraft.css'
 
 type ExamTrack = 'academic' | 'general'
-type LandingDraftView = 'home' | 'reading-academic'
+type LandingDraftView = 'home' | 'reading-academic' | 'speaking' | 'writing'
 
 type LandingPageDraftProps = {
   readingMonthGroups?: Array<{ title: string; displayTitle: string; exams: ReadingExamRecord[] }>
-  onStartReadingExam?: (exam: ReadingExamRecord) => void
+  speakingSampleVideos?: LandingSpeakingVideoSample[]
 }
 
 type SkillItem = {
@@ -137,7 +139,7 @@ const TRACK_META: Record<
   }
 }
 
-export function LandingPageDraft({ readingMonthGroups = [], onStartReadingExam }: LandingPageDraftProps) {
+export function LandingPageDraft({ readingMonthGroups = [], speakingSampleVideos = [] }: LandingPageDraftProps) {
   const [examTrack, setExamTrack] = useState<ExamTrack>('academic')
   const [draftView, setDraftView] = useState<LandingDraftView>('home')
   const track = TRACK_META[examTrack]
@@ -147,11 +149,26 @@ export function LandingPageDraft({ readingMonthGroups = [], onStartReadingExam }
   if (draftView === 'reading-academic') {
     return (
       <div className="epLandingDraftWrap">
-        <LandingReadingAcademicPage
-          monthGroups={readingMonthGroups}
+        <LandingReadingAcademicPage monthGroups={readingMonthGroups} onBack={() => setDraftView('home')} />
+      </div>
+    )
+  }
+
+  if (draftView === 'speaking') {
+    return (
+      <div className="epLandingDraftWrap">
+        <LandingSpeakingPage
           onBack={() => setDraftView('home')}
-          onStartReadingExam={onStartReadingExam}
+          featuredVideo={speakingSampleVideos[0] ?? null}
         />
+      </div>
+    )
+  }
+
+  if (draftView === 'writing') {
+    return (
+      <div className="epLandingDraftWrap">
+        <WritingGuidePage onBackHome={() => setDraftView('home')} />
       </div>
     )
   }
@@ -299,9 +316,15 @@ export function LandingPageDraft({ readingMonthGroups = [], onStartReadingExam }
                       className="epLandingTextLink"
                       onClick={() => {
                         if (skill.id === 'reading') setDraftView('reading-academic')
+                        if (skill.id === 'speaking') setDraftView('speaking')
+                        if (skill.id === 'writing') setDraftView('writing')
                       }}
                     >
-                      {skill.cta} →
+                      {skill.id === 'writing'
+                        ? 'ดูข้อสอบ Writing IELTS ล่าสุด →'
+                        : skill.id === 'speaking'
+                          ? 'ดูตัวอย่างและโจทย์ Speaking →'
+                          : `${skill.cta} →`}
                     </button>
                   </article>
                 ))}
@@ -316,8 +339,19 @@ export function LandingPageDraft({ readingMonthGroups = [], onStartReadingExam }
                       <h3>{skill.title}</h3>
                       <p>{skill.body}</p>
                     </div>
-                    <button type="button" className="epLandingBtn epLandingBtnSecondary">
-                      {skill.cta}
+                    <button
+                      type="button"
+                      className="epLandingBtn epLandingBtnSecondary"
+                      onClick={() => {
+                        if (skill.id === 'speaking') setDraftView('speaking')
+                        if (skill.id === 'writing-gt') setDraftView('writing')
+                      }}
+                    >
+                      {skill.id === 'writing-gt'
+                        ? 'ดูข้อสอบ Writing IELTS ล่าสุด'
+                        : skill.id === 'speaking'
+                          ? 'ดูตัวอย่างและโจทย์ Speaking'
+                          : skill.cta}
                     </button>
                   </article>
                 ))}

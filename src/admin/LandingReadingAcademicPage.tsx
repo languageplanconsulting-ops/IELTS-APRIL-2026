@@ -3,9 +3,11 @@ import {
   LANDING_READING_BAND_GUIDE,
   READING_COURSE_URL
 } from './landingReadingAcademicData'
+import { LandingReadingExamSession } from './LandingReadingExamSession'
 import {
   buildLandingReadingMonths,
-  getLandingReadingExamMeta
+  getLandingReadingExamMeta,
+  getLandingReadingPassageTitle
 } from './landingReadingAcademicUtils'
 import type { ReadingExamRecord } from '../readingJourney'
 import './LandingReadingAcademicPage.css'
@@ -13,7 +15,6 @@ import './LandingReadingAcademicPage.css'
 type LandingReadingAcademicPageProps = {
   monthGroups: Array<{ title: string; displayTitle: string; exams: ReadingExamRecord[] }>
   onBack: () => void
-  onStartReadingExam?: (exam: ReadingExamRecord) => void
 }
 
 function ReadingLockIcon() {
@@ -31,10 +32,11 @@ function ReadingLockIcon() {
   )
 }
 
-export function LandingReadingAcademicPage({ monthGroups, onBack, onStartReadingExam }: LandingReadingAcademicPageProps) {
+export function LandingReadingAcademicPage({ monthGroups, onBack }: LandingReadingAcademicPageProps) {
   const months = useMemo(() => buildLandingReadingMonths(monthGroups), [monthGroups])
   const defaultMonthId = months[months.length - 1]?.id || months[0]?.id || ''
   const [activeMonthId, setActiveMonthId] = useState(defaultMonthId)
+  const [activeFreeExam, setActiveFreeExam] = useState<ReadingExamRecord | null>(null)
   const [lockModalOpen, setLockModalOpen] = useState(false)
   const [lockedExamTitle, setLockedExamTitle] = useState('')
 
@@ -46,12 +48,14 @@ export function LandingReadingAcademicPage({ monthGroups, onBack, onStartReading
     setLockModalOpen(true)
   }
 
-  const startFreeExam = (exam: ReadingExamRecord) => {
-    if (onStartReadingExam) {
-      onStartReadingExam(exam)
-      return
-    }
-    window.alert('Reading exam is not connected yet. Please wire onStartReadingExam from the app shell.')
+  if (activeFreeExam) {
+    return (
+      <div className="epReadingPage epReadingPage-exam">
+        <div className="epReadingExamHost">
+          <LandingReadingExamSession exam={activeFreeExam} onBack={() => setActiveFreeExam(null)} />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -151,7 +155,7 @@ export function LandingReadingAcademicPage({ monthGroups, onBack, onStartReading
                       <ExamCard
                         exam={activeMonth.freeExam}
                         locked={false}
-                        onClick={() => startFreeExam(activeMonth.freeExam!)}
+                        onClick={() => setActiveFreeExam(activeMonth.freeExam!)}
                       />
                     )}
                     {activeMonth.lockedExams.map((exam) => (
@@ -206,7 +210,7 @@ function ExamCard({
   onClick: () => void
 }) {
   const meta = getLandingReadingExamMeta(exam)
-  const passageTitle = exam.parsedPayload?.passages?.[0]?.title || exam.title
+  const passageTitle = getLandingReadingPassageTitle(exam)
 
   return (
     <article className={`epReadingSetCard${locked ? ' is-locked' : ' is-free'}`}>

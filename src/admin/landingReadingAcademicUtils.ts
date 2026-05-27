@@ -48,6 +48,28 @@ export const buildLandingReadingMonths = (
     }
   })
 
+const READING_TIME_INSTRUCTION_PATTERN = /^You should spend about/i
+
+export const getLandingReadingPassageTitle = (exam: ReadingExamRecord) => {
+  const fromExamTitle = String(exam.title || '')
+    .split(' - ')
+    .pop()
+    ?.trim()
+  if (fromExamTitle && !/^Passage\s+\d+$/i.test(fromExamTitle)) {
+    return fromExamTitle
+  }
+
+  const passageTitle = String(exam.parsedPayload?.passages?.[0]?.title || '').trim()
+  if (passageTitle && !READING_TIME_INSTRUCTION_PATTERN.test(passageTitle)) {
+    return passageTitle
+  }
+
+  const passageMatch = String(exam.title || '').match(/Passage\s+\d+\s*[-–—:]\s*(.+)$/i)
+  if (passageMatch?.[1]?.trim()) return passageMatch[1].trim()
+
+  return exam.title || 'Reading Passage'
+}
+
 export const getLandingReadingExamMeta = (exam: ReadingExamRecord) => {
   const passage = exam.parsedPayload?.passages?.[0]
   const questionCount = exam.parsedPayload?.questionCount || passage?.questions?.length || 0
