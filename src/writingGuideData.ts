@@ -531,3 +531,442 @@ export const WRITING_TASK2_TYPES: WritingTask2Type[] = [
     ]
   }
 ]
+
+// ── Monthly question sets Jan–Dec 2026 ────────────────────────────────────
+
+export type WritingMonthlyQuestionSet = {
+  id: string
+  month: string
+  monthTh: string
+  period: string
+  isScheduled: boolean
+  scheduledDateTh?: string
+  task1: {
+    chartType: string
+    chartTypeTh: string
+    promptText: string
+    promptLine: string
+  }
+  task2: {
+    questionType: string
+    questionTypeTh: string
+    promptText: string
+  }
+  task1Prompt?: WritingTimelinePracticePrompt
+}
+
+export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
+  {
+    id: 'jan-2026',
+    month: 'January 2026',
+    monthTh: 'มกราคม 2569',
+    period: 'Jan 2026',
+    isScheduled: false,
+    task1: {
+      chartType: 'line-graph',
+      chartTypeTh: 'Line Graph',
+      promptText: 'The line graph below shows the percentage of adults in three countries (UK, USA, and Australia) who made at least one online purchase per month between 2014 and 2024.',
+      promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task1Prompt: {
+      id: 'monthly-jan-t1',
+      number: 1,
+      chartType: 'line-graph',
+      chartTypeLabel: 'Line Graph',
+      title: 'Adults making at least one online purchase per month (%)',
+      chartCaption: 'Percentage of adults making at least one online purchase per month (2014-2024)',
+      subjectPhrase: 'the percentage of adults who made at least one online purchase per month',
+      unit: '% of adults',
+      yAxisLabel: 'Percentage (%)',
+      valueLabel: 'Percentage',
+      years: [2014, 2016, 2018, 2020, 2022, 2024],
+      values: [28, 38, 51, 72, 79, 86],
+      mainTrend: 'Online shopping grew sharply, especially between 2018 and 2020.'
+    },
+    task2: {
+      questionType: 'Discuss Both Views + Give Opinion',
+      questionTypeTh: 'Discuss Both Views + Give Opinion',
+      promptText: 'Some people believe that artificial intelligence will have a largely positive impact on education, while others argue that it will cause more harm than good. Discuss both views and give your own opinion.'
+    }
+  },
+  {
+    id: 'feb-2026',
+    month: 'February 2026',
+    monthTh: 'กุมภาพันธ์ 2569',
+    period: 'Feb 2026',
+    isScheduled: false,
+    task1: {
+      chartType: 'bar-chart',
+      chartTypeTh: 'Bar Chart',
+      promptText: 'The bar chart below compares the average household spending on five categories (food, transport, housing, healthcare, and leisure) in the UK and Thailand in 2023.',
+      promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task2: {
+      questionType: 'Advantages & Disadvantages',
+      questionTypeTh: 'Advantages & Disadvantages',
+      promptText: 'Nowadays, many people choose to work from home rather than commuting to an office every day. Do the advantages of working from home outweigh the disadvantages?'
+    }
+  },
+  {
+    id: 'mar-2026',
+    month: 'March 2026',
+    monthTh: 'มีนาคม 2569',
+    period: 'Mar 2026',
+    isScheduled: false,
+    task1: {
+      chartType: 'map',
+      chartTypeTh: 'Map',
+      promptText: 'The two maps below show the layout of a town centre in 2005 and 2025. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.',
+      promptLine: 'Write at least 150 words.'
+    },
+    task2: {
+      questionType: 'To What Extent',
+      questionTypeTh: 'To What Extent (เห็นด้วยมากน้อยแค่ไหน)',
+      promptText: 'Some people believe that the most important thing governments can do to address climate change is to significantly reduce the use of private cars. To what extent do you agree or disagree?'
+    }
+  },
+  {
+    id: 'apr-2026',
+    month: 'April 2026',
+    monthTh: 'เมษายน 2569',
+    period: 'Apr 2026',
+    isScheduled: false,
+    task1: {
+      chartType: 'pie-chart',
+      chartTypeTh: 'Pie Chart',
+      promptText: 'The pie charts below show the distribution of energy sources used to generate electricity in two countries (Germany and Australia) in 2010 and 2020.',
+      promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task2: {
+      questionType: 'Double Question',
+      questionTypeTh: 'Double Question (สองคำถาม)',
+      promptText: 'In many countries, young people are spending more time playing video games than ever before. Why is this happening? Is this a positive or negative development for society?'
+    }
+  },
+  {
+    id: 'may-2026',
+    month: 'May 2026',
+    monthTh: 'พฤษภาคม 2569',
+    period: 'May 2026',
+    isScheduled: false,
+    task1: {
+      chartType: 'line-graph',
+      chartTypeTh: 'Line Graph',
+      promptText: 'The line graph below shows the percentage of people using social media platforms in four regions (North America, Europe, Asia-Pacific, and Latin America) from 2010 to 2024.',
+      promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task2: {
+      questionType: 'To What Extent',
+      questionTypeTh: 'To What Extent',
+      promptText: 'Some people feel that entertainers such as film stars, musicians and sports personalities are paid too much money. To what extent do you agree or disagree with this opinion?'
+    }
+  },
+  {
+    id: 'jun-2026',
+    month: 'June 2026',
+    monthTh: 'มิถุนายน 2569',
+    period: 'Jun 2026',
+    isScheduled: false,
+    task1: {
+      chartType: 'table',
+      chartTypeTh: 'Table',
+      promptText: 'The table below shows data on five universities across four indicators (research output, student satisfaction rate, graduate employment rate, and percentage of international students) in 2024.',
+      promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task2: {
+      questionType: 'Discuss Both Views + Give Opinion',
+      questionTypeTh: 'Discuss Both Views + Give Opinion',
+      promptText: 'Many parents today allow their children to use electronic devices such as smartphones and tablets from a very young age. Discuss the advantages and disadvantages of this trend and give your own opinion.'
+    }
+  },
+  {
+    id: 'jul-2026',
+    month: 'July 2026',
+    monthTh: 'กรกฎาคม 2569',
+    period: 'Jul 2026',
+    isScheduled: true,
+    scheduledDateTh: 'เปิดเผยต้นเดือนกรกฎาคม 2569',
+    task1: {
+      chartType: 'line-graph',
+      chartTypeTh: 'Line Graph',
+      promptText: 'กำลังจะมา',
+      promptLine: ''
+    },
+    task2: {
+      questionType: 'TBA',
+      questionTypeTh: 'กำลังจะมา',
+      promptText: 'กำลังจะมา'
+    }
+  },
+  {
+    id: 'aug-2026',
+    month: 'August 2026',
+    monthTh: 'สิงหาคม 2569',
+    period: 'Aug 2026',
+    isScheduled: true,
+    scheduledDateTh: 'เปิดเผยต้นเดือนสิงหาคม 2569',
+    task1: { chartType: 'bar-chart', chartTypeTh: 'Bar Chart', promptText: 'กำลังจะมา', promptLine: '' },
+    task2: { questionType: 'TBA', questionTypeTh: 'กำลังจะมา', promptText: 'กำลังจะมา' }
+  },
+  {
+    id: 'sep-2026',
+    month: 'September 2026',
+    monthTh: 'กันยายน 2569',
+    period: 'Sep 2026',
+    isScheduled: true,
+    scheduledDateTh: 'เปิดเผยต้นเดือนกันยายน 2569',
+    task1: { chartType: 'map', chartTypeTh: 'Map', promptText: 'กำลังจะมา', promptLine: '' },
+    task2: { questionType: 'TBA', questionTypeTh: 'กำลังจะมา', promptText: 'กำลังจะมา' }
+  },
+  {
+    id: 'oct-2026',
+    month: 'October 2026',
+    monthTh: 'ตุลาคม 2569',
+    period: 'Oct 2026',
+    isScheduled: true,
+    scheduledDateTh: 'เปิดเผยต้นเดือนตุลาคม 2569',
+    task1: { chartType: 'process', chartTypeTh: 'Process Diagram', promptText: 'กำลังจะมา', promptLine: '' },
+    task2: { questionType: 'TBA', questionTypeTh: 'กำลังจะมา', promptText: 'กำลังจะมา' }
+  },
+  {
+    id: 'nov-2026',
+    month: 'November 2026',
+    monthTh: 'พฤศจิกายน 2569',
+    period: 'Nov 2026',
+    isScheduled: true,
+    scheduledDateTh: 'เปิดเผยต้นเดือนพฤศจิกายน 2569',
+    task1: { chartType: 'line-graph', chartTypeTh: 'Line Graph', promptText: 'กำลังจะมา', promptLine: '' },
+    task2: { questionType: 'TBA', questionTypeTh: 'กำลังจะมา', promptText: 'กำลังจะมา' }
+  },
+  {
+    id: 'dec-2026',
+    month: 'December 2026',
+    monthTh: 'ธันวาคม 2569',
+    period: 'Dec 2026',
+    isScheduled: true,
+    scheduledDateTh: 'เปิดเผยต้นเดือนธันวาคม 2569',
+    task1: { chartType: 'bar-chart', chartTypeTh: 'Bar Chart', promptText: 'กำลังจะมา', promptLine: '' },
+    task2: { questionType: 'TBA', questionTypeTh: 'กำลังจะมา', promptText: 'กำลังจะมา' }
+  }
+]
+
+// ── Band 7 sample answers ─────────────────────────────────────────────────
+
+export type WritingBand7Highlight = {
+  phrase: string
+  kind: 'vocabulary' | 'grammar' | 'structure'
+  labelTh: string
+  descTh: string
+  exampleTh?: string
+}
+
+export type WritingBand7SampleSegment = {
+  id: string
+  labelTh: string
+  text: string
+  highlights: WritingBand7Highlight[]
+}
+
+export type WritingBand7Sample = {
+  task: 1 | 2
+  band: string
+  wordCount: number
+  timeNote: string
+  questionType: string
+  questionTypeTh: string
+  promptText: string
+  segments: WritingBand7SampleSegment[]
+  summaryPoints: string[]
+}
+
+export const WRITING_BAND7_TASK1_SAMPLE: WritingBand7Sample = {
+  task: 1,
+  band: 'Band 7',
+  wordCount: 168,
+  timeNote: '~18 นาที',
+  questionType: 'Line Graph',
+  questionTypeTh: 'Line Graph — แนวโน้มตามเวลา',
+  promptText: 'The line graph below shows the percentage of adults who made at least one online purchase per month between 2014 and 2024.',
+  segments: [
+    {
+      id: 't1-overview',
+      labelTh: 'Overview — ภาพรวมหลัก (ต้องมีเสมอ)',
+      text: 'The line graph illustrates the proportion of adults who shopped online at least once per month over a ten-year period from 2014 to 2024. Overall, there was a considerable and sustained rise in online shopping throughout this period, with the most dramatic increase occurring between 2018 and 2020.',
+      highlights: [
+        {
+          phrase: 'illustrates the proportion of',
+          kind: 'vocabulary',
+          labelTh: 'illustrates the proportion of (paraphrase)',
+          descTh: 'paraphrase "shows the percentage of" ด้วยคำที่หลากหลายกว่า — แสดง Lexical Resource สูง',
+          exampleTh: 'The chart illustrates the proportion of students who passed the exam.'
+        },
+        {
+          phrase: 'considerable and sustained rise',
+          kind: 'vocabulary',
+          labelTh: 'considerable and sustained rise',
+          descTh: '"considerable" = มาก, "sustained" = ต่อเนื่องไม่หยุด — คำคู่นี้แสดง precision สูงมาก',
+          exampleTh: 'There was a considerable and sustained rise in tourism following the new policy.'
+        },
+        {
+          phrase: 'most dramatic increase',
+          kind: 'vocabulary',
+          labelTh: 'most dramatic increase (superlative + noun)',
+          descTh: 'ใช้ superlative เพื่อ highlight จุดที่น่าสนใจที่สุดในกราฟ — เป็น pattern ที่ดีมากสำหรับ Task 1',
+          exampleTh: 'The most dramatic increase was recorded in 2020.'
+        }
+      ]
+    },
+    {
+      id: 't1-body1',
+      labelTh: 'Body 1 — ช่วงแรก (2014–2018)',
+      text: 'In 2014, approximately 28% of adults made regular online purchases. This figure rose steadily over the following four years, reaching 51% in 2018 — an increase of around 23 percentage points.',
+      highlights: [
+        {
+          phrase: 'rose steadily',
+          kind: 'vocabulary',
+          labelTh: 'rose steadily (verb + adverb trend language)',
+          descTh: '"steadily" บ่งบอกการเพิ่มขึ้นสม่ำเสมอ ไม่ฉับพลัน — เป็น trend language สำคัญมาก',
+          exampleTh: 'The temperature rose steadily throughout the morning.'
+        },
+        {
+          phrase: 'an increase of around 23 percentage points',
+          kind: 'grammar',
+          labelTh: 'an increase of [amount] — การระบุขนาดการเปลี่ยนแปลง',
+          descTh: 'โครงสร้าง "an increase of [X]" ใช้แทน "increased by [X]" ได้ — แสดง Grammar Range',
+          exampleTh: 'The pass rate improved by an increase of 15 percentage points.'
+        }
+      ]
+    },
+    {
+      id: 't1-body2',
+      labelTh: 'Body 2 — ช่วงที่น่าสนใจ (2018–2024)',
+      text: 'The period between 2018 and 2020 saw the sharpest surge, with the percentage jumping from 51% to 72%. From 2020 onwards, growth continued but at a more moderate pace, climbing from 72% to 79% by 2022 before reaching a peak of 86% in 2024 — more than three times the 2014 figure.',
+      highlights: [
+        {
+          phrase: 'saw the sharpest surge',
+          kind: 'vocabulary',
+          labelTh: 'saw the sharpest surge (period + saw + noun)',
+          descTh: '"[period] saw [change]" เป็น structure คลาสสิกของ Band 7+ Task 1 — ฟังดู academic มาก',
+          exampleTh: 'The 1990s saw the sharpest surge in mobile phone ownership.'
+        },
+        {
+          phrase: 'at a more moderate pace',
+          kind: 'vocabulary',
+          labelTh: 'at a more moderate pace',
+          descTh: 'บ่งบอกการเติบโตที่ช้าลง — ดีกว่า "more slowly" เพราะ precise และ formal กว่า',
+          exampleTh: 'After the initial boom, the economy grew at a more moderate pace.'
+        },
+        {
+          phrase: 'more than three times the 2014 figure',
+          kind: 'grammar',
+          labelTh: 'more than [X] times the [year] figure — multiple comparison',
+          descTh: 'โครงสร้างเปรียบเทียบแบบ multiple ที่ดีกว่า "increased a lot since 2014"',
+          exampleTh: 'Sales in 2024 were more than four times the 2010 figure.'
+        }
+      ]
+    }
+  ],
+  summaryPoints: [
+    'เขียน Overview ก่อนเสมอ — อธิบาย trend หลัก 1-2 จุดโดยไม่ใส่ตัวเลข',
+    'ใช้ "saw + noun" เพื่อบรรยายช่วงเวลา เช่น "The period from X to Y saw..."',
+    'ระบุขนาดการเปลี่ยนแปลงด้วย "percentage points" ไม่ใช่แค่ "percent"',
+    'เปรียบเทียบจุดสูงสุด-ต่ำสุดกับช่วงเริ่มต้น เช่น "more than three times the 2014 figure"',
+    'ไม่ต้องอธิบายทุกตัวเลข — เลือกเฉพาะจุดที่ significant ที่สุด'
+  ]
+}
+
+export const WRITING_BAND7_TASK2_SAMPLE: WritingBand7Sample = {
+  task: 2,
+  band: 'Band 7',
+  wordCount: 261,
+  timeNote: '~38 นาที',
+  questionType: 'Discuss Both Views + Give Opinion',
+  questionTypeTh: 'Discuss Both Views + Give Opinion',
+  promptText: 'Some people believe that artificial intelligence will have a largely positive impact on education, while others argue that it will cause more harm than good. Discuss both views and give your own opinion.',
+  segments: [
+    {
+      id: 't2-intro',
+      labelTh: 'Introduction — paraphrase + thesis',
+      text: 'The rapid development of artificial intelligence has sparked considerable debate regarding its role in education. While some argue that AI will fundamentally transform learning for the better, others remain concerned about its potential drawbacks. In my view, the benefits of AI in education largely outweigh the disadvantages, provided that it is implemented thoughtfully.',
+      highlights: [
+        {
+          phrase: 'sparked considerable debate',
+          kind: 'vocabulary',
+          labelTh: 'sparked considerable debate (collocation)',
+          descTh: '"spark" + "debate" เป็น collocation ที่ดูเป็น native มาก — ดีกว่า "caused a lot of discussion"',
+          exampleTh: 'The new policy has sparked considerable debate among politicians.'
+        },
+        {
+          phrase: 'provided that it is implemented thoughtfully',
+          kind: 'grammar',
+          labelTh: '"provided that" — Conditional clause',
+          descTh: '"provided that" = "ถ้าหาก / ตราบเท่าที่" เป็น conditional ที่ formal กว่า "if" — แสดง Grammar Range สูง',
+          exampleTh: 'Technology can be beneficial, provided that it is used responsibly.'
+        }
+      ]
+    },
+    {
+      id: 't2-body1',
+      labelTh: 'Body 1 — มุมมองฝ่ายสนับสนุน AI',
+      text: 'Those who favour AI in education point to its ability to personalise learning. Unlike traditional classroom instruction, AI-powered platforms can adapt to each student\'s pace and learning style, offering targeted exercises and instant feedback. This is particularly beneficial in large classrooms where teachers may struggle to meet every student\'s individual needs.',
+      highlights: [
+        {
+          phrase: 'personalise learning',
+          kind: 'vocabulary',
+          labelTh: 'personalise learning (key topic verb)',
+          descTh: '"personalise" แปลว่าทำให้เหมาะกับแต่ละบุคคล — คำสำคัญที่ใช้ในหัวข้อ AI + Education บ่อยมาก',
+          exampleTh: 'Technology allows teachers to personalise learning for each student.'
+        },
+        {
+          phrase: 'particularly beneficial',
+          kind: 'vocabulary',
+          labelTh: 'particularly beneficial (hedged positive adjective)',
+          descTh: '"particularly" เพิ่ม precision ให้กับ "beneficial" — ฟังดู measured และ academic กว่า "very useful"',
+          exampleTh: 'This approach is particularly beneficial for students with learning difficulties.'
+        }
+      ]
+    },
+    {
+      id: 't2-body2',
+      labelTh: 'Body 2 — มุมมองฝ่ายต่อต้าน AI',
+      text: 'On the other hand, critics argue that excessive reliance on AI could undermine essential social and emotional skills. Education is not merely about acquiring knowledge; it also fosters communication, teamwork, and critical thinking through human interaction. If AI replaces too many aspects of the teacher-student relationship, these vital skills may be neglected.',
+      highlights: [
+        {
+          phrase: 'undermine essential social and emotional skills',
+          kind: 'vocabulary',
+          labelTh: 'undermine (v.) — ทำให้อ่อนแอ / บ่อนทำลาย',
+          descTh: '"undermine" แสดงผลกระทบเชิงลบที่ค่อยๆ เกิดขึ้น — ดีกว่า "destroy" หรือ "hurt" เพราะ nuanced กว่า',
+          exampleTh: 'Poor management can undermine employee morale over time.'
+        },
+        {
+          phrase: 'not merely about acquiring knowledge',
+          kind: 'grammar',
+          labelTh: '"not merely about" — Cleft emphasis structure',
+          descTh: '"not merely about X; it also Y" เป็นโครงสร้าง contrast ที่ elegant — แสดง sentence variety ที่ดี',
+          exampleTh: 'University is not merely about getting a degree; it also builds life skills.'
+        }
+      ]
+    },
+    {
+      id: 't2-conclusion',
+      labelTh: 'Conclusion — restate + final opinion',
+      text: 'In conclusion, while the concerns about AI in education are valid, I believe that its capacity to personalise and enhance learning makes it a largely positive development. The key is to use AI as a supplement to, rather than a replacement for, human teaching.',
+      highlights: [
+        {
+          phrase: 'a supplement to, rather than a replacement for',
+          kind: 'grammar',
+          labelTh: '"a supplement to, rather than a replacement for" — Parallel contrast',
+          descTh: 'โครงสร้าง "A rather than B" แบบ parallel — แสดง Grammar Range สูงมาก เป็น Band 7+ signature',
+          exampleTh: 'Technology should be a tool for teachers, rather than a substitute for them.'
+        }
+      ]
+    }
+  ],
+  summaryPoints: [
+    'Introduction: paraphrase โจทย์ + บอก stance ชัดเจน อย่าวน เขียน 3-4 ประโยค',
+    'Body 1 & 2: แยกฝ่ายชัดเจน ใช้ "Those who favour..." และ "On the other hand..."',
+    'ทุก body paragraph ต้องมี topic sentence + explanation + example',
+    'Conclusion: อย่าเพิ่มข้อมูลใหม่ — summarise และยืนยัน opinion อีกครั้ง',
+    'ใช้ "provided that / given that / as long as" แทน "if" เพื่อ Grammar Range สูงขึ้น'
+  ]
+}

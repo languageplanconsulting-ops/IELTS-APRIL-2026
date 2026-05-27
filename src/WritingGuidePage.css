@@ -1978,3 +1978,411 @@
   }
   .wlpRecentMonth { display: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Monthly question grid (wlpMonth*)
+══════════════════════════════════════════════════════════════ */
+
+.wlpMonthGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.wlpMonthCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 20px;
+  background: #fff;
+  border: 1px solid rgba(15, 46, 133, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(15, 46, 133, 0.06);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.wlpMonthCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 46, 133, 0.1);
+}
+
+.wlpMonthCard-scheduled {
+  background: #f8faff;
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+.wlpMonthCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.wlpMonthBadge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.wlpMonthPeriod {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.wlpMonthTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0b1f44;
+  letter-spacing: -0.015em;
+}
+
+.wlpMonthScheduled {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.wlpMonthTask {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: rgba(15, 46, 133, 0.04);
+  border-radius: 10px;
+  border-left: 3px solid #0f2e85;
+}
+
+.wlpMonthTask-t2 {
+  background: rgba(191, 139, 48, 0.05);
+  border-left-color: #bf8b30;
+}
+
+.wlpMonthTaskHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wlpMonthTaskLabel {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0f2e85;
+}
+
+.wlpMonthTaskLabel-t2 {
+  color: #bf8b30;
+}
+
+.wlpMonthChartBadge {
+  font-size: 0.69rem;
+  font-weight: 600;
+  color: #475569;
+  background: rgba(15, 46, 133, 0.07);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.wlpMonthChartBadge-t2 {
+  background: rgba(191, 139, 48, 0.1);
+  color: #7a5a20;
+}
+
+.wlpMonthTaskPrompt {
+  margin: 0;
+  font-size: 0.81rem;
+  color: #334155;
+  line-height: 1.55;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Band 7 sample answer (wlpBand7*)
+══════════════════════════════════════════════════════════════ */
+
+.wlpSection-band7 {
+  background: linear-gradient(160deg, #f8faff 0%, #fff 100%);
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 18px;
+  border: 1px solid rgba(15, 46, 133, 0.07);
+}
+
+.wlpBand7TabsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wlpBand7TabRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wlpBand7Tab {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(15, 46, 133, 0.18);
+  background: #fff;
+  color: #475569;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.wlpBand7Tab.is-active {
+  background: #0f2e85;
+  color: #fff;
+  border-color: #0f2e85;
+  box-shadow: 0 3px 10px rgba(15, 46, 133, 0.25);
+}
+
+.wlpBand7Tab:hover:not(.is-active) {
+  background: #f0f5ff;
+  border-color: rgba(15, 46, 133, 0.3);
+}
+
+.wlpBand7Sample {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wlpBand7Header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.wlpBand7HeaderLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wlpBand7Badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #0f2e85;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  width: fit-content;
+}
+
+.wlpBand7Meta {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.wlpBand7LegendRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.wlpBand7Legend {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.wlpBand7Legend-vocab { background: rgba(15, 46, 133, 0.1); color: #0f2e85; }
+.wlpBand7Legend-grammar { background: rgba(191, 139, 48, 0.15); color: #7a5a20; }
+.wlpBand7Legend-structure { background: rgba(22, 163, 74, 0.1); color: #15803d; }
+
+/* Prompt box */
+.wlpBand7Prompt {
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid rgba(15, 46, 133, 0.1);
+  border-radius: 12px;
+}
+
+.wlpBand7PromptLabel {
+  margin: 0 0 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+}
+
+.wlpBand7PromptText {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #1e293b;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* Answer segments */
+.wlpBand7Segments {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wlpBand7Segment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 18px;
+  background: #fff;
+  border: 1px solid rgba(15, 46, 133, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(15, 46, 133, 0.04);
+}
+
+.wlpBand7SegLabel {
+  margin: 0;
+  font-size: 0.69rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #0f2e85;
+}
+
+.wlpBand7SegText {
+  font-size: 0.9rem;
+  color: #1e293b;
+  line-height: 1.78;
+}
+
+.wlpSegmentText {
+  display: inline;
+}
+
+/* Inline highlight marks */
+.wlpInlineWrap {
+  display: inline;
+  position: relative;
+}
+
+.wlpMark {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 1px 2px;
+  font-style: inherit;
+  font-weight: 600;
+  transition: background 100ms;
+}
+
+.wlpMark-vocabulary {
+  background: rgba(15, 46, 133, 0.1);
+  color: #0f2e85;
+  border-bottom: 2px solid #0f2e85;
+}
+
+.wlpMark-grammar {
+  background: rgba(191, 139, 48, 0.1);
+  color: #7a5a20;
+  border-bottom: 2px dashed #bf8b30;
+}
+
+.wlpMark-structure {
+  background: rgba(22, 163, 74, 0.08);
+  color: #15803d;
+  border-bottom: 2px solid #16a34a;
+}
+
+.wlpMark.is-open {
+  background: rgba(15, 46, 133, 0.18);
+}
+
+.wlpMark-grammar.is-open { background: rgba(191, 139, 48, 0.2); }
+
+.wlpMarkPopover {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: absolute;
+  z-index: 30;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 240px;
+  max-width: 320px;
+  padding: 12px 14px;
+  background: #0b1f44;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  font-size: 0.79rem;
+  line-height: 1.5;
+  pointer-events: none;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.wlpMarkPopover strong {
+  font-size: 0.83rem;
+  color: #ffcc00;
+  font-weight: 700;
+}
+
+.wlpMarkPopover em {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+/* Tips summary */
+.wlpBand7Tips {
+  padding: 16px 18px;
+  background: rgba(15, 46, 133, 0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(15, 46, 133, 0.08);
+}
+
+.wlpBand7TipsLabel {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0f2e85;
+}
+
+.wlpBand7TipsList {
+  margin: 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wlpBand7TipsList li {
+  font-size: 0.83rem;
+  color: #334155;
+  line-height: 1.55;
+}
+
+/* Responsive for monthly grid */
+@media (max-width: 640px) {
+  .wlpMonthGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .wlpBand7Header {
+    flex-direction: column;
+  }
+
+  .wlpBand7LegendRow {
+    flex-wrap: wrap;
+  }
+}

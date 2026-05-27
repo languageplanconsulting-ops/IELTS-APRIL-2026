@@ -8,6 +8,9 @@ import {
   WRITING_TASK2_TYPE_INFO,
   WRITING_FEATURED_TASK1,
   WRITING_FEATURED_TASK2,
+  WRITING_MONTHLY_SETS_2026,
+  WRITING_BAND7_TASK1_SAMPLE,
+  WRITING_BAND7_TASK2_SAMPLE,
   IELTS_TASK1_SUMMARY_INSTRUCTION,
   IELTS_TASK1_TIME_NOTE,
   IELTS_TASK1_WORD_LIMIT,
@@ -15,7 +18,9 @@ import {
   type WritingGuideChipGroup,
   type WritingGuideStructure,
   type WritingTask1Section,
-  type WritingTimelinePracticePrompt
+  type WritingTimelinePracticePrompt,
+  type WritingBand7Highlight,
+  type WritingBand7Sample
 } from './writingGuideData'
 
 type WritingGuidePageProps = {
@@ -330,6 +335,133 @@ function WritingFlowHead({
   )
 }
 
+// ── Band 7 sample helper components ──────────────────────────────────────
+
+const CHART_TYPE_ICON: Record<string, string> = {
+  'line-graph': '📈',
+  'bar-chart': '📊',
+  'pie-chart': '🥧',
+  'table': '📋',
+  'map': '🗺',
+  'process': '⚙'
+}
+
+function WlpHighlightInline({ text, highlights }: { text: string; highlights: WritingBand7Highlight[] }) {
+  const [openPhrase, setOpenPhrase] = useState<string | null>(null)
+  const parts: Array<{ type: 'text' | 'mark'; content: string; h?: WritingBand7Highlight }> = []
+  let remaining = text
+  const sorted = [...highlights].sort(
+    (a, b) => text.indexOf(a.phrase) - text.indexOf(b.phrase)
+  )
+  for (const h of sorted) {
+    const idx = remaining.indexOf(h.phrase)
+    if (idx < 0) continue
+    if (idx > 0) parts.push({ type: 'text', content: remaining.slice(0, idx) })
+    parts.push({ type: 'mark', content: h.phrase, h })
+    remaining = remaining.slice(idx + h.phrase.length)
+  }
+  if (remaining) parts.push({ type: 'text', content: remaining })
+
+  return (
+    <span className="wlpSegmentText">
+      {parts.map((part, i) => {
+        if (part.type === 'mark' && part.h) {
+          const isOpen = openPhrase === part.content
+          return (
+            <span key={i} className="wlpInlineWrap">
+              <mark
+                className={`wlpMark wlpMark-${part.h.kind} ${isOpen ? 'is-open' : ''}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => setOpenPhrase(isOpen ? null : part.content)}
+                onKeyDown={(e) => e.key === 'Enter' && setOpenPhrase(isOpen ? null : part.content)}
+              >
+                {part.content}
+              </mark>
+              {isOpen && (
+                <span className="wlpMarkPopover">
+                  <strong>{part.h.labelTh}</strong>
+                  <span>{part.h.descTh}</span>
+                  {part.h.exampleTh && <em>ตัวอย่าง: {part.h.exampleTh}</em>}
+                </span>
+              )}
+            </span>
+          )
+        }
+        return <span key={i}>{part.content}</span>
+      })}
+    </span>
+  )
+}
+
+function Band7SampleView({ sample }: { sample: WritingBand7Sample }) {
+  return (
+    <div className="wlpBand7Sample">
+      <div className="wlpBand7Header">
+        <div className="wlpBand7HeaderLeft">
+          <span className="wlpBand7Badge">Band {sample.band} · {sample.questionTypeTh}</span>
+          <p className="wlpBand7Meta">{sample.wordCount} คำ · {sample.timeNote}</p>
+        </div>
+        <div className="wlpBand7LegendRow">
+          <span className="wlpBand7Legend wlpBand7Legend-vocab">คำศัพท์</span>
+          <span className="wlpBand7Legend wlpBand7Legend-grammar">ไวยากรณ์</span>
+          <span className="wlpBand7Legend wlpBand7Legend-structure">โครงสร้าง</span>
+        </div>
+      </div>
+
+      <div className="wlpBand7Prompt">
+        <p className="wlpBand7PromptLabel">โจทย์</p>
+        <p className="wlpBand7PromptText">{sample.promptText}</p>
+      </div>
+
+      <div className="wlpBand7Segments">
+        {sample.segments.map((seg) => (
+          <div key={seg.id} className="wlpBand7Segment">
+            <p className="wlpBand7SegLabel">{seg.labelTh}</p>
+            <div className="wlpBand7SegText">
+              <WlpHighlightInline text={seg.text} highlights={seg.highlights} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="wlpBand7Tips">
+        <p className="wlpBand7TipsLabel">สรุปเทคนิคที่ใช้</p>
+        <ul className="wlpBand7TipsList">
+          {sample.summaryPoints.map((tip) => (
+            <li key={tip}>{tip}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function WlpBand7Tabs() {
+  const [activeTask, setActiveTask] = useState<1 | 2>(1)
+  return (
+    <div className="wlpBand7TabsWrap">
+      <div className="wlpBand7TabRow">
+        <button
+          type="button"
+          className={`wlpBand7Tab ${activeTask === 1 ? 'is-active' : ''}`}
+          onClick={() => setActiveTask(1)}
+        >
+          Task 1 — Line Graph
+        </button>
+        <button
+          type="button"
+          className={`wlpBand7Tab ${activeTask === 2 ? 'is-active' : ''}`}
+          onClick={() => setActiveTask(2)}
+        >
+          Task 2 — Discuss Both Views
+        </button>
+      </div>
+      <Band7SampleView sample={activeTask === 1 ? WRITING_BAND7_TASK1_SAMPLE : WRITING_BAND7_TASK2_SAMPLE} />
+    </div>
+  )
+}
+
 export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
   const [flow, setFlow] = useState<WritingFlow>({ step: 'task-pick' })
   const [timelineAnswers, setTimelineAnswers] = useState<Record<string, string>>({})
@@ -553,6 +685,72 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
                   </button>
                 </article>
 
+              </div>
+            </section>
+
+            {/* ── Monthly question sets Jan–Dec 2026 ───────── */}
+            <section className="wlpSection">
+              <div className="wlpSectionHead">
+                <p className="wlpSectionKicker">โจทย์จากการสอบจริง · มกราคม – ธันวาคม 2569</p>
+                <h2 className="wlpSectionH2">IELTS Writing 2026<br />Task 1 + Task 2 รายเดือน</h2>
+                <p className="wlpSectionLead">
+                  รวบรวมโจทย์ IELTS Academic Writing จากการสอบในประเทศไทยและภูมิภาค APAC
+                  มกราคม–มิถุนายน 2569 (ข้อมูลจริง) และโจทย์คาดการณ์ กรกฎาคม–ธันวาคม 2569
+                </p>
+              </div>
+              <div className="wlpMonthGrid">
+                {WRITING_MONTHLY_SETS_2026.map((set) => (
+                  <article
+                    key={set.id}
+                    className={`wlpMonthCard ${set.isScheduled ? 'wlpMonthCard-scheduled' : ''}`}
+                  >
+                    <div className="wlpMonthCardHead">
+                      <span className="wlpMonthBadge">
+                        {set.isScheduled ? '🗓 กำลังจะมา' : '✅ ข้อสอบจริง'}
+                      </span>
+                      <span className="wlpMonthPeriod">{set.period}</span>
+                    </div>
+                    <h3 className="wlpMonthTitle">{set.monthTh}</h3>
+
+                    {set.isScheduled ? (
+                      <p className="wlpMonthScheduled">{set.scheduledDateTh}</p>
+                    ) : (
+                      <>
+                        <div className="wlpMonthTask">
+                          <div className="wlpMonthTaskHead">
+                            <span className="wlpMonthTaskLabel">Task 1</span>
+                            <span className="wlpMonthChartBadge">
+                              {CHART_TYPE_ICON[set.task1.chartType] || '📊'} {set.task1.chartTypeTh}
+                            </span>
+                          </div>
+                          <p className="wlpMonthTaskPrompt">{set.task1.promptText}</p>
+                        </div>
+                        <div className="wlpMonthTask wlpMonthTask-t2">
+                          <div className="wlpMonthTaskHead">
+                            <span className="wlpMonthTaskLabel wlpMonthTaskLabel-t2">Task 2</span>
+                            <span className="wlpMonthChartBadge wlpMonthChartBadge-t2">{set.task2.questionTypeTh}</span>
+                          </div>
+                          <p className="wlpMonthTaskPrompt">{set.task2.promptText}</p>
+                        </div>
+                      </>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            {/* ── Band 7 Sample Answers ─────────────────────── */}
+            <section className="wlpSection wlpSection-band7">
+              <div className="wlpSectionHead">
+                <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
+                <h2 className="wlpSectionH2">ดูว่า Band 7 เขียนยังไง<br />พร้อมคำอธิบายภาษาไทย</h2>
+                <p className="wlpSectionLead">
+                  กด <strong>คำที่ขีดเส้นใต้</strong> เพื่อดูคำอธิบายคำศัพท์และโครงสร้างไวยากรณ์เป็นภาษาไทย
+                </p>
+              </div>
+
+              <div className="wlpBand7Tabs">
+                <WlpBand7Tabs />
               </div>
             </section>
 
