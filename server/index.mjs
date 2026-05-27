@@ -1,7 +1,7 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto'
+import { createHash, createHmac, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto'
 import fs from 'node:fs'
 import { createRequire } from 'node:module'
 import os from 'node:os'
@@ -86,7 +86,12 @@ const MARCH_2026_GOOD_ARCHIVE_READING_EXAMS = requireJson('../cambridge-reading-
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
-app.use(express.json({ limit: requestBodyLimit }))
+app.use(express.json({
+  limit: requestBodyLimit,
+  verify: (req, _res, buffer) => {
+    req.rawBody = buffer?.length ? buffer.toString('utf8') : ''
+  }
+}))
 
 const GEMINI_PRICING_VERIFIED_AT = '2026-05-02'
 const GEMINI_PRICING_SOURCE_URL = 'https://ai.google.dev/gemini-api/docs/pricing?hl=en'
@@ -2753,6 +2758,24 @@ const ADMIN_SIGNUP_NOTIFY_EMAIL = normalizeEmail(
 const APP_BASE_URL = String(process.env.APP_BASE_URL || '').trim().replace(/\/+$/, '')
 const ACCESS_APPROVAL_SECRET = String(process.env.ACCESS_APPROVAL_SECRET || ADMIN_PANEL_CODE || 'language-plan').trim()
 const ACCESS_APPROVAL_TOKEN_TTL_MS = 1000 * 60 * 60 * 24 * 7
+const THINKIFIC_WEBHOOK_SECRET = String(process.env.THINKIFIC_WEBHOOK_SECRET || '').trim()
+const THINKIFIC_ALLOWED_COURSE_IDS = String(process.env.THINKIFIC_ALLOWED_COURSE_IDS || '')
+  .split(',')
+  .map((item) => item.trim())
+  .filter(Boolean)
+const THINKIFIC_DEFAULT_ACCESS_MONTHS = Math.max(0, Number(process.env.THINKIFIC_DEFAULT_ACCESS_MONTHS || 3) || 0)
+const parseThinkificCreditDefault = (value, fallback) => {
+  const parsed = Number(value)
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback
+}
+const THINKIFIC_FEEDBACK_CREDITS = Math.max(
+  0,
+  parseThinkificCreditDefault(process.env.THINKIFIC_FEEDBACK_CREDITS, DEFAULT_FEEDBACK_CREDITS)
+)
+const THINKIFIC_FULL_MOCK_CREDITS = Math.max(
+  0,
+  parseThinkificCreditDefault(process.env.THINKIFIC_FULL_MOCK_CREDITS, DEFAULT_FULL_MOCK_CREDITS)
+)
 
 const escapeHtml = (value) =>
   String(value || '')
@@ -6527,6 +6550,277 @@ const loadUserProfileByEmail = async (email) => {
   return Array.isArray(rows) ? rows[0] || null : null
 }
 
+const timingSafeStringEqual = (received, expected) => {
+  try {
+    const receivedBuffer = Buffer.from(String(received || ''), 'utf8')
+    const expectedBuffer = Buffer.from(String(expected || ''), 'utf8')
+    return receivedBuffer.length === expectedBuffer.length && timingSafeEqual(receivedBuffer, expectedBuffer)
+  } catch {
+    return false
+  }
+}
+
+const verifyThinkificWebhookSignature = (req) => {
+  if (!THINKIFIC_WEBHOOK_SECRET) {
+    const error = new Error('THINKIFIC_WEBHOOK_SECRET is not configured.')
+    error.status = 503
+    throw error
+  }
+  const receivedSignature = String(
+    req.headers['x-thinkific-hmac-sha256'] ||
+      req.headers['x-thinkific-hmac-sha256-signature'] ||
+      req.headers['x-thinkific-webhook-signature'] ||
+      ''
+  )
+    .trim()
+    .toLowerCase()
+  const expectedSignature = createHmac('sha256', THINKIFIC_WEBHOOK_SECRET)
+    .update(String(req.rawBody || ''))
+    .digest('hex')
+    .toLowerCase()
+  return timingSafeStringEqual(receivedSignature, expectedSignature)
+}
+
+const pickFirstTextValue = (...values) => {
+  for (const value of values) {
+    const normalized = String(value || '').trim()
+    if (normalized) return normalized
+  }
+  return ''
+}
+
+const normalizeThinkificEventName = (req, payload = {}) =>
+  pickFirstTextValue(
+    req.headers['x-thinkific-topic'],
+    req.headers['x-thinkific-event'],
+    payload?.event_name,
+    payload?.eventName,
+    payload?.event,
+    payload?.topic,
+    payload?.type
+  )
+    .toLowerCase()
+    .replace(/_/g, '.')
+
+const extractThinkificEnrollmentPayload = (payload = {}) => {
+  const resource = payload?.resource && typeof payload.resource === 'object' ? payload.resource : payload
+  const user =
+    resource?.user ||
+    payload?.user ||
+    resource?.student ||
+    payload?.student ||
+    resource?.owner ||
+    payload?.owner ||
+    {}
+  const course = resource?.course || payload?.course || resource?.product || payload?.product || {}
+  const firstName = pickFirstTextValue(user?.first_name, user?.firstName)
+  const lastName = pickFirstTextValue(user?.last_name, user?.lastName)
+  const email = normalizeEmail(
+    pickFirstTextValue(
+      user?.email,
+      resource?.email,
+      payload?.email,
+      resource?.user_email,
+      payload?.user_email,
+      resource?.student_email,
+      payload?.student_email
+    )
+  )
+  const name = pickFirstTextValue(
+    user?.name,
+    user?.full_name,
+    user?.fullName,
+    [firstName, lastName].filter(Boolean).join(' '),
+    email ? email.split('@')[0] : ''
+  )
+  const courseId = pickFirstTextValue(
+    resource?.course_id,
+    resource?.courseId,
+    course?.id,
+    course?.course_id,
+    payload?.course_id,
+    payload?.courseId
+  )
+  const courseName = pickFirstTextValue(course?.name, course?.title, resource?.course_name, payload?.course_name)
+
+  return {
+    email,
+    name: name || 'Student',
+    courseId,
+    courseName,
+    enrollmentId: pickFirstTextValue(resource?.id, resource?.enrollment_id, payload?.id, payload?.enrollment_id),
+    startsAt: pickFirstTextValue(
+      resource?.activated_at,
+      resource?.started_at,
+      resource?.created_at,
+      payload?.created_at,
+      payload?.occurred_at
+    ),
+    expiresAt: pickFirstTextValue(resource?.expiry_date, resource?.expires_at, payload?.expiry_date, payload?.expires_at)
+  }
+}
+
+const isThinkificCourseAllowed = (courseId) => {
+  if (THINKIFIC_ALLOWED_COURSE_IDS.length === 0) return true
+  return THINKIFIC_ALLOWED_COURSE_IDS.includes(String(courseId || '').trim())
+}
+
+const buildThinkificAccessWindow = ({ startsAt, expiresAt }) => {
+  const parsedStartsAt = new Date(startsAt || '')
+  const effectiveStartsAt = Number.isNaN(parsedStartsAt.getTime())
+    ? new Date().toISOString()
+    : parsedStartsAt.toISOString()
+  const parsedExpiresAt = new Date(expiresAt || '')
+  const effectiveExpiresAt = !Number.isNaN(parsedExpiresAt.getTime())
+    ? parsedExpiresAt.toISOString()
+    : THINKIFIC_DEFAULT_ACCESS_MONTHS > 0
+      ? addMonthsUtc(effectiveStartsAt, THINKIFIC_DEFAULT_ACCESS_MONTHS)
+      : null
+
+  return {
+    startsAt: effectiveStartsAt,
+    expiresAt: effectiveExpiresAt
+  }
+}
+
+const generateTemporaryPassword = () => `${randomBytes(18).toString('base64url')}Aa1`
+
+const sendThinkificAccessEmail = async ({ req, learner, temporaryPassword, courseName, wasActive }) => {
+  const appUrl = resolveAppBaseUrl(req)
+  const learnerName = escapeHtml(learner?.full_name || learner?.email || 'Student')
+  const learnerEmail = normalizeEmail(learner?.email || '')
+  const safeCourseName = escapeHtml(courseName || 'your course')
+  const appLink = appUrl ? `<p><a href="${escapeHtml(appUrl)}">Open the IELTS practice app</a></p>` : ''
+  const passwordBlock = temporaryPassword
+    ? `
+      <p>Your app account has been created automatically.</p>
+      <p><strong>Email:</strong> ${escapeHtml(learnerEmail)}<br />
+      <strong>Temporary password:</strong> ${escapeHtml(temporaryPassword)}</p>
+      <p>Please sign in with this password, then keep it somewhere safe.</p>
+    `
+    : `
+      <p>Your existing app account has ${wasActive ? 'active' : 'newly activated'} access.</p>
+      <p>Sign in with the same app password you already use for ${escapeHtml(learnerEmail)}.</p>
+    `
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.7;color:#172033">
+      <p>Hi ${learnerName},</p>
+      <p>Your access for ${safeCourseName} is ready in the IELTS practice app.</p>
+      ${passwordBlock}
+      ${appLink}
+      <p>Have a nice week!</p>
+    </div>
+  `
+  const text = [
+    `Hi ${String(learner?.full_name || learner?.email || 'Student')},`,
+    '',
+    `Your access for ${courseName || 'your course'} is ready in the IELTS practice app.`,
+    '',
+    temporaryPassword
+      ? `Email: ${learnerEmail}\nTemporary password: ${temporaryPassword}\nPlease sign in with this password, then keep it somewhere safe.`
+      : `Your existing app account has ${wasActive ? 'active' : 'newly activated'} access. Sign in with the app password you already use for ${learnerEmail}.`,
+    appUrl ? `Open the app: ${appUrl}` : '',
+    '',
+    'Have a nice week!'
+  ]
+    .filter(Boolean)
+    .join('\n')
+
+  return sendEmailWithResend({
+    to: learnerEmail,
+    subject: 'Your IELTS app access is ready',
+    html,
+    text
+  })
+}
+
+const provisionThinkificEnrollmentAccess = async ({ req, enrollment }) => {
+  const existingProfile = await loadUserProfileByEmail(enrollment.email)
+  const previousStatus = String(existingProfile?.learner_access?.status || 'inactive')
+  let userId = String(existingProfile?.id || '')
+  let temporaryPassword = ''
+  let createdAppAccount = false
+
+  if (!userId) {
+    temporaryPassword = generateTemporaryPassword()
+    const created = await fetchSupabaseJson('/auth/v1/admin/users', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        email: enrollment.email,
+        password: temporaryPassword,
+        email_confirm: true,
+        user_metadata: {
+          name: enrollment.name,
+          role: 'student',
+          thinkific_course_id: enrollment.courseId || null,
+          thinkific_enrollment_id: enrollment.enrollmentId || null
+        }
+      })
+    })
+    userId = String(created?.user?.id || created?.id || '')
+    if (!userId) throw new Error('Could not create app account for Thinkific enrollee.')
+    createdAppAccount = true
+  }
+
+  await supabaseRequest('/rest/v1/profiles', {
+    method: 'POST',
+    headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+    body: JSON.stringify({
+      id: userId,
+      email: enrollment.email,
+      full_name: enrollment.name || enrollment.email,
+      role: 'student'
+    })
+  })
+
+  const accessWindow = buildThinkificAccessWindow({
+    startsAt: enrollment.startsAt,
+    expiresAt: enrollment.expiresAt
+  })
+  await supabaseRequest('/rest/v1/learner_access', {
+    method: 'POST',
+    headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+    body: JSON.stringify(
+      buildLearnerAccessPayload({
+        userId,
+        status: 'active',
+        startsAt: accessWindow.startsAt,
+        expiresAt: accessWindow.expiresAt,
+        feedbackCredits: Math.max(
+          THINKIFIC_FEEDBACK_CREDITS,
+          Number(existingProfile?.learner_access?.feedback_credits ?? 0)
+        ),
+        fullMockCredits: Math.max(
+          THINKIFIC_FULL_MOCK_CREDITS,
+          Number(existingProfile?.learner_access?.full_mock_credits ?? 0)
+        )
+      })
+    )
+  })
+
+  const profile = await loadUserProfileWithAccess(userId)
+  if (!profile) throw new Error('Thinkific learner profile was not found after provisioning.')
+
+  const shouldEmailLearner = createdAppAccount || previousStatus !== 'active'
+  const emailResult = shouldEmailLearner
+    ? await sendThinkificAccessEmail({
+        req,
+        learner: profile,
+        temporaryPassword: createdAppAccount ? temporaryPassword : '',
+        courseName: enrollment.courseName,
+        wasActive: previousStatus === 'active'
+      })
+    : { skipped: true, reason: 'already_active' }
+
+  return {
+    learner: mapLearnerRecord(profile),
+    createdAppAccount,
+    previousStatus,
+    emailResult
+  }
+}
+
 const isTrialProfileRecord = (profile, authUser = null) => {
   const profileName = String(profile?.full_name || '').trim()
   const profileRole = String(profile?.role || 'student').trim()
@@ -6701,6 +6995,73 @@ const requireAdmin = async (req, res, next) => {
     })
   }
 }
+
+app.post('/api/integrations/thinkific/webhook', async (req, res) => {
+  try {
+    ensureSupabaseConfigured()
+    if (!verifyThinkificWebhookSignature(req)) {
+      return res.status(401).json({
+        error: {
+          status: 401,
+          type: 'thinkific_webhook_signature_error',
+          message: 'Invalid Thinkific webhook signature.'
+        }
+      })
+    }
+
+    const eventName = normalizeThinkificEventName(req, req.body)
+    if (eventName && !['enrollment.created', 'enrollment.completed', 'enrollment.updated'].includes(eventName)) {
+      return res.json({
+        ok: true,
+        ignored: true,
+        reason: 'unsupported_event',
+        event: eventName
+      })
+    }
+
+    const enrollment = extractThinkificEnrollmentPayload(req.body)
+    if (!enrollment.email) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'thinkific_webhook_payload_error',
+          message: 'Thinkific webhook did not include a learner email.'
+        }
+      })
+    }
+    if (!isThinkificCourseAllowed(enrollment.courseId)) {
+      return res.json({
+        ok: true,
+        ignored: true,
+        reason: 'course_not_allowed',
+        courseId: enrollment.courseId || null
+      })
+    }
+
+    const result = await provisionThinkificEnrollmentAccess({ req, enrollment })
+    return res.json({
+      ok: true,
+      event: eventName || 'enrollment',
+      courseId: enrollment.courseId || null,
+      courseName: enrollment.courseName || '',
+      learner: result.learner,
+      createdAppAccount: result.createdAppAccount,
+      email: {
+        skipped: Boolean(result.emailResult?.skipped),
+        reason: result.emailResult?.reason || ''
+      }
+    })
+  } catch (error) {
+    console.error('Thinkific webhook provisioning failed:', error)
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'thinkific_webhook_error',
+        message: error instanceof Error ? error.message : 'Could not process Thinkific webhook.'
+      }
+    })
+  }
+})
 
 const decrementLearnerCredits = async ({ userId, assessmentMode }) => {
   const profile = await loadUserProfileWithAccess(userId)

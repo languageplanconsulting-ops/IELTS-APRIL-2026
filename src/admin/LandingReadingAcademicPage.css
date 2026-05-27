@@ -1,0 +1,753 @@
+.epReadingPage {
+  --ep-blue: #0f2e85;
+  --ep-blue-bright: #0f53c9;
+  --ep-blue-soft: #eef3ff;
+  --ep-yellow: #ffcc00;
+  --ep-yellow-soft: #fff9ed;
+  --ep-gold: #bf8b30;
+  --ep-ink: #162033;
+  --ep-muted: #5f6980;
+  --ep-bg: #f7f9fc;
+  --ep-white: #ffffff;
+  --ep-line: rgba(15, 46, 133, 0.12);
+  --ep-shadow: 0 12px 32px rgba(15, 46, 133, 0.1);
+  --ep-radius: 14px;
+
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--ep-bg);
+  color: var(--ep-ink);
+  font-family: 'Prompt', system-ui, sans-serif;
+}
+
+.epReadingShell {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.epReadingTopbar {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  border-bottom: 1px solid var(--ep-line);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+}
+
+.epReadingTopbarInner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.epReadingBackBtn {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ep-blue-bright);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.epReadingTopbarTitle span {
+  display: block;
+  color: var(--ep-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.epReadingTopbarTitle strong {
+  color: var(--ep-blue);
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.epReadingZone {
+  padding: clamp(36px, 5vw, 56px) 0;
+}
+
+.epReadingZoneHero {
+  background:
+    radial-gradient(circle at 92% 18%, rgba(255, 204, 0, 0.16), transparent 42%),
+    linear-gradient(180deg, var(--ep-white), var(--ep-blue-soft));
+  border-bottom: 1px solid var(--ep-line);
+}
+
+.epReadingHeroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+}
+
+.epReadingHeroStat {
+  display: grid;
+  gap: 4px;
+  min-width: 180px;
+  padding: 18px 20px;
+  border: 1px solid rgba(15, 83, 201, 0.14);
+  border-radius: var(--ep-radius);
+  background: var(--ep-white);
+  box-shadow: var(--ep-shadow);
+  text-align: center;
+}
+
+.epReadingHeroStat strong {
+  color: var(--ep-blue);
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.epReadingHeroStat span {
+  color: var(--ep-ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.epReadingHeroStat em {
+  margin-top: 4px;
+  color: var(--ep-muted);
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.epReadingZoneGuide {
+  background: var(--ep-white);
+  border-bottom: 1px solid var(--ep-line);
+}
+
+.epReadingZoneMonthly {
+  background: var(--ep-bg);
+}
+
+.epReadingPage-exam {
+  background: var(--ep-bg);
+}
+
+.epReadingExamHost {
+  padding: 0 0 24px;
+}
+
+.epReadingExamHost .readingExamWrap {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.epReadingExamHost .readingExamLayout-bank {
+  min-height: 72vh;
+}
+
+.epReadingTopbarInner-exam {
+  grid-template-columns: auto 1fr;
+}
+
+.epReadingKicker {
+  margin: 0 0 8px;
+  color: var(--ep-blue-bright);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.epReadingZoneHero h1 {
+  margin: 0;
+  color: var(--ep-blue);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+}
+
+.epReadingLead {
+  max-width: 680px;
+  margin: 14px 0 0;
+  color: var(--ep-muted);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.epReadingZoneLabel {
+  margin: 0 0 6px;
+  color: var(--ep-gold);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.epReadingSectionHead {
+  margin-bottom: 24px;
+}
+
+.epReadingSectionHead h2 {
+  margin: 0;
+  color: var(--ep-blue);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 800;
+}
+
+.epReadingSectionHead p {
+  margin: 8px 0 0;
+  color: var(--ep-muted);
+}
+
+/* Band guide cards — visually distinct colors */
+.epReadingGuideGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.epReadingGuideCard {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--ep-line);
+  border-radius: var(--ep-radius);
+  background: var(--ep-white);
+  box-shadow: 0 4px 16px rgba(15, 46, 133, 0.05);
+}
+
+.epReadingGuideCard--1 {
+  border-top: 4px solid #7c9fd4;
+}
+
+.epReadingGuideCard--2 {
+  border-top: 4px solid var(--ep-blue-bright);
+}
+
+.epReadingGuideCard--3 {
+  border-top: 4px solid var(--ep-gold);
+  background: var(--ep-yellow-soft);
+}
+
+.epReadingGuideStep {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: rgba(15, 46, 133, 0.28);
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.epReadingGuideBand {
+  margin: 0;
+  color: var(--ep-blue-bright);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.epReadingGuideCard h3 {
+  margin: 0;
+  color: var(--ep-blue);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.epReadingGuideCard p {
+  margin: 0;
+  color: var(--ep-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* Month tabs */
+.epReadingMonthTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.epReadingMonthTab {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--ep-line);
+  border-radius: 999px;
+  background: var(--ep-white);
+  color: var(--ep-ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.epReadingMonthTab.is-active {
+  border-color: var(--ep-blue-bright);
+  background: var(--ep-blue-soft);
+  color: var(--ep-blue);
+}
+
+.epReadingMonthPanel {
+  padding: 22px;
+  border: 1px solid var(--ep-line);
+  border-radius: calc(var(--ep-radius) + 2px);
+  background: var(--ep-white);
+  box-shadow: var(--ep-shadow);
+}
+
+.epReadingMonthPanelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ep-line);
+}
+
+.epReadingMonthPanelHead h3 {
+  margin: 0;
+  color: var(--ep-blue);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.epReadingMonthPanelHead p {
+  margin: 4px 0 0;
+  color: var(--ep-muted);
+  font-size: 0.9rem;
+}
+
+.epReadingMonthBadge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--ep-yellow-soft);
+  color: var(--ep-gold);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+/* Passage set cards */
+.epReadingSetGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.epReadingSetCard {
+  overflow: hidden;
+  border: 1px solid var(--ep-line);
+  border-radius: var(--ep-radius);
+  background: var(--ep-bg);
+}
+
+.epReadingSetCard.is-free {
+  border-color: rgba(15, 83, 201, 0.22);
+  background: var(--ep-white);
+}
+
+.epReadingSetCard.is-locked {
+  background: linear-gradient(135deg, #f5f7fb 0%, #eef1f8 100%);
+  border-color: rgba(15, 46, 133, 0.1);
+}
+
+.epReadingSetCard.is-expanded {
+  border-color: var(--ep-blue-bright);
+  box-shadow: 0 8px 24px rgba(15, 83, 201, 0.1);
+}
+
+.epReadingSetCardBtn {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  padding: 18px 20px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.epReadingSetPassage {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: var(--ep-blue-bright);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.epReadingSetCardMain h4 {
+  margin: 0;
+  color: var(--ep-blue);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.epReadingSetCardMain p {
+  margin: 6px 0 0;
+  color: var(--ep-muted);
+  font-size: 0.86rem;
+}
+
+.epReadingSetCardSide {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.epReadingFreeBadge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--ep-yellow);
+  color: var(--ep-ink);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.epReadingLockBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(15, 46, 133, 0.08);
+  color: var(--ep-blue);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.epReadingLockSvg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.epReadingExpandHint {
+  color: var(--ep-blue-bright);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.epReadingSetLockOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.72) 0%, rgba(238, 243, 255, 0.82) 55%, rgba(255, 249, 237, 0.75) 100%);
+  backdrop-filter: blur(3px);
+  pointer-events: none;
+}
+
+.epReadingSetLockOverlay::before {
+  content: '';
+  position: absolute;
+  inset: -40% -20%;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 62%
+  );
+  animation: epReadingLockShimmer 3.2s ease-in-out infinite;
+}
+
+@keyframes epReadingLockShimmer {
+  0%,
+  100% {
+    transform: translateX(-18%);
+  }
+  50% {
+    transform: translateX(18%);
+  }
+}
+
+.epReadingSetLockPlate {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  padding: 14px 18px;
+  border: 1px solid rgba(15, 46, 133, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 24px rgba(15, 46, 133, 0.1);
+  color: var(--ep-blue);
+}
+
+.epReadingSetLockPlate .epReadingLockSvg {
+  width: 22px;
+  height: 22px;
+}
+
+.epReadingSetLockPlate span {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.epReadingSetCard.is-locked .epReadingSetCardMain {
+  opacity: 0.68;
+  filter: saturate(0.85);
+}
+
+/* Question preview */
+.epReadingQuestionPanel {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--ep-line);
+  background: var(--ep-blue-soft);
+}
+
+.epReadingQuestionPanelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0 12px;
+}
+
+.epReadingQuestionPanelHead strong {
+  color: var(--ep-blue);
+  font-size: 0.95rem;
+}
+
+.epReadingQuestionList {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.epReadingQuestionList li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 83, 201, 0.12);
+  border-radius: 10px;
+  background: var(--ep-white);
+}
+
+.epReadingQuestionNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--ep-blue-soft);
+  color: var(--ep-blue);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.epReadingQuestionType {
+  margin: 0 0 4px;
+  color: var(--ep-gold);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.epReadingQuestionPrompt {
+  margin: 0;
+  color: var(--ep-ink);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.epReadingQuestionNote {
+  margin: 12px 0 0;
+  color: var(--ep-muted);
+  font-size: 0.84rem;
+}
+
+.epReadingQuestionEmpty {
+  margin: 0;
+  padding: 18px 16px;
+  border: 1px dashed rgba(15, 83, 201, 0.2);
+  border-radius: 10px;
+  background: var(--ep-white);
+  color: var(--ep-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* CTA + buttons */
+.epReadingBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 750;
+  text-decoration: none;
+  transition: background 0.18s ease;
+}
+
+.epReadingBtnLarge {
+  min-height: 48px;
+  padding: 0 22px;
+}
+
+.epReadingBtnPrimary {
+  background: var(--ep-yellow);
+  color: var(--ep-ink);
+}
+
+.epReadingBtnPrimary:hover {
+  background: #ffd633;
+}
+
+.epReadingBtnSecondary {
+  border-color: var(--ep-line);
+  background: var(--ep-white);
+  color: var(--ep-blue);
+}
+
+.epReadingCtaInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.epReadingCtaInner h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.epReadingCtaInner p {
+  max-width: 560px;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.95rem;
+}
+
+/* Lock modal */
+.epReadingModalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 28, 68, 0.48);
+}
+
+.epReadingModal {
+  position: relative;
+  width: min(460px, 100%);
+  padding: 28px 24px 24px;
+  border-radius: calc(var(--ep-radius) + 2px);
+  background: var(--ep-white);
+  box-shadow: var(--ep-shadow);
+  text-align: center;
+}
+
+.epReadingModalClose {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: none;
+  color: var(--ep-muted);
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.epReadingModalLockIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--ep-blue-soft), #dce8ff);
+  color: var(--ep-blue);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.epReadingModalLockIcon .epReadingLockSvg {
+  width: 26px;
+  height: 26px;
+}
+
+.epReadingModal h3 {
+  margin: 0;
+  color: var(--ep-blue);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.epReadingModalSet {
+  margin: 10px 0 0;
+  color: var(--ep-muted);
+  font-size: 0.88rem;
+}
+
+.epReadingModal p {
+  margin: 14px 0 18px;
+  color: var(--ep-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .epReadingGuideGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .epReadingHeroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .epReadingHeroStat {
+    justify-self: start;
+  }
+
+  .epReadingTopbarInner {
+    grid-template-columns: 1fr;
+  }
+
+  .epReadingSetCardBtn {
+    grid-template-columns: 1fr;
+  }
+
+  .epReadingSetCardSide {
+    justify-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .epReadingCtaInner,
+  .epReadingQuestionPanelHead {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .epReadingCtaInner .epReadingBtn,
+  .epReadingQuestionPanelHead .epReadingBtn {
+    width: 100%;
+  }
+}

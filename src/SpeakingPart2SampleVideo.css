@@ -313,15 +313,16 @@
   right: auto;
   bottom: auto;
   z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(164px, 1fr);
+  grid-template-rows: repeat(3, minmax(0, auto));
+  align-items: start;
   justify-content: flex-start;
-  gap: 4px;
-  width: min(28%, 188px);
-  max-width: 188px;
-  /* Keep stack in top-left quadrant — never reach video center */
-  max-height: min(32%, 168px);
+  gap: 4px 5px;
+  width: min(56%, 392px);
+  max-width: 392px;
+  max-height: calc(100% - 118px);
   padding: 5px 6px 5px 7px;
   border-radius: 11px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -333,12 +334,7 @@
     0 10px 24px rgba(0, 0, 0, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   pointer-events: none;
-  overflow: hidden auto;
-  scrollbar-width: none;
-}
-
-.speakingP2SampleKnowledgeStack::-webkit-scrollbar {
-  display: none;
+  overflow: visible;
 }
 
 .speakingP2SampleKnowledgeStackRail {
@@ -357,6 +353,7 @@
   flex: 0 0 auto;
   width: 100%;
   margin-left: 3px;
+  min-width: 0;
   padding: 5px 7px 5px 8px !important;
   border: 1px solid rgba(15, 23, 42, 0.12) !important;
   border-radius: 9px !important;
@@ -448,10 +445,14 @@
   .speakingP2SampleKnowledgeStack {
     top: 6px;
     left: 6px;
-    width: min(36%, 164px);
-    max-width: 164px;
-    max-height: min(30%, 148px);
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-auto-columns: auto;
+    width: min(44%, 172px);
+    max-width: 172px;
+    max-height: calc(100% - 112px);
     padding: 4px 5px 4px 6px;
+    overflow: hidden;
   }
 
   .speakingP2SampleKnowledgeCard {

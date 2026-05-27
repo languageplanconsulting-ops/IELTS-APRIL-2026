@@ -3,6 +3,7 @@ export type SpeakingSampleSubtitleNoteKind = 'vocabulary' | 'grammar'
 export type SpeakingSampleSubtitleNote = {
   id: string
   phrase: string
+  fullPhrase?: string
   detail?: string
   kind?: SpeakingSampleSubtitleNoteKind
   partOfSpeech?: string
@@ -28,7 +29,14 @@ export type ParsedSpeakingSampleSubtitleNote = {
   example?: string
 }
 
-const VOCAB_GLOSSARY: Record<string, { partOfSpeech: string; thai: string }> = {
+export const SPEAKING_SAMPLE_NOTE_LIMITS = {
+  total: 8,
+  vocabulary: 5,
+  grammar: 2,
+  overlayMax: 6
+} as const
+
+const VOCAB_GLOSSARY: Record<string, { partOfSpeech: string; thai: string; score?: number }> = {
   'generally speaking': { partOfSpeech: 'adv. phr.', thai: 'โดยทั่วไป / โดยรวมแล้ว' },
   'to begin with': { partOfSpeech: 'adv. phr.', thai: 'เริ่มจาก / ก่อนอื่นเลย' },
   'moving on to': { partOfSpeech: 'adv. phr.', thai: 'ต่อไป / มาพูดถึง' },
@@ -47,7 +55,7 @@ const VOCAB_GLOSSARY: Record<string, { partOfSpeech: string; thai: string }> = {
   nostalgic: { partOfSpeech: 'adj.', thai: 'คิดถึงอดีต / อิ่มเอม' },
   emotional: { partOfSpeech: 'adj.', thai: 'รู้สึกอารมณ์ / ซาบซึ้ง' },
   optimistic: { partOfSpeech: 'adj.', thai: 'มองโลกในแง่ดี' },
-  'avid reader': { partOfSpeech: 'n. phr.', thai: 'คนที่ชอบอ่านหนังสือมาก' },
+  'avid reader': { partOfSpeech: 'n. phr.', thai: 'คนที่ชอบอ่านหนังสือมาก', score: 80 },
   subconsciously: { partOfSpeech: 'adv.', thai: 'โดยไม่รู้ตัว / ในระดับจิตใต้สำนึก' },
   fascinating: { partOfSpeech: 'adj.', thai: 'น่าหลงใหล / น่าสนใจมาก' },
   knowledgeable: { partOfSpeech: 'adj.', thai: 'มีความรู้ / รอบรู้' },
@@ -55,8 +63,8 @@ const VOCAB_GLOSSARY: Record<string, { partOfSpeech: string; thai: string }> = {
   rewarding: { partOfSpeech: 'adj.', thai: 'คุ้มค่า / ให้ความรู้สึกดี' },
   progress: { partOfSpeech: 'n.', thai: 'ความก้าวหน้า' },
   weightlifting: { partOfSpeech: 'n.', thai: 'ยกน้ำหนัก' },
-  reunion: { partOfSpeech: 'n.', thai: 'การรวมตัว / งานเลี้ยงรุ่น' },
-  foodie: { partOfSpeech: 'n.', thai: 'คนรักอาหาร / สายกิน' },
+  reunion: { partOfSpeech: 'n.', thai: 'การรวมตัว / งานเลี้ยงรุ่น', score: 74 },
+  foodie: { partOfSpeech: 'n.', thai: 'คนรักอาหาร / สายกิน', score: 68 },
   comedic: { partOfSpeech: 'adj.', thai: 'ตลก / สไตล์คอมเมดี' },
   documentary: { partOfSpeech: 'n.', thai: 'สารคดี' },
   curious: { partOfSpeech: 'adj.', thai: 'อยากรู้ / ขี้สงสัย' },
@@ -100,8 +108,176 @@ const VOCAB_GLOSSARY: Record<string, { partOfSpeech: string; thai: string }> = {
   'primary school': { partOfSpeech: 'n. phr.', thai: 'ประถมศึกษา' },
   'summer camp': { partOfSpeech: 'n. phr.', thai: 'ค่ายฤดูร้อน' },
   'best friends': { partOfSpeech: 'n. phr.', thai: 'เพื่อนสนิท' },
-  'high school': { partOfSpeech: 'n. phr.', thai: 'มัธยมปลาย / โรงเรียนมัธยม' }
+  'high school': { partOfSpeech: 'n. phr.', thai: 'มัธยมปลาย / โรงเรียนมัธยม' },
+  'you name it': { partOfSpeech: 'phrase', thai: 'มีครบทุกอย่าง / อะไรก็มี', score: 72 },
+  inspiring: { partOfSpeech: 'adj.', thai: 'สร้างแรงบันดาลใจ / ทำให้อยากเป็นแบบนั้น', score: 88 },
+  'loves learning': { partOfSpeech: 'v. phr.', thai: 'ชอบการเรียนรู้ / รักการเรียน', score: 78 },
+  'historical facts': { partOfSpeech: 'n. phr.', thai: 'ข้อเท็จจริงทางประวัติศาสตร์', score: 82 },
+  'root of': { partOfSpeech: 'n. phr.', thai: 'รากศัพท์ / ที่มาของคำ', score: 80 },
+  groundbreaking: { partOfSpeech: 'adj.', thai: 'เปิดแนวใหม่ / ก้าวล้ำ', score: 86 },
+  intellectual: { partOfSpeech: 'adj.', thai: 'ฉลาด / ใช้สมอง / มีความคิดลึก', score: 84 },
+  mesmerizing: { partOfSpeech: 'adj.', thai: 'ดึงดูดใจ / ทำให้หลงใหล', score: 83 },
+  'reminds me of': { partOfSpeech: 'v. phr.', thai: 'ทำให้นึกถึง...', score: 85 },
+  'memorable experience': { partOfSpeech: 'n. phr.', thai: 'ประสบการณ์ที่น่าจดจำ', score: 84 },
+  'travel independently': { partOfSpeech: 'v. phr.', thai: 'เดินทางด้วยตัวเอง / ไม่พึ่งครอบครัว', score: 82 },
+  'engaged in': { partOfSpeech: 'v. phr.', thai: 'มีส่วนร่วมใน / ทำอยู่', score: 76 },
+  'discover a lot': { partOfSpeech: 'v. phr.', thai: 'ได้ค้นพบสิ่งใหม่ ๆ มากมาย', score: 78 },
+  'younger version of myself': { partOfSpeech: 'n. phr.', thai: 'ตัวฉันในวัยที่ younger', score: 88 },
+  'adult life': { partOfSpeech: 'n. phr.', thai: 'ชีวิตวัยผู้ใหญ่', score: 74 },
+  'upbringing': { partOfSpeech: 'n.', thai: 'การเลี้ยงดู / สภาพแวดล้อมในวัยเด็ก', score: 82 },
+  'get to analyze': { partOfSpeech: 'v. phr.', thai: 'ได้วิเคราะห์ / ได้ไตร่ตรอง', score: 80 },
+  'not aware of': { partOfSpeech: 'adj. phr.', thai: 'ไม่รู้ตัว / ไม่ได้ตระหนัก', score: 78 },
+  political: { partOfSpeech: 'adj.', thai: 'เกี่ยวกับการเมือง', score: 70 },
+  'bond with': { partOfSpeech: 'v. phr.', thai: 'สร้างความผูกพันกับ', score: 82 },
+  'closet friends': { partOfSpeech: 'n. phr.', thai: 'เพื่อนสนิทที่สุด', score: 76 },
+  'closest friends': { partOfSpeech: 'n. phr.', thai: 'เพื่อนสนิทที่สุด', score: 76 },
+  'eating out': { partOfSpeech: 'v. phr.', thai: 'กินข้าวนอกบ้าน / ไปร้านอาหาร', score: 72 },
+  'sense of control': { partOfSpeech: 'n. phr.', thai: 'ความรู้สึกว่าควบคุมได้', score: 78 },
+  'sense of curiosity': { partOfSpeech: 'n. phr.', thai: 'ความอยากรู้อยากเห็น', score: 90 },
+  'sense of belonging': { partOfSpeech: 'n. phr.', thai: 'ความรู้สึกเป็นส่วนหนึ่ง', score: 82 },
+  'personal fulfilment': { partOfSpeech: 'n. phr.', thai: 'ความสำเร็จในชีวิต / ความพึงพอใจ', score: 84 },
+  'cultural heritage': { partOfSpeech: 'n. phr.', thai: 'มรดกทางวัฒนธรรม', score: 80 },
+  'vivid memories': { partOfSpeech: 'n. phr.', thai: 'ความทรงจำที่ชัดเจน', score: 82 },
+  'deeply moved': { partOfSpeech: 'adj. phr.', thai: 'ประทับใจ / ซาบซึ้งลึก ๆ', score: 84 },
+  'opened my eyes': { partOfSpeech: 'v. phr.', thai: 'ทำให้เห็นโลกในมุมใหม่', score: 86 },
+  'broadened my horizons': { partOfSpeech: 'v. phr.', thai: 'ขยายมุมมอง / เปิดโลกทัศน์', score: 88 },
+  'left a lasting impression': { partOfSpeech: 'v. phr.', thai: 'สร้างความประทับใจยาวนาน', score: 90 }
 }
+
+const GENERIC_LOW_VALUE = new Set([
+  'high school',
+  'middle school',
+  'primary school',
+  'best friends',
+  'city center',
+  'workplace',
+  'progress',
+  'retired',
+  'graduated',
+  'curious',
+  'independent',
+  'exciting',
+  'convenient',
+  'peaceful',
+  'documentary',
+  'weightlifting',
+  'love song',
+  'summer camp',
+  'long weekends',
+  'have been to',
+  'would like to',
+  'depending on',
+  'traditional ways',
+  'get together',
+  'physical activities'
+])
+
+const VOCAB_PATTERNS: Array<{
+  pattern: RegExp
+  pickPhrase: (match: RegExpMatchArray, text: string) => string
+  partOfSpeech: string
+  thai: string
+  score: number
+}> = [
+  {
+    pattern: /\binstilled in me a sense of [a-z]+/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'v. phr.',
+    thai: 'ปลูกฝังความรู้สึก...ให้กับฉัน',
+    score: 98
+  },
+  {
+    pattern: /\binspired me to (?:become|be)\b[^.?!,;]{0,50}/gi,
+    pickPhrase: (match) =>
+      trimGrammarPhrase(
+        match[0]
+          .trim()
+          .replace(/[,;].*$/, '')
+          .replace(/\s+you know.*$/i, ''),
+        8
+      ),
+    partOfSpeech: 'v. phr.',
+    thai: 'สร้างแรงบันดาลใจให้ฉัน...',
+    score: 95
+  },
+  {
+    pattern: /\b(?:very )?inspiring(?: for me)?\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'adj. phr.',
+    thai: 'สร้างแรงบันดาลใจ / ทำให้อยากเป็นแบบนั้น',
+    score: 90
+  },
+  {
+    pattern: /\ba sense of [a-z]+/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'n. phr.',
+    thai: 'ความรู้สึก...',
+    score: 86
+  },
+  {
+    pattern: /\breminds me of [a-z]+(?:\s+[a-z]+){0,5}/gi,
+    pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 7),
+    partOfSpeech: 'v. phr.',
+    thai: 'ทำให้ฉันนึกถึง...',
+    score: 84
+  },
+  {
+    pattern: /\bresult of your upbringing\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'n. phr.',
+    thai: 'ผลมาจากการเลี้ยงดูในวัยเด็ก',
+    score: 82
+  },
+  {
+    pattern: /\bwired subconsciously\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'adv. phr.',
+    thai: 'ถูกกำหนดโดยจิตใต้สำนึก',
+    score: 88
+  },
+  {
+    pattern: /\bemotional and nostalgic\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'adj. phr.',
+    thai: 'รู้สึกอารมณ์และคิดถึงอดีต',
+    score: 85
+  },
+  {
+    pattern: /\bcomedic and funny\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'adj. phr.',
+    thai: 'ตลกและสนุก',
+    score: 72
+  },
+  {
+    pattern: /\bfunny but political\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'adj. phr.',
+    thai: 'ตลกแต่เกี่ยวกับการเมือง',
+    score: 80
+  },
+  {
+    pattern: /\bfirst time traveling\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'n. phr.',
+    thai: 'ครั้งแรกที่เดินทาง',
+    score: 78
+  },
+  {
+    pattern: /\bremember (?:this|her|him|it) forever\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'v. phr.',
+    thai: 'จดจำ...ไปตลอด',
+    score: 82
+  },
+  {
+    pattern: /\bremember my entire life\b/gi,
+    pickPhrase: (match) => match[0].trim(),
+    partOfSpeech: 'v. phr.',
+    thai: 'จำได้ตลอดชีวิต',
+    score: 80
+  }
+]
 
 const trimGrammarPhrase = (value: string, maxWords = 5) =>
   normalizeNoteText(value).split(/\s+/).slice(0, maxWords).join(' ')
@@ -114,15 +290,29 @@ const DISCOURSE_MARKERS = new Set([
   'whether it be'
 ])
 
-const vocabPriority = (term: string) => (DISCOURSE_MARKERS.has(term.toLowerCase()) ? 1 : 5)
-
 const isUsefulGrammarPhrase = (phrase: string) => {
   const normalized = normalizeNoteText(phrase)
   const words = normalized.split(/\s+/).filter(Boolean)
   if (normalized.length < 12 || words.length < 3) return false
-  if (/^(that|which|who|where|as|i|we|he|she|it|they)\s/i.test(normalized) && words.length < 4) return false
-  if (/^(that i|which is|who are|where i)\b/i.test(normalized)) return false
+  if (/^because (there|when|it|i|we)\b/i.test(normalized)) return false
+  if (/^have (been|grown)\b/i.test(normalized) && words.length < 5) return false
+  if (/^(that|which|who|where|when|as|i|we|he|she|it|they)\s/i.test(normalized) && words.length < 5) return false
+  if (/^(that|which|who|where)\s+(?:i|we|he|she|it|they|is|are|was|were|has|have|had|really|very|somebody|someone|something|when)\b/i.test(normalized)) {
+    return false
+  }
+  if (/\b(instilled|inspired|sense of|remember her forever|remember him forever|historical facts|historical)\b/i.test(normalized)) {
+    return false
+  }
   return true
+}
+
+const scoreStaticVocab = (term: string, meta: { score?: number }) => {
+  const lower = term.toLowerCase()
+  let score = meta.score ?? term.split(/\s+/).length * 8
+  if (GENERIC_LOW_VALUE.has(lower)) score -= 28
+  if (DISCOURSE_MARKERS.has(lower)) score -= 18
+  if (term.length >= 18) score += 12
+  return score
 }
 
 const GRAMMAR_PATTERNS: Array<{
@@ -156,7 +346,7 @@ const GRAMMAR_PATTERNS: Array<{
     pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 4)
   },
   {
-    pattern: /\b(?:which|who|that|where)\s+[a-z]+(?:\s+[a-z]+){0,6}/gi,
+    pattern: /\b(?:which|who|that|where)\s+(?:I|we|they|he|she|it|[a-z]{4,})\s+[a-z]+(?:\s+[a-z]+){0,4}/gi,
     grammarRule: 'relative clause',
     thai: 'อนุภาคความ — ขยายคำนามที่อยู่ข้างหน้า',
     pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 6)
@@ -182,6 +372,13 @@ const GRAMMAR_PATTERNS: Array<{
 ]
 
 const normalizeNoteText = (value: string) => String(value || '').trim().replace(/\s+/g, ' ')
+
+const normalizeDedupeKey = (value: string) =>
+  normalizeNoteText(value)
+    .toLowerCase()
+    .replace(/[''""]/g, '')
+    .replace(/[,.!?;:]+$/g, '')
+    .trim()
 
 const parseDetailString = (detail: string) => {
   const text = normalizeNoteText(detail)
@@ -225,7 +422,7 @@ const parseDetailString = (detail: string) => {
 export const parseSpeakingSampleSubtitleNote = (
   note: SpeakingSampleSubtitleNote
 ): ParsedSpeakingSampleSubtitleNote | null => {
-  const phrase = normalizeNoteText(note.phrase)
+  const phrase = normalizeNoteText(note.fullPhrase || note.phrase)
   if (!phrase) return null
 
   if (note.kind === 'grammar' || note.grammarRule) {
@@ -315,51 +512,59 @@ const sentenceAround = (text: string, index: number) => {
   return normalizeNoteText(text.slice(left, right))
 }
 
-const snapPhraseToCueText = (cues: SpeakingSampleSubtitleCue[], phrase: string) => {
-  const lowerPhrase = normalizeNoteText(phrase).toLowerCase()
-  if (!lowerPhrase) return phrase
-  for (const cue of cues) {
-    const text = normalizeNoteText(cue.text)
-    const index = text.toLowerCase().indexOf(lowerPhrase)
-    if (index >= 0) return text.slice(index, index + phrase.length)
-  }
-  const words = lowerPhrase.split(/\s+/).filter(Boolean)
-  if (words.length <= 1) return phrase
-  for (const cue of cues) {
-    const text = normalizeNoteText(cue.text)
-    const lowerText = text.toLowerCase()
-    const startMatch = lowerText.match(
-      new RegExp(`\\b${words[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`)
-    )
-    if (!startMatch || startMatch.index == null) continue
-    let start = startMatch.index
-    let end = start + words[0].length
-    let matched = 1
-    for (let i = 1; i < words.length; i += 1) {
-      const nextMatch = lowerText
-        .slice(end)
-        .match(new RegExp(`^\\s+\\b${words[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`))
-      if (!nextMatch) break
-      end += nextMatch[0].length
-      matched += 1
-    }
-    if (matched >= Math.min(words.length, 2)) {
-      return text.slice(start, end)
-    }
-  }
-  return phrase
-}
-
 const findCueForPhrase = (cues: SpeakingSampleSubtitleCue[], phrase: string) => {
   const lowerPhrase = normalizeNoteText(phrase).toLowerCase()
-  return (
+  const direct =
     cues.find((cue) => normalizeNoteText(cue.text).toLowerCase().includes(lowerPhrase)) ||
-    cues.find((cue) => {
-      const words = lowerPhrase.split(/\s+/).filter((word) => word.length > 3)
-      return words.length > 0 && words.every((word) => normalizeNoteText(cue.text).toLowerCase().includes(word))
-    }) ||
     null
-  )
+  if (direct) return direct
+
+  const words = lowerPhrase.split(/\s+/).filter(Boolean)
+  for (let start = 0; start < words.length; start += 1) {
+    for (let end = words.length; end > start; end -= 1) {
+      const chunk = words.slice(start, end).join(' ')
+      if (chunk.length < 4) continue
+      const cue = cues.find((item) => normalizeNoteText(item.text).toLowerCase().includes(chunk))
+      if (cue) return cue
+    }
+  }
+
+  const keywords = words.filter((word) => word.length > 3)
+  let bestCue: SpeakingSampleSubtitleCue | null = null
+  let bestScore = 0
+  cues.forEach((cue) => {
+    const lowerText = normalizeNoteText(cue.text).toLowerCase()
+    const score = keywords.filter((word) => lowerText.includes(word)).length
+    if (score > bestScore) {
+      bestScore = score
+      bestCue = cue
+    }
+  })
+  return bestScore >= 1 ? bestCue : null
+}
+
+const longestPhraseInCue = (target: string, cueText: string) => {
+  const normalizedTarget = normalizeNoteText(target)
+  const normalizedCue = normalizeNoteText(cueText)
+  const lowerTarget = normalizedTarget.toLowerCase()
+  const lowerCue = normalizedCue.toLowerCase()
+  const directIndex = lowerCue.indexOf(lowerTarget)
+  if (directIndex >= 0) {
+    return normalizedCue.slice(directIndex, directIndex + normalizedTarget.length)
+  }
+
+  const words = lowerTarget.split(/\s+/).filter(Boolean)
+  let best = ''
+  for (let start = 0; start < words.length; start += 1) {
+    for (let end = words.length; end > start; end -= 1) {
+      const chunk = words.slice(start, end).join(' ')
+      const index = lowerCue.indexOf(chunk)
+      if (index >= 0 && chunk.length > best.length) {
+        best = normalizedCue.slice(index, index + chunk.length)
+      }
+    }
+  }
+  return best || normalizedTarget
 }
 
 const isQualityNote = (note: SpeakingSampleSubtitleNote) => {
@@ -377,6 +582,11 @@ const isQualityNote = (note: SpeakingSampleSubtitleNote) => {
 const collectQualityNotes = (cues: SpeakingSampleSubtitleCue[]) =>
   cues.flatMap((cue) => (cue.notes || []).filter(isQualityNote))
 
+const isRichStructuredNote = (note: SpeakingSampleSubtitleNote) => {
+  if (!isQualityNote(note)) return false
+  return Boolean(normalizeNoteText(note.thaiMeaning || ''))
+}
+
 export const suggestSpeakingSampleSubtitleNotes = (
   cues: SpeakingSampleSubtitleCue[],
   transcript = ''
@@ -387,91 +597,157 @@ export const suggestSpeakingSampleSubtitleNotes = (
 
   const suggestions: SpeakingSampleSubtitleNote[] = []
   const usedPhrases = new Set<string>()
+  let discourseMarkerCount = 0
   let noteId = 1
 
-  const addSuggestion = (note: Omit<SpeakingSampleSubtitleNote, 'id'> & { id?: string }) => {
-    const snappedPhrase = snapPhraseToCueText(cues, note.phrase)
-    if (note.kind === 'grammar' && !isUsefulGrammarPhrase(snappedPhrase)) return false
-    const cue = findCueForPhrase(cues, snappedPhrase)
+  const isDiscourseMarker = (value: string) => {
+    const lower = normalizeNoteText(value).toLowerCase()
+    return [...DISCOURSE_MARKERS].some((marker) => lower === marker || lower.startsWith(`${marker} `) || lower.includes(marker))
+  }
+
+  const registerPhrase = (displayPhrase: string) => {
+    const lower = normalizeDedupeKey(displayPhrase)
+    for (let index = suggestions.length - 1; index >= 0; index -= 1) {
+      const existing = normalizeDedupeKey(suggestions[index].fullPhrase || suggestions[index].phrase)
+      if (lower.includes(existing) && lower !== existing) {
+        usedPhrases.delete(existing)
+        suggestions.splice(index, 1)
+      }
+    }
+    if ([...usedPhrases].some((used) => used.includes(lower) && used !== lower)) return false
+    if (usedPhrases.has(lower)) return false
+    usedPhrases.add(lower)
+    return true
+  }
+
+  const addSuggestion = (
+    note: Omit<SpeakingSampleSubtitleNote, 'id'> & { id?: string; score?: number; matchPhrase?: string }
+  ) => {
+    const matchPhrase = normalizeNoteText(note.matchPhrase || note.fullPhrase || note.phrase)
+    const cue = findCueForPhrase(cues, matchPhrase)
     if (!cue) return false
-    if (!normalizeNoteText(cue.text).toLowerCase().includes(snappedPhrase.toLowerCase())) return false
-    const key = snappedPhrase.toLowerCase()
-    if (usedPhrases.has(key)) return false
-    usedPhrases.add(key)
+
+    const highlightPhrase = longestPhraseInCue(matchPhrase, cue.text)
+    if (!highlightPhrase) return false
+
+    if (note.kind === 'grammar' && !isUsefulGrammarPhrase(highlightPhrase) && !isUsefulGrammarPhrase(matchPhrase)) {
+      return false
+    }
+
+    const displayPhrase = normalizeNoteText(note.fullPhrase || matchPhrase)
+    if (!registerPhrase(displayPhrase)) return false
+
+    if (note.kind !== 'grammar' && isDiscourseMarker(displayPhrase)) {
+      if (discourseMarkerCount >= 1) {
+        usedPhrases.delete(displayPhrase.toLowerCase())
+        return false
+      }
+      discourseMarkerCount += 1
+    }
+
     suggestions.push({
       ...note,
       id: note.id || `auto-${noteId++}`,
-      phrase: snappedPhrase,
+      fullPhrase: displayPhrase,
+      phrase: highlightPhrase,
       detail:
         note.detail ||
         (note.kind === 'grammar'
           ? `${note.grammarRule || ''} · ${note.thaiMeaning || ''}`.trim()
-          : `${snappedPhrase} · ${note.partOfSpeech || ''} · ${note.thaiMeaning || ''}`.trim())
+          : `${displayPhrase} · ${note.partOfSpeech || ''} · ${note.thaiMeaning || ''}`.trim())
     })
     return true
   }
 
-  const glossaryEntries = Object.entries(VOCAB_GLOSSARY).sort(
-    (a, b) => vocabPriority(b[0]) - vocabPriority(a[0]) || b[0].length - a[0].length
-  )
+  type ScoredCandidate = Omit<SpeakingSampleSubtitleNote, 'id'> & { score: number; matchPhrase: string }
 
-  for (const grammar of GRAMMAR_PATTERNS) {
-    if (suggestions.filter((item) => item.kind === 'grammar').length >= 2) break
-    const regex = new RegExp(grammar.pattern.source, grammar.pattern.flags)
+  const vocabCandidates: ScoredCandidate[] = []
+
+  for (const pattern of VOCAB_PATTERNS) {
+    const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags)
     let match = regex.exec(fullText)
     while (match) {
-      const phrase = grammar.pickPhrase(match, fullText)
-      if (!isUsefulGrammarPhrase(phrase)) {
-        match = regex.exec(fullText)
-        continue
-      }
-      const example = sentenceAround(fullText, match.index)
-      const added = addSuggestion({
-        phrase,
-        kind: 'grammar',
-        grammarRule: grammar.grammarRule,
-        thaiMeaning: grammar.thai,
-        exampleSentence: example.includes(phrase) ? example : `"${example}"`
+      const matchPhrase = pattern.pickPhrase(match, fullText)
+      vocabCandidates.push({
+        phrase: matchPhrase,
+        matchPhrase,
+        kind: 'vocabulary',
+        partOfSpeech: pattern.partOfSpeech,
+        thaiMeaning: pattern.thai,
+        score: pattern.score
       })
-      if (added && suggestions.filter((item) => item.kind === 'grammar').length >= 2) break
       match = regex.exec(fullText)
     }
   }
 
-  for (const [term, meta] of glossaryEntries) {
-    if (suggestions.length >= 4) break
-    if (suggestions.filter((item) => item.kind === 'vocabulary').length >= 2) continue
+  for (const [term, meta] of Object.entries(VOCAB_GLOSSARY)) {
     const index = fullText.toLowerCase().indexOf(term.toLowerCase())
     if (index < 0) continue
-    addSuggestion({
-      phrase: fullText.slice(index, index + term.length),
+    const matchPhrase = fullText.slice(index, index + term.length)
+    vocabCandidates.push({
+      phrase: matchPhrase,
+      matchPhrase,
       kind: 'vocabulary',
       partOfSpeech: meta.partOfSpeech,
-      thaiMeaning: meta.thai
+      thaiMeaning: meta.thai,
+      score: scoreStaticVocab(term, meta)
     })
   }
 
-  for (const [term, meta] of glossaryEntries) {
-    if (suggestions.length >= 4) break
-    const index = fullText.toLowerCase().indexOf(term.toLowerCase())
-    if (index < 0) continue
-    addSuggestion({
-      phrase: fullText.slice(index, index + term.length),
-      kind: 'vocabulary',
-      partOfSpeech: meta.partOfSpeech,
-      thaiMeaning: meta.thai
+  vocabCandidates
+    .sort((a, b) => b.score - a.score)
+    .forEach((candidate) => {
+      if (suggestions.filter((item) => item.kind === 'vocabulary').length >= SPEAKING_SAMPLE_NOTE_LIMITS.vocabulary) {
+        return
+      }
+      const { score: _score, matchPhrase, ...note } = candidate
+      addSuggestion({ ...note, matchPhrase })
     })
+
+  const grammarCandidates: ScoredCandidate[] = []
+  for (const grammar of GRAMMAR_PATTERNS) {
+    const regex = new RegExp(grammar.pattern.source, grammar.pattern.flags)
+    let match = regex.exec(fullText)
+    while (match) {
+      const phrase = grammar.pickPhrase(match, fullText)
+      if (isUsefulGrammarPhrase(phrase)) {
+        const example = sentenceAround(fullText, match.index)
+        grammarCandidates.push({
+          phrase: grammar.pickPhrase(match, fullText),
+          matchPhrase: phrase,
+          kind: 'grammar',
+          grammarRule: grammar.grammarRule,
+          thaiMeaning: grammar.thai,
+          exampleSentence: example.includes(phrase) ? example : `"${example}"`,
+          score: phrase.split(/\s+/).length * 6 + 40
+        })
+      }
+      match = regex.exec(fullText)
+    }
   }
 
-  return suggestions.slice(0, 4)
+  grammarCandidates
+    .sort((a, b) => b.score - a.score)
+    .slice(0, SPEAKING_SAMPLE_NOTE_LIMITS.grammar)
+    .forEach((candidate) => {
+      const { score: _score, matchPhrase, ...note } = candidate
+      addSuggestion({ ...note, matchPhrase })
+    })
+
+  return suggestions.slice(0, SPEAKING_SAMPLE_NOTE_LIMITS.total)
 }
 
 export const enrichSpeakingSampleSubtitlesWithNotes = (
   cues: SpeakingSampleSubtitleCue[],
-  transcript = ''
+  transcript = '',
+  options: { force?: boolean } = {}
 ): SpeakingSampleSubtitleCue[] => {
-  const qualityNotes = collectQualityNotes(cues)
-  if (qualityNotes.length >= 4 && qualityNotes.every(isQualityNote)) {
+  const richNotes = collectQualityNotes(cues).filter(isRichStructuredNote)
+  if (
+    !options.force &&
+    richNotes.length >= SPEAKING_SAMPLE_NOTE_LIMITS.total &&
+    richNotes.every(isRichStructuredNote)
+  ) {
     return cues.map((cue) => ({
       ...cue,
       notes: (cue.notes || []).map((note) => ({
@@ -486,7 +762,7 @@ export const enrichSpeakingSampleSubtitlesWithNotes = (
 
   const nextCues = cues.map((cue) => ({ ...cue, notes: [] as SpeakingSampleSubtitleNote[] }))
   suggestions.forEach((note) => {
-    const cue = findCueForPhrase(nextCues, note.phrase)
+    const cue = findCueForPhrase(nextCues, note.fullPhrase || note.phrase)
     if (!cue) return
     cue.notes = [...(cue.notes || []), note]
   })
@@ -516,7 +792,7 @@ export type RevealedSpeakingSampleSubtitleNote = SpeakingSampleSubtitleNote & {
 export const getRevealedSpeakingSampleSubtitleNotes = (
   cues: SpeakingSampleSubtitleCue[],
   videoTime: number,
-  maxNotes = 4
+  maxNotes = SPEAKING_SAMPLE_NOTE_LIMITS.overlayMax
 ): RevealedSpeakingSampleSubtitleNote[] => {
   const seen = new Set<string>()
   const revealed: RevealedSpeakingSampleSubtitleNote[] = []
@@ -527,7 +803,7 @@ export const getRevealedSpeakingSampleSubtitleNotes = (
       if (!phrase) return
       const revealSeconds = estimateSpeakingSampleSubtitleNoteRevealSeconds(cue, phrase)
       if (videoTime < revealSeconds - 0.02) return
-      const key = phrase.toLowerCase()
+      const key = normalizeNoteText(note.fullPhrase || note.phrase).toLowerCase()
       if (seen.has(key)) return
       seen.add(key)
       revealed.push({
@@ -561,7 +837,7 @@ export const collectUniqueSpeakingSampleSubtitleNotes = (
 
   cues.forEach((cue) => {
     ;(cue.notes || []).forEach((note) => {
-      const key = normalizeNoteText(note.phrase).toLowerCase()
+      const key = normalizeNoteText(note.fullPhrase || note.phrase).toLowerCase()
       if (!key || seen.has(key)) return
       seen.add(key)
       notes.push(note)

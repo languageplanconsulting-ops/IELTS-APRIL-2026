@@ -3,17 +3,18 @@
  * Batch-enrich speaking sample videos with B1-B2 vocabulary + grammar subtitle notes.
  *
  * Usage:
- *   node scripts/enrich-speaking-sample-notes.mjs [--dry-run] [--api-base URL]
+ *   npx tsx scripts/enrich-speaking-sample-notes.mjs [--dry-run] [--force] [--api-base URL]
  *
  * Env:
  *   ADMIN_PANEL_CODE (default: englishplanforeover)
  *   APP_BASE_URL (default: https://www.englishplan-ielts.com)
  */
 
-import { enrichSpeakingSampleSubtitlesWithNotes } from './lib/speakingSampleSubtitleNotes.mjs'
+import { enrichSpeakingSampleSubtitlesWithNotes } from '../src/speakingSampleSubtitleNotes.ts'
 
 const args = process.argv.slice(2)
 const dryRun = args.includes('--dry-run')
+const force = args.includes('--force')
 const apiBaseArg = args.find((arg) => arg.startsWith('--api-base='))
 const API_BASE = (apiBaseArg ? apiBaseArg.split('=').slice(1).join('=') : process.env.APP_BASE_URL || 'https://www.englishplan-ielts.com').replace(/\/$/, '')
 const ADMIN_CODE = String(process.env.ADMIN_PANEL_CODE || 'englishplanforeover').trim()
@@ -23,8 +24,7 @@ const countNotes = (subtitles) =>
   (subtitles || []).reduce((total, cue) => total + (cue.notes?.length || 0), 0)
 
 const summarizeNotes = (subtitles) =>
-  (subtitles || [])
-    .flatMap((cue) => (cue.notes || []).map((note) => ({ ...note, cueText: cue.text?.slice(0, 50) })))
+  (subtitles || []).flatMap((cue) => (cue.notes || []).map((note) => ({ ...note, cueText: cue.text?.slice(0, 50) })))
 
 const fetchVideos = async () => {
   const res = await fetch(`${API_BASE}/api/admin/speaking-sample-videos`, {
@@ -58,6 +58,7 @@ const patchVideo = async (topicId, body) => {
 const main = async () => {
   console.log(`API: ${API_BASE}`)
   console.log(dryRun ? 'DRY RUN — no writes' : 'LIVE — will PATCH videos')
+  if (force) console.log('FORCE — replacing existing notes')
   const items = await fetchVideos()
   console.log(`Found ${items.length} speaking sample videos\n`)
 
@@ -69,7 +70,7 @@ const main = async () => {
     const topicId = item.topicId || item.id
     const cues = item.subtitles || []
     const before = countNotes(cues)
-    const enriched = enrichSpeakingSampleSubtitlesWithNotes(cues, item.transcript || '')
+    const enriched = enrichSpeakingSampleSubtitlesWithNotes(cues, item.transcript || '', { force })
     const after = countNotes(enriched)
     const notes = summarizeNotes(enriched)
 
@@ -78,7 +79,8 @@ const main = async () => {
     notes.forEach((note) => {
       const label = note.kind === 'grammar' ? note.grammarRule : note.partOfSpeech
       const thai = note.thaiMeaning || ''
-      console.log(`  · [${note.kind}] "${note.phrase}" — ${label} · ${thai.slice(0, 40)}`)
+      const display = note.fullPhrase && note.fullPhrase !== note.phrase ? `${note.fullPhrase} [${note.phrase}]` : note.phrase
+      console.log(`  · [${note.kind || 'vocab'}] "${display}" — ${label} · ${thai.slice(0, 48)}`)
     })
 
     if (after === 0) {

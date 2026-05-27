@@ -57,6 +57,14 @@ Required for access control:
 - `ADMIN_SIGNUP_NOTIFY_EMAIL`
 - `ACCESS_APPROVAL_SECRET`
 
+Optional Thinkific enrollment bridge:
+
+- `THINKIFIC_WEBHOOK_SECRET`
+- `THINKIFIC_ALLOWED_COURSE_IDS`
+- `THINKIFIC_DEFAULT_ACCESS_MONTHS`
+- `THINKIFIC_FEEDBACK_CREDITS`
+- `THINKIFIC_FULL_MOCK_CREDITS`
+
 Required for the existing speaking features:
 
 - `GEMINI_API_KEY`
@@ -138,6 +146,29 @@ You can also:
 Access expiry default:
 
 - when access is granted without an explicit expiry date, the app sets expiry to 3 months from the access date
+
+## Thinkific Enrollment Bridge
+
+Thinkific can automatically activate access in this app when a learner enrolls in a course.
+
+1. Set these server environment variables:
+   - `THINKIFIC_WEBHOOK_SECRET`: your Thinkific site API key or app client secret used to verify webhook HMAC signatures
+   - `THINKIFIC_ALLOWED_COURSE_IDS`: optional comma-separated Thinkific course ids; leave blank to allow all courses
+   - `THINKIFIC_DEFAULT_ACCESS_MONTHS`: default access length when Thinkific does not send an expiry date
+   - `THINKIFIC_FEEDBACK_CREDITS` and `THINKIFIC_FULL_MOCK_CREDITS`: credits granted or topped up on enrollment
+2. In Thinkific, create an `enrollment.created` webhook pointing to:
+
+```text
+https://your-app-domain.com/api/integrations/thinkific/webhook
+```
+
+When the webhook arrives, the app:
+
+- verifies the Thinkific HMAC signature
+- finds the learner by Thinkific email, or creates a new Supabase account
+- activates `learner_access`
+- tops credits up to the configured Thinkific defaults
+- emails brand-new app users a temporary password and app link
 
 ## Notes
 
