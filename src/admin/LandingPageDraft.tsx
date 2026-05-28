@@ -35,32 +35,32 @@ const ACADEMIC_SKILLS: SkillItem[] = [
     id: 'writing',
     abbr: 'W',
     title: 'IELTS Writing',
-    subtitle: 'Academic Track · Band 7+ framework',
-    body: 'วิเคราะห์ Task 1 และ Task 2 ด้วยโครงสร้างคำตอบที่ชัดเจน พร้อมคลังคำศัพท์เชิงวิชาการ',
-    cta: 'สำรวจหลักสูตร Writing'
+    subtitle: 'Task 1 & Task 2 · Band 7+ framework',
+    body: 'วิเคราะห์ทั้ง Task 1 และ Task 2 พร้อมคลังคำศัพท์เชิงวิชาการ',
+    cta: 'ดูข้อสอบ Writing IELTS ล่าสุด'
   },
   {
     id: 'reading',
     abbr: 'R',
     title: 'IELTS Reading',
-    subtitle: 'Academic Track · Cambridge-style practice',
-    body: 'ฝึกทำข้อสอบภายใต้เวลาจริง พร้อมเฉลยเชิงเหตุผลและคำอธิบายภาษาไทยแบบเป็นขั้นตอน',
-    cta: 'สำรวจหลักสูตร Reading'
+    subtitle: 'Cambridge-style · Timed practice',
+    body: 'ฝึกจับเวลาด้วยโจทย์ Cambridge-style พร้อมเฉลยภาษาไทย',
+    cta: 'ทำแบบฝึกหัด Reading'
   },
   {
     id: 'speaking',
     abbr: 'S',
     title: 'IELTS Speaking',
-    subtitle: 'Mock Interview + Guided feedback',
-    body: 'ฝึกตอบ Part 1, 2, 3 พร้อมรายงานจุดแข็งและประเด็นที่ควรปรับเพื่อยกระดับคะแนน',
-    cta: 'สำรวจหลักสูตร Speaking'
+    subtitle: 'Part 1, 2, 3 · Mock interview',
+    body: 'ฝึก Part 1–3 พร้อมตัวอย่างคำตอบ Band 7+ และ feedback',
+    cta: 'ดูตัวอย่างและโจทย์ Speaking'
   },
   {
     id: 'band',
     abbr: 'B',
     title: 'Band Score Check',
-    subtitle: 'Initial diagnostic in ~20 minutes',
-    body: 'ประเมินระดับปัจจุบันและจัดลำดับความสำคัญของทักษะที่ควรพัฒนาก่อนเข้าสอบจริง',
+    subtitle: 'Diagnostic · ~20 minutes',
+    body: 'ประเมินระดับปัจจุบันใน ~20 นาที ก่อนเข้าโปรแกรมจริง',
     cta: 'เริ่มประเมินเบื้องต้น'
   }
 ]
@@ -247,6 +247,50 @@ export function LandingPageDraft({ readingMonthGroups = [], speakingSampleVideos
 
       <div className="epLandingZoneDivider" aria-hidden="true" />
 
+      {/* ── Video Planning Section ── */}
+      <section className="epLandingZone epLandingZonePlanVideos">
+        <div className="epLandingShell">
+          <header className="epLandingSectionHead">
+            <p className="epLandingZoneLabel">Free Resources</p>
+            <h2>การวางแผนสำหรับการเรียน IELTS</h2>
+            <p className="epLandingLead" style={{ maxWidth: 560, margin: '0 auto' }}>
+              ดูวิดีโอแนะแนวฟรีจากทีมผู้สอน English Plan — ครอบคลุมทั้ง 4 ทักษะ
+              เพื่อให้เข้าใจแนวทางการสอบก่อนเริ่มฝึก
+            </p>
+          </header>
+
+          <div className="epLandingPlanVideoGrid">
+            {[
+              { skill: 'Speaking', abbr: 'S', color: '#1a4db5' },
+              { skill: 'Writing',  abbr: 'W', color: '#0a3070' },
+              { skill: 'Reading',  abbr: 'R', color: '#13316b' },
+              { skill: 'Listening', abbr: 'L', color: '#0f2455' }
+            ].map(({ skill, abbr, color }) => (
+              <div key={skill} className="epLandingPlanVideoCard">
+                <div className="epLandingPlanVideoThumb" style={{ '--ep-plan-color': color } as React.CSSProperties}>
+                  <span className="epLandingPlanVideoAbbr">{abbr}</span>
+                  <div className="epLandingPlanVideoPlayBtn" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                  <span className="epLandingPlanVideoComingSoon">อัปโหลดเร็วๆ นี้</span>
+                </div>
+                <div className="epLandingPlanVideoMeta">
+                  <p className="epLandingCardTag">IELTS {skill}</p>
+                  <h4>วางแผน {skill} อย่างไรให้ได้ Band 7</h4>
+                  <p className="epLandingPlanVideoDesc">
+                    เทคนิค กลยุทธ์ และแผนการเรียนสำหรับทักษะ {skill} จากพี่ดอย
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="epLandingZoneDivider" aria-hidden="true" />
+
       <section id="ep-landing-exam" className="epLandingZone epLandingZonePicker">
         <div className="epLandingShell">
           <div className="epLandingPickerCard">
@@ -304,28 +348,28 @@ export function LandingPageDraft({ readingMonthGroups = [], speakingSampleVideos
             {examTrack === 'academic' ? (
               <div className="epLandingSkillsGrid epLandingSkillsGrid--4">
                 {skills.map((skill) => (
-                  <article key={skill.id} className="epLandingSkillCard">
-                    <span className="epLandingSkillAbbr" aria-hidden="true">
-                      {skill.abbr}
-                    </span>
-                    <p className="epLandingCardTag">{skill.subtitle}</p>
-                    <h3>{skill.title}</h3>
-                    <p>{skill.body}</p>
-                    <button
-                      type="button"
-                      className="epLandingTextLink"
-                      onClick={() => {
-                        if (skill.id === 'reading') setDraftView('reading-academic')
-                        if (skill.id === 'speaking') setDraftView('speaking')
-                        if (skill.id === 'writing') setDraftView('writing')
-                      }}
-                    >
-                      {skill.id === 'writing'
-                        ? 'ดูข้อสอบ Writing IELTS ล่าสุด →'
-                        : skill.id === 'speaking'
-                          ? 'ดูตัวอย่างและโจทย์ Speaking →'
-                          : `${skill.cta} →`}
-                    </button>
+                  <article key={skill.id} className={`epLandingSkillCard epLandingSkillCard--${skill.id}`}>
+                    <div className="epLandingSkillCardHead">
+                      <div className="epLandingSkillCardHeadContent">
+                        <p className="epLandingCardTag">{skill.subtitle}</p>
+                        <h3>{skill.title}</h3>
+                      </div>
+                      <span className="epLandingSkillCardMonogram" aria-hidden="true">{skill.abbr}</span>
+                    </div>
+                    <div className="epLandingSkillCardFoot">
+                      <p>{skill.body}</p>
+                      <button
+                        type="button"
+                        className="epLandingSkillCardCta"
+                        onClick={() => {
+                          if (skill.id === 'reading') setDraftView('reading-academic')
+                          if (skill.id === 'speaking') setDraftView('speaking')
+                          if (skill.id === 'writing') setDraftView('writing')
+                        }}
+                      >
+                        {skill.cta} →
+                      </button>
+                    </div>
                   </article>
                 ))}
               </div>

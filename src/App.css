@@ -21978,3 +21978,243 @@ textarea {
     transition-duration: 1ms !important;
   }
 }
+
+/* Admin workspace overrides: keep the menu focused on one workspace at a time. */
+.workspace .adminPanelPage {
+  max-width: 1380px !important;
+  gap: 14px !important;
+}
+
+.workspace .adminHero {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 420px) !important;
+  align-items: start !important;
+  gap: 18px !important;
+  margin-bottom: 0 !important;
+  padding: 18px 20px !important;
+  border: 1px solid #d8e3f7 !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07) !important;
+}
+
+.workspace .adminHero h2 {
+  margin: 0 0 8px !important;
+  font-size: clamp(1.7rem, 2.4vw, 2.45rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0 !important;
+}
+
+.workspace .adminHero .meta {
+  max-width: 720px;
+  font-size: 0.96rem !important;
+  line-height: 1.55 !important;
+}
+
+.workspace .adminStatGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+}
+
+.workspace button.adminStatCard,
+.workspace .adminStatCard {
+  min-height: 72px !important;
+  padding: 12px 14px !important;
+  border: 1px solid #d8e3f7 !important;
+  border-radius: 14px !important;
+  background: #f8fbff !important;
+  color: #172033 !important;
+  text-align: left !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.workspace button.adminStatCard:hover {
+  border-color: #004aad !important;
+  background: #eef5ff !important;
+  box-shadow: 0 10px 22px rgba(0, 74, 173, 0.1) !important;
+}
+
+.workspace .adminStatCard strong {
+  color: #004aad !important;
+  font-size: 1.45rem !important;
+  letter-spacing: 0 !important;
+}
+
+.workspace .adminLayout {
+  grid-template-columns: 254px minmax(0, 1fr) !important;
+  gap: 14px !important;
+  align-items: start !important;
+}
+
+.workspace .adminNavRail {
+  top: 18px !important;
+  gap: 14px !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+.workspace .adminNavBrand {
+  padding: 4px 4px 12px !important;
+}
+
+.workspace .adminNavBrandIcon {
+  border-radius: 10px !important;
+  background: #004aad !important;
+  font-size: 0.74rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+.workspace .adminNavGroup {
+  gap: 6px !important;
+}
+
+.workspace .adminNavList {
+  gap: 5px !important;
+}
+
+.workspace .adminNavList button {
+  grid-template-columns: 32px minmax(0, 1fr) !important;
+  min-height: 48px !important;
+  padding: 7px 9px !important;
+  border: 1px solid transparent !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: #172033 !important;
+  box-shadow: none !important;
+  letter-spacing: 0 !important;
+  transform: none !important;
+}
+
+.workspace .adminNavList button:hover {
+  border-color: #d8e3f7 !important;
+  background: #f6f9ff !important;
+  box-shadow: none !important;
+}
+
+.workspace .adminNavList button.active {
+  border-color: rgba(0, 74, 173, 0.22) !important;
+  background: #eaf2ff !important;
+  color: #004aad !important;
+}
+
+.workspace .adminNavIcon {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 9px !important;
+  background: #eef4ff !important;
+  color: #004aad !important;
+  font-size: 0.68rem !important;
+  font-weight: 900 !important;
+}
+
+.workspace .adminNavList button.active .adminNavIcon {
+  background: #004aad !important;
+  color: #ffffff !important;
+}
+
+.workspace .adminNavCopy > span {
+  font-size: 0.86rem !important;
+  line-height: 1.15 !important;
+}
+
+.workspace .adminNavCopy small {
+  font-size: 0.68rem !important;
+  line-height: 1.2 !important;
+}
+
+.workspace .adminMainColumn {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+  gap: 14px !important;
+  padding: 14px !important;
+  border-radius: 18px !important;
+  background: #f8fbff !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08) !important;
+}
+
+.workspace .adminWorkspaceWindowHeader {
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+}
+
+.workspace .adminWorkspaceWindowHeader h3 {
+  font-size: 1.24rem !important;
+  letter-spacing: 0 !important;
+}
+
+.workspace .adminWindowStatus {
+  white-space: nowrap;
+}
+
+.workspace .adminPanelPage :is(
+  .adminOnly-landing,
+  .adminOnly-learners,
+  .adminOnly-support,
+  .adminOnly-analytics,
+  .adminOnly-reports,
+  .adminOnly-reading,
+  .adminOnly-audio,
+  .adminOnly-videos,
+  .adminOnly-settings
+) {
+  display: none !important;
+}
+
+.workspace .adminPanelPage[data-admin-section='landing'] .adminOnly-landing,
+.workspace .adminPanelPage[data-admin-section='learners'] .adminOnly-learners,
+.workspace .adminPanelPage[data-admin-section='support'] .adminOnly-support,
+.workspace .adminPanelPage[data-admin-section='analytics'] .adminOnly-analytics,
+.workspace .adminPanelPage[data-admin-section='reports'] .adminOnly-reports,
+.workspace .adminPanelPage[data-admin-section='reading'] .adminOnly-reading,
+.workspace .adminPanelPage[data-admin-section='audio'] .adminOnly-audio,
+.workspace .adminPanelPage[data-admin-section='videos'] .adminOnly-videos,
+.workspace .adminPanelPage[data-admin-section='settings'] .adminOnly-settings {
+  display: grid !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard {
+  gap: 14px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+.workspace .adminSettingsGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+@media (max-width: 1080px) {
+  .workspace .adminHero,
+  .workspace .adminLayout,
+  .workspace .adminSettingsGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .workspace .adminMainColumn {
+    grid-column: 1 !important;
+  }
+
+  .workspace .adminNavRail {
+    position: static !important;
+  }
+
+  .workspace .adminNavList {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .workspace .adminHero,
+  .workspace .adminMainColumn {
+    padding: 12px !important;
+  }
+
+  .workspace .adminStatGrid,
+  .workspace .adminNavList {
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -20,7 +20,13 @@ import {
   type WritingTask1Section,
   type WritingTimelinePracticePrompt,
   type WritingBand7Highlight,
-  type WritingBand7Sample
+  type WritingBand7Sample,
+  type Task1LineGraphData,
+  type Task1BarChartData,
+  type Task1PieChartData,
+  type Task1MapData,
+  type Task1TableData,
+  type Task1ChartData
 } from './writingGuideData'
 
 type WritingGuidePageProps = {
@@ -462,6 +468,246 @@ function WlpBand7Tabs() {
   )
 }
 
+// ─────────────────────────────────────────────────────────────
+// Mini SVG chart components for Task 1 monthly questions
+// ─────────────────────────────────────────────────────────────
+
+function MiniLineGraph({ data }: { data: Task1LineGraphData }) {
+  const W = 280, H = 158
+  const pL = 30, pR = 8, pT = 6, pB = 44
+  const cW = W - pL - pR
+  const cH = H - pT - pB
+  const { xLabels, series, yMin, yMax, yStep } = data
+  const n = xLabels.length
+  const xPos = (i: number) => pL + (i / (n - 1)) * cW
+  const yPos = (v: number) => pT + ((yMax - v) / (yMax - yMin)) * cH
+  const yTicks = []
+  for (let v = yMin; v <= yMax; v += yStep) yTicks.push(v)
+  const legendCols = Math.ceil(series.length / 2)
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+      {/* grid + y labels */}
+      {yTicks.map(v => (
+        <g key={v}>
+          <line x1={pL} y1={yPos(v)} x2={W - pR} y2={yPos(v)} stroke="#e2e8f0" strokeWidth={0.6} />
+          <text x={pL - 3} y={yPos(v) + 3} textAnchor="end" fontSize={7} fill="#94a3b8">{v}</text>
+        </g>
+      ))}
+      {/* x labels */}
+      {xLabels.map((lbl, i) => (
+        <text key={i} x={xPos(i)} y={pT + cH + 11} textAnchor="middle" fontSize={7} fill="#94a3b8">{lbl}</text>
+      ))}
+      {/* axes */}
+      <line x1={pL} y1={pT} x2={pL} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
+      <line x1={pL} y1={pT + cH} x2={W - pR} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
+      {/* series */}
+      {series.map(s => (
+        <g key={s.label}>
+          <polyline
+            points={s.values.map((v, i) => `${xPos(i)},${yPos(v)}`).join(' ')}
+            fill="none" stroke={s.color} strokeWidth={1.8} strokeLinejoin="round" strokeLinecap="round"
+          />
+          {s.values.map((v, i) => <circle key={i} cx={xPos(i)} cy={yPos(v)} r={2.2} fill={s.color} />)}
+        </g>
+      ))}
+      {/* legend — 2 rows max */}
+      {series.map((s, i) => {
+        const col = i % legendCols
+        const row = Math.floor(i / legendCols)
+        return (
+          <g key={s.label} transform={`translate(${pL + col * (cW / legendCols)},${pT + cH + 20 + row * 12})`}>
+            <rect x={0} y={-4} width={14} height={3} fill={s.color} rx={1} />
+            <text x={17} y={0} fontSize={6.5} fill="#475569">{s.label}</text>
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
+function MiniBarChart({ data }: { data: Task1BarChartData }) {
+  const W = 280, H = 158
+  const pL = 28, pR = 8, pT = 6, pB = 46
+  const cW = W - pL - pR
+  const cH = H - pT - pB
+  const { categories, series, yMax } = data
+  const nCat = categories.length
+  const nSer = series.length
+  const groupW = cW / nCat
+  const barW = Math.min((groupW * 0.7) / nSer, 18)
+  const gapBetween = 2
+  const totalBarW = nSer * barW + (nSer - 1) * gapBetween
+  const yPos = (v: number) => pT + ((yMax - v) / yMax) * cH
+  const yTicks = [0, yMax * 0.25, yMax * 0.5, yMax * 0.75, yMax].map(v => Math.round(v))
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+      {yTicks.map(v => (
+        <g key={v}>
+          <line x1={pL} y1={yPos(v)} x2={W - pR} y2={yPos(v)} stroke="#e2e8f0" strokeWidth={0.6} />
+          <text x={pL - 3} y={yPos(v) + 3} textAnchor="end" fontSize={6.5} fill="#94a3b8">{v}</text>
+        </g>
+      ))}
+      <line x1={pL} y1={pT} x2={pL} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
+      <line x1={pL} y1={pT + cH} x2={W - pR} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
+      {categories.map((cat, ci) => {
+        const groupX = pL + ci * groupW + (groupW - totalBarW) / 2
+        return (
+          <g key={cat}>
+            {series.map((s, si) => {
+              const bx = groupX + si * (barW + gapBetween)
+              const by = yPos(s.values[ci])
+              const bh = pT + cH - by
+              return <rect key={si} x={bx} y={by} width={barW} height={bh} fill={s.color} rx={1.5} opacity={0.88} />
+            })}
+            <text x={pL + (ci + 0.5) * groupW} y={pT + cH + 10} textAnchor="middle" fontSize={6.5} fill="#94a3b8">{cat}</text>
+          </g>
+        )
+      })}
+      {series.map((s, i) => (
+        <g key={s.label} transform={`translate(${pL + i * 80},${pT + cH + 22})`}>
+          <rect x={0} y={-5} width={12} height={8} fill={s.color} rx={1.5} opacity={0.88} />
+          <text x={15} y={0} fontSize={7} fill="#475569">{s.label}</text>
+        </g>
+      ))}
+    </svg>
+  )
+}
+
+function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
+  const rad = (angleDeg - 90) * (Math.PI / 180)
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
+}
+
+function pieSlicePath(cx: number, cy: number, r: number, start: number, end: number) {
+  const s = polarToXY(cx, cy, r, start)
+  const e = polarToXY(cx, cy, r, end)
+  const large = end - start > 180 ? 1 : 0
+  return `M ${cx} ${cy} L ${s.x.toFixed(2)} ${s.y.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${e.x.toFixed(2)} ${e.y.toFixed(2)} Z`
+}
+
+function MiniPieChart({ data }: { data: Task1PieChartData }) {
+  const W = 280, H = 175
+  const cx1 = 68, cx2 = 212, cy = 72, R = 58
+  const allSliceLabels = Array.from(new Set(data.charts.flatMap(c => c.slices.map(s => s.label))))
+  const colorMap: Record<string, string> = {}
+  data.charts.forEach(c => c.slices.forEach(s => { colorMap[s.label] = s.color }))
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+      {data.charts.map((chart, ci) => {
+        const cx = ci === 0 ? cx1 : cx2
+        let cursor = 0
+        return (
+          <g key={chart.title}>
+            <text x={cx} y={cy - R - 8} textAnchor="middle" fontSize={8} fontWeight="700" fill="#1e3a6e">{chart.title}</text>
+            {chart.slices.map(slice => {
+              const sweep = (slice.value / 100) * 360
+              const path = pieSlicePath(cx, cy, R, cursor, cursor + sweep)
+              const mid = cursor + sweep / 2
+              const lp = polarToXY(cx, cy, R * 0.62, mid)
+              cursor += sweep
+              return (
+                <g key={slice.label}>
+                  <path d={path} fill={slice.color} stroke="#fff" strokeWidth={1} />
+                  {slice.value >= 9 && (
+                    <text x={lp.x} y={lp.y + 3} textAnchor="middle" fontSize={7} fontWeight="600" fill="#fff">
+                      {slice.value}%
+                    </text>
+                  )}
+                </g>
+              )
+            })}
+          </g>
+        )
+      })}
+      {/* shared legend at bottom */}
+      {allSliceLabels.map((lbl, i) => {
+        const col = i % 3
+        const row = Math.floor(i / 3)
+        return (
+          <g key={lbl} transform={`translate(${16 + col * 88},${cy + R + 12 + row * 13})`}>
+            <rect x={0} y={-5} width={9} height={9} fill={colorMap[lbl] || '#ccc'} rx={2} />
+            <text x={12} y={0} fontSize={6.5} fill="#475569">{lbl}</text>
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
+function MiniMapDiagram({ data }: { data: Task1MapData }) {
+  const W = 280, H = 148
+  const mapW = 118, mapH = 86
+  const x1 = 8, x2 = 152, y0 = 18
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+      {[data.before, data.after].map((panel, pi) => {
+        const ox = pi === 0 ? x1 : x2
+        return (
+          <g key={pi}>
+            <text x={ox + mapW / 2} y={y0 - 6} textAnchor="middle" fontSize={8.5} fontWeight="700" fill="#1e3a6e">
+              {panel.year}
+            </text>
+            <rect x={ox} y={y0} width={mapW} height={mapH} fill="#f8fafc" stroke="#cbd5e1" strokeWidth={1} rx={3} />
+            {panel.zones.map((z, zi) => (
+              <g key={zi}>
+                <rect x={ox + z.x} y={y0 + z.y} width={z.w} height={z.h}
+                  fill={z.color} stroke="#fff" strokeWidth={0.8} rx={2} />
+                {z.label.split('\n').map((line, li) => (
+                  <text
+                    key={li}
+                    x={ox + z.x + z.w / 2}
+                    y={y0 + z.y + z.h / 2 + (li - (z.label.split('\n').length - 1) / 2) * 9}
+                    textAnchor="middle"
+                    fontSize={6.5}
+                    fontWeight="600"
+                    fill="#1e3a6e"
+                  >
+                    {line}
+                  </text>
+                ))}
+              </g>
+            ))}
+          </g>
+        )
+      })}
+      <line x1={140} y1={y0} x2={140} y2={y0 + mapH} stroke="#e2e8f0" strokeWidth={1} strokeDasharray="3,2" />
+      <text x={140} y={y0 + mapH + 14} textAnchor="middle" fontSize={7} fill="#94a3b8">Changes in Town Centre Layout</text>
+    </svg>
+  )
+}
+
+function MiniDataTable({ data }: { data: Task1TableData }) {
+  return (
+    <div className="wlpMiniTable">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            {data.headers.map(h => <th key={h}>{h}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {data.rows.map(row => (
+            <tr key={row.entity}>
+              <td className="wlpMiniTableEntity">{row.entity}</td>
+              {row.values.map((v, i) => <td key={i}>{v}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function Task1ChartVisual({ chartData }: { chartData: Task1ChartData }) {
+  if (chartData.type === 'line-graph') return <MiniLineGraph data={chartData} />
+  if (chartData.type === 'bar-chart')  return <MiniBarChart data={chartData} />
+  if (chartData.type === 'pie-chart')  return <MiniPieChart data={chartData} />
+  if (chartData.type === 'map')        return <MiniMapDiagram data={chartData} />
+  if (chartData.type === 'table')      return <MiniDataTable data={chartData} />
+  return null
+}
+
 export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
   const [flow, setFlow] = useState<WritingFlow>({ step: 'task-pick' })
   const [timelineAnswers, setTimelineAnswers] = useState<Record<string, string>>({})
@@ -724,6 +970,11 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
                             </span>
                           </div>
                           <p className="wlpMonthTaskPrompt">{set.task1.promptText}</p>
+                          {set.task1ChartData && (
+                            <div className="wlpTask1ChartWrap">
+                              <Task1ChartVisual chartData={set.task1ChartData} />
+                            </div>
+                          )}
                         </div>
                         <div className="wlpMonthTask wlpMonthTask-t2">
                           <div className="wlpMonthTaskHead">

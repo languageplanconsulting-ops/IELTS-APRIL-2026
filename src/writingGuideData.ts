@@ -534,6 +534,57 @@ export const WRITING_TASK2_TYPES: WritingTask2Type[] = [
 
 // ── Monthly question sets Jan–Dec 2026 ────────────────────────────────────
 
+export type Task1ChartSeries = { label: string; color: string; values: number[] }
+
+export type Task1LineGraphData = {
+  type: 'line-graph'
+  xLabels: string[]
+  yUnit: string
+  yMin: number
+  yMax: number
+  yStep: number
+  series: Task1ChartSeries[]
+}
+
+export type Task1BarChartData = {
+  type: 'bar-chart'
+  categories: string[]
+  yUnit: string
+  yMax: number
+  series: Task1ChartSeries[]
+}
+
+export type Task1PieChartData = {
+  type: 'pie-chart'
+  charts: Array<{
+    title: string
+    slices: Array<{ label: string; value: number; color: string }>
+  }>
+}
+
+export type Task1MapZone = {
+  x: number; y: number; w: number; h: number; label: string; color: string
+}
+
+export type Task1MapData = {
+  type: 'map'
+  before: { year: string; zones: Task1MapZone[] }
+  after:  { year: string; zones: Task1MapZone[] }
+}
+
+export type Task1TableData = {
+  type: 'table'
+  headers: string[]
+  rows: Array<{ entity: string; values: (string | number)[] }>
+}
+
+export type Task1ChartData =
+  | Task1LineGraphData
+  | Task1BarChartData
+  | Task1PieChartData
+  | Task1MapData
+  | Task1TableData
+
 export type WritingMonthlyQuestionSet = {
   id: string
   month: string
@@ -553,6 +604,7 @@ export type WritingMonthlyQuestionSet = {
     promptText: string
   }
   task1Prompt?: WritingTimelinePracticePrompt
+  task1ChartData?: Task1ChartData
 }
 
 export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
@@ -583,6 +635,19 @@ export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
       values: [28, 38, 51, 72, 79, 86],
       mainTrend: 'Online shopping grew sharply, especially between 2018 and 2020.'
     },
+    task1ChartData: {
+      type: 'line-graph',
+      xLabels: ['2014', '2016', '2018', '2020', '2022', '2024'],
+      yUnit: '% of adults',
+      yMin: 0,
+      yMax: 100,
+      yStep: 25,
+      series: [
+        { label: 'UK',        color: '#0f53c9', values: [28, 38, 51, 72, 79, 86] },
+        { label: 'USA',       color: '#d97706', values: [35, 45, 58, 75, 83, 89] },
+        { label: 'Australia', color: '#0d9488', values: [22, 31, 44, 65, 76, 84] }
+      ]
+    },
     task2: {
       questionType: 'Discuss Both Views + Give Opinion',
       questionTypeTh: 'Discuss Both Views + Give Opinion',
@@ -600,6 +665,16 @@ export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
       chartTypeTh: 'Bar Chart',
       promptText: 'The bar chart below compares the average household spending on five categories (food, transport, housing, healthcare, and leisure) in the UK and Thailand in 2023.',
       promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task1ChartData: {
+      type: 'bar-chart',
+      categories: ['Food', 'Transport', 'Housing', 'Healthcare', 'Leisure'],
+      yUnit: '% of spending',
+      yMax: 35,
+      series: [
+        { label: 'UK',       color: '#0f53c9', values: [18, 14, 28, 12, 15] },
+        { label: 'Thailand', color: '#bf8b30', values: [25, 18, 22,  8, 10] }
+      ]
     },
     task2: {
       questionType: 'Advantages & Disadvantages',
@@ -619,6 +694,29 @@ export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
       promptText: 'The two maps below show the layout of a town centre in 2005 and 2025. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.',
       promptLine: 'Write at least 150 words.'
     },
+    task1ChartData: {
+      type: 'map',
+      before: {
+        year: '2005',
+        zones: [
+          { x: 4,  y: 4,  w: 54, h: 36, label: 'Shopping\nMall',    color: '#bfdbfe' },
+          { x: 62, y: 4,  w: 34, h: 36, label: 'Car Park',          color: '#e2e8f0' },
+          { x: 4,  y: 44, w: 34, h: 36, label: 'Industrial\nZone',  color: '#fde68a' },
+          { x: 42, y: 44, w: 54, h: 18, label: 'Market',            color: '#bbf7d0' },
+          { x: 42, y: 64, w: 54, h: 16, label: 'Open Space',        color: '#d1fae5' }
+        ]
+      },
+      after: {
+        year: '2025',
+        zones: [
+          { x: 4,  y: 4,  w: 38, h: 36, label: 'Residential',       color: '#c7d2fe' },
+          { x: 46, y: 4,  w: 50, h: 36, label: 'Civic Centre',       color: '#bfdbfe' },
+          { x: 4,  y: 44, w: 34, h: 36, label: 'Tech Park',          color: '#fde68a' },
+          { x: 42, y: 44, w: 24, h: 36, label: 'Library',            color: '#bbf7d0' },
+          { x: 70, y: 44, w: 26, h: 36, label: 'Park',               color: '#d1fae5' }
+        ]
+      }
+    },
     task2: {
       questionType: 'To What Extent',
       questionTypeTh: 'To What Extent (เห็นด้วยมากน้อยแค่ไหน)',
@@ -634,8 +732,32 @@ export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
     task1: {
       chartType: 'pie-chart',
       chartTypeTh: 'Pie Chart',
-      promptText: 'The pie charts below show the distribution of energy sources used to generate electricity in two countries (Germany and Australia) in 2010 and 2020.',
+      promptText: 'The pie charts below show the distribution of energy sources used to generate electricity in two countries (Germany and Australia) in 2020.',
       promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task1ChartData: {
+      type: 'pie-chart',
+      charts: [
+        {
+          title: 'Germany 2020',
+          slices: [
+            { label: 'Renewables', value: 44, color: '#0d9488' },
+            { label: 'Coal',       value: 25, color: '#64748b' },
+            { label: 'Gas',        value: 16, color: '#0f53c9' },
+            { label: 'Nuclear',    value:  6, color: '#bf8b30' },
+            { label: 'Other',      value:  9, color: '#e2e8f0' }
+          ]
+        },
+        {
+          title: 'Australia 2020',
+          slices: [
+            { label: 'Coal',       value: 52, color: '#64748b' },
+            { label: 'Gas',        value: 22, color: '#0f53c9' },
+            { label: 'Renewables', value: 21, color: '#0d9488' },
+            { label: 'Other',      value:  5, color: '#e2e8f0' }
+          ]
+        }
+      ]
     },
     task2: {
       questionType: 'Double Question',
@@ -655,6 +777,20 @@ export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
       promptText: 'The line graph below shows the percentage of people using social media platforms in four regions (North America, Europe, Asia-Pacific, and Latin America) from 2010 to 2024.',
       promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
     },
+    task1ChartData: {
+      type: 'line-graph',
+      xLabels: ["'10", "'12", "'14", "'16", "'18", "'20", "'22", "'24"],
+      yUnit: '% of population',
+      yMin: 0,
+      yMax: 100,
+      yStep: 25,
+      series: [
+        { label: 'N. America',   color: '#0f53c9', values: [48, 56, 65, 71, 75, 80, 83, 85] },
+        { label: 'Europe',       color: '#d97706', values: [38, 44, 52, 59, 65, 70, 74, 77] },
+        { label: 'Asia-Pacific', color: '#0d9488', values: [15, 22, 31, 42, 52, 61, 68, 73] },
+        { label: 'Latin America',color: '#7c3aed', values: [28, 35, 44, 54, 62, 68, 72, 75] }
+      ]
+    },
     task2: {
       questionType: 'To What Extent',
       questionTypeTh: 'To What Extent',
@@ -672,6 +808,17 @@ export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
       chartTypeTh: 'Table',
       promptText: 'The table below shows data on five universities across four indicators (research output, student satisfaction rate, graduate employment rate, and percentage of international students) in 2024.',
       promptLine: 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+    },
+    task1ChartData: {
+      type: 'table',
+      headers: ['Research Output', 'Satisfaction', 'Employment', "Int'l Students"],
+      rows: [
+        { entity: 'Oxford',         values: ['48,500', '87%', '94%', '42%'] },
+        { entity: 'MIT',            values: ['42,000', '91%', '97%', '35%'] },
+        { entity: 'Univ. Sydney',   values: ['18,200', '83%', '89%', '38%'] },
+        { entity: 'Chulalongkorn', values: ['4,300',  '79%', '82%', '12%'] },
+        { entity: 'Seoul Nat\'l',   values: ['22,100', '85%', '91%', '28%'] }
+      ]
     },
     task2: {
       questionType: 'Discuss Both Views + Give Opinion',

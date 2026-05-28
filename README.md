@@ -156,11 +156,13 @@ Thinkific can automatically activate access in this app when a learner enrolls i
    - `THINKIFIC_ALLOWED_COURSE_IDS`: optional comma-separated Thinkific course ids; leave blank to allow all courses
    - `THINKIFIC_DEFAULT_ACCESS_MONTHS`: default access length when Thinkific does not send an expiry date
    - `THINKIFIC_FEEDBACK_CREDITS` and `THINKIFIC_FULL_MOCK_CREDITS`: credits granted or topped up on enrollment
-2. In Thinkific, create an `enrollment.created` webhook pointing to:
+2. If your Thinkific plan includes Webhooks, create an `enrollment.created` webhook pointing to:
 
 ```text
 https://your-app-domain.com/api/integrations/thinkific/webhook
 ```
+
+If Webhooks are not available on your current Thinkific plan, use the same endpoint from Thinkific's Order tracking code. The app accepts signed JSON or signed `application/x-www-form-urlencoded` payloads, so a Liquid `hmac_sha256` signature can protect the request.
 
 When the webhook arrives, the app:
 

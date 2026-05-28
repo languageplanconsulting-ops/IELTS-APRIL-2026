@@ -2062,6 +2062,63 @@
   border-left-color: #bf8b30;
 }
 
+/* ── Task 1 inline chart ── */
+.wlpTask1ChartWrap {
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 46, 133, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 10px 8px 6px;
+}
+
+/* ── Mini data table (Jun) ── */
+.wlpMiniTable {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.wlpMiniTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+}
+
+.wlpMiniTable th {
+  background: rgba(15, 46, 133, 0.07);
+  color: #0f2e85;
+  font-weight: 700;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 7px;
+  text-align: center;
+  border-bottom: 1px solid rgba(15, 46, 133, 0.15);
+}
+
+.wlpMiniTable td {
+  padding: 4px 7px;
+  text-align: center;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.7rem;
+}
+
+.wlpMiniTableEntity {
+  text-align: left !important;
+  font-weight: 600;
+  color: #1e3a6e !important;
+  white-space: nowrap;
+}
+
+.wlpMiniTable tr:last-child td {
+  border-bottom: none;
+}
+
+.wlpMiniTable tr:nth-child(even) td {
+  background: rgba(15, 46, 133, 0.025);
+}
+
 .wlpMonthTaskHead {
   display: flex;
   align-items: center;

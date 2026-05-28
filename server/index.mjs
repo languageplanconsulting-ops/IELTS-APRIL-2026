@@ -86,11 +86,17 @@ const MARCH_2026_GOOD_ARCHIVE_READING_EXAMS = requireJson('../cambridge-reading-
 
 app.use(cors())
 const requestBodyLimit = process.env.REQUEST_BODY_LIMIT || '25mb'
+const captureRawRequestBody = (req, _res, buffer) => {
+  req.rawBody = buffer?.length ? buffer.toString('utf8') : ''
+}
 app.use(express.json({
   limit: requestBodyLimit,
-  verify: (req, _res, buffer) => {
-    req.rawBody = buffer?.length ? buffer.toString('utf8') : ''
-  }
+  verify: captureRawRequestBody
+}))
+app.use(express.urlencoded({
+  extended: false,
+  limit: requestBodyLimit,
+  verify: captureRawRequestBody
 }))
 
 const GEMINI_PRICING_VERIFIED_AT = '2026-05-02'
@@ -6630,6 +6636,14 @@ const extractThinkificEnrollmentPayload = (payload = {}) => {
     user?.name,
     user?.full_name,
     user?.fullName,
+    resource?.name,
+    resource?.full_name,
+    resource?.fullName,
+    payload?.name,
+    payload?.full_name,
+    payload?.fullName,
+    resource?.billing_name,
+    payload?.billing_name,
     [firstName, lastName].filter(Boolean).join(' '),
     email ? email.split('@')[0] : ''
   )
@@ -7010,7 +7024,10 @@ app.post('/api/integrations/thinkific/webhook', async (req, res) => {
     }
 
     const eventName = normalizeThinkificEventName(req, req.body)
-    if (eventName && !['enrollment.created', 'enrollment.completed', 'enrollment.updated'].includes(eventName)) {
+    if (
+      eventName &&
+      !['enrollment.created', 'enrollment.completed', 'enrollment.updated', 'order.created'].includes(eventName)
+    ) {
       return res.json({
         ok: true,
         ignored: true,

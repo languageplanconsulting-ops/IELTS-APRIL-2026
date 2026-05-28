@@ -46,17 +46,27 @@ type LandingSpeakingPageProps = {
 function HighlightChip({ h }: { h: SampleAnswerHighlight }) {
   const [open, setOpen] = useState(false)
   return (
-    <span
-      className={`lspHighlight lspHighlight-${h.kind} ${open ? 'is-open' : ''}`}
-      onClick={() => setOpen((v) => !v)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && setOpen((v) => !v)}
-      aria-expanded={open}
-    >
-      <span className="lspHighlightPhrase">{h.phrase}</span>
+    <span className={`lspHighlight lspHighlight-${h.kind} ${open ? 'is-open' : ''}`}>
+      <span
+        className="lspHighlightPhrase"
+        role="button"
+        tabIndex={0}
+        onClick={() => setOpen((v) => !v)}
+        onKeyDown={(e) => e.key === 'Enter' && setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        {h.phrase}
+      </span>
       {open && (
         <span className="lspHighlightPopover">
+          <button
+            type="button"
+            className="lspPopoverClose"
+            onClick={() => setOpen(false)}
+            aria-label="ปิด"
+          >
+            ✕
+          </button>
           <strong>{h.labelTh}</strong>
           <span>{h.descTh}</span>
           {h.exampleTh && <em>ตัวอย่าง: {h.exampleTh}</em>}
@@ -269,7 +279,7 @@ function RealCueSegment({
 }: {
   cue: LandingSpeakingSubtitleCue
   activeNote: LandingSpeakingSubtitleNote | null
-  onNoteClick: (note: LandingSpeakingSubtitleNote) => void
+  onNoteClick: (note: LandingSpeakingSubtitleNote | null) => void
 }) {
   const notes = cue.notes || []
   if (notes.length === 0) {
@@ -302,8 +312,8 @@ function RealCueSegment({
               className={`lspHighlight lspHighlight-${part.note.kind || 'vocabulary'} ${isActive ? 'is-open' : ''}`}
               role="button"
               tabIndex={0}
-              onClick={() => onNoteClick(part.note!)}
-              onKeyDown={(e) => e.key === 'Enter' && onNoteClick(part.note!)}
+              onClick={() => onNoteClick(isActive ? null : part.note!)}
+              onKeyDown={(e) => e.key === 'Enter' && onNoteClick(isActive ? null : part.note!)}
             >
               <span className="lspHighlightPhrase">{part.content}</span>
             </span>
