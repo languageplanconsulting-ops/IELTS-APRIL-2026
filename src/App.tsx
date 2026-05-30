@@ -67,6 +67,7 @@ import { CAMBRIDGE_18_SECTION_2_EXAM_SET } from './listeningBuilderCambridge18Se
 import { LISTENING_FOUNDATION_SETS, type ListeningFoundationCategory, type ListeningFoundationSet } from './listeningFoundationData'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridgeSafeData'
 import { LISTENING_PART1_FOUNDATION_SETS } from './listeningPart1FromWorkbook'
+import { isListeningPart1AnswerCorrect } from './listeningPart1AnswerCheck'
 import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge12Data'
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from './listeningFoundationCambridge13Data'
 import { ADVANCED_PART34_LISTENING_SETS } from './listeningAdvancedPart34Data'
@@ -3477,6 +3478,7 @@ const NOTEBOOK_CUSTOM_SECTIONS_KEY = 'ielts-notebook-custom-sections'
 const TEST_LATEST_SCORE_KEY = 'ielts-test-latest-scores'
 const READING_ATTEMPTS_KEY = 'ielts-reading-attempts'
 const LISTENING_ATTEMPTS_KEY = 'ielts-listening-attempts'
+const LISTENING_FOUNDATION_PROGRESS_KEY = 'ielts-listening-foundation-progress'
 const READING_PDOY_PROGRESS_KEY = 'ielts-reading-pdoy-progress'
 const AUTH_SESSION_KEY = 'english-plan-auth-session'
 const DEFAULT_FEEDBACK_CREDITS = 20
@@ -5817,13 +5819,6 @@ const normalizeReadingAnswer = (value: string) =>
     .replace(/\.$/, '')
     .toUpperCase()
 
-const normalizeListeningAnswer = (value: string) =>
-  String(value || '')
-    .trim()
-    .replace(/\s+/g, ' ')
-    .replace(/\.$/, '')
-    .toUpperCase()
-
 const slugifyListeningBuilderPack = (value: string) =>
   String(value || '')
     .toLowerCase()
@@ -6841,12 +6836,10 @@ const scoreListeningQuestions = (
 ) =>
   questions.map((question) => {
     const userAnswer = String(answers[question.number] || '').trim()
-    const acceptedAnswers = question.acceptedAnswers?.length
-      ? question.acceptedAnswers
-      : [question.correctAnswer]
-    const normalizedUserAnswer = normalizeListeningAnswer(userAnswer)
-    const isCorrect = acceptedAnswers.some(
-      (answer) => normalizeListeningAnswer(String(answer || '')) === normalizedUserAnswer
+    const isCorrect = isListeningPart1AnswerCorrect(
+      userAnswer,
+      question.correctAnswer,
+      question.acceptedAnswers
     )
     return {
       ...question,
@@ -7102,6 +7095,21 @@ const parseStoredListeningAttempts = (value: string | null): Record<string, List
             : []
         }
       ])
+    )
+  } catch {
+    return {}
+  }
+}
+
+const parseStoredListeningFoundationProgress = (value: string | null): Record<string, 'correct'> => {
+  if (!value) return {}
+  try {
+    const parsed = JSON.parse(value) as Record<string, string>
+    if (!parsed || typeof parsed !== 'object') return {}
+    return Object.fromEntries(
+      Object.entries(parsed)
+        .filter(([, status]) => status === 'correct')
+        .map(([id]) => [id, 'correct' as const])
     )
   } catch {
     return {}
@@ -8384,6 +8392,10 @@ function App() {
     const scopedScoresKey = makeScopedStorageKey(TEST_LATEST_SCORE_KEY, session.email)
     const scopedReadingAttemptsKey = makeScopedStorageKey(READING_ATTEMPTS_KEY, session.email)
     const scopedListeningAttemptsKey = makeScopedStorageKey(LISTENING_ATTEMPTS_KEY, session.email)
+    const scopedListeningFoundationProgressKey = makeScopedStorageKey(
+      LISTENING_FOUNDATION_PROGRESS_KEY,
+      session.email
+    )
     const scopedReadingPdoyProgressKey = makeScopedStorageKey(READING_PDOY_PROGRESS_KEY, session.email)
     const scopedReadingJourneyProgressKey = makeScopedStorageKey(READING_JOURNEY_PROGRESS_KEY, session.email)
 
@@ -8392,6 +8404,9 @@ function App() {
     const localScores = parseStoredScores(localStorage.getItem(scopedScoresKey))
     const localReadingAttempts = parseStoredReadingAttempts(localStorage.getItem(scopedReadingAttemptsKey))
     const localListeningAttempts = parseStoredListeningAttempts(localStorage.getItem(scopedListeningAttemptsKey))
+    const localListeningFoundationProgress = parseStoredListeningFoundationProgress(
+      localStorage.getItem(scopedListeningFoundationProgressKey)
+    )
     const localReadingPdoyProgress = parseStoredReadingPdoyProgress(localStorage.getItem(scopedReadingPdoyProgressKey))
     const localReadingJourneyProgress = parseStoredReadingJourneyProgress(
       localStorage.getItem(scopedReadingJourneyProgressKey)
@@ -8419,6 +8434,7 @@ function App() {
     setReadingAttemptHistory(localReadingAttempts)
     setReadingJourneyProgress(localReadingJourneyProgress)
     setListeningAttemptHistory(localListeningAttempts)
+    setListeningFoundationAnswerState(localListeningFoundationProgress)
     applyReadingPdoyProgressSnapshot(localReadingPdoyProgress)
     const hydrateReadingAttemptsFromRemote = async () => {
       try {
@@ -11661,18 +11677,56 @@ function App() {
     localStorage.setItem(makeScopedStorageKey(LISTENING_ATTEMPTS_KEY, authSession.email), JSON.stringify(listeningAttemptHistory))
   }, [authSession, listeningAttemptHistory])
 
+  useEffect(() => {
+    if (!authSession?.email) return
+    localStorage.setItem(
+      makeScopedStorageKey(LISTENING_FOUNDATION_PROGRESS_KEY, authSession.email),
+      JSON.stringify(listeningFoundationAnswerState)
+    )
+  }, [authSession, listeningFoundationAnswerState])
+
   useEffect(() => () => {
+    const audio = listeningSectionAudioRef.current
+    if (audio) {
+      audio.pause()
+      audio.currentTime = 0
+      audio.src = ''
+      listeningSectionAudioRef.current = null
+    }
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel()
     }
   }, [])
 
   useEffect(() => {
-    if (activePage !== 'listening' && typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-      listeningSpeechRef.current = null
-      setListeningPlaybackState('idle')
+    const listeningPages = new Set<AppPage>([
+      'listening',
+      'listening_foundation_exam',
+      'listening_full_test_exam',
+      'listening_builder_exam'
+    ])
+    if (listeningPages.has(activePage)) return
+
+    const audio = listeningSectionAudioRef.current
+    if (audio) {
+      audio.pause()
+      audio.currentTime = 0
+      audio.onended = null
+      audio.onerror = null
+      audio.onplay = null
+      audio.onpause = null
+      audio.ontimeupdate = null
+      audio.onloadedmetadata = null
+      audio.src = ''
+      listeningSectionAudioRef.current = null
     }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
+    listeningSpeechRef.current = null
+    setListeningPlaybackState('idle')
+    setListeningPlaybackPosition(0)
+    setListeningPlaybackDuration(0)
   }, [activePage])
 
   useEffect(() => {

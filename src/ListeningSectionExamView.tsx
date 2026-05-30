@@ -4,7 +4,7 @@ import {
   ListeningEvidenceTutorial
 } from './ListeningEvidenceTutorial'
 import { getListeningEvidenceMatch } from './listeningHighlightMatch'
-import { isListeningGapFillAnswerCorrect } from './listeningPart1AnswerCheck'
+import { isListeningGapFillAnswerCorrect, isListeningPart1AnswerCorrect } from './listeningPart1AnswerCheck'
 import type { Part1ExamForm, Part1FormLine } from './listeningPart1FormLayout'
 import type {
   ListeningSectionExamConfig,
@@ -305,7 +305,7 @@ export function ListeningSectionExamView({
           options: question.options
         })
       }
-      return answer.trim().toUpperCase() === question.correctAnswer.trim().toUpperCase()
+      return isListeningPart1AnswerCorrect(answer, question.correctAnswer, question.acceptedAnswers)
     },
     []
   )
