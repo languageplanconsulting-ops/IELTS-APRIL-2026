@@ -51,6 +51,44 @@
   user-select: none;
 }
 
+.prepSampleVideoShelf {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  margin: 12px 0 18px;
+}
+
+.speakingP2SamplePanel--tablet {
+  width: min(100%, 760px);
+  margin: 0 auto 14px;
+  padding: 12px;
+  border-width: 2px;
+  border-radius: 18px;
+  box-shadow: 5px 5px 0 var(--bc-black, #0f172a);
+}
+
+.speakingP2SamplePanel--tablet .speakingP2SamplePanelHeader {
+  margin-bottom: 8px;
+}
+
+.speakingP2SamplePanel--tablet .speakingP2SampleTitle {
+  font-size: clamp(0.98rem, 1.6vw, 1.12rem);
+}
+
+.speakingP2SamplePanel--tablet .speakingP2SampleLead {
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.speakingP2SamplePanel--tablet .speakingP2SampleFrame {
+  width: min(100%, 700px);
+  border-radius: 14px;
+}
+
+.speakingP2SamplePanel--tablet .speakingP2SampleFooter {
+  margin-top: 8px;
+}
+
 .speakingP2SamplePanelHeader {
   display: flex;
   align-items: flex-start;

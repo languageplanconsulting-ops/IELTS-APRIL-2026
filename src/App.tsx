@@ -6018,14 +6018,22 @@ const parseListeningSectionBank = (raw: string): ListeningSectionBankTest[] => {
   return tests
 }
 
-const canonicalizeReadingCorrectAnswer = (value: string) => {
+const isReadingJudgementAnswerType = (answerType?: string) =>
+  answerType === 'true-false-not-given' || answerType === 'yes-no-not-given'
+
+const canonicalizeReadingCorrectAnswer = (value: string, answerType?: string) => {
   const normalized = normalizeReadingAnswer(value)
   if (!normalized) return ''
-  if (normalized.startsWith('NOT GIVEN')) return 'NOT GIVEN'
-  if (normalized.startsWith('TRUE')) return 'TRUE'
-  if (normalized.startsWith('FALSE')) return 'FALSE'
-  if (normalized.startsWith('YES')) return 'YES'
-  if (normalized.startsWith('NO')) return 'NO'
+  // Only apply TFNG/YNNG prefix canonicalization for judgement question types.
+  // Applying it to all types causes fill-in answers like "note", "yesterday",
+  // "falsehood" to be incorrectly collapsed to NO/YES/FALSE.
+  if (isReadingJudgementAnswerType(answerType)) {
+    if (normalized.startsWith('NOT GIVEN')) return 'NOT GIVEN'
+    if (normalized.startsWith('TRUE')) return 'TRUE'
+    if (normalized.startsWith('FALSE')) return 'FALSE'
+    if (normalized.startsWith('YES')) return 'YES'
+    if (normalized.startsWith('NO')) return 'NO'
+  }
   if (READING_ROMAN_HEADING_PATTERN.test(normalized)) {
     return normalized.toLowerCase()
   }
@@ -6190,20 +6198,21 @@ const normalizeReadingExamForDisplay = (exam: ReadingExamRecord): ReadingExamRec
   }
 })
 
-const normalizeReadingScoredAnswer = (value: string) => {
-  const canonical = canonicalizeReadingCorrectAnswer(value)
+const normalizeReadingScoredAnswer = (value: string, answerType?: string) => {
+  const canonical = canonicalizeReadingCorrectAnswer(value, answerType)
   return canonical ? normalizeReadingAnswer(canonical) : normalizeReadingAnswer(value)
 }
 
 const isReadingAnswerCorrect = (
   userAnswer: string,
   correctAnswer: string,
-  acceptedAnswers?: string[]
+  acceptedAnswers?: string[],
+  answerType?: string
 ) => {
-  const normalizedUserAnswer = normalizeReadingScoredAnswer(userAnswer)
+  const normalizedUserAnswer = normalizeReadingScoredAnswer(userAnswer, answerType)
   if (!normalizedUserAnswer) return false
   const answerPool = acceptedAnswers?.length ? acceptedAnswers : [correctAnswer]
-  return answerPool.some((answer) => normalizeReadingScoredAnswer(answer) === normalizedUserAnswer)
+  return answerPool.some((answer) => normalizeReadingScoredAnswer(answer, answerType) === normalizedUserAnswer)
 }
 
 const buildReadingEvidenceOptions = (
@@ -6789,7 +6798,8 @@ const scoreReadingQuestions = (
           isReadingAnswerCorrect(
             String(answers[question.number] || ''),
             question.correctAnswer,
-            question.acceptedAnswers
+            question.acceptedAnswers,
+            question.answerType
           )
         )
       }
@@ -6799,10 +6809,10 @@ const scoreReadingQuestions = (
     const acceptedAnswers = orderedQuestions[0]?.acceptedAnswers?.length
       ? [...orderedQuestions[0].acceptedAnswers]
       : orderedQuestions.map((question) => question.correctAnswer)
-    const remainingAnswers = acceptedAnswers.map((answer) => normalizeReadingScoredAnswer(answer))
+    const remainingAnswers = acceptedAnswers.map((answer) => normalizeReadingScoredAnswer(answer, orderedQuestions[0]?.answerType))
 
     for (const question of orderedQuestions) {
-      const normalizedUserAnswer = normalizeReadingScoredAnswer(String(answers[question.number] || ''))
+      const normalizedUserAnswer = normalizeReadingScoredAnswer(String(answers[question.number] || ''), question.answerType)
       const matchedIndex = normalizedUserAnswer ? remainingAnswers.indexOf(normalizedUserAnswer) : -1
       if (matchedIndex >= 0) {
         groupedResults.set(question.number, true)
@@ -6820,7 +6830,7 @@ const scoreReadingQuestions = (
       userAnswer,
       isCorrect: groupedQuestionNumbers.has(question.number)
         ? Boolean(groupedResults.get(question.number))
-        : isReadingAnswerCorrect(userAnswer, question.correctAnswer, question.acceptedAnswers)
+        : isReadingAnswerCorrect(userAnswer, question.correctAnswer, question.acceptedAnswers, question.answerType)
     }
   })
 }
@@ -7393,6 +7403,7 @@ function App() {
   const [adminVideoTrimStart, setAdminVideoTrimStart] = useState(0)
   const [adminVideoTrimEnd, setAdminVideoTrimEnd] = useState(0)
   const [adminVideoUploadProgress, setAdminVideoUploadProgress] = useState(0)
+  const [adminBgUpload, setAdminBgUpload] = useState<{ topicTitle: string; progress: number; done: boolean; error: string } | null>(null)
   const [adminVideoInputDevices, setAdminVideoInputDevices] = useState<AdminMediaDevice[]>([])
   const [adminAudioInputDevices, setAdminAudioInputDevices] = useState<AdminMediaDevice[]>([])
   const [adminSelectedVideoDeviceId, setAdminSelectedVideoDeviceId] = useState('')
@@ -10542,26 +10553,6 @@ function App() {
       videoFlipHorizontal: Boolean(uploaded.subtitleStyle?.videoFlipHorizontal)
     })
   }
-  const getSpeakingSampleForQuestion = (
-    part: 'part1' | 'part3',
-    topic: SpeakingTopic | null | undefined,
-    questionIndex: number,
-    question: string
-  ): SpeakingPart2SampleVideo | null => {
-    if (!topic || !question) return null
-    const topicTitle = `${part === 'part1' ? 'Part 1' : 'Part 3'}: ${topic.title}`
-    const topicSample = getUploadedSpeakingSampleForQuestion(
-      buildSpeakingSampleTopicId(part, topic.id),
-      topicTitle,
-      question
-    )
-    if (topicSample) return topicSample
-    return getUploadedSpeakingSampleForQuestion(
-      buildSpeakingSampleQuestionId(part, topic.id, questionIndex),
-      `${part === 'part1' ? 'Part 1' : 'Part 3'} Q${questionIndex + 1}: ${topic.title}`,
-      question
-    )
-  }
   const isFullExamMode = selectedTestMode === 'full'
   const isQuestionByQuestionMode = selectedTestMode === 'part1' || selectedTestMode === 'part3'
   const isTrialSpeakingFlow = isTrialUser && isFullExamMode && activeTopic?.id === TRIAL_SPEAKING_TOPIC_ID
@@ -10668,34 +10659,54 @@ function App() {
         : [],
     [isFullExamMode, fullExamPlan.part2Prompt, activeTopic, activePart2SampleVideo]
   )
-  const activeQuestionSampleVideo = useMemo(() => {
-    if (!activeTopic || !activeQuestion || !isQuestionByQuestionMode) return null
-    if (selectedTestMode !== 'part1' && selectedTestMode !== 'part3') return null
-    return getSpeakingSampleForQuestion(selectedTestMode, activeTopic, currentQuestionIndex, activeQuestion)
+  const getSpeakingPrepSamplesForQuestionList = (
+    part: 'part1' | 'part3',
+    topic: SpeakingTopic | null | undefined,
+    questions: string[]
+  ) => {
+    if (!topic || questions.length === 0) return []
+    const partLabel = part === 'part1' ? 'Part 1' : 'Part 3'
+    const topicSample = getUploadedSpeakingSampleForQuestion(
+      buildSpeakingSampleTopicId(part, topic.id),
+      `${partLabel}: ${topic.title}`,
+      questions[0]
+    )
+    if (topicSample) {
+      return [{ id: `${part}-topic-sample`, label: `${partLabel} model answer`, sample: topicSample }]
+    }
+    return questions
+      .map((question, index) => {
+        const sample = getUploadedSpeakingSampleForQuestion(
+          buildSpeakingSampleQuestionId(part, topic.id, index),
+          `${partLabel} Q${index + 1}: ${topic.title}`,
+          question
+        )
+        return sample ? { id: `${part}-question-sample-${index}`, label: `${partLabel} Q${index + 1} model answer`, sample } : null
+      })
+      .filter((item): item is { id: string; label: string; sample: SpeakingPart2SampleVideo } => Boolean(item))
+  }
+  const prepPart1SampleVideos = useMemo(() => {
+    const questions =
+      isFullExamMode ? fullExamPlan.part1Questions : selectedTestMode === 'part1' ? activeQuestionList : []
+    return getSpeakingPrepSamplesForQuestionList('part1', activeTopic, questions)
   }, [
     activeTopic,
-    activeQuestion,
-    currentQuestionIndex,
-    isQuestionByQuestionMode,
+    activeQuestionList,
+    fullExamPlan.part1Questions,
+    isFullExamMode,
     selectedTestMode,
     speakingSampleVideoAssets
   ])
-  const fullExamCurrentQuestionSampleVideo = useMemo(() => {
-    if (!activeTopic || !isFullExamMode || !fullExamCurrentQuestion) return null
-    if (fullExamPhase === 'part1') {
-      return getSpeakingSampleForQuestion('part1', activeTopic, fullExamPart1Index, fullExamCurrentQuestion)
-    }
-    if (fullExamPhase === 'part3') {
-      return getSpeakingSampleForQuestion('part3', activeTopic, fullExamPart3Index, fullExamCurrentQuestion)
-    }
-    return null
+  const prepPart3SampleVideos = useMemo(() => {
+    const questions =
+      isFullExamMode ? fullExamPlan.part3Questions : selectedTestMode === 'part3' ? activeQuestionList : []
+    return getSpeakingPrepSamplesForQuestionList('part3', activeTopic, questions)
   }, [
     activeTopic,
-    fullExamCurrentQuestion,
-    fullExamPart1Index,
-    fullExamPart3Index,
-    fullExamPhase,
+    activeQuestionList,
+    fullExamPlan.part3Questions,
     isFullExamMode,
+    selectedTestMode,
     speakingSampleVideoAssets
   ])
   const currentPart1Recommendations = useMemo(
@@ -15423,7 +15434,26 @@ function App() {
     adminVideoUploadXhrRef.current = null
     setAdminVideoRecorderStatus('preview')
     setAdminVideoUploadProgress(0)
+    setAdminBgUpload(null)
     setAdminVideoRecorderMessage('Upload canceled. Your recording is still ready to preview or upload again.')
+  }
+
+  // Release the studio UI immediately so you can record a new video while the current upload runs in background
+  const releaseStudioForNewRecording = () => {
+    if (adminVideoRecorderStatus !== 'uploading') return
+    // Revoke the local object URL — the blob is already captured in FormData inside the in-flight XHR
+    if (adminRecordedVideoUrl) URL.revokeObjectURL(adminRecordedVideoUrl)
+    adminRecordedVideoBlobRef.current = null
+    setAdminRecordedVideoUrl('')
+    setAdminRecordedVideoActualDuration(0)
+    setAdminRecordedVideoSizeBytes(0)
+    setAdminRecordedVideoHasBakedFlip(false)
+    setAdminVideoTrimStart(0)
+    setAdminVideoTrimEnd(0)
+    setAdminVideoStudioStep('setup')
+    setAdminVideoRecorderStatus('idle')
+    setAdminVideoRecorderMessage('')
+    // The XHR continues uploading in background; adminBgUpload banner shows progress
   }
 
   const uploadAdminRecordedVideo = async () => {
@@ -15456,6 +15486,7 @@ function App() {
     setAdminVideoRecorderStatus('uploading')
     setAdminVideoRecorderMessage('Uploading video to online storage...')
     setAdminVideoUploadProgress(0)
+    setAdminBgUpload({ topicTitle: adminSelectedVideoTopic.title, progress: 0, done: false, error: '' })
     try {
       if (videoBlob.size > ADMIN_VIDEO_API_UPLOAD_SAFE_BYTES) {
         setAdminVideoRecorderMessage(
@@ -15503,7 +15534,9 @@ function App() {
         xhr.setRequestHeader('Authorization', `Bearer ${authSession.accessToken}`)
         xhr.upload.onprogress = (event) => {
           if (!event.lengthComputable) return
-          setAdminVideoUploadProgress(Math.min(99, Math.round((event.loaded / event.total) * 100)))
+          const pct = Math.min(99, Math.round((event.loaded / event.total) * 100))
+          setAdminVideoUploadProgress(pct)
+          setAdminBgUpload((prev) => prev ? { ...prev, progress: pct } : prev)
         }
         xhr.onload = () => {
           let payload: { item?: SpeakingSampleVideoAsset; error?: { message?: string } | string } = {}
@@ -15548,6 +15581,7 @@ function App() {
       }
       await loadSpeakingSampleVideoCatalog(authSession.accessToken)
       setAdminVideoUploadProgress(100)
+      setAdminBgUpload((prev) => prev ? { ...prev, progress: 100, done: true } : null)
       setAdminVideoRecorderMessage('Sample published — students can now watch it during Part 2 prep.')
       setAdminVideoStudioStep('setup')
       setAdminVideoEditMode('fresh')
@@ -15563,9 +15597,11 @@ function App() {
       setAdminVideoTrimEnd(0)
       setAdminVideoRecorderStatus('idle')
     } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Could not upload video.'
       setAdminVideoRecorderStatus('preview')
       setAdminVideoUploadProgress(0)
-      setAdminVideoRecorderMessage(error instanceof Error ? error.message : 'Could not upload video.')
+      setAdminBgUpload((prev) => prev ? { ...prev, error: msg, done: false } : null)
+      setAdminVideoRecorderMessage(msg)
     }
   }
 
@@ -18074,6 +18110,8 @@ function App() {
     setReadingExamError('')
     setReadingSelectionText('')
     setReadingUserHighlights([])
+    setReadingPencilStrokes({})
+    setReadingSmartPencilMode(false)
     setReadingActivePassageNumber(exam.parsedPayload.passages[0]?.number || 1)
     setActivePage('reading')
   }
@@ -18218,8 +18256,8 @@ function App() {
           return
         }
       }
-      const normalizedDecision = normalizeReadingScoredAnswer(activeReadingPdoySelectedOptionRecord.letter)
-      const normalizedCorrect = normalizeReadingScoredAnswer(activeReadingPdoyQuestion.correctAnswer)
+      const normalizedDecision = normalizeReadingScoredAnswer(activeReadingPdoySelectedOptionRecord.letter, activeReadingPdoyQuestion.answerType)
+      const normalizedCorrect = normalizeReadingScoredAnswer(activeReadingPdoyQuestion.correctAnswer, activeReadingPdoyQuestion.answerType)
       if (normalizedDecision === normalizedCorrect) {
         setReadingPdoyFeedback(`ถูกต้องครับ ${activeReadingPdoyQuestion.explanationThai}`)
         setReadingPdoyStep('result')
@@ -18279,8 +18317,8 @@ function App() {
       }
       return
     }
-    const normalizedDecision = canonicalizeReadingCorrectAnswer(readingPdoyDecision)
-    const normalizedCorrect = canonicalizeReadingCorrectAnswer(activeReadingPdoyQuestion.correctAnswer)
+    const normalizedDecision = canonicalizeReadingCorrectAnswer(readingPdoyDecision, activeReadingPdoyQuestion.answerType)
+    const normalizedCorrect = canonicalizeReadingCorrectAnswer(activeReadingPdoyQuestion.correctAnswer, activeReadingPdoyQuestion.answerType)
     if (normalizedDecision === normalizedCorrect) {
       setReadingPdoyFeedback(`ถูกต้องครับ ${activeReadingPdoyQuestion.explanationThai}`)
       setReadingPdoyStep('result')
@@ -22029,6 +22067,24 @@ function App() {
                   <button type="button" className="secondary" onClick={exportReadingReportPdf}>
                     Export PDF
                   </button>
+                  {readingAttemptStage === 'report' && readingReportItems.some((item) => !item.isCorrect) && (
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => setReadingAttemptStage('review')}
+                    >
+                      Review Mistakes
+                    </button>
+                  )}
+                  {readingAttemptStage === 'review' && (
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => setReadingAttemptStage('report')}
+                    >
+                      Full Report
+                    </button>
+                  )}
                   <button type="button" onClick={() => startReadingExam(activeReadingExam.id)}>
                     Retry Exam
                   </button>
@@ -23586,7 +23642,7 @@ function App() {
                           type="button"
                           className={`adminVideoWizardStep ${isActive ? 'active' : ''} ${isComplete ? 'complete' : ''} ${isLocked ? 'locked' : ''}`}
                           onClick={() => goToAdminStudioStep(step.id)}
-                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading' || isLocked}
+                          disabled={adminVideoRecorderStatus === 'recording' || isLocked}
                           title={isLocked ? 'Record or load a video first' : step.description}
                         >
                           <span className="adminVideoWizardStepIndex">{index + 1}</span>
@@ -23664,127 +23720,136 @@ function App() {
                           ) : null}
                         </div>
                       ) : null}
-                      <div className="adminVideoDeviceGrid">
-                        <label className="adminSearchField">
-                          <span>Camera source</span>
-                          <select
-                            value={adminSelectedVideoDeviceId}
+                      {/* ── Devices ── */}
+                      <div className="adminSetupGroup">
+                        <p className="adminSetupGroupLabel">Camera &amp; Microphone</p>
+                        <div className="adminVideoDeviceGrid">
+                          <label className="adminSearchField">
+                            <span>Camera</span>
+                            <select
+                              value={adminSelectedVideoDeviceId}
+                              onChange={(event) => {
+                                setAdminSelectedVideoDeviceId(event.target.value)
+                                setAdminActiveVideoSourceLabel('')
+                              }}
+                              disabled={adminVideoRecorderStatus === 'recording'}
+                            >
+                              {adminVideoInputDevices.length === 0 ? (
+                                <option value="">Default camera</option>
+                              ) : (
+                                adminVideoInputDevices.map((device) => (
+                                  <option key={`video-device-${device.deviceId}`} value={device.deviceId}>
+                                    {device.label}
+                                  </option>
+                                ))
+                              )}
+                            </select>
+                          </label>
+                          <label className="adminSearchField">
+                            <span>Microphone</span>
+                            <select
+                              value={adminSelectedAudioDeviceId}
+                              onChange={(event) => {
+                                setAdminSelectedAudioDeviceId(event.target.value)
+                                setAdminActiveAudioSourceLabel('')
+                              }}
+                              disabled={adminVideoRecorderStatus === 'recording'}
+                            >
+                              {adminAudioInputDevices.length === 0 ? (
+                                <option value="">Default microphone</option>
+                              ) : (
+                                adminAudioInputDevices.map((device) => (
+                                  <option key={`audio-device-${device.deviceId}`} value={device.deviceId}>
+                                    {device.label}
+                                  </option>
+                                ))
+                              )}
+                            </select>
+                          </label>
+                        </div>
+                        <button
+                          type="button"
+                          className="secondary adminRefreshDevicesBtn"
+                          onClick={() => void loadAdminMediaDevices({ requestPermission: true })}
+                          disabled={adminVideoRecorderStatus === 'recording'}
+                        >
+                          Refresh sources
+                        </button>
+                      </div>
+
+                      {/* ── Recording options ── */}
+                      <div className="adminSetupGroup">
+                        <p className="adminSetupGroupLabel">Recording Options</p>
+                        <label className="adminVideoBlurToggle">
+                          <input
+                            type="checkbox"
+                            checked={adminShouldBlurBackground}
                             onChange={(event) => {
-                              setAdminSelectedVideoDeviceId(event.target.value)
-                              setAdminActiveVideoSourceLabel('')
+                              setAdminShouldBlurBackground(event.target.checked)
+                              setAdminBackgroundBlurState(event.target.checked ? 'requested' : 'off')
+                              setAdminVideoRecorderMessage('')
                             }}
-                            disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                          >
-                            {adminVideoInputDevices.length === 0 ? (
-                              <option value="">Default camera</option>
-                            ) : (
-                              adminVideoInputDevices.map((device) => (
-                                <option key={`video-device-${device.deviceId}`} value={device.deviceId}>
-                                  {device.label}
-                                </option>
-                              ))
-                            )}
-                          </select>
+                            disabled={adminVideoRecorderStatus === 'recording'}
+                          />
+                          <span>
+                            <strong>Blur background</strong>
+                            <small>
+                              {adminBackgroundBlurState === 'enabled'
+                                ? 'Native blur enabled for this recording.'
+                                : adminBackgroundBlurState === 'unsupported'
+                                  ? 'Not available on this browser/camera.'
+                                  : 'Uses browser or camera support when available.'}
+                            </small>
+                          </span>
                         </label>
-                        <label className="adminSearchField">
-                          <span>Microphone source</span>
-                          <select
-                            value={adminSelectedAudioDeviceId}
+                        <label className="adminVideoBlurToggle">
+                          <input
+                            type="checkbox"
+                            checked={Boolean(adminSubtitleStyle.videoFlipHorizontal)}
+                            onChange={(event) => updateAdminSubtitleStyle({ videoFlipHorizontal: event.target.checked })}
+                            disabled={adminVideoRecorderStatus === 'recording'}
+                          />
+                          <span>
+                            <strong>Flip video</strong>
+                            <small>Mirror the camera horizontally in preview and student playback.</small>
+                          </span>
+                        </label>
+                        <label className="adminVideoBlurToggle">
+                          <input
+                            type="checkbox"
+                            checked={adminShouldGenerateSubtitles}
                             onChange={(event) => {
-                              setAdminSelectedAudioDeviceId(event.target.value)
-                              setAdminActiveAudioSourceLabel('')
+                              const enabled = event.target.checked
+                              setAdminShouldGenerateSubtitles(enabled)
+                              setAdminSubtitleStatus(enabled ? 'idle' : 'idle')
+                              setAdminVideoRecorderMessage('')
                             }}
-                            disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                          >
-                            {adminAudioInputDevices.length === 0 ? (
-                              <option value="">Default microphone</option>
-                            ) : (
-                              adminAudioInputDevices.map((device) => (
-                                <option key={`audio-device-${device.deviceId}`} value={device.deviceId}>
-                                  {device.label}
-                                </option>
-                              ))
-                            )}
-                          </select>
+                            disabled={adminVideoRecorderStatus === 'recording'}
+                          />
+                          <span>
+                            <strong>Auto-sync subtitles</strong>
+                            <small>
+                              {isAdminBackendTranscribing
+                                ? 'Syncing subtitles to your voice locally…'
+                                : adminShouldGenerateSubtitles
+                                  ? 'Generated in browser after recording — free, no API cost.'
+                                  : 'Off — add subtitles manually in the Subtitles step.'}
+                            </small>
+                          </span>
+                        </label>
+                        <label className="adminVideoBlurToggle">
+                          <input
+                            type="checkbox"
+                            checked={adminTeleprompterMode}
+                            onChange={(event) => setAdminTeleprompterMode(event.target.checked)}
+                            disabled={adminVideoRecorderStatus === 'recording'}
+                          />
+                          <span>
+                            <strong>Teleprompter mode</strong>
+                            <small>Show a larger read-along prompt beside the preview while recording.</small>
+                          </span>
                         </label>
                       </div>
-                      <button
-                        type="button"
-                        className="secondary adminRefreshDevicesBtn"
-                        onClick={() => void loadAdminMediaDevices({ requestPermission: true })}
-                        disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                      >
-                        Refresh Sources
-                      </button>
-                      <label className="adminVideoBlurToggle">
-                        <input
-                          type="checkbox"
-                          checked={adminShouldBlurBackground}
-                          onChange={(event) => {
-                            setAdminShouldBlurBackground(event.target.checked)
-                            setAdminBackgroundBlurState(event.target.checked ? 'requested' : 'off')
-                            setAdminVideoRecorderMessage('')
-                          }}
-                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                        />
-                        <span>
-                          <strong>Blur background</strong>
-                          <small>
-                            {adminBackgroundBlurState === 'enabled'
-                              ? 'Native blur enabled for this recording.'
-                              : adminBackgroundBlurState === 'unsupported'
-                                ? 'Not available on this browser/camera.'
-                                : 'Uses browser or camera support when available.'}
-                          </small>
-                        </span>
-                      </label>
-                      <label className="adminVideoBlurToggle">
-                        <input
-                          type="checkbox"
-                          checked={Boolean(adminSubtitleStyle.videoFlipHorizontal)}
-                          onChange={(event) => updateAdminSubtitleStyle({ videoFlipHorizontal: event.target.checked })}
-                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                        />
-                        <span>
-                          <strong>Flip video</strong>
-                          <small>Mirror the camera horizontally in admin preview and student playback.</small>
-                        </span>
-                      </label>
-                      <label className="adminVideoBlurToggle">
-                        <input
-                          type="checkbox"
-                          checked={adminShouldGenerateSubtitles}
-                          onChange={(event) => {
-                            const enabled = event.target.checked
-                            setAdminShouldGenerateSubtitles(enabled)
-                            setAdminSubtitleStatus(enabled ? 'idle' : 'idle')
-                            setAdminVideoRecorderMessage('')
-                          }}
-                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                        />
-                        <span>
-                          <strong>Auto-sync subtitles (free)</strong>
-                          <small>
-                            {isAdminBackendTranscribing
-                              ? 'Matching subtitles to your voice on this device…'
-                              : adminShouldGenerateSubtitles
-                                ? 'After you stop, subtitles are generated locally in your browser — no API cost. First sync downloads a small speech model (~40 MB), then it is cached.'
-                                : 'Off — add subtitles manually in the Subtitles step.'}
-                          </small>
-                        </span>
-                      </label>
-                      <label className="adminVideoBlurToggle">
-                        <input
-                          type="checkbox"
-                          checked={adminTeleprompterMode}
-                          onChange={(event) => setAdminTeleprompterMode(event.target.checked)}
-                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
-                        />
-                        <span>
-                          <strong>Teleprompter mode</strong>
-                          <small>Show a bigger read-along prompt beside the preview while recording.</small>
-                        </span>
-                      </label>
                       <div className="adminRecordingReadinessCard">
                         <div className="adminRecordingReadinessHeader">
                           <div>
@@ -25151,13 +25216,35 @@ function App() {
                       ) : null}
                       {adminVideoRecorderStatus === 'uploading' ? (
                         <div className="adminVideoUploadProgressWrap">
+                          <div className="adminVideoUploadProgressHeader">
+                            <span className="adminVideoUploadProgressLabel">
+                              Uploading "{adminBgUpload?.topicTitle || 'video'}"…
+                            </span>
+                            <span className="adminVideoUploadProgressPct">{adminVideoUploadProgress}%</span>
+                          </div>
                           <div className="adminVideoUploadProgress" aria-label="Video upload progress">
                             <div style={{ width: `${adminVideoUploadProgress}%` }} />
-                            <span>{adminVideoUploadProgress}%</span>
                           </div>
-                          <button type="button" className="secondary" onClick={cancelAdminVideoUpload}>
-                            Cancel Upload
-                          </button>
+                          <div className="adminActionRow">
+                            <button type="button" className="adminStudioButton-primary" onClick={releaseStudioForNewRecording}>
+                              Record new video now
+                            </button>
+                            <button type="button" className="secondary adminStudioButton-danger" onClick={cancelAdminVideoUpload}>
+                              Cancel upload
+                            </button>
+                          </div>
+                          <p className="meta">The upload continues in the background — click <strong>Record new video now</strong> to start another recording immediately.</p>
+                        </div>
+                      ) : null}
+                      {adminBgUpload?.done ? (
+                        <div className="adminVideoBgUploadBanner adminVideoBgUploadBanner-success">
+                          <span>✓ "{adminBgUpload.topicTitle}" published successfully</span>
+                          <button type="button" className="secondary" onClick={() => setAdminBgUpload(null)}>Dismiss</button>
+                        </div>
+                      ) : adminBgUpload?.error ? (
+                        <div className="adminVideoBgUploadBanner adminVideoBgUploadBanner-error">
+                          <span>Upload failed: {adminBgUpload.error}</span>
+                          <button type="button" className="secondary" onClick={() => setAdminBgUpload(null)}>Dismiss</button>
                         </div>
                       ) : null}
                       {adminRecordedVideoUrl && adminSelectedVideoAsset && adminVideoEditMode === 'fresh' ? (
@@ -25199,7 +25286,7 @@ function App() {
                             type="button"
                             className={adminRecordedVideoUrl ? 'adminStudioButton-soft' : 'adminStudioButton-primary'}
                             onClick={requestAdminVideoRecording}
-                            disabled={adminIsPostProcessingBlur || adminVideoRecorderStatus === 'uploading' || !adminSelectedVideoTopic || adminRecordCountdown !== null}
+                            disabled={adminIsPostProcessingBlur || !adminSelectedVideoTopic || adminRecordCountdown !== null}
                           >
                             {adminRecordedVideoUrl ? 'Retake' : 'Record'}
                           </button>
@@ -26085,6 +26172,17 @@ function App() {
                             <span>Part 1 Notes ({fullExamPlan.part1Questions.length} questions)</span>
                             <span className="prepAccordionTip">💡 ตอบสั้น 2-3 ประโยคพอ</span>
                           </summary>
+                          {prepPart1SampleVideos.length > 0 ? (
+                            <div className="prepSampleVideoShelf" aria-label="Part 1 sample videos">
+                              {prepPart1SampleVideos.map((item) => (
+                                <SpeakingPart2SamplePanel
+                                  key={`prep-p1-sample-${item.id}`}
+                                  sample={item.sample}
+                                  className="speakingP2SamplePanel--tablet"
+                                />
+                              ))}
+                            </div>
+                          ) : null}
                           <div className="questionNoteGrid">
                             {fullExamPlan.part1Questions.map((question, index) => (
                               <label key={`full-p1-note-${index}`} className="questionNoteItem">
@@ -26150,6 +26248,17 @@ function App() {
                             <span>Part 3 Notes ({fullExamPlan.part3Questions.length} questions)</span>
                             <span className="prepAccordionTip">💡 ใช้ Because / However / For example</span>
                           </summary>
+                          {prepPart3SampleVideos.length > 0 ? (
+                            <div className="prepSampleVideoShelf" aria-label="Part 3 sample videos">
+                              {prepPart3SampleVideos.map((item) => (
+                                <SpeakingPart2SamplePanel
+                                  key={`prep-p3-sample-${item.id}`}
+                                  sample={item.sample}
+                                  className="speakingP2SamplePanel--tablet"
+                                />
+                              ))}
+                            </div>
+                          ) : null}
                           <div className="questionNoteGrid">
                             {fullExamPlan.part3Questions.map((question, index) => (
                               <label key={`full-p3-note-${index}`} className="questionNoteItem">
@@ -26178,31 +26287,44 @@ function App() {
                         </details>
                       </div>
                     ) : isQuestionByQuestionMode ? (
-                      <div className="questionNoteGrid">
-                        {activeQuestionList.map((question, index) => (
-                          <label key={`prep-note-${index}`} className="questionNoteItem">
-                            <p className="questionNotePrompt">{question}</p>
-                            {renderRecommendationDropdown({
-                              title: selectedTestMode === 'part1' ? 'Part 1 vocabulary guide' : 'Part 3 speaking guide',
-                              question,
-                              items:
-                                selectedTestMode === 'part1'
-                                  ? getPart1Recommendations(question, buildPart1RecommendationExtras(activeTopic, question))
-                                  : getPart3Recommendations(question, buildPart3RecommendationExtras(activeTopic, question))
-                            })}
-                            <textarea
-                              value={questionPrepNotes[String(index)] || ''}
-                              onChange={(event) =>
-                                setQuestionPrepNotes((current) => ({
-                                  ...current,
-                                  [String(index)]: event.target.value
-                                }))
-                              }
-                              placeholder={`Key points for: ${question}`}
-                            />
-                          </label>
-                        ))}
-                      </div>
+                      <>
+                        {(selectedTestMode === 'part1' ? prepPart1SampleVideos : prepPart3SampleVideos).length > 0 ? (
+                          <div className="prepSampleVideoShelf" aria-label={`${SPEAKING_MODE_LABELS[selectedTestMode]} sample videos`}>
+                            {(selectedTestMode === 'part1' ? prepPart1SampleVideos : prepPart3SampleVideos).map((item) => (
+                              <SpeakingPart2SamplePanel
+                                key={`prep-${selectedTestMode}-sample-${item.id}`}
+                                sample={item.sample}
+                                className="speakingP2SamplePanel--tablet"
+                              />
+                            ))}
+                          </div>
+                        ) : null}
+                        <div className="questionNoteGrid">
+                          {activeQuestionList.map((question, index) => (
+                            <label key={`prep-note-${index}`} className="questionNoteItem">
+                              <p className="questionNotePrompt">{question}</p>
+                              {renderRecommendationDropdown({
+                                title: selectedTestMode === 'part1' ? 'Part 1 vocabulary guide' : 'Part 3 speaking guide',
+                                question,
+                                items:
+                                  selectedTestMode === 'part1'
+                                    ? getPart1Recommendations(question, buildPart1RecommendationExtras(activeTopic, question))
+                                    : getPart3Recommendations(question, buildPart3RecommendationExtras(activeTopic, question))
+                              })}
+                              <textarea
+                                value={questionPrepNotes[String(index)] || ''}
+                                onChange={(event) =>
+                                  setQuestionPrepNotes((current) => ({
+                                    ...current,
+                                    [String(index)]: event.target.value
+                                  }))
+                                }
+                                placeholder={`Key points for: ${question}`}
+                              />
+                            </label>
+                          ))}
+                        </div>
+                      </>
                     ) : (
                       <label className="questionNoteItem">
                         <span>Part 2 Note</span>
@@ -26315,9 +26437,6 @@ function App() {
                           ) : (
                             <>
                               <h3>Follow-up Question {fullExamPart3Index + 1}/3</h3>
-                              {fullExamCurrentQuestionSampleVideo ? (
-                                <SpeakingPart2SamplePanel sample={fullExamCurrentQuestionSampleVideo} />
-                              ) : null}
                               <p>{fullExamCurrentQuestion}</p>
                               <p className="promptSub">คุณมีเวลา 1 นาทีสำหรับคำถามนี้ครับ ตอบให้มี opinion + reason + example สั้น ๆ</p>
                             </>
@@ -26390,9 +26509,6 @@ function App() {
                                 </>
                               ) : (
                                 <>
-                                  {fullExamCurrentQuestionSampleVideo ? (
-                                    <SpeakingPart2SamplePanel sample={fullExamCurrentQuestionSampleVideo} />
-                                  ) : null}
                                   <p>{fullExamCurrentQuestion}</p>
                                   {fullExamPhase === 'part1' &&
                                     renderRecommendationDropdown({
@@ -26432,7 +26548,6 @@ function App() {
                           <h3>
                             Question {currentQuestionIndex + 1}/{activeQuestionList.length}
                           </h3>
-                          {activeQuestionSampleVideo ? <SpeakingPart2SamplePanel sample={activeQuestionSampleVideo} /> : null}
                           <p>{activeQuestion}</p>
                           {renderRecommendationDropdown({
                             title: selectedTestMode === 'part1' ? 'Part 1 vocabulary guide' : 'Part 3 speaking guide',

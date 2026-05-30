@@ -7327,6 +7327,25 @@ body,
   gap: 14px;
 }
 
+/* ── Setup groups ── */
+.adminSetupGroup {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  background: #f8fbff;
+  border: 1px solid #dbe8f8;
+  border-radius: 14px;
+}
+
+.adminSetupGroupLabel {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
 .adminVideoDeviceGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -7342,10 +7361,53 @@ body,
   grid-template-columns: auto minmax(0, 1fr);
   gap: 10px;
   align-items: center;
-  padding: 12px;
+  padding: 10px 12px;
   border: 1px solid #d8e4f7;
-  border-radius: 14px;
-  background: #f8fbff;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+/* ── Background upload progress ── */
+.adminVideoUploadProgressHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.adminVideoUploadProgressLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e3a6e;
+}
+
+.adminVideoUploadProgressPct {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #2563eb;
+}
+
+.adminVideoBgUploadBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.adminVideoBgUploadBanner-success {
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.adminVideoBgUploadBanner-error {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
 }
 
 .adminVideoBlurToggle input {

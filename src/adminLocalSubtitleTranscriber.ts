@@ -28,8 +28,8 @@ export type LocalTranscriptionResult = {
 
 const WHISPER_SAMPLE_RATE = 16000
 const WHISPER_BASE_OPTIONS = {
-  chunk_length_s: 28,
-  stride_length_s: 4,
+  chunk_length_s: 30,
+  stride_length_s: 5,
   language: 'english',
   task: 'transcribe',
   sampling_rate: WHISPER_SAMPLE_RATE
@@ -42,8 +42,15 @@ let transcriberPromise: ReturnType<typeof pipeline> | null = null
 
 const ensureTranscriber = async (onProgress?: (message: string) => void) => {
   if (!transcriberPromise) {
-    onProgress?.('Loading free speech model (first use downloads ~40 MB, then cached in your browser)…')
+    onProgress?.('Loading speech model (first use ~40 MB download, then cached)…')
     env.allowLocalModels = false
+    // Use all available CPU threads for faster WASM inference
+    const threads = typeof navigator !== 'undefined' && navigator.hardwareConcurrency
+      ? Math.max(2, Math.min(navigator.hardwareConcurrency, 8))
+      : 4
+    ;(env as Record<string, unknown>).backends = {
+      onnx: { wasm: { numThreads: threads } }
+    }
     transcriberPromise = pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny.en', {
       quantized: true,
       progress_callback: (progress: { status?: string; progress?: number; file?: string }) => {
@@ -211,24 +218,29 @@ const prepareWhisperAudio = async (
 ): Promise<Float32Array> => {
   onProgress?.('Extracting audio from your recording…')
 
-  const isLikelyVideo = /^video\//i.test(videoBlob.type) || videoBlob.type.includes('webm')
   let samples: Float32Array | null = null
 
-  if (isLikelyVideo) {
+  // Fast path: decodeAudioData is near-instant (works in Chrome/Safari for WebM/MP4)
+  try {
+    const direct = await decodeAudioBlobDirect(videoBlob)
+    if (direct?.length) {
+      const trimmed = trimAudioSamples(direct, trimStartSeconds, trimEndSeconds)
+      // Accept if we got meaningful audio (RMS above silence threshold)
+      if (measureAudioRms(trimmed) > 0.00005) {
+        samples = trimmed
+      }
+    }
+  } catch {
+    // fast path failed, continue to fallback
+  }
+
+  // Slow fallback: real-time video playback capture (only used if fast path failed)
+  if (!samples?.length) {
+    onProgress?.('Fast audio decode unavailable — using video capture mode (takes one full playthrough)…')
     try {
       samples = await extractMonoAudioFromVideoBlob(videoBlob, trimStartSeconds, trimEndSeconds)
     } catch (error) {
-      const fallback = await decodeAudioBlobDirect(videoBlob)
-      if (fallback?.length) {
-        samples = trimAudioSamples(fallback, trimStartSeconds, trimEndSeconds)
-      } else {
-        throw error
-      }
-    }
-  } else {
-    samples = await decodeAudioBlobDirect(videoBlob)
-    if (samples?.length) {
-      samples = trimAudioSamples(samples, trimStartSeconds, trimEndSeconds)
+      if (!samples?.length) throw error
     }
   }
 

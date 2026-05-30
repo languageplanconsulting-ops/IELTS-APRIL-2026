@@ -100,9 +100,10 @@ export function SpeakingPart2SampleBadge() {
 
 type SpeakingPart2SamplePanelProps = {
   sample: SpeakingPart2SampleVideo
+  className?: string
 }
 
-export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelProps) {
+export function SpeakingPart2SamplePanel({ sample, className = '' }: SpeakingPart2SamplePanelProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [thumbFailed, setThumbFailed] = useState(false)
   const [videoTime, setVideoTime] = useState(0)
@@ -240,7 +241,7 @@ export function SpeakingPart2SamplePanel({ sample }: SpeakingPart2SamplePanelPro
 
   return (
     <section
-      className="speakingP2SamplePanel"
+      className={`speakingP2SamplePanel${className ? ` ${className}` : ''}`}
       aria-label={`พี่ดอย speaking sample: ${sample.shortLabel}`}
       onContextMenu={(event) => event.preventDefault()}
     >
