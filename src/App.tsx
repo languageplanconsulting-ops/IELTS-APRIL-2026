@@ -22065,40 +22065,63 @@ function App() {
                     onMouseUp={handleReadingSelection}
                   >
                     <div className="readingPencilStage" ref={readingPencilStageRef}>
-                      {activeReadingPassage.bodyParagraphs.map((paragraph, index) => {
-                        const sectionMatch = paragraph.match(/^([A-G])\.\s+([\s\S]+)$/)
-                        if (sectionMatch && isAdvancedReadingExam) {
-                          return (
-                            <section key={`reading-section-${index}`} className="readingPassageSection">
-                              <p className="readingPassageSectionLabel" aria-hidden="true">
-                                {sectionMatch[1]}
-                              </p>
-                              <p className="readingPassageSectionText">
-                                {renderPassageParagraphWithHighlights(
-                                  sectionMatch[2],
-                                  activeReadingPassage.number,
-                                  activeReadingHint &&
-                                    activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
-                                    ? activeReadingHintNeedles
-                                    : ''
+                      {(() => {
+                        const highlightNeedles =
+                          activeReadingHint &&
+                          activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
+                            ? activeReadingHintNeedles
+                            : ''
+                        if (isAdvancedReadingExam) {
+                          type AdvSection = { label: string; paragraphs: string[] }
+                          const sections: AdvSection[] = []
+                          for (const raw of activeReadingPassage.bodyParagraphs) {
+                            const paragraph = String(raw || '').trim()
+                            if (!paragraph) continue
+                            const sectionMatch = paragraph.match(/^([A-G])(?:\.|:)?\s+([\s\S]+)$/)
+                            if (sectionMatch) {
+                              sections.push({ label: sectionMatch[1], paragraphs: [sectionMatch[2].trim()] })
+                            } else if (sections.length) {
+                              sections[sections.length - 1].paragraphs.push(paragraph)
+                            } else {
+                              sections.push({ label: '', paragraphs: [paragraph] })
+                            }
+                          }
+                          if (sections.length > 0 && sections.some((section) => section.label)) {
+                            return sections.map((section, index) => (
+                              <section
+                                key={`reading-section-${index}`}
+                                className={`readingPassageSection ${section.label ? '' : 'readingPassageSection-noLabel'}`.trim()}
+                              >
+                                {section.label && (
+                                  <p className="readingPassageSectionLabel" aria-hidden="true">
+                                    {section.label}
+                                  </p>
                                 )}
-                              </p>
-                            </section>
-                          )
+                                <div className="readingPassageSectionText">
+                                  {section.paragraphs.map((para, paraIndex) => (
+                                    <p key={`reading-section-${index}-para-${paraIndex}`}>
+                                      {renderPassageParagraphWithHighlights(
+                                        para,
+                                        activeReadingPassage.number,
+                                        highlightNeedles
+                                      )}
+                                    </p>
+                                  ))}
+                                </div>
+                              </section>
+                            ))
+                          }
                         }
-                        return (
+                        return activeReadingPassage.bodyParagraphs.map((paragraph, index) => (
                           <p key={`reading-paragraph-${index}`}>
                             {renderPassageParagraphWithHighlights(
                               paragraph,
                               activeReadingPassage.number,
-                              activeReadingHint &&
-                                activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
-                                  ? activeReadingHintNeedles
-                                  : ''
+                              highlightNeedles
                             )}
                           </p>
-                        )
-                      })}
+                        ))
+                      })()}
                       <canvas
                         ref={readingPencilCanvasRef}
                         className={`readingPencilCanvas ${readingSmartPencilMode ? 'is-active' : ''}`.trim()}

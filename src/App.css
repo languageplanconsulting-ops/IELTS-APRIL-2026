@@ -9987,9 +9987,9 @@ body,
 
 .readingPassageSection {
   display: grid;
-  grid-template-columns: 2.1rem minmax(0, 1fr);
-  gap: 12px 14px;
-  padding: 16px 0;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 14px 16px;
+  padding: 20px 0;
   border-top: 1px solid #e2e8f0;
 }
 
@@ -9998,23 +9998,38 @@ body,
   padding-top: 4px;
 }
 
+.readingPassageSection-noLabel {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .readingPassageSectionLabel {
   margin: 0;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 2.4rem;
+  height: 2.4rem;
   display: grid;
   place-items: center;
   border-radius: 10px;
   background: linear-gradient(180deg, #dbeafe 0%, #eff6ff 100%);
   border: 2px solid #93c5fd;
   color: #1d4ed8;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 800;
   line-height: 1;
+  position: sticky;
+  top: 8px;
+  align-self: start;
 }
 
 .readingPassageSectionText {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.readingPassageSectionText p {
+  margin: 0;
+  text-indent: 0;
 }
 
 .readingTaskInstruction {
