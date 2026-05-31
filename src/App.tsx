@@ -3645,6 +3645,12 @@ const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   'general-training': 'General Training Reading'
 }
 
+const READING_BRIEFING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
+  normal: 'Reading ปกติ',
+  advanced: 'Advanced Reading',
+  'general-training': 'General Training Reading'
+}
+
 const READING_COLLECTION_OPTIONS = [
   'IELTS Academic Reading Jan 2026',
   'IELTS Academic Reading Feb 2026',
@@ -4921,11 +4927,43 @@ const findReadingQuestionRange = (passage: ReadingPassageRecord | null, question
 const extractReadingQuestionBlock = (questionSectionText: string, questionNumber: number) => {
   const escapedNumber = String(questionNumber).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const pattern = new RegExp(
-    `(?:^|\\n)\\s*${escapedNumber}\\s*[.)]\\s+([\\s\\S]*?)(?=\\n\\s*\\d+\\s*[.)]\\s+|\\n\\s*\\d+\\s*[.)]?\\s+|$)`,
+    `(?:^|\\n)\\s*${escapedNumber}\\s*(?:[.)]\\s+|\\s+)([\\s\\S]*?)(?=\\n\\s*\\d+\\s*(?:[.)\\s]|[A-Za-z"'(])|$)`,
     'i'
   )
   const match = String(questionSectionText || '').match(pattern)
   return String(match?.[1] || '').trim()
+}
+
+const parseReadingLetterOptionsFromText = (text: string): ReadingPdoyMultipleChoiceOption[] => {
+  const options: ReadingPdoyMultipleChoiceOption[] = []
+  const seen = new Set<string>()
+  const lines = String(text || '')
+    .split('\n')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index]
+    const soloLetter = line.match(/^([A-G])$/i)
+    if (soloLetter && lines[index + 1] && !/^\d+[\.)]?\s/.test(lines[index + 1])) {
+      const letter = soloLetter[1].toUpperCase()
+      if (!seen.has(letter)) {
+        seen.add(letter)
+        options.push({ letter, text: lines[index + 1] })
+      }
+      index += 1
+      continue
+    }
+
+    const match =
+      line.match(READING_MCQ_OPTION_LINE) || line.match(/^([A-G])[\).:\-]?\s+(.+)$/i)
+    if (!match) continue
+    const letter = match[1].toUpperCase()
+    if (seen.has(letter)) continue
+    seen.add(letter)
+    options.push({ letter, text: match[2].trim() })
+  }
+  return options.sort((first, second) => first.letter.localeCompare(second.letter))
 }
 
 const stripReadingMcqOptionsFromPrompt = (prompt: string) => {
@@ -4972,7 +5010,7 @@ const getReadingMultipleChoicePromptStem = (
       .filter(Boolean)
     const stemLines: string[] = []
     for (const line of lines) {
-      if (/^[A-G][\).:\-]?\s+/i.test(line) || READING_LETTER_OPTION_LINE.test(line)) break
+      if (isReadingMcqOptionLine(line)) break
       stemLines.push(line)
     }
     if (stemLines.length) {
@@ -5018,6 +5056,30 @@ const getReadingQuestionDisplayPrompt = (
 }
 
 const READING_LETTER_OPTION_LINE = /^([A-J])\s+(.+)$/i
+const READING_MCQ_OPTION_LINE = /^([A-G])[\s\).:\-_]+(.+)$/i
+
+const isReadingMcqOptionLine = (line: string) => {
+  const trimmed = String(line || '').trim()
+  if (!trimmed || /^\d+[\.)]?\s/.test(trimmed)) return false
+  if (READING_LETTER_OPTION_LINE.test(trimmed)) return true
+  return READING_MCQ_OPTION_LINE.test(trimmed)
+}
+
+const passageHasLetteredParagraphMarkers = (passage: ReadingPassageRecord | null) => {
+  const paragraphs = (passage?.bodyParagraphs || []).map((paragraph) =>
+    String(paragraph || '').trim()
+  )
+  const standalone = paragraphs.filter((paragraph) => /^[A-I]$/i.test(paragraph))
+  if (standalone.length >= 3) return true
+  const prefixed = paragraphs.filter((paragraph) => /^[A-I]\s+[A-Z"'(]/i.test(paragraph))
+  return prefixed.length >= 3
+}
+
+const blockHasNumberedStatementQuestions = (block: string) =>
+  /(?:^|\n)\s*\d+[\.)]\s+[^\n?]{8,}/m.test(block) || /(?:^|\n)\s*\d+\s+[^\d\n?]{8,}/m.test(block)
+
+const defaultReadingMcqLetterOptions = (): ReadingPdoyMultipleChoiceOption[] =>
+  ['A', 'B', 'C', 'D'].map((letter) => ({ letter, text: letter }))
 
 const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
   const text = String(sourceText || '')
@@ -5031,7 +5093,7 @@ const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
     const optionCount = chunk
       .split('\n')
       .map((line) => line.trim())
-      .filter((line) => READING_LETTER_OPTION_LINE.test(line)).length
+      .filter((line) => isReadingMcqOptionLine(line)).length
     if (optionCount >= 2) return true
   }
 
@@ -5190,6 +5252,31 @@ const getReadingParagraphAnswerLetters = (sectionText: string) => {
   )
 }
 
+const isReadingImplicitMatchingInformationQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!question || !passage || question.answerType !== 'multiple-choice') return false
+  const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+  if (!/^[A-I]$/.test(answer)) return false
+  if (!passageHasLetteredParagraphMarkers(passage)) return false
+
+  const range = findReadingQuestionRange(passage, question)
+  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+  if (isReadingStandardMcqBlock(block)) return false
+  if (isReadingChooseTwoSectionBlock(block)) return false
+  if (isReadingFillSectionBlock(block)) return false
+  if (/choose the correct letter/i.test(block)) return false
+
+  const questionBlock = extractReadingQuestionBlock(block, question.number)
+  if (parseReadingLetterOptionsFromText(questionBlock).length >= 2) return false
+  if (!blockHasNumberedStatementQuestions(block)) return false
+
+  const prompt = String(question.prompt || '').trim()
+  if (/^which\s+two\b|^what\s+does\b.*\?$/i.test(prompt)) return false
+  return true
+}
+
 const isReadingMatchingInformationQuestion = (
   passage: ReadingPassageRecord | null,
   question: ReadingQuestion | null
@@ -5197,15 +5284,40 @@ const isReadingMatchingInformationQuestion = (
   if (!question || !passage) return false
   const range = findReadingQuestionRange(passage, question)
   const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
-  if (!/which (?:paragraph|section) contains|contains the following information/i.test(block)) {
+  const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+
+  if (/which (?:paragraph|section) contains|contains the following information/i.test(block)) {
+    const allowedLetters = getReadingParagraphAnswerLetters(block)
+    if (allowedLetters?.length) {
+      return allowedLetters.includes(answer.toUpperCase())
+    }
+    return /^[A-I]$/.test(answer)
+  }
+
+  return isReadingImplicitMatchingInformationQuestion(passage, question)
+}
+
+const isReadingImplicitMatchingStatementQuestion = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion | null
+) => {
+  if (!question || !passage || question.answerType !== 'multiple-choice') return false
+  if (isReadingMatchingHeadingQuestion(passage, question) || isReadingMatchingInformationQuestion(passage, question)) {
     return false
   }
   const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
-  const allowedLetters = getReadingParagraphAnswerLetters(block)
-  if (allowedLetters?.length) {
-    return allowedLetters.includes(answer.toUpperCase())
-  }
-  return /^[A-G]$/.test(answer)
+  if (!/^[A-J]$/i.test(answer)) return false
+
+  const range = findReadingQuestionRange(passage, question)
+  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+  if (isReadingStandardMcqBlock(block)) return false
+  if (isReadingChooseTwoSectionBlock(block)) return false
+  if (isReadingFillSectionBlock(block)) return false
+
+  const questionBlock = extractReadingQuestionBlock(block, question.number)
+  if (parseReadingLetterOptionsFromText(questionBlock).length >= 2) return false
+  if (!blockHasNumberedStatementQuestions(block)) return false
+  return true
 }
 
 const isReadingMatchingStatementQuestion = (
@@ -5216,6 +5328,7 @@ const isReadingMatchingStatementQuestion = (
   if (isReadingMatchingHeadingQuestion(passage, question) || isReadingMatchingInformationQuestion(passage, question)) {
     return false
   }
+  if (isReadingImplicitMatchingStatementQuestion(passage, question)) return true
   const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
   if (!/^[A-J]$/i.test(answer)) return false
   const range = findReadingQuestionRange(passage, question)
@@ -5299,13 +5412,18 @@ const getReadingMatchingAnswerOptions = (
   const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
 
   if (kind === 'information') {
+    const lettersFromBody = (passage.bodyParagraphs || [])
+      .map((paragraph) => String(paragraph || '').trim())
+      .map((paragraph) => {
+        if (/^[A-I]$/i.test(paragraph)) return paragraph.toUpperCase()
+        const match = paragraph.match(/^([A-I])\s+[A-Z"'(]/i)
+        return match ? match[1].toUpperCase() : null
+      })
+      .filter(Boolean) as string[]
     const letters =
       getReadingParagraphAnswerLetters(block) ||
       getReadingParagraphAnswerLetters(passage.questionSectionText || '') ||
-      (passage.bodyParagraphs || [])
-        .map((paragraph) => String(paragraph || '').trim())
-        .filter((paragraph) => /^[A-I]$/i.test(paragraph))
-        .map((paragraph) => paragraph.toUpperCase())
+      lettersFromBody
     const paragraphLetters = letters.length ? letters : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
     return paragraphLetters.map((letter) => ({ letter, text: `Paragraph ${letter}` }))
   }
@@ -5533,7 +5651,8 @@ const getReadingMatchingExcludedParagraphIndices = (
 ) =>
   isFirstReadingMatchingGroupQuestion(passage, question, allQuestions) ? [0, 1] : []
 
-const READING_CHOOSE_TWO_SECTION_PATTERN = /choose\s+two\s+letters?/i
+const READING_CHOOSE_TWO_SECTION_PATTERN =
+  /which\s+two\b|choose\s+two\s+(?:letters?|answers?|options?)/i
 
 const isReadingChooseTwoSectionBlock = (block: string) => READING_CHOOSE_TWO_SECTION_PATTERN.test(block)
 
@@ -5846,12 +5965,17 @@ const extractReadingMultipleChoiceOptions = (
   }
 
   if (isReadingMatchingInformationQuestion(passage, question)) {
+    const lettersFromBody = (passage.bodyParagraphs || [])
+      .map((paragraph) => String(paragraph || '').trim())
+      .map((paragraph) => {
+        if (/^[A-I]$/i.test(paragraph)) return paragraph.toUpperCase()
+        const match = paragraph.match(/^([A-I])\s+[A-Z"'(]/i)
+        return match ? match[1].toUpperCase() : null
+      })
+      .filter(Boolean) as string[]
     const letters =
       getReadingParagraphAnswerLetters(passage.questionSectionText || '') ||
-      (passage.bodyParagraphs || [])
-        .map((paragraph) => String(paragraph || '').trim())
-        .filter((paragraph) => /^[A-I]$/i.test(paragraph))
-        .map((paragraph) => paragraph.toUpperCase())
+      lettersFromBody
     const paragraphLetters = letters.length ? letters : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
     return paragraphLetters.map((letter) => ({
       letter,
@@ -5871,24 +5995,34 @@ const extractReadingMultipleChoiceOptions = (
   }
 
   const block = extractReadingQuestionBlock(
-    sectionBlock || passage.questionSectionText,
+    sectionBlock || passage.questionSectionText || '',
     question.number
   )
-  const optionSource = block || sectionBlock || passage.questionSectionText
-  const lines = optionSource
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-  return lines
-    .map((line) => {
-      const match = line.match(/^([A-G])[\).:\-]?\s+(.+)$/i)
-      if (!match) return null
-      return {
-        letter: match[1].toUpperCase(),
-        text: match[2].trim()
-      }
-    })
-    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
+  if (block) {
+    const options = parseReadingLetterOptionsFromText(block)
+    if (options.length) return options
+  }
+
+  if (sectionBlock && isReadingStandardMcqBlock(sectionBlock)) {
+    return []
+  }
+
+  const parsed = parseReadingLetterOptionsFromText(sectionBlock || passage.questionSectionText || '')
+  if (parsed.length >= 2) return parsed
+
+  const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+  const prompt = String(question.prompt || '').trim()
+  if (question.answerType === 'multiple-choice' && /^[A-F]$/i.test(answer)) {
+    if (/\?\s*$/.test(prompt) || /^(?:which|what|when|who|why|how)\b/i.test(prompt)) {
+      return defaultReadingMcqLetterOptions()
+    }
+    if (blockHasNumberedStatementQuestions(sectionBlock || '') && !isReadingMatchingQuestion(passage, question)) {
+      const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+      return letters.map((letter) => ({ letter, text: letter }))
+    }
+  }
+
+  return parsed
 }
 
 const isReadingOptionParaphraseMatch = (
@@ -10126,6 +10260,13 @@ function App() {
       group.questions.forEach((question) => lookup.set(question.number, group))
     })
     return lookup
+  }, [activeReadingFillQuestionGroups])
+  const activeReadingFillGroupQuestionNumbers = useMemo(() => {
+    const numbers = new Set<number>()
+    activeReadingFillQuestionGroups.forEach((group) => {
+      group.questions.forEach((question) => numbers.add(question.number))
+    })
+    return numbers
   }, [activeReadingFillQuestionGroups])
   const activeReadingChooseTwoGroups = useMemo(
     () => buildReadingChooseTwoGroups(activeReadingPassage, activeReadingQuestions),
@@ -22847,7 +22988,9 @@ function App() {
                     })}
                   </div>
 
-                  {!isAdvancedReadingExam && activeReadingPassage.questionSectionText && (
+                  {!isAdvancedReadingExam &&
+                    activeReadingPassage.questionSectionText &&
+                    activeReadingFillQuestionGroups.length === 0 && (
                     <details className="readingQuestionReference">
                       <summary>Show original question block</summary>
                       <pre>{activeReadingPassage.questionSectionText}</pre>
@@ -22874,11 +23017,12 @@ function App() {
                           ? renderReadingMatchingGroup(matchingGroup)
                           : null
                       }
-                      const fillGroup = activeReadingFillGroupByQuestionNumber.get(question.number)
-                      if (fillGroup) {
-                        return fillGroup.questions[0]?.number === question.number
-                          ? renderReadingFillQuestionGroup(fillGroup)
-                          : null
+                      if (activeReadingFillGroupQuestionNumbers.has(question.number)) {
+                        const fillGroup = activeReadingFillGroupByQuestionNumber.get(question.number)
+                        if (fillGroup?.questions[0]?.number === question.number) {
+                          return renderReadingFillQuestionGroup(fillGroup)
+                        }
+                        return null
                       }
                       if (isReadingFillQuestion(activeReadingPassage, question, isReadingMatchingQuestion)) {
                         return renderReadingFillFallbackQuestion(question)
@@ -23014,49 +23158,48 @@ function App() {
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'briefing' && activeReadingExam && activeReadingPassage && (
             <div className="readingBriefingWrap">
               <div className="readingBriefingCard">
-                <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
+                <p className="sectionLabel">{READING_BRIEFING_CATEGORY_LABELS[activeReadingExam.category]}</p>
                 <h2>{activeReadingExam.title}</h2>
                 <p className="readingBriefingSubtitle">
-                  Get ready before you start. This screen mirrors what you'd see at the start of the real exam.
+                  เตรียมตัวก่อนเริ่มทำข้อสอบ หน้านี้จำลองขั้นตอนก่อนเริ่มสอบ IELTS Reading จริง
                 </p>
                 <div className="readingBriefingGrid">
                   <div className="readingBriefingTile">
-                    <p className="sectionLabel">Passages</p>
+                    <p className="sectionLabel">บทความ</p>
                     <strong>{activeReadingPassages.length}</strong>
-                    <span>to read</span>
+                    <span>บทที่ต้องอ่าน</span>
                   </div>
                   <div className="readingBriefingTile">
-                    <p className="sectionLabel">Questions</p>
+                    <p className="sectionLabel">คำถาม</p>
                     <strong>{activeReadingAllQuestions.length}</strong>
-                    <span>total</span>
+                    <span>ข้อทั้งหมด</span>
                   </div>
                   <div className="readingBriefingTile">
-                    <p className="sectionLabel">Suggested time</p>
+                    <p className="sectionLabel">เวลาที่แนะนำ</p>
                     <strong>
-                      {activeReadingPassages.length >= 3 ? '60' : activeReadingPassages.length >= 2 ? '40' : '20'} min
+                      {activeReadingPassages.length >= 3 ? '60' : activeReadingPassages.length >= 2 ? '40' : '20'} นาที
                     </strong>
-                    <span>at exam pace</span>
+                    <span>ตามจังหวะสอบจริง</span>
                   </div>
                   {readingAttemptHistory[activeReadingExam.id] && (
                     <div className="readingBriefingTile">
-                      <p className="sectionLabel">Your best</p>
+                      <p className="sectionLabel">คะแนนดีที่สุด</p>
                       <strong>
                         {readingAttemptHistory[activeReadingExam.id].bestAccuracy ??
                           readingAttemptHistory[activeReadingExam.id].accuracy}
                         %
                       </strong>
                       <span>
-                        attempt{(readingAttemptHistory[activeReadingExam.id].attemptCount || 1) === 1 ? '' : 's'}{' '}
-                        {readingAttemptHistory[activeReadingExam.id].attemptCount || 1}
+                        ทำแล้ว {readingAttemptHistory[activeReadingExam.id].attemptCount || 1} ครั้ง
                       </span>
                     </div>
                   )}
                 </div>
                 <ul className="readingBriefingList">
-                  <li>Read carefully — answers must be exactly as in the passage where required.</li>
-                  <li>Use Smart Pencil or highlight to mark useful evidence on the left.</li>
-                  <li>The number strip on the right jumps to any question; answered ones turn green.</li>
-                  <li>Your answers and highlights autosave to this device — refresh-safe.</li>
+                  <li>อ่านให้ละเอียด — คำตอบบางข้อต้องตรงกับข้อความในบทความทุกตัวอักษร</li>
+                  <li>ใช้ Smart Pencil หรือไฮไลต์ทำเครื่องหมายหลักฐานที่สำคัญทางซ้าย</li>
+                  <li>แถบเลขคำถามด้านขวา — กดข้ามไปข้อใดก็ได้ ข้อที่ตอบแล้วจะเป็นสีเขียว</li>
+                  <li>คำตอบและไฮไลต์บันทึกอัตโนมัติบนเครื่องนี้ — รีเฟรชแล้วไม่หาย</li>
                 </ul>
                 <div className="readingBriefingActions">
                   <button
@@ -23064,14 +23207,14 @@ function App() {
                     className="secondary"
                     onClick={() => returnToReadingBank(activeReadingExam)}
                   >
-                    Back to Bank
+                    กลับไปคลังข้อสอบ
                   </button>
                   <button
                     type="button"
                     className="readingSubmitExamBtn"
                     onClick={() => setReadingAttemptStage('exam')}
                   >
-                    {Object.keys(readingAnswers).length > 0 ? 'Resume Exam' : 'Start Exam'}
+                    {Object.keys(readingAnswers).length > 0 ? 'ทำต่อ' : 'เริ่มทำข้อสอบ'}
                   </button>
                 </div>
               </div>

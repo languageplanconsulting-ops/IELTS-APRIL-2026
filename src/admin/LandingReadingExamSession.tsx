@@ -74,6 +74,11 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
     fillGroups.forEach((group) => group.questions.forEach((question) => lookup.set(question.number, group)))
     return lookup
   }, [fillGroups])
+  const fillGroupQuestionNumbers = useMemo(() => {
+    const numbers = new Set<number>()
+    fillGroups.forEach((group) => group.questions.forEach((question) => numbers.add(question.number)))
+    return numbers
+  }, [fillGroups])
 
   if (!passage) {
     return (
@@ -424,7 +429,7 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
               })}
             </div>
 
-            {passage.questionSectionText && (
+            {passage.questionSectionText && fillGroups.length === 0 && (
               <details className="readingQuestionReference">
                 <summary>Show original question block</summary>
                 <pre>{passage.questionSectionText}</pre>
@@ -433,11 +438,13 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
 
             <div className="readingQuestionList">
               {questions.map((question) => {
-                const fillGroup = fillGroupByNumber.get(question.number)
-                if (fillGroup && fillGroup.questions[0]?.number === question.number) {
-                  return renderFillGroup(fillGroup)
+                if (fillGroupQuestionNumbers.has(question.number)) {
+                  const fillGroup = fillGroupByNumber.get(question.number)
+                  if (fillGroup?.questions[0]?.number === question.number) {
+                    return renderFillGroup(fillGroup)
+                  }
+                  return null
                 }
-                if (fillGroup) return null
                 if (isReadingFillQuestion(passage, question, noopMatchingCheck)) {
                   return renderFillFallback(question)
                 }
