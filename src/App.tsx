@@ -699,6 +699,32 @@ const normalizeSpeakingSampleLookupId = (value: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
 
+const hasUploadedSpeakingSampleAsset = (
+  assets: Record<string, SpeakingSampleVideoAsset>,
+  sampleId: string
+) => Boolean(assets[sampleId]?.videoUrl || assets[normalizeSpeakingSampleLookupId(sampleId)]?.videoUrl)
+
+const topicHasSpeakingSampleInBank = (
+  topic: SpeakingTopic,
+  mode: SpeakingTestMode,
+  assets: Record<string, SpeakingSampleVideoAsset>
+): boolean => {
+  if (mode === 'part2') {
+    if (hasUploadedSpeakingSampleAsset(assets, topic.id)) return true
+    return Boolean(
+      resolveSpeakingPart2SampleVideo({ id: topic.id, title: topic.title, prompt: topic.prompt })
+    )
+  }
+  if (mode === 'part1' || mode === 'part3') {
+    if (hasUploadedSpeakingSampleAsset(assets, buildSpeakingSampleTopicId(mode, topic.id))) return true
+    const questions = getSpeakingTopicQuestionList(topic)
+    return questions.some((_, index) =>
+      hasUploadedSpeakingSampleAsset(assets, buildSpeakingSampleQuestionId(mode, topic.id, index))
+    )
+  }
+  return false
+}
+
 const formatAdminCountdownClock = (seconds: number) => {
   const safeSeconds = Math.max(0, Math.ceil(Number(seconds) || 0))
   const minutes = Math.floor(safeSeconds / 60)
@@ -6126,34 +6152,75 @@ const sanitizeReadingQuestionPromptForDisplay = (prompt: string, _correctAnswer:
   )
 }
 
-const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
-  const cleaned = cleanReadingPassageParagraphsShared(paragraphs)
-  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
-  if (cleaned.length > 2 || totalLength < 3000) return cleaned
+const READING_PASSAGE_SECTION_LETTER_PATTERN = /^([A-G])(?:\.\s*|\s+(?=[A-Z"'(]))/
 
-  const source = cleaned.join('\n\n')
-  const sectionParts = source
-    .split(/(?=(?:^|\s)([A-G])\s+(?=[A-Z"'(]))/)
-    .map((part) => part.trim())
-    .filter(Boolean)
-  if (sectionParts.length >= 3) {
-    return sectionParts.map((part) => part.replace(/^\s*([A-G])\s+/, '$1. '))
-  }
-
-  const sentences = source.match(/[^.!?]+[.!?]+(?:['"]|\s+|$)|[^.!?]+$/g) || [source]
-  const chunks: string[] = []
-  let current = ''
-  for (const sentence of sentences) {
-    const next = `${current}${sentence}`.trim()
-    if (current && next.length > 900) {
-      chunks.push(current.trim())
-      current = sentence
-    } else {
-      current = next
+const mergeBrokenReadingPassageParagraphs = (paragraphs: string[]) => {
+  const merged: string[] = []
+  for (const paragraph of paragraphs) {
+    const trimmed = String(paragraph || '').trim()
+    if (!trimmed) continue
+    const previous = merged[merged.length - 1]
+    const startsNewSection = READING_PASSAGE_SECTION_LETTER_PATTERN.test(trimmed)
+    const previousEndsIncomplete =
+      previous &&
+      !startsNewSection &&
+      !/[.!?]["']?\s*$/.test(previous) &&
+      !/^>\s*\|/.test(trimmed)
+    if (previousEndsIncomplete) {
+      merged[merged.length - 1] = `${previous} ${trimmed}`.replace(/\s+/g, ' ').trim()
+      continue
     }
+    merged.push(trimmed)
   }
-  if (current.trim()) chunks.push(current.trim())
-  return chunks.length >= 2 ? chunks : cleaned
+  return merged
+}
+
+const normalizeLetteredReadingPassageParagraphs = (paragraphs: string[]) =>
+  paragraphs.map((paragraph) => {
+    const match = paragraph.match(READING_PASSAGE_SECTION_LETTER_PATTERN)
+    if (!match) return paragraph
+    const body = paragraph.slice(match[0].length).trim()
+    return body ? `${match[1]}. ${body}` : `${match[1]}.`
+  })
+
+const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
+  const cleaned = mergeBrokenReadingPassageParagraphs(cleanReadingPassageParagraphsShared(paragraphs))
+  const letteredSectionCount = cleaned.filter((paragraph) =>
+    READING_PASSAGE_SECTION_LETTER_PATTERN.test(paragraph)
+  ).length
+
+  if (letteredSectionCount >= 3) {
+    return normalizeLetteredReadingPassageParagraphs(cleaned)
+  }
+
+  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
+  if (cleaned.length <= 2 && totalLength >= 3000) {
+    const source = cleaned.join('\n\n')
+    const sectionParts = source
+      .split(/(?=(?:^|\s)([A-G])\s+(?=[A-Z"'(]))/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+    if (sectionParts.length >= 3) {
+      return normalizeLetteredReadingPassageParagraphs(sectionParts)
+    }
+
+    const sentences = source.match(/[^.!?]+[.!?]+(?:['"]|\s+|$)|[^.!?]+$/g) || [source]
+    const chunks: string[] = []
+    let current = ''
+    for (const sentence of sentences) {
+      const next = `${current}${sentence}`.trim()
+      if (current && next.length > 900) {
+        chunks.push(current.trim())
+        current = sentence
+      } else {
+        current = next
+      }
+    }
+    if (current.trim()) chunks.push(current.trim())
+    if (chunks.length >= 2) return chunks
+  }
+
+  return cleaned
 }
 
 const normalizeReadingQuestionForDisplay = (
@@ -10254,8 +10321,26 @@ function App() {
       if (!map.has(cat)) map.set(cat, [])
       map.get(cat)!.push(topic)
     }
-    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]))
-  }, [topicBankFilteredTopics])
+    const sortTopicsWithSamplesFirst = (topics: SpeakingTopic[]) =>
+      [...topics].sort((a, b) => {
+        const aHasSample = topicHasSpeakingSampleInBank(a, selectedTestMode, speakingSampleVideoAssets)
+        const bHasSample = topicHasSpeakingSampleInBank(b, selectedTestMode, speakingSampleVideoAssets)
+        if (aHasSample !== bHasSample) return aHasSample ? -1 : 1
+        return a.title.localeCompare(b.title)
+      })
+    return [...map.entries()]
+      .sort((a, b) => {
+        const aSampleCount = a[1].filter((topic) =>
+          topicHasSpeakingSampleInBank(topic, selectedTestMode, speakingSampleVideoAssets)
+        ).length
+        const bSampleCount = b[1].filter((topic) =>
+          topicHasSpeakingSampleInBank(topic, selectedTestMode, speakingSampleVideoAssets)
+        ).length
+        if (aSampleCount !== bSampleCount) return bSampleCount - aSampleCount
+        return a[0].localeCompare(b[0])
+      })
+      .map(([category, groupTopics]) => [category, sortTopicsWithSamplesFirst(groupTopics)] as const)
+  }, [topicBankFilteredTopics, selectedTestMode, speakingSampleVideoAssets])
 
   const topicBankFlatIds = useMemo(
     () => topicBankGrouped.flatMap(([, groupTopics]) => groupTopics.map((t) => t.id)),
@@ -18845,9 +18930,13 @@ function App() {
           </div>
         </div>
         {group.instruction && (
-          <pre className={`readingFillInstruction ${isAdvancedReadingExam ? 'readingFillInstruction-advanced' : ''}`.trim()}>
-            {group.instruction}
-          </pre>
+          <div
+            className={`readingTaskInstruction ${isAdvancedReadingExam ? 'readingTaskInstruction-advanced' : ''}`.trim()}
+          >
+            {group.instruction.split('\n').map((line, index) => (
+              <p key={`${group.id}-instruction-${index}`}>{line}</p>
+            ))}
+          </div>
         )}
         <div
           className={`readingFillOriginalBlock ${
@@ -18990,8 +19079,39 @@ function App() {
           : 'Paragraphs'
 
     return (
-      <article key={`reading-matching-group-${group.id}`} className="readingQuestionCard readingMatchingInfoGroup">
-        <pre className="readingMatchingInfoInstruction">{group.instruction}</pre>
+      <article key={`reading-matching-group-${group.id}`} className={`readingQuestionCard readingMatchingInfoGroup ${isAdvancedReadingExam ? 'readingMatchingInfoGroup-advanced' : ''}`.trim()}>
+        <div className="readingFillGroupHeader">
+          <div>
+            <p className="readingQuestionNumber">
+              Questions {group.start}-{group.end}
+            </p>
+            <h4>
+              {group.kind === 'heading'
+                ? 'Choose the correct heading'
+                : group.kind === 'information'
+                  ? 'Which section contains this information?'
+                  : 'Match each statement'}
+            </h4>
+          </div>
+        </div>
+        {group.instruction && (
+          <div
+            className={`readingTaskInstruction ${isAdvancedReadingExam ? 'readingTaskInstruction-advanced' : ''}`.trim()}
+          >
+            {group.instruction.split('\n').map((line, index) => (
+              <p key={`${group.id}-instruction-${index}`}>{line}</p>
+            ))}
+          </div>
+        )}
+        {group.kind === 'information' && isAdvancedReadingExam && group.choiceOptions.length > 0 && (
+          <div className="readingSectionKeyPanel" aria-label="Passage sections">
+            {group.choiceOptions.map((option) => (
+              <span key={`${group.id}-section-${option.letter}`} className="readingSectionKeyChip">
+                {option.letter}
+              </span>
+            ))}
+          </div>
+        )}
         {group.choiceOptions.length > 0 && group.kind !== 'information' && (
           <div className="readingHeadingListPanel" aria-label={choiceListTitle}>
             <p className="readingQuestionNumber">{choiceListTitle}</p>
@@ -21824,7 +21944,10 @@ function App() {
                   <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
                   <h3>{activeReadingExam.title}</h3>
                   <p className="meta">
-                    {answeredReadingCount}/{activeReadingAllQuestions.length} answered · Passage {activeReadingPassage.number} of {activeReadingPassages.length}
+                    {answeredReadingCount}/{activeReadingAllQuestions.length} answered
+                    {activeReadingPassages.length > 1
+                      ? ` · Passage ${activeReadingPassages.findIndex((passage) => passage.number === activeReadingPassage.number) + 1} of ${activeReadingPassages.length}`
+                      : ''}
                   </p>
                 </div>
                 <div className="controls">
@@ -21838,24 +21961,6 @@ function App() {
                     Back to Bank
                   </button>
                 </div>
-              </div>
-
-              <div className="readingSummaryStrip">
-                <article className="readingSummaryCard">
-                  <p className="sectionLabel">Exam Progress</p>
-                  <strong>{answeredReadingCount}/{activeReadingAllQuestions.length}</strong>
-                  <span>questions answered</span>
-                </article>
-                <article className="readingSummaryCard">
-                  <p className="sectionLabel">Current Passage</p>
-                  <strong>{activeReadingPassage.title}</strong>
-                  <span>{activeReadingQuestions.length} questions in this passage</span>
-                </article>
-                <article className="readingSummaryCard">
-                  <p className="sectionLabel">Study Mode</p>
-                  <strong>Highlight + Hint</strong>
-                  <span>Mark evidence before you submit</span>
-                </article>
               </div>
 
               {activeReadingPassages.length > 1 && (
@@ -21873,7 +21978,7 @@ function App() {
                 </div>
               )}
 
-              <div className="readingExamLayout readingExamLayout-bank">
+              <div className={`readingExamLayout readingExamLayout-bank ${isAdvancedReadingExam ? 'readingExamLayout-advanced' : ''}`.trim()}>
                 <section
                   key={readingActivePassageNumber}
                   className="readingPassagePanel readingPassagePanel-exam"
@@ -21960,18 +22065,40 @@ function App() {
                     onMouseUp={handleReadingSelection}
                   >
                     <div className="readingPencilStage" ref={readingPencilStageRef}>
-                      {activeReadingPassage.bodyParagraphs.map((paragraph, index) => (
-                        <p key={`reading-paragraph-${index}`}>
-                          {renderPassageParagraphWithHighlights(
-                            paragraph,
-                            activeReadingPassage.number,
-                            activeReadingHint &&
-                              activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
-                              ? activeReadingHintNeedles
-                              : ''
-                          )}
-                        </p>
-                      ))}
+                      {activeReadingPassage.bodyParagraphs.map((paragraph, index) => {
+                        const sectionMatch = paragraph.match(/^([A-G])\.\s+([\s\S]+)$/)
+                        if (sectionMatch && isAdvancedReadingExam) {
+                          return (
+                            <section key={`reading-section-${index}`} className="readingPassageSection">
+                              <p className="readingPassageSectionLabel" aria-hidden="true">
+                                {sectionMatch[1]}
+                              </p>
+                              <p className="readingPassageSectionText">
+                                {renderPassageParagraphWithHighlights(
+                                  sectionMatch[2],
+                                  activeReadingPassage.number,
+                                  activeReadingHint &&
+                                    activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
+                                    ? activeReadingHintNeedles
+                                    : ''
+                                )}
+                              </p>
+                            </section>
+                          )
+                        }
+                        return (
+                          <p key={`reading-paragraph-${index}`}>
+                            {renderPassageParagraphWithHighlights(
+                              paragraph,
+                              activeReadingPassage.number,
+                              activeReadingHint &&
+                                activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
+                                  ? activeReadingHintNeedles
+                                  : ''
+                            )}
+                          </p>
+                        )
+                      })}
                       <canvas
                         ref={readingPencilCanvasRef}
                         className={`readingPencilCanvas ${readingSmartPencilMode ? 'is-active' : ''}`.trim()}
@@ -21993,7 +22120,11 @@ function App() {
                   <div className="readingQuestionsHeader">
                     <div>
                       <p className="sectionLabel">Questions</p>
-                      <h3>Answer below — scroll this panel for more questions</h3>
+                      <h3>
+                        {isAdvancedReadingExam
+                          ? `${activeReadingQuestions.length} questions · use the number strip to jump`
+                          : 'Answer below — scroll this panel for more questions'}
+                      </h3>
                     </div>
                     <span className="bandPill">{activeReadingQuestions.length} questions</span>
                   </div>
@@ -22022,7 +22153,7 @@ function App() {
                     })}
                   </div>
 
-                  {activeReadingPassage.questionSectionText && (
+                  {!isAdvancedReadingExam && activeReadingPassage.questionSectionText && (
                     <details className="readingQuestionReference">
                       <summary>Show original question block</summary>
                       <pre>{activeReadingPassage.questionSectionText}</pre>
@@ -25912,28 +26043,11 @@ function App() {
                           const latestScore = latestScoresByTest[`${selectedTestMode}:${topic.id}`]
                           const hasAttempted = latestScore !== undefined
                           const isSelected = selectedTopicId === topic.id
-                          const topicHasSpeakingSample =
-                            selectedTestMode === 'part2'
-                              ? Boolean(getSpeakingSampleForTopic(topic))
-                              : selectedTestMode === 'part1' || selectedTestMode === 'part3'
-                                ? Boolean(
-                                    getUploadedSpeakingSampleForQuestion(
-                                      buildSpeakingSampleTopicId(selectedTestMode, topic.id),
-                                      `${selectedTestMode === 'part1' ? 'Part 1' : 'Part 3'}: ${topic.title}`,
-                                      topic.prompt
-                                    ) ||
-                                      [topic.prompt, ...topic.cues].some((question, index) =>
-                                        Boolean(
-                                          question &&
-                                            getUploadedSpeakingSampleForQuestion(
-                                              buildSpeakingSampleQuestionId(selectedTestMode, topic.id, index),
-                                              `${selectedTestMode === 'part1' ? 'Part 1' : 'Part 3'} Q${index + 1}: ${topic.title}`,
-                                              question
-                                            )
-                                        )
-                                      )
-                                  )
-                                : false
+                          const topicHasSpeakingSample = topicHasSpeakingSampleInBank(
+                            topic,
+                            selectedTestMode,
+                            speakingSampleVideoAssets
+                          )
                           return (
                             <div
                               key={topic.id}

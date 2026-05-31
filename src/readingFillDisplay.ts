@@ -444,6 +444,21 @@ export const parseReadingFillLineSegments = (
   const inlineNumberedSegments = parseInlineNumberedGapsInLine(trimmed, questionNumbers)
   if (inlineNumberedSegments?.length) return inlineNumberedSegments
 
+  const numberedSentence = trimmed.match(/^(\d+)\s+(.+)$/)
+  if (numberedSentence) {
+    const questionNumber = normalizeOcrFillQuestionNumber(numberedSentence[1], questionNumbers)
+    if (questionNumbers.has(questionNumber) && !lineContainsBlankMarker(trimmed, questionNumbers)) {
+      return coalesceFillLineSegments([
+        {
+          kind: 'blank',
+          questionNumber,
+          before: numberedSentence[2].trim(),
+          after: ''
+        }
+      ])
+    }
+  }
+
   const leadingBlank = trimmed.match(/^(\d+)\s*([.．…⋯·•_\-–—]+)\s+(.+)$/)
   if (leadingBlank) {
     const questionNumber = normalizeOcrFillQuestionNumber(leadingBlank[1], questionNumbers)
@@ -780,13 +795,34 @@ export const enrichFillDisplayLines = (
 
       const question = byNumber.get(segment.questionNumber)
       const context = question ? parseFillContextFromPrompt(question.prompt, segment.questionNumber) : null
-      if (!context?.before && !context?.after) return segment
-
-      return {
-        ...segment,
-        before: context.before,
-        after: context.after || ''
+      if (context?.before || context?.after) {
+        return {
+          ...segment,
+          before: context.before,
+          after: context.after || ''
+        }
       }
+
+      if (question) {
+        const prompt = stripFillPromptPrefix(question.prompt)
+        if (prompt && !/^drop (?:heading|answer) here/i.test(prompt)) {
+          const gapMatch = prompt.match(/^(.*?)(?:\s*[.．…⋯·•_\-–—]{2,}|…+)\s*(.*)$/s)
+          if (gapMatch) {
+            return {
+              ...segment,
+              before: cleanFillSegmentText(gapMatch[1]),
+              after: cleanFillSegmentText(gapMatch[2] || '')
+            }
+          }
+          return {
+            ...segment,
+            before: cleanFillSegmentText(prompt),
+            after: ''
+          }
+        }
+      }
+
+      return segment
     })
   }))
 }

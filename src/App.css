@@ -9970,6 +9970,121 @@ body,
   max-height: none;
 }
 
+/* Advanced reading exam — cleaner passage + questions layout */
+.readingExamLayout-advanced .readingPassagePanel-exam,
+.readingExamLayout-advanced .readingQuestionsPanel-exam {
+  border-width: 2px;
+  box-shadow: 6px 6px 0 var(--bc-black);
+}
+
+.readingExamLayout-advanced .readingPassageBody {
+  gap: 0;
+  font-size: 1.02rem;
+  font-weight: 450;
+  line-height: 1.85;
+  color: #1e293b;
+}
+
+.readingPassageSection {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: 12px 14px;
+  padding: 16px 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.readingPassageSection:first-child {
+  border-top: none;
+  padding-top: 4px;
+}
+
+.readingPassageSectionLabel {
+  margin: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #dbeafe 0%, #eff6ff 100%);
+  border: 2px solid #93c5fd;
+  color: #1d4ed8;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.readingPassageSectionText {
+  margin: 0;
+}
+
+.readingTaskInstruction {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.readingTaskInstruction p {
+  margin: 0;
+}
+
+.readingTaskInstruction-advanced {
+  border-left: 4px solid #2563eb;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
+  color: #1e3a5f;
+}
+
+.readingMatchingInfoGroup-advanced {
+  gap: 14px;
+}
+
+.readingMatchingInfoGroup-advanced .readingMatchingInfoList {
+  gap: 10px;
+}
+
+.readingMatchingInfoGroup-advanced .readingMatchingInfoRow {
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.readingSectionKeyPanel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.readingSectionKeyPanel::before {
+  content: 'Sections in passage:';
+  margin-right: 4px;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.readingSectionKeyChip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 8px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d4ed8;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
 .readingPassageBody p {
   margin: 0;
 }
@@ -12279,15 +12394,15 @@ body,
   border-radius: 16px;
   background: #fafbfc;
   border-color: #dbeafe;
-  font-size: 1.04rem;
+  font-size: 1rem;
   font-weight: 450;
-  line-height: 2;
+  line-height: 1.75;
   letter-spacing: 0.01em;
 }
 
 .readingFillQuestionGroup-advanced .readingFillLine {
-  margin: 0 0 0.65em;
-  line-height: 2.15;
+  margin: 0 0 0.85em;
+  line-height: 1.75;
 }
 
 .readingFillQuestionGroup-advanced .readingFillLine:last-child {
