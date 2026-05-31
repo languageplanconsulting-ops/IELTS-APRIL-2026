@@ -6113,16 +6113,35 @@ const sanitizeReadingQuestionSectionLineForDisplay = (line: string) => {
     .trim()
 }
 
+const rebreakReadingQuestionSectionText = (text: string): string => {
+  const newlineCount = (text.match(/\n/g) || []).length
+  const hasEnoughNewlines = newlineCount >= Math.floor(text.length / 200)
+  if (hasEnoughNewlines) return text
+  return text
+    .replace(/\s+(Questions?\s+\d+[-–]\d+)/gi, '\n$1')
+    .replace(/\s+(Question\s+\d+\b)/gi, '\n$1')
+    .replace(/\s+(\d{1,2})\s+(?=[A-Z"'(])/g, '\n$1 ')
+    .replace(/\s+(Write\s+(?:the\s+)?(?:correct|your)\s)/gi, '\n$1')
+    .replace(/\s+(Choose\s+(?:the\s+)?correct\s)/gi, '\n$1')
+    .replace(/\s+(Do\s+the\s+following\s)/gi, '\n$1')
+    .replace(/\s+(Complete\s+the\s)/gi, '\n$1')
+    .replace(/\s+(Reading\s+Passage\s+\d+\s+has\s)/gi, '\n$1')
+    .replace(/\s+(NB\s)/g, '\nNB ')
+    .replace(/\s+([A-H])\s+(?=[A-Z][a-z])/g, '\n$1 ')
+}
+
 const sanitizeReadingQuestionSectionTextForDisplay = (text: string) =>
   sanitizeReadingQuestionSectionTextShared(
-    String(text || '')
-      .replace(/\r/g, '')
-      .replace(/\s*Drag and drop an option[\s\S]*?(?=\nQuestions?\s+\d|\n\s*\d+\.\s|$)/gi, '\n')
-      .replace(/<(?:form|input|div|span|script)\b[\s\S]*?(?=\n|$)/gi, '')
-      .split('\n')
-      .map((line) => sanitizeReadingQuestionSectionLineForDisplay(line))
-      .filter(Boolean)
-      .join('\n')
+    rebreakReadingQuestionSectionText(
+      String(text || '')
+        .replace(/\r/g, '')
+        .replace(/\s*Drag and drop an option[\s\S]*?(?=\nQuestions?\s+\d|\n\s*\d+\.\s|$)/gi, '\n')
+        .replace(/<(?:form|input|div|span|script)\b[\s\S]*?(?=\n|$)/gi, '')
+    )
+    .split('\n')
+    .map((line) => sanitizeReadingQuestionSectionLineForDisplay(line))
+    .filter(Boolean)
+    .join('\n')
   )
 
 const stripReadingMatchingListFromPrompt = (text: string) =>
@@ -22077,20 +22096,40 @@ function App() {
                             : ''
                         if (isAdvancedReadingExam) {
                           type AdvSection = { label: string; paragraphs: string[] }
-                          const sections: AdvSection[] = []
-                          for (const raw of activeReadingPassage.bodyParagraphs) {
-                            const paragraph = String(raw || '').trim()
-                            if (!paragraph) continue
-                            const sectionMatch = paragraph.match(/^([A-G])(?:\.|:)?\s+([\s\S]+)$/)
-                            if (sectionMatch) {
-                              sections.push({ label: sectionMatch[1], paragraphs: [sectionMatch[2].trim()] })
-                            } else if (sections.length) {
-                              sections[sections.length - 1].paragraphs.push(paragraph)
-                            } else {
-                              sections.push({ label: '', paragraphs: [paragraph] })
+
+                          const buildSections = (paragraphs: string[]): AdvSection[] => {
+                            const result: AdvSection[] = []
+                            for (const raw of paragraphs) {
+                              const paragraph = String(raw || '').trim()
+                              if (!paragraph) continue
+                              const sectionMatch = paragraph.match(/^([A-G])(?:\.|:)?\s+([\s\S]+)$/)
+                              if (sectionMatch) {
+                                result.push({ label: sectionMatch[1], paragraphs: [sectionMatch[2].trim()] })
+                              } else if (result.length) {
+                                result[result.length - 1].paragraphs.push(paragraph)
+                              } else {
+                                result.push({ label: '', paragraphs: [paragraph] })
+                              }
+                            }
+                            return result
+                          }
+
+                          let sections = buildSections(activeReadingPassage.bodyParagraphs)
+
+                          // Fallback: whole passage is one blob — split on section letter boundaries
+                          if (!sections.some((section) => section.label)) {
+                            const fullText = activeReadingPassage.bodyParagraphs.map((p) => String(p || '').trim()).join(' ')
+                            const parts = fullText
+                              .split(/(?=\b[A-G]\.?\s+[A-Z"'(])/)
+                              .map((p) => p.trim())
+                              .filter(Boolean)
+                            const candidate = buildSections(parts)
+                            if (candidate.some((section) => section.label)) {
+                              sections = candidate
                             }
                           }
-                          if (sections.length > 0 && sections.some((section) => section.label)) {
+
+                          if (sections.some((section) => section.label)) {
                             return sections.map((section, index) => (
                               <section
                                 key={`reading-section-${index}`}
