@@ -47,6 +47,14 @@ const scoreQuestions = (questions: ReadingQuestion[], answers: Record<number, st
 
 const noopMatchingCheck = () => false
 
+const READING_ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
+
+const getDisplayPrompt = (question: ReadingQuestion) => {
+  const prompt = String(question.prompt || '').replace(/\s+/g, ' ').trim()
+  if (prompt && !/^Question\s+\d+$/i.test(prompt)) return prompt
+  return `Question ${question.number}`
+}
+
 export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSessionProps) {
   const passages = exam.parsedPayload?.passages || []
   const passage = passages[0]
@@ -71,6 +79,17 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
     return (
       <div className="readingExamWrap">
         <p className="meta">ไม่พบ passage ในชุดข้อสอบนี้</p>
+        <button type="button" className="secondary" onClick={onBack}>
+          กลับ
+        </button>
+      </div>
+    )
+  }
+
+  if (!questions.length) {
+    return (
+      <div className="readingExamWrap">
+        <p className="meta">ไม่พบคำถามในชุดข้อสอบนี้ — ลองรีเฟรชหรือติดต่อแอดมิน</p>
         <button type="button" className="secondary" onClick={onBack}>
           กลับ
         </button>
@@ -116,10 +135,14 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
       )
     }
     if (question.answerType === 'multiple-choice') {
+      const isRomanHeading = READING_ROMAN_HEADING_PATTERN.test(String(question.correctAnswer || '').trim())
+      const choices = isRomanHeading
+        ? ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x']
+        : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
       return (
         <select value={value} onChange={(event) => setAnswer(question.number, event.target.value)}>
           <option value="">Select answer</option>
-          {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((choice) => (
+          {choices.map((choice) => (
             <option key={choice} value={choice}>
               {choice}
             </option>
@@ -281,7 +304,7 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
               <div className="readingReportHeader">
                 <div>
                   <p className="readingQuestionNumber">Question {item.number}</p>
-                  <p className="readingQuestionPrompt">{item.prompt}</p>
+                  <p className="readingQuestionPrompt">{getDisplayPrompt(item)}</p>
                 </div>
                 <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
                   {item.isCorrect ? 'Correct' : 'Wrong'}
@@ -358,9 +381,13 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
             )}
           </div>
           <div className="readingPassageBody">
-            {passage.bodyParagraphs.map((paragraph, index) => (
-              <p key={`landing-reading-p-${index}`}>{renderPassageText(paragraph)}</p>
-            ))}
+            {passage.bodyParagraphs.length ? (
+              passage.bodyParagraphs.map((paragraph, index) => (
+                <p key={`landing-reading-p-${index}`}>{renderPassageText(paragraph)}</p>
+              ))
+            ) : (
+              <p className="meta">Passage text is not available for this exam yet.</p>
+            )}
           </div>
         </section>
 
@@ -423,7 +450,7 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
                     <div className="readingQuestionCardTop">
                       <div>
                         <p className="readingQuestionNumber">Question {question.number}</p>
-                        <p className="readingQuestionPrompt">{question.prompt}</p>
+                        <p className="readingQuestionPrompt">{getDisplayPrompt(question)}</p>
                       </div>
                       <button
                         type="button"

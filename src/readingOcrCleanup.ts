@@ -17,6 +17,11 @@ export const isLikelyOcrGarbageWord = (word: string) => {
 const isReadingSectionLabelLine = (line: string) =>
   /^[A-G]\.?$/i.test(line) || /^[ivxlcdm]+\.?$/i.test(line) || /^[A-J]\.?$/i.test(line)
 
+const isReadingTimingInstructionLine = (line: string) => {
+  const text = String(line || '').trim()
+  return /^you should spend about \d+\s+minutes?\s+on\b/i.test(text)
+}
+
 export const isGarbledOcrReadingLine = (line: string) => {
   const trimmed = String(line || '').trim()
   if (!trimmed) return false
@@ -121,7 +126,9 @@ export const sanitizeReadingQuestionSectionTextForDisplay = (text: string) =>
 export const isJunkReadingPassageParagraph = (paragraph: string) => {
   const text = String(paragraph || '').trim()
   if (!text) return true
+  if (isReadingTimingInstructionLine(text)) return true
   if (isReadingSectionLabelLine(text)) return false
+  if (/^which (?:section|paragraph) contains the following information/i.test(text)) return true
   if (isGarbledOcrReadingLine(text)) return true
   if (/^<\w+/i.test(text)) return true
   if (/^<(?:form|input|div|span|script)\b/i.test(text)) return true

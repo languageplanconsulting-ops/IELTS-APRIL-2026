@@ -2,7 +2,7 @@
  * Audit all Cambridge reading exams for corrupt passage bodies and drag-drop UI junk.
  * Run: node scripts/audit-reading-passage-bodies.mjs
  */
-import { buildReadingExamPayload } from '../server/readingImportUtils.mjs'
+import { buildReadingExamPayload, isValidReadingParsedPayload } from '../server/readingImportUtils.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS } from '../server/userProvidedReadingPracticeCambridge11.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from '../server/userProvidedReadingPracticeCambridge12.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from '../server/userProvidedReadingPracticeCambridge13.mjs'
@@ -92,11 +92,12 @@ let questionCount = 0
 for (const [book, exams] of EXAM_SOURCES) {
   for (const exam of exams) {
     examCount += 1
-    auditPassages(exam.parsedPayload?.passages, book, exam, 'stored')
-
     let payload
     try {
-      payload = buildReadingExamPayload(exam)
+      payload = buildReadingExamPayload({
+        ...exam,
+        parsedPayload: exam.parsedPayload || exam.parsed_payload
+      })
     } catch (error) {
       failures.push({
         book,
@@ -105,6 +106,17 @@ for (const [book, exams] of EXAM_SOURCES) {
         source: 'runtime',
         kind: 'parse_error',
         detail: error.message
+      })
+      continue
+    }
+
+    if (!isValidReadingParsedPayload(payload)) {
+      failures.push({
+        book,
+        id: exam.id,
+        title: exam.title,
+        source: 'runtime',
+        kind: 'invalid_payload'
       })
       continue
     }

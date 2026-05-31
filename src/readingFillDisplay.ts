@@ -236,7 +236,11 @@ export const isReadingLetterSummaryFill = (block: string, question: FillQuestion
     .trim()
     .toUpperCase()
   if (!/^[A-J]$/.test(answer)) return false
-  return /list of phrases|write the correct letter,\s*[A-J]/i.test(block)
+  return (
+    /complete the summary using the list of (?:words|phrases)/i.test(block) ||
+    /list of (?:words|phrases)/i.test(block) ||
+    /write the correct letters?,\s*[A-J]/i.test(block)
+  )
 }
 
 export const isReadingFillQuestion = <P extends FillPassage, Q extends FillQuestion>(
@@ -875,8 +879,11 @@ export const buildReadingFillQuestionGroups = <P extends FillPassage, Q extends 
   const questionSectionText = passage.questionSectionText || ''
 
   const groups: ReadingFillQuestionGroup[] = []
-  const ranges = passage.questionRanges?.length ? passage.questionRanges : [{ start: 1, end: 999 }]
-  const leafRanges = ranges.filter(
+  const ranges = passage.questionRanges?.length
+    ? passage.questionRanges
+    : inferReadingQuestionRangesFromSection(passage.questionSectionText || '')
+  const effectiveRanges = ranges.length ? ranges : [{ start: 1, end: 999 }]
+  const leafRanges = effectiveRanges.filter(
     (range) =>
       !ranges.some(
         (other) =>
@@ -891,12 +898,12 @@ export const buildReadingFillQuestionGroups = <P extends FillPassage, Q extends 
     const block = resolveReadingFillRangeBlock(questionSectionText, sectionOverride, range.start, range.end)
     if (!block || !isReadingFillSectionBlock(block)) return
 
-    const rangeQuestions = questions.filter(
-      (question) =>
-        question.number >= range.start &&
-        question.number <= range.end &&
-        isReadingFillQuestion(passage, question, isMatchingQuestion)
-    )
+    const rangeQuestions = questions.filter((question) => {
+      if (question.number < range.start || question.number > range.end) return false
+      if (isMatchingQuestion(passage, question)) return false
+      if (isReadingFillQuestion(passage, question, isMatchingQuestion)) return true
+      return isReadingLetterSummaryFill(block, question)
+    })
     if (!rangeQuestions.length) return
 
     const questionNumbers = new Set(rangeQuestions.map((question) => question.number))
@@ -929,7 +936,21 @@ const findReadingQuestionRange = (passage: FillPassage, question: FillQuestion) 
 }
 
 const QUESTION_SECTION_HEADER_REGEX =
-  /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
+  /(?:^|\n)\s*(?:#+\s*)?Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
+
+const inferReadingQuestionRangesFromSection = (questionSectionText: string) => {
+  const source = String(questionSectionText || '')
+  QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
+  const ranges = [...source.matchAll(QUESTION_SECTION_HEADER_REGEX)].map((match) => {
+    const start = Number(match[1])
+    const end = Number(match[2] || match[3] || match[1])
+    return { start: Math.min(start, end), end: Math.max(start, end) }
+  })
+  return ranges.filter(
+    (range, index) =>
+      ranges.findIndex((other) => other.start === range.start && other.end === range.end) === index
+  )
+}
 
 const extractReadingQuestionSectionBlock = (
   questionSectionText: string,

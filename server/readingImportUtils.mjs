@@ -142,19 +142,57 @@ const sanitizeReadingQuestionPrompt = (prompt, correctAnswer) => {
 
 const QUESTION_SECTION_HEADER_REGEX =
   /\bQuestions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
-const QUESTION_SECTION_MARKER_REGEX = /\bQuestions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/i
+
+const isReadingTimingInstructionLine = (line) => {
+  const text = String(line || '').trim()
+  return /^you should spend about \d+\s+minutes?\s+on\b/i.test(text)
+}
+
+const isReadingInstructionQuestionReference = (line) => {
+  const text = String(line || '').trim()
+  return (
+    isReadingTimingInstructionLine(text) ||
+    (/questions?\s+\d+/i.test(text) && /based on reading passage/i.test(text))
+  )
+}
+
+/** Real question blocks start at line boundaries — not inside "spend 20 minutes on Questions 1–13". */
+const findReadingQuestionSectionStart = (block) => {
+  const source = String(block || '')
+  const lineStartPattern = /(?:^|\n)\s*Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?/gi
+  let match
+  while ((match = lineStartPattern.exec(source)) !== null) {
+    const lineEnd = source.indexOf('\n', match.index + match[0].length)
+    const line = source
+      .slice(match.index, lineEnd === -1 ? undefined : lineEnd)
+      .replace(/^\s+/, '')
+      .trim()
+    if (isReadingInstructionQuestionReference(line)) continue
+    return match.index
+  }
+  return -1
+}
 
 const parseQuestionRangesFromText = (text) => {
-  QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
-  const matches = [...String(text || '').matchAll(QUESTION_SECTION_HEADER_REGEX)]
-  return matches.map((match) => {
+  const source = String(text || '')
+  const lineStartPattern = /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
+  const ranges = []
+  let match
+  while ((match = lineStartPattern.exec(source)) !== null) {
+    const lineEnd = source.indexOf('\n', match.index + match[0].length)
+    const line = source
+      .slice(match.index, lineEnd === -1 ? undefined : lineEnd)
+      .replace(/^\s+/, '')
+      .trim()
+    if (isReadingInstructionQuestionReference(line)) continue
     const start = Number(match[1])
     const end = Number(match[2] || match[3] || match[1])
-    return {
+    ranges.push({
       start: Math.min(start, end),
       end: Math.max(start, end)
-    }
-  })
+    })
+  }
+  return ranges
 }
 
 const getQuestionSectionTextForNumber = (text, questionNumber) => {
@@ -175,10 +213,12 @@ const getQuestionSectionTextForNumber = (text, questionNumber) => {
 const isJunkReadingPassageParagraph = (paragraph) => {
   const text = String(paragraph || '').trim()
   if (!text) return true
+  if (isReadingTimingInstructionLine(text)) return true
   if (/^<\w+/i.test(text)) return true
   if (/^\d*Drop heading here<input/i.test(text)) return true
   if (/^\d+Drop heading here[A-H]\.?$/i.test(text)) return true
   if (/^Questions?\s+\d+/i.test(text)) return true
+  if (/^which (?:section|paragraph) contains the following information/i.test(text)) return true
   if (/^Drag and drop an option/i.test(text)) return true
   if (/^hidden"\s*form=/i.test(text)) return true
   if (/^<(?:form|input|div|span|script)\b/i.test(text)) return true
@@ -294,18 +334,40 @@ const stripWrappedQuotes = (value) => {
   return text
 }
 
+/** Normalize dense OCR / PDF paste (single-line passages, inline question blocks). */
+const normalizeReadingRawPassageSource = (text) => {
+  let source = stripWrappedQuotes(text).replace(/\r/g, '')
+  source = source.replace(/\bREADING PASSAGE\s+(\d+)\s+(?=[A-Za-z"'(])/g, 'READING PASSAGE $1\n\n')
+  source = source.replace(
+    /([.!?]["']?)\s+(Questions?\s+\d+(?:\s*[–-]\s*\d+|\s+and\s+\d+)?)/g,
+    '$1\n\n$2'
+  )
+  return source
+}
+
 const splitReadingTitleAndBody = (value, fallbackTitle) => {
   const lines = String(value || '').replace(/\r/g, '').split('\n')
-  const titleIndex = lines.findIndex((line) => line.trim())
-  const title = String(titleIndex >= 0 ? lines[titleIndex] : fallbackTitle || 'Passage 1').trim() || String(fallbackTitle || 'Passage 1')
+  let titleLineIndex = -1
+  for (let index = 0; index < lines.length; index += 1) {
+    const trimmed = lines[index].trim()
+    if (!trimmed) continue
+    if (isReadingTimingInstructionLine(trimmed)) continue
+    if (/^reading passage\s+\d+$/i.test(trimmed)) continue
+    titleLineIndex = index
+    break
+  }
+  const title =
+    (titleLineIndex >= 0 ? lines[titleLineIndex].trim() : '') ||
+    String(fallbackTitle || 'Passage 1').trim() ||
+    String(fallbackTitle || 'Passage 1')
   const bodyText = lines
-    .slice(titleIndex >= 0 ? titleIndex + 1 : 0)
+    .slice(titleLineIndex >= 0 ? titleLineIndex + 1 : 0)
     .join('\n')
     .trim()
   const bodyParagraphs = bodyText
     .split(/\n\s*\n/)
     .map((paragraph) => paragraph.replace(/\n+/g, ' ').trim())
-    .filter(Boolean)
+    .filter((paragraph) => paragraph && !isReadingTimingInstructionLine(paragraph))
 
   return {
     title,
@@ -314,9 +376,11 @@ const splitReadingTitleAndBody = (value, fallbackTitle) => {
 }
 
 const parseReadingPassages = (rawPassageText) => {
-  const source = stripWrappedQuotes(rawPassageText)
+  const source = normalizeReadingRawPassageSource(rawPassageText)
   const passages = []
-  const matches = [...source.matchAll(/(?:^|\n)\s*READING PASSAGE\s+(\d+)\b/gim)]
+  const matches = [
+    ...source.matchAll(/(?:^|\n)\s*READING PASSAGE\s+(\d+)(?:\s*(?:\n|$)|\s+(?=[A-Za-z"'(]))/gm)
+  ]
   for (let index = 0; index < matches.length; index += 1) {
     const current = matches[index]
     const next = matches[index + 1]
@@ -324,7 +388,7 @@ const parseReadingPassages = (rawPassageText) => {
       .slice(current.index, next ? next.index : source.length)
       .replace(/^\s*READING PASSAGE\s+\d+\s*/i, '')
       .trim()
-    const questionMarker = block.search(QUESTION_SECTION_MARKER_REGEX)
+    const questionMarker = findReadingQuestionSectionStart(block)
     const passageBodyRaw = stripReadingPassageSourceHtml(
       questionMarker >= 0 ? block.slice(0, questionMarker).trim() : block.trim()
     )
@@ -342,7 +406,7 @@ const parseReadingPassages = (rawPassageText) => {
   }
 
   if (passages.length === 0 && source.trim()) {
-    const fallbackQuestionMarker = source.search(QUESTION_SECTION_MARKER_REGEX)
+    const fallbackQuestionMarker = findReadingQuestionSectionStart(source)
     const fallbackPassageBodyRaw = stripReadingPassageSourceHtml(
       fallbackQuestionMarker >= 0 ? source.slice(0, fallbackQuestionMarker).trim() : source.trim()
     )
@@ -399,15 +463,36 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
   })
 }
 
-const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
+const extractReadingPromptFromQuestionSection = (questionSectionText, number) => {
+  const lines = String(questionSectionText || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  for (const line of lines) {
+    if (new RegExp(`\\b${number}\\s*[.…·]{2,}`).test(line)) {
+      return line.replace(/^●\s*/, '').trim()
+    }
+    const numbered = line.match(new RegExp(`^${number}[.)\\s]+(.+)$`))
+    if (numbered?.[1]) return numbered[1].trim()
+  }
+  return ''
+}
+
+export const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
   const correctAnswer = canonicalizeReadingCorrectAnswer(question?.correctAnswer || '')
   const answerType = inferReadingAnswerType(correctAnswer, questionSectionText)
+  const sanitizedPrompt = sanitizeReadingQuestionPrompt(
+    sanitizeReadingJudgementPrompt(question?.prompt, answerType),
+    correctAnswer
+  )
+  const sectionPrompt = extractReadingPromptFromQuestionSection(questionSectionText, question?.number)
+  const prompt =
+    sanitizedPrompt && !/^Question\s+\d+$/i.test(sanitizedPrompt)
+      ? sanitizedPrompt
+      : sectionPrompt || sanitizedPrompt || `Question ${question?.number || ''}`.trim()
   return {
     ...question,
-    prompt: sanitizeReadingQuestionPrompt(
-      sanitizeReadingJudgementPrompt(question?.prompt, answerType),
-      correctAnswer
-    ),
+    prompt,
     correctAnswer,
     answerType
   }
@@ -463,7 +548,57 @@ const resolveReadingReleaseAt = ({ releaseAt, collectionTitle, title } = {}) =>
   getReadingReleaseAtFromMonthlyTitle(collectionTitle) ||
   getReadingReleaseAtFromMonthlyTitle(title)
 
-export const buildReadingExamPayload = ({ title, category, collectionTitle, releaseAt, rawPassageText, rawAnswerKey }) => {
+export const isValidReadingParsedPayload = (payload) => {
+  if (!payload || !Array.isArray(payload.passages)) return false
+  return payload.passages.some((passage) => {
+    const paragraphs = passage.bodyParagraphs || []
+    const bodyLength = paragraphs.reduce((sum, paragraph) => sum + String(paragraph || '').length, 0)
+    const questionCount = passage.questions?.length || 0
+    return bodyLength >= 500 && questionCount > 0
+  })
+}
+
+export const buildReadingExamPayload = ({ title, category, collectionTitle, releaseAt, rawPassageText, rawAnswerKey, parsedPayload: storedPayload }) => {
+  if (isValidReadingParsedPayload(storedPayload)) {
+    const passages = storedPayload.passages.map((passage) => ({
+      ...passage,
+      bodyParagraphs: resolveReadingPassageBodyParagraphs(passage.title, passage.bodyParagraphs || []),
+      questionSectionText: sanitizeReadingQuestionSectionText(passage.questionSectionText || ''),
+      questions: (passage.questions || []).map((question) =>
+        normalizeReadingQuestionRecord(
+          question,
+          getQuestionSectionTextForNumber(passage.questionSectionText, question.number)
+        )
+      )
+    }))
+    return {
+      title: String(storedPayload.title || title || '').trim(),
+      category: normalizeReadingCategory(storedPayload.category || category),
+      ...(normalizeReadingCollectionTitle(storedPayload.collectionTitle || collectionTitle)
+        ? {
+            collectionTitle: normalizeReadingCollectionTitle(
+              storedPayload.collectionTitle || collectionTitle
+            )
+          }
+        : {}),
+      ...(resolveReadingReleaseAt({
+        releaseAt: storedPayload.releaseAt || releaseAt,
+        collectionTitle: storedPayload.collectionTitle || collectionTitle,
+        title: storedPayload.title || title
+      })
+        ? {
+            releaseAt: resolveReadingReleaseAt({
+              releaseAt: storedPayload.releaseAt || releaseAt,
+              collectionTitle: storedPayload.collectionTitle || collectionTitle,
+              title: storedPayload.title || title
+            })
+          }
+        : {}),
+      passages,
+      questionCount: passages.reduce((sum, passage) => sum + (passage.questions?.length || 0), 0)
+    }
+  }
+
   const passages = parseReadingPassages(rawPassageText)
   const questions = parseReadingAnswerKey(rawAnswerKey)
   const passagesWithQuestions = passages.map((passage) => ({

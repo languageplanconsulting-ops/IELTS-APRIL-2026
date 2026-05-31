@@ -9756,7 +9756,21 @@ body,
 
 .readingPencilStage {
   position: relative;
-  min-height: 100%;
+  min-height: auto;
+}
+
+.readingExamLayout-bank:not(.readingExamLayout-advanced) .readingPencilStage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+}
+
+.readingExamLayout-bank:not(.readingExamLayout-advanced) .readingPencilStage > p,
+.readingExamLayout-bank:not(.readingExamLayout-advanced) .readingPassageSection {
+  position: relative;
+  z-index: 1;
+  margin: 0;
 }
 
 .readingPencilCanvas {
@@ -9966,15 +9980,21 @@ body,
   scroll-behavior: smooth;
 }
 
-.readingExamLayout-bank .readingPassagePanel-exam .readingPassageBody {
-  max-height: none;
-}
-
 /* Advanced reading exam — cleaner passage + questions layout */
 .readingExamLayout-advanced .readingPassagePanel-exam,
 .readingExamLayout-advanced .readingQuestionsPanel-exam {
   border-width: 2px;
   box-shadow: 6px 6px 0 var(--bc-black);
+}
+
+.readingExamLayout-advanced .readingPassagePanel-exam .readingPassageBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .readingExamLayout-advanced .readingPassageBody {
@@ -9983,6 +10003,10 @@ body,
   font-weight: 450;
   line-height: 1.85;
   color: #1e293b;
+}
+
+.readingExamLayout-advanced .readingPencilStage {
+  min-height: 0;
 }
 
 .readingExamLayout-advanced .readingPassageBody > p {
@@ -10020,6 +10044,84 @@ body,
 
 .readingExamLayout-advanced .readingTaskInstruction p + p {
   margin-top: 6px;
+}
+
+.readingMcqGroup-advanced,
+.readingJudgementGroup-advanced {
+  gap: 14px;
+}
+
+.readingMcqQuestionList,
+.readingJudgementList {
+  display: grid;
+  gap: 14px;
+}
+
+.readingMcqQuestionRow,
+.readingJudgementRow {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.readingMcqQuestionRow.is-active,
+.readingJudgementRow.is-active {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.readingMcqQuestionRowTop,
+.readingJudgementControls {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.readingMcqQuestionStem,
+.readingJudgementStatement {
+  margin: 0;
+  color: #1e293b;
+  font-size: 0.96rem;
+  line-height: 1.6;
+}
+
+.readingMcqQuestionStem strong,
+.readingJudgementStatement strong {
+  color: #1d4ed8;
+  margin-right: 6px;
+}
+
+.readingMcqChoiceGrid {
+  grid-template-columns: 1fr;
+}
+
+.readingJudgementChoiceGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.readingJudgementChoiceBtn {
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.readingJudgementChoiceBtn.active {
+  border-color: #2563eb;
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 
 .readingPassageSection {
@@ -13159,10 +13261,20 @@ body,
     transform: none !important;
   }
 
-  .readingPassageBody {
+  .readingPassagePanel:not(.readingPassagePanel-exam) .readingPassageBody,
+  .readingPassagePanel-pdoyTutorial .readingPassageBody {
     max-height: none;
     overflow: visible;
     font-size: 1rem;
+  }
+
+  .readingExamLayout-bank .readingPassagePanel-exam .readingPassageBody {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .readingPassagePanel-pdoyTutorial .readingPassageBody {

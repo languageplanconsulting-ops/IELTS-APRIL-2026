@@ -164,6 +164,7 @@ import {
 import {
   buildReadingFillQuestionGroups,
   isReadingFillQuestion,
+  isReadingFillSectionBlock,
   isReadingFillStylePrompt,
   parseFillContextFromPrompt,
   type ReadingFillQuestionGroup
@@ -399,6 +400,23 @@ type ReadingChooseTwoGroup = {
   end: number
   instruction: string
   choiceOptions: ReadingPdoyMultipleChoiceOption[]
+  questions: ReadingQuestion[]
+}
+
+type ReadingMcqGroup = {
+  id: string
+  start: number
+  end: number
+  instruction: string
+  questions: ReadingQuestion[]
+}
+
+type ReadingJudgementGroup = {
+  id: string
+  start: number
+  end: number
+  instruction: string
+  judgementType: 'yes-no-not-given' | 'true-false-not-given'
   questions: ReadingQuestion[]
 }
 
@@ -4826,7 +4844,7 @@ const buildReadingMatchingHintNeedles = (
 }
 
 const READING_QUESTION_SECTION_HEADER_REGEX =
-  /(?:^|\n)\s*Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
+  /(?:^|\n)\s*(?:#+\s*)?Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
 
 const extractReadingQuestionSectionBlock = (
   questionSectionText: string,
@@ -4884,7 +4902,7 @@ const extractReadingQuestionRangeBlock = (questionSectionText: string, start: nu
 }
 
 const findReadingQuestionRange = (passage: ReadingPassageRecord | null, question: ReadingQuestion) => {
-  const ranges = passage?.questionRanges || []
+  const ranges = getReadingQuestionRanges(passage)
   const matches = ranges.filter(
     (range) => question.number >= range.start && question.number <= range.end
   )
@@ -4901,7 +4919,7 @@ const findReadingQuestionRange = (passage: ReadingPassageRecord | null, question
 const extractReadingQuestionBlock = (questionSectionText: string, questionNumber: number) => {
   const escapedNumber = String(questionNumber).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const pattern = new RegExp(
-    `(?:^|\\n)\\s*${escapedNumber}\\s*[.)]?\\s+([\\s\\S]*?)(?=\\n\\s*\\d+\\s*[.)]?\\s+|$)`,
+    `(?:^|\\n)\\s*${escapedNumber}\\s*[.)]\\s+([\\s\\S]*?)(?=\\n\\s*\\d+\\s*[.)]\\s+|\\n\\s*\\d+\\s*[.)]?\\s+|$)`,
     'i'
   )
   const match = String(questionSectionText || '').match(pattern)
@@ -4952,7 +4970,7 @@ const getReadingMultipleChoicePromptStem = (
       .filter(Boolean)
     const stemLines: string[] = []
     for (const line of lines) {
-      if (/^[A-G]\s+/.test(line)) break
+      if (/^[A-G][\).:\-]?\s+/i.test(line) || READING_LETTER_OPTION_LINE.test(line)) break
       stemLines.push(line)
     }
     if (stemLines.length) {
@@ -4990,27 +5008,75 @@ const getReadingQuestionDisplayPrompt = (
     const stem = getReadingMultipleChoicePromptStem(passage, question)
     if (stem) return stem
   }
-  return question.prompt
+  const prompt = String(question.prompt || '').replace(/\s+/g, ' ').trim()
+  if (/^Questions?\s+\d+/i.test(prompt) && prompt.length > 120) {
+    return getReadingMultipleChoicePromptStem(passage, question) || `Question ${question.number}`
+  }
+  return prompt
 }
 
 const READING_LETTER_OPTION_LINE = /^([A-J])\s+(.+)$/i
 
 const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
-  const lines = String(sourceText || '')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
+  const text = String(sourceText || '')
+  const questionStarts = [...text.matchAll(/(?:^|\n)\s*(\d+)\s*[.)]?\s+/gm)]
+  if (!questionStarts.length) return false
 
-  for (let index = 0; index < lines.length; index += 1) {
-    if (!/^\d+[\.)]?\s+/.test(lines[index])) continue
-    let cursor = index + 1
-    while (cursor < lines.length && READING_LETTER_OPTION_LINE.test(lines[cursor])) {
-      cursor += 1
-    }
-    if (cursor > index + 1) return true
+  for (let index = 0; index < questionStarts.length; index += 1) {
+    const start = questionStarts[index].index ?? 0
+    const end = questionStarts[index + 1]?.index ?? text.length
+    const chunk = text.slice(start, end)
+    const optionCount = chunk
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => READING_LETTER_OPTION_LINE.test(line)).length
+    if (optionCount >= 2) return true
   }
 
   return false
+}
+
+const isReadingStandardMcqBlock = (block: string) =>
+  /choose the correct letter/i.test(String(block || '')) && readingBlockHasPerQuestionLetterOptions(block)
+
+const isReadingJudgementBlock = (block: string) => {
+  const normalized = String(block || '')
+  if (/which (?:paragraph|section) contains|choose the correct letter|complete the (?:notes|summary|sentences|table)/i.test(normalized)) {
+    return false
+  }
+  if (/do the following statements/i.test(normalized)) {
+    return /TRUE\s+if\s+the\s+statement|FALSE\s+if\s+the\s+statement|NOT\s+GIVEN|YES\s+if\s+the\s+statement|NO\s+if\s+the\s+statement|agree with the (?:views|information|claims)/i.test(
+      normalized
+    )
+  }
+  if (/YES\s*\/\s*NO|TRUE\s*\/\s*FALSE/i.test(normalized)) {
+    const statementLines = normalized
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => /^\d+[\.)]?\s+\S/.test(line))
+    return statementLines.length >= 2
+  }
+  return false
+}
+
+const inferReadingQuestionRangesFromSection = (questionSectionText: string) => {
+  const source = String(questionSectionText || '')
+  READING_QUESTION_SECTION_HEADER_REGEX.lastIndex = 0
+  const ranges = [...source.matchAll(READING_QUESTION_SECTION_HEADER_REGEX)].map((match) => {
+    const start = Number(match[1])
+    const end = Number(match[2] || match[3] || match[1])
+    return { start: Math.min(start, end), end: Math.max(start, end) }
+  })
+  return ranges.filter(
+    (range, index) =>
+      ranges.findIndex((other) => other.start === range.start && other.end === range.end) === index
+  )
+}
+
+const getReadingQuestionRanges = (passage: ReadingPassageRecord | null) => {
+  if (!passage) return []
+  if (passage.questionRanges?.length) return passage.questionRanges
+  return inferReadingQuestionRangesFromSection(passage.questionSectionText || '')
 }
 
 const extractSharedReadingLetterOptionBank = (sourceText: string) => {
@@ -5045,12 +5111,10 @@ const extractSharedReadingLetterOptionBank = (sourceText: string) => {
 
 const isReadingLetterBankMatchingBlock = (block: string) => {
   const normalized = String(block || '')
-  if (/choose the correct letter,\s*A,\s*B,\s*C or D/i.test(normalized) && readingBlockHasPerQuestionLetterOptions(normalized)) {
-    return false
-  }
+  if (isReadingStandardMcqBlock(normalized)) return false
+  if (isReadingFillSectionBlock(normalized)) return false
   if (/match\s+each/i.test(normalized)) return true
   if (/complete each sentence/i.test(normalized)) return true
-  if (/complete the summary using the list of (?:words|phrases)/i.test(normalized)) return true
   if (/for which (?:apartment|section|paragraph)/i.test(normalized)) return true
   if (
     /following statements? (?:are )?true/i.test(normalized) &&
@@ -5090,7 +5154,7 @@ const isReadingMatchingHeadingQuestion = (
   }
   if (
     READING_ROMAN_HEADING_PATTERN.test(answer) &&
-    (/^(?:paragraph|section)\s+[A-G]\b/i.test(prompt))
+    (/^(?:paragraph|section)\s+[A-G]\b/i.test(prompt) || /^section\s*[A-G]$/i.test(prompt))
   ) {
     return true
   }
@@ -5098,7 +5162,10 @@ const isReadingMatchingHeadingQuestion = (
   if (passage && READING_ROMAN_HEADING_PATTERN.test(answer)) {
     const range = findReadingQuestionRange(passage, question)
     const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
-    if (/choose the correct heading|list of headings/i.test(block) && /paragraph\s+[A-F]/i.test(block)) {
+    if (
+      /choose the correct heading|list of headings/i.test(block) &&
+      /(?:paragraph|section)s?,?\s+[A-H]/i.test(block)
+    ) {
       return true
     }
   }
@@ -5107,7 +5174,11 @@ const isReadingMatchingHeadingQuestion = (
 }
 
 const getReadingParagraphAnswerLetters = (sectionText: string) => {
-  const rangeMatch = String(sectionText || '').match(/\b([A-Z])\s*[-–—]\s*([A-Z])\b/i)
+  const source = String(sectionText || '')
+  const rangeMatch =
+    source.match(/\b([A-Z])\s*[-–—]\s*([A-Z])\b/i) ||
+    source.match(/paragraphs?,?\s+([A-H])\s*[-–—]\s*([A-H])/i) ||
+    source.match(/boxes\s+([A-H])\s*[-–—]\s*([A-H])/i)
   if (!rangeMatch) return null
   const startCode = rangeMatch[1].toUpperCase().charCodeAt(0)
   const endCode = rangeMatch[2].toUpperCase().charCodeAt(0)
@@ -5147,6 +5218,8 @@ const isReadingMatchingStatementQuestion = (
   if (!/^[A-J]$/i.test(answer)) return false
   const range = findReadingQuestionRange(passage, question)
   const block = extractReadingQuestionRangeBlock(passage?.questionSectionText || '', range.start, range.end)
+  if (isReadingStandardMcqBlock(block)) return false
+  if (isReadingFillSectionBlock(block)) return false
   return isReadingLetterBankMatchingBlock(block)
 }
 
@@ -5505,9 +5578,8 @@ const buildReadingChooseTwoGroups = (
   if (!passage) return []
 
   const groups: ReadingChooseTwoGroup[] = []
-  const ranges = passage.questionRanges?.length ? passage.questionRanges : []
 
-  ranges.forEach((range) => {
+  getReadingQuestionRanges(passage).forEach((range) => {
     const block = extractReadingQuestionRangeBlock(
       passage.questionSectionText || '',
       range.start,
@@ -5530,6 +5602,113 @@ const buildReadingChooseTwoGroups = (
       end: range.end,
       instruction: extractReadingChooseTwoGroupInstruction(block),
       choiceOptions,
+      questions: [...rangeQuestions]
+    })
+  })
+
+  return groups.sort((first, second) => first.start - second.start)
+}
+
+const extractReadingMcqGroupInstruction = (block: string) => {
+  const lines = String(block || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const instructionLines = lines.filter(
+    (line) =>
+      !/^\d+[\.)]?\s+/.test(line) &&
+      !READING_LETTER_OPTION_LINE.test(line) &&
+      /questions?|choose the correct letter|write the correct letter/i.test(line)
+  )
+  return instructionLines.join('\n').trim()
+}
+
+const buildReadingMcqGroups = (
+  passage: ReadingPassageRecord | null,
+  questions: ReadingQuestion[]
+): ReadingMcqGroup[] => {
+  if (!passage) return []
+
+  const groups: ReadingMcqGroup[] = []
+
+  getReadingQuestionRanges(passage).forEach((range) => {
+    const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+    if (!block || !isReadingStandardMcqBlock(block)) return
+
+    const rangeQuestions = questions.filter((question) => {
+      if (question.number < range.start || question.number > range.end) return false
+      if (question.answerType !== 'multiple-choice') return false
+      if (isReadingChooseTwoQuestion(passage, question)) return false
+      if (isReadingMatchingQuestion(passage, question)) return false
+      if (/which (?:paragraph|section) contains/i.test(block)) return false
+      return true
+    })
+    if (!rangeQuestions.length) return
+
+    groups.push({
+      id: `${passage.number}-mcq-${range.start}-${range.end}`,
+      start: range.start,
+      end: range.end,
+      instruction: extractReadingMcqGroupInstruction(block),
+      questions: [...rangeQuestions]
+    })
+  })
+
+  return groups.sort((first, second) => first.start - second.start)
+}
+
+const extractReadingJudgementGroupInstruction = (block: string) => {
+  const lines = String(block || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const instructionLines = lines.filter(
+    (line) =>
+      !/^\d+[\.)]?\s+/.test(line) &&
+      /questions?|do the following|agree with|write\s+(?:yes|no|true|false|not given)/i.test(line)
+  )
+  return instructionLines.join('\n').trim()
+}
+
+const buildReadingJudgementGroups = (
+  passage: ReadingPassageRecord | null,
+  questions: ReadingQuestion[]
+): ReadingJudgementGroup[] => {
+  if (!passage) return []
+
+  const groups: ReadingJudgementGroup[] = []
+
+  getReadingQuestionRanges(passage).forEach((range) => {
+    const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+    const rangeQuestions = questions.filter(
+      (question) =>
+        question.number >= range.start &&
+        question.number <= range.end &&
+        isReadingJudgementQuestion(question)
+    )
+    if (!rangeQuestions.length) return
+    if (!isReadingJudgementBlock(block)) {
+      if (rangeQuestions.length < 2) return
+      if (
+        block &&
+        /which (?:paragraph|section) contains|choose the correct letter|complete the (?:notes|summary|sentences|table)/i.test(
+          block
+        )
+      ) {
+        return
+      }
+    }
+
+    const judgementType = rangeQuestions.some((question) => question.answerType === 'true-false-not-given')
+      ? 'true-false-not-given'
+      : 'yes-no-not-given'
+
+    groups.push({
+      id: `${passage.number}-judgement-${range.start}-${range.end}`,
+      start: range.start,
+      end: range.end,
+      instruction: extractReadingJudgementGroupInstruction(block),
+      judgementType,
       questions: [...rangeQuestions]
     })
   })
@@ -6239,8 +6418,37 @@ const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
     if (chunks.length >= 2) return chunks
   }
 
-  return cleaned
+  return splitDenseReadingPassageParagraphs(cleaned)
 }
+
+const splitDenseReadingPassageParagraphs = (paragraphs: string[]) =>
+  paragraphs.flatMap((paragraph) => {
+    const text = String(paragraph || '').trim()
+    if (!text || text.length < 420 || READING_PASSAGE_SECTION_LETTER_PATTERN.test(text)) {
+      return text ? [text] : []
+    }
+
+    const normalized = text.replace(/([.!?])([A-Z])/g, '$1 $2')
+    const sentences = normalized
+      .split(/(?<=[.!?])\s+(?=[A-Z"'(])/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean)
+    if (sentences.length < 2) return [text]
+
+    const chunks: string[] = []
+    let current = ''
+    for (const sentence of sentences) {
+      const candidate = current ? `${current} ${sentence}` : sentence
+      if (current && candidate.length > 480) {
+        chunks.push(current)
+        current = sentence
+      } else {
+        current = candidate
+      }
+    }
+    if (current) chunks.push(current)
+    return chunks.length >= 2 ? chunks : [text]
+  })
 
 const normalizeReadingQuestionForDisplay = (
   question: ReadingQuestion,
@@ -9916,6 +10124,28 @@ function App() {
     })
     return lookup
   }, [activeReadingChooseTwoGroups])
+  const activeReadingMcqGroups = useMemo(
+    () => buildReadingMcqGroups(activeReadingPassage, activeReadingQuestions),
+    [activeReadingPassage, activeReadingQuestions]
+  )
+  const activeReadingMcqGroupByQuestionNumber = useMemo(() => {
+    const lookup = new Map<number, ReadingMcqGroup>()
+    activeReadingMcqGroups.forEach((group) => {
+      group.questions.forEach((question) => lookup.set(question.number, group))
+    })
+    return lookup
+  }, [activeReadingMcqGroups])
+  const activeReadingJudgementGroups = useMemo(
+    () => buildReadingJudgementGroups(activeReadingPassage, activeReadingQuestions),
+    [activeReadingPassage, activeReadingQuestions]
+  )
+  const activeReadingJudgementGroupByQuestionNumber = useMemo(() => {
+    const lookup = new Map<number, ReadingJudgementGroup>()
+    activeReadingJudgementGroups.forEach((group) => {
+      group.questions.forEach((question) => lookup.set(question.number, group))
+    })
+    return lookup
+  }, [activeReadingJudgementGroups])
   const activeReadingAllQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
   const visibleReadingReportItems =
     readingAttemptStage === 'review' ? readingReportItems.filter((item) => !item.isCorrect) : readingReportItems
@@ -18961,6 +19191,31 @@ function App() {
             ))}
           </div>
         )}
+        {(() => {
+          const block = extractReadingQuestionRangeBlock(
+            activeReadingPassage?.questionSectionText || '',
+            group.start,
+            group.end
+          )
+          const wordBank =
+            block && group.questions.some((item) => /^[A-J]$/i.test(String(item.correctAnswer || '').trim()))
+              ? extractSharedReadingLetterOptionBank(block)
+              : []
+          if (!wordBank.length) return null
+          return (
+            <div className="readingHeadingListPanel" aria-label="Word list">
+              <p className="readingQuestionNumber">List of words</p>
+              <ul className="readingHeadingListPanelList">
+                {wordBank.map((option) => (
+                  <li key={`${group.id}-word-${option.letter}`}>
+                    <strong>{option.letter}</strong>
+                    <span>{option.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        })()}
         <div
           className={`readingFillOriginalBlock ${
             group.displayLines.some((line) => line.procedure || line.procedureSegments?.length)
@@ -19209,6 +19464,151 @@ function App() {
     )
   }
 
+  const renderReadingMcqGroup = (group: ReadingMcqGroup) => {
+    return (
+      <article
+        key={`reading-mcq-group-${group.id}`}
+        className={`readingQuestionCard readingMcqGroup ${isAdvancedReadingExam ? 'readingMcqGroup-advanced' : ''}`.trim()}
+      >
+        <div className="readingFillGroupHeader">
+          <div>
+            <p className="readingQuestionNumber">
+              Questions {group.start}-{group.end}
+            </p>
+            <h4>Choose the correct answer</h4>
+          </div>
+        </div>
+        {group.instruction && (
+          <div
+            className={`readingTaskInstruction ${isAdvancedReadingExam ? 'readingTaskInstruction-advanced' : ''}`.trim()}
+          >
+            {group.instruction.split('\n').map((line, index) => (
+              <p key={`${group.id}-instruction-${index}`}>{line}</p>
+            ))}
+          </div>
+        )}
+        <div className="readingMcqQuestionList">
+          {group.questions.map((question) => {
+            const stem = getReadingQuestionDisplayPrompt(activeReadingPassage, question)
+            const options = extractReadingMultipleChoiceOptions(activeReadingPassage, question)
+            const value = readingAnswers[question.number] || ''
+            const isHinting = readingHintQuestionNumber === question.number
+            return (
+              <div
+                key={`reading-mcq-${group.id}-${question.number}`}
+                id={`reading-question-${question.number}`}
+                className={`readingMcqQuestionRow ${isHinting ? 'is-active' : ''}`.trim()}
+              >
+                <div className="readingMcqQuestionRowTop">
+                  <p className="readingMcqQuestionStem">
+                    <strong>{question.number}</strong> {stem}
+                  </p>
+                  {renderReadingHintToggleButton(question.number, isHinting, { label: 'th' })}
+                </div>
+                {options.length > 0 ? (
+                  <div className="listeningChoiceGrid readingMcqChoiceGrid" role="listbox" aria-label={`Answer options for question ${question.number}`}>
+                    {options.map((option) => (
+                      <button
+                        key={`${question.number}-${option.letter}`}
+                        type="button"
+                        className={`listeningChoiceBtn ${value === option.letter ? 'active' : ''}`}
+                        role="option"
+                        aria-selected={value === option.letter}
+                        onClick={() =>
+                          setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
+                        }
+                      >
+                        <strong>{option.letter}</strong>
+                        <span>{option.text}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="readingAnswerField">{renderReadingAnswerField(question, activeReadingPassage)}</div>
+                )}
+                {isHinting && (
+                  <p className="readingMatchingInfoHintNote">
+                    <strong>Hint:</strong> evidence highlighted in the passage.
+                  </p>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </article>
+    )
+  }
+
+  const renderReadingJudgementGroup = (group: ReadingJudgementGroup) => {
+    const choices =
+      group.judgementType === 'true-false-not-given'
+        ? ['TRUE', 'FALSE', 'NOT GIVEN']
+        : ['YES', 'NO', 'NOT GIVEN']
+    const title = group.judgementType === 'true-false-not-given' ? 'True / False / Not Given' : 'Yes / No / Not Given'
+
+    return (
+      <article
+        key={`reading-judgement-group-${group.id}`}
+        className={`readingQuestionCard readingJudgementGroup ${isAdvancedReadingExam ? 'readingJudgementGroup-advanced' : ''}`.trim()}
+      >
+        <div className="readingFillGroupHeader">
+          <div>
+            <p className="readingQuestionNumber">
+              Questions {group.start}-{group.end}
+            </p>
+            <h4>{title}</h4>
+          </div>
+        </div>
+        {group.instruction && (
+          <div
+            className={`readingTaskInstruction ${isAdvancedReadingExam ? 'readingTaskInstruction-advanced' : ''}`.trim()}
+          >
+            {group.instruction.split('\n').map((line, index) => (
+              <p key={`${group.id}-instruction-${index}`}>{line}</p>
+            ))}
+          </div>
+        )}
+        <div className="readingJudgementList">
+          {group.questions.map((question) => {
+            const statement = sanitizeReadingPromptForDisplayShared(String(question.prompt || '').trim())
+            const value = readingAnswers[question.number] || ''
+            const isHinting = readingHintQuestionNumber === question.number
+            return (
+              <div
+                key={`reading-judgement-${group.id}-${question.number}`}
+                id={`reading-question-${question.number}`}
+                className={`readingJudgementRow ${isHinting ? 'is-active' : ''}`.trim()}
+              >
+                <p className="readingJudgementStatement">
+                  <strong>{question.number}</strong> {statement}
+                </p>
+                <div className="readingJudgementControls">
+                  <div className="readingJudgementChoiceGrid" role="listbox" aria-label={`Answer options for question ${question.number}`}>
+                    {choices.map((choice) => (
+                      <button
+                        key={`${question.number}-${choice}`}
+                        type="button"
+                        className={`readingJudgementChoiceBtn ${value === choice ? 'active' : ''}`}
+                        role="option"
+                        aria-selected={value === choice}
+                        onClick={() =>
+                          setReadingAnswers((current) => ({ ...current, [question.number]: choice }))
+                        }
+                      >
+                        {choice}
+                      </button>
+                    ))}
+                  </div>
+                  {renderReadingHintToggleButton(question.number, isHinting, { label: 'th' })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </article>
+    )
+  }
+
   const renderReadingChooseTwoGroup = (group: ReadingChooseTwoGroup) => {
     const letterChoices =
       group.choiceOptions.length > 0
@@ -19359,29 +19759,41 @@ function App() {
     }
 
     if (question.answerType === 'true-false-not-given') {
+      const choices = ['TRUE', 'FALSE', 'NOT GIVEN']
       return (
-        <select
-          value={value}
-          onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
-        >
-          <option value="">Select answer</option>
-          <option value="TRUE">TRUE</option>
-          <option value="FALSE">FALSE</option>
-          <option value="NOT GIVEN">NOT GIVEN</option>
-        </select>
+        <div className="readingJudgementChoiceGrid" role="listbox" aria-label={`Answer options for question ${question.number}`}>
+          {choices.map((choice) => (
+            <button
+              key={`${question.number}-${choice}`}
+              type="button"
+              className={`readingJudgementChoiceBtn ${value === choice ? 'active' : ''}`}
+              role="option"
+              aria-selected={value === choice}
+              onClick={() => setReadingAnswers((current) => ({ ...current, [question.number]: choice }))}
+            >
+              {choice}
+            </button>
+          ))}
+        </div>
       )
     }
     if (question.answerType === 'yes-no-not-given') {
+      const choices = ['YES', 'NO', 'NOT GIVEN']
       return (
-        <select
-          value={value}
-          onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
-        >
-          <option value="">Select answer</option>
-          <option value="YES">YES</option>
-          <option value="NO">NO</option>
-          <option value="NOT GIVEN">NOT GIVEN</option>
-        </select>
+        <div className="readingJudgementChoiceGrid" role="listbox" aria-label={`Answer options for question ${question.number}`}>
+          {choices.map((choice) => (
+            <button
+              key={`${question.number}-${choice}`}
+              type="button"
+              className={`readingJudgementChoiceBtn ${value === choice ? 'active' : ''}`}
+              role="option"
+              aria-selected={value === choice}
+              onClick={() => setReadingAnswers((current) => ({ ...current, [question.number]: choice }))}
+            >
+              {choice}
+            </button>
+          ))}
+        </div>
       )
     }
     if (question.answerType === 'multiple-choice') {
@@ -22155,6 +22567,13 @@ function App() {
                             ))
                           }
                         }
+                        if (!activeReadingPassage.bodyParagraphs.length) {
+                          return (
+                            <p className="meta readingPassageEmpty">
+                              Passage text is not available for this exam yet. Use the question panel on the right.
+                            </p>
+                          )
+                        }
                         return activeReadingPassage.bodyParagraphs.map((paragraph, index) => (
                           <p key={`reading-paragraph-${index}`}>
                             {renderPassageParagraphWithHighlights(
@@ -22228,6 +22647,18 @@ function App() {
 
                   <div className="readingQuestionList">
                     {activeReadingQuestions.map((question) => {
+                      const mcqGroup = activeReadingMcqGroupByQuestionNumber.get(question.number)
+                      if (mcqGroup) {
+                        return mcqGroup.questions[0]?.number === question.number
+                          ? renderReadingMcqGroup(mcqGroup)
+                          : null
+                      }
+                      const judgementGroup = activeReadingJudgementGroupByQuestionNumber.get(question.number)
+                      if (judgementGroup) {
+                        return judgementGroup.questions[0]?.number === question.number
+                          ? renderReadingJudgementGroup(judgementGroup)
+                          : null
+                      }
                       const matchingGroup = activeReadingMatchingGroupByQuestionNumber.get(question.number)
                       if (matchingGroup) {
                         return matchingGroup.questions[0]?.number === question.number

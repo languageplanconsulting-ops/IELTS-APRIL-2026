@@ -19,7 +19,12 @@ import { USER_PROVIDED_READING_PRACTICE_GENERAL_TRAINING_EXAMS } from './userPro
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS } from './userProvidedReadingPracticeCambridge17.mjs'
 import { USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS } from './userProvidedReadingPracticeJune2026.mjs'
-import { buildReadingExamPayload, resolveReadingPassageBodyParagraphs } from './readingImportUtils.mjs'
+import {
+  buildReadingExamPayload,
+  isValidReadingParsedPayload,
+  normalizeReadingQuestionRecord,
+  resolveReadingPassageBodyParagraphs
+} from './readingImportUtils.mjs'
 
 dotenv.config()
 
@@ -3261,20 +3266,6 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
   })
 }
 
-const normalizeReadingQuestionRecord = (question, questionSectionText = '') => {
-  const correctAnswer = canonicalizeReadingCorrectAnswer(question?.correctAnswer || '')
-  const answerType = inferReadingAnswerType(correctAnswer, questionSectionText)
-  return {
-    ...question,
-    prompt: sanitizeReadingQuestionPrompt(
-      sanitizeReadingJudgementPrompt(question?.prompt, answerType),
-      correctAnswer
-    ),
-    correctAnswer,
-    answerType
-  }
-}
-
 const normalizeReadingParsedPayload = (payload) => ({
   ...(payload && typeof payload === 'object' ? payload : {}),
   passages: Array.isArray(payload?.passages)
@@ -3282,7 +3273,9 @@ const normalizeReadingParsedPayload = (payload) => ({
         ...passage,
         bodyParagraphs: resolveReadingPassageBodyParagraphs(passage?.title, passage?.bodyParagraphs),
         questions: Array.isArray(passage?.questions)
-          ? passage.questions.map((question) => normalizeReadingQuestionRecord(question))
+          ? passage.questions.map((question) =>
+              normalizeReadingQuestionRecord(question, passage?.questionSectionText || '')
+            )
           : []
       }))
     : [],
@@ -5753,13 +5746,33 @@ const getReadingExamCollectionTitle = (exam) =>
 const isReadingBankExamRecord = (exam) =>
   isCambridgeBookReadingExamRecord(exam) || Boolean(getReadingExamCollectionTitle(exam))
 
-const mapBuiltInReadingExam = (exam, timestamps) => ({
-  ...exam,
-  parsedPayload: buildReadingExamPayload(exam),
-  ...(resolveReadingReleaseAt(exam) ? { releaseAt: resolveReadingReleaseAt(exam) } : {}),
-  createdAt: timestamps.createdAt,
-  updatedAt: timestamps.updatedAt
-})
+const mapBuiltInReadingExam = (exam, timestamps) => {
+  const storedPayload = exam.parsedPayload || exam.parsed_payload
+  let parsedPayload = storedPayload
+  try {
+    const rebuilt = buildReadingExamPayload({
+      ...exam,
+      parsedPayload: storedPayload
+    })
+    if (isValidReadingParsedPayload(rebuilt)) {
+      parsedPayload = rebuilt
+    }
+  } catch (error) {
+    if (!isValidReadingParsedPayload(parsedPayload)) {
+      throw error
+    }
+  }
+  if (!isValidReadingParsedPayload(parsedPayload)) {
+    parsedPayload = buildReadingExamPayload(exam)
+  }
+  return {
+    ...exam,
+    parsedPayload,
+    ...(resolveReadingReleaseAt(exam) ? { releaseAt: resolveReadingReleaseAt(exam) } : {}),
+    createdAt: timestamps.createdAt,
+    updatedAt: timestamps.updatedAt
+  }
+}
 
 const BUILT_IN_READING_BANK_EXAMS = [
   ...APRIL_2026_UNCERTAIN_PREDICTION_READING_EXAMS.map((exam) =>
@@ -6422,7 +6435,8 @@ const mapReadingExamRecord = (row) => {
         ? {
             ...buildReadingExamPayload({
               ...exam,
-              releaseAt
+              releaseAt,
+              parsedPayload: storedPayload
             }),
             ...(collectionTitle ? { collectionTitle } : {}),
             ...(releaseAt ? { releaseAt } : {})
