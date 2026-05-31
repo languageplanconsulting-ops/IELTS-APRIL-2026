@@ -18726,10 +18726,14 @@ function App() {
   }
 
   const renderPassageParagraphWithHighlights = (
-    text: string,
+    rawText: string,
     passageNumber: number,
     hintExcerpt?: string | string[]
   ) => {
+    const text = String(rawText || '')
+      .replace(/([.!?;:,])([A-Z])/g, '$1 $2')
+      .replace(/\s{2,}/g, ' ')
+      .trim()
     const hintNeedles = Array.isArray(hintExcerpt) ? hintExcerpt : buildReadingHintNeedles(hintExcerpt)
     const highlights = [
       ...readingUserHighlights
