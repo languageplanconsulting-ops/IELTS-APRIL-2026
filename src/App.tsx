@@ -363,6 +363,8 @@ type ReadingAttemptSummary = {
   wrongCount: number
   completedAt: string
   reportItems: ReadingReportItem[]
+  attemptCount?: number
+  bestAccuracy?: number
 }
 
 type ReadingPdoyLesson = {
@@ -7574,7 +7576,10 @@ function App() {
   const [selectedReadingCollection, setSelectedReadingCollection] = useState('all')
   const [selectedReadingExamId, setSelectedReadingExamId] = useState('')
   const [readingAnswers, setReadingAnswers] = useState<Record<number, string>>({})
-  const [readingAttemptStage, setReadingAttemptStage] = useState<'bank' | 'exam' | 'report' | 'review'>('bank')
+  const [readingAutosaveLabel, setReadingAutosaveLabel] = useState('')
+  const [isSubmittingReading, setIsSubmittingReading] = useState(false)
+  const [readingSubmitConfirmOpen, setReadingSubmitConfirmOpen] = useState(false)
+  const [readingAttemptStage, setReadingAttemptStage] = useState<'bank' | 'exam' | 'report' | 'review' | 'briefing'>('bank')
   const [readingReportItems, setReadingReportItems] = useState<ReadingReportItem[]>([])
   const [readingAttemptHistory, setReadingAttemptHistory] = useState<Record<string, ReadingAttemptSummary>>({})
   const [readingJourneyProgress, setReadingJourneyProgress] = useState<ReadingJourneyProgress>(
@@ -11977,6 +11982,27 @@ function App() {
     if (!authSession?.email) return
     localStorage.setItem(makeScopedStorageKey(READING_ATTEMPTS_KEY, authSession.email), JSON.stringify(readingAttemptHistory))
   }, [authSession, readingAttemptHistory])
+
+  useEffect(() => {
+    if (!authSession?.email) return
+    if (readingAttemptStage !== 'exam' || !activeReadingExam) return
+    const key = makeScopedStorageKey(`ielts-reading-progress:${activeReadingExam.id}`, authSession.email)
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          answers: readingAnswers,
+          highlights: readingUserHighlights,
+          updatedAt: Date.now()
+        })
+      )
+      setReadingAutosaveLabel('✓ Saved')
+      const timer = window.setTimeout(() => setReadingAutosaveLabel(''), 1800)
+      return () => window.clearTimeout(timer)
+    } catch {
+      // localStorage full or unavailable — ignore
+    }
+  }, [authSession, activeReadingExam, readingAttemptStage, readingAnswers, readingUserHighlights])
 
   useEffect(() => {
     if (!authSession?.email || isNotebookHydrating) return
@@ -18491,13 +18517,34 @@ function App() {
     setSelectedReadingCollection('all')
     setReadingPdoySessionActive(false)
     setSelectedReadingExamId(exam.id)
-    setReadingAnswers({})
+    // Restore in-progress answers/highlights if user has them saved locally
+    let restoredAnswers: Record<number, string> = {}
+    let restoredHighlights: Array<{ id: string; passageNumber: number; text: string }> = []
+    if (authSession?.email) {
+      try {
+        const key = makeScopedStorageKey(`ielts-reading-progress:${exam.id}`, authSession.email)
+        const raw = localStorage.getItem(key)
+        if (raw) {
+          const parsed = JSON.parse(raw) as {
+            answers?: Record<number, string>
+            highlights?: Array<{ id: string; passageNumber: number; text: string }>
+          }
+          if (parsed && typeof parsed === 'object') {
+            if (parsed.answers && typeof parsed.answers === 'object') restoredAnswers = parsed.answers
+            if (Array.isArray(parsed.highlights)) restoredHighlights = parsed.highlights
+          }
+        }
+      } catch {
+        // ignore parse errors
+      }
+    }
+    setReadingAnswers(restoredAnswers)
     setReadingReportItems([])
-    setReadingAttemptStage('exam')
+    setReadingAttemptStage('briefing')
     setReadingHintQuestionNumber(null)
     setReadingExamError('')
     setReadingSelectionText('')
-    setReadingUserHighlights([])
+    setReadingUserHighlights(restoredHighlights)
     setReadingPencilStrokes({})
     setReadingSmartPencilMode(false)
     setReadingActivePassageNumber(exam.parsedPayload.passages[0]?.number || 1)
@@ -18794,28 +18841,36 @@ function App() {
     setActivePage('reading')
   }
 
-  const submitReadingExam = () => {
+  const finalizeReadingExamSubmission = () => {
     if (!activeReadingExam) return
+    setIsSubmittingReading(true)
     const allQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
     const results = scoreReadingQuestions(allQuestions, readingAnswers)
     const correctCount = results.filter((item) => item.isCorrect).length
     const totalQuestions = results.length
     const accuracy = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0
     const completedAt = new Date().toISOString()
-    setReadingAttemptHistory((current) => ({
-      ...current,
-      [activeReadingExam.id]: {
-        examId: activeReadingExam.id,
-        examTitle: activeReadingExam.title,
-        category: activeReadingExam.category,
-        correctCount,
-        totalQuestions,
-        accuracy,
-        wrongCount: Math.max(0, totalQuestions - correctCount),
-        completedAt,
-        reportItems: results
+    setReadingAttemptHistory((current) => {
+      const previous = current[activeReadingExam.id]
+      const previousAttempts = previous?.attemptCount || 0
+      const previousBest = previous?.bestAccuracy ?? previous?.accuracy ?? 0
+      return {
+        ...current,
+        [activeReadingExam.id]: {
+          examId: activeReadingExam.id,
+          examTitle: activeReadingExam.title,
+          category: activeReadingExam.category,
+          correctCount,
+          totalQuestions,
+          accuracy,
+          wrongCount: Math.max(0, totalQuestions - correctCount),
+          completedAt,
+          reportItems: results,
+          attemptCount: previousAttempts + 1,
+          bestAccuracy: Math.max(previousBest, accuracy)
+        }
       }
-    }))
+    })
     if (isReadingJourneyExamId(activeReadingExam.id)) {
       const stageNumber = parseReadingJourneyStageNumber(activeReadingExam.id)
       if (stageNumber) {
@@ -18828,9 +18883,34 @@ function App() {
         }))
       }
     }
+    // Clear in-progress autosave for this exam now that it's finalized
+    if (authSession?.email) {
+      try {
+        localStorage.removeItem(
+          makeScopedStorageKey(`ielts-reading-progress:${activeReadingExam.id}`, authSession.email)
+        )
+      } catch {
+        // ignore
+      }
+    }
     setReadingReportItems(results)
     setReadingAttemptStage('report')
     setReadingHintQuestionNumber(null)
+    setReadingSubmitConfirmOpen(false)
+    setIsSubmittingReading(false)
+  }
+
+  const submitReadingExam = () => {
+    if (!activeReadingExam || isSubmittingReading) return
+    const allQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
+    const unanswered = allQuestions.filter(
+      (question) => !String(readingAnswers[question.number] || '').trim()
+    )
+    if (unanswered.length > 0) {
+      setReadingSubmitConfirmOpen(true)
+      return
+    }
+    finalizeReadingExamSubmission()
   }
 
   function resizeReadingPencilCanvas() {
@@ -22383,6 +22463,7 @@ function App() {
                     {activeReadingPassages.length > 1
                       ? ` · Passage ${activeReadingPassages.findIndex((passage) => passage.number === activeReadingPassage.number) + 1} of ${activeReadingPassages.length}`
                       : ''}
+                    {readingAutosaveLabel && <span className="readingAutosaveStamp">{readingAutosaveLabel}</span>}
                   </p>
                 </div>
                 <div className="controls">
@@ -22396,6 +22477,15 @@ function App() {
                     Back to Bank
                   </button>
                 </div>
+              </div>
+
+              <div className="readingExamProgressBar" role="progressbar" aria-label="Answered progress" aria-valuemin={0} aria-valuemax={activeReadingAllQuestions.length} aria-valuenow={answeredReadingCount}>
+                <div
+                  className="readingExamProgressBarFill"
+                  style={{
+                    width: `${activeReadingAllQuestions.length ? Math.min(100, Math.round((answeredReadingCount / activeReadingAllQuestions.length) * 100)) : 0}%`
+                  }}
+                />
               </div>
 
               {activeReadingPassages.length > 1 && (
@@ -22714,11 +22804,157 @@ function App() {
                   </div>
 
                   <div className="readingExamSubmitBar">
-                    <button type="button" className="readingSubmitExamBtn readingSubmitExamBtn-end" onClick={submitReadingExam}>
-                      Submit Reading Exam
+                    <div className="readingExamSubmitBarStatus">
+                      <span className="readingExamSubmitBarCount">
+                        {answeredReadingCount}/{activeReadingAllQuestions.length} answered
+                      </span>
+                      {answeredReadingCount < activeReadingAllQuestions.length && (
+                        <span className="readingExamSubmitBarRemaining">
+                          {activeReadingAllQuestions.length - answeredReadingCount} left
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      className="readingSubmitExamBtn readingSubmitExamBtn-end"
+                      onClick={submitReadingExam}
+                      disabled={isSubmittingReading}
+                    >
+                      {isSubmittingReading ? (
+                        <>
+                          <span className="readingSubmitSpinner" aria-hidden="true" />
+                          Scoring…
+                        </>
+                      ) : (
+                        'Submit Reading Exam'
+                      )}
                     </button>
                   </div>
                 </section>
+              </div>
+
+              {readingSubmitConfirmOpen && (
+                <div
+                  className="readingSubmitConfirmBackdrop"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="reading-submit-confirm-title"
+                  onClick={() => setReadingSubmitConfirmOpen(false)}
+                >
+                  <div
+                    className="readingSubmitConfirmCard"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <p className="sectionLabel">Submit early?</p>
+                    <h3 id="reading-submit-confirm-title">
+                      {activeReadingAllQuestions.length - answeredReadingCount} question
+                      {activeReadingAllQuestions.length - answeredReadingCount === 1 ? '' : 's'} still blank
+                    </h3>
+                    <p className="meta">
+                      Unanswered:{' '}
+                      {activeReadingAllQuestions
+                        .filter((question) => !String(readingAnswers[question.number] || '').trim())
+                        .map((question) => `Q${question.number}`)
+                        .join(', ')}
+                    </p>
+                    <p>
+                      Blank answers will be marked wrong. You can still go back and answer them, or
+                      submit now to see your score.
+                    </p>
+                    <div className="readingSubmitConfirmActions">
+                      <button
+                        type="button"
+                        className="secondary"
+                        onClick={() => setReadingSubmitConfirmOpen(false)}
+                        disabled={isSubmittingReading}
+                      >
+                        Go back
+                      </button>
+                      <button
+                        type="button"
+                        className="readingSubmitExamBtn"
+                        onClick={finalizeReadingExamSubmission}
+                        disabled={isSubmittingReading}
+                      >
+                        {isSubmittingReading ? (
+                          <>
+                            <span className="readingSubmitSpinner" aria-hidden="true" />
+                            Scoring…
+                          </>
+                        ) : (
+                          'Submit anyway'
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {readingWorkspaceMode === 'bank' && readingAttemptStage === 'briefing' && activeReadingExam && activeReadingPassage && (
+            <div className="readingBriefingWrap">
+              <div className="readingBriefingCard">
+                <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
+                <h2>{activeReadingExam.title}</h2>
+                <p className="readingBriefingSubtitle">
+                  Get ready before you start. This screen mirrors what you'd see at the start of the real exam.
+                </p>
+                <div className="readingBriefingGrid">
+                  <div className="readingBriefingTile">
+                    <p className="sectionLabel">Passages</p>
+                    <strong>{activeReadingPassages.length}</strong>
+                    <span>to read</span>
+                  </div>
+                  <div className="readingBriefingTile">
+                    <p className="sectionLabel">Questions</p>
+                    <strong>{activeReadingAllQuestions.length}</strong>
+                    <span>total</span>
+                  </div>
+                  <div className="readingBriefingTile">
+                    <p className="sectionLabel">Suggested time</p>
+                    <strong>
+                      {activeReadingPassages.length >= 3 ? '60' : activeReadingPassages.length >= 2 ? '40' : '20'} min
+                    </strong>
+                    <span>at exam pace</span>
+                  </div>
+                  {readingAttemptHistory[activeReadingExam.id] && (
+                    <div className="readingBriefingTile">
+                      <p className="sectionLabel">Your best</p>
+                      <strong>
+                        {readingAttemptHistory[activeReadingExam.id].bestAccuracy ??
+                          readingAttemptHistory[activeReadingExam.id].accuracy}
+                        %
+                      </strong>
+                      <span>
+                        attempt{(readingAttemptHistory[activeReadingExam.id].attemptCount || 1) === 1 ? '' : 's'}{' '}
+                        {readingAttemptHistory[activeReadingExam.id].attemptCount || 1}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <ul className="readingBriefingList">
+                  <li>Read carefully — answers must be exactly as in the passage where required.</li>
+                  <li>Use Smart Pencil or highlight to mark useful evidence on the left.</li>
+                  <li>The number strip on the right jumps to any question; answered ones turn green.</li>
+                  <li>Your answers and highlights autosave to this device — refresh-safe.</li>
+                </ul>
+                <div className="readingBriefingActions">
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => returnToReadingBank(activeReadingExam)}
+                  >
+                    Back to Bank
+                  </button>
+                  <button
+                    type="button"
+                    className="readingSubmitExamBtn"
+                    onClick={() => setReadingAttemptStage('exam')}
+                  >
+                    {Object.keys(readingAnswers).length > 0 ? 'Resume Exam' : 'Start Exam'}
+                  </button>
+                </div>
               </div>
             </div>
           )}

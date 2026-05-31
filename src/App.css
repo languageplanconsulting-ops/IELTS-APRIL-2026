@@ -9817,14 +9817,211 @@ body,
 }
 
 .readingExamLayout-bank .readingExamSubmitBar {
-  position: static;
-  bottom: auto;
-  z-index: auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
   flex-shrink: 0;
   margin-top: auto;
-  padding: 12px 0 0;
+  padding: 12px 0 4px;
   border-top: 2px solid rgba(15, 23, 42, 0.1);
-  background: linear-gradient(180deg, rgba(255, 254, 249, 0.72) 0%, #fffef9 42%);
+  background: linear-gradient(180deg, rgba(255, 254, 249, 0.92) 0%, #fffef9 50%);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.readingExamSubmitBarStatus {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.readingExamSubmitBarCount {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 0.92rem;
+}
+
+.readingExamSubmitBarRemaining {
+  color: #b45309;
+  font-weight: 700;
+}
+
+.readingExamLayout-bank .readingExamSubmitBar .readingSubmitExamBtn-end {
+  flex: 1 1 auto;
+}
+
+.readingExamProgressBar {
+  width: 100%;
+  height: 6px;
+  margin: 8px 0 4px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.readingExamProgressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #16a34a 0%, #15803d 100%);
+  border-radius: inherit;
+  transition: width 240ms ease;
+}
+
+.readingAutosaveStamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.readingSubmitSpinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: readingSpin 0.7s linear infinite;
+  vertical-align: -2px;
+}
+
+@keyframes readingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.readingSubmitConfirmBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.55);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.readingSubmitConfirmCard {
+  width: min(520px, 100%);
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 24px 26px;
+  border: 3px solid var(--bc-black);
+  border-radius: 18px;
+  background: #fffef9;
+  box-shadow: 8px 8px 0 var(--bc-black);
+  display: grid;
+  gap: 12px;
+}
+
+.readingSubmitConfirmCard h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.readingSubmitConfirmActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.readingSubmitConfirmActions .readingSubmitExamBtn {
+  min-width: 160px;
+}
+
+.readingBriefingWrap {
+  display: grid;
+  place-items: center;
+  padding: 40px 16px;
+}
+
+.readingBriefingCard {
+  width: min(820px, 100%);
+  padding: 32px 32px 28px;
+  border: 3px solid var(--bc-black);
+  border-radius: 22px;
+  background: #fffef9;
+  box-shadow: 8px 8px 0 var(--bc-black);
+  display: grid;
+  gap: 16px;
+}
+
+.readingBriefingCard h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.readingBriefingSubtitle {
+  margin: 0;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.readingBriefingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 4px 0 6px;
+}
+
+.readingBriefingTile {
+  display: grid;
+  gap: 4px;
+  padding: 14px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.readingBriefingTile strong {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.readingBriefingTile span {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.readingBriefingList {
+  margin: 4px 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.readingBriefingActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.readingBriefingActions .readingSubmitExamBtn {
+  min-width: 200px;
 }
 
 .readingExamLayout-bank .readingSubmitExamBtn-end {
@@ -10106,22 +10303,30 @@ body,
 }
 
 .readingJudgementChoiceBtn {
-  min-height: 36px;
-  padding: 8px 14px;
+  min-height: 40px;
+  padding: 10px 16px;
   border: 2px solid #cbd5e1;
-  border-radius: 10px;
+  border-radius: 999px;
   background: #fff;
   color: #334155;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.readingJudgementChoiceBtn:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
 }
 
 .readingJudgementChoiceBtn.active {
-  border-color: #2563eb;
-  background: #dbeafe;
-  color: #1d4ed8;
+  border-color: #1e3a8a;
+  background: #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.35);
+  transform: translateY(-1px);
 }
 
 .readingPassageSection {
@@ -11096,7 +11301,21 @@ body,
 }
 
 .listeningChoiceBtn.active {
-  background: linear-gradient(180deg, #fff8dd 0%, #fff1a8 100%);
+  background: linear-gradient(180deg, #1d4ed8 0%, #1e3a8a 100%);
+  border-color: #1e3a8a;
+  color: #ffffff;
+  box-shadow: 6px 6px 0 #0f172a;
+  transform: translate(-1px, -1px);
+}
+
+.listeningChoiceBtn.active strong,
+.listeningChoiceBtn.active span {
+  color: #ffffff;
+}
+
+.listeningChoiceBtn.active::before {
+  content: '';
+  position: absolute;
 }
 
 .listeningChoiceBtn strong {
@@ -11874,15 +12093,50 @@ body,
   box-shadow: 4px 4px 0 var(--bc-black);
   padding: 8px 10px;
   font-weight: 800;
+  color: #1e293b;
   cursor: pointer;
+  position: relative;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.readingQuestionNavigator button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--bc-black);
 }
 
 .readingQuestionNavigator button.is-answered {
-  background: #d1fae5;
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #15803d;
+}
+
+.readingQuestionNavigator button.is-answered::after {
+  content: '✓';
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.readingQuestionNavigator button.is-flagged {
+  background: #fef3c7;
+  border-color: #d97706;
 }
 
 .readingQuestionNavigator button.is-active {
   background: #fde68a;
+  border-color: #b45309;
+  color: #78350f;
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
 }
 
 .readingQuestionList {
