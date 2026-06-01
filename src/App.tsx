@@ -6740,7 +6740,9 @@ function App() {
   const [adminRecordedVideoSizeBytes, setAdminRecordedVideoSizeBytes] = useState(0)
   const [adminVideoTrimStart, setAdminVideoTrimStart] = useState(0)
   const [adminVideoTrimEnd, setAdminVideoTrimEnd] = useState(0)
-  const [adminVideoUploadProgress, setAdminVideoUploadProgress] = useState(0)
+  // Upload progress is mirrored into adminBgUpload.progress for the banner; this
+  // raw setter is still used by the blur-compaction pre-step for granular feedback.
+  const [, setAdminVideoUploadProgress] = useState(0)
   const [adminBgUpload, setAdminBgUpload] = useState<{ topicTitle: string; progress: number; done: boolean; error: string } | null>(null)
   const [adminVideoInputDevices, setAdminVideoInputDevices] = useState<AdminMediaDevice[]>([])
   const [adminAudioInputDevices, setAdminAudioInputDevices] = useState<AdminMediaDevice[]>([])
@@ -13934,7 +13936,6 @@ function App() {
     if (
       (!options?.force && adminRecordedVideoUrl) ||
       adminVideoRecorderStatus === 'recording' ||
-      adminVideoRecorderStatus === 'uploading' ||
       !navigator.mediaDevices?.getUserMedia
     ) {
       return false
@@ -14096,7 +14097,7 @@ function App() {
   }
 
   const requestAdminVideoRecording = async () => {
-    if (adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading') return
+    if (adminVideoRecorderStatus === 'recording') return
     setAdminResponsivePreviewMode('tablet')
     const isRetake = Boolean(adminRecordedVideoUrl)
     if (isRetake) {
@@ -14140,7 +14141,7 @@ function App() {
   }
 
   const goToAdminStudioStep = (step: AdminVideoStudioStep) => {
-    if (adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading') return
+    if (adminVideoRecorderStatus === 'recording') return
     if (!canAccessAdminStudioStep(step, Boolean(adminRecordedVideoUrl))) {
       setAdminVideoRecorderMessage('Record or load a video before opening that step.')
       return
@@ -14890,28 +14891,17 @@ function App() {
     setAdminVideoRecorderMessage('Upload canceled. Your recording is still ready to preview or upload again.')
   }
 
-  // Release the studio UI immediately so you can record a new video while the current upload runs in background
-  const releaseStudioForNewRecording = () => {
-    if (adminVideoRecorderStatus !== 'uploading') return
-    // Revoke the local object URL — the blob is already captured in FormData inside the in-flight XHR
-    if (adminRecordedVideoUrl) URL.revokeObjectURL(adminRecordedVideoUrl)
-    adminRecordedVideoBlobRef.current = null
-    setAdminRecordedVideoUrl('')
-    setAdminRecordedVideoActualDuration(0)
-    setAdminRecordedVideoSizeBytes(0)
-    setAdminRecordedVideoHasBakedFlip(false)
-    setAdminVideoTrimStart(0)
-    setAdminVideoTrimEnd(0)
-    setAdminVideoStudioStep('setup')
-    setAdminVideoRecorderStatus('idle')
-    setAdminVideoRecorderMessage('')
-    // The XHR continues uploading in background; adminBgUpload banner shows progress
-  }
-
   const uploadAdminRecordedVideo = async () => {
     if (!authSession?.accessToken || authSession.role !== 'admin') return
     if (!adminSelectedVideoTopic) {
       setAdminVideoRecorderMessage('Choose a speaking topic before uploading.')
+      return
+    }
+    // Don't allow a second concurrent upload — the XHR ref is single-slot.
+    if (adminVideoUploadXhrRef.current) {
+      setAdminVideoRecorderMessage(
+        'A previous upload is still finishing. Wait for it to complete, then publish again.'
+      )
       return
     }
     let videoBlob = adminRecordedVideoBlobRef.current
@@ -14939,6 +14929,11 @@ function App() {
     setAdminVideoRecorderMessage('Uploading video to online storage...')
     setAdminVideoUploadProgress(0)
     setAdminBgUpload({ topicTitle: adminSelectedVideoTopic.title, progress: 0, done: false, error: '' })
+    // Snapshot the topic being uploaded so the studio can be freed while
+    // the network upload continues in the background.
+    const uploadingTopicId = adminSelectedVideoTopic.id
+    const uploadingTopicTitle = adminSelectedVideoTopic.title
+    const uploadingTopicPrompt = adminSelectedVideoTopic.prompt
     try {
       if (videoBlob.size > ADMIN_VIDEO_API_UPLOAD_SAFE_BYTES) {
         setAdminVideoRecorderMessage(
@@ -14965,9 +14960,9 @@ function App() {
       }
       setAdminVideoRecorderMessage('Uploading compact video to online storage...')
       const formData = new FormData()
-      formData.append('topicId', adminSelectedVideoTopic.id)
-      formData.append('topicTitle', adminSelectedVideoTopic.title)
-      formData.append('prompt', adminSelectedVideoTopic.prompt)
+      formData.append('topicId', uploadingTopicId)
+      formData.append('topicTitle', uploadingTopicTitle)
+      formData.append('prompt', uploadingTopicPrompt)
       formData.append('durationSeconds', String(adminRecordedVideoDuration))
       formData.append('trimStartSeconds', String(roundAdminSubtitleSeconds(adminVideoTrimStart)))
       formData.append('trimEndSeconds', String(roundAdminSubtitleSeconds(adminVideoTrimEnd || adminRecordedVideoDuration)))
@@ -14977,66 +14972,74 @@ function App() {
       formData.append('transcript', adminSubtitleTranscript.trim())
       formData.append('subtitlesJson', JSON.stringify(adminSubtitleCues))
       formData.append('subtitleStyleJson', JSON.stringify(adminPlaybackSubtitleStyle))
-      formData.append('video', videoBlob, `${adminSelectedVideoTopic.id}-sample.${getAdminVideoFileExtension(videoBlob.type)}`)
+      formData.append('video', videoBlob, `${uploadingTopicId}-sample.${getAdminVideoFileExtension(videoBlob.type)}`)
 
-      const payload = await new Promise<{ item: SpeakingSampleVideoAsset }>((resolve, reject) => {
-        const xhr = new XMLHttpRequest()
-        adminVideoUploadXhrRef.current = xhr
-        xhr.open('POST', '/api/admin/speaking-sample-videos')
-        xhr.setRequestHeader('Authorization', `Bearer ${authSession.accessToken}`)
-        xhr.upload.onprogress = (event) => {
-          if (!event.lengthComputable) return
-          const pct = Math.min(99, Math.round((event.loaded / event.total) * 100))
-          setAdminVideoUploadProgress(pct)
-          setAdminBgUpload((prev) => prev ? { ...prev, progress: pct } : prev)
-        }
-        xhr.onload = () => {
-          let payload: { item?: SpeakingSampleVideoAsset; error?: { message?: string } | string } = {}
-          try {
-            payload = xhr.responseText ? JSON.parse(xhr.responseText) : {}
-          } catch {
-            payload = {}
-          }
-          if (xhr.status < 200 || xhr.status >= 300) {
-            adminVideoUploadXhrRef.current = null
-            const message =
-              typeof payload.error === 'string'
-                ? payload.error
-                : payload.error?.message ||
-                  (xhr.status === 413
-                    ? `Upload failed because the video is still too large for the production API. Trim it below ${ADMIN_VIDEO_API_UPLOAD_SAFE_MB} MB and try again.`
-                    : `Upload failed (${xhr.status})`)
-            reject(new Error(message))
-            return
-          }
-          adminVideoUploadXhrRef.current = null
-          resolve(payload as { item: SpeakingSampleVideoAsset })
-        }
-        xhr.onerror = () => {
-          adminVideoUploadXhrRef.current = null
-          reject(new Error('Network error while uploading video.'))
-        }
-        xhr.onabort = () => {
-          adminVideoUploadXhrRef.current = null
-          reject(new Error('Upload canceled.'))
-        }
-        xhr.send(formData)
-      })
-      if (!payload.item?.topicId || !payload.item?.videoUrl) {
-        throw new Error('Upload finished, but the saved video did not come back from storage. Try publishing again.')
+      // Fire-and-forget the upload. We immediately release the studio UI so
+      // the admin can pick the next topic and start recording while the
+      // network transfer continues in the background. State updates for the
+      // banner happen in the XHR callbacks.
+      const xhr = new XMLHttpRequest()
+      adminVideoUploadXhrRef.current = xhr
+      xhr.open('POST', '/api/admin/speaking-sample-videos')
+      xhr.setRequestHeader('Authorization', `Bearer ${authSession.accessToken}`)
+      xhr.upload.onprogress = (event) => {
+        if (!event.lengthComputable) return
+        const pct = Math.min(99, Math.round((event.loaded / event.total) * 100))
+        setAdminVideoUploadProgress(pct)
+        setAdminBgUpload((prev) => (prev ? { ...prev, progress: pct } : prev))
       }
-      if (payload.item?.topicId) {
+      xhr.onload = () => {
+        adminVideoUploadXhrRef.current = null
+        let payload: { item?: SpeakingSampleVideoAsset; error?: { message?: string } | string } = {}
+        try {
+          payload = xhr.responseText ? JSON.parse(xhr.responseText) : {}
+        } catch {
+          payload = {}
+        }
+        if (xhr.status < 200 || xhr.status >= 300) {
+          const message =
+            typeof payload.error === 'string'
+              ? payload.error
+              : payload.error?.message ||
+                (xhr.status === 413
+                  ? `Upload failed because the video is still too large. Trim it below ${ADMIN_VIDEO_API_UPLOAD_SAFE_MB} MB and try again.`
+                  : `Upload failed (${xhr.status})`)
+          setAdminBgUpload({ topicTitle: uploadingTopicTitle, progress: 0, done: false, error: message })
+          setAdminVideoUploadProgress(0)
+          return
+        }
+        const itemPayload = payload as { item?: SpeakingSampleVideoAsset }
+        if (!itemPayload.item?.topicId || !itemPayload.item?.videoUrl) {
+          setAdminBgUpload({
+            topicTitle: uploadingTopicTitle,
+            progress: 0,
+            done: false,
+            error: 'Upload finished but the saved video did not come back from storage. Try publishing again.'
+          })
+          return
+        }
         setSpeakingSampleVideoAssets((current) => ({
           ...current,
-          [payload.item.topicId]: payload.item
+          [itemPayload.item!.topicId]: itemPayload.item!
         }))
+        void loadSpeakingSampleVideoCatalog(authSession.accessToken)
+        setAdminVideoUploadProgress(100)
+        setAdminBgUpload({ topicTitle: uploadingTopicTitle, progress: 100, done: true, error: '' })
       }
-      await loadSpeakingSampleVideoCatalog(authSession.accessToken)
-      setAdminVideoUploadProgress(100)
-      setAdminBgUpload((prev) => prev ? { ...prev, progress: 100, done: true } : null)
-      setAdminVideoRecorderMessage('Sample published — students can now watch it during Part 2 prep.')
-      setAdminVideoStudioStep('setup')
-      setAdminVideoEditMode('fresh')
+      xhr.onerror = () => {
+        adminVideoUploadXhrRef.current = null
+        setAdminBgUpload({ topicTitle: uploadingTopicTitle, progress: 0, done: false, error: 'Network error while uploading video.' })
+        setAdminVideoUploadProgress(0)
+      }
+      xhr.onabort = () => {
+        adminVideoUploadXhrRef.current = null
+        setAdminBgUpload(null)
+        setAdminVideoUploadProgress(0)
+      }
+      xhr.send(formData)
+
+      // Network is now in flight. The blob is owned by the FormData captured
+      // inside the XHR. Free the studio so the admin can move on.
       if (adminRecordedVideoUrl) {
         URL.revokeObjectURL(adminRecordedVideoUrl)
       }
@@ -15047,12 +15050,17 @@ function App() {
       setAdminRecordedVideoHasBakedFlip(false)
       setAdminVideoTrimStart(0)
       setAdminVideoTrimEnd(0)
+      setAdminVideoStudioStep('setup')
       setAdminVideoRecorderStatus('idle')
+      setAdminVideoEditMode('fresh')
+      setAdminVideoRecorderMessage(
+        `Uploading "${uploadingTopicTitle}" in the background — feel free to pick another topic and record.`
+      )
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Could not upload video.'
       setAdminVideoRecorderStatus('preview')
       setAdminVideoUploadProgress(0)
-      setAdminBgUpload((prev) => prev ? { ...prev, error: msg, done: false } : null)
+      setAdminBgUpload((prev) => (prev ? { ...prev, error: msg, done: false } : prev))
       setAdminVideoRecorderMessage(msg)
     }
   }
@@ -23756,7 +23764,7 @@ function App() {
                         <select
                           value={adminSelectedVideoTopic?.id || ''}
                           onChange={(event) => handleAdminVideoTopicChange(event.target.value)}
-                          disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
+                          disabled={adminVideoRecorderStatus === 'recording'}
                         >
                           {(['part1', 'part2', 'part3'] as const).map((part) => {
                             const label =
@@ -23956,7 +23964,7 @@ function App() {
                             type="button"
                             className="secondary"
                             onClick={() => void loadAdminMediaDevices({ requestPermission: true })}
-                            disabled={adminVideoRecorderStatus === 'recording' || adminVideoRecorderStatus === 'uploading'}
+                            disabled={adminVideoRecorderStatus === 'recording'}
                           >
                             Run check
                           </button>
@@ -25308,36 +25316,33 @@ function App() {
                           ) : null}
                         </div>
                       ) : null}
-                      {adminVideoRecorderStatus === 'uploading' ? (
-                        <div className="adminVideoUploadProgressWrap">
-                          <div className="adminVideoUploadProgressHeader">
-                            <span className="adminVideoUploadProgressLabel">
-                              Uploading "{adminBgUpload?.topicTitle || 'video'}"…
+                      {adminBgUpload && !adminBgUpload.done && !adminBgUpload.error ? (
+                        <div className="adminVideoBgUploadBanner adminVideoBgUploadBanner-progress" role="status" aria-live="polite">
+                          <div className="adminVideoBgUploadBannerHead">
+                            <span className="adminVideoBgUploadBannerTitle">
+                              Uploading "{adminBgUpload.topicTitle}" in background
                             </span>
-                            <span className="adminVideoUploadProgressPct">{adminVideoUploadProgress}%</span>
+                            <span className="adminVideoBgUploadBannerPct">{adminBgUpload.progress}%</span>
                           </div>
                           <div className="adminVideoUploadProgress" aria-label="Video upload progress">
-                            <div style={{ width: `${adminVideoUploadProgress}%` }} />
+                            <div style={{ width: `${adminBgUpload.progress}%` }} />
                           </div>
-                          <div className="adminActionRow">
-                            <button type="button" className="adminStudioButton-primary" onClick={releaseStudioForNewRecording}>
-                              Record new video now
-                            </button>
+                          <div className="adminVideoBgUploadBannerActions">
+                            <span className="meta">You can keep recording — this finishes on its own.</span>
                             <button type="button" className="secondary adminStudioButton-danger" onClick={cancelAdminVideoUpload}>
-                              Cancel upload
+                              Cancel
                             </button>
                           </div>
-                          <p className="meta">The upload continues in the background — click <strong>Record new video now</strong> to start another recording immediately.</p>
                         </div>
                       ) : null}
                       {adminBgUpload?.done ? (
-                        <div className="adminVideoBgUploadBanner adminVideoBgUploadBanner-success">
+                        <div className="adminVideoBgUploadBanner adminVideoBgUploadBanner-success" role="status" aria-live="polite">
                           <span>✓ "{adminBgUpload.topicTitle}" published successfully</span>
                           <button type="button" className="secondary" onClick={() => setAdminBgUpload(null)}>Dismiss</button>
                         </div>
                       ) : adminBgUpload?.error ? (
-                        <div className="adminVideoBgUploadBanner adminVideoBgUploadBanner-error">
-                          <span>Upload failed: {adminBgUpload.error}</span>
+                        <div className="adminVideoBgUploadBanner adminVideoBgUploadBanner-error" role="alert">
+                          <span>Upload failed for "{adminBgUpload.topicTitle}": {adminBgUpload.error}</span>
                           <button type="button" className="secondary" onClick={() => setAdminBgUpload(null)}>Dismiss</button>
                         </div>
                       ) : null}
