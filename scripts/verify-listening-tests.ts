@@ -31,8 +31,7 @@ import {
   resolveListeningBuilderExamCorrectAnswer
 } from '../src/listeningBuilderQuestionParse'
 import {
-  CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS,
-  CAMBRIDGE_13_SPEAKING_FULL_EXAM_TOPICS
+  SPEAKING_CURATED_FULL_EXAM_TOPICS
 } from '../src/speakingCambridge1213Data'
 
 const EXAM_SETS: ListeningBuilderExamSet[] = [
@@ -114,7 +113,7 @@ for (const set of allFoundation) {
   }
 }
 
-for (const topic of [...CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS, ...CAMBRIDGE_13_SPEAKING_FULL_EXAM_TOPICS]) {
+for (const topic of SPEAKING_CURATED_FULL_EXAM_TOPICS) {
   const p1 = topic.cues.filter((c) => c.startsWith('Part 1 -'))
   const p3 = topic.cues.filter((c) => c.startsWith('Part 3 -'))
   if (!topic.prompt) push('error', 'SPEAKING_NO_P2', topic.id, 'Missing Part 2 prompt')

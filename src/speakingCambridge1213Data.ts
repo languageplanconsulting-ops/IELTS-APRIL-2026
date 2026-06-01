@@ -7,7 +7,7 @@ export type CambridgeSpeakingTopic = {
 }
 
 type CambridgeSpeakingTest = {
-  book: 12 | 13
+  book: 12 | 13 | 14 | 15 | 16
   test: number
   part1Theme: string
   part1Questions: string[]
@@ -22,8 +22,8 @@ const prefixPart3 = (questions: string[]) => questions.map((q) => `Part 3 - ${q}
 
 const buildFullExamTopic = (spec: CambridgeSpeakingTest): CambridgeSpeakingTopic => ({
   id: `cam${spec.book}-t${spec.test}-full`,
-  category: `Cambridge IELTS ${spec.book} — Test ${spec.test}`,
-  title: `Test ${spec.test}: ${spec.part1Theme} / ${spec.part2Title}`,
+  category: 'Full Speaking Exam',
+  title: `${spec.part1Theme} · ${spec.part2Title}`,
   prompt: spec.part2Prompt,
   cues: [...prefixPart1(spec.part1Questions), ...prefixPart3(spec.part3Questions)]
 })
@@ -32,8 +32,8 @@ const buildPart1Topic = (spec: CambridgeSpeakingTest): CambridgeSpeakingTopic =>
   const [first, ...rest] = spec.part1Questions
   return {
     id: `cam${spec.book}-t${spec.test}-p1`,
-    category: `Cambridge IELTS ${spec.book} — Test ${spec.test}`,
-    title: `Part 1: ${spec.part1Theme}`,
+    category: `Part 1 - ${spec.part1Theme}`,
+    title: spec.part1Theme,
     prompt: first,
     cues: rest
   }
@@ -41,7 +41,7 @@ const buildPart1Topic = (spec: CambridgeSpeakingTest): CambridgeSpeakingTopic =>
 
 const buildPart2Topic = (spec: CambridgeSpeakingTest): CambridgeSpeakingTopic => ({
   id: `cam${spec.book}-t${spec.test}-p2`,
-  category: `Cambridge IELTS ${spec.book} — Test ${spec.test}`,
+  category: `Part 2 - ${spec.part2Title}`,
   title: spec.part2Title,
   prompt: spec.part2Prompt,
   cues: spec.part2Cues
@@ -51,8 +51,8 @@ const buildPart3Topic = (spec: CambridgeSpeakingTest): CambridgeSpeakingTopic =>
   const [first, ...rest] = spec.part3Questions
   return {
     id: `cam${spec.book}-t${spec.test}-p3`,
-    category: `Cambridge IELTS ${spec.book} — Test ${spec.test}`,
-    title: `Part 3: ${spec.part2Title}`,
+    category: `Part 3 - ${spec.part2Title}`,
+    title: spec.part2Title,
     prompt: first,
     cues: rest
   }
@@ -288,8 +288,332 @@ const CAMBRIDGE_13_TESTS: CambridgeSpeakingTest[] = [
   }
 ]
 
+const CAMBRIDGE_14_TESTS: CambridgeSpeakingTest[] = [
+  {
+    book: 14,
+    test: 1,
+    part1Theme: 'Future plans',
+    part1Questions: [
+      'What job would you like to have ten years from now?',
+      'How useful will English be for your future?',
+      'How much travelling do you hope to do in the future?',
+      'How do you think your life will change in the future?'
+    ],
+    part2Title: 'A language lesson',
+    part2Prompt: 'Describe a language lesson you enjoyed.',
+    part2Cues: [
+      'what the lesson was about',
+      'when and where you had the lesson',
+      'what the teacher did',
+      'why you enjoyed the lesson'
+    ],
+    part3Questions: [
+      'Why do some people have a good memory while others do not?',
+      'Why do more people depend on their mobile phones?',
+      'What are some possible advantages of having a good memory?',
+      'Do you think it is important to learn languages at school?'
+    ]
+  },
+  {
+    book: 14,
+    test: 2,
+    part1Theme: 'Music',
+    part1Questions: [
+      "What's your favourite kind of music?",
+      'Do you like to listen to live music?',
+      'Has the music that you listen to changed since you were young?',
+      'Do you think music and musicians influence young people today?'
+    ],
+    part2Title: 'A useful website',
+    part2Prompt: 'Describe a website you use that helps you in your work or studies.',
+    part2Cues: [
+      'what the website is',
+      'how often you use it',
+      'what information it gives you',
+      'how your work or studies would change if the website did not exist'
+    ],
+    part3Questions: [
+      'What are the positive aspects of using the internet?',
+      'Do people in your country use the internet a lot?',
+      'Do you agree that the internet is making people more sociable?',
+      'How important is it for children to learn to use computers?'
+    ]
+  },
+  {
+    book: 14,
+    test: 3,
+    part1Theme: 'Languages',
+    part1Questions: [
+      'Which language do you find hardest to pronounce words in?',
+      'Have you ever tried to learn another language?',
+      'Do you think it is important to learn foreign languages?',
+      'What is the most difficult part of learning a foreign language?'
+    ],
+    part2Title: 'A person who taught you something',
+    part2Prompt: 'Describe a person who taught you something useful.',
+    part2Cues: [
+      'who this person was',
+      'what they taught you',
+      'how they taught you',
+      'why what you learned was useful'
+    ],
+    part3Questions: [
+      'What qualities should a good teacher have?',
+      'How can people who cannot read and write learn?',
+      'Do teachers still play important roles in the internet era?',
+      'Which is better for children to learn: pictures or words?'
+    ]
+  },
+  {
+    book: 14,
+    test: 4,
+    part1Theme: 'Weather',
+    part1Questions: [
+      "What's the weather like where you live?",
+      'Do you prefer hot or cold weather?',
+      'Do you like the weather in your hometown?',
+      'Are there any weather changes in recent years in your hometown?'
+    ],
+    part2Title: 'A useful book',
+    part2Prompt: 'Describe a book you read that you found useful.',
+    part2Cues: [
+      'what the book was',
+      'when you read it',
+      'why you read it',
+      'why you found it useful'
+    ],
+    part3Questions: [
+      'What are the benefits of reading books?',
+      'Do you think people read less nowadays?',
+      'Which is better for children: paper books or e-books?',
+      'What kinds of books do children like?'
+    ]
+  }
+]
+
+const CAMBRIDGE_15_TESTS: CambridgeSpeakingTest[] = [
+  {
+    book: 15,
+    test: 1,
+    part1Theme: 'Work',
+    part1Questions: [
+      'What work do you do?',
+      'Why did you choose to do that type of work (or that job)?',
+      'Do you like your job?',
+      'Do you miss being a student?',
+      'What was your dream job when you were a child?'
+    ],
+    part2Title: 'A person who taught you something',
+    part2Prompt: 'Describe a person who taught you something important.',
+    part2Cues: [
+      'who this person was',
+      'what they taught you',
+      'how they taught you',
+      'why it was important'
+    ],
+    part3Questions: [
+      'What qualities should a good teacher have?',
+      'How can people who cannot read and write learn?',
+      'Do teachers still play important roles in the internet era?',
+      'Which is better for children to learn: pictures or words?'
+    ]
+  },
+  {
+    book: 15,
+    test: 2,
+    part1Theme: 'Study',
+    part1Questions: [
+      'Do you work or are you a student?',
+      'What subject are you studying?',
+      'Why did you choose to study that subject?',
+      'Do you like your subject?',
+      'Is your subject interesting to your friends?'
+    ],
+    part2Title: 'A time you helped someone',
+    part2Prompt: 'Describe a time when you helped someone.',
+    part2Cues: [
+      'who you helped',
+      'how you helped them',
+      'why they needed help',
+      'how you felt about helping them'
+    ],
+    part3Questions: [
+      'Should children be taught to help others?',
+      'How can we encourage children to help others?',
+      'Do people in your country help strangers?',
+      'What are the differences between helping family and helping strangers?'
+    ]
+  },
+  {
+    book: 15,
+    test: 3,
+    part1Theme: 'Hometown',
+    part1Questions: [
+      'Where is your hometown?',
+      'Do you like your hometown?',
+      "What's the most interesting part of your hometown?",
+      'Has your hometown changed much in recent years?'
+    ],
+    part2Title: 'A time you were surprised',
+    part2Prompt: 'Describe a time when you were surprised to meet someone.',
+    part2Cues: [
+      'who you met',
+      'where you met them',
+      'why you were surprised',
+      'how you felt about the meeting'
+    ],
+    part3Questions: [
+      'Why do people often feel nervous when meeting new people?',
+      'Is it easier to meet new people now than in the past?',
+      'How important is first impression when meeting someone?',
+      'Do you think people are more open to meeting strangers than before?'
+    ]
+  },
+  {
+    book: 15,
+    test: 4,
+    part1Theme: 'Morning routine',
+    part1Questions: [
+      'Do you usually get up early in the morning?',
+      'What do you usually do in the morning?',
+      'Do you think breakfast is important?',
+      'Did you have the same morning routine in the past?'
+    ],
+    part2Title: 'A time you were not allowed to use your phone',
+    part2Prompt: 'Describe a time when you were not allowed to use your mobile phone.',
+    part2Cues: [
+      'when it was',
+      'where you were',
+      'why you were not allowed to use your phone',
+      'how you felt about not being able to use your phone'
+    ],
+    part3Questions: [
+      'How do young and old people use mobile phones differently?',
+      'What are the differences between texting and calling?',
+      'Why do some people dislike making phone calls?',
+      'How has technology changed the way people communicate?'
+    ]
+  }
+]
+
+const CAMBRIDGE_16_TESTS: CambridgeSpeakingTest[] = [
+  {
+    book: 16,
+    test: 1,
+    part1Theme: 'Friends',
+    part1Questions: [
+      'Do you have many friends?',
+      'How often do you see your friends?',
+      'What do you usually do with your friends?',
+      'Do you prefer to have a small or large group of friends?'
+    ],
+    part2Title: 'A time you were bored',
+    part2Prompt: 'Describe a time when you felt bored.',
+    part2Cues: [
+      'when it was',
+      'where you were',
+      'why you felt bored',
+      'what you did to stop feeling bored'
+    ],
+    part3Questions: [
+      'When do people feel bored?',
+      'What can people do when they feel bored?',
+      'Do people get bored more easily now than in the past?',
+      'Do you think school is boring for some students?'
+    ]
+  },
+  {
+    book: 16,
+    test: 2,
+    part1Theme: 'Daily routine',
+    part1Questions: [
+      'What is your daily routine?',
+      'Do you have the same routine every day?',
+      'Is your routine now different from when you were a child?',
+      'Do you think it is important to have a daily routine?'
+    ],
+    part2Title: 'A time you waited for something',
+    part2Prompt: 'Describe a time when you waited for something special.',
+    part2Cues: [
+      'what you waited for',
+      'where you waited',
+      'how long you waited',
+      'how you felt while waiting'
+    ],
+    part3Questions: [
+      'In what kinds of situations should people arrive early?',
+      'In your country, how important is it to arrive early?',
+      'How can modern technology help people to arrive early?',
+      'What kinds of jobs require the most patience?'
+    ]
+  },
+  {
+    book: 16,
+    test: 3,
+    part1Theme: 'Being on time',
+    part1Questions: [
+      'Do you wear a watch?',
+      'In your country is it important to be on time?',
+      'How do you feel when others are late?',
+      'Are you a patient person?'
+    ],
+    part2Title: 'A time you were not allowed to use your phone',
+    part2Prompt: 'Describe a time when you were not allowed to use your mobile phone.',
+    part2Cues: [
+      'when it was',
+      'where you were',
+      'why you were not allowed to use your phone',
+      'how you felt about not being able to use your phone'
+    ],
+    part3Questions: [
+      'How do young and old people use mobile phones differently?',
+      'What are the differences between texting and calling?',
+      'Why do some people dislike making phone calls?',
+      'How has technology changed the way people communicate?'
+    ]
+  },
+  {
+    book: 16,
+    test: 4,
+    part1Theme: 'Holidays',
+    part1Questions: [
+      'Do you prefer to travel or stay at home during holidays?',
+      'What do you do in your holidays?',
+      'Can you describe a typical holiday in your country?',
+      'Is there any difference between holidays now and in the past?'
+    ],
+    part2Title: 'A time you were surprised',
+    part2Prompt: 'Describe a time when you were surprised to meet someone.',
+    part2Cues: [
+      'who you met',
+      'where you met them',
+      'why you were surprised',
+      'how you felt about the meeting'
+    ],
+    part3Questions: [
+      'Why do people often feel nervous when meeting new people?',
+      'Is it easier to meet new people now than in the past?',
+      'How important is first impression when meeting someone?',
+      'Do you think people are more open to meeting strangers than before?'
+    ]
+  }
+]
+
+const ALL_CURATED_TESTS = [
+  ...CAMBRIDGE_12_TESTS,
+  ...CAMBRIDGE_13_TESTS,
+  ...CAMBRIDGE_14_TESTS,
+  ...CAMBRIDGE_15_TESTS,
+  ...CAMBRIDGE_16_TESTS
+]
+
+const curated = mapBookTests(ALL_CURATED_TESTS)
 const cam12 = mapBookTests(CAMBRIDGE_12_TESTS)
 const cam13 = mapBookTests(CAMBRIDGE_13_TESTS)
+
+export const SPEAKING_CURATED_PART1_TOPICS = curated.part1
+export const SPEAKING_CURATED_PART3_TOPICS = curated.part3
+export const SPEAKING_CURATED_FULL_EXAM_TOPICS = curated.full
 
 export const CAMBRIDGE_12_SPEAKING_FULL_EXAM_TOPICS = cam12.full
 export const CAMBRIDGE_12_SPEAKING_PART1_TOPICS = cam12.part1
@@ -301,7 +625,4 @@ export const CAMBRIDGE_13_SPEAKING_PART1_TOPICS = cam13.part1
 export const CAMBRIDGE_13_SPEAKING_PART2_TOPICS = cam13.part2
 export const CAMBRIDGE_13_SPEAKING_PART3_TOPICS = cam13.part3
 
-export const CAMBRIDGE_SPEAKING_PART2_TOPICS = [
-  ...CAMBRIDGE_12_SPEAKING_PART2_TOPICS,
-  ...CAMBRIDGE_13_SPEAKING_PART2_TOPICS
-]
+export const CAMBRIDGE_SPEAKING_PART2_TOPICS = curated.part2
