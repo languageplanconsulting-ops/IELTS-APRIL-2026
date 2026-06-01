@@ -6800,6 +6800,10 @@ function App() {
   const [adminVideoExportFormat, setAdminVideoExportFormat] = useState<AdminVideoExportFormat | null>(null)
   const adminVideoExportAbortRef = useRef<AbortController | null>(null)
   const [adminVideoStudioStep, setAdminVideoStudioStep] = useState<AdminVideoStudioStep>('setup')
+  const [adminVideoTopicSearch, setAdminVideoTopicSearch] = useState('')
+  const [adminVideoTopicFilter, setAdminVideoTopicFilter] = useState<'all' | 'part1' | 'part2' | 'part3' | 'missing'>('all')
+  const adminTrimTimelineRef = useRef<HTMLDivElement | null>(null)
+  const adminTrimDragRef = useRef<'start' | 'end' | null>(null)
   const [adminTeleprompterMode, setAdminTeleprompterMode] = useState(true)
   const [adminShowAdvancedSubtitleTools, setAdminShowAdvancedSubtitleTools] = useState(false)
   const [adminUploadChecklistOpen, setAdminUploadChecklistOpen] = useState(false)
@@ -9660,6 +9664,21 @@ function App() {
     null
   const adminSelectedVideoAsset = adminSelectedVideoTopic ? speakingSampleVideoAssets[adminSelectedVideoTopic.id] : null
   const uploadedSpeakingSampleVideoCount = Object.keys(speakingSampleVideoAssets).length
+  const adminFilteredVideoTopics = useMemo(() => {
+    const search = adminVideoTopicSearch.trim().toLowerCase()
+    return adminSpeakingVideoTargets.filter((topic) => {
+      if (adminVideoTopicFilter === 'missing' && speakingSampleVideoAssets[topic.id]) return false
+      if (
+        adminVideoTopicFilter !== 'all' &&
+        adminVideoTopicFilter !== 'missing' &&
+        topic.samplePart !== adminVideoTopicFilter
+      )
+        return false
+      if (!search) return true
+      const haystack = `${topic.title} ${topic.category || ''} ${topic.prompt || ''}`.toLowerCase()
+      return haystack.includes(search)
+    })
+  }, [adminSpeakingVideoTargets, adminVideoTopicFilter, adminVideoTopicSearch, speakingSampleVideoAssets])
   const adminRecordedVideoTimeLabel = `${String(Math.floor(adminRecordedVideoDuration / 60)).padStart(2, '0')}:${String(
     adminRecordedVideoDuration % 60
   ).padStart(2, '0')}`
@@ -23759,34 +23778,121 @@ function App() {
                   <div className="adminVideoStudio adminVideoStudio-layout">
                     {(adminVideoStudioStep === 'setup' || adminVideoStudioStep === 'record') ? (
                     <div className="adminVideoQuestionPicker">
-                      <label className="adminSearchField">
-                        <span>Speaking sample topic</span>
-                        <select
-                          value={adminSelectedVideoTopic?.id || ''}
-                          onChange={(event) => handleAdminVideoTopicChange(event.target.value)}
-                          disabled={adminVideoRecorderStatus === 'recording'}
-                        >
-                          {(['part1', 'part2', 'part3'] as const).map((part) => {
-                            const label =
-                              part === 'part1'
-                                ? 'Part 1 topics'
-                                : part === 'part2'
-                                  ? 'Part 2 prompts'
-                                  : 'Part 3 topics'
-                            const targets = adminSpeakingVideoTargets.filter((topic) => topic.samplePart === part)
-                            return (
-                              <optgroup key={`video-target-group-${part}`} label={label}>
-                                {targets.map((topic) => (
-                                  <option key={`video-topic-${topic.id}`} value={topic.id}>
-                                    {speakingSampleVideoAssets[topic.id] ? 'Ready - ' : ''}
-                                    {topic.title}
-                                  </option>
-                                ))}
-                              </optgroup>
-                            )
-                          })}
-                        </select>
-                      </label>
+                      <div className="adminVideoTopicPicker">
+                        <div className="adminVideoTopicPickerHead">
+                          <div>
+                            <p className="adminSetupGroupLabel">Speaking sample topic</p>
+                            <p className="meta">
+                              {adminSelectedVideoTopic
+                                ? `Selected: ${adminSelectedVideoTopic.title}`
+                                : 'Pick a topic to record'}
+                            </p>
+                          </div>
+                          <div className="adminVideoTopicPickerToolbar">
+                            <input
+                              type="search"
+                              className="adminVideoTopicSearch"
+                              placeholder="Search topics…"
+                              value={adminVideoTopicSearch}
+                              onChange={(event) => setAdminVideoTopicSearch(event.target.value)}
+                              aria-label="Search speaking sample topics"
+                            />
+                            <div className="adminVideoTopicPartTabs" role="tablist" aria-label="Filter by part">
+                              {(['all', 'part1', 'part2', 'part3', 'missing'] as const).map((tab) => (
+                                <button
+                                  key={`video-topic-tab-${tab}`}
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={adminVideoTopicFilter === tab}
+                                  className={`adminVideoTopicPartTab ${adminVideoTopicFilter === tab ? 'active' : ''}`.trim()}
+                                  onClick={() => setAdminVideoTopicFilter(tab)}
+                                >
+                                  {tab === 'all'
+                                    ? 'All'
+                                    : tab === 'missing'
+                                      ? 'Missing'
+                                      : tab === 'part1'
+                                        ? 'Part 1'
+                                        : tab === 'part2'
+                                          ? 'Part 2'
+                                          : 'Part 3'}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="adminVideoTopicGrid" role="listbox" aria-label="Speaking sample topics">
+                          {adminFilteredVideoTopics.length === 0 ? (
+                            <p className="meta adminVideoTopicGridEmpty">
+                              No topics match this filter. Try clearing the search or choose another part.
+                            </p>
+                          ) : (
+                            adminFilteredVideoTopics.map((topic) => {
+                              const hasSample = Boolean(speakingSampleVideoAssets[topic.id])
+                              const isUploading =
+                                adminBgUpload &&
+                                !adminBgUpload.done &&
+                                !adminBgUpload.error &&
+                                adminBgUpload.topicTitle === topic.title
+                              const isSelected = adminSelectedVideoTopic?.id === topic.id
+                              const partLabel =
+                                topic.samplePart === 'part1'
+                                  ? 'Part 1'
+                                  : topic.samplePart === 'part2'
+                                    ? 'Part 2'
+                                    : 'Part 3'
+                              return (
+                                <button
+                                  key={`video-topic-card-${topic.id}`}
+                                  type="button"
+                                  role="option"
+                                  aria-selected={isSelected}
+                                  className={`adminVideoTopicCard ${isSelected ? 'is-selected' : ''} ${hasSample ? 'is-ready' : ''}`.trim()}
+                                  onClick={() => handleAdminVideoTopicChange(topic.id)}
+                                  disabled={adminVideoRecorderStatus === 'recording'}
+                                >
+                                  <div className="adminVideoTopicCardHead">
+                                    <span className="adminVideoTopicCardPart">{partLabel}</span>
+                                    {isUploading ? (
+                                      <span className="adminVideoTopicCardStatus is-uploading">⏳ uploading</span>
+                                    ) : hasSample ? (
+                                      <span className="adminVideoTopicCardStatus is-ready">✓ uploaded</span>
+                                    ) : (
+                                      <span className="adminVideoTopicCardStatus is-missing">— missing</span>
+                                    )}
+                                  </div>
+                                  <strong className="adminVideoTopicCardTitle">{topic.title}</strong>
+                                  <span className="adminVideoTopicCardCategory">{topic.category}</span>
+                                </button>
+                              )
+                            })
+                          )}
+                        </div>
+                        {adminFilteredVideoTopics.length > 0 && (
+                          <div className="adminVideoTopicPickerFoot">
+                            <span className="meta">
+                              {adminFilteredVideoTopics.length} topic
+                              {adminFilteredVideoTopics.length === 1 ? '' : 's'}
+                            </span>
+                            <button
+                              type="button"
+                              className="secondary"
+                              onClick={() => {
+                                const next = adminFilteredVideoTopics.find(
+                                  (topic) => !speakingSampleVideoAssets[topic.id]
+                                )
+                                if (next) handleAdminVideoTopicChange(next.id)
+                              }}
+                              disabled={
+                                adminVideoRecorderStatus === 'recording' ||
+                                !adminFilteredVideoTopics.some((topic) => !speakingSampleVideoAssets[topic.id])
+                              }
+                            >
+                              Jump to next missing
+                            </button>
+                          </div>
+                        )}
+                      </div>
                       {adminSelectedVideoTopic ? (
                         <div className="adminQuestionCard compact adminVideoPromptCard">
                           <div className="adminVideoPromptCardHeader">
@@ -24502,46 +24608,142 @@ function App() {
                             </div>
                             <span className="adminReadyDot">{adminTrimDurationLabel}</span>
                           </div>
-                          <div className="adminVideoTrimGrid">
-                            <label>
-                              <span>Start</span>
-                              <input
-                                type="range"
-                                min="0"
-                                max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.001"
-                                value={adminVideoTrimStart}
-                                onChange={(event) => handleAdminTrimStartChange(Number(event.target.value))}
-                              />
-                              <input
-                                type="number"
-                                min="0"
-                                max={adminVideoTrimEnd || adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.001"
-                                value={roundAdminSubtitleSeconds(adminVideoTrimStart)}
-                                onChange={(event) => handleAdminTrimStartChange(Number(event.target.value))}
-                              />
-                            </label>
-                            <label>
-                              <span>End</span>
-                              <input
-                                type="range"
-                                min="0"
-                                max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.001"
-                                value={adminVideoTrimEnd}
-                                onChange={(event) => handleAdminTrimEndChange(Number(event.target.value))}
-                              />
-                              <input
-                                type="number"
-                                min={adminVideoTrimStart}
-                                max={adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0}
-                                step="0.001"
-                                value={roundAdminSubtitleSeconds(adminVideoTrimEnd)}
-                                onChange={(event) => handleAdminTrimEndChange(Number(event.target.value))}
-                              />
-                            </label>
-                          </div>
+                          {(() => {
+                            const totalDuration =
+                              adminRecordedVideoActualDuration || adminRecordedVideoDuration || 0
+                            const startPct =
+                              totalDuration > 0 ? Math.min(100, (adminVideoTrimStart / totalDuration) * 100) : 0
+                            const endPct =
+                              totalDuration > 0
+                                ? Math.min(
+                                    100,
+                                    ((adminVideoTrimEnd || totalDuration) / totalDuration) * 100
+                                  )
+                                : 100
+                            const playheadPct =
+                              totalDuration > 0
+                                ? Math.min(100, (adminVideoPreviewTime / totalDuration) * 100)
+                                : 0
+                            const beginDrag = (which: 'start' | 'end') => (event: React.PointerEvent) => {
+                              if (!adminTrimTimelineRef.current || totalDuration <= 0) return
+                              ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+                              adminTrimDragRef.current = which
+                            }
+                            const handleDragMove = (event: React.PointerEvent) => {
+                              const which = adminTrimDragRef.current
+                              const track = adminTrimTimelineRef.current
+                              if (!which || !track) return
+                              const rect = track.getBoundingClientRect()
+                              if (rect.width <= 0 || totalDuration <= 0) return
+                              const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width))
+                              const seconds = ratio * totalDuration
+                              if (which === 'start') {
+                                handleAdminTrimStartChange(Math.min(seconds, adminVideoTrimEnd - 0.1))
+                              } else {
+                                handleAdminTrimEndChange(Math.max(seconds, adminVideoTrimStart + 0.1))
+                              }
+                            }
+                            const endDrag = (event: React.PointerEvent) => {
+                              adminTrimDragRef.current = null
+                              try {
+                                ;(event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId)
+                              } catch {
+                                // ignore
+                              }
+                            }
+                            return (
+                              <div className="adminVideoTrimSlider">
+                                <div
+                                  className="adminVideoTrimTimeline"
+                                  ref={adminTrimTimelineRef}
+                                  onPointerMove={handleDragMove}
+                                  onPointerUp={endDrag}
+                                  onPointerCancel={endDrag}
+                                >
+                                  <div className="adminVideoTrimRail" />
+                                  <div
+                                    className="adminVideoTrimSelection"
+                                    style={{ left: `${startPct}%`, right: `${100 - endPct}%` }}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="adminVideoTrimHandle adminVideoTrimHandle-start"
+                                    style={{ left: `${startPct}%` }}
+                                    onPointerDown={beginDrag('start')}
+                                    onKeyDown={(event) => {
+                                      const step = event.shiftKey ? 1 : 0.1
+                                      if (event.key === 'ArrowLeft') {
+                                        event.preventDefault()
+                                        handleAdminTrimStartChange(Math.max(0, adminVideoTrimStart - step))
+                                      } else if (event.key === 'ArrowRight') {
+                                        event.preventDefault()
+                                        handleAdminTrimStartChange(
+                                          Math.min(adminVideoTrimEnd - 0.1, adminVideoTrimStart + step)
+                                        )
+                                      }
+                                    }}
+                                    aria-label="Trim start"
+                                    aria-valuemin={0}
+                                    aria-valuemax={adminVideoTrimEnd}
+                                    aria-valuenow={adminVideoTrimStart}
+                                    role="slider"
+                                  >
+                                    <span className="adminVideoTrimHandleLabel">
+                                      {formatAdminSubtitleTime(adminVideoTrimStart)}
+                                    </span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="adminVideoTrimHandle adminVideoTrimHandle-end"
+                                    style={{ left: `${endPct}%` }}
+                                    onPointerDown={beginDrag('end')}
+                                    onKeyDown={(event) => {
+                                      const step = event.shiftKey ? 1 : 0.1
+                                      if (event.key === 'ArrowLeft') {
+                                        event.preventDefault()
+                                        handleAdminTrimEndChange(
+                                          Math.max(adminVideoTrimStart + 0.1, adminVideoTrimEnd - step)
+                                        )
+                                      } else if (event.key === 'ArrowRight') {
+                                        event.preventDefault()
+                                        handleAdminTrimEndChange(Math.min(totalDuration, adminVideoTrimEnd + step))
+                                      }
+                                    }}
+                                    aria-label="Trim end"
+                                    aria-valuemin={adminVideoTrimStart}
+                                    aria-valuemax={totalDuration}
+                                    aria-valuenow={adminVideoTrimEnd}
+                                    role="slider"
+                                  >
+                                    <span className="adminVideoTrimHandleLabel">
+                                      {formatAdminSubtitleTime(adminVideoTrimEnd)}
+                                    </span>
+                                  </button>
+                                  {playheadPct >= startPct && playheadPct <= endPct ? (
+                                    <div
+                                      className="adminVideoTrimPlayhead"
+                                      style={{ left: `${playheadPct}%` }}
+                                      aria-hidden="true"
+                                    />
+                                  ) : null}
+                                </div>
+                                <div className="adminVideoTrimMeta">
+                                  <span>
+                                    Start <strong>{formatAdminSubtitleTime(adminVideoTrimStart)}</strong>
+                                  </span>
+                                  <span>
+                                    Length <strong>{adminTrimDurationLabel}</strong>
+                                  </span>
+                                  <span>
+                                    End <strong>{formatAdminSubtitleTime(adminVideoTrimEnd)}</strong>
+                                  </span>
+                                  <span className="meta adminVideoTrimHint">
+                                    Tip: drag the handles, or focus a handle and use ←/→ (Shift = 1s)
+                                  </span>
+                                </div>
+                              </div>
+                            )
+                          })()}
                           <div className="adminActionRow">
                             <button type="button" className="secondary" onClick={previewAdminTrimmedSegment}>
                               Preview Trim
