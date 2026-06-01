@@ -118,8 +118,13 @@ export function SpeakingPart2SamplePanel({ sample, className = '' }: SpeakingPar
     const base = (sample.subtitles || [])
       .filter((cue) => cue.text && cue.endSeconds > cue.startSeconds)
       .sort((a, b) => a.startSeconds - b.startSeconds) as SpeakingSampleSubtitleCue[]
-    return enrichSpeakingSampleSubtitlesWithNotes(base, sample.transcript || '')
-  }, [sample.subtitles, sample.transcript])
+    return enrichSpeakingSampleSubtitlesWithNotes(base, sample.transcript || '', {
+      topicContext: {
+        title: sample.topicLabel,
+        prompt: sample.topicLabel
+      }
+    })
+  }, [sample.subtitles, sample.transcript, sample.topicLabel])
   const trimStartSeconds = Math.max(0, Number(sample.trimStartSeconds || 0))
   const trimEndSeconds = Math.max(trimStartSeconds, Number(sample.trimEndSeconds || 0))
   const hasTrim = Boolean(hasUploadedVideo && trimEndSeconds > trimStartSeconds)
@@ -298,6 +303,7 @@ export function SpeakingPart2SamplePanel({ sample, className = '' }: SpeakingPar
             {visibleSubtitleNotes.length > 0 ? (
               <SpeakingSampleKnowledgeOverlay
                 notes={visibleSubtitleNotes}
+                videoTime={videoTime}
                 className="speakingP2SampleKnowledgeStack"
                 cardClassName="speakingP2SampleKnowledgeCard"
               />

@@ -29,12 +29,43 @@ export type ParsedSpeakingSampleSubtitleNote = {
   example?: string
 }
 
+export const SPEAKING_SAMPLE_NOTE_DISPLAY_SECONDS = 10
+
 export const SPEAKING_SAMPLE_NOTE_LIMITS = {
   total: 8,
-  vocabulary: 5,
-  grammar: 2,
+  vocabulary: 8,
+  grammar: 0,
   overlayMax: 6
 } as const
+
+export type SpeakingSampleTopicContext = {
+  title?: string
+  prompt?: string
+  category?: string
+}
+
+const TOPIC_STOP_WORDS = new Set([
+  'describe',
+  'talk',
+  'about',
+  'when',
+  'where',
+  'what',
+  'which',
+  'that',
+  'this',
+  'your',
+  'have',
+  'been',
+  'would',
+  'like',
+  'know',
+  'time',
+  'someone',
+  'something',
+  'person',
+  'people'
+])
 
 const VOCAB_GLOSSARY: Record<string, { partOfSpeech: string; thai: string; score?: number }> = {
   'generally speaking': { partOfSpeech: 'adv. phr.', thai: 'โดยทั่วไป / โดยรวมแล้ว' },
@@ -290,22 +321,6 @@ const DISCOURSE_MARKERS = new Set([
   'whether it be'
 ])
 
-const isUsefulGrammarPhrase = (phrase: string) => {
-  const normalized = normalizeNoteText(phrase)
-  const words = normalized.split(/\s+/).filter(Boolean)
-  if (normalized.length < 12 || words.length < 3) return false
-  if (/^because (there|when|it|i|we)\b/i.test(normalized)) return false
-  if (/^have (been|grown)\b/i.test(normalized) && words.length < 5) return false
-  if (/^(that|which|who|where|when|as|i|we|he|she|it|they)\s/i.test(normalized) && words.length < 5) return false
-  if (/^(that|which|who|where)\s+(?:i|we|he|she|it|they|is|are|was|were|has|have|had|really|very|somebody|someone|something|when)\b/i.test(normalized)) {
-    return false
-  }
-  if (/\b(instilled|inspired|sense of|remember her forever|remember him forever|historical facts|historical)\b/i.test(normalized)) {
-    return false
-  }
-  return true
-}
-
 const scoreStaticVocab = (term: string, meta: { score?: number }) => {
   const lower = term.toLowerCase()
   let score = meta.score ?? term.split(/\s+/).length * 8
@@ -315,63 +330,47 @@ const scoreStaticVocab = (term: string, meta: { score?: number }) => {
   return score
 }
 
-const GRAMMAR_PATTERNS: Array<{
-  pattern: RegExp
-  grammarRule: string
-  thai: string
-  pickPhrase: (match: RegExpMatchArray, sentence: string) => string
-}> = [
-  {
-    pattern: /\bused to\s+[a-z]+(?:\s+[a-z]+){0,4}/gi,
-    grammarRule: 'used to + V1',
-    thai: 'พูดถึงนิสัย/กิจวัตรในอดีตที่ไม่ทำแล้ว',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim())
-  },
-  {
-    pattern: /\b(?:I|we|they|he|she|it)\s+would\s+(?!like\b)[a-z]+(?:\s+[a-z]+){0,3}/gi,
-    grammarRule: 'S + would + V1',
-    thai: 'พูดถึงสิ่งที่เคยทำบ่อยในอดีต',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 4)
-  },
-  {
-    pattern: /\b(?:have|has|had)\s+(?:been|become|done|seen|visited|known|lived|worked|read|grown|become)\b[^.?!]{0,50}/gi,
-    grammarRule: 'S + have/has + V3',
-    thai: 'present perfect — เชื่อมอดีตกับปัจจุบัน',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 6)
-  },
-  {
-    pattern: /\b(?:I|we|they|he|she|it)\s+(?:decided|majored|graduated|visited|started|felt|remembered|realized|engaged|picked|brought)\b(?:\s+[a-z]+){0,3}/gi,
-    grammarRule: 'S + V2',
-    thai: 'past simple — พูดถึงเหตุการณ์ในอดีต',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 4)
-  },
-  {
-    pattern: /\b(?:which|who|that|where)\s+(?:I|we|they|he|she|it|[a-z]{4,})\s+[a-z]+(?:\s+[a-z]+){0,4}/gi,
-    grammarRule: 'relative clause',
-    thai: 'อนุภาคความ — ขยายคำนามที่อยู่ข้างหน้า',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 6)
-  },
-  {
-    pattern: /\b(?:because|since)\s+[a-z]+(?:\s+[a-z]+){0,6}/gi,
-    grammarRule: 'because / since + clause',
-    thai: 'บอกเหตุผล — เพราะว่า...',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim(), 6)
-  },
-  {
-    pattern: /\bwhen I was\s+[a-z]+(?:\s+[a-z]+){0,4}/gi,
-    grammarRule: 'when + past clause',
-    thai: 'บอกช่วงเวลาในอดีต — ตอนที่...',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim())
-  },
-  {
-    pattern: /\bas I grew up\b/gi,
-    grammarRule: 'as + clause',
-    thai: 'บอกการเปลี่ยนแปลงตามกาลเวลา — เมื่อโตขึ้น',
-    pickPhrase: (match) => trimGrammarPhrase(match[0].trim())
-  }
-]
-
 const normalizeNoteText = (value: string) => String(value || '').trim().replace(/\s+/g, ' ')
+
+const extractTopicKeywordTokens = (topicContext?: SpeakingSampleTopicContext) => {
+  const haystack = normalizeNoteText([topicContext?.title, topicContext?.prompt, topicContext?.category].filter(Boolean).join(' '))
+  if (!haystack) return [] as string[]
+  const tokens = haystack
+    .toLowerCase()
+    .match(/\b[a-z][a-z'-]{2,}\b/g)
+    ?.filter((token) => !TOPIC_STOP_WORDS.has(token)) || []
+  return [...new Set(tokens)]
+}
+
+const topicRelevanceBoost = (phrase: string, topicTokens: string[]) => {
+  if (!topicTokens.length) return 0
+  const lower = normalizeNoteText(phrase).toLowerCase()
+  return topicTokens.reduce((boost, token) => (lower.includes(token) ? boost + 28 : boost), 0)
+}
+
+export const isGrammarSubtitleNote = (note: Pick<SpeakingSampleSubtitleNote, 'kind' | 'grammarRule' | 'detail'>) => {
+  if (note.kind === 'grammar') return true
+  const grammarRule = normalizeNoteText(note.grammarRule || '')
+  if (grammarRule) return true
+  const detail = normalizeNoteText(note.detail || '')
+  if (/relative clause|past simple|present perfect|used to \+ v1|s \+ v2|s \+ have|because \/ since/i.test(detail)) {
+    return true
+  }
+  const parsed = detail ? parseDetailString(detail) : null
+  return parsed?.kind === 'grammar'
+}
+
+export const sanitizeVocabularySubtitleNotes = (
+  notes: SpeakingSampleSubtitleNote[] | undefined
+): SpeakingSampleSubtitleNote[] =>
+  (notes || [])
+    .filter((note) => !isGrammarSubtitleNote(note))
+    .map((note) => ({
+      ...note,
+      kind: 'vocabulary' as const,
+      grammarRule: undefined,
+      exampleSentence: undefined
+    }))
 
 const normalizeDedupeKey = (value: string) =>
   normalizeNoteText(value)
@@ -497,21 +496,6 @@ export const parseSpeakingSampleSubtitleNote = (
   }
 }
 
-const sentenceAround = (text: string, index: number) => {
-  const left = Math.max(
-    0,
-    text.lastIndexOf('.', index - 1) + 1,
-    text.lastIndexOf('!', index - 1) + 1,
-    text.lastIndexOf('?', index - 1) + 1
-  )
-  const rightCandidates = ['.', '!', '?'].map((mark) => {
-    const pos = text.indexOf(mark, index)
-    return pos >= 0 ? pos + 1 : text.length
-  })
-  const right = Math.min(...rightCandidates)
-  return normalizeNoteText(text.slice(left, right))
-}
-
 const findCueForPhrase = (cues: SpeakingSampleSubtitleCue[], phrase: string) => {
   const lowerPhrase = normalizeNoteText(phrase).toLowerCase()
   const direct =
@@ -568,19 +552,17 @@ const longestPhraseInCue = (target: string, cueText: string) => {
 }
 
 const isQualityNote = (note: SpeakingSampleSubtitleNote) => {
+  if (isGrammarSubtitleNote(note)) return false
   const phrase = normalizeNoteText(note.phrase)
   if (!phrase) return false
-  if (note.kind === 'grammar' || note.grammarRule) {
-    return Boolean(normalizeNoteText(note.grammarRule || '') && normalizeNoteText(note.thaiMeaning || ''))
-  }
-  if (note.kind === 'vocabulary' || note.partOfSpeech || note.thaiMeaning) {
+  if (note.partOfSpeech || note.thaiMeaning) {
     return Boolean(normalizeNoteText(note.partOfSpeech || '') && normalizeNoteText(note.thaiMeaning || ''))
   }
   return Boolean(normalizeNoteText(note.detail || '') && (note.detail || '').length > 12)
 }
 
 const collectQualityNotes = (cues: SpeakingSampleSubtitleCue[]) =>
-  cues.flatMap((cue) => (cue.notes || []).filter(isQualityNote))
+  cues.flatMap((cue) => sanitizeVocabularySubtitleNotes(cue.notes).filter(isQualityNote))
 
 const isRichStructuredNote = (note: SpeakingSampleSubtitleNote) => {
   if (!isQualityNote(note)) return false
@@ -589,7 +571,8 @@ const isRichStructuredNote = (note: SpeakingSampleSubtitleNote) => {
 
 export const suggestSpeakingSampleSubtitleNotes = (
   cues: SpeakingSampleSubtitleCue[],
-  transcript = ''
+  transcript = '',
+  topicContext?: SpeakingSampleTopicContext
 ): SpeakingSampleSubtitleNote[] => {
   const cueText = cues.map((cue) => cue.text).join(' ')
   const fullText = normalizeNoteText([transcript, cueText].filter(Boolean).join(' '))
@@ -597,6 +580,7 @@ export const suggestSpeakingSampleSubtitleNotes = (
 
   const suggestions: SpeakingSampleSubtitleNote[] = []
   const usedPhrases = new Set<string>()
+  const topicTokens = extractTopicKeywordTokens(topicContext)
   let discourseMarkerCount = 0
   let noteId = 1
 
@@ -630,14 +614,10 @@ export const suggestSpeakingSampleSubtitleNotes = (
     const highlightPhrase = longestPhraseInCue(matchPhrase, cue.text)
     if (!highlightPhrase) return false
 
-    if (note.kind === 'grammar' && !isUsefulGrammarPhrase(highlightPhrase) && !isUsefulGrammarPhrase(matchPhrase)) {
-      return false
-    }
-
     const displayPhrase = normalizeNoteText(note.fullPhrase || matchPhrase)
     if (!registerPhrase(displayPhrase)) return false
 
-    if (note.kind !== 'grammar' && isDiscourseMarker(displayPhrase)) {
+    if (isDiscourseMarker(displayPhrase)) {
       if (discourseMarkerCount >= 1) {
         usedPhrases.delete(displayPhrase.toLowerCase())
         return false
@@ -648,13 +628,14 @@ export const suggestSpeakingSampleSubtitleNotes = (
     suggestions.push({
       ...note,
       id: note.id || `auto-${noteId++}`,
+      kind: 'vocabulary',
       fullPhrase: displayPhrase,
       phrase: highlightPhrase,
       detail:
         note.detail ||
-        (note.kind === 'grammar'
-          ? `${note.grammarRule || ''} · ${note.thaiMeaning || ''}`.trim()
-          : `${displayPhrase} · ${note.partOfSpeech || ''} · ${note.thaiMeaning || ''}`.trim())
+        `${displayPhrase} · ${note.partOfSpeech || ''} · ${note.thaiMeaning || ''}${
+          topicRelevanceBoost(displayPhrase, topicTokens) > 0 ? ' · คำที่ใช้ตรงหัวข้อนี้' : ''
+        }`.trim()
     })
     return true
   }
@@ -674,7 +655,7 @@ export const suggestSpeakingSampleSubtitleNotes = (
         kind: 'vocabulary',
         partOfSpeech: pattern.partOfSpeech,
         thaiMeaning: pattern.thai,
-        score: pattern.score
+        score: pattern.score + topicRelevanceBoost(matchPhrase, topicTokens)
       })
       match = regex.exec(fullText)
     }
@@ -690,46 +671,16 @@ export const suggestSpeakingSampleSubtitleNotes = (
       kind: 'vocabulary',
       partOfSpeech: meta.partOfSpeech,
       thaiMeaning: meta.thai,
-      score: scoreStaticVocab(term, meta)
+      score: scoreStaticVocab(term, meta) + topicRelevanceBoost(matchPhrase, topicTokens)
     })
   }
 
   vocabCandidates
     .sort((a, b) => b.score - a.score)
     .forEach((candidate) => {
-      if (suggestions.filter((item) => item.kind === 'vocabulary').length >= SPEAKING_SAMPLE_NOTE_LIMITS.vocabulary) {
+      if (suggestions.length >= SPEAKING_SAMPLE_NOTE_LIMITS.vocabulary) {
         return
       }
-      const { score: _score, matchPhrase, ...note } = candidate
-      addSuggestion({ ...note, matchPhrase })
-    })
-
-  const grammarCandidates: ScoredCandidate[] = []
-  for (const grammar of GRAMMAR_PATTERNS) {
-    const regex = new RegExp(grammar.pattern.source, grammar.pattern.flags)
-    let match = regex.exec(fullText)
-    while (match) {
-      const phrase = grammar.pickPhrase(match, fullText)
-      if (isUsefulGrammarPhrase(phrase)) {
-        const example = sentenceAround(fullText, match.index)
-        grammarCandidates.push({
-          phrase: grammar.pickPhrase(match, fullText),
-          matchPhrase: phrase,
-          kind: 'grammar',
-          grammarRule: grammar.grammarRule,
-          thaiMeaning: grammar.thai,
-          exampleSentence: example.includes(phrase) ? example : `"${example}"`,
-          score: phrase.split(/\s+/).length * 6 + 40
-        })
-      }
-      match = regex.exec(fullText)
-    }
-  }
-
-  grammarCandidates
-    .sort((a, b) => b.score - a.score)
-    .slice(0, SPEAKING_SAMPLE_NOTE_LIMITS.grammar)
-    .forEach((candidate) => {
       const { score: _score, matchPhrase, ...note } = candidate
       addSuggestion({ ...note, matchPhrase })
     })
@@ -737,30 +688,40 @@ export const suggestSpeakingSampleSubtitleNotes = (
   return suggestions.slice(0, SPEAKING_SAMPLE_NOTE_LIMITS.total)
 }
 
+export type EnrichSpeakingSampleSubtitleOptions = {
+  force?: boolean
+  topicContext?: SpeakingSampleTopicContext
+}
+
 export const enrichSpeakingSampleSubtitlesWithNotes = (
   cues: SpeakingSampleSubtitleCue[],
   transcript = '',
-  options: { force?: boolean } = {}
+  options: EnrichSpeakingSampleSubtitleOptions = {}
 ): SpeakingSampleSubtitleCue[] => {
-  const richNotes = collectQualityNotes(cues).filter(isRichStructuredNote)
+  const sanitizedCues = cues.map((cue) => ({
+    ...cue,
+    notes: sanitizeVocabularySubtitleNotes(cue.notes)
+  }))
+
+  const richNotes = collectQualityNotes(sanitizedCues).filter(isRichStructuredNote)
   if (
     !options.force &&
     richNotes.length >= SPEAKING_SAMPLE_NOTE_LIMITS.total &&
     richNotes.every(isRichStructuredNote)
   ) {
-    return cues.map((cue) => ({
+    return sanitizedCues.map((cue) => ({
       ...cue,
       notes: (cue.notes || []).map((note) => ({
         ...note,
-        kind: note.kind || (note.grammarRule ? 'grammar' : note.partOfSpeech ? 'vocabulary' : undefined)
+        kind: 'vocabulary' as const
       }))
     }))
   }
 
-  const suggestions = suggestSpeakingSampleSubtitleNotes(cues, transcript)
-  if (!suggestions.length) return cues
+  const suggestions = suggestSpeakingSampleSubtitleNotes(sanitizedCues, transcript, options.topicContext)
+  if (!suggestions.length) return sanitizedCues
 
-  const nextCues = cues.map((cue) => ({ ...cue, notes: [] as SpeakingSampleSubtitleNote[] }))
+  const nextCues = sanitizedCues.map((cue) => ({ ...cue, notes: [] as SpeakingSampleSubtitleNote[] }))
   suggestions.forEach((note) => {
     const cue = findCueForPhrase(nextCues, note.fullPhrase || note.phrase)
     if (!cue) return
@@ -788,7 +749,13 @@ export type RevealedSpeakingSampleSubtitleNote = SpeakingSampleSubtitleNote & {
   revealSeconds: number
 }
 
-/** Notes that have been reached in playback — they stay visible for the rest of the video. */
+export const isSpeakingSampleSubtitleNoteVisible = (
+  revealSeconds: number,
+  videoTime: number,
+  displaySeconds = SPEAKING_SAMPLE_NOTE_DISPLAY_SECONDS
+) => videoTime >= revealSeconds - 0.02 && videoTime < revealSeconds + displaySeconds
+
+/** Vocabulary/collocation notes visible for a short window after the phrase is spoken. */
 export const getRevealedSpeakingSampleSubtitleNotes = (
   cues: SpeakingSampleSubtitleCue[],
   videoTime: number,
@@ -798,11 +765,11 @@ export const getRevealedSpeakingSampleSubtitleNotes = (
   const revealed: RevealedSpeakingSampleSubtitleNote[] = []
 
   cues.forEach((cue) => {
-    ;(cue.notes || []).forEach((note) => {
+    sanitizeVocabularySubtitleNotes(cue.notes).forEach((note) => {
       const phrase = normalizeNoteText(note.phrase)
       if (!phrase) return
       const revealSeconds = estimateSpeakingSampleSubtitleNoteRevealSeconds(cue, phrase)
-      if (videoTime < revealSeconds - 0.02) return
+      if (!isSpeakingSampleSubtitleNoteVisible(revealSeconds, videoTime)) return
       const key = normalizeNoteText(note.fullPhrase || note.phrase).toLowerCase()
       if (seen.has(key)) return
       seen.add(key)
@@ -821,7 +788,10 @@ export const isSpeakingSampleSubtitlePhraseRevealed = (
   cue: Pick<SpeakingSampleSubtitleCue, 'startSeconds' | 'endSeconds' | 'text'>,
   phrase: string,
   videoTime: number
-) => videoTime >= estimateSpeakingSampleSubtitleNoteRevealSeconds(cue, phrase) - 0.02
+) => {
+  const revealSeconds = estimateSpeakingSampleSubtitleNoteRevealSeconds(cue, phrase)
+  return isSpeakingSampleSubtitleNoteVisible(revealSeconds, videoTime)
+}
 
 export type SpeakingSampleVocabularyGuideItem = {
   level: 'B1' | 'B2' | 'C1'
@@ -858,18 +828,11 @@ export const speakingSampleSubtitleNotesToVocabularyGuideItems = (
   cues: SpeakingSampleSubtitleCue[] = []
 ): SpeakingSampleVocabularyGuideItem[] =>
   collectUniqueSpeakingSampleSubtitleNotes(cues)
+    .filter((note) => !isGrammarSubtitleNote(note))
     .map((note) => parseSpeakingSampleSubtitleNote(note))
-    .filter((parsed): parsed is ParsedSpeakingSampleSubtitleNote => Boolean(parsed))
+    .filter((parsed): parsed is ParsedSpeakingSampleSubtitleNote => Boolean(parsed && parsed.kind === 'vocabulary'))
     .map((parsed) => {
       const level = inferSpeakingSampleNoteLevel(parsed)
-      if (parsed.kind === 'grammar') {
-        const tipParts = [parsed.headline, parsed.body, parsed.example ? `เช่น ${parsed.example}` : ''].filter(Boolean)
-        return {
-          level,
-          phrase: parsed.phrase,
-          tip: tipParts.join(' · ')
-        }
-      }
       return {
         level,
         phrase: parsed.headline || parsed.phrase,

@@ -9748,9 +9748,23 @@ function App() {
     () =>
       enrichSpeakingSampleSubtitlesWithNotes(
         adminSubtitleCues,
-        adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || ''
+        adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || '',
+        {
+          topicContext: {
+            title: adminSelectedVideoTopic?.title || adminSelectedVideoTopic?.prompt,
+            prompt: adminSelectedVideoTopic?.prompt,
+            category: adminSelectedVideoTopic?.category
+          }
+        }
       ),
-    [adminSubtitleCues, adminSubtitleTranscript, adminSelectedVideoAsset?.transcript]
+    [
+      adminSubtitleCues,
+      adminSubtitleTranscript,
+      adminSelectedVideoAsset?.transcript,
+      adminSelectedVideoTopic?.title,
+      adminSelectedVideoTopic?.prompt,
+      adminSelectedVideoTopic?.category
+    ]
   )
   const adminVisibleSubtitleNotes = shouldShowAdminSubtitleKnowledgeNotes
     ? getRevealedSpeakingSampleSubtitleNotes(adminEnrichedSubtitleCues, adminVideoPreviewTime)
@@ -12601,32 +12615,37 @@ function App() {
       return
     }
     rememberAdminSubtitleEdit()
+    const topicContext = {
+      title: adminSelectedVideoTopic?.title || adminSelectedVideoTopic?.prompt,
+      prompt: adminSelectedVideoTopic?.prompt,
+      category: adminSelectedVideoTopic?.category
+    }
     const suggestions = suggestSpeakingSampleSubtitleNotes(
       adminSubtitleCues,
-      adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || ''
+      adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || '',
+      topicContext
     )
     if (!suggestions.length) {
-      setAdminSubtitleDraftMessage('No B1-B2 vocabulary or grammar highlights found in this transcript.')
+      setAdminSubtitleDraftMessage('No topic-related vocabulary or collocation highlights found in this transcript.')
       return
     }
     const enriched = enrichSpeakingSampleSubtitlesWithNotes(
       adminSubtitleCues,
-      adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || ''
+      adminSubtitleTranscript || adminSelectedVideoAsset?.transcript || '',
+      { force: true, topicContext }
     )
     setAdminSubtitleCuesSafe(
       enriched.map((cue) => ({
         ...cue,
         notes: (cue.notes || []).map((note) => ({
           ...note,
+          kind: 'vocabulary' as const,
           detail:
-            note.detail ||
-            (note.kind === 'grammar'
-              ? `${note.grammarRule || ''} · ${note.thaiMeaning || ''}`.trim()
-              : `${note.phrase} · ${note.partOfSpeech || ''} · ${note.thaiMeaning || ''}`.trim())
+            note.detail || `${note.phrase} · ${note.partOfSpeech || ''} · ${note.thaiMeaning || ''}`.trim()
         }))
       })) as AdminSubtitleCue[]
     )
-    setAdminSubtitleDraftMessage(`Added ${suggestions.length} auto-suggested B1-B2 notes. Review and edit before publish.`)
+    setAdminSubtitleDraftMessage(`Added ${suggestions.length} topic-focused vocabulary/collocation notes. Review before publish.`)
   }
 
   const filterAdminSubtitleNotesForText = (notes: AdminSubtitleNote[] | undefined, text: string) => {
@@ -24260,6 +24279,7 @@ function App() {
                         {adminVisibleSubtitleNotes.length > 0 ? (
                           <SpeakingSampleKnowledgeOverlay
                             notes={adminVisibleSubtitleNotes}
+                            videoTime={adminVideoPreviewTime}
                             className="adminVideoKnowledgeStack"
                             cardClassName="adminVideoKnowledgeCard"
                           />
