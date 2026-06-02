@@ -23680,7 +23680,7 @@ textarea {
 
 .adminVideoStudio2CueRow {
   display: grid;
-  grid-template-columns: minmax(220px, auto) 1fr minmax(160px, auto) auto;
+  grid-template-columns: minmax(260px, auto) 1fr minmax(140px, auto) minmax(120px, auto) auto;
   gap: 10px;
   align-items: center;
   padding: 8px;
@@ -23688,6 +23688,68 @@ textarea {
   border: 1px solid #334155;
   border-radius: 8px;
   transition: border-color 120ms ease;
+}
+
+.adminVideoStudio2CueChipWrap {
+  display: flex;
+  align-items: center;
+}
+
+.adminVideoStudio2CueChip {
+  display: inline-block;
+  white-space: nowrap;
+  border-radius: 6px;
+}
+
+.adminVideoStudio2CueAdvanced {
+  grid-column: 1 / -1;
+  margin-top: 2px;
+  border-top: 1px dashed #334155;
+  padding-top: 8px;
+}
+
+.adminVideoStudio2CueAdvanced summary {
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  user-select: none;
+  list-style: none;
+}
+
+.adminVideoStudio2CueAdvanced summary::after {
+  content: ' ▾';
+}
+
+.adminVideoStudio2CueAdvanced[open] summary::after {
+  content: ' ▴';
+}
+
+.adminVideoStudio2CueAdvancedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.adminVideoStudio2CueAdvancedGrid label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.adminVideoStudio2CueAdvancedGrid input,
+.adminVideoStudio2CueAdvancedGrid select {
+  padding: 6px 8px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.85rem;
 }
 
 .adminVideoStudio2CueRow.is-active {

@@ -10,6 +10,7 @@ import {
   VIDEO_STUDIO_SFX,
   VIDEO_STUDIO_STYLES,
   VIDEO_STUDIO_STYLE_MAP,
+  VIDEO_STUDIO_TEXT_ANIMATIONS,
   VIDEO_STUDIO_TRANSITIONS,
   VIDEO_STUDIO_ZOOM_SCALES,
   type VideoStudioCameraPanKind,
@@ -528,11 +529,61 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
             onTimeUpdate={onTimeUpdate}
             className="adminVideoStudio2Video"
           />
-          {activeSubtitle && (
-            <div className="adminVideoStudio2SubtitlePreview" data-style={activeSubtitle.styleId}>
-              {activeSubtitle.text || '—'}
-            </div>
-          )}
+          {activeSubtitle && (() => {
+            const style = VIDEO_STUDIO_STYLE_MAP[activeSubtitle.styleId] || VIDEO_STUDIO_STYLE_MAP.normal
+            const { anchor, preview } = style
+            const text = activeSubtitle.text || '—'
+            const translation = activeSubtitle.translation || ''
+            const translatePct = anchor.align === 'left'
+              ? '0'
+              : anchor.align === 'right'
+                ? '-100%'
+                : '-50%'
+            const wrapperStyle: React.CSSProperties = {
+              position: 'absolute',
+              top: `${anchor.yPercent}%`,
+              left: `${anchor.xPercent}%`,
+              transform: `translate(${translatePct}, -50%)`,
+              pointerEvents: 'none',
+              maxWidth: '78%'
+            }
+            // Vocab callout: highlight word in [[brackets]] OR first capitalized word.
+            const renderVocabCallout = () => {
+              const bracketMatch = /\[\[(.+?)\]\]/.exec(text)
+              const highlight = bracketMatch?.[1]
+              if (!highlight) {
+                return <span style={{ color: preview.color }}>{text}</span>
+              }
+              const [before, after] = text.split(bracketMatch[0])
+              return (
+                <span style={{ color: preview.color }}>
+                  {before}
+                  <span style={{ background: '#facc15', color: '#111827', padding: '0 6px', borderRadius: 4, fontWeight: 900 }}>
+                    {highlight}
+                  </span>
+                  {after}
+                </span>
+              )
+            }
+            return (
+              <div style={wrapperStyle}>
+                <div style={preview as React.CSSProperties}>
+                  {style.id === 'vocab-callout' ? (
+                    renderVocabCallout()
+                  ) : style.id === 'bilingual-stack' ? (
+                    <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                      <span>{text}</span>
+                      {translation && (
+                        <span style={{ fontSize: '0.78em', opacity: 0.85 }}>{translation}</span>
+                      )}
+                    </span>
+                  ) : (
+                    text
+                  )}
+                </div>
+              </div>
+            )
+          })()}
         </div>
       )}
 
@@ -563,58 +614,130 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
               No subtitles yet. Transcribe the video, or add them manually.
             </li>
           )}
-          {project.subtitles.map((cue) => (
-            <li
-              key={cue.id}
-              className={`adminVideoStudio2CueRow ${activeSubtitle?.id === cue.id ? 'is-active' : ''}`.trim()}
-            >
-              <div className="adminVideoStudio2CueTime">
-                <input
-                  type="number"
-                  min={0}
-                  step={50}
-                  value={cue.startMs}
-                  onChange={(event) =>
-                    updateSubtitle(cue.id, { startMs: Number(event.target.value) })
-                  }
-                />
-                <span>→</span>
-                <input
-                  type="number"
-                  min={0}
-                  step={50}
-                  value={cue.endMs}
-                  onChange={(event) =>
-                    updateSubtitle(cue.id, { endMs: Number(event.target.value) })
-                  }
-                />
-                <span>ms</span>
-              </div>
-              <input
-                type="text"
-                className="adminVideoStudio2CueText"
-                value={cue.text}
-                placeholder="Subtitle text"
-                onChange={(event) => updateSubtitle(cue.id, { text: event.target.value })}
-              />
-              <select
-                className="adminVideoStudio2CueStyle"
-                value={cue.styleId}
-                onChange={(event) =>
-                  updateSubtitle(cue.id, { styleId: event.target.value as VideoStudioStyleId })
-                }
+          {project.subtitles.map((cue) => {
+            const style = VIDEO_STUDIO_STYLE_MAP[cue.styleId] || VIDEO_STUDIO_STYLE_MAP.normal
+            return (
+              <li
+                key={cue.id}
+                className={`adminVideoStudio2CueRow ${activeSubtitle?.id === cue.id ? 'is-active' : ''}`.trim()}
               >
-                {VIDEO_STUDIO_STYLES.map((style) => (
-                  <option key={style.id} value={style.id}>
+                <div className="adminVideoStudio2CueTime">
+                  <button
+                    type="button"
+                    className="adminVideoStudio2MarkerSeek"
+                    onClick={() => seekTo(cue.startMs)}
+                    title="Seek to start"
+                  >
+                    {formatMs(cue.startMs)}
+                  </button>
+                  <input
+                    type="number"
+                    min={0}
+                    step={50}
+                    value={cue.startMs}
+                    onChange={(event) =>
+                      updateSubtitle(cue.id, { startMs: Number(event.target.value) })
+                    }
+                  />
+                  <span>→</span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={50}
+                    value={cue.endMs}
+                    onChange={(event) =>
+                      updateSubtitle(cue.id, { endMs: Number(event.target.value) })
+                    }
+                  />
+                </div>
+                <input
+                  type="text"
+                  className="adminVideoStudio2CueText"
+                  value={cue.text}
+                  placeholder="Subtitle text — use [[brackets]] to mark a vocab word"
+                  onChange={(event) => updateSubtitle(cue.id, { text: event.target.value })}
+                />
+                <select
+                  className="adminVideoStudio2CueStyle"
+                  value={cue.styleId}
+                  onChange={(event) =>
+                    updateSubtitle(cue.id, { styleId: event.target.value as VideoStudioStyleId })
+                  }
+                >
+                  {VIDEO_STUDIO_STYLES.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="adminVideoStudio2CueChipWrap">
+                  <span
+                    className="adminVideoStudio2CueChip"
+                    style={{
+                      ...(style.preview as React.CSSProperties),
+                      transform: undefined,
+                      fontSize: '0.72rem',
+                      padding: '4px 8px'
+                    }}
+                    title={style.description}
+                  >
                     {style.label}
-                  </option>
-                ))}
-              </select>
-              <button type="button" className="secondary" onClick={() => deleteSubtitle(cue.id)}>
-                ✕
-              </button>
-            </li>
-          ))}
+                  </span>
+                </div>
+                <button type="button" className="secondary" onClick={() => deleteSubtitle(cue.id)}>
+                  ✕
+                </button>
+                <details className="adminVideoStudio2CueAdvanced">
+                  <summary>Advanced</summary>
+                  <div className="adminVideoStudio2CueAdvancedGrid">
+                    <label>
+                      <span>Translation</span>
+                      <input
+                        type="text"
+                        value={cue.translation || ''}
+                        placeholder="Optional translation"
+                        onChange={(event) => updateSubtitle(cue.id, { translation: event.target.value })}
+                      />
+                    </label>
+                    <label>
+                      <span>Animation in</span>
+                      <select
+                        value={cue.animationIn || style.renderHint.animationIn || 'fade'}
+                        onChange={(event) =>
+                          updateSubtitle(cue.id, {
+                            animationIn: event.target.value as VideoStudioTextAnimation
+                          })
+                        }
+                      >
+                        {VIDEO_STUDIO_TEXT_ANIMATIONS.map((anim) => (
+                          <option key={anim} value={anim}>
+                            {anim}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      <span>Animation out</span>
+                      <select
+                        value={cue.animationOut || style.renderHint.animationOut || 'fade'}
+                        onChange={(event) =>
+                          updateSubtitle(cue.id, {
+                            animationOut: event.target.value as VideoStudioTextAnimation
+                          })
+                        }
+                      >
+                        {VIDEO_STUDIO_TEXT_ANIMATIONS.map((anim) => (
+                          <option key={anim} value={anim}>
+                            {anim}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                </details>
+              </li>
+            )
+          })}
         </ul>
       </div>
 
