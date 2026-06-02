@@ -1078,6 +1078,158 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
 
   // ---- Bulk preset: auto-apply styles based on cue text prefixes ----------
 
+  const insertSceneTipSequence = useCallback(() => {
+    insertTutorScene(
+      [
+        { text: 'TIP #1: <first IELTS tip>', styleId: 'tip-number-card', durationMs: 4500 },
+        { text: 'TIP #2: <second IELTS tip>', styleId: 'tip-number-card', durationMs: 4500 },
+        { text: 'TIP #3: <third IELTS tip>', styleId: 'tip-number-card', durationMs: 4500 }
+      ],
+      {
+        zooms: [
+          { offsetMs: 0, level: 2, kind: 'in' },
+          { offsetMs: 4500, level: 2, kind: 'in' },
+          { offsetMs: 9000, level: 2, kind: 'in' }
+        ],
+        sfx: [
+          { offsetMs: 0, kind: 'ding', volume: 0.6 },
+          { offsetMs: 4500, kind: 'ding', volume: 0.6 },
+          { offsetMs: 9000, kind: 'ding', volume: 0.6 }
+        ]
+      }
+    )
+  }, [insertTutorScene])
+
+  const insertSceneHookCtaBookends = useCallback(() => {
+    const totalDurationMs = project.source?.durationMs || 30000
+    const startMs = 0
+    const endMs = Math.max(totalDurationMs - 5500, totalDurationMs - 6000)
+    setProject((prev) => {
+      const hookCue: VideoStudioSubtitleCue = {
+        id: newId('s'),
+        startMs,
+        endMs: 3000,
+        text: 'Hook: <one-line attention grabber>',
+        styleId: 'bold-thai-display'
+      }
+      const ctaCue: VideoStudioSubtitleCue = {
+        id: newId('s'),
+        startMs: endMs,
+        endMs: totalDurationMs,
+        text: 'Follow @your-handle for more IELTS tips',
+        styleId: 'cta-outro'
+      }
+      const hookZoom: VideoStudioZoomMarker = {
+        id: newId('z'),
+        atMs: 0,
+        level: 2,
+        kind: 'in',
+        durationMs: 600
+      }
+      return {
+        ...prev,
+        subtitles: [...prev.subtitles, hookCue, ctaCue].sort((a, b) => a.startMs - b.startMs),
+        zooms: [...prev.zooms, hookZoom].sort((a, b) => a.atMs - b.atMs)
+      }
+    })
+  }, [project.source?.durationMs])
+
+  const insertSceneSectionIntro = useCallback(() => {
+    insertTutorScene(
+      [
+        { text: 'Section: SPEAKING', styleId: 'section-header', durationMs: 2500 },
+        { text: 'Body explanation goes here', styleId: 'word-highlight-4', durationMs: 5000 }
+      ],
+      {
+        zooms: [{ offsetMs: 2500, level: 1, kind: 'in' }]
+      }
+    )
+  }, [insertTutorScene])
+
+  const insertSceneSpeakingSampleTag = useCallback(() => {
+    insertTutorScene(
+      [
+        { text: 'Band: 8.5', styleId: 'band-score-badge', durationMs: 6000 },
+        { text: 'Criterion: Fluency & Coherence', styleId: 'criterion-stamp', durationMs: 6000 },
+        { text: 'Criterion: Lexical Resource', styleId: 'criterion-stamp', durationMs: 6000 },
+        { text: 'Criterion: Grammar', styleId: 'criterion-stamp', durationMs: 6000 },
+        { text: 'Criterion: Pronunciation', styleId: 'criterion-stamp', durationMs: 6000 }
+      ],
+      {
+        zooms: [{ offsetMs: 0, level: 1, kind: 'in' }]
+      }
+    )
+  }, [insertTutorScene])
+
+  // ---- Cue splitter — turn long cues into 5-word chunks for shorts ----
+
+  const splitLongCuesForShorts = useCallback(() => {
+    setProject((prev) => {
+      const next: VideoStudioSubtitleCue[] = []
+      for (const cue of prev.subtitles) {
+        const tokenized = cue.words && cue.words.length > 0 ? cue.words : null
+        const words = tokenized
+          ? tokenized
+          : cue.text
+              .split(/\s+/)
+              .filter(Boolean)
+              .map((word, i, arr) => {
+                // Synthesize even-spaced timestamps when we don't have real ones.
+                const span = cue.endMs - cue.startMs
+                const slice = span / arr.length
+                return {
+                  word,
+                  startMs: Math.round(cue.startMs + slice * i),
+                  endMs: Math.round(cue.startMs + slice * (i + 1))
+                }
+              })
+        if (words.length <= 5) {
+          next.push(cue)
+          continue
+        }
+        // Group into chunks of up to 5 words each.
+        for (let i = 0; i < words.length; i += 5) {
+          const chunk = words.slice(i, i + 5)
+          next.push({
+            ...cue,
+            id: newId('s'),
+            startMs: chunk[0].startMs,
+            endMs: chunk[chunk.length - 1].endMs,
+            text: chunk.map((w) => w.word).join(' '),
+            words: chunk
+          })
+        }
+      }
+      return { ...prev, subtitles: next.sort((a, b) => a.startMs - b.startMs) }
+    })
+  }, [])
+
+  // ---- IELTS preset — auto-style every cue based on prefixes ----
+
+  const applyIeltsPreset = useCallback(() => {
+    setProject((prev) => ({
+      ...prev,
+      subtitles: prev.subtitles.map((cue) => {
+        const text = String(cue.text || '').trim()
+        if (/^Band:/i.test(text)) return { ...cue, styleId: 'band-score-badge' }
+        if (/^Section:/i.test(text)) return { ...cue, styleId: 'section-header' }
+        if (/^Criterion:/i.test(text)) return { ...cue, styleId: 'criterion-stamp' }
+        if (/^Tip(\s*#?\d+)?:/i.test(text) || /^TIP\s*#?\d+:/.test(text)) return { ...cue, styleId: 'tip-number-card' }
+        if (/^Hook:/i.test(text)) return { ...cue, styleId: 'bold-thai-display' }
+        if (/^CTA:/i.test(text)) return { ...cue, styleId: 'cta-outro' }
+        if (/^Watermark:/i.test(text)) return { ...cue, styleId: 'channel-watermark' }
+        if (/^Before:/i.test(text)) return { ...cue, styleId: 'grammar-before' }
+        if (/^After:/i.test(text)) return { ...cue, styleId: 'grammar-after' }
+        if (/^Vocab:/i.test(text)) return { ...cue, styleId: 'vocab-card' }
+        if (/^Quote:/i.test(text)) return { ...cue, styleId: 'quote-essay' }
+        if (/^(Why|Explanation):/i.test(text)) return { ...cue, styleId: 'caption-pill' }
+        if (/\[\[.+?\]\]/.test(text)) return { ...cue, styleId: 'vocab-callout' }
+        if (cue.styleId === DEFAULT_VIDEO_STUDIO_STYLE) return { ...cue, styleId: 'word-highlight-4' }
+        return cue
+      })
+    }))
+  }, [])
+
   const applyTutorPreset = useCallback(() => {
     setProject((prev) => ({
       ...prev,
@@ -1472,7 +1624,31 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
                     <span style={{ fontStyle: 'italic' }}>
                       “{text.replace(/^Quote:\s*/i, '')}”
                     </span>
-                  ) : (
+                  ) : style.id === 'band-score-badge' ? (
+                    <span>{text.replace(/^Band:\s*/i, '')}</span>
+                  ) : style.id === 'section-header' ? (() => {
+                    const upper = text.replace(/^Section:\s*/i, '').toUpperCase()
+                    const sectionColor =
+                      upper.includes('READING') ? '#16a34a'
+                      : upper.includes('LISTENING') ? '#2563eb'
+                      : upper.includes('WRITING') ? '#ea580c'
+                      : upper.includes('SPEAKING') ? '#7c3aed'
+                      : '#1d4ed8'
+                    return <span style={{ background: sectionColor, padding: '12px 28px', margin: '-12px -28px', borderRadius: 8 }}>{upper}</span>
+                  })() : style.id === 'criterion-stamp' ? (
+                    <span>{text.replace(/^Criterion:\s*/i, '')}</span>
+                  ) : style.id === 'tip-number-card' ? (() => {
+                    const cleaned = text.replace(/^Tip:\s*/i, '')
+                    const m = cleaned.match(/^(TIP\s*#?\d+|Tip\s*#?\d+)[:.\-\s]+(.+)$/i)
+                    const head = (m?.[1] ?? 'TIP').toUpperCase()
+                    const body = (m?.[2] ?? cleaned).trim()
+                    return (
+                      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                        <span style={{ color: '#dc2626' }}>{head}</span>
+                        <span style={{ fontSize: '0.7em', color: '#0f172a' }}>{body}</span>
+                      </span>
+                    )
+                  })() : (
                     text
                   )}
                 </div>
@@ -1649,6 +1825,52 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
             )
           })}
         </ul>
+      </div>
+
+      {/* ---- IELTS Scenes ---- */}
+      <div className="adminVideoStudio2Panel adminVideoStudio2Panel-ielts">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>IELTS scenes</h3>
+          <div className="controls">
+            <button type="button" onClick={insertSceneTipSequence} disabled={!sourceBlob}>
+              + Tip Sequence (3)
+            </button>
+            <button type="button" onClick={insertSceneHookCtaBookends} disabled={!sourceBlob}>
+              + Hook + CTA bookends
+            </button>
+            <button type="button" onClick={insertSceneSectionIntro} disabled={!sourceBlob}>
+              + Section Intro
+            </button>
+            <button type="button" onClick={insertSceneSpeakingSampleTag} disabled={!sourceBlob}>
+              + Speaking Sample Tag
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={splitLongCuesForShorts}
+              disabled={project.subtitles.length === 0}
+              title="Split any cue with >5 words into 5-word chunks (uses per-word timing)"
+            >
+              Split long cues for shorts
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={applyIeltsPreset}
+              disabled={project.subtitles.length === 0}
+              title="Auto-style every cue based on prefixes (Band:, Section:, Tip:, Criterion:, Hook:, CTA:, plus Tutor prefixes)"
+            >
+              Apply IELTS Preset
+            </button>
+          </div>
+        </div>
+        <p className="meta">
+          Built for IELTS tip shorts + course promos + speaking samples. Prefixes:{' '}
+          <code>Band:</code>, <code>Section:</code>, <code>Tip:</code>, <code>Criterion:</code>,{' '}
+          <code>Hook:</code>, <code>CTA:</code>, <code>Watermark:</code>.{' '}
+          <strong>Apply IELTS Preset</strong> applies all of those AND the tutor prefixes (Before /
+          After / Vocab / Quote / Why) AND <code>[[brackets]]</code> at once.
+        </p>
       </div>
 
       {/* ---- Tutor Scenes (for English-tutoring videos) ---- */}

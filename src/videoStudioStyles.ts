@@ -20,6 +20,12 @@ export type VideoStudioStyleId =
   | 'grammar-before'
   | 'grammar-after'
   | 'quote-essay'
+  | 'band-score-badge'
+  | 'section-header'
+  | 'criterion-stamp'
+  | 'tip-number-card'
+  | 'cta-outro'
+  | 'channel-watermark'
 
 export type VideoStudioStylePreview = {
   background: string
@@ -507,6 +513,175 @@ export const VIDEO_STUDIO_STYLES: VideoStudioStyleDefinition[] = [
       animationIn: 'fade',
       animationOut: 'fade',
       notes: 'Render italicized. Open and close with smart quotes “ ”. If text starts with "Quote:" strip that prefix.'
+    }
+  },
+  {
+    id: 'band-score-badge',
+    label: 'Band Score Badge',
+    description: 'Circular gold-on-navy badge. Cue text: "8.5" or "Band: 8.5".',
+    anchor: { xPercent: 85, yPercent: 16, align: 'right' },
+    preview: {
+      background: 'radial-gradient(circle at 30% 30%, #fbbf24 0%, #d97706 100%)',
+      color: '#0f172a',
+      fontFamily: 'Inter, sans-serif',
+      fontWeight: 900,
+      fontSize: '1.4rem',
+      padding: '18px 22px',
+      borderRadius: '999px',
+      border: '4px solid #0f172a',
+      boxShadow: '4px 4px 0 #0f172a'
+    },
+    renderHint: {
+      family: 'Inter Black',
+      weight: 900,
+      sizeRem: 2.0,
+      fillHex: '#0f172a',
+      backgroundHex: '#fbbf24',
+      strokeHex: '#0f172a',
+      animationIn: 'pop',
+      animationOut: 'fade',
+      notes: 'Strip leading "Band:" if present. Render as a perfect circle with the band score number centered. Best in the upper-right corner; stays on-screen for the entire cue duration (often the whole video for branding).'
+    }
+  },
+  {
+    id: 'section-header',
+    label: 'IELTS Section Header',
+    description: 'Big colored chapter card. Use for "READING", "LISTENING", "WRITING", "SPEAKING".',
+    anchor: { xPercent: 50, yPercent: 22, align: 'center' },
+    preview: {
+      background: '#1d4ed8',
+      color: '#ffffff',
+      fontFamily: 'Inter, Noto Sans Thai, sans-serif',
+      fontWeight: 900,
+      fontSize: '1.5rem',
+      padding: '12px 28px',
+      borderRadius: '8px',
+      letterSpacing: '0.15em',
+      textTransform: 'uppercase',
+      boxShadow: '0 6px 18px rgba(29,78,216,0.45)'
+    },
+    renderHint: {
+      family: 'Inter Black',
+      weight: 900,
+      sizeRem: 2.2,
+      fillHex: '#ffffff',
+      backgroundHex: '#1d4ed8',
+      animationIn: 'slide-up',
+      animationOut: 'slide-down',
+      notes: 'Strip leading "Section:" prefix. Recolor based on the IELTS section: READING #16a34a (green), LISTENING #2563eb (blue), WRITING #ea580c (orange), SPEAKING #7c3aed (purple). All-caps, wide letter-spacing.'
+    }
+  },
+  {
+    id: 'criterion-stamp',
+    label: 'IELTS Criterion Stamp',
+    description: 'Small stamp for marking IELTS scoring criteria. "Fluency", "Lexical Resource", "Grammar", "Pronunciation", "Task Response", "Coherence & Cohesion".',
+    anchor: { xPercent: 18, yPercent: 78, align: 'left' },
+    preview: {
+      background: '#fef3c7',
+      color: '#78350f',
+      fontFamily: 'Inter, sans-serif',
+      fontWeight: 900,
+      fontSize: '0.78rem',
+      padding: '5px 10px',
+      borderRadius: '4px',
+      border: '2px solid #b45309',
+      letterSpacing: '0.06em',
+      textTransform: 'uppercase',
+      transform: 'rotate(-4deg)'
+    },
+    renderHint: {
+      family: 'Inter Black',
+      weight: 900,
+      sizeRem: 1.0,
+      fillHex: '#78350f',
+      backgroundHex: '#fef3c7',
+      strokeHex: '#b45309',
+      tiltDeg: -4,
+      animationIn: 'stamp',
+      animationOut: 'fade',
+      notes: 'Strip leading "Criterion:" prefix. Use for tagging WHICH IELTS scoring band the current cue demonstrates. Stays brief — 2-4 words max.'
+    }
+  },
+  {
+    id: 'tip-number-card',
+    label: 'TIP #N Card',
+    description: 'Big red-bordered "TIP #1" card for IELTS tip shorts. Cue text: "TIP #1: Skim the headings first".',
+    anchor: { xPercent: 50, yPercent: 35, align: 'center' },
+    preview: {
+      background: '#ffffff',
+      color: '#7f1d1d',
+      fontFamily: 'Inter, Noto Sans Thai, sans-serif',
+      fontWeight: 900,
+      fontSize: '1.3rem',
+      padding: '16px 24px',
+      borderRadius: '14px',
+      border: '5px solid #dc2626',
+      boxShadow: '6px 6px 0 #7f1d1d'
+    },
+    renderHint: {
+      family: 'Inter Black / Noto Sans Thai Black',
+      weight: 900,
+      sizeRem: 2.0,
+      fillHex: '#7f1d1d',
+      backgroundHex: '#ffffff',
+      strokeHex: '#dc2626',
+      animationIn: 'pop',
+      animationOut: 'slide-down',
+      notes: 'Cue text format: "TIP #N: <description>" or "Tip: <description>". Render "TIP #N" on top line in red bold, the description body underneath in dark color at 70% size.'
+    }
+  },
+  {
+    id: 'cta-outro',
+    label: 'CTA Outro',
+    description: 'Bottom-bar "Follow @handle for more IELTS tips" — end of video.',
+    anchor: { xPercent: 50, yPercent: 88, align: 'center' },
+    preview: {
+      background: 'linear-gradient(90deg, #1e40af 0%, #6d28d9 100%)',
+      color: '#ffffff',
+      fontFamily: 'Inter, sans-serif',
+      fontWeight: 900,
+      fontSize: '1.05rem',
+      padding: '12px 28px',
+      borderRadius: '999px',
+      letterSpacing: '0.04em',
+      boxShadow: '0 8px 24px rgba(30,64,175,0.45)'
+    },
+    renderHint: {
+      family: 'Inter Black',
+      weight: 900,
+      sizeRem: 1.4,
+      fillHex: '#ffffff',
+      backgroundHex: 'linear-gradient(90deg,#1e40af,#6d28d9)',
+      animationIn: 'slide-up',
+      animationOut: 'fade',
+      notes: 'Default text: "Follow @handle for more IELTS tips". Sized to span ~60% of frame width.'
+    }
+  },
+  {
+    id: 'channel-watermark',
+    label: 'Channel Watermark',
+    description: 'Tiny persistent corner brand label. Stays visible the whole video for branding.',
+    anchor: { xPercent: 4, yPercent: 6, align: 'left' },
+    preview: {
+      background: 'rgba(255,255,255,0.85)',
+      color: '#0f172a',
+      fontFamily: 'Inter, sans-serif',
+      fontWeight: 800,
+      fontSize: '0.72rem',
+      padding: '4px 10px',
+      borderRadius: '999px',
+      letterSpacing: '0.05em',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+    },
+    renderHint: {
+      family: 'Inter SemiBold',
+      weight: 800,
+      sizeRem: 0.9,
+      fillHex: '#0f172a',
+      backgroundHex: '#ffffff',
+      animationIn: 'fade',
+      animationOut: 'fade',
+      notes: 'Default text: "@your-handle · IELTS". Best in a top corner, small and unobtrusive.'
     }
   }
 ]

@@ -139,7 +139,16 @@ const stripVocabBrackets = (text: string) => text.replace(/\[\[(.+?)\]\]/g, '$1'
 
 // Strip tutor-scene prefixes like "Before:", "After:", "Vocab:", "Quote:".
 const stripTutorPrefix = (text: string) =>
-  text.replace(/^(Before|After|Vocab|Quote|Why):\s*/i, '')
+  text.replace(/^(Before|After|Vocab|Quote|Why|Band|Section|Criterion|Tip|Hook|CTA):\s*/i, '')
+
+const ieltsSectionColor = (text: string) => {
+  const upper = text.toUpperCase()
+  if (upper.includes('READING')) return '#16a34a'
+  if (upper.includes('LISTENING')) return '#2563eb'
+  if (upper.includes('WRITING')) return '#ea580c'
+  if (upper.includes('SPEAKING')) return '#7c3aed'
+  return '#1d4ed8'
+}
 
 // Vocab-card text split: "WORD / translation" → ['WORD', 'translation']
 const splitVocabCard = (text: string, translation?: string) => {
@@ -186,6 +195,26 @@ const drawCueOverlay = (
   } else if (style.id === 'quote-essay') {
     const sentence = stripTutorPrefix(cleanText)
     for (const line of wrapTextLines(ctx, `“${sentence}”`, maxWidth)) lines.push({ text: line })
+  } else if (style.id === 'band-score-badge') {
+    lines.push({ text: stripTutorPrefix(cleanText) })
+  } else if (style.id === 'section-header') {
+    lines.push({ text: stripTutorPrefix(cleanText).toUpperCase() })
+  } else if (style.id === 'criterion-stamp') {
+    lines.push({ text: stripTutorPrefix(cleanText).toUpperCase() })
+  } else if (style.id === 'tip-number-card') {
+    const cleaned = stripTutorPrefix(cleanText)
+    const m = cleaned.match(/^(TIP\s*#?\d+|Tip\s*#?\d+)[:.\-\s]+(.+)$/i)
+    const head = (m?.[1] ?? 'TIP').toUpperCase()
+    const body = (m?.[2] ?? cleaned).trim()
+    lines.push({ text: head })
+    if (body) {
+      const smallFontPx = Math.round(fontSizePx * 0.7)
+      ctx.font = `${fontWeight} ${smallFontPx}px ${fontFamily}`
+      for (const line of wrapTextLines(ctx, body, maxWidth)) lines.push({ text: line })
+      ctx.font = `${fontWeight} ${fontSizePx}px ${fontFamily}`
+    }
+  } else if (style.id === 'cta-outro' || style.id === 'channel-watermark') {
+    for (const line of wrapTextLines(ctx, stripTutorPrefix(cleanText), maxWidth)) lines.push({ text: line })
   } else if (style.id === 'word-highlight-4' && cue.words?.length) {
     const activeIndex = findActiveWord(cue.words, currentTimeMs)
     const center = activeIndex >= 0 ? activeIndex : 0
@@ -239,7 +268,11 @@ const drawCueOverlay = (
   }
 
   // Background (if not transparent).
-  const bg = style.preview.background
+  let bg = style.preview.background
+  // section-header swaps colour by detected IELTS section in its text.
+  if (style.id === 'section-header') {
+    bg = ieltsSectionColor(cleanText)
+  }
   const radius = Number(String(style.preview.borderRadius).replace(/px/g, '')) || 0
   if (bg && bg !== 'transparent') {
     if (bg.startsWith('linear-gradient')) {
