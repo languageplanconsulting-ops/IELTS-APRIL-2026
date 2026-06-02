@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { exportVideoStudioVideo, type VideoStudioExportFormat } from './videoStudioExport'
 import {
   DEFAULT_VIDEO_STUDIO_STYLE,
   VIDEO_STUDIO_CAMERA_PANS,
@@ -575,6 +576,7 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
   const [isTranscribing, setIsTranscribing] = useState(false)
   const [transcribeStatus, setTranscribeStatus] = useState('')
   const [transcribeError, setTranscribeError] = useState('')
+  const [transcribeProvider, setTranscribeProvider] = useState<'gemini' | 'deepgram'>('gemini')
   const [currentTimeMs, setCurrentTimeMs] = useState(0)
   const [savedLabel, setSavedLabel] = useState('')
 
@@ -704,10 +706,34 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
     try {
       const durationSeconds = (project.source?.durationMs || 0) / 1000
       const fileName = `video-studio-source.${guessVideoFileExtension(sourceBlob.type)}`
+      const GEMINI_LIMIT = 22 * 1024 * 1024
 
+      // ---- Gemini path (free, default) ----
+      if (transcribeProvider === 'gemini') {
+        if (sourceBlob.size > GEMINI_LIMIT) {
+          throw new Error(
+            `Video is ${(sourceBlob.size / (1024 * 1024)).toFixed(1)} MB. Gemini's free transcription tier caps at ~22 MB. Trim or re-encode to a smaller clip, or switch to Deepgram (paid).`
+          )
+        }
+        setTranscribeStatus('Sending to Gemini (free, Thai-friendly)…')
+        const formData = new FormData()
+        formData.append('video', sourceBlob, fileName)
+        const response = await fetch('/api/admin/video-studio/transcribe-gemini', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${accessToken}` },
+          body: formData
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) {
+          throw new Error(payload?.error?.message || `Gemini transcription failed (${response.status})`)
+        }
+        return applyBackendTranscriptionResult(payload)
+      }
+
+      // ---- Deepgram path (paid, but no 22 MB cap and supports large files via storage) ----
       if (sourceBlob.size <= BACKEND_UPLOAD_SAFE_BYTES) {
         // Small file path — direct FormData (fast).
-        setTranscribeStatus('Uploading to Deepgram / Gemini…')
+        setTranscribeStatus('Uploading to Deepgram…')
         const formData = new FormData()
         formData.append('video', sourceBlob, fileName)
         formData.append('trimStartSeconds', '0')
@@ -725,7 +751,7 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
         return applyBackendTranscriptionResult(payload)
       }
 
-      // Large file path — direct-to-Supabase, then transcribe by URL.
+      // Deepgram large-file path — direct-to-Supabase, then transcribe by URL.
       setTranscribeStatus(`Uploading ${(sourceBlob.size / (1024 * 1024)).toFixed(0)} MB to storage…`)
       const objectPath = await uploadToStorageViaSignedUrl(sourceBlob, fileName, (pct) => {
         setTranscribeStatus(`Uploading… ${Math.round(pct * 100)}%`)
@@ -779,7 +805,7 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
       )
       window.setTimeout(() => setTranscribeStatus(''), 4000)
     }
-  }, [sourceBlob, accessToken, project.source?.durationMs, uploadToStorageViaSignedUrl])
+  }, [sourceBlob, accessToken, project.source?.durationMs, transcribeProvider, uploadToStorageViaSignedUrl])
 
   const updateSubtitle = useCallback((id: string, patch: Partial<VideoStudioSubtitleCue>) => {
     setProject((prev) => ({
@@ -947,6 +973,10 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
   const [copyLabel, setCopyLabel] = useState('Copy JSON')
   const [copySrtLabel, setCopySrtLabel] = useState('Copy SRT')
   const [copyHfLabel, setCopyHfLabel] = useState('Copy HTML')
+  const [isRendering, setIsRendering] = useState(false)
+  const [renderPct, setRenderPct] = useState(0)
+  const [renderError, setRenderError] = useState('')
+  const renderAbortRef = useRef<AbortController | null>(null)
 
   const safeProjectFileBase = useMemo(
     () => project.title.replace(/[^a-zA-Z0-9-_]/g, '_').slice(0, 60) || 'video-studio',
@@ -1024,6 +1054,55 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
       window.setTimeout(() => setCopyHfLabel('Copy HTML'), 1800)
     }
   }, [exportHyperframe])
+
+  const onRenderVideo = useCallback(
+    async (format: VideoStudioExportFormat) => {
+      if (!sourceBlob) {
+        setRenderError('Upload a source video first.')
+        return
+      }
+      if (isRendering) return
+      setIsRendering(true)
+      setRenderPct(0)
+      setRenderError('')
+      const controller = new AbortController()
+      renderAbortRef.current = controller
+      try {
+        const blob = await exportVideoStudioVideo({
+          project,
+          sourceBlob,
+          format,
+          onProgress: (pct) => setRenderPct(Math.round(pct)),
+          signal: controller.signal
+        })
+        const ext = format === 'mp4' ? 'mp4' : 'webm'
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `${safeProjectFileBase}.${ext}`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+        setRenderPct(100)
+      } catch (error) {
+        if ((error as DOMException)?.name === 'AbortError') {
+          setRenderError('Render cancelled.')
+        } else {
+          const message = error instanceof Error ? error.message : 'Render failed.'
+          setRenderError(message)
+        }
+      } finally {
+        setIsRendering(false)
+        renderAbortRef.current = null
+      }
+    },
+    [project, sourceBlob, isRendering, safeProjectFileBase]
+  )
+
+  const onCancelRender = useCallback(() => {
+    renderAbortRef.current?.abort()
+  }, [])
 
   const onResetProject = useCallback(() => {
     if (!window.confirm('Reset project? Unsaved work will be lost.')) return
@@ -1248,13 +1327,23 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
         <div className="adminVideoStudio2PanelHeader">
           <h3>Subtitles ({project.subtitles.length})</h3>
           <div className="controls">
+            <select
+              value={transcribeProvider}
+              onChange={(event) => setTranscribeProvider(event.target.value as 'gemini' | 'deepgram')}
+              disabled={isTranscribing}
+              title="Pick which provider transcribes your video"
+              style={{ padding: '6px 10px', borderRadius: 8 }}
+            >
+              <option value="gemini">Gemini (free, Thai-friendly)</option>
+              <option value="deepgram">Deepgram (paid, large files OK)</option>
+            </select>
             <button
               type="button"
               className="secondary"
               onClick={onTranscribe}
               disabled={!sourceBlob || isTranscribing}
             >
-              {isTranscribing ? (transcribeStatus || 'Transcribing…') : 'Transcribe (Thai + EN)'}
+              {isTranscribing ? (transcribeStatus || 'Transcribing…') : 'Transcribe'}
             </button>
             <button type="button" onClick={addSubtitle} disabled={!sourceBlob}>
               Add subtitle at playhead
@@ -1770,10 +1859,56 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
         </ul>
       </div>
 
+      {/* ---- Render video locally ---- */}
+      <div className="adminVideoStudio2Panel adminVideoStudio2Panel-render">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>Render finished video (in browser, no upload)</h3>
+          <div className="controls">
+            {isRendering ? (
+              <button type="button" className="secondary" onClick={onCancelRender}>
+                Cancel
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onRenderVideo('mp4')}
+                  disabled={!sourceBlob || isRendering}
+                >
+                  Render .mp4
+                </button>
+                <button
+                  type="button"
+                  className="secondary"
+                  onClick={() => onRenderVideo('webm')}
+                  disabled={!sourceBlob || isRendering}
+                >
+                  Render .webm
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+        <p className="meta">
+          The browser plays the source video, draws each frame on a canvas with subtitle overlays in
+          the chosen style, applies zoom transforms at zoom markers, and records the result through
+          MediaRecorder. Render takes roughly real-time. Nothing is uploaded; the output is saved
+          straight to your machine. Safari handles .mp4 natively; on Chrome / Edge, .webm gives the
+          cleanest result.
+        </p>
+        {isRendering && (
+          <div className="adminVideoStudio2RenderProgress">
+            <div className="adminVideoStudio2RenderProgressFill" style={{ width: `${renderPct}%` }} />
+            <span>{renderPct}%</span>
+          </div>
+        )}
+        {renderError && <p className="adminVideoStudio2Error">{renderError}</p>}
+      </div>
+
       {/* ---- Export ---- */}
       <div className="adminVideoStudio2Panel adminVideoStudio2Panel-export">
         <div className="adminVideoStudio2PanelHeader">
-          <h3>Export</h3>
+          <h3>Export specs (for external renderers)</h3>
           <div className="controls">
             <button type="button" className="secondary" onClick={onCopyJson}>
               {copyLabel}

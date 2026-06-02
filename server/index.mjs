@@ -12272,6 +12272,175 @@ app.post('/api/admin/speaking-sample-videos/transcribe', requireAdmin, videoUplo
 //  for files that exceed the serverless body limit (~4.5 MB on Vercel).
 // --------------------------------------------------------------------------
 
+// Gemini-only transcription that uses the free Google API tier. Asks for
+// JSON output with start/end timestamps and per-word timing so the Video
+// Studio's word-highlight style still works. Original-language transcription
+// (Thai stays Thai), unlike the existing English-biased Gemini route.
+app.post(
+  '/api/admin/video-studio/transcribe-gemini',
+  requireAdmin,
+  videoUpload.single('video'),
+  async (req, res) => {
+    const tempFilePath = req.file?.path
+    try {
+      const file = req.file
+      if (!file?.path || Number(file.size || 0) < 1024) {
+        return res.status(400).json({
+          error: { status: 400, type: 'validation_error', message: 'Video file missing or too short.' }
+        })
+      }
+      const apiKey = String(process.env.GEMINI_API_KEY || '').trim()
+      if (!apiKey) {
+        return res.status(500).json({
+          error: {
+            status: 500,
+            type: 'config_error',
+            message: 'GEMINI_API_KEY is not set. Add a free key from https://aistudio.google.com/apikey and restart the server.'
+          }
+        })
+      }
+      const buffer = await fs.promises.readFile(file.path)
+      // Gemini inline_data caps audio at ~22 MB. If the source exceeds that,
+      // surface a clear error suggesting a shorter clip (audio extraction +
+      // chunking is a future improvement).
+      if (buffer.byteLength > 22 * 1024 * 1024) {
+        return res.status(413).json({
+          error: {
+            status: 413,
+            type: 'file_too_large',
+            message: 'Gemini accepts up to ~22 MB per request. Trim or re-encode the source and try again.'
+          }
+        })
+      }
+      const mimeType = normalizeUploadedVideoMimeType(file).mimeType
+      const audioData = buffer.toString('base64')
+
+      const prompt = `You are transcribing this audio for a short-form social video editor.
+Return ONLY a JSON object (no markdown, no commentary) with this exact shape:
+{
+  "language": "th" | "en" | <ISO-639-1>,
+  "segments": [
+    { "startSeconds": <number>, "endSeconds": <number>, "text": "<spoken text>" }
+  ],
+  "words": [
+    { "word": "<word>", "start": <number>, "end": <number> }
+  ]
+}
+
+Rules:
+- Transcribe in the ORIGINAL spoken language (do not translate). Thai stays Thai, English stays English.
+- Split into natural sentence / phrase segments of 1-6 seconds each.
+- Provide per-word timestamps in 'words' covering the entire transcript. Each word's start/end must lie within some segment's range.
+- Times are in seconds, with 2-3 decimal precision.
+- Do not include filler markers like [music] or [laughter]; transcribe spoken words only.
+- Do not wrap the JSON in code fences.`
+
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+        'gemini-2.5-flash'
+      )}:generateContent?key=${apiKey}`
+
+      const response = await safeFetch(
+        endpoint,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: prompt },
+                  { inline_data: { mime_type: mimeType, data: audioData } }
+                ]
+              }
+            ],
+            generationConfig: {
+              temperature: 0,
+              response_mime_type: 'application/json'
+            }
+          })
+        },
+        { timeoutMs: 180000, retries: 1, retryDelayMs: 1500 }
+      )
+
+      if (!response.ok) {
+        const body = await response.text().catch(() => '')
+        return res.status(502).json({
+          error: {
+            status: 502,
+            type: 'gemini_error',
+            message: `Gemini transcription failed: ${response.status} ${body.slice(0, 240)}`
+          }
+        })
+      }
+      const payload = await response.json()
+      const rawText = extractGeminiTextFromPayload(payload) || ''
+      let parsed
+      try {
+        parsed = JSON.parse(rawText)
+      } catch {
+        return res.status(502).json({
+          error: {
+            status: 502,
+            type: 'gemini_bad_json',
+            message: `Gemini returned non-JSON output (first 240 chars): ${rawText.slice(0, 240)}`
+          }
+        })
+      }
+
+      const segments = Array.isArray(parsed?.segments) ? parsed.segments : []
+      if (!segments.length) {
+        return res.status(502).json({
+          error: {
+            status: 502,
+            type: 'empty_transcript',
+            message: 'Gemini returned no segments. Check the audio has clear speech.'
+          }
+        })
+      }
+      const subtitles = segments
+        .map((seg, index) => {
+          const startSeconds = Math.max(0, Number(seg?.startSeconds ?? 0))
+          const endSeconds = Math.max(startSeconds, Number(seg?.endSeconds ?? 0))
+          const text = String(seg?.text || '').trim()
+          if (!text || endSeconds <= startSeconds) return null
+          return {
+            id: `gemini-${index + 1}`,
+            startSeconds,
+            endSeconds,
+            text
+          }
+        })
+        .filter(Boolean)
+      const words = (Array.isArray(parsed?.words) ? parsed.words : [])
+        .map((w) => ({
+          word: String(w?.word || '').trim(),
+          start: Math.max(0, Number(w?.start ?? 0)),
+          end: Math.max(0, Number(w?.end ?? 0))
+        }))
+        .filter((w) => w.word && w.end > w.start)
+
+      const transcript = subtitles.map((s) => s.text).join(' ')
+      return res.json({
+        provider: 'gemini',
+        model: 'gemini-2.5-flash',
+        confidenceQuality: 0.8,
+        language: String(parsed?.language || 'auto'),
+        transcript,
+        subtitles,
+        words
+      })
+    } catch (error) {
+      const status = Number(error?.status) || 500
+      const message = error?.error?.message || error?.message || 'Gemini transcription error.'
+      return res.status(status).json({
+        error: { status, type: error?.type || 'transcribe_gemini_error', message }
+      })
+    } finally {
+      if (tempFilePath) fs.promises.unlink(tempFilePath).catch(() => undefined)
+    }
+  }
+)
+
 app.post('/api/admin/video-studio/sign-upload', requireAdmin, async (req, res) => {
   try {
     const fileName = String(req.body?.fileName || '').trim()
