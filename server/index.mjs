@@ -1598,6 +1598,26 @@ const signSpeakingSampleVideoObject = async (objectPath) => {
   return normalizeSignedStorageUrl(payload?.signedURL || payload?.signedUrl || payload?.url)
 }
 
+// Signed UPLOAD URL — used by the admin Video Studio for direct-to-Supabase
+// uploads when a file exceeds the serverless body size limit.
+const signSpeakingSampleVideoUploadUrl = async (objectPath) => {
+  const normalized = String(objectPath || '').trim()
+  if (!normalized) return { url: '', token: '' }
+  await ensureSpeakingSampleVideoBucket()
+  const payload = await fetchSupabaseJson(
+    `/storage/v1/object/upload/sign/${encodeURIComponent(SUPABASE_SPEAKING_SAMPLE_VIDEO_BUCKET)}/${encodeStorageObjectPath(normalized)}`,
+    {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ expiresIn: 3600 })
+    }
+  )
+  return {
+    url: normalizeSignedStorageUrl(payload?.url || payload?.signedURL || payload?.signedUrl),
+    token: String(payload?.token || '')
+  }
+}
+
 const getSpeakingSampleVideoPlaybackSecret = () =>
   String(process.env.SPEAKING_SAMPLE_VIDEO_PLAYBACK_SECRET || SUPABASE_SERVICE_ROLE_KEY || ADMIN_PANEL_CODE).trim()
 
@@ -12244,6 +12264,138 @@ app.post('/api/admin/speaking-sample-videos/transcribe', requireAdmin, videoUplo
     if (tempFilePath) {
       fs.promises.unlink(tempFilePath).catch(() => undefined)
     }
+  }
+})
+
+// --------------------------------------------------------------------------
+//  Admin Video Studio: direct-to-Supabase upload + URL-based transcription
+//  for files that exceed the serverless body limit (~4.5 MB on Vercel).
+// --------------------------------------------------------------------------
+
+app.post('/api/admin/video-studio/sign-upload', requireAdmin, async (req, res) => {
+  try {
+    const fileName = String(req.body?.fileName || '').trim()
+    const mimeType = String(req.body?.mimeType || 'video/mp4').trim()
+    const sizeBytes = Number(req.body?.sizeBytes || 0)
+    if (!fileName) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'fileName is required.' }
+      })
+    }
+    if (sizeBytes && sizeBytes > 4 * 1024 * 1024 * 1024) {
+      return res.status(413).json({
+        error: { status: 413, type: 'file_too_large', message: 'File exceeds the 4 GB cap.' }
+      })
+    }
+    const safeExt = (path.extname(fileName) || '.mp4').toLowerCase().replace(/[^.a-z0-9]/g, '')
+    const objectPath = `video-studio-temp/${Date.now()}-${randomUUID()}${safeExt || '.mp4'}`
+    const signed = await signSpeakingSampleVideoUploadUrl(objectPath)
+    if (!signed.url || !signed.token) {
+      return res.status(502).json({
+        error: { status: 502, type: 'sign_upload_failed', message: 'Could not sign upload URL.' }
+      })
+    }
+    return res.json({
+      objectPath,
+      uploadUrl: signed.url,
+      token: signed.token,
+      mimeType
+    })
+  } catch (error) {
+    const status = Number(error?.status) || 500
+    const message = error?.error?.message || error?.message || 'Could not sign upload URL.'
+    return res.status(status).json({
+      error: { status, type: error?.type || 'sign_upload_error', message }
+    })
+  }
+})
+
+app.post('/api/admin/video-studio/transcribe-url', requireAdmin, async (req, res) => {
+  try {
+    const objectPath = String(req.body?.objectPath || '').trim()
+    const trimStartSeconds = Math.max(0, Number(req.body?.trimStartSeconds || 0) || 0)
+    const trimEndSeconds = Math.max(trimStartSeconds, Number(req.body?.trimEndSeconds || 0) || 0)
+    const durationSeconds = Math.max(0, Number(req.body?.durationSeconds || 0) || 0)
+    if (!objectPath) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'objectPath is required.' }
+      })
+    }
+    const signedReadUrl = await signSpeakingSampleVideoObject(objectPath)
+    if (!signedReadUrl) {
+      return res.status(502).json({
+        error: { status: 502, type: 'sign_read_failed', message: 'Could not sign read URL.' }
+      })
+    }
+    const apiKey = String(process.env.DEEPGRAM_API_KEY || '').trim()
+    if (!apiKey) {
+      return res.status(500).json({
+        error: { status: 500, type: 'config_error', message: 'DEEPGRAM_API_KEY not configured.' }
+      })
+    }
+    const model = String(process.env.DEEPGRAM_STT_MODEL || 'nova-3').trim()
+    const dgResponse = await safeFetch(
+      `https://api.deepgram.com/v1/listen?model=${encodeURIComponent(
+        model
+      )}&smart_format=true&punctuate=true&utterances=true&filler_words=true`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Token ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: signedReadUrl })
+      },
+      { timeoutMs: 180000, retries: 1, retryDelayMs: 1200 }
+    )
+    if (!dgResponse.ok) {
+      const body = await dgResponse.text().catch(() => '')
+      return res.status(502).json({
+        error: {
+          status: 502,
+          type: 'deepgram_error',
+          message: `Deepgram URL transcription failed: ${dgResponse.status} ${body.slice(0, 240)}`
+        }
+      })
+    }
+    const payload = await dgResponse.json()
+    const alt = payload?.results?.channels?.[0]?.alternatives?.[0] || {}
+    const transcript = String(alt?.transcript || '').trim()
+    const words = Array.isArray(alt?.words)
+      ? alt.words.map((item) => ({
+          word: String(item?.punctuated_word || item?.word || ''),
+          confidence: Math.max(0.01, Math.min(0.99, Number(item?.confidence ?? 0.5))),
+          start: Number(item?.start ?? 0),
+          end: Number(item?.end ?? 0)
+        }))
+      : []
+    if (!transcript) {
+      return res.status(502).json({
+        error: { status: 502, type: 'empty_transcript', message: 'Deepgram returned an empty transcript.' }
+      })
+    }
+    const subtitles = buildSpeakingSampleSubtitlesFromWords({
+      words,
+      transcript,
+      trimStartSeconds,
+      trimEndSeconds: trimEndSeconds > trimStartSeconds ? trimEndSeconds : durationSeconds
+    })
+    // Best-effort cleanup of the temp object (fire-and-forget).
+    deleteSpeakingSampleVideoObject(objectPath).catch(() => undefined)
+    return res.json({
+      provider: 'deepgram',
+      model,
+      confidenceQuality: 0.85,
+      transcript,
+      subtitles,
+      words
+    })
+  } catch (error) {
+    const status = Number(error?.status) || 500
+    const message = error?.error?.message || error?.message || 'Could not transcribe video from storage.'
+    return res.status(status).json({
+      error: { status, type: error?.type || 'transcribe_url_error', message }
+    })
   }
 })
 

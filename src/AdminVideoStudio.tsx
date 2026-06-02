@@ -213,7 +213,6 @@ const guessVideoFileExtension = (mimeType = '') => {
 }
 
 const BACKEND_UPLOAD_SAFE_BYTES = 3.8 * 1024 * 1024
-const BACKEND_UPLOAD_SAFE_MB = (BACKEND_UPLOAD_SAFE_BYTES / (1024 * 1024)).toFixed(1)
 
 type Props = {
   isAdmin: boolean
@@ -306,45 +305,133 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
     }))
   }, [sourceUrl])
 
+  const uploadToStorageViaSignedUrl = useCallback(
+    async (
+      blob: Blob,
+      fileName: string,
+      onProgress: (pct: number) => void
+    ): Promise<string> => {
+      if (!accessToken) throw new Error('No admin session.')
+      // 1. Ask the server for a signed upload URL.
+      const signRes = await fetch('/api/admin/video-studio/sign-upload', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileName,
+          mimeType: blob.type || 'video/mp4',
+          sizeBytes: blob.size
+        })
+      })
+      const signPayload = await signRes.json().catch(() => ({}))
+      if (!signRes.ok || !signPayload?.uploadUrl || !signPayload?.token) {
+        throw new Error(signPayload?.error?.message || `Could not get upload URL (${signRes.status})`)
+      }
+      const { uploadUrl, token, objectPath } = signPayload as {
+        uploadUrl: string
+        token: string
+        objectPath: string
+      }
+      // 2. PUT the blob directly to Supabase storage. Use XHR so we can show progress.
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('PUT', uploadUrl)
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+        xhr.setRequestHeader('Content-Type', blob.type || 'video/mp4')
+        xhr.setRequestHeader('x-upsert', 'true')
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) onProgress(event.loaded / event.total)
+        }
+        xhr.onload = () =>
+          xhr.status >= 200 && xhr.status < 300
+            ? resolve()
+            : reject(new Error(`Upload failed: ${xhr.status} ${xhr.responseText.slice(0, 200)}`))
+        xhr.onerror = () => reject(new Error('Upload network error'))
+        xhr.send(blob)
+      })
+      return objectPath
+    },
+    [accessToken]
+  )
+
   const onTranscribe = useCallback(async () => {
     if (!sourceBlob) return
     if (!accessToken) {
       setTranscribeError('No admin session — sign in again before transcribing.')
       return
     }
-    if (sourceBlob.size > BACKEND_UPLOAD_SAFE_BYTES) {
-      setTranscribeError(
-        `Video is ${(sourceBlob.size / (1024 * 1024)).toFixed(1)} MB. The transcription backend accepts up to ${BACKEND_UPLOAD_SAFE_MB} MB — trim or re-encode the source and re-upload.`
-      )
-      return
-    }
     setIsTranscribing(true)
-    setTranscribeStatus('Uploading to Deepgram / Gemini…')
     setTranscribeError('')
     try {
       const durationSeconds = (project.source?.durationMs || 0) / 1000
-      const ext = guessVideoFileExtension(sourceBlob.type)
-      const formData = new FormData()
-      formData.append('video', sourceBlob, `video-studio-source.${ext}`)
-      formData.append('trimStartSeconds', '0')
-      formData.append('trimEndSeconds', String(durationSeconds.toFixed(3)))
-      formData.append('durationSeconds', String(durationSeconds.toFixed(3)))
-      const response = await fetch('/api/admin/speaking-sample-videos/transcribe', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}` },
-        body: formData
-      })
-      const payload = await response.json().catch(() => ({}))
-      if (!response.ok) {
-        throw new Error(payload?.error?.message || `Backend transcription failed (${response.status})`)
+      const fileName = `video-studio-source.${guessVideoFileExtension(sourceBlob.type)}`
+
+      if (sourceBlob.size <= BACKEND_UPLOAD_SAFE_BYTES) {
+        // Small file path — direct FormData (fast).
+        setTranscribeStatus('Uploading to Deepgram / Gemini…')
+        const formData = new FormData()
+        formData.append('video', sourceBlob, fileName)
+        formData.append('trimStartSeconds', '0')
+        formData.append('trimEndSeconds', String(durationSeconds.toFixed(3)))
+        formData.append('durationSeconds', String(durationSeconds.toFixed(3)))
+        const response = await fetch('/api/admin/speaking-sample-videos/transcribe', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${accessToken}` },
+          body: formData
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) {
+          throw new Error(payload?.error?.message || `Backend transcription failed (${response.status})`)
+        }
+        return applyBackendTranscriptionResult(payload)
       }
-      const backendCues: BackendSubtitleCue[] = Array.isArray(payload?.subtitles) ? payload.subtitles : []
+
+      // Large file path — direct-to-Supabase, then transcribe by URL.
+      setTranscribeStatus(`Uploading ${(sourceBlob.size / (1024 * 1024)).toFixed(0)} MB to storage…`)
+      const objectPath = await uploadToStorageViaSignedUrl(sourceBlob, fileName, (pct) => {
+        setTranscribeStatus(`Uploading… ${Math.round(pct * 100)}%`)
+      })
+      setTranscribeStatus('Transcribing via Deepgram (URL mode)…')
+      const trRes = await fetch('/api/admin/video-studio/transcribe-url', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          objectPath,
+          durationSeconds,
+          trimStartSeconds: 0,
+          trimEndSeconds: durationSeconds
+        })
+      })
+      const trPayload = await trRes.json().catch(() => ({}))
+      if (!trRes.ok) {
+        throw new Error(trPayload?.error?.message || `URL transcription failed (${trRes.status})`)
+      }
+      applyBackendTranscriptionResult(trPayload)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Transcription failed'
+      setTranscribeError(message)
+    } finally {
+      setIsTranscribing(false)
+    }
+
+    function applyBackendTranscriptionResult(payload: unknown) {
+      const data = (payload || {}) as {
+        subtitles?: BackendSubtitleCue[]
+        provider?: string
+        words?: unknown[]
+      }
+      const backendCues: BackendSubtitleCue[] = Array.isArray(data.subtitles) ? data.subtitles : []
       if (!backendCues.length) {
         throw new Error('Backend returned no subtitles. Check the audio track has clear speech.')
       }
       const cues = backendCues.map(cueFromBackend).filter((c) => c.text && c.endMs > c.startMs)
-      const provider = String(payload?.provider || 'transcription service')
-      const wordTimestamps = Array.isArray(payload?.words) ? payload.words.length : 0
+      const provider = String(data.provider || 'transcription service')
+      const wordTimestamps = Array.isArray(data.words) ? data.words.length : 0
       setProject((prev) => ({ ...prev, subtitles: cues }))
       setTranscribeStatus(
         wordTimestamps > 0
@@ -352,13 +439,8 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
           : `${cues.length} cues via ${provider}. Timing may need manual nudges.`
       )
       window.setTimeout(() => setTranscribeStatus(''), 4000)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Transcription failed'
-      setTranscribeError(message)
-    } finally {
-      setIsTranscribing(false)
     }
-  }, [sourceBlob, accessToken, project.source?.durationMs])
+  }, [sourceBlob, accessToken, project.source?.durationMs, uploadToStorageViaSignedUrl])
 
   const updateSubtitle = useCallback((id: string, patch: Partial<VideoStudioSubtitleCue>) => {
     setProject((prev) => ({
@@ -657,7 +739,7 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
           />
           <div>
             <strong>Drop a video or click to browse</strong>
-            <p>MP4, MOV, WebM — any aspect ratio</p>
+            <p>MP4, MOV, WebM — any aspect ratio · up to 4 GB</p>
           </div>
         </label>
       ) : (
