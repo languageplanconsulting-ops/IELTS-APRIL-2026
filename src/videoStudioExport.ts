@@ -137,6 +137,18 @@ const findActiveWord = (
 
 const stripVocabBrackets = (text: string) => text.replace(/\[\[(.+?)\]\]/g, '$1')
 
+// Strip tutor-scene prefixes like "Before:", "After:", "Vocab:", "Quote:".
+const stripTutorPrefix = (text: string) =>
+  text.replace(/^(Before|After|Vocab|Quote|Why):\s*/i, '')
+
+// Vocab-card text split: "WORD / translation" → ['WORD', 'translation']
+const splitVocabCard = (text: string, translation?: string) => {
+  const cleaned = text.replace(/^Vocab:\s*/i, '')
+  const m = cleaned.match(/^(.+?)\s*[\/—\-:\n]\s*(.+)$/s)
+  if (m) return { top: m[1].trim(), bottom: m[2].trim() }
+  return { top: cleaned.trim(), bottom: (translation || '').trim() }
+}
+
 // Draw one subtitle on the canvas. Supports background pill, padding,
 // alignment, tilt, and the three special-case styles (vocab-callout,
 // bilingual-stack, word-highlight-4).
@@ -158,7 +170,23 @@ const drawCueOverlay = (
   const cleanText = stripVocabBrackets(cue.text || '')
   const lines: Array<{ text: string; words?: Array<{ word: string; isActive: boolean }> }> = []
 
-  if (style.id === 'word-highlight-4' && cue.words?.length) {
+  if (style.id === 'vocab-card') {
+    const { top, bottom } = splitVocabCard(cue.text, cue.translation)
+    lines.push({ text: top })
+    if (bottom) {
+      const smallFontPx = Math.round(fontSizePx * 0.7)
+      ctx.font = `${fontWeight} ${smallFontPx}px ${fontFamily}`
+      lines.push({ text: bottom })
+      ctx.font = `${fontWeight} ${fontSizePx}px ${fontFamily}`
+    }
+  } else if (style.id === 'grammar-before' || style.id === 'grammar-after') {
+    const sentence = stripTutorPrefix(cleanText)
+    const prefix = style.id === 'grammar-before' ? '✗  ' : '✓  '
+    for (const line of wrapTextLines(ctx, prefix + sentence, maxWidth)) lines.push({ text: line })
+  } else if (style.id === 'quote-essay') {
+    const sentence = stripTutorPrefix(cleanText)
+    for (const line of wrapTextLines(ctx, `“${sentence}”`, maxWidth)) lines.push({ text: line })
+  } else if (style.id === 'word-highlight-4' && cue.words?.length) {
     const activeIndex = findActiveWord(cue.words, currentTimeMs)
     const center = activeIndex >= 0 ? activeIndex : 0
     const windowStart = Math.max(0, Math.min(cue.words.length - 4, center - 1))
@@ -315,6 +343,22 @@ const drawCueOverlay = (
       }
     } else {
       ctx.fillText(line.text, boxX + boxWidth / 2, lineY)
+      // Grammar-before: paint a red strikethrough across the sentence portion
+      // (skipping the leading '✗  ' marker).
+      if (style.id === 'grammar-before') {
+        const markerWidth = ctx.measureText('✗  ').width
+        const fullWidth = ctx.measureText(line.text).width
+        const sentenceWidth = fullWidth - markerWidth
+        const startX = boxX + boxWidth / 2 - fullWidth / 2 + markerWidth
+        ctx.save()
+        ctx.strokeStyle = '#dc2626'
+        ctx.lineWidth = Math.max(2, Math.round(fontSizePx * 0.08))
+        ctx.beginPath()
+        ctx.moveTo(startX, lineY)
+        ctx.lineTo(startX + sentenceWidth, lineY)
+        ctx.stroke()
+        ctx.restore()
+      }
     }
   })
 

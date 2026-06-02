@@ -23982,6 +23982,19 @@ textarea {
   font-size: 0.85rem;
 }
 
+.adminVideoStudio2Panel-tutor {
+  border: 1px solid #f59e0b;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.18), rgba(15, 23, 42, 0.6));
+}
+
+.adminVideoStudio2Panel-tutor code {
+  background: rgba(15, 23, 42, 0.7);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.78em;
+  color: #fde68a;
+}
+
 .adminVideoStudio2Panel-render {
   border: 1px solid #22c55e;
   background: linear-gradient(180deg, rgba(22, 163, 74, 0.2), rgba(15, 23, 42, 0.6));

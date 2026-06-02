@@ -964,6 +964,138 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
     setProject((prev) => ({ ...prev, cameraPans: prev.cameraPans.filter((m) => m.id !== id) }))
   }, [])
 
+  // ---- Tutor Scenes (multi-cue insertions for English-tutoring videos) ----
+
+  // Insert a sequence of cues + markers at the current playhead. Each cue
+  // gets a duration so subsequent cues stack in time naturally.
+  const insertTutorScene = useCallback(
+    (
+      cueSpecs: Array<{ text: string; styleId: VideoStudioStyleId; durationMs: number; translation?: string }>,
+      extras?: {
+        zooms?: Array<{ offsetMs: number; level: VideoStudioZoomLevel; kind: 'in' | 'out' }>
+        transitions?: Array<{ offsetMs: number; kind: VideoStudioTransitionKind }>
+        sfx?: Array<{ offsetMs: number; kind: VideoStudioSfxKind; volume?: number }>
+      }
+    ) => {
+      const startMs = Math.round(currentTimeMs)
+      let cursor = startMs
+      const newCues: VideoStudioSubtitleCue[] = cueSpecs.map((spec) => {
+        const cue: VideoStudioSubtitleCue = {
+          id: newId('s'),
+          startMs: cursor,
+          endMs: cursor + spec.durationMs,
+          text: spec.text,
+          translation: spec.translation,
+          styleId: spec.styleId
+        }
+        cursor += spec.durationMs
+        return cue
+      })
+      const totalSceneDuration = cursor - startMs
+      const newZooms: VideoStudioZoomMarker[] = (extras?.zooms || []).map((z) => ({
+        id: newId('z'),
+        atMs: startMs + z.offsetMs,
+        level: z.level,
+        kind: z.kind,
+        durationMs: 400
+      }))
+      const newTransitions: VideoStudioTransitionMarker[] = (extras?.transitions || []).map((t) => {
+        const preset = VIDEO_STUDIO_TRANSITIONS.find((preset) => preset.id === t.kind)
+        return {
+          id: newId('t'),
+          atMs: startMs + t.offsetMs,
+          kind: t.kind,
+          durationMs: preset?.defaultDurationMs ?? 350
+        }
+      })
+      const newSfx: VideoStudioSfxMarker[] = (extras?.sfx || []).map((s) => ({
+        id: newId('sfx'),
+        atMs: startMs + s.offsetMs,
+        kind: s.kind,
+        volume: s.volume ?? 0.8
+      }))
+      setProject((prev) => ({
+        ...prev,
+        subtitles: [...prev.subtitles, ...newCues].sort((a, b) => a.startMs - b.startMs),
+        zooms: [...prev.zooms, ...newZooms].sort((a, b) => a.atMs - b.atMs),
+        transitions: [...prev.transitions, ...newTransitions].sort((a, b) => a.atMs - b.atMs),
+        soundEffects: [...prev.soundEffects, ...newSfx].sort((a, b) => a.atMs - b.atMs)
+      }))
+      // Scroll the active scene into view by advancing the video to its midpoint.
+      seekTo(startMs + Math.round(totalSceneDuration / 2))
+    },
+    [currentTimeMs, seekTo]
+  )
+
+  const insertSceneVocab = useCallback(() => {
+    insertTutorScene(
+      [{ text: 'ENGLISH WORD / ภาษาไทย', styleId: 'vocab-card', durationMs: 3500 }],
+      {
+        zooms: [{ offsetMs: 0, level: 1, kind: 'in' }],
+        sfx: [{ offsetMs: 0, kind: 'ding', volume: 0.6 }]
+      }
+    )
+  }, [insertTutorScene])
+
+  const insertSceneGrammarFix = useCallback(() => {
+    insertTutorScene(
+      [
+        { text: 'Before: <paste the wrong sentence>', styleId: 'grammar-before', durationMs: 3500 },
+        { text: 'After: <paste the corrected sentence>', styleId: 'grammar-after', durationMs: 3500 },
+        { text: 'Why: <one-line explanation>', styleId: 'caption-pill', durationMs: 4000 }
+      ],
+      {
+        transitions: [{ offsetMs: 3500, kind: 'whip-pan' }],
+        sfx: [{ offsetMs: 3500, kind: 'whoosh', volume: 0.7 }],
+        zooms: [{ offsetMs: 0, level: 1, kind: 'in' }]
+      }
+    )
+  }, [insertTutorScene])
+
+  const insertSceneQuoteExplain = useCallback(() => {
+    insertTutorScene(
+      [
+        { text: 'Quote: <paste the student passage>', styleId: 'quote-essay', durationMs: 5000 },
+        { text: 'Explanation: <what to fix and why>', styleId: 'caption-pill', durationMs: 5000 }
+      ],
+      {
+        zooms: [{ offsetMs: 0, level: 1, kind: 'in' }]
+      }
+    )
+  }, [insertTutorScene])
+
+  const insertSceneConceptHeaderBody = useCallback(() => {
+    insertTutorScene(
+      [
+        { text: 'Section title', styleId: 'bold-thai-display', durationMs: 2200 },
+        { text: 'Body explanation goes here', styleId: 'word-highlight-4', durationMs: 5000 }
+      ],
+      {
+        zooms: [{ offsetMs: 2200, level: 2, kind: 'in' }]
+      }
+    )
+  }, [insertTutorScene])
+
+  // ---- Bulk preset: auto-apply styles based on cue text prefixes ----------
+
+  const applyTutorPreset = useCallback(() => {
+    setProject((prev) => ({
+      ...prev,
+      subtitles: prev.subtitles.map((cue) => {
+        const text = String(cue.text || '').trim()
+        if (/^Before:/i.test(text)) return { ...cue, styleId: 'grammar-before' }
+        if (/^After:/i.test(text)) return { ...cue, styleId: 'grammar-after' }
+        if (/^Vocab:/i.test(text)) return { ...cue, styleId: 'vocab-card' }
+        if (/^Quote:/i.test(text)) return { ...cue, styleId: 'quote-essay' }
+        if (/^(Why|Explanation):/i.test(text)) return { ...cue, styleId: 'caption-pill' }
+        if (/\[\[.+?\]\]/.test(text)) return { ...cue, styleId: 'vocab-callout' }
+        // Default body style — keep existing pick if already non-default, else word-highlight.
+        if (cue.styleId === DEFAULT_VIDEO_STUDIO_STYLE) return { ...cue, styleId: 'word-highlight-4' }
+        return cue
+      })
+    }))
+  }, [])
+
   // ---- Export --------------------------------------------------------------
 
   const exportManifest = useMemo(() => buildVideoStudioExportManifest(project), [project])
@@ -1313,6 +1445,33 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
                     </span>
                   ) : style.id === 'word-highlight-4' ? (
                     renderWordHighlight()
+                  ) : style.id === 'vocab-card' ? (() => {
+                    // Vocab-card: render English on top, Thai below at 70% size.
+                    // Accept "EN / Thai" or "EN\nThai" or "EN — Thai".
+                    const cleaned = text.replace(/^Vocab:\s*/i, '')
+                    const m = cleaned.match(/^(.+?)\s*[\/—\-:\n]\s*(.+)$/s)
+                    const top = (m?.[1] ?? cleaned).trim()
+                    const bottom = (m?.[2] ?? translation ?? '').trim()
+                    return (
+                      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+                        <span>{top}</span>
+                        {bottom && <span style={{ fontSize: '0.7em', opacity: 0.9 }}>{bottom}</span>}
+                      </span>
+                    )
+                  })() : style.id === 'grammar-before' ? (
+                    <span>
+                      <span style={{ color: '#dc2626', marginRight: 6, fontWeight: 900 }}>✗</span>
+                      <span style={{ textDecoration: 'line-through' }}>{text.replace(/^Before:\s*/i, '')}</span>
+                    </span>
+                  ) : style.id === 'grammar-after' ? (
+                    <span>
+                      <span style={{ color: '#16a34a', marginRight: 6, fontWeight: 900 }}>✓</span>
+                      <span>{text.replace(/^After:\s*/i, '')}</span>
+                    </span>
+                  ) : style.id === 'quote-essay' ? (
+                    <span style={{ fontStyle: 'italic' }}>
+                      “{text.replace(/^Quote:\s*/i, '')}”
+                    </span>
                   ) : (
                     text
                   )}
@@ -1490,6 +1649,63 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
             )
           })}
         </ul>
+      </div>
+
+      {/* ---- Tutor Scenes (for English-tutoring videos) ---- */}
+      <div className="adminVideoStudio2Panel adminVideoStudio2Panel-tutor">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>Tutor scenes</h3>
+          <div className="controls">
+            <button
+              type="button"
+              onClick={insertSceneVocab}
+              disabled={!sourceBlob}
+              title="Inserts a vocab-card cue + L1 zoom + ding"
+            >
+              + Vocab Lesson
+            </button>
+            <button
+              type="button"
+              onClick={insertSceneGrammarFix}
+              disabled={!sourceBlob}
+              title="Inserts Before / After / Why cues with whip-pan + whoosh between"
+            >
+              + Grammar Fix
+            </button>
+            <button
+              type="button"
+              onClick={insertSceneQuoteExplain}
+              disabled={!sourceBlob}
+              title="Inserts a quoted essay snippet + an explanation cue"
+            >
+              + Quote &amp; Explain
+            </button>
+            <button
+              type="button"
+              onClick={insertSceneConceptHeaderBody}
+              disabled={!sourceBlob}
+              title="Inserts a big title cue followed by a word-highlight body cue"
+            >
+              + Concept Header + Body
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={applyTutorPreset}
+              disabled={project.subtitles.length === 0}
+              title="Walk every cue and auto-pick a style based on its prefix (Before: / After: / Vocab: / Quote: / Why:) or [[brackets]]"
+            >
+              Apply Tutor Preset to all cues
+            </button>
+          </div>
+        </div>
+        <p className="meta">
+          Drops pre-styled cue groups at the playhead. Use{' '}
+          <code>Before:</code>, <code>After:</code>, <code>Vocab:</code>, <code>Quote:</code>,{' '}
+          <code>Why:</code> prefixes in your transcribed cues — then click{' '}
+          <strong>Apply Tutor Preset</strong> to bulk-style the whole project. Wrap any vocab word in{' '}
+          <code>[[brackets]]</code> to mark it for <code>vocab-callout</code>.
+        </p>
       </div>
 
       <div className="adminVideoStudio2Panel">

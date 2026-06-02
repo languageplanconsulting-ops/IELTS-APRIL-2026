@@ -16,6 +16,10 @@ export type VideoStudioStyleId =
   | 'vocab-callout'
   | 'gradient-bar'
   | 'word-highlight-4'
+  | 'vocab-card'
+  | 'grammar-before'
+  | 'grammar-after'
+  | 'quote-essay'
 
 export type VideoStudioStylePreview = {
   background: string
@@ -391,6 +395,118 @@ export const VIDEO_STUDIO_STYLES: VideoStudioStyleDefinition[] = [
       backgroundHex: 'linear-gradient(90deg,#4338ca,#db2777)',
       animationIn: 'slide-up',
       animationOut: 'slide-down'
+    }
+  },
+  {
+    id: 'vocab-card',
+    label: 'Vocab Card (EN → TH)',
+    description: 'Big English word centered, Thai translation below at 70% size. The classic vocab card.',
+    anchor: { xPercent: 50, yPercent: 50, align: 'center' },
+    preview: {
+      background: '#ffffff',
+      color: '#0f172a',
+      fontFamily: 'Inter, Noto Sans Thai, sans-serif',
+      fontWeight: 900,
+      fontSize: '1.6rem',
+      padding: '20px 28px',
+      borderRadius: '16px',
+      border: '4px solid #0f172a',
+      boxShadow: '8px 8px 0 #0f172a'
+    },
+    renderHint: {
+      family: 'Inter Black / Noto Sans Thai Black',
+      weight: 900,
+      sizeRem: 2.4,
+      fillHex: '#0f172a',
+      backgroundHex: '#ffffff',
+      strokeHex: '#0f172a',
+      animationIn: 'pop',
+      animationOut: 'fade',
+      notes: 'Cue text format: "ENGLISH WORD / Thai translation" or "ENGLISH WORD\\nThai translation". Render English on top line at full sizeRem, Thai below at 0.7×. If [[brackets]] surround the English word, ignore brackets here.'
+    }
+  },
+  {
+    id: 'grammar-before',
+    label: 'Grammar — Before (✗)',
+    description: 'Red-bordered card with strikethrough text and ✗. For the original wrong sentence.',
+    anchor: { xPercent: 50, yPercent: 38, align: 'center' },
+    preview: {
+      background: '#fef2f2',
+      color: '#7f1d1d',
+      fontFamily: 'Inter, Noto Sans Thai, sans-serif',
+      fontWeight: 700,
+      fontSize: '1.05rem',
+      padding: '12px 18px',
+      borderRadius: '12px',
+      border: '3px solid #dc2626',
+      boxShadow: '4px 4px 0 #7f1d1d'
+    },
+    renderHint: {
+      family: 'Inter SemiBold',
+      weight: 700,
+      sizeRem: 1.4,
+      fillHex: '#7f1d1d',
+      backgroundHex: '#fef2f2',
+      strokeHex: '#dc2626',
+      animationIn: 'slide-up',
+      animationOut: 'fade',
+      notes: 'Prefix the line with a red ✗ glyph. Apply line-through text-decoration to the rest of the cue text. If text starts with "Before:" strip that prefix and render only the sentence portion. Optional shake animation per-cue if you want extra emphasis.'
+    }
+  },
+  {
+    id: 'grammar-after',
+    label: 'Grammar — After (✓)',
+    description: 'Green-bordered card with ✓. For the corrected version.',
+    anchor: { xPercent: 50, yPercent: 62, align: 'center' },
+    preview: {
+      background: '#f0fdf4',
+      color: '#14532d',
+      fontFamily: 'Inter, Noto Sans Thai, sans-serif',
+      fontWeight: 700,
+      fontSize: '1.05rem',
+      padding: '12px 18px',
+      borderRadius: '12px',
+      border: '3px solid #16a34a',
+      boxShadow: '4px 4px 0 #14532d'
+    },
+    renderHint: {
+      family: 'Inter SemiBold',
+      weight: 700,
+      sizeRem: 1.4,
+      fillHex: '#14532d',
+      backgroundHex: '#f0fdf4',
+      strokeHex: '#16a34a',
+      animationIn: 'slide-up',
+      animationOut: 'fade',
+      notes: 'Prefix the line with a green ✓ glyph. Render text normally (no strikethrough). If text starts with "After:" strip that prefix and render only the sentence portion.'
+    }
+  },
+  {
+    id: 'quote-essay',
+    label: 'Quote (essay snippet)',
+    description: 'Beige paper card with italicized quoted text. For citing student work.',
+    anchor: { xPercent: 50, yPercent: 45, align: 'center' },
+    preview: {
+      background: '#fefce8',
+      color: '#451a03',
+      fontFamily: 'Georgia, "Noto Serif Thai", serif',
+      fontWeight: 600,
+      fontSize: '1.1rem',
+      padding: '14px 22px',
+      borderRadius: '8px',
+      border: '1px solid #ca8a04',
+      boxShadow: '0 6px 16px rgba(202,138,4,0.25)'
+    },
+    renderHint: {
+      family: 'Georgia / Noto Serif Thai',
+      weight: 600,
+      sizeRem: 1.5,
+      fillHex: '#451a03',
+      backgroundHex: '#fefce8',
+      strokeHex: '#ca8a04',
+      animationIn: 'fade',
+      animationOut: 'fade',
+      notes: 'Render italicized. Open and close with smart quotes “ ”. If text starts with "Quote:" strip that prefix.'
     }
   }
 ]
