@@ -6600,6 +6600,7 @@ function App() {
   const [selectedReadingCollection, setSelectedReadingCollection] = useState('all')
   const [selectedReadingExamId, setSelectedReadingExamId] = useState('')
   const [readingAnswers, setReadingAnswers] = useState<Record<number, string>>({})
+  const [readingLockedQuestions, setReadingLockedQuestions] = useState<Set<number>>(new Set())
   const [readingAutosaveLabel, setReadingAutosaveLabel] = useState('')
   const [isSubmittingReading, setIsSubmittingReading] = useState(false)
   const [readingSubmitConfirmOpen, setReadingSubmitConfirmOpen] = useState(false)
@@ -17565,7 +17566,7 @@ function App() {
     window.getSelection()?.removeAllRanges()
   }
 
-  const startReadingExam = (examId: string) => {
+  const startReadingExam = (examId: string, options?: { mode?: 'fresh' | 'fix-wrong' }) => {
     const exam = practiceReadingExams.find((item) => item.id === examId) || null
     if (!exam) return
     const isMonthlyExam = isMonthlyReadingCollection(exam)
@@ -17626,9 +17627,22 @@ function App() {
         // ignore parse errors
       }
     }
+    let lockedFromFixMode = new Set<number>()
+    if (options?.mode === 'fix-wrong') {
+      const summary = readingAttemptHistory[examId]
+      if (summary && summary.reportItems.length > 0) {
+        const prefill: Record<number, string> = {}
+        summary.reportItems.forEach((item) => {
+          prefill[item.number] = item.userAnswer || ''
+          if (item.isCorrect) lockedFromFixMode.add(item.number)
+        })
+        restoredAnswers = prefill
+      }
+    }
+    setReadingLockedQuestions(lockedFromFixMode)
     setReadingAnswers(restoredAnswers)
     setReadingReportItems([])
-    setReadingAttemptStage('briefing')
+    setReadingAttemptStage(options?.mode === 'fix-wrong' ? 'exam' : 'briefing')
     setReadingHintQuestionNumber(null)
     setReadingExamError('')
     setReadingSelectionText('')
@@ -18227,6 +18241,7 @@ function App() {
     options?: { advancedLayout?: boolean; wordCountHint?: number }
   ) => {
     const isHinting = readingHintQuestionNumber === question.number
+    const isLocked = readingLockedQuestions.has(question.number)
     const advancedLayout = Boolean(options?.advancedLayout)
     // Size the input from the instruction's word-count hint only ("NO MORE
     // THAN TWO WORDS" → 2). Never use the correct answer's length — that
@@ -18240,7 +18255,7 @@ function App() {
         <span
           key={slotKey}
           id={`reading-question-${question.number}`}
-          className={`readingFillBlankSlot readingFillBlankSlot-advanced ${isHinting ? 'is-active' : ''}`.trim()}
+          className={`readingFillBlankSlot readingFillBlankSlot-advanced ${isHinting ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}`.trim()}
         >
           {segment.before && <span className="readingFillBlankPrefix">{segment.before} </span>}
           <span className="readingFillBlankGap-advanced">
@@ -18258,6 +18273,7 @@ function App() {
               className="readingFillBlankInput"
               aria-label={`Question ${question.number}`}
               style={blankInputStyle}
+              disabled={isLocked}
             />
           </span>
           <span className="readingFillBlankHint-advanced">
@@ -18272,7 +18288,7 @@ function App() {
       <span
         key={slotKey}
         id={`reading-question-${question.number}`}
-        className={`readingFillBlankSlot ${isHinting ? 'is-active' : ''}`.trim()}
+        className={`readingFillBlankSlot ${isHinting ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}`.trim()}
       >
         {segment.before && <span className="readingFillBlankPrefix">{segment.before} </span>}
         <span className="readingFillBlankInputWrap">
@@ -18290,6 +18306,7 @@ function App() {
             className="readingFillBlankInput"
             aria-label={`Question ${question.number}`}
             style={blankInputStyle}
+            disabled={isLocked}
           />
           {renderReadingHintToggleButton(question.number, isHinting, { compact: true })}
         </span>
@@ -18631,6 +18648,7 @@ function App() {
               group.questions
             )
             const isHinting = readingHintQuestionNumber === question.number
+            const isLocked = readingLockedQuestions.has(question.number)
             const selectPlaceholder =
               group.kind === 'heading'
                 ? 'Select heading'
@@ -18641,10 +18659,11 @@ function App() {
               <div
                 key={`reading-matching-row-${group.id}-${question.number}`}
                 id={`reading-question-${question.number}`}
-                className={`readingMatchingInfoRow ${isHinting ? 'is-active' : ''}`.trim()}
+                className={`readingMatchingInfoRow ${isHinting ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}`.trim()}
               >
                 <p className="readingMatchingInfoStatement">
                   <strong>{question.number}</strong> {statement}
+                  {isLocked && <span className="readingLockedBadge">✓ Locked</span>}
                 </p>
                 <div className="readingMatchingInfoControls">
                   <select
@@ -18653,6 +18672,7 @@ function App() {
                       setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))
                     }
                     className="readingMatchingInfoSelect"
+                    disabled={isLocked}
                   >
                     <option value="">{selectPlaceholder}</option>
                     {group.choiceOptions.map((option) => (
@@ -18712,15 +18732,17 @@ function App() {
             const options = extractReadingMultipleChoiceOptions(activeReadingPassage, question)
             const value = readingAnswers[question.number] || ''
             const isHinting = readingHintQuestionNumber === question.number
+            const isLocked = readingLockedQuestions.has(question.number)
             return (
               <div
                 key={`reading-mcq-${group.id}-${question.number}`}
                 id={`reading-question-${question.number}`}
-                className={`readingMcqQuestionRow ${isHinting ? 'is-active' : ''}`.trim()}
+                className={`readingMcqQuestionRow ${isHinting ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}`.trim()}
               >
                 <div className="readingMcqQuestionRowTop">
                   <p className="readingMcqQuestionStem">
                     <strong>{question.number}</strong> {stem}
+                    {isLocked && <span className="readingLockedBadge">✓ Locked</span>}
                   </p>
                   {renderReadingHintToggleButton(question.number, isHinting, { label: 'th' })}
                 </div>
@@ -18733,6 +18755,7 @@ function App() {
                         className={`listeningChoiceBtn ${value === option.letter ? 'active' : ''}`}
                         role="option"
                         aria-selected={value === option.letter}
+                        disabled={isLocked}
                         onClick={() =>
                           setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
                         }
@@ -18792,14 +18815,16 @@ function App() {
             const statement = sanitizeReadingPromptForDisplayShared(String(question.prompt || '').trim())
             const value = readingAnswers[question.number] || ''
             const isHinting = readingHintQuestionNumber === question.number
+            const isLocked = readingLockedQuestions.has(question.number)
             return (
               <div
                 key={`reading-judgement-${group.id}-${question.number}`}
                 id={`reading-question-${question.number}`}
-                className={`readingJudgementRow ${isHinting ? 'is-active' : ''}`.trim()}
+                className={`readingJudgementRow ${isHinting ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}`.trim()}
               >
                 <p className="readingJudgementStatement">
                   <strong>{question.number}</strong> {statement}
+                  {isLocked && <span className="readingLockedBadge">✓ Locked</span>}
                 </p>
                 <div className="readingJudgementControls">
                   <div className="readingJudgementChoiceGrid" role="listbox" aria-label={`Answer options for question ${question.number}`}>
@@ -18810,6 +18835,7 @@ function App() {
                         className={`readingJudgementChoiceBtn ${value === choice ? 'active' : ''}`}
                         role="option"
                         aria-selected={value === choice}
+                        disabled={isLocked}
                         onClick={() =>
                           setReadingAnswers((current) => ({ ...current, [question.number]: choice }))
                         }
@@ -18868,6 +18894,7 @@ function App() {
         <div className="readingChooseTwoAnswers">
           {group.questions.map((question) => {
             const isHinting = readingHintQuestionNumber === question.number
+            const isLocked = readingLockedQuestions.has(question.number)
             const currentValue = String(readingAnswers[question.number] || '').trim().toUpperCase()
             const lettersTakenElsewhere = new Set(
               group.questions
@@ -18879,10 +18906,11 @@ function App() {
               <div
                 key={`reading-choose-two-answer-${question.number}`}
                 id={`reading-question-${question.number}`}
-                className={`readingChooseTwoAnswerRow ${isHinting ? 'is-active' : ''}`.trim()}
+                className={`readingChooseTwoAnswerRow ${isHinting ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}`.trim()}
               >
                 <label className="readingChooseTwoAnswerLabel" htmlFor={`reading-choose-two-select-${question.number}`}>
                   Question {question.number}
+                  {isLocked && <span className="readingLockedBadge">✓ Locked</span>}
                 </label>
                 <div className="readingChooseTwoAnswerControls">
                   <select
@@ -18895,6 +18923,7 @@ function App() {
                       }))
                     }
                     className="readingMatchingInfoSelect"
+                    disabled={isLocked}
                   >
                     <option value="">Select letter</option>
                     {letterChoices.map((option) => {
@@ -18976,6 +19005,7 @@ function App() {
     passage: ReadingPassageRecord | null = activeReadingPassage
   ) => {
     const value = readingAnswers[question.number] || ''
+    const isLocked = readingLockedQuestions.has(question.number)
 
     const matchingKind = getReadingMatchingQuestionKind(passage, question)
     if (matchingKind) {
@@ -18993,6 +19023,7 @@ function App() {
             setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))
           }
           className="readingMatchingInfoSelect"
+          disabled={isLocked}
         >
           <option value="">{placeholder}</option>
           {options.map((option) => (
@@ -19017,6 +19048,7 @@ function App() {
               className={`readingJudgementChoiceBtn ${value === choice ? 'active' : ''}`}
               role="option"
               aria-selected={value === choice}
+              disabled={isLocked}
               onClick={() => setReadingAnswers((current) => ({ ...current, [question.number]: choice }))}
             >
               {choice}
@@ -19036,6 +19068,7 @@ function App() {
               className={`readingJudgementChoiceBtn ${value === choice ? 'active' : ''}`}
               role="option"
               aria-selected={value === choice}
+              disabled={isLocked}
               onClick={() => setReadingAnswers((current) => ({ ...current, [question.number]: choice }))}
             >
               {choice}
@@ -19056,6 +19089,7 @@ function App() {
                 className={`listeningChoiceBtn ${value === option.letter ? 'active' : ''}`}
                 role="option"
                 aria-selected={value === option.letter}
+                disabled={isLocked}
                 onClick={() =>
                   setReadingAnswers((current) => ({ ...current, [question.number]: option.letter }))
                 }
@@ -19071,6 +19105,7 @@ function App() {
         <select
           value={value}
           onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
+          disabled={isLocked}
         >
           <option value="">Select answer</option>
           {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((choice) => (
@@ -19087,6 +19122,7 @@ function App() {
         value={value}
         onChange={(event) => setReadingAnswers((current) => ({ ...current, [question.number]: event.target.value }))}
         placeholder="Type your answer"
+        disabled={isLocked}
       />
     )
   }
@@ -21647,6 +21683,14 @@ function App() {
                 </div>
               </div>
 
+              {readingLockedQuestions.size > 0 && (
+                <div className="readingFixModeBanner" role="status">
+                  <strong>Fix mistakes mode</strong>
+                  <span>
+                    {readingLockedQuestions.size} correct answers are locked. Fix the {activeReadingAllQuestions.length - readingLockedQuestions.size} remaining to retry.
+                  </span>
+                </div>
+              )}
               <div className="readingExamProgressBar" role="progressbar" aria-label="Answered progress" aria-valuemin={0} aria-valuemax={activeReadingAllQuestions.length} aria-valuenow={answeredReadingCount}>
                 <div
                   className="readingExamProgressBarFill"
@@ -21991,11 +22035,15 @@ function App() {
                       }
                       const isHinting = readingHintQuestionNumber === question.number
                       const isJudgementQuestion = isReadingJudgementQuestion(question)
+                      const isLocked = readingLockedQuestions.has(question.number)
                       return (
-                        <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
+                        <article key={question.number} id={`reading-question-${question.number}`} className={`readingQuestionCard ${isLocked ? 'is-locked' : ''}`.trim()}>
                           <div className="readingQuestionCardTop">
                             <div>
-                              <p className="readingQuestionNumber">Question {question.number}</p>
+                              <p className="readingQuestionNumber">
+                                Question {question.number}
+                                {isLocked && <span className="readingLockedBadge">✓ Locked</span>}
+                              </p>
                               <p className="readingQuestionPrompt">
                                 {getReadingQuestionDisplayPrompt(activeReadingPassage, question)}
                               </p>
@@ -22237,8 +22285,20 @@ function App() {
                       Full Report
                     </button>
                   )}
-                  <button type="button" onClick={() => startReadingExam(activeReadingExam.id)}>
-                    Retry Exam
+                  {readingReportItems.some((item) => !item.isCorrect) && (
+                    <button
+                      type="button"
+                      onClick={() => startReadingExam(activeReadingExam.id, { mode: 'fix-wrong' })}
+                    >
+                      Fix Wrong Answers
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className={readingReportItems.some((item) => !item.isCorrect) ? 'secondary' : ''}
+                    onClick={() => startReadingExam(activeReadingExam.id, { mode: 'fresh' })}
+                  >
+                    {readingReportItems.some((item) => !item.isCorrect) ? 'Start Fresh' : 'Retry Exam'}
                   </button>
                 </div>
               </div>
