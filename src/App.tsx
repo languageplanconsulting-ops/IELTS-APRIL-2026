@@ -18228,19 +18228,11 @@ function App() {
   ) => {
     const isHinting = readingHintQuestionNumber === question.number
     const advancedLayout = Boolean(options?.advancedLayout)
-    // Auto-size the blank input based on the expected answer's length OR the
-    // instruction word-count hint (1/2/3 words). Each word ~ 8 chars on average.
-    const expectedAnswer = String(question.correctAnswer || '').trim()
+    // Size the input from the instruction's word-count hint only ("NO MORE
+    // THAN TWO WORDS" → 2). Never use the correct answer's length — that
+    // would leak how long the answer is.
     const wordHint = options?.wordCountHint
-    const charBudget = expectedAnswer
-      ? Math.max(8, Math.min(28, expectedAnswer.length + 4))
-      : wordHint
-        ? wordHint === 1
-          ? 12
-          : wordHint === 2
-            ? 20
-            : 28
-        : 14
+    const charBudget = wordHint === 1 ? 14 : wordHint === 2 ? 22 : 28
     const blankInputStyle = { width: `${charBudget}ch` } as const
 
     if (advancedLayout) {
@@ -18873,6 +18865,13 @@ function App() {
         <div className="readingChooseTwoAnswers">
           {group.questions.map((question) => {
             const isHinting = readingHintQuestionNumber === question.number
+            const currentValue = String(readingAnswers[question.number] || '').trim().toUpperCase()
+            const lettersTakenElsewhere = new Set(
+              group.questions
+                .filter((other) => other.number !== question.number)
+                .map((other) => String(readingAnswers[other.number] || '').trim().toUpperCase())
+                .filter(Boolean)
+            )
             return (
               <div
                 key={`reading-choose-two-answer-${question.number}`}
@@ -18895,11 +18894,21 @@ function App() {
                     className="readingMatchingInfoSelect"
                   >
                     <option value="">Select letter</option>
-                    {letterChoices.map((option) => (
-                      <option key={`${question.number}-${option.letter}`} value={option.letter}>
-                        {option.letter}. {option.text}
-                      </option>
-                    ))}
+                    {letterChoices.map((option) => {
+                      const upper = option.letter.toUpperCase()
+                      const isTakenElsewhere = lettersTakenElsewhere.has(upper)
+                      const isOwnValue = upper === currentValue
+                      return (
+                        <option
+                          key={`${question.number}-${option.letter}`}
+                          value={option.letter}
+                          disabled={isTakenElsewhere && !isOwnValue}
+                        >
+                          {option.letter}. {option.text}
+                          {isTakenElsewhere && !isOwnValue ? ' (already chosen)' : ''}
+                        </option>
+                      )
+                    })}
                   </select>
                   {renderReadingHintToggleButton(question.number, isHinting)}
                 </div>

@@ -12643,6 +12643,7 @@ body,
   display: grid;
   gap: 12px;
   margin-top: 14px;
+  padding-bottom: 24px;
 }
 
 .readingHeadingListPanel {
@@ -12657,7 +12658,25 @@ body,
   position: sticky;
   top: 0;
   z-index: 4;
+  max-height: min(42vh, 360px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f8fafc;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.readingHeadingListPanel-sticky > .readingQuestionNumber {
+  flex-shrink: 0;
+}
+
+.readingHeadingListPanel-sticky .readingHeadingListPanelList {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .readingHeadingListPanelCount {
@@ -12711,9 +12730,12 @@ body,
   position: sticky;
   top: 0;
   z-index: 4;
+  max-height: 30vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(4px);
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
