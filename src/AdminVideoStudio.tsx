@@ -93,6 +93,69 @@ export type VideoStudioProject = {
 const newId = (prefix: string) =>
   `${prefix}_${Math.floor(performance.now() * 1000).toString(36)}_${Math.floor((performance.now() % 1) * 1e9).toString(36)}`
 
+// ---- Export manifest builder ----------------------------------------------
+
+const buildAiPrompt = (project: VideoStudioProject) => `You are rendering a short-form social video from this JSON edit deck.
+
+Source video: ${project.source?.fileName || '(unknown)'}, ${project.source?.aspectRatio || '?'} aspect, ${project.source?.durationMs ?? 0} ms total. Keep the original audio track intact.
+
+Apply every cue in 'subtitles' on screen between its startMs and endMs. The 'style' object on each cue is fully self-contained — it tells you the font family, weight, size hint (renderHint.sizeRem), fill color, optional stroke/background, tilt angle, anchor position (anchor.xPercent/yPercent — measured from top-left of the frame, with anchor.align controlling horizontal alignment about that point), and the entry/exit animations. Use the cue's own animationIn/animationOut when present; otherwise fall back to style.renderHint.animationIn / animationOut. For style 'bilingual-stack', stack the subtitle text on top and the 'translation' field below at ~80% size. For style 'vocab-callout', find a word wrapped in [[double brackets]] in the text — render that word highlighted (yellow #facc15 background, dark text, larger, bold) while the surrounding line is dimmed (#94a3b8). Strip the brackets before rendering.
+
+Apply each 'zooms' marker at atMs: smoothly scale the video to the level's scaleFactor (kind='in') or back to 1× (kind='out') over durationMs, easing in-out. Centre on the most prominent face in frame at that moment unless otherwise instructed. The level→scale mapping: ${JSON.stringify(VIDEO_STUDIO_ZOOM_SCALES)}.
+
+Apply each 'transitions' marker at atMs: cut/fade/whip-pan/book-flip with the given durationMs. 'cut' means an instant change; 'fade' is a crossfade; 'whip-pan' is a fast horizontal motion blur; 'book-flip' is a 3D page-turn.
+
+Apply each 'soundEffects' marker at atMs: trigger the named SFX (kind = book-flip | whoosh | swoosh | ding | impact) at the given volume (0–1). When 'pairedTransitionId' is present, sync the SFX onset to the centre of that transition. Duck the underlying audio by ~6 dB during the SFX if renderHints.audio.duckUnderSfx is true.
+
+Apply each 'cameraPans' marker at atMs: pan the framed crop left/right/up/down or orbit cw/ccw over durationMs while keeping the subject roughly centred.
+
+Render the final at renderHints.exportQuality (720p / 1080p / 4k). Preserve the source aspect ratio. Do not add any captions, watermarks, or content not listed in this manifest.`
+
+export const buildVideoStudioExportManifest = (project: VideoStudioProject) => {
+  return {
+    schemaVersion: project.schemaVersion,
+    project: {
+      id: project.id,
+      title: project.title,
+      spokenLanguage: project.spokenLanguage,
+      translationLanguage: project.translationLanguage,
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt,
+      source: project.source
+    },
+    aiPrompt: buildAiPrompt(project),
+    renderHints: {
+      exportQuality: project.exportQuality,
+      audio: { duckUnderSfx: true }
+    },
+    subtitles: project.subtitles.map((cue) => {
+      const style = VIDEO_STUDIO_STYLE_MAP[cue.styleId] || VIDEO_STUDIO_STYLE_MAP.normal
+      return {
+        id: cue.id,
+        startMs: cue.startMs,
+        endMs: cue.endMs,
+        text: cue.text,
+        translation: cue.translation || null,
+        style: {
+          id: style.id,
+          label: style.label,
+          anchor: style.anchor,
+          renderHint: style.renderHint
+        },
+        animationIn: cue.animationIn || style.renderHint.animationIn || 'fade',
+        animationOut: cue.animationOut || style.renderHint.animationOut || 'fade'
+      }
+    }),
+    zooms: project.zooms.map((z) => ({
+      ...z,
+      scaleFactor: VIDEO_STUDIO_ZOOM_SCALES[z.level]
+    })),
+    transitions: project.transitions,
+    soundEffects: project.soundEffects,
+    cameraPans: project.cameraPans
+  }
+}
+
 const makeEmptyProject = (): VideoStudioProject => ({
   schemaVersion: SCHEMA_VERSION,
   id: newId('proj'),
@@ -406,6 +469,36 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
   const deletePan = useCallback((id: string) => {
     setProject((prev) => ({ ...prev, cameraPans: prev.cameraPans.filter((m) => m.id !== id) }))
   }, [])
+
+  // ---- Export --------------------------------------------------------------
+
+  const exportManifest = useMemo(() => buildVideoStudioExportManifest(project), [project])
+  const exportJson = useMemo(() => JSON.stringify(exportManifest, null, 2), [exportManifest])
+  const [copyLabel, setCopyLabel] = useState('Copy JSON')
+
+  const onDownloadJson = useCallback(() => {
+    const blob = new Blob([exportJson], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    const safeTitle = project.title.replace(/[^a-zA-Z0-9-_]/g, '_').slice(0, 60) || 'video-studio'
+    link.href = url
+    link.download = `${safeTitle}.video-studio.json`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }, [exportJson, project.title])
+
+  const onCopyJson = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(exportJson)
+      setCopyLabel('Copied!')
+      window.setTimeout(() => setCopyLabel('Copy JSON'), 1800)
+    } catch {
+      setCopyLabel('Copy failed')
+      window.setTimeout(() => setCopyLabel('Copy JSON'), 1800)
+    }
+  }, [exportJson])
 
   const onResetProject = useCallback(() => {
     if (!window.confirm('Reset project? Unsaved work will be lost.')) return
@@ -1106,6 +1199,31 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* ---- Export ---- */}
+      <div className="adminVideoStudio2Panel adminVideoStudio2Panel-export">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>Export JSON for AI render</h3>
+          <div className="controls">
+            <button type="button" className="secondary" onClick={onCopyJson}>
+              {copyLabel}
+            </button>
+            <button type="button" onClick={onDownloadJson}>
+              Download .json
+            </button>
+          </div>
+        </div>
+        <p className="meta">
+          Manifest is self-contained — style anchors, render hints, zoom scale factors, and the AI prompt
+          are all inlined. {project.subtitles.length} subtitles · {project.zooms.length} zooms ·{' '}
+          {project.transitions.length} transitions · {project.soundEffects.length} sfx ·{' '}
+          {project.cameraPans.length} pans.
+        </p>
+        <details className="adminVideoStudio2ExportDetails">
+          <summary>Preview JSON</summary>
+          <pre className="adminVideoStudio2ExportPre">{exportJson}</pre>
+        </details>
       </div>
     </section>
   )

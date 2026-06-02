@@ -23970,3 +23970,29 @@ textarea {
 .adminVideoStudio2MarkerInlineLabel input[type='range'] {
   width: 100px;
 }
+
+.adminVideoStudio2Panel-export {
+  border: 1px solid #60a5fa;
+  background: linear-gradient(180deg, rgba(30, 64, 175, 0.2), rgba(15, 23, 42, 0.6));
+}
+
+.adminVideoStudio2ExportDetails summary {
+  cursor: pointer;
+  color: #93c5fd;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2ExportPre {
+  margin-top: 10px;
+  max-height: 360px;
+  overflow: auto;
+  padding: 12px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  white-space: pre;
+}
