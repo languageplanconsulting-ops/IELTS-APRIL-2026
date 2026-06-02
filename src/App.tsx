@@ -18577,7 +18577,7 @@ function App() {
               .filter(Boolean)
           )
           return (
-            <div className="readingSectionKeyPanel readingSectionKeyPanel-sticky" aria-label="Passage sections">
+            <div className="readingSectionKeyPanel" aria-label="Passage sections">
               {group.choiceOptions.map((option) => (
                 <span
                   key={`${group.id}-section-${option.letter}`}
@@ -18596,15 +18596,18 @@ function App() {
               .filter(Boolean)
           )
           return (
-          <div className="readingHeadingListPanel readingHeadingListPanel-sticky" aria-label={choiceListTitle}>
-            <p className="readingQuestionNumber">
-              {choiceListTitle}
-              {usedLetters.size > 0 && (
-                <span className="readingHeadingListPanelCount">
-                  {usedLetters.size} / {group.choiceOptions.length} used
-                </span>
-              )}
-            </p>
+          <details className="readingHeadingListPanel readingHeadingListPanel-collapsible" open aria-label={choiceListTitle}>
+            <summary className="readingHeadingListPanelSummary">
+              <span className="readingQuestionNumber">
+                {choiceListTitle}
+                {usedLetters.size > 0 && (
+                  <span className="readingHeadingListPanelCount">
+                    {usedLetters.size} / {group.choiceOptions.length} used
+                  </span>
+                )}
+              </span>
+              <span className="readingHeadingListPanelToggleHint">Tap to show / hide</span>
+            </summary>
             <ul className="readingHeadingListPanelList">
               {group.choiceOptions.map((option) => (
                 <li
@@ -18616,7 +18619,7 @@ function App() {
                 </li>
               ))}
             </ul>
-          </div>
+          </details>
           )
         })()}
         <div className="readingMatchingInfoList">
