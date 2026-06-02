@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  transcribeRecordingLocally,
-  type LocalSubtitleCue,
-  type LocalTranscriptionResult
-} from './adminLocalSubtitleTranscriber'
-import {
   DEFAULT_VIDEO_STUDIO_STYLE,
   VIDEO_STUDIO_CAMERA_PANS,
   VIDEO_STUDIO_SFX,
@@ -193,19 +188,39 @@ const formatMs = (ms: number) => {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`
 }
 
-const cueFromLocal = (cue: LocalSubtitleCue): VideoStudioSubtitleCue => ({
+// Backend transcribe response shape (matches existing speaking-sample-videos
+// pipeline). startSeconds / endSeconds are floats; text is the cue line.
+type BackendSubtitleCue = {
+  id?: string
+  startSeconds: number
+  endSeconds: number
+  text: string
+}
+
+const cueFromBackend = (cue: BackendSubtitleCue): VideoStudioSubtitleCue => ({
   id: newId('s'),
-  startMs: Math.round(cue.startSeconds * 1000),
-  endMs: Math.round(cue.endSeconds * 1000),
-  text: cue.text,
+  startMs: Math.round((cue.startSeconds ?? 0) * 1000),
+  endMs: Math.round((cue.endSeconds ?? 0) * 1000),
+  text: String(cue.text || '').trim(),
   styleId: DEFAULT_VIDEO_STUDIO_STYLE
 })
 
-type Props = {
-  isAdmin: boolean
+const guessVideoFileExtension = (mimeType = '') => {
+  if (mimeType.includes('mp4')) return 'mp4'
+  if (mimeType.includes('webm')) return 'webm'
+  if (mimeType.includes('quicktime') || mimeType.includes('mov')) return 'mov'
+  return 'mp4'
 }
 
-export const AdminVideoStudio = ({ isAdmin }: Props) => {
+const BACKEND_UPLOAD_SAFE_BYTES = 3.8 * 1024 * 1024
+const BACKEND_UPLOAD_SAFE_MB = (BACKEND_UPLOAD_SAFE_BYTES / (1024 * 1024)).toFixed(1)
+
+type Props = {
+  isAdmin: boolean
+  accessToken?: string
+}
+
+export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
   const [project, setProject] = useState<VideoStudioProject>(() => {
     if (typeof window === 'undefined') return makeEmptyProject()
     try {
@@ -293,25 +308,57 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
 
   const onTranscribe = useCallback(async () => {
     if (!sourceBlob) return
+    if (!accessToken) {
+      setTranscribeError('No admin session — sign in again before transcribing.')
+      return
+    }
+    if (sourceBlob.size > BACKEND_UPLOAD_SAFE_BYTES) {
+      setTranscribeError(
+        `Video is ${(sourceBlob.size / (1024 * 1024)).toFixed(1)} MB. The transcription backend accepts up to ${BACKEND_UPLOAD_SAFE_MB} MB — trim or re-encode the source and re-upload.`
+      )
+      return
+    }
     setIsTranscribing(true)
-    setTranscribeStatus('Starting…')
+    setTranscribeStatus('Uploading to Deepgram / Gemini…')
     setTranscribeError('')
     try {
-      const result: LocalTranscriptionResult = await transcribeRecordingLocally(sourceBlob, {
-        trimStartSeconds: 0,
-        trimEndSeconds: (project.source?.durationMs || 0) / 1000,
-        onProgress: (message) => setTranscribeStatus(message)
+      const durationSeconds = (project.source?.durationMs || 0) / 1000
+      const ext = guessVideoFileExtension(sourceBlob.type)
+      const formData = new FormData()
+      formData.append('video', sourceBlob, `video-studio-source.${ext}`)
+      formData.append('trimStartSeconds', '0')
+      formData.append('trimEndSeconds', String(durationSeconds.toFixed(3)))
+      formData.append('durationSeconds', String(durationSeconds.toFixed(3)))
+      const response = await fetch('/api/admin/speaking-sample-videos/transcribe', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        body: formData
       })
-      const cues = result.subtitles.map(cueFromLocal)
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(payload?.error?.message || `Backend transcription failed (${response.status})`)
+      }
+      const backendCues: BackendSubtitleCue[] = Array.isArray(payload?.subtitles) ? payload.subtitles : []
+      if (!backendCues.length) {
+        throw new Error('Backend returned no subtitles. Check the audio track has clear speech.')
+      }
+      const cues = backendCues.map(cueFromBackend).filter((c) => c.text && c.endMs > c.startMs)
+      const provider = String(payload?.provider || 'transcription service')
+      const wordTimestamps = Array.isArray(payload?.words) ? payload.words.length : 0
       setProject((prev) => ({ ...prev, subtitles: cues }))
+      setTranscribeStatus(
+        wordTimestamps > 0
+          ? `${cues.length} cues via ${provider} (${wordTimestamps} word timestamps).`
+          : `${cues.length} cues via ${provider}. Timing may need manual nudges.`
+      )
+      window.setTimeout(() => setTranscribeStatus(''), 4000)
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Transcription failed'
       setTranscribeError(message)
     } finally {
       setIsTranscribing(false)
-      setTranscribeStatus('')
     }
-  }, [sourceBlob, project.source?.durationMs])
+  }, [sourceBlob, accessToken, project.source?.durationMs])
 
   const updateSubtitle = useCallback((id: string, patch: Partial<VideoStudioSubtitleCue>) => {
     setProject((prev) => ({
@@ -690,7 +737,7 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
               onClick={onTranscribe}
               disabled={!sourceBlob || isTranscribing}
             >
-              {isTranscribing ? (transcribeStatus || 'Transcribing…') : 'Transcribe with Whisper'}
+              {isTranscribing ? (transcribeStatus || 'Transcribing…') : 'Transcribe (Thai + EN)'}
             </button>
             <button type="button" onClick={addSubtitle} disabled={!sourceBlob}>
               Add subtitle at playhead
@@ -698,6 +745,11 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
           </div>
         </div>
         {transcribeError && <p className="adminVideoStudio2Error">{transcribeError}</p>}
+        {!isTranscribing && transcribeStatus && (
+          <p className="meta" style={{ color: '#86efac' }}>
+            {transcribeStatus}
+          </p>
+        )}
         <p className="meta">
           Playhead: <strong>{formatMs(currentTimeMs)}</strong>
         </p>

@@ -25951,7 +25951,10 @@ function App() {
                 </div>
 
                 <div className="adminOnly-video-studio">
-                  <AdminVideoStudio isAdmin={authSession?.role === 'admin'} />
+                  <AdminVideoStudio
+                    isAdmin={authSession?.role === 'admin'}
+                    accessToken={authSession?.accessToken}
+                  />
                 </div>
 
                 <div className="adminSettingsGrid adminOnly-settings">
