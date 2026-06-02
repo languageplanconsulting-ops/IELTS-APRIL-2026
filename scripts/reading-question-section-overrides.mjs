@@ -1,5 +1,77 @@
 /** Full questionSectionText replacements for exams where OCR left stub blocks. */
 export const READING_QUESTION_SECTION_OVERRIDES = {
+  'cambridge-11-test1-passage2': `Questions 14-19
+Do the following statements agree with the information given in Reading Passage 2?
+In boxes 14-19 on your answer sheet, write
+TRUE if the statement agrees with the information
+FALSE if the statement contradicts the information
+NOT GIVEN if there is no information on this
+14 The Falkirk Wheel has linked the Forth & Clyde Canal with the Union Canal for the first time in their history.
+15 There was some opposition to the design of the Falkirk Wheel at first.
+16 The Falkirk Wheel was initially put together at the location where its components were manufactured.
+17 The Falkirk Wheel is the only boat lift in the world which has steel sections bolted together by hand.
+18 The weight of the gondolas varies according to the size of boat being carried.
+19 The construction of the Falkirk Wheel site took into account the presence of a nearby ancient monument.
+
+Questions 20-26
+Label the diagram below.
+Choose ONE WORD from the passage for each answer.
+Write your answers in boxes 20-26 on your answer sheet.
+
+How a boat is lifted on the Falkirk Wheel
+
+A pair of 20 ………………… are lifted in order to shut out water from canal basin
+A 21 ………………… is taken out, enabling Wheel to rotate
+Boat is raised, floating in one of Wheel's two
+A range of different-sized 23 ………………… ensures boat keeps upright
+Boat reaches top Wheel, then moves directly onto 24 …………………
+Boat travels through tunnel beneath Roman
+25 …………………
+26 ………………… raise boat 11 m to level of Union Canal`,
+
+  'cambridge-11-test2-passage1': `Questions 1-4
+
+Do the following statements agree with the information given in Reading Passage 1?
+In boxes 1-4 on your answer sheet, write
+TRUE if the statement agrees with the information
+FALSE if the statement contradicts the information
+NOT GIVEN if there is no information on this
+1 There is some doubt about what caused the Mary Rose to sink.
+2 The Mary Rose was the only ship to sink in the battle of 19 July 1545.
+3 Most of one side of the Mary Rose lay undamaged under the sea.
+4 Alexander McKee knew that the wreck would contain many valuable historical objects.
+
+Questions 5-8
+Look at the following statements (Questions 5-8) and the list of dates below.
+Match each statement with the correct date, A-G.
+Write the correct letter, A-G, in boxes 5-8 on your answer sheet.
+5 A search for the Mary Rose was launched.
+6 One person's exploration of the Mary Rose site stopped.
+7 It was agreed that the hull of the Mary Rose should be raised.
+8 The site of the Mary Rose was found by chance.
+
+List of Dates
+A 1836
+B 1840
+C 1965
+D 1967
+E 1971
+F 1979
+G 1982
+
+Questions 9-13
+Label the diagram below.
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+Write your answers in boxes 9-13 on your answer sheet.
+
+Raising the hull of the Mary Rose: Stages one and two
+
+9 … attached to hull by wires
+10 … to prevent hull being sucked into mud
+11 crane hook
+12 … .
+13 … used as extra protection for the hull`,
+
   'cambridge-12-test3-passage2': `Questions 14-19
 Reading Passage 2 has eight sections, A-H.
 Which paragraph contains the following information?

@@ -102,6 +102,14 @@ const isStubSection = (text) => {
   )
 }
 
+const needsQuestionSectionOverride = (examId, text) => {
+  const override = READING_QUESTION_SECTION_OVERRIDES[examId]
+  if (!override) return false
+  const value = String(text || '')
+  if (isStubSection(value)) return true
+  return /u�[lI]|AF€|eccssmsniutneenee|\(\s*\\?\s*SAGE/i.test(value)
+}
+
 const buildHeadingPrompt = (question, headingQuestions) => {
   const index = headingQuestions.findIndex((item) => item.number === question.number)
   if (index >= 0) return `Paragraph ${String.fromCharCode(65 + index)}`
@@ -110,8 +118,16 @@ const buildHeadingPrompt = (question, headingQuestions) => {
 
 const resolvePrompt = (exam, passage, question, sectionText) => {
   const current = String(question.prompt || '').replace(/\s+/g, ' ').trim()
+  const needsFallback =
+    !current ||
+    current === '……' ||
+    current === '…' ||
+    /^Complete the summary below\.?…?$/i.test(current) ||
+    /^Choose the correct heading for this section\.?…?$/i.test(current) ||
+    /^Drop (?:heading|answer) here/i.test(current) ||
+    /Questions 14-20 The Reading Passage has seven paragraphs/i.test(current)
 
-  if (!current) {
+  if (needsFallback) {
     const answer = String(question.correctAnswer || '').trim()
     if (ROMAN.test(answer) && /list of headings/i.test(sectionText)) {
       const headingQuestions = (passage.questions || []).filter((item) =>
@@ -174,7 +190,7 @@ for (const book of targetBooks) {
 
     for (const passage of exam.parsedPayload?.passages || []) {
       const override = READING_QUESTION_SECTION_OVERRIDES[exam.id]
-      if (override && isStubSection(passage.questionSectionText)) {
+      if (override) {
         passage.questionSectionText = override
         examChanged = true
         stats.sectionOverrides += 1

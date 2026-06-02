@@ -607,7 +607,8 @@ export const extractReadingFillDisplayLines = (
   if (displayLines.length) {
     const enriched = enrichFillDisplayLines(displayLines, questions)
     const merged = mergeFillDisplayLineContinuations(enriched)
-    return supplementMissingFillDisplayLines(merged, questionNumbers, questions, block)
+    const split = splitMultiBlankDisplayLines(merged)
+    return supplementMissingFillDisplayLines(split, questionNumbers, questions, block)
   }
 
   return [...questionNumbers]
@@ -696,6 +697,69 @@ const supplementMissingFillDisplayLines = (
   return [...displayLines, ...supplementalLines]
 }
 
+const isLikelyFillSectionHeadingText = (text: string) => {
+  const trimmed = String(text || '').trim()
+  if (!trimmed || trimmed.length > 48) return false
+  if (/^[•\-\*]/.test(trimmed)) return false
+  if (/^(?:must|should|need|have to)\b/i.test(trimmed)) return false
+  if (/(?:[.．…⋯]{2,}|…+)/.test(trimmed)) return false
+  if (/^\d+\s/.test(trimmed)) return false
+  return /^[A-Z][A-Za-z0-9\s'-]+$/.test(trimmed)
+}
+
+const splitMultiBlankDisplayLines = (
+  displayLines: ReadingFillDisplayLine[]
+): ReadingFillDisplayLine[] => {
+  const result: ReadingFillDisplayLine[] = []
+
+  for (const line of displayLines) {
+    if (line.procedure || line.procedureSegments?.length) {
+      result.push(line)
+      continue
+    }
+
+    const blankSegments = line.segments.filter((segment) => segment.kind === 'blank')
+    if (blankSegments.length <= 1) {
+      result.push(line)
+      continue
+    }
+
+    let pendingPrefix = ''
+    for (const segment of line.segments) {
+      if (segment.kind === 'text') {
+        pendingPrefix = pendingPrefix ? `${pendingPrefix} ${segment.text}`.trim() : segment.text.trim()
+        continue
+      }
+      if (segment.kind === 'heading' || segment.kind === 'clue') {
+        if (pendingPrefix) {
+          result.push({ segments: [{ kind: 'text', text: pendingPrefix }] })
+          pendingPrefix = ''
+        }
+        result.push({ segments: [segment] })
+        continue
+      }
+      if (segment.kind === 'blank') {
+        result.push({
+          segments: [
+            {
+              ...segment,
+              before: cleanFillSegmentText([pendingPrefix, segment.before].filter(Boolean).join(' ')),
+              after: cleanFillSegmentText(segment.after)
+            }
+          ]
+        })
+        pendingPrefix = ''
+      }
+    }
+
+    if (pendingPrefix) {
+      result.push({ segments: [{ kind: 'text', text: pendingPrefix }] })
+    }
+  }
+
+  return result
+}
+
 const shouldMergeTextIntoFollowingBlank = (text: string) => {
   const trimmed = text.trim()
   if (!trimmed || /[.!?]["']?\s*$/.test(trimmed)) return false
@@ -760,6 +824,7 @@ const mergeFillDisplayLineContinuations = (
       previous &&
       lastPreviousSegment?.kind === 'blank' &&
       onlySegment?.kind === 'text' &&
+      !isLikelyFillSectionHeadingText(onlySegment.text) &&
       !/^[e•\-*]\s/.test(onlySegment.text.trim()) &&
       onlySegment.text.trim().length <= 48 &&
       /^[a-z(]/.test(onlySegment.text.trim())
@@ -786,44 +851,63 @@ export const enrichFillDisplayLines = (
 ): ReadingFillDisplayLine[] => {
   const byNumber = new Map(questions.map((question) => [question.number, question]))
 
+  const resolvePromptContext = (question: FillQuestion, questionNumber: number) => {
+    const direct = parseFillContextFromPrompt(question.prompt, questionNumber)
+    if (direct?.before || direct?.after) return direct
+
+    const prompt = stripFillPromptPrefix(question.prompt)
+    const gapMatch = prompt.match(/^(.*?)(?:\s*[.．…⋯·•_\-–—]{2,}|…+)\s*(.*)$/s)
+    if (gapMatch) {
+      return {
+        before: cleanFillSegmentText(gapMatch[1]),
+        after: cleanFillSegmentText(gapMatch[2] || '')
+      }
+    }
+    if (prompt && !/^drop (?:heading|answer) here/i.test(prompt)) {
+      return { before: cleanFillSegmentText(prompt), after: '' }
+    }
+    return null
+  }
+
   return displayLines.map((line) => ({
     ...line,
     segments: line.segments.map((segment, index, segments) => {
       if (segment.kind !== 'blank') return segment
-      if (segment.before || segment.after) return segment
+
+      const question = byNumber.get(segment.questionNumber)
+      const promptContext = question
+        ? resolvePromptContext(question, segment.questionNumber)
+        : null
+
+      let before = cleanFillSegmentText(segment.before)
+      let after = cleanFillSegmentText(segment.after)
+
+      if (isLikelyFillSectionHeadingText(after)) {
+        after = ''
+      }
+
+      if (!before && !after && promptContext) {
+        return {
+          ...segment,
+          before: promptContext.before,
+          after: promptContext.after || ''
+        }
+      }
+
+      if ((!before || !after) && promptContext) {
+        if (!before && promptContext.before) before = promptContext.before
+        if (!after && promptContext.after && !isLikelyFillSectionHeadingText(promptContext.after)) {
+          after = promptContext.after
+        }
+      }
+
+      if (before || after) {
+        return { ...segment, before, after }
+      }
 
       const previous = segments[index - 1]
       if (previous?.kind === 'text' && previous.text.trim()) {
         return segment
-      }
-
-      const question = byNumber.get(segment.questionNumber)
-      const context = question ? parseFillContextFromPrompt(question.prompt, segment.questionNumber) : null
-      if (context?.before || context?.after) {
-        return {
-          ...segment,
-          before: context.before,
-          after: context.after || ''
-        }
-      }
-
-      if (question) {
-        const prompt = stripFillPromptPrefix(question.prompt)
-        if (prompt && !/^drop (?:heading|answer) here/i.test(prompt)) {
-          const gapMatch = prompt.match(/^(.*?)(?:\s*[.．…⋯·•_\-–—]{2,}|…+)\s*(.*)$/s)
-          if (gapMatch) {
-            return {
-              ...segment,
-              before: cleanFillSegmentText(gapMatch[1]),
-              after: cleanFillSegmentText(gapMatch[2] || '')
-            }
-          }
-          return {
-            ...segment,
-            before: cleanFillSegmentText(prompt),
-            after: ''
-          }
-        }
       }
 
       return segment

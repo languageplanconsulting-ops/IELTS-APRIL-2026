@@ -211,10 +211,74 @@ const inferPassageSlot = (exam: ReadingExamRecord): 1 | 2 | 3 => {
   return 1
 }
 
+/** Remap IELTS question numbers in section text without touching dates like 1946/7 or 70 CE. */
+export const remapReadingQuestionNumbersInSectionText = (text: string, offset: number) => {
+  if (!offset) return String(text || '')
+
+  let result = String(text || '')
+
+  result = result.replace(
+    /Questions?\s+(\d{1,2})(?:\s*[–-]\s*(\d{1,2})|\s+and\s+(\d{1,2}))?/gi,
+    (match) =>
+      match.replace(/\d{1,2}/g, (token) => {
+        const value = Number(token)
+        return value >= 1 && value <= 40 ? String(value + offset) : token
+      })
+  )
+
+  result = result.replace(
+    /(?:in\s+)?boxes\s+(\d{1,2})(?:\s*[–-]\s*(\d{1,2}))?/gi,
+    (match) =>
+      match.replace(/\d{1,2}/g, (token) => {
+        const value = Number(token)
+        return value >= 1 && value <= 40 ? String(value + offset) : token
+      })
+  )
+
+  result = result.replace(
+    /\b(\d{1,2})\s*(?:[.．…⋯·•_\-–—]{2,}|…+)/g,
+    (match, token: string) => {
+      const value = Number(token)
+      return value >= 1 && value <= 40 ? `${value + offset}${match.slice(token.length)}` : match
+    }
+  )
+
+  result = result.replace(/^(\s*)(\d{1,2})(\s+)([A-Z])/gm, (match, indent, token, space, letter) => {
+    const value = Number(token)
+    return value >= 1 && value <= 40 ? `${indent}${value + offset}${space}${letter}` : match
+  })
+
+  return result
+}
+
+const remapQuestionPrompt = (prompt: string, originalNumber: number, nextNumber: number) => {
+  let result = String(prompt || '').trim()
+  if (!result || nextNumber === originalNumber) return result
+
+  result = result.replace(
+    new RegExp(`^Complete the (?:notes|summary|sentences|table):?\\s*${originalNumber}\\b`, 'i'),
+    (match) => match.replace(String(originalNumber), String(nextNumber))
+  )
+  result = result.replace(
+    new RegExp(`^Complete the summary —\\s*${originalNumber}\\b`, 'i'),
+    `Complete the summary — ${nextNumber}`
+  )
+  result = result.replace(
+    new RegExp(`\\b${originalNumber}\\s*([.．…⋯·•_\\-–—]+)`, 'g'),
+    `${nextNumber} $1`
+  )
+  result = result.replace(
+    new RegExp(`\\b${originalNumber}\\b(?=\\s*(?:[.…]|$))`),
+    String(nextNumber)
+  )
+
+  return result
+}
+
 const remapQuestion = (question: ReadingQuestion, nextNumber: number): ReadingQuestion => ({
   ...question,
   number: nextNumber,
-  prompt: String(question.prompt || '').trim()
+  prompt: remapQuestionPrompt(String(question.prompt || '').trim(), question.number, nextNumber)
 })
 
 const remapPassageForSlot = (
@@ -231,14 +295,10 @@ const remapPassageForSlot = (
     end: range.end + questionOffset
   }))
 
-  let questionSectionText = String(passage.questionSectionText || '')
-  if (questionOffset > 0) {
-    questionSectionText = questionSectionText.replace(/\b(\d{1,2})\b/g, (match) => {
-      const value = Number(match)
-      if (value >= 1 && value <= 40) return String(value + questionOffset)
-      return match
-    })
-  }
+  const questionSectionText =
+    questionOffset > 0
+      ? remapReadingQuestionNumbersInSectionText(passage.questionSectionText || '', questionOffset)
+      : String(passage.questionSectionText || '')
 
   return {
     ...passage,

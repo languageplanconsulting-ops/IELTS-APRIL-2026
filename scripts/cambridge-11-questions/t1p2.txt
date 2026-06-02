@@ -38,4 +38,4 @@ Boat is raised,
 of Wheel's two
 A range of different-sized 23 … .
 ensures boat keeps upright
-24 u�I_P-1 .:.,l,,j {!::? >"
+Boat reaches top Wheel, then moves directly onto 24 … ..
