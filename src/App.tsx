@@ -6377,6 +6377,37 @@ const mergeReadingAttemptHistories = (
   return merged
 }
 
+// Merge two ReadingJourneyProgress objects, picking the higher unlock stage
+// and the newer attempt-per-stage. Used to reconcile local vs Supabase
+// progress on login so users never lose missions across devices.
+const mergeReadingJourneyProgresses = (
+  remote: ReadingJourneyProgress,
+  local: ReadingJourneyProgress
+): ReadingJourneyProgress => {
+  const mergedAttempts: Record<string, { accuracy: number; completedAt: string }> = { ...remote.attempts }
+  for (const [stageId, localAttempt] of Object.entries(local.attempts)) {
+    const remoteAttempt = mergedAttempts[stageId]
+    if (
+      !remoteAttempt ||
+      (Date.parse(localAttempt.completedAt) || 0) > (Date.parse(remoteAttempt.completedAt) || 0)
+    ) {
+      mergedAttempts[stageId] = localAttempt
+    }
+  }
+  return {
+    unlockedThroughStage: Math.max(remote.unlockedThroughStage || 1, local.unlockedThroughStage || 1),
+    attempts: mergedAttempts
+  }
+}
+
+const buildReadingJourneyProgressSignature = (progress: ReadingJourneyProgress) =>
+  JSON.stringify({
+    unlockedThroughStage: progress.unlockedThroughStage,
+    attempts: Object.fromEntries(
+      Object.entries(progress.attempts).sort(([a], [b]) => a.localeCompare(b))
+    )
+  })
+
 const parseStoredListeningAttempts = (value: string | null): Record<string, ListeningAttemptSummary> => {
   if (!value) return {}
   try {
@@ -6921,6 +6952,8 @@ function App() {
   const notebookSyncedSignatureRef = useRef('')
   const readingAttemptsSyncTimeoutRef = useRef<number | null>(null)
   const readingAttemptsSyncedSignatureRef = useRef('')
+  const readingJourneyProgressSyncedSignatureRef = useRef('')
+  const readingJourneyProgressSyncTimeoutRef = useRef<number | null>(null)
   const readingPdoyProgressSyncTimeoutRef = useRef<number | null>(null)
   const readingPdoyProgressSyncedSignatureRef = useRef('')
   const notebookEntriesRef = useRef<NotebookEntry[]>([])
@@ -6972,6 +7005,33 @@ function App() {
 
   const buildReadingAttemptsSyncSignature = (attempts: Record<string, ReadingAttemptSummary>) =>
     JSON.stringify(attempts)
+
+  const syncReadingJourneyProgressToSupabase = async (progress: ReadingJourneyProgress) => {
+    if (
+      !authSession?.accessToken ||
+      authSession.role === 'admin' ||
+      !authSession.email ||
+      isNotebookHydrating ||
+      !notebookLoadedRef.current
+    ) {
+      return false
+    }
+    const signature = buildReadingJourneyProgressSignature(progress)
+    try {
+      await fetchJson<{ progress: ReadingJourneyProgress; updatedAt: string | null }>(
+        '/api/me/reading-journey-progress',
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${authSession.accessToken}` },
+          body: JSON.stringify({ progress })
+        }
+      )
+      readingJourneyProgressSyncedSignatureRef.current = signature
+      return true
+    } catch {
+      return false
+    }
+  }
 
   const syncReadingAttemptsToSupabase = async (attempts: Record<string, ReadingAttemptSummary>) => {
     if (!authSession?.accessToken || authSession.role === 'admin' || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) {
@@ -7795,6 +7855,26 @@ function App() {
           : buildReadingAttemptsSyncSignature(localReadingAttempts)
       }
     }
+
+    const hydrateReadingJourneyProgressFromRemote = async () => {
+      try {
+        const payload = await fetchJson<{ progress: ReadingJourneyProgress; updatedAt: string | null }>(
+          '/api/me/reading-journey-progress',
+          {
+            headers: { Authorization: `Bearer ${session.accessToken}` }
+          }
+        )
+        const remoteProgress = normalizeReadingJourneyProgress(payload?.progress)
+        const merged = mergeReadingJourneyProgresses(remoteProgress, localReadingJourneyProgress)
+        const remoteSignature = buildReadingJourneyProgressSignature(remoteProgress)
+        const mergedSignature = buildReadingJourneyProgressSignature(merged)
+        setReadingJourneyProgress(merged)
+        readingJourneyProgressSyncedSignatureRef.current =
+          mergedSignature === remoteSignature ? mergedSignature : ''
+      } catch {
+        readingJourneyProgressSyncedSignatureRef.current = ''
+      }
+    }
     setIsNotebookHydrating(true)
     setNotebookSyncError('')
     notebookLoadedRef.current = false
@@ -7850,7 +7930,10 @@ function App() {
       setNotebookSyncError('Notebook sync is temporarily unavailable. Using this device backup for now.')
       notebookSyncedSignatureRef.current = ''
     } finally {
-      await hydrateReadingAttemptsFromRemote()
+      await Promise.all([
+        hydrateReadingAttemptsFromRemote(),
+        hydrateReadingJourneyProgressFromRemote()
+      ])
       setSelectedNotebookSection('speaking')
       setIsNotebookHydrating(false)
       notebookLoadedRef.current = true
@@ -7864,6 +7947,8 @@ function App() {
     setNotebookSyncError('')
     setLatestScoresByTest({})
     setReadingAttemptHistory({})
+    setReadingJourneyProgress(getDefaultReadingJourneyProgress())
+    readingJourneyProgressSyncedSignatureRef.current = ''
     setListeningAttemptHistory({})
     setListeningFoundationAnswerState({})
     setListeningFoundationAudioPlayed(false)
@@ -11088,6 +11173,25 @@ function App() {
       JSON.stringify(readingJourneyProgress)
     )
   }, [authSession, isNotebookHydrating, readingJourneyProgress])
+
+  useEffect(() => {
+    if (!authSession?.accessToken || !authSession.email || authSession.role === 'admin' || isNotebookHydrating || !notebookLoadedRef.current) return
+    const nextSignature = buildReadingJourneyProgressSignature(readingJourneyProgress)
+    if (nextSignature === readingJourneyProgressSyncedSignatureRef.current) return
+    if (readingJourneyProgressSyncTimeoutRef.current) {
+      window.clearTimeout(readingJourneyProgressSyncTimeoutRef.current)
+    }
+    readingJourneyProgressSyncTimeoutRef.current = window.setTimeout(() => {
+      void syncReadingJourneyProgressToSupabase(readingJourneyProgress)
+    }, 600)
+    return () => {
+      if (readingJourneyProgressSyncTimeoutRef.current) {
+        window.clearTimeout(readingJourneyProgressSyncTimeoutRef.current)
+        readingJourneyProgressSyncTimeoutRef.current = null
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authSession?.accessToken, authSession?.email, authSession?.role, readingJourneyProgress, isNotebookHydrating])
 
   useEffect(() => {
     if (!authSession?.accessToken || !authSession.email || authSession.role === 'admin' || isNotebookHydrating || !notebookLoadedRef.current) return

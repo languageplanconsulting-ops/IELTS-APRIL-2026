@@ -2099,6 +2099,11 @@ const ensureReadingAttemptsBucket = async () => {
 
 const buildReadingAttemptsObjectPath = (userId) => `users/${normalizeOptionalUuid(userId) || 'unknown'}.json`
 
+// Journey progress shares the reading-attempts bucket with a different path
+// prefix so we don't need a new bucket env var.
+const buildReadingJourneyProgressObjectPath = (userId) =>
+  `journey/${normalizeOptionalUuid(userId) || 'unknown'}.json`
+
 const uploadReadingAttemptsJson = async ({ objectPath, payload }) => {
   await ensureReadingAttemptsBucket()
   await supabaseRequest(
@@ -3018,6 +3023,29 @@ const sanitizeReadingAttemptHistory = (value) => {
       .filter(Boolean)
       .map((attempt) => [attempt.examId, attempt])
   )
+}
+
+// Sanitize a single journey attempt record { accuracy, completedAt }.
+const sanitizeReadingJourneyAttempt = (raw) => {
+  if (!raw || typeof raw !== 'object') return null
+  const accuracy = Math.max(0, Math.min(100, Number(raw.accuracy ?? 0)))
+  const completedAt = String(raw.completedAt || '').trim()
+  if (!completedAt) return null
+  return { accuracy, completedAt }
+}
+
+const sanitizeReadingJourneyProgress = (value) => {
+  if (!value || typeof value !== 'object') {
+    return { unlockedThroughStage: 1, attempts: {} }
+  }
+  const unlockedThroughStage = Math.max(1, Math.min(100, Number(value.unlockedThroughStage || 1)))
+  const attemptsRaw = value.attempts && typeof value.attempts === 'object' ? value.attempts : {}
+  const attempts = {}
+  for (const [examId, raw] of Object.entries(attemptsRaw)) {
+    const cleaned = sanitizeReadingJourneyAttempt(raw)
+    if (cleaned && examId) attempts[String(examId)] = cleaned
+  }
+  return { unlockedThroughStage, attempts }
 }
 
 const normalizeSupportReportCategory = (value) => {
@@ -11493,6 +11521,72 @@ app.put('/api/me/reading-attempts', requireAuth, async (req, res) => {
         status: error?.status || 500,
         type: 'reading_attempts_save_error',
         message: error instanceof Error ? error.message : 'Could not save reading reports.'
+      }
+    })
+  }
+})
+
+// Reading Journey (quest) progress — unlockedThroughStage + per-stage attempt
+// summary. Lives in the same reading-attempts bucket under a journey/ prefix.
+app.get('/api/me/reading-journey-progress', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'reading_journey_auth_error',
+          message: 'Please sign in before loading Reading journey progress.'
+        }
+      })
+    }
+    const objectPath = buildReadingJourneyProgressObjectPath(userId)
+    try {
+      const payload = await loadReadingAttemptsJson(objectPath)
+      return res.json({
+        progress: sanitizeReadingJourneyProgress(payload?.progress),
+        updatedAt: payload?.updatedAt || null
+      })
+    } catch (error) {
+      if (error?.status !== 400 && error?.status !== 404) throw error
+      return res.json({ progress: { unlockedThroughStage: 1, attempts: {} }, updatedAt: null })
+    }
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_journey_load_error',
+        message: error instanceof Error ? error.message : 'Could not load Reading journey progress.'
+      }
+    })
+  }
+})
+
+app.put('/api/me/reading-journey-progress', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'reading_journey_auth_error',
+          message: 'Please sign in before saving Reading journey progress.'
+        }
+      })
+    }
+    const progress = sanitizeReadingJourneyProgress(req.body?.progress)
+    const updatedAt = new Date().toISOString()
+    await uploadReadingAttemptsJson({
+      objectPath: buildReadingJourneyProgressObjectPath(userId),
+      payload: { userId, updatedAt, progress }
+    })
+    return res.json({ progress, updatedAt })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'reading_journey_save_error',
+        message: error instanceof Error ? error.message : 'Could not save Reading journey progress.'
       }
     })
   }
