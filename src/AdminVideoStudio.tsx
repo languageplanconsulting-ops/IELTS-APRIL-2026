@@ -10,7 +10,6 @@ import {
   VIDEO_STUDIO_SFX,
   VIDEO_STUDIO_STYLES,
   VIDEO_STUDIO_STYLE_MAP,
-  VIDEO_STUDIO_TEXT_ANIMATIONS,
   VIDEO_STUDIO_TRANSITIONS,
   VIDEO_STUDIO_ZOOM_SCALES,
   type VideoStudioCameraPanKind,
@@ -288,6 +287,125 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
     setCurrentTimeMs(Math.round(videoRef.current.currentTime * 1000))
   }, [])
 
+  const seekTo = useCallback((ms: number) => {
+    if (!videoRef.current) return
+    videoRef.current.currentTime = Math.max(0, ms / 1000)
+    setCurrentTimeMs(Math.round(ms))
+  }, [])
+
+  // ---- Marker add / update / delete ---------------------------------------
+
+  const addZoom = useCallback(
+    (level: VideoStudioZoomLevel = 2, kind: 'in' | 'out' = 'in') => {
+      const atMs = Math.round(currentTimeMs)
+      setProject((prev) => ({
+        ...prev,
+        zooms: [
+          ...prev.zooms,
+          { id: newId('z'), atMs, level, kind, durationMs: 400 }
+        ].sort((a, b) => a.atMs - b.atMs)
+      }))
+    },
+    [currentTimeMs]
+  )
+
+  const updateZoom = useCallback((id: string, patch: Partial<VideoStudioZoomMarker>) => {
+    setProject((prev) => ({
+      ...prev,
+      zooms: prev.zooms.map((m) => (m.id === id ? { ...m, ...patch } : m))
+    }))
+  }, [])
+
+  const deleteZoom = useCallback((id: string) => {
+    setProject((prev) => ({ ...prev, zooms: prev.zooms.filter((m) => m.id !== id) }))
+  }, [])
+
+  const addTransition = useCallback(
+    (kind: VideoStudioTransitionKind = 'fade') => {
+      const atMs = Math.round(currentTimeMs)
+      const preset = VIDEO_STUDIO_TRANSITIONS.find((t) => t.id === kind)
+      setProject((prev) => ({
+        ...prev,
+        transitions: [
+          ...prev.transitions,
+          { id: newId('t'), atMs, kind, durationMs: preset?.defaultDurationMs ?? 350 }
+        ].sort((a, b) => a.atMs - b.atMs)
+      }))
+    },
+    [currentTimeMs]
+  )
+
+  const updateTransition = useCallback(
+    (id: string, patch: Partial<VideoStudioTransitionMarker>) => {
+      setProject((prev) => ({
+        ...prev,
+        transitions: prev.transitions.map((m) => (m.id === id ? { ...m, ...patch } : m))
+      }))
+    },
+    []
+  )
+
+  const deleteTransition = useCallback((id: string) => {
+    setProject((prev) => ({
+      ...prev,
+      transitions: prev.transitions.filter((m) => m.id !== id),
+      // Detach any SFX paired to it.
+      soundEffects: prev.soundEffects.map((sfx) =>
+        sfx.pairedTransitionId === id ? { ...sfx, pairedTransitionId: undefined } : sfx
+      )
+    }))
+  }, [])
+
+  const addSfx = useCallback(
+    (kind: VideoStudioSfxKind = 'whoosh') => {
+      const atMs = Math.round(currentTimeMs)
+      setProject((prev) => ({
+        ...prev,
+        soundEffects: [
+          ...prev.soundEffects,
+          { id: newId('sfx'), atMs, kind, volume: 0.8 }
+        ].sort((a, b) => a.atMs - b.atMs)
+      }))
+    },
+    [currentTimeMs]
+  )
+
+  const updateSfx = useCallback((id: string, patch: Partial<VideoStudioSfxMarker>) => {
+    setProject((prev) => ({
+      ...prev,
+      soundEffects: prev.soundEffects.map((m) => (m.id === id ? { ...m, ...patch } : m))
+    }))
+  }, [])
+
+  const deleteSfx = useCallback((id: string) => {
+    setProject((prev) => ({ ...prev, soundEffects: prev.soundEffects.filter((m) => m.id !== id) }))
+  }, [])
+
+  const addPan = useCallback(
+    (kind: VideoStudioCameraPanKind = 'right') => {
+      const atMs = Math.round(currentTimeMs)
+      setProject((prev) => ({
+        ...prev,
+        cameraPans: [
+          ...prev.cameraPans,
+          { id: newId('pan'), atMs, kind, durationMs: 600 }
+        ].sort((a, b) => a.atMs - b.atMs)
+      }))
+    },
+    [currentTimeMs]
+  )
+
+  const updatePan = useCallback((id: string, patch: Partial<VideoStudioCameraPanMarker>) => {
+    setProject((prev) => ({
+      ...prev,
+      cameraPans: prev.cameraPans.map((m) => (m.id === id ? { ...m, ...patch } : m))
+    }))
+  }, [])
+
+  const deletePan = useCallback((id: string) => {
+    setProject((prev) => ({ ...prev, cameraPans: prev.cameraPans.filter((m) => m.id !== id) }))
+  }, [])
+
   const onResetProject = useCallback(() => {
     if (!window.confirm('Reset project? Unsaved work will be lost.')) return
     if (sourceUrl) URL.revokeObjectURL(sourceUrl)
@@ -521,16 +639,349 @@ export const AdminVideoStudio = ({ isAdmin }: Props) => {
         </div>
       </div>
 
+      {/* ---- Timeline visualization ---- */}
       <div className="adminVideoStudio2Panel">
         <div className="adminVideoStudio2PanelHeader">
-          <h3>Markers (placeholders — Phase 2)</h3>
+          <h3>Timeline</h3>
+          <p className="meta">
+            {project.source ? `0 → ${formatMs(project.source.durationMs)}` : 'Upload a video to enable the timeline.'}
+          </p>
         </div>
-        <ul className="meta">
-          <li>Zoom levels: {Object.entries(VIDEO_STUDIO_ZOOM_SCALES).map(([level, scale]) => `L${level}=${scale}×`).join(', ')}</li>
-          <li>Transitions: {VIDEO_STUDIO_TRANSITIONS.map((t) => t.label).join(', ')}</li>
-          <li>SFX: {VIDEO_STUDIO_SFX.map((s) => s.label).join(', ')}</li>
-          <li>Camera pans: {VIDEO_STUDIO_CAMERA_PANS.map((p) => p.label).join(', ')}</li>
-          <li>Text animations: {VIDEO_STUDIO_TEXT_ANIMATIONS.join(', ')}</li>
+        {project.source && project.source.durationMs > 0 ? (
+          <div className="adminVideoStudio2Timeline">
+            {[
+              { id: 'subtitles', label: 'Subtitles', markers: project.subtitles.map((c) => ({ id: c.id, atMs: c.startMs, label: c.text })) },
+              { id: 'zooms', label: 'Zooms', markers: project.zooms.map((z) => ({ id: z.id, atMs: z.atMs, label: `${z.kind === 'in' ? '+' : '-'}L${z.level}` })) },
+              { id: 'transitions', label: 'Transitions', markers: project.transitions.map((t) => ({ id: t.id, atMs: t.atMs, label: t.kind })) },
+              { id: 'sfx', label: 'SFX', markers: project.soundEffects.map((s) => ({ id: s.id, atMs: s.atMs, label: s.kind })) },
+              { id: 'pans', label: 'Camera', markers: project.cameraPans.map((p) => ({ id: p.id, atMs: p.atMs, label: p.kind })) }
+            ].map((track) => (
+              <div key={track.id} className={`adminVideoStudio2TimelineRow row-${track.id}`}>
+                <span className="adminVideoStudio2TimelineRowLabel">{track.label}</span>
+                <div
+                  className="adminVideoStudio2TimelineLane"
+                  onClick={(event) => {
+                    if (!project.source) return
+                    const rect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
+                    const fraction = (event.clientX - rect.left) / rect.width
+                    seekTo(Math.max(0, Math.min(project.source.durationMs, fraction * project.source.durationMs)))
+                  }}
+                >
+                  {track.markers.map((marker) => {
+                    const pct = Math.max(
+                      0,
+                      Math.min(100, (marker.atMs / (project.source?.durationMs || 1)) * 100)
+                    )
+                    return (
+                      <span
+                        key={marker.id}
+                        className="adminVideoStudio2TimelineMarker"
+                        style={{ left: `${pct}%` }}
+                        title={`${formatMs(marker.atMs)} — ${marker.label}`}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          seekTo(marker.atMs)
+                        }}
+                      />
+                    )
+                  })}
+                  <span
+                    className="adminVideoStudio2TimelinePlayhead"
+                    style={{
+                      left: `${Math.min(100, (currentTimeMs / (project.source?.durationMs || 1)) * 100)}%`
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="meta">No source video.</p>
+        )}
+      </div>
+
+      {/* ---- Zoom markers ---- */}
+      <div className="adminVideoStudio2Panel">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>Zooms ({project.zooms.length})</h3>
+          <div className="controls">
+            <button type="button" className="secondary" onClick={() => addZoom(1, 'in')} disabled={!sourceBlob}>
+              + Zoom in L1
+            </button>
+            <button type="button" className="secondary" onClick={() => addZoom(2, 'in')} disabled={!sourceBlob}>
+              + L2
+            </button>
+            <button type="button" className="secondary" onClick={() => addZoom(3, 'in')} disabled={!sourceBlob}>
+              + L3
+            </button>
+            <button type="button" className="secondary" onClick={() => addZoom(4, 'in')} disabled={!sourceBlob}>
+              + L4
+            </button>
+            <button type="button" onClick={() => addZoom(2, 'out')} disabled={!sourceBlob}>
+              + Zoom out
+            </button>
+          </div>
+        </div>
+        <ul className="adminVideoStudio2CueList">
+          {project.zooms.length === 0 && <li className="adminVideoStudio2EmptyHint">No zoom markers yet.</li>}
+          {project.zooms.map((zoom) => (
+            <li key={zoom.id} className="adminVideoStudio2MarkerRow">
+              <button
+                type="button"
+                className="adminVideoStudio2MarkerSeek"
+                onClick={() => seekTo(zoom.atMs)}
+              >
+                {formatMs(zoom.atMs)}
+              </button>
+              <input
+                type="number"
+                value={zoom.atMs}
+                step={50}
+                onChange={(event) => updateZoom(zoom.id, { atMs: Number(event.target.value) })}
+              />
+              <select
+                value={zoom.kind}
+                onChange={(event) => updateZoom(zoom.id, { kind: event.target.value as 'in' | 'out' })}
+              >
+                <option value="in">Zoom in</option>
+                <option value="out">Zoom out</option>
+              </select>
+              <select
+                value={zoom.level}
+                onChange={(event) =>
+                  updateZoom(zoom.id, { level: Number(event.target.value) as VideoStudioZoomLevel })
+                }
+              >
+                {(Object.keys(VIDEO_STUDIO_ZOOM_SCALES) as unknown as VideoStudioZoomLevel[]).map((level) => (
+                  <option key={level} value={level}>
+                    L{level} · {VIDEO_STUDIO_ZOOM_SCALES[level]}×
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                value={zoom.durationMs}
+                step={50}
+                onChange={(event) => updateZoom(zoom.id, { durationMs: Number(event.target.value) })}
+                title="duration ms"
+              />
+              <button type="button" className="secondary" onClick={() => deleteZoom(zoom.id)}>
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ---- Transition markers ---- */}
+      <div className="adminVideoStudio2Panel">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>Transitions ({project.transitions.length})</h3>
+          <div className="controls">
+            {VIDEO_STUDIO_TRANSITIONS.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                className="secondary"
+                onClick={() => addTransition(preset.id)}
+                disabled={!sourceBlob}
+              >
+                + {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <ul className="adminVideoStudio2CueList">
+          {project.transitions.length === 0 && (
+            <li className="adminVideoStudio2EmptyHint">No transitions yet.</li>
+          )}
+          {project.transitions.map((tr) => (
+            <li key={tr.id} className="adminVideoStudio2MarkerRow">
+              <button
+                type="button"
+                className="adminVideoStudio2MarkerSeek"
+                onClick={() => seekTo(tr.atMs)}
+              >
+                {formatMs(tr.atMs)}
+              </button>
+              <input
+                type="number"
+                value={tr.atMs}
+                step={50}
+                onChange={(event) => updateTransition(tr.id, { atMs: Number(event.target.value) })}
+              />
+              <select
+                value={tr.kind}
+                onChange={(event) =>
+                  updateTransition(tr.id, { kind: event.target.value as VideoStudioTransitionKind })
+                }
+              >
+                {VIDEO_STUDIO_TRANSITIONS.map((preset) => (
+                  <option key={preset.id} value={preset.id}>
+                    {preset.label}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                value={tr.durationMs}
+                step={50}
+                onChange={(event) =>
+                  updateTransition(tr.id, { durationMs: Number(event.target.value) })
+                }
+                title="duration ms"
+              />
+              <button type="button" className="secondary" onClick={() => deleteTransition(tr.id)}>
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ---- Sound effect markers ---- */}
+      <div className="adminVideoStudio2Panel">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>Sound effects ({project.soundEffects.length})</h3>
+          <div className="controls">
+            {VIDEO_STUDIO_SFX.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                className="secondary"
+                onClick={() => addSfx(preset.id)}
+                disabled={!sourceBlob}
+                title={
+                  preset.pairsWithTransition
+                    ? `Best paired with "${preset.pairsWithTransition}" transition`
+                    : undefined
+                }
+              >
+                + {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <ul className="adminVideoStudio2CueList">
+          {project.soundEffects.length === 0 && (
+            <li className="adminVideoStudio2EmptyHint">No sound effects yet.</li>
+          )}
+          {project.soundEffects.map((sfx) => (
+            <li key={sfx.id} className="adminVideoStudio2MarkerRow">
+              <button
+                type="button"
+                className="adminVideoStudio2MarkerSeek"
+                onClick={() => seekTo(sfx.atMs)}
+              >
+                {formatMs(sfx.atMs)}
+              </button>
+              <input
+                type="number"
+                value={sfx.atMs}
+                step={50}
+                onChange={(event) => updateSfx(sfx.id, { atMs: Number(event.target.value) })}
+              />
+              <select
+                value={sfx.kind}
+                onChange={(event) => updateSfx(sfx.id, { kind: event.target.value as VideoStudioSfxKind })}
+              >
+                {VIDEO_STUDIO_SFX.map((preset) => (
+                  <option key={preset.id} value={preset.id}>
+                    {preset.label}
+                  </option>
+                ))}
+              </select>
+              <label className="adminVideoStudio2MarkerInlineLabel">
+                <span>vol</span>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={sfx.volume}
+                  onChange={(event) => updateSfx(sfx.id, { volume: Number(event.target.value) })}
+                />
+              </label>
+              <select
+                value={sfx.pairedTransitionId || ''}
+                onChange={(event) =>
+                  updateSfx(sfx.id, { pairedTransitionId: event.target.value || undefined })
+                }
+              >
+                <option value="">Unpaired</option>
+                {project.transitions.map((tr) => (
+                  <option key={tr.id} value={tr.id}>
+                    {tr.kind} @ {formatMs(tr.atMs)}
+                  </option>
+                ))}
+              </select>
+              <button type="button" className="secondary" onClick={() => deleteSfx(sfx.id)}>
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ---- Camera pan markers ---- */}
+      <div className="adminVideoStudio2Panel">
+        <div className="adminVideoStudio2PanelHeader">
+          <h3>Camera pans ({project.cameraPans.length})</h3>
+          <div className="controls">
+            {VIDEO_STUDIO_CAMERA_PANS.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                className="secondary"
+                onClick={() => addPan(preset.id)}
+                disabled={!sourceBlob}
+              >
+                + {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <ul className="adminVideoStudio2CueList">
+          {project.cameraPans.length === 0 && (
+            <li className="adminVideoStudio2EmptyHint">No camera pans yet.</li>
+          )}
+          {project.cameraPans.map((pan) => (
+            <li key={pan.id} className="adminVideoStudio2MarkerRow">
+              <button
+                type="button"
+                className="adminVideoStudio2MarkerSeek"
+                onClick={() => seekTo(pan.atMs)}
+              >
+                {formatMs(pan.atMs)}
+              </button>
+              <input
+                type="number"
+                value={pan.atMs}
+                step={50}
+                onChange={(event) => updatePan(pan.id, { atMs: Number(event.target.value) })}
+              />
+              <select
+                value={pan.kind}
+                onChange={(event) => updatePan(pan.id, { kind: event.target.value as VideoStudioCameraPanKind })}
+              >
+                {VIDEO_STUDIO_CAMERA_PANS.map((preset) => (
+                  <option key={preset.id} value={preset.id}>
+                    {preset.label}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                value={pan.durationMs}
+                step={50}
+                onChange={(event) => updatePan(pan.id, { durationMs: Number(event.target.value) })}
+                title="duration ms"
+              />
+              <button type="button" className="secondary" onClick={() => deletePan(pan.id)}>
+                ✕
+              </button>
+            </li>
+          ))}
         </ul>
       </div>
     </section>

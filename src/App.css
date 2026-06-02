@@ -23775,3 +23775,136 @@ textarea {
   color: #94a3b8;
   font-size: 0.78rem;
 }
+
+/* Timeline tracks */
+.adminVideoStudio2Timeline {
+  display: grid;
+  gap: 6px;
+}
+
+.adminVideoStudio2TimelineRow {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.adminVideoStudio2TimelineRowLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+}
+
+.adminVideoStudio2TimelineLane {
+  position: relative;
+  height: 22px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: crosshair;
+  overflow: hidden;
+}
+
+.adminVideoStudio2TimelineRow.row-subtitles .adminVideoStudio2TimelineMarker {
+  background: #facc15;
+}
+.adminVideoStudio2TimelineRow.row-zooms .adminVideoStudio2TimelineMarker {
+  background: #60a5fa;
+}
+.adminVideoStudio2TimelineRow.row-transitions .adminVideoStudio2TimelineMarker {
+  background: #c084fc;
+}
+.adminVideoStudio2TimelineRow.row-sfx .adminVideoStudio2TimelineMarker {
+  background: #f472b6;
+}
+.adminVideoStudio2TimelineRow.row-pans .adminVideoStudio2TimelineMarker {
+  background: #34d399;
+}
+
+.adminVideoStudio2TimelineMarker {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: transform 120ms ease;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.6);
+}
+
+.adminVideoStudio2TimelineMarker:hover {
+  transform: translateX(-50%) scaleX(2);
+}
+
+.adminVideoStudio2TimelinePlayhead {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: #f87171;
+  transform: translateX(-50%);
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(248, 113, 113, 0.6);
+}
+
+/* Marker editor rows */
+.adminVideoStudio2MarkerRow {
+  display: grid;
+  grid-template-columns: 78px 96px auto auto auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.adminVideoStudio2MarkerRow input[type='number'] {
+  width: 96px;
+  padding: 6px 8px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2MarkerRow select {
+  padding: 6px 8px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2MarkerSeek {
+  padding: 4px 8px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #1e293b;
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  cursor: pointer;
+}
+
+.adminVideoStudio2MarkerSeek:hover {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+.adminVideoStudio2MarkerInlineLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.adminVideoStudio2MarkerInlineLabel input[type='range'] {
+  width: 100px;
+}
