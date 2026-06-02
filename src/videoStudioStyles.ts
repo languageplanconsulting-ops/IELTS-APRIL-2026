@@ -15,6 +15,7 @@ export type VideoStudioStyleId =
   | 'bilingual-stack'
   | 'vocab-callout'
   | 'gradient-bar'
+  | 'word-highlight-4'
 
 export type VideoStudioStylePreview = {
   background: string
@@ -340,6 +341,31 @@ export const VIDEO_STUDIO_STYLES: VideoStudioStyleDefinition[] = [
       animationIn: 'fade',
       animationOut: 'fade',
       notes: 'Use the first capitalized word OR the word inside [[brackets]] as the highlighted vocab — render it in yellow #facc15, larger, with the rest of the line dimmed.'
+    }
+  },
+  {
+    id: 'word-highlight-4',
+    label: 'Word Highlight (4-word group)',
+    description: 'Karaoke-style — shows 4 words at a time, the currently-spoken word in yellow.',
+    anchor: { xPercent: 50, yPercent: 86, align: 'center' },
+    preview: {
+      background: 'rgba(0,0,0,0.55)',
+      color: '#f1f5f9',
+      fontFamily: 'Inter, Noto Sans Thai, sans-serif',
+      fontWeight: 800,
+      fontSize: '1.05rem',
+      padding: '8px 14px',
+      borderRadius: '10px'
+    },
+    renderHint: {
+      family: 'Inter Bold / Noto Sans Thai Bold',
+      weight: 800,
+      sizeRem: 1.4,
+      fillHex: '#f1f5f9',
+      backgroundHex: '#000000',
+      animationIn: 'fade',
+      animationOut: 'fade',
+      notes: 'Render at most 4 words at once. As the playhead crosses each word in cue.words[], highlight that word in #facc15 (bold) while the others stay #f1f5f9. When the 5th word begins, shift the window so the active word is again in the visible group of 4. If cue.words is missing, fall back to showing the whole text without highlight.'
     }
   },
   {

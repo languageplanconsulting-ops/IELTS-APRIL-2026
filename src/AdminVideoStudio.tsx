@@ -21,6 +21,12 @@ const STORAGE_KEY = 'admin-video-studio-project:v1'
 const AUTOSAVE_DEBOUNCE_MS = 1500
 const SCHEMA_VERSION = 'video-studio/1.0'
 
+export type VideoStudioWordTimestamp = {
+  word: string
+  startMs: number
+  endMs: number
+}
+
 export type VideoStudioSubtitleCue = {
   id: string
   startMs: number
@@ -30,6 +36,11 @@ export type VideoStudioSubtitleCue = {
   styleId: VideoStudioStyleId
   animationIn?: VideoStudioTextAnimation
   animationOut?: VideoStudioTextAnimation
+  // Per-word timestamps from the transcription provider (when available).
+  // Required for the 'word-highlight-4' style to know which word is currently
+  // spoken. Always exported in the JSON manifest so the AI renderer can also
+  // build karaoke / word-pop / typewriter timing precisely.
+  words?: VideoStudioWordTimestamp[]
 }
 
 export type VideoStudioZoomMarker = {
@@ -151,6 +162,253 @@ export const buildVideoStudioSrt = (project: VideoStudioProject) => {
     .join('\n')
 }
 
+// Escape user-supplied text before injecting into the HTML bundle.
+const escHtml = (raw: string) =>
+  String(raw || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+const escAttr = (raw: string) => escHtml(raw)
+
+// Translate our anchor.align ('left' | 'center' | 'right') into a CSS
+// translate() pair so the overlay text sits exactly where the editor previewed.
+const anchorTranslate = (align: 'left' | 'center' | 'right') =>
+  align === 'left' ? '0%, -50%' : align === 'right' ? '-100%, -50%' : '-50%, -50%'
+
+// Build a Hyperframe-ready standalone HTML overlay. The output is a single
+// self-contained file: open it directly in a browser to preview, or hand it
+// (plus the source video path) to a Hyperframe / Remotion / ffmpeg pipeline
+// which overlays it on the video frame-for-frame using each cue's data-attrs.
+//
+// File structure:
+//   <html>
+//     <head>: CSS for every premade style + the entry/exit animations
+//     <body>: <div class="hf-stage" data-duration-ms="...">
+//               <div class="hf-cue" data-start-ms="..." data-end-ms="..." ...>
+//                 [styled subtitle content, with word spans for word-highlight]
+//               </div>
+//             </div>
+//             <script>: driver that flips cue visibility based on currentTime
+//             (works when the renderer signals time via a 'hf-time' custom event
+//             OR when the file is played standalone next to an HTML5 video).
+//
+// Markers (zooms, transitions, sfx, camera pans) are emitted as <hf-marker>
+// elements with data-* attributes so the renderer can pick them up without
+// re-parsing the JSON.
+export const buildVideoStudioHyperframeBundle = (project: VideoStudioProject) => {
+  const aspectRatio = project.source?.aspectRatio || '9:16'
+  const totalDurationMs = project.source?.durationMs || 0
+
+  // Per-style CSS — generated from the same `preview` spec the editor uses, so
+  // what you saw on screen is exactly what comes out the other side.
+  const styleCss = VIDEO_STUDIO_STYLES.map((style) => {
+    const p = style.preview
+    return `.hf-style--${style.id} {
+  background: ${p.background};
+  color: ${p.color};
+  font-family: ${p.fontFamily};
+  font-weight: ${p.fontWeight};
+  font-size: ${p.fontSize};
+  padding: ${p.padding};
+  border-radius: ${p.borderRadius};
+  ${p.border ? `border: ${p.border};` : ''}
+  ${p.boxShadow ? `box-shadow: ${p.boxShadow};` : ''}
+  ${p.textTransform ? `text-transform: ${p.textTransform};` : ''}
+  ${p.letterSpacing ? `letter-spacing: ${p.letterSpacing};` : ''}
+  ${p.transform ? `transform: ${p.transform};` : ''}
+  ${p.textShadow ? `text-shadow: ${p.textShadow};` : ''}
+}`.replace(/^\s*$/gm, '')
+  }).join('\n\n')
+
+  const animationCss = `
+@keyframes hf-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes hf-fade-out { from { opacity: 1 } to { opacity: 0 } }
+@keyframes hf-pop-in { from { opacity: 0; transform: scale(0.7) } to { opacity: 1; transform: scale(1) } }
+@keyframes hf-slide-up-in { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes hf-slide-down-out { from { opacity: 1; transform: translateY(0) } to { opacity: 0; transform: translateY(20px) } }
+@keyframes hf-stamp-in { from { opacity: 0; transform: scale(1.4) rotate(-3deg) } to { opacity: 1; transform: scale(1) rotate(0) } }
+@keyframes hf-typewriter { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0 0 0) } }
+@keyframes hf-bounce { 0% { transform: translateY(0) } 50% { transform: translateY(-6px) } 100% { transform: translateY(0) } }
+@keyframes hf-shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-3px) } 75% { transform: translateX(3px) } }
+
+.hf-anim-in-fade { animation: hf-fade-in 220ms ease both }
+.hf-anim-in-pop { animation: hf-pop-in 220ms cubic-bezier(.34,1.56,.64,1) both }
+.hf-anim-in-slide-up { animation: hf-slide-up-in 240ms ease-out both }
+.hf-anim-in-typewriter { animation: hf-typewriter 600ms steps(20) both }
+.hf-anim-in-stamp { animation: hf-stamp-in 240ms cubic-bezier(.5,1.8,.5,1) both }
+.hf-anim-out-fade { animation: hf-fade-out 220ms ease both }
+.hf-anim-out-slide-down { animation: hf-slide-down-out 240ms ease-in both }
+.hf-anim-bounce { animation: hf-bounce 480ms ease infinite }
+.hf-anim-shake { animation: hf-shake 180ms ease infinite }`
+
+  const cuesHtml = project.subtitles
+    .filter((cue) => cue.endMs > cue.startMs && cue.text.trim())
+    .sort((a, b) => a.startMs - b.startMs)
+    .map((cue) => {
+      const style = VIDEO_STUDIO_STYLE_MAP[cue.styleId] || VIDEO_STUDIO_STYLE_MAP.normal
+      const animIn = cue.animationIn || style.renderHint.animationIn || 'fade'
+      const animOut = cue.animationOut || style.renderHint.animationOut || 'fade'
+      const translate = anchorTranslate(style.anchor.align)
+
+      // Body content varies per style. Word-highlight emits a <span> per word
+      // with data-start/data-end so the runtime driver can flip the active one.
+      let inner = escHtml(cue.text)
+      if (style.id === 'vocab-callout') {
+        inner = escHtml(cue.text).replace(
+          /\[\[(.+?)\]\]/,
+          (_m, w) => `<mark class="hf-vocab">${w}</mark>`
+        )
+      } else if (style.id === 'bilingual-stack') {
+        inner =
+          `<span class="hf-bilingual-main">${escHtml(cue.text)}</span>` +
+          (cue.translation
+            ? `<span class="hf-bilingual-translation">${escHtml(cue.translation)}</span>`
+            : '')
+      } else if (style.id === 'word-highlight-4' && cue.words?.length) {
+        inner = cue.words
+          .map(
+            (w) =>
+              `<span class="hf-word" data-word-start-ms="${w.startMs}" data-word-end-ms="${w.endMs}">${escHtml(w.word)}</span>`
+          )
+          .join(' ')
+      }
+
+      return `  <div class="hf-cue hf-style--${style.id} hf-anim-in-${animIn} hf-anim-out-${animOut}"
+       data-start-ms="${cue.startMs}"
+       data-end-ms="${cue.endMs}"
+       data-style-id="${escAttr(style.id)}"
+       style="position:absolute;
+              top:${style.anchor.yPercent}%;
+              left:${style.anchor.xPercent}%;
+              transform:translate(${translate});
+              max-width:78%;
+              display:none;">
+    ${inner}
+  </div>`
+    })
+    .join('\n')
+
+  const markersHtml = [
+    ...project.zooms.map(
+      (z) =>
+        `  <hf-marker type="zoom" data-at-ms="${z.atMs}" data-kind="${z.kind}" data-level="${z.level}" data-scale="${VIDEO_STUDIO_ZOOM_SCALES[z.level]}" data-duration-ms="${z.durationMs}"></hf-marker>`
+    ),
+    ...project.transitions.map(
+      (t) =>
+        `  <hf-marker type="transition" data-at-ms="${t.atMs}" data-kind="${escAttr(t.kind)}" data-duration-ms="${t.durationMs}"></hf-marker>`
+    ),
+    ...project.soundEffects.map(
+      (s) =>
+        `  <hf-marker type="sfx" data-at-ms="${s.atMs}" data-kind="${escAttr(s.kind)}" data-volume="${s.volume}" data-paired-transition="${escAttr(s.pairedTransitionId || '')}"></hf-marker>`
+    ),
+    ...project.cameraPans.map(
+      (p) =>
+        `  <hf-marker type="pan" data-at-ms="${p.atMs}" data-kind="${escAttr(p.kind)}" data-duration-ms="${p.durationMs}"></hf-marker>`
+    )
+  ].join('\n')
+
+  // Tiny runtime that flips cue + word visibility based on a clock. Works
+  // standalone (uses requestAnimationFrame from page load) and also responds
+  // to a 'hf-time' CustomEvent dispatched by a Hyperframe / Remotion renderer
+  // so they can drive the clock from the actual frame they're encoding.
+  const driverJs = `
+(() => {
+  const stage = document.querySelector('.hf-stage');
+  if (!stage) return;
+  const cues = Array.from(document.querySelectorAll('.hf-cue'));
+  const words = Array.from(document.querySelectorAll('.hf-word'));
+  let nowMs = 0;
+  let startedAt = performance.now();
+
+  function render() {
+    cues.forEach((cue) => {
+      const start = Number(cue.dataset.startMs || 0);
+      const end = Number(cue.dataset.endMs || 0);
+      const visible = nowMs >= start && nowMs < end;
+      cue.style.display = visible ? '' : 'none';
+    });
+    words.forEach((w) => {
+      const start = Number(w.dataset.wordStartMs || 0);
+      const end = Number(w.dataset.wordEndMs || 0);
+      const active = nowMs >= start && nowMs < end;
+      w.classList.toggle('hf-word-active', active);
+    });
+  }
+
+  // Standalone autoplay clock.
+  function tick(t) {
+    nowMs = t - startedAt;
+    render();
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // Renderer-driven clock: dispatch CustomEvent('hf-time', { detail: { ms } })
+  // and we'll use that instead of wall-clock.
+  window.addEventListener('hf-time', (event) => {
+    const detail = event.detail || {};
+    if (typeof detail.ms === 'number') {
+      nowMs = detail.ms;
+      startedAt = performance.now() - nowMs;
+      render();
+    }
+  });
+})();`
+
+  const wordHighlightCss = `.hf-word { transition: background 120ms ease, color 120ms ease; padding: 0 2px; }
+.hf-word-active { background: #facc15; color: #111827; padding: 0 6px; border-radius: 4px; font-weight: 900; }
+.hf-vocab { background: #facc15; color: #111827; padding: 0 6px; border-radius: 4px; font-weight: 900; }
+.hf-bilingual-main, .hf-bilingual-translation { display: block; text-align: center; }
+.hf-bilingual-translation { font-size: 0.8em; opacity: 0.85; margin-top: 4px; }`
+
+  // The leading comment is for Claude Code / Hyperframe to read as an
+  // assignment briefing. Stripping it has no functional effect.
+  return `<!--
+  Hyperframes overlay bundle — generated by Video Studio.
+
+  Project: ${escHtml(project.title)}
+  Aspect:  ${aspectRatio}
+  Source duration: ${totalDurationMs} ms
+  ${project.subtitles.length} cues · ${project.zooms.length} zooms · ${project.transitions.length} transitions · ${project.soundEffects.length} sfx · ${project.cameraPans.length} pans.
+
+  Assignment for the renderer:
+    1. Compose this HTML over the source video frame-by-frame.
+    2. Read each .hf-cue's data-start-ms / data-end-ms to know when to show it.
+       The runtime <script> below already handles this if you can dispatch a
+       CustomEvent 'hf-time' on window with { detail: { ms } }.
+    3. For zoom / transition / sfx / pan, read the <hf-marker> elements in
+       <hf-markers> — they carry data-at-ms and kind-specific data-* attrs.
+       Zoom data-scale is the multiplier (e.g. 1.5 for L3).
+    4. Output at the quality specified in the manifest (.json sibling).
+-->
+<!DOCTYPE html>
+<html lang="${project.spokenLanguage}">
+<head>
+  <meta charset="utf-8" />
+  <title>${escHtml(project.title)} — Hyperframes overlay</title>
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; }
+    .hf-stage { position: relative; width: 100%; height: 100%; pointer-events: none; }
+    ${wordHighlightCss}
+    ${animationCss}
+    ${styleCss}
+  </style>
+</head>
+<body>
+<div class="hf-stage" data-aspect="${aspectRatio}" data-duration-ms="${totalDurationMs}">
+${cuesHtml}
+</div>
+<hf-markers style="display:none;">
+${markersHtml}
+</hf-markers>
+<script>${driverJs}</script>
+</body>
+</html>`
+}
+
 export const buildVideoStudioExportManifest = (project: VideoStudioProject) => {
   return {
     schemaVersion: project.schemaVersion,
@@ -176,6 +434,7 @@ export const buildVideoStudioExportManifest = (project: VideoStudioProject) => {
         endMs: cue.endMs,
         text: cue.text,
         translation: cue.translation || null,
+        words: cue.words || [],
         style: {
           id: style.id,
           label: style.label,
@@ -242,6 +501,15 @@ type BackendSubtitleCue = {
   text: string
 }
 
+// Word-level timestamp returned by Deepgram (and the other providers we route
+// through). Used to attach per-word timing to the matching cue so the
+// word-highlight style can light up each word as it's spoken.
+type BackendWordTimestamp = {
+  word?: string
+  start?: number
+  end?: number
+}
+
 const cueFromBackend = (cue: BackendSubtitleCue): VideoStudioSubtitleCue => ({
   id: newId('s'),
   startMs: Math.round((cue.startSeconds ?? 0) * 1000),
@@ -249,6 +517,30 @@ const cueFromBackend = (cue: BackendSubtitleCue): VideoStudioSubtitleCue => ({
   text: String(cue.text || '').trim(),
   styleId: DEFAULT_VIDEO_STUDIO_STYLE
 })
+
+// Distribute provider word timestamps into the cue list — each word goes to
+// the cue whose time range contains its midpoint. Empty/zero-length words are
+// skipped so we don't generate junk highlights.
+const attachWordTimestampsToCues = (
+  cues: VideoStudioSubtitleCue[],
+  words: BackendWordTimestamp[]
+): VideoStudioSubtitleCue[] => {
+  if (!cues.length || !words.length) return cues
+  const bucketed = cues.map((cue) => ({ cue, words: [] as VideoStudioWordTimestamp[] }))
+  for (const raw of words) {
+    const wordText = String(raw?.word || '').trim()
+    if (!wordText) continue
+    const startMs = Math.round(Number(raw?.start ?? 0) * 1000)
+    const endMs = Math.round(Number(raw?.end ?? 0) * 1000)
+    if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs <= startMs) continue
+    const mid = (startMs + endMs) / 2
+    const bucket = bucketed.find(({ cue }) => mid >= cue.startMs && mid < cue.endMs)
+    if (bucket) bucket.words.push({ word: wordText, startMs, endMs })
+  }
+  return bucketed.map(({ cue, words: cueWords }) =>
+    cueWords.length ? { ...cue, words: cueWords } : cue
+  )
+}
 
 const guessVideoFileExtension = (mimeType = '') => {
   if (mimeType.includes('mp4')) return 'mp4'
@@ -468,20 +760,22 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
       const data = (payload || {}) as {
         subtitles?: BackendSubtitleCue[]
         provider?: string
-        words?: unknown[]
+        words?: BackendWordTimestamp[]
       }
       const backendCues: BackendSubtitleCue[] = Array.isArray(data.subtitles) ? data.subtitles : []
       if (!backendCues.length) {
         throw new Error('Backend returned no subtitles. Check the audio track has clear speech.')
       }
-      const cues = backendCues.map(cueFromBackend).filter((c) => c.text && c.endMs > c.startMs)
+      const baseCues = backendCues.map(cueFromBackend).filter((c) => c.text && c.endMs > c.startMs)
+      const providerWords = Array.isArray(data.words) ? data.words : []
+      const cues = attachWordTimestampsToCues(baseCues, providerWords)
+      const cuesWithWords = cues.filter((c) => c.words && c.words.length > 0).length
       const provider = String(data.provider || 'transcription service')
-      const wordTimestamps = Array.isArray(data.words) ? data.words.length : 0
       setProject((prev) => ({ ...prev, subtitles: cues }))
       setTranscribeStatus(
-        wordTimestamps > 0
-          ? `${cues.length} cues via ${provider} (${wordTimestamps} word timestamps).`
-          : `${cues.length} cues via ${provider}. Timing may need manual nudges.`
+        providerWords.length > 0
+          ? `${cues.length} cues via ${provider} (${providerWords.length} words, ${cuesWithWords} cues with word-level timing).`
+          : `${cues.length} cues via ${provider}. Word-level timing unavailable — word-highlight style will degrade gracefully.`
       )
       window.setTimeout(() => setTranscribeStatus(''), 4000)
     }
@@ -649,8 +943,10 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
   const exportManifest = useMemo(() => buildVideoStudioExportManifest(project), [project])
   const exportJson = useMemo(() => JSON.stringify(exportManifest, null, 2), [exportManifest])
   const exportSrt = useMemo(() => buildVideoStudioSrt(project), [project])
+  const exportHyperframe = useMemo(() => buildVideoStudioHyperframeBundle(project), [project])
   const [copyLabel, setCopyLabel] = useState('Copy JSON')
   const [copySrtLabel, setCopySrtLabel] = useState('Copy SRT')
+  const [copyHfLabel, setCopyHfLabel] = useState('Copy HTML')
 
   const safeProjectFileBase = useMemo(
     () => project.title.replace(/[^a-zA-Z0-9-_]/g, '_').slice(0, 60) || 'video-studio',
@@ -705,6 +1001,29 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
       window.setTimeout(() => setCopySrtLabel('Copy SRT'), 1800)
     }
   }, [exportSrt])
+
+  const onDownloadHyperframe = useCallback(() => {
+    const blob = new Blob([exportHyperframe], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${safeProjectFileBase}.hyperframe.html`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }, [exportHyperframe, safeProjectFileBase])
+
+  const onCopyHyperframe = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(exportHyperframe)
+      setCopyHfLabel('Copied!')
+      window.setTimeout(() => setCopyHfLabel('Copy HTML'), 1800)
+    } catch {
+      setCopyHfLabel('Copy failed')
+      window.setTimeout(() => setCopyHfLabel('Copy HTML'), 1800)
+    }
+  }, [exportHyperframe])
 
   const onResetProject = useCallback(() => {
     if (!window.confirm('Reset project? Unsaved work will be lost.')) return
@@ -864,6 +1183,43 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
                 </span>
               )
             }
+            const renderWordHighlight = () => {
+              const words = activeSubtitle.words || []
+              if (!words.length) {
+                // Graceful fallback when no per-word data is available.
+                return <span>{text}</span>
+              }
+              const activeIndex = words.findIndex(
+                (w) => currentTimeMs >= w.startMs && currentTimeMs < w.endMs
+              )
+              // 4-word window: centred on the active word; clamped to bounds.
+              const center = activeIndex >= 0 ? activeIndex : 0
+              const windowStart = Math.max(0, Math.min(words.length - 4, center - 1))
+              const windowEnd = Math.min(words.length, windowStart + 4)
+              const visible = words.slice(windowStart, windowEnd)
+              return (
+                <span style={{ display: 'inline-flex', gap: 6, flexWrap: 'nowrap' }}>
+                  {visible.map((w, i) => {
+                    const isActive = windowStart + i === activeIndex
+                    return (
+                      <span
+                        key={`${w.startMs}-${i}`}
+                        style={{
+                          background: isActive ? '#facc15' : 'transparent',
+                          color: isActive ? '#111827' : preview.color,
+                          padding: isActive ? '0 6px' : '0',
+                          borderRadius: 4,
+                          fontWeight: isActive ? 900 : 800,
+                          transition: 'background 120ms ease'
+                        }}
+                      >
+                        {w.word}
+                      </span>
+                    )
+                  })}
+                </span>
+              )
+            }
             return (
               <div style={wrapperStyle}>
                 <div style={preview as React.CSSProperties}>
@@ -876,6 +1232,8 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
                         <span style={{ fontSize: '0.78em', opacity: 0.85 }}>{translation}</span>
                       )}
                     </span>
+                  ) : style.id === 'word-highlight-4' ? (
+                    renderWordHighlight()
                   ) : (
                     text
                   )}
@@ -1440,15 +1798,30 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
             >
               Download .srt
             </button>
+            <button type="button" className="secondary" onClick={onCopyHyperframe}>
+              {copyHfLabel}
+            </button>
+            <button type="button" onClick={onDownloadHyperframe}>
+              Download Hyperframe .html
+            </button>
           </div>
         </div>
         <p className="meta">
           <strong>.json</strong> — self-contained manifest (styles, anchors, render hints, zoom scale
-          factors, AI prompt) for Hyperframes / Remotion / custom AI renderers.
+          factors, AI prompt) for Hyperframes / Remotion / custom AI renderers. Each cue now also
+          includes a <code>words[]</code> array with per-word timestamps when the provider returned
+          them — feeds karaoke / word-pop / typewriter styles precisely.
           <br />
           <strong>.srt</strong> — universal subtitle format for CapCut, Premiere, Final Cut, DaVinci, or
           burning in via ffmpeg. Bilingual-stack cues export with the translation on the second line;
           <code> [[brackets]] </code>are stripped.
+          <br />
+          <strong>.hyperframe.html</strong> — standalone HTML/CSS/JS overlay ready for Hyperframes /
+          Remotion. Each cue is a positioned <code>&lt;div&gt;</code> with{' '}
+          <code>data-start-ms</code> / <code>data-end-ms</code>, every premade style is inlined as a
+          CSS class, and a tiny runtime script flips visibility from a wall-clock OR from a
+          <code> CustomEvent('hf-time') </code>your renderer dispatches. Markers go in
+          <code> &lt;hf-markers&gt; </code>as <code>&lt;hf-marker&gt;</code> elements with data-attrs.
           <br />
           {project.subtitles.length} subtitles · {project.zooms.length} zooms ·{' '}
           {project.transitions.length} transitions · {project.soundEffects.length} sfx ·{' '}
@@ -1464,6 +1837,10 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
             <pre className="adminVideoStudio2ExportPre">{exportSrt}</pre>
           </details>
         )}
+        <details className="adminVideoStudio2ExportDetails">
+          <summary>Preview Hyperframe HTML</summary>
+          <pre className="adminVideoStudio2ExportPre">{exportHyperframe}</pre>
+        </details>
       </div>
     </section>
   )
