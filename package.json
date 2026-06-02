@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "build:seo": "node scripts/build-seo-pages.mjs",
     "verify:reading": "node scripts/verify-reading-prompts.mjs",
+    "audit:reading-deep": "node scripts/audit-reading-deep.mjs",
     "audit:reading-passages": "node scripts/audit-reading-passage-bodies.mjs",
     "audit:advanced-reading": "node scripts/audit-advanced-reading.mjs",
     "rebuild:reading-payloads": "node scripts/rebuild-cambridge-reading-parsed-payloads.mjs",
