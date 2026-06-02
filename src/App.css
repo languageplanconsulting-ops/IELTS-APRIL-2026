@@ -23430,6 +23430,7 @@ textarea {
   .adminOnly-reading,
   .adminOnly-audio,
   .adminOnly-videos,
+  .adminOnly-video-studio,
   .adminOnly-settings
 ) {
   display: none !important;
@@ -23443,6 +23444,7 @@ textarea {
 .workspace .adminPanelPage[data-admin-section='reading'] .adminOnly-reading,
 .workspace .adminPanelPage[data-admin-section='audio'] .adminOnly-audio,
 .workspace .adminPanelPage[data-admin-section='videos'] .adminOnly-videos,
+.workspace .adminPanelPage[data-admin-section='video-studio'] .adminOnly-video-studio,
 .workspace .adminPanelPage[data-admin-section='settings'] .adminOnly-settings {
   display: grid !important;
 }
@@ -23488,4 +23490,288 @@ textarea {
   .workspace .adminNavList {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* ---------- Admin Video Studio (JSON-only editor) ---------- */
+
+.adminVideoStudio2 {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  background: #0b1220;
+  color: #e2e8f0;
+  border-radius: 16px;
+}
+
+.adminVideoStudio2Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.adminVideoStudio2Header h2 {
+  margin: 4px 0 4px;
+  color: #f8fafc;
+  font-size: 1.4rem;
+}
+
+.adminVideoStudio2Header .meta {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2Toolbar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 14px;
+  background: rgba(30, 41, 59, 0.7);
+  border-radius: 12px;
+}
+
+.adminVideoStudio2Field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.adminVideoStudio2Field span {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+}
+
+.adminVideoStudio2Field input,
+.adminVideoStudio2Field select {
+  padding: 8px 10px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+}
+
+.adminVideoStudio2Drop {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  border: 2px dashed #475569;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.4);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.adminVideoStudio2Drop:hover {
+  border-color: #60a5fa;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.adminVideoStudio2Drop input[type='file'] {
+  display: none;
+}
+
+.adminVideoStudio2Drop div {
+  text-align: center;
+  color: #cbd5e1;
+}
+
+.adminVideoStudio2Drop strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #f1f5f9;
+}
+
+.adminVideoStudio2Drop p {
+  margin: 6px 0 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2Stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  max-height: 60vh;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.adminVideoStudio2Video {
+  max-width: 100%;
+  max-height: 60vh;
+  display: block;
+}
+
+.adminVideoStudio2SubtitlePreview {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  pointer-events: none;
+}
+
+.adminVideoStudio2Panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(30, 41, 59, 0.6);
+  border-radius: 12px;
+}
+
+.adminVideoStudio2PanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adminVideoStudio2PanelHeader h3 {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: 1.05rem;
+}
+
+.adminVideoStudio2PanelHeader .controls {
+  display: flex;
+  gap: 8px;
+}
+
+.adminVideoStudio2Error {
+  margin: 0;
+  padding: 8px 12px;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fecaca;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2CueList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.adminVideoStudio2EmptyHint {
+  padding: 14px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px dashed #475569;
+  border-radius: 8px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.adminVideoStudio2CueRow {
+  display: grid;
+  grid-template-columns: minmax(220px, auto) 1fr minmax(160px, auto) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  transition: border-color 120ms ease;
+}
+
+.adminVideoStudio2CueRow.is-active {
+  border-color: #60a5fa;
+  background: rgba(30, 64, 175, 0.25);
+}
+
+.adminVideoStudio2CueTime {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.adminVideoStudio2CueTime input {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2CueText {
+  padding: 8px 10px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-size: 0.92rem;
+}
+
+.adminVideoStudio2CueStyle {
+  padding: 6px 8px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.adminVideoStudio2StyleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.adminVideoStudio2StyleCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid #334155;
+  border-radius: 10px;
+}
+
+.adminVideoStudio2StyleCard header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.adminVideoStudio2StyleCard header strong {
+  color: #f1f5f9;
+}
+
+.adminVideoStudio2StyleCard header code {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.adminVideoStudio2StylePreview {
+  display: grid;
+  place-items: center;
+  min-height: 64px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.adminVideoStudio2StyleCard .meta {
+  color: #94a3b8;
+  font-size: 0.78rem;
 }

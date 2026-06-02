@@ -4,6 +4,7 @@ import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
 import { LandingPageDraft } from './admin/LandingPageDraft'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
+import { AdminVideoStudio } from './AdminVideoStudio'
 import {
   GENERAL_TRAINING_READING_LABEL,
   GENERAL_TRAINING_READING_LEAD,
@@ -219,6 +220,7 @@ type AdminWorkspaceSection =
   | 'reports'
   | 'audio'
   | 'videos'
+  | 'video-studio'
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
@@ -2605,6 +2607,7 @@ const ADMIN_WORKSPACE_SECTIONS: Array<{
   { id: 'reading', label: 'Reading Generator', shortLabel: 'RD', description: 'Create, check, and upload exams', group: 'Content' },
   { id: 'audio', label: 'Question Audio', shortLabel: 'AU', description: 'TTS library', group: 'Content' },
   { id: 'videos', label: 'Speaking Videos', shortLabel: 'VD', description: 'Record Part 2 samples', group: 'Content' },
+  { id: 'video-studio', label: 'Video Studio', shortLabel: 'VS', description: 'Edit deck → JSON for AI render', group: 'Content' },
   { id: 'reports', label: 'Speaking Reports', shortLabel: 'RP', description: 'Saved attempts', group: 'Operations' },
   { id: 'landing', label: 'Landing Preview', shortLabel: 'LP', description: 'Admin-only SEO draft', group: 'Operations' },
   { id: 'settings', label: 'Settings', shortLabel: 'QA', description: 'Topics and QA tools', group: 'Operations' }
@@ -25945,6 +25948,10 @@ function App() {
                       ))}
                     </div>
                   ) : null}
+                </div>
+
+                <div className="adminOnly-video-studio">
+                  <AdminVideoStudio isAdmin={authSession?.role === 'admin'} />
                 </div>
 
                 <div className="adminSettingsGrid adminOnly-settings">
