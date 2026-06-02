@@ -106,6 +106,51 @@ Apply each 'cameraPans' marker at atMs: pan the framed crop left/right/up/down o
 
 Render the final at renderHints.exportQuality (720p / 1080p / 4k). Preserve the source aspect ratio. Do not add any captions, watermarks, or content not listed in this manifest.`
 
+// SRT timestamp format: HH:MM:SS,mmm
+const formatSrtTimestamp = (ms: number) => {
+  const safe = Math.max(0, Math.round(ms))
+  const totalSeconds = Math.floor(safe / 1000)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  const millis = safe % 1000
+  return (
+    `${hours.toString().padStart(2, '0')}:` +
+    `${minutes.toString().padStart(2, '0')}:` +
+    `${seconds.toString().padStart(2, '0')},` +
+    `${millis.toString().padStart(3, '0')}`
+  )
+}
+
+// Strip [[brackets]] used by the vocab-callout style; SRT consumers don't
+// know about that markup.
+const stripVocabBrackets = (text: string) => text.replace(/\[\[(.+?)\]\]/g, '$1')
+
+export const buildVideoStudioSrt = (project: VideoStudioProject) => {
+  const cues = [...project.subtitles]
+    .filter((cue) => cue.endMs > cue.startMs && cue.text.trim())
+    .sort((a, b) => a.startMs - b.startMs)
+
+  if (cues.length === 0) return ''
+
+  return cues
+    .map((cue, index) => {
+      const cleanText = stripVocabBrackets(cue.text.trim())
+      // Bilingual stack → put translation on a second line so SRT renders both.
+      const lines = [cleanText]
+      if (cue.styleId === 'bilingual-stack' && cue.translation?.trim()) {
+        lines.push(cue.translation.trim())
+      }
+      return [
+        String(index + 1),
+        `${formatSrtTimestamp(cue.startMs)} --> ${formatSrtTimestamp(cue.endMs)}`,
+        lines.join('\n'),
+        ''
+      ].join('\n')
+    })
+    .join('\n')
+}
+
 export const buildVideoStudioExportManifest = (project: VideoStudioProject) => {
   return {
     schemaVersion: project.schemaVersion,
@@ -603,20 +648,26 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
 
   const exportManifest = useMemo(() => buildVideoStudioExportManifest(project), [project])
   const exportJson = useMemo(() => JSON.stringify(exportManifest, null, 2), [exportManifest])
+  const exportSrt = useMemo(() => buildVideoStudioSrt(project), [project])
   const [copyLabel, setCopyLabel] = useState('Copy JSON')
+  const [copySrtLabel, setCopySrtLabel] = useState('Copy SRT')
+
+  const safeProjectFileBase = useMemo(
+    () => project.title.replace(/[^a-zA-Z0-9-_]/g, '_').slice(0, 60) || 'video-studio',
+    [project.title]
+  )
 
   const onDownloadJson = useCallback(() => {
     const blob = new Blob([exportJson], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
-    const safeTitle = project.title.replace(/[^a-zA-Z0-9-_]/g, '_').slice(0, 60) || 'video-studio'
     link.href = url
-    link.download = `${safeTitle}.video-studio.json`
+    link.download = `${safeProjectFileBase}.video-studio.json`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-  }, [exportJson, project.title])
+  }, [exportJson, safeProjectFileBase])
 
   const onCopyJson = useCallback(async () => {
     try {
@@ -628,6 +679,32 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
       window.setTimeout(() => setCopyLabel('Copy JSON'), 1800)
     }
   }, [exportJson])
+
+  const onDownloadSrt = useCallback(() => {
+    if (!exportSrt) return
+    // BOM keeps Thai display correct in editors that auto-detect encoding poorly.
+    const blob = new Blob(['﻿' + exportSrt], { type: 'text/srt;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${safeProjectFileBase}.srt`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }, [exportSrt, safeProjectFileBase])
+
+  const onCopySrt = useCallback(async () => {
+    if (!exportSrt) return
+    try {
+      await navigator.clipboard.writeText(exportSrt)
+      setCopySrtLabel('Copied!')
+      window.setTimeout(() => setCopySrtLabel('Copy SRT'), 1800)
+    } catch {
+      setCopySrtLabel('Copy failed')
+      window.setTimeout(() => setCopySrtLabel('Copy SRT'), 1800)
+    }
+  }, [exportSrt])
 
   const onResetProject = useCallback(() => {
     if (!window.confirm('Reset project? Unsaved work will be lost.')) return
@@ -1338,7 +1415,7 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
       {/* ---- Export ---- */}
       <div className="adminVideoStudio2Panel adminVideoStudio2Panel-export">
         <div className="adminVideoStudio2PanelHeader">
-          <h3>Export JSON for AI render</h3>
+          <h3>Export</h3>
           <div className="controls">
             <button type="button" className="secondary" onClick={onCopyJson}>
               {copyLabel}
@@ -1346,11 +1423,34 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
             <button type="button" onClick={onDownloadJson}>
               Download .json
             </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={onCopySrt}
+              disabled={!exportSrt}
+              title={!exportSrt ? 'Add at least one subtitle first' : ''}
+            >
+              {copySrtLabel}
+            </button>
+            <button
+              type="button"
+              onClick={onDownloadSrt}
+              disabled={!exportSrt}
+              title={!exportSrt ? 'Add at least one subtitle first' : ''}
+            >
+              Download .srt
+            </button>
           </div>
         </div>
         <p className="meta">
-          Manifest is self-contained — style anchors, render hints, zoom scale factors, and the AI prompt
-          are all inlined. {project.subtitles.length} subtitles · {project.zooms.length} zooms ·{' '}
+          <strong>.json</strong> — self-contained manifest (styles, anchors, render hints, zoom scale
+          factors, AI prompt) for Hyperframes / Remotion / custom AI renderers.
+          <br />
+          <strong>.srt</strong> — universal subtitle format for CapCut, Premiere, Final Cut, DaVinci, or
+          burning in via ffmpeg. Bilingual-stack cues export with the translation on the second line;
+          <code> [[brackets]] </code>are stripped.
+          <br />
+          {project.subtitles.length} subtitles · {project.zooms.length} zooms ·{' '}
           {project.transitions.length} transitions · {project.soundEffects.length} sfx ·{' '}
           {project.cameraPans.length} pans.
         </p>
@@ -1358,6 +1458,12 @@ export const AdminVideoStudio = ({ isAdmin, accessToken }: Props) => {
           <summary>Preview JSON</summary>
           <pre className="adminVideoStudio2ExportPre">{exportJson}</pre>
         </details>
+        {exportSrt && (
+          <details className="adminVideoStudio2ExportDetails">
+            <summary>Preview SRT</summary>
+            <pre className="adminVideoStudio2ExportPre">{exportSrt}</pre>
+          </details>
+        )}
       </div>
     </section>
   )
