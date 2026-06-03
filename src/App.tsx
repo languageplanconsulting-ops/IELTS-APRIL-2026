@@ -18486,19 +18486,144 @@ function App() {
             </div>
           )
         })()}
+        {(() => {
+          const hasTableContent = group.displayLines.some(
+            (line) => line.procedure || line.procedureSegments?.length
+          )
+          // "Flowing summary" mode: every line is just text + blank segments
+          // (no procedure rows, no standalone headings/clues except optional
+          // section labels). Render those as a single coherent paragraph so
+          // the blanks sit at the natural sentence positions instead of
+          // looking like disconnected rows.
+          const eligibleForFlowingSummary =
+            !hasTableContent &&
+            group.displayLines.length >= 2 &&
+            group.displayLines.every((line) => {
+              if (line.procedure || line.procedureSegments?.length) return false
+              const onlySegment = line.segments.length === 1 ? line.segments[0] : null
+              // Allow section heading/clue lines mixed in — those still render
+              // separately but the rest flow as paragraph.
+              if (onlySegment?.kind === 'heading' || onlySegment?.kind === 'clue') return true
+              return line.segments.some((segment) => segment.kind === 'blank')
+            })
+
+          if (eligibleForFlowingSummary) {
+            // Group consecutive non-heading lines into one running paragraph.
+            type FlowChunk =
+              | { kind: 'heading'; text: string }
+              | { kind: 'clue'; text: string }
+              | { kind: 'paragraph'; lines: typeof group.displayLines }
+            const chunks: FlowChunk[] = []
+            for (const line of group.displayLines) {
+              const onlySegment = line.segments.length === 1 ? line.segments[0] : null
+              if (onlySegment?.kind === 'heading') {
+                chunks.push({ kind: 'heading', text: onlySegment.text })
+                continue
+              }
+              if (onlySegment?.kind === 'clue') {
+                chunks.push({ kind: 'clue', text: onlySegment.text })
+                continue
+              }
+              const last = chunks[chunks.length - 1]
+              if (last && last.kind === 'paragraph') {
+                last.lines.push(line)
+              } else {
+                chunks.push({ kind: 'paragraph', lines: [line] })
+              }
+            }
+
+            const renderFillSegmentsForFlow = (segments: typeof group.displayLines[number]['segments']) =>
+              segments.map((segment, segmentIndex) => {
+                if (segment.kind === 'text') {
+                  return (
+                    <span key={`flow-text-${segmentIndex}`}>{segment.text} </span>
+                  )
+                }
+                if (segment.kind === 'heading') {
+                  return (
+                    <strong key={`flow-heading-${segmentIndex}`} className="readingFillInlineHeading">
+                      {segment.text}{' '}
+                    </strong>
+                  )
+                }
+                if (segment.kind === 'clue') {
+                  return (
+                    <span key={`flow-clue-${segmentIndex}`} className="readingFillClueInline">
+                      {segment.text}{' '}
+                    </span>
+                  )
+                }
+                if (segment.kind !== 'blank') return null
+                const question = questionByNumber.get(segment.questionNumber)
+                if (!question) return null
+                return renderReadingFillBlankSlot(
+                  { number: question.number, correctAnswer: question.correctAnswer },
+                  { before: segment.before, after: segment.after },
+                  `reading-fill-flow-slot-${group.id}-${segment.questionNumber}-${segmentIndex}`,
+                  { advancedLayout: isAdvancedReadingExam, wordCountHint: groupWordCountHint }
+                )
+              })
+
+            return (
+              <div className="readingFillOriginalBlock readingFillOriginalBlock-flowing">
+                {chunks.map((chunk, chunkIndex) => {
+                  if (chunk.kind === 'heading') {
+                    return (
+                      <p key={`${group.id}-flow-heading-${chunkIndex}`} className="readingFillSectionHeading">
+                        {chunk.text}
+                      </p>
+                    )
+                  }
+                  if (chunk.kind === 'clue') {
+                    return (
+                      <p key={`${group.id}-flow-clue-${chunkIndex}`} className="readingFillClueLine">
+                        {chunk.text}
+                      </p>
+                    )
+                  }
+                  // Flowing paragraph: render all lines' segments end-to-end.
+                  return (
+                    <p
+                      key={`${group.id}-flow-para-${chunkIndex}`}
+                      className="readingFillLine readingFillLine-flowing"
+                    >
+                      {chunk.lines.map((line, lineIdx) => (
+                        <span key={`flow-line-${lineIdx}`}>
+                          {renderFillSegmentsForFlow(line.segments)}
+                          {/* Inject a sentence separator between consecutive
+                              lines that don't already end with terminal
+                              punctuation, so fragments read like a summary. */}
+                          {(() => {
+                            const lastSegment = line.segments[line.segments.length - 1]
+                            const lastText =
+                              lastSegment?.kind === 'text'
+                                ? lastSegment.text
+                                : lastSegment?.kind === 'blank'
+                                  ? lastSegment.after
+                                  : ''
+                            const needsTerminator =
+                              lineIdx < chunk.lines.length - 1 &&
+                              !/[.!?]\s*$/.test(String(lastText || ''))
+                            return needsTerminator ? '. ' : ' '
+                          })()}
+                        </span>
+                      ))}
+                    </p>
+                  )
+                })}
+              </div>
+            )
+          }
+
+          // Original per-line rendering for tables / procedure rows / advanced layouts.
+          return (
         <div
           className={`readingFillOriginalBlock ${
-            group.displayLines.some((line) => line.procedure || line.procedureSegments?.length)
-              ? 'readingFillOriginalBlock-table'
-              : ''
+            hasTableContent ? 'readingFillOriginalBlock-table' : ''
           }`.trim()}
         >
           <div
-            className={
-              group.displayLines.some((line) => line.procedure || line.procedureSegments?.length)
-                ? 'readingFillTable'
-                : undefined
-            }
+            className={hasTableContent ? 'readingFillTable' : undefined}
           >
             {group.displayLines.map((line, lineIndex) => {
               const renderFillSegments = (segments = line.segments) =>
@@ -18596,6 +18721,8 @@ function App() {
             })}
           </div>
         </div>
+          )
+        })()}
         {group.questions.some((question) => question.number === readingHintQuestionNumber) && (
           <div className="readingHintBox">
             <strong>Hint:</strong> evidence highlighted in the passage.

@@ -13221,6 +13221,30 @@ body,
   line-height: 1.9;
 }
 
+/* Flowing summary mode — render fragments as a continuous paragraph
+   instead of stacked rows. */
+.readingFillOriginalBlock-flowing {
+  display: block;
+  padding: 18px 22px;
+  background: #ffffff;
+  border-color: #cbd5e1;
+  line-height: 2.2;
+  font-size: 1.04rem;
+  font-weight: 550;
+  color: #1f2937;
+}
+
+.readingFillLine-flowing {
+  margin: 0;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
+.readingFillLine-flowing > span {
+  display: inline;
+}
+
 .readingFillLine {
   margin: 0;
   line-height: 2.05;
@@ -13275,15 +13299,15 @@ body,
 
 .readingFillBlankInputWrap {
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0 4px;
-  padding: 4px 8px 4px 6px;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0 3px;
+  padding: 1px 8px 1px 6px;
   vertical-align: baseline;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 999px;
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fefce8;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   transition:
     border-color var(--duration-luxury-fast, 420ms) var(--ease-luxury-soft, ease),
     box-shadow var(--duration-luxury-fast, 420ms) var(--ease-luxury-soft, ease);
