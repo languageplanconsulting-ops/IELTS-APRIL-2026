@@ -157,7 +157,7 @@ import {
   getJourneyStageTypeSummary,
   getNextJourneyUnlockStage,
   isReadingJourneyExamId,
-  isReadingJourneyStageUnlocked,
+  isReadingJourneyStageAccessible,
   normalizeReadingJourneyProgress,
   parseReadingJourneyStageNumber,
   type ReadingJourneyProgress
@@ -171,7 +171,7 @@ import {
   type ReadingFillQuestionGroup
 } from './readingFillDisplay'
 import {
-  cleanReadingPassageParagraphs as cleanReadingPassageParagraphsShared,
+  reflowReadingPassageParagraphsForDisplay,
   sanitizeReadingPromptForDisplay as sanitizeReadingPromptForDisplayShared,
   sanitizeReadingQuestionSectionTextForDisplay as sanitizeReadingQuestionSectionTextShared
 } from './readingOcrCleanup'
@@ -5411,7 +5411,8 @@ const normalizeLetteredReadingPassageParagraphs = (paragraphs: string[]) =>
   })
 
 const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
-  const cleaned = mergeBrokenReadingPassageParagraphs(cleanReadingPassageParagraphsShared(paragraphs))
+  const reflowed = reflowReadingPassageParagraphsForDisplay(paragraphs)
+  const cleaned = mergeBrokenReadingPassageParagraphs(reflowed)
   const letteredSectionCount = cleaned.filter((paragraph) =>
     READING_PASSAGE_SECTION_LETTER_PATTERN.test(paragraph)
   ).length
@@ -5420,64 +5421,8 @@ const cleanReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
     return normalizeLetteredReadingPassageParagraphs(cleaned)
   }
 
-  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
-  if (cleaned.length <= 2 && totalLength >= 3000) {
-    const source = cleaned.join('\n\n')
-    const sectionParts = source
-      .split(/(?=(?:^|\s)([A-G])\s+(?=[A-Z"'(]))/)
-      .map((part) => part.trim())
-      .filter(Boolean)
-    if (sectionParts.length >= 3) {
-      return normalizeLetteredReadingPassageParagraphs(sectionParts)
-    }
-
-    const sentences = source.match(/[^.!?]+[.!?]+(?:['"]|\s+|$)|[^.!?]+$/g) || [source]
-    const chunks: string[] = []
-    let current = ''
-    for (const sentence of sentences) {
-      const next = `${current}${sentence}`.trim()
-      if (current && next.length > 900) {
-        chunks.push(current.trim())
-        current = sentence
-      } else {
-        current = next
-      }
-    }
-    if (current.trim()) chunks.push(current.trim())
-    if (chunks.length >= 2) return chunks
-  }
-
-  return splitDenseReadingPassageParagraphs(cleaned)
+  return cleaned
 }
-
-const splitDenseReadingPassageParagraphs = (paragraphs: string[]) =>
-  paragraphs.flatMap((paragraph) => {
-    const text = String(paragraph || '').trim()
-    if (!text || text.length < 420 || READING_PASSAGE_SECTION_LETTER_PATTERN.test(text)) {
-      return text ? [text] : []
-    }
-
-    const normalized = text.replace(/([.!?])([A-Z])/g, '$1 $2')
-    const sentences = normalized
-      .split(/(?<=[.!?])\s+(?=[A-Z"'(])/)
-      .map((sentence) => sentence.trim())
-      .filter(Boolean)
-    if (sentences.length < 2) return [text]
-
-    const chunks: string[] = []
-    let current = ''
-    for (const sentence of sentences) {
-      const candidate = current ? `${current} ${sentence}` : sentence
-      if (current && candidate.length > 480) {
-        chunks.push(current)
-        current = sentence
-      } else {
-        current = candidate
-      }
-    }
-    if (current) chunks.push(current)
-    return chunks.length >= 2 ? chunks : [text]
-  })
 
 const normalizeReadingQuestionForDisplay = (
   question: ReadingQuestion,
@@ -8836,7 +8781,7 @@ function App() {
       if (attempt) bestAccuracy = Math.max(bestAccuracy, attempt.accuracy)
       if (
         activeMission === 0 &&
-        isReadingJourneyStageUnlocked(stage.stageNumber, readingJourneyProgress) &&
+        isReadingJourneyStageAccessible(stage.stageNumber, readingJourneyProgress, authSession?.role) &&
         !passed
       ) {
         activeMission = stage.stageNumber
@@ -8960,6 +8905,15 @@ function App() {
     activeReadingPassages[0] ??
     null
   const isAdvancedReadingExam = activeReadingExam?.category === 'advanced'
+  const isAdminUser = authSession?.role === 'admin'
+  const adminBypassNormalReadingQuestionLocks =
+    isAdminUser &&
+    Boolean(
+      activeReadingExam &&
+        (activeReadingExam.category === 'normal' || isReadingJourneyExamId(activeReadingExam.id))
+    )
+  const isReadingQuestionLocked = (questionNumber: number) =>
+    !adminBypassNormalReadingQuestionLocks && readingLockedQuestions.has(questionNumber)
   const readingPdoyLessons = useMemo<ReadingPdoyLesson[]>(() => {
     const lessons: ReadingPdoyLesson[] = []
     pdoyReadingExams.forEach((exam) => {
@@ -17746,6 +17700,9 @@ function App() {
         restoredAnswers = prefill
       }
     }
+    if (authSession?.role === 'admin' && exam.category === 'normal') {
+      lockedFromFixMode = new Set()
+    }
     setReadingLockedQuestions(lockedFromFixMode)
     setReadingAnswers(restoredAnswers)
     setReadingReportItems([])
@@ -18348,7 +18305,7 @@ function App() {
     options?: { advancedLayout?: boolean; wordCountHint?: number }
   ) => {
     const isHinting = readingHintQuestionNumber === question.number
-    const isLocked = readingLockedQuestions.has(question.number)
+    const isLocked = isReadingQuestionLocked(question.number)
     const advancedLayout = Boolean(options?.advancedLayout)
     // Size the input from the instruction's word-count hint only ("NO MORE
     // THAN TWO WORDS" → 2). Never use the correct answer's length — that
@@ -18755,7 +18712,7 @@ function App() {
               group.questions
             )
             const isHinting = readingHintQuestionNumber === question.number
-            const isLocked = readingLockedQuestions.has(question.number)
+            const isLocked = isReadingQuestionLocked(question.number)
             const selectPlaceholder =
               group.kind === 'heading'
                 ? 'Select heading'
@@ -18839,7 +18796,7 @@ function App() {
             const options = extractReadingMultipleChoiceOptions(activeReadingPassage, question)
             const value = readingAnswers[question.number] || ''
             const isHinting = readingHintQuestionNumber === question.number
-            const isLocked = readingLockedQuestions.has(question.number)
+            const isLocked = isReadingQuestionLocked(question.number)
             return (
               <div
                 key={`reading-mcq-${group.id}-${question.number}`}
@@ -18922,7 +18879,7 @@ function App() {
             const statement = sanitizeReadingPromptForDisplayShared(String(question.prompt || '').trim())
             const value = readingAnswers[question.number] || ''
             const isHinting = readingHintQuestionNumber === question.number
-            const isLocked = readingLockedQuestions.has(question.number)
+            const isLocked = isReadingQuestionLocked(question.number)
             return (
               <div
                 key={`reading-judgement-${group.id}-${question.number}`}
@@ -19001,7 +18958,7 @@ function App() {
         <div className="readingChooseTwoAnswers">
           {group.questions.map((question) => {
             const isHinting = readingHintQuestionNumber === question.number
-            const isLocked = readingLockedQuestions.has(question.number)
+            const isLocked = isReadingQuestionLocked(question.number)
             const currentValue = String(readingAnswers[question.number] || '').trim().toUpperCase()
             const lettersTakenElsewhere = new Set(
               group.questions
@@ -19112,7 +19069,7 @@ function App() {
     passage: ReadingPassageRecord | null = activeReadingPassage
   ) => {
     const value = readingAnswers[question.number] || ''
-    const isLocked = readingLockedQuestions.has(question.number)
+    const isLocked = isReadingQuestionLocked(question.number)
 
     const matchingKind = getReadingMatchingQuestionKind(passage, question)
     if (matchingKind) {
@@ -20813,7 +20770,12 @@ function App() {
                       </header>
                       <div className="listeningFullTestBankGrid">
                         {tests.map((spec) => {
-                          const ready = isFullReadingTestComplete(spec.bookNumber, spec.testNumber, bankReadingExams)
+                          const isAdminUser =
+                            String(authSession?.role || '').trim().toLowerCase() === 'admin'
+                          const contentReady = isFullReadingTestComplete(spec.bookNumber, spec.testNumber, bankReadingExams)
+                          // Admins can always open a test, even if content is flagged incomplete,
+                          // so they can spot-check and edit any exam.
+                          const ready = contentReady || isAdminUser
                           const attempt = readingAttemptByExamId[spec.id]
                           return (
                             <article
@@ -20829,6 +20791,7 @@ function App() {
                                     ? `${attempt.correctCount}/${attempt.totalQuestions} correct · ${attempt.accuracy}%`
                                     : '3 passages · 40 questions'
                                   : 'Content incomplete'}
+                                {isAdminUser && !contentReady && ' · admin override'}
                               </span>
                               <div className="readingStageExamActions">
                                 <button type="button" disabled={!ready} onClick={() => startReadingFullTest(spec.id)}>
@@ -21006,7 +20969,15 @@ function App() {
                       const exam = readingJourneyExams.find((item) => item.id === stage.id) || null
                       const attempt =
                         readingAttemptByExamId[stage.id] || readingJourneyProgress.attempts[stage.id]
-                      const unlocked = isReadingJourneyStageUnlocked(stage.stageNumber, readingJourneyProgress)
+                      const isAdminUser =
+                        String(authSession?.role || '').trim().toLowerCase() === 'admin'
+                      const unlocked =
+                        isAdminUser ||
+                        isReadingJourneyStageAccessible(
+                          stage.stageNumber,
+                          readingJourneyProgress,
+                          authSession?.role
+                        )
                       const passed = attempt ? didPassReadingJourneyStage(attempt.accuracy) : false
                       const isActive =
                         unlocked &&
@@ -21790,7 +21761,7 @@ function App() {
                 </div>
               </div>
 
-              {readingLockedQuestions.size > 0 && (
+              {!adminBypassNormalReadingQuestionLocks && readingLockedQuestions.size > 0 && (
                 <div className="readingFixModeBanner" role="status">
                   <strong>Fix mistakes mode</strong>
                   <span>
@@ -22142,7 +22113,7 @@ function App() {
                       }
                       const isHinting = readingHintQuestionNumber === question.number
                       const isJudgementQuestion = isReadingJudgementQuestion(question)
-                      const isLocked = readingLockedQuestions.has(question.number)
+                      const isLocked = isReadingQuestionLocked(question.number)
                       return (
                         <article key={question.number} id={`reading-question-${question.number}`} className={`readingQuestionCard ${isLocked ? 'is-locked' : ''}`.trim()}>
                           <div className="readingQuestionCardTop">
