@@ -408,7 +408,8 @@ const isOrphanFillContinuationLine = (line: string, previous?: string) => {
   if (/(?:[.．…⋯]{2,}|…+)/.test(trimmed)) return false
   if (trimmed.length > 40) return false
   if (/^[A-Z][^.!?]*[.!?]\s/.test(trimmed)) return false
-  return /^[a-z][a-z\s-]*$/i.test(trimmed)
+  // Section headings like "The problem" must not merge into the previous line.
+  return /^[a-z][a-z\s-]*$/.test(trimmed)
 }
 
 const mergeMultilineFillContentLines = (lines: string[]) => {

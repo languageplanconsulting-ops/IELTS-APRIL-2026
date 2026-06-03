@@ -235,3 +235,106 @@ export const cleanReadingPassageParagraphs = (paragraphs: string[]) => {
 
   return cleaned
 }
+
+const splitReadingPassageSentences = (text: string) => {
+  const source = String(text || '').trim()
+  if (!source) return []
+  return (
+    source.match(/[^.!?]+[.!?]+(?:['"]|\s+|$)|[^.!?]+$/g) || [source]
+  )
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+}
+
+const splitLongReadingPassageText = (text: string) => {
+  const source = String(text || '').trim()
+  if (!source) return []
+
+  const sectionParts = source
+    .split(/(?=(?:^|\s)([A-G])\s+(?=[A-Z"'(]))/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+  if (sectionParts.length >= 3) {
+    return sectionParts.map((part) => part.replace(/^\s*([A-G])\s+/, '$1. '))
+  }
+
+  if (source.length < 2500) return [source]
+
+  const sentences = splitReadingPassageSentences(source)
+  const chunks: string[] = []
+  let current = ''
+  for (const sentence of sentences) {
+    const next = `${current}${sentence}`.trim()
+    if (current && next.length > 900) {
+      chunks.push(current.trim())
+      current = sentence
+    } else {
+      current = next
+    }
+  }
+  if (current.trim()) chunks.push(current.trim())
+  return chunks.length >= 2 ? chunks : [source]
+}
+
+export const isOverFragmentedReadingPassage = (paragraphs: string[]) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  if (cleaned.length < 10) return false
+
+  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
+  const averageLength = totalLength / cleaned.length
+  if (averageLength >= 320) return false
+
+  const letterParagraphs = cleaned.filter((paragraph) => /^[A-G][.)]?\s/.test(paragraph)).length
+  if (letterParagraphs >= 3 && cleaned.length <= 10) return false
+
+  return true
+}
+
+export const mergeOverFragmentedPassageParagraphs = (paragraphs: string[]) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  if (!cleaned.length) return []
+
+  const joined = cleaned.join(' ')
+  const sectionSplit = splitLongReadingPassageText(joined)
+  if (sectionSplit.length >= 3 && sectionSplit.some((part) => /^[A-G][.)]?\s/.test(part))) {
+    return sectionSplit
+  }
+
+  const sentences = splitReadingPassageSentences(joined)
+  if (!sentences.length) return cleaned
+
+  const targetMin = 420
+  const targetMax = 950
+  const merged: string[] = []
+  let current = ''
+
+  for (const sentence of sentences) {
+    const next = current ? `${current} ${sentence}`.trim() : sentence
+    if (current && next.length >= targetMin && (next.length > targetMax || sentence.length > 180)) {
+      merged.push(current)
+      current = sentence
+    } else {
+      current = next
+    }
+  }
+  if (current.trim()) merged.push(current.trim())
+
+  if (merged.length >= 2 && merged.length <= 12) return merged
+  return splitLongReadingPassageText(joined)
+}
+
+/** Normalize passage bodies for the reading UI (merge sentence fragments, split huge blobs). */
+export const reflowReadingPassageParagraphsForDisplay = (paragraphs: string[]) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
+
+  if (isOverFragmentedReadingPassage(cleaned)) {
+    return mergeOverFragmentedPassageParagraphs(cleaned)
+  }
+
+  if (cleaned.length <= 2 && totalLength >= 2500) {
+    return splitLongReadingPassageText(cleaned.join('\n\n'))
+  }
+
+  return cleaned
+}

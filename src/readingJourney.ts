@@ -557,6 +557,15 @@ export const isReadingJourneyStageUnlocked = (
   progress: ReadingJourneyProgress
 ) => stageNumber <= Math.max(1, progress.unlockedThroughStage)
 
+export const isReadingJourneyStageAccessible = (
+  stageNumber: number,
+  progress: ReadingJourneyProgress,
+  role?: string
+) => {
+  if (String(role || '').trim().toLowerCase() === 'admin') return true
+  return isReadingJourneyStageUnlocked(stageNumber, progress)
+}
+
 export const didPassReadingJourneyStage = (accuracy: number) =>
   accuracy >= READING_JOURNEY_UNLOCK_PERCENT
 
