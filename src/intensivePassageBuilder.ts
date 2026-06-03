@@ -29,9 +29,19 @@ export type IntensiveQuestionSpec = {
   thaiMeaning?: string
 }
 
+export type IntensiveSectionKey =
+  | 'matchingInfo'
+  | 'fill'
+  | 'matchingPeople'
+  | 'headings'
+  | 'mcq'
+  | 'ynng'
+  | 'tfng'
+
 export type IntensivePassageLayout = {
   title: string
   paragraphs: Array<[string, string]>
+  sectionOrder?: IntensiveSectionKey[]
   matchingInfo?: { instruction: string; items: IntensiveQuestionSpec[] }
   fill?: { instruction: string; summaryTitle?: string; items: IntensiveQuestionSpec[] }
   matchingPeople?: { instruction: string; people: string[]; items: IntensiveQuestionSpec[] }
@@ -40,6 +50,16 @@ export type IntensivePassageLayout = {
   ynng?: { instruction: string; items: IntensiveQuestionSpec[] }
   tfng?: { instruction: string; items: IntensiveQuestionSpec[] }
 }
+
+const DEFAULT_SECTION_ORDER: IntensiveSectionKey[] = [
+  'matchingInfo',
+  'fill',
+  'matchingPeople',
+  'headings',
+  'mcq',
+  'ynng',
+  'tfng'
+]
 
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii']
 
@@ -97,81 +117,97 @@ export const buildIntensivePassage = (
     ranges.push({ start, end: n - 1 })
   }
 
-  if (layout.matchingInfo?.items.length) {
-    const items = layout.matchingInfo.items
-    addSection(
-      `Questions 1–${items.length}`,
-      layout.matchingInfo.instruction,
-      ['Which section contains the following information? Write the correct letter, A–G.']
-    )
-    pushQuestions(items, {
-      answerType: 'multiple-choice',
-      answerGroup: layout.matchingInfo.instruction
-    })
-  }
+  const sectionOrder = layout.sectionOrder?.length ? layout.sectionOrder : DEFAULT_SECTION_ORDER
 
-  if (layout.fill?.items.length) {
-    const items = layout.fill.items
-    const startNum = n
-    addSection(
-      `Questions ${startNum}–${startNum + items.length - 1}`,
-      layout.fill.instruction,
-      ['Choose ONE WORD ONLY from the passage for each answer.', ...(layout.fill.summaryTitle ? [layout.fill.summaryTitle] : [])]
-    )
-    pushQuestions(items, { answerType: 'text', answerGroup: layout.fill.instruction })
-  }
+  for (const sectionKey of sectionOrder) {
+    if (sectionKey === 'matchingInfo' && layout.matchingInfo?.items.length) {
+      const items = layout.matchingInfo.items
+      const startNum = n
+      addSection(
+        `Questions ${startNum}–${startNum + items.length - 1}`,
+        layout.matchingInfo.instruction,
+        ['Which section contains the following information? Write the correct letter, A–G.']
+      )
+      pushQuestions(items, {
+        answerType: 'multiple-choice',
+        answerGroup: layout.matchingInfo.instruction
+      })
+    }
 
-  if (layout.matchingPeople?.items.length) {
-    const mp = layout.matchingPeople
-    const startNum = n
-    addSection(`Questions ${startNum}–${startNum + mp.items.length - 1}`, mp.instruction, [
-      'Match each statement with the correct person, A–D. You may use any letter more than once.',
-      'List of people',
-      ...mp.people
-    ])
-    pushQuestions(mp.items, {
-      answerType: 'multiple-choice',
-      answerGroup: mp.instruction
-    })
-  }
+    if (sectionKey === 'fill' && layout.fill?.items.length) {
+      const items = layout.fill.items
+      const startNum = n
+      addSection(
+        `Questions ${startNum}–${startNum + items.length - 1}`,
+        layout.fill.instruction,
+        ['Choose ONE WORD ONLY from the passage for each answer.', ...(layout.fill.summaryTitle ? [layout.fill.summaryTitle] : [])]
+      )
+      pushQuestions(items, { answerType: 'text', answerGroup: layout.fill.instruction })
+    }
 
-  if (layout.headings?.items.length) {
-    const h = layout.headings
-    const startNum = n
-    addSection(`Questions ${startNum}–${startNum + h.items.length - 1}`, h.instruction, [
-      'List of Headings',
-      ...h.options.map((o, i) => `${ROMAN[i]}. ${o}`)
-    ])
-    pushQuestions(h.items, {
-      answerType: 'multiple-choice',
-      answerGroup: h.instruction
-    })
-  }
+    if (sectionKey === 'matchingPeople' && layout.matchingPeople?.items.length) {
+      const mp = layout.matchingPeople
+      const startNum = n
+      addSection(`Questions ${startNum}–${startNum + mp.items.length - 1}`, mp.instruction, [
+        'Match each statement with the correct person, A–D. You may use any letter more than once.',
+        'List of people',
+        ...mp.people
+      ])
+      pushQuestions(mp.items, {
+        answerType: 'multiple-choice',
+        answerGroup: mp.instruction
+      })
+    }
 
-  if (layout.mcq?.items.length) {
-    const mcq = layout.mcq
-    const startNum = n
-    addSection(`Questions ${startNum}–${startNum + mcq.items.length - 1}`, mcq.instruction)
-    pushQuestions(mcq.items, {
-      answerType: 'multiple-choice',
-      answerGroup: mcq.instruction
-    })
-  }
+    if (sectionKey === 'headings' && layout.headings?.items.length) {
+      const h = layout.headings
+      const startNum = n
+      addSection(`Questions ${startNum}–${startNum + h.items.length - 1}`, h.instruction, [
+        'List of Headings',
+        ...h.options.map((o, i) => `${ROMAN[i]}. ${o}`)
+      ])
+      pushQuestions(h.items, {
+        answerType: 'multiple-choice',
+        answerGroup: h.instruction
+      })
+    }
 
-  const judgement = layout.ynng || layout.tfng
-  if (judgement?.items.length) {
-    const startNum = n
-    const isYnng = Boolean(layout.ynng)
-    addSection(
-      `Questions ${startNum}–${startNum + judgement.items.length - 1}`,
-      judgement.instruction,
-      isYnng ? ['Write YES, NO or NOT GIVEN.'] : ['Write TRUE, FALSE or NOT GIVEN.']
-    )
-    pushQuestions(judgement.items, {
-      answerType: isYnng ? 'yes-no-not-given' : 'true-false-not-given',
-      answerGroup: judgement.instruction,
-      isYnng
-    })
+    if (sectionKey === 'mcq' && layout.mcq?.items.length) {
+      const mcq = layout.mcq
+      const startNum = n
+      addSection(`Questions ${startNum}–${startNum + mcq.items.length - 1}`, mcq.instruction)
+      pushQuestions(mcq.items, {
+        answerType: 'multiple-choice',
+        answerGroup: mcq.instruction
+      })
+    }
+
+    if (sectionKey === 'ynng' && layout.ynng?.items.length) {
+      const startNum = n
+      addSection(
+        `Questions ${startNum}–${startNum + layout.ynng.items.length - 1}`,
+        layout.ynng.instruction,
+        ['Write YES, NO or NOT GIVEN.']
+      )
+      pushQuestions(layout.ynng.items, {
+        answerType: 'yes-no-not-given',
+        answerGroup: layout.ynng.instruction,
+        isYnng: true
+      })
+    }
+
+    if (sectionKey === 'tfng' && layout.tfng?.items.length) {
+      const startNum = n
+      addSection(
+        `Questions ${startNum}–${startNum + layout.tfng.items.length - 1}`,
+        layout.tfng.instruction,
+        ['Write TRUE, FALSE or NOT GIVEN.']
+      )
+      pushQuestions(layout.tfng.items, {
+        answerType: 'true-false-not-given',
+        answerGroup: layout.tfng.instruction
+      })
+    }
   }
 
   return {

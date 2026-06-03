@@ -1,5 +1,9 @@
 import { INTENSIVE_PASSAGES_BY_STAGE } from './journeyIntensivePassages.ts'
 import { INTENSIVE_LAYOUTS_STAGE_11_15 } from './journeyIntensivePassages11to15.ts'
+import { INTENSIVE_LAYOUTS_STAGE_1_5 } from './journeyIntensivePassages1to5.ts'
+import { INTENSIVE_LAYOUTS_STAGE_6 } from './journeyIntensivePassages6.ts'
+import { INTENSIVE_LAYOUTS_STAGE_7_9 } from './journeyIntensivePassages7to9.ts'
+import { INTENSIVE_LAYOUTS_STAGE_10 } from './journeyIntensivePassages10.ts'
 import { buildIntensivePassage } from './intensivePassageBuilder.ts'
 import {
   INTENSIVE_SOLUTIONS_BY_STAGE,
@@ -85,6 +89,19 @@ export type ReadingJourneyProgress = {
 }
 
 const QUESTION_START_BY_PASSAGE_SLOT = [1, 14] as const
+/** Stages 1–5 use 14 questions on passage 1, so passage 2 starts at 15. */
+const INTENSIVE_QUESTION_START_BY_STAGE: Record<number, readonly [number, number]> = {
+  1: [1, 15],
+  2: [1, 15],
+  3: [1, 15],
+  4: [1, 15],
+  5: [1, 15],
+  6: [1, 15],
+  7: [1, 15],
+  8: [1, 15],
+  9: [1, 15],
+  10: [1, 15]
+}
 const FULL_READING_QUESTION_START_BY_PASSAGE_SLOT = [1, 14, 27] as const
 
 export const getReadingJourneyStageId = (stageNumber: number) =>
@@ -692,22 +709,29 @@ const buildJourneyExamFromPassages = (
 }
 
 export const buildIntensiveJourneyExam = (stageNumber: number): ReadingExamRecord | null => {
-  const layouts = INTENSIVE_LAYOUTS_STAGE_11_15[stageNumber]
+  const layouts =
+    INTENSIVE_LAYOUTS_STAGE_1_5[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_6[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_7_9[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_10[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_11_15[stageNumber]
   const legacyPair = INTENSIVE_PASSAGES_BY_STAGE[stageNumber]
   if (!layouts && !legacyPair) return null
+
+  const starts = INTENSIVE_QUESTION_START_BY_STAGE[stageNumber] || QUESTION_START_BY_PASSAGE_SLOT
 
   const passages = layouts
     ? layouts.map((layout, index) => {
         const slot = (index + 1) as 1 | 2
         const passage = buildIntensivePassage(slot, layout)
         applyIntensiveQuestionSolutions(passage, INTENSIVE_SOLUTIONS_BY_STAGE[stageNumber]?.[slot])
-        return remapPassageForSlot(passage, slot, QUESTION_START_BY_PASSAGE_SLOT[slot - 1] - 1)
+        return remapPassageForSlot(passage, slot, starts[slot - 1] - 1)
       })
     : legacyPair!.map((input, index) => {
         const slot = (index + 1) as 1 | 2
         const passage = makeCustomJourneyPassage(slot, input)
         applyIntensiveQuestionSolutions(passage, INTENSIVE_SOLUTIONS_BY_STAGE[stageNumber]?.[slot])
-        return remapPassageForSlot(passage, slot, QUESTION_START_BY_PASSAGE_SLOT[slot - 1] - 1)
+        return remapPassageForSlot(passage, slot, starts[slot - 1] - 1)
       })
 
   return buildJourneyExamFromPassages(stageNumber, passages, { skipRequirements: true })
