@@ -1785,6 +1785,408 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
         exactPortion: 'the finished work should reveal human authorship'
       }
     ]
+  },
+
+  // ── Big Cats / rewilding: lynx (source Q19-22 → journey stage-2 P3 Q32-35) ──
+  {
+    examId: 'cambridge-12-test4-passage2',
+    passageNumber: 1,
+    startNumber: 19,
+    endNumber: 22,
+    sourceParagraphs: ['G', 'H'],
+    instructions: [
+      'Questions 19–22',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 19–22 on your answer sheet.'
+    ],
+    summaryTitle: 'The case for reintroducing the lynx',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'The lynx poses no {19} to people, as there is no record of one ever attacking a human. It is a specialist hunter of roe {20}, a species that has grown very numerous in Britain and is putting pressure on woodland wildlife.'
+      },
+      { type: 'bullet', text: 'Because it needs dense {21} for shelter, it would rarely come near farmland and is therefore unlikely to threaten sheep.' },
+      {
+        type: 'para',
+        text: 'Bringing lynx back fits naturally with efforts to restore {22} to bare upland areas — an aim that many conservation projects across Britain already share.'
+      }
+    ],
+    questions: [
+      {
+        number: 19,
+        answer: 'threat',
+        passageKeyword: 'presents no threat to human beings',
+        questionKeyword: 'poses no threat to people',
+        thaiMeaning: 'ภัยคุกคาม',
+        exactPortion: 'The lynx presents no threat to human beings: there is no known instance of one preying on people.'
+      },
+      {
+        number: 20,
+        answer: 'deer',
+        passageKeyword: 'specialist predator of roe deer',
+        questionKeyword: 'specialist hunter of roe deer',
+        thaiMeaning: 'กวาง',
+        exactPortion: 'It is a specialist predator of roe deer, a species that has exploded in Britain in recent decades, holding woodland biodiversity in check.'
+      },
+      {
+        number: 21,
+        answer: 'cover',
+        passageKeyword: 'The lynx requires deep cover',
+        questionKeyword: 'needs dense cover for shelter',
+        thaiMeaning: 'พุ่มไม้หนาทึบ / ที่กำบัง',
+        exactPortion: 'The lynx requires deep cover, and as such presents little risk to sheep and other livestock, which are found mainly in the open.'
+      },
+      {
+        number: 22,
+        answer: 'forests',
+        passageKeyword: 'bringing forests back',
+        questionKeyword: 'efforts to restore forests',
+        thaiMeaning: 'ป่า',
+        exactPortion: 'The attempt to reintroduce this predator marries well with the aim of bringing forests back to parts of Scotland and northern England.'
+      }
+    ]
+  },
+
+  // ── 6 custom passages (Q5-8 fill-blank summary) ──
+
+  {
+    examId: 'custom-reading-beyond-petroleum',
+    passageNumber: 1,
+    startNumber: 5,
+    endNumber: 8,
+    sourceParagraphs: ['D', 'D'],
+    instructions: [
+      'Questions 5–8',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 5–8 on your answer sheet.'
+    ],
+    summaryTitle: 'Seaweed-based bioplastics',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'Seaweed is considered a particularly promising source material because, unlike crops such as maize, it does not require fresh {5} or agricultural land, and needs no {6} either.'
+      },
+      { type: 'bullet', text: 'Scientists have shown that seaweed can be turned into products including films and {7}.' },
+      { type: 'bullet', text: 'One company in Indonesia has gone further, creating packaging that is not only capable of natural breakdown but is also {8}.' }
+    ],
+    questions: [
+      {
+        number: 5,
+        answer: 'water',
+        passageKeyword: 'requires no freshwater',
+        questionKeyword: 'does not require fresh water',
+        thaiMeaning: 'น้ำจืด',
+        exactPortion: 'Unlike maize or sugarcane, seaweed requires no freshwater, no agricultural land and no fertilisers to grow.'
+      },
+      {
+        number: 6,
+        answer: 'fertilisers',
+        passageKeyword: 'no fertilisers to grow',
+        questionKeyword: 'needs no fertilisers',
+        thaiMeaning: 'ปุ๋ย',
+        exactPortion: 'Unlike maize or sugarcane, seaweed requires no freshwater, no agricultural land and no fertilisers to grow.'
+      },
+      {
+        number: 7,
+        answer: 'textiles',
+        passageKeyword: 'processed into films, containers and even textiles',
+        questionKeyword: 'turned into products including films and textiles',
+        thaiMeaning: 'สิ่งทอ',
+        exactPortion: 'seaweed-derived materials can be processed into films, containers and even textiles with properties comparable to conventional plastics.'
+      },
+      {
+        number: 8,
+        answer: 'edible',
+        passageKeyword: 'not only biodegradable but edible',
+        questionKeyword: 'not only biodegradable but also edible',
+        thaiMeaning: 'กินได้ / รับประทานได้',
+        exactPortion: 'The Indonesian company Evoware has developed seaweed-based food packaging that is not only biodegradable but edible.'
+      }
+    ]
+  },
+  {
+    examId: 'custom-reading-vertical-farming',
+    passageNumber: 1,
+    startNumber: 5,
+    endNumber: 8,
+    sourceParagraphs: ['D', 'F'],
+    instructions: [
+      'Questions 5–8',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 5–8 on your answer sheet.'
+    ],
+    summaryTitle: 'The energy challenge of vertical farming',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'One of the main difficulties with vertical farming is the quantity of {5} it consumes. Crops are grown under artificial {6} rather than sunlight, which drives up power use considerably.'
+      },
+      { type: 'bullet', text: 'Scientists at Lancaster University found that producing lettuce in a vertical farm uses far more energy than growing it in a conventional {7}.' },
+      { type: 'bullet', text: 'However, advances in {8} lighting technology are helping to reduce this problem.' }
+    ],
+    questions: [
+      {
+        number: 5,
+        answer: 'energy',
+        passageKeyword: 'enormous quantities of electricity / energy consumption',
+        questionKeyword: 'quantity of energy it consumes',
+        thaiMeaning: 'พลังงาน',
+        exactPortion: 'these facilities require enormous quantities of electricity.'
+      },
+      {
+        number: 6,
+        answer: 'lighting',
+        passageKeyword: 'Artificial lighting, calibrated to match the specific needs',
+        questionKeyword: 'grown under artificial lighting',
+        thaiMeaning: 'แสงไฟ / การให้แสง',
+        exactPortion: 'Artificial lighting, calibrated to match the specific needs of each crop, replaces sunlight.'
+      },
+      {
+        number: 7,
+        answer: 'greenhouse',
+        passageKeyword: 'compared to just one kilowatt-hour in a conventional greenhouse',
+        questionKeyword: 'in a conventional greenhouse',
+        thaiMeaning: 'เรือนกระจก',
+        exactPortion: 'growing one kilogram of lettuce in a vertical farm consumes approximately 247 kilowatt-hours of energy, compared to just one kilowatt-hour in a conventional greenhouse.'
+      },
+      {
+        number: 8,
+        answer: 'LED',
+        passageKeyword: 'increasingly efficient LED lighting',
+        questionKeyword: 'advances in LED lighting technology',
+        thaiMeaning: 'หลอด LED',
+        exactPortion: 'The development of increasingly efficient LED lighting has significantly reduced the power demands of indoor farming over the past decade.'
+      }
+    ]
+  },
+  {
+    examId: 'custom-reading-tidal-energy',
+    passageNumber: 1,
+    startNumber: 5,
+    endNumber: 8,
+    sourceParagraphs: ['B', 'D'],
+    instructions: [
+      'Questions 5–8',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 5–8 on your answer sheet.'
+    ],
+    summaryTitle: 'Tidal stream technology',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'Tidal stream technology generates electricity by positioning {5} in areas of fast-moving ocean current. Unlike tidal range systems, it does not require large {6} that obstruct the mouths of rivers, which makes it less damaging to surrounding environments.'
+      },
+      { type: 'bullet', text: 'However, it remains costly to install and maintain because the {7} conditions at sea cause rapid deterioration of components.' },
+      { type: 'bullet', text: 'According to one expert, the cost per unit of electricity produced is currently several times higher than that of {8} wind power.' }
+    ],
+    questions: [
+      {
+        number: 5,
+        answer: 'turbines',
+        passageKeyword: 'places turbines directly in fast-moving tidal currents',
+        questionKeyword: 'positioning turbines in fast-moving current',
+        thaiMeaning: 'กังหัน',
+        exactPortion: 'Tidal stream technology, by contrast, places turbines directly in fast-moving tidal currents, much like underwater wind turbines.'
+      },
+      {
+        number: 6,
+        answer: 'structures',
+        passageKeyword: 'does not require large structures that block estuaries',
+        questionKeyword: 'large structures that obstruct the mouths of rivers',
+        thaiMeaning: 'สิ่งก่อสร้างขนาดใหญ่',
+        exactPortion: 'tidal stream is generally considered more environmentally sensitive, as it does not require large structures that block estuaries and disrupt ecosystems.'
+      },
+      {
+        number: 7,
+        answer: 'corrosive',
+        passageKeyword: 'the corrosive marine environment accelerates wear',
+        questionKeyword: 'corrosive conditions at sea cause rapid deterioration',
+        thaiMeaning: 'กัดกร่อน / ซึ่งกัดกร่อน',
+        exactPortion: 'the corrosive marine environment accelerates wear on mechanical components.'
+      },
+      {
+        number: 8,
+        answer: 'onshore',
+        passageKeyword: 'three to four times higher than that of onshore wind power',
+        questionKeyword: 'higher than that of onshore wind power',
+        thaiMeaning: 'บนบก / ภายในแผ่นดิน',
+        exactPortion: 'the cost of tidal electricity remains three to four times higher than that of onshore wind power.'
+      }
+    ]
+  },
+  {
+    examId: 'custom-reading-rewilding',
+    passageNumber: 1,
+    startNumber: 5,
+    endNumber: 8,
+    sourceParagraphs: ['B', 'B'],
+    instructions: [
+      'Questions 5–8',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 5–8 on your answer sheet.'
+    ],
+    summaryTitle: 'Wolves and the Yellowstone effect',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'The reintroduction of wolves to Yellowstone in 1995 is the most frequently cited example of a {5} cascade. When wolves hunted elk, the elk changed their {6} habits, which allowed plants to grow back in previously bare areas.'
+      },
+      { type: 'bullet', text: 'This in turn helped {7} along rivers to become more stable and encouraged the return of other species.' },
+      { type: 'bullet', text: 'However, some scientists have {8} the extent of these changes.' }
+    ],
+    questions: [
+      {
+        number: 5,
+        answer: 'trophic',
+        passageKeyword: 'concept of trophic cascades',
+        questionKeyword: 'trophic cascade',
+        thaiMeaning: 'ห่วงโซ่อาหาร (trophic cascade)',
+        exactPortion: 'The scientific foundation of rewilding rests on the concept of trophic cascades.'
+      },
+      {
+        number: 6,
+        answer: 'grazing',
+        passageKeyword: 'wolf predation caused elk to avoid grazing in certain areas',
+        questionKeyword: 'changed their grazing habits',
+        thaiMeaning: 'การกินหญ้า / การหากิน',
+        exactPortion: 'wolf predation caused elk to avoid grazing in certain areas, allowing vegetation to recover, riverbanks to stabilise and a range of other species to return.'
+      },
+      {
+        number: 7,
+        answer: 'riverbanks',
+        passageKeyword: 'riverbanks to stabilise',
+        questionKeyword: 'riverbanks along rivers to become more stable',
+        thaiMeaning: 'ตลิ่ง / ฝั่งแม่น้ำ',
+        exactPortion: 'wolf predation caused elk to avoid grazing in certain areas, allowing vegetation to recover, riverbanks to stabilise and a range of other species to return.'
+      },
+      {
+        number: 8,
+        answer: 'disputed',
+        passageKeyword: 'some ecologists have disputed the scale of these effects',
+        questionKeyword: 'scientists have disputed the extent of these changes',
+        thaiMeaning: 'โต้แย้ง / ตั้งข้อสงสัย',
+        exactPortion: 'Although some ecologists have disputed the scale of these effects, the Yellowstone case remains a central reference point for rewilding proponents.'
+      }
+    ]
+  },
+  {
+    examId: 'custom-reading-mycelium',
+    passageNumber: 1,
+    startNumber: 5,
+    endNumber: 8,
+    sourceParagraphs: ['B', 'B'],
+    instructions: [
+      'Questions 5–8',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 5–8 on your answer sheet.'
+    ],
+    summaryTitle: 'How mycelium material is made',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'Mycelium grows naturally by spreading its fibres through organic material, which it binds together. Producers can adjust the final product\'s characteristics by controlling factors such as temperature and the {5} from which the mycelium feeds.'
+      },
+      { type: 'bullet', text: 'When the material has grown to the correct shape, {6} is applied to stop further growth.' },
+      { type: 'bullet', text: 'The result is a firm, dry product. At the end of its life, it can be placed in a {7} heap and will break down naturally within a few weeks, returning entirely to the {8}.' }
+    ],
+    questions: [
+      {
+        number: 5,
+        answer: 'substrate',
+        passageKeyword: 'composition of the substrate',
+        questionKeyword: 'the substrate from which the mycelium feeds',
+        thaiMeaning: 'วัสดุรองพื้น / สารตั้งต้น',
+        exactPortion: 'By controlling the growing conditions — temperature, humidity and the composition of the substrate — manufacturers can influence the density, rigidity and texture of the final material.'
+      },
+      {
+        number: 6,
+        answer: 'heat',
+        passageKeyword: 'applying heat, which kills the mycelium',
+        questionKeyword: 'heat is applied to stop further growth',
+        thaiMeaning: 'ความร้อน',
+        exactPortion: 'the growing process is halted by applying heat, which kills the mycelium and prevents further growth.'
+      },
+      {
+        number: 7,
+        answer: 'compost',
+        passageKeyword: 'composted at the end of its useful life',
+        questionKeyword: 'placed in a compost heap',
+        thaiMeaning: 'ปุ๋ยหมัก / กองปุ๋ยหมัก',
+        exactPortion: 'The result is a rigid, dry material that can be composted at the end of its useful life and returns completely to the soil within weeks.'
+      },
+      {
+        number: 8,
+        answer: 'soil',
+        passageKeyword: 'returns completely to the soil within weeks',
+        questionKeyword: 'returning entirely to the soil',
+        thaiMeaning: 'ดิน',
+        exactPortion: 'The result is a rigid, dry material that can be composted at the end of its useful life and returns completely to the soil within weeks.'
+      }
+    ]
+  },
+  {
+    examId: 'custom-reading-desalination',
+    passageNumber: 1,
+    startNumber: 5,
+    endNumber: 8,
+    sourceParagraphs: ['B', 'B'],
+    instructions: [
+      'Questions 5–8',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 5–8 on your answer sheet.'
+    ],
+    summaryTitle: 'How reverse osmosis works',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'In reverse osmosis, seawater is pushed at high {5} through special {6} that separate fresh water from dissolved salt. The fresh water passes through and is collected, while the remaining liquid — a concentrated salt solution called {7} — is returned to the sea.'
+      },
+      {
+        type: 'para',
+        text: 'The process demands a great deal of energy, but improvements in both {8} technology and systems that recover energy have significantly reduced this requirement.'
+      }
+    ],
+    questions: [
+      {
+        number: 5,
+        answer: 'pressure',
+        passageKeyword: 'forced at high pressure',
+        questionKeyword: 'pushed at high pressure',
+        thaiMeaning: 'แรงดัน',
+        exactPortion: 'Seawater is forced at high pressure through semi-permeable membranes that allow water molecules to pass through while blocking dissolved salts and other contaminants.'
+      },
+      {
+        number: 6,
+        answer: 'membranes',
+        passageKeyword: 'semi-permeable membranes',
+        questionKeyword: 'special membranes that separate fresh water',
+        thaiMeaning: 'เยื่อกรอง / เมมเบรน',
+        exactPortion: 'Seawater is forced at high pressure through semi-permeable membranes that allow water molecules to pass through while blocking dissolved salts and other contaminants.'
+      },
+      {
+        number: 7,
+        answer: 'brine',
+        passageKeyword: 'highly concentrated salt solution — known as brine',
+        questionKeyword: 'concentrated salt solution called brine',
+        thaiMeaning: 'น้ำเกลือเข้มข้น',
+        exactPortion: 'the remaining highly concentrated salt solution — known as brine — is discharged.'
+      },
+      {
+        number: 8,
+        answer: 'membrane',
+        passageKeyword: 'advances in membrane technology',
+        questionKeyword: 'improvements in membrane technology',
+        thaiMeaning: 'เมมเบรน / เยื่อกรอง',
+        exactPortion: 'advances in membrane technology and energy recovery systems have reduced power consumption dramatically over the past two decades.'
+      }
+    ]
   }
 ]
 

@@ -19,6 +19,7 @@ import { USER_PROVIDED_READING_PRACTICE_GENERAL_TRAINING_EXAMS } from './userPro
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS } from './userProvidedReadingPracticeCambridge19.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS } from './userProvidedReadingPracticeCambridge17.mjs'
 import { USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS } from './userProvidedReadingPracticeJune2026.mjs'
+import { USER_PROVIDED_READING_PRACTICE_CUSTOM_EXAMS } from './userProvidedReadingPracticeCustom.mjs'
 import {
   buildReadingExamPayload,
   isValidReadingParsedPayload,
@@ -6277,6 +6278,12 @@ const BUILT_IN_READING_BANK_EXAMS = [
     mapBuiltInReadingExam(exam, {
       createdAt: '2026-05-20T00:00:00.000Z',
       updatedAt: '2026-05-20T00:00:00.000Z'
+    })
+  ),
+  ...USER_PROVIDED_READING_PRACTICE_CUSTOM_EXAMS.map((exam) =>
+    mapBuiltInReadingExam(exam, {
+      createdAt: '2026-06-03T00:00:00.000Z',
+      updatedAt: '2026-06-03T00:00:00.000Z'
     })
   ),
   ...USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS.map((exam) =>
