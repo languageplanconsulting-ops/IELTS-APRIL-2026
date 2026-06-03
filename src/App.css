@@ -13221,6 +13221,84 @@ body,
   line-height: 1.9;
 }
 
+/* Hand-authored summary completion layout. Clean, no bold text, mix of
+   flowing paragraphs and bullet sentences, prominent ONE WORD ONLY note. */
+.readingFillNewGroup .readingFillGroupHeader h4 {
+  font-weight: 700;
+}
+
+.readingFillNewInstruction {
+  margin: 8px 0 14px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  color: #334155;
+  font-size: 0.96rem;
+  line-height: 1.6;
+}
+
+.readingFillNewInstruction p {
+  margin: 2px 0;
+}
+
+.readingFillNewOneWord {
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 6px;
+}
+
+.readingFillNewBody {
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  color: #1f2937;
+  font-size: 1.02rem;
+  font-weight: 450;
+  line-height: 2;
+}
+
+.readingFillNewTitle {
+  margin: 0 0 10px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.readingFillNewSubheading {
+  margin: 12px 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.readingFillNewPara {
+  margin: 8px 0;
+}
+
+.readingFillNewBullet {
+  position: relative;
+  margin: 6px 0 6px 18px;
+  padding-left: 16px;
+}
+
+.readingFillNewBullet::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #64748b;
+  font-weight: 700;
+  top: -1px;
+}
+
+.readingFillBlankMissing {
+  color: #b91c1c;
+  font-style: italic;
+}
+
 /* Flowing summary mode — render fragments as a continuous paragraph
    instead of stacked rows. */
 .readingFillOriginalBlock-flowing {

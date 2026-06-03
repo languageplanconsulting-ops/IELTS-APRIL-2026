@@ -6,6 +6,11 @@ import { LandingPageDraft } from './admin/LandingPageDraft'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import { AdminVideoStudio } from './AdminVideoStudio'
 import {
+  findNewFillBlankSet,
+  findNewFillBlankQuestion,
+  type NewFillBlankSet
+} from './readingNewFillBlankQuestions'
+import {
   GENERAL_TRAINING_READING_LABEL,
   GENERAL_TRAINING_READING_LEAD,
   type GeneralTrainingReadingSection,
@@ -8899,7 +8904,36 @@ function App() {
     practiceReadingExams.find((exam) => exam.id === selectedReadingExamId) ??
     filteredReadingExams[0] ??
     null
-  const activeReadingPassages = activeReadingExam?.parsedPayload?.passages || []
+  // Apply hand-authored fill-blank overrides on top of the parsed payload.
+  // For every passage that has an override set covering some of its questions,
+  // we replace those questions' correctAnswer / explanationThai / exactPortion
+  // with the new values. The legacy parsed displayLines are kept untouched —
+  // the renderer ignores them for overridden ranges.
+  const activeReadingPassages = useMemo(() => {
+    const basePassages = activeReadingExam?.parsedPayload?.passages || []
+    if (!activeReadingExam) return basePassages
+    return basePassages.map((passage) => {
+      let modified = false
+      const nextQuestions = (passage.questions || []).map((q) => {
+        const override = findNewFillBlankQuestion(activeReadingExam.id, q.number)
+        if (!override) return q
+        modified = true
+        return {
+          ...q,
+          answerType: 'text' as const,
+          correctAnswer: override.question.answer,
+          acceptedAnswers: override.question.acceptedAnswers
+            ? [override.question.answer, ...override.question.acceptedAnswers]
+            : [override.question.answer],
+          exactPortion: override.question.exactPortion,
+          explanationThai: `${override.question.passageKeyword} = ${override.question.questionKeyword} = ${override.question.thaiMeaning}`,
+          paraphrasedVocabulary: `${override.question.passageKeyword} ↔ ${override.question.questionKeyword} (${override.question.thaiMeaning})`,
+          prompt: q.prompt
+        }
+      })
+      return modified ? { ...passage, questions: nextQuestions } : passage
+    })
+  }, [activeReadingExam])
   const activeReadingPassage =
     activeReadingPassages.find((passage) => passage.number === readingActivePassageNumber) ??
     activeReadingPassages[0] ??
@@ -18435,9 +18469,137 @@ function App() {
     )
   }
 
+  // Hand-authored summary completion renderer. Used when an override set in
+  // readingNewFillBlankQuestions.ts covers a question group. Layout follows
+  // the spec:
+  //   - clear "ONE WORD ONLY" instruction header
+  //   - optional summary title (no bold)
+  //   - mix of flowing paragraphs and bullet sentences
+  //   - inline blanks with question numbers
+  const renderNewFillBlankSet = (
+    set: NewFillBlankSet,
+    questionByNumber: Map<number, { number: number; correctAnswer?: string }>
+  ) => {
+    // Substitute {N} placeholders with the actual blank slots.
+    const renderLineSegments = (text: string, lineKey: string) => {
+      const parts: Array<{ kind: 'text'; text: string } | { kind: 'blank'; number: number }> = []
+      const regex = /\{(\d+)\}/g
+      let cursor = 0
+      let match: RegExpExecArray | null
+      while ((match = regex.exec(text)) !== null) {
+        if (match.index > cursor) {
+          parts.push({ kind: 'text', text: text.slice(cursor, match.index) })
+        }
+        parts.push({ kind: 'blank', number: Number(match[1]) })
+        cursor = match.index + match[0].length
+      }
+      if (cursor < text.length) parts.push({ kind: 'text', text: text.slice(cursor) })
+
+      return parts.map((part, partIndex) => {
+        if (part.kind === 'text') {
+          return <span key={`${lineKey}-t-${partIndex}`}>{part.text}</span>
+        }
+        const question = questionByNumber.get(part.number)
+        if (!question) {
+          return (
+            <span key={`${lineKey}-missing-${part.number}`} className="readingFillBlankMissing">
+              [{part.number}]
+            </span>
+          )
+        }
+        return renderReadingFillBlankSlot(
+          { number: question.number, correctAnswer: question.correctAnswer },
+          { before: '', after: '' },
+          `reading-fill-new-${set.examId}-${part.number}-${lineKey}-${partIndex}`,
+          { advancedLayout: false, wordCountHint: 1 }
+        )
+      })
+    }
+
+    return (
+      <article
+        key={`reading-fill-new-${set.examId}-${set.startNumber}`}
+        className="readingQuestionCard readingFillQuestionGroup readingFillNewGroup"
+      >
+        <div className="readingFillGroupHeader">
+          <div>
+            <p className="readingQuestionNumber">
+              Questions {set.startNumber}–{set.endNumber}
+            </p>
+            <h4>Summary completion</h4>
+          </div>
+        </div>
+
+        <div className="readingFillNewInstruction">
+          {set.instructions.map((line, index) => (
+            <p key={`new-fill-instruction-${index}`}>
+              {line.includes('ONE WORD ONLY') ? (
+                <>
+                  {line.split('ONE WORD ONLY')[0]}
+                  <span className="readingFillNewOneWord">ONE WORD ONLY</span>
+                  {line.split('ONE WORD ONLY')[1]}
+                </>
+              ) : (
+                line
+              )}
+            </p>
+          ))}
+        </div>
+
+        <div className="readingFillNewBody">
+          {set.summaryTitle && (
+            <p className="readingFillNewTitle">{set.summaryTitle}</p>
+          )}
+          {set.summaryLines.map((line, lineIndex) => {
+            const key = `line-${lineIndex}`
+            if (line.type === 'heading') {
+              return (
+                <p key={key} className="readingFillNewSubheading">
+                  {line.text}
+                </p>
+              )
+            }
+            if (line.type === 'bullet') {
+              return (
+                <p key={key} className="readingFillNewBullet">
+                  {renderLineSegments(line.text, key)}
+                </p>
+              )
+            }
+            return (
+              <p key={key} className="readingFillNewPara">
+                {renderLineSegments(line.text, key)}
+              </p>
+            )
+          })}
+        </div>
+
+        {set.questions.some((q) => q.number === readingHintQuestionNumber) && (
+          <div className="readingHintBox">
+            <strong>Hint:</strong> evidence highlighted in the passage.
+          </div>
+        )}
+      </article>
+    )
+  }
+
   const renderReadingFillQuestionGroup = (group: ReadingFillQuestionGroup) => {
     const questionByNumber = new Map(group.questions.map((question) => [question.number, question]))
     const groupWordCountHint = inferWordCountHintFromInstruction(group.instruction)
+
+    // Hand-authored override: when an override set covers the group's number
+    // range for this exam, render the new clean format and skip the legacy
+    // displayLines path entirely.
+    const overrideSet = activeReadingExam
+      ? findNewFillBlankSet(activeReadingExam.id, group.start)
+      : null
+    if (
+      overrideSet &&
+      overrideSet.startNumber === group.start &&
+      overrideSet.endNumber === group.end
+    ) {
+      return renderNewFillBlankSet(overrideSet, questionByNumber)
+    }
 
     return (
       <article
