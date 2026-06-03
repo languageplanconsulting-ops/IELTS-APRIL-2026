@@ -1711,6 +1711,80 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
         exactPortion: 'in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves'
       }
     ]
+  },
+  {
+    examId: 'builtin-reading-march-2026-passage-2-artists-ai',
+    passageNumber: 2,
+    startNumber: 21,
+    endNumber: 26,
+    sourceParagraphs: ['D', 'D'],
+    instructions: [
+      'Questions 21–26',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 21–26 on your answer sheet.'
+    ],
+    summaryTitle: 'How the Human-Led Studio method works',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'Lessons begin with an artist writing a clear {21}. The artist then gives the AI a set of visual {22}, such as a limited palette or a source photograph.'
+      },
+      { type: 'bullet', text: 'The AI produces several rough {23}.' },
+      { type: 'bullet', text: 'The artist selects one version and makes manual {24}.' },
+      { type: 'bullet', text: 'Each major decision is recorded in a process {25}.' },
+      { type: 'bullet', text: 'Finally, the finished work should reveal human {26}.' }
+    ],
+    questions: [
+      {
+        number: 21,
+        answer: 'intention',
+        passageKeyword: 'writing a clear intention',
+        questionKeyword: 'writing a clear intention',
+        thaiMeaning: 'เจตนา / วัตถุประสงค์',
+        exactPortion: 'Lessons in the method begin with an artist writing a clear intention.'
+      },
+      {
+        number: 22,
+        answer: 'constraints',
+        passageKeyword: 'a set of visual constraints',
+        questionKeyword: 'a set of visual constraints',
+        thaiMeaning: 'ข้อจำกัด / เงื่อนไข',
+        exactPortion: 'The artist gives the AI a set of visual constraints, such as a limited palette, a source photograph or a forbidden style.'
+      },
+      {
+        number: 23,
+        answer: 'drafts',
+        passageKeyword: 'several rough drafts',
+        questionKeyword: 'several rough drafts',
+        thaiMeaning: 'ร่าง / ฉบับร่าง',
+        exactPortion: 'The system then produces several rough drafts.'
+      },
+      {
+        number: 24,
+        answer: 'edits',
+        passageKeyword: 'makes manual edits',
+        questionKeyword: 'makes manual edits',
+        thaiMeaning: 'การแก้ไข',
+        exactPortion: 'The artist chooses one version, makes manual edits and records each major decision in a process log before continuing.'
+      },
+      {
+        number: 25,
+        answer: 'log',
+        passageKeyword: 'records each major decision in a process log',
+        questionKeyword: 'recorded in a process log',
+        thaiMeaning: 'บันทึก / ล็อก',
+        exactPortion: 'The artist chooses one version, makes manual edits and records each major decision in a process log before continuing.'
+      },
+      {
+        number: 26,
+        answer: 'authorship',
+        passageKeyword: 'reveal human authorship',
+        questionKeyword: 'reveal human authorship',
+        thaiMeaning: 'ความเป็นเจ้าของผลงาน',
+        exactPortion: 'the finished work should reveal human authorship'
+      }
+    ]
   }
 ]
 
