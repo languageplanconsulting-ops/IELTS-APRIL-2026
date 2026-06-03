@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
- * Build journey fill-blank override sets (remapped from bank sets).
+ * Build journey fill-blank override sets for Quest Log stages.
+ * Prefers hand-authored manual sets, then generates fresh from source passages.
+ *
  * Run: npx tsx scripts/build-journey-fill-blank-sets.mjs [maxStage]
  */
 import fs from 'node:fs'
@@ -12,12 +14,20 @@ import {
   orderJourneySourceExams,
   getJourneyPassageQuestionOffset
 } from '../src/readingJourney.ts'
-import { NEW_FILL_BLANK_SETS } from '../src/readingNewFillBlankQuestions.ts'
+import { MANUAL_FILL_BLANK_SETS } from '../src/readingNewFillBlankQuestions.ts'
 import { buildReadingFillQuestionGroups } from '../src/readingFillDisplay.ts'
+import {
+  buildThaiGlossary,
+  findBestSourceSet,
+  generateFillBlankSet,
+  isLetterFillGroup,
+  remapSetToJourney
+} from './lib/fillBlankSetGenerator.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
 const outputPath = path.join(root, 'src/generated/journeyFillBlankSets.json')
+const generatedBankPath = path.join(root, 'src/generated/readingNewFillBlankSets.json')
 const maxStage = Math.max(1, Number(process.argv[2] || 5))
 
 const books = [11, 12, 13, 14, 15, 16, 17, 19]
@@ -28,29 +38,16 @@ for (const book of books) {
   pool.push(...mod[key].filter((exam) => exam.category === 'normal'))
 }
 
+const generatedSets = fs.existsSync(generatedBankPath)
+  ? JSON.parse(fs.readFileSync(generatedBankPath, 'utf8'))
+  : []
+const thaiGlossary = buildThaiGlossary(pool)
 const noop = () => false
-
-const remapSummaryText = (text, delta) =>
-  String(text || '').replace(/\{(\d+)\}/g, (_, token) => `{${Number(token) + delta}}`)
-
-const buildInstructions = (start, end) => [
-  `Questions ${start}–${end}`,
-  'Complete the summary below.',
-  'Choose ONE WORD ONLY from the passage for each answer.',
-  `Write your answers in boxes ${start}–${end} on your answer sheet.`
-]
-
-const findSourceSet = (sourceExamId, sourceStart, sourceEnd) =>
-  NEW_FILL_BLANK_SETS.find(
-    (set) =>
-      set.examId === sourceExamId &&
-      set.startNumber <= sourceStart &&
-      set.endNumber >= sourceEnd
-  )
 
 const definitions = buildJourneyStageDefinitions(pool, 30).slice(0, maxStage)
 const journeyExams = buildJourneyExamRecords(pool, 30)
 const journeySets = []
+const warnings = []
 
 for (const definition of definitions) {
   const journeyExam = journeyExams.find((exam) => exam.id === definition.id)
@@ -64,7 +61,7 @@ for (const definition of definitions) {
   const orderedSources = orderJourneySourceExams(sourceExams)
 
   for (let index = 0; index < 3; index += 1) {
-    const slot = (index + 1)
+    const slot = index + 1
     const passage = journeyExam.parsedPayload.passages[index]
     const sourceExam = orderedSources[index]
     const sourcePassage = sourceExam?.parsedPayload?.passages?.[0]
@@ -74,65 +71,79 @@ for (const definition of definitions) {
     const groups = buildReadingFillQuestionGroups(passage, passage.questions, noop, definition.id)
 
     for (const group of groups) {
-      const sourceStart = group.start - offset
-      const sourceEnd = group.end - offset
-      const sourceSet = findSourceSet(sourceExam.id, sourceStart, sourceEnd)
-      if (!sourceSet) {
-        console.warn(
-          `Missing source set: stage ${definition.stageNumber} P${slot} ${definition.id} needs ${sourceExam.id} ${sourceStart}-${sourceEnd}`
+      const fillQuestions = group.questions.filter((question) => question.answerType === 'text')
+      if (!fillQuestions.length) continue
+      if (isLetterFillGroup(fillQuestions)) {
+        warnings.push(
+          `Stage ${definition.stageNumber} P${slot} Q${group.start}-${group.end}: skipped (letter-based fill)`
         )
         continue
       }
 
-      const delta = group.start - sourceSet.startNumber
-      const questions = sourceSet.questions
-        .filter(
-          (question) =>
-            question.number + delta >= group.start && question.number + delta <= group.end
-        )
-        .map((question) => ({
-          ...question,
-          number: question.number + delta
-        }))
+      const sourceStart = group.start - offset
+      const sourceEnd = group.end - offset
+      let sourceSet = findBestSourceSet(
+        sourceExam.id,
+        sourceStart,
+        sourceEnd,
+        MANUAL_FILL_BLANK_SETS,
+        generatedSets
+      )
 
-      if (questions.length !== group.end - group.start + 1) {
-        console.warn(
-          `Question count mismatch stage ${definition.stageNumber} P${slot}: expected ${group.end - group.start + 1}, got ${questions.length}`
-        )
+      if (!sourceSet) {
+        sourceSet = generateFillBlankSet({
+          examId: sourceExam.id,
+          passage: sourcePassage,
+          fillQuestions: fillQuestions.map((question) => ({
+            ...question,
+            number: question.number - offset
+          })),
+          groupInstruction: group.instruction,
+          thaiGlossary
+        })
       }
 
-      const validNumbers = new Set(questions.map((q) => q.number))
-      const summaryLines = sourceSet.summaryLines
-        .map((line) => ({
-          ...line,
-          text: line.text ? remapSummaryText(line.text, delta) : line.text
-        }))
-        .filter((line) => {
-          if (!line.text) return true
-          const placeholders = [...line.text.matchAll(/\{(\d+)\}/g)].map((m) => Number(m[1]))
-          if (!placeholders.length) return true
-          return placeholders.every((n) => validNumbers.has(n))
-        })
-
-      journeySets.push({
-        examId: definition.id,
+      const remapped = remapSetToJourney(sourceSet, {
+        journeyExamId: definition.id,
         passageNumber: passage.number,
-        startNumber: group.start,
-        endNumber: group.end,
-        sourceParagraphs: sourceSet.sourceParagraphs,
-        instructions: buildInstructions(group.start, group.end),
-        summaryTitle: sourceSet.summaryTitle,
-        summaryLines,
-        questions
+        journeyStart: group.start,
+        journeyEnd: group.end
       })
+
+      if (!remapped) {
+        warnings.push(
+          `Stage ${definition.stageNumber} P${slot} Q${group.start}-${group.end}: remap failed (${sourceExam.id} ${sourceStart}-${sourceEnd})`
+        )
+        continue
+      }
+
+      journeySets.push(remapped)
     }
   }
 }
 
+let existingTail = []
+if (fs.existsSync(outputPath) && maxStage < 30) {
+  const existing = JSON.parse(fs.readFileSync(outputPath, 'utf8'))
+  existingTail = existing.filter((set) => {
+    const stage = Number(String(set.examId || '').replace('journey-normal-stage-', ''))
+    return stage > maxStage
+  })
+}
+
+const merged = [...journeySets, ...existingTail]
+
 fs.mkdirSync(path.dirname(outputPath), { recursive: true })
-fs.writeFileSync(outputPath, `${JSON.stringify(journeySets, null, 2)}\n`, 'utf8')
+fs.writeFileSync(outputPath, `${JSON.stringify(merged, null, 2)}\n`, 'utf8')
 
 const questionTotal = journeySets.reduce((sum, set) => sum + set.questions.length, 0)
 console.log(
-  `Wrote ${journeySets.length} journey fill-blank sets (${questionTotal} questions) for stages 1-${maxStage} to ${outputPath}`
+  `Wrote ${journeySets.length} journey fill-blank sets (${questionTotal} questions) for stages 1-${maxStage}`
 )
+if (existingTail.length) {
+  console.log(`Kept ${existingTail.length} sets for stages ${maxStage + 1}+`)
+}
+if (warnings.length) {
+  console.warn('Warnings:')
+  for (const warning of warnings) console.warn(`  - ${warning}`)
+}

@@ -94,8 +94,8 @@
     "startNumber": 21,
     "endNumber": 24,
     "sourceParagraphs": [
-      "C",
-      "D"
+      "B",
+      "C"
     ],
     "instructions": [
       "Questions 21–24",
@@ -103,57 +103,49 @@
       "Choose ONE WORD ONLY from the passage for each answer.",
       "Write your answers in boxes 21–24 on your answer sheet."
     ],
-    "summaryTitle": "What destroyed the civilisation of Easter Island? 14Drop",
+    "summaryTitle": "The decline of Easter Island",
     "summaryLines": [
       {
         "type": "para",
-        "text": "{21}. Twentieth-century discoveries of pollen prove that Rapu Nui had once been covered in palm forests, which had turned into grassland by the time the Europeans arrived on the island. When the islanders were no longer able to build the {22}they needed to go fishing, they began using the island’s"
+        "text": "Pollen evidence shows that Rapu Nui was once covered in palm forests, but the islanders cleared the trees for {21} and firewood. When they could no longer build {22} for fishing, they began eating {23} instead."
       },
       {
         "type": "bullet",
-        "text": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate {23}."
-      },
-      {
-        "type": "bullet",
-        "text": "Diamond thinks they laid the moai on wooden sledges, hauled over log rails, but that required both a lot of {24}and a lot of people."
+        "text": "Some researchers believe the islanders moved the moai using wooden sledges and log rails, which required large amounts of {24} and many workers."
       }
     ],
     "questions": [
       {
         "number": 21,
         "answer": "farming",
-        "acceptedAnswers": [],
-        "passageKeyword": "twentieth-century discoveries pollen",
-        "questionKeyword": "islanders cleared forests firewood",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "When the islanders cleared the forests for firewood and farming, the forests didn’t grow back."
+        "passageKeyword": "cleared the forests for firewood and farming",
+        "questionKeyword": "cleared the trees for farming",
+        "thaiMeaning": "การเกษตร",
+        "exactPortion": "When the islanders cleared the forests for firewood and farming, the forests did not grow back"
       },
       {
         "number": 22,
         "answer": "canoes",
-        "acceptedAnswers": [],
-        "passageKeyword": "using island",
-        "questionKeyword": "became scarce longer construct",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds."
+        "passageKeyword": "construct wooden canoes for fishing",
+        "questionKeyword": "build canoes for fishing",
+        "thaiMeaning": "เรือพาย / เรือคานู",
+        "exactPortion": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds"
       },
       {
         "number": 23,
         "answer": "birds",
-        "acceptedAnswers": [],
-        "passageKeyword": "complete summary diagram",
-        "questionKeyword": "became scarce longer construct",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds."
+        "passageKeyword": "they ate birds",
+        "questionKeyword": "began eating birds",
+        "thaiMeaning": "นก",
+        "exactPortion": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds"
       },
       {
         "number": 24,
         "answer": "wood",
-        "acceptedAnswers": [],
-        "passageKeyword": "questions 25-26",
-        "questionKeyword": "diamond thinks wooden sledges",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "Diamond thinks they laid the moai on wooden sledges, hauled over log rails, but that required both a lot of wood and a lot of people."
+        "passageKeyword": "required both a lot of wood and a lot of people",
+        "questionKeyword": "required large amounts of wood",
+        "thaiMeaning": "ไม้",
+        "exactPortion": "Diamond thinks they laid the moai on wooden sledges, hauled over log rails, but that required both a lot of wood and a lot of people"
       }
     ]
   },
@@ -580,40 +572,41 @@
       "Choose ONE WORD ONLY from the passage for each answer.",
       "Write your answers in boxes 37–39 on your answer sheet."
     ],
-    "summaryTitle": "Why being bored is stimulating – and useful,",
+    "summaryTitle": "Responses to boredom",
     "summaryLines": [
       {
         "type": "para",
-        "text": "Responses to boredom — people cannot {37}due to a failure in the attention system {38}is an important aim in life may have problems in coping with boredom, whereas those who have the characteristic of Responses to boredom — people with the characteristic of {39}generally cope with boredom"
+        "text": "For John Eastwood, boredom means people cannot {37} because their attention system fails to engage. He also argues that people whose main life goal is {38} tend to cope poorly with boredom."
+      },
+      {
+        "type": "bullet",
+        "text": "By contrast, people who show {39} usually have a higher boredom threshold and handle boredom more easily."
       }
     ],
     "questions": [
       {
         "number": 37,
         "answer": "focus",
-        "acceptedAnswers": [],
-        "passageKeyword": "failure to put attention system into gear",
+        "passageKeyword": "failure to put our attention system into gear",
         "questionKeyword": "cannot focus",
-        "thaiMeaning": "บทความระบุว่า",
-        "exactPortion": "Psychologist John Eastwood at York University in Toronto, Canada isn’t convinced."
+        "thaiMeaning": "โฟกัส / จดจ่อ",
+        "exactPortion": "For Eastwood, the central feature of boredom is a failure to put our attention system into gear. This causes an inability to focus on anything"
       },
       {
         "number": 38,
         "answer": "pleasure",
-        "acceptedAnswers": [],
-        "passageKeyword": "motivated by pleasure suffer particularly badly",
-        "questionKeyword": "pleasure important aim",
-        "thaiMeaning": "มักรับมือ",
-        "exactPortion": "People who are motivated by pleasure seem to suffer particularly badly."
+        "passageKeyword": "motivated by pleasure seem to suffer particularly badly",
+        "questionKeyword": "main life goal is pleasure",
+        "thaiMeaning": "ความสุข / ความพึงพอใจ",
+        "exactPortion": "People who are motivated by pleasure seem to suffer particularly badly"
       },
       {
         "number": 39,
         "answer": "curiosity",
-        "acceptedAnswers": [],
-        "passageKeyword": "characteristic curiosity",
-        "questionKeyword": "curiosity high boredom threshold",
-        "thaiMeaning": "บทความระบุว่า",
-        "exactPortion": "However, it remains to be seen whether there are any character traits that predict the kind of boredom each of us might be prone to."
+        "passageKeyword": "curiosity, are associated with a high boredom threshold",
+        "questionKeyword": "show curiosity",
+        "thaiMeaning": "ความอยากรู้",
+        "exactPortion": "Other personality traits, such as curiosity, are associated with a high boredom threshold"
       }
     ]
   },
@@ -737,61 +730,45 @@
       "Choose ONE WORD ONLY from the passage for each answer.",
       "Write your answers in boxes 14–17 on your answer sheet."
     ],
-    "summaryTitle": "Nutmeg – a valuable spice The nutmeg tree,",
+    "summaryTitle": "The nutmeg tree and its products",
     "summaryLines": [
       {
-        "type": "heading",
-        "text": "Key points from the passage"
-      },
-      {
         "type": "para",
-        "text": "The tree is thickly branched with dense foliage of tough, dark green {14}leaves When the fruit is ripe, this {15}splits into two halves along a ridge running the length of the fruit"
-      },
-      {
-        "type": "bullet",
-        "text": "the former being produced from the dried {16}and the latter from the aril"
-      },
-      {
-        "type": "bullet",
-        "text": "These are the sources of the two spices nutmeg and {17}"
+        "text": "The leaves of the nutmeg tree are {14} in shape. The fruit is encased in a fleshy {15}, and the spice nutmeg comes from the {16} inside. The red covering of the seed is dried to produce {17}."
       }
     ],
     "questions": [
       {
         "number": 14,
         "answer": "oval",
-        "acceptedAnswers": [],
-        "passageKeyword": "leaves shape",
-        "questionKeyword": "thickly branched foliage leaves",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "The tree is thickly branched with dense foliage of tough, dark green oval leaves"
+        "passageKeyword": "leaves are oval in shape",
+        "questionKeyword": "leaves are oval in shape",
+        "thaiMeaning": "รูปวงรี",
+        "exactPortion": "The leaves are oval in shape"
       },
       {
         "number": 15,
         "answer": "husk",
-        "acceptedAnswers": [],
-        "passageKeyword": "surrounds fruit breaks",
-        "questionKeyword": "splits halves running length",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "When the fruit is ripe, this husk splits into two halves along a ridge running the length of the fruit"
+        "passageKeyword": "fleshy husk",
+        "questionKeyword": "fleshy husk",
+        "thaiMeaning": "เปลือก / เปลือกหุ้มผล",
+        "exactPortion": "The fruit is encased in a fleshy husk"
       },
       {
         "number": 16,
         "answer": "seed",
-        "acceptedAnswers": [],
-        "passageKeyword": "produce spice nutmeg",
-        "questionKeyword": "former produced latter",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "the former being produced from the dried seed and the latter from the aril"
+        "passageKeyword": "spice nutmeg is the seed",
+        "questionKeyword": "spice nutmeg comes from the seed",
+        "thaiMeaning": "เมล็ด",
+        "exactPortion": "the spice nutmeg is the seed"
       },
       {
         "number": 17,
         "answer": "mace",
-        "acceptedAnswers": [],
-        "passageKeyword": "covering known produce",
-        "questionKeyword": "sources spices nutmeg",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "These are the sources of the two spices nutmeg and mace"
+        "passageKeyword": "red covering is dried to produce mace",
+        "questionKeyword": "dried to produce mace",
+        "thaiMeaning": "ดอกจันทน์เทศ",
+        "exactPortion": "The red covering of the seed is dried to produce mace"
       }
     ]
   },
@@ -802,7 +779,7 @@
     "endNumber": 26,
     "sourceParagraphs": [
       "E",
-      "F"
+      "G"
     ],
     "instructions": [
       "Questions 21–26",
@@ -810,87 +787,69 @@
       "Choose ONE WORD ONLY from the passage for each answer.",
       "Write your answers in boxes 21–26 on your answer sheet."
     ],
-    "summaryTitle": "Nutmeg – a valuable spice The nutmeg tree,",
+    "summaryTitle": "The history of the nutmeg trade",
     "summaryLines": [
       {
-        "type": "bullet",
-        "text": "{21}16th century European nations took control of the nutmeg trade 17th century Demand for nutmeg grew, as it was believed to be effective against the disease known as the"
+        "type": "para",
+        "text": "In the 16th century, the {21} were the exclusive importers of nutmeg to Europe. Later, demand grew because the spice was thought to protect against the {22}."
       },
       {
         "type": "bullet",
-        "text": "{22}The Dutch – took control of the Banda Islands – restricted nutmeg production to"
+        "text": "The Dutch covered exported nutmeg with {23} so that fertile seeds could not be grown elsewhere."
       },
       {
-        "type": "bullet",
-        "text": "{23}on nutmeg to avoid it being cultivated outside the islands – finally obtained the island of"
-      },
-      {
-        "type": "bullet",
-        "text": "{24}from the British Late 18th century 1770 – nutmeg plants were secretly taken to"
-      },
-      {
-        "type": "bullet",
-        "text": "{25}1778 – half the Banda Islands’ nutmeg plantations were destroyed by a"
-      },
-      {
-        "type": "bullet",
-        "text": "Next, in 1778, a volcanic eruption in the Banda region caused a {26}that wiped out half the nutmeg groves"
+        "type": "para",
+        "text": "The Dutch later traded the island of {24} to Britain. In 1770, Pierre Poivre smuggled plants to {25}, and in 1778 a {26} destroyed half the nutmeg groves."
       }
     ],
     "questions": [
       {
         "number": 21,
         "answer": "Arabs",
-        "acceptedAnswers": [],
-        "passageKeyword": "nations took control",
-        "questionKeyword": "throughout period exclusive importers",
-        "thaiMeaning": "จากข้อความใน",
+        "passageKeyword": "Arabs were the exclusive importers",
+        "questionKeyword": "exclusive importers",
+        "thaiMeaning": "ชาวอาหรับ",
         "exactPortion": "Throughout this period, the Arabs were the exclusive importers of the spice to Europe"
       },
       {
         "number": 22,
         "answer": "plague",
-        "acceptedAnswers": [],
-        "passageKeyword": "islands restricted nutmeg",
-        "questionKeyword": "thousands across europe highly",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "At the same time, thousands of people across Europe were dying of the plague, a highly contagious and deadly disease. Doctors were desperate for a way to stop the spread of this disease, and they decided nutmeg held the cure"
+        "passageKeyword": "dying of the plague",
+        "questionKeyword": "protect against the plague",
+        "thaiMeaning": "กาฬโรค",
+        "exactPortion": "thousands of people across Europe were dying of the plague, a highly contagious and deadly disease"
       },
       {
         "number": 23,
         "answer": "lime",
-        "acceptedAnswers": [],
-        "passageKeyword": "nutmeg avoid cultivated",
-        "questionKeyword": "addition exported nutmeg covered",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "In addition, all exported nutmeg was covered with lime to make sure there was no chance a fertile seed which could be grown elsewhere would leave the islands"
+        "passageKeyword": "exported nutmeg was covered with lime",
+        "questionKeyword": "covered exported nutmeg with lime",
+        "thaiMeaning": "ปูนขาว",
+        "exactPortion": "all exported nutmeg was covered with lime to make sure there was no chance a fertile seed which could be grown elsewhere would leave the islands"
       },
       {
         "number": 24,
         "answer": "Run",
-        "acceptedAnswers": [],
-        "passageKeyword": "british century nutmeg",
-        "questionKeyword": "offered british island britain",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "the Dutch offered a trade: if the British would give them the island of Run, they would in turn give Britain a distant and much less valuable island in North America. The British agreed."
+        "passageKeyword": "give them the island of Run",
+        "questionKeyword": "traded the island of Run",
+        "thaiMeaning": "เกาะรัน",
+        "exactPortion": "if the British would give them the island of Run, they would in turn give Britain a distant and much less valuable island in North America"
       },
       {
         "number": 25,
         "answer": "Mauritius",
-        "acceptedAnswers": [],
-        "passageKeyword": "islands nutmeg plantations",
-        "questionKeyword": "frenchman pierre poivre successfully",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "Then, in 1770, a Frenchman named Pierre Poivre successfully smuggled nutmeg plants to safety in Mauritius, an island off the coast of Africa"
+        "passageKeyword": "smuggled nutmeg plants to safety in Mauritius",
+        "questionKeyword": "smuggled plants to Mauritius",
+        "thaiMeaning": "เกาะมอริเชียส",
+        "exactPortion": "Pierre Poivre successfully smuggled nutmeg plants to safety in Mauritius, an island off the coast of Africa"
       },
       {
         "number": 26,
         "answer": "tsunami",
-        "acceptedAnswers": [],
-        "passageKeyword": "questions 14-18 seven",
-        "questionKeyword": "volcanic eruption region caused",
-        "thaiMeaning": "จากข้อความใน",
-        "exactPortion": "Next, in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves"
+        "passageKeyword": "volcanic eruption caused a tsunami",
+        "questionKeyword": "a tsunami destroyed half the groves",
+        "thaiMeaning": "สึนามิ",
+        "exactPortion": "in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves"
       }
     ]
   },

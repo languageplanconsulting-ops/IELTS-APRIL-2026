@@ -58,7 +58,7 @@ export type NewFillBlankSet = {
 import generatedSets from './generated/readingNewFillBlankSets.json'
 import journeySets from './generated/journeyFillBlankSets.json'
 
-const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
+export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
   {
     examId: 'cambridge-11-test1-passage1',
     passageNumber: 1,
@@ -1467,6 +1467,248 @@ const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
         questionKeyword: 'the police removed them',
         thaiMeaning: 'ตำรวจ',
         exactPortion: 'The police were opposed to Provo’s initiatives and almost as soon as the white bikes were distributed around the city, they removed them'
+      }
+    ]
+  },
+  {
+    examId: 'cambridge-11-test2-passage2',
+    passageNumber: 2,
+    startNumber: 21,
+    endNumber: 24,
+    sourceParagraphs: ['B', 'C'],
+    instructions: [
+      'Questions 21–24',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 21–24 on your answer sheet.'
+    ],
+    summaryTitle: 'The decline of Easter Island',
+    summaryLines: [
+      {
+        type: 'para',
+        text:
+          'Pollen evidence shows that Rapu Nui was once covered in palm forests, but the islanders cleared the trees for {21} and firewood. When they could no longer build {22} for fishing, they began eating {23} instead.'
+      },
+      {
+        type: 'bullet',
+        text: 'Some researchers believe the islanders moved the moai using wooden sledges and log rails, which required large amounts of {24} and many workers.'
+      }
+    ],
+    questions: [
+      {
+        number: 21,
+        answer: 'farming',
+        passageKeyword: 'cleared the forests for firewood and farming',
+        questionKeyword: 'cleared the trees for farming',
+        thaiMeaning: 'การเกษตร',
+        exactPortion: 'When the islanders cleared the forests for firewood and farming, the forests did not grow back'
+      },
+      {
+        number: 22,
+        answer: 'canoes',
+        passageKeyword: 'construct wooden canoes for fishing',
+        questionKeyword: 'build canoes for fishing',
+        thaiMeaning: 'เรือพาย / เรือคานู',
+        exactPortion: 'As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds'
+      },
+      {
+        number: 23,
+        answer: 'birds',
+        passageKeyword: 'they ate birds',
+        questionKeyword: 'began eating birds',
+        thaiMeaning: 'นก',
+        exactPortion: 'As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds'
+      },
+      {
+        number: 24,
+        answer: 'wood',
+        passageKeyword: 'required both a lot of wood and a lot of people',
+        questionKeyword: 'required large amounts of wood',
+        thaiMeaning: 'ไม้',
+        exactPortion: 'Diamond thinks they laid the moai on wooden sledges, hauled over log rails, but that required both a lot of wood and a lot of people'
+      }
+    ]
+  },
+  {
+    examId: 'cambridge-13-test1-passage2',
+    passageNumber: 2,
+    startNumber: 24,
+    endNumber: 26,
+    sourceParagraphs: ['D', 'E'],
+    instructions: [
+      'Questions 24–26',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 24–26 on your answer sheet.'
+    ],
+    summaryTitle: 'Responses to boredom',
+    summaryLines: [
+      {
+        type: 'para',
+        text:
+          'For John Eastwood, boredom means people cannot {24} because their attention system fails to engage. He also argues that people whose main life goal is {25} tend to cope poorly with boredom.'
+      },
+      {
+        type: 'bullet',
+        text: 'By contrast, people who show {26} usually have a higher boredom threshold and handle boredom more easily.'
+      }
+    ],
+    questions: [
+      {
+        number: 24,
+        answer: 'focus',
+        passageKeyword: 'failure to put our attention system into gear',
+        questionKeyword: 'cannot focus',
+        thaiMeaning: 'โฟกัส / จดจ่อ',
+        exactPortion: 'For Eastwood, the central feature of boredom is a failure to put our attention system into gear. This causes an inability to focus on anything'
+      },
+      {
+        number: 25,
+        answer: 'pleasure',
+        passageKeyword: 'motivated by pleasure seem to suffer particularly badly',
+        questionKeyword: 'main life goal is pleasure',
+        thaiMeaning: 'ความสุข / ความพึงพอใจ',
+        exactPortion: 'People who are motivated by pleasure seem to suffer particularly badly'
+      },
+      {
+        number: 26,
+        answer: 'curiosity',
+        passageKeyword: 'curiosity, are associated with a high boredom threshold',
+        questionKeyword: 'show curiosity',
+        thaiMeaning: 'ความอยากรู้',
+        exactPortion: 'Other personality traits, such as curiosity, are associated with a high boredom threshold'
+      }
+    ]
+  },
+  {
+    examId: 'cambridge-15-test1-passage1',
+    passageNumber: 1,
+    startNumber: 1,
+    endNumber: 4,
+    sourceParagraphs: ['A', 'B'],
+    instructions: [
+      'Questions 1–4',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 1–4 on your answer sheet.'
+    ],
+    summaryTitle: 'The nutmeg tree and its products',
+    summaryLines: [
+      {
+        type: 'para',
+        text:
+          'The leaves of the nutmeg tree are {1} in shape. The fruit is encased in a fleshy {2}, and the spice nutmeg comes from the {3} inside. The red covering of the seed is dried to produce {4}.'
+      }
+    ],
+    questions: [
+      {
+        number: 1,
+        answer: 'oval',
+        passageKeyword: 'leaves are oval in shape',
+        questionKeyword: 'leaves are oval in shape',
+        thaiMeaning: 'รูปวงรี',
+        exactPortion: 'The leaves are oval in shape'
+      },
+      {
+        number: 2,
+        answer: 'husk',
+        passageKeyword: 'fleshy husk',
+        questionKeyword: 'fleshy husk',
+        thaiMeaning: 'เปลือก / เปลือกหุ้มผล',
+        exactPortion: 'The fruit is encased in a fleshy husk'
+      },
+      {
+        number: 3,
+        answer: 'seed',
+        passageKeyword: 'spice nutmeg is the seed',
+        questionKeyword: 'spice nutmeg comes from the seed',
+        thaiMeaning: 'เมล็ด',
+        exactPortion: 'the spice nutmeg is the seed'
+      },
+      {
+        number: 4,
+        answer: 'mace',
+        passageKeyword: 'red covering is dried to produce mace',
+        questionKeyword: 'dried to produce mace',
+        thaiMeaning: 'ดอกจันทน์เทศ',
+        exactPortion: 'The red covering of the seed is dried to produce mace'
+      }
+    ]
+  },
+  {
+    examId: 'cambridge-15-test1-passage1',
+    passageNumber: 1,
+    startNumber: 8,
+    endNumber: 13,
+    sourceParagraphs: ['E', 'G'],
+    instructions: [
+      'Questions 8–13',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 8–13 on your answer sheet.'
+    ],
+    summaryTitle: 'The history of the nutmeg trade',
+    summaryLines: [
+      {
+        type: 'para',
+        text:
+          'In the 16th century, the {8} were the exclusive importers of nutmeg to Europe. Later, demand grew because the spice was thought to protect against the {9}.'
+      },
+      { type: 'bullet', text: 'The Dutch covered exported nutmeg with {10} so that fertile seeds could not be grown elsewhere.' },
+      {
+        type: 'para',
+        text:
+          'The Dutch later traded the island of {11} to Britain. In 1770, Pierre Poivre smuggled plants to {12}, and in 1778 a {13} destroyed half the nutmeg groves.'
+      }
+    ],
+    questions: [
+      {
+        number: 8,
+        answer: 'Arabs',
+        passageKeyword: 'Arabs were the exclusive importers',
+        questionKeyword: 'exclusive importers',
+        thaiMeaning: 'ชาวอาหรับ',
+        exactPortion: 'Throughout this period, the Arabs were the exclusive importers of the spice to Europe'
+      },
+      {
+        number: 9,
+        answer: 'plague',
+        passageKeyword: 'dying of the plague',
+        questionKeyword: 'protect against the plague',
+        thaiMeaning: 'กาฬโรค',
+        exactPortion: 'thousands of people across Europe were dying of the plague, a highly contagious and deadly disease'
+      },
+      {
+        number: 10,
+        answer: 'lime',
+        passageKeyword: 'exported nutmeg was covered with lime',
+        questionKeyword: 'covered exported nutmeg with lime',
+        thaiMeaning: 'ปูนขาว',
+        exactPortion: 'all exported nutmeg was covered with lime to make sure there was no chance a fertile seed which could be grown elsewhere would leave the islands'
+      },
+      {
+        number: 11,
+        answer: 'Run',
+        passageKeyword: 'give them the island of Run',
+        questionKeyword: 'traded the island of Run',
+        thaiMeaning: 'เกาะรัน',
+        exactPortion: 'if the British would give them the island of Run, they would in turn give Britain a distant and much less valuable island in North America'
+      },
+      {
+        number: 12,
+        answer: 'Mauritius',
+        passageKeyword: 'smuggled nutmeg plants to safety in Mauritius',
+        questionKeyword: 'smuggled plants to Mauritius',
+        thaiMeaning: 'เกาะมอริเชียส',
+        exactPortion: 'Pierre Poivre successfully smuggled nutmeg plants to safety in Mauritius, an island off the coast of Africa'
+      },
+      {
+        number: 13,
+        answer: 'tsunami',
+        passageKeyword: 'volcanic eruption caused a tsunami',
+        questionKeyword: 'a tsunami destroyed half the groves',
+        thaiMeaning: 'สึนามิ',
+        exactPortion: 'in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves'
       }
     ]
   }
