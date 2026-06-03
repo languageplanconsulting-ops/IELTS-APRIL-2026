@@ -116,6 +116,16 @@ const buildHeadingPrompt = (question, headingQuestions) => {
   return 'Choose the correct heading for this section.'
 }
 
+const isCorruptFillPrompt = (prompt) => {
+  const text = String(prompt || '').replace(/\s+/g, ' ').trim()
+  if (!text) return true
+  return (
+    /^[.…·]{2,}\s/i.test(text) ||
+    /0\.0:|eeemmmnmunsssseen|OCCUPIEM|vosmmnnnnninninnnnie|00mmnnnnnnnnnn/i.test(text) ||
+    (/^…/.test(text) && !/\b\d+\s*[.…·]{2,}/.test(text))
+  )
+}
+
 const resolvePrompt = (exam, passage, question, sectionText) => {
   const current = String(question.prompt || '').replace(/\s+/g, ' ').trim()
   const needsFallback =
@@ -125,7 +135,8 @@ const resolvePrompt = (exam, passage, question, sectionText) => {
     /^Complete the summary below\.?…?$/i.test(current) ||
     /^Choose the correct heading for this section\.?…?$/i.test(current) ||
     /^Drop (?:heading|answer) here/i.test(current) ||
-    /Questions 14-20 The Reading Passage has seven paragraphs/i.test(current)
+    /Questions 14-20 The Reading Passage has seven paragraphs/i.test(current) ||
+    (question.answerType === 'text' && isCorruptFillPrompt(current))
 
   if (needsFallback) {
     const answer = String(question.correctAnswer || '').trim()
@@ -151,6 +162,17 @@ const resolvePrompt = (exam, passage, question, sectionText) => {
     const block = extractQuestionBlock(sectionText, question.number)
     if (block && !/^drop (?:heading|answer) here/i.test(block)) {
       return block.replace(/^\d+\.\s*/, '').trim()
+    }
+  }
+
+  if (
+    question.answerType === 'true-false-not-given' ||
+    question.answerType === 'yes-no-not-given'
+  ) {
+    const block = extractQuestionBlock(sectionText, question.number)
+    if (block) {
+      const stem = block.replace(/^\d+\.\s*/, '').trim()
+      if (stem && stem.length > current.length + 6) return stem
     }
   }
 

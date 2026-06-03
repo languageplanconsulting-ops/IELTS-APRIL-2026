@@ -14,6 +14,8 @@
     "build:seo": "node scripts/build-seo-pages.mjs",
     "verify:reading": "node scripts/verify-reading-prompts.mjs",
     "verify:reading-fill": "npx --yes tsx scripts/verify-reading-fill-display.mjs",
+    "generate:new-fill-blank": "npx --yes tsx scripts/generate-new-fill-blank-sets.mjs",
+    "generate:journey-fill-blank": "npx --yes tsx scripts/build-journey-fill-blank-sets.mjs",
     "audit:reading-source": "node scripts/audit-reading-against-source.mjs",
     "sync:reading-from-source": "node scripts/sync-reading-from-pdf-source.mjs",
     "fix:reading-passage-ocr": "node scripts/fix-reading-passage-ocr.mjs",

@@ -240,6 +240,7 @@ const normalizeReadingPassageParagraph = (paragraph) =>
   String(paragraph || '')
     .replace(/\r/g, '')
     .replace(/\n+/g, ' ')
+    .replace(/Passage\s+\d+\s+id="[^"]*"\s+class="[^"]*"\s+data-part-number="\d+"\s*/gi, '')
     .replace(/^\d+Drop heading here[A-H]\.?\s*/i, '')
     .replace(/^\d+Drop heading here<input[\s\S]*$/i, '')
     .replace(/Drop heading here[^.]*\.\.\.\s*/gi, '')
@@ -252,6 +253,17 @@ export const cleanReadingPassageParagraphs = (paragraphs = []) =>
   (Array.isArray(paragraphs) ? paragraphs : [])
     .map(normalizeReadingPassageParagraph)
     .filter((paragraph) => !isJunkReadingPassageParagraph(paragraph))
+
+const splitReadingPassageSentences = (text) => {
+  const source = String(text || '').trim()
+  if (!source) return []
+  return (
+    source.match(/(?:[^.!?]|\d\.\d)+(?:\.(?!\d)|[!?])+(?:['"]|\s+|$)|(?:[^.!?]|\d\.\d)+$/g) ||
+      [source]
+  )
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+}
 
 const splitLongReadingPassageText = (text) => {
   const source = String(text || '').trim()
@@ -267,11 +279,11 @@ const splitLongReadingPassageText = (text) => {
 
   if (source.length < 2500) return [source]
 
-  const sentences = source.match(/[^.!?]+[.!?]+(?:['"]|\s+|$)|[^.!?]+$/g) || [source]
+  const sentences = splitReadingPassageSentences(source)
   const chunks = []
   let current = ''
   for (const sentence of sentences) {
-    const next = `${current}${sentence}`.trim()
+    const next = current ? `${current} ${sentence}`.trim() : sentence.trim()
     if (current && next.length > 900) {
       chunks.push(current.trim())
       current = sentence
@@ -283,11 +295,68 @@ const splitLongReadingPassageText = (text) => {
   return chunks.length >= 2 ? chunks : [source]
 }
 
+/** True when stored "paragraphs" are really one sentence each (common OCR/import artefact). */
+export const isOverFragmentedReadingPassage = (paragraphs = []) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  if (cleaned.length < 10) return false
+
+  const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
+  const averageLength = totalLength / cleaned.length
+  if (averageLength >= 320) return false
+
+  const letterParagraphs = cleaned.filter((paragraph) => /^[A-G][.)]?\s/.test(paragraph)).length
+  if (letterParagraphs >= 3 && cleaned.length <= 10) return false
+
+  return true
+}
+
+/** Merge sentence-level fragments into readable passage paragraphs (~500–950 chars). */
+export const mergeOverFragmentedPassageParagraphs = (paragraphs = []) => {
+  const cleaned = cleanReadingPassageParagraphs(paragraphs)
+  if (!cleaned.length) return []
+
+  const joined = cleaned.join(' ')
+  const sectionSplit = splitLongReadingPassageText(joined)
+  if (sectionSplit.length >= 3 && sectionSplit.some((part) => /^[A-G][.)]?\s/.test(part))) {
+    return sectionSplit
+  }
+
+  const sentences = splitReadingPassageSentences(joined)
+  if (!sentences.length) return cleaned
+
+  const targetMin = 420
+  const targetMax = 950
+  const merged = []
+  let current = ''
+
+  for (const sentence of sentences) {
+    const next = current ? `${current} ${sentence}`.trim() : sentence
+    if (current && next.length >= targetMin && (next.length > targetMax || sentence.length > 180)) {
+      merged.push(current)
+      current = sentence
+    } else {
+      current = next
+    }
+  }
+  if (current.trim()) merged.push(current.trim())
+
+  if (merged.length >= 2 && merged.length <= 12) return merged
+  return splitLongReadingPassageText(joined)
+}
+
 export const reflowReadingPassageParagraphs = (paragraphs = []) => {
   const cleaned = cleanReadingPassageParagraphs(paragraphs)
   const totalLength = cleaned.reduce((sum, paragraph) => sum + paragraph.length, 0)
-  if (cleaned.length > 2 || totalLength < 3000) return cleaned
-  return splitLongReadingPassageText(cleaned.join('\n\n'))
+
+  if (isOverFragmentedReadingPassage(cleaned)) {
+    return mergeOverFragmentedPassageParagraphs(cleaned)
+  }
+
+  if (cleaned.length <= 2 && totalLength >= 2500) {
+    return splitLongReadingPassageText(cleaned.join('\n\n'))
+  }
+
+  return cleaned
 }
 
 export const isCorruptReadingPassageBody = (paragraphs = []) => {

@@ -1,0 +1,2528 @@
+[
+  {
+    "examId": "journey-normal-stage-1",
+    "passageNumber": 1,
+    "startNumber": 8,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 8–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 8–13 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {8}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {9} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {10}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {11} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {12} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {13}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 8,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 9,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 10,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 11,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 12,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 13,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-1",
+    "passageNumber": 2,
+    "startNumber": 21,
+    "endNumber": 24,
+    "sourceParagraphs": [
+      "C",
+      "D"
+    ],
+    "instructions": [
+      "Questions 21–24",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 21–24 on your answer sheet."
+    ],
+    "summaryTitle": "What destroyed the civilisation of Easter Island? 14Drop",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "{21}. Twentieth-century discoveries of pollen prove that Rapu Nui had once been covered in palm forests, which had turned into grassland by the time the Europeans arrived on the island. When the islanders were no longer able to build the {22}they needed to go fishing, they began using the island’s"
+      },
+      {
+        "type": "bullet",
+        "text": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate {23}."
+      },
+      {
+        "type": "bullet",
+        "text": "Diamond thinks they laid the moai on wooden sledges, hauled over log rails, but that required both a lot of {24}and a lot of people."
+      }
+    ],
+    "questions": [
+      {
+        "number": 21,
+        "answer": "farming",
+        "acceptedAnswers": [],
+        "passageKeyword": "twentieth-century discoveries pollen",
+        "questionKeyword": "islanders cleared forests firewood",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "When the islanders cleared the forests for firewood and farming, the forests didn’t grow back."
+      },
+      {
+        "number": 22,
+        "answer": "canoes",
+        "acceptedAnswers": [],
+        "passageKeyword": "using island",
+        "questionKeyword": "became scarce longer construct",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds."
+      },
+      {
+        "number": 23,
+        "answer": "birds",
+        "acceptedAnswers": [],
+        "passageKeyword": "complete summary diagram",
+        "questionKeyword": "became scarce longer construct",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "As trees became scarce and they could no longer construct wooden canoes for fishing, they ate birds."
+      },
+      {
+        "number": 24,
+        "answer": "wood",
+        "acceptedAnswers": [],
+        "passageKeyword": "questions 25-26",
+        "questionKeyword": "diamond thinks wooden sledges",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "Diamond thinks they laid the moai on wooden sledges, hauled over log rails, but that required both a lot of wood and a lot of people."
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-2",
+    "passageNumber": 1,
+    "startNumber": 6,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "F",
+      "G"
+    ],
+    "instructions": [
+      "Questions 6–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 6–13 on your answer sheet."
+    ],
+    "summaryTitle": "Cork bottle stoppers versus aluminium screw caps",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "One reason wineries have moved away from cork is the risk of TCA, a compound that can spoil the {6} of the bottle's contents. Aluminium screw caps avoid this problem; they are also {7} to manufacture than cork, and they are more {8} for the user to open and close."
+      },
+      {
+        "type": "heading",
+        "text": "Why cork is still attractive"
+      },
+      {
+        "type": "bullet",
+        "text": "The classic cork stopper suits the {9} of the high-quality products it has long been associated with."
+      },
+      {
+        "type": "bullet",
+        "text": "Cork is a {10} material that can be {11} without difficulty."
+      },
+      {
+        "type": "bullet",
+        "text": "Cork forests also support local {12} in the regions where they grow."
+      },
+      {
+        "type": "bullet",
+        "text": "They help to prevent {13} in those same regions."
+      }
+    ],
+    "questions": [
+      {
+        "number": 6,
+        "answer": "taste",
+        "passageKeyword": "spoil the taste of the product",
+        "questionKeyword": "spoil the taste of the bottle’s contents",
+        "thaiMeaning": "รสชาติ",
+        "exactPortion": "as little as three or four parts to a trillion – can spoil the taste of the product contained in the bottle"
+      },
+      {
+        "number": 7,
+        "answer": "cheaper",
+        "passageKeyword": "cheaper to manufacture",
+        "questionKeyword": "cheaper to manufacture",
+        "thaiMeaning": "ถูกกว่า",
+        "exactPortion": "These substitutes are cheaper to manufacture and, in the case of screw caps, more convenient for the user"
+      },
+      {
+        "number": 8,
+        "answer": "convenient",
+        "passageKeyword": "more convenient for the user",
+        "questionKeyword": "more convenient for the user",
+        "thaiMeaning": "สะดวก",
+        "exactPortion": "in the case of screw caps, more convenient for the user"
+      },
+      {
+        "number": 9,
+        "answer": "image",
+        "passageKeyword": "traditional image is more in keeping with … high quality goods",
+        "questionKeyword": "suits the image of high-quality products",
+        "thaiMeaning": "ภาพลักษณ์",
+        "exactPortion": "Firstly, its traditional image is more in keeping with that of the type of high quality goods with which it has long been associated"
+      },
+      {
+        "number": 10,
+        "answer": "sustainable",
+        "passageKeyword": "cork is a sustainable product",
+        "questionKeyword": "a sustainable material",
+        "thaiMeaning": "ยั่งยืน",
+        "exactPortion": "cork is a sustainable product that can be recycled without difficulty"
+      },
+      {
+        "number": 11,
+        "answer": "recycled",
+        "passageKeyword": "can be recycled without difficulty",
+        "questionKeyword": "can be recycled without difficulty",
+        "thaiMeaning": "รีไซเคิล / นำกลับมาใช้ใหม่",
+        "exactPortion": "cork is a sustainable product that can be recycled without difficulty"
+      },
+      {
+        "number": 12,
+        "answer": "biodiversity",
+        "passageKeyword": "support local biodiversity",
+        "questionKeyword": "support local biodiversity",
+        "thaiMeaning": "ความหลากหลายทางชีวภาพ",
+        "exactPortion": "cork forests are a resource which support local biodiversity, and prevent desertification"
+      },
+      {
+        "number": 13,
+        "answer": "desertification",
+        "passageKeyword": "prevent desertification",
+        "questionKeyword": "prevent desertification",
+        "thaiMeaning": "การกลายเป็นทะเลทราย",
+        "exactPortion": "cork forests are a resource which support local biodiversity, and prevent desertification in the regions where they are planted"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-2",
+    "passageNumber": 2,
+    "startNumber": 21,
+    "endNumber": 26,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 21–26",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 21–26 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {21}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {22} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {23}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {24} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {25} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {26}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 21,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 22,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 23,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 24,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 25,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 26,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-3",
+    "passageNumber": 1,
+    "startNumber": 8,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 8–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 8–13 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {8}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {9} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {10}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {11} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {12} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {13}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 8,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 9,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 10,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 11,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 12,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 13,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-3",
+    "passageNumber": 2,
+    "startNumber": 14,
+    "endNumber": 21,
+    "sourceParagraphs": [
+      "A",
+      "B"
+    ],
+    "instructions": [
+      "Questions 14–21",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 14–21 on your answer sheet."
+    ],
+    "summaryTitle": "The importance of children's play",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "Imaginative play such as building a 'magical kingdom' supports the development of {14}, while board games teach children to follow {15} and take turns with a partner."
+      },
+      {
+        "type": "heading",
+        "text": "Recent changes affecting play"
+      },
+      {
+        "type": "bullet",
+        "text": "The {16} population has grown, reducing space for outdoor activity."
+      },
+      {
+        "type": "heading",
+        "text": "Why free play is limited"
+      },
+      {
+        "type": "bullet",
+        "text": "Parents worry about {17} on the roads."
+      },
+      {
+        "type": "bullet",
+        "text": "There is also concern about {18}."
+      },
+      {
+        "type": "bullet",
+        "text": "Schools face greater {19}."
+      },
+      {
+        "type": "heading",
+        "text": "Policy and research"
+      },
+      {
+        "type": "para",
+        "text": "International organisations lack the {20} needed to support new policies, and researchers still need data on how play affects the rest of a child's {21}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 14,
+        "answer": "creativity",
+        "passageKeyword": "capacity for creativity",
+        "questionKeyword": "development of creativity",
+        "thaiMeaning": "ความคิดสร้างสรรค์",
+        "exactPortion": "this fantasy is helping her take her first steps towards her capacity for creativity"
+      },
+      {
+        "number": 15,
+        "answer": "rules",
+        "passageKeyword": "follow rules",
+        "questionKeyword": "follow rules",
+        "thaiMeaning": "กฎ / ข้อกำหนด",
+        "exactPortion": "she's learning about the need to follow rules and take turns with a partner"
+      },
+      {
+        "number": 16,
+        "answer": "cities",
+        "passageKeyword": "live in cities",
+        "questionKeyword": "population has grown",
+        "thaiMeaning": "เมือง",
+        "exactPortion": "over half the people in the world now live in cities"
+      },
+      {
+        "number": 17,
+        "answer": "traffic",
+        "passageKeyword": "risk to do with traffic",
+        "questionKeyword": "worry about traffic",
+        "thaiMeaning": "การจราจร",
+        "exactPortion": "Outdoor play is curtailed by perceptions of risk to do with traffic"
+      },
+      {
+        "number": 18,
+        "answer": "crime",
+        "passageKeyword": "victims of crime",
+        "questionKeyword": "concern about crime",
+        "thaiMeaning": "อาชญากรรม",
+        "exactPortion": "parents' increased wish to protect their children from being the victims of crime"
+      },
+      {
+        "number": 19,
+        "answer": "competition",
+        "passageKeyword": "competition in academic learning",
+        "questionKeyword": "greater competition",
+        "thaiMeaning": "การแข่งขัน",
+        "exactPortion": "greater competition in academic learning and schools"
+      },
+      {
+        "number": 20,
+        "answer": "evidence",
+        "passageKeyword": "evidence to base policies on",
+        "questionKeyword": "lack the evidence",
+        "thaiMeaning": "หลักฐาน",
+        "exactPortion": "what they often lack is the evidence to base policies on"
+      },
+      {
+        "number": 21,
+        "answer": "life",
+        "passageKeyword": "child's later life",
+        "questionKeyword": "rest of a child's life",
+        "thaiMeaning": "ชีวิต",
+        "exactPortion": "there is very little data on the impact it has on the child's later life"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-3",
+    "passageNumber": 3,
+    "startNumber": 37,
+    "endNumber": 39,
+    "sourceParagraphs": [
+      "D",
+      "E"
+    ],
+    "instructions": [
+      "Questions 37–39",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 37–39 on your answer sheet."
+    ],
+    "summaryTitle": "Why being bored is stimulating – and useful,",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "Responses to boredom — people cannot {37}due to a failure in the attention system {38}is an important aim in life may have problems in coping with boredom, whereas those who have the characteristic of Responses to boredom — people with the characteristic of {39}generally cope with boredom"
+      }
+    ],
+    "questions": [
+      {
+        "number": 37,
+        "answer": "focus",
+        "acceptedAnswers": [],
+        "passageKeyword": "failure to put attention system into gear",
+        "questionKeyword": "cannot focus",
+        "thaiMeaning": "บทความระบุว่า",
+        "exactPortion": "Psychologist John Eastwood at York University in Toronto, Canada isn’t convinced."
+      },
+      {
+        "number": 38,
+        "answer": "pleasure",
+        "acceptedAnswers": [],
+        "passageKeyword": "motivated by pleasure suffer particularly badly",
+        "questionKeyword": "pleasure important aim",
+        "thaiMeaning": "มักรับมือ",
+        "exactPortion": "People who are motivated by pleasure seem to suffer particularly badly."
+      },
+      {
+        "number": 39,
+        "answer": "curiosity",
+        "acceptedAnswers": [],
+        "passageKeyword": "characteristic curiosity",
+        "questionKeyword": "curiosity high boredom threshold",
+        "thaiMeaning": "บทความระบุว่า",
+        "exactPortion": "However, it remains to be seen whether there are any character traits that predict the kind of boredom each of us might be prone to."
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-4",
+    "passageNumber": 1,
+    "startNumber": 1,
+    "endNumber": 7,
+    "sourceParagraphs": [
+      "B",
+      "E"
+    ],
+    "instructions": [
+      "Questions 1–7",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 1–7 on your answer sheet."
+    ],
+    "summaryTitle": "The Tourism New Zealand website",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "The site was built around a database of tourism service operators. Any business could register on a simple form, and because they were able to {1} their details regularly, the information on the site stayed accurate. As part of an evaluation scheme, the effect of each business on the {2} was also considered."
+      },
+      {
+        "type": "heading",
+        "text": "Special features"
+      },
+      {
+        "type": "bullet",
+        "text": "One popular interview was with a former rugby {3} of the All Blacks."
+      },
+      {
+        "type": "bullet",
+        "text": "Another feature offered an interactive tour of locations used in {4}."
+      },
+      {
+        "type": "bullet",
+        "text": "Driving-route guides changed according to the {5} of the year, with distances and travel times shown."
+      },
+      {
+        "type": "bullet",
+        "text": "A Travel Planner showed maps, public transport options and local {6}."
+      },
+      {
+        "type": "bullet",
+        "text": "In the 'Your Words' section, travellers could share a link to their travel {7}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 1,
+        "answer": "update",
+        "passageKeyword": "update the details they gave on a regular basis",
+        "questionKeyword": "update their details regularly",
+        "thaiMeaning": "อัปเดต / ปรับปรุงข้อมูล",
+        "exactPortion": "participating businesses were able to update the details they gave on a regular basis, the information provided remained accurate"
+      },
+      {
+        "number": 2,
+        "answer": "environment",
+        "passageKeyword": "the effect of each business on the environment was considered",
+        "questionKeyword": "effect of each business on the environment",
+        "thaiMeaning": "สิ่งแวดล้อม",
+        "exactPortion": "As part of this, the effect of each business on the environment was considered"
+      },
+      {
+        "number": 3,
+        "answer": "captain",
+        "passageKeyword": "former New Zealand All Blacks rugby captain Tana Umaga",
+        "questionKeyword": "former rugby captain",
+        "thaiMeaning": "กัปตันทีม",
+        "exactPortion": "One of the most popular was an interview with former New Zealand All Blacks rugby captain Tana Umaga"
+      },
+      {
+        "number": 4,
+        "answer": "films",
+        "passageKeyword": "locations chosen for blockbuster films",
+        "questionKeyword": "locations used in films",
+        "thaiMeaning": "ภาพยนตร์",
+        "exactPortion": "an interactive journey through a number of the locations chosen for blockbuster films which had made use of New Zealand's stunning scenery as a backdrop"
+      },
+      {
+        "number": 5,
+        "answer": "season",
+        "passageKeyword": "highlighting different routes according to the season",
+        "questionKeyword": "changed according to the season",
+        "thaiMeaning": "ฤดูกาล",
+        "exactPortion": "the site catalogued the most popular driving routes in the country, highlighting different routes according to the season and indicating distances and times"
+      },
+      {
+        "number": 6,
+        "answer": "accommodation",
+        "passageKeyword": "links to accommodation in the area",
+        "questionKeyword": "local accommodation",
+        "thaiMeaning": "ที่พัก",
+        "exactPortion": "The Travel Planner offered suggested routes and public transport options between the chosen locations. There were also links to accommodation in the area"
+      },
+      {
+        "number": 7,
+        "answer": "blog",
+        "passageKeyword": "submit a blog of their New Zealand travels",
+        "questionKeyword": "share a link to their travel blog",
+        "thaiMeaning": "บล็อก",
+        "exactPortion": "anyone could submit a blog of their New Zealand travels for possible inclusion on the website"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-4",
+    "passageNumber": 2,
+    "startNumber": 14,
+    "endNumber": 17,
+    "sourceParagraphs": [
+      "A",
+      "B"
+    ],
+    "instructions": [
+      "Questions 14–17",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 14–17 on your answer sheet."
+    ],
+    "summaryTitle": "Nutmeg – a valuable spice The nutmeg tree,",
+    "summaryLines": [
+      {
+        "type": "heading",
+        "text": "Key points from the passage"
+      },
+      {
+        "type": "para",
+        "text": "The tree is thickly branched with dense foliage of tough, dark green {14}leaves When the fruit is ripe, this {15}splits into two halves along a ridge running the length of the fruit"
+      },
+      {
+        "type": "bullet",
+        "text": "the former being produced from the dried {16}and the latter from the aril"
+      },
+      {
+        "type": "bullet",
+        "text": "These are the sources of the two spices nutmeg and {17}"
+      }
+    ],
+    "questions": [
+      {
+        "number": 14,
+        "answer": "oval",
+        "acceptedAnswers": [],
+        "passageKeyword": "leaves shape",
+        "questionKeyword": "thickly branched foliage leaves",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "The tree is thickly branched with dense foliage of tough, dark green oval leaves"
+      },
+      {
+        "number": 15,
+        "answer": "husk",
+        "acceptedAnswers": [],
+        "passageKeyword": "surrounds fruit breaks",
+        "questionKeyword": "splits halves running length",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "When the fruit is ripe, this husk splits into two halves along a ridge running the length of the fruit"
+      },
+      {
+        "number": 16,
+        "answer": "seed",
+        "acceptedAnswers": [],
+        "passageKeyword": "produce spice nutmeg",
+        "questionKeyword": "former produced latter",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "the former being produced from the dried seed and the latter from the aril"
+      },
+      {
+        "number": 17,
+        "answer": "mace",
+        "acceptedAnswers": [],
+        "passageKeyword": "covering known produce",
+        "questionKeyword": "sources spices nutmeg",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "These are the sources of the two spices nutmeg and mace"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-4",
+    "passageNumber": 2,
+    "startNumber": 21,
+    "endNumber": 26,
+    "sourceParagraphs": [
+      "E",
+      "F"
+    ],
+    "instructions": [
+      "Questions 21–26",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 21–26 on your answer sheet."
+    ],
+    "summaryTitle": "Nutmeg – a valuable spice The nutmeg tree,",
+    "summaryLines": [
+      {
+        "type": "bullet",
+        "text": "{21}16th century European nations took control of the nutmeg trade 17th century Demand for nutmeg grew, as it was believed to be effective against the disease known as the"
+      },
+      {
+        "type": "bullet",
+        "text": "{22}The Dutch – took control of the Banda Islands – restricted nutmeg production to"
+      },
+      {
+        "type": "bullet",
+        "text": "{23}on nutmeg to avoid it being cultivated outside the islands – finally obtained the island of"
+      },
+      {
+        "type": "bullet",
+        "text": "{24}from the British Late 18th century 1770 – nutmeg plants were secretly taken to"
+      },
+      {
+        "type": "bullet",
+        "text": "{25}1778 – half the Banda Islands’ nutmeg plantations were destroyed by a"
+      },
+      {
+        "type": "bullet",
+        "text": "Next, in 1778, a volcanic eruption in the Banda region caused a {26}that wiped out half the nutmeg groves"
+      }
+    ],
+    "questions": [
+      {
+        "number": 21,
+        "answer": "Arabs",
+        "acceptedAnswers": [],
+        "passageKeyword": "nations took control",
+        "questionKeyword": "throughout period exclusive importers",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "Throughout this period, the Arabs were the exclusive importers of the spice to Europe"
+      },
+      {
+        "number": 22,
+        "answer": "plague",
+        "acceptedAnswers": [],
+        "passageKeyword": "islands restricted nutmeg",
+        "questionKeyword": "thousands across europe highly",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "At the same time, thousands of people across Europe were dying of the plague, a highly contagious and deadly disease. Doctors were desperate for a way to stop the spread of this disease, and they decided nutmeg held the cure"
+      },
+      {
+        "number": 23,
+        "answer": "lime",
+        "acceptedAnswers": [],
+        "passageKeyword": "nutmeg avoid cultivated",
+        "questionKeyword": "addition exported nutmeg covered",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "In addition, all exported nutmeg was covered with lime to make sure there was no chance a fertile seed which could be grown elsewhere would leave the islands"
+      },
+      {
+        "number": 24,
+        "answer": "Run",
+        "acceptedAnswers": [],
+        "passageKeyword": "british century nutmeg",
+        "questionKeyword": "offered british island britain",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "the Dutch offered a trade: if the British would give them the island of Run, they would in turn give Britain a distant and much less valuable island in North America. The British agreed."
+      },
+      {
+        "number": 25,
+        "answer": "Mauritius",
+        "acceptedAnswers": [],
+        "passageKeyword": "islands nutmeg plantations",
+        "questionKeyword": "frenchman pierre poivre successfully",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "Then, in 1770, a Frenchman named Pierre Poivre successfully smuggled nutmeg plants to safety in Mauritius, an island off the coast of Africa"
+      },
+      {
+        "number": 26,
+        "answer": "tsunami",
+        "acceptedAnswers": [],
+        "passageKeyword": "questions 14-18 seven",
+        "questionKeyword": "volcanic eruption region caused",
+        "thaiMeaning": "จากข้อความใน",
+        "exactPortion": "Next, in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-4",
+    "passageNumber": 3,
+    "startNumber": 34,
+    "endNumber": 39,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 34–39",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 34–39 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {34}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {35} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {36}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {37} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {38} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {39}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 34,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 35,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 36,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 37,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 38,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 39,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-5",
+    "passageNumber": 1,
+    "startNumber": 9,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "C",
+      "D"
+    ],
+    "instructions": [
+      "Questions 9–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 9–13 on your answer sheet."
+    ],
+    "summaryTitle": "The setting of the Uffington White Horse",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "The Uffington White Horse is a stylised carving cut into a steep {9} above Uffington village. It sits just below an ancient long-distance {10} that runs along the ridge, and the surrounding land is dotted with Bronze Age burial {11}."
+      },
+      {
+        "type": "bullet",
+        "text": "Not far away lies the Bronze Age {12} of Lambourn Seven Barrows, which contains over 30 well-preserved mounds."
+      },
+      {
+        "type": "bullet",
+        "text": "Because the figure is so close to the ground, the best view of it is from the {13}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 9,
+        "answer": "slope",
+        "passageKeyword": "steep slope",
+        "questionKeyword": "steep slope",
+        "thaiMeaning": "ทางลาดชัน / เนิน",
+        "exactPortion": "The horse is situated 2.5 km from Uffington village on a steep slope"
+      },
+      {
+        "number": 10,
+        "answer": "track",
+        "passageKeyword": "long-distance Neolithic track",
+        "questionKeyword": "ancient long-distance track",
+        "thaiMeaning": "เส้นทาง / ทางเดิน",
+        "exactPortion": "below the Ridgeway, a long-distance Neolithic track"
+      },
+      {
+        "number": 11,
+        "answer": "mounds",
+        "passageKeyword": "Bronze Age burial mounds",
+        "questionKeyword": "Bronze Age burial mounds",
+        "thaiMeaning": "เนินสุสาน / เนินฝังศพ",
+        "exactPortion": "The Uffington Horse is also surrounded by Bronze Age burial mounds"
+      },
+      {
+        "number": 12,
+        "answer": "cemetery",
+        "passageKeyword": "Bronze Age cemetery of Lambourn Seven Barrows",
+        "questionKeyword": "Bronze Age cemetery of Lambourn",
+        "thaiMeaning": "สุสาน",
+        "exactPortion": "It is not far from the Bronze Age cemetery of Lambourn Seven Barrows"
+      },
+      {
+        "number": 13,
+        "answer": "air",
+        "passageKeyword": "best appreciated from the air",
+        "questionKeyword": "best view is from the air",
+        "thaiMeaning": "อากาศ / มุมสูง",
+        "exactPortion": "like many geoglyphs is best appreciated from the air"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-5",
+    "passageNumber": 2,
+    "startNumber": 21,
+    "endNumber": 26,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 21–26",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 21–26 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {21}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {22} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {23}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {24} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {25} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {26}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 21,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 22,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 23,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 24,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 25,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 26,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-5",
+    "passageNumber": 3,
+    "startNumber": 34,
+    "endNumber": 39,
+    "sourceParagraphs": [
+      "B",
+      "E"
+    ],
+    "instructions": [
+      "Questions 34–39",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 34–39 on your answer sheet."
+    ],
+    "summaryTitle": "Research into oxytocin",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "The first hints about the role of oxytocin came from work with {34}, which showed that the hormone strengthens bonds between mating prairie voles and triggers motherly behaviour in sheep. The hormone is also released by women during {35}, helping mothers bond with their newborns."
+      },
+      {
+        "type": "bullet",
+        "text": "In a famous 2005 experiment at Freiburg, volunteers who had inhaled oxytocin invested more money than those who received a {36}."
+      },
+      {
+        "type": "bullet",
+        "text": "At the University of Haifa, participants playing a competitive {37} showed more pleasure when they beat others, and more envy when they lost."
+      },
+      {
+        "type": "para",
+        "text": "Later studies showed that oxytocin can also harm social interactions. Research in Antwerp found that people given the hormone became less cooperative when dealing with complete {38}. In Amsterdam, Dutch men were quicker to link positive words with Dutch {39} than with foreign ones."
+      }
+    ],
+    "questions": [
+      {
+        "number": 34,
+        "answer": "animals",
+        "passageKeyword": "studies focusing on animals",
+        "questionKeyword": "work with animals",
+        "thaiMeaning": "สัตว์",
+        "exactPortion": "It was through various studies focusing on animals that scientists first became aware of the influence of oxytocin"
+      },
+      {
+        "number": 35,
+        "answer": "childbirth",
+        "passageKeyword": "released by women in childbirth",
+        "questionKeyword": "released by women during childbirth",
+        "thaiMeaning": "การคลอดบุตร",
+        "exactPortion": "It is also released by women in childbirth, strengthening the attachment between mother and baby"
+      },
+      {
+        "number": 36,
+        "answer": "placebo",
+        "passageKeyword": "received a placebo instead",
+        "questionKeyword": "received a placebo",
+        "thaiMeaning": "ยาหลอก",
+        "exactPortion": "the participants who had sniffed oxytocin via a nasal spray beforehand invested more money than those who received a placebo instead"
+      },
+      {
+        "number": 37,
+        "answer": "game",
+        "passageKeyword": "played a competitive game",
+        "questionKeyword": "playing a competitive game",
+        "thaiMeaning": "เกม",
+        "exactPortion": "when volunteers played a competitive game, those who inhaled the hormone showed more pleasure when they beat other players"
+      },
+      {
+        "number": 38,
+        "answer": "strangers",
+        "passageKeyword": "when dealing with complete strangers",
+        "questionKeyword": "when dealing with complete strangers",
+        "thaiMeaning": "คนแปลกหน้า",
+        "exactPortion": "people who had received a dose of oxytocin actually became less cooperative when dealing with complete strangers"
+      },
+      {
+        "number": 39,
+        "answer": "names",
+        "passageKeyword": "positive words with Dutch names",
+        "questionKeyword": "link positive words with Dutch names",
+        "thaiMeaning": "ชื่อ",
+        "exactPortion": "Dutch men became quicker to associate positive words with Dutch names than with foreign ones"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-6",
+    "passageNumber": 1,
+    "startNumber": 9,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "E",
+      "H"
+    ],
+    "instructions": [
+      "Questions 9–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 9–13 on your answer sheet."
+    ],
+    "summaryTitle": "Cutty Sark's later career",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From 1880 onwards, Cutty Sark entered the most successful phase of her working life, carrying {9} from Australia to Britain. Her next captain, Richard Woodget, was a highly skilled {10} who pushed the ship further south than any previous master."
+      },
+      {
+        "type": "bullet",
+        "text": "In 1922 the ship was badly damaged by a {11} and was put into Falmouth harbour for repairs."
+      },
+      {
+        "type": "bullet",
+        "text": "Between 1923 and 1954 the restored Cutty Sark was used by Wilfred Dowman and his successors for {12}."
+      },
+      {
+        "type": "para",
+        "text": "After going on public display in Greenwich in 1954, the ship was twice damaged by {13} in the 21st century, but she still attracts about a quarter of a million visitors every year."
+      }
+    ],
+    "questions": [
+      {
+        "number": 9,
+        "answer": "wool",
+        "passageKeyword": "transporting wool from Australia to Britain",
+        "questionKeyword": "carrying wool from Australia to Britain",
+        "thaiMeaning": "ขนแกะ",
+        "exactPortion": "the beginning of the most successful period in Cutty Sark’s working life, transporting wool from Australia to Britain"
+      },
+      {
+        "number": 10,
+        "answer": "navigator",
+        "passageKeyword": "an excellent navigator",
+        "questionKeyword": "highly skilled navigator",
+        "thaiMeaning": "นักเดินเรือ",
+        "exactPortion": "The ship’s next captain, Richard Woodget, was an excellent navigator, who got the best out of both his ship and his crew"
+      },
+      {
+        "number": 11,
+        "answer": "gale",
+        "passageKeyword": "Badly damaged in a gale in 1922",
+        "questionKeyword": "damaged by a gale in 1922",
+        "thaiMeaning": "พายุ / ลมแรง",
+        "exactPortion": "Badly damaged in a gale in 1922, she was put into Falmouth harbor in southwest England, for repairs"
+      },
+      {
+        "number": 12,
+        "answer": "training",
+        "passageKeyword": "Dowman used Cutty Sark as a training ship",
+        "questionKeyword": "used … for training",
+        "thaiMeaning": "การฝึกอบรม",
+        "exactPortion": "Dowman used Cutty Sark as a training ship, and she continued in this role after his death"
+      },
+      {
+        "number": 13,
+        "answer": "fire",
+        "passageKeyword": "suffered from fire in 2007, and again, less seriously, in 2014",
+        "questionKeyword": "damaged by fire in the 21st century",
+        "thaiMeaning": "ไฟไหม้",
+        "exactPortion": "The ship suffered from fire in 2007, and again, less seriously, in 2014"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-6",
+    "passageNumber": 2,
+    "startNumber": 14,
+    "endNumber": 19,
+    "sourceParagraphs": [
+      "A",
+      "B"
+    ],
+    "instructions": [
+      "Questions 14–19",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 14–19 on your answer sheet."
+    ],
+    "summaryTitle": "Building the London underground railway",
+    "summaryLines": [
+      {
+        "type": "heading",
+        "text": "The problem"
+      },
+      {
+        "type": "bullet",
+        "text": "London's {14} rose quickly in the early 1800s, while the streets were crowded with horse-drawn vehicles."
+      },
+      {
+        "type": "heading",
+        "text": "Pearson's proposal"
+      },
+      {
+        "type": "para",
+        "text": "Charles Pearson wanted workers to move to better housing in the {15}, and gained support from several {16}."
+      },
+      {
+        "type": "bullet",
+        "text": "The company initially struggled to obtain enough {17}."
+      },
+      {
+        "type": "bullet",
+        "text": "Critical reports appeared in the {18}."
+      },
+      {
+        "type": "heading",
+        "text": "Construction"
+      },
+      {
+        "type": "para",
+        "text": "After the brick arch was finished, a layer of {19} was placed over the tunnel before the road was rebuilt."
+      }
+    ],
+    "questions": [
+      {
+        "number": 14,
+        "answer": "population",
+        "passageKeyword": "London's population grew",
+        "questionKeyword": "London's population rose",
+        "thaiMeaning": "ประชากร",
+        "exactPortion": "In the first half of the 1800s, London's population grew at an astonishing rate"
+      },
+      {
+        "number": 15,
+        "answer": "suburbs",
+        "passageKeyword": "newly constructed suburbs",
+        "questionKeyword": "housing in the suburbs",
+        "thaiMeaning": "ชานเมือง",
+        "exactPortion": "relocate the poor workers who lived in the inner-city slums to newly constructed suburbs"
+      },
+      {
+        "number": 16,
+        "answer": "businessmen",
+        "passageKeyword": "some businessmen",
+        "questionKeyword": "support from businessmen",
+        "thaiMeaning": "นักธุรกิจ",
+        "exactPortion": "Pearson's ideas gained support amongst some businessmen"
+      },
+      {
+        "number": 17,
+        "answer": "funding",
+        "passageKeyword": "raising the funding",
+        "questionKeyword": "obtain enough funding",
+        "thaiMeaning": "เงินทุน / การระดมทุน",
+        "exactPortion": "The organisation had difficulty in raising the funding for such a radical and expensive scheme"
+      },
+      {
+        "number": 18,
+        "answer": "press",
+        "passageKeyword": "printed by the press",
+        "questionKeyword": "reports in the press",
+        "thaiMeaning": "สื่อ / หนังสือพิมพ์",
+        "exactPortion": "critical articles printed by the press"
+      },
+      {
+        "number": 19,
+        "answer": "soil",
+        "passageKeyword": "layer of soil",
+        "questionKeyword": "layer of soil",
+        "thaiMeaning": "ดิน",
+        "exactPortion": "A two-metre-deep layer of soil was laid on top of the tunnel and the road above rebuilt"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-6",
+    "passageNumber": 3,
+    "startNumber": 34,
+    "endNumber": 39,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 34–39",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 34–39 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {34}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {35} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {36}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {37} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {38} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {39}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 34,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 35,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 36,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 37,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 38,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 39,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-7",
+    "passageNumber": 1,
+    "startNumber": 1,
+    "endNumber": 7,
+    "sourceParagraphs": [
+      "C",
+      "I"
+    ],
+    "instructions": [
+      "Questions 1–7",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 1–7 on your answer sheet."
+    ],
+    "summaryTitle": "Key developments of the Industrial Revolution",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "Watt and Boulton designed a new steam engine in which the forward and backward strokes of the {1} were linked to a gear system that produced rotary motion. Steam power needed a cheap energy source, and the demand for {2} grew rapidly to feed both factories and steam-powered transport."
+      },
+      {
+        "type": "bullet",
+        "text": "Before the new spinning and weaving machines appeared, textiles in Britain were produced in small {3} or even at home."
+      },
+      {
+        "type": "bullet",
+        "text": "With the new machines, very little human {4} was needed to produce cloth."
+      },
+      {
+        "type": "bullet",
+        "text": "Smelting iron ore with coke produced metal of higher {5} than the traditional charcoal method."
+      },
+      {
+        "type": "bullet",
+        "text": "Demand for iron grew even further with the expansion of the {6} from the 1830s onwards."
+      },
+      {
+        "type": "para",
+        "text": "As factories drew workers into the cities, the rapid urbanisation that followed brought serious problems, including pollution and inadequate {7}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 1,
+        "answer": "piston",
+        "passageKeyword": "forward and backward strokes of the piston",
+        "questionKeyword": "forward and backward strokes of the piston",
+        "thaiMeaning": "ลูกสูบ",
+        "exactPortion": "Watt later worked with the English manufacturer Matthew Boulton to invent a new steam engine driven by both the forward and backward strokes of the piston"
+      },
+      {
+        "number": 2,
+        "answer": "coal",
+        "passageKeyword": "demand for coal … grew rapidly",
+        "questionKeyword": "demand for coal grew rapidly",
+        "thaiMeaning": "ถ่านหิน",
+        "exactPortion": "The demand for coal, which was a relatively cheap energy source, grew rapidly during the Industrial Revolution"
+      },
+      {
+        "number": 3,
+        "answer": "workshops",
+        "passageKeyword": "work performed in small workshops or even homes",
+        "questionKeyword": "produced in small workshops or at home",
+        "thaiMeaning": "โรงงานเล็ก / เวิร์กชอป",
+        "exactPortion": "the British textile business was a true ‘cottage industry’, with the work performed in small workshops or even homes by individual spinners, weavers and dyers"
+      },
+      {
+        "number": 4,
+        "answer": "labour",
+        "passageKeyword": "relatively little labour was required",
+        "questionKeyword": "very little human labour was needed",
+        "thaiMeaning": "แรงงาน",
+        "exactPortion": "With these machines, relatively little labour was required to produce cloth"
+      },
+      {
+        "number": 5,
+        "answer": "quality",
+        "passageKeyword": "metals that were of a higher quality",
+        "questionKeyword": "metal of higher quality",
+        "thaiMeaning": "คุณภาพ",
+        "exactPortion": "This method was cheaper and produced metals that were of a higher quality"
+      },
+      {
+        "number": 6,
+        "answer": "railways",
+        "passageKeyword": "expansion of the railways from the 1830s",
+        "questionKeyword": "expansion of the railways from the 1830s",
+        "thaiMeaning": "ทางรถไฟ",
+        "exactPortion": "Britain’s iron and steel production to expand in response to demand created by the Napoleonic Wars (1803-15) and the expansion of the railways from the 1830s"
+      },
+      {
+        "number": 7,
+        "answer": "sanitation",
+        "passageKeyword": "overcrowded cities suffered from pollution and inadequate sanitation",
+        "questionKeyword": "pollution and inadequate sanitation",
+        "thaiMeaning": "สุขาภิบาล / ระบบสาธารณสุข",
+        "exactPortion": "overcrowded cities suffered from pollution and inadequate sanitation"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-7",
+    "passageNumber": 2,
+    "startNumber": 21,
+    "endNumber": 26,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 21–26",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 21–26 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {21}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {22} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {23}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {24} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {25} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {26}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 21,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 22,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 23,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 24,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 25,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 26,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-7",
+    "passageNumber": 3,
+    "startNumber": 36,
+    "endNumber": 39,
+    "sourceParagraphs": [
+      "B",
+      "C"
+    ],
+    "instructions": [
+      "Questions 36–39",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 36–39 on your answer sheet."
+    ],
+    "summaryTitle": "The origins of bike-sharing",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "The first urban bike-sharing scheme, called the Witte Fietsenplan, was launched in 1965 by Provo, a group of Dutch {36} who wanted to change society. They believed the scheme answered the threats of air pollution and {37}."
+      },
+      {
+        "type": "bullet",
+        "text": "To spread their message, Provo painted some used bikes white and handed out {38} explaining the dangers of cars."
+      },
+      {
+        "type": "bullet",
+        "text": "Almost as soon as the white bikes appeared on the streets, however, the {39} removed them."
+      }
+    ],
+    "questions": [
+      {
+        "number": 36,
+        "answer": "activists",
+        "passageKeyword": "a group of Dutch activists",
+        "questionKeyword": "a group of Dutch activists",
+        "thaiMeaning": "นักเคลื่อนไหว",
+        "exactPortion": "Provo, the organization that came up with the idea, was a group of Dutch activists who wanted to change society"
+      },
+      {
+        "number": 37,
+        "answer": "consumerism",
+        "passageKeyword": "perceived threats of air pollution and consumerism",
+        "questionKeyword": "threats of air pollution and consumerism",
+        "thaiMeaning": "บริโภคนิยม",
+        "exactPortion": "they believed the scheme … was an answer to the perceived threats of air pollution and consumerism"
+      },
+      {
+        "number": 38,
+        "answer": "leaflets",
+        "passageKeyword": "distributed leaflets describing the dangers of cars",
+        "questionKeyword": "handed out leaflets",
+        "thaiMeaning": "ใบปลิว",
+        "exactPortion": "They also distributed leaflets describing the dangers of cars and inviting people to use the white bikes"
+      },
+      {
+        "number": 39,
+        "answer": "police",
+        "passageKeyword": "The police were opposed to Provo’s initiatives",
+        "questionKeyword": "the police removed them",
+        "thaiMeaning": "ตำรวจ",
+        "exactPortion": "The police were opposed to Provo’s initiatives and almost as soon as the white bikes were distributed around the city, they removed them"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-8",
+    "passageNumber": 1,
+    "startNumber": 9,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "E",
+      "F"
+    ],
+    "instructions": [
+      "Questions 9–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 9–13 on your answer sheet."
+    ],
+    "summaryTitle": "Raising the Mary Rose",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "After a successful 1978 excavation, The Mary Rose Trust was created in 1979 with Prince Charles as its President and Dr Margaret Rule as its Archaeological {9}. The team eventually decided to carry out the lift in three distinct {10}."
+      },
+      {
+        "type": "bullet",
+        "text": "First, the open hull was attached to a lifting {11} using bolts and wires, while twelve hydraulic {12} stopped it being sucked back into the mud."
+      },
+      {
+        "type": "bullet",
+        "text": "Next, the hull was hooked to a {13} and transferred underwater into the lifting cradle."
+      }
+    ],
+    "questions": [
+      {
+        "number": 9,
+        "answer": "Director",
+        "passageKeyword": "its Archaeological Director",
+        "questionKeyword": "its Archaeological Director",
+        "thaiMeaning": "ผู้อำนวยการ",
+        "exactPortion": "The Mary Rose Trust was formed, with Prince Charles as its President and Dr Margaret Rule its Archaeological Director"
+      },
+      {
+        "number": 10,
+        "answer": "stages",
+        "passageKeyword": "three very distinct stages",
+        "questionKeyword": "three distinct stages",
+        "thaiMeaning": "ขั้นตอน / ช่วง",
+        "exactPortion": "to carry out the lifting operation in three very distinct stages"
+      },
+      {
+        "number": 11,
+        "answer": "frame",
+        "passageKeyword": "lifting frame via a network of bolts and lifting wires",
+        "questionKeyword": "lifting frame using bolts and wires",
+        "thaiMeaning": "โครง / เฟรม",
+        "exactPortion": "The hull was attached to a lifting frame via a network of bolts and lifting wires"
+      },
+      {
+        "number": 12,
+        "answer": "jacks",
+        "passageKeyword": "12 hydraulic jacks",
+        "questionKeyword": "twelve hydraulic jacks",
+        "thaiMeaning": "แม่แรง",
+        "exactPortion": "The problem of the hull being sucked back downwards into the mud was overcome by using 12 hydraulic jacks"
+      },
+      {
+        "number": 13,
+        "answer": "crane",
+        "passageKeyword": "fixed to a hook attached to a crane",
+        "questionKeyword": "hooked to a crane",
+        "thaiMeaning": "เครน",
+        "exactPortion": "the lifting frame was fixed to a hook attached to a crane, and the hull was lifted completely clear of the seabed"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-8",
+    "passageNumber": 2,
+    "startNumber": 21,
+    "endNumber": 26,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 21–26",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 21–26 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {21}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {22} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {23}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {24} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {25} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {26}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 21,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 22,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 23,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 24,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 25,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 26,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-8",
+    "passageNumber": 3,
+    "startNumber": 36,
+    "endNumber": 39,
+    "sourceParagraphs": [
+      "G",
+      "H"
+    ],
+    "instructions": [
+      "Questions 36–39",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 36–39 on your answer sheet."
+    ],
+    "summaryTitle": "Ross Piper's bioprospecting approach",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "At Aberystwyth University, Ross Piper's team relies on their knowledge of {36} to direct their search for useful compounds. They are particularly interested in insects whose powerful poison subdues {37} and keeps it fresh for later consumption."
+      },
+      {
+        "type": "bullet",
+        "text": "The team also studies insects that live in filthy {38} such as faeces and carcasses, where antimicrobial compounds are produced to fight off pathogens."
+      },
+      {
+        "type": "bullet",
+        "text": "Piper hopes these natural chemicals will inspire new {39} that can deal with bacteria and fungi."
+      }
+    ],
+    "questions": [
+      {
+        "number": 36,
+        "answer": "ecology",
+        "passageKeyword": "use our knowledge of ecology",
+        "questionKeyword": "knowledge of ecology",
+        "thaiMeaning": "นิเวศวิทยา",
+        "exactPortion": "we use our knowledge of ecology as a guide to target our efforts"
+      },
+      {
+        "number": 37,
+        "answer": "prey",
+        "passageKeyword": "subduing prey and keeping it fresh",
+        "questionKeyword": "powerful poison subdues prey",
+        "thaiMeaning": "เหยื่อ",
+        "exactPortion": "insects that secrete powerful poison for subduing prey and keeping it fresh for future consumption"
+      },
+      {
+        "number": 38,
+        "answer": "habitats",
+        "passageKeyword": "masters of exploiting filthy habitats",
+        "questionKeyword": "live in filthy habitats",
+        "thaiMeaning": "ที่อยู่อาศัย / แหล่งอาศัย",
+        "exactPortion": "insects that are masters of exploiting filthy habitats, such as faeces and carcasses"
+      },
+      {
+        "number": 39,
+        "answer": "antibiotics",
+        "passageKeyword": "inspire new antibiotics",
+        "questionKeyword": "inspire new antibiotics",
+        "thaiMeaning": "ยาปฏิชีวนะ",
+        "exactPortion": "compounds that can serve as or inspire new antibiotics"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-9",
+    "passageNumber": 1,
+    "startNumber": 6,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "F",
+      "G"
+    ],
+    "instructions": [
+      "Questions 6–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 6–13 on your answer sheet."
+    ],
+    "summaryTitle": "Cork bottle stoppers versus aluminium screw caps",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "One reason wineries have moved away from cork is the risk of TCA, a compound that can spoil the {6} of the bottle's contents. Aluminium screw caps avoid this problem; they are also {7} to manufacture than cork, and they are more {8} for the user to open and close."
+      },
+      {
+        "type": "heading",
+        "text": "Why cork is still attractive"
+      },
+      {
+        "type": "bullet",
+        "text": "The classic cork stopper suits the {9} of the high-quality products it has long been associated with."
+      },
+      {
+        "type": "bullet",
+        "text": "Cork is a {10} material that can be {11} without difficulty."
+      },
+      {
+        "type": "bullet",
+        "text": "Cork forests also support local {12} in the regions where they grow."
+      },
+      {
+        "type": "bullet",
+        "text": "They help to prevent {13} in those same regions."
+      }
+    ],
+    "questions": [
+      {
+        "number": 6,
+        "answer": "taste",
+        "passageKeyword": "spoil the taste of the product",
+        "questionKeyword": "spoil the taste of the bottle’s contents",
+        "thaiMeaning": "รสชาติ",
+        "exactPortion": "as little as three or four parts to a trillion – can spoil the taste of the product contained in the bottle"
+      },
+      {
+        "number": 7,
+        "answer": "cheaper",
+        "passageKeyword": "cheaper to manufacture",
+        "questionKeyword": "cheaper to manufacture",
+        "thaiMeaning": "ถูกกว่า",
+        "exactPortion": "These substitutes are cheaper to manufacture and, in the case of screw caps, more convenient for the user"
+      },
+      {
+        "number": 8,
+        "answer": "convenient",
+        "passageKeyword": "more convenient for the user",
+        "questionKeyword": "more convenient for the user",
+        "thaiMeaning": "สะดวก",
+        "exactPortion": "in the case of screw caps, more convenient for the user"
+      },
+      {
+        "number": 9,
+        "answer": "image",
+        "passageKeyword": "traditional image is more in keeping with … high quality goods",
+        "questionKeyword": "suits the image of high-quality products",
+        "thaiMeaning": "ภาพลักษณ์",
+        "exactPortion": "Firstly, its traditional image is more in keeping with that of the type of high quality goods with which it has long been associated"
+      },
+      {
+        "number": 10,
+        "answer": "sustainable",
+        "passageKeyword": "cork is a sustainable product",
+        "questionKeyword": "a sustainable material",
+        "thaiMeaning": "ยั่งยืน",
+        "exactPortion": "cork is a sustainable product that can be recycled without difficulty"
+      },
+      {
+        "number": 11,
+        "answer": "recycled",
+        "passageKeyword": "can be recycled without difficulty",
+        "questionKeyword": "can be recycled without difficulty",
+        "thaiMeaning": "รีไซเคิล / นำกลับมาใช้ใหม่",
+        "exactPortion": "cork is a sustainable product that can be recycled without difficulty"
+      },
+      {
+        "number": 12,
+        "answer": "biodiversity",
+        "passageKeyword": "support local biodiversity",
+        "questionKeyword": "support local biodiversity",
+        "thaiMeaning": "ความหลากหลายทางชีวภาพ",
+        "exactPortion": "cork forests are a resource which support local biodiversity, and prevent desertification"
+      },
+      {
+        "number": 13,
+        "answer": "desertification",
+        "passageKeyword": "prevent desertification",
+        "questionKeyword": "prevent desertification",
+        "thaiMeaning": "การกลายเป็นทะเลทราย",
+        "exactPortion": "cork forests are a resource which support local biodiversity, and prevent desertification in the regions where they are planted"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-9",
+    "passageNumber": 2,
+    "startNumber": 21,
+    "endNumber": 26,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 21–26",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 21–26 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {21}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {22} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {23}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {24} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {25} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {26}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 21,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 22,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 23,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 24,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 25,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 26,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-9",
+    "passageNumber": 3,
+    "startNumber": 32,
+    "endNumber": 35,
+    "sourceParagraphs": [
+      "B",
+      "D"
+    ],
+    "instructions": [
+      "Questions 32–35",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 32–35 on your answer sheet."
+    ],
+    "summaryTitle": "Driverless cars: motives and effects",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "Research at the UK's Transport Research Laboratory found that human {32} is involved in more than 90 percent of road collisions, which is why {33} is one of the most frequently cited reasons for developing driverless vehicles. Automation may also reduce the {34} of crashes."
+      },
+      {
+        "type": "bullet",
+        "text": "When the car handles the driving, passengers can spend their time being productive, socialising or simply relaxing."
+      },
+      {
+        "type": "bullet",
+        "text": "Older or disabled travellers who currently struggle with standard vehicles may finally enjoy much greater travel {35}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 32,
+        "answer": "error",
+        "passageKeyword": "human error as a contributory factor",
+        "questionKeyword": "human error is involved in collisions",
+        "thaiMeaning": "ความผิดพลาด (ของมนุษย์)",
+        "exactPortion": "more than 90 percent of road collisions involve human error as a contributory factor"
+      },
+      {
+        "number": 33,
+        "answer": "safety",
+        "passageKeyword": "One frequently cited motive is safety",
+        "questionKeyword": "most frequently cited reasons … safety",
+        "thaiMeaning": "ความปลอดภัย",
+        "exactPortion": "One frequently cited motive is safety"
+      },
+      {
+        "number": 34,
+        "answer": "incidence",
+        "passageKeyword": "help to reduce the incidence of this",
+        "questionKeyword": "reduce the incidence of crashes",
+        "thaiMeaning": "อุบัติการณ์ / การเกิดขึ้น",
+        "exactPortion": "Automation may help to reduce the incidence of this"
+      },
+      {
+        "number": 35,
+        "answer": "autonomy",
+        "passageKeyword": "significantly greater travel autonomy",
+        "questionKeyword": "much greater travel autonomy",
+        "thaiMeaning": "อิสระในการเดินทาง",
+        "exactPortion": "older or disabled travellers – may be able to enjoy significantly greater travel autonomy"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-10",
+    "passageNumber": 1,
+    "startNumber": 8,
+    "endNumber": 13,
+    "sourceParagraphs": [
+      "D",
+      "E"
+    ],
+    "instructions": [
+      "Questions 8–13",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 8–13 on your answer sheet."
+    ],
+    "summaryTitle": "Henry Moore's mid-career changes",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "After the harsh reviews of his 1931 exhibition, there were calls for Moore's {8} from the Royal College. When his contract ended, he left to start a sculpture department at the Chelsea School of Art. During the Second World War a shortage of {9} forced him to focus on drawing rather than sculpting."
+      },
+      {
+        "type": "bullet",
+        "text": "In 1942 he returned to Castleford to sketch the {10} who worked there."
+      },
+      {
+        "type": "para",
+        "text": "In 1944 the town of Harlow commissioned Moore to produce a sculpture depicting a {11}. He made dozens of clay studies, which were cast in bronze and issued in small editions."
+      },
+      {
+        "type": "bullet",
+        "text": "In this way, Moore's work became available to {12} all over the world."
+      },
+      {
+        "type": "bullet",
+        "text": "The boost to his {13} let him take on more ambitious projects on the scale his sculpture demanded."
+      }
+    ],
+    "questions": [
+      {
+        "number": 8,
+        "answer": "resignation",
+        "passageKeyword": "calls for his resignation from the Royal College",
+        "questionKeyword": "calls for Moore's resignation",
+        "thaiMeaning": "การลาออก",
+        "exactPortion": "There were calls for his resignation from the Royal College"
+      },
+      {
+        "number": 9,
+        "answer": "materials",
+        "passageKeyword": "A shortage of materials forced him to focus on drawing",
+        "questionKeyword": "shortage of materials forced him to draw",
+        "thaiMeaning": "วัสดุ",
+        "exactPortion": "A shortage of materials forced him to focus on drawing"
+      },
+      {
+        "number": 10,
+        "answer": "miners",
+        "passageKeyword": "sketches of the miners who worked there",
+        "questionKeyword": "sketch the miners",
+        "thaiMeaning": "คนงานเหมือง",
+        "exactPortion": "he returned to Castleford to make a series of sketches of the miners who worked there"
+      },
+      {
+        "number": 11,
+        "answer": "family",
+        "passageKeyword": "a sculpture depicting a family",
+        "questionKeyword": "sculpture depicting a family",
+        "thaiMeaning": "ครอบครัว",
+        "exactPortion": "Harlow, a town near London, offered Moore a commission for a sculpture depicting a family"
+      },
+      {
+        "number": 12,
+        "answer": "collectors",
+        "passageKeyword": "Moore's work became available to collectors all over the world",
+        "questionKeyword": "available to collectors all over the world",
+        "thaiMeaning": "นักสะสม",
+        "exactPortion": "Moore's work became available to collectors all over the world"
+      },
+      {
+        "number": 13,
+        "answer": "income",
+        "passageKeyword": "The boost to his income enabled him to take on ambitious projects",
+        "questionKeyword": "boost to his income",
+        "thaiMeaning": "รายได้",
+        "exactPortion": "The boost to his income enabled him to take on ambitious projects and start working on the scale he felt his sculpture demanded"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-10",
+    "passageNumber": 2,
+    "startNumber": 14,
+    "endNumber": 20,
+    "sourceParagraphs": [
+      "B",
+      "E"
+    ],
+    "instructions": [
+      "Questions 14–20",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 14–20 on your answer sheet."
+    ],
+    "summaryTitle": "The Tourism New Zealand website",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "The site was built around a database of tourism service operators. Any business could register on a simple form, and because they were able to {14} their details regularly, the information on the site stayed accurate. As part of an evaluation scheme, the effect of each business on the {15} was also considered."
+      },
+      {
+        "type": "heading",
+        "text": "Special features"
+      },
+      {
+        "type": "bullet",
+        "text": "One popular interview was with a former rugby {16} of the All Blacks."
+      },
+      {
+        "type": "bullet",
+        "text": "Another feature offered an interactive tour of locations used in {17}."
+      },
+      {
+        "type": "bullet",
+        "text": "Driving-route guides changed according to the {18} of the year, with distances and travel times shown."
+      },
+      {
+        "type": "bullet",
+        "text": "A Travel Planner showed maps, public transport options and local {19}."
+      },
+      {
+        "type": "bullet",
+        "text": "In the 'Your Words' section, travellers could share a link to their travel {20}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 14,
+        "answer": "update",
+        "passageKeyword": "update the details they gave on a regular basis",
+        "questionKeyword": "update their details regularly",
+        "thaiMeaning": "อัปเดต / ปรับปรุงข้อมูล",
+        "exactPortion": "participating businesses were able to update the details they gave on a regular basis, the information provided remained accurate"
+      },
+      {
+        "number": 15,
+        "answer": "environment",
+        "passageKeyword": "the effect of each business on the environment was considered",
+        "questionKeyword": "effect of each business on the environment",
+        "thaiMeaning": "สิ่งแวดล้อม",
+        "exactPortion": "As part of this, the effect of each business on the environment was considered"
+      },
+      {
+        "number": 16,
+        "answer": "captain",
+        "passageKeyword": "former New Zealand All Blacks rugby captain Tana Umaga",
+        "questionKeyword": "former rugby captain",
+        "thaiMeaning": "กัปตันทีม",
+        "exactPortion": "One of the most popular was an interview with former New Zealand All Blacks rugby captain Tana Umaga"
+      },
+      {
+        "number": 17,
+        "answer": "films",
+        "passageKeyword": "locations chosen for blockbuster films",
+        "questionKeyword": "locations used in films",
+        "thaiMeaning": "ภาพยนตร์",
+        "exactPortion": "an interactive journey through a number of the locations chosen for blockbuster films which had made use of New Zealand's stunning scenery as a backdrop"
+      },
+      {
+        "number": 18,
+        "answer": "season",
+        "passageKeyword": "highlighting different routes according to the season",
+        "questionKeyword": "changed according to the season",
+        "thaiMeaning": "ฤดูกาล",
+        "exactPortion": "the site catalogued the most popular driving routes in the country, highlighting different routes according to the season and indicating distances and times"
+      },
+      {
+        "number": 19,
+        "answer": "accommodation",
+        "passageKeyword": "links to accommodation in the area",
+        "questionKeyword": "local accommodation",
+        "thaiMeaning": "ที่พัก",
+        "exactPortion": "The Travel Planner offered suggested routes and public transport options between the chosen locations. There were also links to accommodation in the area"
+      },
+      {
+        "number": 20,
+        "answer": "blog",
+        "passageKeyword": "submit a blog of their New Zealand travels",
+        "questionKeyword": "share a link to their travel blog",
+        "thaiMeaning": "บล็อก",
+        "exactPortion": "anyone could submit a blog of their New Zealand travels for possible inclusion on the website"
+      }
+    ]
+  },
+  {
+    "examId": "journey-normal-stage-10",
+    "passageNumber": 3,
+    "startNumber": 34,
+    "endNumber": 39,
+    "sourceParagraphs": [
+      "B",
+      "B"
+    ],
+    "instructions": [
+      "Questions 34–39",
+      "Complete the summary below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 34–39 on your answer sheet."
+    ],
+    "summaryTitle": "Exploitation of the Galápagos tortoise",
+    "summaryLines": [
+      {
+        "type": "para",
+        "text": "From the 17th century onwards, a small number of tortoises were carried away from the islands by {34}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {35} or water, and so were stored on long voyages."
+      },
+      {
+        "type": "bullet",
+        "text": "Sometimes their bodies were processed into high-grade {36}."
+      },
+      {
+        "type": "para",
+        "text": "The damage grew further when {37} arrived on the islands. They hunted the tortoises and cleared the land for farming."
+      },
+      {
+        "type": "bullet",
+        "text": "They also brought in alien {38} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat."
+      },
+      {
+        "type": "bullet",
+        "text": "Many of these animals preyed on baby tortoises and on tortoise {39}."
+      }
+    ],
+    "questions": [
+      {
+        "number": 34,
+        "answer": "pirates",
+        "passageKeyword": "pirates took a few on board for food",
+        "questionKeyword": "carried away by pirates",
+        "thaiMeaning": "โจรสลัด",
+        "exactPortion": "From the 17th century onwards, pirates took a few on board for food"
+      },
+      {
+        "number": 35,
+        "answer": "food",
+        "passageKeyword": "surviving for months without food or water",
+        "questionKeyword": "survive without food or water",
+        "thaiMeaning": "อาหาร",
+        "exactPortion": "Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships"
+      },
+      {
+        "number": 36,
+        "answer": "oil",
+        "passageKeyword": "processed into high-grade oil",
+        "questionKeyword": "processed into high-grade oil",
+        "thaiMeaning": "น้ำมัน",
+        "exactPortion": "Sometimes, their bodies were processed into high-grade oil"
+      },
+      {
+        "number": 37,
+        "answer": "settlers",
+        "passageKeyword": "settlers came to the islands",
+        "questionKeyword": "settlers arrived on the islands",
+        "thaiMeaning": "ผู้มาตั้งถิ่นฐาน",
+        "exactPortion": "This historical exploitation was then exacerbated when settlers came to the islands"
+      },
+      {
+        "number": 38,
+        "answer": "species",
+        "passageKeyword": "introduced alien species",
+        "questionKeyword": "brought in alien species",
+        "thaiMeaning": "สายพันธุ์ / สิ่งมีชีวิต",
+        "exactPortion": "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants"
+      },
+      {
+        "number": 39,
+        "answer": "eggs",
+        "passageKeyword": "prey on the eggs and young tortoises",
+        "questionKeyword": "preyed on tortoise eggs",
+        "thaiMeaning": "ไข่",
+        "exactPortion": "that either prey on the eggs and young tortoises or damage or destroy their habitat"
+      }
+    ]
+  }
+]

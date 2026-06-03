@@ -1,0 +1,513 @@
+[
+  {
+    "examId": "cambridge-11-test1-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 7,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-11-test1-passage2",
+    "passage": 2,
+    "start": 20,
+    "end": 26,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-11-test1-passage3",
+    "passage": 3,
+    "start": 30,
+    "end": 36,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-11-test2-passage1",
+    "passage": 1,
+    "start": 9,
+    "end": 13,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-11-test2-passage2",
+    "passage": 2,
+    "start": 21,
+    "end": 24,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-11-test3-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 9,
+    "count": 9
+  },
+  {
+    "examId": "cambridge-11-test3-passage2",
+    "passage": 2,
+    "start": 23,
+    "end": 26,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-11-test3-passage3",
+    "passage": 3,
+    "start": 35,
+    "end": 40,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-12-test1-passage1",
+    "passage": 1,
+    "start": 6,
+    "end": 13,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-12-test1-passage2",
+    "passage": 2,
+    "start": 14,
+    "end": 21,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-12-test1-passage3",
+    "passage": 3,
+    "start": 33,
+    "end": 36,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-12-test2-passage2",
+    "passage": 2,
+    "start": 25,
+    "end": 26,
+    "count": 2
+  },
+  {
+    "examId": "cambridge-12-test2-passage3",
+    "passage": 3,
+    "start": 27,
+    "end": 31,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-12-test3-passage1",
+    "passage": 1,
+    "start": 8,
+    "end": 13,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-12-test3-passage2",
+    "passage": 2,
+    "start": 20,
+    "end": 26,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-12-test3-passage3",
+    "passage": 3,
+    "start": 27,
+    "end": 31,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-12-test4-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 8,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-12-test4-passage3",
+    "passage": 3,
+    "start": 38,
+    "end": 40,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-13-test1-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 7,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-13-test1-passage2",
+    "passage": 2,
+    "start": 24,
+    "end": 26,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-13-test2-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 9,
+    "count": 9
+  },
+  {
+    "examId": "cambridge-13-test2-passage2",
+    "passage": 2,
+    "start": 21,
+    "end": 26,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-13-test3-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 8,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-13-test3-passage2",
+    "passage": 2,
+    "start": 18,
+    "end": 23,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-13-test3-passage3",
+    "passage": 3,
+    "start": 32,
+    "end": 36,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-13-test4-passage1",
+    "passage": 1,
+    "start": 9,
+    "end": 13,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-13-test4-passage2",
+    "passage": 2,
+    "start": 14,
+    "end": 17,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-14-test1-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 8,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-14-test1-passage2",
+    "passage": 2,
+    "start": 23,
+    "end": 26,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-14-test1-passage3",
+    "passage": 3,
+    "start": 36,
+    "end": 40,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-14-test2-passage1",
+    "passage": 1,
+    "start": 9,
+    "end": 13,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-14-test2-passage2",
+    "passage": 2,
+    "start": 19,
+    "end": 26,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-14-test2-passage3",
+    "passage": 3,
+    "start": 35,
+    "end": 37,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-14-test3-passage2",
+    "passage": 2,
+    "start": 23,
+    "end": 26,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-14-test3-passage3",
+    "passage": 3,
+    "start": 37,
+    "end": 40,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-14-test4-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 8,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-14-test4-passage3",
+    "passage": 3,
+    "start": 34,
+    "end": 39,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-15-test1-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 4,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-15-test1-passage1",
+    "passage": 1,
+    "start": 8,
+    "end": 13,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-15-test1-passage2",
+    "passage": 2,
+    "start": 19,
+    "end": 22,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-15-test1-passage3",
+    "passage": 3,
+    "start": 38,
+    "end": 40,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-15-test2-passage1",
+    "passage": 1,
+    "start": 7,
+    "end": 13,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-15-test2-passage2",
+    "passage": 2,
+    "start": 18,
+    "end": 22,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-15-test3-passage1",
+    "passage": 1,
+    "start": 8,
+    "end": 13,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-15-test3-passage2",
+    "passage": 2,
+    "start": 21,
+    "end": 26,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-15-test4-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 8,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-15-test4-passage2",
+    "passage": 2,
+    "start": 20,
+    "end": 26,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-16-test1-passage1",
+    "passage": 1,
+    "start": 8,
+    "end": 13,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-16-test1-passage2",
+    "passage": 2,
+    "start": 21,
+    "end": 24,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-16-test2-passage1",
+    "passage": 1,
+    "start": 9,
+    "end": 13,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-16-test3-passage1",
+    "passage": 1,
+    "start": 6,
+    "end": 13,
+    "count": 8
+  },
+  {
+    "examId": "cambridge-16-test3-passage2",
+    "passage": 2,
+    "start": 20,
+    "end": 22,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-16-test3-passage3",
+    "passage": 3,
+    "start": 38,
+    "end": 40,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-16-test4-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 6,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-16-test4-passage1",
+    "passage": 1,
+    "start": 11,
+    "end": 13,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-17-test1-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 6,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-17-test1-passage2",
+    "passage": 2,
+    "start": 18,
+    "end": 22,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-17-test2-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 5,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-17-test2-passage2",
+    "passage": 2,
+    "start": 24,
+    "end": 26,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-17-test3-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 5,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-17-test3-passage2",
+    "passage": 2,
+    "start": 23,
+    "end": 26,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-17-test4-passage1",
+    "passage": 1,
+    "start": 7,
+    "end": 13,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-17-test4-passage2",
+    "passage": 2,
+    "start": 19,
+    "end": 22,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-17-test4-passage3",
+    "passage": 3,
+    "start": 37,
+    "end": 40,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-19-test1-passage1",
+    "passage": 1,
+    "start": 8,
+    "end": 13,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-19-test1-passage2",
+    "passage": 2,
+    "start": 24,
+    "end": 26,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-19-test2-passage1",
+    "passage": 1,
+    "start": 1,
+    "end": 7,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-19-test2-passage2",
+    "passage": 2,
+    "start": 19,
+    "end": 22,
+    "count": 4
+  },
+  {
+    "examId": "cambridge-19-test3-passage1",
+    "passage": 1,
+    "start": 8,
+    "end": 13,
+    "count": 6
+  },
+  {
+    "examId": "cambridge-19-test3-passage2",
+    "passage": 2,
+    "start": 18,
+    "end": 22,
+    "count": 5
+  },
+  {
+    "examId": "cambridge-19-test4-passage1",
+    "passage": 1,
+    "start": 7,
+    "end": 13,
+    "count": 7
+  },
+  {
+    "examId": "cambridge-19-test4-passage2",
+    "passage": 2,
+    "start": 24,
+    "end": 26,
+    "count": 3
+  },
+  {
+    "examId": "cambridge-19-test4-passage3",
+    "passage": 3,
+    "start": 31,
+    "end": 35,
+    "count": 5
+  }
+]

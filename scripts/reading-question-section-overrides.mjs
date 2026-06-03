@@ -244,5 +244,92 @@ NOT GIVEN if it is impossible to say what the writer thinks about this
 23 Britain could become the first European country to reintroduce the lynx.
 24 The large growth in the European lynx population since 1970 has exceeded conservationists' expectations.
 25 Changes in agricultural practices have extended the habitat of the lynx in Europe.
-26 It has become apparent that species reintroduction has commercial advantages.`
+26 It has become apparent that species reintroduction has commercial advantages.`,
+
+  'cambridge-16-test1-passage2': `Questions 14-20
+Reading Passage 2 has seven paragraphs, A-G.
+Choose the correct heading for each paragraph from the list of headings below.
+Write the correct number, i-ix, in boxes 14-20 on your answer sheet.
+List of Headings
+i The areas and artefacts within the pyramid itself
+ii A difficult task for those involved
+iii A king who saved his people
+iv A single certainty among other less definite facts
+v An overview of the external buildings and areas
+vi A pyramid design that others copied
+vii An idea for changing the design of burial structures
+viii An incredible experience despite the few remains
+ix The answers to some unexpected questions
+14 Paragraph A
+15 Paragraph B
+16 Paragraph C
+17 Paragraph D
+18 Paragraph E
+19 Paragraph F
+20 Paragraph G
+
+Questions 21-24
+Complete the notes below.
+Choose ONE WORD ONLY from the passage for each answer.
+Write your answers in boxes 21-24 on your answer sheet.
+The Step Pyramid of Djoser
+The complex that includes the Step Pyramid and its surroundings is considered to be
+as big as an Egyptian 21 ………………… of the past. The area outside the pyramid
+included accommodation that was occupied by 22 …………………, along with
+many other buildings and features.
+A wall ran around the outside of the complex and a number of false entrances were
+built into this. In addition, a long 23 ………………… encircled the wall. As a result,
+any visitors who had not been invited were cleverly prevented from entering the
+pyramid grounds unless they knew the 24 ………………… of the real entrance.
+
+Questions 25-26
+Choose TWO letters, A-E.
+Write the correct letters in boxes 25 and 26 on your answer sheet.
+Which TWO of the following points does the writer make about King Djoser?
+A Initially he had to be persuaded to build in stone rather than clay.
+B There is disagreement concerning the length of his reign.
+C He failed to appreciate Imhotep's part in the design of the Step Pyramid.
+D A few of his possessions were still in his tomb when archaeologists found it.
+E He criticised the design and construction of other pyramids in Egypt.`,
+
+  'cambridge-14-test1-passage1': `Questions 1-8
+
+Complete the notes below.
+
+Choose ONE WORD ONLY from the passage for each answer.
+
+Write your answers in boxes 1-8 on your answer sheet.
+
+Children's play
+
+Uses of children's play
+• building a 'magical kingdom' may help develop 1 ………………………………
+• board games involve 2 ……………………………… and turn-taking
+
+Recent changes affecting children's play
+• population of 3 ……………………………… have grown
+• opportunities for free play are limited due to
+  – fear of 4 ………………………………
+  – fear of 5 ………………………………
+  – increased 6 ……………………………… in schools
+
+International policies on children's play
+• it is difficult to find 7 ……………………………… to support new policies
+• research needs to study the impact of play on the rest of the child's 8 ………………………………
+
+Questions 9-13
+
+Do the following statements agree with the information given in Reading Passage 1?
+
+In boxes 9-13 on your answer sheet, write
+
+TRUE if the statement agrees with the information
+FALSE if the statement contradicts the information
+NOT GIVEN if there is no information on this
+
+9 Children with good self-control are known to be likely to do well at school later on.
+10 The way a child plays may provide information about possible medical problems.
+11 Playing with dolls was found to benefit girls' writing more than boys' writing.
+12 Children had problems thinking up ideas when they first created the story with Lego.
+13 People nowadays regard children's play as less significant than they did in the past.`
 }

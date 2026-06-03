@@ -7,6 +7,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { READING_QUESTION_SECTION_OVERRIDES } from './reading-question-section-overrides.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
@@ -72,6 +73,11 @@ const exams = EXAM_MAP.map(({ id, key, test, passage }) => {
   } catch (error) {
     console.error(`Failed to parse ${id}:`, error.message)
     throw error
+  }
+
+  const sectionOverride = READING_QUESTION_SECTION_OVERRIDES[id]
+  if (sectionOverride && parsedPayload?.passages?.[0]) {
+    parsedPayload.passages[0].questionSectionText = sectionOverride
   }
 
   return {

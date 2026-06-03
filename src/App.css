@@ -13224,7 +13224,7 @@ body,
 /* Hand-authored summary completion layout. Clean, no bold text, mix of
    flowing paragraphs and bullet sentences, prominent ONE WORD ONLY note. */
 .readingFillNewGroup .readingFillGroupHeader h4 {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .readingFillNewInstruction {
@@ -13264,15 +13264,15 @@ body,
 .readingFillNewTitle {
   margin: 0 0 10px;
   font-size: 1.08rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #0f172a;
 }
 
 .readingFillNewSubheading {
   margin: 12px 0 4px;
   font-size: 1rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-weight: 500;
+  color: #334155;
 }
 
 .readingFillNewPara {

@@ -10,6 +10,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { READING_QUESTION_SECTION_OVERRIDES } from './reading-question-section-overrides.mjs'
+import { resolveReadingPassageBodyParagraphs } from '../server/readingImportUtils.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
@@ -61,21 +62,16 @@ const extractQuestionSection = (rawPassageText) => {
     .trim()
 }
 
-const splitBodyParagraphs = (body) => {
+const splitBodyParagraphs = (body, title = '') => {
   const text = stripHtml(body)
   if (!text) return []
 
   const byBlank = text.split(/\n\s*\n/).map((chunk) => chunk.trim()).filter((chunk) => chunk.length > 40)
-  if (byBlank.length > 1) return byBlank
+  if (byBlank.length > 1) {
+    return resolveReadingPassageBodyParagraphs(title, byBlank)
+  }
 
-  const sentences = text
-    .split(/(?<=[.!?]["']?)\s+(?=[A-Z"'(])/)
-    .map((chunk) => chunk.trim())
-    .filter(Boolean)
-  const kept = sentences.filter((chunk) => chunk.length > 40)
-  const joined = kept.join(' ')
-  if (!kept.length || joined.length < text.length * 0.95) return [text]
-  return kept
+  return resolveReadingPassageBodyParagraphs(title, [text])
 }
 
 const parseAnswerKeyPrompts = (rawAnswerKey) => {
@@ -142,7 +138,7 @@ for (const book of books) {
 
     const body = extractPassageBody(imported.rawPassageText)
     if (!isUsableBody(body)) return exam
-    const bodyParagraphs = splitBodyParagraphs(body)
+    const bodyParagraphs = splitBodyParagraphs(body, passage.title || exam.title)
     const titleLine = body.split(/\s+/).slice(0, 8).join(' ') || passage.title
 
     const override = READING_QUESTION_SECTION_OVERRIDES[exam.id]

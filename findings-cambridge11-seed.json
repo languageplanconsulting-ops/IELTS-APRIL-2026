@@ -1,0 +1,134 @@
+[
+  {
+    "examId": "cambridge-11-test1-passage2",
+    "passageNumber": 2,
+    "questionNumber": null,
+    "kind": "passage_ocr",
+    "currentValue": "5m Millennium Link project",
+    "suggestedValue": "£84.5m Millennium Link project",
+    "source": "https://ieltstrainingonline.com/practice-cam-11-reading-test-01-with-answer/",
+    "reasoning": "Should be £84.5m per official source.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test1-passage2",
+    "passageNumber": 2,
+    "questionNumber": null,
+    "kind": "passage_truncated",
+    "currentValue": "Union Canal.5 km",
+    "suggestedValue": "Union Canal. Historically, the two canals had been joined near the town of Falkirk by a sequence of 11 locks – enclosed sections of canal in which the water level could be raised or lowered – that stepped down across a distance of 1.5 km.",
+    "source": "https://ieltsdeal.com/ielts-reading-cambridge-11-test-1-reading-passage-2-the-falkirk-wheel-with-solutions-and-best-explanations/",
+    "reasoning": "Missing 11-locks sentence.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test1-passage2",
+    "passageNumber": 2,
+    "questionNumber": null,
+    "kind": "passage_ocr",
+    "currentValue": "180&deg;",
+    "suggestedValue": "180°",
+    "source": "https://ieltstrainingonline.com/practice-cam-11-reading-test-01-with-answer/",
+    "reasoning": "HTML entity instead of unicode.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test1-passage2",
+    "passageNumber": 2,
+    "questionNumber": 19,
+    "kind": "wrong_prompt",
+    "currentValue": "The construction of the Falkirk Wheel site took into account the presence of",
+    "suggestedValue": "The construction of the Falkirk Wheel site took into account the presence of a nearby ancient monument.",
+    "source": "http://cambridgeieltssolution.com/cambridge-ielts-11-test-1-reading-passage-2-the-falkirk-wheel-solution-with-answer-key/",
+    "reasoning": "Q19 prompt truncated.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test1-passage3",
+    "passageNumber": 3,
+    "questionNumber": null,
+    "kind": "passage_ocr",
+    "currentValue": "Dr Dan Hunt",
+    "suggestedValue": "Dr Dan Lunt",
+    "source": "https://mini-ielts.com/388/view-solution/reading/reducing-the-effects-of-climate-change",
+    "reasoning": "Scientist name is Lunt (Univ Bristol), not Hunt.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test2-passage1",
+    "passageNumber": 1,
+    "questionNumber": null,
+    "kind": "passage_ocr",
+    "currentValue": "Interest ^ in the project grew",
+    "suggestedValue": "Interest in the project grew",
+    "source": "https://mini-ielts.com/393/view-solution/reading/raising-the-mary-rose",
+    "reasoning": "Caret OCR artifact.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test3-passage2",
+    "passageNumber": 2,
+    "questionNumber": 20,
+    "kind": "wrong_prompt",
+    "currentValue": "During migration, animals are unlikely to",
+    "suggestedValue": "To prepare for migration, animals are likely to",
+    "source": "https://www.readingielts.com/cambridge-ielts-11-reading-test-3-answers/",
+    "reasoning": "Q20 prompt swapped with Q21.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test3-passage2",
+    "passageNumber": 2,
+    "questionNumber": 21,
+    "kind": "wrong_prompt",
+    "currentValue": "Arctic terns illustrate migrating animals' ability to",
+    "suggestedValue": "During migration, animals are unlikely to",
+    "source": "https://www.readingielts.com/cambridge-ielts-11-reading-test-3-answers/",
+    "reasoning": "Q21 prompt swapped with Q22.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test3-passage1",
+    "passageNumber": 1,
+    "questionNumber": null,
+    "kind": "passage_truncated",
+    "currentValue": "The story of silk The history of the",
+    "suggestedValue": "The Story of Silk — The history of the world's most luxurious fabric, from ancient China to the present day",
+    "source": "https://ieltstrainingonline.com/practice-cambridge-ielts-11-reading-test-03-with-answer/",
+    "reasoning": "Title incomplete.",
+    "confidence": "high"
+  },
+  {
+    "examId": "cambridge-11-test2-passage2",
+    "passageNumber": 2,
+    "questionNumber": 25,
+    "kind": "wrong_answer",
+    "currentValue": "C",
+    "suggestedValue": "B",
+    "source": "https://ieltstrainingonline.com/practice-cam-11-reading-test-02-with-answer/",
+    "reasoning": "Q25 expected B per official source — possible swap with Q26.",
+    "confidence": "medium"
+  },
+  {
+    "examId": "cambridge-11-test2-passage2",
+    "passageNumber": 2,
+    "questionNumber": 26,
+    "kind": "wrong_answer",
+    "currentValue": "B",
+    "suggestedValue": "C",
+    "source": "https://ieltstrainingonline.com/practice-cam-11-reading-test-02-with-answer/",
+    "reasoning": "Q26 expected C per official source — possible swap with Q25.",
+    "confidence": "medium"
+  },
+  {
+    "examId": "cambridge-11-test3-passage3",
+    "passageNumber": 3,
+    "questionNumber": null,
+    "kind": "passage_truncated",
+    "currentValue": "parts so simple a beginner could play them. There are some discoveries",
+    "suggestedValue": "parts so simple a beginner could play them. So it is with mathematics as well. There are some discoveries",
+    "source": "https://ieltsdeal.com/ielts-academic-reading-cambridge-11-test-3-reading-passage-3-preface-to-how-the-other-half-thinks-adventures-in-mathematical-reasoning-with-best-solutions-and-detailed-explanatio/",
+    "reasoning": "Missing transition sentence between music analogy and math.",
+    "confidence": "high"
+  }
+]

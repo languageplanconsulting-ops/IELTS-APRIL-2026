@@ -211,6 +211,22 @@ const inferPassageSlot = (exam: ReadingExamRecord): 1 | 2 | 3 => {
   return 1
 }
 
+export const orderJourneySourceExams = (
+  sourceExams: [ReadingExamRecord, ReadingExamRecord, ReadingExamRecord]
+) =>
+  [...sourceExams].sort(
+    (first, second) => inferPassageSlot(first) - inferPassageSlot(second)
+  ) as [ReadingExamRecord, ReadingExamRecord, ReadingExamRecord]
+
+export const getJourneyPassageQuestionOffset = (
+  sourcePassage: ReadingPassageRecord,
+  slot: 1 | 2 | 3
+) => {
+  const targetStart = QUESTION_START_BY_PASSAGE_SLOT[slot - 1]
+  const { min } = getQuestionNumberBounds(sourcePassage)
+  return min > 0 ? targetStart - min : targetStart - 1
+}
+
 /** Remap IELTS question numbers in section text without touching dates like 1946/7 or 70 CE. */
 export const remapReadingQuestionNumbersInSectionText = (text: string, offset: number) => {
   if (!offset) return String(text || '')

@@ -6,8 +6,8 @@ import { LandingPageDraft } from './admin/LandingPageDraft'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import { AdminVideoStudio } from './AdminVideoStudio'
 import {
-  findNewFillBlankSet,
   findNewFillBlankQuestion,
+  NEW_FILL_BLANK_SETS,
   type NewFillBlankSet
 } from './readingNewFillBlankQuestions'
 import {
@@ -18588,16 +18588,19 @@ function App() {
     const groupWordCountHint = inferWordCountHintFromInstruction(group.instruction)
 
     // Hand-authored override: when an override set covers the group's number
-    // range for this exam, render the new clean format and skip the legacy
-    // displayLines path entirely.
+    // range for this exam EXACTLY, render the new clean format and skip the
+    // legacy displayLines path entirely. Match exactly so a wider source-only
+    // set (kept for journey rebuild) doesn't shadow a narrower set that
+    // matches the actual group rendered in this view.
     const overrideSet = activeReadingExam
-      ? findNewFillBlankSet(activeReadingExam.id, group.start)
+      ? NEW_FILL_BLANK_SETS.find(
+          (set) =>
+            set.examId === activeReadingExam.id &&
+            set.startNumber === group.start &&
+            set.endNumber === group.end
+        )
       : null
-    if (
-      overrideSet &&
-      overrideSet.startNumber === group.start &&
-      overrideSet.endNumber === group.end
-    ) {
+    if (overrideSet) {
       return renderNewFillBlankSet(overrideSet, questionByNumber)
     }
 
