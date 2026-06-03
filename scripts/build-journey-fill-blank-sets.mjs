@@ -53,14 +53,38 @@ for (const definition of definitions) {
   const journeyExam = journeyExams.find((exam) => exam.id === definition.id)
   if (!journeyExam) continue
 
+  if (definition.intensive || definition.stageNumber <= 15) {
+    for (let index = 0; index < 2; index += 1) {
+      const slot = index + 1
+      const passage = journeyExam.parsedPayload.passages[index]
+      if (!passage) continue
+
+      const groups = buildReadingFillQuestionGroups(passage, passage.questions, noop, definition.id)
+      for (const group of groups) {
+        const fillQuestions = group.questions.filter((question) => question.answerType === 'text')
+        if (!fillQuestions.length || isLetterFillGroup(fillQuestions)) continue
+
+        const generated = generateFillBlankSet({
+          examId: definition.id,
+          passage,
+          fillQuestions,
+          groupInstruction: group.instruction,
+          thaiGlossary
+        })
+        if (generated) journeySets.push(generated)
+      }
+    }
+    continue
+  }
+
   const sourceExams = definition.sourceExamIds
     .map((examId) => pool.find((exam) => exam.id === examId))
     .filter(Boolean)
-  if (sourceExams.length !== 3) continue
+  if (sourceExams.length !== 2) continue
 
   const orderedSources = orderJourneySourceExams(sourceExams)
 
-  for (let index = 0; index < 3; index += 1) {
+  for (let index = 0; index < 2; index += 1) {
     const slot = index + 1
     const passage = journeyExam.parsedPayload.passages[index]
     const sourceExam = orderedSources[index]

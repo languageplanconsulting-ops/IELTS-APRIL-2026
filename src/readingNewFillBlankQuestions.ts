@@ -57,8 +57,15 @@ export type NewFillBlankSet = {
 
 import generatedSets from './generated/readingNewFillBlankSets.json'
 import journeySets from './generated/journeyFillBlankSets.json'
+import { INTENSIVE_JOURNEY_FILL_BLANK_SETS } from './intensiveJourneyFillBlankSets.ts'
+import { paraphraseFillBlankSet } from './readingFillBlankParaphrase.ts'
+import {
+  fillBlankSetsOverlap,
+  isLowQualityFillBlankSet
+} from './readingFillBlankQuality.ts'
 
 export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
+  ...INTENSIVE_JOURNEY_FILL_BLANK_SETS,
   {
     examId: 'cambridge-11-test1-passage1',
     passageNumber: 1,
@@ -186,7 +193,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'International organisations lack the {7} needed to support new policies, and researchers still need data on how play affects the rest of a child\'s {8}.'
+          'International organisations lack the {7} needed to support new, and researchers still need data on how play affects the rest of a child\'s {8}.'
       }
     ],
     questions: [
@@ -535,7 +542,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'As industrialisation spread, small towns rapidly grew into large {8}. The new urban areas became overcrowded and were soon suffering from {9} as well as poor sanitation.'
+          'As industrialisation spread, small towns rapidly grew into large {8}. The new urban areas became and were soon suffering from {9} as well as poor sanitation.'
       },
       {
         type: 'para',
@@ -691,7 +698,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'Finally, the whole structure was lifted into the air. To protect the fragile timbers, the cradle was fitted with air {13} that cushioned the wooden framework.'
+          'Finally, the whole structure was lifted into the air. To protect the fragile timbers, the cradle was with air {13} that cushioned the wooden framework.'
       }
     ],
     questions: [
@@ -770,7 +777,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          "An MIT study in Singapore suggests that full car-sharing could meet demand with under 30 percent of today's vehicles. Research from Michigan suggests automation could cut vehicle {23} by 43 percent, while each car's annual {24} would roughly double."
+          'An MIT study in Singapore suggests that full car-sharing could meet demand with under 30 percent of today\'s. Research from Michigan suggests automation could cut vehicle {23} by 43 percent, while each car\'s annual {24} would roughly double.'
       },
       { type: 'bullet', text: 'Because every vehicle would be used much more intensively, its rate of {25} would rise and it would need replacing sooner.' },
       { type: 'bullet', text: 'As a result, overall vehicle {26} may not actually fall.' }
@@ -937,7 +944,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'From the 17th century onwards, a small number of tortoises were carried away from the islands by {8}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for months on board without {9} or water, and so were stored on long voyages.'
+          'From the 17th century onwards, a small number of tortoises were carried away from the islands by {8}, who took them as food. The arrival of whaling ships in the 1790s made the problem much worse, since these large animals could survive for on board without {9} or water, and so were stored on long voyages.'
       },
       { type: 'bullet', text: 'Sometimes their bodies were processed into high-grade {10}.' },
       {
@@ -946,7 +953,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
           'The damage grew further when {11} arrived on the islands. They hunted the tortoises and cleared the land for farming.'
       },
       { type: 'bullet', text: 'They also brought in alien {12} — cattle, pigs, goats, rats, dogs, plants and ants — that destroyed habitat.' },
-      { type: 'bullet', text: 'Many of these animals preyed on baby tortoises and on tortoise {13}.' }
+      { type: 'bullet', text:
+          'Many of these animals preyed on baby and on tortoise {13}.' }
     ],
     questions: [
       {
@@ -1019,7 +1027,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
           'From 1880 onwards, Cutty Sark entered the most successful phase of her working life, carrying {9} from Australia to Britain. Her next captain, Richard Woodget, was a highly skilled {10} who pushed the ship further south than any previous master.'
       },
       { type: 'bullet', text: 'In 1922 the ship was badly damaged by a {11} and was put into Falmouth harbour for repairs.' },
-      { type: 'bullet', text: 'Between 1923 and 1954 the restored Cutty Sark was used by Wilfred Dowman and his successors for {12}.' },
+      { type: 'bullet', text:
+          'Between 1923 and 1954 the restored Cutty Sark was used by Wilfred and his successors for {12}.' },
       {
         type: 'para',
         text:
@@ -1178,7 +1187,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          "After the harsh reviews of his 1931 exhibition, there were calls for Moore's {8} from the Royal College. When his contract ended, he left to start a sculpture department at the Chelsea School of Art. During the Second World War a shortage of {9} forced him to focus on drawing rather than sculpting."
+          'After the harsh reviews of his 1931 exhibition, there were calls for Moore\'s {8} from the Royal. When his contract ended, he left to start a sculpture department at the Chelsea School of Art. During the Second World War a shortage of draw {9} forced him to focus on drawing rather than sculpting.'
       },
       { type: 'bullet', text: 'In 1942 he returned to Castleford to sketch the {10} who worked there.' },
       {
@@ -1186,7 +1195,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
         text:
           'In 1944 the town of Harlow commissioned Moore to produce a sculpture depicting a {11}. He made dozens of clay studies, which were cast in bronze and issued in small editions.'
       },
-      { type: 'bullet', text: "In this way, Moore's work became available to {12} all over the world." },
+      { type: 'bullet', text:
+          'In this way, Moore\'s work available to {12} all over the world.' },
       { type: 'bullet', text: 'The boost to his {13} let him take on more ambitious projects on the scale his sculpture demanded.' }
     ],
     questions: [
@@ -1351,7 +1361,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'As factories drew workers into the cities, the rapid urbanisation that followed brought serious problems, including pollution and inadequate {7}.'
+          'As factories drew workers into the, the rapid urbanisation that followed brought serious problems, including pollution and inadequate {7}.'
       }
     ],
     questions: [
@@ -1487,7 +1497,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'Pollen evidence shows that Rapu Nui was once covered in palm forests, but the islanders cleared the trees for {21} and firewood. When they could no longer build {22} for fishing, they began eating {23} instead.'
+          'Pollen evidence shows that Rapu Nui was once covered in palm, but the islanders cleared the trees for {21} and. When they could no longer build {22} for fishing, they began eating {23} instead.'
       },
       {
         type: 'bullet',
@@ -1546,7 +1556,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'For John Eastwood, boredom means people cannot {24} because their attention system fails to engage. He also argues that people whose main life goal is {25} tend to cope poorly with boredom.'
+          'For John Eastwood, boredom means people cannot {24} because their fails to engage. He also argues that people whose main life goal is {25} tend to cope poorly with boredom.'
       },
       {
         type: 'bullet',
@@ -1597,7 +1607,7 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       {
         type: 'para',
         text:
-          'The leaves of the nutmeg tree are {1} in shape. The fruit is encased in a fleshy {2}, and the spice nutmeg comes from the {3} inside. The red covering of the seed is dried to produce {4}.'
+          'The leaves of the nutmeg tree are {1} in shape. The fruit is encased in a fleshy {2}, and the spice nutmeg comes from the {3} inside. The red of the seed is dried to produce {4}.'
       }
     ],
     questions: [
@@ -1732,7 +1742,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       },
       { type: 'bullet', text: 'The AI produces several rough {23}.' },
       { type: 'bullet', text: 'The artist selects one version and makes manual {24}.' },
-      { type: 'bullet', text: 'Each major decision is recorded in a process {25}.' },
+      { type: 'bullet', text:
+          'Each major is recorded in a process {25}.' },
       { type: 'bullet', text: 'Finally, the finished work should reveal human {26}.' }
     ],
     questions: [
@@ -1809,7 +1820,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       { type: 'bullet', text: 'Because it needs dense {21} for shelter, it would rarely come near farmland and is therefore unlikely to threaten sheep.' },
       {
         type: 'para',
-        text: 'Bringing lynx back fits naturally with efforts to restore {22} to bare upland areas — an aim that many conservation projects across Britain already share.'
+        text:
+          'lynx back fits naturally with efforts to restore {22} to bare upland areas — an aim that many conservation projects across Britain already share.'
       }
     ],
     questions: [
@@ -1869,7 +1881,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
         text: 'Seaweed is considered a particularly promising source material because, unlike crops such as maize, it does not require fresh {5} or agricultural land, and needs no {6} either.'
       },
       { type: 'bullet', text: 'Scientists have shown that seaweed can be turned into products including films and {7}.' },
-      { type: 'bullet', text: 'One company in Indonesia has gone further, creating packaging that is not only capable of natural breakdown but is also {8}.' }
+      { type: 'bullet', text:
+          'One company in Indonesia has gone further, creating packaging that is not only capable of natural breakdown but is also biodegradable {8}.' }
     ],
     questions: [
       {
@@ -1978,7 +1991,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
     summaryLines: [
       {
         type: 'para',
-        text: 'Tidal stream technology generates electricity by positioning {5} in areas of fast-moving ocean current. Unlike tidal range systems, it does not require large {6} that obstruct the mouths of rivers, which makes it less damaging to surrounding environments.'
+        text:
+          'Tidal stream technology generates electricity by positioning {5} in areas of fast-moving ocean current. Unlike tidal range systems, it does not large {6} that obstruct the mouths of rivers, which makes it less damaging to surrounding environments.'
       },
       { type: 'bullet', text: 'However, it remains costly to install and maintain because the {7} conditions at sea cause rapid deterioration of components.' },
       { type: 'bullet', text: 'According to one expert, the cost per unit of electricity produced is currently several times higher than that of {8} wind power.' }
@@ -2093,7 +2107,8 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
         text: 'Mycelium grows naturally by spreading its fibres through organic material, which it binds together. Producers can adjust the final product\'s characteristics by controlling factors such as temperature and the {5} from which the mycelium feeds.'
       },
       { type: 'bullet', text: 'When the material has grown to the correct shape, {6} is applied to stop further growth.' },
-      { type: 'bullet', text: 'The result is a firm, dry product. At the end of its life, it can be placed in a {7} heap and will break down naturally within a few weeks, returning entirely to the {8}.' }
+      { type: 'bullet', text:
+          'The result is a firm, dry product. At the end of its life, it can be placed in a {7} heap and will break down naturally a few weeks, returning entirely to the {8}.' }
     ],
     questions: [
       {
@@ -2194,15 +2209,25 @@ export const NEW_FILL_BLANK_SETS: NewFillBlankSet[] = [
   ...MANUAL_FILL_BLANK_SETS,
   ...(generatedSets as NewFillBlankSet[]).filter(
     (set) =>
-      !MANUAL_FILL_BLANK_SETS.some(
-        (manual) =>
-          manual.examId === set.examId &&
-          manual.startNumber === set.startNumber &&
-          manual.endNumber === set.endNumber
-      )
+      !MANUAL_FILL_BLANK_SETS.some((manual) => fillBlankSetsOverlap(manual, set)) &&
+      !isLowQualityFillBlankSet(set)
   ),
-  ...(journeySets as NewFillBlankSet[])
+  ...(journeySets as NewFillBlankSet[]).filter((set) => {
+    const stageMatch = String(set.examId || '').match(/journey-normal-stage-(\d+)/)
+    const stageNumber = stageMatch ? Number(stageMatch[1]) : 0
+    if (stageNumber >= 1 && stageNumber <= 15) return false
+    if (
+      ['journey-normal-stage-20', 'journey-normal-stage-21', 'journey-normal-stage-22'].includes(set.examId) &&
+      set.passageNumber <= 2
+    ) {
+      return false
+    }
+    if (MANUAL_FILL_BLANK_SETS.some((manual) => fillBlankSetsOverlap(manual, set))) return false
+    return !isLowQualityFillBlankSet(set)
+  })
 ]
+  .map(paraphraseFillBlankSet)
+  .filter((set) => !isLowQualityFillBlankSet(set))
 
 // Lookup helper — find the set that covers a given question number.
 export const findNewFillBlankSet = (

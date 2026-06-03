@@ -2,6 +2,10 @@
 import { buildJourneyExamRecords } from '../src/readingJourney.ts'
 import { buildReadingFillQuestionGroups } from '../src/readingFillDisplay.ts'
 import { NEW_FILL_BLANK_SETS } from '../src/readingNewFillBlankQuestions.ts'
+import {
+  fillBlankSetHasMissingBlankMarkers,
+  isLowQualityFillBlankSet
+} from '../src/readingFillBlankQuality.ts'
 const noop = () => false
 // Exclude letter-answer questions (paragraph matching / matching features)
 // so the audit mirrors how the real app renderer handles fill groups.
@@ -35,22 +39,17 @@ for (const ex of exams) {
 
       // Check 2: is the summary text clean?
       const allText = overrideSet.summaryLines.map(l => l.text || '').join(' ')
-      const garbledPatterns = [
-        /answer signal/i, /[a-z][A-Z]{3,}/, /[A-Z]{3,}[a-z]/, /\{[^0-9]/, /vooitisnn/,
-        /SUFr|USEd|PrOd|WEE\s|Key points from the passage\n.*\n.*\{/s,
-        /\{(\d+)\}[a-z]/, // placeholder immediately followed by lowercase (no space)
-      ]
-      const isGarbled = garbledPatterns.some(re => re.test(allText))
+      const isGarbled = isLowQualityFillBlankSet(overrideSet)
 
       // Check 3: summary lines without any placeholder (orphan headings with no blanks nearby)
       const hasPlaceholders = /\{\d+\}/.test(allText)
       const questionCount = overrideSet.questions.length
       const expectedCount = g.end - g.start + 1
 
-      if (isGarbled || !hasPlaceholders || questionCount !== expectedCount) {
+      if (isGarbled || !hasPlaceholders || questionCount !== expectedCount || fillBlankSetHasMissingBlankMarkers(overrideSet)) {
         issues.push({
           stage, passage: p.number, start: g.start, end: g.end,
-          issue: isGarbled ? 'GARBLED_TEXT' : !hasPlaceholders ? 'NO_PLACEHOLDERS' : 'QUESTION_COUNT_MISMATCH',
+          issue: isGarbled ? 'GARBLED_TEXT' : fillBlankSetHasMissingBlankMarkers(overrideSet) ? 'MISSING_BLANK' : !hasPlaceholders ? 'NO_PLACEHOLDERS' : 'QUESTION_COUNT_MISMATCH',
           title: p.title?.slice(0,50),
           summaryTitle: overrideSet.summaryTitle?.slice(0,50),
           expected: expectedCount, got: questionCount,

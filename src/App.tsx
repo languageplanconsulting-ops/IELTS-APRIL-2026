@@ -176,6 +176,13 @@ import {
   type ReadingFillQuestionGroup
 } from './readingFillDisplay'
 import {
+  READING_LETTER_OPTION_LINE,
+  extractReadingMatchingListOptions,
+  formatReadingMatchingChoiceOption,
+  getReadingPeopleMatchingChoiceOptions,
+  isReadingPeopleMatchingBlock
+} from './readingMatchingDisplay'
+import {
   reflowReadingPassageParagraphsForDisplay,
   sanitizeReadingPromptForDisplay as sanitizeReadingPromptForDisplayShared,
   sanitizeReadingQuestionSectionTextForDisplay as sanitizeReadingQuestionSectionTextShared
@@ -3733,20 +3740,51 @@ const resolveReadingEvidenceNeedleInPassage = (
   return stripped.length > 120 ? stripped.slice(0, 120).trim() : stripped
 }
 
+const MATCHING_HINT_HIGHLIGHT_COUNT = 4
+
 const buildReadingMatchingHintNeedles = (
   passage: ReadingPassageRecord | null,
   question: ReadingQuestion | null,
   allQuestions: ReadingQuestion[] = []
 ) => {
   if (!passage || !question) return []
+  const kind = getReadingMatchingQuestionKind(passage, question)
+  const useParagraphLabels = kind === 'information'
   const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question, allQuestions)
-  const portions = [correctText, ...distractors.slice(0, 3)].filter(Boolean)
-  return portions
-    .map((portion) => resolveReadingEvidenceNeedleInPassage(passage, portion))
-    .filter((needle, index, list) => {
-      const normalized = normalizeTextForLooseMatch(needle)
-      return normalized.length >= 8 && list.findIndex((item) => normalizeTextForLooseMatch(item) === normalized) === index
-    })
+  const excluded = new Set(getReadingMatchingExcludedParagraphIndices(passage, question, allQuestions))
+  const portions = [correctText, ...distractors.slice(0, MATCHING_HINT_HIGHLIGHT_COUNT - 1)].filter(Boolean)
+  const needles: string[] = []
+  const seen = new Set<string>()
+
+  const addPortion = (portion: string) => {
+    const resolved = resolveReadingEvidenceNeedleInPassage(passage, portion)
+    const normalized = normalizeTextForLooseMatch(resolved)
+    if (normalized.length < 8 || seen.has(normalized)) return
+    seen.add(normalized)
+    needles.push(resolved)
+  }
+
+  for (const portion of portions) {
+    if (needles.length >= MATCHING_HINT_HIGHLIGHT_COUNT) break
+    addPortion(portion)
+  }
+
+  const paragraphs = passage.bodyParagraphs || []
+  for (let index = 0; index < paragraphs.length && needles.length < MATCHING_HINT_HIGHLIGHT_COUNT; index += 1) {
+    if (excluded.has(index)) continue
+    const sentences = String(paragraphs[index] || '')
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+      .filter((sentence) => sentence.length >= 18)
+    const fallbackSentences = sentences.length ? sentences : [String(paragraphs[index] || '').replace(/\s+/g, ' ').trim()]
+    for (const sentence of fallbackSentences) {
+      if (needles.length >= MATCHING_HINT_HIGHLIGHT_COUNT) break
+      const prefix = useParagraphLabels ? `Paragraph ${getReadingPassageLabel(index)}: ` : ''
+      addPortion(prefix + clipReadingOptionText(sentence, useParagraphLabels ? 220 : 200))
+    }
+  }
+
+  return needles.slice(0, MATCHING_HINT_HIGHLIGHT_COUNT)
 }
 
 const READING_QUESTION_SECTION_HEADER_REGEX =
@@ -3865,10 +3903,22 @@ const parseReadingLetterOptionsFromText = (text: string): ReadingPdoyMultipleCho
 }
 
 const stripReadingMcqOptionsFromPrompt = (prompt: string) => {
-  let text = String(prompt || '').replace(/\s+/g, ' ').trim()
-  if (!text) return text
+  const raw = String(prompt || '').trim()
+  if (!raw) return raw
 
+  const lines = raw.split('\n').map((line) => line.trim()).filter(Boolean)
+  const stemLines: string[] = []
+  for (const line of lines) {
+    if (isReadingMcqOptionLine(line)) break
+    stemLines.push(line)
+  }
+  if (stemLines.length) return stemLines.join(' ').trim()
+
+  let text = raw.replace(/\s+/g, ' ').trim()
   text = stripReadingMatchingListFromPrompt(text)
+
+  const optionStart = text.search(/\s[A-G][\).]\s+/)
+  if (optionStart > 20) return text.slice(0, optionStart).trim()
 
   if (/\s[A-G]\)\s+/i.test(text)) {
     const cut = text.search(/\s[A-G]\)\s+/i)
@@ -3953,7 +4003,6 @@ const getReadingQuestionDisplayPrompt = (
   return prompt
 }
 
-const READING_LETTER_OPTION_LINE = /^([A-J])\s+(.+)$/i
 const READING_MCQ_OPTION_LINE = /^([A-G])[\s\).:\-_]+(.+)$/i
 
 const isReadingMcqOptionLine = (line: string) => {
@@ -4140,7 +4189,8 @@ const getReadingParagraphAnswerLetters = (sectionText: string) => {
   const rangeMatch =
     source.match(/\b([A-Z])\s*[-–—]\s*([A-Z])\b/i) ||
     source.match(/paragraphs?,?\s+([A-H])\s*[-–—]\s*([A-H])/i) ||
-    source.match(/boxes\s+([A-H])\s*[-–—]\s*([A-H])/i)
+    source.match(/boxes\s+([A-H])\s*[-–—]\s*([A-H])/i) ||
+    source.match(/(?:person|people|researcher),?\s+([A-H])\s*[-–—]\s*([A-H])/i)
   if (!rangeMatch) return null
   const startCode = rangeMatch[1].toUpperCase().charCodeAt(0)
   const endCode = rangeMatch[2].toUpperCase().charCodeAt(0)
@@ -4165,6 +4215,7 @@ const isReadingImplicitMatchingInformationQuestion = (
   if (isReadingChooseTwoSectionBlock(block)) return false
   if (isReadingFillSectionBlock(block)) return false
   if (/choose the correct letter/i.test(block)) return false
+  if (isReadingPeopleMatchingBlock(block)) return false
 
   const questionBlock = extractReadingQuestionBlock(block, question.number)
   if (parseReadingLetterOptionsFromText(questionBlock).length >= 2) return false
@@ -4183,6 +4234,8 @@ const isReadingMatchingInformationQuestion = (
   const range = findReadingQuestionRange(passage, question)
   const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
   const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+
+  if (isReadingPeopleMatchingBlock(block)) return false
 
   if (/which (?:paragraph|section) contains|contains the following information/i.test(block)) {
     const allowedLetters = getReadingParagraphAnswerLetters(block)
@@ -4233,6 +4286,7 @@ const isReadingMatchingStatementQuestion = (
   const block = extractReadingQuestionRangeBlock(passage?.questionSectionText || '', range.start, range.end)
   if (isReadingStandardMcqBlock(block)) return false
   if (isReadingFillSectionBlock(block)) return false
+  if (isReadingPeopleMatchingBlock(block)) return true
   return isReadingLetterBankMatchingBlock(block)
 }
 
@@ -4250,55 +4304,6 @@ const isReadingMatchingQuestion = (
   passage: ReadingPassageRecord | null,
   question: ReadingQuestion | null
 ) => getReadingMatchingQuestionKind(passage, question) !== null
-
-const extractReadingMatchingListOptions = (sourceText: string) => {
-  const listMatch = sourceText.match(
-    /List of (?:Headings|Ideas|Researchers|People|Statements|Companies|Dates|Words|Phrases|Endings)\s*\n([\s\S]*?)(?=\n\s*\d+\s*(?:[.)]|\s)|\nQuestions?\s+|\nNB\b|$)/i
-  )
-  const listSource = listMatch?.[1] || ''
-  const romanOptions = listSource
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const match = line.match(/^((?:i|ii|iii|iv|v|vi|vii|viii|ix|x))[\).:\-]?\s+(.+)$/i)
-      if (!match) return null
-      return { letter: match[1].toLowerCase(), text: match[2].trim() }
-    })
-    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
-  if (romanOptions.length) return romanOptions
-
-  const letterOptions = listSource
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const match = line.match(READING_LETTER_OPTION_LINE)
-      if (!match) return null
-      return { letter: match[1].toUpperCase(), text: match[2].trim() }
-    })
-    .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
-  if (letterOptions.length) return letterOptions
-
-  const inlineBankMatch = sourceText.match(
-    /\n([A-J]\s+[^\n]+(?:\n[A-J]\s+[^\n]+){2,})\s*(?:\nQuestions?\s+|\n##|$)/i
-  )
-  if (inlineBankMatch?.[1]) {
-    const inlineOptions = inlineBankMatch[1]
-      .split('\n')
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .map((line) => {
-        const match = line.match(READING_LETTER_OPTION_LINE)
-        if (!match) return null
-        return { letter: match[1].toUpperCase(), text: match[2].trim() }
-      })
-      .filter(Boolean) as ReadingPdoyMultipleChoiceOption[]
-    if (inlineOptions.length >= 3) return inlineOptions
-  }
-
-  return extractSharedReadingLetterOptionBank(sourceText)
-}
 
 const getReadingMatchingAnswerOptions = (
   passage: ReadingPassageRecord | null,
@@ -4326,8 +4331,17 @@ const getReadingMatchingAnswerOptions = (
     return paragraphLetters.map((letter) => ({ letter, text: `Paragraph ${letter}` }))
   }
 
-  const fromList = extractReadingMatchingListOptions(block || passage.questionSectionText || '')
+  const scopedBlock = block || passage.questionSectionText || ''
+  const fromList = extractReadingMatchingListOptions(scopedBlock)
   if (fromList.length) return fromList
+
+  if (kind === 'statement' && isReadingPeopleMatchingBlock(scopedBlock)) {
+    const peopleOptions = getReadingPeopleMatchingChoiceOptions(
+      scopedBlock,
+      passage.bodyParagraphs || []
+    )
+    if (peopleOptions.length) return peopleOptions
+  }
 
   if (kind === 'statement') {
     const paragraphOptions = (passage.bodyParagraphs || [])
@@ -4480,9 +4494,11 @@ const buildReadingMatchingGroupFromQuestions = (
 ): ReadingMatchingGroup => {
   const start = questions[0].number
   const end = questions[questions.length - 1].number
+  const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', start, end)
+  const peopleMatching = kind === 'statement' && isReadingPeopleMatchingBlock(block)
   const choiceOptions = getReadingMatchingAnswerOptions(passage, questions[0], kind)
   const choiceLabel =
-    kind === 'heading' ? 'Heading' : kind === 'information' ? 'Paragraph' : 'Answer'
+    kind === 'heading' ? 'Heading' : kind === 'information' ? 'Paragraph' : peopleMatching ? 'Person' : 'Answer'
 
   return {
     id: `${passage.number}-${kind}-${start}-${end}`,
@@ -4901,6 +4917,9 @@ const extractReadingMultipleChoiceOptions = (
     if (options.length) return options
   }
 
+  const promptOptions = parseReadingLetterOptionsFromText(String(question.prompt || ''))
+  if (promptOptions.length >= 2) return promptOptions
+
   if (sectionBlock && isReadingStandardMcqBlock(sectionBlock)) {
     return []
   }
@@ -4980,7 +4999,8 @@ const buildReadingMatchingEvidencePortions = (
     getReadingMatchingExcludedParagraphIndices(passage, question, allQuestions)
   )
   const paragraphs = passage?.bodyParagraphs || []
-  const useParagraphLabels = isReadingMatchingQuestion(passage, question)
+  const kind = getReadingMatchingQuestionKind(passage, question)
+  const useParagraphLabels = kind === 'information'
   const isParagraphExcluded = (index: number) => excludedParagraphIndices.has(index)
 
   const pickTrapSentenceSnippet = (paragraph: string, index: number) => {
@@ -5045,6 +5065,19 @@ const buildReadingMatchingEvidencePortions = (
       !distractors.some((item) => normalizeTextForLooseMatch(item) === normalizedSnippet)
     ) {
       distractors.push(entry.snippet)
+    }
+  }
+
+  for (let index = 0; index < paragraphs.length && distractors.length < 3; index += 1) {
+    if (index === focusIndex || isParagraphExcluded(index)) continue
+    const snippet = pickTrapSentenceSnippet(paragraphs[index], index)
+    const normalizedSnippet = normalizeTextForLooseMatch(snippet)
+    if (
+      normalizedSnippet &&
+      (!correctNormalized || !normalizedSnippet.includes(correctNormalized)) &&
+      !distractors.some((item) => normalizeTextForLooseMatch(item) === normalizedSnippet)
+    ) {
+      distractors.push(snippet)
     }
   }
 
@@ -5847,12 +5880,25 @@ const parseParaphraseBridge = (value: string) => {
 
   if (!firstSegment) return null
 
-  const parts = firstSegment.split(/\s*(?:=|->|→)\s*/).map((item) => item.trim()).filter(Boolean)
+  const parts = firstSegment.split(/\s*(?:=|->|→|↔)\s*/).map((item) => item.trim()).filter(Boolean)
   if (parts.length < 2) return null
 
   return {
     questionKeyword: parts[0].replace(/^\[|\]$/g, '').trim(),
     passageKeyword: parts[1].replace(/^\[|\]$/g, '').trim()
+  }
+}
+
+/** Intensive journey: explanationThai is often `passage = question = Thai`. */
+const parseIntensiveExplanationEquation = (explanationThai: string) => {
+  const raw = String(explanationThai || '').trim()
+  if (!raw || !raw.includes('=')) return null
+  const parts = raw.split(/\s*=\s*/).map((item) => item.trim()).filter(Boolean)
+  if (parts.length < 3) return null
+  return {
+    passageKeyword: parts[0],
+    questionKeyword: parts[1],
+    thaiMeaning: parts.slice(2).join(' = ')
   }
 }
 
@@ -5862,6 +5908,9 @@ const buildReadingParaphraseEquation = (
 ) => {
   if (!question) return null
 
+  const intensiveEquation = parseIntensiveExplanationEquation(question.explanationThai)
+  if (intensiveEquation) return intensiveEquation
+
   const target = buildReadingFillWordTarget(question)
   const bridge = parseParaphraseBridge(question.paraphrasedVocabulary)
   const exactNeedle = buildReadingHintNeedles(question.exactPortion)[0] || String(question.exactPortion || '').trim()
@@ -5869,8 +5918,10 @@ const buildReadingParaphraseEquation = (
     target?.important || bridge?.questionKeyword || pickReadingPdoyQuestionClue(question).clue || question.correctAnswer
   ).trim()
   const passageKeyword = String(target?.match || bridge?.passageKeyword || exactNeedle || question.correctAnswer).trim()
+  const thaiFromExplanation = parseIntensiveExplanationEquation(question.explanationThai)?.thaiMeaning
   const thaiMeaning = String(
-    target?.matchThai ||
+    thaiFromExplanation ||
+      target?.matchThai ||
       target?.importantThai ||
       lookupReadingThaiMeaning(questionKeyword) ||
       lookupReadingThaiMeaning(passageKeyword) ||
@@ -18552,23 +18603,24 @@ function App() {
           )}
           {set.summaryLines.map((line, lineIndex) => {
             const key = `line-${lineIndex}`
+            const displayText = line.text
             if (line.type === 'heading') {
               return (
                 <p key={key} className="readingFillNewSubheading">
-                  {line.text}
+                  {displayText}
                 </p>
               )
             }
             if (line.type === 'bullet') {
               return (
                 <p key={key} className="readingFillNewBullet">
-                  {renderLineSegments(line.text, key)}
+                  {renderLineSegments(displayText, key)}
                 </p>
               )
             }
             return (
               <p key={key} className="readingFillNewPara">
-                {renderLineSegments(line.text, key)}
+                {renderLineSegments(displayText, key)}
               </p>
             )
           })}
@@ -18899,6 +18951,7 @@ function App() {
 
   const renderReadingMatchingGroup = (group: ReadingMatchingGroup) => {
     const hintedQuestion = group.questions.find((question) => question.number === readingHintQuestionNumber)
+    const peopleMatching = group.kind === 'statement' && isReadingPeopleMatchingBlock(group.instruction)
     const choiceListTitle =
       group.kind === 'heading'
         ? 'List of headings'
@@ -18930,7 +18983,9 @@ function App() {
                 ? 'Choose the correct heading'
                 : group.kind === 'information'
                   ? 'Which section contains this information?'
-                  : 'Match each statement'}
+                  : peopleMatching
+                    ? 'Match each statement with the correct person'
+                    : 'Match each statement'}
             </h4>
           </div>
         </div>
@@ -19010,7 +19065,9 @@ function App() {
                 ? 'Select heading'
                 : group.kind === 'information'
                   ? 'Select paragraph'
-                  : 'Select answer'
+                  : peopleMatching
+                    ? 'Select person'
+                    : 'Select answer'
             return (
               <div
                 key={`reading-matching-row-${group.id}-${question.number}`}
@@ -19033,9 +19090,7 @@ function App() {
                     <option value="">{selectPlaceholder}</option>
                     {group.choiceOptions.map((option) => (
                       <option key={`${group.id}-${question.number}-${option.letter}`} value={option.letter}>
-                        {group.kind === 'information'
-                          ? `Paragraph ${option.letter}`
-                          : `${option.letter}. ${option.text}`}
+                        {formatReadingMatchingChoiceOption(option, group.kind, peopleMatching)}
                       </option>
                     ))}
                   </select>
@@ -19043,7 +19098,8 @@ function App() {
                 </div>
                 {isHinting && (
                   <p className="readingMatchingInfoHintNote">
-                    Four possible evidence portions are highlighted in the passage on the left.
+                    Four possible evidence portions are highlighted in the passage on the left. Decide which
+                    one actually supports this answer.
                   </p>
                 )}
               </div>
@@ -19052,7 +19108,8 @@ function App() {
         </div>
         {hintedQuestion && (
           <div className="readingHintBox">
-            <strong>Hint:</strong> four possible evidence portions are highlighted in the passage.
+            <strong>Hint:</strong> four possible evidence portions are highlighted in the passage — pick the one
+            that supports your answer.
           </div>
         )}
       </article>
@@ -19366,12 +19423,20 @@ function App() {
     const matchingKind = getReadingMatchingQuestionKind(passage, question)
     if (matchingKind) {
       const options = getReadingMatchingAnswerOptions(passage, question, matchingKind)
+      const range = passage ? findReadingQuestionRange(passage, question) : null
+      const block =
+        passage && range
+          ? extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
+          : ''
+      const peopleMatching = matchingKind === 'statement' && isReadingPeopleMatchingBlock(block)
       const placeholder =
         matchingKind === 'heading'
           ? 'Select heading'
           : matchingKind === 'information'
             ? 'Select paragraph'
-            : 'Select answer'
+            : peopleMatching
+              ? 'Select person'
+              : 'Select answer'
       return (
         <select
           value={value}
@@ -19384,9 +19449,7 @@ function App() {
           <option value="">{placeholder}</option>
           {options.map((option) => (
             <option key={`${question.number}-${option.letter}`} value={option.letter}>
-              {matchingKind === 'information'
-                ? `Paragraph ${option.letter}`
-                : `${option.letter}. ${option.text}`}
+              {formatReadingMatchingChoiceOption(option, matchingKind, peopleMatching)}
             </option>
           ))}
         </select>
@@ -21212,7 +21275,7 @@ function App() {
                     <span className="readingJourneyJournalTag">Normal · Mission Mode</span>
                     <h3 className="readingJourneyJournalTitle">สมุดภารกิจ Reading</h3>
                     <p className="readingJourneyJournalLead">
-                      แต่ละด่าน = 3 passages สุ่มจากชุดที่อัปโหลด · ต้องมี Fill · TFNG/YNNG · Matching headings — เคลียร์ที่{' '}
+                      แต่ละด่าน = 2 passages (ด่าน 1–15 ชุดฝึก intensive · ด่าน 16+ สุ่มจากชุดที่อัปโหลด) · Fill · TFNG/YNNG · Matching — เคลียร์ที่{' '}
                       <strong>{READING_JOURNEY_UNLOCK_PERCENT}%+</strong> ถึงจะเปิดด่านถัดไป
                     </p>
                     <div className="readingJourneyJournalChips">
@@ -21306,11 +21369,11 @@ function App() {
                             <h4 className="readingJourneyMissionName">ด่าน {stage.stageNumber}</h4>
                             <p className="readingJourneyMissionObjective">
                               {exam
-                                ? getJourneyStageTypeSummary(exam).replace('3 passages · ', '')
+                                ? getJourneyStageTypeSummary(exam).replace(/^\d+ passages · /, '')
                                 : 'Fill · TFNG/YNNG · Matching headings'}
                             </p>
                             <ul className="readingJourneyMissionLoot">
-                              <li>📜 3 passages สุ่ม</li>
+                              <li>📜 {exam?.parsedPayload?.passages?.length || 2} passages</li>
                               <li>🎯 เป้า {READING_JOURNEY_UNLOCK_PERCENT}%+</li>
                               {attempt ? <li>📊 ล่าสุด {attempt.accuracy}%</li> : <li>✨ ยังไม่ลอง</li>}
                             </ul>
@@ -22753,7 +22816,10 @@ function App() {
                             </div>
                           </div>
                         )}
-                        <p>{item.explanationThai}</p>
+                        {!paraphraseEquation && item.explanationThai && <p>{item.explanationThai}</p>}
+                        {paraphraseEquation && item.explanationThai && !parseIntensiveExplanationEquation(item.explanationThai) && (
+                          <p className="meta">{item.explanationThai}</p>
+                        )}
                         {isNotGivenReport && (
                           <p className="meta">Related portion (topic + question words, but not TRUE/FALSE or YES/NO):</p>
                         )}

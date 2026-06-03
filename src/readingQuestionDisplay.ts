@@ -5,6 +5,13 @@ import {
   isReadingFillStylePrompt,
   type ReadingFillQuestionGroup
 } from './readingFillDisplay'
+import {
+  READING_LETTER_OPTION_LINE,
+  extractReadingMatchingListOptions,
+  getReadingPeopleMatchingChoiceOptions,
+  hasNamedPeopleMatchingOptions,
+  isReadingPeopleMatchingBlock
+} from './readingMatchingDisplay'
 
 export type ReadingQuestionDisplayOption = { letter: string; text: string }
 
@@ -70,7 +77,6 @@ export type ReadingQuestionDisplayMode =
   | 'fill-fallback'
   | 'individual'
 
-const READING_LETTER_OPTION_LINE = /^([A-J])\s+(.+)$/i
 const READING_MCQ_OPTION_LINE = /^([A-G])[\s\).:\-_]+(.+)$/i
 const READING_QUESTION_SECTION_HEADER_REGEX =
   /(?:^|\n)\s*(?:#+\s*)?Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
@@ -406,6 +412,7 @@ const isReadingImplicitMatchingInformationQuestion = (
   if (isReadingChooseTwoSectionBlock(block)) return false
   if (isReadingFillSectionBlock(block)) return false
   if (/choose the correct letter/i.test(block)) return false
+  if (isReadingPeopleMatchingBlock(block)) return false
 
   const questionBlock = extractReadingQuestionBlock(block, question.number)
   if (parseReadingLetterOptionsFromText(questionBlock).length >= 2) return false
@@ -424,6 +431,8 @@ const isReadingMatchingInformationQuestion = (
   const range = findReadingQuestionRange(passage, question)
   const block = extractReadingQuestionRangeBlock(passage.questionSectionText || '', range.start, range.end)
   const answer = canonicalizeReadingCorrectAnswer(question.correctAnswer)
+
+  if (isReadingPeopleMatchingBlock(block)) return false
 
   if (/which (?:paragraph|section) contains|contains the following information/i.test(block)) {
     const allowedLetters = getReadingParagraphAnswerLetters(block)
@@ -474,6 +483,7 @@ const isReadingMatchingStatementQuestion = (
   const block = extractReadingQuestionRangeBlock(passage?.questionSectionText || '', range.start, range.end)
   if (isReadingStandardMcqBlock(block)) return false
   if (isReadingFillSectionBlock(block)) return false
+  if (isReadingPeopleMatchingBlock(block)) return true
   return isReadingLetterBankMatchingBlock(block)
 }
 
@@ -542,6 +552,9 @@ export const extractReadingMultipleChoiceOptions = (
     if (options.length) return options
   }
 
+  const promptOptions = parseReadingLetterOptionsFromText(String(question.prompt || ''))
+  if (promptOptions.length >= 2) return promptOptions
+
   if (sectionBlock && isReadingStandardMcqBlock(sectionBlock)) {
     return []
   }
@@ -599,11 +612,20 @@ export const getReadingMultipleChoicePromptStem = (
     if (inlineCut > 20) return inline.slice(0, inlineCut).trim()
   }
 
-  const prompt = String(question.prompt || '').replace(/\s+/g, ' ').trim()
-  if (/^Questions?\s+\d+/i.test(prompt) && prompt.length > 120) return ''
-  const inlineCut = prompt.search(/\s+[A-G][\).:\-]?\s+[A-Z"'(]/i)
-  if (inlineCut > 20) return prompt.slice(0, inlineCut).trim()
-  return prompt
+  const prompt = String(question.prompt || '').trim()
+  const promptLines = prompt.split('\n').map((line) => line.trim()).filter(Boolean)
+  const stemFromLines: string[] = []
+  for (const line of promptLines) {
+    if (isReadingMcqOptionLine(line)) break
+    stemFromLines.push(line)
+  }
+  if (stemFromLines.length) return stemFromLines.join(' ').trim()
+
+  const collapsed = prompt.replace(/\s+/g, ' ').trim()
+  if (/^Questions?\s+\d+/i.test(collapsed) && collapsed.length > 120) return ''
+  const inlineCut = collapsed.search(/\s+[A-G][\).]\s+/)
+  if (inlineCut > 20) return collapsed.slice(0, inlineCut).trim()
+  return collapsed
 }
 
 export const getReadingQuestionDisplayPrompt = (
@@ -645,6 +667,18 @@ const getReadingMatchingAnswerOptions = (
       lettersFromBody
     const paragraphLetters = letters.length ? letters : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
     return paragraphLetters.map((letter) => ({ letter, text: `Paragraph ${letter}` }))
+  }
+
+  const scopedBlock = block || passage.questionSectionText || ''
+  const fromList = extractReadingMatchingListOptions(scopedBlock)
+  if (fromList.length) return fromList
+
+  if (kind === 'statement' && isReadingPeopleMatchingBlock(scopedBlock)) {
+    const peopleOptions = getReadingPeopleMatchingChoiceOptions(
+      scopedBlock,
+      passage.bodyParagraphs || []
+    )
+    if (peopleOptions.length) return peopleOptions
   }
 
   const fromBank = extractSharedReadingLetterOptionBank(block)
@@ -931,10 +965,28 @@ export const auditReadingQuestionDisplayPlan = (
       const group = plan.matchingGroups.find(
         (item) => question.number >= item.start && question.number <= item.end
       )
-      if (group?.kind === 'statement' && isReadingStandardMcqBlock(
-        extractReadingQuestionRangeBlock(passage?.questionSectionText || '', group.start, group.end)
-      )) {
+      const groupBlock = extractReadingQuestionRangeBlock(
+        passage?.questionSectionText || '',
+        group?.start || question.number,
+        group?.end || question.number
+      )
+      if (group?.kind === 'statement' && isReadingStandardMcqBlock(groupBlock)) {
         issues.push({ question: question.number, kind: 'mcq-as-matching' })
+      }
+      if (group && isReadingPeopleMatchingBlock(groupBlock)) {
+        if (group.kind === 'information') {
+          issues.push({
+            question: question.number,
+            kind: 'people-matching-as-information',
+            detail: 'shows paragraph letters instead of person names'
+          })
+        } else if (!hasNamedPeopleMatchingOptions(group.choiceOptions)) {
+          issues.push({
+            question: question.number,
+            kind: 'people-matching-missing-names',
+            detail: group.choiceOptions.map((option) => option.text).join(' | ').slice(0, 120)
+          })
+        }
       }
     }
 
