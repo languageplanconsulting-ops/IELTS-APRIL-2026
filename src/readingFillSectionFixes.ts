@@ -381,4 +381,80 @@ Write your answers in boxes 31–35 on your answer sheet.
 
 Contemporary hunter-gatherer societies
 Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high level of 31………………… in all areas of life. In these cultures, distributing resources fairly among all members is a moral obligation. These societies also employ strategies to prevent differences in 32………………… occurring: for example, the !Kung follow a custom whereby the credit for one person's success at 33………………… is given to another member of the group. Individuals who behave in a 34………………… manner are punished by being excluded from the group, and women have a considerable amount of 35………………… in choices regarding work and marriage.`,
+
+  'cambridge-12-test1-passage3': `Questions 33-36
+Complete the summary below.
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+Write your answers in boxes 33-36 on your answer sheet.
+The 'Arson for Profit' course
+33 students studying …
+34 They will become … specialising in arson.
+35 Find … of criminal intent
+36 leading to successful … in the courts.`,
+
+  'cambridge-12-test2-passage3': `Questions 27-31
+Complete the table below.
+Choose NO MORE THAN TWO WORDS from the passage for each answer.
+Write your answers in boxes 27-31 on your answer sheet.
+27 Observing the … of Russian-English bilingual people when asked to select certain objects
+28 mechanism known as …
+29 A test called the …, focusing on naming colours
+30 bilingual people are more able to handle …
+31 bilingual people have superior …`,
+
+  'cambridge-13-test3-passage3': `Questions 32-36
+Complete the summary below.
+Choose ONE WORD ONLY from the passage for each answer.
+Write your answers in boxes 32-36 on your answer sheet.
+Looking at evidence of climate change
+Yama Dixit and David Hodell have found the first definitive evidence of climate change affecting the plains of north-western India thousands of years ago. By collecting the 32 … of snails and analysing them, they discovered evidence of a change in water levels in a 33 … in the region. This occurred when there was less 34 … than evaporation, and suggests that there was an extended period of drought.
+Climate change evidence — looking at 35 … from five millennia ago
+36 examining objects including …
+
+Questions 37-40
+Match each statement with the correct researcher, A, B, C or D.
+Write the correct letter, A, B, C or D, in boxes 37-40 on your answer sheet.
+NB You may use any letter more than once.
+37 Finding further information about changes to environmental conditions in the region is vital.
+38 Examining previous patterns of behaviour may have long-term benefits.
+39 Rough calculations indicate the approximate length of a period of water shortage.
+40 Information about the decline of the Harappan Civilisation has been lacking.
+List of Researchers
+A Cameron Petrie
+B Ravindanath Singh
+C Yama Dixit
+D David Hodell`,
+
+  'cambridge-17-test1-passage3': `Questions 27-31
+Complete the summary using the list of phrases, A-J, below.
+Write the correct letter, A-J, in boxes 27-31 on your answer sheet.
+The story behind the hunt for Charles II
+Charles II's father was executed by the Parliamentarian forces in 1649. Charles II then formed a 27 … with the Scots, and in order to become King of Scots he abandoned an important 28 … that was held by his father and had contributed to his father's death. The opposing sides then met outside Worcester in 1651. The battle led to a 29 … for the Parliamentarians and Charles had to flee for his life. A 30 … was offered for Charles's capture, but after six weeks spent in hiding, he eventually managed to reach the 31 … of continental Europe.
+A military innovation
+B large reward
+C widespread conspiracy
+D relative safety
+E new government
+F decisive victory
+G political debate
+H strategic alliance
+I popular solution
+J religious conviction`,
+
+  'cambridge-19-test2-passage3': `Questions 27-32
+Complete the summary using the list of phrases, A-K, below.
+Write the correct letter, A-K, in boxes 27-32 on your answer sheet.
+Maryam Mirzakhani
+Maryam Mirzakhani is regarded as 27 … in the field of mathematics because she was the only female holder of the prestigious Fields Medal. However, maths held little 28 … for her as a child and in fact her performance was below average until she was 29 … by a difficult puzzle that one of her siblings showed her. She proved herself to be 30 … when things did not go smoothly, she got the greatest 31 … from making ground-breaking discoveries, and she was responsible for some extremely 32 … mathematical studies.
+A appeal
+B determined
+C intrigued
+D single
+E achievement
+F devoted
+G involved
+H unique
+I innovative
+J satisfaction
+K intent`,
 }
