@@ -18,12 +18,12 @@ export const INTENSIVE_SOLUTIONS_STAGE_7_9: Record<number, StageSolutions> = {
       5: s('has proposed the Old Friends Hypothesis', 'formally adopted in UK treatment guidelines', 'ไม่ได้กล่าวว่านำไปใช้ในแนวทางรักษา'),
       6: s('remarkable effectiveness in treating recurrent Clostridioides difficile infection', 'FMT success for antibiotic-related infections', 'ปลูกถ่ายอุจจาระได้ผลกับ C. difficile'),
       7: s('health claims that frequently outpace the available evidence', 'probiotic claims not supported by research', 'อ้างสรรพคุณเกินกว่าหลักฐาน'),
-      8: s('Collectively known as the microbiome', 'microbiome', 'ไมโครไบโอม'),
-      9: s('butyrate', 'butyrate', 'บิวทิเรต'),
+      8: s('Collectively known as the microbiome', 'microbiome (collective name)', 'ไมโครไบโอม'),
+      9: s('butyrate', 'butyrate compound', 'บิวทิเรต'),
       10: s('Old Friends Hypothesis', 'Old Friends Hypothesis', 'สมมติฐาน Old Friends'),
       11: s('gut-brain axis', 'gut-brain axis', 'แกนลำไส้–สมอง'),
-      12: s('germ-free mice', 'germ-free mice', 'หนูไร้เชื้อ'),
-      13: s('Faecal microbiota transplantation', 'faecal microbiota transplantation', 'การปลูกถ่ายจุลินทรีย์ในอุจจาระ'),
+      12: s('germ-free mice', 'laboratory mice without gut microbes', 'หนูไร้เชื้อ'),
+      13: s('Faecal microbiota transplantation', 'gut-bacteria transfer (transplantation)', 'การปลูกถ่ายจุลินทรีย์ในอุจจาระ'),
       14: s('Much microbiome science is correlational', 'correlational', 'เชิงความสัมพันธ์')
     },
     2: {
@@ -37,9 +37,9 @@ export const INTENSIVE_SOLUTIONS_STAGE_7_9: Record<number, StageSolutions> = {
       8: s('Pierre who insisted that Marie be included', 'Pierre ensured Marie received credit', 'Pierre ยืนยันให้ Marie ได้รับเครดิต'),
       9: s('would not admit a woman member until 1962', 'Academy changed policy within ten years', '1962 คือ 51 ปีหลัง 1911 ไม่ใช่ภายในสิบปี'),
       10: s('she drove herself… trained 150 women to operate them', 'only Curie operated X-ray equipment at front', 'ไม่ได้บอกว่าเธอเป็นคนเดียวที่ปฏิบัติหน้างาน'),
-      11: s('coined the term "radioactivity"', 'radioactivity', 'รังสีกัมมันตภาพ'),
-      12: s('samples of pitchblende', 'pitchblende', 'พิตช์เบลนด์'),
-      13: s('aplastic anaemia', 'aplastic anaemia', 'โลหิตจาง')
+      11: s('coined the term "radioactivity"', 'radioactivity (named by Curie)', 'รังสีกัมมันตภาพ'),
+      12: s('samples of pitchblende', 'pitchblende uranium mineral', 'พิตช์เบลนด์'),
+      13: s('aplastic anaemia', 'blood disorder (aplastic anaemia)', 'โลหิตจาง')
     }
   },
   8: {
@@ -51,13 +51,13 @@ export const INTENSIVE_SOLUTIONS_STAGE_7_9: Record<number, StageSolutions> = {
       5: s('enhanced growth under elevated CO₂ conditions', 'some species grow better with higher CO₂', 'บางชนิดเติบโตดีขึ้นเมื่อ CO₂ สูง'),
       6: s('seawater treatment systems that buffer pH', 'hatcheries installed equipment to alter water chemistry', 'ติดตั้งระบบปรับ pH'),
       7: s('requires reducing atmospheric CO₂', 'agreements already reduced seawater acidity', 'ไม่ได้กล่าวว่ามีข้อตกลงที่ลดความเป็นกรดแล้ว'),
-      8: s('carbonic acid', 'carbonic acid', 'กรดคาร์บอนิก'),
-      9: s('ocean acidification', 'ocean acidification', 'การเป็นกรดของมหาสมุทร'),
-      10: s('Pteropods', 'pteropods', 'เทอโรพอด'),
-      11: s('Pacific salmon', 'Pacific salmon', 'แซลมอน'),
-      12: s('Hatcheries producing oyster seed', 'oyster hatcheries', 'ฟาร์มพันธุ์หอย'),
-      13: s('coastal waters', 'coastal water', 'น้ำชายฝั่ง'),
-      14: s('global emissions reduction', 'global emissions', 'การปล่อยก๊าซ')
+      8: s('carbonic acid', 'seawater acid (carbonic acid)', 'กรดคาร์บอนิก'),
+      9: s('ocean acidification', 'seawater acidification', 'การเป็นกรดของมหาสมุทร'),
+      10: s('Pteropods', 'pteropods (sea butterflies)', 'เทอโรพอด'),
+      11: s('Pacific salmon', 'commercially significant Pacific fish (salmon)', 'แซลมอน'),
+      12: s('Hatcheries producing oyster seed', 'shellfish breeding hatcheries', 'ฟาร์มพันธุ์หอย'),
+      13: s('coastal waters', 'nearshore marine waters', 'น้ำชายฝั่ง'),
+      14: s('global emissions reduction', 'worldwide emissions', 'การปล่อยก๊าซ')
     },
     2: {
       1: s('completing the first transcontinental railroad… less than a week by rail', 'Paragraph A', 'เปลี่ยนเวลาเดินทางข้ามทวีป'),
@@ -70,7 +70,7 @@ export const INTENSIVE_SOLUTIONS_STAGE_7_9: Record<number, StageSolutions> = {
       8: s('doubted their physical capability', 'managers doubted Chinese workers\' suitability', 'ผู้จัดการสงสัยความสามารถทางกาย'),
       9: s('strike collapsed after a week', 'strikers dismissed after failure', 'ไม่ได้กล่าวว่าถูกไล่ออก'),
       10: s('most escaped serious legal consequence', 'imprisonment of a Congress member', 'ส่วนใหญ่ไม่ถูกลงโทษหนัก'),
-      11: s('government bonds', 'government bonds', 'พันธบัตรรัฐบาล'),
+      11: s('government bonds', 'public financial bonds', 'พันธบัตรรัฐบาล'),
       12: s('Summit Tunnel', 'Summit Tunnel', 'อุโมงค์ Summit'),
       13: s('The scandal eventually became public', 'Crédit Mobilier scandal', 'เรื่องอื้อฉาว')
     }
@@ -89,8 +89,8 @@ export const INTENSIVE_SOLUTIONS_STAGE_7_9: Record<number, StageSolutions> = {
       10: s('availability heuristic', 'availability heuristic', 'heuristic ความพร้อมใช้'),
       11: s('The framing effect', 'framing effect', 'เอฟเฟกต์การจัดกรอบ'),
       12: s('Anchoring describes', 'anchoring', 'การยึดจุดอ้างอิง'),
-      13: s('Philip Tetlock', 'Philip Tetlock', 'ฟิลิป เท็ตล็อก'),
-      14: s('default options', 'default options', 'ตัวเลือกเริ่มต้น')
+      13: s('Philip Tetlock', 'political scientist Tetlock', 'ฟิลิป เท็ตล็อก'),
+      14: s('default options', 'pre-selected options', 'ตัวเลือกเริ่มต้น')
     },
     2: {
       1: s('largest structure ever assembled in orbit… continuously occupied since November 2000', 'Paragraph A', 'สถานีใหญ่ที่สุดโคจรรอบโลก'),
@@ -103,9 +103,9 @@ export const INTENSIVE_SOLUTIONS_STAGE_7_9: Record<number, StageSolutions> = {
       8: s('world\'s first space station, Salyut 1', 'Soviet Union first to launch space station', 'โซเวียตเป็นประเทศแรก'),
       9: s('Russian rocket scientists who might otherwise have sought work in hostile states', 'concern about employment of Russian scientists', 'กังวลเรื่องการจ้างงานนักวิทยาศาสตร์รัสเซีย'),
       10: s('purchasing services from these private operators', 'NASA to operate jointly with Axiom after 2030', 'ไม่ได้กล่าวถึงการดำเนินงานร่วม'),
-      11: s('bone density loss', 'bone density loss', 'ความหนาแน่นของกระดูก'),
-      12: s('life support systems', 'life support systems', 'ระบบสนับสนุนชีวิต'),
-      13: s('maintain operational cooperation', 'operational cooperation', 'ความร่วมมือในการปฏิบัติการ')
+      11: s('bone density loss', 'bone density reduction', 'ความหนาแน่นของกระดูก'),
+      12: s('life support systems', 'life-sustaining systems', 'ระบบสนับสนุนชีวิต'),
+      13: s('maintain operational cooperation', 'working cooperation', 'ความร่วมมือในการปฏิบัติการ')
     }
   }
 }

@@ -21,11 +21,11 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       7: s('dependent on commercial beekeeping operations', 'alternative pollination methods', 'ไม่ได้กล่าวถึงวิธีผสมเกสรทางเลือก'),
       8: s('Colony Collapse Disorder', 'Colony Collapse Disorder', 'โรค/ความผิดปกติของอาณานิคม (CCD)'),
       9: s('neonicotinoids', 'neonicotinoids', 'นิโอนิโคตินอยด์ (สารกำจัดแมลง)'),
-      10: s('Varroa mite', 'Varroa mite', 'ไรวาโรอา'),
+      10: s('Varroa mite', 'parasitic organism called Varroa', 'ไรวาโรอา'),
       11: s('Deformed Wing Virus', 'Deformed Wing Virus', 'ไวรัส Deformed Wing'),
       12: s('monoculture fields', 'monoculture farming', 'การปลูกพืชชนิดเดียว'),
       13: s('flowers provide nectar', 'nectar production', 'น้ำหวาน'),
-      14: s('pollinator-dependent crops', 'pollinator-dependent crops', 'พืชที่พึ่งผู้ช่วยผสมเกสร')
+      14: s('pollinator-dependent crops', 'crops that depend on pollinators', 'พืชที่พึ่งผู้ช่วยผสมเกสร')
     },
     2: {
       1: s('extraordinary mental ability from childhood', 'Paragraph A', 'ความเก่งตั้งแต่เด็กและเรียนไม่จบ'),
@@ -40,7 +40,7 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       10: s('predated and superseded those of Guglielmo Marconi', 'Tesla radio patents registered before Marconi', 'สิทธิบัติวิทยุของ Tesla มีก่อน Marconi'),
       11: s('harness the power of Niagara Falls', 'dominant form of electrical power', 'พลังงานไฟฟ้า'),
       12: s('Niagara Falls', 'Niagara Falls', 'น้ำตกไนแองการา'),
-      13: s('world wireless communication', 'global wireless communication', 'การสื่อสารไร้สาย')
+      13: s('world wireless communication', 'worldwide cable-free communication', 'การสื่อสารไร้สาย')
     }
   },
   2: {
@@ -53,12 +53,12 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       6: s('commissioned by one major mining operator', 'reviewed by an independent scientific body', 'ไม่ได้กล่าวว่ามีการตรวจสอบโดยหน่วยงานอิสระ'),
       7: s('moratorium on commercial extraction until a fairer benefit-sharing framework', 'delaying extraction until revenue-sharing is fairer', 'ขอหยุดชั่วคราวจนกว่าจะแบ่งปันผลประโยชน์อย่างเป็นธรรม'),
       8: s('potato-sized nodules', 'rounded nodules', 'ก้อนแร่กลม'),
-      9: s('global energy transition', 'energy transition', 'การเปลี่ยนผ่านด้านพลังงาน'),
+      9: s('global energy transition', 'clean energy sector', 'การเปลี่ยนผ่านด้านพลังงาน'),
       10: s('5,000 species', 'species living around mineral deposits', 'สปีชีส์'),
       11: s('Recovery timescales', 'recovery after disturbance', 'การฟื้นตัว'),
       12: s('common heritage of mankind', 'heritage of all humanity', 'มรดกร่วมของมนุษยชาติ'),
       13: s('most advanced deep-sea technology', 'superior technology', 'เทคโนโลยี'),
-      14: s('battery metals', 'battery metals', 'โลหะสำหรับแบตเตอรี่')
+      14: s('battery metals', 'metals used in rechargeable cells', 'โลหะสำหรับแบตเตอรี่')
     },
     2: {
       1: s('denied legal rights', 'Paragraph A', 'ถูกตัดสิทธิทางกฎหมายเพราะเข้าใจผิด'),
@@ -72,7 +72,7 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       9: s('refused to share their techniques', 'refused assistance by British educators', 'ครูอังกฤษปฏิเสธให้ความช่วยเหลือ'),
       10: s('the Milan resolution', 'formally reversed by a later conference', 'ไม่ได้กล่าวว่ามีการยกเลิกมติในภายหลัง'),
       11: s('denied legal rights', 'fundamental rights', 'สิทธิ'),
-      12: s('Milan resolution', 'Milan resolution of 1880', 'มติมิลาน'),
+      12: s('Milan resolution', '1880 resolution passed in Milan', 'มติมิลาน'),
       13: s('complete, independent language', 'genuine language', 'ภาษา')
     }
   },
@@ -86,10 +86,10 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       6: s('in some contexts but not others', 'consistently reduced procrastination in all settings', 'ลดได้บางบริบท ไม่ใช่ทุกกรณี'),
       7: s('identify and challenge the underlying beliefs', 'focus on beliefs that support avoidance', 'แก้ความเชื่อที่ทำให้หลบเลี่ยง'),
       8: s('tasks that generate negative emotion', 'emotion management', 'อารมณ์'),
-      9: s('temporary good feeling', 'good feeling from avoidance', 'ความรู้สึกดีชั่วคราว'),
+      9: s('temporary good feeling', 'positive feeling from avoidance', 'ความรู้สึกดีชั่วคราว'),
       10: s('self-compassion', 'self-compassion', 'ความเมตตาต่อตนเอง'),
-      11: s('Implementation intentions', 'implementation intentions', 'แผนปฏิบัติที่ผูกสถานการณ์กับการกระทำ'),
-      12: s('maladaptive perfectionism', 'maladaptive perfectionism', 'ความพยายามให้สมบูรณ์แบบแบบไม่เหมาะสม'),
+      11: s('Implementation intentions', 'specific intentions (implementation intentions)', 'แผนปฏิบัติที่ผูกสถานการณ์กับการกระทำ'),
+      12: s('maladaptive perfectionism', 'dysfunctional perfectionism', 'ความพยายามให้สมบูรณ์แบบแบบไม่เหมาะสม'),
       13: s('fundamental inadequacy', 'personal inadequacy', 'ความรู้สึกว่าตัวเองไม่ดีพอ'),
       14: s('in some contexts but not others', 'context in which it occurs', 'บริบท')
     },
@@ -104,9 +104,9 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       8: s('unable to isolate or stabilise the active compound', 'could not produce a form usable on people', 'ยังแยกสารบริสุทธิ์ไม่ได้ จึงทดสอบกับคนไม่ได้'),
       9: s('fled Nazi Germany in 1933', 'left Germany before Fleming\'s 1929 paper', 'ตอนตีพิมพ์ 1929 Chain ยังอยู่เยอรมนี'),
       10: s('not yet produced enough penicillin to complete a full course', 'enough to treat several patients simultaneously', 'ไม่ได้กล่าวว่ารักษาหลายคนพร้อมกันได้หรือไม่'),
-      11: s('his laboratory at St Mary\'s Hospital', 'laboratory in London', 'ห้องปฏิบัติการ'),
-      12: s('corn steep liquor', 'corn steep liquor', 'ของเหลวจากข้าวโพด'),
-      13: s('Military medical historians', 'medical historians', 'นักประวัติศาสตร์การแพทย์ทหาร')
+      11: s('his laboratory at St Mary\'s Hospital in London', 'hospital research laboratory', 'ห้องปฏิบัติการ'),
+      12: s('corn steep liquor', 'corn-milling liquid (liquor)', 'ของเหลวจากข้าวโพด'),
+      13: s('Military medical historians', 'battlefield medical historians', 'นักประวัติศาสตร์การแพทย์ทหาร')
     }
   },
   4: {
@@ -118,13 +118,13 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       5: s('replacement construction never matched the rate of sales', 'required councils to reinvest sale proceeds', 'ไม่ได้กล่าวว่าต้องนำเงินขายไปสร้างทดแทน'),
       6: s('reducing construction costs by an estimated 15 to 20 percent', 'lower building costs by 15–20% in some European countries', 'ลดต้นทุนก่อสร้าง 15–20%'),
       7: s('Political obstacles are considerable', 'reducing prices would be politically straightforward', 'ลดราคาบ้านไม่ง่ายทางการเมือง'),
-      8: s('reduced labour mobility', 'labour mobility', 'การเคลื่อนย้ายแรงงาน'),
+      8: s('reduced labour mobility', 'restricted labour movement', 'การเคลื่อนย้ายแรงงาน'),
       9: s('housing supply has failed to keep pace', 'insufficient supply', 'อุปทานที่อยู่อาศัย'),
-      10: s('Restrictive zoning laws', 'zoning laws', 'กฎจัดโซนที่อยู่อาศัย'),
+      10: s('Restrictive zoning laws', 'zoning restrictions on density', 'กฎจัดโซนที่อยู่อาศัย'),
       11: s('financialisation of housing', 'financialisation', 'การทำให้ที่อยู่อาศัยเป็นสินทรัพย์การเงิน'),
       12: s('Right to Buy scheme', 'Right to Buy scheme', 'โครงการ Right to Buy'),
-      13: s('modular factories', 'modular factories', 'โรงงานประกอบบ้านสำเร็จรูป'),
-      14: s('regulation of speculative investment', 'investment regulation', 'การกำกับการลงทุนเชิงเก็งกำไร')
+      13: s('modular factories', 'dedicated prefabricated factories', 'โรงงานประกอบบ้านสำเร็จรูป'),
+      14: s('regulation of speculative investment', 'speculative investment controls', 'การกำกับการลงทุนเชิงเก็งกำไร')
     },
     2: {
       1: s('sparking controversy about credit, data access, and the commercialisation', 'Paragraph A', 'ประกาศยิ่งใหญ่แต่มีข้อโต้แย้งเรื่องเครดิต'),
@@ -138,8 +138,8 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       9: s('Celera Genomics', 'made sequence data available at no charge', 'ไม่ได้กล่าวว่า Celera เปิดข้อมูลฟรี'),
       10: s('mapped with precision, enabling improved diagnostic tests', 'more accurate identification of single-gene disorders', 'วินิจฉัยโรคยีนเดียวได้แม่นยำขึ้น'),
       11: s('complete sequence of the human genome', 'DNA sequence', 'ลำดับ DNA'),
-      12: s('public database', 'public database', 'ฐานข้อมูลสาธารณะ'),
-      13: s('thousands of genetic variants', 'genetic variants', 'ลักษณะย่อยทางพันธุกรรม')
+      12: s('public database', 'shared open-access database', 'ฐานข้อมูลสาธารณะ'),
+      13: s('thousands of genetic variants', 'many small-effect genetic variants', 'ลักษณะย่อยทางพันธุกรรม')
     }
   },
   5: {
@@ -154,10 +154,10 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       8: s('Reconsolidation', 'reconsolidation', 'การสร้างความจำใหม่หลังถูกเรียก'),
       9: s('process called consolidation', 'consolidation', 'การรวมความจำระยะยาว'),
       10: s('the hippocampus', 'hippocampus', 'ฮิปโปแคมปัส'),
-      11: s('slow-wave sleep', 'slow-wave sleep', 'การนอนหลับลึก (slow-wave)'),
-      12: s('emotional intensity does not guarantee accuracy', 'emotional intensity', 'ความเข้มข้นทางอารมณ์'),
+      11: s('slow-wave sleep', 'stage of sleep with slow brain-wave activity', 'การนอนหลับลึก (slow-wave)'),
+      12: s('emotional intensity does not guarantee accuracy', 'degree of intensity', 'ความเข้มข้นทางอารมณ์'),
       13: s('broken glass at the scene', 'broken glass', 'กระจก'),
-      14: s('false memories can be deliberately implanted', 'false memories', 'ความจำเท็จ')
+      14: s('false memories can be deliberately implanted', 'artificial memories (false memories)', 'ความจำเท็จ')
     },
     2: {
       1: s('politically neutral, belonging to no single nation', 'Paragraph A', 'ภาษากลางที่ไม่เอื้อชาติใดชาติหนึ่ง'),
@@ -170,9 +170,9 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, StageSolutions> = {
       8: s('Doktoro Esperanto," meaning "one who hopes"', 'pseudonym to protect from medical criticism', 'ไม่ได้อธิบายเหตุผลที่ใช้นามแฝง'),
       9: s('internationalism with deep suspicion', 'persecution linked to opposition to nationalism', 'ถูกล่าอาวรณ์เพราะลัทธิสากลขัดกับชาตินิยม'),
       10: s('more than for some natural languages', 'more learners than any other Duolingo language', 'ไม่ได้บอกว่ามากกว่าทุกภาษาใน Duolingo'),
-      11: s('belonging to no single nation', 'single nation', 'ชาติ'),
+      11: s('belonging to no single nation', 'any one nation', 'ชาติ'),
       12: s('systematic campaign of persecution', 'severe persecution', 'การล่าอาวรณ์'),
-      13: s('first language', 'first language', 'ภาษา')
+      13: s('first language', 'primary language', 'ภาษา')
     }
   }
 }

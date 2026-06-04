@@ -21,10 +21,10 @@ export const INTENSIVE_SOLUTIONS_STAGE_6: Record<number, StageSolutions> = {
       7: s('cottage industry, with production handled by individual artisans', 'solitary craftsmen at home', 'ช่างทำผ้าที่บ้าน'),
       8: s('coke, a derivative of coal', 'coal-based substance coke', 'โค้ก (จากถ่านหิน)'),
       9: s('prevented potential accidents on the tracks', 'accidents on railway lines', 'อุบัติเหตุ'),
-      10: s('severe overcrowding', 'overcrowding in cities', 'ความแออัด'),
-      11: s('textile and metal-working sectors', 'textile sector', 'สิ่งทอ'),
-      12: s('rotary movement', 'rotary movement', 'การหมุน'),
-      13: s('need for steel and iron', 'steel', 'เหล็กกล้า'),
+      10: s('severe overcrowding', 'overcrowding in urban centres', 'ความแออัด'),
+      11: s('textile and metal-working sectors', 'textile industry', 'สิ่งทอ'),
+      12: s('rotary movement', 'rotary motion', 'การหมุน'),
+      13: s('need for steel and iron', 'iron and steel (railway material)', 'เหล็กกล้า'),
       14: s('sanitation failures', 'sanitation systems', 'ระบบสุขาภิบาล')
     },
     2: {
@@ -38,9 +38,9 @@ export const INTENSIVE_SOLUTIONS_STAGE_6: Record<number, StageSolutions> = {
       8: s('Succulents are specifically adapted to hold massive quantities of liquid', 'only type of succulent that stores water', 'ไม่ได้บอกว่าเฉพาะกระบองเพชรเท่านั้น'),
       9: s('extremely slow growth rates', 'recover from physical damage very quickly', 'เติบโตช้า ฟื้นตัวไม่เร็ว'),
       10: s('cooler nighttime hours', 'nighttime temperatures always below freezing', 'ไม่ได้บอกว่าอุณหภูมิกลางคืนต่ำกว่า 0°C เสมอ'),
-      11: s('sharp spines', 'sharp spines', 'หนาม'),
-      12: s('chemical inhibitors', 'chemical inhibitor', 'สารยับยั้ง'),
-      13: s('protective surface crust', 'surface crust', 'ชั้นผิวดิน')
+      11: s('sharp spines', 'pointed spines', 'หนาม'),
+      12: s('chemical inhibitors', 'germination-blocking compound (inhibitor)', 'สารยับยั้ง'),
+      13: s('protective surface crust', 'thin surface covering (crust)', 'ชั้นผิวดิน')
     }
   }
 }

@@ -46,7 +46,7 @@ export const INTENSIVE_SOLUTIONS_STAGE_10: Record<number, StageSolutions> = {
         'financial penalties for failing to meet rewilding targets',
         'บทความพูดถึงเป้าหมาย 30% แต่ไม่ได้กล่าวถึงบทลงโทษทางการเงิน'
       ),
-      8: s('reducing human management', 'human management', 'ลด human management = การจัดการโดยมนุษย์'),
+      8: s('reducing human management', 'direct landscape management', 'การจัดการโดยมนุษย์'),
       9: s('The concept of trophic cascades', 'trophic cascades', 'trophic cascades = การถ่ายทอดผลกระทบในโซ่อาหาร'),
       10: s(
         'elk reduced their grazing pressure in areas where predation risk was high',
@@ -60,15 +60,15 @@ export const INTENSIVE_SOLUTIONS_STAGE_10: Record<number, StageSolutions> = {
       ),
       12: s(
         'beaver-engineered wetlands reduced peak water flow during storms by up to 30 percent',
-        'beaver-engineered wetlands',
+        'beaver-created wetlands',
         'beaver-engineered wetlands = พื้นที่ชุ่มน้ำที่ beaver สร้าง'
       ),
       13: s(
         'negotiating the interests of farmers, foresters, landowners, and rural communities',
-        'farmers',
+        'farmers and rural stakeholders',
         'interests of farmers = ผลประโยชน์ของเกษตรกร'
       ),
-      14: s('rigorous long-term monitoring', 'long-term monitoring', 'long-term monitoring = การติดตามผลระยะยาว')
+      14: s('rigorous long-term monitoring', 'ongoing monitoring', 'long-term monitoring = การติดตามผลระยะยาว')
     },
     2: {
       1: s(
@@ -123,13 +123,13 @@ export const INTENSIVE_SOLUTIONS_STAGE_10: Record<number, StageSolutions> = {
       ),
       11: s(
         'induce mild infection and subsequent immunity',
-        'immunity',
+        'immunity (immune response)',
         'stimulate immunity = กระตุ้นภูมิคุ้มกัน'
       ),
-      12: s('vacca, meaning cow', 'cow', 'vacca แปลว่า cow = วัว'),
+      12: s('vacca, meaning cow', 'the animal (cow)', 'vacca แปลว่า cow = วัว'),
       13: s(
         'low-income countries receiving significantly fewer doses per capita than wealthier nations',
-        'doses per capita',
+        'doses administered per person',
         'fewer doses per capita = ได้โดสวัคซีนต่อหัวน้อยกว่า'
       )
     }
