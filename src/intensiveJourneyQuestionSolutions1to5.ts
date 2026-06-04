@@ -15,7 +15,7 @@ export const INTENSIVE_SOLUTIONS_STAGE_1_5: Record<number, { 1: Record<number, I
       7: s('serious climatic event', 'condition helped recent spells', 'จึงคำตอบคือ "drought" (paraphrase จากข้อความใน passage)'),
       8: s('frequent visitors stepwells', 'far-flung corners northwestern wonder', 'จึงคำตอบคือ "tourists" (paraphrase จากข้อความใน passage)'),
       9: s('… of 2001.', 'Incredibly, in January 2001, this ancient structure survived…', 'จึงคำตอบคือ "Earthquake" (paraphrase จากข้อความใน passage)'),
-      10: s('produce', 'including descend bottom stunning', 'จึงคำตอบคือ "4 sides" (paraphrase จากข้อความใน passage)'),
+      10: s('produce', 'including descend bottom stunning', 'จึงคำตอบคือ "four sides" (paraphrase จากข้อความใน passage)'),
       11: s('well', 'actually resembles reservoir rather', 'จึงคำตอบคือ "Tank" (paraphrase จากข้อความใน passage)'),
       12: s('provide', 'fourth verandas supported ornate', 'จึงคำตอบคือ "verandahs" (paraphrase จากข้อความใน passage)'),
       13: s('levels public today', 'constructed around storeys', 'จึงคำตอบคือ "underwater" (paraphrase จากข้อความใน passage)'),
