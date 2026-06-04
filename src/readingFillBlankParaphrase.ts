@@ -210,14 +210,19 @@ export const paraphraseFillBlankSummaryLineText = (
     .trim()
 }
 
-export const paraphraseFillBlankSummaryLines = <T extends { text: string }>(
+export const paraphraseFillBlankSummaryLines = <
+  T extends { type: string; text?: string }
+>(
   summaryLines: T[],
   questions: NewFillBlankQuestion[]
 ) =>
-  summaryLines.map((line) => ({
-    ...line,
-    text: paraphraseFillBlankSummaryLineText(line.text, questions)
-  }))
+  summaryLines.map((line) => {
+    if (line.type === 'diagram' || !('text' in line) || !line.text) return line
+    return {
+      ...line,
+      text: paraphraseFillBlankSummaryLineText(line.text, questions)
+    }
+  })
 
 export const paraphraseFillBlankSet = (set: NewFillBlankSet): NewFillBlankSet => ({
   ...set,

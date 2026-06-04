@@ -33,6 +33,8 @@ export type NewFillBlankSummaryLine =
   | { type: 'para'; text: string }
   | { type: 'bullet'; text: string }
   | { type: 'heading'; text: string }
+  /** Renders a diagram/infographic from `diagramImage` on the parent set. */
+  | { type: 'diagram' }
 
 export type NewFillBlankSet = {
   examId: string
@@ -45,6 +47,9 @@ export type NewFillBlankSet = {
   sourceParagraphs: [string, string]
   // Multi-line instruction block shown at the top of the question card.
   instructions: string[]
+  /** Public URL path to an SVG/PNG diagram shown for label-the-diagram tasks. */
+  diagramImage?: string
+  diagramAlt?: string
   // Optional title above the summary (rendered as a heading, no bold).
   summaryTitle?: string
   // The summary body — mix of flowing paragraphs and bullet sentences.
@@ -2215,7 +2220,7 @@ export const NEW_FILL_BLANK_SETS: NewFillBlankSet[] = [
   ...(journeySets as NewFillBlankSet[]).filter((set) => {
     const stageMatch = String(set.examId || '').match(/journey-normal-stage-(\d+)/)
     const stageNumber = stageMatch ? Number(stageMatch[1]) : 0
-    if (stageNumber >= 1 && stageNumber <= 15) return false
+    if (stageNumber >= 1 && stageNumber <= 20) return false
     if (
       ['journey-normal-stage-20', 'journey-normal-stage-21', 'journey-normal-stage-22'].includes(set.examId) &&
       set.passageNumber <= 2
@@ -2226,7 +2231,13 @@ export const NEW_FILL_BLANK_SETS: NewFillBlankSet[] = [
     return !isLowQualityFillBlankSet(set)
   })
 ]
-  .map(paraphraseFillBlankSet)
+  .map((set) => {
+    // Intensive journey sets are hand-authored or generator-built — skip paraphrase
+    // (paraphrase can garble diagram labels and trigger quality-filter false positives).
+    if (String(set.examId || '').startsWith('journey-normal-stage-')) return set
+    if (set.diagramImage) return set
+    return paraphraseFillBlankSet(set)
+  })
   .filter((set) => !isLowQualityFillBlankSet(set))
 
 // Lookup helper — find the set that covers a given question number.

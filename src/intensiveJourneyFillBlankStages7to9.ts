@@ -1,6 +1,6 @@
 import type { NewFillBlankSet } from './readingNewFillBlankQuestions.ts'
 
-/** Fill-blank UI for Quest Log ด่าน 7–9 (Cambridge-style: P1 Q8–14, P2 Q25–27). */
+/** Fill-blank UI for Quest Log ด่าน 7 only (Cambridge 13 Test 1 P1+P2). Stages 8–12: intensiveJourneyFillBlankStages8to12.ts */
 export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_7_9: NewFillBlankSet[] = [
   {
     examId: "journey-normal-stage-7",
@@ -64,116 +64,6 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_7_9: NewFillBlankSet[] = [
       { number: 22, answer: "repertoire", passageKeyword: "wider repertoire of kinds of speech to practice", questionKeyword: "repertoire of speech types", thaiMeaning: "คลังภาษา", exactPortion: "The idea is that a kid gets to practice a certain kind of speech with mom and another kind of speech with dad, so the kid then has a wider repertoire of kinds of speech to practice" },
       { number: 23, answer: "vests", passageKeyword: "audio-recording vests", questionKeyword: "vests", thaiMeaning: "เสื้อบันทึกเสียง", exactPortion: "fitting 26 children with audio-recording vests that captured language and sound during a typical eight-hour day" },
       { number: 24, answer: "vocabulary", passageKeyword: "dramatically boosted vocabulary", questionKeyword: "larger vocabulary at age two", thaiMeaning: "คำศัพท์", exactPortion: "And when researchers saw the same babies at age two, they found that frequent baby talk had dramatically boosted vocabulary, regardless of socioeconomic status" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-8",
-    passageNumber: 1,
-    startNumber: 9,
-    endNumber: 13,
-    sourceParagraphs: ["F", "G"],
-    instructions: [
-      "Questions 9–13",
-      "Complete the sentences below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 9–13 on your answer sheet."
-    ],
-    summaryTitle: "Cutty Sark later career",
-    summaryLines: [
-      { type: 'bullet', text: "After 1880, Cutty Sark carried {9} as its main cargo during its most successful period." },
-      { type: 'bullet', text: "As a captain and {10}, Richard Woodget was highly skilled." },
-      { type: 'bullet', text: "The ship Ferreira went to Falmouth to repair damage caused by a {11}." },
-      { type: 'bullet', text: "Between 1923 and 1954, Cutty Sark was used for {12}." },
-      { type: 'bullet', text: "In the 21st century, Cutty Sark has twice been damaged by {13}." }
-    ],
-    questions: [
-      { number: 9, answer: "wool", passageKeyword: "transporting wool from Australia to Britain", questionKeyword: "main cargo wool", thaiMeaning: "ขนแกะ", exactPortion: "the beginning of the most successful period in Cutty Sark's working life, transporting wool from Australia to Britain" },
-      { number: 10, answer: "navigator", passageKeyword: "excellent navigator", questionKeyword: "captain and navigator", thaiMeaning: "นักเดินเรือ", exactPortion: "Richard Woodget, was an excellent navigator, who got the best out of both his ship and his crew" },
-      { number: 11, answer: "gale", passageKeyword: "Badly damaged in a gale in 1922", questionKeyword: "gale damage", thaiMeaning: "พายุ", exactPortion: "Badly damaged in a gale in 1922, she was put into Falmouth harbour in southwest England, for repairs" },
-      { number: 12, answer: "training", passageKeyword: "used Cutty Sark as a training ship", questionKeyword: "used for training 1923–1954", thaiMeaning: "ฝึกอบรม", exactPortion: "Dowman used Cutty Sark as a training ship, and she continued in this role after his death" },
-      { number: 13, answer: "fire", passageKeyword: "fire in 2007, and again, less seriously, in 2014", questionKeyword: "damaged by fire 21st century", thaiMeaning: "ไฟไหม้", exactPortion: "The ship suffered from fire in 2007, and again, less seriously, in 2014" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-8",
-    passageNumber: 2,
-    startNumber: 15,
-    endNumber: 18,
-    sourceParagraphs: ["B", "C"],
-    instructions: [
-      "Questions 15–18",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 15–18 on your answer sheet."
-    ],
-    summaryTitle: "Why soil degradation could be a disaster for humans",
-    summaryLines: [
-      { type: 'para', text: "Healthy soil contains bacteria and other microorganisms, as well as plant remains and {15}." },
-      { type: 'bullet', text: "It provides food and antibiotics, and storing {16} affects the climate." },
-      { type: 'bullet', text: "It also prevents flood damage to buildings because it holds {17}." },
-      { type: 'bullet', text: "The main human factor in soil degradation is {18}." }
-    ],
-    questions: [
-      { number: 15, answer: "minerals", passageKeyword: "decomposing plants and various minerals", questionKeyword: "plant remains and minerals", thaiMeaning: "แร่ธาตุ", exactPortion: "living amid decomposing plants and various minerals" },
-      { number: 16, answer: "carbon", passageKeyword: "lock in their carbon content", questionKeyword: "storing carbon", thaiMeaning: "คาร์บอน", exactPortion: "they lock in their carbon content, holding three times the amount of carbon as does the entire atmosphere" },
-      { number: 17, answer: "water", passageKeyword: "Soils also store water, preventing flood damage", questionKeyword: "holds water", thaiMeaning: "น้ำ", exactPortion: "Soils also store water, preventing flood damage: in the UK, damage to buildings, roads and bridges from floods caused by soil degradation costs £233 million every year" },
-      { number: 18, answer: "agriculture", passageKeyword: "Agriculture is by far the biggest problem", questionKeyword: "main factor agriculture", thaiMeaning: "เกษตรกรรม", exactPortion: "Agriculture is by far the biggest problem" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-9",
-    passageNumber: 1,
-    startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
-    instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
-    ],
-    summaryTitle: "Biases in human judgement",
-    summaryLines: [
-      { type: 'bullet', text: "Decision-making falls short of the rational ideal described in classical economic {8}." },
-      { type: 'bullet', text: "Kahneman and Tversky's prospect {9} shows people evaluate outcomes relative to a reference point." },
-      { type: 'bullet', text: "Overestimating dramatic events because they are easily remembered is the availability {10}." },
-      { type: 'bullet', text: "The {11} effect shows identical information can produce opposite decisions when framed differently." },
-      { type: 'bullet', text: "When an early number unduly influences later estimates, this is called {12}." },
-      { type: 'bullet', text: "An American political scientist named {13} found that expert forecasters were often barely better than chance." },
-      { type: 'bullet', text: "Adjusting the pre-selected {14} in any given system can steer people toward better decisions while preserving their freedom to choose." }
-    ],
-    questions: [
-      { number: 8, answer: "model", passageKeyword: "dismantled this model", questionKeyword: "classical economic model", thaiMeaning: "แบบจำลองเศรษฐศาสตร์คลาสสิก", exactPortion: "Decades of psychological research have comprehensively dismantled this model" },
-      { number: 9, answer: "theory", passageKeyword: "prospect theory", questionKeyword: "prospect theory", thaiMeaning: "ทฤษฎี prospect", exactPortion: "Their prospect theory, published in 1979" },
-      { number: 10, answer: "heuristic", passageKeyword: "availability heuristic", questionKeyword: "availability heuristic", thaiMeaning: "heuristic ความพร้อมใช้", exactPortion: "the availability heuristic — the tendency to judge the frequency or probability of an event based on how easily examples of it come to mind" },
-      { number: 11, answer: "framing", passageKeyword: "The framing effect", questionKeyword: "framing effect", thaiMeaning: "เอฟเฟกต์การจัดกรอบ", exactPortion: "The framing effect describes the phenomenon whereby the same information presented in different ways produces different decisions" },
-      { number: 12, answer: "anchoring", passageKeyword: "Anchoring describes", questionKeyword: "anchoring", thaiMeaning: "การยึดจุดอ้างอิง", exactPortion: "Anchoring describes the disproportionate influence of the first piece of numerical information encountered on subsequent estimates and judgements" },
-      { number: 13, answer: "Tetlock", passageKeyword: "Philip Tetlock", questionKeyword: "political scientist Tetlock", thaiMeaning: "ฟิลิป เท็ตล็อก", exactPortion: "Research by Philip Tetlock across thousands of expert forecasters" },
-      { number: 14, answer: "options", passageKeyword: "default options", questionKeyword: "pre-selected options", thaiMeaning: "ตัวเลือกเริ่มต้น", exactPortion: "default options are designed to guide people toward choices that align with their long-term interests" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-9",
-    passageNumber: 2,
-    startNumber: 25,
-    endNumber: 27,
-    sourceParagraphs: ["E", "F"],
-    instructions: [
-      "Questions 25–27",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
-    ],
-    summaryTitle: "Research and cooperation aboard the station",
-    summaryLines: [
-      { type: 'bullet', text: "Prolonged spaceflight leads to a significant reduction in bone {25}." },
-      { type: 'bullet', text: "The station validates the technology required to sustain human {26} during extended periods in space." },
-      { type: 'bullet', text: "Despite political tensions, NASA and Roscosmos chose to maintain their working {27}." }
-    ],
-    questions: [
-      { number: 25, answer: "density", passageKeyword: "bone density loss", questionKeyword: "bone density reduction", thaiMeaning: "ความหนาแน่นของกระดูก", exactPortion: "bone density loss of up to 1% per month" },
-      { number: 26, answer: "life", passageKeyword: "life support systems", questionKeyword: "life-sustaining systems", thaiMeaning: "ระบบสนับสนุนชีวิต", exactPortion: "The station has also served as a test bed for life support systems" },
-      { number: 27, answer: "cooperation", passageKeyword: "maintain operational cooperation", questionKeyword: "working cooperation", thaiMeaning: "ความร่วมมือในการปฏิบัติการ", exactPortion: "NASA and Roscosmos ultimately chose to maintain operational cooperation" }
     ]
   }
 ]

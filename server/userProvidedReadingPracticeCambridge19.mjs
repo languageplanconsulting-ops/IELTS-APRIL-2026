@@ -893,7 +893,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
       "passages": [
         {
           "number": 2,
-          "title": "Passage 2 id=\"ielts-reading-transcript-2\" class=\"ielts-reading-transcript \" data-part-number=\"2\">Athletes and stress",
+          "title": "Athletes and stress",
           "bodyParagraphs": [
             ">Athletes and stress",
             "A. It isn't easy being a professional athlete. Not only are the physical demands greater than most people could handle, athletes also face intense psychological pressure during competition. This is something that British tennis player Emma Raducanu wrote about on social media following her withdrawal from the 2021 Wimbledon tournament. Though the young player had been doing well in the tournament, she began having difficulty regulating her breathing and heart rate during a match, which she later attributed to 'the accumulation of the excitement and the buzz'.",

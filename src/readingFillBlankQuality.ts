@@ -1,4 +1,11 @@
-import type { NewFillBlankQuestion, NewFillBlankSet } from './readingNewFillBlankQuestions'
+import type {
+  NewFillBlankQuestion,
+  NewFillBlankSet,
+  NewFillBlankSummaryLine
+} from './readingNewFillBlankQuestions'
+
+const summaryLineText = (line: NewFillBlankSummaryLine) =>
+  'text' in line ? String(line.text || '') : ''
 
 const GARBLED_SUMMARY_PATTERNS = [
   /answer signal/i,
@@ -33,11 +40,12 @@ export const isGarbledFillBlankSummaryText = (text: string) => {
 
 export const fillBlankSetHasMissingBlankMarkers = (set: NewFillBlankSet) =>
   set.questions.some(
-    (question) => !set.summaryLines.some((line) => line.text.includes(`{${question.number}}`))
+    (question) =>
+      !set.summaryLines.some((line) => summaryLineText(line).includes(`{${question.number}}`))
   )
 
 export const isLowQualityFillBlankSet = (set: NewFillBlankSet) => {
-  const allText = set.summaryLines.map((line) => line.text || '').join(' ')
+  const allText = set.summaryLines.map((line) => summaryLineText(line)).join(' ')
   if (!/\{\d+\}/.test(allText)) return true
   if (fillBlankSetHasMissingBlankMarkers(set)) return true
   if (isGarbledFillBlankSummaryText(allText)) return true
@@ -53,5 +61,5 @@ export const validateFillBlankQuestionMarkers = (
   questions: NewFillBlankQuestion[]
 ) =>
   questions.every((question) =>
-    summaryLines.some((line) => line.text.includes(`{${question.number}}`))
+    summaryLines.some((line) => summaryLineText(line).includes(`{${question.number}}`))
   )

@@ -1,0 +1,2616 @@
+export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_10_EXAMS = [
+  {
+    "id": "cambridge-10-test1-passage1",
+    "title": "Cambridge 10 Test 1 Passage 1 - Stepwells",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 1\nStepwells\n\nA millennium ago, stepwells were fundamental to life in the driest parts of India. Although many have been neglected, recent restoration has returned them to their former glory. Richard Cox travelled to north-western India to document these spectacular monuments from a bygone era.\n\nDuring the sixth and seventh centuries, the inhabitants of the modern-day states of Gujarat and Rajasthan in North-western India developed a method of gaining access to clean, fresh groundwater during the dry season for drinking, bathing, watering animals and irrigation. However, the significance of this invention – the stepwell – goes beyond its utilitarian application.\n\nUnique to the region, stepwells are often architecturally complex and vary widely in size and shape. During their heyday, they were places of gathering, of leisure, of relaxation and of worship for villagers of all but the lowest castes. Most stepwells are found dotted around the desert areas of Gujarat (where they are called vav) and Rajasthan (where they are known as baori), while a few also survive in Delhi. Some were located in or near villages as public spaces for the community; others were positioned beside roads as resting places for travellers.\n\nAs their name suggests, stepwells comprise a series of stone steps descending from ground level to the water source (normally an underground aquifer) as it recedes following the rains. When the water level was high, the user needed only to descend a few steps to reach it; when it was low, several levels would have to be negotiated.\n\nSome wells are vast, open craters with hundreds of steps paving each sloping side, often in tiers. Others are more elaborate, with long stepped passages leading to the water via several storeys. Built from stone and supported by pillars, they also included pavilions that sheltered visitors from the relentless heat. But perhaps the most impressive features are the intricate decorative sculptures that embellish many stepwells, showing activities from fighting and dancing to everyday acts such as women combing their hair and churning butter.\n\nDown the centuries, thousands of wells were constructed throughout northwestern India, but the majority have now fallen into disuse; many are derelict and dry, as groundwater has been diverted for industrial use and the wells no longer reach the water table. Their condition hasn't been helped by recent dry spells: southern Rajasthan suffered an eight-year drought between 1996 and 2004.\n\nHowever, some important sites in Gujarat have recently undergone major restoration, and the state government announced in June last year that it plans to restore the stepwells throughout the state.\n\nIn Patan, the state's ancient capital, the stepwell of Rani Ki Vav (Queen's Stepwell) is perhaps the finest current example. It was built by Queen Udayamati during the late 11th century, but became silted up following a flood during the 13th century. But the Archaeological Survey of India began restoring it in the 1960s, and today it's in pristine condition. At 65 metres long, 20 metres wide and 27 metres deep, Rani Ki Vav features 500 distinct sculptures carved into niches throughout the monument, depicting gods such as Vishnu and Parvati in various incarnations. Incredibly, in January 2001, this ancient structure survived a devastating earthquake that measured 7.6 on the Richter scale.\n\nAnother example is the Surya Kund in Modhera, northern Gujarat, next to the Sun Temple, built by King Bhima I in 1026 to honour the sun god Surya. It actually resembles a tank (kund means reservoir or pond) rather than a well, but displays the hallmarks of stepwell architecture, including four sides of steps that descend to the bottom in a stunning geometrical formation. The terraces house 108 small, intricately carved shrines between the sets of steps.\n\nRajasthan also has a wealth of wells. The ancient city of Bundi, 200 kilometres south of Jaipur, is renowned for its architecture, including its stepwells. One of the larger examples is Raniji Ki Baori, which was built by the queen of the region, Nathavatji, in 1699. At 46 metres deep, 20 metres wide and 40 metres long, the intricately carved monument is one of 21 baoris commissioned in the Bundi area by Nathavatji.\n\nIn the old ruined town of Abhaneri, about 95 kilometres east of Jaipur, is Chand Baori, one of India's oldest and deepest wells; aesthetically, it's perhaps one of the most dramatic. Built in around 850 AD next to the temple of Harshat Mata, the baori comprises hundreds of zigzagging steps that run along three of its sides, steeply descending 11 storeys, resulting in a striking geometric pattern when seen from afar. On the fourth side, verandas which are supported by ornate pillars overlook the steps.\n\nStill in public use is Neemrana Ki Baori, located just off the Jaipur–Dehli highway. Constructed in around 1700, it's nine storeys deep, with the last two being underwater. At ground level, there are 86 colonnaded openings from where the visitor descends 170 steps to the deepest water source.\n\nToday, following years of neglect, many of these monuments to medieval engineering have been saved by the Archaeological Survey of India, which has recognised the importance of preserving them as part of the country's rich history. Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these architectural marvels from 1,000 years ago, which serve as a reminder of both the ingenuity and artistry of ancient civilisations and of the value of water to human existence.\n\n<div\n\nQuestions 1-13\n\n1. Examples of ancient stepwells can be found all over the world.\n\n2. Stepwells had\n\n3. The few existing stepwells in Delhi are more attractive than those found elsewhere.\n\n4. It took workers many years to build the stone steps characteristic of stepwells.\n\n5. The number of steps above the water level in\n\n6. Which part of some stepwells provided shade for people? …\n\n7. What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? …\n\n8. Who are frequent visitors to stepwells nowadays? … Questions 9-13 Complete the table below Choose\n\n9. … of 2001.\n\n10. … produce\n\n11. … than a well.\n\n12. … which provide\n\n13. … levels. Used by public today Questions 14-21 The Reading Passage has nine paragraphs,",
+    "rawAnswerKey": "READING PASSAGE 1: Stepwells\n\nQuestion 1: Examples of ancient stepwells can be found all over the world.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"Unique to the region, stepwells are often architecturally complex and vary widely in size and shape.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Examples of ancient stepwells can be found all over the world.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Unique to the region, stepwells are often architecturally complex and vary widely in size and s…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: ancient stepwells found = unique region stepwells architecturally = FALSE\n\nQuestion 2: Stepwells had\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"During their heyday, they were places of gathering, of leisure, of relaxation and of worship for villagers of all but the lowest castes.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Stepwells had\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"During their heyday, they were places of gathering, of leisure, of relaxation and of worship fo…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: stepwells = heyday places gathering leisure = TRUE\n\nQuestion 3: The few existing stepwells in Delhi are more attractive than those found elsewhere.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"a few also survive in Delhi.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The few existing stepwells in Delhi are more attractive than those found elsewhere.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"a few also survive in Delhi.\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: found elsewhere = survive = NOT GIVEN\n\nQuestion 4: It took workers many years to build the stone steps characteristic of stepwells.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"As their name suggests, stepwells comprise a series of stone steps descending from ground level to the water source (normally an underground aquifer) as it recedes following the rains.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"It took workers many years to build the stone steps characteristic of stepwells.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"As their name suggests, stepwells comprise a series of stone steps descending from ground level…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: workers years build = suggests stepwells comprise series = NOT GIVEN\n\nQuestion 5: The number of steps above the water level in\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"When the water level was high, the user needed only to descend a few steps to reach it; when it was low, several levels would have to be negotiated.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The number of steps above the water level in\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"When the water level was high, the user needed only to descend a few steps to reach it; when it…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: number steps above = needed descend several levels = TRUE\n\nQuestion 6: Which part of some stepwells provided shade for people? …\n\nCorrect Answer: pavilions\n\nAccepted Answers: pavilions\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"they also included pavilions that sheltered visitors from the relentless heat.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Which part of some stepwells provided shade for people? …\" บทความมีถ้อยคำที่ตรงกันคือ \"they also included pavilions that sheltered visitors from the relentless heat.\" จึงคำตอบคือ \"pavilions\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: stepwells provided shade = included sheltered visitors relentless = pavilions\n\nQuestion 7: What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? …\n\nCorrect Answer: drought\n\nAccepted Answers: drought\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"Their condition hasn’t been helped by recent dry spells: southern Rajasthan suffered an eight-year drought between 1996 and 2004.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? …\" บทความมีถ้อยคำที่ตรงกันคือ \"Their condition hasn’t been helped by recent dry spells: southern Rajasthan suffered an eight-y…\" จึงคำตอบคือ \"drought\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: serious climatic event = condition helped recent spells = drought\n\nQuestion 8: Who are frequent visitors to stepwells nowadays? … Questions 9-13 Complete the table below Choose\n\nCorrect Answer: tourists\n\nAccepted Answers: tourists\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these architectural marvels from 1,000 years ago\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Who are frequent visitors to stepwells nowadays? … Questions 9-13 Complete the table below Choose\" บทความมีถ้อยคำที่ตรงกันคือ \"Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these a…\" จึงคำตอบคือ \"tourists\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: frequent visitors stepwells = far-flung corners northwestern wonder = tourists\n\nQuestion 9: … of 2001.\n\nCorrect Answer: Earthquake\n\nAccepted Answers: Earthquake\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"Incredibly, in January 2001, this ancient structure survived a devastating earthquake that measured 7.6 on the Richter scale.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… of 2001.\" บทความมีถ้อยคำที่ตรงกันคือ \"Incredibly, in January 2001, this ancient structure survived a devastating earthquake that meas…\" จึงคำตอบคือ \"Earthquake\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: … of 2001. = Incredibly, in January 2001, this ancient structure survived… = Earthquake\n\nQuestion 10: … produce\n\nCorrect Answer: 4 sides\n\nAccepted Answers: Four sides|4 sides\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"including four sides of steps that descend to the bottom in a stunning geometrical formation.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… produce\" บทความมีถ้อยคำที่ตรงกันคือ \"including four sides of steps that descend to the bottom in a stunning geometrical formation.\" จึงคำตอบคือ \"4 sides\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: produce = including descend bottom stunning = 4 sides\n\nQuestion 11: … than a well.\n\nCorrect Answer: Tank\n\nAccepted Answers: Tank\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"It actually resembles a tank (kund means reservoir or pond) rather than a well\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… than a well.\" บทความมีถ้อยคำที่ตรงกันคือ \"It actually resembles a tank (kund means reservoir or pond) rather than a well\" จึงคำตอบคือ \"Tank\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: well = actually resembles reservoir rather = Tank\n\nQuestion 12: … which provide\n\nCorrect Answer: verandahs\n\nAccepted Answers: verandas|verandahs\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"On the fourth side, verandas which are supported by ornate pillars overlook the steps.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… which provide\" บทความมีถ้อยคำที่ตรงกันคือ \"On the fourth side, verandas which are supported by ornate pillars overlook the steps.\" จึงคำตอบคือ \"verandahs\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: provide = fourth verandas supported ornate = verandahs\n\nQuestion 13: … levels. Used by public today Questions 14-21 The Reading Passage has nine paragraphs,\n\nCorrect Answer: underwater\n\nAccepted Answers: underwater\n\nAnswer Group: Cambridge 10 Test 1 Passage 1\n\nExact Portion: \"Constructed in around 1700, it’s nine storeys deep, with the last two being underwater.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… levels. Used by public today Questions 14-21 The Reading Passage has nine paragraphs,\" บทความมีถ้อยคำที่ตรงกันคือ \"Constructed in around 1700, it’s nine storeys deep, with the last two being underwater.\" จึงคำตอบคือ \"underwater\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: levels public today = constructed around storeys = underwater",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 1 Passage 1 - Stepwells",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 1,
+          "title": "Stepwells",
+          "bodyParagraphs": [
+            "A millennium ago, stepwells were fundamental to life in the driest parts of India. Although many have been neglected, recent restoration has returned them to their former glory. Richard Cox travelled to north-western India to document these spectacular monuments from a bygone era.",
+            "During the sixth and seventh centuries, the inhabitants of the modern-day states of Gujarat and Rajasthan in North-western India developed a method of gaining access to clean, fresh groundwater during the dry season for drinking, bathing, watering animals and irrigation. However, the significance of this invention – the stepwell – goes beyond its utilitarian application.",
+            "Unique to the region, stepwells are often architecturally complex and vary widely in size and shape. During their heyday, they were places of gathering, of leisure, of relaxation and of worship for villagers of all but the lowest castes. Most stepwells are found dotted around the desert areas of Gujarat (where they are called vav) and Rajasthan (where they are known as baori), while a few also survive in Delhi. Some were located in or near villages as public spaces for the community; others were positioned beside roads as resting places for travellers.",
+            "As their name suggests, stepwells comprise a series of stone steps descending from ground level to the water source (normally an underground aquifer) as it recedes following the rains. When the water level was high, the user needed only to descend a few steps to reach it; when it was low, several levels would have to be negotiated.",
+            "Some wells are vast, open craters with hundreds of steps paving each sloping side, often in tiers. Others are more elaborate, with long stepped passages leading to the water via several storeys. Built from stone and supported by pillars, they also included pavilions that sheltered visitors from the relentless heat. But perhaps the most impressive features are the intricate decorative sculptures that embellish many stepwells, showing activities from fighting and dancing to everyday acts such as women combing their hair and churning butter.",
+            "Down the centuries, thousands of wells were constructed throughout northwestern India, but the majority have now fallen into disuse; many are derelict and dry, as groundwater has been diverted for industrial use and the wells no longer reach the water table. Their condition hasn't been helped by recent dry spells: southern Rajasthan suffered an eight-year drought between 1996 and 2004.",
+            "However, some important sites in Gujarat have recently undergone major restoration, and the state government announced in June last year that it plans to restore the stepwells throughout the state.",
+            "In Patan, the state's ancient capital, the stepwell of Rani Ki Vav (Queen's Stepwell) is perhaps the finest current example. It was built by Queen Udayamati during the late 11th century, but became silted up following a flood during the 13th century. But the Archaeological Survey of India began restoring it in the 1960s, and today it's in pristine condition. At 65 metres long, 20 metres wide and 27 metres deep, Rani Ki Vav features 500 distinct sculptures carved into niches throughout the monument, depicting gods such as Vishnu and Parvati in various incarnations. Incredibly, in January 2001, this ancient structure survived a devastating earthquake that measured 7.6 on the Richter scale.",
+            "Another example is the Surya Kund in Modhera, northern Gujarat, next to the Sun Temple, built by King Bhima I in 1026 to honour the sun god Surya. It actually resembles a tank (kund means reservoir or pond) rather than a well, but displays the hallmarks of stepwell architecture, including four sides of steps that descend to the bottom in a stunning geometrical formation. The terraces house 108 small, intricately carved shrines between the sets of steps.",
+            "Rajasthan also has a wealth of wells. The ancient city of Bundi, 200 kilometres south of Jaipur, is renowned for its architecture, including its stepwells. One of the larger examples is Raniji Ki Baori, which was built by the queen of the region, Nathavatji, in 1699. At 46 metres deep, 20 metres wide and 40 metres long, the intricately carved monument is one of 21 baoris commissioned in the Bundi area by Nathavatji.",
+            "In the old ruined town of Abhaneri, about 95 kilometres east of Jaipur, is Chand Baori, one of India's oldest and deepest wells; aesthetically, it's perhaps one of the most dramatic. Built in around 850 AD next to the temple of Harshat Mata, the baori comprises hundreds of zigzagging steps that run along three of its sides, steeply descending 11 storeys, resulting in a striking geometric pattern when seen from afar. On the fourth side, verandas which are supported by ornate pillars overlook the steps.",
+            "Still in public use is Neemrana Ki Baori, located just off the Jaipur–Dehli highway. Constructed in around 1700, it's nine storeys deep, with the last two being underwater. At ground level, there are 86 colonnaded openings from where the visitor descends 170 steps to the deepest water source.",
+            "Today, following years of neglect, many of these monuments to medieval engineering have been saved by the Archaeological Survey of India, which has recognised the importance of preserving them as part of the country's rich history. Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these architectural marvels from 1,000 years ago, which serve as a reminder of both the ingenuity and artistry of ancient civilisations and of the value of water to human existence."
+          ],
+          "questionSectionText": "Questions 1-13\n1. Examples of ancient stepwells can be found all over the world.\n2. Stepwells had\n3. The few existing stepwells in Delhi are more attractive than those found elsewhere.\n4. It took workers many years to build the stone steps characteristic of stepwells.\n5. The number of steps above the water level in\n6. Which part of some stepwells provided shade for people? …\n7. What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? …\n8. Who are frequent visitors to stepwells nowadays? … Questions 9-13 Complete the table below Choose\n9. … of 2001.\n10. … produce\n11. … than a well.\n12. … which provide\n13. … levels. Used by public today Questions 14-21 The Reading Passage has nine paragraphs,",
+          "questionRanges": [
+            {
+              "start": 1,
+              "end": 13
+            }
+          ],
+          "questions": [
+            {
+              "number": 1,
+              "prompt": "Examples of ancient stepwells can be found all over the world.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Unique to the region, stepwells are often architecturally complex and vary widely in size and shape.",
+              "explanationThai": "ข้อความในข้อว่า \"Examples of ancient stepwells can be found all over the world.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Unique to the region, stepwells are often architecturally complex and vary widely in size and s…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "ancient stepwells found = unique region stepwells architecturally = FALSE"
+            },
+            {
+              "number": 2,
+              "prompt": "Stepwells had",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "During their heyday, they were places of gathering, of leisure, of relaxation and of worship for villagers of all but the lowest castes.",
+              "explanationThai": "ข้อความในข้อว่า \"Stepwells had\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"During their heyday, they were places of gathering, of leisure, of relaxation and of worship fo…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "stepwells = heyday places gathering leisure = TRUE"
+            },
+            {
+              "number": 3,
+              "prompt": "The few existing stepwells in Delhi are more attractive than those found elsewhere.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "a few also survive in Delhi.",
+              "explanationThai": "ข้อความในข้อว่า \"The few existing stepwells in Delhi are more attractive than those found elsewhere.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"a few also survive in Delhi.\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "found elsewhere = survive = NOT GIVEN"
+            },
+            {
+              "number": 4,
+              "prompt": "It took workers many years to build the stone steps characteristic of stepwells.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "As their name suggests, stepwells comprise a series of stone steps descending from ground level to the water source (normally an underground aquifer) as it recedes following the rains.",
+              "explanationThai": "ข้อความในข้อว่า \"It took workers many years to build the stone steps characteristic of stepwells.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"As their name suggests, stepwells comprise a series of stone steps descending from ground level…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "workers years build = suggests stepwells comprise series = NOT GIVEN"
+            },
+            {
+              "number": 5,
+              "prompt": "The number of steps above the water level in",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "When the water level was high, the user needed only to descend a few steps to reach it; when it was low, several levels would have to be negotiated.",
+              "explanationThai": "ข้อความในข้อว่า \"The number of steps above the water level in\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"When the water level was high, the user needed only to descend a few steps to reach it; when it…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "number steps above = needed descend several levels = TRUE"
+            },
+            {
+              "number": 6,
+              "prompt": "Which part of some stepwells provided shade for people? …",
+              "correctAnswer": "pavilions",
+              "acceptedAnswers": [
+                "pavilions"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "they also included pavilions that sheltered visitors from the relentless heat.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Which part of some stepwells provided shade for people? …\" บทความมีถ้อยคำที่ตรงกันคือ \"they also included pavilions that sheltered visitors from the relentless heat.\" จึงคำตอบคือ \"pavilions\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "stepwells provided shade = included sheltered visitors relentless = pavilions"
+            },
+            {
+              "number": 7,
+              "prompt": "What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? …",
+              "correctAnswer": "drought",
+              "acceptedAnswers": [
+                "drought"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "Their condition hasn’t been helped by recent dry spells: southern Rajasthan suffered an eight-year drought between 1996 and 2004.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? …\" บทความมีถ้อยคำที่ตรงกันคือ \"Their condition hasn’t been helped by recent dry spells: southern Rajasthan suffered an eight-y…\" จึงคำตอบคือ \"drought\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "serious climatic event = condition helped recent spells = drought"
+            },
+            {
+              "number": 8,
+              "prompt": "Who are frequent visitors to stepwells nowadays? …",
+              "correctAnswer": "tourists",
+              "acceptedAnswers": [
+                "tourists"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these architectural marvels from 1,000 years ago",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Who are frequent visitors to stepwells nowadays? … Questions 9-13 Complete the table below Choose\" บทความมีถ้อยคำที่ตรงกันคือ \"Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these a…\" จึงคำตอบคือ \"tourists\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "frequent visitors stepwells = far-flung corners northwestern wonder = tourists"
+            },
+            {
+              "number": 9,
+              "prompt": "… of 2001.",
+              "correctAnswer": "Earthquake",
+              "acceptedAnswers": [
+                "Earthquake"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "Incredibly, in January 2001, this ancient structure survived a devastating earthquake that measured 7.6 on the Richter scale.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of 2001.\" บทความมีถ้อยคำที่ตรงกันคือ \"Incredibly, in January 2001, this ancient structure survived a devastating earthquake that meas…\" จึงคำตอบคือ \"Earthquake\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "… of 2001. = Incredibly, in January 2001, this ancient structure survived… = Earthquake"
+            },
+            {
+              "number": 10,
+              "prompt": "… produce",
+              "correctAnswer": "4 sides",
+              "acceptedAnswers": [
+                "Four sides",
+                "4 sides"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "including four sides of steps that descend to the bottom in a stunning geometrical formation.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… produce\" บทความมีถ้อยคำที่ตรงกันคือ \"including four sides of steps that descend to the bottom in a stunning geometrical formation.\" จึงคำตอบคือ \"4 sides\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "produce = including descend bottom stunning = 4 sides"
+            },
+            {
+              "number": 11,
+              "prompt": "… than a well.",
+              "correctAnswer": "Tank",
+              "acceptedAnswers": [
+                "Tank"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "It actually resembles a tank (kund means reservoir or pond) rather than a well",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… than a well.\" บทความมีถ้อยคำที่ตรงกันคือ \"It actually resembles a tank (kund means reservoir or pond) rather than a well\" จึงคำตอบคือ \"Tank\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "well = actually resembles reservoir rather = Tank"
+            },
+            {
+              "number": 12,
+              "prompt": "… which provide",
+              "correctAnswer": "verandahs",
+              "acceptedAnswers": [
+                "verandas",
+                "verandahs"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "On the fourth side, verandas which are supported by ornate pillars overlook the steps.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… which provide\" บทความมีถ้อยคำที่ตรงกันคือ \"On the fourth side, verandas which are supported by ornate pillars overlook the steps.\" จึงคำตอบคือ \"verandahs\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "provide = fourth verandas supported ornate = verandahs"
+            },
+            {
+              "number": 13,
+              "prompt": "… levels. Used by public today",
+              "correctAnswer": "underwater",
+              "acceptedAnswers": [
+                "underwater"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 1",
+              "answerType": "text",
+              "exactPortion": "Constructed in around 1700, it’s nine storeys deep, with the last two being underwater.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… levels. Used by public today Questions 14-21 The Reading Passage has nine paragraphs,\" บทความมีถ้อยคำที่ตรงกันคือ \"Constructed in around 1700, it’s nine storeys deep, with the last two being underwater.\" จึงคำตอบคือ \"underwater\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "levels public today = constructed around storeys = underwater"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test1-passage2",
+    "title": "Cambridge 10 Test 1 Passage 2 - EUROPEAN TRANSPORT SYSTEMS 1990-2010",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 2\nEUROPEAN TRANSPORT SYSTEMS 1990-2010\n\nWhat have been the trends and what are the prospects for European transport systems?\n\n14Drop heading hereA\n\nIt is difficult to conceive of vigorous economic growth without an efficient transport system. Although modern information technologies can reduce the demand for physical transport by facilitating teleworking and teleservices, the requirement for transport continues to increase. There are two key factors behind this trend. For passenger transport, the determining factor is the spectacular growth in car use. The number of cars on European Union (EU) roads saw an increase of three million cars each year from 1990 to 2010, and in the next decade the EU will see a further substantial increase in its fleet.\n\n15Drop heading hereB\n\nAs far as goods transport is concerned, growth is due to a large extent to changes in the European economy and its system of production. In the last 20 years, as internal frontiers have been abolished, the EU has moved from a 'stock' economy to a 'flow' economy. This phenomenon has been emphasised by the relocation of some industries, particularly those which are labour intensive, to reduce production costs, even though the production site is hundreds or even thousands of kilometres away from the final assembly plant or away from users.\n\n16Drop heading hereC\n\nThe strong economic growth expected in countries which are candidates for entry to the EU will also increase transport flows, in particular road haulage traffic. In 1998, some of these countries already exported more than twice their 1990 volumes and imported more than five times their 1990 volumes. And although many candidate countries inherited a transport system which encourages rail, the distribution between modes has tipped sharply in favour of road transport since the 1990s. Between 1990 and 1998, road haulage increased by 19.4%, while during the same period rail haulage decreased by 43.5%, although – and this could benefit the enlarged EU – it is still on average at a much higher level than in existing member states.\n\n17Drop heading hereD\n\nHowever, a new imperative-sustainable development – offers an opportunity for adapting the EU's common transport policy. This objective, agreed by the Gothenburg European Council, has to be achieved by integrating environmental considerations into Community policies, and shifting the balance between modes of transport lies at the heart of its strategy. The ambitious objective can only be fully achieved by 2020, but proposed measures are nonetheless a first essential step towards a sustainable transport system which will ideally be in place in 30 years' time, that is by 2040.\n\n18Drop heading hereE\n\nIn 1998, energy consumption in the transport sector was to blame for 28% of emissions of CO2, the leading greenhouse gas. According to the latest estimates, if nothing is done to reverse the traffic growth trend, CO2 emissions from transport can be expected to increase by around 50% to 1,113 billion tonnes by 2020, compared with the 739 billion tonnes recorded in 1990. Once again, road transport is the main culprit since it alone accounts for 84% of the CO2 emissions attributable to transport. Using alternative fuels and improving energy efficiency is thus both an ecological necessity and a technological challenge.\n\nF\n\nAt the same time greater efforts must be made to achieve a modal shift. Such a change cannot be achieved overnight, all the less so after over half a century of constant deterioration in favour of road. This has reached such a pitch that today rail freight services are facing marginalisation, with just 8% of market share, and with international goods trains struggling along at an average speed of 18km/h. Three possible options have emerged.\n\n19Drop heading hereG\n\nThe first approach would consist of focusing on road transport solely through pricing. This option would not be accompanied by complementary measures in the other modes of transport. In the short term it might curb the growth in road transport through the better loading ratio of goods vehicles and occupancy rates of passenger vehicles expected as a result of the increase in the price of transport. However, the lack of measures available to revitalise other modes of transport would make it impossible for more sustainable modes of transport to take up the baton.\n\n20Drop heading hereH\n\nThe second approach also concentrates on road transport pricing but is accompanied by measures to increase the efficiency of the other modes (better quality of services, logistics, technology). However, this approach does not include investment in new infrastructure, nor does it guarantee better regional cohesion. It could help to achieve greater uncoupling than the first approach, but road transport would keep the lion's share of the market and continue to concentrate on saturated arteries, despite being the most polluting of the modes. It is therefore not enough to guarantee the necessary shift of the balance.\n\n21Drop heading hereI\n\nThe third approach, which is not new, comprises a series of measures ranging from pricing to revitalising alternative modes of transport and targeting investment in the trans-European network. This integrated approach would allow the market shares of the other modes to return to their 1998 levels and thus make a shift of balance. It is far more ambitious than it looks, bearing in mind the historical imbalance in favour of roads for the last fifty years, but would achieve a marked break in the link between road transport growth and economic growth, without placing restrictions on the mobility of people and goods.\n\n<div\n\nQuestions 14-26\n\n14. Drop heading here …\n\n15. Drop heading here …\n\n16. Drop heading here …\n\n17. Drop heading here …\n\n18. Drop heading here …\n\n19. Drop heading here …\n\n20. Drop heading here …\n\n21. Drop heading here …\n\n22. The need for transport is growing, despite technological developments.\n\n23. To reduce production costs, some industries have been moved closer to their relevant consumers.\n\n24. Cars are prohibitively expensive in some EU candidate countries.\n\n25. The Gothenburg European Council was set up 30 years ago.\n\n26. By the end of this decade, CO2 emissions from transport are predicted to reach 739 billion tonnes.",
+    "rawAnswerKey": "READING PASSAGE 2: EUROPEAN TRANSPORT SYSTEMS 1990-2010\n\nQuestion 14: Drop heading here …\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"For passenger transport, the determining factor is the spectacular growth in car use.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"For passenger transport, the determining factor is the spectacular growth in car use.\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = passenger transport determining factor = viii\n\nQuestion 15: Drop heading here …\n\nCorrect Answer: iii\n\nAccepted Answers: iii\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"As far as goods transport is concerned, growth is due to a large extent to changes in the European economy and its system of production.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"As far as goods transport is concerned, growth is due to a large extent to changes in the Europ…\" จึงคำตอบคือ \"iii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = transport concerned growth extent = iii\n\nQuestion 16: Drop heading here …\n\nCorrect Answer: xi\n\nAccepted Answers: xi\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"The strong economic growth expected in countries which are candidates for entry to the EU will also increase transport flows, in particular road haulage traffic.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The strong economic growth expected in countries which are candidates for entry to the EU will …\" จึงคำตอบคือ \"xi\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = strong economic growth expected = xi\n\nQuestion 17: Drop heading here …\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"The ambitious objective can only be fully achieved by 2020, but proposed measures are nonetheless a first essential step towards a sustainable transport system which will ideally be in place in 30 years’ time, that is by 2040.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The ambitious objective can only be fully achieved by 2020, but proposed measures are nonethele…\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = ambitious objective achieved proposed = i\n\nQuestion 18: Drop heading here …\n\nCorrect Answer: v\n\nAccepted Answers: v\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"In 1998, energy consumption in the transport sector was to blame for 28% of emissions of CO2, the leading greenhouse gas.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"In 1998, energy consumption in the transport sector was to blame for 28% of emissions of CO2, t…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = energy consumption transport sector = v\n\nQuestion 19: Drop heading here …\n\nCorrect Answer: x\n\nAccepted Answers: x\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"The first approach would consist of focusing on road transport solely through pricing.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The first approach would consist of focusing on road transport solely through pricing.\" จึงคำตอบคือ \"x\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = approach consist focusing transport = x\n\nQuestion 20: Drop heading here …\n\nCorrect Answer: ii\n\nAccepted Answers: ii\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"The second approach also concentrates on road transport pricing but is accompanied by measures to increase the efficiency of the other modes (better quality of services, logistics, technology).\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The second approach also concentrates on road transport pricing but is accompanied by measures …\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = second approach concentrates transport = ii\n\nQuestion 21: Drop heading here …\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"This integrated approach would allow the market shares of the other modes to return to their 1998 levels and thus make a shift of balance.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"This integrated approach would allow the market shares of the other modes to return to their 19…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = integrated approach market shares = iv\n\nQuestion 22: The need for transport is growing, despite technological developments.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"Although modern information technologies can reduce the demand for physical transport by facilitating teleworking and teleservices, the requirement for transport continues to increase.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The need for transport is growing, despite technological developments.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Although modern information technologies can reduce the demand for physical transport by facili…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: transport growing despite = although modern technologies reduce = TRUE\n\nQuestion 23: To reduce production costs, some industries have been moved closer to their relevant consumers.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"This phenomenon has been emphasised by the relocation of some industries, particularly those which are labour intensive, to reduce production costs, even though the production site is hundreds or even thousands of kilometres away from the final assembly plant or away from users.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"To reduce production costs, some industries have been moved closer to their relevant consumers.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"This phenomenon has been emphasised by the relocation of some industries, particularly those wh…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: reduce production costs = phenomenon emphasised relocation industries = FALSE\n\nQuestion 24: Cars are prohibitively expensive in some EU candidate countries.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"The strong economic growth expected in countries which are candidates for entry to the EU will also increase transport flows, in particular road haulage traffic.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Cars are prohibitively expensive in some EU candidate countries.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"The strong economic growth expected in countries which are candidates for entry to the EU will …\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: prohibitively expensive candidate = strong economic growth expected = NOT GIVEN\n\nQuestion 25: The Gothenburg European Council was set up 30 years ago.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"The ambitious objective can only be fully achieved by 2020, but proposed measures are nonetheless a first essential step towards a sustainable transport system which will ideally be in place in 30 years’ time, that is by 2040.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The Gothenburg European Council was set up 30 years ago.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"The ambitious objective can only be fully achieved by 2020, but proposed measures are nonethele…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: council years = ambitious objective achieved proposed = NOT GIVEN\n\nQuestion 26: By the end of this decade, CO2 emissions from transport are predicted to reach 739 billion tonnes.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 1 Passage 2\n\nExact Portion: \"CO2 emissions from transport can be expected to increase by around 50% to 1,113 billion tonnes by 2020, compared with the 739 billion tonnes recorded in 1990.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"By the end of this decade, CO2 emissions from transport are predicted to reach 739 billion tonnes.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"CO2 emissions from transport can be expected to increase by around 50% to 1,113 billion tonnes …\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: decade emissions transport = emissions transport expected increase = FALSE",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 1 Passage 2 - EUROPEAN TRANSPORT SYSTEMS 1990-2010",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 2,
+          "title": "EUROPEAN TRANSPORT SYSTEMS 1990-2010",
+          "bodyParagraphs": [
+            "What have been the trends and what are the prospects for European transport systems?",
+            "It is difficult to conceive of vigorous economic growth without an efficient transport system. Although modern information technologies can reduce the demand for physical transport by facilitating teleworking and teleservices, the requirement for transport continues to increase. There are two key factors behind this trend. For passenger transport, the determining factor is the spectacular growth in car use. The number of cars on European Union (EU) roads saw an increase of three million cars each year from 1990 to 2010, and in the next decade the EU will see a further substantial increase in its fleet.",
+            "As far as goods transport is concerned, growth is due to a large extent to changes in the European economy and its system of production. In the last 20 years, as internal frontiers have been abolished, the EU has moved from a 'stock' economy to a 'flow' economy. This phenomenon has been emphasised by the relocation of some industries, particularly those which are labour intensive, to reduce production costs, even though the production site is hundreds or even thousands of kilometres away from the final assembly plant or away from users.",
+            "The strong economic growth expected in countries which are candidates for entry to the EU will also increase transport flows, in particular road haulage traffic. In 1998, some of these countries already exported more than twice their 1990 volumes and imported more than five times their 1990 volumes. And although many candidate countries inherited a transport system which encourages rail, the distribution between modes has tipped sharply in favour of road transport since the 1990s. Between 1990 and 1998, road haulage increased by 19.4%, while during the same period rail haulage decreased by 43.5%, although – and this could benefit the enlarged EU – it is still on average at a much higher level than in existing member states.",
+            "However, a new imperative-sustainable development – offers an opportunity for adapting the EU's common transport policy. This objective, agreed by the Gothenburg European Council, has to be achieved by integrating environmental considerations into Community policies, and shifting the balance between modes of transport lies at the heart of its strategy. The ambitious objective can only be fully achieved by 2020, but proposed measures are nonetheless a first essential step towards a sustainable transport system which will ideally be in place in 30 years' time, that is by 2040.",
+            "In 1998, energy consumption in the transport sector was to blame for 28% of emissions of CO2, the leading greenhouse gas. According to the latest estimates, if nothing is done to reverse the traffic growth trend, CO2 emissions from transport can be expected to increase by around 50% to 1,113 billion tonnes by 2020, compared with the 739 billion tonnes recorded in 1990. Once again, road transport is the main culprit since it alone accounts for 84% of the CO2 emissions attributable to transport. Using alternative fuels and improving energy efficiency is thus both an ecological necessity and a technological challenge.",
+            "F",
+            "At the same time greater efforts must be made to achieve a modal shift. Such a change cannot be achieved overnight, all the less so after over half a century of constant deterioration in favour of road. This has reached such a pitch that today rail freight services are facing marginalisation, with just 8% of market share, and with international goods trains struggling along at an average speed of 18km/h. Three possible options have emerged.",
+            "The first approach would consist of focusing on road transport solely through pricing. This option would not be accompanied by complementary measures in the other modes of transport. In the short term it might curb the growth in road transport through the better loading ratio of goods vehicles and occupancy rates of passenger vehicles expected as a result of the increase in the price of transport. However, the lack of measures available to revitalise other modes of transport would make it impossible for more sustainable modes of transport to take up the baton.",
+            "The second approach also concentrates on road transport pricing but is accompanied by measures to increase the efficiency of the other modes (better quality of services, logistics, technology). However, this approach does not include investment in new infrastructure, nor does it guarantee better regional cohesion. It could help to achieve greater uncoupling than the first approach, but road transport would keep the lion's share of the market and continue to concentrate on saturated arteries, despite being the most polluting of the modes. It is therefore not enough to guarantee the necessary shift of the balance.",
+            "21Drop heading hereI",
+            "The third approach, which is not new, comprises a series of measures ranging from pricing to revitalising alternative modes of transport and targeting investment in the trans-European network. This integrated approach would allow the market shares of the other modes to return to their 1998 levels and thus make a shift of balance. It is far more ambitious than it looks, bearing in mind the historical imbalance in favour of roads for the last fifty years, but would achieve a marked break in the link between road transport growth and economic growth, without placing restrictions on the mobility of people and goods."
+          ],
+          "questionSectionText": "Questions 14-26\n22. The need for transport is growing, despite technological developments.\n23. To reduce production costs, some industries have been moved closer to their relevant consumers.\n24. Cars are prohibitively expensive in some EU candidate countries.\n25. The Gothenburg European Council was set up 30 years ago.\n26. By the end of this decade, CO2 emissions from transport are predicted to reach 739 billion tonnes.",
+          "questionRanges": [
+            {
+              "start": 14,
+              "end": 26
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "viii",
+              "acceptedAnswers": [
+                "viii"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "For passenger transport, the determining factor is the spectacular growth in car use.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"For passenger transport, the determining factor is the spectacular growth in car use.\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = passenger transport determining factor = viii"
+            },
+            {
+              "number": 15,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "iii",
+              "acceptedAnswers": [
+                "iii"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "As far as goods transport is concerned, growth is due to a large extent to changes in the European economy and its system of production.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"As far as goods transport is concerned, growth is due to a large extent to changes in the Europ…\" จึงคำตอบคือ \"iii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = transport concerned growth extent = iii"
+            },
+            {
+              "number": 16,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "xi",
+              "acceptedAnswers": [
+                "xi"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "text",
+              "exactPortion": "The strong economic growth expected in countries which are candidates for entry to the EU will also increase transport flows, in particular road haulage traffic.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The strong economic growth expected in countries which are candidates for entry to the EU will …\" จึงคำตอบคือ \"xi\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = strong economic growth expected = xi"
+            },
+            {
+              "number": 17,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "i",
+              "acceptedAnswers": [
+                "i"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "The ambitious objective can only be fully achieved by 2020, but proposed measures are nonetheless a first essential step towards a sustainable transport system which will ideally be in place in 30 years’ time, that is by 2040.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The ambitious objective can only be fully achieved by 2020, but proposed measures are nonethele…\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = ambitious objective achieved proposed = i"
+            },
+            {
+              "number": 18,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "v",
+              "acceptedAnswers": [
+                "v"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "In 1998, energy consumption in the transport sector was to blame for 28% of emissions of CO2, the leading greenhouse gas.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"In 1998, energy consumption in the transport sector was to blame for 28% of emissions of CO2, t…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = energy consumption transport sector = v"
+            },
+            {
+              "number": 19,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "x",
+              "acceptedAnswers": [
+                "x"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "The first approach would consist of focusing on road transport solely through pricing.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The first approach would consist of focusing on road transport solely through pricing.\" จึงคำตอบคือ \"x\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = approach consist focusing transport = x"
+            },
+            {
+              "number": 20,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "ii",
+              "acceptedAnswers": [
+                "ii"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "The second approach also concentrates on road transport pricing but is accompanied by measures to increase the efficiency of the other modes (better quality of services, logistics, technology).",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The second approach also concentrates on road transport pricing but is accompanied by measures …\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = second approach concentrates transport = ii"
+            },
+            {
+              "number": 21,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "iv",
+              "acceptedAnswers": [
+                "iv"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "This integrated approach would allow the market shares of the other modes to return to their 1998 levels and thus make a shift of balance.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"This integrated approach would allow the market shares of the other modes to return to their 19…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = integrated approach market shares = iv"
+            },
+            {
+              "number": 22,
+              "prompt": "The need for transport is growing, despite technological developments.",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Although modern information technologies can reduce the demand for physical transport by facilitating teleworking and teleservices, the requirement for transport continues to increase.",
+              "explanationThai": "ข้อความในข้อว่า \"The need for transport is growing, despite technological developments.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Although modern information technologies can reduce the demand for physical transport by facili…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "transport growing despite = although modern technologies reduce = TRUE"
+            },
+            {
+              "number": 23,
+              "prompt": "To reduce production costs, some industries have been moved closer to their relevant consumers.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "This phenomenon has been emphasised by the relocation of some industries, particularly those which are labour intensive, to reduce production costs, even though the production site is hundreds or even thousands of kilometres away from the final assembly plant or away from users.",
+              "explanationThai": "ข้อความในข้อว่า \"To reduce production costs, some industries have been moved closer to their relevant consumers.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"This phenomenon has been emphasised by the relocation of some industries, particularly those wh…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "reduce production costs = phenomenon emphasised relocation industries = FALSE"
+            },
+            {
+              "number": 24,
+              "prompt": "Cars are prohibitively expensive in some EU candidate countries.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "The strong economic growth expected in countries which are candidates for entry to the EU will also increase transport flows, in particular road haulage traffic.",
+              "explanationThai": "ข้อความในข้อว่า \"Cars are prohibitively expensive in some EU candidate countries.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"The strong economic growth expected in countries which are candidates for entry to the EU will …\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "prohibitively expensive candidate = strong economic growth expected = NOT GIVEN"
+            },
+            {
+              "number": 25,
+              "prompt": "The Gothenburg European Council was set up 30 years ago.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "The ambitious objective can only be fully achieved by 2020, but proposed measures are nonetheless a first essential step towards a sustainable transport system which will ideally be in place in 30 years’ time, that is by 2040.",
+              "explanationThai": "ข้อความในข้อว่า \"The Gothenburg European Council was set up 30 years ago.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"The ambitious objective can only be fully achieved by 2020, but proposed measures are nonethele…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "council years = ambitious objective achieved proposed = NOT GIVEN"
+            },
+            {
+              "number": 26,
+              "prompt": "By the end of this decade, CO2 emissions from transport are predicted to reach 739 billion tonnes.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "CO2 emissions from transport can be expected to increase by around 50% to 1,113 billion tonnes by 2020, compared with the 739 billion tonnes recorded in 1990.",
+              "explanationThai": "ข้อความในข้อว่า \"By the end of this decade, CO2 emissions from transport are predicted to reach 739 billion tonnes.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"CO2 emissions from transport can be expected to increase by around 50% to 1,113 billion tonnes …\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "decade emissions transport = emissions transport expected increase = FALSE"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test1-passage3",
+    "title": "Cambridge 10 Test 1 Passage 3 - The psychology of innovation",
+    "category": "advanced",
+    "rawPassageText": "READING PASSAGE 3\nThe psychology of innovation\n\nWhy are so few companies truly innovative?\n\nInnovation is key to business survival, and companies put substantial resources into inspiring employees to develop new ideas. There are, nevertheless, people working in luxurious, state-of-the-art centres designed to stimulate innovation who find that their environment doesn't make them feel at all creative. And there are those who don't have a budget, or much space, but who innovate successfully.\n\nFor Robert B. Cialdini, Professor of Psychology at Arizona State University, one reason that companies don't succeed as often as they should is that innovation starts with recruitment. Research shows that the fit between an employee's values and a company's values makes a difference to what contribution they make and whether, two years after they join, they're still at the company. Studies at Harvard Business School show that, although some individuals may be more creative than others, almost every individual can be creative in the right circumstances.\n\nOne of the most famous photographs in the story of rock'n'roll emphasises Ciaidini's views. The 1956 picture of singers Elvis Presley, Carl Perkins, Johnny Cash and Jerry Lee Lewis jamming at a piano in Sun Studios in Memphis tells a hidden story. Sun's 'million-dollar quartet' could have been a quintet. Missing from the picture is Roy Orbison' a greater natural singer than Lewis, Perkins or Cash. Sam Phillips, who owned Sun, wanted to revolutionise popular music with songs that fused black and white music, and country and blues. Presley, Cash, Perkins and Lewis instinctively understood Phillips's ambition and believed in it. Orbison wasn't inspired by the goal, and only ever achieved one hit with the Sun label.\n\nThe value fit matters, says Cialdini, because innovation is, in part, a process of change, and under that pressure we, as a species, behave differently, 'When things change, we are hard-wired to play it safe.' Managers should therefore adopt an approach that appears counterintuitive -they should explain what stands to be lost if the company fails to seize a particular opportunity. Studies show that we invariably take more gambles when threatened with a loss than when offered a reward.\n\nManaging innovation is a delicate art. It's easy for a company to be pulled in conflicting directions as the marketing, product development, and finance departments each get different feedback from different sets of people. And without a system which ensures collaborative exchanges within the company, it's also easy for small 'pockets of innovation' to disappear. Innovation is a contact sport. You can't brief people just by saying, 'We're going in this direction and I'm going to take you with me.'\n\nCialdini believes that this 'follow-the-leader syndrome, is dangerous, not least because it encourages bosses to go it alone. 'It's been scientifically proven that three people will be better than one at solving problems, even if that one person is the smartest person in the field.' To prove his point, Cialdini cites an interview with molecular biologist James Watson. Watson, together with Francis Crick, discovered the structure of DNA, the genetic information carrier of all living organisms. 'When asked how they had cracked the code ahead of an array of highly accomplished rival investigators, he said something that stunned me. He said he and Crick had succeeded because they were aware that they weren't the most intelligent of the scientists pursuing the answer. The smartest scientist was called Rosalind Franklin who, Watson said, \"was so intelligent she rarely sought advice\".'\n\nTeamwork taps into one of the basic drivers of human behaviour. 'The principle of social proof is so pervasive that we don't even recognise it,' says Cialdini. 'If your project is being resisted, for example, by a group of veteran employees, ask another old-timer to speak up for it.' Cialdini is not alone in advocating this strategy. Research shows that peer power, used horizontally not vertically, is much more powerful than any boss's speech.\n\nWriting, visualising and prototyping can stimulate the flow of new ideas. Cialdini cites scores of research papers and historical events that prove that even something as simple as writing deepens every individual's engagement in the project. It is, he says, the reason why all those competitions on breakfast cereal packets encouraged us to write in saying, in no more than 10 words: 'I like Kellogg's Com Flakes because... .' The very act of writing makes us more likely to believe it.\n\nAuthority doesn't have to inhibit innovation but it often does. The wrong kind of leadership will lead to what Cialdini calls 'captainitis, the regrettable tendency of team members to opt out of team responsibilities that are properly theirs'. He calls it captainitis because, he says, 'crew members of multipilot aircraft exhibit a sometimes deadly passivity when the flight captain makes a clearly wrong-headed decision'. This behaviour is not, he says, unique to air travel, but can happen in any workplace where the leader is overbearing.\n\nAt the other end of the scale is the 1980s Memphis design collective, a group of young designers for whom 'the only rule was that there were no rules'. This environment encouraged a free interchange of ideas, which led to more creativity with form, function, colour and materials that revolutionised attitudes to furniture design.\n\nMany theorists believe the ideal boss should lead from behind, taking pride in collective accomplishment and giving credit where it is due. Cialdini says: 'Leaders should encourage everyone to contribute and simultaneously assure all concerned that every recommendation is important to making the right decision and will be given full attention.' The frustrating thing about innovation is that there are many approaches, but no magic formula. However, a manager who wants to create a truly innovative culture can make their job a lot easier by recognising these psychological realities.\n\n                        \n                    \n                    \n                    \n                                                    <form id =\"\n\nQuestions 27-40\n\n27. The example of the 'million-dollar quartet' underlines the writer's point about\n\n28. James Watson suggests that he and Francis Crick won the race to discover the DNA code because they\n\n29. The writer mentions competitions on breakfast cereal packets as an example of how to\n\n30. In the last paragraph, the writer suggests that it is important for employees to\n\n31. Drop answer here … • At times of change, people tend to\n\n32. Drop answer here … • If people are aware of what they might lose, they will often\n\n33. Drop answer here … • People working under\n\n34. Drop answer here … • Employees working in organisations with few rules are more likely to\n\n35. Drop answer here … Drag and drop an option to fill in each blank. A. take chances. B. share their ideas. C. become competitive. D. get promotion. E. avoid risk. F. ignore their duties. G. remain in their jobs. Questions 36-40 Do the following statements agree with the claims of the writer in the Reading Passage? In boxes on your answer sheet, write\n\n36. The physical surroundings in which\n\n37. Most people have the potential to be creative.\n\n38. Teams work best when their members are of equally matched intelligence.\n\n39. It is easier for smaller companies to be innovative.\n\n40. A manager's approval of an idea is more persuasive than that of",
+    "rawAnswerKey": "READING PASSAGE 3: The psychology of innovation\n\nQuestion 27: The example of the 'million-dollar quartet' underlines the writer's point about\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"Presley, Cash, Perkins and Lewis instinctively understood Phillips’s ambition and believed in it. Orbison wasn’t inspired by the goal, and only ever achieved one hit with the Sun label.\"\n\nShort Thai Explanation: คำถาม: \"The example of the 'million-dollar quartet' underlines the writer's point about\" หลักฐานในบทความคือ \"Presley, Cash, Perkins and Lewis instinctively understood Phillips’s ambition and believed in i…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: example 'million-dollar quartet' = presley perkins instinctively understood = C\n\nQuestion 28: James Watson suggests that he and Francis Crick won the race to discover the DNA code because they\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"He said he and Crick had succeeded because they were aware that they weren’t the most intelligent of the scientists pursuing the answer.\"\n\nShort Thai Explanation: คำถาม: \"James Watson suggests that he and Francis Crick won the race to discover the DNA code because they\" หลักฐานในบทความคือ \"He said he and Crick had succeeded because they were aware that they weren’t the most intellige…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: code because = succeeded because intelligent scientists = A\n\nQuestion 29: The writer mentions competitions on breakfast cereal packets as an example of how to\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"The very act of writing makes us more likely to believe it.\"\n\nShort Thai Explanation: คำถาม: \"The writer mentions competitions on breakfast cereal packets as an example of how to\" หลักฐานในบทความคือ \"The very act of writing makes us more likely to believe it.\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: example = writing likely believe = D\n\nQuestion 30: In the last paragraph, the writer suggests that it is important for employees to\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"assure all concerned that every recommendation is important to making the right decision and will be given full attention.\"\n\nShort Thai Explanation: ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (In the last paragraph, the writer suggests that it is important for employees to) โดยเฉพาะประโยค \"assure all concerned that every recommendation is important to making the right decision and wi…\" จึงเลือก B\n\nParaphrased Vocabulary: suggests important employees = assure concerned recommendation important = B\n\nQuestion 31: Drop answer here … • At times of change, people tend to\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"Research shows that the fit between an employee’s values and a company’s values makes a difference to what contribution they make and whether, two years after they join, they’re still at the company.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • At times of change, people tend to\" หลักฐานในบทความคือ \"Research shows that the fit between an employee’s values and a company’s values makes a differe…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G\n\nParaphrased Vocabulary: times change = research between employee values = G\n\nQuestion 32: Drop answer here … • If people are aware of what they might lose, they will often\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"When things change, we are hard-wired to play it safe.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • If people are aware of what they might lose, they will often\" หลักฐานในบทความคือ \"When things change, we are hard-wired to play it safe.\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: aware might often = things change hard-wired = E\n\nQuestion 33: Drop answer here … • People working under\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"Studies show that we invariably take more gambles when threatened with a loss than when offered a reward.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • People working under\" หลักฐานในบทความคือ \"Studies show that we invariably take more gambles when threatened with a loss than when offered…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: working = studies invariably gambles threatened = A\n\nQuestion 34: Drop answer here … • Employees working in organisations with few rules are more likely to\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"The wrong kind of leadership will lead to what Cialdini calls ‘captainitis, the regrettable tendency of team members to opt out of team responsibilities that are properly theirs’.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • Employees working in organisations with few rules are more likely to\" หลักฐานในบทความคือ \"The wrong kind of leadership will lead to what Cialdini calls ‘captainitis, the regrettable ten…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F\n\nParaphrased Vocabulary: employees working organisations = leadership cialdini captainitis regrettable = F\n\nQuestion 35: Drop answer here … Drag and drop an option to fill in each blank. A. take chances. B. share their ideas. C. become competitive. D. get promotion. E. avoid risk. F. ignore their duties. G. remain in their jobs. Questions 36-40 Do the following statements agree with the claims of the writer in the Reading Passage? In boxes on your answer sheet, write\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"for whom ‘the only rule was that there were no rules’. This environment encouraged a free interchange of ideas\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … Drag and drop an option to fill in each blank. A. take chances. B. share their ideas. C. become competitive. D.…\" หลักฐานในบทความคือ \"for whom ‘the only rule was that there were no rules’. This environment encouraged a free inter…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: option fill blank = environment encouraged interchange = B\n\nQuestion 36: The physical surroundings in which\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"There are, nevertheless, people working in luxurious, state-of-the-art centres designed to stimulate innovation who find that their environment doesn’t make them feel at all creative. And there are those who don’t have a budget, or much space, but who innovate successfully.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"The physical surroundings in which\" โดยเฉพาะจากข้อความ \"There are, nevertheless, people working in luxurious, state-of-the-art centres designed to stim…\" จึงตอบ NO\n\nParaphrased Vocabulary: physical surroundings = nevertheless working luxurious state-of-the-art = NO\n\nQuestion 37: Most people have the potential to be creative.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"almost every individual can be creative in the right circumstances.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Most people have the potential to be creative.\" โดยเฉพาะจากข้อความ \"almost every individual can be creative in the right circumstances.\" จึงตอบ YES\n\nParaphrased Vocabulary: potential creative = almost individual creative circumstances = YES\n\nQuestion 38: Teams work best when their members are of equally matched intelligence.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"‘It’s been scientifically proven that three people will be better than one at solving problems, even if that one person is the smartest person in the field.’\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Teams work best when their members are of equally matched intelligence.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"‘It’s been scientifically proven that three people will be better than one at solving problems,…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: teams members equally = scientifically proven better solving = NOT GIVEN\n\nQuestion 39: It is easier for smaller companies to be innovative.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"It’s easy for a company to be pulled in conflicting directions as the marketing, product development, and finance departments each get different feedback from different sets of people.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"It is easier for smaller companies to be innovative.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"It’s easy for a company to be pulled in conflicting directions as the marketing, product develo…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: easier smaller companies = company pulled conflicting directions = NOT GIVEN\n\nQuestion 40: A manager's approval of an idea is more persuasive than that of\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 10 Test 1 Passage 3\n\nExact Portion: \"Research shows that peer power, used horizontally not vertically, is much more powerful than any boss’s speech.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"A manager's approval of an idea is more persuasive than that of\" โดยเฉพาะจากข้อความ \"Research shows that peer power, used horizontally not vertically, is much more powerful than an…\" จึงตอบ NO\n\nParaphrased Vocabulary: manager's approval idea = research horizontally vertically powerful = NO",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 1 Passage 3 - The psychology of innovation",
+      "category": "advanced",
+      "passages": [
+        {
+          "number": 3,
+          "title": "The psychology of innovation",
+          "bodyParagraphs": [
+            "Why are so few companies truly innovative?",
+            "Innovation is key to business survival, and companies put substantial resources into inspiring employees to develop new ideas. There are, nevertheless, people working in luxurious, state-of-the-art centres designed to stimulate innovation who find that their environment doesn't make them feel at all creative. And there are those who don't have a budget, or much space, but who innovate successfully.",
+            "For Robert B. Cialdini, Professor of Psychology at Arizona State University, one reason that companies don't succeed as often as they should is that innovation starts with recruitment. Research shows that the fit between an employee's values and a company's values makes a difference to what contribution they make and whether, two years after they join, they're still at the company. Studies at Harvard Business School show that, although some individuals may be more creative than others, almost every individual can be creative in the right circumstances.",
+            "One of the most famous photographs in the story of rock'n'roll emphasises Ciaidini's views. The 1956 picture of singers Elvis Presley, Carl Perkins, Johnny Cash and Jerry Lee Lewis jamming at a piano in Sun Studios in Memphis tells a hidden story. Sun's 'million-dollar quartet' could have been a quintet. Missing from the picture is Roy Orbison' a greater natural singer than Lewis, Perkins or Cash. Sam Phillips, who owned Sun, wanted to revolutionise popular music with songs that fused black and white music, and country and blues. Presley, Cash, Perkins and Lewis instinctively understood Phillips's ambition and believed in it. Orbison wasn't inspired by the goal, and only ever achieved one hit with the Sun label.",
+            "The value fit matters, says Cialdini, because innovation is, in part, a process of change, and under that pressure we, as a species, behave differently, 'When things change, we are hard-wired to play it safe.' Managers should therefore adopt an approach that appears counterintuitive -they should explain what stands to be lost if the company fails to seize a particular opportunity. Studies show that we invariably take more gambles when threatened with a loss than when offered a reward.",
+            "Managing innovation is a delicate art. It's easy for a company to be pulled in conflicting directions as the marketing, product development, and finance departments each get different feedback from different sets of people. And without a system which ensures collaborative exchanges within the company, it's also easy for small 'pockets of innovation' to disappear. Innovation is a contact sport. You can't brief people just by saying, 'We're going in this direction and I'm going to take you with me.'",
+            "Cialdini believes that this 'follow-the-leader syndrome, is dangerous, not least because it encourages bosses to go it alone. 'It's been scientifically proven that three people will be better than one at solving problems, even if that one person is the smartest person in the field.' To prove his point, Cialdini cites an interview with molecular biologist James Watson. Watson, together with Francis Crick, discovered the structure of DNA, the genetic information carrier of all living organisms. 'When asked how they had cracked the code ahead of an array of highly accomplished rival investigators, he said something that stunned me. He said he and Crick had succeeded because they were aware that they weren't the most intelligent of the scientists pursuing the answer. The smartest scientist was called Rosalind Franklin who, Watson said, \"was so intelligent she rarely sought advice\".'",
+            "Teamwork taps into one of the basic drivers of human behaviour. 'The principle of social proof is so pervasive that we don't even recognise it,' says Cialdini. 'If your project is being resisted, for example, by a group of veteran employees, ask another old-timer to speak up for it.' Cialdini is not alone in advocating this strategy. Research shows that peer power, used horizontally not vertically, is much more powerful than any boss's speech.",
+            "Writing, visualising and prototyping can stimulate the flow of new ideas. Cialdini cites scores of research papers and historical events that prove that even something as simple as writing deepens every individual's engagement in the project. It is, he says, the reason why all those competitions on breakfast cereal packets encouraged us to write in saying, in no more than 10 words: 'I like Kellogg's Com Flakes because... .' The very act of writing makes us more likely to believe it.",
+            "Authority doesn't have to inhibit innovation but it often does. The wrong kind of leadership will lead to what Cialdini calls 'captainitis, the regrettable tendency of team members to opt out of team responsibilities that are properly theirs'. He calls it captainitis because, he says, 'crew members of multipilot aircraft exhibit a sometimes deadly passivity when the flight captain makes a clearly wrong-headed decision'. This behaviour is not, he says, unique to air travel, but can happen in any workplace where the leader is overbearing.",
+            "At the other end of the scale is the 1980s Memphis design collective, a group of young designers for whom 'the only rule was that there were no rules'. This environment encouraged a free interchange of ideas, which led to more creativity with form, function, colour and materials that revolutionised attitudes to furniture design.",
+            "Many theorists believe the ideal boss should lead from behind, taking pride in collective accomplishment and giving credit where it is due. Cialdini says: 'Leaders should encourage everyone to contribute and simultaneously assure all concerned that every recommendation is important to making the right decision and will be given full attention.' The frustrating thing about innovation is that there are many approaches, but no magic formula. However, a manager who wants to create a truly innovative culture can make their job a lot easier by recognising these psychological realities."
+          ],
+          "questionSectionText": "Questions 27-40\n27. The example of the 'million-dollar quartet' underlines the writer's point about\n28. James Watson suggests that he and Francis Crick won the race to discover the DNA code because they\n29. The writer mentions competitions on breakfast cereal packets as an example of how to\n30. In the last paragraph, the writer suggests that it is important for employees to\n31. • At times of change, people tend to\n32. • If people are aware of what they might lose, they will often\n33. • People working under\n34. • Employees working in organisations with few rules are more likely to\n35.\nQuestions 36-40 Do the following statements agree with the claims of the writer in the Reading Passage? In boxes on your answer sheet, write\n36. The physical surroundings in which\n37. Most people have the potential to be creative.\n38. Teams work best when their members are of equally matched intelligence.\n39. It is easier for smaller companies to be innovative.\n40. A manager's approval of an idea is more persuasive than that of",
+          "questionRanges": [
+            {
+              "start": 27,
+              "end": 40
+            },
+            {
+              "start": 36,
+              "end": 40
+            }
+          ],
+          "questions": [
+            {
+              "number": 27,
+              "prompt": "The example of the 'million-dollar quartet' underlines the writer's point about",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Presley, Cash, Perkins and Lewis instinctively understood Phillips’s ambition and believed in it. Orbison wasn’t inspired by the goal, and only ever achieved one hit with the Sun label.",
+              "explanationThai": "คำถาม: \"The example of the 'million-dollar quartet' underlines the writer's point about\" หลักฐานในบทความคือ \"Presley, Cash, Perkins and Lewis instinctively understood Phillips’s ambition and believed in i…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "example 'million-dollar quartet' = presley perkins instinctively understood = C"
+            },
+            {
+              "number": 28,
+              "prompt": "James Watson suggests that he and Francis Crick won the race to discover the DNA code because they",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "He said he and Crick had succeeded because they were aware that they weren’t the most intelligent of the scientists pursuing the answer.",
+              "explanationThai": "คำถาม: \"James Watson suggests that he and Francis Crick won the race to discover the DNA code because they\" หลักฐานในบทความคือ \"He said he and Crick had succeeded because they were aware that they weren’t the most intellige…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "code because = succeeded because intelligent scientists = A"
+            },
+            {
+              "number": 29,
+              "prompt": "The writer mentions competitions on breakfast cereal packets as an example of how to",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "The very act of writing makes us more likely to believe it.",
+              "explanationThai": "คำถาม: \"The writer mentions competitions on breakfast cereal packets as an example of how to\" หลักฐานในบทความคือ \"The very act of writing makes us more likely to believe it.\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "example = writing likely believe = D"
+            },
+            {
+              "number": 30,
+              "prompt": "In the last paragraph, the writer suggests that it is important for employees to",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "assure all concerned that every recommendation is important to making the right decision and will be given full attention.",
+              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (In the last paragraph, the writer suggests that it is important for employees to) โดยเฉพาะประโยค \"assure all concerned that every recommendation is important to making the right decision and wi…\" จึงเลือก B",
+              "paraphrasedVocabulary": "suggests important employees = assure concerned recommendation important = B"
+            },
+            {
+              "number": 31,
+              "prompt": "At times of change, people tend to",
+              "correctAnswer": "G",
+              "acceptedAnswers": [
+                "G"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Research shows that the fit between an employee’s values and a company’s values makes a difference to what contribution they make and whether, two years after they join, they’re still at the company.",
+              "explanationThai": "คำถาม: \"Drop answer here … • At times of change, people tend to\" หลักฐานในบทความคือ \"Research shows that the fit between an employee’s values and a company’s values makes a differe…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "times change = research between employee values = G"
+            },
+            {
+              "number": 32,
+              "prompt": "If people are aware of what they might lose, they will often",
+              "correctAnswer": "E",
+              "acceptedAnswers": [
+                "E"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "When things change, we are hard-wired to play it safe.",
+              "explanationThai": "คำถาม: \"Drop answer here … • If people are aware of what they might lose, they will often\" หลักฐานในบทความคือ \"When things change, we are hard-wired to play it safe.\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "aware might often = things change hard-wired = E"
+            },
+            {
+              "number": 33,
+              "prompt": "People working under",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Studies show that we invariably take more gambles when threatened with a loss than when offered a reward.",
+              "explanationThai": "คำถาม: \"Drop answer here … • People working under\" หลักฐานในบทความคือ \"Studies show that we invariably take more gambles when threatened with a loss than when offered…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "working = studies invariably gambles threatened = A"
+            },
+            {
+              "number": 34,
+              "prompt": "Employees working in organisations with few rules are more likely to",
+              "correctAnswer": "F",
+              "acceptedAnswers": [
+                "F"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "The wrong kind of leadership will lead to what Cialdini calls ‘captainitis, the regrettable tendency of team members to opt out of team responsibilities that are properly theirs’.",
+              "explanationThai": "คำถาม: \"Drop answer here … • Employees working in organisations with few rules are more likely to\" หลักฐานในบทความคือ \"The wrong kind of leadership will lead to what Cialdini calls ‘captainitis, the regrettable ten…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "employees working organisations = leadership cialdini captainitis regrettable = F"
+            },
+            {
+              "number": 35,
+              "prompt": "Complete the summary below.",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "for whom ‘the only rule was that there were no rules’. This environment encouraged a free interchange of ideas",
+              "explanationThai": "คำถาม: \"Drop answer here … Drag and drop an option to fill in each blank. A. take chances. B. share their ideas. C. become competitive. D.…\" หลักฐานในบทความคือ \"for whom ‘the only rule was that there were no rules’. This environment encouraged a free inter…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "option fill blank = environment encouraged interchange = B"
+            },
+            {
+              "number": 36,
+              "prompt": "The physical surroundings in which",
+              "correctAnswer": "NO",
+              "acceptedAnswers": [
+                "NO"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "There are, nevertheless, people working in luxurious, state-of-the-art centres designed to stimulate innovation who find that their environment doesn’t make them feel at all creative. And there are those who don’t have a budget, or much space, but who innovate successfully.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"The physical surroundings in which\" โดยเฉพาะจากข้อความ \"There are, nevertheless, people working in luxurious, state-of-the-art centres designed to stim…\" จึงตอบ NO",
+              "paraphrasedVocabulary": "physical surroundings = nevertheless working luxurious state-of-the-art = NO"
+            },
+            {
+              "number": 37,
+              "prompt": "Most people have the potential to be creative.",
+              "correctAnswer": "YES",
+              "acceptedAnswers": [
+                "YES"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "almost every individual can be creative in the right circumstances.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Most people have the potential to be creative.\" โดยเฉพาะจากข้อความ \"almost every individual can be creative in the right circumstances.\" จึงตอบ YES",
+              "paraphrasedVocabulary": "potential creative = almost individual creative circumstances = YES"
+            },
+            {
+              "number": 38,
+              "prompt": "Teams work best when their members are of equally matched intelligence.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "true-false-not-given",
+              "exactPortion": "‘It’s been scientifically proven that three people will be better than one at solving problems, even if that one person is the smartest person in the field.’",
+              "explanationThai": "ข้อความในข้อว่า \"Teams work best when their members are of equally matched intelligence.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"‘It’s been scientifically proven that three people will be better than one at solving problems,…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "teams members equally = scientifically proven better solving = NOT GIVEN"
+            },
+            {
+              "number": 39,
+              "prompt": "It is easier for smaller companies to be innovative.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "true-false-not-given",
+              "exactPortion": "It’s easy for a company to be pulled in conflicting directions as the marketing, product development, and finance departments each get different feedback from different sets of people.",
+              "explanationThai": "ข้อความในข้อว่า \"It is easier for smaller companies to be innovative.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"It’s easy for a company to be pulled in conflicting directions as the marketing, product develo…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "easier smaller companies = company pulled conflicting directions = NOT GIVEN"
+            },
+            {
+              "number": 40,
+              "prompt": "A manager's approval of an idea is more persuasive than that of",
+              "correctAnswer": "NO",
+              "acceptedAnswers": [
+                "NO"
+              ],
+              "answerGroup": "Cambridge 10 Test 1 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "Research shows that peer power, used horizontally not vertically, is much more powerful than any boss’s speech.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"A manager's approval of an idea is more persuasive than that of\" โดยเฉพาะจากข้อความ \"Research shows that peer power, used horizontally not vertically, is much more powerful than an…\" จึงตอบ NO",
+              "paraphrasedVocabulary": "manager's approval idea = research horizontally vertically powerful = NO"
+            }
+          ]
+        }
+      ],
+      "questionCount": 14
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test2-passage1",
+    "title": "Cambridge 10 Test 2 Passage 1 - Tea and the Industrial Revolution",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 1\nTea and the Industrial Revolution\n\nA Cambridge professor says that a change in drinking habits was the reason for the Industrial Revolution in Britain. Anjana Abuja reports\n\n1Drop heading hereA \n\nAlan Macfarlane, professor of anthropological science at King's College, Cambridge has, like other historians, spent decades wrestling with the enigma of the Industrial Revolution. Why did this particular Big Bang – the world-changing birth of industry-happen in Britain? And why did it strike at the end of the 18th century?\n\n2Drop heading hereB \n\nMacfarlane compares the puzzle to a combination lock. 'There are about 20 different factors and all of them need to be present before the revolution can happen,' he says. For industry to take off, there needs to be the technology and power to drive factories, large urban populations to provide cheap labour, easy transport to move goods around, an affluent middle-class willing to buy mass-produced objects, a market-driven economy and a political system that allows this to happen. While this was the case for England, other nations, such as Japan, the Netherlands and France also met some of these criteria but were not industrialising. All these factors must have been necessary. But not sufficient to cause the revolution, says Macfarlane. 'After all, Holland had everything except coal while China also had many of these factors. Most historians are convinced there are one or two missing factors that you need to open the lock.'\n\n3Drop heading hereC \n\nThe missing factors, he proposes, are to be found in almost even kitchen cupboard. Tea and beer, two of the nation's favourite drinks, fuelled the revolution. The antiseptic properties of tannin, the active ingredient in tea, and of hops in beer – plus the fact that both are made with boiled water – allowed urban communities to flourish at close quarters without succumbing to water-borne diseases such as dysentery. The theory sounds eccentric but once he starts to explain the detective work that went into his deduction, the scepticism gives way to wary admiration. Macfarlanes case has been strengthened by support from notable quarters – Roy Porter, the distinguished medical historian, recently wrote a favourable appraisal of his research.\n\n4Drop heading hereD \n\nMacfarlane had wondered for a long time how the Industrial Revolution came about. Historians had alighted on one interesting factor around the mid-18th century that required explanation. Between about 1650 and 1740, the population in Britain was static. But then there was a burst in population growth. Macfarlane says: 'The infant mortality rate halved in the space of 20 years, and this happened in both rural areas and cities, and across all classes. People suggested four possible causes. Was there a sudden change in the viruses and bacteria around? Unlikely. Was there a revolution in medical science? But this was a century before Lister's revolution*. Was there a change in environmental conditions? There were improvements in agriculture that wiped out malaria, but these were small gains. Sanitation did not become widespread until the 19th century. The only option left is food. But the height and weight statistics show a decline. So the food must have got worse. Efforts to explain this sudden reduction in child deaths appeared to draw a blank.'\n\n5Drop heading hereE \n\nThis population burst seemed to happen at just the right time to provide labour for the Industrial Revolution. 'When you start moving towards an industrial revolution, it is economically efficient to have people living close together,' says Macfarlane. 'But then you get disease, particularly from human waste.' Some digging around in historical records revealed that there was a change in the incidence of water-borne disease at that time, especially dysentery. Macfarlane deduced that whatever the British were drinking must have been important in regulating disease. He says, 'We drank beer. For a long time, the English were protected by the strong antibacterial agent in hops, which were added to help preserve the beer. But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The poor turned to water and gin and in the 1720s the mortality rate began to rise again. Then it suddenly dropped again. What caused this?'\n\n6Drop heading hereF \n\nMacfarlane looked to Japan, which was also developing large cities about the same time, and also had no sanitation. Water-borne diseases had a much looser grip on the Japanese population than those in Britain. Could it be the prevalence of tea in their culture? Macfarlane then noted that the history of tea in Britain provided an extraordinary coincidence of dates. Tea was relatively expensive until Britain started a direct clipper trade with China in the early 18th century. By the 1740s, about the time that infant mortality was dipping, the drink was common. Macfarlane guessed that the fact that water had to be boiled, together with the stomach-purifying properties of tea meant that the breast milk provided by mothers was healthier than it had ever been. No other European nation sipped tea like the British, which, by Macfarlanes logic, pushed these other countries out of contention for the revolution.\n\n7Drop heading hereG \n\nBut, if tea is a factor in the combination lock, why didn't Japan forge ahead in a tea-soaked industrial revolution of its own? Macfarlane notes that even though 17th-century Japan had large cities, high literacy rates, even a futures market, it had turned its back on the essence of any work-based revolution by giving up labour-saving devices such as animals, afraid that they would put people out of work. So, the nation that we now think of as one of the most technologically advanced entered the 19th century having 'abandoned the wheel'.\n\n————\n\n* Joseph Lister was the first doctor to use antiseptic techniques during surgical operations to prevent infections.\n\n<div\n\nQuestions 1-13\n\n1. Drop heading here …\n\n2. Drop heading here …\n\n3. Drop heading here …\n\n4. Drop heading here …\n\n5. Drop heading here …\n\n6. Drop heading here …\n\n7. Drop heading here …\n\n8. China's transport system was not suitable for industry in the 18th century.\n\n9. Tea and beer both helped to prevent dysentery in Britain.\n\n10. Roy Porter disagrees with Professor Macfarlane's findings.\n\n11. After 1740，there was\n\n12. People in Britain used to make beer at home.\n\n13. The tax on malt indirectly caused",
+    "rawAnswerKey": "READING PASSAGE 1: Tea and the Industrial Revolution\n\nQuestion 1: Drop heading here …\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"Why did this particular Big Bang – the world-changing birth of industry-happen in Britain? And why did it strike at the end of the 18th century?\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Why did this particular Big Bang – the world-changing birth of industry-happen in Britain? And …\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = particular world-changing industry-happen britain = iv\n\nQuestion 2: Drop heading here …\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"There are about 20 different factors and all of them need to be present before the revolution can happen\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"There are about 20 different factors and all of them need to be present before the revolution c…\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = different factors present revolution = viii\n\nQuestion 3: Drop heading here …\n\nCorrect Answer: vii\n\nAccepted Answers: vii\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"Tea and beer, two of the nation’s favourite drinks, fuelled the revolution.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Tea and beer, two of the nation’s favourite drinks, fuelled the revolution.\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = nation favourite drinks fuelled = vii\n\nQuestion 4: Drop heading here …\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"Efforts to explain this sudden reduction in child deaths appeared to draw a blank.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Efforts to explain this sudden reduction in child deaths appeared to draw a blank.\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = efforts explain sudden reduction = i\n\nQuestion 5: Drop heading here …\n\nCorrect Answer: vi\n\nAccepted Answers: vi\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The poor turned to water and gin and in the 1720s the mortality rate began to rise again. Then it suddenly dropped again. What caused this?’\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The po…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = century introduced ingredient turned = vi\n\nQuestion 6: Drop heading here …\n\nCorrect Answer: ix\n\nAccepted Answers: ix\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"Macfarlane looked to Japan, which was also developing large cities about the same time, and also had no sanitation.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Macfarlane looked to Japan, which was also developing large cities about the same time, and als…\" จึงคำตอบคือ \"ix\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = macfarlane looked developing cities = ix\n\nQuestion 7: Drop heading here …\n\nCorrect Answer: ii\n\nAccepted Answers: ii\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"it had turned its back on the essence of any work-based revolution by giving up labour-saving devices such as animals, afraid that they would put people out of work.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"it had turned its back on the essence of any work-based revolution by giving up labour-saving d…\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = turned essence work-based revolution = ii\n\nQuestion 8: China's transport system was not suitable for industry in the 18th century.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"Tea was relatively expensive until Britain started a direct clipper trade with China in the early 18th century.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"China's transport system was not suitable for industry in the 18th century.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Tea was relatively expensive until Britain started a direct clipper trade with China in the ear…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: china's transport system = relatively expensive britain started = NOT GIVEN\n\nQuestion 9: Tea and beer both helped to prevent dysentery in Britain.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"The antiseptic properties of tannin, the active ingredient in tea, and of hops in beer – plus the fact that both are made with boiled water – allowed urban communities to flourish at close quarters without succumbing to water-borne diseases such as dysentery.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Tea and beer both helped to prevent dysentery in Britain.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"The antiseptic properties of tannin, the active ingredient in tea, and of hops in beer – plus t…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: beer helped prevent = antiseptic properties tannin active = TRUE\n\nQuestion 10: Roy Porter disagrees with Professor Macfarlane's findings.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"Macfarlanes case has been strengthened by support from notable quarters – Roy Porter, the distinguished medical historian, recently wrote a favourable appraisal of his research.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Roy Porter disagrees with Professor Macfarlane's findings.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Macfarlanes case has been strengthened by support from notable quarters – Roy Porter, the disti…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: porter disagrees professor = macfarlanes strengthened support notable = FALSE\n\nQuestion 11: After 1740，there was\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"Between about 1650 and 1740, the population in Britain was static. But then there was a burst in population growth.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"After 1740，there was\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Between about 1650 and 1740, the population in Britain was static. But then there was a burst i…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: After 1740，there was = Between about 1650 and 1740, the population in Britain was s… = FALSE\n\nQuestion 12: People in Britain used to make beer at home.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"We drank beer. For a long time, the English were protected by the strong antibacterial agent in hops, which were added to help preserve the beer.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"People in Britain used to make beer at home.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"We drank beer. For a long time, the English were protected by the strong antibacterial agent in…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: britain = english protected strong antibacterial = NOT GIVEN\n\nQuestion 13: The tax on malt indirectly caused\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 2 Passage 1\n\nExact Portion: \"But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The poor turned to water and gin and in the 1720s the mortality rate began to rise again.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The tax on malt indirectly caused\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The po…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: indirectly caused = century introduced ingredient turned = TRUE",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 2 Passage 1 - Tea and the Industrial Revolution",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 1,
+          "title": "Tea and the Industrial Revolution",
+          "bodyParagraphs": [
+            "A Cambridge professor says that a change in drinking habits was the reason for the Industrial Revolution in Britain. Anjana Abuja reports",
+            "Alan Macfarlane, professor of anthropological science at King's College, Cambridge has, like other historians, spent decades wrestling with the enigma of the Industrial Revolution. Why did this particular Big Bang – the world-changing birth of industry-happen in Britain? And why did it strike at the end of the 18th century?",
+            "Macfarlane compares the puzzle to a combination lock. 'There are about 20 different factors and all of them need to be present before the revolution can happen,' he says. For industry to take off, there needs to be the technology and power to drive factories, large urban populations to provide cheap labour, easy transport to move goods around, an affluent middle-class willing to buy mass-produced objects, a market-driven economy and a political system that allows this to happen. While this was the case for England, other nations, such as Japan, the Netherlands and France also met some of these criteria but were not industrialising. All these factors must have been necessary. But not sufficient to cause the revolution, says Macfarlane. 'After all, Holland had everything except coal while China also had many of these factors. Most historians are convinced there are one or two missing factors that you need to open the lock.'",
+            "The missing factors, he proposes, are to be found in almost even kitchen cupboard. Tea and beer, two of the nation's favourite drinks, fuelled the revolution. The antiseptic properties of tannin, the active ingredient in tea, and of hops in beer – plus the fact that both are made with boiled water – allowed urban communities to flourish at close quarters without succumbing to water-borne diseases such as dysentery. The theory sounds eccentric but once he starts to explain the detective work that went into his deduction, the scepticism gives way to wary admiration. Macfarlanes case has been strengthened by support from notable quarters – Roy Porter, the distinguished medical historian, recently wrote a favourable appraisal of his research.",
+            "Macfarlane had wondered for a long time how the Industrial Revolution came about. Historians had alighted on one interesting factor around the mid-18th century that required explanation. Between about 1650 and 1740, the population in Britain was static. But then there was a burst in population growth. Macfarlane says: 'The infant mortality rate halved in the space of 20 years, and this happened in both rural areas and cities, and across all classes. People suggested four possible causes. Was there a sudden change in the viruses and bacteria around? Unlikely. Was there a revolution in medical science? But this was a century before Lister's revolution*. Was there a change in environmental conditions? There were improvements in agriculture that wiped out malaria, but these were small gains. Sanitation did not become widespread until the 19th century. The only option left is food. But the height and weight statistics show a decline. So the food must have got worse. Efforts to explain this sudden reduction in child deaths appeared to draw a blank.'",
+            "This population burst seemed to happen at just the right time to provide labour for the Industrial Revolution. 'When you start moving towards an industrial revolution, it is economically efficient to have people living close together,' says Macfarlane. 'But then you get disease, particularly from human waste.' Some digging around in historical records revealed that there was a change in the incidence of water-borne disease at that time, especially dysentery. Macfarlane deduced that whatever the British were drinking must have been important in regulating disease. He says, 'We drank beer. For a long time, the English were protected by the strong antibacterial agent in hops, which were added to help preserve the beer. But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The poor turned to water and gin and in the 1720s the mortality rate began to rise again. Then it suddenly dropped again. What caused this?'",
+            "Macfarlane looked to Japan, which was also developing large cities about the same time, and also had no sanitation. Water-borne diseases had a much looser grip on the Japanese population than those in Britain. Could it be the prevalence of tea in their culture? Macfarlane then noted that the history of tea in Britain provided an extraordinary coincidence of dates. Tea was relatively expensive until Britain started a direct clipper trade with China in the early 18th century. By the 1740s, about the time that infant mortality was dipping, the drink was common. Macfarlane guessed that the fact that water had to be boiled, together with the stomach-purifying properties of tea meant that the breast milk provided by mothers was healthier than it had ever been. No other European nation sipped tea like the British, which, by Macfarlanes logic, pushed these other countries out of contention for the revolution.",
+            "But, if tea is a factor in the combination lock, why didn't Japan forge ahead in a tea-soaked industrial revolution of its own? Macfarlane notes that even though 17th-century Japan had large cities, high literacy rates, even a futures market, it had turned its back on the essence of any work-based revolution by giving up labour-saving devices such as animals, afraid that they would put people out of work. So, the nation that we now think of as one of the most technologically advanced entered the 19th century having 'abandoned the wheel'.",
+            "————",
+            "* Joseph Lister was the first doctor to use antiseptic techniques during surgical operations to prevent infections."
+          ],
+          "questionSectionText": "Questions 1-13\n8. China's transport system was not suitable for industry in the 18th century.\n9. Tea and beer both helped to prevent dysentery in Britain.\n10. Roy Porter disagrees with Professor Macfarlane's findings.\n11. After 1740，there was\n12. People in Britain used to make beer at home.\n13. The tax on malt indirectly caused",
+          "questionRanges": [
+            {
+              "start": 1,
+              "end": 13
+            }
+          ],
+          "questions": [
+            {
+              "number": 1,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "iv",
+              "acceptedAnswers": [
+                "iv"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "Why did this particular Big Bang – the world-changing birth of industry-happen in Britain? And why did it strike at the end of the 18th century?",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Why did this particular Big Bang – the world-changing birth of industry-happen in Britain? And …\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = particular world-changing industry-happen britain = iv"
+            },
+            {
+              "number": 2,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "viii",
+              "acceptedAnswers": [
+                "viii"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "There are about 20 different factors and all of them need to be present before the revolution can happen",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"There are about 20 different factors and all of them need to be present before the revolution c…\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = different factors present revolution = viii"
+            },
+            {
+              "number": 3,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "vii",
+              "acceptedAnswers": [
+                "vii"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "Tea and beer, two of the nation’s favourite drinks, fuelled the revolution.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Tea and beer, two of the nation’s favourite drinks, fuelled the revolution.\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = nation favourite drinks fuelled = vii"
+            },
+            {
+              "number": 4,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "i",
+              "acceptedAnswers": [
+                "i"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "Efforts to explain this sudden reduction in child deaths appeared to draw a blank.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Efforts to explain this sudden reduction in child deaths appeared to draw a blank.\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = efforts explain sudden reduction = i"
+            },
+            {
+              "number": 5,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "vi",
+              "acceptedAnswers": [
+                "vi"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The poor turned to water and gin and in the 1720s the mortality rate began to rise again. Then it suddenly dropped again. What caused this?’",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The po…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = century introduced ingredient turned = vi"
+            },
+            {
+              "number": 6,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "ix",
+              "acceptedAnswers": [
+                "ix"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "Macfarlane looked to Japan, which was also developing large cities about the same time, and also had no sanitation.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Macfarlane looked to Japan, which was also developing large cities about the same time, and als…\" จึงคำตอบคือ \"ix\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = macfarlane looked developing cities = ix"
+            },
+            {
+              "number": 7,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "ii",
+              "acceptedAnswers": [
+                "ii"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "it had turned its back on the essence of any work-based revolution by giving up labour-saving devices such as animals, afraid that they would put people out of work.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"it had turned its back on the essence of any work-based revolution by giving up labour-saving d…\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = turned essence work-based revolution = ii"
+            },
+            {
+              "number": 8,
+              "prompt": "China's transport system was not suitable for industry in the 18th century.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Tea was relatively expensive until Britain started a direct clipper trade with China in the early 18th century.",
+              "explanationThai": "ข้อความในข้อว่า \"China's transport system was not suitable for industry in the 18th century.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Tea was relatively expensive until Britain started a direct clipper trade with China in the ear…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "china's transport system = relatively expensive britain started = NOT GIVEN"
+            },
+            {
+              "number": 9,
+              "prompt": "Tea and beer both helped to prevent dysentery in Britain.",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "The antiseptic properties of tannin, the active ingredient in tea, and of hops in beer – plus the fact that both are made with boiled water – allowed urban communities to flourish at close quarters without succumbing to water-borne diseases such as dysentery.",
+              "explanationThai": "ข้อความในข้อว่า \"Tea and beer both helped to prevent dysentery in Britain.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"The antiseptic properties of tannin, the active ingredient in tea, and of hops in beer – plus t…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "beer helped prevent = antiseptic properties tannin active = TRUE"
+            },
+            {
+              "number": 10,
+              "prompt": "Roy Porter disagrees with Professor Macfarlane's findings.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Macfarlanes case has been strengthened by support from notable quarters – Roy Porter, the distinguished medical historian, recently wrote a favourable appraisal of his research.",
+              "explanationThai": "ข้อความในข้อว่า \"Roy Porter disagrees with Professor Macfarlane's findings.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Macfarlanes case has been strengthened by support from notable quarters – Roy Porter, the disti…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "porter disagrees professor = macfarlanes strengthened support notable = FALSE"
+            },
+            {
+              "number": 11,
+              "prompt": "After 1740，there was",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Between about 1650 and 1740, the population in Britain was static. But then there was a burst in population growth.",
+              "explanationThai": "ข้อความในข้อว่า \"After 1740，there was\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Between about 1650 and 1740, the population in Britain was static. But then there was a burst i…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "After 1740，there was = Between about 1650 and 1740, the population in Britain was s… = FALSE"
+            },
+            {
+              "number": 12,
+              "prompt": "People in Britain used to make beer at home.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "We drank beer. For a long time, the English were protected by the strong antibacterial agent in hops, which were added to help preserve the beer.",
+              "explanationThai": "ข้อความในข้อว่า \"People in Britain used to make beer at home.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"We drank beer. For a long time, the English were protected by the strong antibacterial agent in…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "britain = english protected strong antibacterial = NOT GIVEN"
+            },
+            {
+              "number": 13,
+              "prompt": "The tax on malt indirectly caused",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The poor turned to water and gin and in the 1720s the mortality rate began to rise again.",
+              "explanationThai": "ข้อความในข้อว่า \"The tax on malt indirectly caused\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"But in the late 17th century a tax was introduced on malt, the basic ingredient of beer. The po…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "indirectly caused = century introduced ingredient turned = TRUE"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test2-passage2",
+    "title": "Cambridge 10 Test 2 Passage 2 - Gifted children and learning",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 2\nGifted children and learning\n\nA \n\nInternationally, 'giftedness' is most frequently determined by a score on a general intelligence test, known as an IQ test, which is above a chosen cutoff point, usually at around the top 2-5%. Children's educational environment contributes to the IQ score and the way intelligence is used. For example, a very close positive relationship was found when children's IQ scores were compared with their home educational provision (Freeman, 2010). The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc. Because IQ tests are decidedly influenced by what the child has learned, they are to some extent measures of current achievement based on age-norms; that is, how well the children have learned to manipulate their knowledge and know-how within the terms of the test. The vocabulary aspect, for example, is dependent on having heard those words. But IQ tests can neither identify the processes of learning and thinking nor predict creativity.\n\nB \n\nExcellence does not emerge without appropriate help. To reach an exceptionally high standard in any area very able children need the means to learn, which includes material to work with and focused challenging tuition -and the encouragement to follow their dream. There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation. To be at their most effective in their self-regulation, all children can be helped to identify their own ways of learning – metacognition – which will include strategies of planning, monitoring, evaluation, and choice of what to learn. Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.\n\nC\n\nHigh achievers have been found to use self-regulatory learning strategies more often and more effectively than lower achievers, and are better able to transfer these strategies to deal with unfamiliar tasks. This happens to such a high degree in some children that they appear to be demonstrating talent in particular areas. Overviewing research on the thinking process of highly able children, (Shore and Kanevsky, 1993) put the instructor's problem succinctly: 'If they [the gifted] merely think more quickly, then .we need only teach more quickly. If they merely make fewer errors, then we can shorten the practice'. But of course, this is not entirely the case; adjustments have to be made in methods of learning and teaching, to take account of the many ways individuals think.\n\nD\n\nYet in order to learn by themselves, the gifted do need some support from their teachers. Conversely, teachers who have a tendency to 'overdirect' can diminish their gifted pupils' learning autonomy. Although 'spoon-feeding' can produce extremely high examination results, these are not always followed by equally impressive life successes. Too much dependence on the teachers risks loss of autonomy and motivation to discover. However, when teachers help pupils to reflect on their own learning and thinking activities, they increase their pupils' self-regulation. For a young child, it may be just the simple question 'What have you learned today?' which helps them to recognise what they are doing. Given that a fundamental goal of education is to transfer the control of learning from teachers to pupils, improving pupils' learning to learn techniques should be a major outcome of the school experience, especially for the highly competent. There are quite a number of new methods which can help, such as child- initiated learning, ability-peer tutoring, etc. Such practices have been found to be particularly useful for bright children from deprived areas.\n\nE \n\nBut scientific progress is not all theoretical, knowledge is also vital to outstanding performance: individuals who know a great deal about a specific domain will achieve at a higher level than those who do not (Elshout, 1995). Research with creative scientists by Simonton (1988) brought him to the conclusion that above a certain high level, characteristics such as independence seemed to contribute more to reaching the highest levels of expertise than intellectual skills, due to the great demands of effort and time needed for learning and practice. Creativity in all forms can be seen as expertise se mixed with a high level of motivation (Weisberg, 1993).\n\nF\n\nTo sum up, learning is affected by emotions of both the individual and significant others. Positive emotions facilitate the creative aspects of earning and negative emotions inhibit it. Fear, for example, can limit the development of curiosity, which is a strong force in scientific advance, because it motivates problem-solving behaviour. In Boekaerts' (1991) review of emotion the learning of very high IQ and highly achieving children, she found emotional forces in harness. They were not only curious, but often had a strong desire to control their environment, improve their learning efficiency and increase their own learning resources.\n\n<div\n\nQuestions 14-26\n\n14. a reference to the influence of the domestic background on the gifted child. …  …  …  …  …  …\n\n15. reference to what can be lost if learners are given too much guidance. …  …  …  …  …  …\n\n16. a reference to the damaging effects of anxiety. …  …  …  …  …  …\n\n17. examples of classroom techniques which favour socially-disadvantaged children. …  …  …  …  …  … Questions 18-22 Look at the following statements and the list of people below. Match each statement with the correct person or people,\n\n18. Less time can be spent on exercises with gifted pupils who produce accurate work. …  …  …  …  …\n\n19. Self-reliance is\n\n20. Gifted children know how to channel their feelings to assist their learning. …  …  …  …  …\n\n21. The very gifted child benefits from appropriate support from close relatives. …  …  …  …  …\n\n22. Really successful students have learnt\n\n23. One study found\n\n24. Children of average ability seem to need more direction from teachers because they do not have …  … .\n\n25. Meta-cognition involves children understanding their own learning strategies, as well as developing …  … .\n\n26. Teachers who rely on what is known as …  … often produce sets of impressive grades in class tests.",
+    "rawAnswerKey": "READING PASSAGE 2: Gifted children and learning\n\nQuestion 14: a reference to the influence of the domestic background on the gifted child. …  …  …  …  …  …\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"The higher the children’s IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.\"\n\nShort Thai Explanation: คำถาม: \"a reference to the influence of the domestic background on the gifted child. … … … … … …\" หลักฐานในบทความคือ \"The higher the children’s IQ scores, especially over IQ 130, the better the quality of their ed…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: influence domestic background = higher children scores especially = A\n\nQuestion 15: reference to what can be lost if learners are given too much guidance. …  …  …  …  …  …\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"Conversely, teachers who have a tendency to ‘overdirect’ can diminish their gifted pupils’ learning autonomy.\"\n\nShort Thai Explanation: คำถาม: \"reference to what can be lost if learners are given too much guidance. … … … … … …\" หลักฐานในบทความคือ \"Conversely, teachers who have a tendency to ‘overdirect’ can diminish their gifted pupils’ lear…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: lost learners guidance = conversely teachers tendency overdirect = D\n\nQuestion 16: a reference to the damaging effects of anxiety. …  …  …  …  …  …\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"Fear, for example, can limit the development of curiosity, which is a strong force in scientific advance, because it motivates problem-solving behaviour.\"\n\nShort Thai Explanation: คำถาม: \"a reference to the damaging effects of anxiety. … … … … … …\" หลักฐานในบทความคือ \"Fear, for example, can limit the development of curiosity, which is a strong force in scientifi…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F\n\nParaphrased Vocabulary: damaging effects anxiety = example development curiosity strong = F\n\nQuestion 17: examples of classroom techniques which favour socially-disadvantaged children. …  …  …  …  …  … Questions 18-22 Look at the following statements and the list of people below. Match each statement with the correct person or people,\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"There are quite a number of new methods which can help, such as child- initiated learning, ability-peer tutoring, etc. Such practices have been found to be particularly useful for bright children from deprived areas.\"\n\nShort Thai Explanation: คำถาม: \"examples of classroom techniques which favour socially-disadvantaged children. … … … … … … Questions 18-22 Look at the following s…\" หลักฐานในบทความคือ \"There are quite a number of new methods which can help, such as child- initiated learning, abil…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: classroom techniques favour = number methods child- initiated = D\n\nQuestion 18: Less time can be spent on exercises with gifted pupils who produce accurate work. …  …  …  …  …\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"(Shore and Kanevsky, 1993) put the instructor’s problem succinctly: ‘If they [the gifted] merely think more quickly, then .we need only teach more quickly. If they merely make fewer errors, then we can shorten the practice’.\"\n\nShort Thai Explanation: คำถาม: \"Less time can be spent on exercises with gifted pupils who produce accurate work. … … … … …\" หลักฐานในบทความคือ \"(Shore and Kanevsky, 1993) put the instructor’s problem succinctly: ‘If they [the gifted] merel…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: spent exercises gifted = kanevsky instructor problem succinctly = B\n\nQuestion 19: Self-reliance is\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"Research with creative scientists by Simonton (1988) brought\"\n\nShort Thai Explanation: คำถาม: \"Self-reliance is\" หลักฐานในบทความคือ \"Research with creative scientists by Simonton (1988) brought\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: self-reliance = research creative scientists simonton = D\n\nQuestion 20: Gifted children know how to channel their feelings to assist their learning. …  …  …  …  …\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"In Boekaerts’ (1991) review of emotion the learning of very high IQ and highly achieving children, she found emotional forces in harness.\"\n\nShort Thai Explanation: คำถาม: \"Gifted children know how to channel their feelings to assist their learning. … … … … …\" หลักฐานในบทความคือ \"In Boekaerts’ (1991) review of emotion the learning of very high IQ and highly achieving childr…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: gifted children channel = boekaerts review emotion learning = E\n\nQuestion 21: The very gifted child benefits from appropriate support from close relatives. …  …  …  …  …\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"For example, a very close positive relationship was found when children’s IQ scores were compared with their home educational provision (Freeman, 2010).\"\n\nShort Thai Explanation: คำถาม: \"The very gifted child benefits from appropriate support from close relatives. … … … … …\" หลักฐานในบทความคือ \"For example, a very close positive relationship was found when children’s IQ scores were compar…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: gifted child benefits = example positive relationship children = A\n\nQuestion 22: Really successful students have learnt\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"individuals who know a great deal about a specific domain will achieve at a higher level than those who do not (Elshout, 1995).\"\n\nShort Thai Explanation: คำถาม: \"Really successful students have learnt\" หลักฐานในบทความคือ \"individuals who know a great deal about a specific domain will achieve at a higher level than t…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: really successful students = individuals specific domain achieve = C\n\nQuestion 23: One study found\n\nCorrect Answer: activities\n\nAccepted Answers: activities\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"The higher the children’s IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"One study found\" บทความมีถ้อยคำที่ตรงกันคือ \"The higher the children’s IQ scores, especially over IQ 130, the better the quality of their ed…\" จึงคำตอบคือ \"activities\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: study found = higher children scores especially = activities\n\nQuestion 24: Children of average ability seem to need more direction from teachers because they do not have …  … .\n\nCorrect Answer: internal regulation\n\nAccepted Answers: internal regulation|self-regulation\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Children of average ability seem to need more direction from teachers because they do not have … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"There appears to be a qualitative difference in the way the intellectually highly able think, c…\" จึงคำตอบคือ \"internal regulation\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: children average ability = appears qualitative difference intellectually = internal regulation\n\nQuestion 25: Meta-cognition involves children understanding their own learning strategies, as well as developing …  … .\n\nCorrect Answer: emotional awareness\n\nAccepted Answers: emotional awareness\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Meta-cognition involves children understanding their own learning strategies, as well as developing … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"Emotional awareness is also part of metacognition, so children should be helped to be aware of …\" จึงคำตอบคือ \"emotional awareness\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: meta-cognition involves children = emotional awareness metacognition children = emotional awareness\n\nQuestion 26: Teachers who rely on what is known as …  … often produce sets of impressive grades in class tests.\n\nCorrect Answer: spoon-feeding\n\nAccepted Answers: spoon-feeding\n\nAnswer Group: Cambridge 10 Test 2 Passage 2\n\nExact Portion: \"Although ‘spoon-feeding’ can produce extremely high examination results\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Teachers who rely on what is known as … … often produce sets of impressive grades in class tests.\" บทความมีถ้อยคำที่ตรงกันคือ \"Although ‘spoon-feeding’ can produce extremely high examination results\" จึงคำตอบคือ \"spoon-feeding\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: teachers known often = although produce extremely examination = spoon-feeding",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 2 Passage 2 - Gifted children and learning",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 2,
+          "title": "Gifted children and learning",
+          "bodyParagraphs": [
+            "A",
+            "Internationally, 'giftedness' is most frequently determined by a score on a general intelligence test, known as an IQ test, which is above a chosen cutoff point, usually at around the top 2-5%. Children's educational environment contributes to the IQ score and the way intelligence is used. For example, a very close positive relationship was found when children's IQ scores were compared with their home educational provision (Freeman, 2010). The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc. Because IQ tests are decidedly influenced by what the child has learned, they are to some extent measures of current achievement based on age-norms; that is, how well the children have learned to manipulate their knowledge and know-how within the terms of the test. The vocabulary aspect, for example, is dependent on having heard those words. But IQ tests can neither identify the processes of learning and thinking nor predict creativity.",
+            "B",
+            "Excellence does not emerge without appropriate help. To reach an exceptionally high standard in any area very able children need the means to learn, which includes material to work with and focused challenging tuition -and the encouragement to follow their dream. There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation. To be at their most effective in their self-regulation, all children can be helped to identify their own ways of learning – metacognition – which will include strategies of planning, monitoring, evaluation, and choice of what to learn. Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.",
+            "C",
+            "High achievers have been found to use self-regulatory learning strategies more often and more effectively than lower achievers, and are better able to transfer these strategies to deal with unfamiliar tasks. This happens to such a high degree in some children that they appear to be demonstrating talent in particular areas. Overviewing research on the thinking process of highly able children, (Shore and Kanevsky, 1993) put the instructor's problem succinctly: 'If they [the gifted] merely think more quickly, then .we need only teach more quickly. If they merely make fewer errors, then we can shorten the practice'. But of course, this is not entirely the case; adjustments have to be made in methods of learning and teaching, to take account of the many ways individuals think.",
+            "D",
+            "Yet in order to learn by themselves, the gifted do need some support from their teachers. Conversely, teachers who have a tendency to 'overdirect' can diminish their gifted pupils' learning autonomy. Although 'spoon-feeding' can produce extremely high examination results, these are not always followed by equally impressive life successes. Too much dependence on the teachers risks loss of autonomy and motivation to discover. However, when teachers help pupils to reflect on their own learning and thinking activities, they increase their pupils' self-regulation. For a young child, it may be just the simple question 'What have you learned today?' which helps them to recognise what they are doing. Given that a fundamental goal of education is to transfer the control of learning from teachers to pupils, improving pupils' learning to learn techniques should be a major outcome of the school experience, especially for the highly competent. There are quite a number of new methods which can help, such as child- initiated learning, ability-peer tutoring, etc. Such practices have been found to be particularly useful for bright children from deprived areas.",
+            "E",
+            "But scientific progress is not all theoretical, knowledge is also vital to outstanding performance: individuals who know a great deal about a specific domain will achieve at a higher level than those who do not (Elshout, 1995). Research with creative scientists by Simonton (1988) brought him to the conclusion that above a certain high level, characteristics such as independence seemed to contribute more to reaching the highest levels of expertise than intellectual skills, due to the great demands of effort and time needed for learning and practice. Creativity in all forms can be seen as expertise se mixed with a high level of motivation (Weisberg, 1993).",
+            "F",
+            "To sum up, learning is affected by emotions of both the individual and significant others. Positive emotions facilitate the creative aspects of earning and negative emotions inhibit it. Fear, for example, can limit the development of curiosity, which is a strong force in scientific advance, because it motivates problem-solving behaviour. In Boekaerts' (1991) review of emotion the learning of very high IQ and highly achieving children, she found emotional forces in harness. They were not only curious, but often had a strong desire to control their environment, improve their learning efficiency and increase their own learning resources."
+          ],
+          "questionSectionText": "Questions 14-26\n14. a reference to the influence of the domestic background on the gifted child. …  …  …  …  …  …\n15. reference to what can be lost if learners are given too much guidance. …  …  …  …  …  …\n16. a reference to the damaging effects of anxiety. …  …  …  …  …  …\n17. examples of classroom techniques which favour socially-disadvantaged children. …  …  …  …  …  … Questions 18-22 Look at the following statements and the list of people below. Match each statement with the correct person or people,\n18. Less time can be spent on exercises with gifted pupils who produce accurate work. …  …  …  …  …\n19. Self-reliance is\n20. Gifted children know how to channel their feelings to assist their learning. …  …  …  …  …\n21. The very gifted child benefits from appropriate support from close relatives. …  …  …  …  …\n22. Really successful students have learnt\n23. One study found\n24. Children of average ability seem to need more direction from teachers because they do not have …  … .\n25. Meta-cognition involves children understanding their own learning strategies, as well as developing …  … .\n26. Teachers who rely on what is known as …  … often produce sets of impressive grades in class tests.",
+          "questionRanges": [
+            {
+              "start": 14,
+              "end": 26
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "prompt": "a reference to the influence of the domestic background on the gifted child. … … … … … …",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "The higher the children’s IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.",
+              "explanationThai": "คำถาม: \"a reference to the influence of the domestic background on the gifted child. … … … … … …\" หลักฐานในบทความคือ \"The higher the children’s IQ scores, especially over IQ 130, the better the quality of their ed…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "influence domestic background = higher children scores especially = A"
+            },
+            {
+              "number": 15,
+              "prompt": "reference to what can be lost if learners are given too much guidance. … … … … … …",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Conversely, teachers who have a tendency to ‘overdirect’ can diminish their gifted pupils’ learning autonomy.",
+              "explanationThai": "คำถาม: \"reference to what can be lost if learners are given too much guidance. … … … … … …\" หลักฐานในบทความคือ \"Conversely, teachers who have a tendency to ‘overdirect’ can diminish their gifted pupils’ lear…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "lost learners guidance = conversely teachers tendency overdirect = D"
+            },
+            {
+              "number": 16,
+              "prompt": "a reference to the damaging effects of anxiety. … … … … … …",
+              "correctAnswer": "F",
+              "acceptedAnswers": [
+                "F"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Fear, for example, can limit the development of curiosity, which is a strong force in scientific advance, because it motivates problem-solving behaviour.",
+              "explanationThai": "คำถาม: \"a reference to the damaging effects of anxiety. … … … … … …\" หลักฐานในบทความคือ \"Fear, for example, can limit the development of curiosity, which is a strong force in scientifi…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "damaging effects anxiety = example development curiosity strong = F"
+            },
+            {
+              "number": 17,
+              "prompt": "examples of classroom techniques which favour socially-disadvantaged children. … … … … … …",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "There are quite a number of new methods which can help, such as child- initiated learning, ability-peer tutoring, etc. Such practices have been found to be particularly useful for bright children from deprived areas.",
+              "explanationThai": "คำถาม: \"examples of classroom techniques which favour socially-disadvantaged children. … … … … … … Questions 18-22 Look at the following s…\" หลักฐานในบทความคือ \"There are quite a number of new methods which can help, such as child- initiated learning, abil…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "classroom techniques favour = number methods child- initiated = D"
+            },
+            {
+              "number": 18,
+              "prompt": "Less time can be spent on exercises with gifted pupils who produce accurate work. … … … … …",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "(Shore and Kanevsky, 1993) put the instructor’s problem succinctly: ‘If they [the gifted] merely think more quickly, then .we need only teach more quickly. If they merely make fewer errors, then we can shorten the practice’.",
+              "explanationThai": "คำถาม: \"Less time can be spent on exercises with gifted pupils who produce accurate work. … … … … …\" หลักฐานในบทความคือ \"(Shore and Kanevsky, 1993) put the instructor’s problem succinctly: ‘If they [the gifted] merel…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "spent exercises gifted = kanevsky instructor problem succinctly = B"
+            },
+            {
+              "number": 19,
+              "prompt": "Self-reliance is",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Research with creative scientists by Simonton (1988) brought",
+              "explanationThai": "คำถาม: \"Self-reliance is\" หลักฐานในบทความคือ \"Research with creative scientists by Simonton (1988) brought\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "self-reliance = research creative scientists simonton = D"
+            },
+            {
+              "number": 20,
+              "prompt": "Gifted children know how to channel their feelings to assist their learning. … … … … …",
+              "correctAnswer": "E",
+              "acceptedAnswers": [
+                "E"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "In Boekaerts’ (1991) review of emotion the learning of very high IQ and highly achieving children, she found emotional forces in harness.",
+              "explanationThai": "คำถาม: \"Gifted children know how to channel their feelings to assist their learning. … … … … …\" หลักฐานในบทความคือ \"In Boekaerts’ (1991) review of emotion the learning of very high IQ and highly achieving childr…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "gifted children channel = boekaerts review emotion learning = E"
+            },
+            {
+              "number": 21,
+              "prompt": "The very gifted child benefits from appropriate support from close relatives. … … … … …",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "For example, a very close positive relationship was found when children’s IQ scores were compared with their home educational provision (Freeman, 2010).",
+              "explanationThai": "คำถาม: \"The very gifted child benefits from appropriate support from close relatives. … … … … …\" หลักฐานในบทความคือ \"For example, a very close positive relationship was found when children’s IQ scores were compar…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "gifted child benefits = example positive relationship children = A"
+            },
+            {
+              "number": 22,
+              "prompt": "Really successful students have learnt",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "individuals who know a great deal about a specific domain will achieve at a higher level than those who do not (Elshout, 1995).",
+              "explanationThai": "คำถาม: \"Really successful students have learnt\" หลักฐานในบทความคือ \"individuals who know a great deal about a specific domain will achieve at a higher level than t…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "really successful students = individuals specific domain achieve = C"
+            },
+            {
+              "number": 23,
+              "prompt": "One study found",
+              "correctAnswer": "activities",
+              "acceptedAnswers": [
+                "activities"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "text",
+              "exactPortion": "The higher the children’s IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"One study found\" บทความมีถ้อยคำที่ตรงกันคือ \"The higher the children’s IQ scores, especially over IQ 130, the better the quality of their ed…\" จึงคำตอบคือ \"activities\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "study found = higher children scores especially = activities"
+            },
+            {
+              "number": 24,
+              "prompt": "Children of average ability seem to need more direction from teachers because they do not have … … .",
+              "correctAnswer": "internal regulation",
+              "acceptedAnswers": [
+                "internal regulation",
+                "self-regulation"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "text",
+              "exactPortion": "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Children of average ability seem to need more direction from teachers because they do not have … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"There appears to be a qualitative difference in the way the intellectually highly able think, c…\" จึงคำตอบคือ \"internal regulation\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "children average ability = appears qualitative difference intellectually = internal regulation"
+            },
+            {
+              "number": 25,
+              "prompt": "Meta-cognition involves children understanding their own learning strategies, as well as developing … … .",
+              "correctAnswer": "emotional awareness",
+              "acceptedAnswers": [
+                "emotional awareness"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "text",
+              "exactPortion": "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Meta-cognition involves children understanding their own learning strategies, as well as developing … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"Emotional awareness is also part of metacognition, so children should be helped to be aware of …\" จึงคำตอบคือ \"emotional awareness\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "meta-cognition involves children = emotional awareness metacognition children = emotional awareness"
+            },
+            {
+              "number": 26,
+              "prompt": "Teachers who rely on what is known as … … often produce sets of impressive grades in class tests.",
+              "correctAnswer": "spoon-feeding",
+              "acceptedAnswers": [
+                "spoon-feeding"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 2",
+              "answerType": "text",
+              "exactPortion": "Although ‘spoon-feeding’ can produce extremely high examination results",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Teachers who rely on what is known as … … often produce sets of impressive grades in class tests.\" บทความมีถ้อยคำที่ตรงกันคือ \"Although ‘spoon-feeding’ can produce extremely high examination results\" จึงคำตอบคือ \"spoon-feeding\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "teachers known often = although produce extremely examination = spoon-feeding"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test2-passage3",
+    "title": "Cambridge 10 Test 2 Passage 3 - Museums of fine art and their public",
+    "category": "advanced",
+    "rawPassageText": "READING PASSAGE 3\nMuseums of fine art and their public\n\nThe fact that people go to the Louvre museum in Paris to see the original painting Mona Lisa when they can see a reproduction anywhere leads us to question some assumptions about the role of museums of fine art in today's world\n\nOne of the most famous works of art in the world is Leonardo da Vinci's Mona Lisa. Nearly everyone who goes to see the original will already be familiar with it from reproductions, but they accept that fine art is more rewardingly viewed in its original form.\n\nHowever, if Mona Lisa was a famous novel, few people would bother to go to a museum to read the writer's actual manuscript rather than a printed reproduction. This might be explained by the fact that the novel has evolved precisely because of technological developments that made it possible to print out huge numbers of texts, whereas oil paintings have always been produced as unique objects. In addition, it could be argued that the practice of interpreting or 'reading' each medium follows different conventions. With novels, the reader attends mainly to the meaning of words rather than the way they are printed on the page, whereas the 'reader' of a painting must attend just as closely to the material form of marks and shapes in the picture as to any ideas they may signify.\n\nYet it has always been possible to make very accurate facsimiles of pretty well any fine art work. The seven surviving versions of Mona Lisa bear witness to the fact that in the 16th century, artists seemed perfectly content to assign the reproduction of their creations to their workshop apprentices as regular 'bread and butter' work. And today the task of reproducing pictures is incomparably more simple and reliable, with reprographic techniques that allow the production of high-quality prints made exactly to the original scale, with faithful colour values, and even with duplication of the surface relief of the painting.\n\nBut despite an implicit recognition that the spread of good reproductions can be culturally valuable, museums continue to promote the special status of original work.\n\nUnfortunately, this seems to place severe limitations on the kind of experience offered to visitors.\n\nOne limitation is related to the way the museum presents its exhibits. As repositories of unique historical objects, art museums are often called 'treasure houses'. We are reminded of this even before we view a collection by the presence of security guards, attendants, ropes and display cases to keep us away from the exhibits. In many cases, the architectural style of the building further reinforces that notion. In addition, a major collection like that of London's National Gallery is housed in numerous rooms, each with dozens of works, any one of which is likely to be worth more than all the average visitor possesses. In a society that judges the personal status of the individual so much by their material worth, it is therefore difficult not to be impressed by one's own relative 'worthlessness' in such an environment.\n\nFurthermore, consideration of the 'value' of the original work in its treasure house setting impresses upon the viewer that, since these works were originally produced, they have been assigned a huge monetary value by some person or institution more powerful than themselves. Evidently, nothing the viewer thinks about the work is going to alter that value, and so today's viewer is deterred from trying to extend that spontaneous, immediate, self-reliant kind of reading which would originally have met the work.\n\nThe visitor may then be struck by the strangeness of seeing such diverse paintings, drawings and sculptures brought together in an environment for which they were not originally created. This 'displacement effect' is further heightened by the sheer volume of exhibits. In the case of a major collection, there are probably more works on display than we could realistically view in weeks or even months.\n\nThis is particularly distressing because time seems to be a vital factor in the appreciation of all art forms. A fundamental difference between paintings and other art forms is that there is no prescribed time over which a painting is viewed. By contrast, the audience encourage an opera or a play over a specific time, which is the duration of the performance. Similarly novels and poems are read in a prescribed temporal sequence, whereas a picture has no clear place at which to start viewing, or at which to finish. Thus art works themselves encourage us to view them superficially, without appreciating the richness of detail and labour that is involved.\n\nConsequently, the dominant critical approach becomes that of the art historian, a specialised academic approach devoted to 'discovering the meaning' of art within the cultural context of its time. This is in perfect harmony with the museum's function, since the approach is dedicated to seeking out and conserving 'authentic', original, readings of the exhibits. Again, this seems to put paid to that spontaneous, participators criticism which can be found in abundance in criticism of classic works of literature, but is absent from most art history.\n\nThe displays of art museums serve as a warning of what critical practices can emerge when spontaneous criticism is suppressed. The museum public, like any other audience, experience art more rewardingly when given the confidence to express their views. If appropriate works of fine art could be rendered permanently accessible to the public by means of high-fidelity reproductions, as literature and music already are, the public may feel somewhat less in awe of them. Unfortunately, that may be too much to ask from those who seek to maintain and control the art establishment.\n\n                        \n                    \n                    \n                    \n                                                    <form id =\"\n\nQuestions 27-40\n\n27. Drop answer here … for so long, and also because with novels, the\n\n28. Drop answer here … are the most important thing. However, in historical times artists such as Leonardo were happy to instruct\n\n29. Drop answer here … to produce copies of their work and these days new methods of reproduction allow excellent replication of surface relief features as well as colour and\n\n30. Drop answer here … . It is regrettable that museums still promote the superiority of original works of art, since this may not be in the interests of the\n\n31. Drop answer here … . Drag and drop an option to fill in each blank. A. institution B. mass production C. mechanical processes D. public E. paints F. artist G. size H. underlying ideas I. basic technology J. readers K. picture frames L. assistants Questions 32-35 Choose the correct letter,\n\n32. The writer mentions London's National Gallery to illustrate\n\n33. The writer says that today, viewers may be unwilling to criticise a because\n\n34. According to the writer, the 'displacement effect' on the visitor is caused by\n\n35. The writer says that unlike other forms of art,\n\n36. Art history should focus on discovering the meaning of art using\n\n37. The approach of art historians conflicts with that of art museums.\n\n38. People should be encouraged to give their opinions openly on works of art.\n\n39. Reproductions of fine art should only be sold to the public if they are of high quality.\n\n40. In the future, those with power are likely to encourage more people to enjoy art.",
+    "rawAnswerKey": "READING PASSAGE 3: Museums of fine art and their public\n\nQuestion 27: Drop answer here … for so long, and also because with novels, the\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"This might be explained by the fact that the novel has evolved precisely because of technological developments that made it possible to print out huge numbers of texts\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … for so long, and also because with novels, the\" หลักฐานในบทความคือ \"This might be explained by the fact that the novel has evolved precisely because of technologic…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: because novels = explained evolved precisely because = B\n\nQuestion 28: Drop answer here … are the most important thing. However, in historical times artists such as Leonardo were happy to instruct\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"With novels, the reader attends mainly to the meaning of words rather than the way they are printed on the page\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … are the most important thing. However, in historical times artists such as Leonardo were happy to instruct\" หลักฐานในบทความคือ \"With novels, the reader attends mainly to the meaning of words rather than the way they are pri…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H\n\nParaphrased Vocabulary: important thing however = novels reader attends mainly = H\n\nQuestion 29: Drop answer here … to produce copies of their work and these days new methods of reproduction allow excellent replication of surface relief features as well as colour and\n\nCorrect Answer: L\n\nAccepted Answers: L\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"artists seemed perfectly content to assign the reproduction of their creations to their workshop apprentices as regular ‘bread and butter’ work.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Drop answer here … to produce copies of their work and these days new methods of reproduction allow excellent replication of surfa…\" บทความมีถ้อยคำที่ตรงกันคือ \"artists seemed perfectly content to assign the reproduction of their creations to their worksho…\" จึงคำตอบคือ \"L\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: produce copies methods = artists seemed perfectly content = L\n\nQuestion 30: Drop answer here … . It is regrettable that museums still promote the superiority of original works of art, since this may not be in the interests of the\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"production of high-quality prints made exactly to the original scale\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … . It is regrettable that museums still promote the superiority of original works of art, since this may not be …\" หลักฐานในบทความคือ \"production of high-quality prints made exactly to the original scale\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G\n\nParaphrased Vocabulary: regrettable museums still = production high-quality prints exactly = G\n\nQuestion 31: Drop answer here … . Drag and drop an option to fill in each blank. A. institution B. mass production C. mechanical processes D. public E. paints F. artist G. size H. underlying ideas I. basic technology J. readers K. picture frames L. assistants Questions 32-35 Choose the correct letter,\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"Unfortunately, this seems to place severe limitations on the kind of experience offered to visitors.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … . Drag and drop an option to fill in each blank. A. institution B. mass production C. mechanical processes D. p…\" หลักฐานในบทความคือ \"Unfortunately, this seems to place severe limitations on the kind of experience offered to visi…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: option fill blank = unfortunately severe limitations experience = D\n\nQuestion 32: The writer mentions London's National Gallery to illustrate\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"In a society that judges the personal status of the individual so much by their material worth, it is therefore difficult not to be impressed by one’s own relative ‘worthlessness’ in such an environment.\"\n\nShort Thai Explanation: คำถาม: \"The writer mentions London's National Gallery to illustrate\" หลักฐานในบทความคือ \"In a society that judges the personal status of the individual so much by their material worth,…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: mentions london's national = society judges personal status = C\n\nQuestion 33: The writer says that today, viewers may be unwilling to criticise a because\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"Evidently, nothing the viewer thinks about the work is going to alter that value, and so today’s viewer is deterred from trying to extend that spontaneous, immediate, self-reliant kind of reading which would originally have met the work.\"\n\nShort Thai Explanation: คำถาม: \"The writer says that today, viewers may be unwilling to criticise a because\" หลักฐานในบทความคือ \"Evidently, nothing the viewer thinks about the work is going to alter that value, and so today’…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: because = evidently nothing viewer thinks = D\n\nQuestion 34: According to the writer, the 'displacement effect' on the visitor is caused by\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"The visitor may then be struck by the strangeness of seeing such diverse paintings, drawings and sculptures brought together in an environment for which they were not originally created. This ‘displacement effect’\"\n\nShort Thai Explanation: คำถาม: \"According to the writer, the 'displacement effect' on the visitor is caused by\" หลักฐานในบทความคือ \"The visitor may then be struck by the strangeness of seeing such diverse paintings, drawings an…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: according 'displacement effect' = visitor struck strangeness seeing = A\n\nQuestion 35: The writer says that unlike other forms of art,\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"A fundamental difference between paintings and other art forms is that there is no prescribed time over which a painting is viewed.\"\n\nShort Thai Explanation: คำถาม: \"The writer says that unlike other forms of art,\" หลักฐานในบทความคือ \"A fundamental difference between paintings and other art forms is that there is no prescribed t…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: unlike forms = fundamental difference between paintings = D\n\nQuestion 36: Art history should focus on discovering the meaning of art using\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"Consequently, the dominant critical approach becomes that of the art historian, a specialised academic approach devoted to ‘discovering the meaning’ of art within the cultural context of its time.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Art history should focus on discovering the meaning of art using\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Consequently, the dominant critical approach becomes that of the art historian, a specialised a…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: history should focus = consequently dominant critical approach = NOT GIVEN\n\nQuestion 37: The approach of art historians conflicts with that of art museums.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"This is in perfect harmony with the museum’s function\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"The approach of art historians conflicts with that of art museums.\" โดยเฉพาะจากข้อความ \"This is in perfect harmony with the museum’s function\" จึงตอบ NO\n\nParaphrased Vocabulary: approach historians conflicts = perfect harmony museum function = NO\n\nQuestion 38: People should be encouraged to give their opinions openly on works of art.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"The displays of art museums serve as a warning of what critical practices can emerge when spontaneous criticism is suppressed.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"People should be encouraged to give their opinions openly on works of art.\" โดยเฉพาะจากข้อความ \"The displays of art museums serve as a warning of what critical practices can emerge when spont…\" จึงตอบ YES\n\nParaphrased Vocabulary: should encouraged opinions = displays museums warning critical = YES\n\nQuestion 39: Reproductions of fine art should only be sold to the public if they are of high quality.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"If appropriate works of fine art could be rendered permanently accessible to the public by means of high-fidelity reproductions, as literature and music already are, the public may feel somewhat less in awe of them.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Reproductions of fine art should only be sold to the public if they are of high quality.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"If appropriate works of fine art could be rendered permanently accessible to the public by mean…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: reproductions should public = appropriate rendered permanently accessible = NOT GIVEN\n\nQuestion 40: In the future, those with power are likely to encourage more people to enjoy art.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 10 Test 2 Passage 3\n\nExact Portion: \"Unfortunately, that may be too much to ask from those who seek to maintain and control the art establishment.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"In the future, those with power are likely to encourage more people to enjoy art.\" โดยเฉพาะจากข้อความ \"Unfortunately, that may be too much to ask from those who seek to maintain and control the art …\" จึงตอบ NO\n\nParaphrased Vocabulary: future power likely = unfortunately maintain control establishment = NO",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 2 Passage 3 - Museums of fine art and their public",
+      "category": "advanced",
+      "passages": [
+        {
+          "number": 3,
+          "title": "Museums of fine art and their public",
+          "bodyParagraphs": [
+            "The fact that people go to the Louvre museum in Paris to see the original painting Mona Lisa when they can see a reproduction anywhere leads us to question some assumptions about the role of museums of fine art in today's world",
+            "One of the most famous works of art in the world is Leonardo da Vinci's Mona Lisa. Nearly everyone who goes to see the original will already be familiar with it from reproductions, but they accept that fine art is more rewardingly viewed in its original form.",
+            "However, if Mona Lisa was a famous novel, few people would bother to go to a museum to read the writer's actual manuscript rather than a printed reproduction. This might be explained by the fact that the novel has evolved precisely because of technological developments that made it possible to print out huge numbers of texts, whereas oil paintings have always been produced as unique objects. In addition, it could be argued that the practice of interpreting or 'reading' each medium follows different conventions. With novels, the reader attends mainly to the meaning of words rather than the way they are printed on the page, whereas the 'reader' of a painting must attend just as closely to the material form of marks and shapes in the picture as to any ideas they may signify.",
+            "Yet it has always been possible to make very accurate facsimiles of pretty well any fine art work. The seven surviving versions of Mona Lisa bear witness to the fact that in the 16th century, artists seemed perfectly content to assign the reproduction of their creations to their workshop apprentices as regular 'bread and butter' work. And today the task of reproducing pictures is incomparably more simple and reliable, with reprographic techniques that allow the production of high-quality prints made exactly to the original scale, with faithful colour values, and even with duplication of the surface relief of the painting.",
+            "But despite an implicit recognition that the spread of good reproductions can be culturally valuable, museums continue to promote the special status of original work.",
+            "Unfortunately, this seems to place severe limitations on the kind of experience offered to visitors.",
+            "One limitation is related to the way the museum presents its exhibits. As repositories of unique historical objects, art museums are often called 'treasure houses'. We are reminded of this even before we view a collection by the presence of security guards, attendants, ropes and display cases to keep us away from the exhibits. In many cases, the architectural style of the building further reinforces that notion. In addition, a major collection like that of London's National Gallery is housed in numerous rooms, each with dozens of works, any one of which is likely to be worth more than all the average visitor possesses. In a society that judges the personal status of the individual so much by their material worth, it is therefore difficult not to be impressed by one's own relative 'worthlessness' in such an environment.",
+            "Furthermore, consideration of the 'value' of the original work in its treasure house setting impresses upon the viewer that, since these works were originally produced, they have been assigned a huge monetary value by some person or institution more powerful than themselves. Evidently, nothing the viewer thinks about the work is going to alter that value, and so today's viewer is deterred from trying to extend that spontaneous, immediate, self-reliant kind of reading which would originally have met the work.",
+            "The visitor may then be struck by the strangeness of seeing such diverse paintings, drawings and sculptures brought together in an environment for which they were not originally created. This 'displacement effect' is further heightened by the sheer volume of exhibits. In the case of a major collection, there are probably more works on display than we could realistically view in weeks or even months.",
+            "This is particularly distressing because time seems to be a vital factor in the appreciation of all art forms. A fundamental difference between paintings and other art forms is that there is no prescribed time over which a painting is viewed. By contrast, the audience encourage an opera or a play over a specific time, which is the duration of the performance. Similarly novels and poems are read in a prescribed temporal sequence, whereas a picture has no clear place at which to start viewing, or at which to finish. Thus art works themselves encourage us to view them superficially, without appreciating the richness of detail and labour that is involved.",
+            "Consequently, the dominant critical approach becomes that of the art historian, a specialised academic approach devoted to 'discovering the meaning' of art within the cultural context of its time. This is in perfect harmony with the museum's function, since the approach is dedicated to seeking out and conserving 'authentic', original, readings of the exhibits. Again, this seems to put paid to that spontaneous, participators criticism which can be found in abundance in criticism of classic works of literature, but is absent from most art history.",
+            "The displays of art museums serve as a warning of what critical practices can emerge when spontaneous criticism is suppressed. The museum public, like any other audience, experience art more rewardingly when given the confidence to express their views. If appropriate works of fine art could be rendered permanently accessible to the public by means of high-fidelity reproductions, as literature and music already are, the public may feel somewhat less in awe of them. Unfortunately, that may be too much to ask from those who seek to maintain and control the art establishment."
+          ],
+          "questionSectionText": "Questions 27-40\n27. for so long, and also because with novels, the\n28. are the most important thing. However, in historical times artists such as Leonardo were happy to instruct\n29. to produce copies of their work and these days new methods of reproduction allow excellent replication of surface relief features as well as colour and\n30. . It is regrettable that museums still promote the superiority of original works of art, since this may not be in the interests of the\n31. .\n32. The writer mentions London's National Gallery to illustrate\n33. The writer says that today, viewers may be unwilling to criticise a because\n34. According to the writer, the 'displacement effect' on the visitor is caused by\n35. The writer says that unlike other forms of art,\n36. Art history should focus on discovering the meaning of art using\n37. The approach of art historians conflicts with that of art museums.\n38. People should be encouraged to give their opinions openly on works of art.\n39. Reproductions of fine art should only be sold to the public if they are of high quality.\n40. In the future, those with power are likely to encourage more people to enjoy art.",
+          "questionRanges": [
+            {
+              "start": 27,
+              "end": 40
+            }
+          ],
+          "questions": [
+            {
+              "number": 27,
+              "prompt": "for so long, and also because with novels, the",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "This might be explained by the fact that the novel has evolved precisely because of technological developments that made it possible to print out huge numbers of texts",
+              "explanationThai": "คำถาม: \"Drop answer here … for so long, and also because with novels, the\" หลักฐานในบทความคือ \"This might be explained by the fact that the novel has evolved precisely because of technologic…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "because novels = explained evolved precisely because = B"
+            },
+            {
+              "number": 28,
+              "prompt": "are the most important thing. However, in historical times artists such as Leonardo were happy to instruct",
+              "correctAnswer": "H",
+              "acceptedAnswers": [
+                "H"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "With novels, the reader attends mainly to the meaning of words rather than the way they are printed on the page",
+              "explanationThai": "คำถาม: \"Drop answer here … are the most important thing. However, in historical times artists such as Leonardo were happy to instruct\" หลักฐานในบทความคือ \"With novels, the reader attends mainly to the meaning of words rather than the way they are pri…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "important thing however = novels reader attends mainly = H"
+            },
+            {
+              "number": 29,
+              "prompt": "to produce copies of their work and these days new methods of reproduction allow excellent replication of surface relief features as well as colour and",
+              "correctAnswer": "L",
+              "acceptedAnswers": [
+                "L"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "text",
+              "exactPortion": "artists seemed perfectly content to assign the reproduction of their creations to their workshop apprentices as regular ‘bread and butter’ work.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Drop answer here … to produce copies of their work and these days new methods of reproduction allow excellent replication of surfa…\" บทความมีถ้อยคำที่ตรงกันคือ \"artists seemed perfectly content to assign the reproduction of their creations to their worksho…\" จึงคำตอบคือ \"L\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "produce copies methods = artists seemed perfectly content = L"
+            },
+            {
+              "number": 30,
+              "prompt": "It is regrettable that museums still promote the superiority of original works of art, since this may not be in the interests of the",
+              "correctAnswer": "G",
+              "acceptedAnswers": [
+                "G"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "production of high-quality prints made exactly to the original scale",
+              "explanationThai": "คำถาม: \"Drop answer here … . It is regrettable that museums still promote the superiority of original works of art, since this may not be …\" หลักฐานในบทความคือ \"production of high-quality prints made exactly to the original scale\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "regrettable museums still = production high-quality prints exactly = G"
+            },
+            {
+              "number": 31,
+              "prompt": "Complete the summary below.",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Unfortunately, this seems to place severe limitations on the kind of experience offered to visitors.",
+              "explanationThai": "คำถาม: \"Drop answer here … . Drag and drop an option to fill in each blank. A. institution B. mass production C. mechanical processes D. p…\" หลักฐานในบทความคือ \"Unfortunately, this seems to place severe limitations on the kind of experience offered to visi…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "option fill blank = unfortunately severe limitations experience = D"
+            },
+            {
+              "number": 32,
+              "prompt": "The writer mentions London's National Gallery to illustrate",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "In a society that judges the personal status of the individual so much by their material worth, it is therefore difficult not to be impressed by one’s own relative ‘worthlessness’ in such an environment.",
+              "explanationThai": "คำถาม: \"The writer mentions London's National Gallery to illustrate\" หลักฐานในบทความคือ \"In a society that judges the personal status of the individual so much by their material worth,…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "mentions london's national = society judges personal status = C"
+            },
+            {
+              "number": 33,
+              "prompt": "The writer says that today, viewers may be unwilling to criticise a because",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Evidently, nothing the viewer thinks about the work is going to alter that value, and so today’s viewer is deterred from trying to extend that spontaneous, immediate, self-reliant kind of reading which would originally have met the work.",
+              "explanationThai": "คำถาม: \"The writer says that today, viewers may be unwilling to criticise a because\" หลักฐานในบทความคือ \"Evidently, nothing the viewer thinks about the work is going to alter that value, and so today’…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "because = evidently nothing viewer thinks = D"
+            },
+            {
+              "number": 34,
+              "prompt": "According to the writer, the 'displacement effect' on the visitor is caused by",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "The visitor may then be struck by the strangeness of seeing such diverse paintings, drawings and sculptures brought together in an environment for which they were not originally created. This ‘displacement effect’",
+              "explanationThai": "คำถาม: \"According to the writer, the 'displacement effect' on the visitor is caused by\" หลักฐานในบทความคือ \"The visitor may then be struck by the strangeness of seeing such diverse paintings, drawings an…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "according 'displacement effect' = visitor struck strangeness seeing = A"
+            },
+            {
+              "number": 35,
+              "prompt": "The writer says that unlike other forms of art,",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "A fundamental difference between paintings and other art forms is that there is no prescribed time over which a painting is viewed.",
+              "explanationThai": "คำถาม: \"The writer says that unlike other forms of art,\" หลักฐานในบทความคือ \"A fundamental difference between paintings and other art forms is that there is no prescribed t…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "unlike forms = fundamental difference between paintings = D"
+            },
+            {
+              "number": 36,
+              "prompt": "Art history should focus on discovering the meaning of art using",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Consequently, the dominant critical approach becomes that of the art historian, a specialised academic approach devoted to ‘discovering the meaning’ of art within the cultural context of its time.",
+              "explanationThai": "ข้อความในข้อว่า \"Art history should focus on discovering the meaning of art using\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Consequently, the dominant critical approach becomes that of the art historian, a specialised a…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "history should focus = consequently dominant critical approach = NOT GIVEN"
+            },
+            {
+              "number": 37,
+              "prompt": "The approach of art historians conflicts with that of art museums.",
+              "correctAnswer": "NO",
+              "acceptedAnswers": [
+                "NO"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "This is in perfect harmony with the museum’s function",
+              "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"The approach of art historians conflicts with that of art museums.\" โดยเฉพาะจากข้อความ \"This is in perfect harmony with the museum’s function\" จึงตอบ NO",
+              "paraphrasedVocabulary": "approach historians conflicts = perfect harmony museum function = NO"
+            },
+            {
+              "number": 38,
+              "prompt": "People should be encouraged to give their opinions openly on works of art.",
+              "correctAnswer": "YES",
+              "acceptedAnswers": [
+                "YES"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "The displays of art museums serve as a warning of what critical practices can emerge when spontaneous criticism is suppressed.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"People should be encouraged to give their opinions openly on works of art.\" โดยเฉพาะจากข้อความ \"The displays of art museums serve as a warning of what critical practices can emerge when spont…\" จึงตอบ YES",
+              "paraphrasedVocabulary": "should encouraged opinions = displays museums warning critical = YES"
+            },
+            {
+              "number": 39,
+              "prompt": "Reproductions of fine art should only be sold to the public if they are of high quality.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "true-false-not-given",
+              "exactPortion": "If appropriate works of fine art could be rendered permanently accessible to the public by means of high-fidelity reproductions, as literature and music already are, the public may feel somewhat less in awe of them.",
+              "explanationThai": "ข้อความในข้อว่า \"Reproductions of fine art should only be sold to the public if they are of high quality.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"If appropriate works of fine art could be rendered permanently accessible to the public by mean…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "reproductions should public = appropriate rendered permanently accessible = NOT GIVEN"
+            },
+            {
+              "number": 40,
+              "prompt": "In the future, those with power are likely to encourage more people to enjoy art.",
+              "correctAnswer": "NO",
+              "acceptedAnswers": [
+                "NO"
+              ],
+              "answerGroup": "Cambridge 10 Test 2 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "Unfortunately, that may be too much to ask from those who seek to maintain and control the art establishment.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"In the future, those with power are likely to encourage more people to enjoy art.\" โดยเฉพาะจากข้อความ \"Unfortunately, that may be too much to ask from those who seek to maintain and control the art …\" จึงตอบ NO",
+              "paraphrasedVocabulary": "future power likely = unfortunately maintain control establishment = NO"
+            }
+          ]
+        }
+      ],
+      "questionCount": 14
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test3-passage1",
+    "title": "Cambridge 10 Test 3 Passage 1 - The Context, Meaning and Scope of Tourism",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 1\nThe Context, Meaning and Scope of Tourism\n\nA  \n\nTravel has existed since the beginning of time, when primitive man set out, often traversing great distances in search of game, which provided the food and clothing necessary for his survival. Throughout the course of history, people have travelled for purposes of trade, religious conviction, economic gain, war, migration and other equally compelling motivations. In the Roman era, wealthy aristocrats and high government officials also travelled for pleasure. Seaside resorts located at Pompeii and Herculaneum afforded citizens the opportunity to escape to their vacation villas in order to avoid the summer heat of Rome. Travel, except during the Dark Ages, has continued to grow and, throughout recorded history, has played a vital role in the development of civilisations and their economies.\n\n1Drop heading hereB \n\nTourism in the mass form as we know it today is a distinctly twentieth-century phenomenon. Historians suggest that the advent of mass tourism began in England during the industrial revolution with the rise of the middle class and the availability of relatively inexpensive transportation. The creation of the commercial airline industry following the Second World War and the subsequent development of the jet aircraft in the 1950s signalled the rapid growth and expansion of international travel. This growth led to the development of a major new industry: tourism. In turn, international tourism became the concern of a number of world governments since it not only provided new employment opportunities but also produced a means of earning foreign exchange.\n\n2Drop heading hereC   \n\nTourism today has grown significantly in both economic and social importance. In most industrialised countries over the past few years the fastest growth has been seen in the area of services. One of the largest segments of the service industry, although largely unrecognised as an entity in some of these countries, is travel and tourism. According to the World Travel and Tourism Council (1992), Travel and tourism is the largest industry in the world on virtually any economic measure including value-added capital investment, employment and tax contributions. In 1992, the industry's gross output was estimated to be $3.5 trillion, over 12 per cent of all consumer spending. The travel and tourism industry is the world's largest employer the almost 130 million jobs, or almost 7 per cent of all employees. This industry is the world's leading industrial contributor, producing over 6 per cent of the world's national product and accounting for capital investment in excess of $422 billion in direct indirect and personal taxes each year. Thus, tourism has a profound impact both on the world economy and, because of the educative effect of travel and the effects on employment, on society itself.\n\n3Drop heading hereD   \n\nHowever, the major problems of the travel and tourism industry that have hidden, or obscured, its economic impact are the diversity and fragmentation of the industry itself. The travel industry includes: hotels, motels and other types of accommodation; restaurants and other food services; transportation services and facilities; amusements, attractions and other leisure facilities; gift shops and a large number of other enterprises. Since many of these businesses also serve local residents, the impact of spending by visitors can easily be overlooked or underestimated. In addition, Meis (1992) points out that the tourism industry involves concepts that have remained amorphous to both analysts and decision makers. Moreover, in all nations this problem has made it difficult for the industry to develop any type of reliable or credible tourism information base in order to estimate the contribution it makes to regional, national and global economies. However, the nature of this very diversity makes travel and tourism ideal vehicles for economic development in a wide variety of countries, regions or communities.\n\n4Drop heading hereE  \n\nOnce the exclusive province of the wealthy, travel and tourism have become an institutionalised way of life for most of the population. In fact, McIntosh and Goeldner (1990) suggest that tourism has become the largest commodity in international trade for many nations and, for a significant number of other countries, it ranks second or third. For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries. In addition, Hawkins and Ritchie, quoting from data published by the American Express Company, suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States. However, because of problems of definition, which directly affect statistical measurement, it is not possible with any degree of certainty to provide precise, valid or reliable data about the extent of world-wide tourism participation or its economic impact. In many cases, similar difficulties arise when attempts are made to measure domestic tourism.\n\n<div\n\nQuestions 1-13\n\n1. Drop heading here …\n\n2. Drop heading here …\n\n3. Drop heading here …\n\n4. Drop heading here …\n\n5. The largest employment figures in the world are found in the travel and tourism industry.\n\n6. Tourism contributes over six per cent of the Australian gross national product.\n\n7. Tourism has\n\n8. Two main features of the travel and tourism industry make its economic significance difficult to ascertain.\n\n9. Visitor spending is always greater than the spending of residents in tourist areas.\n\n10. It is easy to show statistically how tourism affects individual economies.\n\n11. In Greece, tourism the most important …  … .\n\n12. The travel and tourism industry in Jamaica is the major …  … .\n\n13. The problems associated with measuring international tourism are often reflected in the measurement of …  … .",
+    "rawAnswerKey": "READING PASSAGE 1: The Context, Meaning and Scope of Tourism\n\nQuestion 1: Drop heading here …\n\nCorrect Answer: ii\n\nAccepted Answers: ii\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"Tourism in the mass form as we know it today is a distinctly twentieth-century phenomenon.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Tourism in the mass form as we know it today is a distinctly twentieth-century phenomenon.\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = tourism distinctly twentieth-century phenomenon = ii\n\nQuestion 2: Drop heading here …\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"Tourism today has grown significantly in both economic and social importance.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Tourism today has grown significantly in both economic and social importance.\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = tourism significantly economic social = i\n\nQuestion 3: Drop heading here …\n\nCorrect Answer: v\n\nAccepted Answers: v\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"However, the major problems of the travel and tourism industry that have hidden, or obscured, its economic impact are the diversity and fragmentation of the industry itself.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"However, the major problems of the travel and tourism industry that have hidden, or obscured, i…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = however problems travel tourism = v\n\nQuestion 4: Drop heading here …\n\nCorrect Answer: vii\n\nAccepted Answers: vii\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"In fact, McIntosh and Goeldner (1990) suggest that tourism has become the largest commodity in international trade for many nations and, for a significant number of other countries, it ranks second or third.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"In fact, McIntosh and Goeldner (1990) suggest that tourism has become the largest commodity in …\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = mcintosh goeldner suggest tourism = vii\n\nQuestion 5: The largest employment figures in the world are found in the travel and tourism industry.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"According to the World Travel and Tourism Council (1992), Travel and tourism is the largest industry in the world on virtually any economic measure including value-added capital investment, employment and tax contributions.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The largest employment figures in the world are found in the travel and tourism industry.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"According to the World Travel and Tourism Council (1992), Travel and tourism is the largest ind…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: largest employment figures = according travel tourism council = TRUE\n\nQuestion 6: Tourism contributes over six per cent of the Australian gross national product.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"This industry is the world’s leading industrial contributor, producing over 6 per cent of the world’s national product and accounting for capital investment in excess of $422 billion in direct indirect and personal taxes each year.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Tourism contributes over six per cent of the Australian gross national product.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"This industry is the world’s leading industrial contributor, producing over 6 per cent of the w…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: gross national product = industry leading industrial contributor = NOT GIVEN\n\nQuestion 7: Tourism has\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"Thus, tourism has a profound impact both on the world economy and, because of the educative effect of travel and the effects on employment, on society itself.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Tourism has\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Thus, tourism has a profound impact both on the world economy and, because of the educative eff…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: tourism = tourism profound impact economy = NOT GIVEN\n\nQuestion 8: Two main features of the travel and tourism industry make its economic significance difficult to ascertain.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"However, the major problems of the travel and tourism industry that have hidden, or obscured, its economic impact are the diversity and fragmentation of the industry itself.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Two main features of the travel and tourism industry make its economic significance difficult to ascertain.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"However, the major problems of the travel and tourism industry that have hidden, or obscured, i…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: features travel tourism = however problems travel tourism = TRUE\n\nQuestion 9: Visitor spending is always greater than the spending of residents in tourist areas.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"Since many of these businesses also serve local residents, the impact of spending by visitors can easily be overlooked or underestimated.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Visitor spending is always greater than the spending of residents in tourist areas.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Since many of these businesses also serve local residents, the impact of spending by visitors c…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: spending residents tourist = businesses residents impact spending = NOT GIVEN\n\nQuestion 10: It is easy to show statistically how tourism affects individual economies.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"However, because of problems of definition, which directly affect statistical measurement, it is not possible with any degree of certainty to provide precise, valid or reliable data about the extent of world-wide tourism participation or its economic impact.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"It is easy to show statistically how tourism affects individual economies.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"However, because of problems of definition, which directly affect statistical measurement, it i…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: statistically tourism affects = however because problems definition = FALSE\n\nQuestion 11: In Greece, tourism the most important …  … .\n\nCorrect Answer: source of income\n\nAccepted Answers: source of income|industry\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"In Greece, tourism the most important … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerlan…\" จึงคำตอบคือ \"source of income\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: greece tourism important = example tourism source income = source of income\n\nQuestion 12: The travel and tourism industry in Jamaica is the major …  … .\n\nCorrect Answer: employer\n\nAccepted Answers: employer\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"The travel and tourism industry in Jamaica is the major … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, …\" จึงคำตอบคือ \"employer\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: major = suggest travel tourism industry = employer\n\nQuestion 13: The problems associated with measuring international tourism are often reflected in the measurement of …  … .\n\nCorrect Answer: domestic tourism\n\nAccepted Answers: domestic tourism\n\nAnswer Group: Cambridge 10 Test 3 Passage 1\n\nExact Portion: \"In many cases, similar difficulties arise when attempts are made to measure domestic tourism.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"The problems associated with measuring international tourism are often reflected in the measurement of … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"In many cases, similar difficulties arise when attempts are made to measure domestic tourism.\" จึงคำตอบคือ \"domestic tourism\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: problems associated measuring = similar difficulties attempts measure = domestic tourism",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 3 Passage 1 - The Context, Meaning and Scope of Tourism",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 1,
+          "title": "The Context, Meaning and Scope of Tourism",
+          "bodyParagraphs": [
+            "A",
+            "Travel has existed since the beginning of time, when primitive man set out, often traversing great distances in search of game, which provided the food and clothing necessary for his survival. Throughout the course of history, people have travelled for purposes of trade, religious conviction, economic gain, war, migration and other equally compelling motivations. In the Roman era, wealthy aristocrats and high government officials also travelled for pleasure. Seaside resorts located at Pompeii and Herculaneum afforded citizens the opportunity to escape to their vacation villas in order to avoid the summer heat of Rome. Travel, except during the Dark Ages, has continued to grow and, throughout recorded history, has played a vital role in the development of civilisations and their economies.",
+            "Tourism in the mass form as we know it today is a distinctly twentieth-century phenomenon. Historians suggest that the advent of mass tourism began in England during the industrial revolution with the rise of the middle class and the availability of relatively inexpensive transportation. The creation of the commercial airline industry following the Second World War and the subsequent development of the jet aircraft in the 1950s signalled the rapid growth and expansion of international travel. This growth led to the development of a major new industry: tourism. In turn, international tourism became the concern of a number of world governments since it not only provided new employment opportunities but also produced a means of earning foreign exchange.",
+            "Tourism today has grown significantly in both economic and social importance. In most industrialised countries over the past few years the fastest growth has been seen in the area of services. One of the largest segments of the service industry, although largely unrecognised as an entity in some of these countries, is travel and tourism. According to the World Travel and Tourism Council (1992), Travel and tourism is the largest industry in the world on virtually any economic measure including value-added capital investment, employment and tax contributions. In 1992, the industry's gross output was estimated to be $3.5 trillion, over 12 per cent of all consumer spending. The travel and tourism industry is the world's largest employer the almost 130 million jobs, or almost 7 per cent of all employees. This industry is the world's leading industrial contributor, producing over 6 per cent of the world's national product and accounting for capital investment in excess of $422 billion in direct indirect and personal taxes each year. Thus, tourism has a profound impact both on the world economy and, because of the educative effect of travel and the effects on employment, on society itself.",
+            "However, the major problems of the travel and tourism industry that have hidden, or obscured, its economic impact are the diversity and fragmentation of the industry itself. The travel industry includes: hotels, motels and other types of accommodation; restaurants and other food services; transportation services and facilities; amusements, attractions and other leisure facilities; gift shops and a large number of other enterprises. Since many of these businesses also serve local residents, the impact of spending by visitors can easily be overlooked or underestimated. In addition, Meis (1992) points out that the tourism industry involves concepts that have remained amorphous to both analysts and decision makers. Moreover, in all nations this problem has made it difficult for the industry to develop any type of reliable or credible tourism information base in order to estimate the contribution it makes to regional, national and global economies. However, the nature of this very diversity makes travel and tourism ideal vehicles for economic development in a wide variety of countries, regions or communities.",
+            "Once the exclusive province of the wealthy, travel and tourism have become an institutionalised way of life for most of the population. In fact, McIntosh and Goeldner (1990) suggest that tourism has become the largest commodity in international trade for many nations and, for a significant number of other countries, it ranks second or third. For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries. In addition, Hawkins and Ritchie, quoting from data published by the American Express Company, suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States. However, because of problems of definition, which directly affect statistical measurement, it is not possible with any degree of certainty to provide precise, valid or reliable data about the extent of world-wide tourism participation or its economic impact. In many cases, similar difficulties arise when attempts are made to measure domestic tourism."
+          ],
+          "questionSectionText": "Questions 1-13\n5. The largest employment figures in the world are found in the travel and tourism industry.\n6. Tourism contributes over six per cent of the Australian gross national product.\n7. Tourism has\n8. Two main features of the travel and tourism industry make its economic significance difficult to ascertain.\n9. Visitor spending is always greater than the spending of residents in tourist areas.\n10. It is easy to show statistically how tourism affects individual economies.\n11. In Greece, tourism the most important …  … .\n12. The travel and tourism industry in Jamaica is the major …  … .\n13. The problems associated with measuring international tourism are often reflected in the measurement of …  … .",
+          "questionRanges": [
+            {
+              "start": 1,
+              "end": 13
+            }
+          ],
+          "questions": [
+            {
+              "number": 1,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "ii",
+              "acceptedAnswers": [
+                "ii"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "Tourism in the mass form as we know it today is a distinctly twentieth-century phenomenon.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Tourism in the mass form as we know it today is a distinctly twentieth-century phenomenon.\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = tourism distinctly twentieth-century phenomenon = ii"
+            },
+            {
+              "number": 2,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "i",
+              "acceptedAnswers": [
+                "i"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "Tourism today has grown significantly in both economic and social importance.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Tourism today has grown significantly in both economic and social importance.\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = tourism significantly economic social = i"
+            },
+            {
+              "number": 3,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "v",
+              "acceptedAnswers": [
+                "v"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "However, the major problems of the travel and tourism industry that have hidden, or obscured, its economic impact are the diversity and fragmentation of the industry itself.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"However, the major problems of the travel and tourism industry that have hidden, or obscured, i…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = however problems travel tourism = v"
+            },
+            {
+              "number": 4,
+              "prompt": "Choose the correct heading for this section.",
+              "correctAnswer": "vii",
+              "acceptedAnswers": [
+                "vii"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "In fact, McIntosh and Goeldner (1990) suggest that tourism has become the largest commodity in international trade for many nations and, for a significant number of other countries, it ranks second or third.",
+              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"In fact, McIntosh and Goeldner (1990) suggest that tourism has become the largest commodity in …\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "heading = mcintosh goeldner suggest tourism = vii"
+            },
+            {
+              "number": 5,
+              "prompt": "The largest employment figures in the world are found in the travel and tourism industry.",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "According to the World Travel and Tourism Council (1992), Travel and tourism is the largest industry in the world on virtually any economic measure including value-added capital investment, employment and tax contributions.",
+              "explanationThai": "ข้อความในข้อว่า \"The largest employment figures in the world are found in the travel and tourism industry.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"According to the World Travel and Tourism Council (1992), Travel and tourism is the largest ind…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "largest employment figures = according travel tourism council = TRUE"
+            },
+            {
+              "number": 6,
+              "prompt": "Tourism contributes over six per cent of the Australian gross national product.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "This industry is the world’s leading industrial contributor, producing over 6 per cent of the world’s national product and accounting for capital investment in excess of $422 billion in direct indirect and personal taxes each year.",
+              "explanationThai": "ข้อความในข้อว่า \"Tourism contributes over six per cent of the Australian gross national product.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"This industry is the world’s leading industrial contributor, producing over 6 per cent of the w…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "gross national product = industry leading industrial contributor = NOT GIVEN"
+            },
+            {
+              "number": 7,
+              "prompt": "Tourism has",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Thus, tourism has a profound impact both on the world economy and, because of the educative effect of travel and the effects on employment, on society itself.",
+              "explanationThai": "ข้อความในข้อว่า \"Tourism has\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Thus, tourism has a profound impact both on the world economy and, because of the educative eff…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "tourism = tourism profound impact economy = NOT GIVEN"
+            },
+            {
+              "number": 8,
+              "prompt": "Two main features of the travel and tourism industry make its economic significance difficult to ascertain.",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "However, the major problems of the travel and tourism industry that have hidden, or obscured, its economic impact are the diversity and fragmentation of the industry itself.",
+              "explanationThai": "ข้อความในข้อว่า \"Two main features of the travel and tourism industry make its economic significance difficult to ascertain.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"However, the major problems of the travel and tourism industry that have hidden, or obscured, i…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "features travel tourism = however problems travel tourism = TRUE"
+            },
+            {
+              "number": 9,
+              "prompt": "Visitor spending is always greater than the spending of residents in tourist areas.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Since many of these businesses also serve local residents, the impact of spending by visitors can easily be overlooked or underestimated.",
+              "explanationThai": "ข้อความในข้อว่า \"Visitor spending is always greater than the spending of residents in tourist areas.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Since many of these businesses also serve local residents, the impact of spending by visitors c…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "spending residents tourist = businesses residents impact spending = NOT GIVEN"
+            },
+            {
+              "number": 10,
+              "prompt": "It is easy to show statistically how tourism affects individual economies.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "However, because of problems of definition, which directly affect statistical measurement, it is not possible with any degree of certainty to provide precise, valid or reliable data about the extent of world-wide tourism participation or its economic impact.",
+              "explanationThai": "ข้อความในข้อว่า \"It is easy to show statistically how tourism affects individual economies.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"However, because of problems of definition, which directly affect statistical measurement, it i…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "statistically tourism affects = however because problems definition = FALSE"
+            },
+            {
+              "number": 11,
+              "prompt": "In Greece, tourism the most important … … .",
+              "correctAnswer": "source of income",
+              "acceptedAnswers": [
+                "source of income",
+                "industry"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "text",
+              "exactPortion": "For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"In Greece, tourism the most important … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerlan…\" จึงคำตอบคือ \"source of income\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "greece tourism important = example tourism source income = source of income"
+            },
+            {
+              "number": 12,
+              "prompt": "The travel and tourism industry in Jamaica is the major … … .",
+              "correctAnswer": "employer",
+              "acceptedAnswers": [
+                "employer"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "text",
+              "exactPortion": "suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The travel and tourism industry in Jamaica is the major … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, …\" จึงคำตอบคือ \"employer\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "major = suggest travel tourism industry = employer"
+            },
+            {
+              "number": 13,
+              "prompt": "The problems associated with measuring international tourism are often reflected in the measurement of … … .",
+              "correctAnswer": "domestic tourism",
+              "acceptedAnswers": [
+                "domestic tourism"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 1",
+              "answerType": "text",
+              "exactPortion": "In many cases, similar difficulties arise when attempts are made to measure domestic tourism.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The problems associated with measuring international tourism are often reflected in the measurement of … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"In many cases, similar difficulties arise when attempts are made to measure domestic tourism.\" จึงคำตอบคือ \"domestic tourism\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "problems associated measuring = similar difficulties attempts measure = domestic tourism"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test3-passage2",
+    "title": "Cambridge 10 Test 3 Passage 2 - Autumn leaves",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 2\nAutumn leaves\n\nCanadian writer Jay Ingram investigates the mystery of why leaves turn red in the fall\n\nA \n\nOne of the most captivating natural events of the year in many areas throughout North America is the turning of the leaves in the fall. The colours are magnificent, but the question of exactly why some trees turn yellow or orange, and others red or purple, is something which has long puzzled scientists.\n\nB\n\nSummer leaves are green because they are full of chlorophyll, the molecule that captures sunlight converts that energy into new building materials for the tree. As fall approaches in the northern hemisphere, the amount of solar energy available declines considerably. For many trees – evergreen conifers being an exception – the best strategy is to abandon photosynthesis* until the spring. So rather than maintaining the now redundant leaves throughout the winter, the tree saves its precious resources and discards them. But before letting its leaves go, the tree dismantles their chlorophyll molecules and ships their valuable nitrogen back into the twigs. As chlorophyll is depleted, other colours that have been dominated by it throughout the summer begin to be revealed. This unmasking explains the autumn colours of yellow and orange, but not the brilliant reds and purples of trees such as the maple or sumac.\n\nC\n\nThe source of the red is widely known: it is created by anthocyanins, water-soluble plant pigments reflecting the red to blue range of the visible spectrum. They belong to a class of sugar-based chemical compounds also known as flavonoids. What's puzzling is that anthocyanins are actually newly minted, made in the leaves at the same time as the tree is preparing to drop them. But it is hard to make sense of the manufacture of anthocyanins – why should a tree bother making new chemicals in its leaves when it's already scrambling to withdraw and preserve the ones already there?\n\nD\n\nSome theories about anthocyanins have argued that they might act as a chemical defence against attacks by insects or fungi, or that they might attract fruit-eating birds or increase a leaf's tolerance to freezing. However there are problems with each of these theories, including the fact that leaves are red for such a relatively short period that the expense of energy needed to manufacture the anthocyanins would outweigh any anti-fungal or anti-herbivore activity achieved.\n\nE\n\nIt has also been proposed that trees may produce vivid red colours to convince herbivorous insects that they are healthy and robust and would be easily able to mount chemical defences against infestation. If insects paid attention to such advertisements, they might be prompted to lay their eggs on a duller, and presumably less resistant host. The flaw in this theory lies in the lack of proof to support it. No one has as yet ascertained whether more robust trees sport the brightest leaves, or whether insects make choices according to colour intensity.\n\nF\n\nPerhaps the most plausible suggestion as to why leaves would go to the trouble of making anthocyanins when they're busy packing up for the winter is the theory known as the 'light screen' hypothesis. It sounds paradoxical, because the idea behind this hypothesis is that the red pigment is made in autumn leaves to protect chlorophyll, the light-absorbing chemical, from too much light. Why does chlorophyll need protection when it is the natural world's supreme light absorber? Why protect chlorophyll at a time when the tree is breaking it down to salvage as much of it as possible?\n\nG\n\nChlorophyll, although exquisitely evolved to capture the energy of sunlight, can sometimes be overwhelmed by it, especially in situations of drought, low temperatures, or nutrient deficiency. Moreover, the problem of oversensitivity to light is even more acute in the fall, when the leaf is busy preparing for winter by dismantling its internal machinery. The energy absorbed by the chlorophyll molecules of the unstable autumn leaf is not immediately channelled into useful products and processes, as it would be in an intact summer leaf. The weakened fall leaf then becomes vulnerable to the highly destructive effects of the oxygen created by the excited chlorophyll molecules.\n\nH\n\nEven if you had never suspected that this is what was going on when leaves turn red, there are clues out there. One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most sun. Not only that, but the red is brighter on the upper side of the leaf. It has also been recognised for decades that the best conditions for intense red colours are dry, sunny days and cool nights, conditions that nicely match those that make leaves susceptible to excess light. And finally, trees such as maples usually get much redder the more north you travel in the northern hemisphere. It's colder there, they're more stressed, their chlorophyll is more sensitive and it needs more sunblock.\n\nI\n\nWhat is still not fully understood, however, is why some trees resort to producing red pigments while others don't bother, and simply reveal their orange or yellow hues. Do these trees have other means at their disposal to prevent overexposure to light in autumn? Their story, though not as spectacular to the eye, will surely turn out to be as subtle and as complex.\n\n————\n\n* photosynthesis: the production of new material from sunlight, water and carbon dioxide.\n\n<div\n\nQuestions 14-26\n\n14. a description of the substance responsible for the red colouration of leaves …  …  …  …  …  …  …  …  …\n\n15. the reason why trees drop their leaves in autumn …  …  …  …  …  …  …  …  …\n\n16. some evidence to confirm\n\n17. an explanation of the function of chlorophyll …  …  …  …  …  …  …  …  …\n\n18. a suggestion that the red colouration in leaves could serve as\n\n19. The most vividly coloured red leaves are found on the side of the tree facing the …  … .\n\n20. The …  … surfaces of leaves contain the most red pigment.\n\n21. Red leaves are most abundant when daytime weather conditions are …  … and sunny.\n\n22. The intensity of the red colour of leaves increases as you go further …  …\n\n23. It is likely that the red pigments help to protect the leaf from freezing temperatures.\n\n24. The 'light screen' hypothesis would initially seem to contradict what is known about chlorophyll.\n\n25. Leaves which turn colours other than red are more likely to be damaged by sunlight.\n\n26. For which of the following questions does the writer offer an explanation?",
+    "rawAnswerKey": "READING PASSAGE 2: Autumn leaves\n\nQuestion 14: a description of the substance responsible for the red colouration of leaves …  …  …  …  …  …  …  …  …\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"The source of the red is widely known: it is created by anthocyanins, water-soluble plant pigments reflecting the red to blue range of the visible spectrum.\"\n\nShort Thai Explanation: คำถาม: \"a description of the substance responsible for the red colouration of leaves … … … … … … … … …\" หลักฐานในบทความคือ \"The source of the red is widely known: it is created by anthocyanins, water-soluble plant pigme…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: description substance responsible = source widely created anthocyanins = C\n\nQuestion 15: the reason why trees drop their leaves in autumn …  …  …  …  …  …  …  …  …\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"For many trees – evergreen conifers being an exception – the best strategy is to abandon photosynthesis* until the spring. So rather than maintaining the now redundant leaves throughout the winter, the tree saves its precious resources and discards them.\"\n\nShort Thai Explanation: คำถาม: \"the reason why trees drop their leaves in autumn … … … … … … … … …\" หลักฐานในบทความคือ \"For many trees – evergreen conifers being an exception – the best strategy is to abandon photos…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: reason trees leaves = evergreen conifers exception strategy = B\n\nQuestion 16: some evidence to confirm\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"Even if you had never suspected that this is what was going on when leaves turn red, there are clues out there.\"\n\nShort Thai Explanation: คำถาม: \"some evidence to confirm\" หลักฐานในบทความคือ \"Even if you had never suspected that this is what was going on when leaves turn red, there are …\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H\n\nParaphrased Vocabulary: evidence confirm = suspected leaves = H\n\nQuestion 17: an explanation of the function of chlorophyll …  …  …  …  …  …  …  …  …\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"Summer leaves are green because they are full of chlorophyll, the molecule that captures sunlight converts that energy into new building materials for the tree.\"\n\nShort Thai Explanation: คำถาม: \"an explanation of the function of chlorophyll … … … … … … … … …\" หลักฐานในบทความคือ \"Summer leaves are green because they are full of chlorophyll, the molecule that captures sunlig…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: explanation function chlorophyll = summer leaves because chlorophyll = B\n\nQuestion 18: a suggestion that the red colouration in leaves could serve as\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"It has also been proposed that trees may produce vivid red colours to convince herbivorous insects that they are healthy and robust and would be easily able to mount chemical defences against infestation.\"\n\nShort Thai Explanation: คำถาม: \"a suggestion that the red colouration in leaves could serve as\" หลักฐานในบทความคือ \"It has also been proposed that trees may produce vivid red colours to convince herbivorous inse…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: suggestion colouration leaves = proposed produce colours convince = E\n\nQuestion 19: The most vividly coloured red leaves are found on the side of the tree facing the …  … .\n\nCorrect Answer: sunlight\n\nAccepted Answers: sun|sunlight\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most sun\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"The most vividly coloured red leaves are found on the side of the tree facing the … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"One is straightforward: on many trees, the leaves that are the reddest are those on the side of…\" จึงคำตอบคือ \"sunlight\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: vividly coloured leaves = straightforward leaves reddest = sunlight\n\nQuestion 20: The …  … surfaces of leaves contain the most red pigment.\n\nCorrect Answer: upper\n\nAccepted Answers: upper\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"Not only that, but the red is brighter on the upper side of the leaf.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"The … … surfaces of leaves contain the most red pigment.\" บทความมีถ้อยคำที่ตรงกันคือ \"Not only that, but the red is brighter on the upper side of the leaf.\" จึงคำตอบคือ \"upper\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: surfaces leaves contain = brighter = upper\n\nQuestion 21: Red leaves are most abundant when daytime weather conditions are …  … and sunny.\n\nCorrect Answer: dry\n\nAccepted Answers: dry\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"It has also been recognised for decades that the best conditions for intense red colours are dry, sunny days and cool nights\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Red leaves are most abundant when daytime weather conditions are … … and sunny.\" บทความมีถ้อยคำที่ตรงกันคือ \"It has also been recognised for decades that the best conditions for intense red colours are dr…\" จึงคำตอบคือ \"dry\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: leaves abundant daytime = recognised decades conditions intense = dry\n\nQuestion 22: The intensity of the red colour of leaves increases as you go further …  …\n\nCorrect Answer: north\n\nAccepted Answers: north\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"And finally, trees such as maples usually get much redder the more north you travel in the northern hemisphere.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"The intensity of the red colour of leaves increases as you go further … …\" บทความมีถ้อยคำที่ตรงกันคือ \"And finally, trees such as maples usually get much redder the more north you travel in the nort…\" จึงคำตอบคือ \"north\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: intensity colour leaves = finally maples usually redder = north\n\nQuestion 23: It is likely that the red pigments help to protect the leaf from freezing temperatures.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"because the idea behind this hypothesis is that the red pigment is made in autumn leaves to protect chlorophyll, the light-absorbing chemical, from too much light.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"It is likely that the red pigments help to protect the leaf from freezing temperatures.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"because the idea behind this hypothesis is that the red pigment is made in autumn leaves to pro…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: likely pigments protect = because behind hypothesis pigment = FALSE\n\nQuestion 24: The 'light screen' hypothesis would initially seem to contradict what is known about chlorophyll.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"It sounds paradoxical\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The 'light screen' hypothesis would initially seem to contradict what is known about chlorophyll.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"It sounds paradoxical\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: 'light screen' hypothesis = sounds paradoxical = TRUE\n\nQuestion 25: Leaves which turn colours other than red are more likely to be damaged by sunlight.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"What is still not fully understood, however, is why some trees resort to producing red pigments while others don’t bother, and simply reveal their orange or yellow hues.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Leaves which turn colours other than red are more likely to be damaged by sunlight.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"What is still not fully understood, however, is why some trees resort to producing red pigments…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: likely damaged sunlight = understood however resort producing = NOT GIVEN\n\nQuestion 26: For which of the following questions does the writer offer an explanation?\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 3 Passage 2\n\nExact Portion: \"As chlorophyll is depleted, other colours that have been dominated by it throughout the summer begin to be revealed.\"\n\nShort Thai Explanation: คำถาม: \"For which of the following questions does the writer offer an explanation?\" หลักฐานในบทความคือ \"As chlorophyll is depleted, other colours that have been dominated by it throughout the summer …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: explanation = chlorophyll depleted colours dominated = B",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 3 Passage 2 - Autumn leaves",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 2,
+          "title": "Autumn leaves",
+          "bodyParagraphs": [
+            "Canadian writer Jay Ingram investigates the mystery of why leaves turn red in the fall",
+            "A",
+            "A. One of the most captivating natural events of the year in many areas throughout North America is the turning of the leaves in the fall. The colours are magnificent, but the question of exactly why some trees turn yellow or orange, and others red or purple, is something which has long puzzled scientists.",
+            "B",
+            "B. Summer leaves are green because they are full of chlorophyll, the molecule that captures sunlight converts that energy into new building materials for the tree. As fall approaches in the northern hemisphere, the amount of solar energy available declines considerably. For many trees – evergreen conifers being an exception – the best strategy is to abandon photosynthesis* until the spring. So rather than maintaining the now redundant leaves throughout the winter, the tree saves its precious resources and discards them. But before letting its leaves go, the tree dismantles their chlorophyll molecules and ships their valuable nitrogen back into the twigs. As chlorophyll is depleted, other colours that have been dominated by it throughout the summer begin to be revealed. This unmasking explains the autumn colours of yellow and orange, but not the brilliant reds and purples of trees such as the maple or sumac.",
+            "C",
+            "C. The source of the red is widely known: it is created by anthocyanins, water-soluble plant pigments reflecting the red to blue range of the visible spectrum. They belong to a class of sugar-based chemical compounds also known as flavonoids. What's puzzling is that anthocyanins are actually newly minted, made in the leaves at the same time as the tree is preparing to drop them. But it is hard to make sense of the manufacture of anthocyanins – why should a tree bother making new chemicals in its leaves when it's already scrambling to withdraw and preserve the ones already there?",
+            "D",
+            "D. Some theories about anthocyanins have argued that they might act as a chemical defence against attacks by insects or fungi, or that they might attract fruit-eating birds or increase a leaf's tolerance to freezing. However there are problems with each of these theories, including the fact that leaves are red for such a relatively short period that the expense of energy needed to manufacture the anthocyanins would outweigh any anti-fungal or anti-herbivore activity achieved.",
+            "E",
+            "E. It has also been proposed that trees may produce vivid red colours to convince herbivorous insects that they are healthy and robust and would be easily able to mount chemical defences against infestation. If insects paid attention to such advertisements, they might be prompted to lay their eggs on a duller, and presumably less resistant host. The flaw in this theory lies in the lack of proof to support it. No one has as yet ascertained whether more robust trees sport the brightest leaves, or whether insects make choices according to colour intensity.",
+            "F",
+            "F. Perhaps the most plausible suggestion as to why leaves would go to the trouble of making anthocyanins when they're busy packing up for the winter is the theory known as the 'light screen' hypothesis. It sounds paradoxical, because the idea behind this hypothesis is that the red pigment is made in autumn leaves to protect chlorophyll, the light-absorbing chemical, from too much light. Why does chlorophyll need protection when it is the natural world's supreme light absorber? Why protect chlorophyll at a time when the tree is breaking it down to salvage as much of it as possible?",
+            "G",
+            "G. Chlorophyll, although exquisitely evolved to capture the energy of sunlight, can sometimes be overwhelmed by it, especially in situations of drought, low temperatures, or nutrient deficiency. Moreover, the problem of oversensitivity to light is even more acute in the fall, when the leaf is busy preparing for winter by dismantling its internal machinery. The energy absorbed by the chlorophyll molecules of the unstable autumn leaf is not immediately channelled into useful products and processes, as it would be in an intact summer leaf. The weakened fall leaf then becomes vulnerable to the highly destructive effects of the oxygen created by the excited chlorophyll molecules. H Even if you had never suspected that this is what was going on when leaves turn red, there are clues out there. One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most sun. Not only that, but the red is brighter on the upper side of the leaf. It has also been recognised for decades that the best conditions for intense red colours are dry, sunny days and cool nights, conditions that nicely match those that make leaves susceptible to excess light. And finally, trees such as maples usually get much redder the more north you travel in the northern hemisphere. It's colder there, they're more stressed, their chlorophyll is more sensitive and it needs more sunblock. I What is still not fully understood, however, is why some trees resort to producing red pigments while others don't bother, and simply reveal their orange or yellow hues. Do these trees have other means at their disposal to prevent overexposure to light in autumn? Their story, though not as spectacular to the eye, will surely turn out to be as subtle and as complex. ———— * photosynthesis: the production of new material from sunlight, water and carbon dioxide."
+          ],
+          "questionSectionText": "Questions 14-26\n14. a description of the substance responsible for the red colouration of leaves …  …  …  …  …  …  …  …  …\n15. the reason why trees drop their leaves in autumn …  …  …  …  …  …  …  …  …\n16. some evidence to confirm\n17. an explanation of the function of chlorophyll …  …  …  …  …  …  …  …  …\n18. a suggestion that the red colouration in leaves could serve as\n19. The most vividly coloured red leaves are found on the side of the tree facing the …  … .\n20. The …  … surfaces of leaves contain the most red pigment.\n21. Red leaves are most abundant when daytime weather conditions are …  … and sunny.\n22. The intensity of the red colour of leaves increases as you go further …  …\n23. It is likely that the red pigments help to protect the leaf from freezing temperatures.\n24. The 'light screen' hypothesis would initially seem to contradict what is known about chlorophyll.\n25. Leaves which turn colours other than red are more likely to be damaged by sunlight.\n26. For which of the following questions does the writer offer an explanation?",
+          "questionRanges": [
+            {
+              "start": 14,
+              "end": 26
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "prompt": "a description of the substance responsible for the red colouration of leaves … … … … … … … … …",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "The source of the red is widely known: it is created by anthocyanins, water-soluble plant pigments reflecting the red to blue range of the visible spectrum.",
+              "explanationThai": "คำถาม: \"a description of the substance responsible for the red colouration of leaves … … … … … … … … …\" หลักฐานในบทความคือ \"The source of the red is widely known: it is created by anthocyanins, water-soluble plant pigme…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "description substance responsible = source widely created anthocyanins = C"
+            },
+            {
+              "number": 15,
+              "prompt": "the reason why trees drop their leaves in autumn … … … … … … … … …",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "For many trees – evergreen conifers being an exception – the best strategy is to abandon photosynthesis* until the spring. So rather than maintaining the now redundant leaves throughout the winter, the tree saves its precious resources and discards them.",
+              "explanationThai": "คำถาม: \"the reason why trees drop their leaves in autumn … … … … … … … … …\" หลักฐานในบทความคือ \"For many trees – evergreen conifers being an exception – the best strategy is to abandon photos…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "reason trees leaves = evergreen conifers exception strategy = B"
+            },
+            {
+              "number": 16,
+              "prompt": "some evidence to confirm",
+              "correctAnswer": "H",
+              "acceptedAnswers": [
+                "H"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Even if you had never suspected that this is what was going on when leaves turn red, there are clues out there.",
+              "explanationThai": "คำถาม: \"some evidence to confirm\" หลักฐานในบทความคือ \"Even if you had never suspected that this is what was going on when leaves turn red, there are …\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "evidence confirm = suspected leaves = H"
+            },
+            {
+              "number": 17,
+              "prompt": "an explanation of the function of chlorophyll … … … … … … … … …",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Summer leaves are green because they are full of chlorophyll, the molecule that captures sunlight converts that energy into new building materials for the tree.",
+              "explanationThai": "คำถาม: \"an explanation of the function of chlorophyll … … … … … … … … …\" หลักฐานในบทความคือ \"Summer leaves are green because they are full of chlorophyll, the molecule that captures sunlig…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "explanation function chlorophyll = summer leaves because chlorophyll = B"
+            },
+            {
+              "number": 18,
+              "prompt": "a suggestion that the red colouration in leaves could serve as",
+              "correctAnswer": "E",
+              "acceptedAnswers": [
+                "E"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "It has also been proposed that trees may produce vivid red colours to convince herbivorous insects that they are healthy and robust and would be easily able to mount chemical defences against infestation.",
+              "explanationThai": "คำถาม: \"a suggestion that the red colouration in leaves could serve as\" หลักฐานในบทความคือ \"It has also been proposed that trees may produce vivid red colours to convince herbivorous inse…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "suggestion colouration leaves = proposed produce colours convince = E"
+            },
+            {
+              "number": 19,
+              "prompt": "The most vividly coloured red leaves are found on the side of the tree facing the … … .",
+              "correctAnswer": "sunlight",
+              "acceptedAnswers": [
+                "sun",
+                "sunlight"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "text",
+              "exactPortion": "One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most sun",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The most vividly coloured red leaves are found on the side of the tree facing the … … .\" บทความมีถ้อยคำที่ตรงกันคือ \"One is straightforward: on many trees, the leaves that are the reddest are those on the side of…\" จึงคำตอบคือ \"sunlight\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "vividly coloured leaves = straightforward leaves reddest = sunlight"
+            },
+            {
+              "number": 20,
+              "prompt": "The … … surfaces of leaves contain the most red pigment.",
+              "correctAnswer": "upper",
+              "acceptedAnswers": [
+                "upper"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "text",
+              "exactPortion": "Not only that, but the red is brighter on the upper side of the leaf.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The … … surfaces of leaves contain the most red pigment.\" บทความมีถ้อยคำที่ตรงกันคือ \"Not only that, but the red is brighter on the upper side of the leaf.\" จึงคำตอบคือ \"upper\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "surfaces leaves contain = brighter = upper"
+            },
+            {
+              "number": 21,
+              "prompt": "Red leaves are most abundant when daytime weather conditions are … … and sunny.",
+              "correctAnswer": "dry",
+              "acceptedAnswers": [
+                "dry"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "text",
+              "exactPortion": "It has also been recognised for decades that the best conditions for intense red colours are dry, sunny days and cool nights",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Red leaves are most abundant when daytime weather conditions are … … and sunny.\" บทความมีถ้อยคำที่ตรงกันคือ \"It has also been recognised for decades that the best conditions for intense red colours are dr…\" จึงคำตอบคือ \"dry\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "leaves abundant daytime = recognised decades conditions intense = dry"
+            },
+            {
+              "number": 22,
+              "prompt": "The intensity of the red colour of leaves increases as you go further … …",
+              "correctAnswer": "NO",
+              "acceptedAnswers": [
+                "NO"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "And finally, trees such as maples usually get much redder the more north you travel in the northern hemisphere.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The intensity of the red colour of leaves increases as you go further … …\" บทความมีถ้อยคำที่ตรงกันคือ \"And finally, trees such as maples usually get much redder the more north you travel in the nort…\" จึงคำตอบคือ \"north\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "intensity colour leaves = finally maples usually redder = north"
+            },
+            {
+              "number": 23,
+              "prompt": "It is likely that the red pigments help to protect the leaf from freezing temperatures.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "because the idea behind this hypothesis is that the red pigment is made in autumn leaves to protect chlorophyll, the light-absorbing chemical, from too much light.",
+              "explanationThai": "ข้อความในข้อว่า \"It is likely that the red pigments help to protect the leaf from freezing temperatures.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"because the idea behind this hypothesis is that the red pigment is made in autumn leaves to pro…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "likely pigments protect = because behind hypothesis pigment = FALSE"
+            },
+            {
+              "number": 24,
+              "prompt": "The 'light screen' hypothesis would initially seem to contradict what is known about chlorophyll.",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "It sounds paradoxical",
+              "explanationThai": "ข้อความในข้อว่า \"The 'light screen' hypothesis would initially seem to contradict what is known about chlorophyll.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"It sounds paradoxical\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "'light screen' hypothesis = sounds paradoxical = TRUE"
+            },
+            {
+              "number": 25,
+              "prompt": "Leaves which turn colours other than red are more likely to be damaged by sunlight.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "true-false-not-given",
+              "exactPortion": "What is still not fully understood, however, is why some trees resort to producing red pigments while others don’t bother, and simply reveal their orange or yellow hues.",
+              "explanationThai": "ข้อความในข้อว่า \"Leaves which turn colours other than red are more likely to be damaged by sunlight.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"What is still not fully understood, however, is why some trees resort to producing red pigments…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "likely damaged sunlight = understood however resort producing = NOT GIVEN"
+            },
+            {
+              "number": 26,
+              "prompt": "For which of the following questions does the writer offer an explanation?",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "As chlorophyll is depleted, other colours that have been dominated by it throughout the summer begin to be revealed.",
+              "explanationThai": "คำถาม: \"For which of the following questions does the writer offer an explanation?\" หลักฐานในบทความคือ \"As chlorophyll is depleted, other colours that have been dominated by it throughout the summer …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "explanation = chlorophyll depleted colours dominated = B"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test3-passage3",
+    "title": "Cambridge 10 Test 3 Passage 3 - Beyond the blue horizon",
+    "category": "advanced",
+    "rawPassageText": "READING PASSAGE 3\nBeyond the blue horizon\n\nAncient voyagers who settled the far-flung islands of the Pacific Ocean\n\nAn important archaeological discovery on the island of Efate in the Pacific archipelago of Vanuatu has revealed traces of an ancient seafaring people, the distant ancestors of today's Polynesians. The site came to light only by chance. An agricultural worker, digging in the grounds of a derelict plantation, scraped open a grave – the first of dozens in a burial ground some 3,000 years old. It is the oldest cemetery ever found in the Pacific islands, and it harbors the remains of an ancient people archaeologists call the Lapita.\n\nThey were daring blue-water adventurers who used basic canoes to rove across the ocean. But they were not just explorers. They were also pioneers who carried with them everything they would need to build new lives – their livestock, taro seedlings and stone tools. Within the span of several centuries, the Lapita stretched the boundaries of their world from the jungle-clad volcanoes of Papua New Guinea to the loneliest coral outliers of Tonga.\n\nThe Lapita left precious few clues about themselves, but Efate expands the volume of data available to researchers dramatically. The remains of 62 individuals have been uncovered so far, and archaeologists were also thrilled to find six complete Lapita pots. Other items included a Lapita burial urn with modeled birds arranged on the rim as though peering down at the human remains sealed inside. 'It's an important discovery,' says Matthew Spriggs, professor of archaeology at the Australian National University and head of the international team digging up the site, 'for it conclusively identifies the remains as Lapita.'\n\nDNA teased from these human remains may help answer one of the most puzzling questions in Pacific anthropology: did all Pacific islanders spring from one source or many? Was there only one outward migration from a single point in Asia, or several from different points? 'This represents the best opportunity we've had yet,' says Spriggs, 'to find out who the Lapita actually were, where they came from, and who their closest descendants are today.'\n\nThere is one stubborn question for which archaeology has yet to provide any answers: how did the Lapita accomplish the ancient equivalent of a moon landing, many times over? No-one has found one of their canoes or any rigging, which could reveal how the canoes were sailed. Nor do the oral histories and traditions of later Polynesians offer any insights, for they turn into myths long before they reach as far back in time as the Lapita.\n\n'All we can say for certain is that the Lapita had canoes that were capable of ocean voyages, and they had the ability to sail them,' says Geoff Irwin, a professor of archaeology at the University of Auckland. Those sailing skills, he says, were developed and passed down over thousands of years by earlier mariners who worked their way through the archipelagoes of the western Pacific, making short crossings to nearby islands. The real adventure didn't begin, however, until their Lapita descendants sailed out of sight of land, with empty horizons on every side. This must have been as difficult for them as landing on the moon is for us today. Certainly it distinguished them from their ancestors, but what gave them the courage to launch out on such risky voyages?\n\nThe Lapita's thrust into the Pacific was eastward, against the prevailing trade winds, Irwin notes. Those nagging headwinds, he argues, may have been the key to their success. 'They could sail out for days into the unknown and assess the area, secure in the knowledge that if they didn't find anything, they could turn about and catch a swift ride back on the trade winds. This is what would have made the whole thing work.' Once out there, skilled seafarers would have detected abundant leads to follow to land: seabirds, coconuts and twigs carried out to sea by the tides, and the afternoon pile-up of clouds on the horizon which often indicates an island in the distance.\n\nFor returning explorers, successful or not, the geography of their own archipelagoes would have provided a safety net. Without this to go by, overshooting their home ports, getting lost and sailing off into eternity would have been all too easy. Vanuatu, for example, stretches more than 500 miles in a northwest-southeast trend, its scores of intervisible islands forming a backstop for mariners riding the trade winds home.\n\nAll this presupposes one essential detail, says Atholl Anderson, professor of prehistory at the Australian National University: the Lapita had mastered the advanced art of sailing against the wind. 'And there's no proof they could do any such thing,' Anderson says. 'There has been this assumption they did, and people have built canoes to re-create those early voyages based on that assumption. But nobody has any idea what their canoes looked like or how they were rigged.'\n\nRather than give all the credit to human skill, Anderson invokes the winds of chance. El Nino, the same climate disruption that affects the Pacific today, may have helped scatter the Lapita, Anderson suggests. He points out that climate data obtained from slow-growing corals around the Pacific indicate a series of unusually frequent El Ninos around the time of the Lapita expansion. By reversing the regular east-to-west flow of the trade winds for weeks at a time, these super El Ninos might have taken the Lapita on long unplanned voyages.\n\nHowever they did it, the Lapita spread themselves a third of the way across the Pacific, then called it quits for reasons known only to them. Ahead lay the vast emptiness of the central Pacific and perhaps they were too thinly stretched to venture farther. They probably never numbered more than a few thousand in total, and in their rapid migration eastward they encountered hundreds of islands – more than 300 in Fiji alone.\n\n                        \n                    \n                    \n                    \n                                                    <form id =\"\n\nQuestions 27-40\n\n27. Drop answer here … on the Pacific island of Efate. The cemetery, which is\n\n28. Drop answer here … , was uncovered accidentally by an agricultural worker. The Lapita explored and colonised many Pacific islands over several centuries. They took many things with them on their voyages including\n\n29. Drop answer here … and tools. The burial ground increases the amount of information about the Lapita available to scientists.\n\n30. Drop answer here … which was found at the site is very important since it confirms that the\n\n31. Drop answer here … found inside are Lapita. Drag and drop an option to fill in each blank. A. proof B. plantation C. harbour D. bones E. data F. archaeological discovery G. burial urn H. source I. animals J. maps Questions 32-35 Choose the correct letter\n\n32. According to the writer, there are difficulties explaining how the Lapita accomplished their journeys because\n\n33. According to the sixth paragraph, what was extraordinary about the Lapita?\n\n34. What does 'This' refer to in the seventh paragraph?\n\n35. According to the eighth paragraph, how was the geography of the region significant?\n\n36. It is now clear that the Lapita could sail into\n\n37. Extreme climate conditions may have played\n\n38. The Lapita learnt to predict the duration of El Ninos.\n\n39. It remains unclear why the Lapita halted their expansion across the Pacific.\n\n40. It is likely that the majority of Lapita settled on Fiji.",
+    "rawAnswerKey": "READING PASSAGE 3: Beyond the blue horizon\n\nQuestion 27: Drop answer here … on the Pacific island of Efate. The cemetery, which is\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"An agricultural worker, digging in the grounds of a derelict plantation, scraped open a grave\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … on the Pacific island of Efate. The cemetery, which is\" หลักฐานในบทความคือ \"An agricultural worker, digging in the grounds of a derelict plantation, scraped open a grave\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: pacific island efate = agricultural worker digging grounds = B\n\nQuestion 28: Drop answer here … , was uncovered accidentally by an agricultural worker. The Lapita explored and colonised many Pacific islands over several centuries. They took many things with them on their voyages including\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"An important archaeological discovery on the island of Efate in the Pacific archipelago of Vanuatu has revealed traces of an ancient seafaring people\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … , was uncovered accidentally by an agricultural worker. The Lapita explored and colonised many Pacific islands …\" หลักฐานในบทความคือ \"An important archaeological discovery on the island of Efate in the Pacific archipelago of Vanu…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F\n\nParaphrased Vocabulary: agricultural worker lapita = important archaeological discovery island = F\n\nQuestion 29: Drop answer here … and tools. The burial ground increases the amount of information about the Lapita available to scientists.\n\nCorrect Answer: I\n\nAccepted Answers: I\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"They were also pioneers who carried with them everything they would need to build new lives – their livestock, taro seedlings and stone tools.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Drop answer here … and tools. The burial ground increases the amount of information about the Lapita available to scientists.\" ตรงกับรายการ i ในบทความ เพราะบทความระบุว่า \"They were also pioneers who carried with them everything they would need to build new lives – t…\" จึงตอบ I\n\nParaphrased Vocabulary: available scientists = pioneers carried everything livestock = I\n\nQuestion 30: Drop answer here … which was found at the site is very important since it confirms that the\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"Other items included a Lapita burial urn with modeled birds arranged on the rim as though peering down at the human remains sealed inside.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … which was found at the site is very important since it confirms that the\" หลักฐานในบทความคือ \"Other items included a Lapita burial urn with modeled birds arranged on the rim as though peeri…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G\n\nParaphrased Vocabulary: found important since = included lapita burial modeled = G\n\nQuestion 31: Drop answer here … found inside are Lapita. Drag and drop an option to fill in each blank. A. proof B. plantation C. harbour D. bones E. data F. archaeological discovery G. burial urn H. source I. animals J. maps Questions 32-35 Choose the correct letter\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"for it conclusively identifies the remains as Lapita.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … found inside are Lapita. Drag and drop an option to fill in each blank. A. proof B. plantation C. harbour D. bo…\" หลักฐานในบทความคือ \"for it conclusively identifies the remains as Lapita.\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: option fill blank = conclusively identifies remains lapita = D\n\nQuestion 32: According to the writer, there are difficulties explaining how the Lapita accomplished their journeys because\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"No-one has found one of their canoes or any rigging, which could reveal how the canoes were sailed. Nor do the oral histories and traditions of later Polynesians offer any insights, for they turn into myths long before they reach as far back in time as the Lapita.\"\n\nShort Thai Explanation: คำถาม: \"According to the writer, there are difficulties explaining how the Lapita accomplished their journeys because\" หลักฐานในบทความคือ \"No-one has found one of their canoes or any rigging, which could reveal how the canoes were sai…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: accomplished journeys because = no-one canoes rigging reveal = C\n\nQuestion 33: According to the sixth paragraph, what was extraordinary about the Lapita?\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"The real adventure didn’t begin, however, until their Lapita descendants sailed out of sight of land, with empty horizons on every side. This must have been as difficult for them as landing on the moon is for us today.\"\n\nShort Thai Explanation: ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (According to the sixth paragraph, what was extraordinary about the Lapita?) โดยเฉพาะประโยค \"The real adventure didn’t begin, however, until their Lapita descendants sailed out of sight of…\" จึงเลือก A\n\nParaphrased Vocabulary: according sixth extraordinary = adventure however lapita descendants = A\n\nQuestion 34: What does 'This' refer to in the seventh paragraph?\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"This is what would have made the whole thing work.\"\n\nShort Thai Explanation: ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What does 'This' refer to in the seventh paragraph?) โดยเฉพาะประโยค \"This is what would have made the whole thing work.\" จึงเลือก D\n\nParaphrased Vocabulary: What does 'This' refer to in the seventh paragraph… = This is what would have made the whole thing work. = D\n\nQuestion 35: According to the eighth paragraph, how was the geography of the region significant?\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"For returning explorers, successful or not, the geography of their own archipelagoes would have provided a safety net.\"\n\nShort Thai Explanation: ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (According to the eighth paragraph, how was the geography of the region significant?) โดยเฉพาะประโยค \"For returning explorers, successful or not, the geography of their own archipelagoes would have…\" จึงเลือก C\n\nParaphrased Vocabulary: according eighth geography = returning explorers successful geography = C\n\nQuestion 36: It is now clear that the Lapita could sail into\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"the Lapita had mastered the advanced art of sailing against the wind. ‘And there’s no proof they could do any such thing,’ Anderson says.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"It is now clear that the Lapita could sail into\" โดยเฉพาะจากข้อความ \"the Lapita had mastered the advanced art of sailing against the wind. ‘And there’s no proof the…\" จึงตอบ NO\n\nParaphrased Vocabulary: sail = lapita mastered advanced sailing = NO\n\nQuestion 37: Extreme climate conditions may have played\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"El Nino, the same climate disruption that affects the Pacific today, may have helped scatter the Lapita, Anderson suggests.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Extreme climate conditions may have played\" โดยเฉพาะจากข้อความ \"El Nino, the same climate disruption that affects the Pacific today, may have helped scatter th…\" จึงตอบ YES\n\nParaphrased Vocabulary: extreme climate conditions = climate disruption affects pacific = YES\n\nQuestion 38: The Lapita learnt to predict the duration of El Ninos.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"By reversing the regular east-to-west flow of the trade winds for weeks at a time, these super El Ninos might have taken the Lapita on long unplanned voyages.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The Lapita learnt to predict the duration of El Ninos.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"By reversing the regular east-to-west flow of the trade winds for weeks at a time, these super …\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: learnt predict duration = reversing regular east-to-west lapita = NOT GIVEN\n\nQuestion 39: It remains unclear why the Lapita halted their expansion across the Pacific.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"However they did it, the Lapita spread themselves a third of the way across the Pacific, then called it quits for reasons known only to them.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"It remains unclear why the Lapita halted their expansion across the Pacific.\" โดยเฉพาะจากข้อความ \"However they did it, the Lapita spread themselves a third of the way across the Pacific, then c…\" จึงตอบ YES\n\nParaphrased Vocabulary: halted expansion across = however lapita spread themselves = YES\n\nQuestion 40: It is likely that the majority of Lapita settled on Fiji.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 3 Passage 3\n\nExact Portion: \"They probably never numbered more than a few thousand in total, and in their rapid migration eastward they encountered hundreds of islands – more than 300 in Fiji alone.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"It is likely that the majority of Lapita settled on Fiji.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"They probably never numbered more than a few thousand in total, and in their rapid migration ea…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: settled fiji = probably numbered thousand migration = NOT GIVEN",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 3 Passage 3 - Beyond the blue horizon",
+      "category": "advanced",
+      "passages": [
+        {
+          "number": 3,
+          "title": "Beyond the blue horizon",
+          "bodyParagraphs": [
+            "Ancient voyagers who settled the far-flung islands of the Pacific Ocean",
+            "An important archaeological discovery on the island of Efate in the Pacific archipelago of Vanuatu has revealed traces of an ancient seafaring people, the distant ancestors of today's Polynesians. The site came to light only by chance. An agricultural worker, digging in the grounds of a derelict plantation, scraped open a grave – the first of dozens in a burial ground some 3,000 years old. It is the oldest cemetery ever found in the Pacific islands, and it harbors the remains of an ancient people archaeologists call the Lapita.",
+            "They were daring blue-water adventurers who used basic canoes to rove across the ocean. But they were not just explorers. They were also pioneers who carried with them everything they would need to build new lives – their livestock, taro seedlings and stone tools. Within the span of several centuries, the Lapita stretched the boundaries of their world from the jungle-clad volcanoes of Papua New Guinea to the loneliest coral outliers of Tonga.",
+            "The Lapita left precious few clues about themselves, but Efate expands the volume of data available to researchers dramatically. The remains of 62 individuals have been uncovered so far, and archaeologists were also thrilled to find six complete Lapita pots. Other items included a Lapita burial urn with modeled birds arranged on the rim as though peering down at the human remains sealed inside. 'It's an important discovery,' says Matthew Spriggs, professor of archaeology at the Australian National University and head of the international team digging up the site, 'for it conclusively identifies the remains as Lapita.'",
+            "DNA teased from these human remains may help answer one of the most puzzling questions in Pacific anthropology: did all Pacific islanders spring from one source or many? Was there only one outward migration from a single point in Asia, or several from different points? 'This represents the best opportunity we've had yet,' says Spriggs, 'to find out who the Lapita actually were, where they came from, and who their closest descendants are today.'",
+            "There is one stubborn question for which archaeology has yet to provide any answers: how did the Lapita accomplish the ancient equivalent of a moon landing, many times over? No-one has found one of their canoes or any rigging, which could reveal how the canoes were sailed. Nor do the oral histories and traditions of later Polynesians offer any insights, for they turn into myths long before they reach as far back in time as the Lapita.",
+            "'All we can say for certain is that the Lapita had canoes that were capable of ocean voyages, and they had the ability to sail them,' says Geoff Irwin, a professor of archaeology at the University of Auckland. Those sailing skills, he says, were developed and passed down over thousands of years by earlier mariners who worked their way through the archipelagoes of the western Pacific, making short crossings to nearby islands. The real adventure didn't begin, however, until their Lapita descendants sailed out of sight of land, with empty horizons on every side. This must have been as difficult for them as landing on the moon is for us today. Certainly it distinguished them from their ancestors, but what gave them the courage to launch out on such risky voyages?",
+            "The Lapita's thrust into the Pacific was eastward, against the prevailing trade winds, Irwin notes. Those nagging headwinds, he argues, may have been the key to their success. 'They could sail out for days into the unknown and assess the area, secure in the knowledge that if they didn't find anything, they could turn about and catch a swift ride back on the trade winds. This is what would have made the whole thing work.' Once out there, skilled seafarers would have detected abundant leads to follow to land: seabirds, coconuts and twigs carried out to sea by the tides, and the afternoon pile-up of clouds on the horizon which often indicates an island in the distance.",
+            "For returning explorers, successful or not, the geography of their own archipelagoes would have provided a safety net. Without this to go by, overshooting their home ports, getting lost and sailing off into eternity would have been all too easy. Vanuatu, for example, stretches more than 500 miles in a northwest-southeast trend, its scores of intervisible islands forming a backstop for mariners riding the trade winds home.",
+            "All this presupposes one essential detail, says Atholl Anderson, professor of prehistory at the Australian National University: the Lapita had mastered the advanced art of sailing against the wind. 'And there's no proof they could do any such thing,' Anderson says. 'There has been this assumption they did, and people have built canoes to re-create those early voyages based on that assumption. But nobody has any idea what their canoes looked like or how they were rigged.'",
+            "Rather than give all the credit to human skill, Anderson invokes the winds of chance. El Nino, the same climate disruption that affects the Pacific today, may have helped scatter the Lapita, Anderson suggests. He points out that climate data obtained from slow-growing corals around the Pacific indicate a series of unusually frequent El Ninos around the time of the Lapita expansion. By reversing the regular east-to-west flow of the trade winds for weeks at a time, these super El Ninos might have taken the Lapita on long unplanned voyages.",
+            "However they did it, the Lapita spread themselves a third of the way across the Pacific, then called it quits for reasons known only to them. Ahead lay the vast emptiness of the central Pacific and perhaps they were too thinly stretched to venture farther. They probably never numbered more than a few thousand in total, and in their rapid migration eastward they encountered hundreds of islands – more than 300 in Fiji alone."
+          ],
+          "questionSectionText": "Questions 27-40\n27. on the Pacific island of Efate. The cemetery, which is\n28. , was uncovered accidentally by an agricultural worker. The Lapita explored and colonised many Pacific islands over several centuries. They took many things with them on their voyages including\n29. and tools. The burial ground increases the amount of information about the Lapita available to scientists.\n30. which was found at the site is very important since it confirms that the\n31. found inside are Lapita.\n32. According to the writer, there are difficulties explaining how the Lapita accomplished their journeys because\n33. According to the sixth paragraph, what was extraordinary about the Lapita?\n34. What does 'This' refer to in the seventh paragraph?\n35. According to the eighth paragraph, how was the geography of the region significant?\n36. It is now clear that the Lapita could sail into\n37. Extreme climate conditions may have played\n38. The Lapita learnt to predict the duration of El Ninos.\n39. It remains unclear why the Lapita halted their expansion across the Pacific.\n40. It is likely that the majority of Lapita settled on Fiji.",
+          "questionRanges": [
+            {
+              "start": 27,
+              "end": 40
+            }
+          ],
+          "questions": [
+            {
+              "number": 27,
+              "prompt": "on the Pacific island of Efate. The cemetery, which is",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "An agricultural worker, digging in the grounds of a derelict plantation, scraped open a grave",
+              "explanationThai": "คำถาม: \"Drop answer here … on the Pacific island of Efate. The cemetery, which is\" หลักฐานในบทความคือ \"An agricultural worker, digging in the grounds of a derelict plantation, scraped open a grave\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "pacific island efate = agricultural worker digging grounds = B"
+            },
+            {
+              "number": 28,
+              "prompt": ", was uncovered accidentally by an agricultural worker. The Lapita explored and colonised many Pacific islands over several centuries. They took many things with them on their voyages including",
+              "correctAnswer": "F",
+              "acceptedAnswers": [
+                "F"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "An important archaeological discovery on the island of Efate in the Pacific archipelago of Vanuatu has revealed traces of an ancient seafaring people",
+              "explanationThai": "คำถาม: \"Drop answer here … , was uncovered accidentally by an agricultural worker. The Lapita explored and colonised many Pacific islands …\" หลักฐานในบทความคือ \"An important archaeological discovery on the island of Efate in the Pacific archipelago of Vanu…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "agricultural worker lapita = important archaeological discovery island = F"
+            },
+            {
+              "number": 29,
+              "prompt": "and tools. The burial ground increases the amount of information about the Lapita available to scientists.",
+              "correctAnswer": "i",
+              "acceptedAnswers": [
+                "i"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "They were also pioneers who carried with them everything they would need to build new lives – their livestock, taro seedlings and stone tools.",
+              "explanationThai": "ข้อความในข้อว่า \"Drop answer here … and tools. The burial ground increases the amount of information about the Lapita available to scientists.\" ตรงกับรายการ i ในบทความ เพราะบทความระบุว่า \"They were also pioneers who carried with them everything they would need to build new lives – t…\" จึงตอบ I",
+              "paraphrasedVocabulary": "available scientists = pioneers carried everything livestock = I"
+            },
+            {
+              "number": 30,
+              "prompt": "which was found at the site is very important since it confirms that the",
+              "correctAnswer": "G",
+              "acceptedAnswers": [
+                "G"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Other items included a Lapita burial urn with modeled birds arranged on the rim as though peering down at the human remains sealed inside.",
+              "explanationThai": "คำถาม: \"Drop answer here … which was found at the site is very important since it confirms that the\" หลักฐานในบทความคือ \"Other items included a Lapita burial urn with modeled birds arranged on the rim as though peeri…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "found important since = included lapita burial modeled = G"
+            },
+            {
+              "number": 31,
+              "prompt": "found inside are Lapita.",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "for it conclusively identifies the remains as Lapita.",
+              "explanationThai": "คำถาม: \"Drop answer here … found inside are Lapita. Drag and drop an option to fill in each blank. A. proof B. plantation C. harbour D. bo…\" หลักฐานในบทความคือ \"for it conclusively identifies the remains as Lapita.\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "option fill blank = conclusively identifies remains lapita = D"
+            },
+            {
+              "number": 32,
+              "prompt": "According to the writer, there are difficulties explaining how the Lapita accomplished their journeys because",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "No-one has found one of their canoes or any rigging, which could reveal how the canoes were sailed. Nor do the oral histories and traditions of later Polynesians offer any insights, for they turn into myths long before they reach as far back in time as the Lapita.",
+              "explanationThai": "คำถาม: \"According to the writer, there are difficulties explaining how the Lapita accomplished their journeys because\" หลักฐานในบทความคือ \"No-one has found one of their canoes or any rigging, which could reveal how the canoes were sai…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "accomplished journeys because = no-one canoes rigging reveal = C"
+            },
+            {
+              "number": 33,
+              "prompt": "According to the sixth paragraph, what was extraordinary about the Lapita?",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "The real adventure didn’t begin, however, until their Lapita descendants sailed out of sight of land, with empty horizons on every side. This must have been as difficult for them as landing on the moon is for us today.",
+              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (According to the sixth paragraph, what was extraordinary about the Lapita?) โดยเฉพาะประโยค \"The real adventure didn’t begin, however, until their Lapita descendants sailed out of sight of…\" จึงเลือก A",
+              "paraphrasedVocabulary": "according sixth extraordinary = adventure however lapita descendants = A"
+            },
+            {
+              "number": 34,
+              "prompt": "What does 'This' refer to in the seventh paragraph?",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "This is what would have made the whole thing work.",
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What does 'This' refer to in the seventh paragraph?) โดยเฉพาะประโยค \"This is what would have made the whole thing work.\" จึงเลือก D",
+              "paraphrasedVocabulary": "What does 'This' refer to in the seventh paragraph… = This is what would have made the whole thing work. = D"
+            },
+            {
+              "number": 35,
+              "prompt": "According to the eighth paragraph, how was the geography of the region significant?",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "For returning explorers, successful or not, the geography of their own archipelagoes would have provided a safety net.",
+              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (According to the eighth paragraph, how was the geography of the region significant?) โดยเฉพาะประโยค \"For returning explorers, successful or not, the geography of their own archipelagoes would have…\" จึงเลือก C",
+              "paraphrasedVocabulary": "according eighth geography = returning explorers successful geography = C"
+            },
+            {
+              "number": 36,
+              "prompt": "It is now clear that the Lapita could sail into",
+              "correctAnswer": "NO",
+              "acceptedAnswers": [
+                "NO"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "the Lapita had mastered the advanced art of sailing against the wind. ‘And there’s no proof they could do any such thing,’ Anderson says.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"It is now clear that the Lapita could sail into\" โดยเฉพาะจากข้อความ \"the Lapita had mastered the advanced art of sailing against the wind. ‘And there’s no proof the…\" จึงตอบ NO",
+              "paraphrasedVocabulary": "sail = lapita mastered advanced sailing = NO"
+            },
+            {
+              "number": 37,
+              "prompt": "Extreme climate conditions may have played",
+              "correctAnswer": "YES",
+              "acceptedAnswers": [
+                "YES"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "El Nino, the same climate disruption that affects the Pacific today, may have helped scatter the Lapita, Anderson suggests.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Extreme climate conditions may have played\" โดยเฉพาะจากข้อความ \"El Nino, the same climate disruption that affects the Pacific today, may have helped scatter th…\" จึงตอบ YES",
+              "paraphrasedVocabulary": "extreme climate conditions = climate disruption affects pacific = YES"
+            },
+            {
+              "number": 38,
+              "prompt": "The Lapita learnt to predict the duration of El Ninos.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "true-false-not-given",
+              "exactPortion": "By reversing the regular east-to-west flow of the trade winds for weeks at a time, these super El Ninos might have taken the Lapita on long unplanned voyages.",
+              "explanationThai": "ข้อความในข้อว่า \"The Lapita learnt to predict the duration of El Ninos.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"By reversing the regular east-to-west flow of the trade winds for weeks at a time, these super …\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "learnt predict duration = reversing regular east-to-west lapita = NOT GIVEN"
+            },
+            {
+              "number": 39,
+              "prompt": "It remains unclear why the Lapita halted their expansion across the Pacific.",
+              "correctAnswer": "YES",
+              "acceptedAnswers": [
+                "YES"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "However they did it, the Lapita spread themselves a third of the way across the Pacific, then called it quits for reasons known only to them.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"It remains unclear why the Lapita halted their expansion across the Pacific.\" โดยเฉพาะจากข้อความ \"However they did it, the Lapita spread themselves a third of the way across the Pacific, then c…\" จึงตอบ YES",
+              "paraphrasedVocabulary": "halted expansion across = however lapita spread themselves = YES"
+            },
+            {
+              "number": 40,
+              "prompt": "It is likely that the majority of Lapita settled on Fiji.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 3 Passage 3",
+              "answerType": "true-false-not-given",
+              "exactPortion": "They probably never numbered more than a few thousand in total, and in their rapid migration eastward they encountered hundreds of islands – more than 300 in Fiji alone.",
+              "explanationThai": "ข้อความในข้อว่า \"It is likely that the majority of Lapita settled on Fiji.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"They probably never numbered more than a few thousand in total, and in their rapid migration ea…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "settled fiji = probably numbered thousand migration = NOT GIVEN"
+            }
+          ]
+        }
+      ],
+      "questionCount": 14
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test4-passage1",
+    "title": "Cambridge 10 Test 4 Passage 1 - The megafires of California",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 1\nThe megafires of California\n\nDrought, housing expansion, and oversupply of tinder make for bigger, hotter fires in the western United States\n\nWildfires are becoming an increasing menace in the western United States, with Southern California being the hardest hit area. There's a reason fire squads battling more frequent blazes in Southern California are having such difficulty containing the flames, despite better preparedness than ever and decades of experience fighting fires fanned by the 'Santa Ana Winds'. The wildfires themselves, experts say, are generally hotter, faster, and spread more erratically than in the past.\n\nMegafires, also called 'siege fires', are the increasingly frequent blazes that burn 500,000 acres or more – 10 times the size of the average forest fire of 20 years ago. Some recent wildfires are among the biggest ever in California in terms of acreage burned, according to state figures and news reports.\n\nOne explanation for the trend to more superhot fires is that the region, which usually has dry summers, has had significantly below normal precipitation in many recent years. Another reason, experts say, is related to the century- long policy of the US Forest Service to stop wildfires as quickly as possible. The unintentional consequence has been to halt the natural eradication of underbrush, now the primary fuel for megafires.\n\nThree other factors contribute to the trend, they add. First is climate change, marked by a 1-degree Fahrenheit rise in average yearly temperature across the western states. Second is fire seasons that on average are 78 days longer than they were 20 years ago. Third is increased construction of homes in wooded areas.\n\n'We are increasingly building our homes in fire-prone ecosystems,' says Dominik Kulakowski, adjunct professor of biology at Clark University Graduate School of Geography in Worcester, Massachusetts. 'Doing that in many of the forests of the western US is like building homes on the side of an active volcano.'\n\nIn California, where population growth has averaged more than 600,000 a year for at least a decade, more residential housing is being built. 'What once was open space is now residential homes providing fuel to make fires burn with greater intensity,' says Terry McHale of the California Department of Forestry firefighters' union. 'With so much dryness, so many communities to catch fire, so many fronts to fight, it becomes an almost incredible job.'\n\nThat said, many experts give California high marks for making progress on preparedness in recent years, after some of the largest fires in state history scorched thousands of acres, burned thousands of homes, and killed numerous people. Stung in the past by criticism of bungling that allowed fires to spread when they might have been contained, personnel are meeting the peculiar challenges of neighborhood – and canyon- hopping fires better than previously, observers say.\n\nState promises to provide more up-to-date engines, planes, and helicopters to fight fires have been fulfilled. Firefighters' unions that in the past complained of dilapidated equipment, old fire engines, and insufficient blueprints for fire safety are now praising the state's commitment, noting that funding for firefighting has increased, despite huge cuts in many other programs. 'We are pleased that the current state administration has been very proactive in its support of us, and [has] come through with budgetary support of the infrastructure needs we have long sought,' says Mr. McHale of the firefighters' union.\n\nBesides providing money to upgrade the fire engines that must traverse the mammoth state and wind along serpentine canyon roads, the state has invested in better command-and-control facilities as well as in the strategies to run them. 'In the fire sieges of earlier years, we found that other jurisdictions and states were willing to offer mutual-aid help, but we were not able to communicate adequately with them,' says Kim Zagaris, chief of the state's Office of Emergency Services Fire and Rescue Branch.\n\nAfter a commission examined and revamped communications procedures, the statewide response 'has become far more professional and responsive,' he says. There is a sense among both government officials and residents that the speed, dedication, and coordination of firefighters from several states and jurisdictions are resulting in greater efficiency than in past 'siege fire' situations.\n\nIn recent years, the Southern California region has improved building codes, evacuation procedures, and procurement of new technology. 'I am extraordinarily impressed by the improvements we have witnessed,' says Randy Jacobs, a Southern California- based lawyer who has had to evacuate both his home and business to escape wildfires. 'Notwithstanding all the damage that will continue to be caused by wildfires, we will no longer suffer the loss of life endured in the past because of the fire prevention and firefighting measures that have been put in place,' he says.\n\n<div\n\nQuestions 1-13\n\n1. movement: …  … more unpredictably\n\n2. size of fires: …  … greater on average than two decades ago\n\n3. rainfall: …  … average\n\n4. more brush to act as …  …\n\n5. extended fire …  …\n\n6. more building of …  … in vulnerable places\n\n7. The amount of open space in California has diminished over the last ten years.\n\n8. Many experts believe California has made little progress in readying itself to fight fires.\n\n9. Personnel in the past have been criticised for mishandling fire containment.\n\n10. California has replaced\n\n11. More firefighters have been hired to improve fire-fighting capacity.\n\n12. Citizens and government groups disapprove of the efforts of different states and agencies working together.\n\n13. Randy Jacobs believes that loss of life from fires will continue at the same levels, despite changes made.",
+    "rawAnswerKey": "READING PASSAGE 1: The megafires of California\n\nQuestion 1: movement: …  … more unpredictably\n\nCorrect Answer: spread\n\nAccepted Answers: spread\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"The wildfires themselves, experts say, are generally hotter, faster, and spread more erratically than in the past.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"movement: … … more unpredictably\" บทความมีถ้อยคำที่ตรงกันคือ \"The wildfires themselves, experts say, are generally hotter, faster, and spread more erraticall…\" จึงคำตอบคือ \"spread\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: movement unpredictably = wildfires themselves experts generally = spread\n\nQuestion 2: size of fires: …  … greater on average than two decades ago\n\nCorrect Answer: 10 times\n\nAccepted Answers: 10|10 times|ten times\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"10 times the size of the average forest fire of 20 years ago.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"size of fires: … … greater on average than two decades ago\" บทความมีถ้อยคำที่ตรงกันคือ \"10 times the size of the average forest fire of 20 years ago.\" จึงคำตอบคือ \"10 times\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: decades = average forest = 10 times\n\nQuestion 3: rainfall: …  … average\n\nCorrect Answer: below\n\nAccepted Answers: below\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"has had significantly below normal precipitation in many recent years.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"rainfall: … … average\" บทความมีถ้อยคำที่ตรงกันคือ \"has had significantly below normal precipitation in many recent years.\" จึงคำตอบคือ \"below\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: rainfall average = significantly normal precipitation recent = below\n\nQuestion 4: more brush to act as …  …\n\nCorrect Answer: fuel\n\nAccepted Answers: fuel\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"halt the natural eradication of underbrush, now the primary fuel for megafires.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"more brush to act as … …\" บทความมีถ้อยคำที่ตรงกันคือ \"halt the natural eradication of underbrush, now the primary fuel for megafires.\" จึงคำตอบคือ \"fuel\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: brush = natural eradication underbrush primary = fuel\n\nQuestion 5: extended fire …  …\n\nCorrect Answer: seasons\n\nAccepted Answers: seasons\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"Second is fire seasons that on average are 78 days longer than they were 20 years ago.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"extended fire … …\" บทความมีถ้อยคำที่ตรงกันคือ \"Second is fire seasons that on average are 78 days longer than they were 20 years ago.\" จึงคำตอบคือ \"seasons\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: extended = second average longer = seasons\n\nQuestion 6: more building of …  … in vulnerable places\n\nCorrect Answer: housing\n\nAccepted Answers: homes|housing\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"We are increasingly building our homes in fire-prone ecosystems\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"more building of … … in vulnerable places\" บทความมีถ้อยคำที่ตรงกันคือ \"We are increasingly building our homes in fire-prone ecosystems\" จึงคำตอบคือ \"housing\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: building vulnerable places = increasingly building fire-prone ecosystems = housing\n\nQuestion 7: The amount of open space in California has diminished over the last ten years.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"What once was open space is now residential homes providing fuel to make fires burn with greater intensity\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The amount of open space in California has diminished over the last ten years.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"What once was open space is now residential homes providing fuel to make fires burn with greate…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: diminished last years = residential providing greater intensity = TRUE\n\nQuestion 8: Many experts believe California has made little progress in readying itself to fight fires.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"That said, many experts give California high marks for making progress on preparedness in recent years\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Many experts believe California has made little progress in readying itself to fight fires.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"That said, many experts give California high marks for making progress on preparedness in recen…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: little progress readying = experts california making progress = FALSE\n\nQuestion 9: Personnel in the past have been criticised for mishandling fire containment.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"Stung in the past by criticism of bungling that allowed fires to spread when they might have been contained, personnel are meeting the peculiar challenges of neighborhood\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Personnel in the past have been criticised for mishandling fire containment.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Stung in the past by criticism of bungling that allowed fires to spread when they might have be…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: personnel criticised mishandling = criticism bungling allowed spread = TRUE\n\nQuestion 10: California has replaced\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"State promises to provide more up-to-date engines, planes, and helicopters to fight fires have been fulfilled.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"California has replaced\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"State promises to provide more up-to-date engines, planes, and helicopters to fight fires have …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: replaced = promises provide up-to-date engines = TRUE\n\nQuestion 11: More firefighters have been hired to improve fire-fighting capacity.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"Besides providing money to upgrade the fire engines that must traverse the mammoth state and wind along serpentine canyon roads, the state has invested in better command-and-control facilities as well as in the strategies to run them.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"More firefighters have been hired to improve fire-fighting capacity.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Besides providing money to upgrade the fire engines that must traverse the mammoth state and wi…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: firefighters hired improve = besides providing upgrade engines = NOT GIVEN\n\nQuestion 12: Citizens and government groups disapprove of the efforts of different states and agencies working together.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"There is a sense among both government officials and residents that the speed, dedication, and coordination of firefighters from several states and jurisdictions are resulting in greater efficiency than in past ‘siege fire’ situations.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Citizens and government groups disapprove of the efforts of different states and agencies working together.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"There is a sense among both government officials and residents that the speed, dedication, and …\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: citizens government groups = government officials residents dedication = FALSE\n\nQuestion 13: Randy Jacobs believes that loss of life from fires will continue at the same levels, despite changes made.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 10 Test 4 Passage 1\n\nExact Portion: \"Notwithstanding all the damage that will continue to be caused by wildfires, we will no longer suffer the loss of life endured in the past because of the fire prevention and firefighting measures that have been put in place,’ he says.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Randy Jacobs believes that loss of life from fires will continue at the same levels, despite changes made.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Notwithstanding all the damage that will continue to be caused by wildfires, we will no longer …\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: randy jacobs believes = notwithstanding damage continue caused = FALSE",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 4 Passage 1 - The megafires of California",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 1,
+          "title": "The megafires of California",
+          "bodyParagraphs": [
+            "Drought, housing expansion, and oversupply of tinder make for bigger, hotter fires in the western United States",
+            "Wildfires are becoming an increasing menace in the western United States, with Southern California being the hardest hit area. There's a reason fire squads battling more frequent blazes in Southern California are having such difficulty containing the flames, despite better preparedness than ever and decades of experience fighting fires fanned by the 'Santa Ana Winds'. The wildfires themselves, experts say, are generally hotter, faster, and spread more erratically than in the past.",
+            "Megafires, also called 'siege fires', are the increasingly frequent blazes that burn 500,000 acres or more – 10 times the size of the average forest fire of 20 years ago. Some recent wildfires are among the biggest ever in California in terms of acreage burned, according to state figures and news reports.",
+            "One explanation for the trend to more superhot fires is that the region, which usually has dry summers, has had significantly below normal precipitation in many recent years. Another reason, experts say, is related to the century- long policy of the US Forest Service to stop wildfires as quickly as possible. The unintentional consequence has been to halt the natural eradication of underbrush, now the primary fuel for megafires.",
+            "Three other factors contribute to the trend, they add. First is climate change, marked by a 1-degree Fahrenheit rise in average yearly temperature across the western states. Second is fire seasons that on average are 78 days longer than they were 20 years ago. Third is increased construction of homes in wooded areas.",
+            "'We are increasingly building our homes in fire-prone ecosystems,' says Dominik Kulakowski, adjunct professor of biology at Clark University Graduate School of Geography in Worcester, Massachusetts. 'Doing that in many of the forests of the western US is like building homes on the side of an active volcano.'",
+            "In California, where population growth has averaged more than 600,000 a year for at least a decade, more residential housing is being built. 'What once was open space is now residential homes providing fuel to make fires burn with greater intensity,' says Terry McHale of the California Department of Forestry firefighters' union. 'With so much dryness, so many communities to catch fire, so many fronts to fight, it becomes an almost incredible job.'",
+            "That said, many experts give California high marks for making progress on preparedness in recent years, after some of the largest fires in state history scorched thousands of acres, burned thousands of homes, and killed numerous people. Stung in the past by criticism of bungling that allowed fires to spread when they might have been contained, personnel are meeting the peculiar challenges of neighborhood – and canyon- hopping fires better than previously, observers say.",
+            "State promises to provide more up-to-date engines, planes, and helicopters to fight fires have been fulfilled. Firefighters' unions that in the past complained of dilapidated equipment, old fire engines, and insufficient blueprints for fire safety are now praising the state's commitment, noting that funding for firefighting has increased, despite huge cuts in many other programs. 'We are pleased that the current state administration has been very proactive in its support of us, and [has] come through with budgetary support of the infrastructure needs we have long sought,' says Mr. McHale of the firefighters' union.",
+            "Besides providing money to upgrade the fire engines that must traverse the mammoth state and wind along serpentine canyon roads, the state has invested in better command-and-control facilities as well as in the strategies to run them. 'In the fire sieges of earlier years, we found that other jurisdictions and states were willing to offer mutual-aid help, but we were not able to communicate adequately with them,' says Kim Zagaris, chief of the state's Office of Emergency Services Fire and Rescue Branch.",
+            "After a commission examined and revamped communications procedures, the statewide response 'has become far more professional and responsive,' he says. There is a sense among both government officials and residents that the speed, dedication, and coordination of firefighters from several states and jurisdictions are resulting in greater efficiency than in past 'siege fire' situations.",
+            "In recent years, the Southern California region has improved building codes, evacuation procedures, and procurement of new technology. 'I am extraordinarily impressed by the improvements we have witnessed,' says Randy Jacobs, a Southern California- based lawyer who has had to evacuate both his home and business to escape wildfires. 'Notwithstanding all the damage that will continue to be caused by wildfires, we will no longer suffer the loss of life endured in the past because of the fire prevention and firefighting measures that have been put in place,' he says."
+          ],
+          "questionSectionText": "Questions 1-13\n1. movement: …  … more unpredictably\n2. size of fires: …  … greater on average than two decades ago\n3. rainfall: …  … average\n4. more brush to act as …  …\n5. extended fire …  …\n6. more building of …  … in vulnerable places\n7. The amount of open space in California has diminished over the last ten years.\n8. Many experts believe California has made little progress in readying itself to fight fires.\n9. Personnel in the past have been criticised for mishandling fire containment.\n10. California has replaced\n11. More firefighters have been hired to improve fire-fighting capacity.\n12. Citizens and government groups disapprove of the efforts of different states and agencies working together.\n13. Randy Jacobs believes that loss of life from fires will continue at the same levels, despite changes made.",
+          "questionRanges": [
+            {
+              "start": 1,
+              "end": 13
+            }
+          ],
+          "questions": [
+            {
+              "number": 1,
+              "prompt": "movement: … … more unpredictably",
+              "correctAnswer": "spread",
+              "acceptedAnswers": [
+                "spread"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "text",
+              "exactPortion": "The wildfires themselves, experts say, are generally hotter, faster, and spread more erratically than in the past.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"movement: … … more unpredictably\" บทความมีถ้อยคำที่ตรงกันคือ \"The wildfires themselves, experts say, are generally hotter, faster, and spread more erraticall…\" จึงคำตอบคือ \"spread\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "movement unpredictably = wildfires themselves experts generally = spread"
+            },
+            {
+              "number": 2,
+              "prompt": "size of fires: … … greater on average than two decades ago",
+              "correctAnswer": "10 times",
+              "acceptedAnswers": [
+                "10",
+                "10 times",
+                "ten times"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "text",
+              "exactPortion": "10 times the size of the average forest fire of 20 years ago.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"size of fires: … … greater on average than two decades ago\" บทความมีถ้อยคำที่ตรงกันคือ \"10 times the size of the average forest fire of 20 years ago.\" จึงคำตอบคือ \"10 times\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "decades = average forest = 10 times"
+            },
+            {
+              "number": 3,
+              "prompt": "rainfall: … … average",
+              "correctAnswer": "below",
+              "acceptedAnswers": [
+                "below"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "text",
+              "exactPortion": "has had significantly below normal precipitation in many recent years.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"rainfall: … … average\" บทความมีถ้อยคำที่ตรงกันคือ \"has had significantly below normal precipitation in many recent years.\" จึงคำตอบคือ \"below\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "rainfall average = significantly normal precipitation recent = below"
+            },
+            {
+              "number": 4,
+              "prompt": "more brush to act as … …",
+              "correctAnswer": "fuel",
+              "acceptedAnswers": [
+                "fuel"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "text",
+              "exactPortion": "halt the natural eradication of underbrush, now the primary fuel for megafires.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"more brush to act as … …\" บทความมีถ้อยคำที่ตรงกันคือ \"halt the natural eradication of underbrush, now the primary fuel for megafires.\" จึงคำตอบคือ \"fuel\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "brush = natural eradication underbrush primary = fuel"
+            },
+            {
+              "number": 5,
+              "prompt": "extended fire … …",
+              "correctAnswer": "seasons",
+              "acceptedAnswers": [
+                "seasons"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "text",
+              "exactPortion": "Second is fire seasons that on average are 78 days longer than they were 20 years ago.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"extended fire … …\" บทความมีถ้อยคำที่ตรงกันคือ \"Second is fire seasons that on average are 78 days longer than they were 20 years ago.\" จึงคำตอบคือ \"seasons\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "extended = second average longer = seasons"
+            },
+            {
+              "number": 6,
+              "prompt": "more building of … … in vulnerable places",
+              "correctAnswer": "housing",
+              "acceptedAnswers": [
+                "homes",
+                "housing"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "text",
+              "exactPortion": "We are increasingly building our homes in fire-prone ecosystems",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"more building of … … in vulnerable places\" บทความมีถ้อยคำที่ตรงกันคือ \"We are increasingly building our homes in fire-prone ecosystems\" จึงคำตอบคือ \"housing\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "building vulnerable places = increasingly building fire-prone ecosystems = housing"
+            },
+            {
+              "number": 7,
+              "prompt": "The amount of open space in California has diminished over the last ten years.",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "What once was open space is now residential homes providing fuel to make fires burn with greater intensity",
+              "explanationThai": "ข้อความในข้อว่า \"The amount of open space in California has diminished over the last ten years.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"What once was open space is now residential homes providing fuel to make fires burn with greate…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "diminished last years = residential providing greater intensity = TRUE"
+            },
+            {
+              "number": 8,
+              "prompt": "Many experts believe California has made little progress in readying itself to fight fires.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "That said, many experts give California high marks for making progress on preparedness in recent years",
+              "explanationThai": "ข้อความในข้อว่า \"Many experts believe California has made little progress in readying itself to fight fires.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"That said, many experts give California high marks for making progress on preparedness in recen…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "little progress readying = experts california making progress = FALSE"
+            },
+            {
+              "number": 9,
+              "prompt": "Personnel in the past have been criticised for mishandling fire containment.",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Stung in the past by criticism of bungling that allowed fires to spread when they might have been contained, personnel are meeting the peculiar challenges of neighborhood",
+              "explanationThai": "ข้อความในข้อว่า \"Personnel in the past have been criticised for mishandling fire containment.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Stung in the past by criticism of bungling that allowed fires to spread when they might have be…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "personnel criticised mishandling = criticism bungling allowed spread = TRUE"
+            },
+            {
+              "number": 10,
+              "prompt": "California has replaced",
+              "correctAnswer": "TRUE",
+              "acceptedAnswers": [
+                "TRUE"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "State promises to provide more up-to-date engines, planes, and helicopters to fight fires have been fulfilled.",
+              "explanationThai": "ข้อความในข้อว่า \"California has replaced\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"State promises to provide more up-to-date engines, planes, and helicopters to fight fires have …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "replaced = promises provide up-to-date engines = TRUE"
+            },
+            {
+              "number": 11,
+              "prompt": "More firefighters have been hired to improve fire-fighting capacity.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Besides providing money to upgrade the fire engines that must traverse the mammoth state and wind along serpentine canyon roads, the state has invested in better command-and-control facilities as well as in the strategies to run them.",
+              "explanationThai": "ข้อความในข้อว่า \"More firefighters have been hired to improve fire-fighting capacity.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Besides providing money to upgrade the fire engines that must traverse the mammoth state and wi…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "firefighters hired improve = besides providing upgrade engines = NOT GIVEN"
+            },
+            {
+              "number": 12,
+              "prompt": "Citizens and government groups disapprove of the efforts of different states and agencies working together.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "There is a sense among both government officials and residents that the speed, dedication, and coordination of firefighters from several states and jurisdictions are resulting in greater efficiency than in past ‘siege fire’ situations.",
+              "explanationThai": "ข้อความในข้อว่า \"Citizens and government groups disapprove of the efforts of different states and agencies working together.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"There is a sense among both government officials and residents that the speed, dedication, and …\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "citizens government groups = government officials residents dedication = FALSE"
+            },
+            {
+              "number": 13,
+              "prompt": "Randy Jacobs believes that loss of life from fires will continue at the same levels, despite changes made.",
+              "correctAnswer": "FALSE",
+              "acceptedAnswers": [
+                "FALSE"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 1",
+              "answerType": "true-false-not-given",
+              "exactPortion": "Notwithstanding all the damage that will continue to be caused by wildfires, we will no longer suffer the loss of life endured in the past because of the fire prevention and firefighting measures that have been put in place,’ he says.",
+              "explanationThai": "ข้อความในข้อว่า \"Randy Jacobs believes that loss of life from fires will continue at the same levels, despite changes made.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Notwithstanding all the damage that will continue to be caused by wildfires, we will no longer …\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "randy jacobs believes = notwithstanding damage continue caused = FALSE"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test4-passage2",
+    "title": "Cambridge 10 Test 4 Passage 2 - Second nature",
+    "category": "normal",
+    "rawPassageText": "READING PASSAGE 2\nSecond nature\n\nYour personality isn't necessarily set in stone. With a little experimentation, people can reshape their temperaments and inject passion, optimism, joy and courage into their lives\n\nA\n\nPsychologists have long held that a person's character cannot undergo a transformation in any meaningful way and that the key traits of personality are determined at a very young age. However, researchers have begun looking more closely at ways we can change. Positive psychologists have identified 24 qualities we admire, such as loyalty and kindness, and are studying them to find out why they come so naturally to some people. What they're discovering is that many of these qualities amount to habitual behaviour that determines the way we respond to the world. The good news is that all this can be learned.\n\nSome qualities are less challenging to develop than others, optimism being one of them. However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising. For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions. Cultivating such qualities will help you realise your full potential.\n\nB\n\n'The evidence is good that most personality traits can be altered,' says Christopher Peterson, professor of psychology at the University of Michigan, who cites himself as an example. Inherently introverted, he realised early on that as an academic, his reticence would prove disastrous in the lecture hall. So he learned to be more outgoing and to entertain his classes. 'Now my extroverted behaviour is spontaneous,' he says.\n\nC\n\nDavid Fajgenbaum had to make a similar transition. He was preparing for university, when he had an accident that put an end to his sports career. On campus, he quickly found that beyond ordinary counselling, the university had no services for students who were undergoing physical rehabilitation and suffering from depression like him. He therefore launched a support group to help others in similar situations. He took action despite his own pain – a typical response of an optimist.\n\nD\n\nSuzanne Segerstrom, professor of psychology at the University of Kentucky, believes that the key to increasing optimism is through cultivating optimistic behaviour, rather than positive thinking. She recommends you train yourself to pay attention to good fortune by writing down three positive things that come about each day. This will help you convince yourself that favourable outcomes actually happen all the time, making it easier to begin taking action.\n\nE\n\nYou can recognise a person who is passionate about a pursuit by the way they are so strongly involved in it. Tanya Streeter's passion is freediving – the sport of plunging deep into the water without tanks or other breathing equipment. Beginning in 1998, she set nine world records and can hold her breath for six minutes. The physical stamina required for this sport is intense but the psychological demands are even more overwhelming. Streeter learned to untangle her fears from her judgment of what her body and mind could do. 'In my career as a competitive freediver, there was a limit to what I could do – but it wasn't anywhere near what I thought it was/ she says.\n\nF\n\nFinding a pursuit that excites you can improve anyone's life. The secret about consuming passions, though, according to psychologist Paul Silvia of the University of North Carolina, is that 'they require discipline, hard work and ability, which is why they are so rewarding.' Psychologist Todd Kashdan has this advice for those people taking up a new passion: 'As a newcomer, you also have to tolerate and laugh at your own ignorance. You must be willing to accept the negative feelings that come your way,' he says.\n\nG\n\nIn 2004, physician-scientist Mauro Zappaterra began his PhD research at Harvard Medical School. Unfortunately, he was miserable as his research wasn't compatible with his curiosity about healing. He finally took a break and during eight months in Santa Fe, Zappaterra learned about alternative healing techniques not taught at Harvard. When he got back, he switched labs to study how cerebrospinal fluid nourishes the developing nervous system. He also vowed to look for the joy in everything, including failure, as this could help him learn about his research and himself.\n\nOne thing that can hold joy back is a person's concentration on avoiding failure rather than their looking forward to doing something well. 'Focusing on being safe might get in the way of your reaching your goals,' explains Kashdan. For example, are you hoping to get through a business lunch without embarrassing yourself, or are you thinking about how fascinating the conversation might be?\n\nH\n\nUsually, we think of courage in physical terms but ordinary life demands something else. For marketing executive Kenneth Pedeleose, it meant speaking out against something he thought was ethically wrong. The new manager was intimidating staff so Pedeleose carefully recorded each instance of bullying and eventually took the evidence to a senior director, knowing his own job security would be threatened. Eventually the manager was the one to go. According to Cynthia Pury, a psychologist at Clemson University, Pedeleose's story proves the point that courage is not motivated by fearlessness, but by moral obligation. Pury also believes that people can acquire courage. Many of her students said that faced with a risky situation, they first tried to calm themselves down, then looked for a way to mitigate the danger, just as Pedeleose did by documenting his allegations.\n\nOver the long term, picking up a new character trait may help you move toward being the person you want to be. And in the short term, the effort itself could be surprisingly rewarding, a kind of internal adventure.\n\n<div\n\nQuestions 14-26\n\n14. … was impossible and that by a\n\n15. … a person’s character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is\n\n16. … . However, regardless of the quality, it is necessary to learn\n\n17. … in order for\n\n18. … in order to increase their happiness. Questions 19-22 Look at the following statements and the list of people below. Match each statement with the correct person,\n\n19. People must accept that they do not know much when first trying something new. …  …  …  …  …  …  …\n\n20. It is important for people to actively notice when good things happen. …  …  …  …  …  …  …\n\n21. Courage can be learned once its origins in\n\n22. It is possible to overcome shyness when faced with the need to speak in public. …  …  …  …  …  …  … Questions 23-26 The Reading Passage has eight sections,\n\n23. a mention of how rational thinking enabled someone to achieve physical goals …  …  …  …  …  …  …  …\n\n24. an account of how someone overcame\n\n25. a description of how someone decided to rethink their academic career path …  …  …  …  …  …  …  …\n\n26. an example of how someone risked his career out of",
+    "rawAnswerKey": "READING PASSAGE 2: Second nature\n\nQuestion 14: … was impossible and that by a\n\nCorrect Answer: transformation\n\nAccepted Answers: transformation|change\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"Psychologists have long held that a person’s character cannot undergo a transformation in any meaningful way\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… was impossible and that by a\" บทความมีถ้อยคำที่ตรงกันคือ \"Psychologists have long held that a person’s character cannot undergo a transformation in any m…\" จึงคำตอบคือ \"transformation\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: impossible = psychologists person character cannot = transformation\n\nQuestion 15: … a person’s character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is\n\nCorrect Answer: young age\n\nAccepted Answers: young age\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"and that the key traits of personality are determined at a very young age.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… a person’s character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualitie…\" บทความมีถ้อยคำที่ตรงกันคือ \"and that the key traits of personality are determined at a very young age.\" จึงคำตอบคือ \"young age\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: person character tends = traits personality determined = young age\n\nQuestion 16: … . However, regardless of the quality, it is necessary to learn\n\nCorrect Answer: optimism\n\nAccepted Answers: optimism\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"Some qualities are less challenging to develop than others, optimism being one of them.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… . However, regardless of the quality, it is necessary to learn\" บทความมีถ้อยคำที่ตรงกันคือ \"Some qualities are less challenging to develop than others, optimism being one of them.\" จึงคำตอบคือ \"optimism\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: however regardless quality = qualities challenging develop others = optimism\n\nQuestion 17: … in order for\n\nCorrect Answer: techniques\n\nAccepted Answers: skills|techniques\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… in order for\" บทความมีถ้อยคำที่ตรงกันคือ \"However, developing qualities requires mastering a range of skills which are diverse and someti…\" จึงคำตอบคือ \"techniques\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: order = however developing qualities requires = techniques\n\nQuestion 18: … in order to increase their happiness. Questions 19-22 Look at the following statements and the list of people below. Match each statement with the correct person,\n\nCorrect Answer: negative emotions\n\nAccepted Answers: negative emotions|feelings\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… in order to increase their happiness. Questions 19-22 Look at the following statements and the list of people below. Match each …\" บทความมีถ้อยคำที่ตรงกันคือ \"For example, to bring more joy and passion into your life, you must be open to experiencing neg…\" จึงคำตอบคือ \"negative emotions\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: order increase happiness = example passion experiencing negative = negative emotions\n\nQuestion 19: People must accept that they do not know much when first trying something new. …  …  …  …  …  …  …\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"Psychologist Todd Kashdan has this advice for those people taking up a new passion: ‘As a newcomer, you also have to tolerate and laugh at your own ignorance.\"\n\nShort Thai Explanation: คำถาม: \"People must accept that they do not know much when first trying something new. … … … … … … …\" หลักฐานในบทความคือ \"Psychologist Todd Kashdan has this advice for those people taking up a new passion: ‘As a newco…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: accept trying something = psychologist kashdan advice taking = E\n\nQuestion 20: It is important for people to actively notice when good things happen. …  …  …  …  …  …  …\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"She recommends you train yourself to pay attention to good fortune by writing down three positive things that come about each day.\"\n\nShort Thai Explanation: คำถาม: \"It is important for people to actively notice when good things happen. … … … … … … …\" หลักฐานในบทความคือ \"She recommends you train yourself to pay attention to good fortune by writing down three positi…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: important actively notice = recommends yourself attention fortune = C\n\nQuestion 21: Courage can be learned once its origins in\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"According to Cynthia Pury, a psychologist at Clemson University, Pedeleose’s story proves the point that courage is not motivated by fearlessness, but by moral obligation. Pury also believes that people can acquire courage.\"\n\nShort Thai Explanation: คำถาม: \"Courage can be learned once its origins in\" หลักฐานในบทความคือ \"According to Cynthia Pury, a psychologist at Clemson University, Pedeleose’s story proves the p…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G\n\nParaphrased Vocabulary: learned once origins = according cynthia psychologist clemson = G\n\nQuestion 22: It is possible to overcome shyness when faced with the need to speak in public. …  …  …  …  …  …  … Questions 23-26 The Reading Passage has eight sections,\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"Inherently introverted, he realised early on that as an academic, his reticence would prove disastrous in the lecture hall. So he learned to be more outgoing and to entertain his classes. ‘Now my extroverted behaviour is spontaneous,’ he says.\"\n\nShort Thai Explanation: ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (It is possible to overcome shyness when faced with the need to speak in public. … … … … … … … Questions 23-26 The Reading Passage …) โดยเฉพาะประโยค \"Inherently introverted, he realised early on that as an academic, his reticence would prove dis…\" จึงเลือก A\n\nParaphrased Vocabulary: possible overcome shyness = inherently introverted realised academic = A\n\nQuestion 23: a mention of how rational thinking enabled someone to achieve physical goals …  …  …  …  …  …  …  …\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"The physical stamina required for this sport is intense but the psychological demands are even more overwhelming. Streeter learned to untangle her fears from her judgment of what her body and mind could do.\"\n\nShort Thai Explanation: คำถาม: \"a mention of how rational thinking enabled someone to achieve physical goals … … … … … … … …\" หลักฐานในบทความคือ \"The physical stamina required for this sport is intense but the psychological demands are even …\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: rational thinking enabled = physical stamina required intense = E\n\nQuestion 24: an account of how someone overcame\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"He took action despite his own pain – a typical response of an optimist.\"\n\nShort Thai Explanation: คำถาม: \"an account of how someone overcame\" หลักฐานในบทความคือ \"He took action despite his own pain – a typical response of an optimist.\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: account someone overcame = action despite typical response = C\n\nQuestion 25: a description of how someone decided to rethink their academic career path …  …  …  …  …  …  …  …\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"When he got back, he switched labs to study how cerebrospinal fluid nourishes the developing nervous system.\"\n\nShort Thai Explanation: คำถาม: \"a description of how someone decided to rethink their academic career path … … … … … … … …\" หลักฐานในบทความคือ \"When he got back, he switched labs to study how cerebrospinal fluid nourishes the developing ne…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G\n\nParaphrased Vocabulary: description someone decided = switched cerebrospinal nourishes developing = G\n\nQuestion 26: an example of how someone risked his career out of\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 10 Test 4 Passage 2\n\nExact Portion: \"Pedeleose carefully recorded each instance of bullying and eventually took the evidence to a senior director, knowing his own job security would be threatened.\"\n\nShort Thai Explanation: คำถาม: \"an example of how someone risked his career out of\" หลักฐานในบทความคือ \"Pedeleose carefully recorded each instance of bullying and eventually took the evidence to a se…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H\n\nParaphrased Vocabulary: example someone risked = pedeleose carefully recorded instance = H",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 4 Passage 2 - Second nature",
+      "category": "normal",
+      "passages": [
+        {
+          "number": 2,
+          "title": "Second nature",
+          "bodyParagraphs": [
+            "Your personality isn't necessarily set in stone. With a little experimentation, people can reshape their temperaments and inject passion, optimism, joy and courage into their lives",
+            "A",
+            "A. Psychologists have long held that a person's character cannot undergo a transformation in any meaningful way and that the key traits of personality are determined at a very young age. However, researchers have begun looking more closely at ways we can change. Positive psychologists have identified 24 qualities we admire, such as loyalty and kindness, and are studying them to find out why they come so naturally to some people. What they're discovering is that many of these qualities amount to habitual behaviour that determines the way we respond to the world. The good news is that all this can be learned. Some qualities are less challenging to develop than others, optimism being one of them. However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising. For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions. Cultivating such qualities will help you realise your full potential.",
+            "B",
+            "B. 'The evidence is good that most personality traits can be altered,' says Christopher Peterson, professor of psychology at the University of Michigan, who cites himself as an example. Inherently introverted, he realised early on that as an academic, his reticence would prove disastrous in the lecture hall. So he learned to be more outgoing and to entertain his classes. 'Now my extroverted behaviour is spontaneous,' he says.",
+            "C",
+            "C. David Fajgenbaum had to make a similar transition. He was preparing for university, when he had an accident that put an end to his sports career. On campus, he quickly found that beyond ordinary counselling, the university had no services for students who were undergoing physical rehabilitation and suffering from depression like him. He therefore launched a support group to help others in similar situations. He took action despite his own pain – a typical response of an optimist.",
+            "D",
+            "D. Suzanne Segerstrom, professor of psychology at the University of Kentucky, believes that the key to increasing optimism is through cultivating optimistic behaviour, rather than positive thinking. She recommends you train yourself to pay attention to good fortune by writing down three positive things that come about each day. This will help you convince yourself that favourable outcomes actually happen all the time, making it easier to begin taking action.",
+            "E",
+            "E. You can recognise a person who is passionate about a pursuit by the way they are so strongly involved in it. Tanya Streeter's passion is freediving – the sport of plunging deep into the water without tanks or other breathing equipment. Beginning in 1998, she set nine world records and can hold her breath for six minutes. The physical stamina required for this sport is intense but the psychological demands are even more overwhelming. Streeter learned to untangle her fears from her judgment of what her body and mind could do. 'In my career as a competitive freediver, there was a limit to what I could do – but it wasn't anywhere near what I thought it was/ she says.",
+            "F",
+            "F. Finding a pursuit that excites you can improve anyone's life. The secret about consuming passions, though, according to psychologist Paul Silvia of the University of North Carolina, is that 'they require discipline, hard work and ability, which is why they are so rewarding.' Psychologist Todd Kashdan has this advice for those people taking up a new passion: 'As a newcomer, you also have to tolerate and laugh at your own ignorance. You must be willing to accept the negative feelings that come your way,' he says.",
+            "G",
+            "G. In 2004, physician-scientist Mauro Zappaterra began his PhD research at Harvard Medical School. Unfortunately, he was miserable as his research wasn't compatible with his curiosity about healing. He finally took a break and during eight months in Santa Fe, Zappaterra learned about alternative healing techniques not taught at Harvard. When he got back, he switched labs to study how cerebrospinal fluid nourishes the developing nervous system. He also vowed to look for the joy in everything, including failure, as this could help him learn about his research and himself. One thing that can hold joy back is a person's concentration on avoiding failure rather than their looking forward to doing something well. 'Focusing on being safe might get in the way of your reaching your goals,' explains Kashdan. For example, are you hoping to get through a business lunch without embarrassing yourself, or are you thinking about how fascinating the conversation might be? H Usually, we think of courage in physical terms but ordinary life demands something else. For marketing executive Kenneth Pedeleose, it meant speaking out against something he thought was ethically wrong. The new manager was intimidating staff so Pedeleose carefully recorded each instance of bullying and eventually took the evidence to a senior director, knowing his own job security would be threatened. Eventually the manager was the one to go. According to Cynthia Pury, a psychologist at Clemson University, Pedeleose's story proves the point that courage is not motivated by fearlessness, but by moral obligation. Pury also believes that people can acquire courage. Many of her students said that faced with a risky situation, they first tried to calm themselves down, then looked for a way to mitigate the danger, just as Pedeleose did by documenting his allegations. Over the long term, picking up a new character trait may help you move toward being the person you want to be. And in the short term, the effort itself could be surprisingly rewarding, a kind of internal adventure."
+          ],
+          "questionSectionText": "Questions 14-26\n14. … was impossible and that by a\n15. … a person’s character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is\n16. … . However, regardless of the quality, it is necessary to learn\n17. … in order for\n18. … in order to increase their happiness.\nQuestions 19-22 Look at the following statements and the list of people below. Match each statement with the correct person,\n19. People must accept that they do not know much when first trying something new. …  …  …  …  …  …  …\n20. It is important for people to actively notice when good things happen. …  …  …  …  …  …  …\n21. Courage can be learned once its origins in\n22. It is possible to overcome shyness when faced with the need to speak in public. …  …  …  …  …  …  … Questions 23-26 The Reading Passage has eight sections,\n23. a mention of how rational thinking enabled someone to achieve physical goals …  …  …  …  …  …  …  …\n24. an account of how someone overcame\n25. a description of how someone decided to rethink their academic career path …  …  …  …  …  …  …  …\n26. an example of how someone risked his career out of",
+          "questionRanges": [
+            {
+              "start": 14,
+              "end": 26
+            },
+            {
+              "start": 19,
+              "end": 22
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "prompt": "… was impossible and that by a",
+              "correctAnswer": "transformation",
+              "acceptedAnswers": [
+                "transformation",
+                "change"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "text",
+              "exactPortion": "Psychologists have long held that a person’s character cannot undergo a transformation in any meaningful way",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… was impossible and that by a\" บทความมีถ้อยคำที่ตรงกันคือ \"Psychologists have long held that a person’s character cannot undergo a transformation in any m…\" จึงคำตอบคือ \"transformation\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "impossible = psychologists person character cannot = transformation"
+            },
+            {
+              "number": 15,
+              "prompt": "… a person’s character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is",
+              "correctAnswer": "young age",
+              "acceptedAnswers": [
+                "young age"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "text",
+              "exactPortion": "and that the key traits of personality are determined at a very young age.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… a person’s character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualitie…\" บทความมีถ้อยคำที่ตรงกันคือ \"and that the key traits of personality are determined at a very young age.\" จึงคำตอบคือ \"young age\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "person character tends = traits personality determined = young age"
+            },
+            {
+              "number": 16,
+              "prompt": "… . However, regardless of the quality, it is necessary to learn",
+              "correctAnswer": "optimism",
+              "acceptedAnswers": [
+                "optimism"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "text",
+              "exactPortion": "Some qualities are less challenging to develop than others, optimism being one of them.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . However, regardless of the quality, it is necessary to learn\" บทความมีถ้อยคำที่ตรงกันคือ \"Some qualities are less challenging to develop than others, optimism being one of them.\" จึงคำตอบคือ \"optimism\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "however regardless quality = qualities challenging develop others = optimism"
+            },
+            {
+              "number": 17,
+              "prompt": "… in order for",
+              "correctAnswer": "techniques",
+              "acceptedAnswers": [
+                "skills",
+                "techniques"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "text",
+              "exactPortion": "However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… in order for\" บทความมีถ้อยคำที่ตรงกันคือ \"However, developing qualities requires mastering a range of skills which are diverse and someti…\" จึงคำตอบคือ \"techniques\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "order = however developing qualities requires = techniques"
+            },
+            {
+              "number": 18,
+              "prompt": "… in order to increase their happiness.",
+              "correctAnswer": "negative emotions",
+              "acceptedAnswers": [
+                "negative emotions",
+                "feelings"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "text",
+              "exactPortion": "For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… in order to increase their happiness. Questions 19-22 Look at the following statements and the list of people below. Match each …\" บทความมีถ้อยคำที่ตรงกันคือ \"For example, to bring more joy and passion into your life, you must be open to experiencing neg…\" จึงคำตอบคือ \"negative emotions\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "order increase happiness = example passion experiencing negative = negative emotions"
+            },
+            {
+              "number": 19,
+              "prompt": "People must accept that they do not know much when first trying something new. … … … … … … …",
+              "correctAnswer": "E",
+              "acceptedAnswers": [
+                "E"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Psychologist Todd Kashdan has this advice for those people taking up a new passion: ‘As a newcomer, you also have to tolerate and laugh at your own ignorance.",
+              "explanationThai": "คำถาม: \"People must accept that they do not know much when first trying something new. … … … … … … …\" หลักฐานในบทความคือ \"Psychologist Todd Kashdan has this advice for those people taking up a new passion: ‘As a newco…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "accept trying something = psychologist kashdan advice taking = E"
+            },
+            {
+              "number": 20,
+              "prompt": "It is important for people to actively notice when good things happen. … … … … … … …",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "She recommends you train yourself to pay attention to good fortune by writing down three positive things that come about each day.",
+              "explanationThai": "คำถาม: \"It is important for people to actively notice when good things happen. … … … … … … …\" หลักฐานในบทความคือ \"She recommends you train yourself to pay attention to good fortune by writing down three positi…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "important actively notice = recommends yourself attention fortune = C"
+            },
+            {
+              "number": 21,
+              "prompt": "Courage can be learned once its origins in",
+              "correctAnswer": "G",
+              "acceptedAnswers": [
+                "G"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "According to Cynthia Pury, a psychologist at Clemson University, Pedeleose’s story proves the point that courage is not motivated by fearlessness, but by moral obligation. Pury also believes that people can acquire courage.",
+              "explanationThai": "คำถาม: \"Courage can be learned once its origins in\" หลักฐานในบทความคือ \"According to Cynthia Pury, a psychologist at Clemson University, Pedeleose’s story proves the p…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "learned once origins = according cynthia psychologist clemson = G"
+            },
+            {
+              "number": 22,
+              "prompt": "It is possible to overcome shyness when faced with the need to speak in public. … … … … … … …",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Inherently introverted, he realised early on that as an academic, his reticence would prove disastrous in the lecture hall. So he learned to be more outgoing and to entertain his classes. ‘Now my extroverted behaviour is spontaneous,’ he says.",
+              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (It is possible to overcome shyness when faced with the need to speak in public. … … … … … … … Questions 23-26 The Reading Passage …) โดยเฉพาะประโยค \"Inherently introverted, he realised early on that as an academic, his reticence would prove dis…\" จึงเลือก A",
+              "paraphrasedVocabulary": "possible overcome shyness = inherently introverted realised academic = A"
+            },
+            {
+              "number": 23,
+              "prompt": "a mention of how rational thinking enabled someone to achieve physical goals … … … … … … … …",
+              "correctAnswer": "E",
+              "acceptedAnswers": [
+                "E"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "The physical stamina required for this sport is intense but the psychological demands are even more overwhelming. Streeter learned to untangle her fears from her judgment of what her body and mind could do.",
+              "explanationThai": "คำถาม: \"a mention of how rational thinking enabled someone to achieve physical goals … … … … … … … …\" หลักฐานในบทความคือ \"The physical stamina required for this sport is intense but the psychological demands are even …\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "rational thinking enabled = physical stamina required intense = E"
+            },
+            {
+              "number": 24,
+              "prompt": "an account of how someone overcame",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "He took action despite his own pain – a typical response of an optimist.",
+              "explanationThai": "คำถาม: \"an account of how someone overcame\" หลักฐานในบทความคือ \"He took action despite his own pain – a typical response of an optimist.\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "account someone overcame = action despite typical response = C"
+            },
+            {
+              "number": 25,
+              "prompt": "a description of how someone decided to rethink their academic career path … … … … … … … …",
+              "correctAnswer": "G",
+              "acceptedAnswers": [
+                "G"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "When he got back, he switched labs to study how cerebrospinal fluid nourishes the developing nervous system.",
+              "explanationThai": "คำถาม: \"a description of how someone decided to rethink their academic career path … … … … … … … …\" หลักฐานในบทความคือ \"When he got back, he switched labs to study how cerebrospinal fluid nourishes the developing ne…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "description someone decided = switched cerebrospinal nourishes developing = G"
+            },
+            {
+              "number": 26,
+              "prompt": "an example of how someone risked his career out of",
+              "correctAnswer": "H",
+              "acceptedAnswers": [
+                "H"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 2",
+              "answerType": "multiple-choice",
+              "exactPortion": "Pedeleose carefully recorded each instance of bullying and eventually took the evidence to a senior director, knowing his own job security would be threatened.",
+              "explanationThai": "คำถาม: \"an example of how someone risked his career out of\" หลักฐานในบทความคือ \"Pedeleose carefully recorded each instance of bullying and eventually took the evidence to a se…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "example someone risked = pedeleose carefully recorded instance = H"
+            }
+          ]
+        }
+      ],
+      "questionCount": 13
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  },
+  {
+    "id": "cambridge-10-test4-passage3",
+    "title": "Cambridge 10 Test 4 Passage 3 - When evolution runs backwards",
+    "category": "advanced",
+    "rawPassageText": "READING PASSAGE 3\nWhen evolution runs backwards\n\nEvolution isn't supposed to run backwards – yet an increasing number of examples show that it does and that it can sometimes represent the future of a species.\n\nThe description of any animal as an 'evolutionary throwback' is controversial. For the better part of a century, most biologists have been reluctant to use those words, mindful of a principle of evolution that says 'evolution cannot run backwards. But as more and more examples come to light and modern genetics enters the scene, that principle is having to be rewritten. Not only are evolutionary throwbacks possible, they sometimes play an important role in the forward march of evolution.                                                          \n\nThe technical term for an evolutionary throwback is an 'atavism', from the Latin atavus, meaning forefather. The word has ugly connotations thanks largely to Cesare Lombroso, a 19th-century Italian medic who argued that criminals were born not made and could be identified by certain physical features that were throwbacks to a primitive, sub-human state.\n\nWhile Lombroso was measuring criminals, a Belgian palaeontologist called Louis Dollo was studying fossil records and coming to the opposite conclusion. In 1890 he proposed that evolution was irreversible: that 'an organism is unable to return, even partially, to a previous stage already realised in the ranks of its ancestors. Early 20th-century biologists came to a similar conclusion, though they qualified it in terms of probability, stating that there is no reason why evolution cannot run backwards -it is just very unlikely. And so the idea of irreversibility in evolution stuck and came to be known as 'Dollo's law.\n\nIf Dollo's law is right, atavisms should occur only very rarely, if at all. Yet almost since the idea took root, exceptions have been cropping up. In 1919, for example, a humpback whale with a pair of leglike appendages over a metre long, complete with a full set of limb bones, was caught off Vancouver Island in Canada. Explorer Roy Chapman Andrews argued at the time that the whale must be a throwback to a land-living ancestor. 'I can see no other explanation,' he wrote in 1921.\n\nSince then, so many other examples have been discovered that it no longer makes sense to say that evolution is as good as irreversible. And this poses a puzzle: how can characteristics that disappeared millions of years ago suddenly reappear?\n\nIn 1994, Rudolf Raff and colleagues at Indiana University in the USA decided to use genetics to put a number on the probability of evolution going into reverse. They reasoned that while some evolutionary changes involve the loss of genes and are therefore irreversible, others may be the result of genes being switched off. If these silent genes are somehow switched back on, they argued, long-lost traits could reappear.\n\nRaff's team went on to calculate the likelihood of it happening. Silent genes accumulate random mutations, they reasoned, eventually rendering them useless. So how long can a gene survive in a species if it is no longer used? The team calculated that there is a good chance of silent genes surviving for up to 6 million years in at least a few individuals in a population, and that some might survive as long as 10 million years. In other words, throwbacks are possible, but only to the relatively recent evolutionary past.\n\nAs a possible example, the team pointed to the mole salamanders of Mexico and California. Like most amphibians these begin life in a juvenile 'tadpole' state, then metamorphose into the adult form – except for one species, the axolotl, which famously lives its entire life as a juvenile. The simplest explanation for this is that the axolotl lineage alone lost the ability to metamorphose, while others retained it. From a detailed analysis of the salamanders' family tree, however, it is clear that the other lineages evolved from an ancestor that itself had lost the ability to metamorphose. In other words, metamorphosis in mole salamanders is an atavism. The salamander example fits with Raff's 10million-year time frame.\n\nMore recently, however, examples have been reported that break the time limit, suggesting that silent genes may not be the whole story. In a paper published last year, biologist Gunter Wagner of Yale University reported some work on the evolutionary history of a group of South American lizards called Bachia. Many of these have minuscule limbs; some look more like snakes than lizards and a few have completely lost the toes on their hind limbs. Other species, however, sport up to four toes on their hind legs. The simplest explanation is that the toed lineages never lost their toes, but Wagner begs to differ. According to his analysis of the Bachia family tree, the toed species re-evolved toes from toeless ancestors and, what is more, digit loss and gain has occurred on more than one occasion over tens of millions of years.\n\nSo what's going on? One possibility is that these traits are lost and then simply reappear, in much the same way that similar structures can independently arise in unrelated species, such as the dorsal fins of sharks and killer whales. Another more intriguing possibility is that the genetic information needed to make toes somehow survived for tens or perhaps hundreds of millions of years in the lizards and was reactivated. These atavistic traits provided an advantage and spread through the population, effectively reversing evolution.\n\nBut if silent genes degrade within 6 to million years, how can long-lost traits be reactivated over longer timescales? The answer may lie in the womb. Early embryos of many species develop ancestral features. Snake embryos, for example, sprout hind limb buds. Later in development these features disappear thanks to developmental programs that say 'lose the leg'. If for any reason this does not happen, the ancestral feature may not disappear, leading to an atavism.\n\n                        \n                    \n                    \n                    \n                                                    <form id =\"\n\nQuestions 27-40\n\n27. When discussing the theory developed by Louis Dollo, the writer says that\n\n28. The humpback whale caught off Vancouver Island is mentioned because of\n\n29. What is said about 'silent genes'?\n\n30. The writer mentions the mole salamander because\n\n31. Which of the following does Wagner claim?\n\n32. Drop answer here … • Opposing views on evolutionary throwbacks are represented by\n\n33. Drop answer here … • Examples of evolutionary throwbacks have led to\n\n34. Drop answer here … • The shark and killer whale are mentioned to exemplify\n\n35. Drop answer here … • One explanation for the findings of Wagner's research is\n\n36. Drop answer here … Drag and drop an option to fill in each blank. A. the question of how certain long-lost traits could reappear. B. the occurrence of\n\n37. Wagner was the first person to do research on South American lizards.\n\n38. Wagner believes that Bachia lizards with toes had toeless ancestors.\n\n39. The temporary occurrence of long-lost traits in embryos is rare.\n\n40. Evolutionary throwbacks might be caused by developmental problems in the womb.",
+    "rawAnswerKey": "READING PASSAGE 3: When evolution runs backwards\n\nQuestion 27: When discussing the theory developed by Louis Dollo, the writer says that\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"Early 20th-century biologists came to a similar conclusion, though they qualified it in terms of probability, stating that there is no reason why evolution cannot run backwards -it is just very unlikely.\"\n\nShort Thai Explanation: คำถาม: \"When discussing the theory developed by Louis Dollo, the writer says that\" หลักฐานในบทความคือ \"Early 20th-century biologists came to a similar conclusion, though they qualified it in terms o…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: discussing theory developed = 20th-century biologists similar conclusion = C\n\nQuestion 28: The humpback whale caught off Vancouver Island is mentioned because of\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"Explorer Roy Chapman Andrews argued at the time that the whale must be a throwback to a land-living ancestor.\"\n\nShort Thai Explanation: คำถาม: \"The humpback whale caught off Vancouver Island is mentioned because of\" หลักฐานในบทความคือ \"Explorer Roy Chapman Andrews argued at the time that the whale must be a throwback to a land-li…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: humpback whale caught = explorer chapman andrews argued = D\n\nQuestion 29: What is said about 'silent genes'?\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"If these silent genes are somehow switched back on, they argued, long-lost traits could reappear.\"\n\nShort Thai Explanation: คำถาม: \"What is said about 'silent genes'?\" หลักฐานในบทความคือ \"If these silent genes are somehow switched back on, they argued, long-lost traits could reappea…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: 'silent genes' = silent somehow switched argued = C\n\nQuestion 30: The writer mentions the mole salamander because\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"As a possible example, the team pointed to the mole salamanders of Mexico and California.\"\n\nShort Thai Explanation: คำถาม: \"The writer mentions the mole salamander because\" หลักฐานในบทความคือ \"As a possible example, the team pointed to the mole salamanders of Mexico and California.\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: mentions salamander because = possible example pointed salamanders = B\n\nQuestion 31: Which of the following does Wagner claim?\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"According to his analysis of the Bachia family tree, the toed species re-evolved toes from toeless ancestors and, what is more, digit loss and gain has occurred on more than one occasion over tens of millions of years.\"\n\nShort Thai Explanation: คำถาม: \"Which of the following does Wagner claim?\" หลักฐานในบทความคือ \"According to his analysis of the Bachia family tree, the toed species re-evolved toes from toel…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: wagner claim = according analysis bachia family = A\n\nQuestion 32: Drop answer here … • Opposing views on evolutionary throwbacks are represented by\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"For the better part of a century, most biologists have been reluctant to use those words, mindful of a principle of evolution that says ‘evolution cannot run backwards.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • Opposing views on evolutionary throwbacks are represented by\" หลักฐานในบทความคือ \"For the better part of a century, most biologists have been reluctant to use those words, mindf…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F\n\nParaphrased Vocabulary: opposing evolutionary throwbacks = better century biologists reluctant = F\n\nQuestion 33: Drop answer here … • Examples of evolutionary throwbacks have led to\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"While Lombroso was measuring criminals, a Belgian palaeontologist called Louis Dollo was studying fossil records and coming to the opposite conclusion.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • Examples of evolutionary throwbacks have led to\" หลักฐานในบทความคือ \"While Lombroso was measuring criminals, a Belgian palaeontologist called Louis Dollo was studyi…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G\n\nParaphrased Vocabulary: evolutionary throwbacks = lombroso measuring criminals belgian = G\n\nQuestion 34: Drop answer here … • The shark and killer whale are mentioned to exemplify\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"Since then, so many other examples have been discovered that it no longer makes sense to say that evolution is as good as irreversible. And this poses a puzzle: how can characteristics that disappeared millions of years ago suddenly reappear?\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • The shark and killer whale are mentioned to exemplify\" หลักฐานในบทความคือ \"Since then, so many other examples have been discovered that it no longer makes sense to say th…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: shark killer whale = examples discovered longer evolution = A\n\nQuestion 35: Drop answer here … • One explanation for the findings of Wagner's research is\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"in much the same way that similar structures can independently arise in unrelated species, such as the dorsal fins of sharks and killer whales.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … • One explanation for the findings of Wagner's research is\" หลักฐานในบทความคือ \"in much the same way that similar structures can independently arise in unrelated species, such…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: explanation findings wagner's = similar structures independently unrelated = B\n\nQuestion 36: Drop answer here … Drag and drop an option to fill in each blank. A. the question of how certain long-lost traits could reappear. B. the occurrence of\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"Another more intriguing possibility is that the genetic information needed to make toes somehow survived for tens or perhaps hundreds of millions of years in the lizards and was reactivated.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … Drag and drop an option to fill in each blank. A. the question of how certain long-lost traits could reappear. …\" หลักฐานในบทความคือ \"Another more intriguing possibility is that the genetic information needed to make toes somehow…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: option fill blank = another intriguing possibility genetic = D\n\nQuestion 37: Wagner was the first person to do research on South American lizards.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"In a paper published last year, biologist Gunter Wagner of Yale University reported some work on the evolutionary history of a group of South American lizards called Bachia.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Wagner was the first person to do research on South American lizards.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"In a paper published last year, biologist Gunter Wagner of Yale University reported some work o…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: lizards = published biologist gunter wagner = NOT GIVEN\n\nQuestion 38: Wagner believes that Bachia lizards with toes had toeless ancestors.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"According to his analysis of the Bachia family tree, the toed species re-evolved toes from toeless ancestors\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Wagner believes that Bachia lizards with toes had toeless ancestors.\" โดยเฉพาะจากข้อความ \"According to his analysis of the Bachia family tree, the toed species re-evolved toes from toel…\" จึงตอบ YES\n\nParaphrased Vocabulary: lizards toes toeless = according analysis bachia family = YES\n\nQuestion 39: The temporary occurrence of long-lost traits in embryos is rare.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"Early embryos of many species develop ancestral features.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"The temporary occurrence of long-lost traits in embryos is rare.\" โดยเฉพาะจากข้อความ \"Early embryos of many species develop ancestral features.\" จึงตอบ NO\n\nParaphrased Vocabulary: temporary occurrence long-lost = embryos species develop ancestral = NO\n\nQuestion 40: Evolutionary throwbacks might be caused by developmental problems in the womb.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 10 Test 4 Passage 3\n\nExact Portion: \"If for any reason this does not happen, the ancestral feature may not disappear, leading to an atavism.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Evolutionary throwbacks might be caused by developmental problems in the womb.\" โดยเฉพาะจากข้อความ \"If for any reason this does not happen, the ancestral feature may not disappear, leading to an …\" จึงตอบ YES\n\nParaphrased Vocabulary: evolutionary throwbacks might = reason happen ancestral feature = YES",
+    "parsedPayload": {
+      "title": "Cambridge 10 Test 4 Passage 3 - When evolution runs backwards",
+      "category": "advanced",
+      "passages": [
+        {
+          "number": 3,
+          "title": "When evolution runs backwards",
+          "bodyParagraphs": [
+            "Evolution isn't supposed to run backwards – yet an increasing number of examples show that it does and that it can sometimes represent the future of a species.",
+            "The description of any animal as an 'evolutionary throwback' is controversial. For the better part of a century, most biologists have been reluctant to use those words, mindful of a principle of evolution that says 'evolution cannot run backwards. But as more and more examples come to light and modern genetics enters the scene, that principle is having to be rewritten. Not only are evolutionary throwbacks possible, they sometimes play an important role in the forward march of evolution.",
+            "The technical term for an evolutionary throwback is an 'atavism', from the Latin atavus, meaning forefather. The word has ugly connotations thanks largely to Cesare Lombroso, a 19th-century Italian medic who argued that criminals were born not made and could be identified by certain physical features that were throwbacks to a primitive, sub-human state.",
+            "While Lombroso was measuring criminals, a Belgian palaeontologist called Louis Dollo was studying fossil records and coming to the opposite conclusion. In 1890 he proposed that evolution was irreversible: that 'an organism is unable to return, even partially, to a previous stage already realised in the ranks of its ancestors. Early 20th-century biologists came to a similar conclusion, though they qualified it in terms of probability, stating that there is no reason why evolution cannot run backwards -it is just very unlikely. And so the idea of irreversibility in evolution stuck and came to be known as 'Dollo's law.",
+            "If Dollo's law is right, atavisms should occur only very rarely, if at all. Yet almost since the idea took root, exceptions have been cropping up. In 1919, for example, a humpback whale with a pair of leglike appendages over a metre long, complete with a full set of limb bones, was caught off Vancouver Island in Canada. Explorer Roy Chapman Andrews argued at the time that the whale must be a throwback to a land-living ancestor. 'I can see no other explanation,' he wrote in 1921.",
+            "Since then, so many other examples have been discovered that it no longer makes sense to say that evolution is as good as irreversible. And this poses a puzzle: how can characteristics that disappeared millions of years ago suddenly reappear?",
+            "In 1994, Rudolf Raff and colleagues at Indiana University in the USA decided to use genetics to put a number on the probability of evolution going into reverse. They reasoned that while some evolutionary changes involve the loss of genes and are therefore irreversible, others may be the result of genes being switched off. If these silent genes are somehow switched back on, they argued, long-lost traits could reappear.",
+            "Raff's team went on to calculate the likelihood of it happening. Silent genes accumulate random mutations, they reasoned, eventually rendering them useless. So how long can a gene survive in a species if it is no longer used? The team calculated that there is a good chance of silent genes surviving for up to 6 million years in at least a few individuals in a population, and that some might survive as long as 10 million years. In other words, throwbacks are possible, but only to the relatively recent evolutionary past.",
+            "As a possible example, the team pointed to the mole salamanders of Mexico and California. Like most amphibians these begin life in a juvenile 'tadpole' state, then metamorphose into the adult form – except for one species, the axolotl, which famously lives its entire life as a juvenile. The simplest explanation for this is that the axolotl lineage alone lost the ability to metamorphose, while others retained it. From a detailed analysis of the salamanders' family tree, however, it is clear that the other lineages evolved from an ancestor that itself had lost the ability to metamorphose. In other words, metamorphosis in mole salamanders is an atavism. The salamander example fits with Raff's 10million-year time frame.",
+            "More recently, however, examples have been reported that break the time limit, suggesting that silent genes may not be the whole story. In a paper published last year, biologist Gunter Wagner of Yale University reported some work on the evolutionary history of a group of South American lizards called Bachia. Many of these have minuscule limbs; some look more like snakes than lizards and a few have completely lost the toes on their hind limbs. Other species, however, sport up to four toes on their hind legs. The simplest explanation is that the toed lineages never lost their toes, but Wagner begs to differ. According to his analysis of the Bachia family tree, the toed species re-evolved toes from toeless ancestors and, what is more, digit loss and gain has occurred on more than one occasion over tens of millions of years.",
+            "So what's going on? One possibility is that these traits are lost and then simply reappear, in much the same way that similar structures can independently arise in unrelated species, such as the dorsal fins of sharks and killer whales. Another more intriguing possibility is that the genetic information needed to make toes somehow survived for tens or perhaps hundreds of millions of years in the lizards and was reactivated. These atavistic traits provided an advantage and spread through the population, effectively reversing evolution.",
+            "But if silent genes degrade within 6 to million years, how can long-lost traits be reactivated over longer timescales? The answer may lie in the womb. Early embryos of many species develop ancestral features. Snake embryos, for example, sprout hind limb buds. Later in development these features disappear thanks to developmental programs that say 'lose the leg'. If for any reason this does not happen, the ancestral feature may not disappear, leading to an atavism."
+          ],
+          "questionSectionText": "Questions 27-40\n27. When discussing the theory developed by Louis Dollo, the writer says that\n28. The humpback whale caught off Vancouver Island is mentioned because of\n29. What is said about 'silent genes'?\n30. The writer mentions the mole salamander because\n31. Which of the following does Wagner claim?\n32. • Opposing views on evolutionary throwbacks are represented by\n33. • Examples of evolutionary throwbacks have led to\n34. • The shark and killer whale are mentioned to exemplify\n35. • One explanation for the findings of Wagner's research is\n36.\n37. Wagner was the first person to do research on South American lizards.\n38. Wagner believes that Bachia lizards with toes had toeless ancestors.\n39. The temporary occurrence of long-lost traits in embryos is rare.\n40. Evolutionary throwbacks might be caused by developmental problems in the womb.",
+          "questionRanges": [
+            {
+              "start": 27,
+              "end": 40
+            }
+          ],
+          "questions": [
+            {
+              "number": 27,
+              "prompt": "When discussing the theory developed by Louis Dollo, the writer says that",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Early 20th-century biologists came to a similar conclusion, though they qualified it in terms of probability, stating that there is no reason why evolution cannot run backwards -it is just very unlikely.",
+              "explanationThai": "คำถาม: \"When discussing the theory developed by Louis Dollo, the writer says that\" หลักฐานในบทความคือ \"Early 20th-century biologists came to a similar conclusion, though they qualified it in terms o…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "discussing theory developed = 20th-century biologists similar conclusion = C"
+            },
+            {
+              "number": 28,
+              "prompt": "The humpback whale caught off Vancouver Island is mentioned because of",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Explorer Roy Chapman Andrews argued at the time that the whale must be a throwback to a land-living ancestor.",
+              "explanationThai": "คำถาม: \"The humpback whale caught off Vancouver Island is mentioned because of\" หลักฐานในบทความคือ \"Explorer Roy Chapman Andrews argued at the time that the whale must be a throwback to a land-li…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "humpback whale caught = explorer chapman andrews argued = D"
+            },
+            {
+              "number": 29,
+              "prompt": "What is said about 'silent genes'?",
+              "correctAnswer": "C",
+              "acceptedAnswers": [
+                "C"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "If these silent genes are somehow switched back on, they argued, long-lost traits could reappear.",
+              "explanationThai": "คำถาม: \"What is said about 'silent genes'?\" หลักฐานในบทความคือ \"If these silent genes are somehow switched back on, they argued, long-lost traits could reappea…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "'silent genes' = silent somehow switched argued = C"
+            },
+            {
+              "number": 30,
+              "prompt": "The writer mentions the mole salamander because",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "As a possible example, the team pointed to the mole salamanders of Mexico and California.",
+              "explanationThai": "คำถาม: \"The writer mentions the mole salamander because\" หลักฐานในบทความคือ \"As a possible example, the team pointed to the mole salamanders of Mexico and California.\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "mentions salamander because = possible example pointed salamanders = B"
+            },
+            {
+              "number": 31,
+              "prompt": "Which of the following does Wagner claim?",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "According to his analysis of the Bachia family tree, the toed species re-evolved toes from toeless ancestors and, what is more, digit loss and gain has occurred on more than one occasion over tens of millions of years.",
+              "explanationThai": "คำถาม: \"Which of the following does Wagner claim?\" หลักฐานในบทความคือ \"According to his analysis of the Bachia family tree, the toed species re-evolved toes from toel…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "wagner claim = according analysis bachia family = A"
+            },
+            {
+              "number": 32,
+              "prompt": "Opposing views on evolutionary throwbacks are represented by",
+              "correctAnswer": "F",
+              "acceptedAnswers": [
+                "F"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "For the better part of a century, most biologists have been reluctant to use those words, mindful of a principle of evolution that says ‘evolution cannot run backwards.",
+              "explanationThai": "คำถาม: \"Drop answer here … • Opposing views on evolutionary throwbacks are represented by\" หลักฐานในบทความคือ \"For the better part of a century, most biologists have been reluctant to use those words, mindf…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "opposing evolutionary throwbacks = better century biologists reluctant = F"
+            },
+            {
+              "number": 33,
+              "prompt": "Examples of evolutionary throwbacks have led to",
+              "correctAnswer": "G",
+              "acceptedAnswers": [
+                "G"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "While Lombroso was measuring criminals, a Belgian palaeontologist called Louis Dollo was studying fossil records and coming to the opposite conclusion.",
+              "explanationThai": "คำถาม: \"Drop answer here … • Examples of evolutionary throwbacks have led to\" หลักฐานในบทความคือ \"While Lombroso was measuring criminals, a Belgian palaeontologist called Louis Dollo was studyi…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "evolutionary throwbacks = lombroso measuring criminals belgian = G"
+            },
+            {
+              "number": 34,
+              "prompt": "The shark and killer whale are mentioned to exemplify",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Since then, so many other examples have been discovered that it no longer makes sense to say that evolution is as good as irreversible. And this poses a puzzle: how can characteristics that disappeared millions of years ago suddenly reappear?",
+              "explanationThai": "คำถาม: \"Drop answer here … • The shark and killer whale are mentioned to exemplify\" หลักฐานในบทความคือ \"Since then, so many other examples have been discovered that it no longer makes sense to say th…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "shark killer whale = examples discovered longer evolution = A"
+            },
+            {
+              "number": 35,
+              "prompt": "One explanation for the findings of Wagner's research is",
+              "correctAnswer": "B",
+              "acceptedAnswers": [
+                "B"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "in much the same way that similar structures can independently arise in unrelated species, such as the dorsal fins of sharks and killer whales.",
+              "explanationThai": "คำถาม: \"Drop answer here … • One explanation for the findings of Wagner's research is\" หลักฐานในบทความคือ \"in much the same way that similar structures can independently arise in unrelated species, such…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "explanation findings wagner's = similar structures independently unrelated = B"
+            },
+            {
+              "number": 36,
+              "prompt": "Complete the summary below.",
+              "correctAnswer": "D",
+              "acceptedAnswers": [
+                "D"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "multiple-choice",
+              "exactPortion": "Another more intriguing possibility is that the genetic information needed to make toes somehow survived for tens or perhaps hundreds of millions of years in the lizards and was reactivated.",
+              "explanationThai": "คำถาม: \"Drop answer here … Drag and drop an option to fill in each blank. A. the question of how certain long-lost traits could reappear. …\" หลักฐานในบทความคือ \"Another more intriguing possibility is that the genetic information needed to make toes somehow…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "option fill blank = another intriguing possibility genetic = D"
+            },
+            {
+              "number": 37,
+              "prompt": "Wagner was the first person to do research on South American lizards.",
+              "correctAnswer": "NOT GIVEN",
+              "acceptedAnswers": [
+                "NOT GIVEN"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "true-false-not-given",
+              "exactPortion": "In a paper published last year, biologist Gunter Wagner of Yale University reported some work on the evolutionary history of a group of South American lizards called Bachia.",
+              "explanationThai": "ข้อความในข้อว่า \"Wagner was the first person to do research on South American lizards.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"In a paper published last year, biologist Gunter Wagner of Yale University reported some work o…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "lizards = published biologist gunter wagner = NOT GIVEN"
+            },
+            {
+              "number": 38,
+              "prompt": "Wagner believes that Bachia lizards with toes had toeless ancestors.",
+              "correctAnswer": "YES",
+              "acceptedAnswers": [
+                "YES"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "According to his analysis of the Bachia family tree, the toed species re-evolved toes from toeless ancestors",
+              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Wagner believes that Bachia lizards with toes had toeless ancestors.\" โดยเฉพาะจากข้อความ \"According to his analysis of the Bachia family tree, the toed species re-evolved toes from toel…\" จึงตอบ YES",
+              "paraphrasedVocabulary": "lizards toes toeless = according analysis bachia family = YES"
+            },
+            {
+              "number": 39,
+              "prompt": "The temporary occurrence of long-lost traits in embryos is rare.",
+              "correctAnswer": "NO",
+              "acceptedAnswers": [
+                "NO"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "Early embryos of many species develop ancestral features.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"The temporary occurrence of long-lost traits in embryos is rare.\" โดยเฉพาะจากข้อความ \"Early embryos of many species develop ancestral features.\" จึงตอบ NO",
+              "paraphrasedVocabulary": "temporary occurrence long-lost = embryos species develop ancestral = NO"
+            },
+            {
+              "number": 40,
+              "prompt": "Evolutionary throwbacks might be caused by developmental problems in the womb.",
+              "correctAnswer": "YES",
+              "acceptedAnswers": [
+                "YES"
+              ],
+              "answerGroup": "Cambridge 10 Test 4 Passage 3",
+              "answerType": "yes-no-not-given",
+              "exactPortion": "If for any reason this does not happen, the ancestral feature may not disappear, leading to an atavism.",
+              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Evolutionary throwbacks might be caused by developmental problems in the womb.\" โดยเฉพาะจากข้อความ \"If for any reason this does not happen, the ancestral feature may not disappear, leading to an …\" จึงตอบ YES",
+              "paraphrasedVocabulary": "evolutionary throwbacks might = reason happen ancestral feature = YES"
+            }
+          ]
+        }
+      ],
+      "questionCount": 14
+    },
+    "createdAt": "2026-05-22T00:00:00.000Z",
+    "updatedAt": "2026-05-22T00:00:00.000Z"
+  }
+]

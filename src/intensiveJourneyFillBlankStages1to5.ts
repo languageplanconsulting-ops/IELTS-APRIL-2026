@@ -1,192 +1,161 @@
 import type { NewFillBlankSet } from './readingNewFillBlankQuestions.ts'
-
-/** Fill-blank UI for Quest Log ด่าน 1–5 (Stage 5: P1 Q1–7, P2 Q25–27). */
 export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
+
   {
     examId: "journey-normal-stage-1",
     passageNumber: 1,
     startNumber: 6,
     endNumber: 13,
-    sourceParagraphs: ["F", "G"],
+    sourceParagraphs: ["H","I"],
     instructions: [
-      "Questions 6–13",
-      "Complete the notes below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 6–13 on your answer sheet."
+          "Questions 6–13",
+          "Complete the summary below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 6–13 on your answer sheet."
     ],
-    summaryTitle: "Comparison of aluminium screw caps and cork bottle stoppers",
+    summaryTitle: "Stepwells",
     summaryLines: [
-      { type: 'heading', text: "Advantages of aluminium screw caps" },
-      { type: 'bullet', text: "do not affect the {6} of the bottle contents" },
-      { type: 'bullet', text: "are {7} to produce" },
-      { type: 'bullet', text: "are {8} to use" },
-      { type: 'heading', text: "Advantages of cork bottle stoppers" },
-      { type: 'bullet', text: "suit the {9} of quality products" },
-      { type: 'bullet', text: "made from a {10} material" },
-      { type: 'bullet', text: "easily {11}" },
-      { type: 'bullet', text: "cork forests aid {12}" },
-      { type: 'bullet', text: "cork forests stop {13} happening" }
+      { type: "para", text: "Which part of some stepwells provided shade for people? {6} What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? {7} Who are frequent visitors to stepwells nowadays? {8} Incredibly, in January 2001, this ancient structure survived a devastating {9} that measured 7.6 on the Richter scale." },
+      { type: "bullet", text: "including four {10} of steps that descend to the bottom in a stunning geometrical formation." },
+      { type: "bullet", text: "It actually resembles a {11}(kund means reservoir or pond) rather than a well." },
+      { type: "bullet", text: "On the fourth side, {12} which are supported by ornate pillars overlook the steps." },
+      { type: "bullet", text: "Constructed in around 1700, it's nine storeys deep, with the last two being {13}." },
     ],
     questions: [
-      { number: 6, answer: "taste", passageKeyword: "spoil the taste of the product", questionKeyword: "do not affect the taste", thaiMeaning: "รสชาติ", exactPortion: "as little as three or four parts to a trillion – can spoil the taste of the product contained in the bottle" },
-      { number: 7, answer: "cheaper", passageKeyword: "cheaper to manufacture", questionKeyword: "cheaper to produce", thaiMeaning: "ถูกกว่า", exactPortion: "These substitutes are cheaper to manufacture and, in the case of screw caps, more convenient for the user" },
-      { number: 8, answer: "convenient", passageKeyword: "more convenient for the user", questionKeyword: "convenient to use", thaiMeaning: "สะดวก", exactPortion: "in the case of screw caps, more convenient for the user" },
-      { number: 9, answer: "image", passageKeyword: "traditional image is more in keeping with … high quality goods", questionKeyword: "suit the image of quality products", thaiMeaning: "ภาพลักษณ์", exactPortion: "Firstly, its traditional image is more in keeping with that of the type of high quality goods with which it has long been associated" },
-      { number: 10, answer: "sustainable", passageKeyword: "cork is a sustainable product", questionKeyword: "a sustainable material", thaiMeaning: "ยั่งยืน", exactPortion: "cork is a sustainable product that can be recycled without difficulty" },
-      { number: 11, answer: "recycled", passageKeyword: "can be recycled without difficulty", questionKeyword: "easily recycled", thaiMeaning: "รีไซเคิล", exactPortion: "cork is a sustainable product that can be recycled without difficulty" },
-      { number: 12, answer: "biodiversity", passageKeyword: "support local biodiversity", questionKeyword: "aid biodiversity", thaiMeaning: "ความหลากหลายทางชีวภาพ", exactPortion: "Moreover, cork forests are a resource which support local biodiversity, and prevent desertification in the regions where they are planted" },
-      { number: 13, answer: "desertification", passageKeyword: "prevent desertification", questionKeyword: "stop desertification", thaiMeaning: "การกลายเป็นทะเลทราย", exactPortion: "prevent desertification in the regions where they are planted" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-1",
-    passageNumber: 2,
-    startNumber: 15,
-    endNumber: 22,
-    sourceParagraphs: ["B", "F"],
-    instructions: [
-      "Questions 15–22",
-      "Complete the sentences below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 15–22 on your answer sheet."
-    ],
-    summaryTitle: "Collecting as a Hobby",
-    summaryLines: [
-      { type: 'bullet', text: "The writer mentions {15} as an example of collecting in order to make money." },
-      { type: 'bullet', text: "Collectors may get a feeling of {16} from buying and selling items." },
-      { type: 'bullet', text: "Collectors' clubs provide opportunities to share {17}." },
-      { type: 'bullet', text: "Collectors' clubs offer {18} with people who have similar interests." },
-      { type: 'bullet', text: "Collecting sometimes involves a life-long {19} for a special item." },
-      { type: 'bullet', text: "Searching for something particular may prevent people from feeling their life is completely {20}." },
-      { type: 'bullet', text: "Stamp collecting may be {21} because it provides facts about different countries." },
-      { type: 'bullet', text: "{22} tends to be mostly a male hobby." }
-    ],
-    questions: [
-      { number: 15, answer: "antiques", passageKeyword: "antiques", questionKeyword: "collecting to make money", thaiMeaning: "ของโบราณ", exactPortion: "They'll look for, say, antiques that they can buy cheaply and expect to be able to sell at a profit." },
-      { number: 16, answer: "triumph", passageKeyword: "sense of triumph", questionKeyword: "feeling of triumph", thaiMeaning: "ชัยชนะ", exactPortion: "But there may well be a psychological element, too – buying cheap and selling dear can give the collector a sense of triumph." },
-      { number: 17, answer: "information", passageKeyword: "exchanging information", questionKeyword: "share information", thaiMeaning: "ข้อมูล", exactPortion: "Many collectors collect to develop their social life, attending meetings of a group of collectors and exchanging information on items." },
-      { number: 18, answer: "contact", acceptedAnswers: ["meetings"], passageKeyword: "contact with like-minded people", questionKeyword: "offer contact", thaiMeaning: "ติดต่อ/พบปะ", exactPortion: "This is a variant on joining a bridge club or a gym, and similarly brings them into contact with like-minded people." },
-      { number: 19, answer: "hunt", acceptedAnswers: ["desire"], passageKeyword: "whole lives in a hunt", questionKeyword: "life-long hunt", thaiMeaning: "การล่าหา", exactPortion: "Some may spend their whole lives in a hunt for this." },
-      { number: 20, answer: "aimless", acceptedAnswers: ["empty"], passageKeyword: "otherwise feels aimless", questionKeyword: "life is completely aimless", thaiMeaning: "ไร้จุดหมาย", exactPortion: "Psychologically, this can give a purpose to a life that otherwise feels aimless." },
-      { number: 21, answer: "educational", passageKeyword: "educational value", questionKeyword: "may be educational", thaiMeaning: "การศึกษา", exactPortion: "If you think about collecting postage stamps, another potential reason for it – or, perhaps, a result of collecting – is its educational value." },
-      { number: 22, answer: "trainspotting", passageKeyword: "trainspotting", questionKeyword: "mostly a male hobby", thaiMeaning: "trainspotting", exactPortion: "In the past – and nowadays, too, though to a lesser extent – a popular form of collecting, particularly among boys and men, was trainspotting." }
+      { number: 6, answer: "pavilions", passageKeyword: "included sheltered visitors relentless", questionKeyword: "stepwells provided shade", thaiMeaning: "จากข้อความใน", exactPortion: "they also included pavilions that sheltered visitors from the relentless heat." },
+      { number: 7, answer: "drought", passageKeyword: "condition helped recent spells", questionKeyword: "serious climatic event", thaiMeaning: "จากข้อความใน", exactPortion: "Their condition hasn't been helped by recent dry spells: southern Rajasthan suffered an eight-year drought between 1996 and 2004." },
+      { number: 8, answer: "tourists", passageKeyword: "far-flung corners northwestern wonder", questionKeyword: "frequent visitors stepwells", thaiMeaning: "จากข้อความใน", exactPortion: "Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these architectural marvels from 1,000 years ago" },
+      { number: 9, answer: "Earthquake", passageKeyword: "Incredibly, in January 2001, this ancient structure survived…", questionKeyword: "… of 2001.", thaiMeaning: "จากข้อความใน", exactPortion: "Incredibly, in January 2001, this ancient structure survived a devastating earthquake that measured 7.6 on the Richter scale." },
+      { number: 10, answer: "sides", passageKeyword: "including descend bottom stunning", questionKeyword: "produce", thaiMeaning: "จากข้อความใน", exactPortion: "including four sides of steps that descend to the bottom in a stunning geometrical formation.", acceptedAnswers: ["sides"] },
+      { number: 11, answer: "Tank", passageKeyword: "actually resembles reservoir rather", questionKeyword: "well", thaiMeaning: "จากข้อความใน", exactPortion: "It actually resembles a tank (kund means reservoir or pond) rather than a well" },
+      { number: 12, answer: "verandas", passageKeyword: "fourth verandas supported ornate", questionKeyword: "provide", thaiMeaning: "จากข้อความใน", exactPortion: "On the fourth side, verandas which are supported by ornate pillars overlook the steps.", acceptedAnswers: ["verandahs"] },
+      { number: 13, answer: "underwater", passageKeyword: "constructed around storeys", questionKeyword: "levels public today", thaiMeaning: "จากข้อความใน", exactPortion: "Constructed in around 1700, it's nine storeys deep, with the last two being underwater." },
     ]
   },
   {
     examId: "journey-normal-stage-2",
     passageNumber: 2,
-    startNumber: 26,
+    startNumber: 24,
     endNumber: 27,
-    sourceParagraphs: ["B", "C"],
+    sourceParagraphs: ["A","B"],
     instructions: [
-      "Questions 26–27",
-      "Complete the sentences below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 26–27 on your answer sheet."
+          "Questions 24–27",
+          "Complete the summary below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 24–27 on your answer sheet."
     ],
-    summaryTitle: "Bingham's journey to Machu Picchu",
+    summaryTitle: "Gifted children and learning",
     summaryLines: [
-      { type: 'bullet', text: "The track that took Bingham down the Urubamba valley had been created for the transportation of {26}." },
-      { type: 'bullet', text: "Bingham found out about the ruins of Machu Picchu from a {27} in the Urubamba valley." }
+      { type: "para", text: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and {24} in their home etc. There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of {25}." },
+      { type: "bullet", text: "{26} is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example." },
+      { type: "bullet", text: "Although ' {27}' can produce extremely high examination results." },
     ],
     questions: [
-      { number: 26, answer: "rubber", passageKeyword: "rubber to be brought up by mules", questionKeyword: "transportation of rubber", thaiMeaning: "ยาง", exactPortion: "a track had recently been blasted down the valley canyon to enable rubber to be brought up by mules from the jungle" },
-      { number: 27, answer: "farmer", passageKeyword: "local farmer, Melchor Arteaga", questionKeyword: "found out from a farmer", thaiMeaning: "ชาวนา", exactPortion: "some ruins that a local farmer, Melchor Arteaga, had told them about the night before" }
+      { number: 24, answer: "activities", passageKeyword: "higher children scores especially", questionKeyword: "study found", thaiMeaning: "จากข้อความใน", exactPortion: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc." },
+      { number: 25, answer: "regulation", passageKeyword: "appears qualitative difference intellectually", questionKeyword: "children average ability", thaiMeaning: "จากข้อความใน", exactPortion: "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.", acceptedAnswers: ["regulation","self-regulation"] },
+      { number: 26, answer: "awareness", passageKeyword: "emotional awareness metacognition children", questionKeyword: "meta-cognition involves children", thaiMeaning: "จากข้อความใน", exactPortion: "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.", acceptedAnswers: ["awareness"] },
+      { number: 27, answer: "spoon-feeding", passageKeyword: "although produce extremely examination", questionKeyword: "teachers known often", thaiMeaning: "จากข้อความใน", exactPortion: "Although 'spoon-feeding' can produce extremely high examination results" },
     ]
   },
   {
     examId: "journey-normal-stage-3",
     passageNumber: 1,
-    startNumber: 8,
+    startNumber: 11,
     endNumber: 13,
-    sourceParagraphs: ["B", "B"],
+    sourceParagraphs: ["D","E"],
     instructions: [
-      "Questions 8–13",
-      "Complete the notes below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–13 on your answer sheet."
+          "Questions 11–13",
+          "Complete the summary below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 11–13 on your answer sheet."
     ],
-    summaryTitle: "The decline of the Galápagos tortoise",
+    summaryTitle: "The Context, Meaning and Scope of Tourism",
     summaryLines: [
-      { type: 'bullet', text: "Originally from mainland South America" },
-      { type: 'bullet', text: "Numbers on Galápagos islands increased, due to lack of predators" },
-      { type: 'bullet', text: "17th century: small numbers taken onto ships used by {8}" },
-      { type: 'bullet', text: "1790s: very large numbers taken onto whaling ships, kept for {9}, and also used to produce {10}" },
-      { type: 'bullet', text: "Hunted by {11} on the islands" },
-      { type: 'bullet', text: "Habitat destruction: for the establishment of agriculture and by various {12} not native to the islands, which also fed on baby tortoises and tortoises' {13}" }
+      { type: "para", text: "For example, tourism is the major source of {11} in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries. suggest that the travel and tourism industry is the number one ranked {12} in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States. In many cases, similar difficulties arise when attempts are made to measure {13}." },
     ],
     questions: [
-      { number: 8, answer: "pirates", passageKeyword: "pirates took a few on board for food", questionKeyword: "ships used by pirates", thaiMeaning: "โจรสลัด", exactPortion: "From the 17th century onwards, pirates took a few on board for food" },
-      { number: 9, answer: "food", passageKeyword: "food supplies during long ocean passages", questionKeyword: "kept for food", thaiMeaning: "อาหาร", exactPortion: "the tortoises were taken on board these ships to act as food supplies during long ocean passages" },
-      { number: 10, answer: "oil", passageKeyword: "processed into high-grade oil", questionKeyword: "used to produce oil", thaiMeaning: "น้ำมัน", exactPortion: "Sometimes, their bodies were processed into high-grade oil" },
-      { number: 11, answer: "settlers", passageKeyword: "settlers came to the islands", questionKeyword: "hunted by settlers", thaiMeaning: "ผู้บุกเบิก", exactPortion: "This historical exploitation was then exacerbated when settlers came to the islands" },
-      { number: 12, answer: "species", passageKeyword: "introduced alien species", questionKeyword: "not native species", thaiMeaning: "สปีชีส์ต่างถิ่น", exactPortion: "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants" },
-      { number: 13, answer: "eggs", passageKeyword: "prey on the eggs and young tortoises", questionKeyword: "fed on eggs", thaiMeaning: "ไข่", exactPortion: "that either prey on the eggs and young tortoises or damage or destroy their habitat" }
+      { number: 11, answer: "income", passageKeyword: "example tourism source income", questionKeyword: "greece tourism important", thaiMeaning: "จากข้อความใน", exactPortion: "For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries.", acceptedAnswers: ["income","industry"] },
+      { number: 12, answer: "employer", passageKeyword: "suggest travel tourism industry", questionKeyword: "major", thaiMeaning: "จากข้อความใน", exactPortion: "suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States." },
+      { number: 13, answer: "tourism", passageKeyword: "similar difficulties attempts measure", questionKeyword: "problems associated measuring", thaiMeaning: "จากข้อความใน", exactPortion: "In many cases, similar difficulties arise when attempts are made to measure domestic tourism.", acceptedAnswers: ["tourism"] },
     ]
   },
   {
     examId: "journey-normal-stage-3",
     passageNumber: 2,
-    startNumber: 21,
-    endNumber: 27,
-    sourceParagraphs: ["A", "G"],
+    startNumber: 20,
+    endNumber: 23,
+    sourceParagraphs: ["G","H"],
     instructions: [
-      "Questions 21–27",
-      "Complete the sentences below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 21–27 on your answer sheet."
+          "Questions 20–23",
+          "Complete the summary below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 20–23 on your answer sheet."
     ],
-    summaryTitle: "The Intersection of Health Sciences and Geography",
+    summaryTitle: "Autumn leaves",
     summaryLines: [
-      { type: 'bullet', text: "Certain diseases have disappeared, thanks to better {21} and healthcare." },
-      { type: 'bullet', text: "Because there is more contact between people, {22} are losing their usefulness." },
-      { type: 'bullet', text: "Disease-causing {23} are most likely to be found in hot, damp regions." },
-      { type: 'bullet', text: "One cause of pollution is {24} that burn a particular fuel." },
-      { type: 'bullet', text: "The growth of cities often has an impact on nearby {25}." },
-      { type: 'bullet', text: "{26} is one disease that is growing after having been eradicated." },
-      { type: 'bullet', text: "A physical barrier such as a {27} can prevent people from reaching a hospital." }
+      { type: "para", text: "One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most {20}. Not only that, but the red is brighter on the {21} side of the leaf." },
+      { type: "bullet", text: "It has also been recognised for decades that the best conditions for intense red colours are {22}, sunny days and cool nights." },
+      { type: "bullet", text: "And finally, trees such as maples usually get much redder the more {23} you travel in the northern hemisphere." },
     ],
     questions: [
-      { number: 21, answer: "vaccinations", passageKeyword: "improvements in vaccinations", questionKeyword: "better vaccinations and healthcare", thaiMeaning: "วัคซีน", exactPortion: "improvements in vaccinations and the availability of healthcare" },
-      { number: 22, answer: "antibiotics", passageKeyword: "resistant to antibiotics", questionKeyword: "antibiotics losing usefulness", thaiMeaning: "ยาปฏิชีวนะ", exactPortion: "super-viruses and other infections resistant to antibiotics are becoming more and more common" },
-      { number: 23, answer: "mosquitoes", acceptedAnswers: ["mosquitos"], passageKeyword: "mosquitos that can give people this disease", questionKeyword: "disease-causing mosquitoes", thaiMeaning: "ยุง", exactPortion: "tropical regions that foster a warm and damp environment in which the mosquitos that can give people this disease can grow" },
-      { number: 24, answer: "factories", passageKeyword: "factories that run on coal power", questionKeyword: "factories burning coal", thaiMeaning: "โรงงาน", exactPortion: "factories that run on coal power" },
-      { number: 25, answer: "forests", passageKeyword: "cutting down of forests", questionKeyword: "impact on nearby forests", thaiMeaning: "ป่า", exactPortion: "the cutting down of forests to allow for the expansion of big cities" },
-      { number: 26, answer: "polio", passageKeyword: "polio are re-emerging", questionKeyword: "disease growing after eradicated", thaiMeaning: "โรคโปลิโอ", exactPortion: "diseases like polio are re-emerging" },
-      { number: 27, answer: "mountain", passageKeyword: "mountain between their village and the nearest hospital", questionKeyword: "physical barrier mountain", thaiMeaning: "ภูเขา", exactPortion: "it may be very difficult for people to get medical attention because there is a mountain between their village and the nearest hospital" }
+      { number: 20, answer: "sun", passageKeyword: "straightforward leaves reddest", questionKeyword: "vividly coloured leaves", thaiMeaning: "จากข้อความใน", exactPortion: "One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most sun", acceptedAnswers: ["sunlight"] },
+      { number: 21, answer: "upper", passageKeyword: "brighter", questionKeyword: "surfaces leaves contain", thaiMeaning: "จากข้อความใน", exactPortion: "Not only that, but the red is brighter on the upper side of the leaf." },
+      { number: 22, answer: "dry", passageKeyword: "recognised decades conditions intense", questionKeyword: "leaves abundant daytime", thaiMeaning: "จากข้อความใน", exactPortion: "It has also been recognised for decades that the best conditions for intense red colours are dry, sunny days and cool nights" },
+      { number: 23, answer: "north", passageKeyword: "finally maples usually redder", questionKeyword: "intensity colour leaves", thaiMeaning: "จากข้อความใน", exactPortion: "And finally, trees such as maples usually get much redder the more north you travel in the northern hemisphere." },
     ]
   },
   {
     examId: "journey-normal-stage-4",
     passageNumber: 1,
     startNumber: 1,
-    endNumber: 8,
-    sourceParagraphs: ["A", "D"],
+    endNumber: 6,
+    sourceParagraphs: ["C","D"],
     instructions: [
-      "Questions 1–8",
-      "Complete the notes below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 1–8 on your answer sheet."
+          "Questions 1–6",
+          "Complete the summary below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 1–6 on your answer sheet."
     ],
-    summaryTitle: "The History of Glass",
+    summaryTitle: "The megafires of California",
     summaryLines: [
-      { type: 'bullet', text: "Early humans used a material called {1} to make the sharp points of their {2}" },
-      { type: 'bullet', text: "4000 BC: {3} made of stone were covered in a coating of man-made glass." },
-      { type: 'bullet', text: "First century BC: glass was coloured because of the {4} in the material." },
-      { type: 'bullet', text: "Until 476 AD: Only the {5} knew how to make glass." },
-      { type: 'bullet', text: "From 10th century: Venetians became famous for making bottles out of glass." },
-      { type: 'bullet', text: "17th century: George Ravenscroft developed a process using {6} to avoid the occurrence of {7} in blown glass." },
-      { type: 'bullet', text: "Mid-19th century: British glass production developed after changes to laws concerning {8}." }
+      { type: "para", text: "Wildfires now {1} more unpredictably than in the past. Megafires are {2} times the size of the average forest fire of 20 years ago. The region has had significantly {3} normal precipitation in recent years." },
+      { type: "bullet", text: "Stopping wildfires quickly has left more brush to act as {4} for megafires." },
+      { type: "bullet", text: "Fire {5} are on average 78 days longer than they were 20 years ago." },
+      { type: "bullet", text: "There is increased {6} in vulnerable wooded areas." },
     ],
     questions: [
-      { number: 1, answer: "obsidian", passageKeyword: "obsidian", questionKeyword: "material called obsidian", thaiMeaning: "ออบซิเดียน", exactPortion: "Historians have discovered that a type of natural glass – obsidian – formed in places such as the mouth of a volcano" },
-      { number: 2, answer: "spears", passageKeyword: "tips for spears", questionKeyword: "sharp points of spears", thaiMeaning: "หอก", exactPortion: "was first used as tips for spears" },
-      { number: 3, answer: "beads", passageKeyword: "coating stone beads", questionKeyword: "stone beads covered in glass", thaiMeaning: "ลูกปัด", exactPortion: "this took the form of glazes used for coating stone beads" },
-      { number: 4, answer: "impurities", passageKeyword: "impurities of the raw material", questionKeyword: "coloured because of impurities", thaiMeaning: "สิ่งเจือปน", exactPortion: "The glass made during this time was highly coloured due to the impurities of the raw material" },
-      { number: 5, answer: "Romans", passageKeyword: "Romans guarded glass-making skills", questionKeyword: "only the Romans knew", thaiMeaning: "ชาวโรมัน", exactPortion: "they guarded the skills and technology required to make glass very closely, and it was not until their empire collapsed in 476 AD" },
-      { number: 6, answer: "lead", passageKeyword: "introducing lead", questionKeyword: "process using lead", thaiMeaning: "ตะกั่ว", exactPortion: "by introducing lead to the raw materials used in the process" },
-      { number: 7, answer: "clouding", passageKeyword: "effect of clouding", questionKeyword: "avoid clouding", thaiMeaning: "ขุ่นมัว", exactPortion: "He attempted to counter the effect of clouding that sometimes occurred in blown glass" },
-      { number: 8, answer: "taxes", passageKeyword: "heavy taxes", questionKeyword: "laws concerning taxes", thaiMeaning: "ภาษี", exactPortion: "heavy taxes had been placed on the amount of glass melted in a glasshouse" }
+      { number: 1, answer: "spread", passageKeyword: "wildfires themselves experts generally", questionKeyword: "movement unpredictably", thaiMeaning: "จากข้อความใน", exactPortion: "The wildfires themselves, experts say, are generally hotter, faster, and spread more erratically than in the past." },
+      { number: 2, answer: "10", passageKeyword: "average forest", questionKeyword: "decades", thaiMeaning: "จากข้อความใน", exactPortion: "10 times the size of the average forest fire of 20 years ago.", acceptedAnswers: ["times"] },
+      { number: 3, answer: "below", passageKeyword: "significantly normal precipitation recent", questionKeyword: "rainfall average", thaiMeaning: "จากข้อความใน", exactPortion: "has had significantly below normal precipitation in many recent years." },
+      { number: 4, answer: "fuel", passageKeyword: "natural eradication underbrush primary", questionKeyword: "brush", thaiMeaning: "จากข้อความใน", exactPortion: "halt the natural eradication of underbrush, now the primary fuel for megafires." },
+      { number: 5, answer: "seasons", passageKeyword: "second average longer", questionKeyword: "extended", thaiMeaning: "จากข้อความใน", exactPortion: "Second is fire seasons that on average are 78 days longer than they were 20 years ago." },
+      { number: 6, answer: "housing", passageKeyword: "increasingly building fire-prone ecosystems", questionKeyword: "building vulnerable places", thaiMeaning: "จากข้อความใน", exactPortion: "In California, where population growth has averaged more than 600,000 a year for at least a decade, more residential housing is being built.", acceptedAnswers: ["homes"] },
+    ]
+  },
+  {
+    examId: "journey-normal-stage-4",
+    passageNumber: 2,
+    startNumber: 15,
+    endNumber: 19,
+    sourceParagraphs: ["A","B"],
+    instructions: [
+          "Questions 15–19",
+          "Complete the summary below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 15–19 on your answer sheet."
+    ],
+    summaryTitle: "Second nature",
+    summaryLines: [
+      { type: "para", text: "Psychologists have long held that a person's character cannot undergo a {15} in any meaningful way. and that the key traits of personality are determined at a very {16}. Some qualities are less challenging to develop than others, {17} being one of them." },
+      { type: "bullet", text: "However, developing qualities requires mastering a range of {18} which are diverse and sometimes surprising." },
+      { type: "bullet", text: "For example, to bring more joy and passion into your life, you must be open to experiencing negative {19}." },
+    ],
+    questions: [
+      { number: 15, answer: "transformation", passageKeyword: "psychologists person character cannot", questionKeyword: "impossible", thaiMeaning: "จากข้อความใน", exactPortion: "Psychologists have long held that a person's character cannot undergo a transformation in any meaningful way", acceptedAnswers: ["change"] },
+      { number: 16, answer: "age", passageKeyword: "traits personality determined", questionKeyword: "person character tends", thaiMeaning: "จากข้อความใน", exactPortion: "and that the key traits of personality are determined at a very young age.", acceptedAnswers: ["age"] },
+      { number: 17, answer: "optimism", passageKeyword: "qualities challenging develop others", questionKeyword: "however regardless quality", thaiMeaning: "จากข้อความใน", exactPortion: "Some qualities are less challenging to develop than others, optimism being one of them." },
+      { number: 18, answer: "skills", passageKeyword: "however developing qualities requires", questionKeyword: "order", thaiMeaning: "จากข้อความใน", exactPortion: "However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising.", acceptedAnswers: ["techniques"] },
+      { number: 19, answer: "emotions", passageKeyword: "example passion experiencing negative", questionKeyword: "order increase happiness", thaiMeaning: "จากข้อความใน", exactPortion: "For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions.", acceptedAnswers: ["emotions","feelings"] },
     ]
   },
   {
@@ -194,60 +163,63 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     passageNumber: 1,
     startNumber: 1,
     endNumber: 7,
-    sourceParagraphs: ["B", "D"],
+    sourceParagraphs: ["F","G"],
     instructions: [
-      "Questions 1–7",
-      "Complete the table below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 1–7 on your answer sheet."
+          "Questions 1–7",
+          "Complete the summary below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 1–7 on your answer sheet."
     ],
-    summaryTitle: "The Tourism New Zealand website",
+    summaryTitle: "Crop-growing skyscrapers",
     summaryLines: [
-      { type: 'heading', text: "Database of tourism services" },
-      { type: 'bullet', text: "allowed businesses to {1} information regularly" },
-      { type: 'bullet', text: "evaluation including impact on the {2}" },
-      { type: 'heading', text: "Special features on local topics" },
-      { type: 'bullet', text: "interview with a former sports {3}" },
-      { type: 'bullet', text: "interactive tour of locations used in {4}" },
-      { type: 'heading', text: "Information on driving routes" },
-      { type: 'bullet', text: "varied depending on the {5}" },
-      { type: 'heading', text: "Travel Planner" },
-      { type: 'bullet', text: "map, public transport and local {6}" },
-      { type: 'heading', text: "'Your Words'" },
-      { type: 'bullet', text: "travellers could send a link to their {7}" }
+      { type: "para", text: "The concept of indoor farming is not new, since hothouse production of {1} and other produce has been in vogue for some time. Situated in the heart of {2}, they would drastically reduce the amount of transportation required to bring food to consumers. Although the system would consume {3}, it would return energy to the grid via methane generation from composting nonedible parts of plants. It would also dramatically reduce fossil {4} consumption, by cutting out the need for tractors, ploughs and shipping." },
+      { type: "bullet", text: "A major drawback of vertical farming, however, is that the plants would require {5} lighting." },
+      { type: "bullet", text: "One variation on vertical farming that has been developed is to grow plants in stacked {6} that move on rails." },
+      { type: "bullet", text: "While it is possible that much of our food will be grown in skyscrapers in future, most experts currently believe it is far more likely that we will simply use the space available on urban {7}." },
     ],
     questions: [
-      { number: 1, answer: "update", passageKeyword: "update the details they gave on a regular basis", questionKeyword: "update information regularly", thaiMeaning: "อัปเดตข้อมูล", exactPortion: "participating businesses were able to update the details they gave on a regular basis, the information provided remained accurate" },
-      { number: 2, answer: "environment", passageKeyword: "effect on the environment", questionKeyword: "impact on the environment", thaiMeaning: "สิ่งแวดล้อม", exactPortion: "As part of this, the effect of each business on the environment was considered" },
-      { number: 3, answer: "captain", passageKeyword: "rugby captain Tana Umaga", questionKeyword: "former sports captain", thaiMeaning: "กัปตันทีม", exactPortion: "One of the most popular was an interview with former New Zealand All Blacks rugby captain Tana Umaga" },
-      { number: 4, answer: "films", passageKeyword: "blockbuster films", questionKeyword: "locations used in films", thaiMeaning: "ภาพยนตร์", exactPortion: "an interactive journey through a number of the locations chosen for blockbuster films which had made use of New Zealand's stunning scenery as a backdrop" },
-      { number: 5, answer: "season", passageKeyword: "according to the season", questionKeyword: "varied depending on the season", thaiMeaning: "ฤดูกาล", exactPortion: "highlighting different routes according to the season and indicating distances and times" },
-      { number: 6, answer: "accommodation", passageKeyword: "links to accommodation", questionKeyword: "local accommodation", thaiMeaning: "ที่พัก", exactPortion: "There were also links to accommodation in the area" },
-      { number: 7, answer: "blog", passageKeyword: "submit a blog", questionKeyword: "link to their blog", thaiMeaning: "บล็อก", exactPortion: "anyone could submit a blog of their New Zealand travels for possible inclusion on the website" }
+      { number: 1, answer: "tomatoes", passageKeyword: "concept indoor farming hothouse", questionKeyword: "plants including already", thaiMeaning: "จากข้อความใน", exactPortion: "The concept of indoor farming is not new, since hothouse production of tomatoes and other produce has been in vogue for some time." },
+      { number: 2, answer: "centres", passageKeyword: "situated centres drastically reduce", questionKeyword: "vertical farms located", thaiMeaning: "จากข้อความใน", exactPortion: "Situated in the heart of urban centres, they would drastically reduce the amount of transportation required to bring food to consumers.", acceptedAnswers: ["centers","centres"] },
+      { number: 3, answer: "energy", passageKeyword: "although system consume return", questionKeyword: "vertical farms methane", thaiMeaning: "จากข้อความใน", exactPortion: "Although the system would consume energy, it would return energy to the grid via methane generation from composting nonedible parts of plants." },
+      { number: 4, answer: "fuel", passageKeyword: "dramatically reduce fossil cutting", questionKeyword: "consumption because agricultural", thaiMeaning: "จากข้อความใน", exactPortion: "It would also dramatically reduce fossil fuel use, by cutting out the need for tractors, ploughs and shipping.", acceptedAnswers: ["fuel"] },
+      { number: 5, answer: "artificial", passageKeyword: "drawback vertical farming however", questionKeyword: "vertical farms light", thaiMeaning: "จากข้อความใน", exactPortion: "A major drawback of vertical farming, however, is that the plants would require artificial light." },
+      { number: 6, answer: "trays", passageKeyword: "variation vertical farming developed", questionKeyword: "vertical farming involves", thaiMeaning: "จากข้อความใน", exactPortion: "One variation on vertical farming that has been developed is to grow plants in stacked trays that move on rails.", acceptedAnswers: ["trays"] },
+      { number: 7, answer: "rooftops", passageKeyword: "possible skyscrapers future experts", questionKeyword: "probable development grown", thaiMeaning: "จากข้อความใน", exactPortion: "While it is possible that much of our food will be grown in skyscrapers in future, most experts currently believe it is far more likely that we will simply use the space available on urban rooftops.", acceptedAnswers: ["rooftops"] },
     ]
   },
   {
     examId: "journey-normal-stage-5",
     passageNumber: 2,
-    startNumber: 25,
+    startNumber: 21,
     endNumber: 27,
-    sourceParagraphs: ["D", "E"],
+    diagramImage: "/reading-diagrams/falkirk-wheel-lift.svg",
+    diagramAlt: "Diagram showing how a boat is lifted on the Falkirk Wheel",
+    sourceParagraphs: ["G","J"],
     instructions: [
-      "Questions 25–27",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
+          "Questions 21–27",
+          "Label the diagram below.",
+          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Write your answers in boxes 21–27 on your answer sheet."
     ],
-    summaryTitle: "Responses to boredom",
+    summaryTitle: "How a boat is lifted on the Falkirk Wheel",
     summaryLines: [
-      { type: 'para', text: "For John Eastwood, the central feature of boredom is that people cannot {25}, due to a failure in the 'attention system', and as a result they become frustrated and irritable." },
-      { type: 'bullet', text: "Those for whom {26} is an important aim in life may have problems in coping with boredom." },
-      { type: 'bullet', text: "Those who have the characteristic of {27} can generally cope with it." }
+      { type: 'diagram' },
+      { type: "bullet", text: "A pair of {21} are raised in order to shut out water from the canal basin." },
+      { type: "bullet", text: "A {22} is taken out, enabling the Wheel to rotate." },
+      { type: "bullet", text: "An array of hydraulic motors begins to rotate the central {23}." },
+      { type: "bullet", text: "A range of different-sized {24} ensures the gondola keeps upright." },
+      { type: "bullet", text: "The boat passes straight onto the {25}, 24 metres above the canal basin." },
+      { type: "bullet", text: "The boat travels through a tunnel beneath the Roman {26}." },
+      { type: "bullet", text: "A pair of {27} raise the boat 11 m to the level of the Union Canal." },
     ],
     questions: [
-      { number: 25, answer: "focus", passageKeyword: "inability to focus on anything", questionKeyword: "cannot focus", thaiMeaning: "โฟกัส", exactPortion: "For Eastwood, the central feature of boredom is a failure to put our attention system into gear. This causes an inability to focus on anything" },
-      { number: 26, answer: "pleasure", passageKeyword: "motivated by pleasure", questionKeyword: "pleasure important aim", thaiMeaning: "ความสุข", exactPortion: "People who are motivated by pleasure seem to suffer particularly badly" },
-      { number: 27, answer: "curiosity", passageKeyword: "high boredom threshold", questionKeyword: "characteristic curiosity", thaiMeaning: "ความอยากรู้", exactPortion: "Other personality traits, such as curiosity, are associated with a high boredom threshold" }
+      { number: 21, answer: "gates", passageKeyword: "hydraulic steel gates", questionKeyword: "pair of gates raised", thaiMeaning: "จึงคำตอบคือ \"gates\"", exactPortion: "Two hydraulic steel gates are raised, so as to seal the gondola off from the water in the canal basin." },
+      { number: 22, answer: "clamp", passageKeyword: "hydraulic clamp", questionKeyword: "clamp taken out", thaiMeaning: "จึงคำตอบคือ \"clamp\"", exactPortion: "A hydraulic clamp, which prevents the arms of the Wheel moving while the gondola is docked, is removed, allowing the Wheel to turn." },
+      { number: 23, answer: "axle", passageKeyword: "central axle", questionKeyword: "rotate the central axle", thaiMeaning: "จึงคำตอบคือ \"axle\"", exactPortion: "In the central machine room an array of ten hydraulic motors then begins to rotate the central axle." },
+      { number: 24, answer: "cogs", passageKeyword: "eight-metre-wide cogs", questionKeyword: "different-sized cogs", thaiMeaning: "จึงคำตอบคือ \"cogs\"", exactPortion: "Two eight-metre-wide cogs orbit a fixed inner cog of the same width, connected by two smaller cogs travelling in the opposite direction to the outer cogs – so ensuring that the gondolas always remain level." },
+      { number: 25, answer: "aqueduct", passageKeyword: "aqueduct", questionKeyword: "passes onto the aqueduct", thaiMeaning: "จึงคำตอบคือ \"aqueduct\"", exactPortion: "When the gondola reaches the top, the boat passes straight onto the aqueduct situated 24 metres above the canal basin." },
+      { number: 26, answer: "wall", passageKeyword: "Antonine Wall", questionKeyword: "tunnel beneath the Roman wall", thaiMeaning: "จึงคำตอบคือ \"wall\"", exactPortion: "Boats travel under this wall via a tunnel, then through the locks, and finally on to the Union Canal." },
+      { number: 27, answer: "locks", passageKeyword: "pair of locks", questionKeyword: "pair of locks raise the boat", thaiMeaning: "จึงคำตอบคือ \"locks\"", exactPortion: "The remaining 11 metres of lift needed to reach the Union Canal is achieved by means of a pair of locks." },
     ]
   }
 ]

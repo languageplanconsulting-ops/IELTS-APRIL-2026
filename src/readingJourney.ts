@@ -3,6 +3,8 @@ import { INTENSIVE_LAYOUTS_STAGE_11_15 } from './journeyIntensivePassages11to15.
 import { INTENSIVE_LAYOUTS_STAGE_1_5 } from './journeyIntensivePassages1to5.ts'
 import { INTENSIVE_LAYOUTS_STAGE_6 } from './journeyIntensivePassages6.ts'
 import { INTENSIVE_LAYOUTS_STAGE_7_9 } from './journeyIntensivePassages7to9.ts'
+import { INTENSIVE_LAYOUTS_STAGE_6_17 } from './journeyIntensivePassages6to17.ts'
+import { INTENSIVE_LAYOUTS_STAGE_8_12 } from './journeyIntensivePassages8to12.ts'
 import { INTENSIVE_LAYOUTS_STAGE_10 } from './journeyIntensivePassages10.ts'
 import { INTENSIVE_LAYOUTS_STAGE_11 } from './journeyIntensivePassages11.ts'
 import { INTENSIVE_LAYOUTS_STAGE_12 } from './journeyIntensivePassages12.ts'
@@ -77,7 +79,7 @@ export type ReadingJourneyPassageStats = {
 }
 
 export const JOURNEY_PASSAGES_PER_STAGE = 2
-export const INTENSIVE_JOURNEY_STAGE_MAX = 15
+export const INTENSIVE_JOURNEY_STAGE_MAX = 17
 
 export type ReadingJourneyStageDefinition = {
   stageNumber: number
@@ -110,7 +112,9 @@ const INTENSIVE_QUESTION_START_BY_STAGE: Record<number, readonly [number, number
   12: [1, 15],
   13: [1, 15],
   14: [1, 15],
-  15: [1, 15]
+  15: [1, 15],
+  16: [1, 15],
+  17: [1, 15]
 }
 const FULL_READING_QUESTION_START_BY_PASSAGE_SLOT = [1, 14, 27] as const
 
@@ -721,8 +725,10 @@ const buildJourneyExamFromPassages = (
 export const buildIntensiveJourneyExam = (stageNumber: number): ReadingExamRecord | null => {
   const layouts =
     INTENSIVE_LAYOUTS_STAGE_1_5[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_6_17[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_6[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_7_9[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_8_12[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_10[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_11[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_12[stageNumber] ||
