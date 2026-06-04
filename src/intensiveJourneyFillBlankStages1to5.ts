@@ -16,7 +16,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     summaryTitle: "Stepwells",
     summaryLines: [
       { type: "para", text: "Which part of some stepwells provided shade for people? {6} What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? {7} Who are frequent visitors to stepwells nowadays? {8} Incredibly, in January 2001, this ancient structure survived a devastating {9} that measured 7.6 on the Richter scale." },
-      { type: "bullet", text: "including four {10} of steps that descend to the bottom in a stunning geometrical formation." },
+      { type: "bullet", text: "including {10} of steps that descend to the bottom in a stunning geometrical formation." },
       { type: "bullet", text: "It actually resembles a {11}(kund means reservoir or pond) rather than a well." },
       { type: "bullet", text: "On the fourth side, {12} which are supported by ornate pillars overlook the steps." },
       { type: "bullet", text: "Constructed in around 1700, it's nine storeys deep, with the last two being {13}." },
@@ -26,7 +26,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
       { number: 7, answer: "drought", passageKeyword: "condition helped recent spells", questionKeyword: "serious climatic event", thaiMeaning: "จากข้อความใน", exactPortion: "Their condition hasn't been helped by recent dry spells: southern Rajasthan suffered an eight-year drought between 1996 and 2004." },
       { number: 8, answer: "tourists", passageKeyword: "far-flung corners northwestern wonder", questionKeyword: "frequent visitors stepwells", thaiMeaning: "จากข้อความใน", exactPortion: "Tourists flock to wells in far-flung corners of northwestern India to gaze in wonder at these architectural marvels from 1,000 years ago" },
       { number: 9, answer: "Earthquake", passageKeyword: "Incredibly, in January 2001, this ancient structure survived…", questionKeyword: "… of 2001.", thaiMeaning: "จากข้อความใน", exactPortion: "Incredibly, in January 2001, this ancient structure survived a devastating earthquake that measured 7.6 on the Richter scale." },
-      { number: 10, answer: "sides", passageKeyword: "including descend bottom stunning", questionKeyword: "produce", thaiMeaning: "จากข้อความใน", exactPortion: "including four sides of steps that descend to the bottom in a stunning geometrical formation.", acceptedAnswers: ["sides"] },
+      { number: 10, answer: "4 sides", passageKeyword: "including descend bottom stunning", questionKeyword: "produce", thaiMeaning: "จากข้อความใน", exactPortion: "including four sides of steps that descend to the bottom in a stunning geometrical formation.", acceptedAnswers: ["4 sides", "Four sides", "sides"] },
       { number: 11, answer: "Tank", passageKeyword: "actually resembles reservoir rather", questionKeyword: "well", thaiMeaning: "จากข้อความใน", exactPortion: "It actually resembles a tank (kund means reservoir or pond) rather than a well" },
       { number: 12, answer: "verandas", passageKeyword: "fourth verandas supported ornate", questionKeyword: "provide", thaiMeaning: "จากข้อความใน", exactPortion: "On the fourth side, verandas which are supported by ornate pillars overlook the steps.", acceptedAnswers: ["verandahs"] },
       { number: 13, answer: "underwater", passageKeyword: "constructed around storeys", questionKeyword: "levels public today", thaiMeaning: "จากข้อความใน", exactPortion: "Constructed in around 1700, it's nine storeys deep, with the last two being underwater." },
@@ -41,7 +41,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     instructions: [
           "Questions 24–27",
           "Complete the summary below.",
-          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
           "Write your answers in boxes 24–27 on your answer sheet."
     ],
     summaryTitle: "Gifted children and learning",
@@ -52,8 +52,8 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     questions: [
       { number: 24, answer: "activities", passageKeyword: "higher children scores especially", questionKeyword: "study found", thaiMeaning: "จากข้อความใน", exactPortion: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc." },
-      { number: 25, answer: "regulation", passageKeyword: "appears qualitative difference intellectually", questionKeyword: "children average ability", thaiMeaning: "จากข้อความใน", exactPortion: "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.", acceptedAnswers: ["regulation","self-regulation"] },
-      { number: 26, answer: "awareness", passageKeyword: "emotional awareness metacognition children", questionKeyword: "meta-cognition involves children", thaiMeaning: "จากข้อความใน", exactPortion: "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.", acceptedAnswers: ["awareness"] },
+      { number: 25, answer: "internal regulation", passageKeyword: "appears qualitative difference intellectually", questionKeyword: "children average ability", thaiMeaning: "จากข้อความใน", exactPortion: "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.", acceptedAnswers: ["internal regulation", "regulation", "self-regulation"] },
+      { number: 26, answer: "emotional awareness", passageKeyword: "emotional awareness metacognition children", questionKeyword: "meta-cognition involves children", thaiMeaning: "จากข้อความใน", exactPortion: "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.", acceptedAnswers: ["emotional awareness", "awareness"] },
       { number: 27, answer: "spoon-feeding", passageKeyword: "although produce extremely examination", questionKeyword: "teachers known often", thaiMeaning: "จากข้อความใน", exactPortion: "Although 'spoon-feeding' can produce extremely high examination results" },
     ]
   },
@@ -66,7 +66,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     instructions: [
           "Questions 11–13",
           "Complete the summary below.",
-          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
           "Write your answers in boxes 11–13 on your answer sheet."
     ],
     summaryTitle: "The Context, Meaning and Scope of Tourism",
@@ -76,7 +76,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     questions: [
       { number: 11, answer: "income", passageKeyword: "example tourism source income", questionKeyword: "greece tourism important", thaiMeaning: "จากข้อความใน", exactPortion: "For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries.", acceptedAnswers: ["income","industry"] },
       { number: 12, answer: "employer", passageKeyword: "suggest travel tourism industry", questionKeyword: "major", thaiMeaning: "จากข้อความใน", exactPortion: "suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States." },
-      { number: 13, answer: "tourism", passageKeyword: "similar difficulties attempts measure", questionKeyword: "problems associated measuring", thaiMeaning: "จากข้อความใน", exactPortion: "In many cases, similar difficulties arise when attempts are made to measure domestic tourism.", acceptedAnswers: ["tourism"] },
+      { number: 13, answer: "domestic tourism", passageKeyword: "similar difficulties attempts measure", questionKeyword: "problems associated measuring", thaiMeaning: "จากข้อความใน", exactPortion: "In many cases, similar difficulties arise when attempts are made to measure domestic tourism.", acceptedAnswers: ["domestic tourism", "tourism"] },
     ]
   },
   {
@@ -125,7 +125,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     questions: [
       { number: 1, answer: "spread", passageKeyword: "wildfires themselves experts generally", questionKeyword: "movement unpredictably", thaiMeaning: "จากข้อความใน", exactPortion: "The wildfires themselves, experts say, are generally hotter, faster, and spread more erratically than in the past." },
-      { number: 2, answer: "10", passageKeyword: "average forest", questionKeyword: "decades", thaiMeaning: "จากข้อความใน", exactPortion: "10 times the size of the average forest fire of 20 years ago.", acceptedAnswers: ["times"] },
+      { number: 2, answer: "10", passageKeyword: "average forest", questionKeyword: "decades", thaiMeaning: "จากข้อความใน", exactPortion: "10 times the size of the average forest fire of 20 years ago.", acceptedAnswers: ["ten"] },
       { number: 3, answer: "below", passageKeyword: "significantly normal precipitation recent", questionKeyword: "rainfall average", thaiMeaning: "จากข้อความใน", exactPortion: "has had significantly below normal precipitation in many recent years." },
       { number: 4, answer: "fuel", passageKeyword: "natural eradication underbrush primary", questionKeyword: "brush", thaiMeaning: "จากข้อความใน", exactPortion: "halt the natural eradication of underbrush, now the primary fuel for megafires." },
       { number: 5, answer: "seasons", passageKeyword: "second average longer", questionKeyword: "extended", thaiMeaning: "จากข้อความใน", exactPortion: "Second is fire seasons that on average are 78 days longer than they were 20 years ago." },
@@ -141,7 +141,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     instructions: [
           "Questions 15–19",
           "Complete the summary below.",
-          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
           "Write your answers in boxes 15–19 on your answer sheet."
     ],
     summaryTitle: "Second nature",
@@ -152,7 +152,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     questions: [
       { number: 15, answer: "transformation", passageKeyword: "psychologists person character cannot", questionKeyword: "impossible", thaiMeaning: "จากข้อความใน", exactPortion: "Psychologists have long held that a person's character cannot undergo a transformation in any meaningful way", acceptedAnswers: ["change"] },
-      { number: 16, answer: "age", passageKeyword: "traits personality determined", questionKeyword: "person character tends", thaiMeaning: "จากข้อความใน", exactPortion: "and that the key traits of personality are determined at a very young age.", acceptedAnswers: ["age"] },
+      { number: 16, answer: "young age", passageKeyword: "traits personality determined", questionKeyword: "person character tends", thaiMeaning: "จากข้อความใน", exactPortion: "and that the key traits of personality are determined at a very young age.", acceptedAnswers: ["young age"] },
       { number: 17, answer: "optimism", passageKeyword: "qualities challenging develop others", questionKeyword: "however regardless quality", thaiMeaning: "จากข้อความใน", exactPortion: "Some qualities are less challenging to develop than others, optimism being one of them." },
       { number: 18, answer: "skills", passageKeyword: "however developing qualities requires", questionKeyword: "order", thaiMeaning: "จากข้อความใน", exactPortion: "However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising.", acceptedAnswers: ["techniques"] },
       { number: 19, answer: "emotions", passageKeyword: "example passion experiencing negative", questionKeyword: "order increase happiness", thaiMeaning: "จากข้อความใน", exactPortion: "For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions.", acceptedAnswers: ["emotions","feelings"] },

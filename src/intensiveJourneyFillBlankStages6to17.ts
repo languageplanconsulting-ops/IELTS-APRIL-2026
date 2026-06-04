@@ -18,7 +18,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
       { type: "para", text: "Bears, on the other hand, seem to be perceived as stupid and in many cases {8}. A male bear called GoGo in Tennoji Zoo, Osaka, has even been observed making use of a {9} to manipulate his environment. The bear used a tree branch on multiple occasions to dislodge a piece of {10} hung out of his reach." },
       { type: "bullet", text: "A calculated move by a male bear involved running and jumping onto barrels in an attempt to get to a {11} standing on a platform four metres high." },
       { type: "bullet", text: "For example, Ames observed bears putting objects in piles and then knocking them over in what appeared to be a {12}." },
-      { type: "bullet", text: "Wildfires now {13} more unpredictably than in the past." },
+      { type: "bullet", text: "Many bears have been seen to hit out at ice and snow — seemingly out of {13} — when they have just missed out on a kill." },
     ],
     questions: [
       { number: 8, answer: "violent", passageKeyword: "perceived stupid", questionKeyword: "however example tennoji", thaiMeaning: "จากข้อความใน", exactPortion: "Bears, on the other hand, seem to be perceived as stupid and in many cases violent." },
@@ -97,8 +97,8 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     summaryTitle: "Stadiums: past, present and future",
     summaryLines: [
       { type: "para", text: "The Roman stadiums of Europe have proved very versatile. The amphitheatre of Arles, for example, was converted first into a {19} The arena in Verona, one of the oldest Roman amphitheatres, is famous today as a venue where 19 {20} is performed. It has endured the centuries and is currently considered one of the world's prime sites for {21}, thanks to its outstanding acoustics." },
-      { type: "bullet", text: "It is now a market square with 21 {22} and homes incorporated into the remains of the Roman amphitheatre." },
-      { type: "bullet", text: "Complete the summary — 22 {23} and homes incorporated into the remains of the Roman amphitheatre" },
+      { type: "bullet", text: "It was variously used as houses, a {22} depot and a prison, before becoming a market square today." },
+      { type: "bullet", text: "Today, the ruins of the amphitheatre remain embedded in the various {23} and residences surrounding the public square." },
     ],
     questions: [
       { number: 19, answer: "fortress", passageKeyword: "romans became towers century", questionKeyword: "stadiums europe proved", thaiMeaning: "จากข้อความใน", exactPortion: "Built by the Romans in 90 AD, it became a fortress with four towers after the fifth century, and was then transformed into a village containing more than 200 houses." },
@@ -122,7 +122,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     ],
     summaryTitle: "The Dead Sea Scrolls",
     summaryLines: [
-      { type: "para", text: "One of these young shepherds tossed a {1} into an opening on the side of a cliff and was surprised to hear a shattering sound. He and his companions later entered the {2} and stumbled across a collection of large clay jars, seven of which contained scrolls with writing on them. The scrolls were stored in 3 {3} jars. They date from between 150 BCE and 70 CE and are thought to have been written by a group of people." },
+      { type: "para", text: "One of these young shepherds tossed a {1} into an opening on the side of a cliff and was surprised to hear a shattering sound. He and his companions later entered the {2} and stumbled across a collection of large {3} jars, seven of which contained scrolls with writing on them. They date from between 150 BCE and 70 CE and are thought to have been written by a group of people." },
       { type: "bullet", text: "The area was known as Judea at that time, and the people are thought to have belonged to a group called the {4}, a devout Jewish sect." },
       { type: "bullet", text: "The majority of the texts on the Dead Sea Scrolls are in {5}, with some fragments written in an ancient version of its alphabet thought to have fallen out of use in the fifth century BCE." },
     ],
@@ -191,7 +191,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     instructions: [
           "Questions 24–27",
           "Complete the summary below.",
-          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
           "Write your answers in boxes 24–27 on your answer sheet."
     ],
     summaryTitle: "Palm oil",
@@ -203,7 +203,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     questions: [
       { number: 24, answer: "solid", passageKeyword: "primarily because unique properties", questionKeyword: "advantage manufacturers stays", thaiMeaning: "จากข้อความใน", exactPortion: "Primarily because its unique properties - such as remaining solid at room temperature - make it an ideal ingredient for long-term preservation" },
       { number: 25, answer: "orangutan", passageKeyword: "endangered species famously sumatran", questionKeyword: "result spread palm", thaiMeaning: "จากข้อความใน", exactPortion: "Endangered species - most famously the Sumatran orangutan, but also rhinos, elephants, tigers, and numerous other fauna - have suffered from the unstoppable spread of oil palm plantations.", acceptedAnswers: ["orang-utan","orangutan"] },
-      { number: 26, answer: "stocks", passageKeyword: "insists virgin forest clearing", questionKeyword: "certification sustainable palm", thaiMeaning: "จากข้อความใน", exactPortion: "The RSPO insists upon no virgin forest clearing, transparency and regular assessment of carbon stocks, among other criteria.", acceptedAnswers: ["stocks"] },
+      { number: 26, answer: "carbon stocks", passageKeyword: "insists virgin forest clearing", questionKeyword: "certification sustainable palm", thaiMeaning: "จากข้อความใน", exactPortion: "The RSPO insists upon no virgin forest clearing, transparency and regular assessment of carbon stocks, among other criteria.", acceptedAnswers: ["carbon stocks", "stocks"] },
       { number: 27, answer: "biodiversity", passageKeyword: "surely greatest threats global", questionKeyword: "wider range activities", thaiMeaning: "ป่า", exactPortion: "Palm oil is surely one of the greatest threats to global biodiversity,' declares Dr Farnon Ellwood of the University of the West of England, Bristol." },
     ]
   },
@@ -282,7 +282,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     ],
     questions: [
       { number: 1, answer: "lettuces", passageKeyword: "identical vertical nearby aromatic", questionKeyword: "vertical tubes strawberries", thaiMeaning: "จากข้อความใน", exactPortion: "From identical vertical tubes nearby burst row upon row of lettuces; near those are aromatic herbs, such as basil, sage and peppermint." },
-      { number: 2, answer: "1000", passageKeyword: "remaining thirds production harvest", questionKeyword: "eventually", thaiMeaning: "จากข้อความใน", exactPortion: "When the remaining two thirds of the vast open area are in production, 20 staff will harvest up to 1,000 kg of perhaps 35 different varieties of fruit and vegetables, every day.", acceptedAnswers: ["1","000","1000"] },
+      { number: 2, answer: "1000", passageKeyword: "remaining thirds production harvest", questionKeyword: "eventually", thaiMeaning: "จากข้อความใน", exactPortion: "When the remaining two thirds of the vast open area are in production, 20 staff will harvest up to 1,000 kg of perhaps 35 different varieties of fruit and vegetables, every day.", acceptedAnswers: ["1000", "1,000"] },
       { number: 3, answer: "consumption", passageKeyword: "obviously cautions environment working", questionKeyword: "possible produce account", thaiMeaning: "จากข้อความใน", exactPortion: "We're not ever, obviously, going to feed the whole city this way,' cautions Hardy. 'In the urban environment you're working with very significant practical constraints, clearly, on what you can do and where. But if enough unused space can be developed like this, there's no reason why you shouldn't eventually target maybe between 5% and 10% of consumption.", acceptedAnswers: ["consumption"] },
       { number: 4, answer: "pesticides", passageKeyword: "vegetables treated something different", questionKeyword: "range", thaiMeaning: "จากข้อความใน", exactPortion: "First, I don't much like the fact that most of the fruit and vegetables we eat have been treated with something like 17 different pesticides" },
       { number: 5, answer: "journeys", passageKeyword: "because varieties selected capacity", questionKeyword: "survive long", thaiMeaning: "จากข้อความใน", exactPortion: "because the varieties are selected for their capacity to withstand such substantial journeys" },
@@ -337,7 +337,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
       { type: "bullet", text: "the astronomer Gerald Hawkins suggested that the cluster of megalithic stones operated as a form of {8}." },
     ],
     questions: [
-      { number: 1, answer: "antlers", passageKeyword: "fashioned", questionKeyword: "ditch henge possibly", thaiMeaning: "จากข้อความใน", exactPortion: "which may have been fashioned out of deer antlers", acceptedAnswers: ["antlers"] },
+      { number: 1, answer: "antlers", passageKeyword: "fashioned", questionKeyword: "ditch henge possibly", thaiMeaning: "จากข้อความใน", exactPortion: "which may have been fashioned out of deer antlers", acceptedAnswers: ["antlers", "deer antlers"] },
       { number: 2, answer: "posts", passageKeyword: "dating located within circle", questionKeyword: "arranged inside circle", thaiMeaning: "จากข้อความใน", exactPortion: "Deep pits dating back to that era and located within the circle may have once held a ring of timber posts, according to some scholars.", acceptedAnswers: ["posts"] },
       { number: 3, answer: "trunks", passageKeyword: "according long-standing theory archaeologists", questionKeyword: "builders sledges rollers", thaiMeaning: "จากข้อความใน", exactPortion: "According to one long-standing theory among archaeologists, Stonehenge's builders fashioned sledges and rollers out of tree trunks to lug the bluestones from the Preseli Hills.", acceptedAnswers: ["trunks"] },
       { number: 4, answer: "oxen", passageKeyword: "recent archaeological hypotheses transporting", questionKeyword: "pulled giant baskets", thaiMeaning: "จากข้อความใน", exactPortion: "More recent archaeological hypotheses have them transporting the bluestones with supersized wicker baskets on a combination of ball bearings and long grooved planks, hauled by oxen." },
@@ -442,9 +442,9 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     summaryLines: [
       { type: "para", text: "they introduced the ganat method of tunnel construction, which consisted of placing {1} over a hill in a straight line, to ensure that the tunnel kept to its route, and then digging vertical shafts down into the ground at regular intervals. Once the tunnel was completed, it allowed water to flow from the top of a hillside down towards a {2}, which supplied water for human use. The excavated soil was taken up to the surface using the shafts, which also provided {3} during the work. The shafts were equipped with handholds and footholds to help those climbing in and out of them and were covered with a wooden or stone {4}. To ensure that the shafts were vertical, Romans hung a plumb line from a rod placed across the top of each shaft and made sure that the {5} at the end of it hung in the center of the shaft." },
       { type: "bullet", text: "The shafts were equipped with handholds and footholds to help those {6} in and out of them and were covered with a wooden or stone lid." },
-      { type: "bullet", text: "What type of mineral were the Dolaucothi mines in Wales built to extract? {7}" },
-      { type: "bullet", text: "In addition to the patron, whose name might be carved onto a tunnel? {8}" },
-      { type: "bullet", text: "What part of Seleuceia Pieria was the &Ccedil;evlik tunnel built to protect? {9}" },
+      { type: "bullet", text: "Traces of such tunnels used to mine {7} can still be found at the Dolaucothi mines in Wales." },
+      { type: "bullet", text: "Most tunnels had inscriptions showing the names of patrons and sometimes the name of the {8}." },
+      { type: "bullet", text: "The Çevlik tunnel in Turkey was built to divert floodwater threatening the {9} of the ancient city of Seleuceia Pieria." },
     ],
     questions: [
       { number: 1, answer: "posts", passageKeyword: "introduced method tunnel construction", questionKeyword: "label diagram questions", thaiMeaning: "จากข้อความใน", exactPortion: "they introduced the ganat method of tunnel construction, which consisted of placing posts over a hill in a straight line, to ensure that the tunnel kept to its route, and then digging vertical shafts down into the ground at regular intervals." },
@@ -454,8 +454,8 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
       { number: 5, answer: "weight", passageKeyword: "ensure shafts vertical romans", questionKeyword: "label diagram questions", thaiMeaning: "จากข้อความใน", exactPortion: "To ensure that the shafts were vertical, Romans hung a plumb line from a rod placed across the top of each shaft and made sure that the weight at the end of it hung in the center of the shaft." },
       { number: 6, answer: "climbing", passageKeyword: "shafts equipped handholds footholds", questionKeyword: "questions", thaiMeaning: "จากข้อความใน", exactPortion: "The shafts were equipped with handholds and footholds to help those climbing in and out of them and were covered with a wooden or stone lid." },
       { number: 7, answer: "gold", passageKeyword: "traces tunnels dolaucothi", questionKeyword: "mineral dolaucothi mines", thaiMeaning: "จากข้อความใน", exactPortion: "Traces of such tunnels used to mine gold can still be found at the Dolaucothi mines in Wales." },
-      { number: 8, answer: "name", passageKeyword: "tunnels inscriptions showing patrons", questionKeyword: "tunnel", thaiMeaning: "จากข้อความใน", exactPortion: "Most tunnels had inscriptions showing the names of patrons who ordered construction and sometimes the name of the architect.", acceptedAnswers: ["architect","architects","name","the"] },
-      { number: 9, answer: "harbour", passageKeyword: "4-kilometer cevlik tunnel turkey", questionKeyword: "pieria ccedil evlik", thaiMeaning: "จากข้อความใน", exactPortion: "the 1.4-kilometer Cevlik tunnel in Turkey, built to divert the floodwater threatening the harbor of the ancient city of Seleuceia Pieria", acceptedAnswers: ["harbor","the"] },
+      { number: 8, answer: "architect", passageKeyword: "tunnels inscriptions showing patrons", questionKeyword: "tunnel", thaiMeaning: "จากข้อความใน", exactPortion: "Most tunnels had inscriptions showing the names of patrons who ordered construction and sometimes the name of the architect.", acceptedAnswers: ["architect", "architects"] },
+      { number: 9, answer: "harbour", passageKeyword: "cevlik tunnel turkey divert floodwater", questionKeyword: "pieria cevlik tunnel protect", thaiMeaning: "จากข้อความใน", exactPortion: "the 1.4-kilometer Cevlik tunnel in Turkey, built to divert the floodwater threatening the harbor of the ancient city of Seleuceia Pieria", acceptedAnswers: ["harbor", "harbour"] },
     ]
   },
   {
