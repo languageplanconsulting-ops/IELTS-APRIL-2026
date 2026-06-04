@@ -104,8 +104,8 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_18_20: NewFillBlankSet[] = [
     ],
     questions: [
       { number: 6, answer: "its branches", passageKeyword: "branches charcoal cooking heating", questionKeyword: "fuel traditional uses", thaiMeaning: "จากข้อความใน", exactPortion: "while its branches were used for charcoal for cooking and heating", acceptedAnswers: ["branches", "its branches", "the branches"] },
-      { number: 7, answer: "bark", passageKeyword: "leaves bark herbal remedies", questionKeyword: "medicine traditional uses", thaiMeaning: "จากข้อความใน", exactPortion: "Its leaves and bark were used for herbal remedies", acceptedAnswers: ["bark", "its bark", "the bark"] },
-      { number: 8, answer: "trunk", passageKeyword: "trunk used build houses", questionKeyword: "construction traditional uses", thaiMeaning: "จากข้อความใน", exactPortion: "its trunk was used to build houses", acceptedAnswers: ["trunk", "its trunk", "the trunk"] },
+      { number: 7, answer: "bark", passageKeyword: "leaves bark herbal remedies", questionKeyword: "medicine traditional uses", thaiMeaning: "จากข้อความใน", exactPortion: "Its leaves and bark were used for herbal remedies", acceptedAnswers: ["bark", "its bark", "the bark", "huarango bark"] },
+      { number: 8, answer: "trunk", passageKeyword: "trunk used build houses", questionKeyword: "construction traditional uses", thaiMeaning: "จากข้อความใน", exactPortion: "its trunk was used to build houses", acceptedAnswers: ["trunk", "its trunk", "the trunk", "huarango trunk"] },
     ]
   },
   {
