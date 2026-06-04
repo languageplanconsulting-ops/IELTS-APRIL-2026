@@ -1,285 +1,253 @@
 import type { NewFillBlankSet } from './readingNewFillBlankQuestions.ts'
 
-/** Fill-blank UI for Quest Log ด่าน 1–5 (Cambridge-style: P1 Q8–14, P2 Q25–27). */
+/** Fill-blank UI for Quest Log ด่าน 1–5 (Stage 5: P1 Q1–7, P2 Q25–27). */
 export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
   {
     examId: "journey-normal-stage-1",
     passageNumber: 1,
-    startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
+    startNumber: 6,
+    endNumber: 13,
+    sourceParagraphs: ["F", "G"],
     instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
+      "Questions 6–13",
+      "Complete the notes below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
+      "Write your answers in boxes 6–13 on your answer sheet."
     ],
-    summaryTitle: "Colony Collapse Disorder and its causes",
+    summaryTitle: "Comparison of aluminium screw caps and cork bottle stoppers",
     summaryLines: [
-      { type: 'para', text: "Honeybee colonies have been declining severely since the mid-2000s. The problem was given the name Colony Collapse {8} after beekeepers in the United States reported that worker bees had vanished from otherwise healthy hives." },
-      { type: 'bullet', text: "A class of pesticides known as {9} has been shown to damage bees' ability to navigate." },
-      { type: 'bullet', text: "A parasitic organism called {10} feeds on bee body fat and transmits multiple harmful viruses." },
-      { type: 'bullet', text: "One of these, Deformed Wing {11}, leaves newly hatched bees physically unable to fly." },
-      { type: 'bullet', text: "Poor diet caused by the spread of large-scale {12} farming has also left bee immune systems weakened." },
-      { type: 'bullet', text: "Changes in climate have disrupted the timing of plant {13} production." },
-      { type: 'bullet', text: "Scientists warn that crops that depend on {14}s for pollination could see yields fall by as much as 90% within one generation." }
+      { type: 'heading', text: "Advantages of aluminium screw caps" },
+      { type: 'bullet', text: "do not affect the {6} of the bottle contents" },
+      { type: 'bullet', text: "are {7} to produce" },
+      { type: 'bullet', text: "are {8} to use" },
+      { type: 'heading', text: "Advantages of cork bottle stoppers" },
+      { type: 'bullet', text: "suit the {9} of quality products" },
+      { type: 'bullet', text: "made from a {10} material" },
+      { type: 'bullet', text: "easily {11}" },
+      { type: 'bullet', text: "cork forests aid {12}" },
+      { type: 'bullet', text: "cork forests stop {13} happening" }
     ],
     questions: [
-      { number: 8, answer: "Disorder", passageKeyword: "Colony Collapse Disorder", questionKeyword: "Colony Collapse Disorder", thaiMeaning: "โรค/ความผิดปกติของอาณานิคม (CCD)", exactPortion: "a phenomenon researchers named Colony Collapse Disorder, or CCD" },
-      { number: 9, answer: "neonicotinoids", passageKeyword: "neonicotinoids", questionKeyword: "neonicotinoids", thaiMeaning: "นิโอนิโคตินอยด์ (สารกำจัดแมลง)", exactPortion: "Pesticides — particularly a class called neonicotinoids — have been shown to impair bee navigation" },
-      { number: 10, answer: "Varroa", passageKeyword: "Varroa mite", questionKeyword: "parasitic organism called Varroa", thaiMeaning: "ไรวาโรอา", exactPortion: "The Varroa mite, first detected in Europe in the 1970s" },
-      { number: 11, answer: "Virus", passageKeyword: "Deformed Wing Virus", questionKeyword: "Deformed Wing Virus", thaiMeaning: "ไวรัส Deformed Wing", exactPortion: "Deformed Wing Virus, which causes bees to be born with shrivelled, non-functional wings" },
-      { number: 12, answer: "monoculture", passageKeyword: "monoculture fields", questionKeyword: "monoculture farming", thaiMeaning: "การปลูกพืชชนิดเดียว", exactPortion: "Intensive agriculture has replaced wildflower meadows with monoculture fields" },
-      { number: 13, answer: "nectar", passageKeyword: "flowers provide nectar", questionKeyword: "nectar production", thaiMeaning: "น้ำหวาน", exactPortion: "causing mismatches between when bees are active and when flowers provide nectar" },
-      { number: 14, answer: "pollinator", passageKeyword: "pollinator-dependent crops", questionKeyword: "crops that depend on pollinators", thaiMeaning: "พืชที่พึ่งผู้ช่วยผสมเกสร", exactPortion: "yields of pollinator-dependent crops could fall by as much as 90% within a generation" }
+      { number: 6, answer: "taste", passageKeyword: "spoil the taste of the product", questionKeyword: "do not affect the taste", thaiMeaning: "รสชาติ", exactPortion: "as little as three or four parts to a trillion – can spoil the taste of the product contained in the bottle" },
+      { number: 7, answer: "cheaper", passageKeyword: "cheaper to manufacture", questionKeyword: "cheaper to produce", thaiMeaning: "ถูกกว่า", exactPortion: "These substitutes are cheaper to manufacture and, in the case of screw caps, more convenient for the user" },
+      { number: 8, answer: "convenient", passageKeyword: "more convenient for the user", questionKeyword: "convenient to use", thaiMeaning: "สะดวก", exactPortion: "in the case of screw caps, more convenient for the user" },
+      { number: 9, answer: "image", passageKeyword: "traditional image is more in keeping with … high quality goods", questionKeyword: "suit the image of quality products", thaiMeaning: "ภาพลักษณ์", exactPortion: "Firstly, its traditional image is more in keeping with that of the type of high quality goods with which it has long been associated" },
+      { number: 10, answer: "sustainable", passageKeyword: "cork is a sustainable product", questionKeyword: "a sustainable material", thaiMeaning: "ยั่งยืน", exactPortion: "cork is a sustainable product that can be recycled without difficulty" },
+      { number: 11, answer: "recycled", passageKeyword: "can be recycled without difficulty", questionKeyword: "easily recycled", thaiMeaning: "รีไซเคิล", exactPortion: "cork is a sustainable product that can be recycled without difficulty" },
+      { number: 12, answer: "biodiversity", passageKeyword: "support local biodiversity", questionKeyword: "aid biodiversity", thaiMeaning: "ความหลากหลายทางชีวภาพ", exactPortion: "Moreover, cork forests are a resource which support local biodiversity, and prevent desertification in the regions where they are planted" },
+      { number: 13, answer: "desertification", passageKeyword: "prevent desertification", questionKeyword: "stop desertification", thaiMeaning: "การกลายเป็นทะเลทราย", exactPortion: "prevent desertification in the regions where they are planted" }
     ]
   },
   {
     examId: "journey-normal-stage-1",
     passageNumber: 2,
-    startNumber: 25,
-    endNumber: 27,
-    sourceParagraphs: ["C", "E"],
+    startNumber: 15,
+    endNumber: 22,
+    sourceParagraphs: ["B", "F"],
     instructions: [
-      "Questions 25–27",
-      "Complete the summary below.",
+      "Questions 15–22",
+      "Complete the sentences below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
+      "Write your answers in boxes 15–22 on your answer sheet."
     ],
-    summaryTitle: "Tesla's commercial and wireless achievements",
+    summaryTitle: "Collecting as a Hobby",
     summaryLines: [
-      { type: 'para', text: "Tesla's most commercially significant achievement was helping to establish alternating current as the dominant form of electrical {25}." },
-      { type: 'bullet', text: "His partnership with George Westinghouse proved decisive after their system was selected to generate electricity from Niagara {26}." },
-      { type: 'bullet', text: "Tesla also envisioned a worldwide system of {27} that would function without physical cables, seeking legal protection through patents." }
+      { type: 'bullet', text: "The writer mentions {15} as an example of collecting in order to make money." },
+      { type: 'bullet', text: "Collectors may get a feeling of {16} from buying and selling items." },
+      { type: 'bullet', text: "Collectors' clubs provide opportunities to share {17}." },
+      { type: 'bullet', text: "Collectors' clubs offer {18} with people who have similar interests." },
+      { type: 'bullet', text: "Collecting sometimes involves a life-long {19} for a special item." },
+      { type: 'bullet', text: "Searching for something particular may prevent people from feeling their life is completely {20}." },
+      { type: 'bullet', text: "Stamp collecting may be {21} because it provides facts about different countries." },
+      { type: 'bullet', text: "{22} tends to be mostly a male hobby." }
     ],
     questions: [
-      { number: 25, answer: "power", passageKeyword: "harness the power of Niagara Falls", questionKeyword: "dominant form of electrical power", thaiMeaning: "พลังงานไฟฟ้า", exactPortion: "their AC system was chosen over Edison's DC system to harness the power of Niagara Falls" },
-      { number: 26, answer: "Falls", passageKeyword: "Niagara Falls", questionKeyword: "Niagara Falls", thaiMeaning: "น้ำตกไนแองการา", exactPortion: "harness the power of Niagara Falls" },
-      { number: 27, answer: "communication", passageKeyword: "world wireless communication", questionKeyword: "worldwide cable-free communication", thaiMeaning: "การสื่อสารไร้สาย", exactPortion: "a system of world wireless communication" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-2",
-    passageNumber: 1,
-    startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
-    instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
-    ],
-    summaryTitle: "Minerals on the ocean floor",
-    summaryLines: [
-      { type: 'para', text: "The ocean floor contains enormous quantities of minerals stored in small, rounded {8} that build up gradually over geological timescales." },
-      { type: 'bullet', text: "Demand from the clean {9} sector — which relies on large quantities of cobalt and manganese — has driven growing interest in recovering these materials." },
-      { type: 'bullet', text: "Scientists discovered more than 5,000 {10} living in and around these mineral deposits." },
-      { type: 'bullet', text: "Disturbed areas show no signs of {11} even after many decades." },
-      { type: 'bullet', text: "Legally, minerals in international waters are considered the {12} of all humanity." },
-      { type: 'bullet', text: "Nations with superior {13} are better positioned to capture these profits." },
-      { type: 'bullet', text: "As global appetite for the {14} used in rechargeable cells continues to increase, policymakers face mounting pressure to act." }
-    ],
-    questions: [
-      { number: 8, answer: "nodules", passageKeyword: "potato-sized nodules", questionKeyword: "rounded nodules", thaiMeaning: "ก้อนแร่กลม", exactPortion: "billions of potato-sized nodules" },
-      { number: 9, answer: "energy", passageKeyword: "global energy transition", questionKeyword: "clean energy sector", thaiMeaning: "การเปลี่ยนผ่านด้านพลังงาน", exactPortion: "closely connected to the global energy transition" },
-      { number: 10, answer: "species", passageKeyword: "5,000 species", questionKeyword: "species living around mineral deposits", thaiMeaning: "สปีชีส์", exactPortion: "identified over 5,000 species" },
-      { number: 11, answer: "recovery", passageKeyword: "Recovery timescales", questionKeyword: "recovery after disturbance", thaiMeaning: "การฟื้นตัว", exactPortion: "Recovery timescales add to these concerns" },
-      { number: 12, answer: "heritage", passageKeyword: "common heritage of mankind", questionKeyword: "heritage of all humanity", thaiMeaning: "มรดกร่วมของมนุษยชาติ", exactPortion: "defined as the \"common heritage of mankind\"" },
-      { number: 13, answer: "technology", passageKeyword: "most advanced deep-sea technology", questionKeyword: "superior technology", thaiMeaning: "เทคโนโลยี", exactPortion: "countries and corporations with the most advanced deep-sea technology" },
-      { number: 14, answer: "metals", passageKeyword: "battery metals", questionKeyword: "metals used in rechargeable cells", thaiMeaning: "โลหะสำหรับแบตเตอรี่", exactPortion: "As the global demand for battery metals accelerates" }
+      { number: 15, answer: "antiques", passageKeyword: "antiques", questionKeyword: "collecting to make money", thaiMeaning: "ของโบราณ", exactPortion: "They'll look for, say, antiques that they can buy cheaply and expect to be able to sell at a profit." },
+      { number: 16, answer: "triumph", passageKeyword: "sense of triumph", questionKeyword: "feeling of triumph", thaiMeaning: "ชัยชนะ", exactPortion: "But there may well be a psychological element, too – buying cheap and selling dear can give the collector a sense of triumph." },
+      { number: 17, answer: "information", passageKeyword: "exchanging information", questionKeyword: "share information", thaiMeaning: "ข้อมูล", exactPortion: "Many collectors collect to develop their social life, attending meetings of a group of collectors and exchanging information on items." },
+      { number: 18, answer: "contact", acceptedAnswers: ["meetings"], passageKeyword: "contact with like-minded people", questionKeyword: "offer contact", thaiMeaning: "ติดต่อ/พบปะ", exactPortion: "This is a variant on joining a bridge club or a gym, and similarly brings them into contact with like-minded people." },
+      { number: 19, answer: "hunt", acceptedAnswers: ["desire"], passageKeyword: "whole lives in a hunt", questionKeyword: "life-long hunt", thaiMeaning: "การล่าหา", exactPortion: "Some may spend their whole lives in a hunt for this." },
+      { number: 20, answer: "aimless", acceptedAnswers: ["empty"], passageKeyword: "otherwise feels aimless", questionKeyword: "life is completely aimless", thaiMeaning: "ไร้จุดหมาย", exactPortion: "Psychologically, this can give a purpose to a life that otherwise feels aimless." },
+      { number: 21, answer: "educational", passageKeyword: "educational value", questionKeyword: "may be educational", thaiMeaning: "การศึกษา", exactPortion: "If you think about collecting postage stamps, another potential reason for it – or, perhaps, a result of collecting – is its educational value." },
+      { number: 22, answer: "trainspotting", passageKeyword: "trainspotting", questionKeyword: "mostly a male hobby", thaiMeaning: "trainspotting", exactPortion: "In the past – and nowadays, too, though to a lesser extent – a popular form of collecting, particularly among boys and men, was trainspotting." }
     ]
   },
   {
     examId: "journey-normal-stage-2",
     passageNumber: 2,
-    startNumber: 25,
+    startNumber: 26,
     endNumber: 27,
-    sourceParagraphs: ["A", "F"],
+    sourceParagraphs: ["B", "C"],
     instructions: [
-      "Questions 25–27",
-      "Complete the summary below.",
+      "Questions 26–27",
+      "Complete the sentences below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
+      "Write your answers in boxes 26–27 on your answer sheet."
     ],
-    summaryTitle: "The history of deaf education",
+    summaryTitle: "Bingham's journey to Machu Picchu",
     summaryLines: [
-      { type: 'para', text: "For most of European history, deaf people were denied fundamental {25} on the grounds that they could not use spoken language." },
-      { type: 'bullet', text: "Sign language gained ground as an instructional method until it was outlawed by the 1880 {26} passed at a congress held in Milan." },
-      { type: 'bullet', text: "William Stokoe proved that American Sign Language possessed the full characteristics of a genuine {27}." }
+      { type: 'bullet', text: "The track that took Bingham down the Urubamba valley had been created for the transportation of {26}." },
+      { type: 'bullet', text: "Bingham found out about the ruins of Machu Picchu from a {27} in the Urubamba valley." }
     ],
     questions: [
-      { number: 25, answer: "rights", passageKeyword: "denied legal rights", questionKeyword: "fundamental rights", thaiMeaning: "สิทธิ", exactPortion: "Deaf individuals in medieval Europe were frequently denied legal rights" },
-      { number: 26, answer: "resolution", passageKeyword: "Milan resolution", questionKeyword: "1880 resolution passed in Milan", thaiMeaning: "มติมิลาน", exactPortion: "the Milan resolution is now widely regarded by deaf historians" },
-      { number: 27, answer: "language", passageKeyword: "complete, independent language", questionKeyword: "genuine language", thaiMeaning: "ภาษา", exactPortion: "a complete, independent language with its own phonology, morphology, and syntax" }
+      { number: 26, answer: "rubber", passageKeyword: "rubber to be brought up by mules", questionKeyword: "transportation of rubber", thaiMeaning: "ยาง", exactPortion: "a track had recently been blasted down the valley canyon to enable rubber to be brought up by mules from the jungle" },
+      { number: 27, answer: "farmer", passageKeyword: "local farmer, Melchor Arteaga", questionKeyword: "found out from a farmer", thaiMeaning: "ชาวนา", exactPortion: "some ruins that a local farmer, Melchor Arteaga, had told them about the night before" }
     ]
   },
   {
     examId: "journey-normal-stage-3",
     passageNumber: 1,
     startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
+    endNumber: 13,
+    sourceParagraphs: ["B", "B"],
     instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
+      "Questions 8–13",
+      "Complete the notes below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
+      "Write your answers in boxes 8–13 on your answer sheet."
     ],
-    summaryTitle: "Understanding procrastination",
+    summaryTitle: "The decline of the Galápagos tortoise",
     summaryLines: [
-      { type: 'para', text: "Procrastination is best understood not as a problem of scheduling but of {8} management, since people tend to avoid tasks that generate negative feelings." },
-      { type: 'bullet', text: "When putting off a task removes discomfort, the positive {9} that results makes similar avoidance more likely in future." },
-      { type: 'bullet', text: "Applying {10} to oneself after procrastinating can reduce future avoidance." },
-      { type: 'bullet', text: "Research shows that forming specific {11} — mentally linking a trigger situation to a predetermined action — can measurably reduce procrastination." },
-      { type: 'bullet', text: "A tendency toward {12} in its dysfunctional form — where mistakes are taken as proof of personal failure — makes people particularly vulnerable to delay." },
-      { type: 'bullet', text: "Starting a task may expose a personal {13}." },
-      { type: 'bullet', text: "Any intervention must address the emotional roots of delay, not only the {14} in which it occurs." }
+      { type: 'bullet', text: "Originally from mainland South America" },
+      { type: 'bullet', text: "Numbers on Galápagos islands increased, due to lack of predators" },
+      { type: 'bullet', text: "17th century: small numbers taken onto ships used by {8}" },
+      { type: 'bullet', text: "1790s: very large numbers taken onto whaling ships, kept for {9}, and also used to produce {10}" },
+      { type: 'bullet', text: "Hunted by {11} on the islands" },
+      { type: 'bullet', text: "Habitat destruction: for the establishment of agriculture and by various {12} not native to the islands, which also fed on baby tortoises and tortoises' {13}" }
     ],
     questions: [
-      { number: 8, answer: "emotion", passageKeyword: "tasks that generate negative emotion", questionKeyword: "emotion management", thaiMeaning: "อารมณ์", exactPortion: "tasks that generate negative emotion" },
-      { number: 9, answer: "feeling", passageKeyword: "temporary good feeling", questionKeyword: "positive feeling from avoidance", thaiMeaning: "ความรู้สึกดีชั่วคราว", exactPortion: "The temporary good feeling that results from avoidance reinforces the behaviour" },
-      { number: 10, answer: "self-compassion", passageKeyword: "self-compassion", questionKeyword: "self-compassion", thaiMeaning: "ความเมตตาต่อตนเอง", exactPortion: "The role of self-compassion in breaking this cycle has attracted considerable research attention" },
-      { number: 11, answer: "intentions", passageKeyword: "Implementation intentions", questionKeyword: "specific intentions (implementation intentions)", thaiMeaning: "แผนปฏิบัติที่ผูกสถานการณ์กับการกระทำ", exactPortion: "Implementation intentions — specific plans that link a future situation to a particular behaviour" },
-      { number: 12, answer: "perfectionism", passageKeyword: "maladaptive perfectionism", questionKeyword: "dysfunctional perfectionism", thaiMeaning: "ความพยายามให้สมบูรณ์แบบแบบไม่เหมาะสม", exactPortion: "Individuals with maladaptive perfectionism delay tasks because starting implies the possibility of failure" },
-      { number: 13, answer: "inadequacy", passageKeyword: "fundamental inadequacy", questionKeyword: "personal inadequacy", thaiMeaning: "ความรู้สึกว่าตัวเองไม่ดีพอ", exactPortion: "failure is experienced not as a setback but as evidence of fundamental inadequacy" },
-      { number: 14, answer: "context", passageKeyword: "in some contexts but not others", questionKeyword: "context in which it occurs", thaiMeaning: "บริบท", exactPortion: "in some contexts but not others" }
+      { number: 8, answer: "pirates", passageKeyword: "pirates took a few on board for food", questionKeyword: "ships used by pirates", thaiMeaning: "โจรสลัด", exactPortion: "From the 17th century onwards, pirates took a few on board for food" },
+      { number: 9, answer: "food", passageKeyword: "food supplies during long ocean passages", questionKeyword: "kept for food", thaiMeaning: "อาหาร", exactPortion: "the tortoises were taken on board these ships to act as food supplies during long ocean passages" },
+      { number: 10, answer: "oil", passageKeyword: "processed into high-grade oil", questionKeyword: "used to produce oil", thaiMeaning: "น้ำมัน", exactPortion: "Sometimes, their bodies were processed into high-grade oil" },
+      { number: 11, answer: "settlers", passageKeyword: "settlers came to the islands", questionKeyword: "hunted by settlers", thaiMeaning: "ผู้บุกเบิก", exactPortion: "This historical exploitation was then exacerbated when settlers came to the islands" },
+      { number: 12, answer: "species", passageKeyword: "introduced alien species", questionKeyword: "not native species", thaiMeaning: "สปีชีส์ต่างถิ่น", exactPortion: "They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants" },
+      { number: 13, answer: "eggs", passageKeyword: "prey on the eggs and young tortoises", questionKeyword: "fed on eggs", thaiMeaning: "ไข่", exactPortion: "that either prey on the eggs and young tortoises or damage or destroy their habitat" }
     ]
   },
   {
     examId: "journey-normal-stage-3",
     passageNumber: 2,
-    startNumber: 25,
+    startNumber: 21,
     endNumber: 27,
-    sourceParagraphs: ["A", "F"],
+    sourceParagraphs: ["A", "G"],
     instructions: [
-      "Questions 25–27",
-      "Complete the summary below.",
+      "Questions 21–27",
+      "Complete the sentences below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
+      "Write your answers in boxes 21–27 on your answer sheet."
     ],
-    summaryTitle: "From laboratory discovery to mass production",
+    summaryTitle: "The Intersection of Health Sciences and Geography",
     summaryLines: [
-      { type: 'para', text: "Penicillin's journey began with an unexpected finding in a hospital research {25} and ended with large-scale manufacture in the United States." },
-      { type: 'bullet', text: "A key breakthrough came when scientists found that using a liquid derived from maize milling — called {26} — as the fermentation medium dramatically boosted yields." },
-      { type: 'bullet', text: "Contemporary {27} who study the history of battlefield medicine estimate that more than one in ten Allied soldiers survived infected wounds because of penicillin." }
+      { type: 'bullet', text: "Certain diseases have disappeared, thanks to better {21} and healthcare." },
+      { type: 'bullet', text: "Because there is more contact between people, {22} are losing their usefulness." },
+      { type: 'bullet', text: "Disease-causing {23} are most likely to be found in hot, damp regions." },
+      { type: 'bullet', text: "One cause of pollution is {24} that burn a particular fuel." },
+      { type: 'bullet', text: "The growth of cities often has an impact on nearby {25}." },
+      { type: 'bullet', text: "{26} is one disease that is growing after having been eradicated." },
+      { type: 'bullet', text: "A physical barrier such as a {27} can prevent people from reaching a hospital." }
     ],
     questions: [
-      { number: 25, answer: "laboratory", passageKeyword: "his laboratory at St Mary's Hospital in London", questionKeyword: "hospital research laboratory", thaiMeaning: "ห้องปฏิบัติการ", exactPortion: "his laboratory at St Mary's Hospital in London" },
-      { number: 26, answer: "liquor", passageKeyword: "corn steep liquor", questionKeyword: "corn-milling liquid (liquor)", thaiMeaning: "ของเหลวจากข้าวโพด", exactPortion: "fermenting penicillin in corn steep liquor" },
-      { number: 27, answer: "historians", passageKeyword: "Military medical historians", questionKeyword: "battlefield medical historians", thaiMeaning: "นักประวัติศาสตร์การแพทย์ทหาร", exactPortion: "Military medical historians credit penicillin with saving the lives" }
+      { number: 21, answer: "vaccinations", passageKeyword: "improvements in vaccinations", questionKeyword: "better vaccinations and healthcare", thaiMeaning: "วัคซีน", exactPortion: "improvements in vaccinations and the availability of healthcare" },
+      { number: 22, answer: "antibiotics", passageKeyword: "resistant to antibiotics", questionKeyword: "antibiotics losing usefulness", thaiMeaning: "ยาปฏิชีวนะ", exactPortion: "super-viruses and other infections resistant to antibiotics are becoming more and more common" },
+      { number: 23, answer: "mosquitoes", acceptedAnswers: ["mosquitos"], passageKeyword: "mosquitos that can give people this disease", questionKeyword: "disease-causing mosquitoes", thaiMeaning: "ยุง", exactPortion: "tropical regions that foster a warm and damp environment in which the mosquitos that can give people this disease can grow" },
+      { number: 24, answer: "factories", passageKeyword: "factories that run on coal power", questionKeyword: "factories burning coal", thaiMeaning: "โรงงาน", exactPortion: "factories that run on coal power" },
+      { number: 25, answer: "forests", passageKeyword: "cutting down of forests", questionKeyword: "impact on nearby forests", thaiMeaning: "ป่า", exactPortion: "the cutting down of forests to allow for the expansion of big cities" },
+      { number: 26, answer: "polio", passageKeyword: "polio are re-emerging", questionKeyword: "disease growing after eradicated", thaiMeaning: "โรคโปลิโอ", exactPortion: "diseases like polio are re-emerging" },
+      { number: 27, answer: "mountain", passageKeyword: "mountain between their village and the nearest hospital", questionKeyword: "physical barrier mountain", thaiMeaning: "ภูเขา", exactPortion: "it may be very difficult for people to get medical attention because there is a mountain between their village and the nearest hospital" }
     ]
   },
   {
     examId: "journey-normal-stage-4",
     passageNumber: 1,
-    startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
-    instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
-    ],
-    summaryTitle: "Urban housing affordability",
-    summaryLines: [
-      { type: 'para', text: "Beyond personal financial pressure, economists have identified links between housing costs and restricted {8} movement across job markets, as well as worsening mental health." },
-      { type: 'bullet', text: "A central cause is insufficient {9} — too few homes are being built relative to demand." },
-      { type: 'bullet', text: "Professor Glaeser contends that {10} restrictions on density and building height serve primarily to protect the financial interests of existing homeowners." },
-      { type: 'bullet', text: "Rodríguez-Pose focuses on the role of {11} in converting housing into an investment vehicle." },
-      { type: 'bullet', text: "The Right to Buy {12} reduced available council homes by more than two million." },
-      { type: 'bullet', text: "Prefabricated construction offers cost savings, but widespread adoption has been held back by the high upfront cost of setting up dedicated {13}." },
-      { type: 'bullet', text: "A lasting solution will also demand stricter controls on speculative {14} in residential property." }
-    ],
-    questions: [
-      { number: 8, answer: "labour", passageKeyword: "reduced labour mobility", questionKeyword: "restricted labour movement", thaiMeaning: "การเคลื่อนย้ายแรงงาน", exactPortion: "economists have linked severe housing unaffordability to reduced labour mobility" },
-      { number: 9, answer: "supply", passageKeyword: "housing supply has failed to keep pace", questionKeyword: "insufficient supply", thaiMeaning: "อุปทานที่อยู่อาศัย", exactPortion: "housing supply has failed to keep pace with population growth and increasing demand" },
-      { number: 10, answer: "zoning", passageKeyword: "Restrictive zoning laws", questionKeyword: "zoning restrictions on density", thaiMeaning: "กฎจัดโซนที่อยู่อาศัย", exactPortion: "Restrictive zoning laws — which limit the density, height, and type of buildings permitted" },
-      { number: 11, answer: "financialisation", passageKeyword: "financialisation of housing", questionKeyword: "financialisation", thaiMeaning: "การทำให้ที่อยู่อาศัยเป็นสินทรัพย์การเงิน", exactPortion: "the financialisation of housing, whereby residential property has been transformed from a consumption good into an investment asset" },
-      { number: 12, answer: "scheme", passageKeyword: "Right to Buy scheme", questionKeyword: "Right to Buy scheme", thaiMeaning: "โครงการ Right to Buy", exactPortion: "the Right to Buy scheme introduced by the Thatcher government in 1980" },
-      { number: 13, answer: "factories", passageKeyword: "modular factories", questionKeyword: "dedicated prefabricated factories", thaiMeaning: "โรงงานประกอบบ้านสำเร็จรูป", exactPortion: "the high initial capital costs of establishing modular factories" },
-      { number: 14, answer: "investment", passageKeyword: "regulation of speculative investment", questionKeyword: "speculative investment controls", thaiMeaning: "การกำกับการลงทุนเชิงเก็งกำไร", exactPortion: "regulation of speculative investment" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-4",
-    passageNumber: 2,
-    startNumber: 25,
-    endNumber: 27,
-    sourceParagraphs: ["A", "F"],
-    instructions: [
-      "Questions 25–27",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
-    ],
-    summaryTitle: "The Human Genome Project",
-    summaryLines: [
-      { type: 'para', text: "The Human Genome Project produced a publicly accessible {25} of human DNA, governed by a principle that required all sequence data to be deposited in a shared database within a day of being generated." },
-      { type: 'bullet', text: "All sequence data would be made freely accessible in a shared {26} on the day it was generated." },
-      { type: 'bullet', text: "For most common conditions, the genetic contribution is spread across many small-effect {27}, making prediction far more complex than early researchers had anticipated." }
-    ],
-    questions: [
-      { number: 25, answer: "sequence", passageKeyword: "complete sequence of the human genome", questionKeyword: "DNA sequence", thaiMeaning: "ลำดับ DNA", exactPortion: "scientists had produced a working draft of the complete sequence of the human genome" },
-      { number: 26, answer: "database", passageKeyword: "public database", questionKeyword: "shared open-access database", thaiMeaning: "ฐานข้อมูลสาธารณะ", exactPortion: "deposited in a public database within twenty-four hours of generation" },
-      { number: 27, answer: "variants", passageKeyword: "thousands of genetic variants", questionKeyword: "many small-effect genetic variants", thaiMeaning: "ลักษณะย่อยทางพันธุกรรม", exactPortion: "spread across thousands of variants, each with a very small individual effect" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-5",
-    passageNumber: 1,
-    startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
-    instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
-    ],
-    summaryTitle: "How memory works",
-    summaryLines: [
-      { type: 'para', text: "Memory is best understood through the concept of {8}, which describes why each recall involves potential alteration." },
-      { type: 'bullet', text: "The stage at which new information is made permanent is known as {9}." },
-      { type: 'bullet', text: "This process depends heavily on a brain structure called the {10}." },
-      { type: 'bullet', text: "Memory consolidation is reinforced at night, during a stage of {11} characterised by unusually slow brain-wave activity." },
-      { type: 'bullet', text: "Although highly charged experiences produce vivid recollections, the degree of {12} felt during an event offers no guarantee that the memory is accurate." },
-      { type: 'bullet', text: "A single word can lead a witness to report seeing {13} that was not present at the scene." },
-      { type: 'bullet', text: "Researchers have investigated whether suggestion alone can generate artificial {14} of events that never actually occurred." }
-    ],
-    questions: [
-      { number: 8, answer: "reconsolidation", passageKeyword: "Reconsolidation", questionKeyword: "reconsolidation", thaiMeaning: "การสร้างความจำใหม่หลังถูกเรียก", exactPortion: "Reconsolidation — the process by which retrieved memories are temporarily labile" },
-      { number: 9, answer: "consolidation", passageKeyword: "process called consolidation", questionKeyword: "consolidation", thaiMeaning: "การรวมความจำระยะยาว", exactPortion: "through a process called consolidation. During consolidation, the hippocampus" },
-      { number: 10, answer: "hippocampus", passageKeyword: "the hippocampus", questionKeyword: "hippocampus", thaiMeaning: "ฮิปโปแคมปัส", exactPortion: "the hippocampus — a seahorse-shaped structure in the medial temporal lobe — plays a central role" },
-      { number: 11, answer: "sleep", passageKeyword: "slow-wave sleep", questionKeyword: "stage of sleep with slow brain-wave activity", thaiMeaning: "การนอนหลับลึก (slow-wave)", exactPortion: "During slow-wave sleep — the deepest stages of the sleep cycle" },
-      { number: 12, answer: "intensity", passageKeyword: "emotional intensity does not guarantee accuracy", questionKeyword: "degree of intensity", thaiMeaning: "ความเข้มข้นทางอารมณ์", exactPortion: "emotional intensity does not guarantee accuracy" },
-      { number: 13, answer: "glass", passageKeyword: "broken glass at the scene", questionKeyword: "broken glass", thaiMeaning: "กระจก", exactPortion: "to falsely remember broken glass at the scene" },
-      { number: 14, answer: "memories", passageKeyword: "false memories can be deliberately implanted", questionKeyword: "artificial memories (false memories)", thaiMeaning: "ความจำเท็จ", exactPortion: "false memories can be deliberately implanted" }
-    ]
-  },
-  {
-    examId: "journey-normal-stage-5",
-    passageNumber: 2,
-    startNumber: 25,
-    endNumber: 27,
+    startNumber: 1,
+    endNumber: 8,
     sourceParagraphs: ["A", "D"],
     instructions: [
+      "Questions 1–8",
+      "Complete the notes below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 1–8 on your answer sheet."
+    ],
+    summaryTitle: "The History of Glass",
+    summaryLines: [
+      { type: 'bullet', text: "Early humans used a material called {1} to make the sharp points of their {2}" },
+      { type: 'bullet', text: "4000 BC: {3} made of stone were covered in a coating of man-made glass." },
+      { type: 'bullet', text: "First century BC: glass was coloured because of the {4} in the material." },
+      { type: 'bullet', text: "Until 476 AD: Only the {5} knew how to make glass." },
+      { type: 'bullet', text: "From 10th century: Venetians became famous for making bottles out of glass." },
+      { type: 'bullet', text: "17th century: George Ravenscroft developed a process using {6} to avoid the occurrence of {7} in blown glass." },
+      { type: 'bullet', text: "Mid-19th century: British glass production developed after changes to laws concerning {8}." }
+    ],
+    questions: [
+      { number: 1, answer: "obsidian", passageKeyword: "obsidian", questionKeyword: "material called obsidian", thaiMeaning: "ออบซิเดียน", exactPortion: "Historians have discovered that a type of natural glass – obsidian – formed in places such as the mouth of a volcano" },
+      { number: 2, answer: "spears", passageKeyword: "tips for spears", questionKeyword: "sharp points of spears", thaiMeaning: "หอก", exactPortion: "was first used as tips for spears" },
+      { number: 3, answer: "beads", passageKeyword: "coating stone beads", questionKeyword: "stone beads covered in glass", thaiMeaning: "ลูกปัด", exactPortion: "this took the form of glazes used for coating stone beads" },
+      { number: 4, answer: "impurities", passageKeyword: "impurities of the raw material", questionKeyword: "coloured because of impurities", thaiMeaning: "สิ่งเจือปน", exactPortion: "The glass made during this time was highly coloured due to the impurities of the raw material" },
+      { number: 5, answer: "Romans", passageKeyword: "Romans guarded glass-making skills", questionKeyword: "only the Romans knew", thaiMeaning: "ชาวโรมัน", exactPortion: "they guarded the skills and technology required to make glass very closely, and it was not until their empire collapsed in 476 AD" },
+      { number: 6, answer: "lead", passageKeyword: "introducing lead", questionKeyword: "process using lead", thaiMeaning: "ตะกั่ว", exactPortion: "by introducing lead to the raw materials used in the process" },
+      { number: 7, answer: "clouding", passageKeyword: "effect of clouding", questionKeyword: "avoid clouding", thaiMeaning: "ขุ่นมัว", exactPortion: "He attempted to counter the effect of clouding that sometimes occurred in blown glass" },
+      { number: 8, answer: "taxes", passageKeyword: "heavy taxes", questionKeyword: "laws concerning taxes", thaiMeaning: "ภาษี", exactPortion: "heavy taxes had been placed on the amount of glass melted in a glasshouse" }
+    ]
+  },
+  {
+    examId: "journey-normal-stage-5",
+    passageNumber: 1,
+    startNumber: 1,
+    endNumber: 7,
+    sourceParagraphs: ["B", "D"],
+    instructions: [
+      "Questions 1–7",
+      "Complete the table below.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 1–7 on your answer sheet."
+    ],
+    summaryTitle: "The Tourism New Zealand website",
+    summaryLines: [
+      { type: 'heading', text: "Database of tourism services" },
+      { type: 'bullet', text: "allowed businesses to {1} information regularly" },
+      { type: 'bullet', text: "evaluation including impact on the {2}" },
+      { type: 'heading', text: "Special features on local topics" },
+      { type: 'bullet', text: "interview with a former sports {3}" },
+      { type: 'bullet', text: "interactive tour of locations used in {4}" },
+      { type: 'heading', text: "Information on driving routes" },
+      { type: 'bullet', text: "varied depending on the {5}" },
+      { type: 'heading', text: "Travel Planner" },
+      { type: 'bullet', text: "map, public transport and local {6}" },
+      { type: 'heading', text: "'Your Words'" },
+      { type: 'bullet', text: "travellers could send a link to their {7}" }
+    ],
+    questions: [
+      { number: 1, answer: "update", passageKeyword: "update the details they gave on a regular basis", questionKeyword: "update information regularly", thaiMeaning: "อัปเดตข้อมูล", exactPortion: "participating businesses were able to update the details they gave on a regular basis, the information provided remained accurate" },
+      { number: 2, answer: "environment", passageKeyword: "effect on the environment", questionKeyword: "impact on the environment", thaiMeaning: "สิ่งแวดล้อม", exactPortion: "As part of this, the effect of each business on the environment was considered" },
+      { number: 3, answer: "captain", passageKeyword: "rugby captain Tana Umaga", questionKeyword: "former sports captain", thaiMeaning: "กัปตันทีม", exactPortion: "One of the most popular was an interview with former New Zealand All Blacks rugby captain Tana Umaga" },
+      { number: 4, answer: "films", passageKeyword: "blockbuster films", questionKeyword: "locations used in films", thaiMeaning: "ภาพยนตร์", exactPortion: "an interactive journey through a number of the locations chosen for blockbuster films which had made use of New Zealand's stunning scenery as a backdrop" },
+      { number: 5, answer: "season", passageKeyword: "according to the season", questionKeyword: "varied depending on the season", thaiMeaning: "ฤดูกาล", exactPortion: "highlighting different routes according to the season and indicating distances and times" },
+      { number: 6, answer: "accommodation", passageKeyword: "links to accommodation", questionKeyword: "local accommodation", thaiMeaning: "ที่พัก", exactPortion: "There were also links to accommodation in the area" },
+      { number: 7, answer: "blog", passageKeyword: "submit a blog", questionKeyword: "link to their blog", thaiMeaning: "บล็อก", exactPortion: "anyone could submit a blog of their New Zealand travels for possible inclusion on the website" }
+    ]
+  },
+  {
+    examId: "journey-normal-stage-5",
+    passageNumber: 2,
+    startNumber: 25,
+    endNumber: 27,
+    sourceParagraphs: ["D", "E"],
+    instructions: [
       "Questions 25–27",
       "Complete the summary below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
       "Write your answers in boxes 25–27 on your answer sheet."
     ],
-    summaryTitle: "Esperanto through history",
+    summaryTitle: "Responses to boredom",
     summaryLines: [
-      { type: 'para', text: "Zamenhof intended Esperanto to transcend any one {25}'s borders, free from the cultural dominance associated with natural languages." },
-      { type: 'bullet', text: "In the Soviet Union and Nazi Germany, thousands of Esperanto speakers suffered severe {26}." },
-      { type: 'bullet', text: "Linguists cite children who grew up using it as their primary {27} — in households where both parents were Esperanto speakers — as evidence of genuine community roots." }
+      { type: 'para', text: "For John Eastwood, the central feature of boredom is that people cannot {25}, due to a failure in the 'attention system', and as a result they become frustrated and irritable." },
+      { type: 'bullet', text: "Those for whom {26} is an important aim in life may have problems in coping with boredom." },
+      { type: 'bullet', text: "Those who have the characteristic of {27} can generally cope with it." }
     ],
     questions: [
-      { number: 25, answer: "nation", passageKeyword: "belonging to no single nation", questionKeyword: "any one nation", thaiMeaning: "ชาติ", exactPortion: "belonging to no single nation and therefore free from the cultural dominance that accompanies natural languages" },
-      { number: 26, answer: "persecution", passageKeyword: "systematic campaign of persecution", questionKeyword: "severe persecution", thaiMeaning: "การล่าอาวรณ์", exactPortion: "ordered a systematic campaign of persecution" },
-      { number: 27, answer: "language", passageKeyword: "first language", questionKeyword: "primary language", thaiMeaning: "ภาษา", exactPortion: "children who grew up speaking it as a first language in households where parents met through Esperanto" }
+      { number: 25, answer: "focus", passageKeyword: "inability to focus on anything", questionKeyword: "cannot focus", thaiMeaning: "โฟกัส", exactPortion: "For Eastwood, the central feature of boredom is a failure to put our attention system into gear. This causes an inability to focus on anything" },
+      { number: 26, answer: "pleasure", passageKeyword: "motivated by pleasure", questionKeyword: "pleasure important aim", thaiMeaning: "ความสุข", exactPortion: "People who are motivated by pleasure seem to suffer particularly badly" },
+      { number: 27, answer: "curiosity", passageKeyword: "high boredom threshold", questionKeyword: "characteristic curiosity", thaiMeaning: "ความอยากรู้", exactPortion: "Other personality traits, such as curiosity, are associated with a high boredom threshold" }
     ]
   }
 ]

@@ -4,6 +4,11 @@ import { INTENSIVE_LAYOUTS_STAGE_1_5 } from './journeyIntensivePassages1to5.ts'
 import { INTENSIVE_LAYOUTS_STAGE_6 } from './journeyIntensivePassages6.ts'
 import { INTENSIVE_LAYOUTS_STAGE_7_9 } from './journeyIntensivePassages7to9.ts'
 import { INTENSIVE_LAYOUTS_STAGE_10 } from './journeyIntensivePassages10.ts'
+import { INTENSIVE_LAYOUTS_STAGE_11 } from './journeyIntensivePassages11.ts'
+import { INTENSIVE_LAYOUTS_STAGE_12 } from './journeyIntensivePassages12.ts'
+import { INTENSIVE_LAYOUTS_STAGE_13 } from './journeyIntensivePassages13.ts'
+import { INTENSIVE_LAYOUTS_STAGE_14 } from './journeyIntensivePassages14.ts'
+import { INTENSIVE_LAYOUTS_STAGE_15 } from './journeyIntensivePassages15.ts'
 import { buildIntensivePassage } from './intensivePassageBuilder.ts'
 import {
   INTENSIVE_SOLUTIONS_BY_STAGE,
@@ -100,7 +105,12 @@ const INTENSIVE_QUESTION_START_BY_STAGE: Record<number, readonly [number, number
   7: [1, 15],
   8: [1, 15],
   9: [1, 15],
-  10: [1, 15]
+  10: [1, 15],
+  11: [1, 15],
+  12: [1, 15],
+  13: [1, 15],
+  14: [1, 15],
+  15: [1, 15]
 }
 const FULL_READING_QUESTION_START_BY_PASSAGE_SLOT = [1, 14, 27] as const
 
@@ -714,6 +724,11 @@ export const buildIntensiveJourneyExam = (stageNumber: number): ReadingExamRecor
     INTENSIVE_LAYOUTS_STAGE_6[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_7_9[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_10[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_11[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_12[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_13[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_14[stageNumber] ||
+    INTENSIVE_LAYOUTS_STAGE_15[stageNumber] ||
     INTENSIVE_LAYOUTS_STAGE_11_15[stageNumber]
   const legacyPair = INTENSIVE_PASSAGES_BY_STAGE[stageNumber]
   if (!layouts && !legacyPair) return null

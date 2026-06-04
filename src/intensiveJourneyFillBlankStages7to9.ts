@@ -5,113 +5,119 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_7_9: NewFillBlankSet[] = [
   {
     examId: "journey-normal-stage-7",
     passageNumber: 1,
-    startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
+    startNumber: 1,
+    endNumber: 8,
+    sourceParagraphs: ["B", "D"],
     instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
+      "Questions 1–8",
+      "Complete the table below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
+      "Write your answers in boxes 1–8 on your answer sheet."
     ],
-    summaryTitle: "The microbiome and its effects on health",
+    summaryTitle: "The uses of the coconut palm",
     summaryLines: [
-      { type: 'para', text: "The vast collection of microorganisms inhabiting the human body goes by the collective name {8}." },
-      { type: 'bullet', text: "When gut bacteria ferment dietary fibre, one useful product is {9} — a compound that energises cells lining the large intestine and reduces inflammation." },
-      { type: 'bullet', text: "The hypothesis that modern immune disorders stem from insufficient contact with ancient microorganisms is known as the Old Friends {10}." },
-      { type: 'bullet', text: "The bidirectional link between the digestive system and the brain is called the gut-brain {11}." },
-      { type: 'bullet', text: "Laboratory {12} raised with no gut microbes at all show marked differences in stress and anxiety compared with normal animals." },
-      { type: 'bullet', text: "A procedure that transfers gut contents from a healthy person into a patient's digestive tract is called {13}." },
-      { type: 'bullet', text: "Scientists caution that most microbiome findings remain {14} in nature, showing association rather than proven cause." }
+      { type: 'bullet', text: "Coconut palm trunk — timber for houses and the making of {1}" },
+      { type: 'bullet', text: "Coconut palm flowers — sap used as a drink or source of {2}" },
+      { type: 'bullet', text: "Fruit middle layer (coir fibres) — used for {3}" },
+      { type: 'bullet', text: "Fruit inner layer (shell) — a source of {4}" },
+      { type: 'bullet', text: "Fruit inner layer (shell) — when halved, used for {5}" },
+      { type: 'bullet', text: "Coconut water — a source of {6} for other plants" },
+      { type: 'bullet', text: "Coconut flesh — oil and milk for cooking and {7}" },
+      { type: 'bullet', text: "Coconut flesh — glycerine (an ingredient in {8})" }
     ],
     questions: [
-      { number: 8, answer: "microbiome", passageKeyword: "Collectively known as the microbiome", questionKeyword: "microbiome (collective name)", thaiMeaning: "ไมโครไบโอม", exactPortion: "Collectively known as the microbiome" },
-      { number: 9, answer: "butyrate", passageKeyword: "butyrate", questionKeyword: "butyrate compound", thaiMeaning: "บิวทิเรต", exactPortion: "short-chain fatty acids, including butyrate, which provides energy for the cells lining the colon and has anti-inflammatory properties" },
-      { number: 10, answer: "Hypothesis", passageKeyword: "Old Friends Hypothesis", questionKeyword: "Old Friends Hypothesis", thaiMeaning: "สมมติฐาน Old Friends", exactPortion: "the Old Friends Hypothesis" },
-      { number: 11, answer: "axis", passageKeyword: "gut-brain axis", questionKeyword: "gut-brain axis", thaiMeaning: "แกนลำไส้–สมอง", exactPortion: "The gut-brain axis — the bidirectional communication network linking the intestine and the central nervous system" },
-      { number: 12, answer: "mice", passageKeyword: "germ-free mice", questionKeyword: "laboratory mice without gut microbes", thaiMeaning: "หนูไร้เชื้อ", exactPortion: "Studies in germ-free mice — animals raised without any microorganisms — show profound differences in stress responses and anxiety-related behaviour" },
-      { number: 13, answer: "transplantation", passageKeyword: "Faecal microbiota transplantation", questionKeyword: "gut-bacteria transfer (transplantation)", thaiMeaning: "การปลูกถ่ายจุลินทรีย์ในอุจจาระ", exactPortion: "Faecal microbiota transplantation, in which stool from a healthy donor is introduced into the gut of a patient" },
-      { number: 14, answer: "correlational", passageKeyword: "Much microbiome science is correlational", questionKeyword: "correlational", thaiMeaning: "เชิงความสัมพันธ์", exactPortion: "Much microbiome science is correlational: it shows that certain microbial profiles are associated with certain health states without establishing that the microbiome is causing those states" }
+      { number: 1, answer: "furniture", passageKeyword: "furniture construction industry|timber for building houses", questionKeyword: "making of furniture", thaiMeaning: "ไม้ทำเฟอร์นิเจอร์", exactPortion: "This is an important source of timber for building houses, and is increasingly being used as a replacement for endangered hardwoods in the furniture construction industry" },
+      { number: 2, answer: "sugar", passageKeyword: "reduced by boiling to produce a type of sugar", questionKeyword: "source of sugar", thaiMeaning: "น้ำตาล", exactPortion: "The flower stems may be tapped for their sap to produce a drink, and the sap can also be reduced by boiling to produce a type of sugar used for cooking" },
+      { number: 3, answer: "ropes", passageKeyword: "particularly important in manufacturing ropes", questionKeyword: "used for ropes", thaiMeaning: "เชือก", exactPortion: "The thick fibrous middle layer produces coconut fibre, 'coir', which has numerous uses and is particularly important in manufacturing ropes" },
+      { number: 4, answer: "charcoal", passageKeyword: "charcoal, which is widely used in various industries", questionKeyword: "source of charcoal", thaiMeaning: "ถ่าน", exactPortion: "An important product obtained from the shell is charcoal, which is widely used in various industries as well as in the home as a cooking fuel" },
+      { number: 5, answer: "bowls", passageKeyword: "used as bowls in many parts of Asia", questionKeyword: "when halved for bowls", thaiMeaning: "ชาม", exactPortion: "When broken in half, the shells are also used as bowls in many parts of Asia" },
+      { number: 6, answer: "hormones", passageKeyword: "provides the hormones which encourage other plants", questionKeyword: "source of hormones", thaiMeaning: "ฮอร์โมน", exactPortion: "Initially, the endosperm is a sweetish liquid, coconut water, which is enjoyed as a drink, but also provides the hormones which encourage other plants to grow more rapidly and produce higher yields" },
+      { number: 7, answer: "cosmetics", passageKeyword: "as well as in cosmetics", questionKeyword: "oil and milk for cosmetics", thaiMeaning: "เครื่องสำอาง", exactPortion: "Dried coconut flesh, 'copra', is made into coconut oil and coconut milk, which are widely used in cooking in different parts of the world, as well as in cosmetics" },
+      { number: 8, answer: "dynamite", passageKeyword: "nitroglycerine-based invention: dynamite", questionKeyword: "ingredient in dynamite", thaiMeaning: "ไดนาไมต์", exactPortion: "A derivative of coconut fat, glycerine, acquired strategic importance in a quite different sphere, as Alfred Nobel introduced the world to his nitroglycerine-based invention: dynamite" }
     ]
   },
   {
     examId: "journey-normal-stage-7",
     passageNumber: 2,
-    startNumber: 25,
-    endNumber: 27,
-    sourceParagraphs: ["C", "G"],
+    startNumber: 19,
+    endNumber: 24,
+    sourceParagraphs: ["C", "D"],
     instructions: [
-      "Questions 25–27",
+      "Questions 19–24",
       "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
+      "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
+      "Write your answers in boxes 19–24 on your answer sheet."
     ],
-    summaryTitle: "Marie Curie's scientific legacy",
+    summaryTitle: "Research into how parents talk to babies",
     summaryLines: [
-      { type: 'bullet', text: "She was the first to name and characterise the phenomenon of {25} — the ability of certain atoms to emit energy spontaneously." },
-      { type: 'bullet', text: "Discovering polonium and radium required processing tonnes of {26}, a uranium-rich mineral." },
-      { type: 'bullet', text: "Decades of unshielded radiation exposure eventually caused her death from {27}, a severe condition in which bone marrow fails to produce blood cells." }
+      { type: 'para', text: "Researchers at Washington State University used {19}, together with specialised computer programs, to analyse how parents interacted with their babies during a normal day." },
+      { type: 'bullet', text: "The study revealed that {20} tended not to modify their ordinary speech patterns when interacting with their babies." },
+      { type: 'bullet', text: "According to an idea known as the {21}, they may use a more adult type of speech to prepare infants for the language they will hear outside the family home." },
+      { type: 'bullet', text: "Hearing baby talk from one parent and 'normal' language from the other expands the baby's {22} of types of speech which they can practise." },
+      { type: 'bullet', text: "Another study recorded speech and sound using special {23} that the babies were equipped with." },
+      { type: 'bullet', text: "When the researchers studied the babies again at age two, those who had heard a lot of baby talk in infancy had a much larger {24} than those who had not." }
     ],
     questions: [
-      { number: 25, answer: "radioactivity", passageKeyword: "coined the term \"radioactivity\"", questionKeyword: "radioactivity (named by Curie)", thaiMeaning: "รังสีกัมมันตภาพ", exactPortion: "Curie coined the term \"radioactivity\" to describe this atomic property" },
-      { number: 26, answer: "pitchblende", passageKeyword: "samples of pitchblende", questionKeyword: "pitchblende uranium mineral", thaiMeaning: "พิตช์เบลนด์", exactPortion: "When she began testing samples of pitchblende — a uranium-bearing mineral ore" },
-      { number: 27, answer: "anaemia", passageKeyword: "aplastic anaemia", questionKeyword: "blood disorder (aplastic anaemia)", thaiMeaning: "โลหิตจาง", exactPortion: "Marie Curie died in 1934 from aplastic anaemia, a condition caused by prolonged exposure to ionising radiation" }
+      { number: 19, answer: "recording devices", acceptedAnswers: ["devices"], passageKeyword: "recording devices and speech-recognition software", questionKeyword: "recording devices", thaiMeaning: "อุปกรณ์บันทึก", exactPortion: "Mark VanDam of Washington State University at Spokane and colleagues equipped parents with recording devices and speech-recognition software to study the way they interacted with their youngsters during a normal day" },
+      { number: 20, answer: "fathers", acceptedAnswers: ["dads"], passageKeyword: "dads didn't raise their pitch", questionKeyword: "fathers (dads)", thaiMeaning: "พ่อ", exactPortion: "But we found that dads aren't doing the same thing. Dads didn't raise their pitch or fundamental frequency when they talked to kids" },
+      { number: 21, answer: "bridge hypothesis", passageKeyword: "bridge hypothesis", questionKeyword: "bridge hypothesis", thaiMeaning: "สมมติฐานสะพาน", exactPortion: "Their role may be rooted in what is called the bridge hypothesis, which dates back to 1975" },
+      { number: 22, answer: "repertoire", passageKeyword: "wider repertoire of kinds of speech to practice", questionKeyword: "repertoire of speech types", thaiMeaning: "คลังภาษา", exactPortion: "The idea is that a kid gets to practice a certain kind of speech with mom and another kind of speech with dad, so the kid then has a wider repertoire of kinds of speech to practice" },
+      { number: 23, answer: "vests", passageKeyword: "audio-recording vests", questionKeyword: "vests", thaiMeaning: "เสื้อบันทึกเสียง", exactPortion: "fitting 26 children with audio-recording vests that captured language and sound during a typical eight-hour day" },
+      { number: 24, answer: "vocabulary", passageKeyword: "dramatically boosted vocabulary", questionKeyword: "larger vocabulary at age two", thaiMeaning: "คำศัพท์", exactPortion: "And when researchers saw the same babies at age two, they found that frequent baby talk had dramatically boosted vocabulary, regardless of socioeconomic status" }
     ]
   },
   {
     examId: "journey-normal-stage-8",
     passageNumber: 1,
-    startNumber: 8,
-    endNumber: 14,
-    sourceParagraphs: ["A", "G"],
+    startNumber: 9,
+    endNumber: 13,
+    sourceParagraphs: ["F", "G"],
     instructions: [
-      "Questions 8–14",
-      "Complete the summary below.",
+      "Questions 9–13",
+      "Complete the sentences below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 8–14 on your answer sheet."
+      "Write your answers in boxes 9–13 on your answer sheet."
     ],
-    summaryTitle: "Ocean chemistry and its consequences",
+    summaryTitle: "Cutty Sark later career",
     summaryLines: [
-      { type: 'bullet', text: "When CO₂ dissolves in seawater it creates an {8} that lowers the concentration of carbonate ions — reducing the material marine organisms need for shells and skeletons." },
-      { type: 'bullet', text: "The resulting shift in seawater chemistry is known as {9}." },
-      { type: 'bullet', text: "Among the most vulnerable organisms are {10}, whose shells dissolve in acidic upwelling zones." },
-      { type: 'bullet', text: "They form a key part of the diet of {11}, one of the most commercially significant fish in the Pacific." },
-      { type: 'bullet', text: "Breeding facilities that cultivate young shellfish on the US west coast — known as {12} — have suffered production losses from acidified water." },
-      { type: 'bullet', text: "One localised approach involves modifying nearshore {13} chemistry by adding alkaline materials." },
-      { type: 'bullet', text: "Scientists agree that the only lasting remedy is a significant cut in worldwide {14}." }
+      { type: 'bullet', text: "After 1880, Cutty Sark carried {9} as its main cargo during its most successful period." },
+      { type: 'bullet', text: "As a captain and {10}, Richard Woodget was highly skilled." },
+      { type: 'bullet', text: "The ship Ferreira went to Falmouth to repair damage caused by a {11}." },
+      { type: 'bullet', text: "Between 1923 and 1954, Cutty Sark was used for {12}." },
+      { type: 'bullet', text: "In the 21st century, Cutty Sark has twice been damaged by {13}." }
     ],
     questions: [
-      { number: 8, answer: "acid", passageKeyword: "carbonic acid", questionKeyword: "seawater acid (carbonic acid)", thaiMeaning: "กรดคาร์บอนิก", exactPortion: "When carbon dioxide dissolves in seawater, it reacts to form carbonic acid" },
-      { number: 9, answer: "acidification", passageKeyword: "ocean acidification", questionKeyword: "seawater acidification", thaiMeaning: "การเป็นกรดของมหาสมุทร", exactPortion: "a process called ocean acidification" },
-      { number: 10, answer: "Pteropods", passageKeyword: "Pteropods", questionKeyword: "pteropods (sea butterflies)", thaiMeaning: "เทอโรพอด", exactPortion: "Pteropods — small free-swimming molluscs known informally as sea butterflies" },
-      { number: 11, answer: "salmon", passageKeyword: "Pacific salmon", questionKeyword: "commercially significant Pacific fish (salmon)", thaiMeaning: "แซลมอน", exactPortion: "pteropods make up a substantial portion of the diet of Pacific salmon" },
-      { number: 12, answer: "hatcheries", passageKeyword: "Hatcheries producing oyster seed", questionKeyword: "shellfish breeding hatcheries", thaiMeaning: "ฟาร์มพันธุ์หอย", exactPortion: "Hatcheries producing oyster seed on the west coast of the United States" },
-      { number: 13, answer: "waters", passageKeyword: "coastal waters", questionKeyword: "nearshore marine waters", thaiMeaning: "น้ำชายฝั่ง", exactPortion: "adding alkaline materials to coastal waters" },
-      { number: 14, answer: "emissions", passageKeyword: "global emissions reduction", questionKeyword: "worldwide emissions", thaiMeaning: "การปล่อยก๊าซ", exactPortion: "urgent global emissions reduction" }
+      { number: 9, answer: "wool", passageKeyword: "transporting wool from Australia to Britain", questionKeyword: "main cargo wool", thaiMeaning: "ขนแกะ", exactPortion: "the beginning of the most successful period in Cutty Sark's working life, transporting wool from Australia to Britain" },
+      { number: 10, answer: "navigator", passageKeyword: "excellent navigator", questionKeyword: "captain and navigator", thaiMeaning: "นักเดินเรือ", exactPortion: "Richard Woodget, was an excellent navigator, who got the best out of both his ship and his crew" },
+      { number: 11, answer: "gale", passageKeyword: "Badly damaged in a gale in 1922", questionKeyword: "gale damage", thaiMeaning: "พายุ", exactPortion: "Badly damaged in a gale in 1922, she was put into Falmouth harbour in southwest England, for repairs" },
+      { number: 12, answer: "training", passageKeyword: "used Cutty Sark as a training ship", questionKeyword: "used for training 1923–1954", thaiMeaning: "ฝึกอบรม", exactPortion: "Dowman used Cutty Sark as a training ship, and she continued in this role after his death" },
+      { number: 13, answer: "fire", passageKeyword: "fire in 2007, and again, less seriously, in 2014", questionKeyword: "damaged by fire 21st century", thaiMeaning: "ไฟไหม้", exactPortion: "The ship suffered from fire in 2007, and again, less seriously, in 2014" }
     ]
   },
   {
     examId: "journey-normal-stage-8",
     passageNumber: 2,
-    startNumber: 25,
-    endNumber: 27,
-    sourceParagraphs: ["B", "E"],
+    startNumber: 15,
+    endNumber: 18,
+    sourceParagraphs: ["B", "C"],
     instructions: [
-      "Questions 25–27",
+      "Questions 15–18",
       "Complete the summary below.",
       "Choose ONE WORD ONLY from the passage for each answer.",
-      "Write your answers in boxes 25–27 on your answer sheet."
+      "Write your answers in boxes 15–18 on your answer sheet."
     ],
-    summaryTitle: "Financing and construction of the railroad",
+    summaryTitle: "Why soil degradation could be a disaster for humans",
     summaryLines: [
-      { type: 'bullet', text: "Part of the funding came from public financial instruments — {25} — whose face value increased for more challenging terrain." },
-      { type: 'bullet', text: "The most demanding section was the Summit {26}, completed using nitroglycerin blasting." },
-      { type: 'bullet', text: "The Crédit Mobilier {27} revealed enormous private profits at public expense." }
+      { type: 'para', text: "Healthy soil contains bacteria and other microorganisms, as well as plant remains and {15}." },
+      { type: 'bullet', text: "It provides food and antibiotics, and storing {16} affects the climate." },
+      { type: 'bullet', text: "It also prevents flood damage to buildings because it holds {17}." },
+      { type: 'bullet', text: "The main human factor in soil degradation is {18}." }
     ],
     questions: [
-      { number: 25, answer: "bonds", passageKeyword: "government bonds", questionKeyword: "public financial bonds", thaiMeaning: "พันธบัตรรัฐบาล", exactPortion: "providing land grants and government bonds to two companies" },
-      { number: 26, answer: "Tunnel", passageKeyword: "Summit Tunnel", questionKeyword: "Summit Tunnel", thaiMeaning: "อุโมงค์ Summit", exactPortion: "Chinese workers pioneered the use of controlled nitroglycerin blasting in the Summit Tunnel" },
-      { number: 27, answer: "scandal", passageKeyword: "The scandal eventually became public", questionKeyword: "Crédit Mobilier scandal", thaiMeaning: "เรื่องอื้อฉาว", exactPortion: "The scandal eventually became public in 1872" }
+      { number: 15, answer: "minerals", passageKeyword: "decomposing plants and various minerals", questionKeyword: "plant remains and minerals", thaiMeaning: "แร่ธาตุ", exactPortion: "living amid decomposing plants and various minerals" },
+      { number: 16, answer: "carbon", passageKeyword: "lock in their carbon content", questionKeyword: "storing carbon", thaiMeaning: "คาร์บอน", exactPortion: "they lock in their carbon content, holding three times the amount of carbon as does the entire atmosphere" },
+      { number: 17, answer: "water", passageKeyword: "Soils also store water, preventing flood damage", questionKeyword: "holds water", thaiMeaning: "น้ำ", exactPortion: "Soils also store water, preventing flood damage: in the UK, damage to buildings, roads and bridges from floods caused by soil degradation costs £233 million every year" },
+      { number: 18, answer: "agriculture", passageKeyword: "Agriculture is by far the biggest problem", questionKeyword: "main factor agriculture", thaiMeaning: "เกษตรกรรม", exactPortion: "Agriculture is by far the biggest problem" }
     ]
   },
   {

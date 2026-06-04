@@ -46,7 +46,7 @@ export type IntensivePassageLayout = {
   fill?: { instruction: string; summaryTitle?: string; items: IntensiveQuestionSpec[] }
   matchingPeople?: { instruction: string; people: string[]; items: IntensiveQuestionSpec[] }
   headings?: { instruction: string; options: string[]; items: IntensiveQuestionSpec[] }
-  mcq?: { instruction: string; items: IntensiveQuestionSpec[] }
+  mcq?: { instruction: string; options?: string[]; items: IntensiveQuestionSpec[] }
   ynng?: { instruction: string; items: IntensiveQuestionSpec[] }
   tfng?: { instruction: string; items: IntensiveQuestionSpec[] }
 }
@@ -175,7 +175,11 @@ export const buildIntensivePassage = (
     if (sectionKey === 'mcq' && layout.mcq?.items.length) {
       const mcq = layout.mcq
       const startNum = n
-      addSection(`Questions ${startNum}–${startNum + mcq.items.length - 1}`, mcq.instruction)
+      addSection(
+        `Questions ${startNum}–${startNum + mcq.items.length - 1}`,
+        mcq.instruction,
+        mcq.options?.length ? mcq.options : []
+      )
       pushQuestions(mcq.items, {
         answerType: 'multiple-choice',
         answerGroup: mcq.instruction
