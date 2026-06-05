@@ -18577,7 +18577,7 @@ function App() {
             <p className="readingQuestionNumber">
               Questions {set.startNumber}–{set.endNumber}
             </p>
-            <h4>Summary completion</h4>
+            <h4>{set.diagramImage ? 'Label the diagram' : 'Summary completion'}</h4>
           </div>
         </div>
 
@@ -18603,7 +18603,18 @@ function App() {
           )}
           {set.summaryLines.map((line, lineIndex) => {
             const key = `line-${lineIndex}`
-            const displayText = line.text
+            if (line.type === 'diagram' && set.diagramImage) {
+              return (
+                <figure key={key} className="readingFillDiagram">
+                  <img
+                    src={set.diagramImage}
+                    alt={set.diagramAlt || 'Diagram for labelling'}
+                    className="readingFillDiagramImg"
+                  />
+                </figure>
+              )
+            }
+            const displayText = 'text' in line ? line.text : ''
             if (line.type === 'heading') {
               return (
                 <p key={key} className="readingFillNewSubheading">
@@ -21275,7 +21286,7 @@ function App() {
                     <span className="readingJourneyJournalTag">Normal · Mission Mode</span>
                     <h3 className="readingJourneyJournalTitle">สมุดภารกิจ Reading</h3>
                     <p className="readingJourneyJournalLead">
-                      แต่ละด่าน = 2 passages (ด่าน 1–15 ชุดฝึก intensive · ด่าน 16+ สุ่มจากชุดที่อัปโหลด) · Fill · TFNG/YNNG · Matching — เคลียร์ที่{' '}
+                      แต่ละด่าน = 2 passages (ด่าน 1–17 ชุดฝึก intensive · ด่าน 18+ สุ่มจากชุดที่อัปโหลด) · Fill · TFNG/YNNG · Matching — เคลียร์ที่{' '}
                       <strong>{READING_JOURNEY_UNLOCK_PERCENT}%+</strong> ถึงจะเปิดด่านถัดไป
                     </p>
                     <div className="readingJourneyJournalChips">

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Audit evidence hints for intensive journey stages 11–15.
+ * Audit evidence hints for intensive journey stages 1–17.
  * Mirrors App.tsx hint resolution (needles, resolve, matching-info paragraph).
  *
  * Run: npx tsx scripts/audit-journey-11-15-hints.mjs
@@ -119,7 +119,16 @@ const auditQuestion = (passage, question) => {
 
   if (isMatchingInfoQuestion(passage, question)) {
     const expected = question.correctAnswer.toUpperCase().charCodeAt(0) - 65
-    if (paraIndex >= 0 && paraIndex !== expected) {
+    const labelAtIndex =
+      paraIndex >= 0
+        ? String(passage.bodyParagraphs[paraIndex] || '')
+            .match(/^([A-G])\s/)?.[1]
+            ?.toUpperCase()
+        : null
+    const expectedLabel = question.correctAnswer.toUpperCase()
+    if (labelAtIndex && labelAtIndex !== expectedLabel) {
+      issues.push(`matching-info-paragraph-mismatch: answer ${question.correctAnswer} but evidence in ${labelAtIndex}`)
+    } else if (paraIndex >= 0 && paraIndex !== expected && !labelAtIndex) {
       issues.push(`matching-info-paragraph-mismatch: answer ${question.correctAnswer} but evidence in ${String.fromCharCode(65 + paraIndex)}`)
     }
   }
@@ -127,9 +136,14 @@ const auditQuestion = (passage, question) => {
   if (isHeadingQuestion(passage, question)) {
     const letter = question.prompt.match(/paragraph\s+([A-G])/i)?.[1]?.toUpperCase()
     if (letter) {
-      const expected = letter.charCodeAt(0) - 65
-      if (paraIndex >= 0 && paraIndex !== expected) {
-        issues.push(`heading-paragraph-mismatch: ${question.prompt} but evidence in ${String.fromCharCode(65 + paraIndex)}`)
+      const labelAtIndex =
+        paraIndex >= 0
+          ? String(passage.bodyParagraphs[paraIndex] || '')
+              .match(/^([A-G])\s/)?.[1]
+              ?.toUpperCase()
+          : null
+      if (labelAtIndex && labelAtIndex !== letter) {
+        issues.push(`heading-paragraph-mismatch: ${question.prompt} but evidence in ${labelAtIndex}`)
       }
     }
   }
@@ -141,10 +155,14 @@ const auditQuestion = (passage, question) => {
   return { ok: issues.length === 0, issues, paraIndex, resolved: resolved.slice(0, 60) }
 }
 
+const STAGE_START = Number(process.env.JOURNEY_HINT_STAGE_START || 11)
+const STAGE_END = Number(process.env.JOURNEY_HINT_STAGE_END || 15)
+
 const failures = []
 const warnings = []
+let questionCount = 0
 
-for (let stage = 11; stage <= 15; stage += 1) {
+for (let stage = STAGE_START; stage <= STAGE_END; stage += 1) {
   const exam = buildIntensiveJourneyExam(stage)
   if (!exam) {
     failures.push({ stage, error: 'exam build failed' })
@@ -152,6 +170,7 @@ for (let stage = 11; stage <= 15; stage += 1) {
   }
   for (const passage of exam.parsedPayload.passages) {
     for (const question of passage.questions || []) {
+      questionCount += 1
       const result = auditQuestion(passage, question)
       if (!result.ok) {
         const entry = {
@@ -180,7 +199,7 @@ if (warnings.length) {
 }
 
 if (!failures.length) {
-  console.log('OK: Evidence hints for stages 11–15 (130 questions) resolve and align with App logic.')
+  console.log(`OK: Evidence hints for stages ${STAGE_START}–${STAGE_END} (${questionCount} questions) resolve and align with App logic.`)
   process.exit(warnings.length ? 0 : 0)
 }
 

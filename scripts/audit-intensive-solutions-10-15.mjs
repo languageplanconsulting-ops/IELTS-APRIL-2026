@@ -6,6 +6,7 @@
 import { buildIntensiveJourneyExam } from '../src/readingJourney.ts'
 import { INTENSIVE_SOLUTIONS_BY_STAGE } from '../src/intensiveJourneyQuestionSolutions.ts'
 import { INTENSIVE_JOURNEY_FILL_BLANK_SETS } from '../src/intensiveJourneyFillBlankSets.ts'
+import { buildReadingFillQuestionGroups } from '../src/readingFillDisplay.ts'
 import {
   fillBlankSetHasMissingBlankMarkers,
   isLowQualityFillBlankSet
@@ -25,6 +26,17 @@ const localNumber = (stage, slot, globalNumber) => {
   return globalNumber - start + 1
 }
 
+/** Intensive journey uses 13 questions per passage; passage 2 starts at Q15 (Q14 unused). */
+const EXPECTED_QUESTION_NUMBERS = [
+  ...Array.from({ length: 13 }, (_, i) => i + 1),
+  ...Array.from({ length: 13 }, (_, i) => i + 15)
+]
+
+const isJudgementAnswer = (answer, answerType) => {
+  if (answerType === 'true-false-not-given' || answerType === 'yes-no-not-given') return true
+  return /^(TRUE|FALSE|NOT GIVEN|YES|NO)$/i.test(String(answer || '').trim())
+}
+
 const issues = []
 const ok = []
 
@@ -38,12 +50,11 @@ for (let stage = 10; stage <= 15; stage += 1) {
   const passages = exam.parsedPayload?.passages || []
   const totalQ = passages.reduce((n, p) => n + (p.questions?.length || 0), 0)
   const numbers = passages.flatMap((p) => p.questions?.map((q) => q.number) || [])
-  const expected = Array.from({ length: 27 }, (_, i) => i + 1)
 
-  if (totalQ !== 27) {
-    issues.push({ stage, type: 'QUESTION_COUNT', expected: 27, got: totalQ })
+  if (totalQ !== 26) {
+    issues.push({ stage, type: 'QUESTION_COUNT', expected: 26, got: totalQ })
   }
-  if (JSON.stringify(numbers) !== JSON.stringify(expected)) {
+  if (JSON.stringify(numbers) !== JSON.stringify(EXPECTED_QUESTION_NUMBERS)) {
     issues.push({ stage, type: 'QUESTION_NUMBERING', got: numbers.join(',') })
   }
 
@@ -94,7 +105,6 @@ for (let stage = 10; stage <= 15; stage += 1) {
         const normEvidence = normalize(evidence.slice(0, 40))
         const normBody = normalize(body)
         if (normEvidence.length >= 8 && !normBody.includes(normEvidence)) {
-          // try first 5 words
           const words = normalize(evidence).split(' ').slice(0, 5).join(' ')
           if (words.length >= 8 && !normBody.includes(words)) {
             issues.push({
@@ -109,24 +119,48 @@ for (let stage = 10; stage <= 15; stage += 1) {
         }
       }
 
-      // TFNG / YNNG answer sanity
-      if (/TRUE|FALSE|NOT GIVEN|YES|NO/i.test(answer) && !/^(TRUE|FALSE|NOT GIVEN|YES|NO)$/i.test(answer)) {
+      if (
+        isJudgementAnswer(answer, question.answerType) &&
+        !/^(TRUE|FALSE|NOT GIVEN|YES|NO)$/i.test(answer)
+      ) {
         issues.push({ stage, type: 'ODD_TFNG_ANSWER', passage: slot, q: question.number, answer })
       }
     }
   }
 
-  // Fill-blank sets
+  // Fill-blank sets — discover actual groups from built exam
   const fillSets = INTENSIVE_JOURNEY_FILL_BLANK_SETS.filter((s) => s.examId === `journey-normal-stage-${stage}`)
-  const expectedSets = [
-    { passage: 1, start: slotStarts(1), end: 14 },
-    { passage: 2, start: 25, end: 27 }
-  ]
+  const expectedGroups = []
 
-  for (const exp of expectedSets) {
-    const set = fillSets.find((s) => s.passageNumber === exp.passage && s.startNumber === exp.start)
+  for (const passage of passages) {
+    const groups = buildReadingFillQuestionGroups(
+      passage,
+      passage.questions || [],
+      () => false,
+      exam.id
+    )
+    for (const group of groups) {
+      const fillQuestions = group.questions.filter((q) => q.answerType === 'text')
+      if (!fillQuestions.length) continue
+      expectedGroups.push({
+        passage: passage.number,
+        start: group.start,
+        end: group.end
+      })
+    }
+  }
+
+  for (const exp of expectedGroups) {
+    const set = fillSets.find(
+      (s) => s.passageNumber === exp.passage && s.startNumber === exp.start && s.endNumber === exp.end
+    )
     if (!set) {
-      issues.push({ stage, type: 'MISSING_FILL_SET', passage: exp.passage, range: `${exp.start}-${exp.end}` })
+      issues.push({
+        stage,
+        type: 'MISSING_FILL_SET',
+        passage: exp.passage,
+        range: `${exp.start}-${exp.end}`
+      })
       continue
     }
 
@@ -195,10 +229,6 @@ for (let stage = 10; stage <= 15; stage += 1) {
   }
 }
 
-function slotStarts(slot) {
-  return slot === 1 ? 8 : 25
-}
-
 console.log('=== Intensive Journey Solutions Audit (Stages 10–15) ===\n')
 
 if (ok.length) {
@@ -233,5 +263,5 @@ if (issues.length) {
   process.exit(1)
 }
 
-console.log('\nAll stages 10–15 passed: 27 questions, full solution coverage, fill-blank answers in passage.')
+console.log('\nAll stages 10–15 passed: 26 questions, full solution coverage, fill-blank answers in passage.')
 process.exit(0)

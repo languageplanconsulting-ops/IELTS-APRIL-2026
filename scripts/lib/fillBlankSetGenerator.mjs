@@ -42,6 +42,8 @@ export const resolveSingleWordAnswer = (question, passageText) => {
 
 export const cleanQuotes = (value) =>
   String(value || '')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
     .replace(/^["'""]+|["'""]+$/g, '')
     .replace(/\s+/g, ' ')
     .trim()
@@ -141,25 +143,135 @@ const sentenceContainingAnswer = (text, answer) => {
   return (match || pieces[0]).trim()
 }
 
-const paraphraseSentenceForGap = (sentence, answer, number) => {
-  let text = applyParaphraseRules(cleanQuotes(sentence))
-  const gapPattern = new RegExp(`\\b${escapeRegex(answer)}\\b`, 'i')
-  if (!gapPattern.test(text)) {
-    return `The passage refers to {${number}} in this context.`
+const normalizeBlankSpacing = (text, number) =>
+  String(text || '')
+    .replace(new RegExp(`\\{${number}\\}(\\w)`, 'g'), `{${number}} $1`)
+    .replace(new RegExp(`(\\w)\\{${number}\\}`, 'g'), `$1 {${number}}`)
+    .replace(/\s+([,.;:!?])/g, '$1')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+
+const NUMBER_WORDS = {
+  fifty: '50',
+  forty: '40',
+  thirty: '30',
+  twenty: '20',
+  ten: '10'
+}
+
+const answerVariantsForGap = (answer, acceptedAnswers = []) => {
+  const variants = []
+  const add = (value) => {
+    const token = String(value || '').trim()
+    if (token && !variants.some((item) => item.toLowerCase() === token.toLowerCase())) {
+      variants.push(token)
+    }
   }
-  text = text.replace(gapPattern, `{${number}}`)
-  text = text.replace(/\s+/g, ' ').trim()
-  if (!/[.!?]$/.test(text)) text += '.'
-  return collapseGapPlaceholder(text, number)
+
+  add(answer)
+  for (const item of acceptedAnswers) add(item)
+
+  const extras = []
+  for (const variant of [...variants]) {
+    if (/centers?$/i.test(variant)) extras.push(variant.replace(/centers/i, 'centres'), 'centres')
+    if (/centres?$/i.test(variant)) extras.push(variant.replace(/centres/i, 'centers'), 'centers')
+    if (/harbor$/i.test(variant)) extras.push('harbour')
+    if (/harbour$/i.test(variant)) extras.push('harbor')
+    if (/verandahs?$/i.test(variant)) extras.push('verandas', 'verandahs')
+    if (/verandas?$/i.test(variant)) extras.push('verandahs', 'verandas')
+    if (/^(\d[\d,]*)\s*kg$/i.test(variant)) extras.push(variant.match(/^(\d[\d,]*)\s*kg$/i)[1].replace(/,/g, ''))
+    if (/^1,000$/i.test(variant)) extras.push('1000', '1,000')
+    if (/^1000$/i.test(variant)) extras.push('1,000')
+    const lower = variant.toLowerCase()
+    if (NUMBER_WORDS[lower]) extras.push(NUMBER_WORDS[lower])
+  }
+  for (const item of extras) add(item)
+  return variants.sort((a, b) => b.length - a.length)
+}
+
+const replaceAnswerWithBlank = (text, variants, number) => {
+  let source = applyParaphraseRules(cleanQuotes(text))
+  for (const variant of variants) {
+    const gapPattern = new RegExp(`\\b${escapeRegex(variant)}\\b`, 'i')
+    if (gapPattern.test(source)) {
+      source = source.replace(gapPattern, ` {${number}} `)
+      return normalizeBlankSpacing(collapseGapPlaceholder(source, number), number)
+    }
+  }
+  return null
+}
+
+const paraphraseSentenceForGap = (sentence, answer, number, acceptedAnswers = []) => {
+  const variants = answerVariantsForGap(answer, acceptedAnswers)
+  const replaced = replaceAnswerWithBlank(sentence, variants, number)
+  if (replaced) {
+    if (!/[.!?]$/.test(replaced)) return `${replaced}.`
+    return replaced
+  }
+  return `The passage refers to {${number}} in this context.`
+}
+
+/** Build a readable clause from table-style prompts like "movement: … … more unpredictably". */
+const buildTableFillClause = (prompt, exactPortion, answer, number) => {
+  const raw = String(prompt || '').trim()
+  const label = raw
+    .split(':')[0]
+    .replace(/^\d+\.?\s*/, '')
+    .replace(/\s*[.…]+[\s.…]*/g, ' ')
+    .replace(/\s+in\s+vulnerable\s+places.*$/i, '')
+    .trim()
+    .toLowerCase()
+  const exact = cleanQuotes(exactPortion)
+
+  const templates = {
+    movement: `Wildfires now {${number}} more unpredictably than in the past.`,
+    'size of fires': `Megafires are {${number}} times the size of the average forest fire of 20 years ago.`,
+    rainfall: `The region has had significantly {${number}} normal precipitation in recent years.`,
+    'more brush to act as': `Stopping wildfires quickly has left more brush to act as {${number}} for megafires.`,
+    'extended fire': `Fire {${number}} are on average 78 days longer than they were 20 years ago.`,
+    'more building of': `There is increased {${number}} in vulnerable wooded areas.`,
+    'there will eventually be': `When fully operational, staff will harvest up to {${number}} kg of produce every day.`,
+    'it may be possible that the farm': `The farm's produce may eventually account for up to 10% of the city's {${number}} overall.`
+  }
+
+  for (const [key, template] of Object.entries(templates)) {
+    if (label.startsWith(key) || label.includes(key)) return template
+  }
+
+  if (exact) {
+    const replaced = paraphraseSentenceForGap(exact, answer, number, [])
+    if (!replaced.startsWith('The passage refers to')) return replaced
+  }
+  return `The passage refers to {${number}} in this context.`
+}
+
+const isTableStyleFillPrompt = (prompt) => {
+  const text = String(prompt || '').trim()
+  if (/^[\w\s]+:\s*[.…\s]+/i.test(text)) return true
+  if (/^[\w\s]+(?:[.…]\s*){1,}/i.test(text) && text.length < 100) return true
+  return false
 }
 
 export const buildGapClause = (question) => {
   const answer = String(question.answer || question.correctAnswer || '').trim()
+  const acceptedAnswers = question.acceptedAnswers || []
   const number = question.number
   const rawPrompt = cleanQuotes(question.prompt)
 
+  // Table-style fill prompts (label: … … remainder, or label … …)
+  if (isTableStyleFillPrompt(rawPrompt)) {
+    return buildTableFillClause(rawPrompt, question.exactPortion, answer, number)
+  }
+
+  // Prompt-only table rows without ellipsis (e.g. "There will eventually be")
+  const promptKey = rawPrompt.replace(/^\d+\.?\s*/, '').trim().toLowerCase()
+  if (promptKey && promptKey.length < 60 && !promptKey.includes('?')) {
+    const tableLine = buildTableFillClause(`${promptKey}: …`, question.exactPortion, answer, number)
+    if (!tableLine.startsWith('The passage refers to')) return tableLine
+  }
+
   if (!isWeakFillPrompt(rawPrompt)) {
-    let fromPrompt = rawPrompt.replace(/…+|\s*\.{2,}/g, `{${number}}`).replace(/\s+/g, ' ').trim()
+    let fromPrompt = rawPrompt.replace(/…+|\s*\.{2,}/g, ` {${number}} `).replace(/\s+/g, ' ').trim()
     fromPrompt = collapseGapPlaceholder(fromPrompt, number)
     if (fromPrompt.includes(`{${number}}`) && fromPrompt.length >= 16 && !/answer signal/i.test(fromPrompt)) {
       return applyParaphraseRules(fromPrompt)
@@ -169,10 +281,16 @@ export const buildGapClause = (question) => {
   const exact = cleanQuotes(question.exactPortion)
   let sentence = sentenceContainingAnswer(exact, answer)
   if (!sentence && exact) {
+    for (const variant of answerVariantsForGap(answer, acceptedAnswers)) {
+      sentence = sentenceContainingAnswer(exact, variant)
+      if (sentence) break
+    }
+  }
+  if (!sentence && exact) {
     sentence = exact
   }
-  if (!sentence) return `The passage refers to {${number}}.`
-  return paraphraseSentenceForGap(sentence, answer, number)
+  if (!sentence) return `The passage refers to {${number}} in this context.`
+  return paraphraseSentenceForGap(sentence, answer, number, acceptedAnswers)
 }
 
 export const inferSummaryTitle = (passageTitle) => {
@@ -273,7 +391,20 @@ export const buildInstructions = (start, end) => [
 ]
 
 export const isLetterFillGroup = (questions) =>
-  questions.some((question) => /^[A-F]$/i.test(String(question.correctAnswer || '').trim()))
+  questions.some((question) => {
+    const answer = String(question.correctAnswer || '').trim()
+    return /^[A-G]$/i.test(answer) || /^[ivxlc]+$/i.test(answer)
+  })
+
+const polishSummaryLines = (summaryLines, questions) =>
+  summaryLines.map((line) => {
+    if (!('text' in line) || !line.text) return line
+    let text = String(line.text)
+    for (const question of questions) {
+      text = normalizeBlankSpacing(text, question.number)
+    }
+    return { ...line, text }
+  })
 
 export const generateFillBlankSet = ({
   examId,
@@ -307,7 +438,7 @@ export const generateFillBlankSet = ({
       passageKeyword: passageKeyword.slice(0, 120),
       questionKeyword: questionKeyword.slice(0, 120),
       thaiMeaning: thaiMeaning.slice(0, 120),
-      exactPortion: cleanQuotes(question.exactPortion).slice(0, 320)
+      exactPortion: cleanQuotes(question.exactPortion).slice(0, 480)
     }
   })
 
@@ -319,7 +450,7 @@ export const generateFillBlankSet = ({
     sourceParagraphs: findSourceParagraphLetters(passage, newQuestions),
     instructions: buildInstructions(startNumber, endNumber),
     summaryTitle: inferSummaryTitle(passage.title),
-    summaryLines: buildSummaryLines(newQuestions, sectionKind, sorted),
+    summaryLines: polishSummaryLines(buildSummaryLines(newQuestions, sectionKind, sorted), newQuestions),
     questions: newQuestions
   }
 }

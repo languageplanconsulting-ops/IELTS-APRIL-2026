@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+  <title id="title">Roman qanat tunnel diagrams</title>
+  <desc id="desc">Persian qanat method and cross-section of a Roman qanat shaft for labelling.</desc>
+  <rect width="720" height="480" fill="#fffbeb"/>
+  <text x="360" y="28" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#78350f">Roman tunnels  label the diagrams</text>
+
+  <!-- Panel A: Persian Qanat Method -->
+  <rect x="24" y="44" width="320" height="200" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="184" y="68" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">The Persian Qanat Method</text>
+
+  <!-- Hill cross-section -->
+  <path d="M40 200 L80 120 L200 100 L280 130 L300 200 Z" fill="#d6d3d1" stroke="#78716c" stroke-width="1.5"/>
+  <ellipse cx="200" cy="108" rx="90" ry="18" fill="#86efac" opacity="0.5"/>
+
+  <!-- Posts on surface -->
+  <line x1="100" y1="118" x2="100" y2="132" stroke="#b45309" stroke-width="3"/>
+  <line x1="140" y1="112" x2="140" y2="128" stroke="#b45309" stroke-width="3"/>
+  <line x1="180" y1="108" x2="180" y2="124" stroke="#b45309" stroke-width="3"/>
+  <line x1="220" y1="112" x2="220" y2="128" stroke="#b45309" stroke-width="3"/>
+  <text x="184" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">1 posts</text>
+
+  <!-- Shafts -->
+  <rect x="98" y="132" width="8" height="68" fill="#fef08a" stroke="#ca8a04"/>
+  <rect x="138" y="128" width="8" height="72" fill="#fef08a" stroke="#ca8a04"/>
+  <rect x="178" y="124" width="8" height="76" fill="#fef08a" stroke="#ca8a04"/>
+  <rect x="218" y="128" width="8" height="72" fill="#fef08a" stroke="#ca8a04"/>
+
+  <!-- Underground tunnel -->
+  <rect x="60" y="168" width="220" height="14" rx="4" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5"/>
+  <path d="M60 175 Q140 155 280 175" fill="none" stroke="#0284c7" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <!-- Water to canal -->
+  <path d="M280 175 L300 200 L320 210" fill="none" stroke="#0284c7" stroke-width="2"/>
+  <rect x="300" y="200" width="40" height="12" fill="#0ea5e9"/>
+  <text x="320" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#0369a1">2 canal</text>
+
+  <text x="184" y="188" text-anchor="middle" font-size="10" fill="#334155">vertical shafts ’ earth removal &amp;</text>
+  <text x="184" y="202" text-anchor="middle" font-size="10" font-weight="600" fill="#059669">3 ventilation</text>
+
+  <!-- Panel B: Cross-section of Roman Qanat Shaft -->
+  <rect x="376" y="44" width="320" height="200" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="536" y="68" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">Cross-section of a Roman Qanat Shaft</text>
+
+  <!-- Ground -->
+  <rect x="400" y="100" width="272" height="24" fill="#a8a29e"/>
+  <text x="536" y="116" text-anchor="middle" font-size="10" fill="#44403c">ground level</text>
+
+  <!-- Shaft -->
+  <rect x="500" y="124" width="72" height="100" fill="#e7e5e4" stroke="#57534e" stroke-width="2"/>
+  <!-- Ladder holds -->
+  <line x1="512" y1="140" x2="512" y2="210" stroke="#78716c" stroke-width="2" stroke-dasharray="6 8"/>
+  <line x1="560" y1="140" x2="560" y2="210" stroke="#78716c" stroke-width="2" stroke-dasharray="6 8"/>
+  <rect x="508" y="136" width="8" height="8" fill="#57534e"/>
+  <rect x="508" y="156" width="8" height="8" fill="#57534e"/>
+  <rect x="556" y="146" width="8" height="8" fill="#57534e"/>
+  <text x="620" y="175" font-size="10" fill="#334155">6 climbing</text>
+
+  <!-- Lid -->
+  <rect x="492" y="96" width="88" height="10" rx="2" fill="#78716c" stroke="#44403c"/>
+  <text x="536" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#44403c">4 lid</text>
+
+  <!-- Plumb line -->
+  <line x1="536" y1="106" x2="536" y2="200" stroke="#1e293b" stroke-width="1"/>
+  <circle cx="536" cy="200" r="8" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+  <text x="580" y="205" font-size="11" font-weight="700" fill="#b45309">5 weight</text>
+  <line x1="480" y1="106" x2="592" y2="106" stroke="#64748b" stroke-width="2"/>
+  <text x="536" y="128" text-anchor="middle" font-size="9" fill="#64748b">rod / plumb line</text>
+
+  <!-- Tunnel at bottom -->
+  <rect x="460" y="224" width="152" height="12" fill="#38bdf8" stroke="#0284c7"/>
+
+  <!-- Question key -->
+  <rect x="24" y="260" width="672" height="200" rx="10" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="48" y="288" font-size="12" font-weight="600" fill="#0f172a">Write ONE WORD ONLY for each box (Questions 16):</text>
+  <text x="48" y="312" font-size="11" fill="#475569">Diagram A: 1 &  2 &  3 &  (posts direct tunnel route; water flows to canal; shafts provide ventilation)</text>
+  <text x="48" y="336" font-size="11" fill="#475569">Diagram B: 4 &  5 &  6 &  (shaft cover; plumb-line weight; handholds for climbing)</text>
+  <text x="48" y="368" font-size="11" font-weight="600" fill="#334155">Questions 79 (no diagram): short answers from the passage.</text>
+</svg>

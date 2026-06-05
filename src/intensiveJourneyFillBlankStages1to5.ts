@@ -8,18 +8,24 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     endNumber: 13,
     sourceParagraphs: ["H","I"],
     instructions: [
-          "Questions 6–13",
-          "Complete the summary below.",
+          "Questions 6–8",
+          "Answer the questions below.",
           "Choose ONE WORD ONLY from the passage for each answer.",
-          "Write your answers in boxes 6–13 on your answer sheet."
+          "Write your answers in boxes 6–8 on your answer sheet.",
+          "Questions 9–13",
+          "Complete the table below.",
+          "Choose ONE WORD AND/OR A NUMBER from the passage for each answer.",
+          "Write your answers in boxes 9–13 on your answer sheet."
     ],
     summaryTitle: "Stepwells",
     summaryLines: [
-      { type: "para", text: "Which part of some stepwells provided shade for people? {6} What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? {7} Who are frequent visitors to stepwells nowadays? {8} Incredibly, in January 2001, this ancient structure survived a devastating {9} that measured 7.6 on the Richter scale." },
-      { type: "bullet", text: "including {10} of steps that descend to the bottom in a stunning geometrical formation." },
-      { type: "bullet", text: "It actually resembles a {11}(kund means reservoir or pond) rather than a well." },
-      { type: "bullet", text: "On the fourth side, {12} which are supported by ornate pillars overlook the steps." },
-      { type: "bullet", text: "Constructed in around 1700, it's nine storeys deep, with the last two being {13}." },
+      { type: "bullet", text: "Which part of some stepwells provided shade for people? {6}" },
+      { type: "bullet", text: "What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? {7}" },
+      { type: "bullet", text: "Who are frequent visitors to stepwells nowadays? {8}" },
+      { type: "heading", text: "Stepwells" },
+      { type: "bullet", text: "Rani Ki Vav | Features: Incredibly, in January 2001, this ancient structure survived a devastating {9} that measured 7.6 on the Richter scale." },
+      { type: "bullet", text: "Surya Kund | Features: Steps on the {10} produce a geometrical pattern. | Other notes: Looks more like a {11} than a well." },
+      { type: "bullet", text: "Raniji Ki Baori | Features: On the fourth side, {12} which provide a view of the steps. | Other notes: Has two {13} levels." },
     ],
     questions: [
       { number: 6, answer: "pavilions", passageKeyword: "included sheltered visitors relentless", questionKeyword: "stepwells provided shade", thaiMeaning: "จากข้อความใน", exactPortion: "they also included pavilions that sheltered visitors from the relentless heat." },
@@ -46,9 +52,10 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     summaryTitle: "Gifted children and learning",
     summaryLines: [
-      { type: "para", text: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and {24} in their home etc. There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of {25}." },
-      { type: "bullet", text: "{26} is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example." },
-      { type: "bullet", text: "Although ' {27}' can produce extremely high examination results." },
+      { type: "para", text: "One study found that the higher the children's IQ scores, especially over 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and {24} in the home." },
+      { type: "para", text: "Children of average ability seem to need more direction from teachers because they do not have {25}." },
+      { type: "para", text: "Meta-cognition involves children understanding their own learning strategies, as well as developing {26}." },
+      { type: "para", text: "Although {27} can produce impressive results in class tests, this style of teaching does not develop children's self-regulation." },
     ],
     questions: [
       { number: 24, answer: "activities", passageKeyword: "higher children scores especially", questionKeyword: "study found", thaiMeaning: "จากข้อความใน", exactPortion: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc." },
@@ -71,7 +78,8 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     summaryTitle: "The Context, Meaning and Scope of Tourism",
     summaryLines: [
-      { type: "para", text: "For example, tourism is the major source of {11} in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries. suggest that the travel and tourism industry is the number one ranked {12} in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States. In many cases, similar difficulties arise when attempts are made to measure {13}." },
+      { type: "para", text: "For example, tourism is the major source of {11} in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries. The World Travel and Tourism Council (WTTC) suggest that the travel and tourism industry is the number one ranked {12} in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States." },
+      { type: "para", text: "In many cases, similar difficulties arise when attempts are made to measure {13}." },
     ],
     questions: [
       { number: 11, answer: "income", passageKeyword: "example tourism source income", questionKeyword: "greece tourism important", thaiMeaning: "จากข้อความใน", exactPortion: "For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries.", acceptedAnswers: ["income","industry"] },
@@ -93,9 +101,10 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     summaryTitle: "Autumn leaves",
     summaryLines: [
-      { type: "para", text: "One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most {20}. Not only that, but the red is brighter on the {21} side of the leaf." },
-      { type: "bullet", text: "It has also been recognised for decades that the best conditions for intense red colours are {22}, sunny days and cool nights." },
-      { type: "bullet", text: "And finally, trees such as maples usually get much redder the more {23} you travel in the northern hemisphere." },
+      { type: "para", text: "The most vividly coloured red leaves are found on the side of the tree facing the {20}." },
+      { type: "para", text: "The {21} surfaces of leaves contain the most red pigment." },
+      { type: "para", text: "Red leaves are most abundant when daytime weather conditions are {22} and sunny." },
+      { type: "para", text: "The intensity of the red colour of leaves increases as you go further {23}." },
     ],
     questions: [
       { number: 20, answer: "sun", passageKeyword: "straightforward leaves reddest", questionKeyword: "vividly coloured leaves", thaiMeaning: "จากข้อความใน", exactPortion: "One is straightforward: on many trees, the leaves that are the reddest are those on the side of the tree which gets most sun", acceptedAnswers: ["sunlight"] },
@@ -146,9 +155,10 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     summaryTitle: "Second nature",
     summaryLines: [
-      { type: "para", text: "Psychologists have long held that a person's character cannot undergo a {15} in any meaningful way. and that the key traits of personality are determined at a very {16}. Some qualities are less challenging to develop than others, {17} being one of them." },
-      { type: "bullet", text: "However, developing qualities requires mastering a range of {18} which are diverse and sometimes surprising." },
-      { type: "bullet", text: "For example, to bring more joy and passion into your life, you must be open to experiencing negative {19}." },
+      { type: "para", text: "Psychologists have long held that a person's character cannot undergo a {15} in any meaningful way and that the key traits of personality are determined at a very {16}." },
+      { type: "para", text: "Some qualities are less challenging to develop than others, {17} being one of them." },
+      { type: "para", text: "However, developing qualities requires mastering a range of {18} which are diverse and sometimes surprising." },
+      { type: "para", text: "For example, to bring more joy and passion into your life, you must be open to experiencing negative {19}." },
     ],
     questions: [
       { number: 15, answer: "transformation", passageKeyword: "psychologists person character cannot", questionKeyword: "impossible", thaiMeaning: "จากข้อความใน", exactPortion: "Psychologists have long held that a person's character cannot undergo a transformation in any meaningful way", acceptedAnswers: ["change"] },
