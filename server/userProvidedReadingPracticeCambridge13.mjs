@@ -811,7 +811,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "… and sold it to destinations around Europe. Questions 10-13 Do the following statements agree with the information given in the Reading Passage? In boxes on your answer sheet, write",
+              "prompt": "traders took it to … … and sold it to destinations around Europe",
               "correctAnswer": "Venice",
               "acceptedAnswers": [
                 "Venice"
