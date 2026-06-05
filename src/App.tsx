@@ -22855,19 +22855,30 @@ function App() {
                       <p className="meta">Your answer: {item.userAnswer || 'No answer'}</p>
                       <p className="meta">Correct answer: {item.correctAnswer}</p>
                       <div className="readingReportEvidence">
-                        <h4>Why?</h4>
-                        {paraphraseEquation && (
-                          <div className="listeningBuilderExamWordCheck">
-                            <p>Do you know this word?</p>
-                            <div className="listeningBuilderExamWordEquation">
-                              <span>{paraphraseEquation.passageKeyword}</span>
-                              <b>=</b>
-                              <span>{paraphraseEquation.questionKeyword}</span>
-                              <b>=</b>
-                              <span>{paraphraseEquation.thaiMeaning}</span>
+                        <h4>ทำไมถึงตอบนี้</h4>
+                        {paraphraseEquation && (() => {
+                          const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
+                          return (
+                            <div className="listeningBuilderExamWordCheck">
+                              <p className="readingReportBridgeLabel">
+                                {isIntensive ? 'Paraphrase ที่ใช้ในโจทย์' : 'Do you know this word?'}
+                              </p>
+                              <div className="listeningBuilderExamWordEquation">
+                                <span>{paraphraseEquation.passageKeyword}</span>
+                                <b>=</b>
+                                <span>{paraphraseEquation.questionKeyword}</span>
+                              </div>
+                              {isIntensive && paraphraseEquation.thaiMeaning && (
+                                <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
+                              )}
+                              {!isIntensive && (
+                                <div className="listeningBuilderExamWordEquation" style={{marginTop: 4}}>
+                                  <span style={{fontSize: '0.9em', color: '#64748b'}}>{paraphraseEquation.thaiMeaning}</span>
+                                </div>
+                              )}
                             </div>
-                          </div>
-                        )}
+                          )
+                        })()}
                         {!paraphraseEquation && item.explanationThai && <p>{item.explanationThai}</p>}
                         {paraphraseEquation && item.explanationThai && !parseIntensiveExplanationEquation(item.explanationThai) && (
                           <p className="meta">{item.explanationThai}</p>
@@ -22878,7 +22889,7 @@ function App() {
                         <blockquote>{reportBlockquote}</blockquote>
                       </div>
                       <div className="readingParaphraseCard readingParaphraseCard-report">
-                        {(item.paraphrasedVocabulary || vocabSupport?.meaning) && (
+                        {!parseIntensiveExplanationEquation(item.explanationThai) && (item.paraphrasedVocabulary || vocabSupport?.meaning) && (
                           <>
                             <p className="sectionLabel">Important vocab / phrase</p>
                             {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
