@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Report — 5 Design Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif;
+  background: #f0f0f0;
+  padding: 32px 16px;
+  min-height: 100vh;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.page-title h1 { font-size: 1.5rem; font-weight: 800; color: #0f172a; }
+.page-title p { color: #64748b; margin-top: 6px; font-size: 0.9rem; }
+
+.option-section {
+  max-width: 540px;
+  margin: 0 auto 64px;
+}
+.option-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.option-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.option-label h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+.option-label p {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* ═══════════════════════════════════════════
+   OPTION 1 — Glassmorphism / Premium Dark Card
+   ══════════════════════════════════════════ */
+.opt1-wrap {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #1e3a5f 100%);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(30,27,75,0.4);
+}
+
+.opt1-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 18px;
+  padding: 20px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.opt1-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+.opt1-qnum {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+.opt1-prompt {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.4;
+}
+.opt1-badge-wrong {
+  flex-shrink: 0;
+  background: rgba(239,68,68,0.25);
+  border: 1px solid rgba(239,68,68,0.5);
+  color: #fca5a5;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.opt1-badge-correct {
+  flex-shrink: 0;
+  background: rgba(34,197,94,0.25);
+  border: 1px solid rgba(34,197,94,0.5);
+  color: #86efac;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.opt1-answer-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.opt1-answer-box {
+  background: rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.opt1-answer-box .label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 4px;
+}
+.opt1-answer-box .value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+.opt1-answer-box.yours .value { color: #fca5a5; text-decoration: line-through; }
+.opt1-answer-box.correct .value { color: #86efac; }
+
+.opt1-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 16px 0;
+}
+
+.opt1-section-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+}
+
+.opt1-bridge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.opt1-bridge-pill {
+  background: rgba(99,102,241,0.3);
+  border: 1px solid rgba(99,102,241,0.5);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #c7d2fe;
+}
+.opt1-bridge-pill.q { background: rgba(251,146,60,0.2); border-color: rgba(251,146,60,0.4); color: #fdba74; }
+.opt1-bridge-arrow {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.opt1-thai {
+  background: rgba(255,255,255,0.05);
+  border-left: 2px solid rgba(99,102,241,0.7);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 12px;
+}
+
+.opt1-quote {
+  font-style: italic;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+  border-left: 2px solid rgba(255,255,255,0.15);
+  padding-left: 12px;
+}
+
+.opt1-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+.opt1-btn {
+  border: none; cursor: pointer;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.opt1-btn:hover { opacity: 0.85; }
+.opt1-btn.knew { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+.opt1-btn.save { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+
+/* ═══════════════════════════════════════════
+   OPTION 2 — Clean White Card / Korean-app style
+   ══════════════════════════════════════════ */
+.opt2-wrap { display: grid; gap: 14px; }
+
+.opt2-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+
+.opt2-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.opt2-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.opt2-qnum {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+.opt2-badge {
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.opt2-badge.wrong { background: #fff1f2; color: #e11d48; }
+.opt2-badge.correct { background: #f0fdf4; color: #16a34a; }
+
+.opt2-prompt {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.45;
+}
+
+.opt2-answers {
+  padding: 14px 20px;
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+.opt2-answer-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.opt2-answer-chip.yours {
+  background: #fff1f2;
+  color: #e11d48;
+}
+.opt2-answer-chip.correct {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+.opt2-answer-chip .chip-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+.opt2-evidence {
+  padding: 16px 20px;
+}
+.opt2-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+.opt2-bridge-wrap {
+  background: #fafafa;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.opt2-bridge-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366f1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.opt2-bridge-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.opt2-pill {
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 11px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+.opt2-pill.passage { border-color: #6366f1; color: #4f46e5; background: #eef2ff; }
+.opt2-pill.question { border-color: #f59e0b; color: #b45309; background: #fffbeb; }
+.opt2-equals { color: #94a3b8; font-weight: 700; font-size: 0.9rem; }
+
+.opt2-thai {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #374151;
+  border-left: 3px solid #6366f1;
+  padding: 8px 12px;
+  background: #f5f3ff;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+}
+
+.opt2-quote-wrap {
+  background: #f8fafc;
+  border-left: 3px solid #cbd5e1;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.opt2-actions {
+  padding: 12px 20px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+.opt2-btn {
+  border: none; cursor: pointer;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  font-family: inherit;
+}
+.opt2-btn.knew { background: #f1f5f9; color: #475569; }
+.opt2-btn.save { background: #6366f1; color: #fff; }
+
+/* ═══════════════════════════════════════════
+   OPTION 3 — Duolingo-inspired / Bright Friendly
+   ══════════════════════════════════════════ */
+.opt3-wrap { display: grid; gap: 14px; }
+
+.opt3-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 2px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.opt3-status-bar {
+  height: 6px;
+  background: #ef4444;
+}
+.opt3-status-bar.correct { background: #22c55e; }
+
+.opt3-body { padding: 18px 18px 0; }
+
+.opt3-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+.opt3-qnum {
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.opt3-prompt { font-size: 0.97rem; font-weight: 600; color: #111827; line-height: 1.4; }
+.opt3-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.opt3-answer-zone {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.opt3-answer-item {
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+}
+.opt3-answer-item .al { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; opacity: 0.6; }
+.opt3-answer-item .av { font-size: 0.95rem; font-weight: 800; }
+.opt3-answer-item.yours { background: #fef2f2; border: 1.5px solid #fecaca; }
+.opt3-answer-item.yours .av { color: #dc2626; }
+.opt3-answer-item.correct { background: #f0fdf4; border: 1.5px solid #bbf7d0; }
+.opt3-answer-item.correct .av { color: #16a34a; }
+
+.opt3-explain {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+  border: 1px solid #f3f4f6;
+}
+.opt3-explain-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+.opt3-bridge {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.opt3-bridge-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.opt3-bridge-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.opt3-bridge-dot.p { background: #6366f1; }
+.opt3-bridge-dot.q { background: #f59e0b; }
+.opt3-bridge-text {
+  font-size: 0.84rem;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.opt3-bridge-text em { font-style: normal; font-weight: 700; }
+.opt3-bridge-text .tag {
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.opt3-bridge-text .tag.p { background: #eef2ff; color: #4f46e5; }
+.opt3-bridge-text .tag.q { background: #fffbeb; color: #b45309; }
+
+.opt3-connect-line {
+  width: 2px; height: 16px;
+  background: linear-gradient(#6366f1, #f59e0b);
+  margin-left: 3px;
+  border-radius: 2px;
+}
+
+.opt3-thai {
+  background: #f0f9ff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #0c4a6e;
+  margin-bottom: 10px;
+}
+
+.opt3-quote {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #6b7280;
+  line-height: 1.6;
+  padding-left: 10px;
+  border-left: 2px dashed #d1d5db;
+}
+
+.opt3-actions {
+  padding: 12px 18px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.opt3-btn {
+  border: none; cursor: pointer;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  font-family: inherit;
+}
+.opt3-btn.knew { background: #f3f4f6; color: #374151; }
+.opt3-btn.save { background: #facc15; color: #78350f; }
+
+/* ═══════════════════════════════════════════
+   OPTION 4 — Step-by-Step / Thai Tutoring Card
+   ══════════════════════════════════════════ */
+.opt4-wrap { display: grid; gap: 14px; }
+
+.opt4-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+}
+
+.opt4-top-band {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.opt4-top-band.wrong { background: #fef2f2; border-bottom: 2px solid #fecaca; }
+.opt4-top-band.correct { background: #f0fdf4; border-bottom: 2px solid #bbf7d0; }
+
+.opt4-q-info .qnum {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 5px;
+}
+.opt4-top-band.wrong .qnum { color: #b91c1c; }
+.opt4-top-band.correct .qnum { color: #15803d; }
+.opt4-q-info .prompt { font-size: 0.97rem; font-weight: 600; color: #111827; line-height: 1.4; }
+
+.opt4-result-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.opt4-result-badge .icon { font-size: 2rem; line-height: 1; }
+.opt4-result-badge .word {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.opt4-top-band.wrong .word { color: #dc2626; }
+.opt4-top-band.correct .word { color: #16a34a; }
+
+.opt4-step-list {
+  padding: 16px 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.opt4-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.opt4-step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.opt4-step.active .opt4-step-num { background: #6366f1; color: #fff; }
+.opt4-step-content { flex: 1; }
+.opt4-step-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 5px;
+}
+.opt4-step.active .opt4-step-title { color: #6366f1; }
+
+.opt4-answers-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.opt4-ans {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.opt4-ans.yours { background: #fef2f2; color: #dc2626; border: 1.5px solid #fecaca; }
+.opt4-ans.correct { background: #f0fdf4; color: #16a34a; border: 1.5px solid #bbf7d0; }
+
+.opt4-bridge-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.opt4-bridge-table tr td {
+  padding: 7px 10px;
+  vertical-align: top;
+}
+.opt4-bridge-table tr td:first-child {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  padding-right: 12px;
+}
+.opt4-bridge-table .passage-row td:first-child { color: #6366f1; }
+.opt4-bridge-table .question-row td:first-child { color: #f59e0b; }
+.opt4-bridge-table tr td:last-child {
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
+}
+.opt4-bridge-table tr:not(:last-child) td { border-bottom: 1px dashed #f1f5f9; }
+
+.opt4-thai-box {
+  background: #f5f3ff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.87rem;
+  line-height: 1.7;
+  color: #3730a3;
+}
+
+.opt4-quote-box {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.opt4-step-divider {
+  width: 1px;
+  background: #e5e7eb;
+  margin: 0 12px;
+  align-self: stretch;
+}
+
+.opt4-actions {
+  padding: 12px 20px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+.opt4-btn {
+  border: none; cursor: pointer;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  font-family: inherit;
+}
+.opt4-btn.knew { background: #f1f5f9; color: #475569; }
+.opt4-btn.save { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+
+/* ═══════════════════════════════════════════
+   OPTION 5 — Bold Thai / Warm + High Contrast
+   ══════════════════════════════════════════ */
+.opt5-wrap { display: grid; gap: 14px; }
+
+.opt5-card {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid #1c1c1e;
+}
+
+.opt5-header {
+  background: #1c1c1e;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.opt5-header .left .qnum {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 5px;
+}
+.opt5-header .left .prompt {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.4;
+}
+.opt5-verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.opt5-verdict .icon { font-size: 1.6rem; }
+.opt5-verdict .word {
+  font-size: 0.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.opt5-verdict.wrong .word { color: #ff6b6b; }
+.opt5-verdict.correct .word { color: #6ee7b7; }
+
+.opt5-answer-band {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.opt5-answer-cell {
+  padding: 12px 18px;
+}
+.opt5-answer-cell:first-child {
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.opt5-answer-cell.yours { background: #3f0000; }
+.opt5-answer-cell.right { background: #052e16; }
+.opt5-answer-cell .al {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  opacity: 0.5;
+  color: #fff;
+}
+.opt5-answer-cell .av {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+.opt5-answer-cell.yours .av { color: #ff6b6b; }
+.opt5-answer-cell.right .av { color: #6ee7b7; }
+
+.opt5-body { background: #fff; padding: 16px 18px; display: grid; gap: 12px; }
+
+.opt5-bridge-card {
+  background: #fff8f0;
+  border: 1.5px solid #f59e0b;
+  border-radius: 12px;
+  padding: 13px 14px;
+}
+.opt5-bridge-card-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #b45309;
+  margin-bottom: 10px;
+}
+.opt5-bridge-flex {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.opt5-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 2px;
+}
+.opt5-tag.p { background: #ede9fe; color: #5b21b6; }
+.opt5-tag.q { background: #fef3c7; color: #92400e; }
+.opt5-phrase {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #1c1c1e;
+}
+.opt5-equals {
+  color: #f59e0b;
+  font-weight: 900;
+  font-size: 0.9rem;
+  margin: 0 2px;
+}
+
+.opt5-thai {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: #374151;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.opt5-quote {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #6b7280;
+  border-left: 3px solid #fbbf24;
+  padding: 8px 12px;
+  background: #fffbeb;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.6;
+}
+
+.opt5-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.opt5-btn {
+  border: none; cursor: pointer;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  font-family: inherit;
+}
+.opt5-btn.knew { background: #f1f5f9; color: #475569; }
+.opt5-btn.save { background: #f59e0b; color: #1c1c1e; }
+
+/* navigation dots */
+.option-tag {
+  display: inline-block;
+  background: #0f172a;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>Reading Report — 5 Design Options</h1>
+  <p>ตัวอย่างหน้าสรุปผลการตอบคำถาม • เลือก 1 แบบที่ชอบที่สุด</p>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- OPTION 1: Glass / Dark Premium      -->
+<!-- ════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">1</div>
+    <div>
+      <h2>Dark Premium / Glass</h2>
+      <p>สีเข้ม Glassmorphism — ดูหรู, ทันสมัย, premium</p>
+    </div>
+  </div>
+  <div class="opt1-wrap">
+    <!-- WRONG card -->
+    <div class="opt1-card">
+      <div class="opt1-header">
+        <div>
+          <div class="opt1-qnum">Question 8</div>
+          <div class="opt1-prompt">People think of bears as unintelligent and …</div>
+        </div>
+        <div class="opt1-badge-wrong">✗ Wrong</div>
+      </div>
+      <div class="opt1-answer-row">
+        <div class="opt1-answer-box yours">
+          <div class="label">คำตอบของคุณ</div>
+          <div class="value">— ไม่ได้ตอบ</div>
+        </div>
+        <div class="opt1-answer-box correct">
+          <div class="label">คำตอบที่ถูก</div>
+          <div class="value">violent</div>
+        </div>
+      </div>
+      <div class="opt1-divider"></div>
+      <div class="opt1-section-label">Paraphrase ที่ใช้ในโจทย์</div>
+      <div class="opt1-bridge">
+        <div class="opt1-bridge-pill">perceived as stupid</div>
+        <div class="opt1-bridge-arrow">⟷</div>
+        <div class="opt1-bridge-pill q">unintelligent</div>
+      </div>
+      <div class="opt1-thai">
+        คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างจะถูกเติมด้วย "violent" (ดุร้าย)
+      </div>
+      <div class="opt1-quote">
+        "Bears, on the other hand, seem to be perceived as stupid and in many cases violent."
+      </div>
+    </div>
+    <div class="opt1-actions">
+      <button class="opt1-btn knew">✓ รู้แล้ว</button>
+      <button class="opt1-btn save">+ บันทึกลง Notebook</button>
+    </div>
+
+    <!-- CORRECT card -->
+    <div class="opt1-card" style="background:rgba(255,255,255,0.05)">
+      <div class="opt1-header">
+        <div>
+          <div class="opt1-qnum">Question 9</div>
+          <div class="opt1-prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+        </div>
+        <div class="opt1-badge-correct">✓ Correct</div>
+      </div>
+      <div class="opt1-answer-row">
+        <div class="opt1-answer-box">
+          <div class="label">คำตอบของคุณ</div>
+          <div class="value" style="color:#86efac">tool</div>
+        </div>
+        <div class="opt1-answer-box correct">
+          <div class="label">คำตอบที่ถูก</div>
+          <div class="value">tool</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- OPTION 2: Clean White / Minimal     -->
+<!-- ════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">2</div>
+    <div>
+      <h2>Clean White / Minimal</h2>
+      <p>สะอาด เรียบ อ่านง่าย — สไตล์แอปเกาหลี</p>
+    </div>
+  </div>
+  <div class="opt2-wrap">
+    <div class="opt2-card">
+      <div class="opt2-header">
+        <div class="opt2-header-top">
+          <div class="opt2-qnum">Question 8</div>
+          <div class="opt2-badge wrong">✗ Wrong</div>
+        </div>
+        <div class="opt2-prompt">People think of bears as unintelligent and …</div>
+      </div>
+      <div class="opt2-answers">
+        <div class="opt2-answer-chip yours"><span class="chip-label">คุณตอบ</span> — ไม่ได้ตอบ</div>
+        <div class="opt2-answer-chip correct"><span class="chip-label">ถูกต้อง</span> violent</div>
+      </div>
+      <div class="opt2-evidence">
+        <div class="opt2-section-label">ทำไมถึงตอบนี้</div>
+        <div class="opt2-bridge-wrap">
+          <div class="opt2-bridge-label">Paraphrase ที่ใช้ในโจทย์</div>
+          <div class="opt2-bridge-row">
+            <div class="opt2-pill passage">perceived as stupid</div>
+            <div class="opt2-equals">=</div>
+            <div class="opt2-pill question">unintelligent</div>
+          </div>
+          <div class="opt2-thai">
+            คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม "violent" (ดุร้าย)
+          </div>
+        </div>
+        <div class="opt2-quote-wrap">
+          "Bears, on the other hand, seem to be perceived as stupid and in many cases violent."
+        </div>
+      </div>
+      <div class="opt2-actions">
+        <button class="opt2-btn knew">✓ รู้แล้ว</button>
+        <button class="opt2-btn save">+ บันทึก Notebook</button>
+      </div>
+    </div>
+
+    <div class="opt2-card">
+      <div class="opt2-header">
+        <div class="opt2-header-top">
+          <div class="opt2-qnum">Question 9</div>
+          <div class="opt2-badge correct">✓ Correct</div>
+        </div>
+        <div class="opt2-prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+      </div>
+      <div class="opt2-answers">
+        <div class="opt2-answer-chip correct"><span class="chip-label">ถูกต้อง</span> tool</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- OPTION 3: Duolingo-style / Friendly -->
+<!-- ════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">3</div>
+    <div>
+      <h2>Friendly Step-by-Step</h2>
+      <p>Step-by-step สไตล์ Duolingo — สำหรับผู้เรียน</p>
+    </div>
+  </div>
+  <div class="opt3-wrap">
+    <div class="opt3-card">
+      <div class="opt3-status-bar"></div>
+      <div class="opt3-body">
+        <div class="opt3-header">
+          <div>
+            <div class="opt3-qnum">Question 8</div>
+            <div class="opt3-prompt">People think of bears as unintelligent and …</div>
+          </div>
+          <div class="opt3-icon">😬</div>
+        </div>
+        <div class="opt3-answer-zone">
+          <div class="opt3-answer-item yours">
+            <div class="al">คุณตอบ</div>
+            <div class="av">— ไม่ได้ตอบ</div>
+          </div>
+          <div class="opt3-answer-item correct">
+            <div class="al">คำตอบที่ถูก</div>
+            <div class="av">violent</div>
+          </div>
+        </div>
+        <div class="opt3-explain">
+          <div class="opt3-explain-title">ทำไมคำตอบนี้ถูกต้อง?</div>
+          <div class="opt3-bridge">
+            <div class="opt3-bridge-item">
+              <div class="opt3-bridge-dot p"></div>
+              <div class="opt3-bridge-text">
+                <span class="tag p">บทความ</span>
+                <em>"perceived as stupid"</em>
+              </div>
+            </div>
+            <div class="opt3-connect-line" style="margin-left: 3px;"></div>
+            <div class="opt3-bridge-item">
+              <div class="opt3-bridge-dot q"></div>
+              <div class="opt3-bridge-text">
+                <span class="tag q">โจทย์</span>
+                <em>"unintelligent"</em>
+              </div>
+            </div>
+          </div>
+          <div class="opt3-thai">
+            สองคำนี้มีความหมายเดียวกัน → ดังนั้นช่องว่างต้องเติม <strong>"violent"</strong> (ดุร้าย) ตามที่บทความกล่าวถึง
+          </div>
+          <div class="opt3-quote">
+            "Bears, on the other hand, seem to be perceived as stupid and in many cases violent."
+          </div>
+        </div>
+      </div>
+      <div class="opt3-actions">
+        <button class="opt3-btn knew">✓ รู้แล้ว</button>
+        <button class="opt3-btn save">⭐ บันทึก Notebook</button>
+      </div>
+    </div>
+
+    <div class="opt3-card">
+      <div class="opt3-status-bar correct"></div>
+      <div class="opt3-body" style="padding-bottom: 16px;">
+        <div class="opt3-header">
+          <div>
+            <div class="opt3-qnum">Question 9</div>
+            <div class="opt3-prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+          </div>
+          <div class="opt3-icon">🎉</div>
+        </div>
+        <div class="opt3-answer-zone" style="margin-bottom: 0;">
+          <div class="opt3-answer-item correct" style="grid-column: 1/-1;">
+            <div class="al">คำตอบที่ถูก</div>
+            <div class="av">tool ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- OPTION 4: Structured Steps          -->
+<!-- ════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">4</div>
+    <div>
+      <h2>Structured Steps / Tutor Card</h2>
+      <p>จัดระเบียบ step-by-step ชัดเจน — สไตล์ติวเตอร์</p>
+    </div>
+  </div>
+  <div class="opt4-wrap">
+    <div class="opt4-card">
+      <div class="opt4-top-band wrong">
+        <div class="opt4-q-info">
+          <div class="qnum">✗ Wrong • Question 8</div>
+          <div class="prompt">People think of bears as unintelligent and …</div>
+        </div>
+        <div class="opt4-result-badge">
+          <div class="icon">✗</div>
+          <div class="word">ผิด</div>
+        </div>
+      </div>
+
+      <div class="opt4-step-list">
+        <!-- Step 1 -->
+        <div class="opt4-step">
+          <div class="opt4-step-num">1</div>
+          <div class="opt4-step-content">
+            <div class="opt4-step-title">คำตอบ</div>
+            <div class="opt4-answers-row">
+              <div class="opt4-ans yours">คุณ: ไม่ได้ตอบ</div>
+              <div class="opt4-ans correct">✓ violent</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="opt4-step active">
+          <div class="opt4-step-num">2</div>
+          <div class="opt4-step-content">
+            <div class="opt4-step-title">Paraphrase ที่ใช้ในโจทย์</div>
+            <table class="opt4-bridge-table">
+              <tr class="passage-row">
+                <td>บทความ</td>
+                <td>"perceived as stupid"</td>
+              </tr>
+              <tr class="question-row">
+                <td>โจทย์</td>
+                <td>"unintelligent"</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="opt4-step">
+          <div class="opt4-step-num">3</div>
+          <div class="opt4-step-content">
+            <div class="opt4-step-title">คำอธิบาย</div>
+            <div class="opt4-thai-box">
+              คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="opt4-step">
+          <div class="opt4-step-num">4</div>
+          <div class="opt4-step-content">
+            <div class="opt4-step-title">หลักฐานจากบทความ</div>
+            <div class="opt4-quote-box">
+              "Bears, on the other hand, seem to be perceived as stupid and in many cases violent."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opt4-actions">
+        <button class="opt4-btn knew">✓ รู้แล้ว</button>
+        <button class="opt4-btn save">+ บันทึก Notebook</button>
+      </div>
+    </div>
+
+    <div class="opt4-card">
+      <div class="opt4-top-band correct">
+        <div class="opt4-q-info">
+          <div class="qnum">✓ Correct • Question 9</div>
+          <div class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+        </div>
+        <div class="opt4-result-badge">
+          <div class="icon">✓</div>
+          <div class="word">ถูก</div>
+        </div>
+      </div>
+      <div class="opt4-step-list">
+        <div class="opt4-step">
+          <div class="opt4-step-num" style="background:#16a34a;color:#fff;">1</div>
+          <div class="opt4-step-content">
+            <div class="opt4-step-title" style="color:#16a34a;">คำตอบ</div>
+            <div class="opt4-answers-row">
+              <div class="opt4-ans correct">tool ✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- OPTION 5: Bold Warm / High Contrast -->
+<!-- ════════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">5</div>
+    <div>
+      <h2>Bold Warm / High Contrast</h2>
+      <p>หัวดำ ตัวอักษรใหญ่ ชัดเจน — สำหรับผู้เรียนไทย</p>
+    </div>
+  </div>
+  <div class="opt5-wrap">
+    <div class="opt5-card">
+      <div class="opt5-header">
+        <div class="left">
+          <div class="qnum">Question 8</div>
+          <div class="prompt">People think of bears as unintelligent and …</div>
+        </div>
+        <div class="opt5-verdict wrong">
+          <div class="icon">✗</div>
+          <div class="word">ผิด</div>
+        </div>
+      </div>
+
+      <div class="opt5-answer-band">
+        <div class="opt5-answer-cell yours">
+          <div class="al">คุณตอบ</div>
+          <div class="av">ไม่ได้ตอบ</div>
+        </div>
+        <div class="opt5-answer-cell right">
+          <div class="al">คำตอบที่ถูก</div>
+          <div class="av">violent</div>
+        </div>
+      </div>
+
+      <div class="opt5-body">
+        <div class="opt5-bridge-card">
+          <div class="opt5-bridge-card-label">Paraphrase ที่ใช้ในโจทย์</div>
+          <div class="opt5-bridge-flex">
+            <span class="opt5-tag p">บทความ</span>
+            <span class="opt5-phrase">"perceived as stupid"</span>
+            <span class="opt5-equals">=</span>
+            <span class="opt5-tag q">โจทย์</span>
+            <span class="opt5-phrase">"unintelligent"</span>
+          </div>
+          <div class="opt5-thai">
+            คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)
+          </div>
+        </div>
+
+        <div class="opt5-quote">
+          "Bears, on the other hand, seem to be perceived as stupid and in many cases violent."
+        </div>
+
+        <div class="opt5-actions">
+          <button class="opt5-btn knew">✓ รู้แล้ว</button>
+          <button class="opt5-btn save">⭐ บันทึก Notebook</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="opt5-card">
+      <div class="opt5-header">
+        <div class="left">
+          <div class="qnum">Question 9</div>
+          <div class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+        </div>
+        <div class="opt5-verdict correct">
+          <div class="icon">✓</div>
+          <div class="word">ถูก</div>
+        </div>
+      </div>
+      <div class="opt5-answer-band">
+        <div class="opt5-answer-cell right" style="grid-column: 1/-1;">
+          <div class="al">คำตอบที่ถูก</div>
+          <div class="av">tool</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

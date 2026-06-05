@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimalist Options</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --blue:#004aad;
+  --yellow:#ffcc00;
+  --black:#0d0d0d;
+  --ink:#1a1a2e;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --bg:#f9fafb;
+}
+body{
+  font-family:'Inter','IBM Plex Sans Thai',sans-serif;
+  background:#f3f4f6;
+  padding:28px 16px 80px;
+  color:var(--ink);
+}
+
+.page-header{text-align:center;margin-bottom:48px;}
+.page-header h1{font-size:1.3rem;font-weight:700;color:var(--black);}
+.page-header p{color:var(--muted);font-size:.82rem;margin-top:5px;}
+
+.section{max-width:480px;margin:0 auto 64px;}
+.section-label{
+  display:flex;align-items:center;gap:10px;margin-bottom:18px;
+}
+.section-label .num{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--black);color:#fff;
+  font-size:.75rem;font-weight:700;
+  display:grid;place-items:center;flex-shrink:0;
+}
+.section-label h2{font-size:.95rem;font-weight:700;color:var(--black);}
+.section-label p{font-size:.75rem;color:var(--muted);}
+
+/* ══════════════════════════════════
+   1 — EDITORIAL / Pure Typography
+   ══════════════════════════════════ */
+.e1-card{
+  background:#fff;
+  border-radius:10px;
+  border:1px solid var(--line);
+  padding:20px 22px;
+  margin-bottom:10px;
+}
+
+.e1-meta-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:12px;
+  gap:10px;
+}
+.e1-qnum{
+  font-size:.65rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--muted);
+}
+.e1-dot{
+  width:7px;height:7px;border-radius:50%;flex-shrink:0;
+  background:var(--muted);
+}
+.e1-dot.wrong{background:#ef4444;}
+.e1-dot.correct{background:#22c55e;}
+
+.e1-prompt{
+  font-size:1rem;font-weight:600;line-height:1.45;
+  color:var(--black);margin-bottom:14px;
+}
+.e1-answer-line{
+  font-size:.82rem;color:var(--muted);
+  margin-bottom:16px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.e1-answer-line strong{color:var(--black);}
+.e1-answer-line .wrong-val{color:#ef4444;text-decoration:line-through;}
+.e1-answer-line .right-val{color:var(--blue);font-weight:700;}
+
+.e1-explain-label{
+  font-size:.62rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--muted);margin-bottom:10px;
+}
+.e1-bridge{
+  font-size:.9rem;line-height:1.5;
+  margin-bottom:10px;
+  color:var(--black);
+}
+.e1-bridge .p-kw{
+  font-weight:700;
+  border-bottom:2px solid var(--blue);
+  color:var(--blue);
+  padding-bottom:1px;
+}
+.e1-bridge .q-kw{
+  font-weight:700;
+  border-bottom:2px solid var(--yellow);
+  background:#fffbe6;
+  padding:0 3px 1px;
+}
+.e1-bridge .arr{color:var(--muted);margin:0 4px;}
+
+.e1-thai{
+  font-size:.86rem;line-height:1.75;
+  color:#374151;margin-bottom:12px;
+}
+.e1-quote{
+  font-style:italic;font-size:.78rem;
+  color:var(--muted);line-height:1.6;
+  padding-left:12px;
+  border-left:2px solid var(--line);
+  margin-bottom:0;
+}
+
+.e1-actions{
+  display:flex;justify-content:flex-end;
+  gap:8px;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--line);
+}
+.e1-btn{
+  background:none;border:1px solid var(--line);
+  border-radius:6px;padding:7px 14px;
+  font-size:.78rem;font-weight:600;
+  font-family:inherit;cursor:pointer;color:var(--muted);
+}
+.e1-btn.save{
+  background:var(--blue);border-color:var(--blue);color:#fff;
+}
+
+/* ══════════════════════════════════
+   2 — GHOST / Barely-there Card
+   ══════════════════════════════════ */
+.e2-wrap{display:grid;gap:1px;background:var(--line);}
+.e2-card{background:#fff;padding:18px 20px;}
+.e2-card:first-child{border-top:2px solid var(--blue);}
+
+.e2-top{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;gap:12px;margin-bottom:14px;
+}
+.e2-left .num{
+  font-size:.62rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:5px;
+}
+.e2-left .prompt{
+  font-size:.97rem;font-weight:600;color:var(--black);line-height:1.4;
+}
+.e2-status{
+  font-size:.68rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);flex-shrink:0;white-space:nowrap;
+}
+.e2-status.wrong{color:#ef4444;}
+.e2-status.correct{color:#16a34a;}
+
+.e2-ans{
+  font-size:.82rem;color:var(--muted);
+  margin-bottom:14px;
+}
+.e2-ans .wrong-val{color:#ef4444;font-weight:600;}
+.e2-ans .right-val{color:var(--blue);font-weight:700;}
+
+.e2-bridge{
+  background:var(--bg);
+  border-radius:6px;padding:12px 14px;
+  margin-bottom:10px;
+}
+.e2-bridge-label{
+  font-size:.6rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);margin-bottom:8px;
+}
+.e2-bridge-row{
+  font-size:.86rem;font-weight:600;
+  color:var(--black);margin-bottom:8px;
+}
+.e2-bridge-row .p{color:var(--blue);}
+.e2-bridge-row .sep{color:var(--muted);margin:0 6px;font-weight:400;}
+.e2-bridge-row .q{background:#fffbe6;padding:1px 4px;}
+.e2-thai{font-size:.84rem;line-height:1.7;color:#374151;}
+
+.e2-quote{
+  font-style:italic;font-size:.78rem;color:var(--muted);
+  line-height:1.6;margin-bottom:12px;
+  padding-left:10px;border-left:2px solid var(--line);
+}
+.e2-actions{
+  display:flex;gap:8px;
+}
+.e2-btn{
+  flex:1;background:none;border:1px solid var(--line);
+  border-radius:6px;padding:8px;
+  font-size:.78rem;font-weight:600;
+  font-family:inherit;cursor:pointer;color:var(--muted);
+}
+.e2-btn.save{background:var(--black);border-color:var(--black);color:#fff;}
+
+/* ══════════════════════════════════
+   3 — LINE SEPARATOR / No Box
+   ══════════════════════════════════ */
+.e3-list{display:grid;gap:0;}
+.e3-item{
+  padding:20px 4px;
+  border-bottom:1px solid var(--line);
+}
+.e3-item:last-child{border-bottom:none;}
+
+.e3-head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:12px;
+}
+.e3-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.e3-dot.wrong{background:#ef4444;}
+.e3-dot.correct{background:#22c55e;}
+.e3-num{font-size:.65rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);}
+.e3-status{font-size:.65rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;margin-left:auto;}
+.e3-status.wrong{color:#ef4444;}
+.e3-status.correct{color:#16a34a;}
+
+.e3-prompt{
+  font-size:.97rem;font-weight:600;color:var(--black);
+  line-height:1.4;margin-bottom:10px;
+}
+.e3-ans-line{
+  font-size:.8rem;color:var(--muted);margin-bottom:14px;
+}
+.e3-ans-line .wrong{color:#ef4444;text-decoration:line-through;}
+.e3-ans-line .right{color:var(--blue);font-weight:700;}
+
+.e3-paraphrase{margin-bottom:10px;}
+.e3-p-label{
+  font-size:.6rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:6px;
+}
+.e3-p-row{
+  font-size:.86rem;font-weight:500;color:#374151;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.e3-p-row .kw{font-weight:700;}
+.e3-p-row .kw.p{color:var(--blue);}
+.e3-p-row .kw.q{background:#fffbe6;padding:1px 4px;color:var(--black);}
+.e3-p-row .arr{color:var(--muted);font-size:.78rem;}
+
+.e3-thai{font-size:.84rem;line-height:1.7;color:#374151;margin-bottom:10px;}
+.e3-quote{
+  font-style:italic;font-size:.77rem;color:var(--muted);line-height:1.6;
+  margin-bottom:12px;
+}
+.e3-actions{display:flex;gap:6px;}
+.e3-btn{
+  flex:1;border:1px solid var(--line);border-radius:5px;
+  padding:7px;font-size:.76rem;font-weight:600;
+  font-family:inherit;cursor:pointer;background:#fff;color:var(--muted);
+}
+.e3-btn.save{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+/* ══════════════════════════════════
+   4 — LEFT STRIPE / Accent Line Only
+   ══════════════════════════════════ */
+.e4-card{
+  background:#fff;border-radius:8px;
+  border:1px solid var(--line);
+  border-left:3px solid var(--blue);
+  padding:18px 20px;
+  margin-bottom:10px;
+}
+.e4-card.wrong{border-left-color:var(--blue);}
+.e4-card.correct{border-left-color:#22c55e;}
+
+.e4-head{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;gap:12px;margin-bottom:14px;
+}
+.e4-head-left .num{
+  font-size:.62rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:5px;
+}
+.e4-head-left .prompt{
+  font-size:.97rem;font-weight:600;color:var(--black);line-height:1.4;
+}
+.e4-status{
+  font-size:.68rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;flex-shrink:0;
+}
+.e4-status.wrong{color:#ef4444;}
+.e4-status.correct{color:#16a34a;}
+
+.e4-ans{
+  font-size:.8rem;color:var(--muted);
+  margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.e4-ans .wrong{color:#ef4444;text-decoration:line-through;}
+.e4-ans .right{color:var(--blue);font-weight:700;}
+
+.e4-label{
+  font-size:.6rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:8px;
+}
+.e4-bridge-row{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.e4-kw{font-size:.88rem;font-weight:700;}
+.e4-kw.p{color:var(--blue);}
+.e4-kw.q{color:var(--black);background:#fffbe6;padding:1px 5px;}
+.e4-arr{color:var(--muted);}
+.e4-thai{font-size:.85rem;line-height:1.75;color:#374151;margin-bottom:10px;}
+.e4-quote{
+  font-style:italic;font-size:.78rem;color:var(--muted);line-height:1.6;
+  border-left:2px solid var(--line);padding-left:10px;margin-bottom:14px;
+}
+.e4-actions{display:flex;gap:8px;justify-content:flex-end;}
+.e4-btn{
+  border:1px solid var(--line);border-radius:5px;
+  padding:7px 14px;font-size:.78rem;font-weight:600;
+  font-family:inherit;cursor:pointer;background:#fff;color:var(--muted);
+}
+.e4-btn.save{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+/* ══════════════════════════════════
+   5 — CONDENSED / Dense + Airy
+   ══════════════════════════════════ */
+.e5-card{
+  background:#fff;border-radius:10px;
+  border:1px solid var(--line);
+  overflow:hidden;margin-bottom:10px;
+}
+
+.e5-head{
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:flex-start;
+  justify-content:space-between;gap:12px;
+}
+.e5-head .num{
+  font-size:.6rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--muted);display:block;margin-bottom:4px;
+}
+.e5-head .prompt{
+  font-size:.95rem;font-weight:600;color:var(--black);line-height:1.4;
+}
+.e5-verdict{text-align:right;flex-shrink:0;}
+.e5-verdict .icon{font-size:1.1rem;display:block;margin-bottom:2px;}
+.e5-verdict .word{
+  font-size:.58rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;display:block;
+}
+.e5-verdict.wrong .word{color:#ef4444;}
+.e5-verdict.correct .word{color:#16a34a;}
+
+.e5-detail{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-bottom:1px solid var(--line);
+}
+.e5-cell{padding:10px 18px;}
+.e5-cell:first-child{border-right:1px solid var(--line);}
+.e5-cell .cl{
+  font-size:.6rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:3px;
+}
+.e5-cell .cv{font-size:.9rem;font-weight:700;}
+.e5-cell.yours .cv{color:#ef4444;}
+.e5-cell.right .cv{color:var(--blue);}
+
+.e5-body{padding:14px 18px;display:grid;gap:10px;}
+
+.e5-bridge{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.e5-kw{font-size:.84rem;font-weight:700;}
+.e5-kw.p{color:var(--blue);text-decoration:underline;text-decoration-color:var(--blue);text-underline-offset:3px;}
+.e5-kw.q{color:var(--black);background:#fffbe6;padding:1px 5px;text-decoration:underline;text-decoration-color:var(--yellow);text-underline-offset:3px;}
+.e5-arr{font-size:.78rem;color:var(--muted);}
+.e5-label{
+  font-size:.6rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);
+}
+.e5-thai{font-size:.84rem;line-height:1.75;color:#374151;}
+.e5-quote{
+  font-style:italic;font-size:.78rem;color:var(--muted);line-height:1.6;
+  border-left:2px solid var(--line);padding-left:10px;
+}
+
+.e5-actions{
+  padding:10px 18px;
+  border-top:1px solid var(--line);
+  background:var(--bg);
+  display:flex;gap:8px;
+}
+.e5-btn{
+  flex:1;border:1px solid var(--line);border-radius:5px;
+  padding:8px;font-size:.78rem;font-weight:600;
+  font-family:inherit;cursor:pointer;background:#fff;color:var(--muted);
+}
+.e5-btn.save{background:var(--blue);border-color:var(--blue);color:#fff;flex:2;}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>5 Minimalist Options</h1>
+  <p>Typography-first · less color · more breathing room</p>
+</div>
+
+<!-- ═══════════ 1: EDITORIAL ═══════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">1</div>
+    <div><h2>Editorial / Pure Type</h2><p>ไม่มี box ซ้อน · dot เล็กๆ บอกผล · อ่านเหมือน article</p></div>
+  </div>
+
+  <div class="e1-card">
+    <div class="e1-meta-row">
+      <span class="e1-qnum">Question 8</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="e1-dot wrong"></div>
+        <span style="font-size:.65rem;color:#ef4444;font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Wrong</span>
+      </div>
+    </div>
+    <p class="e1-prompt">People think of bears as unintelligent and …</p>
+    <p class="e1-answer-line">
+      คุณตอบ <span class="wrong-val">— ไม่ได้ตอบ</span> &nbsp;·&nbsp; คำตอบที่ถูก <span class="right-val">violent</span>
+    </p>
+    <p class="e1-explain-label">Paraphrase ที่ใช้ในโจทย์</p>
+    <p class="e1-bridge">
+      <span class="p-kw">"perceived as stupid"</span>
+      <span class="arr"> → </span>
+      <span class="q-kw">"unintelligent"</span>
+    </p>
+    <p class="e1-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</p>
+    <p class="e1-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</p>
+    <div class="e1-actions">
+      <button class="e1-btn">✓ รู้แล้ว</button>
+      <button class="e1-btn save">+ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="e1-card" style="opacity:.6">
+    <div class="e1-meta-row">
+      <span class="e1-qnum">Question 9</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="e1-dot correct"></div>
+        <span style="font-size:.65rem;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Correct</span>
+      </div>
+    </div>
+    <p class="e1-prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</p>
+    <p class="e1-answer-line" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+      คำตอบที่ถูก <span class="right-val">tool</span>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════ 2: GHOST ═══════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">2</div>
+    <div><h2>Ghost / Separated Rows</h2><p>ไม่มี rounded card · แยกด้วย 1px line · สะอาดมาก</p></div>
+  </div>
+
+  <div class="e2-wrap">
+    <div class="e2-card">
+      <div class="e2-top">
+        <div class="e2-left">
+          <div class="num">Question 8</div>
+          <div class="prompt">People think of bears as unintelligent and …</div>
+        </div>
+        <span class="e2-status wrong">✗ Wrong</span>
+      </div>
+      <p class="e2-ans">คุณตอบ <span class="wrong-val">— ไม่ได้ตอบ</span> &nbsp;·&nbsp; คำตอบที่ถูก <span class="right-val">violent</span></p>
+      <div class="e2-bridge">
+        <p class="e2-bridge-label">Paraphrase ที่ใช้ในโจทย์</p>
+        <p class="e2-bridge-row"><span class="p">"perceived as stupid"</span><span class="sep">→</span><span class="q">"unintelligent"</span></p>
+        <p class="e2-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</p>
+      </div>
+      <p class="e2-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</p>
+      <div class="e2-actions">
+        <button class="e2-btn">✓ รู้แล้ว</button>
+        <button class="e2-btn save">+ บันทึก Notebook</button>
+      </div>
+    </div>
+    <div class="e2-card" style="opacity:.6">
+      <div class="e2-top">
+        <div class="e2-left">
+          <div class="num">Question 9</div>
+          <div class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+        </div>
+        <span class="e2-status correct">✓ Correct</span>
+      </div>
+      <p class="e2-ans">คำตอบที่ถูก <span class="right-val">tool</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 3: LINE SEPARATOR ═══════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">3</div>
+    <div><h2>Line Separator / No Cards</h2><p>ไม่มี card เลย · แค่ divider line · ดู editorial สุด</p></div>
+  </div>
+
+  <div style="background:#fff;border-radius:10px;border:1px solid var(--line);padding:4px 16px;">
+    <div class="e3-list">
+      <div class="e3-item">
+        <div class="e3-head">
+          <div class="e3-dot wrong"></div>
+          <span class="e3-num">Question 8</span>
+          <span class="e3-status wrong">Wrong</span>
+        </div>
+        <p class="e3-prompt">People think of bears as unintelligent and …</p>
+        <p class="e3-ans-line">คุณตอบ <span class="wrong">— ไม่ได้ตอบ</span> &nbsp;·&nbsp; คำตอบที่ถูก <span class="right">violent</span></p>
+        <div class="e3-paraphrase">
+          <p class="e3-p-label">Paraphrase ที่ใช้ในโจทย์</p>
+          <div class="e3-p-row">
+            <span class="kw p">"perceived as stupid"</span>
+            <span class="arr">→</span>
+            <span class="kw q">"unintelligent"</span>
+          </div>
+        </div>
+        <p class="e3-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</p>
+        <p class="e3-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</p>
+        <div class="e3-actions">
+          <button class="e3-btn">✓ รู้แล้ว</button>
+          <button class="e3-btn save">+ บันทึก Notebook</button>
+        </div>
+      </div>
+      <div class="e3-item" style="opacity:.6">
+        <div class="e3-head">
+          <div class="e3-dot correct"></div>
+          <span class="e3-num">Question 9</span>
+          <span class="e3-status correct">Correct</span>
+        </div>
+        <p class="e3-prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</p>
+        <p class="e3-ans-line" style="margin-bottom:0;">คำตอบที่ถูก <span class="right">tool</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 4: LEFT STRIPE ═══════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">4</div>
+    <div><h2>Left Stripe / Accent Line Only</h2><p>เส้นซ้ายบอกสถานะ · ไม่มี color อื่น · clean minimal</p></div>
+  </div>
+
+  <div class="e4-card wrong">
+    <div class="e4-head">
+      <div class="e4-head-left">
+        <div class="num">Question 8</div>
+        <div class="prompt">People think of bears as unintelligent and …</div>
+      </div>
+      <span class="e4-status wrong">✗ Wrong</span>
+    </div>
+    <p class="e4-ans">คุณตอบ <span class="wrong">— ไม่ได้ตอบ</span> &nbsp;·&nbsp; คำตอบที่ถูก <span class="right">violent</span></p>
+    <p class="e4-label">Paraphrase ที่ใช้ในโจทย์</p>
+    <div class="e4-bridge-row">
+      <span class="e4-kw p">"perceived as stupid"</span>
+      <span class="e4-arr">→</span>
+      <span class="e4-kw q">"unintelligent"</span>
+    </div>
+    <p class="e4-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</p>
+    <p class="e4-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</p>
+    <div class="e4-actions">
+      <button class="e4-btn">✓ รู้แล้ว</button>
+      <button class="e4-btn save">+ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="e4-card correct" style="opacity:.6">
+    <div class="e4-head">
+      <div class="e4-head-left">
+        <div class="num">Question 9</div>
+        <div class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+      </div>
+      <span class="e4-status correct">✓ Correct</span>
+    </div>
+    <p class="e4-ans" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">คำตอบที่ถูก <span class="right">tool</span></p>
+  </div>
+</div>
+
+<!-- ═══════════ 5: CONDENSED ═══════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">5</div>
+    <div><h2>Condensed / Dense + Airy</h2><p>กะทัดรัด · แต่ละ section ชัดเจน · ดูใหม่สุด</p></div>
+  </div>
+
+  <div class="e5-card">
+    <div class="e5-head">
+      <div>
+        <span class="num">Question 8</span>
+        <span class="prompt">People think of bears as unintelligent and …</span>
+      </div>
+      <div class="e5-verdict wrong">
+        <span class="icon">✗</span>
+        <span class="word">ผิด</span>
+      </div>
+    </div>
+    <div class="e5-detail">
+      <div class="e5-cell yours">
+        <span class="cl">คุณตอบ</span>
+        <span class="cv">— ไม่ได้ตอบ</span>
+      </div>
+      <div class="e5-cell right">
+        <span class="cl">คำตอบที่ถูก</span>
+        <span class="cv">violent</span>
+      </div>
+    </div>
+    <div class="e5-body">
+      <div>
+        <p class="e5-label" style="margin-bottom:6px;">Paraphrase ที่ใช้ในโจทย์</p>
+        <div class="e5-bridge">
+          <span class="e5-kw p">"perceived as stupid"</span>
+          <span class="e5-arr">→</span>
+          <span class="e5-kw q">"unintelligent"</span>
+        </div>
+      </div>
+      <p class="e5-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</p>
+      <p class="e5-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</p>
+    </div>
+    <div class="e5-actions">
+      <button class="e5-btn">✓ รู้แล้ว</button>
+      <button class="e5-btn save">+ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="e5-card" style="opacity:.6">
+    <div class="e5-head">
+      <div>
+        <span class="num">Question 9</span>
+        <span class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</span>
+      </div>
+      <div class="e5-verdict correct">
+        <span class="icon">✓</span>
+        <span class="word">ถูก</span>
+      </div>
+    </div>
+    <div class="e5-detail">
+      <div class="e5-cell right" style="grid-column:1/-1;">
+        <span class="cl">คำตอบที่ถูก</span>
+        <span class="cv">tool</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

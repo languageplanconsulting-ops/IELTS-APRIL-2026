@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Options — Brand Colors</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bc-blue:   #004aad;
+  --bc-yellow: #ffcc00;
+  --bc-black:  #0d0d0d;
+  --bc-white:  #ffffff;
+
+  /* derived */
+  --blue-light:  #e8f0fb;
+  --blue-mid:    #1a5fbd;
+  --blue-dark:   #003080;
+  --yellow-light:#fff9db;
+  --yellow-dark: #c9a000;
+  --ink:         #0d0d0d;
+}
+
+body {
+  font-family: 'Inter','IBM Plex Sans Thai',sans-serif;
+  background: #f2f2f2;
+  padding: 32px 16px 80px;
+}
+
+/* ── shared layout ──────────────────── */
+.page-header { text-align:center; margin-bottom:52px; }
+.page-header h1 { font-size:1.5rem; font-weight:900; color:var(--bc-black); }
+.page-header p  { color:#555; font-size:.88rem; margin-top:6px; }
+
+.option-section { max-width:520px; margin:0 auto 72px; }
+
+.option-label {
+  display:flex; align-items:center; gap:12px; margin-bottom:20px;
+}
+.option-num {
+  width:38px; height:38px; border-radius:50%;
+  background:var(--bc-black); color:var(--bc-yellow);
+  font-weight:900; font-size:.9rem;
+  display:grid; place-items:center; flex-shrink:0;
+}
+.option-label .meta h2 { font-size:1.05rem; font-weight:800; color:var(--bc-black); }
+.option-label .meta p  { font-size:.78rem; color:#777; margin-top:2px; }
+
+/* ═══════════════════════════════════════
+   OPTION A — FUN / Yellow-First
+   ══════════════════════════════════════ */
+.a-card {
+  background:var(--bc-white);
+  border-radius:18px;
+  overflow:hidden;
+  border:2.5px solid var(--bc-black);
+  box-shadow:5px 5px 0 var(--bc-black);
+  margin-bottom:12px;
+}
+.a-topbar {
+  background:var(--bc-yellow);
+  padding:14px 18px 12px;
+  display:flex; justify-content:space-between; align-items:flex-start;
+}
+.a-topbar .left .qnum {
+  font-size:.68rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--bc-black); opacity:.55; margin-bottom:5px;
+}
+.a-topbar .left .prompt {
+  font-size:1rem; font-weight:800; color:var(--bc-black); line-height:1.35;
+}
+.a-badge {
+  flex-shrink:0;
+  border:2px solid var(--bc-black);
+  background:var(--bc-white);
+  border-radius:20px;
+  padding:4px 12px;
+  font-size:.7rem; font-weight:900; text-transform:uppercase; letter-spacing:.06em;
+}
+.a-badge.wrong { color:#c41c00; }
+.a-badge.correct { color:#006621; }
+
+.a-ans-row {
+  display:grid; grid-template-columns:1fr 1fr;
+  border-bottom:2px solid var(--bc-black);
+}
+.a-ans-cell { padding:12px 18px; }
+.a-ans-cell:first-child { border-right:2px solid var(--bc-black); }
+.a-ans-cell .al {
+  font-size:.62rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:#888; margin-bottom:4px;
+}
+.a-ans-cell .av { font-size:1.05rem; font-weight:800; }
+.a-ans-cell.yours .av { color:#c41c00; text-decoration:line-through; }
+.a-ans-cell.right .av  { color:#006621; }
+
+.a-body { padding:16px 18px 0; display:grid; gap:12px; }
+
+.a-bridge {
+  background:var(--yellow-light);
+  border:2px solid var(--bc-yellow);
+  border-radius:12px;
+  padding:13px 14px;
+}
+.a-bridge-label {
+  font-size:.67rem; font-weight:900; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--yellow-dark); margin-bottom:10px;
+}
+.a-bridge-row {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;
+}
+.a-pill {
+  border:2px solid var(--bc-black);
+  border-radius:8px;
+  padding:6px 11px;
+  font-size:.86rem; font-weight:800; background:var(--bc-white);
+}
+.a-pill.p { background:var(--bc-blue); color:var(--bc-white); border-color:var(--bc-blue); }
+.a-pill.q { background:var(--bc-yellow); color:var(--bc-black); }
+.a-eq { font-weight:900; color:var(--bc-black); font-size:.9rem; }
+.a-thai {
+  font-size:.88rem; line-height:1.7; color:#1a1a1a;
+}
+.a-quote {
+  background:#f7f7f7;
+  border-left:4px solid var(--bc-yellow);
+  padding:9px 12px;
+  font-style:italic; font-size:.8rem; color:#555; line-height:1.6;
+}
+.a-actions {
+  padding:14px 18px;
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.a-btn {
+  border:2px solid var(--bc-black); border-radius:10px;
+  padding:11px 14px; font-weight:800; font-size:.82rem;
+  font-family:inherit; cursor:pointer;
+  box-shadow:3px 3px 0 var(--bc-black);
+  transition:transform .12s, box-shadow .12s;
+}
+.a-btn:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--bc-black); }
+.a-btn.knew  { background:var(--bc-white); }
+.a-btn.save  { background:var(--bc-yellow); }
+
+/* ═══════════════════════════════════════
+   OPTION B — BOLD SPLIT / Neo-brutalist Blue+Yellow
+   ══════════════════════════════════════ */
+.b-card {
+  border:3px solid var(--bc-black);
+  box-shadow:6px 6px 0 var(--bc-black);
+  border-radius:0;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+.b-header {
+  background:var(--bc-blue);
+  padding:16px 20px;
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap:12px;
+}
+.b-header .qnum {
+  font-size:.65rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.12em; color:rgba(255,255,255,.5); margin-bottom:5px;
+}
+.b-header .prompt {
+  font-size:1.02rem; font-weight:800; color:var(--bc-white); line-height:1.35;
+}
+.b-badge {
+  flex-shrink:0;
+  background:var(--bc-yellow);
+  border:2px solid var(--bc-black);
+  padding:5px 12px;
+  font-size:.68rem; font-weight:900; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--bc-black);
+  white-space:nowrap;
+}
+.b-badge.correct { background:#00e676; }
+
+.b-ans-row {
+  display:grid; grid-template-columns:1fr 1fr;
+  background:var(--bc-black);
+  gap:2px;
+}
+.b-ans-cell {
+  background:var(--bc-white);
+  padding:12px 20px;
+}
+.b-ans-cell .al {
+  font-size:.62rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:#888; margin-bottom:4px;
+}
+.b-ans-cell .av { font-size:1.1rem; font-weight:900; }
+.b-ans-cell.yours .av { color:#b91c1c; text-decoration:line-through; }
+.b-ans-cell.right .av  { color:#006621; }
+
+.b-body {
+  background:var(--bc-white);
+  padding:16px 20px;
+  display:grid; gap:12px;
+  border-top:3px solid var(--bc-black);
+}
+.b-bridge {
+  background:var(--blue-light);
+  border:2px solid var(--bc-blue);
+  padding:13px 14px;
+}
+.b-bridge-label {
+  font-size:.67rem; font-weight:900; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--bc-blue); margin-bottom:10px;
+}
+.b-bridge-eq {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;
+}
+.b-phrase {
+  font-size:.88rem; font-weight:800; color:var(--bc-black);
+  background:var(--bc-white); border:2px solid var(--bc-black);
+  padding:6px 10px;
+}
+.b-phrase.p { background:var(--bc-blue); color:var(--bc-white); border-color:var(--bc-blue); }
+.b-phrase.q { background:var(--bc-yellow); color:var(--bc-black); }
+.b-eq { font-size:.9rem; font-weight:900; color:var(--bc-blue); }
+.b-thai { font-size:.88rem; line-height:1.7; color:var(--bc-black); }
+.b-quote {
+  border-left:4px solid var(--bc-blue);
+  padding-left:12px;
+  font-style:italic; font-size:.8rem; color:#555; line-height:1.6;
+}
+.b-actions {
+  display:grid; grid-template-columns:1fr 1fr; gap:0;
+  border-top:3px solid var(--bc-black);
+}
+.b-btn {
+  border:none; padding:14px;
+  font-weight:900; font-size:.82rem;
+  font-family:inherit; cursor:pointer;
+}
+.b-btn.knew { background:var(--bc-white); border-right:2px solid var(--bc-black); }
+.b-btn.save { background:var(--bc-yellow); color:var(--bc-black); }
+
+/* ═══════════════════════════════════════
+   OPTION C — CONFIDENT BLUE / Mid-range
+   ══════════════════════════════════════ */
+.c-card {
+  background:var(--bc-white);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,74,173,.12), 0 1px 4px rgba(0,0,0,.06);
+  margin-bottom:12px;
+}
+.c-header {
+  background:var(--bc-blue);
+  padding:16px 20px 14px;
+  position:relative;
+}
+.c-status-pill {
+  position:absolute; top:14px; right:16px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:20px;
+  padding:4px 12px;
+  font-size:.68rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:rgba(255,255,255,.9);
+}
+.c-status-pill.correct { background:rgba(0,230,118,.2); border-color:rgba(0,230,118,.4); color:#a7f3d0; }
+.c-qnum {
+  font-size:.65rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.12em; color:rgba(255,255,255,.5); margin-bottom:6px;
+}
+.c-prompt { font-size:1rem; font-weight:700; color:var(--bc-white); line-height:1.4; }
+
+.c-ans-row {
+  display:flex; gap:10px; padding:14px 20px;
+  border-bottom:1px solid #eef2fa;
+}
+.c-chip {
+  display:flex; align-items:center; gap:6px;
+  border-radius:20px; padding:6px 14px;
+  font-size:.84rem; font-weight:700;
+}
+.c-chip .cl { font-size:.66rem; font-weight:500; opacity:.6; }
+.c-chip.yours { background:#fff0ed; color:#b91c1c; border:1.5px solid #fecdd3; }
+.c-chip.right  { background:#ecfdf5; color:#065f46; border:1.5px solid #a7f3d0; }
+
+.c-body { padding:16px 20px; display:grid; gap:12px; }
+
+.c-bridge {
+  background:var(--blue-light);
+  border-radius:12px;
+  border:1.5px solid var(--bc-blue);
+  padding:14px;
+}
+.c-bridge-label {
+  font-size:.67rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--bc-blue); margin-bottom:10px;
+}
+.c-bridge-row {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:11px;
+}
+.c-tag { font-size:.63rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.06em; padding:2px 7px; border-radius:4px; margin-right:3px; }
+.c-tag.p { background:var(--bc-blue); color:#fff; }
+.c-tag.q { background:var(--bc-yellow); color:var(--bc-black); }
+.c-kw { font-size:.9rem; font-weight:700; color:var(--bc-black); }
+.c-eq { font-weight:900; color:var(--bc-blue); }
+
+.c-thai {
+  font-size:.88rem; line-height:1.75; color:#1e293b;
+  background:var(--bc-white);
+  border-radius:8px; padding:10px 12px;
+  border-left:3px solid var(--bc-blue);
+}
+.c-quote {
+  font-style:italic; font-size:.8rem; color:#64748b; line-height:1.6;
+  padding:9px 12px;
+  background:#f8fafc;
+  border-radius:8px;
+}
+.c-actions {
+  padding:12px 20px 16px;
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.c-btn {
+  border:none; cursor:pointer;
+  border-radius:10px; padding:11px 14px;
+  font-weight:800; font-size:.82rem; font-family:inherit;
+}
+.c-btn.knew { background:#f1f5f9; color:#475569; }
+.c-btn.save { background:var(--bc-blue); color:var(--bc-white); }
+
+/* ═══════════════════════════════════════
+   OPTION D — BLUE LINE / Academic Clean
+   ══════════════════════════════════════ */
+.d-card {
+  background:var(--bc-white);
+  border-radius:12px;
+  border:1px solid #d1daea;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+.d-accent-bar {
+  height:4px;
+  background:var(--bc-blue);
+}
+.d-accent-bar.wrong  { background: linear-gradient(90deg, var(--bc-blue) 60%, var(--bc-yellow)); }
+.d-accent-bar.correct { background:var(--bc-blue); }
+
+.d-header {
+  padding:16px 20px 12px;
+  display:flex; justify-content:space-between; align-items:flex-start;
+}
+.d-header .left .qnum {
+  font-size:.68rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--bc-blue); margin-bottom:5px;
+}
+.d-header .left .prompt {
+  font-size:.97rem; font-weight:700; color:var(--bc-black); line-height:1.4;
+}
+.d-badge {
+  flex-shrink:0;
+  font-size:.7rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:4px 12px; border-radius:4px; border:1.5px solid;
+}
+.d-badge.wrong  { border-color:#fca5a5; background:#fff0f0; color:#b91c1c; }
+.d-badge.correct { border-color:#86efac; background:#f0fdf4; color:#15803d; }
+
+.d-answers {
+  margin:0 20px 14px;
+  display:flex; gap:8px;
+  padding-bottom:14px;
+  border-bottom:1px solid #e8edf5;
+}
+.d-ans {
+  font-size:.82rem; padding:5px 14px; border-radius:4px; font-weight:600;
+}
+.d-ans .dl { font-size:.64rem; text-transform:uppercase; letter-spacing:.07em;
+  opacity:.6; display:block; margin-bottom:2px; }
+.d-ans.yours { background:#fff0f0; color:#b91c1c; }
+.d-ans.right  { background:#f0fdf4; color:#15803d; }
+
+.d-body { padding:0 20px 16px; display:grid; gap:12px; }
+
+.d-section-label {
+  font-size:.66rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--bc-blue); margin-bottom:8px;
+}
+.d-bridge-row {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.d-kw {
+  font-size:.88rem; font-weight:700; color:var(--bc-black);
+  padding:5px 10px;
+  border-bottom:2px solid;
+}
+.d-kw.p { border-color:var(--bc-blue); color:var(--bc-blue); }
+.d-kw.q { border-color:var(--bc-yellow); background:var(--yellow-light); }
+.d-arrow { color:var(--bc-blue); font-size:.85rem; font-weight:700; }
+
+.d-thai {
+  font-size:.88rem; line-height:1.75; color:#1e293b;
+  padding:10px 12px;
+  background:var(--blue-light);
+  border-radius:0 8px 8px 0;
+  border-left:3px solid var(--bc-blue);
+}
+.d-quote {
+  font-style:italic; font-size:.8rem; color:#64748b; line-height:1.6;
+  border-left:2px solid #cbd5e1;
+  padding:8px 12px;
+}
+.d-actions {
+  padding:12px 20px 16px;
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  border-top:1px solid #e8edf5;
+}
+.d-btn {
+  border:1.5px solid; cursor:pointer;
+  border-radius:6px; padding:10px 14px;
+  font-weight:700; font-size:.82rem; font-family:inherit;
+}
+.d-btn.knew { background:#fff; border-color:#d1daea; color:#475569; }
+.d-btn.save { background:var(--bc-blue); border-color:var(--bc-blue); color:#fff; }
+
+/* ═══════════════════════════════════════
+   OPTION E — CAMBRIDGE INSTITUTIONAL
+   ══════════════════════════════════════ */
+.e-outer {
+  background:var(--bc-white);
+  border:1px solid #b8c4d8;
+  margin-bottom:12px;
+}
+.e-title-bar {
+  background:var(--bc-blue);
+  padding:10px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.e-title-bar .left {
+  font-size:.72rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.1em; color:rgba(255,255,255,.8);
+}
+.e-status {
+  font-size:.7rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:3px 10px;
+  border:1px solid rgba(255,255,255,.5);
+  color:var(--bc-white);
+}
+
+.e-question-row {
+  padding:14px 20px 12px;
+  border-bottom:1px solid #dde4ef;
+}
+.e-prompt {
+  font-size:.97rem; font-weight:600; color:var(--bc-black); line-height:1.45;
+  margin-bottom:10px;
+}
+.e-answer-line {
+  display:flex; gap:24px; font-size:.84rem;
+}
+.e-answer-line span { color:#555; }
+.e-answer-line strong { color:var(--bc-black); }
+.e-answer-line .correct-val { color:var(--bc-blue); font-weight:700; }
+
+.e-explain-block {
+  padding:14px 20px;
+  border-bottom:1px solid #dde4ef;
+}
+.e-explain-title {
+  font-size:.68rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--bc-blue); margin-bottom:12px;
+}
+
+.e-bridge-table { width:100%; border-collapse:collapse; font-size:.85rem; margin-bottom:12px; }
+.e-bridge-table thead tr { background:var(--blue-light); }
+.e-bridge-table thead td {
+  padding:7px 12px; font-size:.66rem; font-weight:800;
+  text-transform:uppercase; letter-spacing:.08em; color:var(--bc-blue);
+  border:1px solid #b8c4d8;
+}
+.e-bridge-table tbody tr td {
+  padding:9px 12px; border:1px solid #dde4ef;
+  vertical-align:top; line-height:1.45;
+}
+.e-bridge-table tbody tr:first-child td { font-weight:700; color:var(--bc-black); }
+.e-bridge-table tbody tr:last-child td  { color:#444; background:#fafcff; }
+
+.e-thai {
+  font-size:.87rem; line-height:1.75; color:#1e293b;
+  margin-bottom:12px;
+}
+.e-quote {
+  background:#f5f7fb;
+  border:1px solid #dde4ef;
+  border-left:3px solid var(--bc-blue);
+  padding:10px 14px;
+  font-style:italic; font-size:.81rem; color:#4a5568; line-height:1.6;
+}
+
+.e-actions {
+  padding:12px 20px;
+  display:flex; justify-content:flex-end; gap:10px;
+  background:#f5f7fb;
+  border-top:1px solid #dde4ef;
+}
+.e-btn {
+  cursor:pointer; border-radius:4px; padding:8px 18px;
+  font-weight:700; font-size:.82rem; font-family:inherit;
+}
+.e-btn.knew { background:#fff; border:1.5px solid #b8c4d8; color:#555; }
+.e-btn.save { background:var(--bc-blue); border:1.5px solid var(--bc-blue); color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>5 Brand-Color Alternatives</h1>
+  <p>จาก Fun → Institutional • Brand: <b style="color:#004aad">#004aad</b> · <b style="color:#c9a000">#FFCC00</b> · <b>#0d0d0d</b></p>
+</div>
+
+<!-- ══════════════════════════════════
+     A — FUN / Yellow-First Neobrutalist
+     ══════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">A</div>
+    <div class="meta">
+      <h2>Fun / Yellow-First Neobrutalist 🎉</h2>
+      <p>Yellow dominant · box-shadow borders · สนุก bold energetic</p>
+    </div>
+  </div>
+
+  <div class="a-card">
+    <div class="a-topbar">
+      <div class="left">
+        <div class="qnum">Question 8</div>
+        <div class="prompt">People think of bears as unintelligent and …</div>
+      </div>
+      <div class="a-badge wrong">✗ Wrong</div>
+    </div>
+    <div class="a-ans-row">
+      <div class="a-ans-cell yours">
+        <div class="al">คุณตอบ</div><div class="av">— ไม่ได้ตอบ</div>
+      </div>
+      <div class="a-ans-cell right">
+        <div class="al">คำตอบที่ถูก</div><div class="av">violent</div>
+      </div>
+    </div>
+    <div class="a-body">
+      <div class="a-bridge">
+        <div class="a-bridge-label">Paraphrase ที่ใช้ในโจทย์</div>
+        <div class="a-bridge-row">
+          <div class="a-pill p">perceived as stupid</div>
+          <div class="a-eq">=</div>
+          <div class="a-pill q">unintelligent</div>
+        </div>
+        <div class="a-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</div>
+      </div>
+      <div class="a-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</div>
+    </div>
+    <div class="a-actions">
+      <button class="a-btn knew">✓ รู้แล้ว</button>
+      <button class="a-btn save">⭐ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="a-card" style="opacity:.75">
+    <div class="a-topbar" style="padding:12px 18px 10px;">
+      <div class="left">
+        <div class="qnum">Question 9</div>
+        <div class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+      </div>
+      <div class="a-badge correct">✓ Correct</div>
+    </div>
+    <div class="a-ans-row">
+      <div class="a-ans-cell right" style="grid-column:1/-1">
+        <div class="al">คำตอบที่ถูก</div><div class="av">tool ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     B — BOLD SPLIT / Neo-Brutalist Blue+Yellow
+     ══════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">B</div>
+    <div class="meta">
+      <h2>Bold Split / Neobrutalist Blue+Yellow ⚡</h2>
+      <p>Blue header · hard edges · yellow accent · กล้า มีพลัง</p>
+    </div>
+  </div>
+
+  <div class="b-card">
+    <div class="b-header">
+      <div>
+        <div class="qnum">Question 8</div>
+        <div class="prompt">People think of bears as unintelligent and …</div>
+      </div>
+      <div class="b-badge wrong">✗ ผิด</div>
+    </div>
+    <div class="b-ans-row">
+      <div class="b-ans-cell yours">
+        <div class="al">คุณตอบ</div><div class="av">— ไม่ได้ตอบ</div>
+      </div>
+      <div class="b-ans-cell right">
+        <div class="al">คำตอบที่ถูก</div><div class="av">violent</div>
+      </div>
+    </div>
+    <div class="b-body">
+      <div class="b-bridge">
+        <div class="b-bridge-label">Paraphrase ที่ใช้ในโจทย์</div>
+        <div class="b-bridge-eq">
+          <span class="b-phrase p">perceived as stupid</span>
+          <span class="b-eq">=</span>
+          <span class="b-phrase q">unintelligent</span>
+        </div>
+        <div class="b-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</div>
+      </div>
+      <div class="b-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</div>
+    </div>
+    <div class="b-actions">
+      <button class="b-btn knew">✓ รู้แล้ว</button>
+      <button class="b-btn save">⭐ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="b-card" style="opacity:.7">
+    <div class="b-header" style="padding:12px 20px;">
+      <div>
+        <div class="qnum">Question 9</div>
+        <div class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+      </div>
+      <div class="b-badge correct">✓ ถูก</div>
+    </div>
+    <div class="b-ans-row">
+      <div class="b-ans-cell right" style="grid-column:1/-1">
+        <div class="al">คำตอบที่ถูก</div><div class="av">tool ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     C — CONFIDENT BLUE / Mid-range
+     ══════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">C</div>
+    <div class="meta">
+      <h2>Confident Blue / Modern App 🔵</h2>
+      <p>Blue header · soft shadows · สมดุล professional แต่ไม่แข็ง</p>
+    </div>
+  </div>
+
+  <div class="c-card">
+    <div class="c-header">
+      <div class="c-status-pill wrong">✗ Wrong</div>
+      <div class="c-qnum">Question 8</div>
+      <div class="c-prompt">People think of bears as unintelligent and …</div>
+    </div>
+    <div class="c-ans-row">
+      <div class="c-chip yours"><span class="cl">คุณตอบ</span>— ไม่ได้ตอบ</div>
+      <div class="c-chip right"><span class="cl">ถูกต้อง</span>violent</div>
+    </div>
+    <div class="c-body">
+      <div class="c-bridge">
+        <div class="c-bridge-label">Paraphrase ที่ใช้ในโจทย์</div>
+        <div class="c-bridge-row">
+          <span class="c-tag p">บทความ</span>
+          <span class="c-kw">"perceived as stupid"</span>
+          <span class="c-eq">=</span>
+          <span class="c-tag q">โจทย์</span>
+          <span class="c-kw">"unintelligent"</span>
+        </div>
+        <div class="c-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</div>
+      </div>
+      <div class="c-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</div>
+    </div>
+    <div class="c-actions">
+      <button class="c-btn knew">✓ รู้แล้ว</button>
+      <button class="c-btn save">+ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="c-card" style="opacity:.7">
+    <div class="c-header" style="padding:12px 20px 10px;">
+      <div class="c-status-pill correct">✓ Correct</div>
+      <div class="c-qnum">Question 9</div>
+      <div class="c-prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+    </div>
+    <div class="c-ans-row" style="padding:10px 20px 12px;">
+      <div class="c-chip right"><span class="cl">ถูกต้อง</span>tool ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     D — BLUE LINE / Academic Clean
+     ══════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">D</div>
+    <div class="meta">
+      <h2>Blue Line / Academic Clean 📋</h2>
+      <p>Underline accents · ขาวสะอาด subtle · เหมือน study material</p>
+    </div>
+  </div>
+
+  <div class="d-card">
+    <div class="d-accent-bar wrong"></div>
+    <div class="d-header">
+      <div class="left">
+        <div class="qnum">Question 8</div>
+        <div class="prompt">People think of bears as unintelligent and …</div>
+      </div>
+      <div class="d-badge wrong">✗ Wrong</div>
+    </div>
+    <div class="d-answers">
+      <div class="d-ans yours"><span class="dl">คุณตอบ</span>— ไม่ได้ตอบ</div>
+      <div class="d-ans right"><span class="dl">คำตอบที่ถูก</span>violent</div>
+    </div>
+    <div class="d-body">
+      <div>
+        <div class="d-section-label">Paraphrase ที่ใช้ในโจทย์</div>
+        <div class="d-bridge-row">
+          <span class="d-kw p">"perceived as stupid"</span>
+          <span class="d-arrow">→</span>
+          <span class="d-kw q">"unintelligent"</span>
+        </div>
+      </div>
+      <div class="d-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</div>
+      <div class="d-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</div>
+    </div>
+    <div class="d-actions">
+      <button class="d-btn knew">✓ รู้แล้ว</button>
+      <button class="d-btn save">+ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="d-card" style="opacity:.7">
+    <div class="d-accent-bar correct"></div>
+    <div class="d-header">
+      <div class="left">
+        <div class="qnum">Question 9</div>
+        <div class="prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+      </div>
+      <div class="d-badge correct">✓ Correct</div>
+    </div>
+    <div class="d-answers" style="border-bottom:none; padding-bottom:4px;">
+      <div class="d-ans right"><span class="dl">คำตอบที่ถูก</span>tool ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     E — CAMBRIDGE INSTITUTIONAL
+     ══════════════════════════════════ -->
+<div class="option-section">
+  <div class="option-label">
+    <div class="option-num">E</div>
+    <div class="meta">
+      <h2>Cambridge Institutional 🎓</h2>
+      <p>Table layout · formal typography · สไตล์ตำราวิชาการ Cambridge</p>
+    </div>
+  </div>
+
+  <div class="e-outer">
+    <div class="e-title-bar">
+      <span class="left">Question 8 · Fill in the Blank</span>
+      <span class="e-status">✗ Incorrect</span>
+    </div>
+    <div class="e-question-row">
+      <div class="e-prompt">People think of bears as unintelligent and …</div>
+      <div class="e-answer-line">
+        <span>Your answer: <strong style="color:#b91c1c">— (blank)</strong></span>
+        <span>Correct answer: <span class="correct-val">violent</span></span>
+      </div>
+    </div>
+    <div class="e-explain-block">
+      <div class="e-explain-title">Paraphrase Analysis</div>
+      <table class="e-bridge-table">
+        <thead>
+          <tr>
+            <td>Source</td>
+            <td>Phrase</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--bc-blue);font-weight:800;white-space:nowrap;">In the passage</td>
+            <td>"perceived as stupid"</td>
+          </tr>
+          <tr>
+            <td style="color:var(--yellow-dark);font-weight:800;white-space:nowrap;">In the question</td>
+            <td>"unintelligent"</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="e-thai">คำว่า "unintelligent" ในโจทย์ = "perceived as stupid" ในบทความ — ดังนั้นช่องว่างต้องเติม <strong>violent</strong> (ดุร้าย)</div>
+      <div style="height:10px"></div>
+      <div class="e-quote">"Bears, on the other hand, seem to be perceived as stupid and in many cases violent."</div>
+    </div>
+    <div class="e-actions">
+      <button class="e-btn knew">รู้แล้ว</button>
+      <button class="e-btn save">+ บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="e-outer" style="opacity:.7">
+    <div class="e-title-bar">
+      <span class="left">Question 9 · Fill in the Blank</span>
+      <span class="e-status" style="background:rgba(0,230,118,.2);border-color:rgba(0,230,118,.5);">✓ Correct</span>
+    </div>
+    <div class="e-question-row" style="border-bottom:none;">
+      <div class="e-prompt">In Tennoji Zoo, a bear has been seen using a branch as a …</div>
+      <div class="e-answer-line">
+        <span>Correct answer: <span class="correct-val">tool</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
