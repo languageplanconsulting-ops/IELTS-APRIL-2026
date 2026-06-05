@@ -22839,6 +22839,10 @@ function App() {
                   const reportBlockquote = reportEvidenceExcerpt || item.exactPortion
                   return (
                     <article key={`reading-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
+                      {/* Option D: top accent bar */}
+                      <div className="readingReportAccentBar" />
+
+                      {/* Header: question number + prompt + badge */}
                       <div className="readingReportHeader">
                         <div>
                           <p className="readingQuestionNumber">Question {item.number}</p>
@@ -22849,64 +22853,75 @@ function App() {
                           </p>
                         </div>
                         <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
-                          {item.isCorrect ? 'Correct' : 'Wrong'}
+                          {item.isCorrect ? '✓ Correct' : '✗ Wrong'}
                         </span>
                       </div>
-                      <p className="meta">Your answer: {item.userAnswer || 'No answer'}</p>
-                      <p className="meta">Correct answer: {item.correctAnswer}</p>
+
+                      {/* Answer row */}
+                      <div className="readingReportAnswerRow">
+                        {!item.isCorrect && (
+                          <div className="readingReportAnswerItem readingReportAnswerItem-yours">
+                            <span className="readingReportAnswerLabel">คุณตอบ</span>
+                            <span className="readingReportAnswerValue">{item.userAnswer || '— ไม่ได้ตอบ'}</span>
+                          </div>
+                        )}
+                        <div className="readingReportAnswerItem readingReportAnswerItem-correct">
+                          <span className="readingReportAnswerLabel">คำตอบที่ถูก</span>
+                          <span className="readingReportAnswerValue">{item.correctAnswer}</span>
+                        </div>
+                      </div>
+
+                      {/* Evidence / explanation */}
                       <div className="readingReportEvidence">
-                        <h4>ทำไมถึงตอบนี้</h4>
                         {paraphraseEquation && (() => {
                           const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
                           const isTFNG = isReadingJudgementQuestion(item) || item.answerType === 'multiple-choice'
                           if (isTFNG) {
-                            // T/F/NG and MCQ: bridge boxes are meaningless keyword fragments — show Thai explanation only
                             return isIntensive && paraphraseEquation.thaiMeaning ? (
                               <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
                             ) : null
                           }
                           return (
-                            <div className="listeningBuilderExamWordCheck">
+                            <div>
                               <p className="readingReportBridgeLabel">
-                                {isIntensive ? 'Paraphrase ที่ใช้ในโจทย์' : 'Do you know this word?'}
+                                {isIntensive ? 'Paraphrase ที่ใช้ในโจทย์' : 'Paraphrase'}
                               </p>
-                              <div className="listeningBuilderExamWordEquation">
-                                <span>{paraphraseEquation.passageKeyword}</span>
-                                <b>=</b>
-                                <span>{paraphraseEquation.questionKeyword}</span>
+                              <div className="readingReportBridgeRow">
+                                <span className="readingReportKw readingReportKw-passage">{paraphraseEquation.passageKeyword}</span>
+                                <span className="readingReportBridgeArrow">→</span>
+                                <span className="readingReportKw readingReportKw-question">{paraphraseEquation.questionKeyword}</span>
                               </div>
-                              {isIntensive && paraphraseEquation.thaiMeaning && (
+                              {paraphraseEquation.thaiMeaning && (
                                 <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
-                              )}
-                              {!isIntensive && (
-                                <div className="listeningBuilderExamWordEquation" style={{marginTop: 4}}>
-                                  <span style={{fontSize: '0.9em', color: '#64748b'}}>{paraphraseEquation.thaiMeaning}</span>
-                                </div>
                               )}
                             </div>
                           )
                         })()}
-                        {!paraphraseEquation && item.explanationThai && <p>{item.explanationThai}</p>}
+                        {!paraphraseEquation && item.explanationThai && (
+                          <p className="readingReportThaiExplanation">{item.explanationThai}</p>
+                        )}
                         {paraphraseEquation && item.explanationThai && !parseIntensiveExplanationEquation(item.explanationThai) && (
-                          <p className="meta">{item.explanationThai}</p>
+                          <p className="readingReportThaiExplanation">{item.explanationThai}</p>
                         )}
                         {isNotGivenReport && (
-                          <p className="meta">Related portion (topic + question words, but not TRUE/FALSE or YES/NO):</p>
+                          <p className="meta" style={{fontSize: '0.78rem', color: '#64748b', margin: 0}}>หมายเหตุ: ข้อนี้เกี่ยวข้องกับหัวข้อแต่บทความไม่ได้ระบุชัดเจน (NOT GIVEN)</p>
                         )}
                         <blockquote>{reportBlockquote}</blockquote>
                       </div>
+
+                      {/* Actions */}
                       <div className="readingParaphraseCard readingParaphraseCard-report">
                         {!parseIntensiveExplanationEquation(item.explanationThai) && (item.paraphrasedVocabulary || vocabSupport?.meaning) && (
                           <>
-                            <p className="sectionLabel">Important vocab / phrase</p>
+                            <p className="sectionLabel">คำ / วลีสำคัญ</p>
                             {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
                             {vocabSupport?.meaning && <p className="meta">TH: {vocabSupport.meaning}</p>}
                           </>
                         )}
                         <ParaphraseBridgeActions
                           variant="report"
-                          knewLabel="Yes, I knew it"
-                          saveLabel="Add to Notebook"
+                          knewLabel="✓ รู้แล้ว"
+                          saveLabel="+ บันทึก Notebook"
                           onKnewIt={showPracticeKnewItToast}
                           onSaveToNotebook={() =>
                             handlePracticeSaveToNotebook({
