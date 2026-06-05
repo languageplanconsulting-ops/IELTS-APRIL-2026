@@ -208,6 +208,12 @@ export const parseFillContextFromPrompt = (
     }
   }
 
+  // Cambridge-style "… …" (spaced double ellipsis, e.g. "Some food plants, including … … are already grown")
+  const spacedEllipsis = cleaned.match(/^(.*?)\s*…\s+…\s*(.*)$/s)
+  if (spacedEllipsis) {
+    return { before: spacedEllipsis[1].trim(), after: spacedEllipsis[2]?.trim() || '' }
+  }
+
   const underscore = cleaned.match(/^(.*?)_{2,}\s*(.*)$/s)
   if (underscore) {
     return { before: underscore[1].trim(), after: underscore[2]?.trim() || '' }
@@ -900,6 +906,16 @@ export const enrichFillDisplayLines = (
         if (!after && promptContext.after && !isLikelyFillSectionHeadingText(promptContext.after)) {
           after = promptContext.after
         }
+      }
+
+      // If the prompt provides a longer 'after' (multi-line question was truncated by OCR parsing),
+      // use the prompt version to restore the full sentence.
+      if (
+        promptContext?.after &&
+        promptContext.after.length > after.length + 8 &&
+        !isLikelyFillSectionHeadingText(promptContext.after)
+      ) {
+        after = promptContext.after
       }
 
       if (before || after) {
