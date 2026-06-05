@@ -18577,64 +18577,105 @@ function App() {
             <p className="readingQuestionNumber">
               Questions {set.startNumber}–{set.endNumber}
             </p>
-            <h4>{set.diagramImage ? 'Label the diagram' : 'Summary completion'}</h4>
+            <h4>{set.diagramImage ? 'Label the diagram' : set.summaryLines.some((l) => l.type === 'table-header' || l.type === 'table-row') ? 'Table completion' : 'Summary completion'}</h4>
           </div>
         </div>
 
         <div className="readingFillNewInstruction">
-          {set.instructions.map((line, index) => (
-            <p key={`new-fill-instruction-${index}`}>
-              {line.includes('ONE WORD ONLY') ? (
-                <>
-                  {line.split('ONE WORD ONLY')[0]}
-                  <span className="readingFillNewOneWord">ONE WORD ONLY</span>
-                  {line.split('ONE WORD ONLY')[1]}
-                </>
-              ) : (
-                line
-              )}
-            </p>
-          ))}
+          {set.instructions.map((line, index) => {
+            const BOLD_PHRASES = ['ONE WORD ONLY', 'ONE WORD AND/OR A NUMBER', 'NO MORE THAN TWO WORDS', 'NO MORE THAN THREE WORDS', 'TWO WORDS', 'THREE WORDS']
+            const phrase = BOLD_PHRASES.find((p) => line.includes(p))
+            return (
+              <p key={`new-fill-instruction-${index}`}>
+                {phrase ? (
+                  <>
+                    {line.split(phrase)[0]}
+                    <span className="readingFillNewOneWord">{phrase}</span>
+                    {line.split(phrase)[1]}
+                  </>
+                ) : (
+                  line
+                )}
+              </p>
+            )
+          })}
         </div>
 
         <div className="readingFillNewBody">
           {set.summaryTitle && (
             <p className="readingFillNewTitle">{set.summaryTitle}</p>
           )}
-          {set.summaryLines.map((line, lineIndex) => {
-            const key = `line-${lineIndex}`
-            if (line.type === 'diagram' && set.diagramImage) {
-              return (
-                <figure key={key} className="readingFillDiagram">
-                  <img
-                    src={set.diagramImage}
-                    alt={set.diagramAlt || 'Diagram for labelling'}
-                    className="readingFillDiagramImg"
-                  />
-                </figure>
-              )
+          {(() => {
+            const rendered: React.ReactNode[] = []
+            let tableRows: React.ReactNode[] = []
+            let inTable = false
+
+            const flushTable = (flushKey: string) => {
+              if (tableRows.length) {
+                rendered.push(
+                  <table key={flushKey} className="readingFillNewTable">
+                    <tbody>{tableRows}</tbody>
+                  </table>
+                )
+                tableRows = []
+              }
+              inTable = false
             }
-            const displayText = 'text' in line ? line.text : ''
-            if (line.type === 'heading') {
-              return (
-                <p key={key} className="readingFillNewSubheading">
-                  {displayText}
-                </p>
-              )
-            }
-            if (line.type === 'bullet') {
-              return (
-                <p key={key} className="readingFillNewBullet">
-                  {renderLineSegments(displayText, key)}
-                </p>
-              )
-            }
-            return (
-              <p key={key} className="readingFillNewPara">
-                {renderLineSegments(displayText, key)}
-              </p>
-            )
-          })}
+
+            set.summaryLines.forEach((line, lineIndex) => {
+              const key = `line-${lineIndex}`
+
+              if (line.type === 'table-header') {
+                inTable = true
+                tableRows.push(
+                  <tr key={key} className="readingFillNewTableHeader">
+                    {line.cells.map((cell, ci) => (
+                      <th key={ci}>{cell}</th>
+                    ))}
+                  </tr>
+                )
+                return
+              }
+
+              if (line.type === 'table-row') {
+                inTable = true
+                tableRows.push(
+                  <tr key={key}>
+                    {line.cells.map((cell, ci) => (
+                      <td key={ci} className={ci === 0 ? 'readingFillNewTableName' : ''}>
+                        {renderLineSegments(cell, `${key}-c${ci}`)}
+                      </td>
+                    ))}
+                  </tr>
+                )
+                return
+              }
+
+              if (inTable) flushTable(`table-flush-${lineIndex}`)
+
+              if (line.type === 'diagram' && set.diagramImage) {
+                rendered.push(
+                  <figure key={key} className="readingFillDiagram">
+                    <img src={set.diagramImage} alt={set.diagramAlt || 'Diagram for labelling'} className="readingFillDiagramImg" />
+                  </figure>
+                )
+                return
+              }
+              const displayText = 'text' in line ? line.text : ''
+              if (line.type === 'heading') {
+                rendered.push(<p key={key} className="readingFillNewSubheading">{displayText}</p>)
+                return
+              }
+              if (line.type === 'bullet') {
+                rendered.push(<p key={key} className="readingFillNewBullet">{renderLineSegments(displayText, key)}</p>)
+                return
+              }
+              rendered.push(<p key={key} className="readingFillNewPara">{renderLineSegments(displayText, key)}</p>)
+            })
+
+            if (inTable) flushTable('table-flush-end')
+            return rendered
+          })()}
         </div>
 
         {set.questions.some((q) => q.number === readingHintQuestionNumber) && (

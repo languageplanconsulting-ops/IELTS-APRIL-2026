@@ -35,6 +35,10 @@ export type NewFillBlankSummaryLine =
   | { type: 'heading'; text: string }
   /** Renders a diagram/infographic from `diagramImage` on the parent set. */
   | { type: 'diagram' }
+  /** Table column headers row — no blanks. */
+  | { type: 'table-header'; cells: string[] }
+  /** Table data row — cells may contain {N} blank placeholders. */
+  | { type: 'table-row'; cells: string[] }
 
 export type NewFillBlankSet = {
   examId: string

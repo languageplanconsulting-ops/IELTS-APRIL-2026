@@ -22,10 +22,11 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
       { type: "bullet", text: "Which part of some stepwells provided shade for people? {6}" },
       { type: "bullet", text: "What type of serious climatic event, which took place in southern Rajasthan, is mentioned in the article? {7}" },
       { type: "bullet", text: "Who are frequent visitors to stepwells nowadays? {8}" },
-      { type: "heading", text: "Stepwells" },
-      { type: "bullet", text: "Rani Ki Vav | Features: Incredibly, in January 2001, this ancient structure survived a devastating {9} that measured 7.6 on the Richter scale." },
-      { type: "bullet", text: "Surya Kund | Features: Steps on the {10} produce a geometrical pattern. | Other notes: Looks more like a {11} than a well." },
-      { type: "bullet", text: "Raniji Ki Baori | Features: On the fourth side, {12} which provide a view of the steps. | Other notes: Has two {13} levels." },
+      { type: "table-header", cells: ["Stepwell", "Date built", "Features", "Other information"] },
+      { type: "table-row", cells: ["Rani Ki Vav", "", "decorated with sculptures", "survived a devastating {9} that measured 7.6 on the Richter scale"] },
+      { type: "table-row", cells: ["Surya Kund", "", "steps on the {10} produce a geometrical pattern", "looks more like a {11} than a well"] },
+      { type: "table-row", cells: ["Chand Baori", "850 AD", "steps take you down 11 storeys to the bottom", "has {12} which provide a view to the steps"] },
+      { type: "table-row", cells: ["Neemrana Ki Baori", "1700", "has two {13} levels", "used by public today"] },
     ],
     questions: [
       { number: 6, answer: "pavilions", passageKeyword: "included sheltered visitors relentless", questionKeyword: "stepwells provided shade", thaiMeaning: "จากข้อความใน", exactPortion: "they also included pavilions that sheltered visitors from the relentless heat." },
@@ -41,27 +42,27 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
   {
     examId: "journey-normal-stage-2",
     passageNumber: 2,
-    startNumber: 24,
-    endNumber: 27,
+    startNumber: 23,
+    endNumber: 26,
     sourceParagraphs: ["A","B"],
     instructions: [
-          "Questions 24–27",
-          "Complete the summary below.",
-          "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
-          "Write your answers in boxes 24–27 on your answer sheet."
+          "Questions 23–26",
+          "Complete the sentences below.",
+          "Choose NO MORE THAN THREE WORDS from the passage for each answer.",
+          "Write your answers in boxes 23–26 on your answer sheet."
     ],
     summaryTitle: "Gifted children and learning",
     summaryLines: [
-      { type: "para", text: "One study found that the higher the children's IQ scores, especially over 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and {24} in the home." },
-      { type: "para", text: "Children of average ability seem to need more direction from teachers because they do not have {25}." },
-      { type: "para", text: "Meta-cognition involves children understanding their own learning strategies, as well as developing {26}." },
-      { type: "para", text: "Although {27} can produce impressive results in class tests, this style of teaching does not develop children's self-regulation." },
+      { type: "bullet", text: "One study found a strong connection between children's IQ and the availability of {23} at home." },
+      { type: "bullet", text: "Children of average ability seem to need more direction from teachers because they do not have {24}." },
+      { type: "bullet", text: "Meta-cognition involves children understanding their own learning strategies, as well as developing {25}." },
+      { type: "bullet", text: "Teachers who rely on what is known as {26} often produce sets of impressive grades in class tests." },
     ],
     questions: [
-      { number: 24, answer: "activities", passageKeyword: "higher children scores especially", questionKeyword: "study found", thaiMeaning: "จากข้อความใน", exactPortion: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc." },
-      { number: 25, answer: "internal regulation", passageKeyword: "appears qualitative difference intellectually", questionKeyword: "children average ability", thaiMeaning: "จากข้อความใน", exactPortion: "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.", acceptedAnswers: ["internal regulation", "self-regulation"] },
-      { number: 26, answer: "emotional awareness", passageKeyword: "emotional awareness metacognition children", questionKeyword: "meta-cognition involves children", thaiMeaning: "จากข้อความใน", exactPortion: "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.", acceptedAnswers: ["emotional awareness"] },
-      { number: 27, answer: "spoon-feeding", passageKeyword: "although produce extremely examination", questionKeyword: "teachers known often", thaiMeaning: "จากข้อความใน", exactPortion: "Although 'spoon-feeding' can produce extremely high examination results" },
+      { number: 23, answer: "books and activities", passageKeyword: "verbal interactions parents number books", questionKeyword: "strong connection IQ availability", thaiMeaning: "จากข้อความใน", exactPortion: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.", acceptedAnswers: ["books and activities", "activities and books"] },
+      { number: 24, answer: "internal regulation", passageKeyword: "appears qualitative difference intellectually", questionKeyword: "children average ability need direction", thaiMeaning: "จากข้อความใน", exactPortion: "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.", acceptedAnswers: ["internal regulation", "self-regulation"] },
+      { number: 25, answer: "emotional awareness", passageKeyword: "emotional awareness metacognition children", questionKeyword: "meta-cognition developing", thaiMeaning: "จากข้อความใน", exactPortion: "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.", acceptedAnswers: ["emotional awareness"] },
+      { number: 26, answer: "spoon-feeding", passageKeyword: "although produce extremely examination", questionKeyword: "teachers rely impressive grades class", thaiMeaning: "จากข้อความใน", exactPortion: "Although 'spoon-feeding' can produce extremely high examination results" },
     ]
   },
   {
