@@ -10329,18 +10329,119 @@ body,
   flex: 1 1 auto;
 }
 
+/* ── Unified single-bar toolbar (Option 1 redesign) ── */
+.readingUnifiedBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 20px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.readingUnifiedBack {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.readingUnifiedBack:hover { color: #0f2e85; }
+
+.readingUnifiedSep {
+  width: 1px;
+  height: 18px;
+  background: #e2e8f0;
+  flex-shrink: 0;
+}
+
+.readingUnifiedBadge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0f2e85;
+  background: #f0f4ff;
+  padding: 3px 9px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.readingUnifiedTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.readingUnifiedPassagePills {
+  display: flex;
+  gap: 2px;
+  background: #f0f4ff;
+  border-radius: 8px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+.readingUnifiedPassagePills button {
+  padding: 4px 13px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  box-shadow: none;
+}
+.readingUnifiedPassagePills button:hover { color: #0f2e85; }
+.readingUnifiedPassagePills button.active {
+  background: #0f2e85;
+  color: #fff;
+  transform: none;
+}
+
+.readingUnifiedFrac {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  flex-shrink: 0;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .readingExamProgressBar {
   width: 100%;
-  height: 6px;
-  margin: 8px 0 4px;
+  height: 3px;
+  margin: 0;
   background: #e2e8f0;
-  border-radius: 999px;
+  border-radius: 0;
   overflow: hidden;
 }
 
 .readingExamProgressBarFill {
   height: 100%;
-  background: linear-gradient(90deg, #16a34a 0%, #15803d 100%);
+  background: linear-gradient(90deg, #0f2e85, #2563eb);
   border-radius: inherit;
   transition: width 240ms ease;
 }

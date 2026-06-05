@@ -22143,29 +22143,36 @@ function App() {
 
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'exam' && activeReadingExam && activeReadingPassage && (
             <div className="readingExamWrap">
-              <div className="readingAttemptToolbar">
-                <div>
-                  <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
-                  <h3>{activeReadingExam.title}</h3>
-                  <p className="meta">
-                    {answeredReadingCount}/{activeReadingAllQuestions.length} answered
-                    {activeReadingPassages.length > 1
-                      ? ` · Passage ${activeReadingPassages.findIndex((passage) => passage.number === activeReadingPassage.number) + 1} of ${activeReadingPassages.length}`
-                      : ''}
-                    {readingAutosaveLabel && <span className="readingAutosaveStamp">{readingAutosaveLabel}</span>}
-                  </p>
-                </div>
-                <div className="controls">
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() => {
-                      returnToReadingBank(activeReadingExam)
-                    }}
-                  >
-                    Back to Bank
-                  </button>
-                </div>
+              {/* Unified single-bar toolbar */}
+              <div className="readingUnifiedBar" role="toolbar" aria-label="Reading exam navigation">
+                <button
+                  type="button"
+                  className="readingUnifiedBack"
+                  onClick={() => returnToReadingBank(activeReadingExam)}
+                >
+                  ← กลับ
+                </button>
+                <div className="readingUnifiedSep" aria-hidden="true" />
+                <span className="readingUnifiedBadge">{READING_CATEGORY_LABELS[activeReadingExam.category]}</span>
+                <span className="readingUnifiedTitle">{activeReadingExam.title}</span>
+                {activeReadingPassages.length > 1 && (
+                  <div className="readingUnifiedPassagePills">
+                    {activeReadingPassages.map((passage) => (
+                      <button
+                        key={passage.number}
+                        type="button"
+                        className={readingActivePassageNumber === passage.number ? 'active' : ''}
+                        onClick={() => setReadingActivePassageNumber(passage.number)}
+                      >
+                        Passage {passage.number}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <span className="readingUnifiedFrac" aria-label={`${answeredReadingCount} of ${activeReadingAllQuestions.length} answered`}>
+                  {answeredReadingCount} / {activeReadingAllQuestions.length}
+                  {readingAutosaveLabel && <span className="readingAutosaveStamp">{readingAutosaveLabel}</span>}
+                </span>
               </div>
 
               {!adminBypassNormalReadingQuestionLocks && readingLockedQuestions.size > 0 && (
@@ -22184,21 +22191,6 @@ function App() {
                   }}
                 />
               </div>
-
-              {activeReadingPassages.length > 1 && (
-                <div className="readingPassageTabs">
-                  {activeReadingPassages.map((passage) => (
-                    <button
-                      key={passage.number}
-                      type="button"
-                      className={readingActivePassageNumber === passage.number ? 'active' : ''}
-                      onClick={() => setReadingActivePassageNumber(passage.number)}
-                    >
-                      Passage {passage.number}
-                    </button>
-                  ))}
-                </div>
-              )}
 
               <div
                 className={`readingExamLayout readingExamLayout-bank ${isAdvancedReadingExam ? 'readingExamLayout-advanced' : ''}`.trim()}
@@ -22875,16 +22867,18 @@ function App() {
                       <div className="readingReportEvidence">
                         {paraphraseEquation && (() => {
                           const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
-                          const isTFNG = isReadingJudgementQuestion(item) || item.answerType === 'multiple-choice'
-                          if (isTFNG) {
-                            return isIntensive && paraphraseEquation.thaiMeaning ? (
+                          const hasMeaningfulBridge = isIntensive || Boolean(parseParaphraseBridge(item.paraphrasedVocabulary))
+                          const isJudgement = isReadingJudgementQuestion(item)
+                          const isMcq = item.answerType === 'multiple-choice'
+                          if ((isJudgement || isMcq) && !hasMeaningfulBridge) {
+                            return paraphraseEquation.thaiMeaning ? (
                               <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
                             ) : null
                           }
                           return (
                             <div>
                               <p className="readingReportBridgeLabel">
-                                {isIntensive ? 'Paraphrase ที่ใช้ในโจทย์' : 'Paraphrase'}
+                                {'Paraphrase ที่ใช้ในโจทย์'}
                               </p>
                               <div className="readingReportBridgeRow">
                                 <span className="readingReportKw readingReportKw-passage">{paraphraseEquation.passageKeyword}</span>
