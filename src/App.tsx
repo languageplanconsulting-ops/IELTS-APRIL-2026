@@ -22858,6 +22858,13 @@ function App() {
                         <h4>ทำไมถึงตอบนี้</h4>
                         {paraphraseEquation && (() => {
                           const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
+                          const isTFNG = isReadingJudgementQuestion(item) || item.answerType === 'multiple-choice'
+                          if (isTFNG) {
+                            // T/F/NG and MCQ: bridge boxes are meaningless keyword fragments — show Thai explanation only
+                            return isIntensive && paraphraseEquation.thaiMeaning ? (
+                              <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
+                            ) : null
+                          }
                           return (
                             <div className="listeningBuilderExamWordCheck">
                               <p className="readingReportBridgeLabel">
