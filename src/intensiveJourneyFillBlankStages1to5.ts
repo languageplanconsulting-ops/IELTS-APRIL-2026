@@ -73,19 +73,20 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     sourceParagraphs: ["D","E"],
     instructions: [
           "Questions 11–13",
-          "Complete the summary below.",
-          "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
+          "Complete the sentences below.",
+          "Choose NO MORE THAN THREE WORDS from the passage for each answer.",
           "Write your answers in boxes 11–13 on your answer sheet."
     ],
     summaryTitle: "The Context, Meaning and Scope of Tourism",
     summaryLines: [
-      { type: "para", text: "For example, tourism is the major source of {11} in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries. The World Travel and Tourism Council (WTTC) suggest that the travel and tourism industry is the number one ranked {12} in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States." },
-      { type: "para", text: "In many cases, similar difficulties arise when attempts are made to measure {13}." },
+      { type: "bullet", text: "In Greece, tourism the most important {11}." },
+      { type: "bullet", text: "The travel and tourism industry in Jamaica is the major {12}." },
+      { type: "bullet", text: "The problems associated with measuring international tourism are often reflected in the measurement of {13}." },
     ],
     questions: [
-      { number: 11, answer: "income", passageKeyword: "example tourism source income", questionKeyword: "greece tourism important", thaiMeaning: "จากข้อความใน", exactPortion: "For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries.", acceptedAnswers: ["income","industry"] },
-      { number: 12, answer: "employer", passageKeyword: "suggest travel tourism industry", questionKeyword: "major", thaiMeaning: "จากข้อความใน", exactPortion: "suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States." },
-      { number: 13, answer: "domestic tourism", passageKeyword: "similar difficulties attempts measure", questionKeyword: "problems associated measuring", thaiMeaning: "จากข้อความใน", exactPortion: "In many cases, similar difficulties arise when attempts are made to measure domestic tourism.", acceptedAnswers: ["domestic tourism"] },
+      { number: 11, answer: "source of income", passageKeyword: "tourism is the major source of income", questionKeyword: "Greece tourism most important", thaiMeaning: "จากข้อความใน", exactPortion: "For example, tourism is the major source of income in Bermuda, Greece, Italy, Spain, Switzerland and most Caribbean countries.", acceptedAnswers: ["source of income", "income"] },
+      { number: 12, answer: "employer", passageKeyword: "number one ranked employer Jamaica", questionKeyword: "travel tourism industry Jamaica major", thaiMeaning: "จากข้อความใน", exactPortion: "suggest that the travel and tourism industry is the number one ranked employer in the Bahamas, Brazil, Canada, France, (the former) West Germany, Hong Kong, Italy, Jamaica, Japan, Singapore, the United Kingdom and the United States." },
+      { number: 13, answer: "domestic tourism", passageKeyword: "similar difficulties attempts measure domestic", questionKeyword: "problems measuring international tourism", thaiMeaning: "จากข้อความใน", exactPortion: "In many cases, similar difficulties arise when attempts are made to measure domestic tourism.", acceptedAnswers: ["domestic tourism"] },
     ]
   },
   {
