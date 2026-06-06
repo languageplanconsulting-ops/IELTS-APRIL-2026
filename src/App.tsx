@@ -22901,6 +22901,7 @@ function App() {
                           const isFillBlank = item.answerType === 'text' && !isJudgement && !isMcq
                           if (isIntensive && isFillBlank) {
                             const answerGloss = /ดังนั้นคำตอบ(?:คือ)?\s*'[^']+'\s*\(([^)]+)\)/.exec(paraphraseEquation.thaiMeaning)?.[1] || ''
+                            const cleanKw = (s: string) => s.replace(/\bblank\b/gi, '_____')
                             return (
                               <div className="vcWrap">
                                 <div className="vcAnswerRow">
@@ -22912,13 +22913,13 @@ function App() {
                                 {paraphraseEquation.passageKeyword && (
                                   <div className="vcBlock vcBlock-passage">
                                     <div className="vcBlockLabel">📖 บทความบอกว่า</div>
-                                    <div className="vcBlockText">"{paraphraseEquation.passageKeyword}"</div>
+                                    <div className="vcBlockText">"{cleanKw(paraphraseEquation.passageKeyword)}"</div>
                                   </div>
                                 )}
                                 {paraphraseEquation.questionKeyword && (
                                   <div className="vcBlock vcBlock-question">
                                     <div className="vcBlockLabel">❓ โจทย์ถามว่า</div>
-                                    <div className="vcBlockText">"{paraphraseEquation.questionKeyword}"</div>
+                                    <div className="vcBlockText">"{cleanKw(paraphraseEquation.questionKeyword)}"</div>
                                   </div>
                                 )}
                                 {paraphraseEquation.thaiMeaning && (
