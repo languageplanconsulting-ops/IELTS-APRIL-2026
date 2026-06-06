@@ -684,18 +684,22 @@ const buildStageDuo = (
 
 export const buildJourneyStageDefinitions = (
   poolExams: ReadingExamRecord[],
-  minimumStages = 24
+  minimumStages = 24,
+  maximumStages = Infinity
 ): ReadingJourneyStageDefinition[] => {
   const candidates = poolExams.filter(Boolean).filter(isReadingJourneySourceExam)
   if (!candidates.length) return []
 
-  const maxStages = Math.max(
-    minimumStages,
-    Math.floor(candidates.length / JOURNEY_PASSAGES_PER_STAGE),
-    Math.min(
-      candidates.filter((exam) => passageHasFill(exam.parsedPayload.passages[0])).length,
-      candidates.filter((exam) => passageHasJudgement(exam.parsedPayload.passages[0])).length,
-      candidates.filter((exam) => passageHasMatching(exam.parsedPayload.passages[0])).length
+  const maxStages = Math.min(
+    maximumStages,
+    Math.max(
+      minimumStages,
+      Math.floor(candidates.length / JOURNEY_PASSAGES_PER_STAGE),
+      Math.min(
+        candidates.filter((exam) => passageHasFill(exam.parsedPayload.passages[0])).length,
+        candidates.filter((exam) => passageHasJudgement(exam.parsedPayload.passages[0])).length,
+        candidates.filter((exam) => passageHasMatching(exam.parsedPayload.passages[0])).length
+      )
     )
   )
 
@@ -739,9 +743,10 @@ export const buildJourneyStageDefinitions = (
 
 export const buildJourneyExamRecords = (
   poolExams: ReadingExamRecord[],
-  minimumStages = 24
+  minimumStages = 24,
+  maximumStages = Infinity
 ): ReadingExamRecord[] => {
-  const definitions = buildJourneyStageDefinitions(poolExams, minimumStages)
+  const definitions = buildJourneyStageDefinitions(poolExams, minimumStages, maximumStages)
   return definitions
     .map((definition) => {
       if (definition.intensive) {
