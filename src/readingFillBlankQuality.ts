@@ -4,8 +4,13 @@ import type {
   NewFillBlankSummaryLine
 } from './readingNewFillBlankQuestions'
 
-const summaryLineText = (line: NewFillBlankSummaryLine) =>
-  'text' in line ? String(line.text || '') : ''
+const summaryLineText = (line: NewFillBlankSummaryLine) => {
+  if ('text' in line) return String(line.text || '')
+  if (line.type === 'table-header' || line.type === 'table-row') {
+    return (line.cells || []).join(' ')
+  }
+  return ''
+}
 
 const GARBLED_SUMMARY_PATTERNS = [
   /answer signal/i,

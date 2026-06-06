@@ -23,6 +23,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
       { type: "bullet", text: "Polar bears have displayed behaviour such as conscious manipulation of objects and activity similar to {12}" },
       { type: "heading", text: "Bears may also display emotions. For example:" },
       { type: "bullet", text: "They may make movements suggesting {13} if disappointed when hunting." },
+      { type: "bullet", text: "They may form relationships with other species." },
     ],
     questions: [
       { number: 8, answer: "violent", passageKeyword: "perceived as stupid and violent", questionKeyword: "think of bears as unintelligent and", thaiMeaning: "'perceived as stupid and in many cases violent' (ถูกมองว่าโง่และมักก้าวร้าว) = 'unintelligent and {8}' (ไม่ฉลาดและ...) → ดังนั้นคำตอบคือ 'violent' (ก้าวร้าว/รุนแรง)", exactPortion: "Bears, on the other hand, seem to be perceived as stupid and in many cases violent." },
@@ -47,16 +48,16 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     ],
     summaryTitle: "The Step Pyramid of Djoser",
     summaryLines: [
-      { type: "bullet", text: "The complex that includes the step Pyramid and its surroundings is considered to be as big as an Egyptian {22} of the past." },
+      { type: "bullet", text: "The complex that includes the Step Pyramid and its surroundings is considered to be as big as an Egyptian {22} of the past." },
       { type: "bullet", text: "The area outside the pyramid included accommodation that was occupied by {23}, along with many other buildings and features." },
-      { type: "bullet", text: "A {24}, 750 metres long and 40 metres wide, encircled the wall." },
-      { type: "bullet", text: "As well as the false entrance, knowledge of the {25} of the real entrance was required." },
+      { type: "bullet", text: "A wall ran around the outside of the complex and a number of false entrances were built into this. In addition, a long {24} encircled the wall." },
+      { type: "bullet", text: "As a result, any visitors who had not been invited were cleverly prevented from entering the pyramid grounds unless they knew the {25} of the real entrance." },
     ],
     questions: [
       { number: 22, answer: "city", passageKeyword: "was the size of a city in ancient Egypt", questionKeyword: "as big as an Egyptian blank of the past", thaiMeaning: "'was the size of a city in ancient Egypt' (มีขนาดเท่ากับเมืองในอียิปต์โบราณ) = 'as big as an Egyptian ___ of the past' (ใหญ่เท่ากับ___ อียิปต์ในอดีต) → ดังนั้นคำตอบคือ 'city' (เมือง)", exactPortion: "The complex in which it was built was the size of a city in ancient Egypt" },
       { number: 23, answer: "priests", passageKeyword: "living quarters for the priests", questionKeyword: "accommodation that was occupied by blank", thaiMeaning: "'living quarters for the priests' (ที่พักสำหรับนักบวช) = 'accommodation that was occupied by ___' (ที่พักที่ถูกใช้โดย___) → ดังนั้นคำตอบคือ 'priests' (นักบวช)", exactPortion: "included a temple, courtyards, shrines, and living quarters for the priests" },
-      { number: 24, answer: "trench", passageKeyword: "ringed by a trench 750 meters long", questionKeyword: "A blank 750 metres long and 40 metres wide encircled the wall", thaiMeaning: "'ringed by a trench 750 meters long and 40 meters wide' (ล้อมรอบด้วยคูน้ำยาว 750 เมตร กว้าง 40 เมตร) = 'A ___, 750 metres long and 40 metres wide, encircled the wall' (___ ยาว 750 เมตร กว้าง 40 เมตร ล้อมรอบกำแพง) → ดังนั้นคำตอบคือ 'trench' (คูดิน/คูล้อม)", exactPortion: "the entire wall was then ringed by a trench 750 meters long and 40 meters wid" },
-      { number: 25, answer: "location", passageKeyword: "needed to know how to find the location", questionKeyword: "knowledge of the blank of the real entrance", thaiMeaning: "'needed to know in advance how to find the location of the true opening' (ต้องรู้ล่วงหน้าว่าจะหาตำแหน่งทางเข้าจริงได้อย่างไร) = 'knowledge of the ___ of the real entrance was required' (ต้องมีความรู้เกี่ยวกับ___ของทางเข้าจริง) → ดังนั้นคำตอบคือ 'location' (ตำแหน่ง)", exactPortion: "If someone wished to enter, he or she would have needed to know in advance how to find the location of the true opening in the wall." },
+      { number: 24, answer: "trench", passageKeyword: "ringed by a trench encircled the wall", questionKeyword: "a long encircled the wall", thaiMeaning: "'ringed by a trench' = 'a long {24} encircled the wall' → ดังนั้นคำตอบคือ 'trench' (คูล้อม)", exactPortion: "the entire wall was then ringed by a trench 750 meters long and 40 meters wide" },
+      { number: 25, answer: "location", passageKeyword: "needed to know how to find the location of the true opening", questionKeyword: "unless they knew the of the real entrance", thaiMeaning: "'needed to know in advance how to find the location of the true opening' = 'unless they knew the {25} of the real entrance' → ดังนั้นคำตอบคือ 'location' (ตำแหน่ง)", exactPortion: "If someone wished to enter, he or she would have needed to know in advance how to find the location of the true opening in the wall." },
     ]
   },
   {
@@ -71,7 +72,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 1–6 on your answer sheet."
     ],
-    summaryTitle: "The development of the London underground railway",
+    summaryTitle: "The London underground railway",
     summaryLines: [
       { type: "heading", text: "The problem" },
       { type: "bullet", text: "The {1} of London increased rapidly between 1800 and 1850" },
@@ -164,13 +165,14 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     sourceParagraphs: ["B","C"],
     instructions: [
           "Questions 25–27",
-          "Complete the summary below.",
+          "Complete the sentences below.",
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 25–27 on your answer sheet."
     ],
-    summaryTitle: "A second attempt at domesticating the tomato",
     summaryLines: [
-      { type: "para", text: "For instance, the tomato strains grown for supermarkets have lost much of their {25}. By modifying one gene in a tomato plant, researchers made the tomato three times {26} A type of tomato which was not badly affected by {27} and was rich in vitamin C was produced by a team of researchers in China." },
+      { type: "para", text: "An undesirable trait such as loss of {25} may be caused by a mutation in a tomato gene." },
+      { type: "para", text: "By modifying one gene in a tomato plant, researchers made the tomato three times its original {26}." },
+      { type: "para", text: "A type of tomato which was not badly affected by {27} and was rich in vitamin C was produced by a team of researchers in China." },
     ],
     questions: [
       { number: 25, answer: "flavour", passageKeyword: "tomato strains supermarkets lost their flavour", questionKeyword: "tomato strains grown supermarkets lost much", thaiMeaning: "'tomato strains grown for supermarkets have lost much of their flavour' (สายพันธุ์มะเขือเทศที่ปลูกเพื่อซูเปอร์มาร์เก็ตสูญเสียรสชาติไปมาก) = 'lost much of their {25}' (สูญเสีย {25} ไปมาก) → ดังนั้นคำตอบคือ 'flavour' (รสชาติ)", exactPortion: "For instance, the tomato strains grown for supermarkets have lost much of their flavour.", acceptedAnswers: ["flavor"] },
@@ -186,17 +188,22 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     sourceParagraphs: ["B","C"],
     instructions: [
           "Questions 1–5",
-          "Complete the summary below.",
+          "Complete the notes below.",
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 1–5 on your answer sheet."
     ],
     summaryTitle: "The thylacine",
     summaryLines: [
+      { type: "heading", text: "Appearance and behaviour" },
+      { type: "bullet", text: "looked rather like a dog" },
+      { type: "bullet", text: "had a series of stripes along its body and tail" },
       { type: "bullet", text: "ate an entirely {1} diet" },
-      { type: "bullet", text: "probably depended mainly on {2}" },
+      { type: "bullet", text: "probably depended mainly on {2} when hunting" },
       { type: "bullet", text: "young spent first months of life inside its mother's {3}" },
+      { type: "heading", text: "Decline and extinction" },
       { type: "bullet", text: "last evidence in mainland Australia is a 3,100-year-old {4}" },
-      { type: "bullet", text: "reduction in {5}" },
+      { type: "bullet", text: "probably went extinct in mainland Australia due to animals known as dingoes" },
+      { type: "bullet", text: "reduction in {5} and available sources of food were partly responsible for decline in Tasmania" },
     ],
     questions: [
       { number: 1, answer: "carnivorous", passageKeyword: "it was exclusively carnivorous stomach muscular", questionKeyword: "ate an entirely diet", thaiMeaning: "'it was exclusively carnivorous' (มันกินเนื้อโดยเฉพาะ) = 'ate an entirely {1} diet' (กินอาหารที่เป็น... ล้วนๆ) → ดังนั้นคำตอบคือ 'carnivorous' (กินเนื้อเป็นอาหาร)", exactPortion: "In terms of feeding, it was exclusively carnivorous, and its stomach was muscular with an ability to distend so that it could eat large amounts of food at one time, probably an adaptation to compensate for long periods when hunting was unsu" },
@@ -214,22 +221,22 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     sourceParagraphs: ["C","D"],
     instructions: [
           "Questions 24–27",
-          "Complete the summary below.",
+          "Complete the sentences below.",
           "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
           "Write your answers in boxes 24–27 on your answer sheet."
     ],
     summaryTitle: "Palm oil",
     summaryLines: [
       { type: "para", text: "One advantage of palm oil for manufacturers is that it stays {24} even when not refrigerated." },
-      { type: "para", text: "The {25} is the best known of the animals suffering habitat loss as a result of the spread of oil palm plantations." },
-      { type: "para", text: "As one of its criteria for certification of sustainable palm oil, the RSPO insists that growers check {26} on a routine basis." },
-      { type: "para", text: "One study on orangutans in Borneo showed that they have a much wider range of activities in the {27} than in other areas." },
+      { type: "para", text: "{25} is the best known of the animals suffering habitat loss as a result of the spread of oil palm plantations." },
+      { type: "para", text: "As one of its criteria for the certification of sustainable palm oil, the RSPO insists that growers check {26} on a routine basis." },
+      { type: "para", text: "Ellwood and his researchers are looking into whether the bird's nest fern could restore {27} in areas where oil palm trees are grown." },
     ],
     questions: [
       { number: 24, answer: "solid", passageKeyword: "remaining solid at room temperature ideal ingredient", questionKeyword: "advantage manufacturers stays even not refrigerated", thaiMeaning: "'remaining solid at room temperature' (คงสภาพแข็งที่อุณหภูมิห้อง) = 'stays … even when not refrigerated' (ยังคงสภาพแม้ไม่แช่เย็น) → ดังนั้นคำตอบคือ 'solid' (แข็ง)", exactPortion: "Primarily because its unique properties - such as remaining solid at room temperature - make it an ideal ingredient for long-term preservation" },
       { number: 25, answer: "orangutan", passageKeyword: "most famously the Sumatran orangutan suffered spread", questionKeyword: "best known animals suffering habitat loss spread", thaiMeaning: "'most famously the Sumatran orangutan...have suffered from the unstoppable spread of oil palm plantations' (ที่รู้จักกันดีที่สุดคืออุรังอุตังสุมาตรา...ได้รับผลกระทบจากการแพร่กระจายของสวนปาล์ม) = 'the best known of the animals suffering habitat loss as a result of the spread of oil palm plantations' (สัตว์ที่เป็นที่รู้จักมากที่สุดที่ได้รับผลกระทบ) → ดังนั้นคำตอบคือ 'orangutan' (อุรังอุตัง)", exactPortion: "Endangered species - most famously the Sumatran orangutan, but also rhinos, elephants, tigers, and numerous other fauna - have suffered from the unstoppable spread of oil palm plantations.", acceptedAnswers: ["orangutan", "orang-utan", "Sumatran orangutan"] },
       { number: 26, answer: "carbon stocks", passageKeyword: "regular assessment of carbon stocks among other criteria", questionKeyword: "RSPO insists growers check routine basis", thaiMeaning: "'regular assessment of carbon stocks' (การประเมินปริมาณคาร์บอนสะสมอย่างสม่ำเสมอ) = 'insists that growers check {26} on a routine basis' (กำหนดให้ผู้ปลูกตรวจสอบเป็นประจำ) → ดังนั้นคำตอบคือ 'carbon stocks' (ปริมาณคาร์บอนสะสม)", exactPortion: "The RSPO insists upon no virgin forest clearing, transparency and regular assessment of carbon stocks, among other criteria.", acceptedAnswers: ["carbon stocks"] },
-      { number: 27, answer: "biodiversity", passageKeyword: "greatest threats to global biodiversity declares Dr Ellwood", questionKeyword: "wider range activities than in other areas", thaiMeaning: "'Palm oil is surely one of the greatest threats to global biodiversity' (ปาล์มน้ำมันเป็นภัยคุกคามต่อความหลากหลายทางชีวภาพระดับโลก) = 'a much wider range of activities in the {27} than in other areas' (กิจกรรมที่หลากหลายกว่าในพื้นที่ที่มีความหลากหลายทางชีวภาพ) → ดังนั้นคำตอบคือ 'biodiversity' (ความหลากหลายทางชีวภาพ)", exactPortion: "Palm oil is surely one of the greatest threats to global biodiversity,' declares Dr Farnon Ellwood of the University of the West of England, Bristol." },
+      { number: 27, answer: "biodiversity", passageKeyword: "reintroducing the bird's nest fern into oil palm plantations could potentially allow these areas to recover their biodiversity", questionKeyword: "bird's nest fern could restore in areas where oil palm trees are grown", thaiMeaning: "'could potentially allow these areas to recover their biodiversity' = 'could restore {27} in areas where oil palm trees are grown' → ดังนั้นคำตอบคือ 'biodiversity' (ความหลากหลายทางชีวภาพ)", exactPortion: "Ellwood believes that reintroducing the bird's nest fern into oil palm plantations could potentially allow these areas to recover their biodiversity, providing a home for all manner of species, from fungi and bacteria, to invertebrates such as insects, amphibians, reptiles and even mammals." },
     ]
   },
   {
@@ -240,19 +247,19 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     sourceParagraphs: ["I","J"],
     instructions: [
           "Questions 7–13",
-          "Complete the summary below.",
+          "Complete the table below.",
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 7–13 on your answer sheet."
     ],
-    summaryTitle: "Bats to the rescue",
+    summaryTitle: "The study carried out by Rocha's team",
     summaryLines: [
       { type: "bullet", text: "DNA analysis of bat {7}" },
-      { type: "bullet", text: "ate pests of rice, {8}" },
-      { type: "bullet", text: "prevent the spread of disease by eating {9}" },
+      { type: "bullet", text: "ate pests of rice, {8}, sugarcane, nuts and fruit" },
+      { type: "bullet", text: "prevent the spread of disease by eating {9} and blackflies" },
       { type: "bullet", text: "they provide food rich in {10}" },
       { type: "bullet", text: "the buildings where they roost become {11}" },
       { type: "bullet", text: "associated with sacred caves and the {12}" },
-      { type: "bullet", text: "farmers should provide special {13}" },
+      { type: "bullet", text: "farmers should provide special {13} to support the bat population" },
     ],
     questions: [
       { number: 7, answer: "droppings", passageKeyword: "DNA barcoding techniques analyse droppings", questionKeyword: "DNA analysis of bat {7}", thaiMeaning: "'DNA barcoding techniques to analyse droppings' (ใช้เทคนิค DNA barcoding วิเคราะห์มูลค้างคาว) = 'DNA analysis of bat {7}' (การวิเคราะห์ DNA ของ ___ ค้างคาว) → ดังนั้นคำตอบคือ 'droppings' (มูลค้างคาว)", exactPortion: "They next used DNA barcoding techniques to analyse droppings collected from bats at the different sites." },
@@ -273,14 +280,14 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     instructions: [
           "Questions 20–23",
           "Complete the summary below.",
-          "Choose ONE WORD ONLY from the passage for each answer.",
+          "Choose ONE WORD from the passage for each answer.",
           "Write your answers in boxes 20–23 on your answer sheet."
     ],
-    summaryTitle: "Does education fuel economic growth?",
+    summaryTitle: "Demographic reconstruction of two German communities",
     summaryLines: [
-      { type: "para", text: "The database sheds light on the lives of individuals, as well as those of their {20}." },
-      { type: "para", text: "Ana Regina and Magdalena were reprimanded for reading while they should have been paying attention to a {21}." },
-      { type: "para", text: "As a punishment, Juliana Schweickherdt was later given a {22}." },
+      { type: "para", text: "The database that Ogilvie and her team has compiled sheds light on the lives of a range of individuals, as well as those of their {20}, over a 300-year period." },
+      { type: "para", text: "For example, Ana Regina and Magdalena Riethmüllerin were reprimanded for reading while they should have been paying attention to a {21}." },
+      { type: "para", text: "There was also Juliana Schweickherdt, who came to the notice of the weavers' guild in the year 1752 for breaking guild rules. As a punishment, she was later given a {22}." },
       { type: "para", text: "Cases like this illustrate how the guilds could prevent {23} and stop skilled people from working." },
     ],
     questions: [
@@ -300,10 +307,11 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
       "Questions 1–3",
       "Complete the summary below.",
       "Choose ONE WORD AND/OR A NUMBER from the passage for each answer.",
-      "Write your answers in boxes 1–7 on your answer sheet.",
+      "Write your answers in boxes 1–3 on your answer sheet.",
       "Questions 4–7",
       "Complete the table below.",
-      "Choose ONE WORD ONLY from the passage for each answer."
+      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Write your answers in boxes 4–7 on your answer sheet."
     ],
     summaryTitle: "Urban farming in Paris",
     summaryLines: [
@@ -334,7 +342,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     sourceParagraphs: ["F","G"],
     instructions: [
           "Questions 23–27",
-          "Complete the summary below.",
+          "Complete the notes below.",
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 23–27 on your answer sheet."
     ],
@@ -363,27 +371,24 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     instructions: [
       "Questions 1–8",
       "Complete the notes below.",
-      "Choose ONE WORD AND/OR A NUMBER from the passage for each answer.",
+      "Choose ONE WORD ONLY from the passage for each answer.",
       "Write your answers in boxes 1–8 on your answer sheet."
     ],
     summaryTitle: "Stonehenge",
     summaryLines: [
-      { type: "heading", text: "History" },
       { type: "bullet", text: "the ditch and henge were dug, possibly using tools made from {1}" },
       { type: "bullet", text: "{2} may have been arranged in deep pits inside the circle" },
-      { type: "heading", text: "How the bluestones got there" },
-      { type: "bullet", text: "According to one theory, builders used {3} to make sledges and rollers" },
-      { type: "bullet", text: "Another theory: {4} pulled them on giant wicker baskets on rails" },
-      { type: "bullet", text: "A third theory: they were brought from Wales by {5}" },
-      { type: "heading", text: "Purpose" },
+      { type: "bullet", text: "builders used {3} to make sledges and rollers" },
+      { type: "bullet", text: "{4} pulled them on giant baskets" },
+      { type: "bullet", text: "they were brought from Wales by {5}" },
       { type: "bullet", text: "a theory arose in the 17th century that its builders were Celtic {6}" },
       { type: "bullet", text: "many experts agree it has been used as a {7} site" },
       { type: "bullet", text: "in the 1960s, it was suggested that it worked as a {8}" },
     ],
     questions: [
       { number: 1, answer: "antlers", passageKeyword: "may have been fashioned out of deer antlers", questionKeyword: "tools made from {1}", thaiMeaning: "'may have been fashioned out of deer antlers' (อาจทำมาจากเขากวาง) = 'tools made from {1}' (เครื่องมือที่ทำจาก {1}) → ดังนั้นคำตอบคือ 'antlers' (เขากวาง)", exactPortion: "which may have been fashioned out of deer antlers", acceptedAnswers: ["antlers", "deer antlers"] },
-      { number: 2, answer: "posts", passageKeyword: "deep pits may have once held timber posts", questionKeyword: "{2} arranged in deep pits inside circle", thaiMeaning: "'Deep pits … may have once held a ring of timber posts' (หลุมลึกอาจเคยมีเสาไม้ตั้งอยู่) = '{2} may have been arranged in deep pits inside the circle' ({2} อาจถูกจัดวางในหลุมลึก) → ดังนั้นคำตอบคือ 'posts' (เสาไม้)", exactPortion: "Deep pits dating back to that era and located within the circle may have once held a ring of timber posts, according to some scholars.", acceptedAnswers: ["posts", "timber posts"] },
-      { number: 3, answer: "trunks", passageKeyword: "fashioned sledges and rollers out of tree trunks", questionKeyword: "builders used {3} to make sledges rollers", thaiMeaning: "'fashioned sledges and rollers out of tree trunks' (ทำเลื่อนและลูกกลิ้งจากลำต้นไม้) = 'builders used {3} to make sledges and rollers' (ผู้สร้างใช้ {3} ทำเลื่อนและลูกกลิ้ง) → ดังนั้นคำตอบคือ 'trunks' (ลำต้นไม้)", exactPortion: "According to one long-standing theory among archaeologists, Stonehenge's builders fashioned sledges and rollers out of tree trunks to lug the bluestones from the Preseli Hills.", acceptedAnswers: ["trunks", "tree trunks"] },
+      { number: 2, answer: "timber posts", passageKeyword: "deep pits may have once held timber posts", questionKeyword: "{2} arranged in deep pits inside circle", thaiMeaning: "'Deep pits … may have once held a ring of timber posts' (หลุมลึกอาจเคยมีเสาไม้ตั้งอยู่) = '{2} may have been arranged in deep pits inside the circle' ({2} อาจถูกจัดวางในหลุมลึก) → ดังนั้นคำตอบคือ 'timber posts' (เสาไม้)", exactPortion: "Deep pits dating back to that era and located within the circle may have once held a ring of timber posts, according to some scholars.", acceptedAnswers: ["posts", "timber posts"] },
+      { number: 3, answer: "tree trunks", passageKeyword: "fashioned sledges and rollers out of tree trunks", questionKeyword: "builders used {3} to make sledges and rollers", thaiMeaning: "'fashioned sledges and rollers out of tree trunks' (ทำเลื่อนและลูกกลิ้งจากลำต้นไม้) = 'builders used {3} to make sledges and rollers' (ผู้สร้างใช้ {3} ทำเลื่อนและลูกกลิ้ง) → ดังนั้นคำตอบคือ 'tree trunks' (ลำต้นไม้)", exactPortion: "According to one long-standing theory among archaeologists, Stonehenge's builders fashioned sledges and rollers out of tree trunks to lug the bluestones from the Preseli Hills.", acceptedAnswers: ["trunks", "tree trunks"] },
       { number: 4, answer: "oxen", passageKeyword: "supersized wicker baskets hauled by oxen", questionKeyword: "{4} pulled them on giant wicker baskets", thaiMeaning: "'supersized wicker baskets … hauled by oxen' (ตะกร้าหวายขนาดยักษ์ … ลากโดยวัว) = '{4} pulled them on giant wicker baskets' ({4} ดึงบนตะกร้าหวายขนาดยักษ์) → ดังนั้นคำตอบคือ 'oxen' (วัว)", exactPortion: "More recent archaeological hypotheses have them transporting the bluestones with supersized wicker baskets on a combination of ball bearings and long grooved planks, hauled by oxen." },
       { number: 5, answer: "glaciers", passageKeyword: "it was glaciers not humans that carried bluestones", questionKeyword: "brought from Wales by {5}", thaiMeaning: "'it was glaciers, not humans, that carried the bluestones to Salisbury Plain' (ธารน้ำแข็ง ไม่ใช่มนุษย์ที่ขนหินสีน้ำเงิน) = 'brought from Wales by {5}' (นำมาจากเวลส์โดย {5}) → ดังนั้นคำตอบคือ 'glaciers' (ธารน้ำแข็ง)", exactPortion: "Challenging the classic image of industrious builders pushing, carting, rolling or hauling giant stones from faraway Wales, some scientists have suggested that it was glaciers, not humans, that carried the bluestones to Salisbury Plain." },
       { number: 6, answer: "druids", passageKeyword: "Stonehenge was the work of druids", questionKeyword: "theory arose 17th century Celtic {6}", thaiMeaning: "'Stonehenge was the work of druids' (สโตนเฮนจ์เป็นผลงานของดรูอิด) = 'its builders were Celtic {6}' (ผู้สร้างเป็น {6} เซลติก) → ดังนั้นคำตอบคือ 'druids' (ดรูอิด นักบวชเซลติก)", exactPortion: "In the 17th century, archaeologist John Aubrey made the claim that Stonehenge was the work of druids," },
@@ -399,15 +404,18 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     sourceParagraphs: ["E","F"],
     instructions: [
           "Questions 9–13",
-          "Complete the summary below.",
+          "Complete the notes below.",
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 9–13 on your answer sheet."
     ],
-    summaryTitle: "The White Horse of Uffington",
+    summaryTitle: "The Uffington White Horse",
     summaryLines: [
+      { type: "heading", text: "The location of the Uffington White Horse:" },
       { type: "bullet", text: "near an ancient road known as the {9}" },
+      { type: "heading", text: "Dating the Uffington White Horse:" },
       { type: "bullet", text: "first reference to White Horse Hill appears in {10} from the 1070s." },
-      { type: "bullet", text: "according to analysis of the surrounding {11} , the Horse is Late Bronze Age / Early Iron Age." },
+      { type: "bullet", text: "according to analysis of the surrounding {11}, the Horse is Late Bronze Age / Early Iron Age." },
+      { type: "heading", text: "Possible reasons for creation of the Uffington White Horse:" },
       { type: "bullet", text: "was a representation of goddess Epona – associated with protection of horses and {12}" },
       { type: "bullet", text: "was a representation of a Welsh goddess called {13}" },
     ],
@@ -431,13 +439,11 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 6–13 on your answer sheet."
     ],
-    summaryTitle: "Roman shipbuilding and navigation",
+    summaryTitle: "Warships and merchant ships",
     summaryLines: [
-      { type: "para", text: "{6} and moved quickly. They often remained afloat after battles and were able to sail close to land as they lacked any additional weight. {7} was included in the design for attacking and damaging the timber and oars of enemy ships. Warships, such as the ‘trireme’, had rowers on three different" },
-      { type: "bullet", text: "{8} . Unlike warships, merchant ships had a broad" },
-      { type: "para", text: "{9} that lay far below the surface of the sea. Merchant ships were steered through the water with the help of large rudders and" },
-      { type: "bullet", text: "{10} sails. On merchant ships and warships," },
-      { type: "para", text: "{11} was used to ensure rowers moved their oars in and out of the water at the same time. Quantities of agricultural goods such as {12} were transported by merchant ships to two main ports in Italy. The ships were pulled to the shore by {13} . When the weather was clear and they could see islands or land, sailors used landmarks that they knew to help them navigate their route." },
+      { type: "para", text: "Warships were designed so that they were {6} and moved quickly. They often remained afloat after battles and were able to sail close to land as they lacked any additional weight. A battering ram made of {7} was included in the design for attacking and damaging the timber and oars of enemy ships. Warships, such as the 'trireme', had rowers on three different {8}." },
+      { type: "para", text: "Unlike warships, merchant ships had a broad {9} that lay far below the surface of the sea. Merchant ships were steered through the water with the help of large rudders and a tiller bar. They had both square and {10} sails. On merchant ships and warships, {11} was used to ensure rowers moved their oars in and out of the water at the same time." },
+      { type: "para", text: "Quantities of agricultural goods such as {12} were transported by merchant ships to two main ports in Italy. The ships were pulled to the shore by {13}. When the weather was clear and they could see islands or land, sailors used landmarks that they knew to help them navigate their route." },
     ],
     questions: [
       { number: 6, answer: "lightweight", passageKeyword: "built to be lightweight very speedy", questionKeyword: "moved quickly lacked additional weight", thaiMeaning: "'built to be lightweight and very speedy' (สร้างให้มีน้ำหนักเบาและเร็วมาก) = 'moved quickly, lacked any additional weight' (เคลื่อนที่เร็ว ไม่มีน้ำหนักเพิ่ม) → ดังนั้นคำตอบคือ 'lightweight' (มีน้ำหนักเบา)", exactPortion: "Warships were built to be lightweight and very speedy." },
@@ -491,7 +497,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
           "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
           "Write your answers in boxes 7–9 on your answer sheet."
     ],
-    summaryTitle: "The Persian Qanat Method",
+    summaryTitle: "Roman tunnels",
     summaryLines: [
       { type: "heading", text: "The Persian Qanat Method" },
       { type: "bullet", text: "{1} placed over a hill in a straight line to direct water into a {2}" },
@@ -512,7 +518,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
       { number: 5, answer: "weight", passageKeyword: "weight at end hung center of shaft", questionKeyword: "blank attached to the plumb line", thaiMeaning: "'the weight at the end of it hung in the center of the shaft' (ลูกตุ้มที่ปลายห้อยอยู่กลางปล่อง) = '{5} attached to the plumb line' (สิ่งที่ติดกับเชือกดิ่ง) → ดังนั้นคำตอบคือ 'weight' (ลูกตุ้ม)", exactPortion: "To ensure that the shafts were vertical, Romans hung a plumb line from a rod placed across the top of each shaft and made sure that the weight at the end of it hung in the center of the shaft." },
       { number: 6, answer: "climbing", passageKeyword: "handholds footholds to help those climbing", questionKeyword: "handholds and footholds used for blank", thaiMeaning: "'handholds and footholds to help those climbing in and out of them' (ที่จับมือและเท้าเพื่อช่วยผู้ที่ปีนขึ้นลง) = 'handholds and footholds used for {6}' (ใช้สำหรับการปีน) → ดังนั้นคำตอบคือ 'climbing' (การปีน)", exactPortion: "The shafts were equipped with handholds and footholds to help those climbing in and out of them and were covered with a wooden or stone lid." },
       { number: 7, answer: "gold", passageKeyword: "tunnels used to mine gold Dolaucothi Wales", questionKeyword: "mineral Dolaucothi mines Wales extract", thaiMeaning: "'tunnels used to mine gold can still be found at the Dolaucothi mines in Wales' (อุโมงค์ที่ใช้ขุดทองยังพบได้ที่เหมือง Dolaucothi ในเวลส์) = 'what type of mineral were the Dolaucothi mines built to extract?' (แร่ชนิดใดที่เหมือง Dolaucothi สร้างขึ้นเพื่อขุด) → ดังนั้นคำตอบคือ 'gold' (ทอง)", exactPortion: "Traces of such tunnels used to mine gold can still be found at the Dolaucothi mines in Wales." },
-      { number: 8, answer: "architect", passageKeyword: "sometimes the name of the architect", questionKeyword: "in addition to patron whose name carved tunnel", thaiMeaning: "'inscriptions showing the names of patrons… and sometimes the name of the architect' (จารึกแสดงชื่อผู้อุปถัมภ์ และบางครั้งชื่อสถาปนิก) = 'in addition to the patron, whose name might be carved onto a tunnel?' (นอกจากผู้อุปถัมภ์ ชื่อของใครอาจถูกสลักไว้) → ดังนั้นคำตอบคือ 'architect' (สถาปนิก)", exactPortion: "Most tunnels had inscriptions showing the names of patrons who ordered construction and sometimes the name of the architect.", acceptedAnswers: ["architect", "architects"] },
+      { number: 8, answer: "architect", passageKeyword: "sometimes the name of the architect", questionKeyword: "in addition to patron whose name carved tunnel", thaiMeaning: "'inscriptions showing the names of patrons… and sometimes the name of the architect' (จารึกแสดงชื่อผู้อุปถัมภ์ และบางครั้งชื่อสถาปนิก) = 'in addition to the patron, whose name might be carved onto a tunnel?' (นอกจากผู้อุปถัมภ์ ชื่อของใครอาจถูกสลักไว้) → ดังนั้นคำตอบคือ 'architect' (สถาปนิก)", exactPortion: "Most tunnels had inscriptions showing the names of patrons who ordered construction and sometimes the name of the architect.", acceptedAnswers: ["architect", "architects", "architect name", "architect's name"] },
       { number: 9, answer: "harbour", passageKeyword: "Cevlik tunnel divert floodwater threatening harbour", questionKeyword: "Seleuceia Pieria Cevlik tunnel built protect", thaiMeaning: "'built to divert the floodwater threatening the harbor of the ancient city of Seleuceia Pieria' (สร้างเพื่อเบี่ยงน้ำท่วมที่คุกคามท่าเรือของเมืองโบราณ Seleuceia Pieria) = 'what part of Seleuceia Pieria was the Cevlik tunnel built to protect?' (ส่วนใดของ Seleuceia Pieria ที่อุโมงค์ Cevlik สร้างขึ้นเพื่อปกป้อง) → ดังนั้นคำตอบคือ 'harbour' (ท่าเรือ)", exactPortion: "the 1.4-kilometer Cevlik tunnel in Turkey, built to divert the floodwater threatening the harbor of the ancient city of Seleuceia Pieria", acceptedAnswers: ["harbour", "harbor", "the harbour", "the harbor"] },
     ]
   },
@@ -528,18 +534,15 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 5–8 on your answer sheet."
     ],
-    summaryTitle: "Materials to take us beyond concrete",
+    summaryTitle: "Making buildings with wood",
     summaryLines: [
-      { type: "para", text: "{5} to use wood in modern construction projects. Using wood, however, has its challenges. For example, as" },
-      { type: "para", text: "{6} in the atmosphere enters wood, it increases in size. In addition, wood is prone to pests and the risk of fire is greater. However, wood can be turned into" },
-      { type: "para", text: "{7} of solid wood are glued together to create building blocks. These blocks are lighter than concrete and steel but equal them in strength. Experts say that wooden buildings are an improvement on those made of concrete and steel in terms of the" },
-      { type: "para", text: "{8} with which they can be constructed and how much noise is generated by the process." },
+      { type: "para", text: "Wood is a traditional building material, but current environmental concerns are encouraging {5} to use wood in modern construction projects. Using wood, however, has its challenges. For example, as {6} in the atmosphere enters wood, it increases in size. In addition, wood is prone to pests and the risk of fire is greater. However, wood can be turned into a better construction material if it is treated and combined with other materials. In one process, {7} of solid wood are glued together to create building blocks. These blocks are lighter than concrete and steel but equal them in strength. Experts say that wooden buildings are an improvement on those made of concrete and steel in terms of the {8} with which they can be constructed and how much noise is generated by the process." },
     ],
     questions: [
-      { number: 5, answer: "architects", passageKeyword: "climate change driving architects turn timber", questionKeyword: "blank to use wood modern construction", thaiMeaning: "'climate change is driving architects to turn to treated timber' (การเปลี่ยนแปลงสภาพภูมิอากาศกำลังผลักดันสถาปนิกให้หันมาใช้ไม้แปรรูป) = 'blank to use wood in modern construction projects' (ว่างเปล่าที่จะใช้ไม้ในโครงการก่อสร้างสมัยใหม่) → ดังนั้นคำตอบคือ 'architects' (สถาปนิก)", exactPortion: "but climate change is driving architects to turn to treated timber as a possible resource." },
-      { number: 6, answer: "moisture", passageKeyword: "wood expands absorbs moisture from air", questionKeyword: "blank in atmosphere enters wood increases size", thaiMeaning: "'Wood expands as it absorbs moisture from the air' (ไม้ขยายตัวเมื่อดูดซับความชื้นจากอากาศ) = 'blank in the atmosphere enters wood, it increases in size' (ว่างเปล่าในบรรยากาศเข้าสู่ไม้ทำให้ขยายใหญ่ขึ้น) → ดังนั้นคำตอบคือ 'moisture' (ความชื้น)", exactPortion: "Wood expands as it absorbs moisture from the air and is susceptible to pests, not to mention fire." },
-      { number: 7, answer: "layers", passageKeyword: "adhesive stick layers solid-sawn timber together", questionKeyword: "blank of solid wood glued together building blocks", thaiMeaning: "'an adhesive is used to stick layers of solid-sawn timber together' (กาวถูกใช้ติดชั้นไม้แปรรูปเข้าด้วยกัน) = 'blank of solid wood are glued together to create building blocks' (ว่างเปล่าของไม้แข็งถูกติดกาวเข้าด้วยกันเพื่อสร้างบล็อกก่อสร้าง) → ดังนั้นคำตอบคือ 'layers' (ชั้น/แผ่น)", exactPortion: "n adhesive is used to stick layers of solid-sawn timber together, crosswise, to form building blocks." },
-      { number: 8, answer: "speed", passageKeyword: "wooden buildings constructed greater speed quieter", questionKeyword: "blank with which they can be constructed noise", thaiMeaning: "'wooden buildings can be constructed at a greater speed' (อาคารไม้สามารถก่อสร้างได้ด้วยความเร็วที่มากกว่า) = 'the blank with which they can be constructed and how much noise is generated' (ว่างเปล่าที่ใช้ในการก่อสร้างและเสียงรบกวนที่เกิดขึ้น) → ดังนั้นคำตอบคือ 'speed' (ความเร็ว)", exactPortion: "Construction experts say that wooden buildings can be constructed at a greater speed than ones of concrete and steel and the process, it seems, is quieter." },
+      { number: 5, answer: "architects", passageKeyword: "climate change driving architects turn timber", questionKeyword: "environmental concerns encouraging to use wood", thaiMeaning: "'climate change is driving architects to turn to treated timber' = 'current environmental concerns are encouraging {5} to use wood in modern construction projects' → architects", exactPortion: "but climate change is driving architects to turn to treated timber as a possible resource." },
+      { number: 6, answer: "moisture", passageKeyword: "wood expands absorbs moisture from air", questionKeyword: "as in the atmosphere enters wood it increases in size", thaiMeaning: "'Wood expands as it absorbs moisture from the air' = 'as {6} in the atmosphere enters wood, it increases in size' → moisture", exactPortion: "Wood expands as it absorbs moisture from the air and is susceptible to pests, not to mention fire." },
+      { number: 7, answer: "layers", passageKeyword: "adhesive stick layers solid-sawn timber together", questionKeyword: "of solid wood are glued together to create building blocks", thaiMeaning: "'stick layers of solid-sawn timber together' = '{7} of solid wood are glued together' → layers", exactPortion: "An adhesive is used to stick layers of solid-sawn timber together, crosswise, to form building blocks." },
+      { number: 8, answer: "speed", passageKeyword: "wooden buildings constructed greater speed quieter", questionKeyword: "improvement in terms of the with which they can be constructed", thaiMeaning: "'constructed at a greater speed' = 'in terms of the {8} with which they can be constructed' → speed", exactPortion: "Construction experts say that wooden buildings can be constructed at a greater speed than ones of concrete and steel and the process, it seems, is quieter." },
     ]
   },
   {
@@ -547,7 +550,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     passageNumber: 2,
     startNumber: 25,
     endNumber: 27,
-    sourceParagraphs: ["G","H"],
+    sourceParagraphs: ["E","H"],
     instructions: [
           "Questions 25–27",
           "Complete the summary below.",
@@ -556,15 +559,15 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     ],
     summaryTitle: "The steam car",
     summaryLines: [
-      { type: "para", text: "With these enhancements, the Dobles' new car company promised a steam vehicle which would provide all of the convenience of a gasoline car, but with much greater {25}, much simpler driving controls, and a virtually silent powerplant, while keeping its emissions extremely low." },
-      { type: "para", text: "The steam car was too expensive for many people and its design was constantly being altered." },
-      { type: "para", text: "By the time the company folded in 1931, fewer than {26} of the amazing Model E steam cars had been produced." },
-      { type: "para", text: "Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in California today, and they are pretty {27}." },
+      {
+        type: "para",
+        text: "With these enhancements, the Dobles' new car company promised a steam vehicle which would provide all of the convenience of a gasoline car, but with much greater {25}, much simpler driving controls, and a virtually silent powerplant, while keeping its emissions extremely low. The steam car was too expensive for many people and its design was constantly being altered. By the time the company folded in 1931, fewer than {26} of the amazing Model E steam cars had been produced. Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in California today, and they are pretty {27}."
+      }
     ],
     questions: [
-      { number: 25, answer: "speed", passageKeyword: "promised steam vehicle much greater speed", questionKeyword: "provide much greater blank simpler driving", thaiMeaning: "'much greater speed, much simpler driving controls' (ความเร็วที่มากกว่า การควบคุมที่ง่ายกว่า) = 'much greater {25}, much simpler driving controls' (มากกว่า __ และง่ายกว่า) → ดังนั้นคำตอบคือ 'speed' (ความเร็ว)", exactPortion: "With these enhancements, the Dobles' new car company promised a steam vehicle which would provide all of the convenience of a gasoline car, but with much greater speed, much simpler driving controls, and a virtually silent powerplant." },
-      { number: 26, answer: "50", passageKeyword: "fewer than fifty Model E steam cars", questionKeyword: "fewer than blank amazing Model E produced", thaiMeaning: "'fewer than fifty of the amazing Model E steam cars had been produced' (ผลิตได้น้อยกว่าห้าสิบคัน) = 'fewer than {26} of the amazing Model E steam cars had been produced' (น้อยกว่า __ คัน) → ดังนั้นคำตอบคือ '50' (ห้าสิบ)", exactPortion: "fewer than fifty of the amazing Model E steam cars had been produced.", acceptedAnswers: ["fifty", "50"] },
-      { number: 27, answer: "strict", passageKeyword: "pass emissions laws California pretty strict", questionKeyword: "emissions laws pretty blank", thaiMeaning: "'they are pretty strict' (กฎหมายเหล่านั้นค่อนข้างเข้มงวด) = 'they are pretty {27}' (ค่อนข้าง __) → ดังนั้นคำตอบคือ 'strict' (เข้มงวด)", exactPortion: "Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in California today, and they are pretty strict." },
+      { number: 25, answer: "speed", passageKeyword: "much greater speed, much simpler driving controls", questionKeyword: "but with much greater", thaiMeaning: "'much greater speed' = '{25}, much simpler driving controls' → speed", exactPortion: "With these enhancements, the Dobles' new car company promised a steam vehicle which would provide all of the convenience of a gasoline car, but with much greater speed, much simpler driving controls, and a virtually silent powerplant." },
+      { number: 26, answer: "50", passageKeyword: "fewer than fifty of the amazing Model E steam cars had been produced", questionKeyword: "By the time the company folded in 1931, fewer than", thaiMeaning: "'fewer than fifty' = 'fewer than {26} of the amazing Model E steam cars' → 50", exactPortion: "By the time the company folded in 1931, fewer than fifty of the amazing Model E steam cars had been produced.", acceptedAnswers: ["fifty", "50"] },
+      { number: 27, answer: "strict", passageKeyword: "they are pretty strict", questionKeyword: "and they are pretty", thaiMeaning: "'they are pretty strict' = 'and they are pretty {27}' → strict", exactPortion: "Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in California today, and they are pretty strict." },
     ]
   },
   {
@@ -579,17 +582,22 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 6–9 on your answer sheet."
     ],
-    summaryTitle: "Green roofs",
+    summaryTitle: "Advantages of green roofs",
     summaryLines: [
-      { type: "para", text: "{6} and creating environments that are suitable for wildlife. In many cases, they can also be used for producing {7} . There are also social benefits of green roofs. For example, the medical profession recommends" },
-      { type: "para", text: "{8} as an activity to help people cope with mental health issues. Studies have also shown that the availability of green spaces can prevent physical problems such as" },
-      { type: "para", text: "{9} ." },
+      {
+        type: "para",
+        text: "City rooftops covered with greenery have many advantages. These include lessening the likelihood that floods will occur, reducing how much money is spent on {6} and creating environments that are suitable for wildlife. In many cases, they can also be used for producing {7}."
+      },
+      {
+        type: "para",
+        text: "There are also social benefits of green roofs. For example, the medical profession recommends {8} as an activity to help people cope with mental health issues. Studies have also shown that the availability of green spaces can prevent physical problems such as {9}."
+      }
     ],
     questions: [
-      { number: 6, answer: "energy", passageKeyword: "benefits are saving on energy costs", questionKeyword: "environments suitable for wildlife", thaiMeaning: "'saving on energy costs' (ประหยัดค่าพลังงาน) = '{6} and creating environments suitable for wildlife' (สร้างสิ่งแวดล้อมที่เหมาะกับสัตว์ป่า) → ดังนั้นคำตอบคือ 'energy' (พลังงาน)", exactPortion: "Among the benefits are saving on energy costs," },
-      { number: 7, answer: "food", passageKeyword: "growing food", questionKeyword: "also be used for producing", thaiMeaning: "'growing food' (การปลูกอาหาร) = 'used for producing {7}' (ใช้สำหรับผลิต) → ดังนั้นคำตอบคือ 'food' (อาหาร)", exactPortion: "mitigating the risk of floods, making habitats for urban wildlife, tackling air pollution and even growing food." },
-      { number: 8, answer: "gardening", passageKeyword: "prescribing time spent gardening outdoors", questionKeyword: "activity to help people cope", thaiMeaning: "'prescribing time spent gardening outdoors' (สั่งให้ใช้เวลาทำสวนกลางแจ้ง) = '{8} as an activity to help people cope with mental health issues' (กิจกรรมช่วยรับมือกับปัญหาสุขภาพจิต) → ดังนั้นคำตอบคือ 'gardening' (การทำสวน)", exactPortion: "Doctors are increasingly prescribing time spent gardening outdoors for patients dealing with anxiety and depression." },
-      { number: 9, answer: "obesity", passageKeyword: "help people avoid obesity", questionKeyword: "prevent physical problems such as", thaiMeaning: "'help people avoid obesity' (ช่วยให้ผู้คนหลีกเลี่ยงโรคอ้วน) = 'prevent physical problems such as {9}' (ป้องกันปัญหาทางกาย เช่น) → ดังนั้นคำตอบคือ 'obesity' (โรคอ้วน)", exactPortion: "And research has found that access to even the most basic green spaces can provide a better quality of life for dementia sufferers and help people avoid obesity." },
+      { number: 6, answer: "energy", passageKeyword: "saving on energy costs", questionKeyword: "reducing how much money is spent on", thaiMeaning: "'saving on energy costs' = 'reducing how much money is spent on {6}' → energy", exactPortion: "Among the benefits are saving on energy costs," },
+      { number: 7, answer: "food", passageKeyword: "even growing food", questionKeyword: "used for producing", thaiMeaning: "'even growing food' = 'used for producing {7}' → food", exactPortion: "mitigating the risk of floods, making habitats for urban wildlife, tackling air pollution and even growing food." },
+      { number: 8, answer: "gardening", passageKeyword: "prescribing time spent gardening outdoors", questionKeyword: "the medical profession recommends as an activity", thaiMeaning: "'prescribing time spent gardening outdoors' = 'medical profession recommends {8} as an activity' → gardening", exactPortion: "Doctors are increasingly prescribing time spent gardening outdoors for patients dealing with anxiety and depression." },
+      { number: 9, answer: "obesity", passageKeyword: "help people avoid obesity", questionKeyword: "prevent physical problems such as", thaiMeaning: "'help people avoid obesity' = 'prevent physical problems such as {9}' → obesity", exactPortion: "And research has found that access to even the most basic green spaces can provide a better quality of life for dementia sufferers and help people avoid obesity." },
     ]
   }
 ]

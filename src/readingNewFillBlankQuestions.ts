@@ -1,5 +1,8 @@
 // Hand-authored replacement fill-blank question sets for Normal Reading.
 //
+// Journey stages 1–20: verbatim Cambridge / IELTS Training Online stems only.
+// Never paraphrase or auto-generate summary text for journey-normal-stage-* sets.
+//
 // Each set is a summary-completion task over TWO CONSECUTIVE paragraphs of the
 // passage. Always 7 questions. Answers are single words taken verbatim from
 // the passage (preferring nouns). The surrounding sentence is fully
@@ -431,6 +434,20 @@ export const NEW_FILL_BLANK_SETS: NewFillBlankSet[] = [
   ...(journeySets as NewFillBlankSet[]).filter((set) => {
     const stageMatch = String(set.examId || '').match(/journey-normal-stage-(\d+)/)
     const stageNumber = stageMatch ? Number(stageMatch[1]) : 0
+    if (stageNumber >= 18 && stageNumber <= 20) {
+      if (
+        MANUAL_FILL_BLANK_SETS.some(
+          (manual) =>
+            manual.examId === set.examId &&
+            manual.passageNumber === set.passageNumber &&
+            manual.startNumber === set.startNumber &&
+            manual.endNumber === set.endNumber
+        )
+      ) {
+        return false
+      }
+      return !isLowQualityFillBlankSet(set)
+    }
     if (stageNumber >= 1 && stageNumber <= 20) return false
     if (
       ['journey-normal-stage-20', 'journey-normal-stage-21', 'journey-normal-stage-22'].includes(set.examId) &&
@@ -443,13 +460,23 @@ export const NEW_FILL_BLANK_SETS: NewFillBlankSet[] = [
   })
 ]
   .map((set) => {
-    // Intensive journey sets are hand-authored or generator-built — skip paraphrase
-    // (paraphrase can garble diagram labels and trigger quality-filter false positives).
+    // Journey + diagram sets: verbatim Cambridge stems — never paraphrase.
     if (String(set.examId || '').startsWith('journey-normal-stage-')) return set
     if (set.diagramImage) return set
     return paraphraseFillBlankSet(set)
   })
   .filter((set) => !isLowQualityFillBlankSet(set))
+  .filter((set) => {
+    // Never allow auto-generated JSON sets to shadow hand-authored journey overrides.
+    if (!String(set.examId || '').startsWith('journey-normal-stage-')) return true
+    return MANUAL_FILL_BLANK_SETS.some(
+      (manual) =>
+        manual.examId === set.examId &&
+        manual.passageNumber === set.passageNumber &&
+        manual.startNumber === set.startNumber &&
+        manual.endNumber === set.endNumber
+    )
+  })
 
 // Lookup helper — find the set that covers a given question number.
 export const findNewFillBlankSet = (

@@ -7,9 +7,13 @@ import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import { AdminVideoStudio } from './AdminVideoStudio'
 import {
   findNewFillBlankQuestion,
-  NEW_FILL_BLANK_SETS,
+  MANUAL_FILL_BLANK_SETS,
   type NewFillBlankSet
 } from './readingNewFillBlankQuestions'
+import {
+  findFillBlankOverrideCoveringQuestion,
+  resolveFillBlankOverride
+} from './readingJourneyFillBlankLookup'
 import {
   GENERAL_TRAINING_READING_LABEL,
   GENERAL_TRAINING_READING_LEAD,
@@ -18697,12 +18701,14 @@ function App() {
     // set (kept for journey rebuild) doesn't shadow a narrower set that
     // matches the actual group rendered in this view.
     const overrideSet = activeReadingExam
-      ? NEW_FILL_BLANK_SETS.find(
-          (set) =>
-            set.examId === activeReadingExam.id &&
-            set.startNumber === group.start &&
-            set.endNumber === group.end
-        )
+      ? resolveFillBlankOverride(MANUAL_FILL_BLANK_SETS, {
+          examId: activeReadingExam.id,
+          passageNumber: activeReadingPassage?.number || 1,
+          startNumber: group.start,
+          endNumber: group.end,
+          stageDefinitions: readingJourneyStageDefinitions,
+          sourcePool: readingJourneySourcePool
+        })
       : null
     if (overrideSet) {
       return renderNewFillBlankSet(overrideSet, questionByNumber)
@@ -22494,6 +22500,39 @@ function App() {
                           return renderReadingFillQuestionGroup(fillGroup)
                         }
                         return null
+                      }
+                      const passageOverrideSet =
+                        activeReadingExam && activeReadingPassage
+                          ? findFillBlankOverrideCoveringQuestion(MANUAL_FILL_BLANK_SETS, {
+                              examId: activeReadingExam.id,
+                              passageNumber: activeReadingPassage.number,
+                              questionNumber: question.number,
+                              stageDefinitions: readingJourneyStageDefinitions,
+                              sourcePool: readingJourneySourcePool
+                            })
+                          : null
+                      if (
+                        passageOverrideSet &&
+                        question.number > passageOverrideSet.startNumber &&
+                        question.number <= passageOverrideSet.endNumber
+                      ) {
+                        return null
+                      }
+                      if (
+                        passageOverrideSet &&
+                        question.number === passageOverrideSet.startNumber &&
+                        (question.answerType === 'text' ||
+                          isReadingFillStylePrompt(question.prompt, question.number))
+                      ) {
+                        const overrideQuestions = activeReadingQuestions.filter(
+                          (item) =>
+                            item.number >= passageOverrideSet.startNumber &&
+                            item.number <= passageOverrideSet.endNumber
+                        )
+                        return renderNewFillBlankSet(
+                          passageOverrideSet,
+                          new Map(overrideQuestions.map((item) => [item.number, item]))
+                        )
                       }
                       if (isReadingFillQuestion(activeReadingPassage, question, isReadingMatchingQuestion)) {
                         return renderReadingFillFallbackQuestion(question)
