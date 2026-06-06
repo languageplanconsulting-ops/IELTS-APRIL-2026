@@ -35,3 +35,8 @@ findings.json
 audit-reading-issues.md
 server/userProvidedReadingPracticeCambridge*.mjs.bak-*
 server/userProvidedReadingPracticeJune*.mjs.bak-*
+IELTS/
+design-preview.html
+public/header-fix.html
+public/reading-minimal.html
+public/vocab-layout-proposals.html
