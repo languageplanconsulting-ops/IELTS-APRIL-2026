@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notebook — Option 4 Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bc-blue: #004aad;
+    --bc-white: #ffffff;
+    --bc-yellow: #ffcc00;
+    --bc-black: #0d0d0d;
+    --brand-primary: #004aad;
+    --surface: #ffffff;
+    --line: #e2e8f0;
+    --line-strong: #cbd5e1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Inter, system-ui, sans-serif;
+    background: #f3f7ff;
+    color: #111827;
+    font-size: 15px;
+  }
+
+  /* ── Simulate app shell ── */
+  .shell {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* ══════════════════════════════════
+     NOTEBOOK — Option 4: Highlighter Notes
+     ══════════════════════════════════ */
+  .notebookPage {
+    background:
+      radial-gradient(circle, #d1d8e8 1px, transparent 1px),
+      #ffffff;
+    background-size: 22px 22px;
+    border: 1px solid #dce6f7;
+    box-shadow: 0 2px 16px rgba(0, 74, 173, 0.07);
+    border-radius: 16px;
+    padding: 28px 32px;
+  }
+
+  /* ── Header ── */
+  .notebookHeader h2 {
+    font-size: 1.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--bc-black);
+    margin: 0 0 4px;
+  }
+  .notebookHeader p {
+    font-size: 0.84rem;
+    color: #64748b;
+    margin: 0 0 4px;
+  }
+  .notebookHeader .syncNote {
+    font-size: 0.82rem;
+    color: var(--bc-blue);
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  /* ── Section tabs ── */
+  .notebookTabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 20px 0 0;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0;
+  }
+  .notebookTabs button {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 18px;
+    border-radius: 0;
+    cursor: pointer;
+    position: relative;
+    font-family: Inter, sans-serif;
+    transition: color 150ms ease;
+  }
+  .notebookTabs button:hover { color: var(--bc-black); }
+  .notebookTabs button.active { color: var(--bc-black); }
+  .notebookTabs button::after {
+    content: '';
+    position: absolute;
+    left: 10%; right: 10%;
+    bottom: -2px;
+    height: 0;
+    background: var(--bc-yellow);
+    border-radius: 2px 2px 0 0;
+    transition: height 160ms ease;
+  }
+  .notebookTabs button.active::after { height: 4px; }
+
+  /* ── Custom section row ── */
+  .customSectionRow {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0 18px;
+  }
+  .customSectionRow input {
+    flex: 1;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 0.85rem;
+    background: #fff;
+    color: #334155;
+  }
+  .customSectionRow input::placeholder { color: #94a3b8; }
+  .customSectionRow button {
+    border: 2px solid var(--bc-blue);
+    background: var(--bc-blue);
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: Inter, sans-serif;
+  }
+
+  /* ── Entry grid ── */
+  .notebookGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+
+  /* ── Entry card ── */
+  .notebookEntry {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 74, 173, 0.06);
+    padding: 16px;
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+  .notebookEntry:hover {
+    box-shadow: 0 6px 20px rgba(0, 74, 173, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .notebookEntryMeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #94a3b8;
+    margin-bottom: 10px;
+  }
+  .notebookEntryMeta span:first-child {
+    background: var(--bc-blue);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+  }
+
+  /* Criterion title — demoted to small category label */
+  .notebookEntry h3 {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 10px;
+    background: none;
+    padding: 0;
+    line-height: 1.3;
+  }
+
+  .notebookEntry .meta {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin: 4px 0 8px;
+  }
+
+  /* Original — slim reference line, struck through */
+  .entryOriginal {
+    margin: 0 0 8px;
+    background: transparent;
+    border: none;
+    border-left: 3px solid #fca5a5;
+    border-radius: 0;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+    text-decoration-color: #fca5a5;
+  }
+
+  /* Vocabulary / fix — HERO */
+  .entryBetter {
+    display: block;
+    margin: 0 0 12px;
+    background: var(--bc-yellow);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--bc-black);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  .noteFieldLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 8px 0 10px;
+  }
+  .noteFieldLabel textarea {
+    min-height: 72px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8faff;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 400;
+    color: #334155;
+    resize: vertical;
+  }
+  .noteFieldLabel textarea::placeholder { color: #94a3b8; }
+
+  .removeNotebookBtn {
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #94a3b8;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: Inter, sans-serif;
+    transition: border-color 150ms ease, color 150ms ease;
+  }
+  .removeNotebookBtn:hover {
+    border-color: #fca5a5;
+    color: #dc2626;
+    background: #fff5f5;
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <section class="notebookPage">
+
+    <!-- Header -->
+    <div class="notebookHeader">
+      <h2>Notebook</h2>
+      <p>Save and organize improvement actions across Speaking, Writing, Listening, Reading, and custom sections.</p>
+      <p class="syncNote">Notebook sync is connected to your Supabase account.</p>
+    </div>
+
+    <!-- Section tabs -->
+    <div class="notebookTabs">
+      <button type="button">Speaking</button>
+      <button type="button" class="active">Listening</button>
+      <button type="button">Writing</button>
+      <button type="button">Reading</button>
+    </div>
+
+    <!-- Custom section row -->
+    <div class="customSectionRow">
+      <input type="text" placeholder="Create custom section (e.g. Business English)" />
+      <button type="button">Create</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="notebookGrid">
+
+      <!-- Card 1 -->
+      <article class="notebookEntry">
+        <div class="notebookEntryMeta">
+          <span>Listening</span>
+          <span>5/17/2026, 4:58 PM</span>
+        </div>
+        <h3>Listening Foundation</h3>
+        <p class="meta">Topic: Work or Study</p>
+        <p class="entryOriginal">"Q12: Which other facility has recently been improved?"</p>
+        <p class="entryBetter">refurbished fitness suite = recently been improved</p>
+        <p class="meta">TH: ห้องฟิตเนสที่ได้รับการปรับปรุงใหม่</p>
+        <label class="noteFieldLabel">
+          Personal note
+          <textarea placeholder="Write your own reminder, vocabulary note, or speaking strategy..."></textarea>
+        </label>
+        <button type="button" class="removeNotebookBtn">Remove</button>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="notebookEntry">
+        <div class="notebookEntryMeta">
+          <span>Listening</span>
+          <span>5/17/2026, 4:57 PM</span>
+        </div>
+        <h3>Listening Foundation</h3>
+        <p class="meta">Topic: Work or Study</p>
+        <p class="entryOriginal">"Q11: Which facility at the leisure club has recently been improved?"</p>
+        <p class="entryBetter">expanded it to eight lanes = recently been improved</p>
+        <p class="meta">TH: ถูกปรับปรุง / ขยายให้ดีขึ้น</p>
+        <label class="noteFieldLabel">
+          Personal note
+          <textarea placeholder="Write your own reminder, vocabulary note, or speaking strategy..."></textarea>
+        </label>
+        <button type="button" class="removeNotebookBtn">Remove</button>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="notebookEntry">
+        <div class="notebookEntryMeta">
+          <span>Listening</span>
+          <span>5/17/2026, 4:55 PM</span>
+        </div>
+        <h3>Listening Foundation</h3>
+        <p class="meta">Topic: Gym &amp; Leisure</p>
+        <p class="entryOriginal">"Q8: What does the man say about the gym equipment?"</p>
+        <p class="entryBetter">out of date = need replacing soon</p>
+        <p class="meta">TH: อุปกรณ์ล้าสมัย / ต้องเปลี่ยนเร็วๆ นี้</p>
+        <label class="noteFieldLabel">
+          Personal note
+          <textarea placeholder="Write your own reminder, vocabulary note, or speaking strategy..."></textarea>
+        </label>
+        <button type="button" class="removeNotebookBtn">Remove</button>
+      </article>
+
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

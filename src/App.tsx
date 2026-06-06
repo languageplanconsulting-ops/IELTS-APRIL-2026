@@ -5791,6 +5791,74 @@ const getReadingFillGrammarHint = (question: ReadingQuestion | null) => {
   return 'ลองดู grammar รอบ blank ก่อนครับ ว่าตำแหน่งนี้ต้องการ noun, adjective, หรือคำบอกสถานที่ แล้วค่อยย้อนหา paraphrase ใน passage'
 }
 
+type FillBlankThaiBridge = {
+  passagePhrase?: string
+  passageGloss?: string
+  questionPhrase?: string
+  questionGloss?: string
+  answerWord?: string
+  answerGloss?: string
+  plainThai?: string
+}
+
+const parseFillBlankThaiBridge = (thaiMeaning: string): FillBlankThaiBridge => {
+  const raw = String(thaiMeaning || '').trim()
+  if (!raw) return {}
+
+  const structuredSingleQuote = raw.match(
+    /^'([^']+)'\s*\(([^)]*)\)\s*=\s*'([^']+)'\s*\(([^)]*)\)\s*→\s*ดังนั้นคำตอบ(?:คือ)?\s*'([^']+)'\s*\(([^)]*)\)\s*$/
+  )
+  if (structuredSingleQuote) {
+    return {
+      passagePhrase: structuredSingleQuote[1],
+      passageGloss: structuredSingleQuote[2],
+      questionPhrase: structuredSingleQuote[3],
+      questionGloss: structuredSingleQuote[4],
+      answerWord: structuredSingleQuote[5],
+      answerGloss: structuredSingleQuote[6]
+    }
+  }
+
+  const structuredDoubleQuote = raw.match(
+    /^"([^"]+)"\s*\(([^)]*)\)\s*=\s*"([^"]+)"\s*\(([^)]*)\)\s*→\s*ดังนั้นคำตอบ(?:คือ)?\s*'([^']+)'\s*\(([^)]*)\)\s*$/
+  )
+  if (structuredDoubleQuote) {
+    return {
+      passagePhrase: structuredDoubleQuote[1],
+      passageGloss: structuredDoubleQuote[2],
+      questionPhrase: structuredDoubleQuote[3],
+      questionGloss: structuredDoubleQuote[4],
+      answerWord: structuredDoubleQuote[5],
+      answerGloss: structuredDoubleQuote[6]
+    }
+  }
+
+  const answerMatch = raw.match(/ดังนั้นคำตอบ(?:คือ)?\s*'([^']+)'\s*\(([^)]*)\)/)
+  if (answerMatch) {
+    return {
+      answerWord: answerMatch[1],
+      answerGloss: answerMatch[2],
+      plainThai: raw
+    }
+  }
+
+  return { plainThai: raw }
+}
+
+const isMeaningfulFillBlankBridge = (passageKeyword: string, questionKeyword: string) => {
+  const passage = String(passageKeyword || '').trim()
+  const question = String(questionKeyword || '').trim()
+  if (!passage || !question) return false
+  if (passage.toLowerCase() === question.toLowerCase()) return false
+  if (passage.split(/\s+/).filter(Boolean).length < 2) return false
+  if (question.split(/\s+/).filter(Boolean).length < 3) return false
+  if (/^\{?\d+\}?/.test(question)) return false
+  return true
+}
+
+const isReadingFillBlankReportQuestion = (question: ReadingQuestion | null) =>
+  Boolean(question && question.answerType === 'text' && !isReadingJudgementQuestion(question))
+
 const READING_FILL_UNCOUNTABLE_ANSWERS = new Set([
   'water',
   'erosion',

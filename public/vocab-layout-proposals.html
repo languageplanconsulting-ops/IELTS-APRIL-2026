@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Vocabulary Layout Proposals</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; background:#f6f7fb; }
+  .card { background:white; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04); }
+  .label { font-size:11px; font-weight:700; letter-spacing:.08em; color:#1e3a8a; }
+  .hl-from { background:#dbeafe; color:#1e3a8a; padding:2px 8px; border-radius:6px; font-weight:600; }
+  .hl-to { background:#fef3c7; color:#92400e; padding:2px 8px; border-radius:6px; font-weight:600; }
+  .btn-know { border:1.5px solid #dc2626; color:#dc2626; background:white; }
+  .btn-save { background:linear-gradient(90deg,#fef3c7,#fde68a); border:1.5px solid #111; color:#111; font-weight:700; }
+  .pos { font-style:italic; color:#6b7280; font-size:12px; }
+</style>
+</head>
+<body class="p-8">
+<div class="max-w-5xl mx-auto space-y-12">
+
+  <h1 class="text-2xl font-bold text-slate-800">Vocabulary Layout Proposals — Question Review Card</h1>
+  <p class="text-slate-600 -mt-8">4 options for adding "รู้ไหมว่า" vocabulary section with per-word save-to-notebook.</p>
+
+  <!-- =================== OPTION A =================== -->
+  <section>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold bg-slate-800 text-white px-2 py-1 rounded">OPTION A</span>
+      <h2 class="font-semibold text-slate-700">Inline chip row — compact, ใต้ paraphrase</h2>
+    </div>
+    <div class="card p-6">
+      <div class="flex justify-between items-start mb-3">
+        <div>
+          <div class="text-xs font-bold text-blue-900">QUESTION 10</div>
+          <div class="font-semibold mt-1">Roy Porter disagrees with Professor Macfarlane's findings.</div>
+        </div>
+        <span class="text-xs font-bold text-red-600 border border-red-300 px-2 py-1 rounded">✗ WRONG</span>
+      </div>
+      <div class="flex gap-3 mb-4">
+        <div class="bg-red-50 border border-red-200 rounded px-3 py-1 text-sm"><span class="text-xs text-slate-500">คุณตอบ</span> <span class="text-red-600">— ไม่ได้ตอบ</span></div>
+        <div class="bg-green-50 border border-green-200 rounded px-3 py-1 text-sm"><span class="text-xs text-slate-500">คำตอบที่ถูก</span> <span class="font-bold text-green-700">FALSE</span></div>
+      </div>
+      <div class="label mb-2">PARAPHRASE ที่ใช้ในโจทย์</div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="hl-from">Porter strengthened Macfarlane's case</span>
+        <span class="text-slate-400">→</span>
+        <span class="hl-to">Porter disagrees with the findings</span>
+      </div>
+      <div class="border-l-4 border-blue-400 bg-blue-50 px-4 py-3 text-sm text-slate-700 mb-3">
+        ข้อความขัดกับบทความ จึงตอบ <b>FALSE</b>
+      </div>
+
+      <!-- Vocabulary chip row -->
+      <div class="border-t pt-4 mt-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">💡</span>
+          <span class="label">รู้ไหมว่า — VOCABULARY</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-300 rounded-full pl-3 pr-1 py-1">
+            <span class="font-semibold text-amber-900">strengthen a case</span>
+            <span class="pos">(v.)</span>
+            <span class="text-sm text-slate-600">สนับสนุนไอเดีย</span>
+            <button class="ml-1 w-7 h-7 rounded-full bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold" title="Save to notebook">+</button>
+          </div>
+          <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-300 rounded-full pl-3 pr-1 py-1">
+            <span class="font-semibold text-amber-900">notable quarters</span>
+            <span class="pos">(n.)</span>
+            <span class="text-sm text-slate-600">ฝ่าย/วงการที่มีชื่อเสียง</span>
+            <button class="ml-1 w-7 h-7 rounded-full bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold">+</button>
+          </div>
+          <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-300 rounded-full pl-3 pr-1 py-1">
+            <span class="font-semibold text-amber-900">distinguished</span>
+            <span class="pos">(adj.)</span>
+            <span class="text-sm text-slate-600">มีชื่อเสียง, โดดเด่น</span>
+            <button class="ml-1 w-7 h-7 rounded-full bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mt-5">
+        <button class="btn-know py-3 rounded-lg font-semibold">✓ รู้แล้ว</button>
+        <button class="btn-save py-3 rounded-lg">✦ + บันทึก Notebook (ทั้งหมด)</button>
+      </div>
+    </div>
+    <p class="text-sm text-slate-500 mt-2">✓ ประหยัดพื้นที่ &nbsp; ✓ อ่านเร็ว &nbsp; ✗ ข้อมูลต่อคำจำกัด</p>
+  </section>
+
+  <!-- =================== OPTION B =================== -->
+  <section>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold bg-slate-800 text-white px-2 py-1 rounded">OPTION B</span>
+      <h2 class="font-semibold text-slate-700">Flashcard rows — แต่ละคำมี row + ปุ่ม save ของตัวเอง</h2>
+    </div>
+    <div class="card p-6">
+      <div class="flex justify-between items-start mb-3">
+        <div class="font-semibold">Roy Porter disagrees with Professor Macfarlane's findings.</div>
+        <span class="text-xs font-bold text-red-600 border border-red-300 px-2 py-1 rounded">✗ WRONG</span>
+      </div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="hl-from">Porter strengthened Macfarlane's case</span>
+        <span class="text-slate-400">→</span>
+        <span class="hl-to">Porter disagrees with the findings</span>
+      </div>
+
+      <div class="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">💡</span>
+            <span class="label" style="color:#92400e">รู้ไหมว่า — คำศัพท์น่ารู้</span>
+          </div>
+          <span class="text-xs text-amber-700">3 คำ</span>
+        </div>
+
+        <div class="space-y-2">
+          <div class="bg-white rounded-lg p-3 flex items-center justify-between border border-amber-100">
+            <div class="flex-1">
+              <div class="flex items-baseline gap-2">
+                <span class="font-bold text-slate-900">strengthen a case</span>
+                <span class="pos">(v.)</span>
+              </div>
+              <div class="text-sm text-slate-600 mt-0.5">สนับสนุนไอเดีย / ทำให้ข้ออ้างหนักแน่นขึ้น</div>
+            </div>
+            <button class="ml-3 flex items-center gap-1 px-3 py-1.5 rounded-md bg-amber-100 hover:bg-amber-200 text-amber-900 text-sm font-semibold">
+              <span>★</span> Save
+            </button>
+          </div>
+
+          <div class="bg-white rounded-lg p-3 flex items-center justify-between border border-amber-100">
+            <div class="flex-1">
+              <div class="flex items-baseline gap-2">
+                <span class="font-bold text-slate-900">notable quarters</span>
+                <span class="pos">(n. phrase)</span>
+              </div>
+              <div class="text-sm text-slate-600 mt-0.5">ฝ่าย/วงการที่มีชื่อเสียง</div>
+            </div>
+            <button class="ml-3 flex items-center gap-1 px-3 py-1.5 rounded-md bg-amber-100 hover:bg-amber-200 text-amber-900 text-sm font-semibold">
+              <span>★</span> Save
+            </button>
+          </div>
+
+          <div class="bg-white rounded-lg p-3 flex items-center justify-between border border-green-200 ring-1 ring-green-300">
+            <div class="flex-1">
+              <div class="flex items-baseline gap-2">
+                <span class="font-bold text-slate-900">distinguished</span>
+                <span class="pos">(adj.)</span>
+              </div>
+              <div class="text-sm text-slate-600 mt-0.5">มีชื่อเสียง, โดดเด่น</div>
+            </div>
+            <button class="ml-3 flex items-center gap-1 px-3 py-1.5 rounded-md bg-green-100 text-green-800 text-sm font-semibold" disabled>
+              <span>✓</span> Saved
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mt-5">
+        <button class="btn-know py-3 rounded-lg font-semibold">✓ รู้แล้ว</button>
+        <button class="btn-save py-3 rounded-lg">✦ + บันทึก Notebook</button>
+      </div>
+    </div>
+    <p class="text-sm text-slate-500 mt-2">✓ อ่านง่าย แต่ละคำชัด &nbsp; ✓ feedback "Saved" ต่อคำ &nbsp; ✗ กินที่แนวตั้ง</p>
+  </section>
+
+  <!-- =================== OPTION C =================== -->
+  <section>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold bg-slate-800 text-white px-2 py-1 rounded">OPTION C</span>
+      <h2 class="font-semibold text-slate-700">Collapsible accordion — เก็บไว้ใต้ "▸ รู้ไหมว่า (3)"</h2>
+    </div>
+    <div class="card p-6">
+      <div class="flex justify-between items-start mb-3">
+        <div class="font-semibold">Roy Porter disagrees with Professor Macfarlane's findings.</div>
+        <span class="text-xs font-bold text-red-600 border border-red-300 px-2 py-1 rounded">✗ WRONG</span>
+      </div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="hl-from">Porter strengthened Macfarlane's case</span>
+        <span class="text-slate-400">→</span>
+        <span class="hl-to">Porter disagrees with the findings</span>
+      </div>
+
+      <details open class="border border-amber-300 rounded-lg overflow-hidden">
+        <summary class="cursor-pointer flex items-center justify-between px-4 py-3 bg-amber-100 hover:bg-amber-200 font-semibold text-amber-900">
+          <span>💡 รู้ไหมว่า — คำศัพท์น่ารู้ <span class="ml-1 text-xs bg-amber-900 text-amber-50 px-2 py-0.5 rounded-full">3</span></span>
+          <span class="text-sm font-normal">คลิกเพื่อขยาย</span>
+        </summary>
+        <div class="bg-amber-50 p-3 space-y-2">
+          <div class="bg-white rounded p-3 grid grid-cols-[1fr_auto] gap-3 items-center">
+            <div>
+              <div><b>strengthen a case</b> <span class="pos">(v.)</span></div>
+              <div class="text-sm text-slate-600">สนับสนุนไอเดีย</div>
+              <div class="text-xs text-slate-400 italic mt-1">e.g. New evidence strengthened the prosecution's case.</div>
+            </div>
+            <button class="w-9 h-9 rounded-full bg-amber-200 hover:bg-amber-300 text-amber-900 text-xl">+</button>
+          </div>
+          <div class="bg-white rounded p-3 grid grid-cols-[1fr_auto] gap-3 items-center">
+            <div>
+              <div><b>notable quarters</b> <span class="pos">(n.)</span></div>
+              <div class="text-sm text-slate-600">ฝ่าย/วงการที่มีชื่อเสียง</div>
+            </div>
+            <button class="w-9 h-9 rounded-full bg-amber-200 hover:bg-amber-300 text-amber-900 text-xl">+</button>
+          </div>
+          <div class="bg-white rounded p-3 grid grid-cols-[1fr_auto] gap-3 items-center">
+            <div>
+              <div><b>distinguished</b> <span class="pos">(adj.)</span></div>
+              <div class="text-sm text-slate-600">มีชื่อเสียง, โดดเด่น</div>
+            </div>
+            <button class="w-9 h-9 rounded-full bg-amber-200 hover:bg-amber-300 text-amber-900 text-xl">+</button>
+          </div>
+        </div>
+      </details>
+
+      <div class="grid grid-cols-2 gap-3 mt-5">
+        <button class="btn-know py-3 rounded-lg font-semibold">✓ รู้แล้ว</button>
+        <button class="btn-save py-3 rounded-lg">✦ + บันทึก Notebook</button>
+      </div>
+    </div>
+    <p class="text-sm text-slate-500 mt-2">✓ ไม่รบกวนคนที่อยากข้าม &nbsp; ✓ มีพื้นที่ใส่ example &nbsp; ✗ ต้องคลิกเพิ่ม 1 ครั้ง</p>
+  </section>
+
+  <!-- =================== OPTION D =================== -->
+  <section>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold bg-slate-800 text-white px-2 py-1 rounded">OPTION D</span>
+      <h2 class="font-semibold text-slate-700">Side panel — vocab อยู่ขวา, paraphrase อยู่ซ้าย (2-column)</h2>
+    </div>
+    <div class="card p-6">
+      <div class="flex justify-between items-start mb-3">
+        <div class="font-semibold">Roy Porter disagrees with Professor Macfarlane's findings.</div>
+        <span class="text-xs font-bold text-red-600 border border-red-300 px-2 py-1 rounded">✗ WRONG</span>
+      </div>
+
+      <div class="grid grid-cols-[1.4fr_1fr] gap-5">
+        <!-- LEFT: explanation -->
+        <div>
+          <div class="label mb-2">PARAPHRASE</div>
+          <div class="flex items-center gap-2 flex-wrap mb-3">
+            <span class="hl-from">Porter strengthened Macfarlane's case</span>
+            <span class="text-slate-400">→</span>
+            <span class="hl-to">Porter disagrees</span>
+          </div>
+          <div class="border-l-4 border-blue-400 bg-blue-50 px-3 py-2 text-sm text-slate-700">
+            ขัดกับบทความ → <b>FALSE</b>
+          </div>
+          <p class="text-xs text-slate-500 italic mt-3">
+            "Macfarlane's case has been strengthened by support from notable quarters — Roy Porter, the distinguished medical historian…"
+          </p>
+        </div>
+
+        <!-- RIGHT: vocab panel -->
+        <aside class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-300 rounded-lg p-3">
+          <div class="flex items-center gap-1.5 mb-2">
+            <span>💡</span>
+            <span class="label" style="color:#92400e">รู้ไหมว่า</span>
+          </div>
+          <div class="space-y-2">
+            <div class="bg-white/70 rounded p-2">
+              <div class="flex items-center justify-between">
+                <b class="text-sm">strengthen a case</b>
+                <button class="text-amber-700 hover:text-amber-900 text-lg leading-none" title="Save">★</button>
+              </div>
+              <div class="pos">(v.)</div>
+              <div class="text-xs text-slate-700">สนับสนุนไอเดีย</div>
+            </div>
+            <div class="bg-white/70 rounded p-2">
+              <div class="flex items-center justify-between">
+                <b class="text-sm">notable quarters</b>
+                <button class="text-amber-700 hover:text-amber-900 text-lg leading-none">★</button>
+              </div>
+              <div class="pos">(n.)</div>
+              <div class="text-xs text-slate-700">วงการมีชื่อเสียง</div>
+            </div>
+            <div class="bg-white/70 rounded p-2">
+              <div class="flex items-center justify-between">
+                <b class="text-sm">distinguished</b>
+                <button class="text-amber-700 hover:text-amber-900 text-lg leading-none">★</button>
+              </div>
+              <div class="pos">(adj.)</div>
+              <div class="text-xs text-slate-700">มีชื่อเสียง, โดดเด่น</div>
+            </div>
+          </div>
+          <button class="w-full mt-3 text-xs font-semibold bg-amber-200 hover:bg-amber-300 text-amber-900 py-1.5 rounded">
+            ★ Save all to Notebook
+          </button>
+        </aside>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mt-5">
+        <button class="btn-know py-3 rounded-lg font-semibold">✓ รู้แล้ว</button>
+        <button class="btn-save py-3 rounded-lg">✦ ถัดไป</button>
+      </div>
+    </div>
+    <p class="text-sm text-slate-500 mt-2">✓ vocab ไม่แทรกกลาง flow &nbsp; ✓ ดูเป็น "พจนานุกรมข้างทาง" &nbsp; ✗ บนมือถือจะแคบ (ต้อง stack)</p>
+  </section>
+
+  <div class="card p-5 bg-slate-50">
+    <h3 class="font-bold mb-2">สรุปคำแนะนำ</h3>
+    <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
+      <li><b>Option A</b> — เหมาะสุดถ้าจะมี vocab 2–4 คำต่อข้อ และต้องรองรับมือถือ</li>
+      <li><b>Option B</b> — เหมาะถ้าอยาก feedback "Saved" ชัด ๆ ต่อคำ (สอนคำศัพท์จริงจัง)</li>
+      <li><b>Option C</b> — เหมาะถ้ากลัวรบกวน user ที่อยากดูแค่เฉลย</li>
+      <li><b>Option D</b> — สวยบน desktop แต่ต้อง responsive stack บนมือถือ</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

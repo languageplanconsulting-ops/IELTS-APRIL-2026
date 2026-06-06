@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Header Fix — 4 Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:   #0f2e85;
+  --blue:   #004aad;
+  --gold:   #bf8b30;
+  --ink:    #0f172a;
+  --slate:  #475569;
+  --muted:  #94a3b8;
+  --border: #e2e8f0;
+  --bg:     #f3f7ff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif;
+  background: #eaeef5;
+  padding: 32px 20px 64px;
+}
+
+/* PAGE TITLE */
+.page-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.page-title h1 { font-size: 1rem; font-weight: 800; color: var(--navy); }
+.page-title p  { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+/* SECTION */
+.section {
+  max-width: 860px;
+  margin: 0 auto 48px;
+}
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.opt-num {
+  width: 26px; height: 26px;
+  background: var(--navy); color: #fff;
+  border-radius: 50%;
+  font-size: 0.72rem; font-weight: 800;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.opt-name { font-size: 0.9rem; font-weight: 800; color: var(--ink); }
+.opt-desc { font-size: 0.75rem; color: var(--muted); margin-top: 1px; }
+
+/* FRAME — simulates page chrome */
+.frame {
+  background: var(--bg);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 16px rgba(15,46,133,0.1);
+}
+/* passage body placeholder */
+.body-placeholder {
+  padding: 28px 28px;
+  background: var(--bg);
+}
+.body-placeholder-line {
+  height: 10px; background: #dde3ef; border-radius: 6px; margin-bottom: 10px;
+}
+.body-placeholder-line:nth-child(2) { width: 92%; }
+.body-placeholder-line:nth-child(3) { width: 86%; }
+.body-placeholder-line:nth-child(4) { width: 95%; }
+.body-placeholder-line:nth-child(5) { width: 78%; }
+
+/* CURRENT — shown for reference */
+.current {
+  opacity: 0.5;
+  filter: grayscale(0.3);
+}
+.current-label {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted);
+  text-align: center; margin-bottom: 10px;
+}
+
+/* annotation */
+.note {
+  margin-top: 10px;
+  font-size: 0.76rem;
+  color: var(--slate);
+  line-height: 1.6;
+  padding: 10px 14px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* ══════════════════════════════════════════
+   CURRENT STATE (for reference)
+   ══════════════════════════════════════════ */
+.cur-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid #e8edf5;
+  background: #fff;
+}
+.cur-badge {
+  display: inline-block;
+  border: 1.5px solid var(--navy);
+  color: var(--navy);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.cur-title { font-size: 1rem; font-weight: 800; color: var(--ink); }
+.cur-meta { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+.cur-back {
+  border: 1.5px solid #dc2626;
+  color: #dc2626;
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.cur-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 10px 18px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+.cur-tab {
+  border: 2px solid #0f172a;
+  box-shadow: 4px 4px 0 #0f172a;
+  padding: 8px 18px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+  font-family: inherit;
+  background: #ffcc00;
+}
+.cur-tab.blue { background: var(--navy); color: #fff; }
+
+/* ══════════════════════════════════════════
+   OPTION 1 — SINGLE UNIFIED BAR
+   Everything in one row. Passage pills inline.
+   ══════════════════════════════════════════ */
+.opt1-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  height: 52px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.opt1-back {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.opt1-back:hover { color: var(--navy); }
+.opt1-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.opt1-badge {
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--navy);
+  background: var(--bg);
+  padding: 3px 9px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.opt1-title {
+  font-size: 0.85rem; font-weight: 700; color: var(--ink);
+  flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.opt1-passage-group {
+  display: flex;
+  gap: 3px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+.opt1-passage-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem; font-weight: 700;
+  border: none; background: transparent;
+  color: var(--muted); cursor: pointer; font-family: inherit;
+}
+.opt1-passage-btn.active { background: var(--navy); color: #fff; }
+.opt1-progress-frac {
+  font-size: 0.72rem; font-weight: 600; color: var(--muted);
+  flex-shrink: 0; white-space: nowrap;
+}
+/* thin progress line */
+.opt1-progress { height: 2px; background: var(--border); }
+.opt1-progress-fill { height: 100%; background: var(--navy); width: 0%; }
+
+/* ══════════════════════════════════════════
+   OPTION 2 — BREADCRUMB + UNDERLINE TABS
+   Back arrow breadcrumb. Tabs = underline only.
+   ══════════════════════════════════════════ */
+.opt2-header {
+  background: #fff;
+  padding: 12px 22px 0;
+  border-bottom: 1px solid var(--border);
+}
+.opt2-row1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.opt2-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.opt2-back-link {
+  font-size: 0.75rem; font-weight: 600; color: var(--muted);
+  cursor: pointer; background: none; border: none; font-family: inherit;
+  display: flex; align-items: center; gap: 4px;
+}
+.opt2-back-link:hover { color: var(--navy); }
+.opt2-crumb-sep { font-size: 0.75rem; color: var(--border); }
+.opt2-crumb-badge { font-size: 0.72rem; font-weight: 700; color: var(--navy); }
+.opt2-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.opt2-meta { font-size: 0.72rem; color: var(--muted); }
+.opt2-row2 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.opt2-title { font-size: 0.95rem; font-weight: 800; color: var(--ink); }
+.opt2-progress-chip {
+  font-size: 0.68rem; font-weight: 700;
+  background: var(--bg); color: var(--navy);
+  padding: 2px 9px; border-radius: 10px;
+}
+.opt2-tabs {
+  display: flex;
+  gap: 0;
+  margin-top: 2px;
+}
+.opt2-tab {
+  padding: 8px 16px;
+  font-size: 0.78rem; font-weight: 700;
+  border: none; background: transparent;
+  color: var(--muted); cursor: pointer; font-family: inherit;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.opt2-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+.opt2-tab:hover:not(.active) { color: var(--slate); }
+/* Progress */
+.opt2-progress { height: 3px; background: var(--border); }
+.opt2-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--navy), var(--blue)); }
+
+/* ══════════════════════════════════════════
+   OPTION 3 — COMPACT PILL ROW
+   Everything in 2 rows max. Pill passage toggle.
+   ══════════════════════════════════════════ */
+.opt3-header {
+  background: #fff;
+  padding: 11px 20px 11px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.opt3-left { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.opt3-top-row { display: flex; align-items: center; gap: 6px; }
+.opt3-label {
+  font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--navy);
+}
+.opt3-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+.opt3-meta-text { font-size: 0.62rem; color: var(--muted); }
+.opt3-title { font-size: 0.9rem; font-weight: 800; color: var(--ink); }
+.opt3-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+/* Segmented passage toggle */
+.opt3-seg {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+.opt3-seg-btn {
+  padding: 4px 13px;
+  border-radius: 6px;
+  font-size: 0.73rem; font-weight: 700;
+  border: none; background: transparent;
+  color: var(--muted); cursor: pointer; font-family: inherit;
+}
+.opt3-seg-btn.active { background: var(--navy); color: #fff; }
+/* Ghost back */
+.opt3-back {
+  font-size: 0.75rem; font-weight: 600; color: var(--muted);
+  border: 1px solid var(--border);
+  background: #fff; border-radius: 7px;
+  padding: 5px 12px; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 4px;
+}
+.opt3-back:hover { border-color: var(--navy); color: var(--navy); }
+/* Progress */
+.opt3-progress { height: 2px; background: var(--border); }
+.opt3-progress-fill { height: 100%; width: 0%; background: var(--gold); }
+
+/* ══════════════════════════════════════════
+   OPTION 4 — NAVY TOPBAR (like a real app)
+   Brand-colored header strip. Passage tabs below.
+   ══════════════════════════════════════════ */
+.opt4-topbar {
+  background: var(--navy);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.opt4-left { display: flex; align-items: center; gap: 10px; }
+.opt4-back-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.8);
+  border-radius: 8px;
+  padding: 5px 11px;
+  font-size: 0.74rem; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 5px;
+}
+.opt4-back-btn:hover { background: rgba(255,255,255,0.18); }
+.opt4-title-col {}
+.opt4-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 2px; }
+.opt4-title { font-size: 0.88rem; font-weight: 800; color: #fff; }
+.opt4-right { display: flex; align-items: center; gap: 10px; }
+.opt4-progress-pill {
+  font-size: 0.7rem; font-weight: 700;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  padding: 4px 11px; border-radius: 20px;
+}
+.opt4-progress-pill span { color: #fff; }
+
+/* Underbar sub-row for passage tabs */
+.opt4-subbar {
+  background: #fff;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.opt4-tab {
+  padding: 9px 14px;
+  font-size: 0.77rem; font-weight: 700;
+  border: none; background: transparent;
+  color: var(--muted); cursor: pointer; font-family: inherit;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.opt4-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+.opt4-tab-count {
+  font-size: 0.62rem; font-weight: 700;
+  background: var(--bg); color: var(--muted);
+  padding: 1px 6px; border-radius: 8px;
+  margin-left: 4px;
+}
+.opt4-tab.active .opt4-tab-count { background: rgba(15,46,133,0.1); color: var(--navy); }
+/* Progress */
+.opt4-progress { height: 2px; background: var(--border); }
+.opt4-progress-fill { height: 100%; width: 0%; background: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>Toolbar Fix — 4 Options</h1>
+  <p>Fixing: sectionLabel badge · "Back to Bank" red button · chunky neo-brutalist passage tabs</p>
+</div>
+
+<!-- CURRENT STATE -->
+<div class="section">
+  <div class="current-label">Current (for reference)</div>
+  <div class="frame current">
+    <div class="cur-toolbar">
+      <div>
+        <div class="cur-badge">Normal Reading</div>
+        <div class="cur-title">ด่าน 7 — Normal Reading Journey</div>
+        <div class="cur-meta">0/26 answered · Passage 1 of 2</div>
+      </div>
+      <button class="cur-back">Back to Bank</button>
+    </div>
+    <div class="cur-tabs">
+      <button class="cur-tab">Passage 1</button>
+      <button class="cur-tab blue">Passage 2</button>
+    </div>
+    <div class="body-placeholder">
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION 1 -->
+<div class="section" id="opt1">
+  <div class="section-label">
+    <div class="opt-num">1</div>
+    <div>
+      <div class="opt-name">Single Unified Bar</div>
+      <div class="opt-desc">Everything in one row · passage pills inline · 2px progress line</div>
+    </div>
+  </div>
+  <div class="frame">
+    <div class="opt1-bar">
+      <button class="opt1-back">← กลับ</button>
+      <div class="opt1-sep"></div>
+      <span class="opt1-badge">Normal Reading</span>
+      <span class="opt1-title">ด่าน 7 — Normal Reading Journey</span>
+      <div class="opt1-passage-group">
+        <button class="opt1-passage-btn active">Passage 1</button>
+        <button class="opt1-passage-btn">Passage 2</button>
+      </div>
+      <span class="opt1-progress-frac">0 / 26</span>
+    </div>
+    <div class="opt1-progress"><div class="opt1-progress-fill"></div></div>
+    <div class="body-placeholder">
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+    </div>
+  </div>
+  <div class="note">
+    One row only. Passage toggle uses a segmented control (soft background, no borders). Back is a plain text link. The 2px navy line replaces the chunky progress bar — it sits flush under the bar. Nothing bold except the title text.
+  </div>
+</div>
+
+<!-- OPTION 2 -->
+<div class="section" id="opt2">
+  <div class="section-label">
+    <div class="opt-num">2</div>
+    <div>
+      <div class="opt-name">Breadcrumb + Underline Tabs</div>
+      <div class="opt-desc">← Normal Reading breadcrumb · passage tabs are underline only</div>
+    </div>
+  </div>
+  <div class="frame">
+    <div class="opt2-header">
+      <div class="opt2-row1">
+        <div class="opt2-breadcrumb">
+          <button class="opt2-back-link">← Normal Reading</button>
+          <span class="opt2-crumb-sep">›</span>
+          <span class="opt2-crumb-badge">ด่าน 7</span>
+        </div>
+        <div class="opt2-right">
+          <span class="opt2-meta">0 / 26 answered</span>
+        </div>
+      </div>
+      <div class="opt2-row2">
+        <span class="opt2-title">Normal Reading Journey</span>
+        <span class="opt2-progress-chip">Passage 1 of 2</span>
+      </div>
+      <div class="opt2-tabs">
+        <button class="opt2-tab active">Passage 1</button>
+        <button class="opt2-tab">Passage 2</button>
+      </div>
+    </div>
+    <div class="opt2-progress"><div class="opt2-progress-fill"></div></div>
+    <div class="body-placeholder">
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+    </div>
+  </div>
+  <div class="note">
+    Breadcrumb replaces the badge+button combo. Passage tabs are underline-only — no box, no border, no shadow. Title stands alone in its own row. Most "website" feeling — works well if your users are desktop-first.
+  </div>
+</div>
+
+<!-- OPTION 3 -->
+<div class="section" id="opt3">
+  <div class="section-label">
+    <div class="opt-num">3</div>
+    <div>
+      <div class="opt-name">Compact Pill Row</div>
+      <div class="opt-desc">2-row header · segmented passage control · ghost back button</div>
+    </div>
+  </div>
+  <div class="frame">
+    <div class="opt3-header">
+      <div class="opt3-left">
+        <div class="opt3-top-row">
+          <span class="opt3-label">Normal Reading</span>
+          <span class="opt3-dot"></span>
+          <span class="opt3-meta-text">0 / 26 answered · Passage 1 of 2</span>
+        </div>
+        <div class="opt3-title">ด่าน 7 — Normal Reading Journey</div>
+      </div>
+      <div class="opt3-right">
+        <div class="opt3-seg">
+          <button class="opt3-seg-btn active">P1</button>
+          <button class="opt3-seg-btn">P2</button>
+        </div>
+        <button class="opt3-back">← กลับ</button>
+      </div>
+    </div>
+    <div class="opt3-progress"><div class="opt3-progress-fill"></div></div>
+    <div class="body-placeholder">
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+    </div>
+  </div>
+  <div class="note">
+    Most compact. Title + meta in two stacked rows on the left. iOS-style segmented P1/P2 toggle on the right. Back is a ghost button with a subtle border. Gold progress line below. Recommended for mobile since the header is only ~52px tall.
+  </div>
+</div>
+
+<!-- OPTION 4 -->
+<div class="section" id="opt4">
+  <div class="section-label">
+    <div class="opt-num">4</div>
+    <div>
+      <div class="opt-name">Navy Top Bar</div>
+      <div class="opt-desc">Brand-coloured header strip · underline passage tabs below on white</div>
+    </div>
+  </div>
+  <div class="frame">
+    <div class="opt4-topbar">
+      <div class="opt4-left">
+        <button class="opt4-back-btn">← กลับ</button>
+        <div class="opt4-title-col">
+          <div class="opt4-label">Normal Reading</div>
+          <div class="opt4-title">ด่าน 7 — Normal Reading Journey</div>
+        </div>
+      </div>
+      <div class="opt4-right">
+        <div class="opt4-progress-pill"><span>0</span> / 26 answered</div>
+      </div>
+    </div>
+    <div class="opt4-progress"><div class="opt4-progress-fill"></div></div>
+    <div class="opt4-subbar">
+      <button class="opt4-tab active">Passage 1 <span class="opt4-tab-count">13 Q</span></button>
+      <button class="opt4-tab">Passage 2 <span class="opt4-tab-count">13 Q</span></button>
+    </div>
+    <div class="body-placeholder">
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+      <div class="body-placeholder-line"></div>
+    </div>
+  </div>
+  <div class="note">
+    Navy bar gives the header visual weight without using thick borders. Back button blends in on dark background. Passage tabs drop to a white sub-bar with underline style — each shows the question count. Consistent with the rest of the brand (same navy you already use everywhere).
+  </div>
+</div>
+
+</body>
+</html>
