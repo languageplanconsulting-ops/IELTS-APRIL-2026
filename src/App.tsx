@@ -22875,6 +22875,29 @@ function App() {
                               <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
                             ) : null
                           }
+                          if (isJudgement && isIntensive) {
+                            return (
+                              <div>
+                                <p className="readingReportBridgeLabel">
+                                  {`ทำไมถึงตอบ ${item.correctAnswer}?`}
+                                </p>
+                                <div className="readingReportBridgeRow readingReportBridgeRow-judgement">
+                                  <div className="readingReportJudgementSide">
+                                    <span className="readingReportJudgementSideLabel">บทความบอกว่า</span>
+                                    <span className="readingReportKw readingReportKw-passage">{paraphraseEquation.passageKeyword}</span>
+                                  </div>
+                                  <span className="readingReportBridgeArrow">vs</span>
+                                  <div className="readingReportJudgementSide">
+                                    <span className="readingReportJudgementSideLabel">โจทย์พูดว่า</span>
+                                    <span className="readingReportKw readingReportKw-question">{paraphraseEquation.questionKeyword}</span>
+                                  </div>
+                                </div>
+                                {paraphraseEquation.thaiMeaning && (
+                                  <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
+                                )}
+                              </div>
+                            )
+                          }
                           return (
                             <div>
                               <p className="readingReportBridgeLabel">

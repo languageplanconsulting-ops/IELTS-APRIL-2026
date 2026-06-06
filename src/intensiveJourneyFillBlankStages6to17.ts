@@ -131,22 +131,29 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
     sourceParagraphs: ["A","B"],
     instructions: [
           "Questions 1–5",
-          "Complete the summary below.",
+          "Complete the notes below.",
           "Choose ONE WORD ONLY from the passage for each answer.",
           "Write your answers in boxes 1–5 on your answer sheet."
     ],
     summaryTitle: "The Dead Sea Scrolls",
     summaryLines: [
-      { type: "para", text: "One of these young shepherds tossed a {1} into an opening on the side of a cliff and was surprised to hear a shattering sound. He and his companions later entered the {2} and stumbled across a collection of large {3} jars, seven of which contained scrolls with writing on them. They date from between 150 BCE and 70 CE and are thought to have been written by a group of people." },
-      { type: "bullet", text: "The area was known as Judea at that time, and the people are thought to have belonged to a group called the {4}, a devout Jewish sect." },
-      { type: "bullet", text: "The majority of the texts on the Dead Sea Scrolls are in {5}, with some fragments written in an ancient version of its alphabet thought to have fallen out of use in the fifth century BCE." },
+      { type: "heading", text: "Discovery" },
+      { type: "bullet", text: "Qumran, 1946/7" },
+      { type: "bullet", text: "three Bedouin shepherds in their teens were near an opening on side of cliff" },
+      { type: "bullet", text: "heard a noise of breaking when one teenager threw a {1}" },
+      { type: "bullet", text: "teenagers went into the {2} and found a number of containers made of {3}" },
+      { type: "heading", text: "The scrolls" },
+      { type: "bullet", text: "date from between 150 BCE and 70 CE" },
+      { type: "bullet", text: "thought to have been written by group of people known as the {4}" },
+      { type: "bullet", text: "written mainly in the {5} language" },
+      { type: "bullet", text: "most are on religious topics, written using ink on parchment or papyrus" },
     ],
     questions: [
-      { number: 1, answer: "rock", passageKeyword: "shepherds tossed opening surprised", questionKeyword: "noise breaking teenager", thaiMeaning: "จากข้อความใน", exactPortion: "One of these young shepherds tossed a rock into an opening on the side of a cliff and was surprised to hear a shattering sound." },
-      { number: 2, answer: "cave", passageKeyword: "companions entered stumbled across", questionKeyword: "teenagers", thaiMeaning: "จากข้อความใน", exactPortion: "He and his companions later entered the cave and stumbled across a collection of large clay jars, seven of which contained scrolls with writing on them." },
-      { number: 3, answer: "clay", passageKeyword: "companions entered stumbled across", questionKeyword: "complete summary scrolls", thaiMeaning: "จากข้อความใน", exactPortion: "He and his companions later entered the cave and stumbled across a collection of large clay jars, seven of which contained scrolls with writing on them." },
-      { number: 4, answer: "Essenes", passageKeyword: "thought belonged called devout", questionKeyword: "thought group known", thaiMeaning: "จากข้อความใน", exactPortion: "The area was known as Judea at that time, and the people are thought to have belonged to a group called the Essenes, a devout Jewish sect." },
-      { number: 5, answer: "Hebrew", passageKeyword: "majority scrolls fragments ancient", questionKeyword: "mainly", thaiMeaning: "จากข้อความใน", exactPortion: "The majority of the texts on the Dead Sea Scrolls are in Hebrew, with some fragments written in an ancient version of its alphabet thought to have fallen out of use in the fifth century BCE." },
+      { number: 1, answer: "rock", passageKeyword: "shepherds tossed opening surprised", questionKeyword: "noise breaking teenager threw", thaiMeaning: "จากข้อความใน", exactPortion: "One of these young shepherds tossed a rock into an opening on the side of a cliff and was surprised to hear a shattering sound." },
+      { number: 2, answer: "cave", passageKeyword: "companions entered cave", questionKeyword: "teenagers went into", thaiMeaning: "จากข้อความใน", exactPortion: "He and his companions later entered the cave and stumbled across a collection of large clay jars, seven of which contained scrolls with writing on them." },
+      { number: 3, answer: "clay", passageKeyword: "containers made of clay", questionKeyword: "found number containers made", thaiMeaning: "จากข้อความใน", exactPortion: "He and his companions later entered the cave and stumbled across a collection of large clay jars, seven of which contained scrolls with writing on them." },
+      { number: 4, answer: "Essenes", passageKeyword: "group called essenes", questionKeyword: "thought group people known", thaiMeaning: "จากข้อความใน", exactPortion: "The area was known as Judea at that time, and the people are thought to have belonged to a group called the Essenes, a devout Jewish sect." },
+      { number: 5, answer: "Hebrew", passageKeyword: "majority texts hebrew", questionKeyword: "written mainly language", thaiMeaning: "จากข้อความใน", exactPortion: "The majority of the texts on the Dead Sea Scrolls are in Hebrew, with some fragments written in an ancient version of its alphabet thought to have fallen out of use in the fifth century BCE." },
     ]
   },
   {

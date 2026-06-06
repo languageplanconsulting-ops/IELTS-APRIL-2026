@@ -14054,6 +14054,35 @@ body,
   margin: 0 0 8px;
 }
 
+.readingReportBridgeRow-judgement {
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.readingReportJudgementSide {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.readingReportJudgementSideLabel {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.readingReportBridgeRow-judgement .readingReportBridgeArrow {
+  margin-top: 24px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
 .readingReportThaiExplanation {
   margin: 0;
   font-size: 0.88rem;
