@@ -18577,7 +18577,7 @@ function App() {
             <p className="readingQuestionNumber">
               Questions {set.startNumber}–{set.endNumber}
             </p>
-            <h4>{set.diagramImage ? 'Label the diagram' : set.summaryLines.some((l) => l.type === 'table-header' || l.type === 'table-row') ? 'Table completion' : 'Summary completion'}</h4>
+            <h4>{set.diagramImage ? 'Label the diagram' : set.summaryLines.some((l) => l.type === 'table-header' || l.type === 'table-row') ? 'Table completion' : set.instructions.some((line) => line.includes('Complete the sentences below')) ? 'Sentence completion' : 'Summary completion'}</h4>
           </div>
         </div>
 
@@ -22894,6 +22894,38 @@ function App() {
                                 </div>
                                 {paraphraseEquation.thaiMeaning && (
                                   <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
+                                )}
+                              </div>
+                            )
+                          }
+                          const isFillBlank = item.answerType === 'text' && !isJudgement && !isMcq
+                          if (isIntensive && isFillBlank) {
+                            const answerGloss = /ดังนั้นคำตอบ(?:คือ)?\s*'[^']+'\s*\(([^)]+)\)/.exec(paraphraseEquation.thaiMeaning)?.[1] || ''
+                            return (
+                              <div className="vcWrap">
+                                <div className="vcAnswerRow">
+                                  <div className="vcAnswerBox">{item.correctAnswer}</div>
+                                  {answerGloss && (
+                                    <div className="vcAnswerThai">= {answerGloss}</div>
+                                  )}
+                                </div>
+                                {paraphraseEquation.passageKeyword && (
+                                  <div className="vcBlock vcBlock-passage">
+                                    <div className="vcBlockLabel">📖 บทความบอกว่า</div>
+                                    <div className="vcBlockText">"{paraphraseEquation.passageKeyword}"</div>
+                                  </div>
+                                )}
+                                {paraphraseEquation.questionKeyword && (
+                                  <div className="vcBlock vcBlock-question">
+                                    <div className="vcBlockLabel">❓ โจทย์ถามว่า</div>
+                                    <div className="vcBlockText">"{paraphraseEquation.questionKeyword}"</div>
+                                  </div>
+                                )}
+                                {paraphraseEquation.thaiMeaning && (
+                                  <div className="vcBlock vcBlock-reason">
+                                    <div className="vcBlockLabel">💡 เหตุผล</div>
+                                    <div className="vcBlockText">{paraphraseEquation.thaiMeaning}</div>
+                                  </div>
                                 )}
                               </div>
                             )

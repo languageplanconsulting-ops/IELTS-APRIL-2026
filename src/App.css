@@ -14094,6 +14094,81 @@ body,
   border-radius: 0 6px 6px 0;
 }
 
+/* ── Version C Plain Thai explanation blocks ── */
+.vcWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vcAnswerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.vcAnswerBox {
+  background: #16a34a;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 900;
+  padding: 6px 16px;
+  border-radius: 9px;
+  letter-spacing: 0.01em;
+}
+
+.vcAnswerThai {
+  font-size: 0.88rem;
+  color: #166534;
+  font-weight: 700;
+}
+
+.vcBlock {
+  border-left: 4px solid #e2e8f0;
+  padding: 9px 12px;
+  margin-bottom: 6px;
+  border-radius: 0 8px 8px 0;
+}
+
+.vcBlock-passage {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.vcBlock-question {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.vcBlock-reason {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.vcBlockLabel {
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.vcBlock-passage .vcBlockLabel { color: #1d4ed8; }
+.vcBlock-question .vcBlockLabel { color: #92400e; }
+.vcBlock-reason .vcBlockLabel { color: #166534; }
+
+.vcBlockText {
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: #1e293b;
+}
+
+.vcBlock-passage .vcBlockText { color: #1e3a8a; }
+.vcBlock-question .vcBlockText { color: #78350f; }
+.vcBlock-reason .vcBlockText { color: #14532d; }
+
 .readingRetryGuidanceCard,
 .readingFinalNotebookPush,
 .readingCheckpointEvidence {
