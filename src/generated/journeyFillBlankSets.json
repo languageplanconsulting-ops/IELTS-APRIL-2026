@@ -615,32 +615,49 @@
     "startNumber": 21,
     "endNumber": 27,
     "sourceParagraphs": [
-      "H",
-      "I"
+      "G",
+      "J"
     ],
     "instructions": [
       "Questions 21–27",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Label the diagram below.",
+      "Choose ONE WORD from the passage for each answer.",
       "Write your answers in boxes 21–27 on your answer sheet."
     ],
-    "summaryTitle": "THE FALKIRK WHEEL",
+    "summaryTitle": "How a boat is lifted on the Falkirk Wheel",
+    "diagramImage": "/reading-diagrams/falkirk-wheel-lift.svg",
+    "diagramAlt": "Diagram showing how a boat is lifted on the Falkirk Wheel",
     "summaryLines": [
       {
-        "type": "para",
-        "text": "Two hydraulic steel {21} are raised, so as to seal the gondola off from the water in the canal basin. A hydraulic {22}, which prevents the arms of the Wheel moving while the gondola is docked, is removed, allowing the Wheel to turn. In the central machine room an array of ten hydraulic motors then begins to rotate the central {23}. Two eight-metre-wide {24} orbit a fixed inner cog of the same width, connected by two smaller cogs travelling in the opposite direction to the outer cogs – so ensuring that the gondolas always remain level."
+        "type": "diagram"
       },
       {
         "type": "bullet",
-        "text": "When the gondola reaches the top, the boat passes straight onto the {25} situated 24 metres above the canal basin."
+        "text": "A pair of {21} are lifted in order to shut out water from canal basin"
       },
       {
         "type": "bullet",
-        "text": "Boats travel under this {26} via a tunnel, then through the locks, and finally on to the Union Canal."
+        "text": "A {22} is taken out, enabling Wheel to rotate"
       },
       {
         "type": "bullet",
-        "text": "The remaining 11 metres of lift needed to reach the Union Canal is achieved by means of a pair of {27}."
+        "text": "Hydraulic motors drive {23}"
+      },
+      {
+        "type": "bullet",
+        "text": "A range of different-sized {24} ensures boat keeps upright"
+      },
+      {
+        "type": "bullet",
+        "text": "Boat reaches top Wheel, then moves directly onto {25}"
+      },
+      {
+        "type": "bullet",
+        "text": "Boat travels through tunnel beneath Roman {26}"
+      },
+      {
+        "type": "bullet",
+        "text": "{27} raise boat 11 m to level of Union Canal"
       }
     ],
     "questions": [
