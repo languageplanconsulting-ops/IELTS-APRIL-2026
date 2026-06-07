@@ -473,7 +473,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_6_17: NewFillBlankSet[] = [
       { type: "para", text: "Organic materials such as animal skins and textiles are not discovered very often at archaeological sites. They have little protection against {21}, which means that they decay relatively quickly." },
       { type: "para", text: "But this is not always the case. If temperatures are low enough, fragile artefacts can be preserved for thousands of years." },
       { type: "para", text: "A team of archaeologists have been working in the mountains in Oppland in Norway to recover artefacts revealed by shrinking ice cover." },
-      { type: "para", text: "In the past, there were trade routes through these mountains and {22} gathered there in the summer months to avoid being attacked by {23} on lower ground." },
+      { type: "para", text: "In the past, there were trade routes through these mountains and {22} gathered there in the summer months to avoid being attacked by {23} on lower ground. The people who used these mountains left things behind and it is those objects that are of interest to archaeologists." },
     ],
     questions: [
       { number: 21, answer: "microorganisms", passageKeyword: "protected from microorganisms that cause decay", questionKeyword: "little protection against decay quickly", thaiMeaning: "'protected from the microorganisms that cause decay' (ได้รับการปกป้องจากจุลินทรีย์ที่ทำให้เน่าเปื่อย) = 'little protection against {21}' (มีการปกป้องน้อยมากจาก...) → ดังนั้นคำตอบคือ 'microorganisms' (จุลินทรีย์)", exactPortion: "This is because unless they're protected from the microorganisms that cause decay, they tend not to last long.", acceptedAnswers: ["micro-organisms"] },

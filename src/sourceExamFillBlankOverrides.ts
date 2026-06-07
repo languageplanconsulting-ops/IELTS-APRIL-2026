@@ -426,5 +426,65 @@ export const SOURCE_EXAM_FILL_BLANK_SETS: NewFillBlankSet[] = [
           'Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in California today, and they are pretty strict.'
       }
     ]
+  },
+  {
+    examId: 'cambridge-16-test3-passage2',
+    passageNumber: 1,
+    startNumber: 20,
+    endNumber: 22,
+    sourceParagraphs: ['B', 'C'],
+    instructions: [
+      'Questions 20–22',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 20–22 on your answer sheet.'
+    ],
+    summaryTitle: 'Interesting finds at an archaeological site',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'Organic materials such as animal skins and textiles are not discovered very often at archaeological sites. They have little protection against {20}, which means that they decay relatively quickly.'
+      },
+      {
+        type: 'para',
+        text: 'But this is not always the case. If temperatures are low enough, fragile artefacts can be preserved for thousands of years.'
+      },
+      {
+        type: 'para',
+        text: 'A team of archaeologists have been working in the mountains in Oppland in Norway to recover artefacts revealed by shrinking ice cover.'
+      },
+      {
+        type: 'para',
+        text: 'In the past, there were trade routes through these mountains and {21} gathered there in the summer months to avoid being attacked by {22} on lower ground. The people who used these mountains left things behind and it is those objects that are of interest to archaeologists.'
+      }
+    ],
+    questions: [
+      {
+        number: 20,
+        answer: 'microorganisms',
+        passageKeyword: 'protected from the microorganisms that cause decay',
+        questionKeyword: 'little protection against',
+        thaiMeaning: 'จุลินทรีย์',
+        exactPortion:
+          "This is because unless they're protected from the microorganisms that cause decay, they tend not to last long.",
+        acceptedAnswers: ['micro-organisms']
+      },
+      {
+        number: 21,
+        answer: 'reindeer',
+        passageKeyword: 'Reindeer once congregated on these icy patches in the later summer months',
+        questionKeyword: 'gathered there in the summer months',
+        thaiMeaning: 'กวางเรนเดียร์',
+        exactPortion: 'Reindeer once congregated on these icy patches in the later summer months'
+      },
+      {
+        number: 22,
+        answer: 'insects',
+        passageKeyword: 'to escape biting insects',
+        questionKeyword: 'avoid being attacked by on lower ground',
+        thaiMeaning: 'แมลง',
+        exactPortion: 'to escape biting insects'
+      }
+    ]
   }
 ]
