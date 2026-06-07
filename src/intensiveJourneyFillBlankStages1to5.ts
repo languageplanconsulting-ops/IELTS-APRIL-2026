@@ -48,22 +48,20 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     sourceParagraphs: ["A","B"],
     instructions: [
           "Questions 24–27",
-          "Complete the summary below.",
-          "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
+          "Choose NO MORE THAN THREE WORDS from the passage for each answer.",
           "Write your answers in boxes 24–27 on your answer sheet."
     ],
-    summaryTitle: "Gifted children and learning",
     summaryLines: [
-      { type: "para", text: "One study found that the higher the children's IQ scores, especially over 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and {24} in the home." },
-      { type: "para", text: "Children of average ability seem to need more direction from teachers because they do not have {25}." },
-      { type: "para", text: "Meta-cognition involves children understanding their own learning strategies, as well as developing {26}." },
-      { type: "para", text: "Although {27} can produce impressive results in class tests, this style of teaching does not develop children's self-regulation." },
+      { type: "bullet", text: "One study found a strong connection between children's IQ and the availability of {24} and {24} at home." },
+      { type: "bullet", text: "Children of average ability seem to need more direction from teachers because they do not have {25}." },
+      { type: "bullet", text: "Meta-cognition involves children understanding their own learning strategies, as well as developing {26}." },
+      { type: "bullet", text: "Teachers who rely on what is known as {27} often produce sets of impressive grades in class tests." },
     ],
     questions: [
-      { number: 24, answer: "activities", passageKeyword: "number of books and activities in their home", questionKeyword: "number of books and in the home", thaiMeaning: "'number of books and activities in their home' (จำนวนหนังสือและกิจกรรมในบ้าน) = 'number of books and {24} in the home' → ดังนั้นคำตอบคือ 'activities' (กิจกรรม)", exactPortion: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.", acceptedAnswers: ["activities", "books and activities", "activities and books"] },
-      { number: 25, answer: "internal regulation", passageKeyword: "external regulation by the teacher often compensates for lack of internal regulation", questionKeyword: "they do not have", thaiMeaning: "'lack of internal regulation' (การขาดการควบคุมตนเอง) = 'do not have {25}' → ดังนั้นคำตอบคือ 'internal regulation' (การควบคุมตนเอง)", exactPortion: "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.", acceptedAnswers: ["internal regulation", "self-regulation"] },
-      { number: 26, answer: "emotional awareness", passageKeyword: "Emotional awareness is also part of metacognition", questionKeyword: "as well as developing", thaiMeaning: "'Emotional awareness is also part of metacognition' = 'developing {26}' → ดังนั้นคำตอบคือ 'emotional awareness' (ความตระหนักทางอารมณ์)", exactPortion: "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.", acceptedAnswers: ["emotional awareness"] },
-      { number: 27, answer: "spoon-feeding", passageKeyword: "Although spoon-feeding can produce extremely high examination results", questionKeyword: "Although can produce impressive results in class tests", thaiMeaning: "'spoon-feeding can produce extremely high examination results' = 'Although {27} can produce impressive results' → ดังนั้นคำตอบคือ 'spoon-feeding' (การป้อนความรู้โดยตรง)", exactPortion: "Although 'spoon-feeding' can produce extremely high examination results" },
+      { number: 24, answer: "activities", passageKeyword: "number of books and activities in their home", questionKeyword: "availability of and at home", thaiMeaning: "'number of books and activities in their home' = 'availability of {24} and {24} at home' → books and activities", exactPortion: "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.", acceptedAnswers: ["activities", "books", "books and activities", "activities and books"] },
+      { number: 25, answer: "internal regulation", passageKeyword: "lack of internal regulation", questionKeyword: "they do not have", thaiMeaning: "'lack of internal regulation' = 'do not have {25}' → internal regulation", exactPortion: "There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.", acceptedAnswers: ["internal regulation", "self-regulation"] },
+      { number: 26, answer: "emotional awareness", passageKeyword: "Emotional awareness is also part of metacognition", questionKeyword: "as well as developing", thaiMeaning: "'Emotional awareness is also part of metacognition' = 'developing {26}' → emotional awareness", exactPortion: "Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.", acceptedAnswers: ["emotional awareness"] },
+      { number: 27, answer: "spoon-feeding", passageKeyword: "spoon-feeding can produce extremely high examination results", questionKeyword: "Teachers who rely on what is known as", thaiMeaning: "'Teachers who rely on what is known as spoon-feeding' = 'rely on what is known as {27}' → spoon-feeding", exactPortion: "Although 'spoon-feeding' can produce extremely high examination results", acceptedAnswers: ["spoon-feeding"] },
     ]
   },
   {

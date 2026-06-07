@@ -486,5 +486,76 @@ export const SOURCE_EXAM_FILL_BLANK_SETS: NewFillBlankSet[] = [
         exactPortion: 'to escape biting insects'
       }
     ]
+  },
+  {
+    examId: 'cambridge-10-test2-passage2',
+    passageNumber: 1,
+    startNumber: 23,
+    endNumber: 26,
+    sourceParagraphs: ['A', 'B'],
+    instructions: [
+      'Questions 23–26',
+      'Choose NO MORE THAN THREE WORDS from the passage for each answer.',
+      'Write your answers in boxes 23–26 on your answer sheet.'
+    ],
+    summaryLines: [
+      {
+        type: 'bullet',
+        text: "One study found a strong connection between children's IQ and the availability of {23} and {23} at home."
+      },
+      {
+        type: 'bullet',
+        text: 'Children of average ability seem to need more direction from teachers because they do not have {24}.'
+      },
+      {
+        type: 'bullet',
+        text: 'Meta-cognition involves children understanding their own learning strategies, as well as developing {25}.'
+      },
+      {
+        type: 'bullet',
+        text: 'Teachers who rely on what is known as {26} often produce sets of impressive grades in class tests.'
+      }
+    ],
+    questions: [
+      {
+        number: 23,
+        answer: 'activities',
+        passageKeyword: 'number of books and activities in their home',
+        questionKeyword: 'availability of and at home',
+        thaiMeaning: 'หนังสือและกิจกรรม',
+        exactPortion:
+          "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and activities in their home etc.",
+        acceptedAnswers: ['activities', 'books', 'books and activities', 'activities and books']
+      },
+      {
+        number: 24,
+        answer: 'internal regulation',
+        passageKeyword: 'lack of internal regulation',
+        questionKeyword: 'they do not have',
+        thaiMeaning: 'การควบคุมตนเอง',
+        exactPortion:
+          'There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of internal regulation.',
+        acceptedAnswers: ['internal regulation', 'self-regulation']
+      },
+      {
+        number: 25,
+        answer: 'emotional awareness',
+        passageKeyword: 'Emotional awareness is also part of metacognition',
+        questionKeyword: 'as well as developing',
+        thaiMeaning: 'ความตระหนักทางอารมณ์',
+        exactPortion:
+          'Emotional awareness is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example.',
+        acceptedAnswers: ['emotional awareness']
+      },
+      {
+        number: 26,
+        answer: 'spoon-feeding',
+        passageKeyword: "spoon-feeding can produce extremely high examination results",
+        questionKeyword: 'Teachers who rely on what is known as',
+        thaiMeaning: 'การป้อนความรู้',
+        exactPortion: "Although 'spoon-feeding' can produce extremely high examination results",
+        acceptedAnswers: ['spoon-feeding']
+      }
+    ]
   }
 ]

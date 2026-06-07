@@ -127,30 +127,37 @@
     ],
     "instructions": [
       "Questions 24–27",
-      "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Choose NO MORE THAN THREE WORDS from the passage for each answer.",
       "Write your answers in boxes 24–27 on your answer sheet."
     ],
-    "summaryTitle": "Gifted children and learning",
     "summaryLines": [
       {
-        "type": "para",
-        "text": "The higher the children's IQ scores, especially over IQ 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and {24} in their home etc. There appears to be a qualitative difference in the way the intellectually highly able think, compared with more average-ability or older pupils, for whom external regulation by the teacher often compensates for lack of {25}."
+        "type": "bullet",
+        "text": "One study found a strong connection between children's IQ and the availability of {24} and {24} at home."
       },
       {
         "type": "bullet",
-        "text": "{26} is also part of metacognition, so children should be helped to be aware of their feelings around the area to be learned, feelings of curiosity or confidence, for example."
+        "text": "Children of average ability seem to need more direction from teachers because they do not have {25}."
       },
       {
         "type": "bullet",
-        "text": "Although ' {27}' can produce extremely high examination results."
+        "text": "Meta-cognition involves children understanding their own learning strategies, as well as developing {26}."
+      },
+      {
+        "type": "bullet",
+        "text": "Teachers who rely on what is known as {27} often produce sets of impressive grades in class tests."
       }
     ],
     "questions": [
       {
         "number": 24,
         "answer": "activities",
-        "acceptedAnswers": [],
+        "acceptedAnswers": [
+          "activities",
+          "books",
+          "books and activities",
+          "activities and books"
+        ],
         "passageKeyword": "number of books and gap in the home",
         "questionKeyword": "number of books and activities reported",
         "thaiMeaning": "กิจกรรมต่าง ๆ ในบ้าน)",

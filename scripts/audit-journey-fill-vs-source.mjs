@@ -170,15 +170,13 @@ Choose NO MORE THAN TWO WORDS from the passage for each answer.
 9 What part of Seleuceia Pieria was the Cevlik tunnel built to protect?`,
 
   'cambridge-10-test2-passage2|23-26': `Questions 23-26
-Complete the summary below.
-Choose NO MORE THAN TWO WORDS from the passage for each answer.
+Choose NO MORE THAN THREE WORDS from the passage for each answer.
 Write your answers in boxes 23-26 on your answer sheet.
 
-Gifted children and learning
-One study found that the higher the children's IQ scores, especially over 130, the better the quality of their educational backup, measured in terms of reported verbal interactions with parents, number of books and 23 … in the home.
+One study found a strong connection between children's IQ and the availability of 23 … and … at home.
 Children of average ability seem to need more direction from teachers because they do not have 24 … .
 Meta-cognition involves children understanding their own learning strategies, as well as developing 25 … .
-Although 26 … can produce impressive results in class tests, this style of teaching does not develop children's self-regulation.`,
+Teachers who rely on what is known as 26 … often produce sets of impressive grades in class tests.`,
 
   'cambridge-10-test3-passage1|11-13': `Questions 11-13
 Complete the sentences below.
