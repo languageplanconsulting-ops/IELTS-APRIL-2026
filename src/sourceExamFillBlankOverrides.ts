@@ -557,5 +557,75 @@ export const SOURCE_EXAM_FILL_BLANK_SETS: NewFillBlankSet[] = [
         acceptedAnswers: ['spoon-feeding']
       }
     ]
+  },
+  {
+    examId: 'cambridge-10-test4-passage2',
+    passageNumber: 1,
+    startNumber: 14,
+    endNumber: 18,
+    sourceParagraphs: ['A', 'A'],
+    instructions: [
+      'Questions 14–18',
+      'Complete the summary below.',
+      'Choose NO MORE THAN TWO WORDS from the passage for each answer.',
+      'Write your answers in boxes 14–18 on your answer sheet.'
+    ],
+    summaryTitle: 'Second nature',
+    summaryLines: [
+      {
+        type: 'para',
+        text: "Psychologists have traditionally believed that a personality {14} was impossible and that by a {15} a person's character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is {16}. However, regardless of the quality, it is necessary to learn a wide variety of different {17} in order for a new quality to develop; for example, a person must understand and feel some {18} in order to increase their happiness."
+      }
+    ],
+    questions: [
+      {
+        number: 14,
+        answer: 'transformation',
+        passageKeyword: 'character cannot undergo a transformation',
+        questionKeyword: 'a personality was impossible',
+        thaiMeaning: 'การเปลี่ยนแปลง',
+        exactPortion:
+          "Psychologists have long held that a person's character cannot undergo a transformation in any meaningful way",
+        acceptedAnswers: ['change', 'transformation']
+      },
+      {
+        number: 15,
+        answer: 'young age',
+        passageKeyword: 'determined at a very young age',
+        questionKeyword: "by a a person's character tends to be fixed",
+        thaiMeaning: 'วัยเด็ก',
+        exactPortion: 'and that the key traits of personality are determined at a very young age.',
+        acceptedAnswers: ['young age']
+      },
+      {
+        number: 16,
+        answer: 'optimism',
+        passageKeyword: 'optimism being one of them',
+        questionKeyword: 'One of the easiest qualities to acquire is',
+        thaiMeaning: 'การมองโลกในแง่ดี',
+        exactPortion:
+          'Some qualities are less challenging to develop than others, optimism being one of them.'
+      },
+      {
+        number: 17,
+        answer: 'skills',
+        passageKeyword: 'mastering a range of skills',
+        questionKeyword: 'learn a wide variety of different',
+        thaiMeaning: 'ทักษะ',
+        exactPortion:
+          'However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising.',
+        acceptedAnswers: ['skills', 'techniques']
+      },
+      {
+        number: 18,
+        answer: 'negative emotions',
+        passageKeyword: 'open to experiencing negative emotions',
+        questionKeyword: 'understand and feel some in order to increase their happiness',
+        thaiMeaning: 'อารมณ์เชิงลบ',
+        exactPortion:
+          'For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions.',
+        acceptedAnswers: ['negative emotions', 'emotions', 'feelings']
+      }
+    ]
   }
 ]

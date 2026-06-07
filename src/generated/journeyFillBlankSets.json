@@ -432,22 +432,14 @@
     "instructions": [
       "Questions 15–19",
       "Complete the summary below.",
-      "Choose ONE WORD ONLY from the passage for each answer.",
+      "Choose NO MORE THAN TWO WORDS from the passage for each answer.",
       "Write your answers in boxes 15–19 on your answer sheet."
     ],
     "summaryTitle": "Second nature",
     "summaryLines": [
       {
         "type": "para",
-        "text": "Psychologists have long held that a person's character cannot undergo a {15} in any meaningful way and that the key traits of personality are determined at a very young {16}. Some qualities are less challenging to develop than others, {17} being one of them."
-      },
-      {
-        "type": "bullet",
-        "text": "However, developing qualities requires mastering a range of {18} which are diverse and sometimes surprising."
-      },
-      {
-        "type": "bullet",
-        "text": "For example, to bring more joy and passion into your life, you must be open to experiencing negative {19}."
+        "text": "Psychologists have traditionally believed that a personality {15} was impossible and that by a {16} a person's character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is {17}. However, regardless of the quality, it is necessary to learn a wide variety of different {18} in order for a new quality to develop; for example, a person must understand and feel some {19} in order to increase their happiness."
       }
     ],
     "questions": [
@@ -495,10 +487,11 @@
       },
       {
         "number": 19,
-        "answer": "emotions",
+        "answer": "negative emotions",
         "acceptedAnswers": [
-          "feelings",
-          "emotions"
+          "negative emotions",
+          "emotions",
+          "feelings"
         ],
         "passageKeyword": "open to experiencing negative gap",
         "questionKeyword": "open to experiencing negative emotions",

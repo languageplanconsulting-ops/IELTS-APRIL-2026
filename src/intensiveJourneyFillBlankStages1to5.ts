@@ -148,7 +148,7 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     passageNumber: 2,
     startNumber: 15,
     endNumber: 19,
-    sourceParagraphs: ["A","B"],
+    sourceParagraphs: ["A","A"],
     instructions: [
           "Questions 15–19",
           "Complete the summary below.",
@@ -157,17 +157,17 @@ export const INTENSIVE_JOURNEY_FILL_BLANK_STAGES_1_5: NewFillBlankSet[] = [
     ],
     summaryTitle: "Second nature",
     summaryLines: [
-      { type: "para", text: "Psychologists have long held that a person's character cannot undergo a {15} in any meaningful way and that the key traits of personality are determined at a very {16}." },
-      { type: "para", text: "Some qualities are less challenging to develop than others, {17} being one of them." },
-      { type: "para", text: "However, developing qualities requires mastering a range of {18} which are diverse and sometimes surprising." },
-      { type: "para", text: "For example, to bring more joy and passion into your life, you must be open to experiencing negative {19}." },
+      {
+        type: "para",
+        text: "Psychologists have traditionally believed that a personality {15} was impossible and that by a {16} a person's character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is {17}. However, regardless of the quality, it is necessary to learn a wide variety of different {18} in order for a new quality to develop; for example, a person must understand and feel some {19} in order to increase their happiness."
+      }
     ],
     questions: [
-      { number: 15, answer: "transformation", passageKeyword: "character cannot undergo a transformation", questionKeyword: "character cannot undergo a blank", thaiMeaning: "'cannot undergo a transformation' (ไม่สามารถเปลี่ยนแปลงได้) = 'cannot undergo a {15}' (ไม่สามารถเกิด ___ ขึ้น) → ดังนั้นคำตอบคือ 'transformation' (การเปลี่ยนแปลง)", exactPortion: "Psychologists have long held that a person's character cannot undergo a transformation in any meaningful way", acceptedAnswers: ["change"] },
-      { number: 16, answer: "young age", passageKeyword: "personality are determined at a very young age", questionKeyword: "key traits determined at a very blank", thaiMeaning: "'determined at a very young age' (ถูกกำหนดตั้งแต่วัยเด็กมาก) = 'determined at a very {16}' (ถูกกำหนดตั้งแต่ ___ มาก) → ดังนั้นคำตอบคือ 'young age' (วัยเยาว์)", exactPortion: "and that the key traits of personality are determined at a very young age.", acceptedAnswers: ["young age"] },
-      { number: 17, answer: "optimism", passageKeyword: "qualities less challenging to develop optimism", questionKeyword: "qualities less challenging to develop blank", thaiMeaning: "'optimism being one of them' (การมองโลกในแง่ดีเป็นหนึ่งในนั้น) = '{17} being one of them' (___ เป็นหนึ่งในนั้น) → ดังนั้นคำตอบคือ 'optimism' (การมองโลกในแง่ดี)", exactPortion: "Some qualities are less challenging to develop than others, optimism being one of them." },
-      { number: 18, answer: "skills", passageKeyword: "developing qualities requires mastering a range of skills", questionKeyword: "developing qualities requires mastering a range of blank", thaiMeaning: "'requires mastering a range of skills' (ต้องการการฝึกฝนทักษะหลากหลาย) = 'requires mastering a range of {18}' (ต้องการการฝึกฝน ___ หลากหลาย) → ดังนั้นคำตอบคือ 'skills' (ทักษะ)", exactPortion: "However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising.", acceptedAnswers: ["techniques"] },
-      { number: 19, answer: "emotions", passageKeyword: "open to experiencing negative emotions", questionKeyword: "open to experiencing negative blank", thaiMeaning: "'open to experiencing negative emotions' (เปิดรับการสัมผัสอารมณ์เชิงลบ) = 'open to experiencing negative {19}' (เปิดรับการสัมผัส ___ เชิงลบ) → ดังนั้นคำตอบคือ 'emotions' (อารมณ์)", exactPortion: "For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions.", acceptedAnswers: ["emotions","feelings"] },
+      { number: 15, answer: "transformation", passageKeyword: "character cannot undergo a transformation", questionKeyword: "a personality was impossible", thaiMeaning: "'cannot undergo a transformation' = 'a personality {15} was impossible' → transformation", exactPortion: "Psychologists have long held that a person's character cannot undergo a transformation in any meaningful way", acceptedAnswers: ["change"] },
+      { number: 16, answer: "young age", passageKeyword: "personality are determined at a very young age", questionKeyword: "by a a person's character tends to be fixed", thaiMeaning: "'determined at a very young age' = 'by a {16} a person's character tends to be fixed' → young age", exactPortion: "and that the key traits of personality are determined at a very young age.", acceptedAnswers: ["young age"] },
+      { number: 17, answer: "optimism", passageKeyword: "optimism being one of them", questionKeyword: "One of the easiest qualities to acquire is", thaiMeaning: "'optimism being one of them' = 'One of the easiest qualities to acquire is {17}' → optimism", exactPortion: "Some qualities are less challenging to develop than others, optimism being one of them." },
+      { number: 18, answer: "skills", passageKeyword: "mastering a range of skills", questionKeyword: "learn a wide variety of different", thaiMeaning: "'mastering a range of skills' = 'learn a wide variety of different {18}' → skills", exactPortion: "However, developing qualities requires mastering a range of skills which are diverse and sometimes surprising.", acceptedAnswers: ["techniques", "skills"] },
+      { number: 19, answer: "negative emotions", passageKeyword: "open to experiencing negative emotions", questionKeyword: "understand and feel some in order to increase their happiness", thaiMeaning: "'experiencing negative emotions' = 'feel some {19} in order to increase their happiness' → negative emotions", exactPortion: "For example, to bring more joy and passion into your life, you must be open to experiencing negative emotions.", acceptedAnswers: ["negative emotions", "emotions", "feelings"] },
     ]
   },
   {

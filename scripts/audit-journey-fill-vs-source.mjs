@@ -217,10 +217,7 @@ Choose NO MORE THAN TWO WORDS from the passage for each answer.
 Write your answers in boxes 14-18 on your answer sheet.
 
 Second nature
-Psychologists have long held that a person's character cannot undergo a 14 … in any meaningful way and that the key traits of personality are determined at a very 15 … .
-Some qualities are less challenging to develop than others, 16 … being one of them.
-However, developing qualities requires mastering a range of 17 … which are diverse and sometimes surprising.
-For example, to bring more joy and passion into your life, you must be open to experiencing negative 18 … .`,
+Psychologists have traditionally believed that a personality 14 … was impossible and that by a 15 … a person's character tends to be fixed. This is not true according to positive psychologists, who say that our personal qualities can be seen as habitual behaviour. One of the easiest qualities to acquire is 16 … . However, regardless of the quality, it is necessary to learn a wide variety of different 17 … in order for a new quality to develop; for example, a person must understand and feel some 18 … in order to increase their happiness.`,
 
   'cambridge-11-test1-passage1|1-7': `Questions 1-7
 Complete the sentences below.
