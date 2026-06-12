@@ -54,6 +54,8 @@ export type NewFillBlankSet = {
   sourceParagraphs: [string, string]
   // Multi-line instruction block shown at the top of the question card.
   instructions: string[]
+  /** Phrase/word bank for letter-choice summary completion (A, B, C…). */
+  choiceOptions?: Array<{ letter: string; text: string }>
   /** Public URL path to an SVG/PNG diagram shown for label-the-diagram tasks. */
   diagramImage?: string
   diagramAlt?: string

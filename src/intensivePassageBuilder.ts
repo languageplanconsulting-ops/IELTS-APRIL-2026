@@ -27,6 +27,8 @@ export type IntensiveQuestionSpec = {
   passageKeyword?: string
   questionKeyword?: string
   thaiMeaning?: string
+  /** Per-question MCQ options, e.g. "A It is difficult to predict …". */
+  options?: string[]
 }
 
 export type IntensiveSectionKey =
@@ -41,10 +43,26 @@ export type IntensiveSectionKey =
 export type IntensivePassageLayout = {
   title: string
   paragraphs: Array<[string, string]>
+  /** When false, passage body omits A/B/C paragraph labels (Cambridge unlettered passages). */
+  paragraphLabels?: boolean
   sectionOrder?: IntensiveSectionKey[]
   matchingInfo?: { instruction: string; items: IntensiveQuestionSpec[] }
-  fill?: { instruction: string; summaryTitle?: string; items: IntensiveQuestionSpec[] }
-  matchingPeople?: { instruction: string; people: string[]; items: IntensiveQuestionSpec[] }
+  fill?: {
+    instruction: string
+    summaryTitle?: string
+    /** Lettered phrase bank for summary completion (e.g. A medical practitioners). */
+    phraseOptions?: string[]
+    /** Replaces default fill instruction lines when provided (verbatim Cambridge blocks). */
+    sectionLines?: string[]
+    items: IntensiveQuestionSpec[]
+  }
+  matchingPeople?: {
+    instruction: string
+    /** Defaults to "List of people". */
+    listLabel?: string
+    people: string[]
+    items: IntensiveQuestionSpec[]
+  }
   headings?: { instruction: string; options: string[]; items: IntensiveQuestionSpec[] }
   mcq?: { instruction: string; options?: string[]; items: IntensiveQuestionSpec[] }
   ynng?: { instruction: string; items: IntensiveQuestionSpec[] }
@@ -112,6 +130,7 @@ export const buildIntensivePassage = (
         paraphrasedVocabulary: sol.paraphrasedVocabulary
       })
       sectionLines.push(`${n}. ${item.prompt}`)
+      if (item.options?.length) sectionLines.push(...item.options)
       n += 1
     })
     ranges.push({ start, end: n - 1 })
@@ -137,10 +156,14 @@ export const buildIntensivePassage = (
     if (sectionKey === 'fill' && layout.fill?.items.length) {
       const items = layout.fill.items
       const startNum = n
+      const phraseOptions = layout.fill.phraseOptions
+      const defaultFillLines = phraseOptions?.length
+        ? [...(layout.fill.summaryTitle ? [layout.fill.summaryTitle] : []), ...phraseOptions]
+        : ['Choose ONE WORD ONLY from the passage for each answer.', ...(layout.fill.summaryTitle ? [layout.fill.summaryTitle] : [])]
       addSection(
         `Questions ${startNum}–${startNum + items.length - 1}`,
         layout.fill.instruction,
-        ['Choose ONE WORD ONLY from the passage for each answer.', ...(layout.fill.summaryTitle ? [layout.fill.summaryTitle] : [])]
+        layout.fill.sectionLines?.length ? layout.fill.sectionLines : defaultFillLines
       )
       pushQuestions(items, { answerType: 'text', answerGroup: layout.fill.instruction })
     }
@@ -149,8 +172,7 @@ export const buildIntensivePassage = (
       const mp = layout.matchingPeople
       const startNum = n
       addSection(`Questions ${startNum}–${startNum + mp.items.length - 1}`, mp.instruction, [
-        'Match each statement with the correct person, A–D. You may use any letter more than once.',
-        'List of people',
+        mp.listLabel || 'List of people',
         ...mp.people
       ])
       pushQuestions(mp.items, {
@@ -217,7 +239,10 @@ export const buildIntensivePassage = (
   return {
     number: passageNumber,
     title: layout.title,
-    bodyParagraphs: layout.paragraphs.map(([letter, text]) => `${letter} ${text}`),
+    bodyParagraphs:
+      layout.paragraphLabels === false
+        ? layout.paragraphs.map(([, text]) => text)
+        : layout.paragraphs.map(([letter, text]) => `${letter} ${text}`),
     questionSectionText: sectionLines.join('\n').replace(/^\n+/, ''),
     questionRanges: ranges,
     questions

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Speaking Feedback v3 — full screen, mapped to the real API</title>
+<style>
+  :root{
+    --paper:#f5f3ee; --ink:#181511; --muted:#736c61; --faint:#a39a8c; --line:#e6e1d6;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#fffdf9;
+    --met:#1d7a55; --met-bg:#e8f4ed; --gap:#b5791f; --gap-bg:#fbf1dd;
+    --strike:#b9433b; --up:#1d7a55; --up-bg:#e7f4ec; --up-ink:#0e5e3f;
+    --shadow:0 1px 2px rgba(40,33,20,.05),0 12px 34px rgba(40,33,20,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .phone{max-width:440px;margin:0 auto;padding:0 18px 48px}
+
+  /* dev toggle for data-source mapping */
+  .devbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(245,243,238,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin:0 -18px 0;padding:10px 18px;font-size:12px;color:var(--muted)}
+  .devbar b{color:var(--ink)}
+  .tog{display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-weight:700;color:var(--accent-ink)}
+  .tog input{appearance:none;width:34px;height:20px;border-radius:99px;background:#d8d2c6;position:relative;cursor:pointer;transition:.2s}
+  .tog input:checked{background:var(--accent)}
+  .tog input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
+  .tog input:checked::after{left:16px}
+  .src{display:none;font-size:10px;font-weight:700;letter-spacing:.2px;color:#7a64d8;background:#efeaff;border:1px solid #ddd3fb;border-radius:6px;padding:1px 6px;margin-bottom:6px;font-family:ui-monospace,Menlo,monospace}
+  body.showsrc .src{display:inline-block}
+
+  .eyebrow{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--faint)}
+
+  /* ===== 1. header: overall + target + verdict ===== */
+  .head{padding:22px 2px 4px}
+  .qline{font-size:12.5px;color:var(--muted);font-weight:600}
+  .qline b{color:var(--ink)}
+  .scorewrap{display:flex;align-items:flex-end;gap:14px;margin-top:12px}
+  .big{font-size:58px;font-weight:800;letter-spacing:-2px;line-height:.85}
+  .big small{font-size:16px;color:var(--muted);font-weight:700;letter-spacing:0}
+  .gap{flex:1;padding-bottom:8px}
+  .track{height:9px;border-radius:99px;background:#e8e2d6;position:relative;overflow:hidden}
+  .track i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#0a63d6,var(--accent))}
+  .track .goal{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gap)}
+  .tlabel{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:700;margin-top:6px}
+  .tlabel .g{color:var(--gap)}
+  .verdict{margin:14px 2px 0;font-size:14.5px;line-height:1.55}
+  .verdict b{color:var(--accent-ink)}
+
+  /* ===== 2. three criteria summary (jump links) ===== */
+  .crisum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
+  .crisum a{text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center;display:block}
+  .crisum .nm{font-size:11.5px;color:var(--muted);font-weight:700}
+  .crisum .bd{font-size:22px;font-weight:800;margin-top:3px}
+  .crisum .to{font-size:11px;font-weight:700;color:var(--gap);margin-top:2px}
+  .crisum .to.ok{color:var(--met)}
+
+  /* ===== 3. top fixes ===== */
+  .block{margin-top:22px}
+  .block>h2{font-size:16px;margin:0 0 3px;letter-spacing:-.2px}
+  .block>.sub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .fixes{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .fix{display:grid;grid-template-columns:26px 1fr;gap:12px;padding:15px 16px;border-top:1px solid var(--line)}
+  .fix:first-child{border-top:0}
+  .fix .n{width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center}
+  .fix .tag{font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--accent-ink)}
+  .fix b{font-size:14px;display:block;margin:2px 0 3px}
+  .fix p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+
+  /* ===== 4. criterion cards ===== */
+  .crit{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-top:14px}
+  .crit .top{padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+  .crit .row1{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .crit h3{margin:0;font-size:17px}
+  .bandjump{font-size:13px;font-weight:800}
+  .bandjump .cur{color:var(--ink)}
+  .bandjump .arr{color:var(--faint);margin:0 4px}
+  .bandjump .tgt{color:var(--gap)}
+  .minitrack{height:7px;border-radius:99px;background:#e8e2d6;position:relative;overflow:hidden;margin-top:11px}
+  .minitrack i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#0a63d6,var(--accent))}
+  .minitrack .goal{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gap)}
+  .why{padding:13px 18px;font-size:13px;color:#43403a;line-height:1.6;background:#faf7f1}
+
+  /* met checklist (collapsed) */
+  details.met{border-top:1px solid var(--line)}
+  details.met>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;padding:12px 18px;font-size:13px;font-weight:700}
+  details.met>summary::-webkit-details-marker{display:none}
+  details.met .pillmet{font-size:11px;font-weight:800;color:var(--met);background:var(--met-bg);border-radius:99px;padding:2px 9px}
+  details.met>summary .arw{margin-left:auto;color:var(--faint);transition:.2s}
+  details.met[open]>summary .arw{transform:rotate(90deg)}
+  .ticks{padding:2px 18px 14px}
+  .tick{display:grid;grid-template-columns:18px 1fr;gap:9px;padding:7px 0;font-size:13px;align-items:start}
+  .tick .mk{font-weight:800;margin-top:1px}
+  .tick.yes .mk{color:var(--met)} .tick.no .mk{color:var(--gap)}
+  .tick .ev{font-size:12px;color:var(--muted);margin-top:3px;font-style:italic}
+
+  /* unlock block — the heart */
+  .unlock{padding:14px 18px 18px;background:linear-gradient(180deg,#fffdf9,#fcf9f2)}
+  .unlock .uh{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .unlock .uh .ic{font-size:15px}
+  .unlock .uh b{font-size:14px}
+  .unlock .uh .cnt{font-size:11px;font-weight:700;color:var(--gap);background:var(--gap-bg);border-radius:99px;padding:2px 9px;margin-left:auto}
+  .ustep{border:1px solid #eee6d6;border-radius:13px;padding:12px 13px;margin-top:11px;background:#fff}
+  .ustep .req{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:13.5px;font-weight:700}
+  .ustep .req .box{width:16px;height:16px;border:2px solid var(--gap);border-radius:5px;margin-top:1px}
+  .ustep .swap{margin:10px 0 0 26px;display:grid;gap:6px}
+  .ustep .swap .from{font-size:12.5px;color:var(--strike);background:#fcefed;border-radius:8px;padding:7px 10px}
+  .ustep .swap .from s{text-decoration-thickness:1.5px}
+  .ustep .swap .to{font-size:13px;color:var(--up-ink);background:var(--up-bg);border-radius:8px;padding:7px 10px}
+  .ustep .swap .to b{font-weight:700}
+  .ustep .fixnote{margin:9px 0 0 26px;font-size:12.5px;color:var(--muted);line-height:1.5}
+
+  /* ===== 5. vocab lift ===== */
+  .vgroup{margin-top:12px}
+  .vgroup .gh{font-size:12px;font-weight:800;color:var(--accent-ink);margin:0 2px 8px}
+  .vcards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .vc{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 12px}
+  .vc .lvl{font-size:10px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:6px;padding:2px 6px;display:inline-block}
+  .vc .pair{font-size:13.5px;margin-top:8px;line-height:1.4}
+  .vc .pair s{color:var(--strike)} .vc .pair b{color:var(--up-ink)}
+  .vc .mean{font-size:11.5px;color:var(--muted);margin-top:4px}
+
+  /* ===== 6. evidence drawer ===== */
+  .drawer{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:var(--card);overflow:hidden}
+  .drawer>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:15px 18px;font-weight:700;font-size:14px}
+  .drawer>summary::-webkit-details-marker{display:none}
+  .drawer>summary .arw{margin-left:auto;color:var(--faint);transition:.2s}
+  .drawer[open]>summary .arw{transform:rotate(90deg)}
+  .drawer .inner{padding:4px 18px 18px;border-top:1px solid var(--line)}
+  .rec{margin:14px 0}
+  .rec audio{width:100%}
+  .qa{margin-top:14px}
+  .qa .q{font-size:12.5px;font-weight:700;color:var(--accent-ink);margin-bottom:4px}
+  .qa .a{font-size:13px;color:#43403a;line-height:1.7;background:#faf7f1;border-radius:11px;padding:11px 13px}
+  .qa .a mark{padding:1px 3px;border-radius:4px;font-weight:600}
+  mark.grammar{background:#fde7e4;color:#9a352c}
+  mark.vocabulary{background:#e7eaff;color:#2334be}
+  mark.fluency{background:#fbf1dd;color:#8a5d12}
+  .anns{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+  .ann{font-size:11px;border-radius:8px;padding:4px 8px;line-height:1.3}
+  .ann b{font-weight:800}
+  .ann.grammar{background:#fde7e4;color:#9a352c} .ann.vocabulary{background:#e7eaff;color:#2334be} .ann.fluency{background:#fbf1dd;color:#8a5d12}
+
+  /* ===== 7. notes + 8. next ===== */
+  .notes{margin-top:16px;font-size:12.5px;color:var(--muted);background:#efece5;border-radius:12px;padding:12px 14px;line-height:1.55}
+  .next{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:20px}
+  .nc{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:14px 10px;text-align:center}
+  .nc.primary{background:var(--accent);border-color:var(--accent)}
+  .nc .ic{font-size:20px}
+  .nc .t{font-size:12px;font-weight:800;margin-top:6px}
+  .nc.primary .t{color:#fff}
+  .nc .d{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+  .nc.primary .d{color:#cfe0f7}
+  .nc.disabled{opacity:.5}
+  .disc{margin-top:20px;font-size:11px;color:var(--faint);line-height:1.55;text-align:center;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="devbar">
+    <span>Speaking result · <b>mapped to live API fields</b></span>
+    <label class="tog"><input type="checkbox" id="srcToggle"> แสดงที่มาข้อมูล</label>
+  </div>
+
+  <!-- 1. HEADER -->
+  <div class="head">
+    <div class="src">overallBand · computeTargetBand() · criteria</div>
+    <div class="qline">Part 1 · Health — <b>“Is it important to you to eat healthy food?”</b></div>
+    <div class="scorewrap">
+      <div class="big">6.5<small> /9</small></div>
+      <div class="gap">
+        <div class="track"><i style="width:72%"></i><span class="goal" style="left:78%"></span></div>
+        <div class="tlabel"><span>วันนี้ 6.5</span><span class="g">เป้า 7.0</span></div>
+      </div>
+    </div>
+    <div class="src">nextAttemptFocusThai</div>
+    <p class="verdict">โดยรวมพูดได้ลื่นและตรงคำถามครับ — จุดเดียวที่ฉุดคะแนนรวมคือ <b>Grammar ยังเป็นประโยคเดี่ยวเป็นส่วนใหญ่</b> ถ้าเก็บตรงนี้ได้ Band 7.0 อยู่ไม่ไกล</p>
+  </div>
+
+  <!-- 2. CRITERIA JUMP -->
+  <div class="crisum">
+    <div class="src" style="grid-column:1/-1">criteria.grammar / .lexical / .fluency</div>
+    <a href="#c-grammar"><div class="nm">Grammar</div><div class="bd">6.5</div><div class="to">→ 7.0</div></a>
+    <a href="#c-vocab"><div class="nm">Vocabulary</div><div class="bd">7.0</div><div class="to">→ 7.5</div></a>
+    <a href="#c-fluency"><div class="nm">Fluency</div><div class="bd">7.5</div><div class="to ok">→ 8.0</div></a>
+  </div>
+
+  <!-- 3. TOP FIXES -->
+  <div class="block">
+    <div class="src">topFixes[] (buildTopFixesFromReport — already ranked)</div>
+    <h2>เริ่มที่นี่ก่อน</h2>
+    <p class="sub">3 อย่างที่คุ้มที่สุด เรียงตามผลกระทบต่อคะแนน</p>
+    <div class="fixes">
+      <div class="fix"><div class="n">1</div><div><span class="tag">Grammar</span><b>เชื่อมประโยคเดี่ยวให้เป็นประโยคซับซ้อน</b><p>“It is good for my body. It gives me energy.” → ใช้ <i>which / because</i> รวมเป็นประโยคเดียว</p></div></div>
+      <div class="fix"><div class="n">2</div><div><span class="tag">Vocabulary</span><b>เลี่ยงคำซ้ำ important / good</b><p>ยกระดับเป็น crucial · beneficial · essential</p></div></div>
+      <div class="fix"><div class="n">3</div><div><span class="tag">Fluency</span><b>ขยายคำตอบอีก 1 ประโยคต่อคำถาม</b><p>เพิ่มเหตุผลหรือตัวอย่าง ดัน word count ให้ถึงเกณฑ์ Band 8</p></div></div>
+    </div>
+  </div>
+
+  <!-- 4. CRITERION CARDS -->
+  <div class="block">
+    <h2>เจาะลึกแต่ละเกณฑ์</h2>
+    <p class="sub">แต่ละเกณฑ์ = คุณอยู่ Band ไหน · ทำอะไรได้แล้ว · ต้องทำอะไรต่อเพื่อขึ้น Band</p>
+
+    <!-- GRAMMAR -->
+    <div class="crit" id="c-grammar">
+      <div class="top">
+        <div class="src">componentReports.grammar</div>
+        <div class="row1"><h3>Grammar</h3><div class="bandjump"><span class="cur">6.5</span><span class="arr">→</span><span class="tgt">7.0</span></div></div>
+        <div class="minitrack"><i style="width:72%"></i><span class="goal" style="left:78%"></span></div>
+      </div>
+      <div class="why"><span class="src">.explanationThai</span>คุณใช้ simple present ได้ถูกต้องและสื่อสารเข้าใจ จึงได้ Band 6.5 — แต่ยังไม่มีประโยคซับซ้อน (subordinating clause) ที่เป็นเงื่อนไขของ Band 7.0</div>
+
+      <details class="met">
+        <summary><span class="pillmet">ผ่านแล้ว 4 / 6</span> เกณฑ์ของ Band 6.5 ที่คุณทำได้ <span class="arw">›</span></summary>
+        <div class="ticks">
+          <div class="src">requiredTicks[] (isMet + evidence)</div>
+          <div class="tick yes"><span class="mk">✓</span><div>ใช้ simple present ถูกต้อง<div class="ev">“I eat vegetables every day.”</div></div></div>
+          <div class="tick yes"><span class="mk">✓</span><div>Subject–verb agreement ถูกต้อง<div class="ev">“healthy food is important”</div></div></div>
+          <div class="tick yes"><span class="mk">✓</span><div>ใช้ connector พื้นฐาน (and / but)<div class="ev">“…every day, but sometimes…”</div></div></div>
+          <div class="tick yes"><span class="mk">✓</span><div>Grammar errors ≤ 3 ครั้ง</div></div>
+          <div class="tick no"><span class="mk">✗</span><div>ยังไม่มี subordinating clause (which / because + clause)</div></div>
+          <div class="tick no"><span class="mk">✗</span><div>ยังไม่มีการเปลี่ยน tense (perfect / past)</div></div>
+        </div>
+      </details>
+
+      <div class="unlock">
+        <div class="src">plusOneChecklist[] — requirement + originalText → improvedText + fix</div>
+        <div class="uh"><span class="ic">🔓</span><b>ปลดล็อก Band 7.0 — ทำ 2 อย่างนี้</b><span class="cnt">2 ข้อ</span></div>
+
+        <div class="ustep">
+          <div class="req"><span class="box"></span><div>ใช้ subordinating clause อย่างน้อย 1 ครั้ง</div></div>
+          <div class="swap">
+            <div class="from"><s>“It is good for my body and it gives me energy.”</s></div>
+            <div class="to">“It keeps my body strong, <b>which</b> gives me the energy to focus all day.”</div>
+          </div>
+          <div class="fixnote">ใช้ which/because เชื่อม 2 ความคิดเข้าด้วยกัน แทนที่จะพูดเป็นประโยคสั้นแยกกัน</div>
+        </div>
+
+        <div class="ustep">
+          <div class="req"><span class="box"></span><div>โชว์การเปลี่ยน tense 1 ครั้ง</div></div>
+          <div class="swap">
+            <div class="from"><s>“I try to eat vegetables every day.”</s></div>
+            <div class="to">“I’ve <b>made</b> it a habit to eat vegetables every day.”</div>
+          </div>
+          <div class="fixnote">present perfect แสดงว่าเป็นนิสัยต่อเนื่อง — ดัน grammar range ทันที</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOCABULARY -->
+    <div class="crit" id="c-vocab">
+      <div class="top">
+        <div class="src">componentReports.lexical</div>
+        <div class="row1"><h3>Vocabulary</h3><div class="bandjump"><span class="cur">7.0</span><span class="arr">→</span><span class="tgt">7.5</span></div></div>
+        <div class="minitrack"><i style="width:78%"></i><span class="goal" style="left:83%"></span></div>
+      </div>
+      <div class="why"><span class="src">.explanationThai</span>มี collocation ระดับ B1+ หลายคำและไม่มี lexical error ชัดเจน จึงได้ Band 7.0 — เพื่อไป 7.5 ต้องมีคำระดับ C1–C2 เพิ่ม</div>
+      <details class="met"><summary><span class="pillmet">ผ่านแล้ว 3 / 4</span> เกณฑ์ของ Band 7.0 ที่คุณทำได้ <span class="arw">›</span></summary>
+        <div class="ticks">
+          <div class="src">requiredTicks[]</div>
+          <div class="tick yes"><span class="mk">✓</span><div>มี B1+ collocation 2–5 คำ<div class="ev">“gives me energy”, “healthy food”</div></div></div>
+          <div class="tick yes"><span class="mk">✓</span><div>ไม่มี lexical error</div></div>
+          <div class="tick yes"><span class="mk">✓</span><div>คำผิดบริบท ≤ 3 จุด</div></div>
+          <div class="tick no"><span class="mk">✗</span><div>ยังไม่มีคำระดับ C1–C2</div></div>
+        </div>
+      </details>
+      <div class="unlock">
+        <div class="src">plusOneChecklist[]</div>
+        <div class="uh"><span class="ic">🔓</span><b>ปลดล็อก Band 7.5 — ทำข้อนี้</b><span class="cnt">1 ข้อ</span></div>
+        <div class="ustep">
+          <div class="req"><span class="box"></span><div>ใส่คำระดับ C1–C2 อย่างน้อย 1 คำ</div></div>
+          <div class="swap">
+            <div class="from"><s>“important to me”</s></div>
+            <div class="to">“<b>crucial</b> to my wellbeing”</div>
+          </div>
+          <div class="fixnote">ดูคำแนะนำเฉพาะคำของคุณด้านล่างในส่วน “คำอัปเกรด”</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLUENCY -->
+    <div class="crit" id="c-fluency">
+      <div class="top">
+        <div class="src">componentReports.fluency</div>
+        <div class="row1"><h3>Fluency</h3><div class="bandjump"><span class="cur">7.5</span><span class="arr">→</span><span class="tgt">8.0</span></div></div>
+        <div class="minitrack"><i style="width:83%"></i><span class="goal" style="left:89%"></span></div>
+      </div>
+      <div class="why"><span class="src">.explanationThai</span>จุดแข็งที่สุดของคุณ — พูดต่อเนื่อง ลังเลน้อย ใช้ referencing ได้ดี เพื่อไป Band 8 ต้องเพิ่มความยาวและ transitional words</div>
+      <details class="met"><summary><span class="pillmet">ผ่านแล้ว 3 / 4</span> เกณฑ์ของ Band 7.5 ที่คุณทำได้ <span class="arw">›</span></summary>
+        <div class="ticks">
+          <div class="src">requiredTicks[]</div>
+          <div class="tick yes"><span class="mk">✓</span><div>พูดต่อเนื่อง มี hesitation ที่เป็นธรรมชาติ</div></div>
+          <div class="tick yes"><span class="mk">✓</span><div>ใช้ referencing word ≥ 2 ครั้ง<div class="ev">“it”, “that”</div></div></div>
+          <div class="tick yes"><span class="mk">✓</span><div>ตอบครบทุกคำถาม</div></div>
+          <div class="tick no"><span class="mk">✗</span><div>word count ยังไม่ถึงเกณฑ์ Band 8</div></div>
+        </div>
+      </details>
+      <div class="unlock">
+        <div class="src">plusOneChecklist[]</div>
+        <div class="uh"><span class="ic">🔓</span><b>ปลดล็อก Band 8.0 — ทำข้อนี้</b><span class="cnt">1 ข้อ</span></div>
+        <div class="ustep">
+          <div class="req"><span class="box"></span><div>ขยายคำตอบ + ใส่ transitional word</div></div>
+          <div class="swap">
+            <div class="from"><s>“…but sometimes I eat junk food.”</s></div>
+            <div class="to">“…<b>although</b> I do occasionally have junk food, <b>for instance</b> when I’m busy at work.”</div>
+          </div>
+          <div class="fixnote">เพิ่มตัวอย่างหลังประโยค ดันทั้ง fluency และ word count</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. VOCAB LIFT -->
+  <div class="block">
+    <div class="src">vocabularyLevelUpSuggestions[] (grouped by .level)</div>
+    <h2>คำอัปเกรดจากคำตอบจริงของคุณ</h2>
+    <p class="sub">เปลี่ยนคำที่คุณพูดจริง → คำระดับสูงขึ้น</p>
+    <div class="vgroup">
+      <div class="gh">C1 Upgrades · 2 จุด</div>
+      <div class="vcards">
+        <div class="vc"><span class="lvl">B2→C1</span><div class="pair"><s>important</s> → <b>crucial</b></div><div class="mean">สำคัญอย่างยิ่ง</div></div>
+        <div class="vc"><span class="lvl">B1→C1</span><div class="pair"><s>healthy</s> → <b>nutritious</b></div><div class="mean">มีคุณค่าทางอาหาร</div></div>
+      </div>
+    </div>
+    <div class="vgroup">
+      <div class="gh">B2 Upgrades · 2 จุด</div>
+      <div class="vcards">
+        <div class="vc"><span class="lvl">B1→B2</span><div class="pair"><s>good for you</s> → <b>beneficial</b></div><div class="mean">เป็นประโยชน์</div></div>
+        <div class="vc"><span class="lvl">A2→B2</span><div class="pair"><s>I think</s> → <b>I’d say</b></div><div class="mean">นุ่มนวลและเป็นธรรมชาติ</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. EVIDENCE DRAWER -->
+  <details class="drawer">
+    <summary><span>🎧</span><span>เสียงที่อัด + Transcript ราย Q พร้อม annotation</span><span class="arw">›</span></summary>
+    <div class="inner">
+      <div class="src">audioUrl · questionBreakdown[] · annotations[] · punctuatedTranscript</div>
+      <div class="rec"><audio controls></audio></div>
+      <div class="qa">
+        <div class="q">Q1: Is it important to you to eat healthy food?</div>
+        <div class="anns">
+          <span class="ann grammar"><b>Simple sentence</b> · ลองเชื่อมประโยค</span>
+          <span class="ann vocabulary"><b>Word repeat</b> · important ซ้ำ</span>
+        </div>
+        <div class="a">“Yes, I think eating healthy food is <mark class="vocabulary">important</mark> to me <mark class="grammar">because it is good for my body and</mark> it gives me energy. I try to eat vegetables every day, <mark class="fluency">but sometimes I eat junk food.</mark>”</div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 7. MODEL NOTES -->
+  <div class="notes"><span class="src">modelNotes</span>หมายเหตุ: คะแนนนี้ประเมินจาก english plan’s database จากคำตอบของคุณในรอบนี้ ผลสอบจริงอาจต่างจากนี้ได้ — ใช้เป็นแนวทางพัฒนาครับ</div>
+
+  <!-- 8. NEXT STEPS -->
+  <div class="src" style="margin-top:18px">Next Steps (isTrialUser → labels/actions)</div>
+  <div class="next">
+    <div class="nc primary"><div class="ic">🔄</div><div class="t">ลองใหม่อีกรอบ</div><div class="d">ฝึก topic เดิมจนชำนาญ</div></div>
+    <div class="nc disabled"><div class="ic">📓</div><div class="t">Notebook</div><div class="d">Coming soon</div></div>
+    <div class="nc"><div class="ic">📚</div><div class="t">เลือก Topic ใหม่</div><div class="d">ฝึกหัวข้ออื่น</div></div>
+  </div>
+
+  <p class="disc">คะแนนนี้เป็นการประเมินจากผลงานของคุณในวันนี้ ตอนสอบจริงอาจได้สูงหรือต่ำกว่านี้ได้ เป้าหมายคือช่วยให้เห็นจุดอ่อนและแนวทางพัฒนาที่ทำได้จริงครับ</p>
+
+</div>
+
+<script>
+  document.getElementById('srcToggle').addEventListener('change',function(e){
+    document.body.classList.toggle('showsrc', e.target.checked);
+  });
+</script>
+</body>
+</html>

@@ -13546,6 +13546,12 @@ body,
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
 }
 
+.readingFillBlankSlot-choice .readingFillChoiceSelect {
+  min-width: 11rem;
+  max-width: 100%;
+  font-size: 0.92rem;
+}
+
 .readingFillBlankNumber {
   flex: 0 0 auto;
   display: inline-flex;
@@ -24814,4 +24820,117 @@ textarea {
   color: #94a3b8;
   background: #f8faff;
   box-shadow: none !important;
+}
+
+/* Band ladder result view (componentReports) */
+.reportStickyCalc {
+  font-size: 11px;
+  color: #6b7280;
+  margin: 2px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+.bandLadder {
+  position: relative;
+  margin-top: 14px;
+  padding-left: 24px;
+}
+.bandLadder::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: #e5e7eb;
+}
+.ladderRung {
+  position: relative;
+  padding-bottom: 16px;
+}
+.ladderRung:last-child {
+  padding-bottom: 0;
+}
+.ladderDot {
+  position: absolute;
+  left: -21px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #cbd5e1;
+}
+.ladderRungCurrent > .ladderDot {
+  background: #004aad;
+  border-color: #004aad;
+  box-shadow: 0 0 0 4px #e3ecf9;
+}
+.ladderRungNext > .ladderDot {
+  background: #fff;
+  border-color: #b5791f;
+}
+.ladderBand {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #003a86;
+}
+.ladderBandNext {
+  color: #b5791f;
+}
+.ladderNote {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  color: #4b463d;
+  line-height: 1.55;
+}
+.ladderMetList {
+  margin: 6px 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+.ladderMetList li {
+  font-size: 12.5px;
+  color: #334155;
+  margin: 4px 0;
+  line-height: 1.5;
+}
+.ladderMetMark {
+  color: #1d7a55;
+  font-weight: 800;
+}
+.ladderMetEv {
+  color: #6b7280;
+  font-style: italic;
+}
+.ladderStepList {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.ladderStep {
+  margin: 0 0 10px;
+}
+.ladderStepReq {
+  margin: 0 0 5px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2937;
+}
+.ladderStepFrom {
+  margin: 0 0 5px;
+  font-size: 12.5px;
+  color: #b9433b;
+  background: #fcefed;
+  border-radius: 8px;
+  padding: 7px 10px;
+  line-height: 1.45;
+}
+.ladderStepTo {
+  margin: 0;
+  font-size: 13px;
+  color: #0e5e3f;
+  background: #e7f4ec;
+  border-radius: 8px;
+  padding: 7px 10px;
+  line-height: 1.5;
 }

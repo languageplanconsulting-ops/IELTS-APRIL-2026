@@ -2427,6 +2427,71 @@ const renderNextBandCriteria = (
   )
 }
 
+const renderBandLadder = (
+  keyPrefix: string,
+  report: ComponentReport,
+  targetBand: number
+) => {
+  const metTicks = (report.requiredTicks || []).filter((tick) => tick.isMet)
+  const checklist =
+    report.plusOneChecklist && report.plusOneChecklist.length
+      ? report.plusOneChecklist
+      : (report.plusOnePlan || []).map((plan) => ({
+          requirement: plan.quote,
+          quote: plan.quote,
+          fix: plan.fix,
+          originalText: plan.quote,
+          improvedText: plan.fix
+        }))
+  return (
+    <div className="bandLadder">
+      <div className="ladderRung ladderRungCurrent">
+        <span className="ladderDot" aria-hidden="true" />
+        <div className="ladderRungBody">
+          <p className="ladderBand">Band {report.band.toFixed(1)} · ตอนนี้</p>
+          {metTicks.length > 0 && (
+            <ul className="ladderMetList">
+              {metTicks.slice(0, 4).map((tick, idx) => (
+                <li key={`${keyPrefix}-met-${idx}`}>
+                  <span className="ladderMetMark">✓</span> {tick.requirement}
+                  {tick.evidence?.[0] && <span className="ladderMetEv"> — “{tick.evidence[0]}”</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+      <div className="ladderRung ladderRungNext">
+        <span className="ladderDot" aria-hidden="true" />
+        <div className="ladderRungBody">
+          <p className="ladderBand ladderBandNext">Band {targetBand.toFixed(1)} · ปลดล็อกขั้นต่อไป</p>
+          {checklist.length === 0 ? (
+            <p className="ladderNote">ทำเกณฑ์ของ Band นี้ให้สม่ำเสมอเพื่อขยับขึ้นอีกครึ่งขั้นครับ</p>
+          ) : (
+            <ol className="ladderStepList">
+              {checklist.slice(0, 12).map((plan, idx) => {
+                const requirement = plan.requirement || plan.quote
+                const improved = plan.improvedText || plan.fix || ''
+                return (
+                  <li key={`${keyPrefix}-step-${idx}`} className="ladderStep">
+                    {requirement && <p className="ladderStepReq">{requirement}</p>}
+                    {plan.originalText && (
+                      <p className="ladderStepFrom">
+                        <s>{plan.originalText}</s>
+                      </p>
+                    )}
+                    {improved && <p className="ladderStepTo">{improved}</p>}
+                  </li>
+                )
+              })}
+            </ol>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const NOTEBOOK_ENTRIES_KEY = 'ielts-notebook-entries'
 const NOTEBOOK_CUSTOM_SECTIONS_KEY = 'ielts-notebook-custom-sections'
 const TEST_LATEST_SCORE_KEY = 'ielts-test-latest-scores'
@@ -15886,13 +15951,6 @@ function App() {
     }
   ) => {
     const effectiveMode = options?.scoreKeyMode || selectedTestMode
-    const apiReady = await checkAssessmentApiReady()
-    if (!apiReady) {
-      throw new Error('Assessment API is offline. Please retry in a few seconds.')
-    }
-    if (!authSession?.accessToken) {
-      throw new Error('Please sign in before starting an assessment.')
-    }
 
     setAttemptStage('assessing')
     setAssessmentProgress(1)
@@ -15905,6 +15963,14 @@ function App() {
     setAssessmentError('')
 
     try {
+      const apiReady = await checkAssessmentApiReady()
+      if (!apiReady) {
+        throw new Error('Assessment API is offline. Please retry in a few seconds.')
+      }
+      if (!authSession?.accessToken) {
+        throw new Error('Please sign in before starting an assessment.')
+      }
+
       const forcedTranscript = String(options?.forcedTranscript || '').trim()
       const effectiveQuestionResponses = Array.isArray(options?.forcedQuestionResponses)
         ? options?.forcedQuestionResponses
@@ -18535,6 +18601,48 @@ function App() {
     set: NewFillBlankSet,
     questionByNumber: Map<number, { number: number; correctAnswer?: string }>
   ) => {
+    const choiceOptions = set.choiceOptions || []
+    const hasChoiceOptions = choiceOptions.length > 0
+
+    const renderChoiceBlankSlot = (
+      question: { number: number; correctAnswer?: string },
+      slotKey: string
+    ) => {
+      const isHinting = readingHintQuestionNumber === question.number
+      const isLocked = isReadingQuestionLocked(question.number)
+      return (
+        <span
+          key={slotKey}
+          id={`reading-question-${question.number}`}
+          className={`readingFillBlankSlot readingFillBlankSlot-choice ${isHinting ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}`.trim()}
+        >
+          <span className="readingFillBlankInputWrap">
+            <span className="readingFillBlankNumber">{question.number}</span>
+            <select
+              value={readingAnswers[question.number] || ''}
+              onChange={(event) =>
+                setReadingAnswers((current) => ({
+                  ...current,
+                  [question.number]: event.target.value
+                }))
+              }
+              className="readingMatchingInfoSelect readingFillChoiceSelect"
+              aria-label={`Question ${question.number}`}
+              disabled={isLocked}
+            >
+              <option value="">Select phrase</option>
+              {choiceOptions.map((option) => (
+                <option key={`${slotKey}-${option.letter}`} value={option.letter}>
+                  {option.letter}. {option.text}
+                </option>
+              ))}
+            </select>
+            {renderReadingHintToggleButton(question.number, isHinting, { compact: true })}
+          </span>
+        </span>
+      )
+    }
+
     // Substitute {N} placeholders with the actual blank slots.
     const renderLineSegments = (text: string, lineKey: string) => {
       const parts: Array<{ kind: 'text'; text: string } | { kind: 'blank'; number: number }> = []
@@ -18560,6 +18668,12 @@ function App() {
             <span key={`${lineKey}-missing-${part.number}`} className="readingFillBlankMissing">
               [{part.number}]
             </span>
+          )
+        }
+        if (hasChoiceOptions) {
+          return renderChoiceBlankSlot(
+            { number: question.number, correctAnswer: question.correctAnswer },
+            `reading-fill-new-${set.examId}-${part.number}-${lineKey}-${partIndex}`
           )
         }
         return renderReadingFillBlankSlot(
@@ -18604,6 +18718,22 @@ function App() {
             )
           })}
         </div>
+
+        {hasChoiceOptions && (
+          <div className="readingHeadingListPanel" aria-label={set.instructions.some((line) => /list of words/i.test(line)) ? 'List of words' : 'List of phrases'}>
+            <p className="readingQuestionNumber">
+              {set.instructions.some((line) => /list of words/i.test(line)) ? 'List of words' : 'List of phrases'}
+            </p>
+            <ul className="readingHeadingListPanelList">
+              {choiceOptions.map((option) => (
+                <li key={`${set.examId}-phrase-${option.letter}`}>
+                  <strong>{option.letter}</strong>
+                  <span>{option.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="readingFillNewBody">
           {set.summaryTitle && (
@@ -27850,6 +27980,20 @@ function App() {
                                   <div>
                                     <p className="reportStickyEyebrow">Overall Band</p>
                                     <p className="reportStickyBand">{overallBand.toFixed(1)}</p>
+                                    {!isMockFullReport && (
+                                      <p className="reportStickyCalc">
+                                        ({activeReport.criteria.fluency.toFixed(1)} +{' '}
+                                        {activeReport.criteria.lexical.toFixed(1)} +{' '}
+                                        {activeReport.criteria.grammar.toFixed(1)}) ÷ 3 ={' '}
+                                        {(
+                                          (activeReport.criteria.fluency +
+                                            activeReport.criteria.lexical +
+                                            activeReport.criteria.grammar) /
+                                          3
+                                        ).toFixed(2)}{' '}
+                                        → {overallBand.toFixed(1)}
+                                      </p>
+                                    )}
                                   </div>
                                   <div className="reportStickyChips">
                                     {criteriaItems.map((item) => (
@@ -28157,40 +28301,7 @@ function App() {
                                             <div className="insightV2">
                                               {report.explanationThai && <p>{report.explanationThai}</p>}
                                             </div>
-                                            {renderReportTicks(String(key), 'เกณฑ์ของ Band นี้ (Checklist)', report.requiredTicks)}
-                                            {renderNextBandCriteria(String(key), targetBand, report.plusOneChecklist || [])}
-                                            {report.plusOnePlan?.length > 0 && (
-                                              <div className="subBlockV2">
-                                                <div className="subBlockHeader">
-                                                  <h5>ข้อเสนอแนะที่ทำได้ทันที</h5>
-                                                  <span className="subBlockCount">{report.plusOnePlan.length} ข้อ</span>
-                                                </div>
-                                                <div className="suggestionGridV2">
-                                                  {report.plusOnePlan.map((plan, idx) => (
-                                                    <article key={`${key}-plan-${idx}`} className="suggestionCardV2">
-                                                      <p className="quoteText">"{plan.quote}"</p>
-                                                      <p className="fixText">{plan.fix}</p>
-                                                      {plan.thaiMeaning && <p className="meta">TH: {plan.thaiMeaning}</p>}
-                                                      <button
-                                                        type="button"
-                                                        className="saveNotebookBtn"
-                                                        onClick={() =>
-                                                          savePlanToNotebook({
-                                                            criterion: label,
-                                                            quote: plan.quote,
-                                                            fix: plan.fix,
-                                                            thaiMeaning: plan.thaiMeaning
-                                                          })
-                                                        }
-                                                      >
-                                                        Save
-                                                      </button>
-                                                    </article>
-                                                  ))}
-                                                </div>
-                                              </div>
-                                            )}
-                                            {renderUnlockChecklist(String(key), targetBand, report.plusOneChecklist || [])}
+                                            {renderBandLadder(String(key), report, targetBand)}
                                           </div>
                                         </section>
                                       )

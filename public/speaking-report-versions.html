@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Speaking Report — 3 logic-driven versions</title>
+<style>
+  :root{
+    --paper:#f5f3ee; --ink:#181511; --muted:#6f685d; --faint:#a39a8c; --line:#e6e1d6;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#fffdf9;
+    --met:#1d7a55; --met-bg:#e8f4ed; --gap:#b5791f; --gap-bg:#fbf1dd;
+    --strike:#b9433b; --up:#1d7a55; --up-bg:#e7f4ec; --up-ink:#0e5e3f;
+    --shadow:0 1px 2px rgba(40,33,20,.05),0 12px 34px rgba(40,33,20,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .phone{max-width:440px;margin:0 auto;padding:0 18px 48px}
+  .topbar{position:sticky;top:0;z-index:40;background:rgba(245,243,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 -18px 14px;padding:12px 18px}
+  .topbar .t{font-size:13px;font-weight:800;margin-bottom:9px}
+  .topbar .t small{font-weight:500;color:var(--muted)}
+  .seg{display:flex;gap:6px}
+  .seg button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:12px;padding:9px 6px;border-radius:10px;cursor:pointer;font-family:inherit;line-height:1.25}
+  .seg button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ver{display:none}.ver.show{display:block;animation:f .25s ease}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .why{font-size:12px;color:var(--muted);background:var(--accent-soft);border:1px solid #cfe0f7;border-radius:12px;padding:10px 13px;margin-bottom:16px;line-height:1.55}
+  .why b{color:var(--accent-ink)}
+  .eyebrow{font-size:10.5px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:var(--faint)}
+
+  /* shared score row */
+  .qline{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px}
+  .qline b{color:var(--ink)}
+  .scorerow{display:flex;align-items:flex-end;gap:13px}
+  .big{font-size:54px;font-weight:800;letter-spacing:-2px;line-height:.85}
+  .big small{font-size:15px;color:var(--muted);font-weight:700;letter-spacing:0}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:7px}
+  .chip{font-size:11.5px;font-weight:700;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 9px;text-align:center;line-height:1.2}
+  .chip b{display:block;font-size:14px}
+  .chip .d{font-size:10px;color:var(--gap);font-weight:700}
+
+  h2.sec{font-size:16px;margin:22px 0 3px;letter-spacing:-.2px}
+  .subsec{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+
+  /* ===== V1 nearest win ===== */
+  .hero{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .hero .band{background:linear-gradient(135deg,var(--accent),#1f63c9);color:#fff;padding:16px 18px}
+  .hero .band .k{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;opacity:.85}
+  .hero .band h3{margin:5px 0 0;font-size:20px}
+  .hero .band .jump{font-size:13px;font-weight:800;margin-top:3px;opacity:.95}
+  .hero .body{padding:16px 18px}
+  .lbl{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .from{font-size:13.5px;color:var(--strike);background:#fcefed;border-radius:11px;padding:11px 13px;line-height:1.5}
+  .from s{text-decoration-thickness:1.5px}
+  .to{font-size:14.5px;color:var(--up-ink);background:var(--up-bg);border-radius:11px;padding:12px 13px;line-height:1.6;margin-top:8px}
+  .to b{font-weight:700}
+  .fixnote{font-size:12.5px;color:var(--muted);margin-top:9px;line-height:1.5}
+  .others{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+  .oc{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px}
+  .oc .nm{font-size:12px;color:var(--muted);font-weight:700}
+  .oc .v{font-size:20px;font-weight:800;margin-top:2px}
+  .oc .step{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+  .cta{width:100%;margin-top:16px;background:var(--accent);color:#fff;border:0;border-radius:15px;padding:15px;font-size:15.5px;font-weight:800;font-family:inherit;cursor:pointer}
+
+  /* ===== V2 ledger ===== */
+  .ledger{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;margin-top:13px}
+  .ledger .lh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid var(--line)}
+  .ledger .lh h3{margin:0;font-size:16px}
+  .ledger .lh .bj{font-size:13px;font-weight:800}
+  .ledger .lh .bj .c{color:var(--ink)}.ledger .lh .bj .a{color:var(--faint);margin:0 3px}.ledger .lh .bj .t{color:var(--gap)}
+  .rule{display:grid;grid-template-columns:20px 1fr;gap:9px;padding:11px 16px;border-top:1px solid #f0ece3;align-items:start}
+  .rule:first-of-type{border-top:0}
+  .rule.next{background:var(--gap-bg)}
+  .rule .mk{font-weight:800;font-size:14px;margin-top:1px}
+  .rule.yes .mk{color:var(--met)}.rule.no .mk{color:var(--gap)}
+  .rule .req{font-size:13px;font-weight:600}
+  .rule .req .tag{font-size:10px;font-weight:800;color:var(--gap);background:#fff;border:1px solid #ecd9b3;border-radius:5px;padding:1px 5px;margin-left:6px}
+  .rule .ev{font-size:12px;color:var(--muted);font-style:italic;margin-top:3px}
+  .rule .ev.miss{color:var(--gap);font-style:normal}
+
+  /* ===== V3 ladder ===== */
+  .ladblock{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px}
+  .ladhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .ladhead h3{margin:0;font-size:16px}
+  .ladhead .now{font-size:11.5px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:99px;padding:3px 10px}
+  .ladder{position:relative;margin-top:10px;padding-left:26px}
+  .ladder::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .rung{position:relative;padding:0 0 16px}
+  .rung:last-child{padding-bottom:0}
+  .rung .dot{position:absolute;left:-22px;top:1px;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--line)}
+  .rung.done .dot{background:var(--met);border-color:var(--met)}
+  .rung.cur .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .rung .rb{font-size:13px;font-weight:800}
+  .rung.done .rb{color:var(--met)}.rung.cur .rb{color:var(--accent-ink)}.rung.todo .rb{color:var(--gap)}
+  .rung .task{font-size:13px;color:#43403a;margin-top:3px;line-height:1.55}
+  .rung .swap{margin-top:8px;display:grid;gap:6px}
+  .rung .swap .from{font-size:12px;padding:8px 10px}
+  .rung .swap .to{font-size:12.5px;padding:8px 10px;margin-top:0}
+  .crittabs{display:flex;gap:6px;margin-top:14px}
+  .crittabs button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:12px;padding:8px;border-radius:9px;cursor:pointer;font-family:inherit}
+  .crittabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .ladpane{display:none}.ladpane.show{display:block}
+
+  .foot{margin-top:18px;font-size:11px;color:var(--faint);text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="topbar">
+    <div class="t">Speaking report · 3 logic-driven versions &nbsp;<small>Part 2 · Hermione · same band data</small></div>
+    <div class="seg">
+      <button data-v="v1" class="active">Nearest Win</button>
+      <button data-v="v2">Evidence Ledger</button>
+      <button data-v="v3">Band Ladder</button>
+    </div>
+  </div>
+  <div class="why" id="why"></div>
+
+  <!-- ============ V1 ============ -->
+  <section class="ver show" id="v1">
+    <div class="qline">Part 2 · “Describe a person you admire” — <b>Hermione Granger</b></div>
+    <div class="scorerow">
+      <div class="big">8.0<small> /9</small></div>
+      <div class="chips">
+        <div class="chip">Fluency<b>8.0</b><span class="d">→ 8.5</span></div>
+        <div class="chip">Vocab<b>8.0</b><span class="d">→ 8.5</span></div>
+        <div class="chip">Grammar<b>7.5</b><span class="d">→ 8.0</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">ใกล้ขยับที่สุด</h2>
+    <p class="subsec">จาก 3 เกณฑ์ Grammar เหลือเงื่อนไขเดียวก็ถึง Band 8.0</p>
+
+    <div class="hero">
+      <div class="band">
+        <div class="k">🎯 1 จุดเดียว · ระยะใกล้สุด</div>
+        <h3>Grammar</h3>
+        <div class="jump">7.5 &nbsp;→&nbsp; 8.0</div>
+      </div>
+      <div class="body">
+        <p class="fixnote">คุณใช้ perfect + past + subordinating clause ได้แล้ว (“<i>I have admired…</i>”, “<i>even though she wasn’t born talented</i>”) — เหลือแค่โชว์โครงสร้างซับซ้อนขึ้น 1 ครั้ง เช่น conditional</p>
+        <div class="lbl">ประโยคของคุณ</div>
+        <div class="from"><s>“She became one of the greatest witches because she worked really hard, not because it was given to her.”</s></div>
+        <div class="lbl" style="margin-top:12px;color:var(--up-ink)">ดันเป็น Band 8.0</div>
+        <div class="to">“<b>Had</b> her talent <b>been</b> handed to her, she might never have pushed so hard — yet she became one of the greatest witches precisely <b>because</b> she earned it.”</div>
+        <div class="fixnote">conditional + inversion (“Had … been”) คือโครงที่ Band 8 ต้องการ และคุณมีเนื้อหาพร้อมอยู่แล้ว</div>
+      </div>
+    </div>
+
+    <div class="others">
+      <div class="oc"><div class="nm">Vocabulary</div><div class="v">8.0 → 8.5</div><div class="step">ต้องการ C1–C2 อีก 1 คำ + ลดคำซ้ำ “really / totally”</div></div>
+      <div class="oc"><div class="nm">Fluency</div><div class="v">8.0 → 8.5</div><div class="step">เพิ่มเหตุผลที่ 3 ให้ถึง ~310 คำ + ลด “you know”</div></div>
+    </div>
+
+    <button class="cta">🎙 อัดใหม่ โฟกัส Grammar จุดเดียว</button>
+  </section>
+
+  <!-- ============ V2 ============ -->
+  <section class="ver" id="v2">
+    <div class="qline">Part 2 · Hermione Granger — <b>Band 8.0</b></div>
+    <p class="subsec" style="margin-top:8px">ทุกคะแนนตรวจสอบได้: แต่ละเกณฑ์ของ Band คือ checklist พร้อมประโยคจริงของคุณเป็นหลักฐาน <b style="color:var(--accent-ink)">แถวสีเหลือง</b> = สิ่งที่ยังขาดเพื่อขึ้น +0.5</p>
+
+    <div class="ledger">
+      <div class="lh"><h3>Grammar</h3><div class="bj"><span class="c">7.5</span><span class="a">→</span><span class="t">8.0</span></div></div>
+      <div class="rule yes"><span class="mk">✓</span><div><div class="req">Present perfect ถูกต้อง</div><div class="ev">“I have admired so many people…”</div></div></div>
+      <div class="rule yes"><span class="mk">✓</span><div><div class="req">Past tense ถูกต้อง</div><div class="ev">“she worked really hard”, “she wasn’t born talented”</div></div></div>
+      <div class="rule yes"><span class="mk">✓</span><div><div class="req">Subordinating clause</div><div class="ev">“even though she wasn’t born talented”, “which is an aspect that I admire”</div></div></div>
+      <div class="rule no next"><span class="mk">✗</span><div><div class="req">โครงสร้างซับซ้อน error-free (conditional / passive)<span class="tag">+0.5</span></div><div class="ev miss">ยังไม่พบ — เพิ่ม conditional 1 ครั้งก็ครบเกณฑ์ Band 8</div></div></div>
+    </div>
+
+    <div class="ledger">
+      <div class="lh"><h3>Vocabulary</h3><div class="bj"><span class="c">8.0</span><span class="a">→</span><span class="t">8.5</span></div></div>
+      <div class="rule yes"><span class="mk">✓</span><div><div class="req">B1+ collocation 4–5 จุด</div><div class="ev">“street smart and book smart”, “cultivate relationships”, “works hard for her craft”</div></div></div>
+      <div class="rule yes"><span class="mk">✓</span><div><div class="req">C1–C2 อย่างน้อย 1 จุด</div><div class="ev">“exemplifies”</div></div></div>
+      <div class="rule no next"><span class="mk">✗</span><div><div class="req">C1–C2 ครบ 2 จุด + ไม่มีคำซ้ำเกิน<span class="tag">+0.5</span></div><div class="ev miss">“very smart / really / totally” ซ้ำ — ยกเป็น “academically gifted”, “hold in high regard”</div></div></div>
+    </div>
+
+    <div class="ledger">
+      <div class="lh"><h3>Fluency</h3><div class="bj"><span class="c">8.0</span><span class="a">→</span><span class="t">8.5</span></div></div>
+      <div class="rule yes"><span class="mk">✓</span><div><div class="req">Referencing &gt;3 ถูกต้อง</div><div class="ev">“she”, “her”, “who” ใช้ต่อเนื่องถูกต้อง</div></div></div>
+      <div class="rule yes"><span class="mk">✓</span><div><div class="req">Discourse markers + self-correction</div><div class="ev">“to begin with”, “moving on to the reasons…”</div></div></div>
+      <div class="rule no next"><span class="mk">✗</span><div><div class="req">≥ 310 คำ + ความคิดไม่วกวน<span class="tag">+0.5</span></div><div class="ev miss">~290 คำ และมี “you know” ถี่ — เพิ่มเหตุผลที่ 3 พร้อมตัวอย่างฉากเฉพาะ</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ V3 ============ -->
+  <section class="ver" id="v3">
+    <div class="qline">Part 2 · Hermione Granger — <b>เส้นทางสู่ Band 9</b></div>
+    <p class="subsec" style="margin-top:8px">แต่ละเกณฑ์เป็นบันได ครึ่งขั้นต่อครึ่งขั้น — ดูว่าคุณอยู่ตรงไหนและอีก 2 ขั้นถัดไปต้องทำอะไร</p>
+
+    <div class="crittabs">
+      <button class="active" data-l="l-g">Grammar</button>
+      <button data-l="l-v">Vocabulary</button>
+      <button data-l="l-f">Fluency</button>
+    </div>
+
+    <div class="ladpane show" id="l-g">
+      <div class="ladblock">
+        <div class="ladhead"><h3>Grammar</h3><span class="now">ตอนนี้ 7.5</span></div>
+        <div class="ladder">
+          <div class="rung done"><span class="dot"></span><div class="rb">✓ Band 7 — simple tense + subordinating</div><div class="task">ทำได้แล้ว: “even though she wasn’t born talented”</div></div>
+          <div class="rung cur"><span class="dot"></span><div class="rb">● Band 7.5 — perfect/past เริ่มปรากฏ</div><div class="task">ทำได้แล้ว: “I have admired…”, “she worked really hard”</div></div>
+          <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.0 — complex range error-free</div><div class="task">เพิ่ม conditional 1 ครั้ง:</div>
+            <div class="swap"><div class="from"><s>“because she worked really hard, not because it was given to her”</s></div><div class="to">“<b>Had</b> it <b>been</b> given to her, she might never have tried so hard.”</div></div>
+          </div>
+          <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.5+ — conditional + passive ผสมไม่มี error</div><div class="task">ใส่ passive: “she <b>is widely regarded</b> as one of the greatest witches.”</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ladpane" id="l-v">
+      <div class="ladblock">
+        <div class="ladhead"><h3>Vocabulary</h3><span class="now">ตอนนี้ 8.0</span></div>
+        <div class="ladder">
+          <div class="rung done"><span class="dot"></span><div class="rb">✓ Band 7.5 — B1+ collocation 4–5</div><div class="task">“street smart and book smart”, “cultivate relationships”</div></div>
+          <div class="rung cur"><span class="dot"></span><div class="rb">● Band 8.0 — C1–C2 อย่างน้อย 1</div><div class="task">“exemplifies” ✓</div></div>
+          <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.5 — C1–C2 ครบ 2 + เลี่ยงคำซ้ำ</div><div class="task">ยกระดับคำซ้ำ:</div>
+            <div class="swap"><div class="from"><s>“she definitely is very smart academically”</s></div><div class="to">“she is <b>academically gifted</b> / <b>intellectually formidable</b>”</div></div>
+          </div>
+          <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 9 — natural C2 ตลอด ไม่มีคำแปลกหู</div><div class="task">“look up to” → “<b>idolise</b>”, “really admire” → “<b>hold in high regard</b>”</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ladpane" id="l-f">
+      <div class="ladblock">
+        <div class="ladhead"><h3>Fluency</h3><span class="now">ตอนนี้ 8.0</span></div>
+        <div class="ladder">
+          <div class="rung done"><span class="dot"></span><div class="rb">✓ Band 7.5 — ref ≥3 + ต่อเนื่อง</div><div class="task">“she / her / who” ถูกต้องตลอด</div></div>
+          <div class="rung cur"><span class="dot"></span><div class="rb">● Band 8.0 — ~290 คำ + self-correction</div><div class="task">“to begin with… moving on to the reasons…”</div></div>
+          <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.5 — ≥310 คำ + ลดความวกวน</div><div class="task">เพิ่มเหตุผลที่ 3 พร้อมฉากเฉพาะจากเรื่อง แทนการพูด “you know”</div></div>
+          <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 9 — referencing &gt;4 ไม่มีจุดวกวนเลย</div><div class="task">ปิดท้ายด้วยประโยคสรุปที่ผูกกลับไปยังคำถามอย่างชัดเจน</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">ทั้ง 3 เวอร์ชันใช้ข้อมูลชุดเดียวกันจาก API (componentReports · requiredTicks · plusOneChecklist) — ต่างกันที่ “ตรรกะการจัดลำดับ”</p>
+</div>
+
+<script>
+  var why={
+    v1:'<b>Nearest Win</b> — ตรรกะ: จัดอันดับทุกเกณฑ์ตาม “ระยะถึงครึ่ง band ถัดไป” แล้วชู 1 จุดที่ใกล้สุด (Grammar 7.5→8.0) เป็นพระเอก · Nodder (โมเมนตัม) + Krug (ทำทีละอย่าง) + Cagan (เน้นผลลัพธ์)',
+    v2:'<b>Evidence Ledger</b> — ตรรกะ: ทุก band แสดงเป็น checklist ที่ตรวจสอบได้ พร้อมประโยคจริงของนักเรียนเป็นหลักฐาน แถวที่ยังขาด = +0.5 · The Mom Test (หลักฐานเหนือความเห็น) + Cagan (คะแนนที่ไว้ใจได้)',
+    v3:'<b>Band Ladder</b> — ตรรกะ: แปลง rubric ครึ่ง band เป็นบันได แสดงตำแหน่งปัจจุบัน + อีก 2 ขั้น พร้อม rewrite จากคำของนักเรียนทีละขั้น · Cagan (โรดแมป) + Brown (เส้นทาง/กำลังใจ) + Tidwell (stepper)'
+  };
+  var whyEl=document.getElementById('why');
+  function show(v){
+    document.querySelectorAll('.ver').forEach(function(s){s.classList.toggle('show',s.id===v)});
+    document.querySelectorAll('.seg button').forEach(function(b){b.classList.toggle('active',b.dataset.v===v)});
+    whyEl.innerHTML=why[v];window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+  document.querySelectorAll('.crittabs button').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('.crittabs button').forEach(function(x){x.classList.remove('active')});
+    document.querySelectorAll('.ladpane').forEach(function(p){p.classList.remove('show')});
+    b.classList.add('active');document.getElementById(b.dataset.l).classList.add('show');
+  }});
+  whyEl.innerHTML=why.v1;
+</script>
+</body>
+</html>

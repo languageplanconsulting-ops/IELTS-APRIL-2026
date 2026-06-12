@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Vocab Pair Save — 2 Versions</title>
+<style>
+  body { font-family: -apple-system, "Sukhumvit Set", "IBM Plex Sans Thai", sans-serif; background:#f6f7fb; margin:0; padding:32px; color:#1a1f36; }
+  h1 { font-size:22px; margin:0 0 8px; }
+  .sub { color:#666; margin-bottom:32px; font-size:14px; }
+  .card { background:white; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; max-width:1100px; }
+  .label { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.5px; color:#fff; padding:3px 10px; border-radius:999px; margin-bottom:8px; }
+  .v1 { background:#0ea5e9; } .v2 { background:#7c3aed; }
+  .qhead { font-size:13px; color:#666; font-weight:700; letter-spacing:1px; }
+  .qtext { font-size:16px; font-weight:600; margin:4px 0 16px; }
+  .pill { display:inline-block; padding:4px 12px; border-radius:6px; font-size:13px; font-weight:700; background:#dcfce7; color:#166534; }
+  .h2 { font-size:13px; font-weight:700; color:#444; margin:18px 0 10px; text-transform:uppercase; letter-spacing:.5px; }
+
+  /* ============ V1 — Inline pair rows ============ */
+  .pair-row {
+    display:grid; grid-template-columns: 1fr 40px 1fr 60px;
+    gap:14px; align-items:center;
+    background:#fafafa; border:1px solid #eee; border-radius:10px;
+    padding:14px; margin-bottom:8px; transition:all .15s;
+  }
+  .pair-row.saved { background:#ecfdf5; border-color:#86efac; }
+  .pair-cell { }
+  .pair-cell .en { font-size:15px; font-weight:700; color:#1a1f36; }
+  .pair-cell .th { font-size:13px; color:#666; margin-top:2px; }
+  .pair-cell.passage .en { color:#0369a1; }
+  .pair-cell.question .en { color:#9a3412; }
+  .eq-sign { text-align:center; color:#16a34a; font-size:22px; font-weight:700; }
+  .save-btn {
+    background:white; border:2px solid #0ea5e9; color:#0369a1;
+    border-radius:8px; padding:8px 12px; font-size:13px; font-weight:700;
+    cursor:pointer; transition:all .12s;
+  }
+  .save-btn:hover { background:#0ea5e9; color:white; }
+  .save-btn.saved { background:#16a34a; border-color:#16a34a; color:white; }
+  .save-btn.saved::before { content:"✓ "; }
+
+  .saved-section {
+    margin-top:24px; background:#f0fdf4; border-radius:10px;
+    border:1px solid #86efac; padding:16px;
+  }
+  .saved-section h3 { margin:0 0 12px; font-size:14px; color:#166534; display:flex; align-items:center; gap:8px; }
+  .saved-item {
+    background:white; padding:12px 14px; border-radius:8px;
+    margin-bottom:6px; font-size:14px;
+    border-left:3px solid #16a34a;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .saved-item .text { line-height:1.6; }
+  .saved-item .en-w { font-weight:700; color:#1a1f36; }
+  .saved-item .th-w { color:#16a34a; font-size:12px; }
+  .saved-item .eq { color:#16a34a; font-weight:700; margin:0 8px; }
+  .remove { background:none; border:none; color:#999; cursor:pointer; font-size:18px; padding:4px 8px; }
+  .remove:hover { color:#dc2626; }
+
+  /* ============ V2 — Tap to reveal + visual matching ============ */
+  .match-grid {
+    display:grid; grid-template-columns: 1fr 1fr; gap:20px;
+    background:#faf5ff; border:1px dashed #c4b5fd; border-radius:12px; padding:18px;
+  }
+  .col-head { font-size:12px; font-weight:700; color:#6d28d9; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+  .word-chip {
+    background:white; border:2px solid #ddd6fe; border-radius:10px;
+    padding:12px 14px; margin-bottom:8px; cursor:pointer;
+    transition:all .15s; position:relative;
+  }
+  .word-chip:hover { border-color:#7c3aed; transform:translateX(2px); }
+  .word-chip .en { font-size:15px; font-weight:700; }
+  .word-chip .th { font-size:12px; color:#6b7280; margin-top:4px; display:none; }
+  .word-chip.revealed .th { display:block; }
+  .word-chip.matched { background:#ede9fe; border-color:#7c3aed; }
+  .word-chip.matched::after {
+    content:""; position:absolute; right:-14px; top:50%; transform:translateY(-50%);
+    width:24px; height:2px; background:#7c3aed;
+  }
+  .col-q .word-chip.matched::before {
+    content:""; position:absolute; left:-14px; top:50%; transform:translateY(-50%);
+    width:24px; height:2px; background:#7c3aed;
+  }
+  .link-line { color:#7c3aed; font-size:11px; text-align:center; margin-top:-4px; margin-bottom:4px; font-weight:600; }
+  .tap-hint { font-size:12px; color:#6d28d9; text-align:center; margin-bottom:10px; font-style:italic; }
+
+  .matched-actions {
+    display:flex; gap:10px; margin-top:14px; padding:12px;
+    background:white; border-radius:8px; border:1px solid #ddd6fe;
+    justify-content:space-between; align-items:center;
+  }
+  .matched-actions .info { font-size:13px; color:#6d28d9; font-weight:600; }
+  .save-all {
+    background:#7c3aed; color:white; border:none;
+    padding:10px 18px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer;
+  }
+
+  .pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; font-size:13px; }
+  .pros, .cons { padding:10px 14px; border-radius:6px; }
+  .pros { background:#f0fdf4; border-left:3px solid #16a34a; }
+  .cons { background:#fef2f2; border-left:3px solid #dc2626; }
+  .pros b, .cons b { display:block; margin-bottom:4px; font-size:12px; }
+</style>
+</head>
+<body>
+
+<h1>Vocab Pair Save — 2 Versions</h1>
+<div class="sub">เห็นชัดว่าคำไหนแมตช์คำไหน + ความหมายไทย → กดบันทึก → notebook เก็บในรูปแบบ <code>EN (ไทย) = EN (ไทย)</code></div>
+
+<!-- ============ VERSION 1 ============ -->
+<div class="card">
+  <span class="label v1">Version 1 — Inline Pair Rows (เห็นทุกอย่างทันที)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill">TRUE</span></div>
+
+  <div class="h2">🔗 คู่คำที่แมตช์กันในข้อนี้ (กดบันทึกเฉพาะคู่ที่อยากจำ)</div>
+
+  <!-- Row 1: not saved -->
+  <div class="pair-row">
+    <div class="pair-cell passage">
+      <div class="en">the vast majority</div>
+      <div class="th">ส่วนใหญ่ที่สุด</div>
+    </div>
+    <div class="eq-sign">=</div>
+    <div class="pair-cell question">
+      <div class="en">most</div>
+      <div class="th">ส่วนใหญ่</div>
+    </div>
+    <button class="save-btn">+ บันทึก</button>
+  </div>
+
+  <!-- Row 2: saved -->
+  <div class="pair-row saved">
+    <div class="pair-cell passage">
+      <div class="en">hill figures</div>
+      <div class="th">รูปสลักบนเนินเขา</div>
+    </div>
+    <div class="eq-sign">=</div>
+    <div class="pair-cell question">
+      <div class="en">geoglyphs</div>
+      <div class="th">รูปสลักบนพื้นดิน</div>
+    </div>
+    <button class="save-btn saved">บันทึกแล้ว</button>
+  </div>
+
+  <!-- Row 3: saved -->
+  <div class="pair-row saved">
+    <div class="pair-cell passage">
+      <div class="en">on the chalk downlands of</div>
+      <div class="th">บนเนินหินปูนของ</div>
+    </div>
+    <div class="eq-sign">=</div>
+    <div class="pair-cell question">
+      <div class="en">located in</div>
+      <div class="th">ตั้งอยู่ใน</div>
+    </div>
+    <button class="save-btn saved">บันทึกแล้ว</button>
+  </div>
+
+  <!-- Row 4: not saved -->
+  <div class="pair-row">
+    <div class="pair-cell passage">
+      <div class="en">the country's southern counties</div>
+      <div class="th">จังหวัดทางใต้ของประเทศ</div>
+    </div>
+    <div class="eq-sign">=</div>
+    <div class="pair-cell question">
+      <div class="en">southern counties</div>
+      <div class="th">จังหวัดทางใต้</div>
+    </div>
+    <button class="save-btn">+ บันทึก</button>
+  </div>
+
+  <!-- Preview of saved section -->
+  <div class="saved-section">
+    <h3>📒 บันทึกแล้วใน Notebook (2 คู่) — รูปแบบเก็บ</h3>
+
+    <div class="saved-item">
+      <div class="text">
+        <span class="en-w">hill figures</span> <span class="th-w">(รูปสลักบนเนินเขา)</span>
+        <span class="eq">=</span>
+        <span class="en-w">geoglyphs</span> <span class="th-w">(รูปสลักบนพื้นดิน)</span>
+      </div>
+      <button class="remove" title="ลบ">✕</button>
+    </div>
+
+    <div class="saved-item">
+      <div class="text">
+        <span class="en-w">on the chalk downlands of</span> <span class="th-w">(บนเนินหินปูนของ)</span>
+        <span class="eq">=</span>
+        <span class="en-w">located in</span> <span class="th-w">(ตั้งอยู่ใน)</span>
+      </div>
+      <button class="remove" title="ลบ">✕</button>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>เห็นทุกคำ + แปลไทยพร้อมกัน · ไม่ต้องคิด · กดบันทึกง่ายมาก · เหมาะกับ struggling learner ที่สุด</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>นักเรียนเห็นคำแปลก่อนคิด → ไม่ได้ฝึกเดาความหมาย → จำได้ตื้นกว่า</div>
+  </div>
+</div>
+
+<!-- ============ VERSION 2 ============ -->
+<div class="card">
+  <span class="label v2">Version 2 — Tap-to-Reveal Matching (ฝึกคิดก่อน แล้วค่อยเฉลย)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill">TRUE</span></div>
+
+  <div class="h2">🎯 ลองจับคู่: แตะคำในบทความ → แตะคำในโจทย์ที่มีความหมายเหมือนกัน</div>
+  <div class="tap-hint">แตะดูคำแปลไทยได้ทุกคำ · ระบบแสดงเส้นเชื่อมเมื่อจับคู่ถูก</div>
+
+  <div class="match-grid">
+    <div class="col-p">
+      <div class="col-head">📖 จากบทความ (passage)</div>
+      <div class="word-chip matched revealed">
+        <div class="en">the vast majority</div>
+        <div class="th">= ส่วนใหญ่ที่สุด</div>
+      </div>
+      <div class="word-chip revealed">
+        <div class="en">hill figures</div>
+        <div class="th">= รูปสลักบนเนินเขา</div>
+      </div>
+      <div class="word-chip matched revealed">
+        <div class="en">on the chalk downlands of</div>
+        <div class="th">= บนเนินหินปูนของ</div>
+      </div>
+      <div class="word-chip">
+        <div class="en">southern counties</div>
+        <div class="th">= จังหวัดทางใต้</div>
+      </div>
+    </div>
+    <div class="col-q">
+      <div class="col-head">❓ จากโจทย์ (question)</div>
+      <div class="word-chip matched revealed">
+        <div class="en">most</div>
+        <div class="th">= ส่วนใหญ่</div>
+      </div>
+      <div class="word-chip revealed">
+        <div class="en">geoglyphs</div>
+        <div class="th">= รูปสลักบนพื้นดิน</div>
+      </div>
+      <div class="word-chip matched revealed">
+        <div class="en">located in</div>
+        <div class="th">= ตั้งอยู่ใน</div>
+      </div>
+      <div class="word-chip">
+        <div class="en">southern counties</div>
+        <div class="th">= จังหวัดทางใต้</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="matched-actions">
+    <span class="info">✓ จับคู่แล้ว 2 จาก 4 คู่ · แตะ "บันทึกคู่ที่จับ" เพื่อเก็บเข้า Notebook</span>
+    <button class="save-all">⭐ บันทึก 2 คู่ →</button>
+  </div>
+
+  <div class="saved-section">
+    <h3>📒 บันทึกแล้วใน Notebook (2 คู่) — รูปแบบเก็บ</h3>
+
+    <div class="saved-item">
+      <div class="text">
+        <span class="en-w">the vast majority</span> <span class="th-w">(ส่วนใหญ่ที่สุด)</span>
+        <span class="eq">=</span>
+        <span class="en-w">most</span> <span class="th-w">(ส่วนใหญ่)</span>
+      </div>
+      <button class="remove" title="ลบ">✕</button>
+    </div>
+
+    <div class="saved-item">
+      <div class="text">
+        <span class="en-w">on the chalk downlands of</span> <span class="th-w">(บนเนินหินปูนของ)</span>
+        <span class="eq">=</span>
+        <span class="en-w">located in</span> <span class="th-w">(ตั้งอยู่ใน)</span>
+      </div>
+      <button class="remove" title="ลบ">✕</button>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>ฝึกสมองให้ <i>เดาก่อน</i> → จำได้ลึกกว่า · interactive · สนุก เหมือนเกม flashcard</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>มี friction มากกว่า · นักเรียนที่ struggling สุดๆ อาจรู้สึกท้อถ้าจับคู่ไม่ถูก</div>
+  </div>
+</div>
+
+<div class="card" style="background:#1a1f36; color:white;">
+  <h3 style="margin-top:0">สรุป</h3>
+  <p style="font-size:14px; line-height:1.7"><b>Version 1 (Inline rows)</b> — เร็ว ตรงไปตรงมา เหมาะกับนักเรียนที่ <b>ยังไม่ค่อยรู้ศัพท์</b> อยากเห็นคำแปลทันที</p>
+  <p style="font-size:14px; line-height:1.7"><b>Version 2 (Tap-to-reveal)</b> — ฝึกแบบ active recall จำได้ลึกกว่า เหมาะกับนักเรียนที่ <b>เริ่มเก่งขึ้นแล้ว</b> อยากท้าทายตัวเอง</p>
+  <p style="font-size:14px; line-height:1.7">ทั้งสองเวอร์ชันบันทึกในรูปแบบเดียวกัน: <code style="background:#374151;padding:2px 6px;border-radius:3px">EN word (ความหมายไทย) = EN word (ความหมายไทย)</code> → ทบทวนใน Notebook ได้ง่าย ทำ flashcard mode ต่อได้</p>
+</div>
+
+</body>
+</html>

@@ -320,19 +320,25 @@ const PART2_FLUENCY_WORD_COUNTS = {
   band7Min: scalePart2FluencyWordCount(213),
   band6Min: scalePart2FluencyWordCount(170),
   band6Max: scalePart2FluencyWordCount(212),
-  band5Floor: scalePart2FluencyWordCount(128)
+  band5Floor: scalePart2FluencyWordCount(128),
+  band7p5Min: scalePart2FluencyWordCount(226),
+  band6p5Min: scalePart2FluencyWordCount(192),
+  band5p5Min: scalePart2FluencyWordCount(149)
 }
 
 const buildBucketRubricTh = (testMode = 'part2') => `
 ไวยากรณ์ (Grammar)
 Band 9: ใช้ conditionals, perfect tense, past tense ไม่มีข้อผิดพลาด ใช้ subordinating conjunction และถ้าเป็น Part 3 ต้องใช้ passive voice ถูกต้องอย่างน้อย 3 ครั้ง
 Band 8: ใช้ perfect tense และ past tense ใช้ subordinating conjunction ไม่มีข้อผิดพลาด และถ้าเป็น Part 3 ต้องใช้ passive voice ถูกต้องอย่างน้อย 2 ครั้ง
+Band 7.5: ใช้ simple tense ถูกต้องครบ และเริ่มใช้ perfect หรือ past tense ได้ถูกต้องอย่างน้อย 1 ครั้ง ใช้ subordinating conjunction ได้ถูกต้อง อนุโลม grammar mistakes ที่ไม่รบกวนความเข้าใจไม่เกิน 2 ครั้ง
 Band 7: ${
   testMode === 'part2'
     ? 'ใช้ simple tense ได้ถูกต้อง ใช้ subordinating conjunction และอนุโลม grammar mistakes ที่ไม่รบกวนความเข้าใจได้ไม่เกิน 3 ครั้ง'
     : 'ใช้ simple tense ได้ถูกต้อง ใช้ subordinating conjunction ยอมรับผิดพลาดเล็กน้อยไม่เกิน 3 ครั้ง'
 } และถ้าเป็น Part 3 ต้องใช้ passive voice ถูกต้องอย่างน้อย 1 ครั้ง
+Band 6.5: ใช้ simple tense ถูกต้องเป็นส่วนใหญ่ พยายามใช้ subordinating conjunction อย่างน้อย 1 ครั้ง (อาจมีผิดบ้าง) มี grammar error 4-5 ครั้ง แต่ยังเข้าใจได้ตลอด
 Band 6: simple tense ผิดไม่เกิน 3 ครั้ง มี past tense error มี conjunction error หรือไม่ใช้ มี grammar error มากกว่า 5 ครั้ง แต่ยังพอเข้าใจ
+Band 5.5: simple tense ผิดเป็นบางครั้ง ใช้ conjunction ถูกบ้างผิดบ้าง มี grammar error ประมาณ 5 ครั้ง โดยรวมยังเข้าใจได้แต่มีบางจุดที่สะดุด
 Band 5: simple tense ผิด ไม่มี tense shift ที่ถูกต้อง ไม่ใช้หรือใช้ conjunction ผิด มี grammar error มากกว่า 5 ครั้ง และรบกวนความเข้าใจ
 Band 4: เหมือน band 5 และรบกวนความเข้าใจชัดเจน
 
@@ -343,16 +349,22 @@ Band 9: ${
     : 'collocation > 6 (B1+) และ C1-C2 อย่างน้อย 2 ไม่มีคำผิดธรรมชาติ'
 }
 Band 8: collocation > 4-5 (B1+) และ C1-C2 อย่างน้อย 1 ไม่มีคำผิดธรรมชาติ
+Band 7.5: collocation 4-5 จุด (B1+) ไม่มี lexical error และคำแปลกหูไม่เกิน 2 ครั้ง (ยังไม่จำเป็นต้องมี C1-C2 หรือมีได้ 0-1 จุด)
 Band 7: collocation 2-5 (B1+) ไม่มี lexical error และคำแปลกหูไม่เกิน 3 ครั้ง
+Band 6.5: collocation 2-3 จุด (B1+) มี lexical error ได้ไม่เกิน 1 จุด คำแปลกหู/ผิดบริบทไม่เกิน 4 ครั้ง แต่ยังเข้าใจได้
 Band 6: collocation ส่วนใหญ่ A2-B1 มีคำแปลกหู/ผิดบ่อยแต่ยังพอเข้าใจ
+Band 5.5: collocation ส่วนใหญ่ A2-B1 มีคำผิด/แปลกหูค่อนข้างบ่อย และมีประโยคที่เข้าใจไม่ได้ 1-2 ประโยค
 Band 5: collocation ส่วนใหญ่ A2-B1 มีคำผิดบ่อยและมีประโยคเข้าใจไม่ได้มากกว่า 2-3 ประโยค
 Band 4: collocation ส่วนใหญ่ A1-B1 มีคำผิดบ่อยและมีประโยคเข้าใจไม่ได้มากกว่า 3 ประโยค
 
 ความคล่องแคล่ว (Fluency)
 Band 9: referencing > 4 ถูกต้องทั้งหมด พูด >= ${PART2_FLUENCY_WORD_COUNTS.band9Min} คำ ลื่นไหลต่อเนื่อง (hesitation ตามธรรมชาติเล็กน้อยยอมรับได้)
 Band 8: referencing > 3 ถูกต้อง พูด >= ${PART2_FLUENCY_WORD_COUNTS.band8Min} คำ มี self-correction ได้ถ้าทำให้ความหมายชัดขึ้น
+Band 7.5: referencing อย่างน้อย 3 ครั้งถูกต้อง พูด >= ${PART2_FLUENCY_WORD_COUNTS.band7p5Min} คำ ลื่นไหลต่อเนื่อง มี self-correction เล็กน้อยได้ถ้าทำให้ความหมายชัดขึ้น
 Band 7: พูด >= ${PART2_FLUENCY_WORD_COUNTS.band7Min} คำ ใช้ referencing อย่างน้อย 2 ครั้งถูกต้อง มี pause/filler ตามธรรมชาติได้
+Band 6.5: referencing อย่างน้อย 2 ครั้ง (ผิดได้บางครั้ง) พูด ${PART2_FLUENCY_WORD_COUNTS.band6p5Min}-${PART2_FLUENCY_WORD_COUNTS.band6Max} คำ มี hesitation/filler ตามธรรมชาติได้
 Band 6: พูด ${PART2_FLUENCY_WORD_COUNTS.band6Min}-${PART2_FLUENCY_WORD_COUNTS.band6Max} คำ referencing ไม่มีหรือผิดบางครั้ง มี hesitation/filler ได้หากไม่รบกวนความเข้าใจ
+Band 5.5: referencing มีบ้างแต่ผิดบ่อย พูด ${PART2_FLUENCY_WORD_COUNTS.band5p5Min}-${PART2_FLUENCY_WORD_COUNTS.band6Min - 1} คำ ความลื่นไหลสะดุดเป็นบางช่วงแต่โดยรวมยังพอเข้าใจ
 Band 5: พูด < ${PART2_FLUENCY_WORD_COUNTS.band6Min} คำ referencing ไม่มีหรือผิดบ่อย ความลื่นไหลสะดุดจนกระทบความเข้าใจ
 Band 4: พูด < ${PART2_FLUENCY_WORD_COUNTS.band6Min} คำ referencing ไม่มีหรือผิดแทบทั้งหมด ความลื่นไหลสะดุดรุนแรงและรบกวนความเข้าใจชัดเจน
 `

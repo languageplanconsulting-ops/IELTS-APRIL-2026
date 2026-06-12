@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>T/F/NG Explanation Layout Proposals</title>
+<style>
+  body { font-family: -apple-system, "Sukhumvit Set", "IBM Plex Sans Thai", sans-serif; background:#f6f7fb; margin:0; padding:32px; color:#1a1f36; }
+  h1 { font-size:22px; margin:0 0 8px; }
+  .sub { color:#666; margin-bottom:32px; font-size:14px; }
+  .card { background:white; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; max-width:1100px; }
+  .label { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.5px; color:#fff; padding:3px 10px; border-radius:999px; margin-bottom:8px; }
+  .l1 { background:#5b6cff; } .l2 { background:#16a34a; } .l3 { background:#d97706; } .l4 { background:#db2777; }
+  .qhead { font-size:13px; color:#666; font-weight:700; letter-spacing:1px; }
+  .qtext { font-size:16px; font-weight:600; margin:4px 0 16px; }
+  .pill { display:inline-block; padding:4px 12px; border-radius:6px; font-size:13px; font-weight:700; }
+  .pill-true { background:#dcfce7; color:#166534; }
+  .pill-wrong { background:#fee2e2; color:#b91c1c; }
+  .h2 { font-size:13px; font-weight:700; color:#444; margin:16px 0 8px; text-transform:uppercase; letter-spacing:.5px; }
+
+  /* ========== LAYOUT 1: Word-pair table with Thai gloss ========== */
+  .pair-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .pair-table th { background:#eef2ff; color:#3730a3; padding:10px; text-align:left; font-size:12px; }
+  .pair-table td { padding:10px; border-bottom:1px solid #eee; vertical-align:top; }
+  .pair-table .eq { text-align:center; color:#16a34a; font-weight:700; font-size:18px; }
+  .thai-gloss { color:#666; font-size:12px; display:block; margin-top:2px; }
+  .verdict-box { background:#f0fdf4; border-left:4px solid #16a34a; padding:14px; border-radius:6px; margin-top:14px; font-size:14px; }
+
+  /* ========== LAYOUT 2: Decision tree / flowchart ========== */
+  .flow { display:flex; gap:12px; align-items:stretch; flex-wrap:wrap; }
+  .flow-step { flex:1; min-width:180px; background:#f9fafb; border:2px solid #e5e7eb; border-radius:10px; padding:14px; position:relative; }
+  .flow-step.active { background:#ecfdf5; border-color:#16a34a; }
+  .flow-step .num { display:inline-block; width:24px; height:24px; line-height:24px; text-align:center; background:#16a34a; color:white; border-radius:50%; font-weight:700; font-size:12px; margin-bottom:6px; }
+  .flow-step.active::after { content:"✓"; position:absolute; top:8px; right:10px; color:#16a34a; font-weight:700; font-size:18px; }
+  .flow-step h4 { margin:0 0 6px; font-size:13px; }
+  .flow-step p { margin:0; font-size:12px; color:#555; }
+  .rule-card { background:#fffbeb; border:1px dashed #f59e0b; padding:10px 14px; border-radius:8px; margin:14px 0; font-size:13px; }
+
+  /* ========== LAYOUT 3: Highlighted sentence overlay ========== */
+  .sentence-box { background:#fafafa; border-radius:8px; padding:18px; font-size:15px; line-height:1.9; }
+  .sentence-box .match { background:#bbf7d0; padding:2px 6px; border-radius:4px; font-weight:600; cursor:help; position:relative; }
+  .sentence-box .match-q { background:#fef08a; padding:2px 6px; border-radius:4px; font-weight:600; }
+  .legend { display:flex; gap:18px; font-size:12px; margin-top:10px; color:#555; }
+  .legend span::before { content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+  .legend .lp::before { background:#bbf7d0; } .legend .lq::before { background:#fef08a; }
+  .stack { display:grid; grid-template-columns:auto 1fr; gap:8px 14px; margin-top:14px; font-size:14px; align-items:center; }
+  .stack .tag { font-size:11px; font-weight:700; padding:3px 8px; border-radius:4px; }
+  .stack .tag-p { background:#bbf7d0; color:#166534; }
+  .stack .tag-q { background:#fef08a; color:#854d0e; }
+  .stack .tag-v { background:#dcfce7; color:#166534; }
+
+  /* ========== LAYOUT 4: Comic-style 3-panel "เพื่อนช่วยอธิบาย" ========== */
+  .panels { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  .panel { background:#fff8f1; border:2px solid #fed7aa; border-radius:14px; padding:16px; position:relative; }
+  .panel .step-tag { position:absolute; top:-10px; left:14px; background:#ea580c; color:white; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; }
+  .panel h4 { margin:8px 0 8px; font-size:14px; color:#9a3412; }
+  .panel p { margin:0 0 8px; font-size:13px; line-height:1.6; }
+  .panel .quote { background:white; border-left:3px solid #ea580c; padding:8px 10px; font-size:12px; border-radius:4px; font-style:italic; color:#444; }
+  .verdict-strip { background:#16a34a; color:white; padding:12px 16px; border-radius:8px; margin-top:14px; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
+
+  .pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; font-size:13px; }
+  .pros, .cons { padding:10px 14px; border-radius:6px; }
+  .pros { background:#f0fdf4; border-left:3px solid #16a34a; }
+  .cons { background:#fef2f2; border-left:3px solid #dc2626; }
+  .pros b, .cons b { display:block; margin-bottom:4px; font-size:12px; }
+</style>
+</head>
+<body>
+
+<h1>T/F/NG Explanation — 4 Layout Proposals for Thai Learners</h1>
+<div class="sub">Same question, same answer (TRUE) — 4 different ways to teach the <i>why</i>.<br>
+Question: "Most geoglyphs in England are located in [southern counties]"</div>
+
+<!-- ============ LAYOUT 1 ============ -->
+<div class="card">
+  <span class="label l1">Layout 1 — Word-Pair Table + Thai Gloss</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill pill-true">TRUE</span></div>
+
+  <div class="h2">เทียบคำต่อคำ (passage ↔ question)</div>
+  <table class="pair-table">
+    <tr><th style="width:42%">บทความ (passage)</th><th style="width:8%">=</th><th>โจทย์ (question)</th></tr>
+    <tr>
+      <td><b>the vast majority</b><span class="thai-gloss">ส่วนใหญ่ที่สุด</span></td>
+      <td class="eq">=</td>
+      <td><b>most</b><span class="thai-gloss">ส่วนใหญ่</span></td>
+    </tr>
+    <tr>
+      <td><b>hill figures / geoglyphs</b><span class="thai-gloss">รูปสลักบนเนินเขา</span></td>
+      <td class="eq">=</td>
+      <td><b>geoglyphs</b><span class="thai-gloss">รูปสลักบนพื้นดิน</span></td>
+    </tr>
+    <tr>
+      <td><b>on the chalk downlands of</b><span class="thai-gloss">บนเนินหินปูนของ</span></td>
+      <td class="eq">=</td>
+      <td><b>located in</b><span class="thai-gloss">ตั้งอยู่ใน</span></td>
+    </tr>
+    <tr>
+      <td><b>the country's southern counties</b><span class="thai-gloss">จังหวัดทางใต้ของประเทศ</span></td>
+      <td class="eq">=</td>
+      <td><b>southern counties</b><span class="thai-gloss">จังหวัดทางใต้</span></td>
+    </tr>
+  </table>
+  <div class="verdict-box">
+    <b>✓ ทุกคำตรงกัน → TRUE</b><br>
+    บทความใช้คำต่างกัน (vast majority / chalk downlands) แต่ความหมายเหมือนโจทย์ทุกจุด
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>นักเรียนเห็นว่าคำไหนแทนคำไหน + มีคำแปลไทยทุกคำ ทำให้ไม่ติดศัพท์</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>ใช้พื้นที่หน้าจอเยอะ ถ้าประโยคยาวจะเลื่อนนาน</div>
+  </div>
+</div>
+
+<!-- ============ LAYOUT 2 ============ -->
+<div class="card">
+  <span class="label l2">Layout 2 — Decision Tree (สอนกฎก่อน แล้วค่อยใช้)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill pill-true">TRUE</span></div>
+
+  <div class="rule-card">
+    <b>📘 กฎ T/F/NG:</b> ถ้าบทความ <b>พูดเรื่องเดียวกัน</b> และ <b>ความหมายตรงกัน</b> → <b>TRUE</b><br>
+    ถ้าพูดเรื่องเดียวกันแต่ <b>ขัดกัน</b> → FALSE / ถ้า <b>ไม่ได้พูดเลย</b> → NOT GIVEN
+  </div>
+
+  <div class="h2">ไล่ตามขั้นตอน</div>
+  <div class="flow">
+    <div class="flow-step active">
+      <span class="num">1</span>
+      <h4>เจอประโยคในบทความไหม?</h4>
+      <p>เจอ: "There are 56 hill figures... vast majority on the chalk downlands of the country's southern counties."</p>
+    </div>
+    <div class="flow-step active">
+      <span class="num">2</span>
+      <h4>พูดเรื่องเดียวกันไหม?</h4>
+      <p>ใช่ — ทั้งคู่พูดเรื่อง <b>ที่ตั้งของ geoglyphs/hill figures</b></p>
+    </div>
+    <div class="flow-step active">
+      <span class="num">3</span>
+      <h4>ความหมายตรงหรือขัด?</h4>
+      <p><b>ตรงกัน</b> — most ↔ vast majority, southern counties ↔ southern counties</p>
+    </div>
+  </div>
+
+  <div class="verdict-box"><b>→ ตอบ TRUE</b> เพราะผ่านทั้ง 3 ขั้น</div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>สอน <i>กฎ</i> ที่ใช้ได้กับทุกข้อ ไม่ใช่แค่จำคำตอบข้อนี้</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>นักเรียนต้องอ่านเยอะกว่า ใช้เวลาเข้าใจครั้งแรกนาน</div>
+  </div>
+</div>
+
+<!-- ============ LAYOUT 3 ============ -->
+<div class="card">
+  <span class="label l3">Layout 3 — Highlight ในประโยคต้นฉบับ (เห็นภาพรวม)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill pill-true">TRUE</span></div>
+
+  <div class="h2">ประโยคจากบทความ</div>
+  <div class="sentence-box">
+    There are 56 <span class="match">hill figures</span> scattered around England, with <span class="match">the vast majority</span> <span class="match">on the chalk downlands</span> of the country's <span class="match">southern counties</span>.
+  </div>
+  <div class="legend">
+    <span class="lp">ส่วนที่ตรงกับโจทย์</span>
+    <span class="lq">คำที่โจทย์ใช้</span>
+  </div>
+
+  <div class="h2">เทียบกับโจทย์</div>
+  <div class="stack">
+    <span class="tag tag-q">โจทย์</span>
+    <div>Most <span class="match-q">geoglyphs</span> in England are <span class="match-q">located in</span> <span class="match-q">southern counties</span>.</div>
+    <span class="tag tag-p">บทความ</span>
+    <div><b>the vast majority</b> = Most · <b>hill figures</b> = geoglyphs · <b>on the chalk downlands of</b> = located in · <b>southern counties</b> = southern counties</div>
+    <span class="tag tag-v">สรุป</span>
+    <div><b style="color:#166534">ทุกส่วนเจอในบทความและตรงกัน → TRUE</b></div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>เห็น "ที่อยู่" ของคำตอบในประโยคจริง ฝึกทักษะ scan ไปด้วย</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>ถ้านักเรียนไม่รู้ศัพท์ ก็ยังต้องเดาความหมายเอง (ไม่มีคำแปลทุกคำ)</div>
+  </div>
+</div>
+
+<!-- ============ LAYOUT 4 ============ -->
+<div class="card">
+  <span class="label l4">Layout 4 — "เพื่อนช่วยอธิบาย" 3 ช่อง (เล่าเป็นเรื่อง)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill pill-true">TRUE</span></div>
+
+  <div class="panels">
+    <div class="panel">
+      <span class="step-tag">1 · อ่านโจทย์</span>
+      <h4>โจทย์ถามว่า?</h4>
+      <p>geoglyphs ส่วนใหญ่ในอังกฤษ <b>อยู่ทางใต้</b> ใช่ไหม?</p>
+      <p style="color:#9a3412"><b>คำสำคัญ:</b> most · geoglyphs · southern</p>
+    </div>
+    <div class="panel">
+      <span class="step-tag">2 · หาในบทความ</span>
+      <h4>บทความเขียนว่า</h4>
+      <div class="quote">"...the vast majority on the chalk downlands of the country's southern counties."</div>
+      <p style="margin-top:8px">📖 <b>vast majority</b> = ส่วนใหญ่ที่สุด<br>📖 <b>southern counties</b> = จังหวัดทางใต้</p>
+    </div>
+    <div class="panel">
+      <span class="step-tag">3 · เทียบดู</span>
+      <h4>ตรงกันไหม?</h4>
+      <p>✓ "most" = "vast majority"<br>✓ "southern counties" = "southern counties"<br>✓ พูดเรื่อง geoglyphs/hill figures เหมือนกัน</p>
+      <p style="color:#166534;font-weight:700;margin-top:10px">→ ตรงกันทุกจุด!</p>
+    </div>
+  </div>
+
+  <div class="verdict-strip">
+    <span>คำตอบ: <b>TRUE</b></span>
+    <span style="font-weight:400;font-size:13px">เพราะบทความยืนยันสิ่งที่โจทย์พูด</span>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>เหมือนมีติวเตอร์เล่าให้ฟัง ลดความกลัวภาษาอังกฤษ เหมาะกับ struggling learner ที่สุด</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>ต้องเขียนเนื้อหา panel เยอะ ถ้า auto-generate อาจดูแข็ง</div>
+  </div>
+</div>
+
+<div class="card" style="background:#1a1f36; color:white;">
+  <h3 style="margin-top:0">คำแนะนำของผม</h3>
+  <p style="font-size:14px; line-height:1.7">สำหรับ <b>นักเรียนไทยที่ struggling จริงๆ</b> — ผมแนะนำ <b>Layout 4 (Panel) เป็น default</b> เพราะมันเล่าเป็นขั้นตอนแบบมีคนสอน + มีคำแปลศัพท์ยากแทรกใน panel 2 ซึ่งเป็นจุดที่นักเรียนมัก "หลุด"</p>
+  <p style="font-size:14px; line-height:1.7">ถ้าอยากให้ลึกขึ้น เพิ่ม <b>ปุ่ม "ดูแบบเทียบคำต่อคำ" (Layout 1)</b> เป็น expandable section สำหรับคนอยากเข้าใจระดับคำ ส่วน <b>Layout 2 (Decision Tree)</b> เก็บไว้เป็นบทเรียนแยก สอน <i>กฎ</i> ครั้งเดียวก่อนเริ่มทำข้อสอบ ไม่ต้องโผล่ทุกข้อ</p>
+</div>
+
+</body>
+</html>

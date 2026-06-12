@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Speaking Feedback — Band Ladder (full report)</title>
+<style>
+  :root{
+    --paper:#f5f3ee; --ink:#181511; --muted:#6f685d; --faint:#a39a8c; --line:#e6e1d6;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#fffdf9;
+    --met:#1d7a55; --met-bg:#e8f4ed; --gap:#b5791f; --gap-bg:#fbf1dd;
+    --strike:#b9433b; --up:#1d7a55; --up-bg:#e7f4ec; --up-ink:#0e5e3f;
+    --shadow:0 1px 2px rgba(40,33,20,.05),0 12px 34px rgba(40,33,20,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .phone{max-width:440px;margin:0 auto;padding:0 18px 48px}
+  .eyebrow{font-size:10.5px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:var(--faint)}
+  h2.sec{font-size:16px;margin:24px 0 3px;letter-spacing:-.2px}
+  .subsec{font-size:12.5px;color:var(--muted);margin:0 0 12px;line-height:1.5}
+
+  /* ===== 1. OVERALL SCORE + CALCULATION (top) ===== */
+  .head{padding:22px 2px 4px}
+  .qline{font-size:12px;color:var(--muted);font-weight:600}
+  .qline b{color:var(--ink)}
+  .scorecard{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .scoretop{display:flex;align-items:center;gap:16px;padding:18px 18px 14px}
+  .ring{--v:8;width:96px;height:96px;border-radius:50%;flex:none;display:grid;place-items:center;
+    background:conic-gradient(var(--accent) calc(var(--v)*36deg),#e7e2d6 0);position:relative}
+  .ring::before{content:"";position:absolute;inset:8px;background:var(--card);border-radius:50%}
+  .ring b{position:relative;font-size:30px;font-weight:800;line-height:1}
+  .ring span{position:relative;font-size:10px;color:var(--muted);font-weight:800;letter-spacing:.5px;margin-top:1px}
+  .scoremeta h1{margin:0;font-size:19px;letter-spacing:-.3px}
+  .scoremeta p{margin:5px 0 0;font-size:12.5px;color:var(--muted);line-height:1.5}
+  .calc{border-top:1px solid var(--line);background:#faf7f1;padding:11px 18px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .calc .eq{font-weight:700;color:var(--ink)}
+  .calc code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+  .crirow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid var(--line)}
+  .crirow .cc{padding:12px 8px;text-align:center;border-left:1px solid var(--line)}
+  .crirow .cc:first-child{border-left:0}
+  .crirow .nm{font-size:11.5px;color:var(--muted);font-weight:700}
+  .crirow .bd{font-size:21px;font-weight:800;margin-top:2px}
+  .crirow .to{font-size:11px;font-weight:700;color:var(--gap);margin-top:1px}
+
+  /* ===== 2. BAND LADDER ===== */
+  .ladblock{margin-top:11px;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px}
+  .ladhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .ladhead h3{margin:0;font-size:16px}
+  .ladhead .now{font-size:11.5px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:99px;padding:3px 10px}
+  .ladder{position:relative;margin-top:8px;padding-left:26px}
+  .ladder::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .rung{position:relative;padding:0 0 16px}
+  .rung:last-child{padding-bottom:0}
+  .rung .dot{position:absolute;left:-22px;top:1px;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--line)}
+  .rung.done .dot{background:var(--met);border-color:var(--met)}
+  .rung.cur .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .rung .rb{font-size:13px;font-weight:800}
+  .rung.done .rb{color:var(--met)}.rung.cur .rb{color:var(--accent-ink)}.rung.todo .rb{color:var(--gap)}
+  .rung .task{font-size:13px;color:#43403a;margin-top:3px;line-height:1.55}
+  .rung .swap{margin-top:8px;display:grid;gap:6px}
+  .rung .swap .from{font-size:12px;color:var(--strike);background:#fcefed;border-radius:9px;padding:8px 10px;line-height:1.45}
+  .rung .swap .from s{text-decoration-thickness:1.5px}
+  .rung .swap .to{font-size:12.5px;color:var(--up-ink);background:var(--up-bg);border-radius:9px;padding:8px 10px;line-height:1.5}
+  .rung .swap .to b{font-weight:700}
+
+  /* ===== 3. VOCABULARY UPGRADE (intact) ===== */
+  .vgroup{margin-top:12px}
+  .vgroup .gh{font-size:12px;font-weight:800;color:var(--accent-ink);margin:0 2px 8px}
+  .vcards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .vc{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 12px}
+  .vc .lvl{font-size:10px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:6px;padding:2px 6px;display:inline-block}
+  .vc .pair{font-size:13.5px;margin-top:8px;line-height:1.4}
+  .vc .pair s{color:var(--strike)} .vc .pair b{color:var(--up-ink)}
+  .vc .mean{font-size:11.5px;color:var(--muted);margin-top:4px}
+
+  /* ===== 4. ANNOTATION-HIGHLIGHT TRANSCRIPT (intact) + recording ===== */
+  .evcard{margin-top:13px;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .evcard .eh{padding:14px 18px 4px}
+  .evcard .eh h3{margin:4px 0 0;font-size:15px}
+  .rec{padding:10px 18px 6px}
+  .rec audio{width:100%}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--muted);padding:6px 18px 10px}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .anns{display:flex;flex-wrap:wrap;gap:6px;padding:4px 18px 2px}
+  .ann{font-size:11px;border-radius:8px;padding:4px 8px;line-height:1.3}
+  .ann b{font-weight:800}
+  .ann.grammar{background:#fde7e4;color:#9a352c} .ann.vocabulary{background:var(--accent-soft);color:var(--accent-ink)} .ann.fluency{background:#fbf1dd;color:#8a5d12}
+  .tx{font-size:13px;color:#43403a;line-height:1.85;background:#faf7f1;border-top:1px solid var(--line);padding:14px 18px;margin-top:8px}
+  .tx mark{padding:1px 3px;border-radius:4px;font-weight:600;cursor:help}
+  mark.grammar{background:#fde7e4;color:#9a352c}
+  mark.vocabulary{background:var(--accent-soft);color:var(--accent-ink)}
+  mark.fluency{background:#fbf1dd;color:#8a5d12}
+
+  /* ===== 5. notes 6. next 7. disc ===== */
+  .notes{margin-top:16px;font-size:12.5px;color:var(--muted);background:#efece5;border-radius:12px;padding:12px 14px;line-height:1.55}
+  .next{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:20px}
+  .nc{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:14px 10px;text-align:center}
+  .nc.primary{background:var(--accent);border-color:var(--accent)}
+  .nc .ic{font-size:20px}.nc .t{font-size:12px;font-weight:800;margin-top:6px}
+  .nc.primary .t{color:#fff}.nc .d{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+  .nc.primary .d{color:#cfe0f7}.nc.disabled{opacity:.5}
+  .disc{margin-top:20px;font-size:11px;color:var(--faint);line-height:1.55;text-align:center;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- 1. OVERALL SCORE + CALCULATION (top) -->
+  <div class="head">
+    <div class="qline">Part 2 · “Describe a person you admire” — <b>Hermione Granger</b></div>
+    <div class="scorecard">
+      <div class="scoretop">
+        <div class="ring" style="--v:8"><b>8.0</b><span>OVERALL</span></div>
+        <div class="scoremeta">
+          <h1>Band 8.0 — แข็งแรงและมีโครงสร้างดี</h1>
+          <p>พูดเป็นระบบ มีเหตุผลรองรับ จุดที่ใกล้ขยับสุดคือ Grammar (7.5 → 8.0)</p>
+        </div>
+      </div>
+      <div class="calc">
+        <span class="eq">การคำนวณ:</span>
+        <code>(8.0 + 8.0 + 7.5) ÷ 3 = 7.83</code> → ปัดเป็นครึ่ง band ใกล้สุด → <code>8.0</code>
+      </div>
+      <div class="crirow">
+        <div class="cc"><div class="nm">Fluency</div><div class="bd">8.0</div><div class="to">→ 8.5</div></div>
+        <div class="cc"><div class="nm">Vocabulary</div><div class="bd">8.0</div><div class="to">→ 8.5</div></div>
+        <div class="cc"><div class="nm">Grammar</div><div class="bd">7.5</div><div class="to">→ 8.0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. BAND LADDER -->
+  <h2 class="sec">เส้นทางสู่ Band ถัดไป</h2>
+  <p class="subsec">แต่ละเกณฑ์เป็นบันไดครึ่ง band — คุณอยู่ตรงไหน และอีก 2 ขั้นต้องทำอะไร (พร้อม rewrite จากคำพูดจริงของคุณ)</p>
+
+  <div class="ladblock">
+      <div class="ladhead"><h3>Grammar</h3><span class="now">ตอนนี้ 7.5</span></div>
+      <div class="ladder">
+        <div class="rung done"><span class="dot"></span><div class="rb">✓ Band 7 — simple tense + subordinating</div><div class="task">ทำได้แล้ว: “even though she wasn’t born talented”</div></div>
+        <div class="rung cur"><span class="dot"></span><div class="rb">● Band 7.5 — perfect/past เริ่มปรากฏ</div><div class="task">ทำได้แล้ว: “I have admired…”, “she worked really hard”</div></div>
+        <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.0 — complex range error-free</div><div class="task">เพิ่ม conditional 1 ครั้ง:</div>
+          <div class="swap"><div class="from"><s>“because she worked really hard, not because it was given to her”</s></div><div class="to">“<b>Had</b> it <b>been</b> given to her, she might never have tried so hard.”</div></div>
+        </div>
+        <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.5+ — conditional + passive ไม่มี error</div><div class="task">ใส่ passive: “she <b>is widely regarded</b> as one of the greatest witches.”</div></div>
+      </div>
+    </div>
+
+  <div class="ladblock">
+      <div class="ladhead"><h3>Vocabulary</h3><span class="now">ตอนนี้ 8.0</span></div>
+      <div class="ladder">
+        <div class="rung done"><span class="dot"></span><div class="rb">✓ Band 7.5 — B1+ collocation 4–5</div><div class="task">“street smart and book smart”, “cultivate relationships”</div></div>
+        <div class="rung cur"><span class="dot"></span><div class="rb">● Band 8.0 — C1–C2 อย่างน้อย 1</div><div class="task">“exemplifies” ✓</div></div>
+        <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.5 — C1–C2 ครบ 2 + เลี่ยงคำซ้ำ</div><div class="task">ยกระดับคำซ้ำ:</div>
+          <div class="swap"><div class="from"><s>“she definitely is very smart academically”</s></div><div class="to">“she is <b>academically gifted</b> / <b>intellectually formidable</b>”</div></div>
+        </div>
+        <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 9 — natural C2 ตลอด ไม่มีคำแปลกหู</div><div class="task">“look up to” → “<b>idolise</b>”, “really admire” → “<b>hold in high regard</b>”</div></div>
+      </div>
+    </div>
+
+  <div class="ladblock">
+      <div class="ladhead"><h3>Fluency</h3><span class="now">ตอนนี้ 8.0</span></div>
+      <div class="ladder">
+        <div class="rung done"><span class="dot"></span><div class="rb">✓ Band 7.5 — ref ≥3 + ต่อเนื่อง</div><div class="task">“she / her / who” ถูกต้องตลอด</div></div>
+        <div class="rung cur"><span class="dot"></span><div class="rb">● Band 8.0 — ~290 คำ + self-correction</div><div class="task">“to begin with… moving on to the reasons…”</div></div>
+        <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.5 — ≥310 คำ + ลดความวกวน</div><div class="task">เพิ่มเหตุผลที่ 3 พร้อมฉากเฉพาะจากเรื่อง แทน “you know”</div></div>
+        <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 9 — referencing &gt;4 ไม่มีจุดวกวนเลย</div><div class="task">ปิดท้ายด้วยประโยคสรุปที่ผูกกลับไปยังคำถามชัดเจน</div></div>
+      </div>
+    </div>
+
+  <!-- 3. VOCABULARY UPGRADE (intact) -->
+  <h2 class="sec">คำอัปเกรดจากคำตอบจริงของคุณ</h2>
+  <p class="subsec">เปลี่ยนคำที่คุณพูดจริง → คำระดับสูงขึ้น</p>
+  <div class="vgroup">
+    <div class="gh">C1 Upgrades · 3 จุด</div>
+    <div class="vcards">
+      <div class="vc"><span class="lvl">B2→C1</span><div class="pair"><s>very smart</s> → <b>academically gifted</b></div><div class="mean">เก่งด้านวิชาการ</div></div>
+      <div class="vc"><span class="lvl">B1→C1</span><div class="pair"><s>really admire</s> → <b>hold in high regard</b></div><div class="mean">ยกย่องอย่างสูง</div></div>
+      <div class="vc"><span class="lvl">B1→C1</span><div class="pair"><s>look up to</s> → <b>idolise</b></div><div class="mean">เทิดทูน</div></div>
+      <div class="vc"><span class="lvl">B2→C1</span><div class="pair"><s>works hard</s> → <b>diligent</b></div><div class="mean">ขยันมุ่งมั่น</div></div>
+    </div>
+  </div>
+  <div class="vgroup">
+    <div class="gh">B2 Upgrades · 1 จุด</div>
+    <div class="vcards">
+      <div class="vc"><span class="lvl">B1→B2</span><div class="pair"><s>so many people</s> → <b>numerous figures</b></div><div class="mean">ผู้คนมากมาย</div></div>
+    </div>
+  </div>
+
+  <!-- 4. ANNOTATION-HIGHLIGHT TRANSCRIPT (intact) + recording -->
+  <h2 class="sec">เสียงที่อัด + Transcript</h2>
+  <p class="subsec">คำที่ไฮไลต์คือจุดที่ AI วิเคราะห์ — แตะเพื่อดูคำอธิบาย</p>
+  <div class="evcard">
+    <div class="rec"><audio controls></audio></div>
+    <div class="legend">
+      <span><i style="background:#fde7e4"></i> Grammar</span>
+      <span><i style="background:var(--accent-soft)"></i> Vocabulary</span>
+      <span><i style="background:#fbf1dd"></i> Fluency</span>
+    </div>
+    <div class="anns">
+      <span class="ann grammar"><b>Simple frame</b> · ใส่ conditional</span>
+      <span class="ann vocabulary"><b>คำพื้น ๆ</b> · ยกระดับ “very smart”</span>
+      <span class="ann fluency"><b>Filler ถี่</b> · ลด “you know”</span>
+    </div>
+    <div class="tx">
+      “…in terms of her personality, I would say that first she is very nerdy, she’s very curious, but most importantly she’s also somebody that’s really <mark class="vocabulary" title="คำพื้น ๆ — ยกระดับเป็น loyal/devoted">loyal to her friends</mark>. Moving on to the reasons why I really like her — she <mark class="vocabulary" title="very smart → academically gifted">definitely is very smart academically</mark>, but she also is able to cultivate relationships with her friends. Another aspect is that even though she wasn’t born talented, she became one of the greatest witches <mark class="grammar" title="ใส่ conditional: Had it been given to her…">because she worked really hard, not because it was given to her</mark>, <mark class="fluency" title="filler ถี่ — ลด you know">you know</mark>.”
+    </div>
+  </div>
+
+  <!-- 5. MODEL NOTES -->
+  <div class="notes">หมายเหตุ: คะแนนนี้ประเมินจาก english plan’s database จากคำตอบของคุณในรอบนี้ ผลสอบจริงอาจต่างจากนี้ได้ — ใช้เป็นแนวทางพัฒนาครับ</div>
+
+  <!-- 6. NEXT STEPS -->
+  <div class="next">
+    <div class="nc primary"><div class="ic">🔄</div><div class="t">ลองใหม่อีกรอบ</div><div class="d">โฟกัส Grammar → 8.0</div></div>
+    <div class="nc disabled"><div class="ic">📓</div><div class="t">Notebook</div><div class="d">Coming soon</div></div>
+    <div class="nc"><div class="ic">📚</div><div class="t">เลือก Topic ใหม่</div><div class="d">ฝึกหัวข้ออื่น</div></div>
+  </div>
+
+  <p class="disc">คะแนนนี้เป็นการประเมินจากผลงานของคุณในวันนี้ ตอนสอบจริงอาจได้สูงหรือต่ำกว่านี้ได้ เป้าหมายคือช่วยให้เห็นจุดอ่อนและแนวทางพัฒนาที่ทำได้จริงครับ</p>
+</div>
+
+</body>
+</html>

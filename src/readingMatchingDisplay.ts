@@ -132,6 +132,7 @@ export const isReadingPeopleMatchingBlock = (block: string) => {
   const listOptions = extractReadingMatchingListOptions(normalized)
   return (
     /match\s+each/i.test(normalized) &&
+    /(?:list of (?:people|researchers)|correct (?:person|people|researcher))/i.test(normalized) &&
     listOptions.length >= 3 &&
     listOptions.every((option) => option.text && option.text.toUpperCase() !== option.letter)
   )

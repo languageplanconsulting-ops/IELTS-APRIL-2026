@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Speaking Feedback — rebuilt around the job</title>
+<style>
+  :root{
+    --paper:#f6f4ef; --ink:#15130f; --muted:#736c61; --line:#e7e2d8;
+    --accent:#3b4ce0; --accent-ink:#2436c4; --gold:#caa24a;
+    --strike:#b9433b; --up:#1d7a55; --up-bg:#e7f4ec; --up-ink:#0e5e3f;
+    --card:#fffdf9; --shadow:0 1px 2px rgba(40,33,20,.05), 0 14px 40px rgba(40,33,20,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .phone{max-width:430px;margin:0 auto;min-height:100vh;padding:0 20px 40px;position:relative}
+
+  /* 1 — reassurance + score, together, above the fold */
+  .top{padding:26px 4px 8px}
+  .targetline{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);font-weight:600}
+  .targetline b{color:var(--ink)}
+  .scorewrap{display:flex;align-items:flex-end;gap:14px;margin-top:10px}
+  .score{font-size:64px;font-weight:800;letter-spacing:-2px;line-height:.9}
+  .score small{font-size:18px;color:var(--muted);font-weight:700;letter-spacing:0}
+  .gap{flex:1;padding-bottom:7px}
+  .gaptrack{height:9px;border-radius:99px;background:#eae5db;position:relative;overflow:hidden}
+  .gaptrack i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--accent),#6b78f0)}
+  .gaptrack .goal{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gold)}
+  .gaplabels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:700;margin-top:6px}
+  .gaplabels .goalc{color:var(--gold)}
+  .verdict{margin:16px 4px 0;font-size:15px;line-height:1.55}
+  .verdict b{color:var(--accent-ink)}
+
+  /* 2 — the hero: your words, upgraded */
+  .hero{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+  .hero .head{padding:18px 20px 4px}
+  .kicker{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold)}
+  .hero h2{margin:6px 0 0;font-size:20px;letter-spacing:-.3px}
+  .hero h2 span{color:var(--muted);font-weight:700}
+
+  .answer{padding:8px 20px 4px}
+  .lbl{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin:14px 0 6px}
+  .raw{font-size:14.5px;color:#8d8579;background:#f3efe6;border-radius:14px;padding:13px 15px;line-height:1.6}
+  .raw s{color:var(--strike);text-decoration-thickness:1.5px;opacity:.8}
+  .up{font-size:16px;line-height:1.7;background:linear-gradient(180deg,#fffdf9,#fbf8f1);border:1px solid #efe9dc;border-radius:14px;padding:15px 16px}
+  .up mark{background:var(--up-bg);color:var(--up-ink);font-weight:700;padding:1px 4px;border-radius:5px;text-decoration:none}
+
+  .hearbtn{margin:14px 0 4px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1.5px solid var(--accent);color:var(--accent-ink);font-weight:800;font-size:15px;padding:13px;border-radius:14px;cursor:pointer;font-family:inherit;transition:.15s}
+  .hearbtn:hover{background:#f3f4ff}
+  .hearbtn.playing{background:var(--accent);color:#fff}
+  .hearbtn .wave{display:inline-flex;gap:3px;align-items:center;height:16px}
+  .hearbtn .wave i{width:3px;background:currentColor;border-radius:2px;height:6px}
+  .hearbtn.playing .wave i{animation:wv .8s ease-in-out infinite}
+  .hearbtn.playing .wave i:nth-child(2){animation-delay:.15s}
+  .hearbtn.playing .wave i:nth-child(3){animation-delay:.3s}
+  .hearbtn.playing .wave i:nth-child(4){animation-delay:.45s}
+  @keyframes wv{0%,100%{height:6px}50%{height:15px}}
+
+  /* the moves */
+  .moves{padding:14px 20px 20px;border-top:1px solid var(--line);margin-top:14px}
+  .moves .mlbl{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px}
+  .move{display:flex;gap:11px;align-items:flex-start;padding:9px 0}
+  .move .dot{width:22px;height:22px;border-radius:7px;background:var(--up-bg);color:var(--up-ink);display:grid;place-items:center;font-size:12px;font-weight:800;flex:none;margin-top:1px}
+  .move b{font-size:13.5px}
+  .move p{margin:2px 0 0;font-size:12.5px;color:var(--muted);line-height:1.5}
+
+  /* 3 — the action */
+  .cta{position:sticky;bottom:0;padding:14px 0 6px;background:linear-gradient(180deg,rgba(246,244,239,0),var(--paper) 30%)}
+  .record{width:100%;background:var(--accent);color:#fff;border:0;border-radius:16px;padding:17px;font-size:16.5px;font-weight:800;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 24px rgba(59,76,224,.28)}
+  .record:active{transform:translateY(1px)}
+  .subact{display:flex;justify-content:center;margin-top:12px}
+  .subact button{background:none;border:0;color:var(--muted);font-weight:700;font-size:13.5px;font-family:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+  /* full breakdown — one quiet door */
+  details.full{margin-top:18px;border-top:1px solid var(--line);padding-top:6px}
+  details.full>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:14px 4px;font-weight:700;font-size:14px;color:var(--ink)}
+  details.full>summary::-webkit-details-marker{display:none}
+  details.full>summary .arw{color:var(--muted);transition:.2s}
+  details.full[open]>summary .arw{transform:rotate(90deg)}
+  .crit{display:grid;gap:12px;padding:6px 4px 4px}
+  .crow{display:grid;grid-template-columns:92px 1fr 34px;gap:12px;align-items:center}
+  .crow label{font-size:13px;font-weight:700}
+  .crow .v{text-align:right;font-weight:800;font-size:13px}
+  .crow .bar{height:7px;border-radius:99px;background:#eae5db;overflow:hidden}
+  .crow .bar i{display:block;height:100%;border-radius:99px}
+  .tx{margin-top:14px;font-size:13px;color:#4b463d;background:#f3efe6;border-radius:12px;padding:13px 15px;line-height:1.6}
+  .tx b{color:var(--accent-ink)}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120%);background:var(--ink);color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:99px;transition:transform .3s;z-index:9}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- 1. score + target gap, instantly, no scroll -->
+  <div class="top">
+    <div class="targetline">🎯 เป้าหมายของคุณ: <b>Band 7.0</b> · เหลืออีกนิดเดียว</div>
+    <div class="scorewrap">
+      <div class="score">6.5</div>
+      <div class="gap">
+        <div class="gaptrack"><i style="width:72%"></i><span class="goal" style="left:78%"></span></div>
+        <div class="gaplabels"><span>วันนี้ 6.5</span><span class="goalc">เป้า 7.0</span></div>
+      </div>
+    </div>
+    <p class="verdict">คุณพูดลื่นและตรงคำถามแล้วครับ — สิ่งเดียวที่กั้น Band 7.0 อยู่คือ <b>คุณกำลัง "ไล่เรียง" ความคิดทีละประโยค แทนที่จะ "เชื่อม" มันเข้าด้วยกัน</b></p>
+  </div>
+
+  <!-- 2. THE PRODUCT: your own answer, said at Band 7 -->
+  <div class="hero">
+    <div class="head">
+      <div class="kicker">ลองฟังตัวเองพูดแบบ Band 7</div>
+      <h2>คำตอบของคุณ <span>· อัปเกรดแล้ว</span></h2>
+    </div>
+
+    <div class="answer">
+      <div class="lbl">สิ่งที่คุณพูดวันนี้</div>
+      <div class="raw">“Yes, I think eating healthy food is <s>important</s> to me <s>because it is good for my body and</s> it gives me energy. I <s>try to</s> eat vegetables every day, <s>but sometimes I eat</s> junk food.”</div>
+
+      <div class="lbl" style="color:var(--up-ink)">เวอร์ชัน Band 7.0 — คำของคุณเอง</div>
+      <div class="up">“Yes, eating healthy food is <mark>crucial</mark> for me. <mark>Not only does it keep my body strong, but it also</mark> gives me the energy to stay focused all day. I <mark>make a conscious effort to</mark> eat vegetables daily, <mark>though I do occasionally give in to</mark> junk food.”</div>
+
+      <button class="hearbtn" id="hear">
+        <span class="wave"><i></i><i></i><i></i><i></i></span>
+        <span id="hearTxt">ฟังเวอร์ชัน Band 7</span>
+      </button>
+    </div>
+
+    <div class="moves">
+      <div class="mlbl">3 จุดที่เปลี่ยน — จำไว้ใช้ครั้งหน้า</div>
+      <div class="move"><div class="dot">1</div><div><b>เชื่อมประโยค ไม่ใช่ไล่เรียง</b><p>“keeps my body strong, but it also gives me energy” แทนที่จะพูดเป็นประโยคสั้น ๆ แยกกัน</p></div></div>
+      <div class="move"><div class="dot">2</div><div><b>ยกระดับคำซ้ำ</b><p>important → <b style="color:var(--up-ink)">crucial</b> · try to → <b style="color:var(--up-ink)">make a conscious effort to</b></p></div></div>
+      <div class="move"><div class="dot">3</div><div><b>ใส่การยอมรับแบบเจ้าของภาษา</b><p>“though I do occasionally give in to…” ฟังเป็นธรรมชาติและดัน fluency</p></div></div>
+    </div>
+  </div>
+
+  <!-- 3. the one action that matters -->
+  <div class="cta">
+    <button class="record" id="rec">🎙 ลองพูดคำตอบนี้อีกครั้ง</button>
+    <div class="subact"><button id="newtopic">ข้ามไปหัวข้ออื่น</button></div>
+  </div>
+
+  <!-- full breakdown: one quiet door -->
+  <details class="full">
+    <summary><span>ดูผลละเอียดทั้งหมด — Fluency · Vocabulary · Grammar · Transcript</span><span class="arw">›</span></summary>
+    <div class="crit">
+      <div class="crow"><label>Fluency</label><div class="bar"><i style="width:75%;background:var(--up)"></i></div><div class="v">7.5</div></div>
+      <div class="crow"><label>Vocabulary</label><div class="bar"><i style="width:70%;background:var(--up)"></i></div><div class="v">7.0</div></div>
+      <div class="crow"><label>Grammar</label><div class="bar"><i style="width:65%;background:var(--gold)"></i></div><div class="v">6.5</div></div>
+    </div>
+    <div class="tx"><b>Q:</b> Is it important to you to eat healthy food?<br><br>“Yes, I think eating healthy food is important to me because it is good for my body and gives me energy. I try to eat vegetables every day, but sometimes I eat junk food.”<br><br><span style="color:var(--muted)">🎧 เสียงที่อัด · 2:14</span></div>
+  </details>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  var hear=document.getElementById('hear'), hearTxt=document.getElementById('hearTxt');
+  var upText="Yes, eating healthy food is crucial for me. Not only does it keep my body strong, but it also gives me the energy to stay focused all day. I make a conscious effort to eat vegetables daily, though I do occasionally give in to junk food.";
+  function speak(){
+    if(!('speechSynthesis' in window)){toast('เบราว์เซอร์นี้ยังไม่รองรับเสียงครับ');return;}
+    window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(upText);
+    u.lang='en-GB'; u.rate=.95;
+    u.onstart=function(){hear.classList.add('playing');hearTxt.textContent='กำลังเล่น…';};
+    u.onend=function(){hear.classList.remove('playing');hearTxt.textContent='ฟังอีกครั้ง';};
+    window.speechSynthesis.speak(u);
+  }
+  hear.onclick=function(){ if(hear.classList.contains('playing')){window.speechSynthesis.cancel();hear.classList.remove('playing');hearTxt.textContent='ฟังเวอร์ชัน Band 7';} else speak(); };
+  var t=document.getElementById('toast');
+  function toast(m){t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2200);}
+  document.getElementById('rec').onclick=function(){toast('🎙 เริ่มอัดใหม่ด้วยโครงนี้ได้เลย');};
+  document.getElementById('newtopic').onclick=function(){toast('กลับไปเลือกหัวข้อ');};
+</script>
+</body>
+</html>

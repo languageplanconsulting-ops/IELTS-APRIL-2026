@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explanation Design Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; padding: 32px 24px; color: #1e293b; }
+
+  .page-title { color: #fff; font-size: 1.1rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+  .page-sub { color: #64748b; font-size: .82rem; margin-bottom: 28px; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
+
+  .col-label { font-size: .65rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: #475569; margin-bottom: 10px; background: #1e293b; display: inline-block; padding: 3px 10px; border-radius: 20px; }
+  .col-title { font-size: 1rem; font-weight: 800; color: #f1f5f9; margin-bottom: 4px; }
+  .col-desc { font-size: .78rem; color: #64748b; margin-bottom: 14px; line-height: 1.5; }
+
+  .card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 24px rgba(0,0,0,.3); }
+
+  /* shared */
+  .q-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .q-num { font-size: .65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: .1em; }
+  .wrong-badge { background: #fef2f2; color: #dc2626; font-size: .68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; border: 1.5px solid #fecaca; white-space: nowrap; }
+  .q-prompt { font-size: .95rem; font-weight: 700; color: #0f172a; margin-bottom: 12px; line-height: 1.5; }
+  .answer-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .answer-chip { display: flex; flex-direction: column; gap: 2px; }
+  .chip-label { font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #94a3b8; }
+  .chip-val { font-size: .82rem; font-weight: 700; padding: 5px 11px; border-radius: 8px; }
+  .chip-yours { background: #fef2f2; color: #dc2626; border: 1.5px solid #fecaca; }
+  .chip-correct { background: #f0fdf4; color: #16a34a; border: 1.5px solid #bbf7d0; }
+  blockquote { font-size: .78rem; color: #64748b; border-left: 3px solid #cbd5e1; padding: 7px 10px; background: #f8fafc; border-radius: 0 6px 6px 0; margin-top: 10px; line-height: 1.6; font-style: italic; }
+
+  /* ── VERSION A ── */
+  .va-spotlight { display: flex; align-items: center; gap: 12px; background: #f0fdf4; border: 2px solid #16a34a; border-radius: 12px; padding: 10px 14px; margin-bottom: 12px; }
+  .va-big { font-size: 1.5rem; font-weight: 900; color: #16a34a; }
+  .va-sep { width: 1px; height: 36px; background: #bbf7d0; }
+  .va-thai { font-size: .78rem; color: #166534; font-weight: 600; line-height: 1.5; }
+  .va-step { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
+  .va-num { min-width: 22px; height: 22px; background: #2563eb; color: #fff; border-radius: 50%; font-size: .68rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .va-text { font-size: .82rem; line-height: 1.6; color: #334155; }
+  .va-text strong { color: #0f172a; }
+  .hl-blue { background: #dbeafe; color: #1d4ed8; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+  .hl-yellow { background: #fef9c3; color: #854d0e; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+
+  /* ── VERSION B ── */
+  .vb-answer-bar { background: #16a34a; color: #fff; border-radius: 10px; padding: 9px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .vb-word { font-size: 1.2rem; font-weight: 900; }
+  .vb-sep { width: 1px; height: 32px; background: rgba(255,255,255,.3); }
+  .vb-thai { font-size: .76rem; line-height: 1.45; opacity: .9; }
+  .vb-label { font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 5px; }
+  .vb-why-label { font-size: .62rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: #64748b; margin-bottom: 8px; }
+  .vb-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; margin-bottom: 10px; }
+  .vb-side { padding: 10px 11px; border-radius: 8px; }
+  .vb-p { background: #eff6ff; border: 1.5px solid #bfdbfe; }
+  .vb-q { background: #fefce8; border: 1.5px solid #fef08a; }
+  .vb-p .vb-label { color: #1d4ed8; }
+  .vb-q .vb-label { color: #92400e; }
+  .vb-side-text { font-size: .8rem; line-height: 1.55; color: #1e293b; }
+  .vb-side-text .hl { font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
+  .vb-p .hl { color: #1d4ed8; }
+  .vb-q .hl { color: #92400e; }
+  .vb-eq { display: flex; align-items: center; justify-content: center; padding: 0 7px; font-size: 1.2rem; font-weight: 900; color: #94a3b8; }
+  .vb-hint { font-size: .72rem; margin-top: 5px; font-weight: 600; }
+  .vb-p .vb-hint { color: #3b82f6; }
+  .vb-q .vb-hint { color: #d97706; }
+
+  /* ── VERSION C ── */
+  .vc-answer-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .vc-box { background: #16a34a; color: #fff; font-size: 1.3rem; font-weight: 900; padding: 7px 18px; border-radius: 10px; }
+  .vc-word-th { font-size: .85rem; color: #166534; font-weight: 700; }
+  .vc-block { border-left: 4px solid; padding: 9px 12px; margin-bottom: 8px; border-radius: 0 8px 8px 0; }
+  .vc-block.pa { border-color: #2563eb; background: #eff6ff; }
+  .vc-block.qu { border-color: #f59e0b; background: #fffbeb; }
+  .vc-block.re { border-color: #16a34a; background: #f0fdf4; }
+  .vc-blabel { font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+  .vc-block.pa .vc-blabel { color: #1d4ed8; }
+  .vc-block.qu .vc-blabel { color: #92400e; }
+  .vc-block.re .vc-blabel { color: #166534; }
+  .vc-btext { font-size: .82rem; line-height: 1.6; color: #1e293b; }
+  .vc-btext .hl { font-weight: 800; }
+  .vc-block.pa .hl { color: #1d4ed8; }
+  .vc-block.qu .hl { color: #b45309; }
+  .vc-block.re .hl { color: #166534; }
+  .vc-hint { font-size: .75rem; color: inherit; opacity: .75; margin-top: 3px; display: block; }
+
+  /* column headers */
+  .col-header { margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<p class="page-title">Reading Report — Explanation Design</p>
+<p class="page-sub">Q6 · "… … receive very little of overall income" · Answer: producers</p>
+
+<div class="grid">
+
+  <!-- ══════════════ VERSION A ══════════════ -->
+  <div>
+    <div class="col-header">
+      <div class="col-label">Version A</div>
+      <div class="col-title">Show Me Why</div>
+      <div class="col-desc">คำตอบใหญ่ก่อน → 3 ขั้นตอนอธิบายเป็นภาษาไทย สำหรับนักเรียนที่อยากเข้าใจเหตุผล</div>
+    </div>
+    <div class="card">
+      <div class="q-header">
+        <span class="q-num">Question 6</span>
+        <span class="wrong-badge">✗ Wrong</span>
+      </div>
+      <p class="q-prompt">… … receive very little of overall income</p>
+      <div class="answer-row">
+        <div class="answer-chip">
+          <span class="chip-label">คุณตอบ</span>
+          <span class="chip-val chip-yours">— ไม่ได้ตอบ</span>
+        </div>
+        <div class="answer-chip">
+          <span class="chip-label">คำตอบที่ถูก</span>
+          <span class="chip-val chip-correct">producers</span>
+        </div>
+      </div>
+      <div class="va-spotlight">
+        <div>
+          <div style="font-size:.58rem;font-weight:800;color:#166534;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">คำตอบ</div>
+          <div class="va-big">producers</div>
+        </div>
+        <div class="va-sep"></div>
+        <div class="va-thai">ผู้ผลิต / เกษตรกร<br><span style="font-weight:400;color:#86efac;font-size:.72rem">คนที่ปลูกหรือผลิตสินค้า</span></div>
+      </div>
+      <div class="va-step">
+        <div class="va-num">1</div>
+        <div class="va-text"><strong>โจทย์ถามว่า:</strong> ใครที่ <span class="hl-yellow">ได้รับรายได้น้อยมาก</span> จากสินค้า?</div>
+      </div>
+      <div class="va-step">
+        <div class="va-num">2</div>
+        <div class="va-text"><strong>บทความบอกว่า:</strong> "goes to wholesalers and transport, <span class="hl-blue">not the producers</span>" → producers ได้แค่ 20%</div>
+      </div>
+      <div class="va-step">
+        <div class="va-num">3</div>
+        <div class="va-text"><strong>Paraphrase:</strong> <span class="hl-blue">not the producers</span> = <span class="hl-yellow">receive very little</span> → คำตอบคือ <strong>producers</strong></div>
+      </div>
+      <blockquote>80% of the price I pay goes to wholesalers and transport companies, not the producers</blockquote>
+    </div>
+  </div>
+
+  <!-- ══════════════ VERSION B ══════════════ -->
+  <div>
+    <div class="col-header">
+      <div class="col-label">Version B</div>
+      <div class="col-title">Side by Side</div>
+      <div class="col-desc">บทความ vs โจทย์ แบบเทียบกัน 2 ฝั่ง สำหรับนักเรียนที่ชอบมองภาพรวม</div>
+    </div>
+    <div class="card">
+      <div class="q-header">
+        <span class="q-num">Question 6</span>
+        <span class="wrong-badge">✗ Wrong</span>
+      </div>
+      <p class="q-prompt">… … receive very little of overall income</p>
+      <div class="answer-row">
+        <div class="answer-chip">
+          <span class="chip-label">คุณตอบ</span>
+          <span class="chip-val chip-yours">— ไม่ได้ตอบ</span>
+        </div>
+        <div class="answer-chip">
+          <span class="chip-label">คำตอบที่ถูก</span>
+          <span class="chip-val chip-correct">producers</span>
+        </div>
+      </div>
+      <div class="vb-answer-bar">
+        <div>
+          <div style="font-size:.55rem;opacity:.6;font-weight:800;text-transform:uppercase;letter-spacing:.08em">คำตอบ</div>
+          <div class="vb-word">producers</div>
+        </div>
+        <div class="vb-sep"></div>
+        <div class="vb-thai">ผู้ผลิต / เกษตรกร<br>คนที่ผลิตหรือปลูกสินค้า</div>
+      </div>
+      <p class="vb-why-label">ทำไมถึงตอบ producers?</p>
+      <div class="vb-compare">
+        <div class="vb-side vb-p">
+          <div class="vb-label">📖 บทความพูดว่า</div>
+          <div class="vb-side-text">"…goes to wholesalers, <span class="hl">not the producers</span>"</div>
+          <div class="vb-hint">ผู้ผลิตไม่ได้รับเงิน</div>
+        </div>
+        <div class="vb-eq">=</div>
+        <div class="vb-side vb-q">
+          <div class="vb-label">❓ โจทย์ถามว่า</div>
+          <div class="vb-side-text">"___ <span class="hl">receive very little</span> of income"</div>
+          <div class="vb-hint">ใครได้รับน้อยมาก?</div>
+        </div>
+      </div>
+      <blockquote>80% of the price I pay goes to wholesalers and transport companies, not the producers</blockquote>
+    </div>
+  </div>
+
+  <!-- ══════════════ VERSION C ══════════════ -->
+  <div>
+    <div class="col-header">
+      <div class="col-label">Version C</div>
+      <div class="col-title">Plain Thai</div>
+      <div class="col-desc">3 block สี บทความ/โจทย์/เหตุผล ไม่มี chip ภาษาอังกฤษ สำหรับนักเรียนที่ยังอ่อนภาษาอังกฤษ</div>
+    </div>
+    <div class="card">
+      <div class="q-header">
+        <span class="q-num">Question 6</span>
+        <span class="wrong-badge">✗ Wrong</span>
+      </div>
+      <p class="q-prompt">… … receive very little of overall income</p>
+      <div class="answer-row">
+        <div class="answer-chip">
+          <span class="chip-label">คุณตอบ</span>
+          <span class="chip-val chip-yours">— ไม่ได้ตอบ</span>
+        </div>
+        <div class="answer-chip">
+          <span class="chip-label">คำตอบที่ถูก</span>
+          <span class="chip-val chip-correct">producers</span>
+        </div>
+      </div>
+      <div class="vc-answer-row">
+        <div class="vc-box">producers</div>
+        <div class="vc-word-th">= ผู้ผลิต / เกษตรกร</div>
+      </div>
+      <div class="vc-block pa">
+        <div class="vc-blabel">📖 บทความบอกว่า</div>
+        <div class="vc-btext">"goes to wholesalers and transport, <span class="hl">not the producers</span>"<span class="vc-hint">→ ผู้ผลิตไม่ได้รับเงินส่วนใหญ่</span></div>
+      </div>
+      <div class="vc-block qu">
+        <div class="vc-blabel">❓ โจทย์ถามว่า</div>
+        <div class="vc-btext">"___ <span class="hl">receive very little of overall income</span>"<span class="vc-hint">→ ใครที่ได้รับรายได้น้อยมาก?</span></div>
+      </div>
+      <div class="vc-block re">
+        <div class="vc-blabel">💡 เหตุผล</div>
+        <div class="vc-btext"><span class="hl">not the producers</span> = <span class="hl">receive very little</span><span class="vc-hint">บทความบอกว่า producers ไม่ได้รับเงิน ตรงกับโจทย์ที่ถามว่าใครได้รับน้อย</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

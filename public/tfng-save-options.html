@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Layout 4 — Save to Notebook Options</title>
+<style>
+  body { font-family: -apple-system, "Sukhumvit Set", "IBM Plex Sans Thai", sans-serif; background:#f6f7fb; margin:0; padding:32px; color:#1a1f36; }
+  h1 { font-size:22px; margin:0 0 8px; }
+  .sub { color:#666; margin-bottom:32px; font-size:14px; }
+  .card { background:white; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; max-width:1100px; }
+  .label { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.5px; color:#fff; padding:3px 10px; border-radius:999px; margin-bottom:8px; }
+  .l1 { background:#db2777; } .l2 { background:#0ea5e9; } .l3 { background:#7c3aed; }
+  .qhead { font-size:13px; color:#666; font-weight:700; letter-spacing:1px; }
+  .qtext { font-size:16px; font-weight:600; margin:4px 0 16px; }
+  .pill { display:inline-block; padding:4px 12px; border-radius:6px; font-size:13px; font-weight:700; background:#dcfce7; color:#166534; }
+
+  .panels { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  .panel { background:#fff8f1; border:2px solid #fed7aa; border-radius:14px; padding:16px; position:relative; }
+  .panel .step-tag { position:absolute; top:-10px; left:14px; background:#ea580c; color:white; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; }
+  .panel h4 { margin:8px 0 8px; font-size:14px; color:#9a3412; }
+  .panel p { margin:0 0 8px; font-size:13px; line-height:1.6; }
+  .panel .quote { background:white; border-left:3px solid #ea580c; padding:8px 10px; font-size:12px; border-radius:4px; font-style:italic; color:#444; }
+
+  /* OPTION A: single big save button */
+  .save-bar-a { display:flex; gap:10px; margin-top:16px; }
+  .btn { padding:14px 20px; border-radius:10px; font-size:15px; font-weight:700; border:none; cursor:pointer; flex:1; transition:all .15s; }
+  .btn-know { background:white; border:2px solid #fca5a5; color:#b91c1c; }
+  .btn-know:hover { background:#fef2f2; }
+  .btn-save { background:linear-gradient(135deg,#fde047,#facc15); color:#713f12; box-shadow:0 2px 6px rgba(250,204,21,.4); }
+  .btn-save:hover { transform:translateY(-1px); box-shadow:0 4px 10px rgba(250,204,21,.5); }
+  .hint { font-size:12px; color:#666; margin-top:8px; text-align:center; }
+
+  /* OPTION B: per-panel save chips */
+  .panel-save { position:absolute; top:8px; right:10px; background:white; border:1.5px solid #fed7aa; width:30px; height:30px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; transition:all .15s; }
+  .panel-save:hover { border-color:#ea580c; transform:scale(1.1); }
+  .panel-save.saved { background:#ea580c; border-color:#ea580c; color:white; }
+  .picker-summary { background:#fffbeb; border:1px dashed #f59e0b; padding:12px 16px; border-radius:8px; margin-top:14px; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+  .picker-summary .count { color:#92400e; font-weight:600; }
+  .save-mini { background:#ea580c; color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer; }
+
+  /* OPTION C: AI-suggested checkbox list */
+  .suggest-box { background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; padding:16px; margin-top:16px; }
+  .suggest-box h4 { margin:0 0 4px; font-size:14px; color:#075985; display:flex; align-items:center; gap:6px; }
+  .suggest-box .sub-h { font-size:12px; color:#0369a1; margin-bottom:12px; }
+  .check-item { display:flex; gap:10px; padding:10px 12px; background:white; border-radius:8px; margin-bottom:6px; cursor:pointer; transition:background .12s; align-items:flex-start; }
+  .check-item:hover { background:#f0f9ff; }
+  .check-item input { margin-top:3px; accent-color:#0ea5e9; transform:scale(1.2); }
+  .check-item .ci-title { font-size:13px; font-weight:600; color:#1a1f36; }
+  .check-item .ci-desc { font-size:12px; color:#666; margin-top:2px; }
+  .check-item .ci-tag { display:inline-block; font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px; margin-left:6px; }
+  .tag-vocab { background:#fef3c7; color:#92400e; }
+  .tag-skill { background:#dbeafe; color:#1e40af; }
+  .tag-quote { background:#e0e7ff; color:#3730a3; }
+  .suggest-actions { display:flex; gap:10px; margin-top:12px; }
+  .btn-primary { background:#0ea5e9; color:white; border:none; padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer; flex:1; }
+  .btn-secondary { background:white; color:#0369a1; border:1.5px solid #bae6fd; padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer; }
+
+  .pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; font-size:13px; }
+  .pros, .cons { padding:10px 14px; border-radius:6px; }
+  .pros { background:#f0fdf4; border-left:3px solid #16a34a; }
+  .cons { background:#fef2f2; border-left:3px solid #dc2626; }
+  .pros b, .cons b { display:block; margin-bottom:4px; font-size:12px; }
+</style>
+</head>
+<body>
+
+<h1>Layout 4 + Save-to-Notebook — 3 Options</h1>
+<div class="sub">Same explanation panels. Different ways to capture insights for later revision.</div>
+
+<!-- ============ OPTION A ============ -->
+<div class="card">
+  <span class="label l1">Option A — Save the Whole Card (1 click)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill">TRUE</span></div>
+
+  <div class="panels">
+    <div class="panel"><span class="step-tag">1 · อ่านโจทย์</span>
+      <h4>โจทย์ถามว่า?</h4>
+      <p>geoglyphs ส่วนใหญ่ในอังกฤษ <b>อยู่ทางใต้</b> ใช่ไหม?</p>
+      <p style="color:#9a3412"><b>คำสำคัญ:</b> most · geoglyphs · southern</p>
+    </div>
+    <div class="panel"><span class="step-tag">2 · หาในบทความ</span>
+      <h4>บทความเขียนว่า</h4>
+      <div class="quote">"...the vast majority on the chalk downlands of the country's southern counties."</div>
+      <p style="margin-top:8px">📖 <b>vast majority</b> = ส่วนใหญ่ที่สุด<br>📖 <b>southern counties</b> = จังหวัดทางใต้</p>
+    </div>
+    <div class="panel"><span class="step-tag">3 · เทียบดู</span>
+      <h4>ตรงกันไหม?</h4>
+      <p>✓ "most" = "vast majority"<br>✓ พูดเรื่อง geoglyphs เหมือนกัน</p>
+      <p style="color:#166534;font-weight:700;margin-top:10px">→ ตรงกันทุกจุด!</p>
+    </div>
+  </div>
+
+  <div class="save-bar-a">
+    <button class="btn btn-know">✓ รู้แล้ว</button>
+    <button class="btn btn-save">⭐ บันทึก Notebook</button>
+  </div>
+  <div class="hint">เก็บคำอธิบายทั้งหมด (3 panels + คำศัพท์ + ประโยคจากบทความ) ไว้ทบทวน</div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>ง่ายที่สุด · click เดียวจบ · นักเรียนไม่ต้องคิดว่า "เก็บอะไรดี"</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>Notebook โตเร็วมาก · เก็บทั้งข้อแม้บางส่วนเขารู้แล้ว · ทบทวนช้า</div>
+  </div>
+</div>
+
+<!-- ============ OPTION B ============ -->
+<div class="card">
+  <span class="label l2">Option B — Pick-and-Save (เก็บเฉพาะ panel ที่อยากทบทวน)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill">TRUE</span></div>
+
+  <div class="panels">
+    <div class="panel">
+      <span class="step-tag">1 · อ่านโจทย์</span>
+      <div class="panel-save" title="บันทึก panel นี้">🔖</div>
+      <h4>โจทย์ถามว่า?</h4>
+      <p>geoglyphs ส่วนใหญ่ในอังกฤษ <b>อยู่ทางใต้</b> ใช่ไหม?</p>
+      <p style="color:#9a3412"><b>คำสำคัญ:</b> most · geoglyphs · southern</p>
+    </div>
+    <div class="panel">
+      <span class="step-tag">2 · หาในบทความ</span>
+      <div class="panel-save saved" title="บันทึกแล้ว">✓</div>
+      <h4>บทความเขียนว่า</h4>
+      <div class="quote">"...the vast majority on the chalk downlands of the country's southern counties."</div>
+      <p style="margin-top:8px">📖 <b>vast majority</b> = ส่วนใหญ่ที่สุด<br>📖 <b>southern counties</b> = จังหวัดทางใต้</p>
+    </div>
+    <div class="panel">
+      <span class="step-tag">3 · เทียบดู</span>
+      <div class="panel-save" title="บันทึก panel นี้">🔖</div>
+      <h4>ตรงกันไหม?</h4>
+      <p>✓ "most" = "vast majority"<br>✓ พูดเรื่อง geoglyphs เหมือนกัน</p>
+      <p style="color:#166534;font-weight:700;margin-top:10px">→ ตรงกันทุกจุด!</p>
+    </div>
+  </div>
+
+  <div class="picker-summary">
+    <span class="count">🔖 เลือกแล้ว <b>1</b> panel (Panel 2: คำศัพท์ + ประโยคต้นฉบับ)</span>
+    <button class="save-mini">บันทึกเข้า Notebook →</button>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>นักเรียนเลือกเฉพาะส่วนที่ <i>ตัวเองพลาด</i> · Notebook สะอาด · ทบทวนเร็ว</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>ต้องตัดสินใจเอง — struggling learner บางคนเลือกไม่เป็น</div>
+  </div>
+</div>
+
+<!-- ============ OPTION C ============ -->
+<div class="card">
+  <span class="label l3">Option C — AI แนะนำสิ่งที่ควรจำ (checkbox preset)</span>
+  <div class="qhead">QUESTION 1</div>
+  <div class="qtext">Most geoglyphs in England are located in southern counties. <span class="pill">TRUE</span></div>
+
+  <div class="panels">
+    <div class="panel"><span class="step-tag">1 · อ่านโจทย์</span>
+      <h4>โจทย์ถามว่า?</h4>
+      <p>geoglyphs ส่วนใหญ่ในอังกฤษ <b>อยู่ทางใต้</b> ใช่ไหม?</p>
+    </div>
+    <div class="panel"><span class="step-tag">2 · หาในบทความ</span>
+      <h4>บทความเขียนว่า</h4>
+      <div class="quote">"...the vast majority on the chalk downlands..."</div>
+    </div>
+    <div class="panel"><span class="step-tag">3 · เทียบดู</span>
+      <h4>ตรงกันไหม?</h4>
+      <p style="color:#166534;font-weight:700">→ ตรงกัน → TRUE</p>
+    </div>
+  </div>
+
+  <div class="suggest-box">
+    <h4>✨ AI แนะนำให้จำ 3 อย่างจากข้อนี้</h4>
+    <div class="sub-h">เลือกได้เลย — เรา preset ให้แล้วตามจุดที่นักเรียนมักพลาด</div>
+
+    <label class="check-item">
+      <input type="checkbox" checked>
+      <div>
+        <div class="ci-title">vast majority = most <span class="ci-tag tag-vocab">คำศัพท์</span></div>
+        <div class="ci-desc">paraphrase สำคัญ เจอบ่อยใน Reading ทุกชุด</div>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox" checked>
+      <div>
+        <div class="ci-title">เทคนิค: คำเดียวกัน vs คำต่างกันที่ความหมายเหมือน <span class="ci-tag tag-skill">เทคนิค T/F/NG</span></div>
+        <div class="ci-desc">บทความใช้ "vast majority" แทน "most" — paraphrase = TRUE ไม่ใช่ NOT GIVEN</div>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div>
+        <div class="ci-title">"There are 56 hill figures... southern counties." <span class="ci-tag tag-quote">ประโยคต้นฉบับ</span></div>
+        <div class="ci-desc">เก็บไว้ดูว่าโครงประโยคแบบนี้ ตอบโจทย์แบบไหน</div>
+      </div>
+    </label>
+
+    <div class="suggest-actions">
+      <button class="btn-primary">⭐ บันทึก 2 รายการที่เลือก</button>
+      <button class="btn-secondary">เลือกเอง...</button>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros"><b>✓ ข้อดี</b>ดีที่สุดสำหรับ struggling learner · ระบบช่วยตัดสินใจ · แยก vocab/skill/quote ใน Notebook ได้ตั้งแต่ต้น · ทบทวนแบบ flashcard ได้เลย</div>
+    <div class="cons"><b>✗ ข้อจำกัด</b>ต้อง generate suggestions ทุกข้อ (cost+complexity) · UI หนาที่สุดใน 3 ตัวเลือก</div>
+  </div>
+</div>
+
+<div class="card" style="background:#1a1f36; color:white;">
+  <h3 style="margin-top:0">คำแนะนำของผม</h3>
+  <p style="font-size:14px; line-height:1.7">สำหรับ struggling Thai learners — <b>Option C</b> สอดคล้องกับเป้าหมายที่สุด เพราะ:</p>
+  <ul style="font-size:14px; line-height:1.7">
+    <li><b>ลดภาระการตัดสินใจ</b> — นักเรียนที่ยังไม่เก่งมักไม่รู้ว่า "อะไรสำคัญพอจะจำ" Option C ตอบให้</li>
+    <li><b>แยกประเภทตั้งแต่บันทึก</b> (vocab / skill / quote) → Notebook ทบทวนเป็นหมวดได้ → ทำ flashcard mode ในอนาคตได้</li>
+    <li><b>ยังคงตัวเลือก override</b> — ปุ่ม "เลือกเอง..." รองรับนักเรียนที่เริ่มเก่งขึ้น</li>
+  </ul>
+  <p style="font-size:14px; line-height:1.7">ถ้ากังวลเรื่อง cost ของ AI suggestions ทุกข้อ — start ด้วย <b>Option A</b> ก่อนเพื่อ ship เร็ว แล้ว upgrade เป็น C เมื่อมีข้อมูลว่านักเรียนใช้ Notebook ยังไง</p>
+</div>
+
+</body>
+</html>
