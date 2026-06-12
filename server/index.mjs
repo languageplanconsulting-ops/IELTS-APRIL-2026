@@ -330,7 +330,7 @@ const buildBucketRubricTh = (testMode = 'part2') => `
 ไวยากรณ์ (Grammar)
 Band 9: ใช้ conditionals, perfect tense, past tense ไม่มีข้อผิดพลาด ใช้ subordinating conjunction และถ้าเป็น Part 3 ต้องใช้ passive voice ถูกต้องอย่างน้อย 3 ครั้ง
 Band 8: ใช้ perfect tense และ past tense ใช้ subordinating conjunction ไม่มีข้อผิดพลาด และถ้าเป็น Part 3 ต้องใช้ passive voice ถูกต้องอย่างน้อย 2 ครั้ง
-Band 7.5: ใช้ simple tense ถูกต้องครบ และเริ่มใช้ perfect หรือ past tense ได้ถูกต้องอย่างน้อย 1 ครั้ง ใช้ subordinating conjunction ได้ถูกต้อง อนุโลม grammar mistakes ที่ไม่รบกวนความเข้าใจไม่เกิน 2 ครั้ง
+Band 7.5: ใช้ simple tense ถูกต้องครบ และเริ่มใช้ perfect หรือ past tense ได้ถูกต้องอย่างน้อย 1 ครั้ง ใช้ subordinating conjunction ได้ถูกต้อง อนุโลม grammar mistakes ที่ไม่รบกวนความเข้าใจไม่เกิน 2 ครั้ง และถ้าเป็น Part 3 ต้องใช้ passive voice ถูกต้องอย่างน้อย 1 ครั้ง
 Band 7: ${
   testMode === 'part2'
     ? 'ใช้ simple tense ได้ถูกต้อง ใช้ subordinating conjunction และอนุโลม grammar mistakes ที่ไม่รบกวนความเข้าใจได้ไม่เกิน 3 ครั้ง'
@@ -349,7 +349,11 @@ Band 9: ${
     : 'collocation > 6 (B1+) และ C1-C2 อย่างน้อย 2 ไม่มีคำผิดธรรมชาติ'
 }
 Band 8: collocation > 4-5 (B1+) และ C1-C2 อย่างน้อย 1 ไม่มีคำผิดธรรมชาติ
-Band 7.5: collocation 4-5 จุด (B1+) ไม่มี lexical error และคำแปลกหูไม่เกิน 2 ครั้ง (ยังไม่จำเป็นต้องมี C1-C2 หรือมีได้ 0-1 จุด)
+Band 7.5: ${
+  testMode === 'part1' || testMode === 'part3'
+    ? 'collocation 5-6 จุด (B1+) และ C1-C2 อย่างน้อย 1 จุด ไม่มี lexical error และคำแปลกหูไม่เกิน 2 ครั้ง'
+    : 'collocation 4-5 จุด (B1+) ไม่มี lexical error และคำแปลกหูไม่เกิน 2 ครั้ง (ยังไม่จำเป็นต้องมี C1-C2 หรือมีได้ 0-1 จุด)'
+}
 Band 7: collocation 2-5 (B1+) ไม่มี lexical error และคำแปลกหูไม่เกิน 3 ครั้ง
 Band 6.5: collocation 2-3 จุด (B1+) มี lexical error ได้ไม่เกิน 1 จุด คำแปลกหู/ผิดบริบทไม่เกิน 4 ครั้ง แต่ยังเข้าใจได้
 Band 6: collocation ส่วนใหญ่ A2-B1 มีคำแปลกหู/ผิดบ่อยแต่ยังพอเข้าใจ
