@@ -2430,7 +2430,13 @@ const renderNextBandCriteria = (
 const renderBandLadder = (
   keyPrefix: string,
   report: ComponentReport,
-  targetBand: number
+  targetBand: number,
+  onSavePlan: (plan: {
+    quote: string
+    fix?: string
+    originalText?: string
+    improvedText?: string
+  }) => void
 ) => {
   const metTicks = (report.requiredTicks || []).filter((tick) => tick.isMet)
   const checklist =
@@ -2481,6 +2487,13 @@ const renderBandLadder = (
                       </p>
                     )}
                     {improved && <p className="ladderStepTo">{improved}</p>}
+                    <button
+                      type="button"
+                      className="ladderSaveBtn"
+                      onClick={() => onSavePlan(plan)}
+                    >
+                      ＋ บันทึกลง Notebook
+                    </button>
                   </li>
                 )
               })}
@@ -28263,49 +28276,96 @@ function App() {
                               ) : (
                                 activeReport.componentReports && (
                                   <>
-                                    {(
-                                      [
-                                        ['grammar', 'Grammar', 'navy'],
-                                        ['lexical', 'Vocabulary', 'green'],
-                                        ['fluency', 'Fluency', 'blue']
-                                      ] as const
-                                    ).map(([key, label, tone]) => {
-                                      const report = activeReport.componentReports?.[key]
-                                      if (!report) return null
-                                      const targetBand = computeTargetBand(report.band)
-                                      return (
-                                        <section key={key} className={`sectionV2 sectionV2Tone-${tone}`}>
-                                          <header className="sectionV2Top">
-                                            <div>
-                                              <p className="sectionV2Eyebrow">เกณฑ์ประเมิน</p>
-                                              <h4 className="sectionV2Title">{label}</h4>
-                                            </div>
-                                            <div className="sectionV2HeaderRight">
-                                              <span className="bandPill">Band {report.band.toFixed(1)}</span>
-                                              <span className="targetBandPill">เป้าหมาย {targetBand.toFixed(1)}</span>
-                                            </div>
-                                          </header>
-                                          <div className="sectionV2Body">
-                                            <div className="bandGapBar" aria-hidden="true">
-                                              <div
-                                                className="bandGapFill"
-                                                style={{ width: `${(Math.min(report.band, 9) / 9) * 100}%` }}
-                                              />
-                                              <span
-                                                className="bandGapMark"
-                                                style={{ left: `${(targetBand / 9) * 100}%` }}
-                                              >
-                                                เป้าหมาย
-                                              </span>
-                                            </div>
-                                            <div className="insightV2">
-                                              {report.explanationThai && <p>{report.explanationThai}</p>}
-                                            </div>
-                                            {renderBandLadder(String(key), report, targetBand)}
-                                          </div>
-                                        </section>
+                                    {(() => {
+                                      const ladderItems = (
+                                        [
+                                          ['grammar', 'Grammar', 'navy'],
+                                          ['lexical', 'Vocabulary', 'green'],
+                                          ['fluency', 'Fluency', 'blue']
+                                        ] as const
                                       )
-                                    })}
+                                        .map(([key, label, tone]) => ({
+                                          key,
+                                          label,
+                                          tone,
+                                          report: activeReport.componentReports?.[key]
+                                        }))
+                                        .filter((item) => item.report)
+                                        .sort(
+                                          (a, b) =>
+                                            (a.report as ComponentReport).band -
+                                            (b.report as ComponentReport).band
+                                        )
+                                      const focus = ladderItems[0]
+                                      return (
+                                        <>
+                                          {focus && focus.report && (
+                                            <div className="focusLeadV2">
+                                              🎯 โฟกัสก่อน · <strong>{focus.label}</strong> (Band{' '}
+                                              {focus.report.band.toFixed(1)} →{' '}
+                                              {computeTargetBand(focus.report.band).toFixed(1)})
+                                            </div>
+                                          )}
+                                          {ladderItems.map(({ key, label, tone, report }) => {
+                                            if (!report) return null
+                                            const targetBand = computeTargetBand(report.band)
+                                            return (
+                                              <section
+                                                key={key}
+                                                className={`sectionV2 sectionV2Tone-${tone}`}
+                                              >
+                                                <header className="sectionV2Top">
+                                                  <div>
+                                                    <p className="sectionV2Eyebrow">เกณฑ์ประเมิน</p>
+                                                    <h4 className="sectionV2Title">{label}</h4>
+                                                  </div>
+                                                  <div className="sectionV2HeaderRight">
+                                                    <span className="bandPill">
+                                                      Band {report.band.toFixed(1)}
+                                                    </span>
+                                                    <span className="targetBandPill">
+                                                      เป้าหมาย {targetBand.toFixed(1)}
+                                                    </span>
+                                                  </div>
+                                                </header>
+                                                <div className="sectionV2Body">
+                                                  <div className="bandGapBar" aria-hidden="true">
+                                                    <div
+                                                      className="bandGapFill"
+                                                      style={{
+                                                        width: `${(Math.min(report.band, 9) / 9) * 100}%`
+                                                      }}
+                                                    />
+                                                    <span
+                                                      className="bandGapMark"
+                                                      style={{ left: `${(targetBand / 9) * 100}%` }}
+                                                    >
+                                                      เป้าหมาย
+                                                    </span>
+                                                  </div>
+                                                  <div className="insightV2">
+                                                    {report.explanationThai && (
+                                                      <p>{report.explanationThai}</p>
+                                                    )}
+                                                  </div>
+                                                  {renderBandLadder(
+                                                    String(key),
+                                                    report,
+                                                    targetBand,
+                                                    (plan) =>
+                                                      savePlanToNotebook({
+                                                        criterion: label,
+                                                        quote: plan.originalText || plan.quote,
+                                                        fix: plan.improvedText || plan.fix || ''
+                                                      })
+                                                  )}
+                                                </div>
+                                              </section>
+                                            )
+                                          })}
+                                        </>
+                                      )
+                                    })()}
                                   </>
                                 )
                               )}
