@@ -25018,3 +25018,44 @@ textarea {
   color: #1f4a39;
   line-height: 1.45;
 }
+
+/* Intensive (ด่าน) judgement explanation — clearer passage↔claim contrast (all stages, cosmetic) */
+.readingReportBridgeRow-judgement {
+  gap: 10px;
+  align-items: stretch;
+}
+.readingReportBridgeRow-judgement .readingReportJudgementSide {
+  flex: 1;
+  border-radius: 9px;
+  padding: 9px 12px;
+  border: 1px solid #e6ecf5;
+  background: #f8fafc;
+}
+.readingReportBridgeRow-judgement .readingReportJudgementSide:first-child {
+  background: #eef4ff;
+  border-color: #d6e4ff;
+}
+.readingReportBridgeRow-judgement .readingReportJudgementSide:last-child {
+  background: #fbf4e6;
+  border-color: #f0e0bd;
+}
+.readingReportBridgeRow-judgement .readingReportJudgementSideLabel {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.readingReportBridgeRow-judgement .readingReportJudgementSide:first-child .readingReportJudgementSideLabel {
+  color: #1d4ed8;
+}
+.readingReportBridgeRow-judgement .readingReportJudgementSide:last-child .readingReportJudgementSideLabel {
+  color: #b45309;
+}
+.readingReportBridgeRow-judgement .readingReportBridgeArrow {
+  align-self: center;
+  color: #94a3b8;
+  font-weight: 800;
+  font-size: 0.72rem;
+}
