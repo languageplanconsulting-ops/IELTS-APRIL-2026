@@ -23058,11 +23058,26 @@ function App() {
                             ) : null
                           }
                           if (isJudgement && isIntensive) {
+                            const ans = String(item.correctAnswer || '').trim().toUpperCase()
+                            const ruleText =
+                              ans === 'FALSE' || ans === 'NO'
+                                ? 'บทความ “ขัด” กับโจทย์ — ไม่ใช่แค่ไม่พูดถึง (ถ้าบทความไม่พูดถึงเลย จะเป็น NOT GIVEN)'
+                                : ans === 'TRUE' || ans === 'YES'
+                                  ? 'บทความ “ยืนยันตรง” กับโจทย์'
+                                  : ans === 'NOT GIVEN'
+                                    ? 'บทความ “ไม่ได้พูดถึง” เรื่องนี้ — ไม่ได้ขัด แค่ไม่มีข้อมูล'
+                                    : ''
                             return (
                               <div>
                                 <p className="readingReportBridgeLabel">
                                   {`ทำไมถึงตอบ ${item.correctAnswer}?`}
                                 </p>
+                                {ruleText && (
+                                  <div className="readingReportRuleBanner">
+                                    <span className="readingReportRuleAns">{item.correctAnswer}</span>
+                                    <span className="readingReportRuleText">{ruleText}</span>
+                                  </div>
+                                )}
                                 <div className="readingReportBridgeRow readingReportBridgeRow-judgement">
                                   <div className="readingReportJudgementSide">
                                     <span className="readingReportJudgementSideLabel">บทความบอกว่า</span>

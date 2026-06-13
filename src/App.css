@@ -24991,3 +24991,30 @@ textarea {
 .readingQuestionsPanel-exam .readingJudgementChoiceBtn {
   border-radius: 10px;
 }
+
+/* Intensive (ด่าน) judgement explanation — decision-rule banner (FALSE vs NOT GIVEN) */
+.readingReportRuleBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #e7f5ee;
+  border: 1px solid #bfe3cf;
+  border-radius: 10px;
+  padding: 9px 12px;
+  margin: 6px 0 10px;
+}
+.readingReportRuleAns {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f5e42;
+  background: #fff;
+  border: 1px solid #bfe3cf;
+  border-radius: 7px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+.readingReportRuleText {
+  font-size: 0.82rem;
+  color: #1f4a39;
+  line-height: 1.45;
+}
