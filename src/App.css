@@ -24965,3 +24965,29 @@ textarea {
 .ladderSaveBtn:hover {
   background: #e3ecf9;
 }
+
+/* === Exam-Real calm restyle — reading EXAM panel only, cosmetic, fully reversible ===
+   Scoped under .readingQuestionsPanel-exam so Listening (shared .listeningChoiceBtn)
+   and other reading modes are untouched. No layout/flow properties changed. */
+.readingQuestionsPanel-exam .readingQuestionCard {
+  border: 1px solid #dde3ec;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.05), 0 8px 22px rgba(20, 30, 60, 0.06);
+}
+.readingQuestionsPanel-exam .readingQuestionNavigator button {
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.readingQuestionsPanel-exam .readingQuestionNavigator button:hover {
+  box-shadow: none;
+  border-color: #b9c6da;
+}
+.readingQuestionsPanel-exam .listeningChoiceBtn {
+  border: 1px solid #dde3ec;
+  border-radius: 10px;
+  box-shadow: none;
+}
+.readingQuestionsPanel-exam .readingJudgementChoiceBtn {
+  border-radius: 10px;
+}
