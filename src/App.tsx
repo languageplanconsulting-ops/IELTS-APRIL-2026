@@ -3789,6 +3789,7 @@ const resolveReadingEvidenceNeedleInPassage = (
 ) => {
   const stripped = String(evidenceText || '')
     .replace(/^Paragraph\s+[A-G]:\s*/i, '')
+    .replace(/^[A-G][.:)]\s+/, '')
     .trim()
   if (!stripped || !passage) return ''
 
@@ -3815,6 +3816,25 @@ const resolveReadingEvidenceNeedleInPassage = (
         const regex = new RegExp(escapeRegExp(candidate), 'i')
         const match = paragraph.match(regex)
         if (match?.[0]) return match[0]
+      }
+    }
+  }
+
+  // Additive fallback: slide the window across the evidence so a phrase from the
+  // MIDDLE still highlights even when the opening words were copied inaccurately.
+  // Runs only after the passes above fail; it can only return a verified real
+  // passage substring, so it never changes a case that already matched.
+  for (let start = 1; start < words.length - 4; start += 1) {
+    for (let length = Math.min(14, words.length - start); length >= 5; length -= 1) {
+      const candidate = words.slice(start, start + length).join(' ')
+      const normalizedCandidate = normalizeTextForLooseMatch(candidate)
+      if (normalizedCandidate.length < 12) continue
+      for (const paragraph of paragraphs) {
+        if (normalizeTextForLooseMatch(paragraph).includes(normalizedCandidate)) {
+          const regex = new RegExp(escapeRegExp(candidate), 'i')
+          const match = paragraph.match(regex)
+          if (match?.[0]) return match[0]
+        }
       }
     }
   }
