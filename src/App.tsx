@@ -23072,32 +23072,40 @@ function App() {
                           const hasMeaningfulBridge = isIntensive || Boolean(parseParaphraseBridge(item.paraphrasedVocabulary))
                           const isJudgement = isReadingJudgementQuestion(item)
                           const isMcq = item.answerType === 'multiple-choice'
+                          const judgementAns = String(item.correctAnswer || '').trim().toUpperCase()
+                          const judgementRuleText = !isJudgement
+                            ? ''
+                            : judgementAns === 'FALSE' || judgementAns === 'NO'
+                              ? 'บทความ “ขัด” กับโจทย์ — ไม่ใช่แค่ไม่พูดถึง (ถ้าบทความไม่พูดถึงเลย จะเป็น NOT GIVEN)'
+                              : judgementAns === 'TRUE' || judgementAns === 'YES'
+                                ? 'บทความ “ยืนยันตรง” กับโจทย์'
+                                : judgementAns === 'NOT GIVEN'
+                                  ? 'บทความ “ไม่ได้พูดถึง” เรื่องนี้ — ไม่ได้ขัด แค่ไม่มีข้อมูล'
+                                  : ''
+                          const judgementRuleBanner = judgementRuleText ? (
+                            <div className="readingReportRuleBanner">
+                              <span className="readingReportRuleAns">{item.correctAnswer}</span>
+                              <span className="readingReportRuleText">{judgementRuleText}</span>
+                            </div>
+                          ) : null
                           if ((isJudgement || isMcq) && !hasMeaningfulBridge) {
-                            return paraphraseEquation.thaiMeaning ? (
-                              <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
-                            ) : null
+                            if (!judgementRuleBanner && !paraphraseEquation.thaiMeaning) return null
+                            return (
+                              <div>
+                                {judgementRuleBanner}
+                                {paraphraseEquation.thaiMeaning && (
+                                  <p className="readingReportThaiExplanation">{paraphraseEquation.thaiMeaning}</p>
+                                )}
+                              </div>
+                            )
                           }
                           if (isJudgement && isIntensive) {
-                            const ans = String(item.correctAnswer || '').trim().toUpperCase()
-                            const ruleText =
-                              ans === 'FALSE' || ans === 'NO'
-                                ? 'บทความ “ขัด” กับโจทย์ — ไม่ใช่แค่ไม่พูดถึง (ถ้าบทความไม่พูดถึงเลย จะเป็น NOT GIVEN)'
-                                : ans === 'TRUE' || ans === 'YES'
-                                  ? 'บทความ “ยืนยันตรง” กับโจทย์'
-                                  : ans === 'NOT GIVEN'
-                                    ? 'บทความ “ไม่ได้พูดถึง” เรื่องนี้ — ไม่ได้ขัด แค่ไม่มีข้อมูล'
-                                    : ''
                             return (
                               <div>
                                 <p className="readingReportBridgeLabel">
                                   {`ทำไมถึงตอบ ${item.correctAnswer}?`}
                                 </p>
-                                {ruleText && (
-                                  <div className="readingReportRuleBanner">
-                                    <span className="readingReportRuleAns">{item.correctAnswer}</span>
-                                    <span className="readingReportRuleText">{ruleText}</span>
-                                  </div>
-                                )}
+                                {judgementRuleBanner}
                                 <div className="readingReportBridgeRow readingReportBridgeRow-judgement">
                                   <div className="readingReportJudgementSide">
                                     <span className="readingReportJudgementSideLabel">บทความบอกว่า</span>
