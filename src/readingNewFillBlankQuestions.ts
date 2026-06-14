@@ -644,6 +644,39 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       { number: 40, answer: 'theorems', passageKeyword: 'in particular, theorems', questionKeyword: 'studying theorems', thaiMeaning: 'ทฤษฎีบท', exactPortion: 'I attribute much of my success there to having learned, through the study of mathematics, and, in particular, theorems, how to analyze complicated principles.' }
     ]
   },
+  {
+    examId: 'cambridge-14-test4-passage3',
+    passageNumber: 3,
+    startNumber: 34,
+    endNumber: 39,
+    sourceParagraphs: ['E', 'G'],
+    instructions: [
+      'Questions 34–39',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 34–39 on your answer sheet.'
+    ],
+    summaryLines: [
+      { type: 'heading', text: 'Findings related to marine debris' },
+      { type: 'para', text: 'Studies of marine debris found the biggest threats were:' },
+      { type: 'bullet', text: 'plastic (not metal or wood)' },
+      { type: 'bullet', text: 'bits of debris that were {34} (harmful to animals)' },
+      { type: 'para', text: 'There was little research into {35}, e.g. from synthetic fibres.' },
+      { type: 'heading', text: 'Drawbacks of the studies examined' },
+      { type: 'bullet', text: 'most of them focused on individual animals, not entire {36}' },
+      { type: 'bullet', text: 'the {37} of plastic used in the lab did not always reflect those in the ocean' },
+      { type: 'bullet', text: 'there was insufficient information on the impact of a reduction in numbers on the {38} of that species' },
+      { type: 'para', text: 'Rochman says more information is needed on the possible impact of future {39} (e.g. involving oil).' }
+    ],
+    questions: [
+      { number: 34, answer: 'large', passageKeyword: 'large pieces of debris', questionKeyword: 'bits of debris that were large', thaiMeaning: 'ขนาดใหญ่', exactPortion: 'Most of the dangers also involved large pieces of debris – animals getting entangled in trash, for example, or eating it and severely injuring themselves.' },
+      { number: 35, answer: 'microplastic', passageKeyword: "a lot of ocean debris is 'microplastic'", questionKeyword: 'little research into microplastic', thaiMeaning: 'ไมโครพลาสติก', exactPortion: "But a lot of ocean debris is 'microplastic', or pieces smaller than five millimeters." },
+      { number: 36, answer: 'populations', passageKeyword: 'whole bird populations are at risk', questionKeyword: 'not entire populations', thaiMeaning: 'ประชากร (ของสัตว์)', exactPortion: 'a study could show that certain seabirds eat plastic bags, and go on to warn that whole bird populations are at risk of dying out.' },
+      { number: 37, answer: 'concentrations', passageKeyword: 'higher concentrations of plastic', questionKeyword: 'the concentrations of plastic used in the lab', thaiMeaning: 'ความเข้มข้น', exactPortion: "And in the lab, scientists often use higher concentrations of plastic than what's really in the ocean." },
+      { number: 38, answer: 'predators', passageKeyword: "affect that animal's predators", questionKeyword: 'the predators of that species', thaiMeaning: 'ผู้ล่า', exactPortion: "how deaths in one species could affect that animal's predators, or the rest of the ecosystem." },
+      { number: 39, answer: 'disasters', passageKeyword: 'disasters such as a tanker spilling oil', questionKeyword: 'the impact of future disasters', thaiMeaning: 'ภัยพิบัติ', exactPortion: "scientists don't know exactly how disasters such as a tanker accidentally spilling its whole cargo of oil and polluting huge areas of the ocean will affect the environment." }
+    ]
+  },
   // ── 6 custom passages (Q5-8 fill-blank summary) ──
 
   {
