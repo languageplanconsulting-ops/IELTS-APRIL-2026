@@ -25059,3 +25059,25 @@ textarea {
   font-weight: 800;
   font-size: 0.72rem;
 }
+
+/* === Exam: make the right (questions) section scroll independently === */
+/* The panel is flex-column + overflow:hidden; the scroll area must grow and
+   scroll while the header, number strip and submit bar stay put. Scoped to the
+   exam layout so no other reading mode is affected. */
+.readingExamLayout-bank .readingQuestionsPanel-exam .readingQuestionsHeader,
+.readingExamLayout-bank .readingQuestionsPanel-exam > .readingExamSubmitBar {
+  flex-shrink: 0;
+}
+.readingExamLayout-bank .readingQuestionsScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.readingExamLayout-bank .readingQuestionsScroll .readingQuestionNavigator {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+  padding-top: 2px;
+}
