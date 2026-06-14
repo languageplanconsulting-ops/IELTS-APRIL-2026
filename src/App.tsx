@@ -22496,29 +22496,54 @@ function App() {
                           }
 
                           if (sections.some((section) => section.label)) {
-                            return sections.map((section, index) => (
-                              <section
-                                key={`reading-section-${index}`}
-                                className={`readingPassageSection ${section.label ? '' : 'readingPassageSection-noLabel'}`.trim()}
-                              >
-                                {section.label && (
-                                  <p className="readingPassageSectionLabel" aria-hidden="true">
-                                    {section.label}
-                                  </p>
+                            const labelledSections = sections.filter((section) => section.label)
+                            return (
+                              <>
+                                {labelledSections.length > 1 && (
+                                  <div className="readingSectionJump" aria-label="Jump to paragraph">
+                                    <span className="readingSectionJumpLabel">Jump to</span>
+                                    {labelledSections.map((section) => (
+                                      <button
+                                        key={`reading-adv-jump-${section.label}`}
+                                        type="button"
+                                        className="readingSectionJumpBtn"
+                                        onClick={() => {
+                                          document
+                                            .getElementById(`reading-adv-sec-${section.label}`)
+                                            ?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+                                        }}
+                                      >
+                                        {section.label}
+                                      </button>
+                                    ))}
+                                  </div>
                                 )}
-                                <div className="readingPassageSectionText">
-                                  {section.paragraphs.map((para, paraIndex) => (
-                                    <p key={`reading-section-${index}-para-${paraIndex}`}>
-                                      {renderPassageParagraphWithHighlights(
-                                        para,
-                                        activeReadingPassage.number,
-                                        highlightNeedles
-                                      )}
-                                    </p>
-                                  ))}
-                                </div>
-                              </section>
-                            ))
+                                {sections.map((section, index) => (
+                                  <section
+                                    key={`reading-section-${index}`}
+                                    id={section.label ? `reading-adv-sec-${section.label}` : undefined}
+                                    className={`readingPassageSection ${section.label ? '' : 'readingPassageSection-noLabel'}`.trim()}
+                                  >
+                                    {section.label && (
+                                      <p className="readingPassageSectionLabel" aria-hidden="true">
+                                        {section.label}
+                                      </p>
+                                    )}
+                                    <div className="readingPassageSectionText">
+                                      {section.paragraphs.map((para, paraIndex) => (
+                                        <p key={`reading-section-${index}-para-${paraIndex}`}>
+                                          {renderPassageParagraphWithHighlights(
+                                            para,
+                                            activeReadingPassage.number,
+                                            highlightNeedles
+                                          )}
+                                        </p>
+                                      ))}
+                                    </div>
+                                  </section>
+                                ))}
+                              </>
+                            )
                           }
                         }
                         if (!activeReadingPassage.bodyParagraphs.length) {
