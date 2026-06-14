@@ -1284,40 +1284,40 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             {
               "number": 38,
               "prompt": "The researchers in the San Diego study were correct in their predictions regarding the behaviour of the high-status individuals.",
-              "correctAnswer": "TRUE",
+              "correctAnswer": "YES",
               "acceptedAnswers": [
-                "TRUE"
+                "YES"
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
-              "answerType": "true-false-not-given",
+              "answerType": "yes-no-not-given",
               "exactPortion": "Analysis revealed that, as expected, high-status individuals produced more dominant laughs and fewer submissive laughs relative to the low-status individuals.",
-              "explanationThai": "ข้อความในข้อว่า \"The researchers in the San Diego study were correct in their predictions regarding the behaviour of the high-status individuals.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Analysis revealed that, as expected, high-status individuals produced more dominant laughs and …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "explanationThai": "ข้อความในข้อว่า \"The researchers in the San Diego study were correct in their predictions regarding the behaviour of the high-status individuals.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Analysis revealed that, as expected, high-status individuals produced more dominant laughs and …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ YES",
               "paraphrasedVocabulary": "diego study predictions = analysis revealed expected high-status = TRUE"
             },
             {
               "number": 39,
-              "prompt": "The participants in the Australian National University study were given a fixed",
-              "correctAnswer": "FALSE",
+              "prompt": "The participants in the Australian National University study were given a fixed amount of time to complete the task focusing on employee profiles.",
+              "correctAnswer": "NO",
               "acceptedAnswers": [
-                "FALSE"
+                "NO"
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
-              "answerType": "true-false-not-given",
+              "answerType": "yes-no-not-given",
               "exactPortion": "Participants were allowed to quit the task at any point",
-              "explanationThai": "ข้อความในข้อว่า \"The participants in the Australian National University study were given\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Participants were allowed to quit the task at any point\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "explanationThai": "ข้อความในข้อว่า \"The participants in the Australian National University study were given\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Participants were allowed to quit the task at any point\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ NO",
               "paraphrasedVocabulary": "national university study = participants allowed = FALSE"
             },
             {
               "number": 40,
               "prompt": "Cheng and Wang's conclusions were in line with established notions regarding task performance.",
-              "correctAnswer": "FALSE",
+              "correctAnswer": "NO",
               "acceptedAnswers": [
-                "FALSE"
+                "NO"
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
-              "answerType": "true-false-not-given",
+              "answerType": "yes-no-not-given",
               "exactPortion": "traditional view of task performance implies that individuals should avoid things such as humour that may distract them from the accomplishment of task goals,’ Cheng and Wang conclude. ‘We suggest that humour is not only enjoyable but more importantly, energising.",
-              "explanationThai": "ข้อความในข้อว่า \"Cheng and Wang's conclusions were in line with established notions regarding task performance.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"traditional view of task performance implies that individuals should avoid things such as humou…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "explanationThai": "ข้อความในข้อว่า \"Cheng and Wang's conclusions were in line with established notions regarding task performance.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"traditional view of task performance implies that individuals should avoid things such as humou…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ NO",
               "paraphrasedVocabulary": "cheng wang's conclusions = traditional performance implies individuals = FALSE"
             }
           ]

@@ -2477,14 +2477,14 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
             {
               "number": 28,
               "prompt": "an outline of what blindfold chess involves",
-              "correctAnswer": "A",
+              "correctAnswer": "E",
               "acceptedAnswers": [
-                "A"
+                "E"
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "The 28-year-old already stands out in the rarefied world of blindfold chess.",
-              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (an outline of what blindfold chess involves) โดยเฉพาะประโยค \"The 28-year-old already stands out in the rarefied world of blindfold chess.\" จึงเลือก A",
+              "exactPortion": "The nature of the game is to run through possible moves in the mind to see how they play out.",
+              "explanationThai": "ย่อหน้า E อธิบายว่า blindfold chess คือการนึกภาพกระดานและเดินหมากในใจ โดยเฉพาะประโยค \"The nature of the game is to run through possible moves in the mind to see how they play out.\" ซึ่งตรงกับหัวข้อ (an outline of what blindfold chess involves) จึงเลือก E",
               "paraphrasedVocabulary": "outline blindfold chess = 28-year-old already stands rarefied = A"
             },
             {
