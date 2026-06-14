@@ -1944,7 +1944,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 38,
-              "prompt": "structured, but it should still be based on the child’s 38 ocd... TO play.",
+              "prompt": "Adults can help children to learn through play, and may make the activity rather structured, but it should still be based on the child’s …",
               "correctAnswer": "desire",
               "acceptedAnswers": [
                 "desire"
@@ -1952,7 +1952,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "text",
               "exactPortion": "Play should stem from the child’s own desire",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… to play. Play without the intervention of adults gives children real\" บทความมีถ้อยคำที่ตรงกันคือ \"Play should stem from the child’s own desire\" จึงคำตอบคือ \"desire\" (paraphrase จากข้อความใน passage)",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"…based on the child’s …\" บทความมีถ้อยคำที่ตรงกันคือ \"Play should stem from the child’s own desire\" จึงคำตอบคือ \"desire\"",
               "paraphrasedVocabulary": "without intervention adults = should = desire"
             },
             {

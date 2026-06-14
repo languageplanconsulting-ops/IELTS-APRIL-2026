@@ -582,7 +582,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 1 Passage 3",
               "answerType": "text",
-              "exactPortion": "Naturally, the course is intended for prospective arson investigators, who can learn all the tricks of the trade for detecting whether a fire was deliberately set, discovering who did it, and establishing a chain of evid",
+              "exactPortion": "the course is intended for prospective arson investigators, who can learn all the tricks of the trade",
               "explanationThai": "วิชานี้สำหรับ prospective arson investigators คำว่า become … specialising in arson จึงตอบ investigators",
               "paraphrasedVocabulary": "become = prospective = investigators"
             },
@@ -595,7 +595,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 1 Passage 3",
               "answerType": "text",
-              "exactPortion": "Naturally, the course is intended for prospective arson investigators, who can learn all the tricks of the trade for detecting whether a fire was deliberately set, discovering who did it, and establishing a chain of evid",
+              "exactPortion": "establishing a chain of evidence for effective prosecution in a court of law",
               "explanationThai": "หลักสูตรช่วยสร้าง chain of evidence เพื่อพิสูจน์เจตนาทางอาญา คำว่า find … of criminal intent จึงตอบ evidence",
               "paraphrasedVocabulary": "find = chain of = evidence = หลักฐาน"
             },
@@ -608,7 +608,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 1 Passage 3",
               "answerType": "text",
-              "exactPortion": "Naturally, the course is intended for prospective arson investigators, who can learn all the tricks of the trade for detecting whether a fire was deliberately set, discovering who did it, and establishing a chain of evid",
+              "exactPortion": "establishing a chain of evidence for effective prosecution in a court of law",
               "explanationThai": "เป้าหมายคือ effective prosecution in a court of law คำว่า successful … in the courts จึงตอบ prosecution",
               "paraphrasedVocabulary": "successful = effective = prosecution = ดำเนินคดี"
             },
@@ -1177,7 +1177,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 3",
               "answerType": "text",
-              "exactPortion": "The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
+              "exactPortion": "Some of the most compelling evidence for this phenomenon, called ‘language co-activation’, comes from studying eye movements.",
               "explanationThai": "หลักฐานของปรากฏการณ์นี้มาจาก studying eye movements ของผู้พูดสองภาษา คำว่า Observing the … จึงตอบ eye movements",
               "paraphrasedVocabulary": "observing = studying = eye movements"
             },
@@ -1190,7 +1190,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 3",
               "answerType": "text",
-              "exactPortion": "The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
+              "exactPortion": "In cases like this, language co-activation occurs because what the listener hears could map onto words in either language.",
               "explanationThai": "บทความเรียกกลไกนี้ว่า phenomenon called 'language co-activation' คำว่า mechanism known as … จึงตอบ language co-activation",
               "paraphrasedVocabulary": "simultaneously = co-activation = เปิดใช้สองภาษา"
             },
@@ -1229,7 +1229,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 3",
               "answerType": "text",
-              "exactPortion": "Bilinguals are also better at switching between two tasks; for example, when bilinguals have to switch from categorizing objects by colour (red or green) to categorizing them by shape (circle or triangle), they do so mor",
+              "exactPortion": "they do so more quickly than monolingual people, reflecting better cognitive control when having to make rapid changes of strategy",
               "explanationThai": "ผลการทดลองสะท้อน better cognitive control คำว่า have superior … จึงตอบ cognitive control",
               "paraphrasedVocabulary": "superior = better = cognitive control"
             },
@@ -1880,7 +1880,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 3",
               "answerType": "text",
-              "exactPortion": "Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?",
+              "exactPortion": "The researchers call this the ‘anticipatory phase’ and argue that the purpose of this activity is to help us predict the arrival of our favourite part.",
               "explanationThai": "นักวิจัยเรียกช่วงนี้ the 'anticipatory phase' คำว่า period known as the … จึงตอบ anticipatory phase",
               "paraphrasedVocabulary": "period known as = anticipatory phase"
             },
@@ -1893,7 +1893,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 3",
               "answerType": "text",
-              "exactPortion": "Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?",
+              "exactPortion": "and in anticipating food and other ‘reward’ stimuli",
               "explanationThai": "ระบบรางวัลเชื่อมกับ anticipating food และ 'reward' stimuli อื่นๆ คำว่า reward stimuli such as … จึงตอบ food",
               "paraphrasedVocabulary": "reward stimuli = food = อาหาร"
             },
