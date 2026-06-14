@@ -403,6 +403,247 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       }
     ]
   },
+  {
+    examId: 'cambridge-14-test1-passage3',
+    passageNumber: 3,
+    startNumber: 36,
+    endNumber: 40,
+    sourceParagraphs: ['F', 'F'],
+    instructions: [
+      'Questions 36–40',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 36–40 on your answer sheet.'
+    ],
+    summaryTitle: 'Fun at work',
+    summaryLines: [
+      {
+        type: 'para',
+        text: "Tews, Michel and Stafford carried out research on staff in an American chain of {36}. They discovered that activities designed for staff to have fun improved their {37}, and that management involvement led to lower staff {38}. They also found that the activities needed to fit with both the company's {39} and the {40} of the staff. A balance was required between a degree of freedom and maintaining work standards."
+      }
+    ],
+    questions: [
+      { number: 36, answer: 'restaurants', passageKeyword: 'a chain of themed restaurants', questionKeyword: 'an American chain of restaurants', thaiMeaning: 'ร้านอาหาร', exactPortion: 'Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed restaurants in the United States.' },
+      { number: 37, answer: 'performance', passageKeyword: 'maintaining superior performance', questionKeyword: 'improved their performance', thaiMeaning: 'ผลการปฏิบัติงาน', exactPortion: 'A critical ingredient in the success of hotels is developing and maintaining superior performance from their employees.' },
+      { number: 38, answer: 'turnover', passageKeyword: 'high employee turnover', questionKeyword: 'lower staff turnover', thaiMeaning: 'อัตราการลาออก', exactPortion: 'high employee turnover has been a recurring problem throughout the hospitality industry.' },
+      { number: 39, answer: 'goals', passageKeyword: 'aligned with both organizational goals', questionKeyword: "the company's goals", thaiMeaning: 'เป้าหมาย', exactPortion: 'the framing of that fun must be carefully aligned with both organizational goals and employee characteristics.' },
+      { number: 40, answer: 'characteristics', passageKeyword: 'and employee characteristics', questionKeyword: 'the characteristics of the staff', thaiMeaning: 'คุณลักษณะ', exactPortion: 'the framing of that fun must be carefully aligned with both organizational goals and employee characteristics.' }
+    ]
+  },
+  {
+    examId: 'cambridge-14-test2-passage3',
+    passageNumber: 3,
+    startNumber: 35,
+    endNumber: 37,
+    sourceParagraphs: ['A', 'B'],
+    instructions: [
+      'Questions 35–37',
+      'Complete the sentences below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 35–37 on your answer sheet.'
+    ],
+    summaryLines: [
+      { type: 'para', text: 'Numerous training sessions are aimed at people who feel they are not {35} enough.' },
+      { type: 'para', text: 'Being organised appeals to people who regard themselves as {36}.' },
+      { type: 'para', text: 'Many people feel {37} with aspects of their work.' }
+    ],
+    questions: [
+      { number: 35, answer: 'productive', passageKeyword: 'becoming more productive', questionKeyword: 'not productive enough', thaiMeaning: 'มีประสิทธิผล', exactPortion: 'We are told that we ought to organise our company, our home life, our week, our day and even our sleep, all as a means to becoming more productive.' },
+      { number: 36, answer: 'perfectionists', passageKeyword: 'self-proclaimed perfectionists', questionKeyword: 'regard themselves as perfectionists', thaiMeaning: 'คนชอบความสมบูรณ์แบบ', exactPortion: 'This rhetoric has also crept into the thinking of business leaders and entrepreneurs, much to the delight of self-proclaimed perfectionists with the need to get everything right.' },
+      { number: 37, answer: 'dissatisfied', passageKeyword: 'claim to be dissatisfied', questionKeyword: 'feel dissatisfied with their work', thaiMeaning: 'ไม่พึงพอใจ', exactPortion: 'A large proportion of workers from all demographics claim to be dissatisfied with the way their work is structured and the way they are managed.' }
+    ]
+  },
+  {
+    examId: 'cambridge-15-test1-passage3',
+    passageNumber: 3,
+    startNumber: 38,
+    endNumber: 40,
+    sourceParagraphs: ['F', 'G'],
+    instructions: [
+      'Questions 38–40',
+      'Complete the summary below.',
+      'Choose NO MORE THAN TWO WORDS from the passage for each answer.',
+      'Write your answers in boxes 38–40 on your answer sheet.'
+    ],
+    summaryTitle: "The writer's own bias",
+    summaryLines: [
+      {
+        type: 'para',
+        text: "The writer has experience of a large number of {38}, and was the first stranger that certain previously {39} people had encountered. He believes there is no need for further exploration of Earth's {40}, except to answer specific questions such as how buffalo eat."
+      }
+    ],
+    questions: [
+      { number: 38, answer: 'expeditions', acceptedAnswers: ['unique expeditions'], passageKeyword: 'a great many expeditions', questionKeyword: 'a large number of expeditions', thaiMeaning: 'การสำรวจ / การเดินทางสำรวจ', exactPortion: "I've done a great many expeditions and each one was unique." },
+      { number: 39, answer: 'uncontacted', passageKeyword: "two 'uncontacted tribes'", questionKeyword: 'previously uncontacted people', thaiMeaning: 'ที่ยังไม่เคยถูกติดต่อ', exactPortion: "I've lived for months alone with isolated groups of people all around the world, even two 'uncontacted tribes'." },
+      { number: 40, answer: 'land surface', passageKeyword: 'how the land surface of our planet lies', questionKeyword: "Earth's land surface", thaiMeaning: 'พื้นผิวแผ่นดิน', exactPortion: 'We know how the land surface of our planet lies; exploration of it is now down to the details.' }
+    ]
+  },
+  {
+    examId: 'cambridge-16-test3-passage3',
+    passageNumber: 3,
+    startNumber: 38,
+    endNumber: 40,
+    sourceParagraphs: ['C', 'F'],
+    instructions: [
+      'Questions 38–40',
+      'Complete the sentences below.',
+      'Choose NO MORE THAN TWO WORDS from the passage for each answer.',
+      'Write your answers in boxes 38–40 on your answer sheet.'
+    ],
+    summaryLines: [
+      { type: 'para', text: 'Daffodils are likely to flower early in response to {38} weather.' },
+      { type: 'para', text: 'If ash trees come into leaf before oak trees, the weather in {39} will probably be wet.' },
+      { type: 'para', text: 'The research was carried out using a particular species of {40}.' }
+    ],
+    questions: [
+      { number: 38, answer: 'warm', acceptedAnswers: ['warm winter'], passageKeyword: 'The warmer it is', questionKeyword: 'warm weather', thaiMeaning: 'อบอุ่น', exactPortion: 'The warmer it is, the faster the molecular change - stimulating plant growth.' },
+      { number: 39, answer: 'summer', passageKeyword: 'a higher likeliness of a hot summer', questionKeyword: 'the weather in summer', thaiMeaning: 'ฤดูร้อน', exactPortion: 'A warmer spring, and consequently a higher likeliness of a hot summer, will result in oak leafing before ash.' },
+      { number: 40, answer: 'mustard', acceptedAnswers: ['mustard plant', 'mustard plants'], passageKeyword: 'a mustard plant called Arabidopsis', questionKeyword: 'a species of mustard', thaiMeaning: 'พืชตระกูลมัสตาร์ด', exactPortion: 'The work was done in a model system, using a mustard plant called Arabidopsis.' }
+    ]
+  },
+  {
+    examId: 'cambridge-14-test3-passage3',
+    passageNumber: 3,
+    startNumber: 37,
+    endNumber: 40,
+    sourceParagraphs: ['G', 'H'],
+    instructions: [
+      'Questions 37–40',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 37–40 on your answer sheet.'
+    ],
+    summaryTitle: 'Guided play',
+    summaryLines: [
+      {
+        type: 'para',
+        text: "In the simplest form of guided play, an adult contributes to the environment in which the child is playing. Alternatively, an adult can play with a child and develop the play, for instance by {37} the child to investigate different aspects of their game. Adults can help children to learn through play, and may make the activity rather structured, but it should still be based on the child's {38} to play."
+      },
+      {
+        type: 'para',
+        text: 'Play without the intervention of adults gives children real {39}; with adults, play can be {40} at particular goals. However, all forms of play should be an opportunity for children to have fun.'
+      }
+    ],
+    questions: [
+      { number: 37, answer: 'encouraging', passageKeyword: 'encouraging further exploration', questionKeyword: 'encouraging the child to investigate', thaiMeaning: 'ส่งเสริม / กระตุ้น', exactPortion: "support children's play by joining in the fun as a co-player, raising thoughtful questions, commenting on children's discoveries, or encouraging further exploration or new facets to the child's activity." },
+      { number: 38, answer: 'desire', passageKeyword: "the child's own desire", questionKeyword: "based on the child's desire", thaiMeaning: 'ความปรารถนา', exactPortion: "Play should stem from the child's own desire." },
+      { number: 39, answer: 'autonomy', passageKeyword: 'provides the child with true autonomy', questionKeyword: 'gives children real autonomy', thaiMeaning: 'อิสระในการกำหนดตนเอง', exactPortion: 'Intrinsically motivated free play provides the child with true autonomy, while guided play is an avenue through which parents and educators can provide more targeted learning experiences.' },
+      { number: 40, answer: 'targeted', passageKeyword: 'more targeted learning experiences', questionKeyword: 'targeted at particular goals', thaiMeaning: 'ที่เจาะจงเป้าหมาย', exactPortion: 'Intrinsically motivated free play provides the child with true autonomy, while guided play is an avenue through which parents and educators can provide more targeted learning experiences.' }
+    ]
+  },
+  {
+    examId: 'cambridge-17-test4-passage3',
+    passageNumber: 3,
+    startNumber: 37,
+    endNumber: 40,
+    sourceParagraphs: ['G', 'H'],
+    instructions: [
+      'Questions 37–40',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 37–40 on your answer sheet.'
+    ],
+    summaryTitle: 'How the research was carried out',
+    summaryLines: [
+      {
+        type: 'para',
+        text: "The researchers started by testing Gareyev's {37}; for example, he was required to recall a string of {38} in order and also in reverse order. Although his performance was normal, scans showed an unusual amount of {39} within the areas of Gareyev's brain that are concerned with directing attention. In addition, the scans raised the possibility of unusual strength in the parts of his brain that deal with {40} input."
+      }
+    ],
+    questions: [
+      { number: 37, answer: 'memory', passageKeyword: 'runs a memory lab', questionKeyword: "testing Gareyev's memory", thaiMeaning: 'ความจำ', exactPortion: "'The ability to play a game of chess with your eyes closed is not a far reach for most accomplished players,' said Jesse Rissman, who runs a memory lab at UCLA." },
+      { number: 38, answer: 'numbers', passageKeyword: 'his ability to hold numbers', questionKeyword: 'a string of numbers', thaiMeaning: 'ตัวเลข', exactPortion: 'These assessed his ability to hold numbers, pictures and words in mind.' },
+      { number: 39, answer: 'communication', passageKeyword: 'much greater than average communication', questionKeyword: 'an unusual amount of communication', thaiMeaning: 'การสื่อสาร (ระหว่างส่วนของสมอง)', exactPortion: "the scans found much greater than average communication between parts of Gareyev's brain that make up what is called the frontoparietal control network." },
+      { number: 40, answer: 'visual', passageKeyword: "Gareyev's visual network", questionKeyword: 'deal with visual input', thaiMeaning: 'การมองเห็น / ภาพ', exactPortion: "The scans also suggest that Gareyev's visual network is more highly connected to other brain parts than usual." }
+    ]
+  },
+  {
+    examId: 'cambridge-19-test4-passage3',
+    passageNumber: 3,
+    startNumber: 31,
+    endNumber: 35,
+    sourceParagraphs: ['C', 'D'],
+    instructions: [
+      'Questions 31–35',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 31–35 on your answer sheet.'
+    ],
+    summaryTitle: 'Contemporary hunter-gatherer societies',
+    summaryLines: [
+      {
+        type: 'para',
+        text: "Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high level of {31} in all areas of life. In these cultures, distributing resources fairly among all members is a moral obligation. These societies also employ strategies to prevent differences in {32} occurring: for example, the !Kung follow a custom whereby the credit for one person's success at {33} is given to another member of the group. Individuals who behave in a {34} manner are punished by being excluded from the group, and women have a considerable amount of {35} in choices regarding work and marriage."
+      }
+    ],
+    questions: [
+      { number: 31, answer: 'egalitarianism', passageKeyword: "'extreme political and sexual egalitarianism'", questionKeyword: 'a high level of egalitarianism', thaiMeaning: 'ความเสมอภาค', exactPortion: "As the anthropologist Bruce Knauft has remarked, hunter-gatherers are characterized by 'extreme political and sexual egalitarianism'." },
+      { number: 32, answer: 'status', passageKeyword: "disparities of status don't arise", questionKeyword: 'differences in status', thaiMeaning: 'สถานะ / ฐานะ', exactPortion: "They also have methods of preserving egalitarianism by ensuring that disparities of status don't arise." },
+      { number: 33, answer: 'hunting', passageKeyword: 'lived by hunting wild animals', questionKeyword: 'success at hunting', thaiMeaning: 'การล่าสัตว์', exactPortion: 'Humans at that time were hunter-gatherers: people who lived by hunting wild animals and collecting wild plants.' },
+      { number: 34, answer: 'domineering', passageKeyword: 'becomes too domineering', questionKeyword: 'behave in a domineering manner', thaiMeaning: 'ชอบครอบงำผู้อื่น', exactPortion: 'And if a person becomes too domineering, the other members of the group ostracise them, exiling the offender from society.' },
+      { number: 35, answer: 'autonomy', passageKeyword: 'a high level of autonomy', questionKeyword: 'a considerable amount of autonomy', thaiMeaning: 'อิสระในการตัดสินใจ', exactPortion: 'Women in hunter-gatherer groups worldwide often benefit from a high level of autonomy, being able to select their own marriage partners, decide what work they do and work whenever they choose to.' }
+    ]
+  },
+  {
+    examId: 'cambridge-11-test1-passage3',
+    passageNumber: 3,
+    startNumber: 30,
+    endNumber: 36,
+    sourceParagraphs: ['C', 'D'],
+    instructions: [
+      'Questions 30–36',
+      'Complete the table below.',
+      'Choose ONE WORD from the passage for each answer.',
+      'Write your answers in boxes 30–36 on your answer sheet.'
+    ],
+    summaryLines: [
+      { type: 'table-header', cells: ['Procedure', 'Aim'] },
+      { type: 'table-row', cells: ['put a large number of tiny spacecraft into orbit far above Earth', 'to create a {30} that would reduce the amount of light reaching Earth'] },
+      { type: 'table-row', cells: ['place {31} in the sea', 'to encourage {32} to form'] },
+      { type: 'table-row', cells: ['release aerosol sprays into the stratosphere', 'to create {33} that would reduce the amount of light reaching Earth'] },
+      { type: 'table-row', cells: ['fix strong {34} to Greenland ice sheets', 'to prevent icebergs moving into the sea'] },
+      { type: 'table-row', cells: ['plant trees in the Russian Arctic that would lose their leaves in winter', 'to allow the {35} to reflect radiation'] },
+      { type: 'table-row', cells: ['change the direction of {36}', 'to bring more cold water into ice-forming areas'] }
+    ],
+    questions: [
+      { number: 30, answer: 'sunshade', passageKeyword: 'a sunlight-refracting sunshade', questionKeyword: 'create a sunshade', thaiMeaning: 'ม่านบังแดด', exactPortion: 'His scheme would employ up to 16 trillion minute spacecraft, each weighing about one gram, to form a transparent, sunlight-refracting sunshade in an orbit 1.5 million km above the Earth.' },
+      { number: 31, answer: 'iron', passageKeyword: 'depositing iron in the ocean', questionKeyword: 'place iron in the sea', thaiMeaning: 'เหล็ก', exactPortion: 'projects so far carried out — which include planting forests in deserts and depositing iron in the ocean to stimulate the growth of algae' },
+      { number: 32, answer: 'algae', passageKeyword: 'stimulate the growth of algae', questionKeyword: 'encourage algae to form', thaiMeaning: 'สาหร่าย', exactPortion: 'depositing iron in the ocean to stimulate the growth of algae' },
+      { number: 33, answer: 'clouds', passageKeyword: 'cement powder to disperse clouds', questionKeyword: 'create clouds', thaiMeaning: 'เมฆ', exactPortion: 'aircraft having deposited dry ice, silver iodide and cement powder to disperse clouds.' },
+      { number: 34, answer: 'cables', passageKeyword: 'reinforced high-tension cables', questionKeyword: 'fix strong cables', thaiMeaning: 'สายเคเบิล', exactPortion: "preserve the ice sheets of Greenland with reinforced high-tension cables, preventing icebergs from moving into the sea." },
+      { number: 35, answer: 'snow', passageKeyword: 'reflected by the snow', questionKeyword: 'allow the snow to reflect radiation', thaiMeaning: 'หิมะ', exactPortion: 'birches would shed their leaves in winter, thus enabling radiation to be reflected by the snow.' },
+      { number: 36, answer: 'rivers', passageKeyword: 'Re-routing Russian rivers', questionKeyword: 'change the direction of rivers', thaiMeaning: 'แม่น้ำ', exactPortion: 'Re-routing Russian rivers to increase cold water flow to ice-forming areas could also be used to slow down warming.' }
+    ]
+  },
+  {
+    examId: 'cambridge-11-test3-passage3',
+    passageNumber: 3,
+    startNumber: 35,
+    endNumber: 40,
+    sourceParagraphs: ['A', 'B'],
+    instructions: [
+      'Questions 35–40',
+      'Complete the sentences below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 35–40 on your answer sheet.'
+    ],
+    summaryLines: [
+      { type: 'para', text: 'Some areas of both music and mathematics are suitable for someone who is a {35}.' },
+      { type: 'para', text: 'It is sometimes possible to understand advanced mathematics using no more than a limited knowledge of {36}.' },
+      { type: 'para', text: 'The writer intends to show that mathematics requires {37} thinking, as well as analytical skills.' },
+      { type: 'para', text: 'Some books written by {38} have had to leave out the mathematics that is central to their theories.' },
+      { type: 'para', text: 'The writer advises non-mathematical readers to perform {39} while reading.' },
+      { type: 'para', text: 'A lawyer found that studying {40} helped even more than other areas of mathematics in the study of law.' }
+    ],
+    questions: [
+      { number: 35, answer: 'beginner', passageKeyword: 'a beginner could play them', questionKeyword: 'suitable for a beginner', thaiMeaning: 'ผู้เริ่มต้น', exactPortion: 'Occasionally, in some difficult musical compositions, there are beautiful, but easy parts – parts so simple a beginner could play them.' },
+      { number: 36, answer: 'arithmetic', passageKeyword: 'a little arithmetic', questionKeyword: 'a limited knowledge of arithmetic', thaiMeaning: 'เลขคณิต', exactPortion: "Instead they may involve, at most, a little arithmetic, such as 'the sum of two odd numbers is even', and common sense." },
+      { number: 37, answer: 'intuitive', passageKeyword: 'its logical, yet intuitive, style of thinking', questionKeyword: 'requires intuitive thinking', thaiMeaning: 'เชิงสัญชาตญาณ', exactPortion: 'to become familiar with its logical, yet intuitive, style of thinking.' },
+      { number: 38, answer: 'scientists', passageKeyword: 'Other scientists have written books', questionKeyword: 'books written by scientists', thaiMeaning: 'นักวิทยาศาสตร์', exactPortion: 'Other scientists have written books to explain their fields to non-scientists, but have necessarily had to omit the mathematics, although it provides the foundation of their theories.' },
+      { number: 39, answer: 'experiments', passageKeyword: 'step-by-step analysis, experiments, and insights', questionKeyword: 'perform experiments while reading', thaiMeaning: 'การทดลอง', exactPortion: 'This book presents the details that illustrate the mathematical style of thinking, which involves sustained, step-by-step analysis, experiments, and insights.' },
+      { number: 40, answer: 'theorems', passageKeyword: 'in particular, theorems', questionKeyword: 'studying theorems', thaiMeaning: 'ทฤษฎีบท', exactPortion: 'I attribute much of my success there to having learned, through the study of mathematics, and, in particular, theorems, how to analyze complicated principles.' }
+    ]
+  },
   // ── 6 custom passages (Q5-8 fill-blank summary) ──
 
   {
