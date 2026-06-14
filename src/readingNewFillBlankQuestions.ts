@@ -137,6 +137,272 @@ export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
       }
     ]
   },
+  {
+    examId: 'cambridge-12-test2-passage3',
+    passageNumber: 3,
+    startNumber: 27,
+    endNumber: 31,
+    sourceParagraphs: ['B', 'C'],
+    instructions: [
+      'Questions 27–31',
+      'Complete the table below.',
+      'Choose NO MORE THAN TWO WORDS from the passage for each answer.',
+      'Write your answers in boxes 27–31 on your answer sheet.'
+    ],
+    summaryLines: [
+      { type: 'table-header', cells: ['Test', 'Findings'] },
+      {
+        type: 'table-row',
+        cells: [
+          'Observing the {27} of Russian-English bilingual people when asked to select certain objects',
+          'Bilingual people engage both languages simultaneously: a mechanism known as {28}'
+        ]
+      },
+      {
+        type: 'table-row',
+        cells: [
+          'A test called the {29}, focusing on naming colours',
+          'Bilingual people are more able to handle tasks involving a skill called {30}'
+        ]
+      },
+      {
+        type: 'table-row',
+        cells: ['A test involving switching between tasks', 'When changing strategies, bilingual people have superior {31}']
+      }
+    ],
+    questions: [
+      {
+        number: 27,
+        answer: 'eye movements',
+        passageKeyword: 'comes from studying eye movements',
+        questionKeyword: 'observing the eye movements',
+        thaiMeaning: 'การเคลื่อนไหวของดวงตา',
+        exactPortion:
+          "Some of the most compelling evidence for this phenomenon, called 'language co-activation', comes from studying eye movements."
+      },
+      {
+        number: 28,
+        answer: 'language co-activation',
+        passageKeyword: "the phenomenon called 'language co-activation'",
+        questionKeyword: 'a mechanism known as language co-activation',
+        thaiMeaning: 'การทำงานพร้อมกันของสองภาษา',
+        exactPortion:
+          'In cases like this, language co-activation occurs because what the listener hears could map onto words in either language.'
+      },
+      {
+        number: 29,
+        answer: 'Stroop Task',
+        passageKeyword: 'the classic Stroop Task',
+        questionKeyword: 'a test called the Stroop Task',
+        thaiMeaning: 'แบบทดสอบสตรูป',
+        exactPortion: "In the classic Stroop Task, people see a word and are asked to name the colour of the word's font."
+      },
+      {
+        number: 30,
+        answer: 'conflict management',
+        passageKeyword: 'tasks that require conflict management',
+        questionKeyword: 'a skill called conflict management',
+        thaiMeaning: 'การจัดการความขัดแย้ง',
+        exactPortion: 'For this reason, bilingual people often perform better on tasks that require conflict management.'
+      },
+      {
+        number: 31,
+        answer: 'cognitive control',
+        passageKeyword: 'reflecting better cognitive control',
+        questionKeyword: 'have superior cognitive control',
+        thaiMeaning: 'การควบคุมการรู้คิด',
+        exactPortion:
+          'they do so more quickly than monolingual people, reflecting better cognitive control when having to make rapid changes of strategy'
+      }
+    ]
+  },
+  {
+    examId: 'cambridge-12-test3-passage3',
+    passageNumber: 3,
+    startNumber: 27,
+    endNumber: 31,
+    sourceParagraphs: ['C', 'D'],
+    instructions: [
+      'Questions 27–31',
+      'Complete the summary below.',
+      'Choose NO MORE THAN TWO WORDS from the passage for each answer.',
+      'Write your answers in boxes 27–31 on your answer sheet.'
+    ],
+    summaryTitle: 'The Montreal study',
+    summaryLines: [
+      {
+        type: 'para',
+        text: "Participants, who were recruited for the study through advertisements, had their brain activity monitored while listening to their favourite music. It was noted that the music stimulated the brain's neurons to release a substance called {27} in two of the parts of the brain which are associated with feeling {28}."
+      },
+      {
+        type: 'para',
+        text: "Researchers also observed that the neurons in the area of the brain called the {29} were particularly active just before the participants' favourite moments in the music – the period known as the {30}. Activity in this part of the brain is associated with the expectation of 'reward' stimuli such as {31}."
+      }
+    ],
+    questions: [
+      {
+        number: 27,
+        answer: 'dopamine',
+        passageKeyword: 'surges of dopamine',
+        questionKeyword: 'release a substance called dopamine',
+        thaiMeaning: 'โดพามีน (สารสื่อประสาท)',
+        exactPortion: 'we typically associate surges of dopamine with pleasure, with the processing of actual rewards.'
+      },
+      {
+        number: 28,
+        answer: 'pleasure',
+        passageKeyword: 'associate surges of dopamine with pleasure',
+        questionKeyword: 'associated with feeling pleasure',
+        thaiMeaning: 'ความสุข / ความพึงพอใจ',
+        exactPortion: 'we typically associate surges of dopamine with pleasure, with the processing of actual rewards.'
+      },
+      {
+        number: 29,
+        answer: 'caudate',
+        passageKeyword: 'the dopamine neurons in the caudate',
+        questionKeyword: 'the area of the brain called the caudate',
+        thaiMeaning: 'คอเดต (ส่วนหนึ่งของสมอง)',
+        exactPortion:
+          'the dopamine neurons in the caudate – a region of the brain involved in learning stimulus-response associations, and in anticipating food and other ‘reward’ stimuli – were at their most active around 15 seconds before the participants’ favourite moments in the music.'
+      },
+      {
+        number: 30,
+        answer: 'anticipatory phase',
+        passageKeyword: "the 'anticipatory phase'",
+        questionKeyword: 'the period known as the anticipatory phase',
+        thaiMeaning: 'ช่วงของการคาดหวัง',
+        exactPortion:
+          'The researchers call this the ‘anticipatory phase’ and argue that the purpose of this activity is to help us predict the arrival of our favourite part.'
+      },
+      {
+        number: 31,
+        answer: 'food',
+        passageKeyword: 'anticipating food and other ‘reward’ stimuli',
+        questionKeyword: "'reward' stimuli such as food",
+        thaiMeaning: 'อาหาร',
+        exactPortion: 'and in anticipating food and other ‘reward’ stimuli'
+      }
+    ]
+  },
+  {
+    examId: 'cambridge-12-test4-passage3',
+    passageNumber: 3,
+    startNumber: 38,
+    endNumber: 40,
+    sourceParagraphs: ['D', 'E'],
+    instructions: [
+      'Questions 38–40',
+      'Complete the sentences below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 38–40 on your answer sheet.'
+    ],
+    summaryLines: [
+      { type: 'para', text: 'Before 2008, non-executive directors were at a disadvantage because of their lack of {38}.' },
+      { type: 'para', text: 'Boards tend to place too much emphasis on {39} considerations that are only of short-term relevance.' },
+      { type: 'para', text: 'On certain matters, such as pay, the board may have to accept the views of {40}.' }
+    ],
+    questions: [
+      {
+        number: 38,
+        answer: 'information',
+        passageKeyword: 'access to information that part-time non-executive directors lacked',
+        questionKeyword: 'lack of information',
+        thaiMeaning: 'ข้อมูล',
+        exactPortion:
+          'the executives had access to information that part-time non-executive directors lacked, leaving the latter unable to comprehend or anticipate the 2008 crash.'
+      },
+      {
+        number: 39,
+        answer: 'financial',
+        passageKeyword: 'concentrate too much on short-term financial metrics',
+        questionKeyword: 'too much emphasis on financial considerations',
+        thaiMeaning: 'ทางการเงิน',
+        exactPortion:
+          'they do not focus sufficiently on longer-term matters of strategy, sustainability and governance, but instead concentrate too much on short-term financial metrics.'
+      },
+      {
+        number: 40,
+        answer: 'shareholders',
+        acceptedAnswers: ['investors'],
+        passageKeyword: 'shareholders use their muscle in the area of pay',
+        questionKeyword: 'accept the views of shareholders',
+        thaiMeaning: 'ผู้ถือหุ้น',
+        exactPortion:
+          'shareholders use their muscle in the area of pay to pressure boards to remove underperforming chief executives.'
+      }
+    ]
+  },
+  {
+    examId: 'cambridge-13-test3-passage3',
+    passageNumber: 3,
+    startNumber: 32,
+    endNumber: 36,
+    sourceParagraphs: ['D', 'E'],
+    instructions: [
+      'Questions 32–36',
+      'Complete the summary below.',
+      'Choose ONE WORD ONLY from the passage for each answer.',
+      'Write your answers in boxes 32–36 on your answer sheet.'
+    ],
+    summaryTitle: 'Looking at evidence of climate change',
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'Yama Dixit and David Hodell have found the first definitive evidence of climate change affecting the plains of north-western India thousands of years ago. By collecting the {32} of snails and analysing them, they discovered evidence of a change in water levels in a {33} in the region. This occurred when there was less {34} than evaporation, and suggests that there was an extended period of drought.'
+      },
+      {
+        type: 'para',
+        text: "Petrie and Singh's team are using archaeological records to look at {35} from five millennia ago, in order to know whether people had adapted their agricultural practices to changing climatic conditions. They are also examining objects including {36}, so as to find out about links between inhabitants of different parts of the region and whether these changed over time."
+      }
+    ],
+    questions: [
+      {
+        number: 32,
+        answer: 'shells',
+        passageKeyword: 'gathered shells of Melanoides tuberculate snails',
+        questionKeyword: 'collecting the shells of snails',
+        thaiMeaning: 'เปลือก (หอย)',
+        exactPortion:
+          'The researchers gathered shells of Melanoides tuberculate snails from the sediments of an ancient lake and used geochemical analysis as a means of tracing the climate history of the region.'
+      },
+      {
+        number: 33,
+        answer: 'lake',
+        passageKeyword: 'evaporation from the lake',
+        questionKeyword: 'change in water levels in a lake',
+        thaiMeaning: 'ทะเลสาบ',
+        exactPortion:
+          'we have observed that there was an abrupt change about 4,100 years ago, when the amount of evaporation from the lake exceeded the rainfall – indicative of a drought.'
+      },
+      {
+        number: 34,
+        answer: 'rainfall',
+        passageKeyword: 'evaporation from the lake exceeded the rainfall',
+        questionKeyword: 'less rainfall than evaporation',
+        thaiMeaning: 'ปริมาณน้ำฝน',
+        exactPortion:
+          'we have observed that there was an abrupt change about 4,100 years ago, when the amount of evaporation from the lake exceeded the rainfall – indicative of a drought.'
+      },
+      {
+        number: 35,
+        answer: 'grains',
+        passageKeyword: 'analysing grains cultivated at the time',
+        questionKeyword: 'look at grains from five millennia ago',
+        thaiMeaning: 'เมล็ดธัญพืช',
+        exactPortion:
+          'They are analysing grains cultivated at the time, and trying to work out whether they were grown under extreme conditions of water stress.'
+      },
+      {
+        number: 36,
+        answer: 'pottery',
+        passageKeyword: 'the types of pottery used',
+        questionKeyword: 'examining objects including pottery',
+        thaiMeaning: 'เครื่องปั้นดินเผา',
+        exactPortion:
+          'They are also looking at whether the types of pottery used, and other aspects of their material culture, were distinctive to specific regions or were more similar across larger areas.'
+      }
+    ]
+  },
   // ── 6 custom passages (Q5-8 fill-blank summary) ──
 
   {
