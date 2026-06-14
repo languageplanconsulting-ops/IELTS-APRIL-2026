@@ -80,6 +80,63 @@ import {
 
 export const MANUAL_FILL_BLANK_SETS: NewFillBlankSet[] = [
   ...INTENSIVE_JOURNEY_FILL_BLANK_SETS,
+  // Advanced (Cambridge Passage-3) fill-blank summary fixes
+  {
+    examId: 'cambridge-12-test1-passage3',
+    passageNumber: 3,
+    startNumber: 33,
+    endNumber: 36,
+    sourceParagraphs: ['A', 'B'],
+    instructions: [
+      'Questions 33–36',
+      'Complete the summary below.',
+      'Choose NO MORE THAN TWO WORDS from the passage for each answer.',
+      'Write your answers in boxes 33–36 on your answer sheet.'
+    ],
+    summaryTitle: "The 'Arson for Profit' course",
+    summaryLines: [
+      {
+        type: 'para',
+        text: 'This is a university course intended for students who are undergraduates and who are studying {33}. The expectation is that they will become {34} specialising in arson. The course will help them to detect cases of arson and find {35} of criminal intent, leading to successful {36} in the courts.'
+      }
+    ],
+    questions: [
+      {
+        number: 33,
+        answer: 'fire science',
+        passageKeyword: "program in 'fire science'",
+        questionKeyword: 'studying fire science',
+        thaiMeaning: 'นิติศาสตร์ดับเพลิง / วิชาว่าด้วยไฟ',
+        exactPortion:
+          "Any undergraduates who have met the academic requirements can sign up for the course in our program in 'fire science'."
+      },
+      {
+        number: 34,
+        answer: 'investigators',
+        passageKeyword: 'prospective arson investigators',
+        questionKeyword: 'become investigators',
+        thaiMeaning: 'ผู้ตรวจสอบ / นักสืบ',
+        exactPortion:
+          'the course is intended for prospective arson investigators, who can learn all the tricks of the trade'
+      },
+      {
+        number: 35,
+        answer: 'evidence',
+        passageKeyword: 'establishing a chain of evidence',
+        questionKeyword: 'find evidence of criminal intent',
+        thaiMeaning: 'หลักฐาน',
+        exactPortion: 'establishing a chain of evidence for effective prosecution in a court of law'
+      },
+      {
+        number: 36,
+        answer: 'prosecution',
+        passageKeyword: 'effective prosecution in a court of law',
+        questionKeyword: 'successful prosecution in the courts',
+        thaiMeaning: 'การฟ้องร้องดำเนินคดี',
+        exactPortion: 'establishing a chain of evidence for effective prosecution in a court of law'
+      }
+    ]
+  },
   // ── 6 custom passages (Q5-8 fill-blank summary) ──
 
   {
