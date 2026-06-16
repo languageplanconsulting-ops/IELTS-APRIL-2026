@@ -25122,3 +25122,13 @@ textarea {
   background: #e3ecf9;
   border-color: #004aad;
 }
+
+/* Locked reading entry card (e.g. Monthly Exam — admins only) */
+.readingEntryCard-locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+.readingEntryCard-locked:hover {
+  transform: none;
+}

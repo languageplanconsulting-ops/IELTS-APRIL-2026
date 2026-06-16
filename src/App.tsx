@@ -17692,6 +17692,7 @@ function App() {
   }
 
   const openReadingMonthlyBank = () => {
+    if (!isAdminUser) return // Monthly Exam is locked for learners
     setReadingWorkspaceMode('bank')
     setReadingEntryView('monthly')
     setReadingEntryCategory(null)
@@ -21264,15 +21265,22 @@ function App() {
                 })}
                 <button
                   type="button"
-                  className="readingEntryCard readingEntryCard-monthly"
+                  className={`readingEntryCard readingEntryCard-monthly ${
+                    !isAdminUser ? 'readingEntryCard-locked' : ''
+                  }`.trim()}
                   style={{ '--motion-stagger': 4 } as CSSProperties}
                   onClick={openReadingMonthlyBank}
+                  disabled={!isAdminUser}
+                  aria-disabled={!isAdminUser}
+                  title={!isAdminUser ? 'ยังไม่เปิดให้ใช้งาน' : undefined}
                 >
-                  <span className="readingEntryLabel">Monthly</span>
+                  <span className="readingEntryLabel">{!isAdminUser ? '🔒 Monthly' : 'Monthly'}</span>
                   <strong>Monthly Exams</strong>
                   <span className="readingEntrySubtitle">ข้อสอบรายเดือน · Recent Exam</span>
-                  <small>{READING_MONTHLY_EXAM_LEAD}</small>
-                  <span className="readingEntryCount">{monthlyReadingExams.length} exams</span>
+                  <small>{!isAdminUser ? 'ยังไม่เปิดให้ใช้งาน — เร็ว ๆ นี้' : READING_MONTHLY_EXAM_LEAD}</small>
+                  <span className="readingEntryCount">
+                    {!isAdminUser ? 'ล็อก' : `${monthlyReadingExams.length} exams`}
+                  </span>
                 </button>
                 <button
                   type="button"
