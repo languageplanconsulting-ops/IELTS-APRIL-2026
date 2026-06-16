@@ -730,7 +730,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r",
+              "exactPortion": "The risks agriculture faces in developing countries Synthesis of an online debate* A. Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a ",
               "explanationThai": "ย่อหน้า A บอกสองสิ่งที่เฉพาะของ food production ข้อความที่เกี่ยวกับ \"distinguish food production from all other\" ชี้ไปที่ตัวเลือก A มากที่สุด",
               "paraphrasedVocabulary": "only apply = distinguish from all other = เฉพาะการผลิตอาหาร"
             },
@@ -769,7 +769,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’ F Nwanze, Murphy and Fan argued that private risk management tools, like private insurance",
+              "exactPortion": "In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’ F. Nwanze, Murphy and Fan argued that private risk management tools, like private insuranc",
               "explanationThai": "อุดหนุนไปหมดคนรวย ไม่ใช่คนจน ข้อความที่เกี่ยวกับ \"sixty percent of beneficiaries of subsidies are not poor\" ชี้ไปที่ตัวเลือก D มากที่สุด",
               "paraphrasedVocabulary": "financial assistance = subsidies = อุดหนุน"
             },
@@ -860,7 +860,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r",
+              "exactPortion": "The risks agriculture faces in developing countries Synthesis of an online debate* A. Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a ",
               "explanationThai": "ผู้ซื้อกลางกดราคา ข้อความที่เกี่ยวกับ \"intermediary purchasers who dictate prices\" ชี้ไปที่ตัวเลือก E มากที่สุด",
               "paraphrasedVocabulary": "intermediary buyers = purchasers who dictate prices = คนกลาง"
             },
@@ -873,7 +873,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r",
+              "exactPortion": "The risks agriculture faces in developing countries Synthesis of an online debate* A. Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a ",
               "explanationThai": "ทุกฝ่ายต้องร่วมมือกัน ข้อความที่เกี่ยวกับ \"all stakeholders must work together\" ชี้ไปที่ตัวเลือก C มากที่สุด",
               "paraphrasedVocabulary": "co-operation = work together = ร่วมมือ"
             },
@@ -1002,7 +1002,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready f",
+              "exactPortion": "The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A. When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready ",
               "explanationThai": "บันทึกกับหนังสือเล่าไม่เหมือนกัน เนื้อหาย่อหน้าที่เกี่ยวกับ \"journal entries reveal a much more gradual appreciation\" ตรงกับหัวข้อ i มากที่สุด",
               "paraphrasedVocabulary": "different accounts = journal vs book = i"
             },
@@ -1054,7 +1054,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 2",
               "answerType": "true-false-not-given",
-              "exactPortion": "The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready f",
+              "exactPortion": "The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A. When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready ",
               "explanationThai": "ใช้เส้นทางใหม่ ไม่ใช่เส้นทางที่คนส่วนใหญ่ใช้ ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE",
               "paraphrasedVocabulary": "most common = advantage over others (negated)"
             },
@@ -1067,7 +1067,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 2",
               "answerType": "true-false-not-given",
-              "exactPortion": "The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready f",
+              "exactPortion": "The Lost City An explorer’s encounter with the ruined city of Machu Picchu, the most famous icon of the Inca civilisation A. When the US explorer and academic Hiram Bingham arrived in South America in 1911, he was ready ",
               "explanationThai": "ยังไม่เข้าใจความสำคัญทันที ข้อความในบทความขัดแย้งกับข้อความในข้อ จึงตอบ FALSE",
               "paraphrasedVocabulary": "as soon as = did not realise = ไม่เข้าใจทันที"
             },
@@ -1673,7 +1673,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The Intersection of Health Sciences and Geography A While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wor",
+              "exactPortion": "The Intersection of Health Sciences and Geography A. While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wo",
               "explanationThai": "ผสานสองสาขา ข้อความที่เกี่ยวกับ \"combination of knowledge regarding geography and the study of health\" ชี้ไปที่ตัวเลือก D มากที่สุด",
               "paraphrasedVocabulary": "mixture = combination = สองสาขา"
             },
@@ -1699,7 +1699,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 2",
               "answerType": "text",
-              "exactPortion": "The Intersection of Health Sciences and Geography A While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wor",
+              "exactPortion": "The Intersection of Health Sciences and Geography A. While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wo",
               "explanationThai": "โรคหายไปเพราะ improvements in vaccinations และการเข้าถึง healthcare คำว่า better … จึงตอบ vaccinations",
               "paraphrasedVocabulary": "better = improvements in = vaccinations"
             },
@@ -2369,7 +2369,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "It is a specialist predator of roe deer, a species that has exploded in Britain in recent decades.",
+              "exactPortion": "It is a specialist predator of roe deer, a species that has exploded in Britain in recent decades,",
               "explanationThai": "สัตว์ป่า ข้อความที่เกี่ยวกับ \"specialist predator of roe deer\" ชี้ไปที่ตัวเลือก D มากที่สุด",
               "paraphrasedVocabulary": "wild animals = roe deer/sika deer = D"
             },

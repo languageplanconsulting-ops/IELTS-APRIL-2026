@@ -219,7 +219,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
     "id": "cambridge-11-test1-passage2",
     "title": "Cambridge 11 Test 1 Passage 2 - THE FALKIRK WHEEL",
     "category": "normal",
-    "rawPassageText": "READING PASSAGE 2\nThe Falkirk Wheel A unique engineering achievement The\n\nThe Falkirk Wheel A unique engineering achievement The Falkirk Wheel in Scotland is the world's first and only rotating boat lift.\n\nOpened in 2002, it is central to the ambitious &pound;84.5m Millennium Link project to restore navigability across Scotland by reconnecting the historic waterways of the Forth & Clyde and Union Canals.\n\nThe major challenge of the project lays in the fact that the Forth & Clyde Canal is situated 35 metres below the level of the Union Canal.\n\nHistorically, the two canals had been joined near the town of Falkirk by a sequence of 11 locks – enclosed sections of canal in which the water level could be raised or lowered – that stepped down across a distance of 1.5 km.\n\nThis had been dismantled in 1933, thereby breaking the link.\n\nWhen the project was launched in 1994, the British Waterways authority were keen to create a dramatic twenty-first-century landmark which would not only be a fitting commemoration of the Millennium, but also a lasting symbol of the economic regeneration of the region.\n\nNumerous ideas were submitted for the project, including concepts ranging from rolling eggs to tilting tanks, from giant seesaws to overhead monorails.\n\nThe eventual winner was a plan for the huge rotating steel boat lift which was to become The Falkirk Wheel.\n\nThe unique shape of the structure is claimed to have been inspired by various sources, both manmade and natural, most notably a Celtic double headed axe, but also the vast turning propeller of a ship, the ribcage of a whale or the spine of a fish.\n\nThe various parts of The Falkirk Wheel were all constructed and assembled, like one giant toy building set, at Butterley Engineering's Steelworks in Derbyshire, some 400 km from Falkirk.\n\nA team there carefully assembled the 1,200 tonnes of steel, painstakingly fitting the pieces together to an accuracy of just 10 mm to ensure a perfect final fit.\n\nIn the summer of 2001, the structure was then dismantled and transported on 35 lorries to Falkirk, before all being bolted back together again on the ground, and finally lifted into position in five large sections by crane.\n\nThe Wheel would need to withstand immense and constantly changing stresses as it rotated, so to make the structure more robust, the steel sections were bolted rather than welded together.\n\nOver 45,000 bolt holes were matched with their bolts, and each bolt was hand-tightened.\n\nThe Wheel consists of two sets of opposing axe-shaped arms, attached about 25 metres apart to a fixed central spine.\n\nTwo diametrically opposed water-filled 'gondolas', each with a capacity of 360,000 litres, are fitted between the ends of the arms.\n\nThese gondolas always weigh the same, whether or not they are carrying boats.\n\nThis is because, according to Archimedes' principle of displacement, floating objects displace their own weight in water.\n\nSo when a boat enters a gondola, the amount of water leaving the gondola weighs exactly the same as the boat.\n\nThis keeps the Wheel balanced and so, despite its enormous mass, it rotates through 180&deg; in five and a half minutes while using very little power.\n\nIt takes just 1.5 kilowatt-hours (5.4 MJ) of energy to rotate the Wheel -roughly the same as boiling eight small domestic kettles of water.\n\nBoats needing to be lifted up enter the canal basin at the level of the Forth & Clyde Canal and then enter the lower gondola of the Wheel.\n\nTwo hydraulic steel gates are raised, so as to seal the gondola off from the water in the canal basin.\n\nThe water between the gates is then pumped out.\n\nA hydraulic clamp, which prevents the arms of the Wheel moving while the gondola is docked, is removed, allowing the Wheel to turn.\n\nIn the central machine room an array of ten hydraulic motors then begins to rotate the central axle.\n\nThe axle connects to the outer arms of the Wheel, which begin to rotate at a speed of 1/8 of a revolution per minute.\n\nAs the wheel rotates, the gondolas are kept in the upright position by a simple gearing system.\n\nTwo eight-metre-wide cogs orbit a fixed inner cog of the same width, connected by two smaller cogs travelling in the opposite direction to the outer cogs – so ensuring that the gondolas always remain level.\n\nWhen the gondola reaches the top, the boat passes straight onto the aqueduct situated 24 metres above the canal basin.\n\nThe remaining 11 metres of lift needed to reach the Union Canal is achieved by means of a pair of locks.\n\nThe Wheel could not be constructed to elevate boats over the full 35-metre difference between the two canals, owing to the presence of the historically important Antonine Wall, which was built by the Romans in the second century AD.\n\nBoats travel under this wall via a tunnel, then through the locks, and finally on to the Union Canal. <div\n\nQuestions 14-19\nDo the following statements agree with the information given in Reading Passage 2?\nIn boxes 14-19 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this\n14 The Falkirk Wheel has linked the Forth & Clyde Canal with the Union Canal for the first time in their history.\n15 There was some opposition to the design of the Falkirk Wheel at first.\n16 The Falkirk Wheel was initially put together at the location where its components were manufactured.\n17 The Falkirk Wheel is the only boat lift in the world which has steel sections bolted together by hand.\n18 The weight of the gondolas varies according to the size of boat being carried.\n19 The construction of the Falkirk Wheel site took into account the presence of a nearby ancient monument.\n\nQuestions 20-26\nLabel the diagram below.\nChoose ONE WORD from the passage for each answer.\nWrite your answers in boxes 20-26 on your answer sheet.\n\nHow a boat is lifted on the Falkirk Wheel\n\nA pair of 20 ………………… are lifted in order to shut out water from canal basin\nA 21 ………………… is taken out, enabling Wheel to rotate\nBoat is raised, floating in one of Wheel's two\nA range of different-sized 23 ………………… ensures boat keeps upright\nBoat reaches top Wheel, then moves directly onto 24 …………………\nBoat travels through tunnel beneath Roman\n25 …………………\n26 ………………… raise boat 11 m to level of Union Canal",
+    "rawPassageText": "READING PASSAGE 2\nThe Falkirk Wheel A unique engineering achievement The\n\nThe Falkirk Wheel A unique engineering achievement The Falkirk Wheel in Scotland is the world's first and only rotating boat lift.\n\nOpened in 2002, it is central to the ambitious &pound;84.5m Millennium Link project to restore navigability across Scotland by reconnecting the historic waterways of the Forth & Clyde and Union Canals.\n\nThe major challenge of the project lays in the fact that the Forth & Clyde Canal is situated 35 metres below the level of the Union Canal. Historically, the two canals had been joined near the town of Falkirk by a sequence of 11 locks – enclosed sections of canal in which the water level could be raised or lowered – that stepped down across a distance of 1.5 km, taking about half a day to pass through.\n\nHistorically, the two canals had been joined near the town of Falkirk by a sequence of 11 locks – enclosed sections of canal in which the water level could be raised or lowered – that stepped down across a distance of 1.5 km.\n\nThis had been dismantled in 1933, thereby breaking the link.\n\nWhen the project was launched in 1994, the British Waterways authority were keen to create a dramatic twenty-first-century landmark which would not only be a fitting commemoration of the Millennium, but also a lasting symbol of the economic regeneration of the region.\n\nNumerous ideas were submitted for the project, including concepts ranging from rolling eggs to tilting tanks, from giant seesaws to overhead monorails.\n\nThe eventual winner was a plan for the huge rotating steel boat lift which was to become The Falkirk Wheel.\n\nThe unique shape of the structure is claimed to have been inspired by various sources, both manmade and natural, most notably a Celtic double headed axe, but also the vast turning propeller of a ship, the ribcage of a whale or the spine of a fish.\n\nThe various parts of The Falkirk Wheel were all constructed and assembled, like one giant toy building set, at Butterley Engineering's Steelworks in Derbyshire, some 400 km from Falkirk.\n\nA team there carefully assembled the 1,200 tonnes of steel, painstakingly fitting the pieces together to an accuracy of just 10 mm to ensure a perfect final fit.\n\nIn the summer of 2001, the structure was then dismantled and transported on 35 lorries to Falkirk, before all being bolted back together again on the ground, and finally lifted into position in five large sections by crane.\n\nThe Wheel would need to withstand immense and constantly changing stresses as it rotated, so to make the structure more robust, the steel sections were bolted rather than welded together.\n\nOver 45,000 bolt holes were matched with their bolts, and each bolt was hand-tightened.\n\nThe Wheel consists of two sets of opposing axe-shaped arms, attached about 25 metres apart to a fixed central spine.\n\nTwo diametrically opposed water-filled 'gondolas', each with a capacity of 360,000 litres, are fitted between the ends of the arms.\n\nThese gondolas always weigh the same, whether or not they are carrying boats.\n\nThis is because, according to Archimedes' principle of displacement, floating objects displace their own weight in water.\n\nSo when a boat enters a gondola, the amount of water leaving the gondola weighs exactly the same as the boat.\n\nThis keeps the Wheel balanced and so, despite its enormous mass, it rotates through 180&deg; in five and a half minutes while using very little power.\n\nIt takes just 1.5 kilowatt-hours (5.4 MJ) of energy to rotate the Wheel -roughly the same as boiling eight small domestic kettles of water.\n\nBoats needing to be lifted up enter the canal basin at the level of the Forth & Clyde Canal and then enter the lower gondola of the Wheel.\n\nTwo hydraulic steel gates are raised, so as to seal the gondola off from the water in the canal basin.\n\nThe water between the gates is then pumped out.\n\nA hydraulic clamp, which prevents the arms of the Wheel moving while the gondola is docked, is removed, allowing the Wheel to turn.\n\nIn the central machine room an array of ten hydraulic motors then begins to rotate the central axle.\n\nThe axle connects to the outer arms of the Wheel, which begin to rotate at a speed of 1/8 of a revolution per minute.\n\nAs the wheel rotates, the gondolas are kept in the upright position by a simple gearing system.\n\nTwo eight-metre-wide cogs orbit a fixed inner cog of the same width, connected by two smaller cogs travelling in the opposite direction to the outer cogs – so ensuring that the gondolas always remain level.\n\nWhen the gondola reaches the top, the boat passes straight onto the aqueduct situated 24 metres above the canal basin.\n\nThe remaining 11 metres of lift needed to reach the Union Canal is achieved by means of a pair of locks.\n\nThe Wheel could not be constructed to elevate boats over the full 35-metre difference between the two canals, owing to the presence of the historically important Antonine Wall, which was built by the Romans in the second century AD.\n\nBoats travel under this wall via a tunnel, then through the locks, and finally on to the Union Canal. <div\n\nQuestions 14-19\nDo the following statements agree with the information given in Reading Passage 2?\nIn boxes 14-19 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this\n14 The Falkirk Wheel has linked the Forth & Clyde Canal with the Union Canal for the first time in their history.\n15 There was some opposition to the design of the Falkirk Wheel at first.\n16 The Falkirk Wheel was initially put together at the location where its components were manufactured.\n17 The Falkirk Wheel is the only boat lift in the world which has steel sections bolted together by hand.\n18 The weight of the gondolas varies according to the size of boat being carried.\n19 The construction of the Falkirk Wheel site took into account the presence of a nearby ancient monument.\n\nQuestions 20-26\nLabel the diagram below.\nChoose ONE WORD from the passage for each answer.\nWrite your answers in boxes 20-26 on your answer sheet.\n\nHow a boat is lifted on the Falkirk Wheel\n\nA pair of 20 ………………… are lifted in order to shut out water from canal basin\nA 21 ………………… is taken out, enabling Wheel to rotate\nBoat is raised, floating in one of Wheel's two\nA range of different-sized 23 ………………… ensures boat keeps upright\nBoat reaches top Wheel, then moves directly onto 24 …………………\nBoat travels through tunnel beneath Roman\n25 …………………\n26 ………………… raise boat 11 m to level of Union Canal",
     "rawAnswerKey": "READING PASSAGE 2: The Falkirk Wheel\n\nQuestion 14: The Falkirk Wheel has linked the Forth & Clyde Canal with the Union Canal for the first time in their history.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"Historically, the two canals had been joined near the town of Falkirk by a sequence of 11 locks – enclosed sections of canal in which the water level could be raised or lowered – that stepped down across a distance of 1.5 km.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The Falkirk Wheel has linked the Forth & Clyde Canal with the Union Canal for the first time in their history.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Historically, the two canals had been joined near the town of Falkirk by a sequence of 11 locks…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: falkirk wheel linked = historically canals joined falkirk = FALSE\n\nQuestion 15: There was some opposition to the design of the Falkirk Wheel at first.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"Numerous ideas were submitted for the project, including concepts ranging from rolling eggs to tilting tanks, from giant seesaws to overhead monorails. The eventual winner was a plan for the huge rotating steel boat lift which was to become The Falkirk Wheel.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"There was some opposition to the design of the Falkirk Wheel at first.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Numerous ideas were submitted for the project, including concepts ranging from rolling eggs to …\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: opposition design falkirk = numerous submitted project including = NOT GIVEN\n\nQuestion 16: The Falkirk Wheel was initially put together at the location where its components were manufactured.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"The various parts of The Falkirk Wheel were all constructed and assembled, like one giant toy building set, at Butterley Engineering’s Steelworks in Derbyshire, some 400 km from Falkirk.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The Falkirk Wheel was initially put together at the location where its components were manufactured.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"The various parts of The Falkirk Wheel were all constructed and assembled, like one giant toy b…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: falkirk wheel initially = various falkirk constructed assembled = TRUE\n\nQuestion 17: The Falkirk Wheel is the only boat lift in the world which has steel sections bolted together by hand.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"The Wheel would need to withstand immense and constantly changing stresses as it rotated, so to make the structure more robust, the steel sections were bolted rather than welded together.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The Falkirk Wheel is the only boat lift in the world which has steel sections bolted together by hand.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"The Wheel would need to withstand immense and constantly changing stresses as it rotated, so to…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: falkirk wheel steel = withstand immense constantly changing = NOT GIVEN\n\nQuestion 18: The weight of the gondolas varies according to the size of boat being carried.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"These gondolas always weigh the same, whether or not they are carrying boats.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The weight of the gondolas varies according to the size of boat being carried.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"These gondolas always weigh the same, whether or not they are carrying boats.\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: weight gondolas varies = gondolas always whether carrying = FALSE\n\nQuestion 19: The construction of the Falkirk Wheel site took into account the presence of\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"The Wheel could not be constructed to elevate boats over the full 35-metre difference between the two canals, owing to the presence of the historically important Antonine Wall, which was built by the Romans in the second century AD.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The construction of the Falkirk Wheel site took into account the presence of\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"The Wheel could not be constructed to elevate boats over the full 35-metre difference between t…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: construction falkirk wheel = constructed elevate 35-metre difference = TRUE\n\nQuestion 20: Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 20\n\nCorrect Answer: gates\n\nAccepted Answers: gates\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"Two hydraulic steel gates are raised, so as to seal the gondola off from the water in the canal basin.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 20\" บทความมีถ้อยคำที่ตรงกันคือ \"Two hydraulic steel gates are raised, so as to seal the gondola off from the water in the canal…\" จึงคำตอบคือ \"gates\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: label diagram questions = hydraulic raised gondola = gates\n\nQuestion 21: Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 21\n\nCorrect Answer: clamp\n\nAccepted Answers: clamp\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"A hydraulic clamp, which prevents the arms of the Wheel moving while the gondola is docked, is removed, allowing the Wheel to turn.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 21\" บทความมีถ้อยคำที่ตรงกันคือ \"A hydraulic clamp, which prevents the arms of the Wheel moving while the gondola is docked, is …\" จึงคำตอบคือ \"clamp\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: label diagram questions = hydraulic prevents moving gondola = clamp\n\nQuestion 22: Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 22\n\nCorrect Answer: axle\n\nAccepted Answers: axle\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"In the central machine room an array of ten hydraulic motors then begins to rotate the central axle.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 22\" บทความมีถ้อยคำที่ตรงกันคือ \"In the central machine room an array of ten hydraulic motors then begins to rotate the central …\" จึงคำตอบคือ \"axle\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: label diagram questions = central machine hydraulic motors = axle\n\nQuestion 23: Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 23\n\nCorrect Answer: cogs\n\nAccepted Answers: cogs\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"Two eight-metre-wide cogs orbit a fixed inner cog of the same width, connected by two smaller cogs travelling in the opposite direction to the outer cogs – so ensuring that the gondolas always remain level.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 23\" บทความมีถ้อยคำที่ตรงกันคือ \"Two eight-metre-wide cogs orbit a fixed inner cog of the same width, connected by two smaller c…\" จึงคำตอบคือ \"cogs\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: label diagram questions = eight-metre-wide connected smaller travelling = cogs\n\nQuestion 24: Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 24\n\nCorrect Answer: aqueduct\n\nAccepted Answers: aqueduct\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"When the gondola reaches the top, the boat passes straight onto the aqueduct situated 24 metres above the canal basin.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 24\" บทความมีถ้อยคำที่ตรงกันคือ \"When the gondola reaches the top, the boat passes straight onto the aqueduct situated 24 metres…\" จึงคำตอบคือ \"aqueduct\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: label diagram questions = gondola reaches passes straight = aqueduct\n\nQuestion 25: Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 25\n\nCorrect Answer: wall\n\nAccepted Answers: wall\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"Boats travel under this wall via a tunnel, then through the locks, and finally on to the Union Canal.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 25\" บทความมีถ้อยคำที่ตรงกันคือ \"Boats travel under this wall via a tunnel, then through the locks, and finally on to the Union …\" จึงคำตอบคือ \"wall\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: label diagram questions = travel tunnel finally = wall\n\nQuestion 26: … Questions 27-29 The Reading Passage has eight paragraphs\n\nCorrect Answer: locks\n\nAccepted Answers: locks\n\nAnswer Group: Cambridge 11 Test 1 Passage 2\n\nExact Portion: \"The remaining 11 metres of lift needed to reach the Union Canal is achieved by means of a pair of locks.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… Questions 27-29 The Reading Passage has eight paragraphs\" บทความมีถ้อยคำที่ตรงกันคือ \"The remaining 11 metres of lift needed to reach the Union Canal is achieved by means of a pair …\" จึงคำตอบคือ \"locks\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: questions 27-29 eight = remaining metres needed achieved = locks",
     "createdAt": "2026-05-22T00:00:00.000Z",
     "updatedAt": "2026-06-03T06:07:04.278Z",
@@ -285,7 +285,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 2",
               "answerType": "true-false-not-given",
-              "exactPortion": "The various parts of The Falkirk Wheel were all constructed and assembled, like one giant toy building set, at Butterley Engineering’s Steelworks in Derbyshire, some 400 km from Falkirk.",
+              "exactPortion": "The various parts of The Falkirk Wheel were all constructed and assembled, like one giant toy building set, at Butterley Engineering's Steelworks in Derbyshire, some 400 km from Falkirk.",
               "explanationThai": "ข้อความในข้อว่า \"The Falkirk Wheel was initially put together at the location where its components were manufactured.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"The various parts of The Falkirk Wheel were all constructed and assembled, like one giant toy b…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
               "paraphrasedVocabulary": "falkirk wheel initially = various falkirk constructed assembled = TRUE"
             },
@@ -476,7 +476,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "The idea is modelled on historic volcanic explosions, such as that of Mount Pinatubo in the Philippines in 1991, which led to a short-term cooling of global temperatures by 0.5 °C.",
+              "exactPortion": "The idea is modelled on historic volcanic explosions, such as that of Mount Pinatubo in the Philippines in 1991, which led to a short-term cooling of global temperatures by 0.5 &de",
               "explanationThai": "คำถาม: \"mention of\" หลักฐานในบทความคือ \"The idea is modelled on historic volcanic explosions, such as that of Mount Pinatubo in the Phi…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
               "paraphrasedVocabulary": "mention of = The idea is modelled on historic volcanic explosions, such a… = D"
             },
@@ -567,7 +567,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 3",
               "answerType": "text",
-              "exactPortion": "Scientists have also scrutinised whether it’s possible to preserve the ice sheets of Greenland with reinforced high-tension cables, preventing icebergs from moving into the sea.",
+              "exactPortion": "Scientists have also scrutinised whether it's possible to preserve the ice sheets of Greenland with reinforced high-tension cables, preventing icebergs from moving into the sea.",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… to Greenland ice sheets to prevent icebergs moving into the sea plant trees in Russian Arctic that would lose their leaves in wi…\" บทความมีถ้อยคำที่ตรงกันคือ \"Scientists have also scrutinised whether it’s possible to preserve the ice sheets of Greenland …\" จึงคำตอบคือ \"cables\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "plant trees russian = scientists scrutinised whether possible = cables"
             },
@@ -606,7 +606,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "And Dr Phil Rasch of the US-based Pacific Northwest National Laboratory is equally guarded about the role of geo-engineering: ‘I think all of us agree that if we were to end geo-engineering on a given day, then the planet would return to its pre-engineered condition very rapidly, and probably within ten to twenty years.",
+              "exactPortion": "And Dr Phil Rasch of the US-based Pacific Northwest National Laboratory is equally guarded about the role of geo-engineering: 'I think all of us agree that if we were to end geo-engineering on a given day, then the planet would return to its pre-engineered condition very rapidly, and probably within ten to twenty years.",
               "explanationThai": "คำถาม: \"The effects of geo-engineering may not be long-lasting. … … … …\" หลักฐานในบทความคือ \"And Dr Phil Rasch of the US-based Pacific Northwest National Laboratory is equally guarded abou…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
               "paraphrasedVocabulary": "effects geo-engineering long-lasting = us-based pacific northwest national = B"
             },
@@ -619,7 +619,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "According to Dr Martin Sommerkorn, climate change advisor for the World Wildlife Fund’s International Arctic Programme, ‘Human-induced climate change has brought humanity to a position where we shouldn’t exclude thinking thoroughly about this topic and its possibilities.’",
+              "exactPortion": "According to Dr Martin Sommerkorn, climate change advisor for the World Wildlife Fund's International Arctic Programme, 'Human-induced climate change has brought humanity to a position where we shouldn't exclude thinking thoroughly about this topic and its possibilities.'",
               "explanationThai": "คำถาม: \"Geo-engineering is\" หลักฐานในบทความคือ \"According to Dr Martin Sommerkorn, climate change advisor for the World Wildlife Fund’s Interna…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
               "paraphrasedVocabulary": "geo-engineering = according martin sommerkorn climate = D"
             },
@@ -632,7 +632,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "To avoid such a scenario,” Hunt says, “Angel’s project would have to operate at half strength; all of which reinforces his view that the best option is to avoid the need for geo-engineering altogether.”",
+              "exactPortion": "To avoid such a scenario,\" Hunt says, \"Angel's project would have to operate at half strength; all of which reinforces his view that the best option is to avoid the need for geo-engineering altogether.\"",
               "explanationThai": "คำถาม: \"It may be necessary to limit the effectiveness of geo-engineering projects. … … … …\" หลักฐานในบทความคือ \"To avoid such a scenario,” Hunt says, “Angel’s project would have to operate at half strength; …\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
               "paraphrasedVocabulary": "necessary limit effectiveness = scenario project operate strength = C"
             },
@@ -645,7 +645,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Angel says that his plan is ‘no substitute for developing renewable energy: the only permanent solution’.",
+              "exactPortion": "Angel says that his plan is 'no substitute for developing renewable energy: the only permanent solution'.",
               "explanationThai": "คำถาม: \"Research into non-fossil-based fuels cannot be replaced by geo-engineering. … … … …\" หลักฐานในบทความคือ \"Angel says that his plan is ‘no substitute for developing renewable energy: the only permanent …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "research non-fossil-based fuels = substitute developing renewable energy = A"
             }
@@ -1161,7 +1161,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "It seems that the viewer can sense the artist’s vision in paintings, even if they can’t explain why.",
+              "exactPortion": "It seems that the viewer can sense the artist's vision in paintings, even if they can't explain why.",
               "explanationThai": "คำถาม: \"Angelina Hawley-Dolan's findings indicate that people\" หลักฐานในบทความคือ \"It seems that the viewer can sense the artist’s vision in paintings, even if they can’t explain…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
               "paraphrasedVocabulary": "hawley-dolan's findings indicate = viewer artist vision paintings = D"
             },
@@ -1200,7 +1200,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "The blurred imagery of Impressionist paintings seems to stimulate the brain’s amygdala, for instance. Since the amygdala plays a crucial role in our feelings, that finding might explain why many people find these pieces so moving.",
+              "exactPortion": "The blurred imagery of Impressionist paintings seems to stimulate the brain's amygdala, for instance. Since the amygdala plays a crucial role in our feelings, that finding might explain why many people find these pieces so moving.",
               "explanationThai": "คำถาม: \"Drop answer here … . Alex Forsythe of the University of Liverpool believes many artists give their works the precise degree of\" หลักฐานในบทความคือ \"The blurred imagery of Impressionist paintings seems to stimulate the brain’s amygdala, for ins…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
               "paraphrasedVocabulary": "forsythe university liverpool = blurred imagery impressionist paintings = C"
             },
@@ -1252,7 +1252,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 2 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "This may be down to our brain’s ‘mirror neurons’, which are known to mimic others’ actions. The hypothesis will need to be thoroughly tested, however.",
+              "exactPortion": "This may be down to our brain's 'mirror neurons', which are known to mimic others' actions. The hypothesis will need to be thoroughly tested, however.",
               "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Certain ideas regarding the link between 'mirror neurons' and art appreciation require further verification.\" โดยเฉพาะจากข้อความ \"This may be down to our brain’s ‘mirror neurons’, which are known to mimic others’ actions. The…\" จึงตอบ YES",
               "paraphrasedVocabulary": "certain ideas regarding = mirror neurons others actions = YES"
             },
@@ -1291,7 +1291,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 2 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "We shouldn’t underestimate the importance of the style of a particular artist, their place in history and the artistic environment of their time.",
+              "exactPortion": "We shouldn't underestimate the importance of the style of a particular artist, their place in history and the artistic environment of their time.",
               "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"Art appreciation should always involve taking into consideration the cultural context in which an artist worked.\" โดยเฉพาะจากข้อความ \"We shouldn’t underestimate the importance of the style of a particular artist, their place in h…\" จึงตอบ YES",
               "paraphrasedVocabulary": "artist worked = shouldn underestimate importance particular = YES"
             },
@@ -1304,7 +1304,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 2 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "In some ways, it’s not so different to science, where we are constantly looking for systems and decoding meaning so that we can view and appreciate the world in a new way.",
+              "exactPortion": "In some ways, it's not so different to science, where we are constantly looking for systems and decoding meaning so that we can view and appreciate the world in a new way.",
               "explanationThai": "ข้อความในข้อว่า \"It is easier to find meaning in the field of science than in that of art.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"In some ways, it’s not so different to science, where we are constantly looking for systems and…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "It is easier to find meaning in the field of scien… = In some ways, it’s not so different to science, where we are… = NOT GIVEN"
             },
@@ -1317,7 +1317,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Could the same approach also shed light on abstract twentieth-century pieces, from Mondrian’s geometrical blocks of colour, to Pollock’s seemingly haphazard arrangements of splashed paint on canvas?",
+              "exactPortion": "Could the same approach also shed light on abstract twentieth-century pieces, from Mondrian's geometrical blocks of colour, to Pollock's seemingly haphazard arrangements of splashed paint on canvas?",
               "explanationThai": "คำถาม: \"What would be the most appropriate subtitle for the article?\" หลักฐานในบทความคือ \"Could the same approach also shed light on abstract twentieth-century pieces, from Mondrian’s g…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "appropriate subtitle article = approach abstract twentieth-century pieces = A"
             }
@@ -1529,7 +1529,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "However, in more recent decades, China has gradually recaptured its position as the world’s biggest producer and exporter of raw silk and silk yarn.",
+              "exactPortion": "However, in more recent decades, China has gradually recaptured its position as the world's biggest producer and exporter of raw silk and silk yarn.",
               "explanationThai": "ข้อความในข้อว่า \"Silk yarn makes up the majority of silk currently exported from China.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"However, in more recent decades, China has gradually recaptured its position as the world’s big…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "makes majority currently = however recent decades gradually = NOT GIVEN"
             }
@@ -1622,7 +1622,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 3 Passage 2",
               "answerType": "true-false-not-given",
-              "exactPortion": "They allow for the fact that, for example, aphids will become sensitive to blue light (from the sky) when it’s time for takeoff on their big journey, and sensitive to yellow light (reflected from tender young leaves) when it’s appropriate to land.",
+              "exactPortion": "They allow for the fact that, for example, aphids will become sensitive to blue light (from the sky) when it's time for takeoff on their big journey, and sensitive to yellow light (reflected from tender young leaves) when it's appropriate to land.",
               "explanationThai": "ข้อความในข้อว่า \"Aphids' journeys are affected by changes in the light that they perceive.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"They allow for the fact that, for example, aphids will become sensitive to blue light (from the…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
               "paraphrasedVocabulary": "aphids' journeys affected = example aphids become sensitive = TRUE"
             },
@@ -1900,7 +1900,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 3 Passage 3",
               "answerType": "text",
-              "exactPortion": "Occasionally, in some difficult musical compositions, there are beautiful, but easy parts – parts so simple a beginner could play them. So it is with mathematics as well.",
+              "exactPortion": "Occasionally, in some difficult musical compositions, there are beautiful, but easy parts – parts so simple a beginner could play them. There are some discoveries in adva",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Some areas of both music and mathematics are suitable for someone who is a … …\" บทความมีถ้อยคำที่ตรงกันคือ \"Occasionally, in some difficult musical compositions, there are beautiful, but easy parts – par…\" จึงคำตอบคือ \"beginner\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "Some areas of both music and mathematics are suita… = Occasionally, in some difficult musical compositions, there … = beginner"
             },
@@ -2053,7 +2053,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "Over two decades 137 sets of twins eventually visited Thomas Bouchard’s lab in what became known as the Minnesota Study of Twins Reared Apart.",
+              "exactPortion": "Over two decades 137 sets of twins eventually visited Thomas Bouchard's lab in what became known as the Minnesota Study of Twins Reared Apart.",
               "explanationThai": "ข้อความในข้อว่า \"Bouchard advertised in newspapers for twins who had been separated at birth.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Over two decades 137 sets of twins eventually visited Thomas Bouchard’s lab in what became know…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "bouchard advertised newspapers = decades eventually visited thomas = NOT GIVEN"
             },
@@ -2066,7 +2066,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "Epigenetic processes are chemical reactions tied to neither nature nor nurture but representing what researchers have called a ‘third component’.",
+              "exactPortion": "Epigenetic processes are chemical reactions tied to neither nature nor nurture but representing what researchers have called a 'third component'.",
               "explanationThai": "ข้อความในข้อว่า \"Epigenetic processes are different from both genetic and environmental processes.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Epigenetic processes are chemical reactions tied to neither nature nor nurture but representing…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
               "paraphrasedVocabulary": "epigenetic processes different = epigenetic processes chemical reactions = TRUE"
             },
@@ -2079,7 +2079,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "when the English scientist Francis Galton first suggested the approach (and coined the phrase ‘nature and nurture’).",
+              "exactPortion": "when the English scientist Francis Galton first suggested the approach (and coined the phrase 'nature and nurture').",
               "explanationThai": "คำถาม: \"invented\" หลักฐานในบทความคือ \"when the English scientist Francis Galton first suggested the approach (and coined the phrase ‘…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "invented = english scientist francis galton = A"
             },
@@ -2099,6 +2099,19 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
             {
               "number": 7,
               "prompt": "developed a mathematical method of measuring genetic influences",
+              "correctAnswer": "A",
+              "acceptedAnswers": [
+                "A"
+              ],
+              "answerGroup": "Cambridge 11 Test 4 Passage 1",
+              "answerType": "multiple-choice",
+              "exactPortion": "The idea of using twins to measure the influence of heredity dates back to 1875, when the English scientist Francis Galton first suggested the approach (and coined the phrase 'nature and nurture').",
+              "explanationThai": "คำถาม: \"developed a mathematical method of measuring genetic influences\" หลักฐานในบทความคือ \"The idea of using twins to measure the influence of heredity dates back to 1875, when the English scientist Francis Galton first suggested the approach.\" กัลตัน (Francis Galton, ตัวเลือก A) เป็นผู้พัฒนาแนวทางการวัดอิทธิพลทางพันธุกรรมโดยใช้แฝดเป็นคนแรก จึงตอบ A",
+              "paraphrasedVocabulary": "developed mathematical method = measure influence heredity galton suggested = A"
+            },
+            {
+              "number": 8,
+              "prompt": "pioneered research into genetics using twins … … …",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2106,21 +2119,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               "answerGroup": "Cambridge 11 Test 4 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Bouchard and his colleagues used this mountain of data to identify how far twins were affected by their genetic makeup. The key to their approach was a statistical concept called heritability.",
-              "explanationThai": "คำถาม: \"developed\" หลักฐานในบทความคือ \"Bouchard and his colleagues used this mountain of data to identify how far twins were affected …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "developed = bouchard colleagues mountain identify = B"
-            },
-            {
-              "number": 8,
-              "prompt": "pioneered research into genetics using twins … … …",
-              "correctAnswer": "A",
-              "acceptedAnswers": [
-                "A"
-              ],
-              "answerGroup": "Cambridge 11 Test 4 Passage 1",
-              "answerType": "multiple-choice",
-              "exactPortion": "The idea of using twins to measure the influence of heredity dates back to 1875, when the English scientist Francis Galton first suggested the approach (and coined the phrase ‘nature and nurture’).",
-              "explanationThai": "คำถาม: \"pioneered research into genetics using twins … … …\" หลักฐานในบทความคือ \"The idea of using twins to measure the influence of heredity dates back to 1875, when the Engli…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "pioneered research genetics = measure influence heredity english = A"
+              "explanationThai": "คำถาม: \"pioneered research into genetics using twins\" หลักฐานในบทความคือ \"Bouchard and his colleagues used this mountain of data to identify how far twins were affected by their genetic makeup.\" บูชาร์ด (Bouchard, ตัวเลือก B) บุกเบิกการวิจัยด้านพันธุศาสตร์โดยใช้ข้อมูลจากแฝดอย่างเป็นระบบ จึงตอบ B",
+              "paraphrasedVocabulary": "pioneered research genetics twins = bouchard colleagues mountain data identify = B"
             },
             {
               "number": 9,
@@ -2131,7 +2131,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "with the arrival of studies into identical twins who had been separated at birth and reunited as adults. Over two decades 137 sets of twins eventually visited Thomas Bouchard’s lab in what became known as the Minnesota Study of Twins Reared Apart.",
+              "exactPortion": "with the arrival of studies into identical twins who had been separated at birth and reunited as adults. Over two decades 137 sets of twins eventually visited Thomas Bouchard's lab in what became known as the Minnesota Study of Twins Reared Apart.",
               "explanationThai": "คำถาม: \"carried out research into twins who had lived apart … … … Questions 10-13 Complete the summary using the list of words,\" หลักฐานในบทความคือ \"with the arrival of studies into identical twins who had been separated at birth and reunited a…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
               "paraphrasedVocabulary": "carried research twins = arrival studies identical separated = B"
             },
@@ -2504,7 +2504,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "The most extraordinary thing about language, however, is that one doesn’t have to be a genius to set its wheels in motion.",
+              "exactPortion": "The most extraordinary thing about language, however, is that one doesn't have to be a genius to set its wheels in motion.",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The most extraordinary thing about language, however, is that one doesn’t have to be a genius t…\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = extraordinary language however genius = vii"
             },
@@ -2517,7 +2517,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Often, it is only the estrangement of foreign tongues, with their many exotic and outlandish features, that brings home the wonder of languages design.",
+              "exactPortion": "Often, it is only the estrangement of foreign tongues, with their many exotic and outlandish features, that brings home the wonder of language's design",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Often, it is only the estrangement of foreign tongues, with their many exotic and outlandish fe…\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = estrangement foreign tongues exotic = i"
             },
@@ -2543,7 +2543,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Other inventions -the wheel, agriculture, sliced bread – may have transformed our material existence",
+              "exactPortion": "Other inventions - the wheel, agriculture, sliced bread - may have transformed our material existenc",
               "explanationThai": "คำถาม: \"Drop answer here … aspects of life, but no impact has been as\" หลักฐานในบทความคือ \"Other inventions -the wheel, agriculture, sliced bread – may have transformed our material exis…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
               "paraphrasedVocabulary": "aspects impact = inventions agriculture sliced transformed = E"
             },
@@ -2582,7 +2582,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "The most extraordinary thing about language, however, is that one doesn’t have to be a genius to set its wheels in motion.",
+              "exactPortion": "The most extraordinary thing about language, however, is that one doesn't have to be a genius to set its wheels in motion.",
               "explanationThai": "คำถาม: \"Drop answer here … to use. However, its sophistication is often overlooked. Drag and drop an option to fill in each blank. A. diff…\" หลักฐานในบทความคือ \"The most extraordinary thing about language, however, is that one doesn’t have to be a genius t…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
               "paraphrasedVocabulary": "option fill blank = extraordinary language however genius = F"
             },

@@ -344,7 +344,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "If disgust protects humans from infection, boredom may protect them from \"infectious\" social situations.",
+              "exactPortion": "If disgust protects humans from infection, boredom may protect them from \"infectious\" social situations,",
               "explanationThai": "Toohey เปรียบ boredom กับ disgust ที่ผลักดันให้หลีกเลี่ยงสถานการณ์ทางสังคม ข้อความที่เกี่ยวกับ \"disgust\" ชี้ไปที่ตัวเลือก E มากที่สุด",
               "paraphrasedVocabulary": "avoid unpleasant experience = boredom may protect from infectious social situations = หลีกเลี่ยงสังคม"
             },
@@ -396,7 +396,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 2",
               "answerType": "text",
-              "exactPortion": "For Eastwood, the central feature of boredom is a failure to put our 'attention system' into gear. This causes an inability to focus on anything.",
+              "exactPortion": "For Eastwood, the central feature of boredom is a failure to put our 'attention system' into gear. This causes an inability to focus on anything,",
               "explanationThai": "บทความระบุว่า Eastwood บอกแก่น boredom คือโฟกัสไม่ได้เพราะ attention system ล้มเหลว คำว่า cannot focus ในข้อจึงตอบ focus เพราะตรงกับ \"failure to put attention system into gear\" ในบทความ",
               "paraphrasedVocabulary": "cannot focus = failure to put attention system into gear = โฟกัสไม่ได้"
             },
@@ -511,7 +511,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Unlike earlier ‘artists’ such as Aaron, the Painting Fool only needs minimal direction and can come up with its own concepts by going online for material.",
+              "exactPortion": "Unlike earlier 'artists' such as Aaron, the Painting Fool only needs minimal direction and can come up with its own concepts by going online for material.",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Unlike earlier ‘artists’ such as Aaron, the Painting Fool only needs minimal directio…\") จึงตอบ C",
               "paraphrasedVocabulary": "difference between aaron = unlike earlier artists = C"
             },
@@ -524,7 +524,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "While some might say they have a mechanical look, Colton argues that such reactions arise from people’s double standards towards software-produced and human-produced art.",
+              "exactPortion": "While some might say they have a mechanical look, Colton argues that such reactions arise from people's double standards towards software-produced and human-produced art.",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"While some might say they have a mechanical look, Colton argues that such reactions a…\") จึงตอบ D",
               "paraphrasedVocabulary": "point simon colton = might mechanical colton = D"
             },
@@ -537,7 +537,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Some of the Painting Fool’s paintings of a chair came out in black and white, thanks to a technical glitch.",
+              "exactPortion": "Some of the Painting Fool's paintings of a chair came out in black and white, thanks to a technical glitch.",
               "explanationThai": "เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Some of the Painting Fool’s paintings of a chair came out in black and white, thanks …\") จึงตอบ A",
               "paraphrasedVocabulary": "refers paintings chair = painting paintings chair = A"
             },
@@ -550,7 +550,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Researchers like Colton don’t believe it is right to measure machine creativity directly to that of humans who have had millennia to develop our skills’.",
+              "exactPortion": "Researchers like Colton don't believe it is right to measure machine creativity directly to that of humans who 'have had millennia to develop our skills'",
               "explanationThai": "Colton ว่าไม่ควรวัดความคิดสร้างสรรค์เครื่องเทียบมนุษย์ที่พัฒนามานานหมื่นปี ข้อความที่เกี่ยวกับ \"millennia\" ชี้ไปที่ตัวเลือก D มากที่สุด",
               "paraphrasedVocabulary": "long-term view = measure machine creativity directly to humans millennia = มุมมองระยะยาว"
             },
@@ -576,7 +576,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Some, such as Wiggins, have blasted Cope’s work as pseudoscience, and condemned him for his deliberately vague explanation of how the software worked.",
+              "exactPortion": "Some, such as Wiggins, have blasted Cope's work as pseudoscience, and condemned him for his deliberately vague explanation of how the software worked.",
               "explanationThai": "Wiggins วิจารณ์ Cope ว่าอธิบายการทำงานซอฟต์แวร์คลุมเครือ ข้อความที่เกี่ยวกับ \"vague explanation\" ชี้ไปที่ตัวเลือก E มากที่สุด",
               "paraphrasedVocabulary": "not revealing technical details = deliberately vague explanation|pseudoscience = ไม่เปิดรายละเอียด"
             },
@@ -589,7 +589,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Douglas Hofstadter of Indiana University said EMI created replicas which still rely completely on the original artist’s creative impulses, When audiences found out the truth they were often outraged with Cope, and one music lover even tried",
+              "exactPortion": "Douglas Hofstadter of Indiana University said EMI created replicas which still rely completely on the original artist's creative impulses. When audiences found out the truth they were often outraged with Cope, and one music lover even tried",
               "explanationThai": "Hofstadter ว่า EMI ยังพึ่งแรงบันดาลใจศิลปินต้นฉบับทั้งหมด ข้อความที่เกี่ยวกับ \"replicas\" ชี้ไปที่ตัวเลือก C มากที่สุด",
               "paraphrasedVocabulary": "entirely dependent on imagination of creator = replicas rely on original artist creative impulses = พึ่งศิลปินเดิม"
             },
@@ -628,7 +628,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "This is a question at the very core of humanity,’ says Geraint Wiggins, a computational creativity researcher at Goldsmiths, University of London.",
+              "exactPortion": "This is a question at the very core of humanity,' says Geraint Wiggins, a computational creativity researcher at Goldsmiths, University of London.",
               "explanationThai": "มุมมองของผู้เขียนสอดคล้องกับข้อนี้ โดยอ้างอิงจาก \"This is a question at the very core of humanity,’ says Geraint Wiggins, a computation…\" จึงตอบ YES",
               "paraphrasedVocabulary": "moffat research explain = humanity geraint wiggins = YES"
             },
@@ -654,7 +654,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 1 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "Composer David Cope invented a program called Experiments in Musical Intelligence, or EMI, Not only did EMI create compositions in Cope s style, but also that of the most revered classical composers, including Bach, Chopin and Mozart.",
+              "exactPortion": "Composer David Cope invented a program called Experiments in Musical Intelligence, or EMI. Not only did EMI create compositions in Cope's style, but also that of the most revered classical composers, including Bach, Chopin and Mozart.",
               "explanationThai": "มุมมองของผู้เขียนขัดแย้งกับข้อนี้ โดยอ้างอิงจาก \"Composer David Cope invented a program called Experiments in Musical Intelligence, or…\" จึงตอบ NO",
               "paraphrasedVocabulary": "justin kruger findings = composer david invented = NO"
             }
@@ -714,7 +714,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 1",
               "answerType": "text",
-              "exactPortion": "It was known in biblical times, and is mentioned in several books of the Bible, both as an ingredient that was mixed with oils for anointing people’s bodies, and also as a token indicating friendship among lovers and friends.",
+              "exactPortion": "It was known in biblical times, and is mentioned in several books of the Bible, both as an ingredient that was mixed with oils for anointing people's bodies, and also as a token indicating friendship among lovers and friends.",
               "explanationThai": "บทความระบุว่า ในพระคัมภีร์ผสมกับน้ำมันเพื่อเจิมร่างกาย คำว่า added to oils ในข้อจึงตอบ oils เพราะตรงกับ \"mixed with oils for anointing\" ในบทความ",
               "paraphrasedVocabulary": "added to oils = mixed with oils for anointing = ผสมน้ำมัน"
             },
@@ -727,7 +727,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 1",
               "answerType": "text",
-              "exactPortion": "It was known in biblical times, and is mentioned in several books of the Bible, both as an ingredient that was mixed with oils for anointing people’s bodies, and also as a token indicating friendship among lovers and friends.",
+              "exactPortion": "It was known in biblical times, and is mentioned in several books of the Bible, both as an ingredient that was mixed with oils for anointing people's bodies, and also as a token indicating friendship among lovers and friends.",
               "explanationThai": "บทความระบุว่า ใช้เป็นสัญลักษณ์มิตรภาพในหมู่คนรักและเพื่อน คำว่า show friendship ในข้อจึงตอบ friendship เพราะตรงกับ \"token indicating friendship among lovers and friends\" ในบทความ",
               "paraphrasedVocabulary": "show friendship = token indicating friendship among lovers and friends = มิตรภาพ"
             },
@@ -818,7 +818,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 1",
               "answerType": "text",
-              "exactPortion": "In the Middle Ages, Europeans who could afford the spice used it to flavor food, particularly meat, and to impress those around them with their ability to purchase an expensive condiment from the ‘exotic’ East.",
+              "exactPortion": "In the Middle Ages, Europeans who could afford the spice used it to flavor food, particularly meat, and to impress those around them with their ability to purchase an expensive condiment from the 'exotic' East.",
               "explanationThai": "บทความระบุว่า พ่อค้ายุโรปนำไปเวนิสแล้วกระจายทัวยุโรป คำว่า took it to Venice ในข้อจึงตอบ Venice เพราะตรงกับ \"brought it back to Venice|markets all around Europe\" ในบทความ",
               "paraphrasedVocabulary": "took it to Venice = brought it back to Venice|markets all around Europe = เวนิส"
             },
@@ -945,7 +945,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "It's a very simple and ancient molecule that has been co-opted for many different functions. It affects primitive parts of the brain like the amygdala, so it's going to have many effects on just about everything.",
+              "exactPortion": "It's a very simple and ancient molecule that has been co-opted for many different functions,' says Sue Carter at the University of Illinois, Chicago, USA. 'It affects primitive parts of the brain like the amygdal",
               "explanationThai": "ย่อหน้า F Sue Carter ว่า oxytocin เป็น very simple ancient molecule แต่มี many different functions จึงซับซ้อน ข้อถามถามเหตุผลที่ effects complex จึงตอบย่อหน้า F",
               "paraphrasedVocabulary": "effects complex = very simple ancient molecule|many different functions = ซับซ้อน"
             },
@@ -958,7 +958,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "For eight years, it was quite a lonesome field, Heinrichs recalls. Now, everyone is interested.",
+              "exactPortion": "For eight years, it was quite a lonesome field,' Heinrichs recalls. 'Now, everyone is intereste",
               "explanationThai": "ย่อหน้า B Heinrichs บอกว่าสาขานี้เคยเป็น quite a lonesome field นานถึงแปดปี ข้อถามถามช่วงที่ oxytocin ได้รับความสนใจจากวิทยาศาสตร์น้อย จึงตอบย่อหน้า B",
               "paraphrasedVocabulary": "little scientific attention = quite a lonesome field|eight years = ไม่ค่อยมีงานวิจัย"
             },
@@ -1152,7 +1152,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "us but profound ways these trends are influencing consumers’ aspirations, attitudes, and behaviors.",
+              "exactPortion": "us but profound ways these trends are influencing consumers' aspirations, attitudes, and behaviors.",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"us but profound ways these trends are influencing consumers’ aspirations, attitudes, …\") จึงตอบ D",
               "paraphrasedVocabulary": "managers consumer trends = profound trends influencing = D"
             },
@@ -1204,7 +1204,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "What set it apart was that it incorporated the traditional physical component of children’s play: it contained a pedometer, which tracked and awarded points for physical activity (walking, running, biking, skateboarding, climbing stairs).",
+              "exactPortion": "What set it apart was that it incorporated the traditional physical component of children's play: it contained a pedometer, which tracked and awarded points for physical activity (walking, running, biking, skateboarding, climbing stairs).",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"What set it apart was that it incorporated the traditional physical component of chil…\") จึงตอบ D",
               "paraphrasedVocabulary": "original contained technology = apart incorporated traditional = D"
             },
@@ -1217,7 +1217,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "product that accomplished this is the ME2, a video game created by Canada’s iToys.",
+              "exactPortion": "product that accomplished this is the ME2, a video game created by Canada's iToys.",
               "explanationThai": "iToys ใช้ counteract-and-affirm เปลี่ยนผลเสียของ digital gaming เป็นจุดขาย ข้อความที่เกี่ยวกับ \"turned the notion that its products could have harmful effects to its own advantage\" ชี้ไปที่บริษัท D (iToys) มากที่สุด",
               "paraphrasedVocabulary": "harmful effects to own advantage = counteracted negative impacts of digital gaming = ใช้ข้อเสียเป็นจุดขาย"
             },
@@ -1230,7 +1230,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "In 2006, they teamed up with technology company Apple to launch Nike+, a digital sports kit comprising a sensor that attaches to the running shoe and a wireless receiver that connects to the user’s iPod.",
+              "exactPortion": "In 2006, they teamed up with technology company Apple to launch Nike+, a digital sports kit comprising a sensor that attaches to the running shoe and a wireless receiver that connects to the user's iPod.",
               "explanationThai": "Nike teamed up with Apple สร้าง Nike+ ข้อความที่เกี่ยวกับ \"collaborating with another manufacturer\" ชี้ไปที่บริษัท C (Nike) มากที่สุด",
               "paraphrasedVocabulary": "collaborating with another manufacturer = teamed up with Apple = ร่วมมือผู้ผลิต"
             },
@@ -1243,7 +1243,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "further example of this strategy was supermarket Tesco’s response to consumers’ growing concerns about the environment.",
+              "exactPortion": "further example of this strategy was supermarket Tesco's response to consumers' growing concerns about the environment.",
               "explanationThai": "เนื้อหาในย่อหน้า B ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"further example of this strategy was supermarket Tesco’s response to consumers’ growi…\") จึงตอบ B",
               "paraphrasedVocabulary": "implemented = further example strategy = B"
             },
@@ -1256,7 +1256,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "But it the course of conducting research in a number of industries and working directly with companies, we have discovered that managers often fail to recognize the less obvious but profound ways these trends are influencing consumers’ aspi",
+              "exactPortion": "But it the course of conducting research in a number of industries and working directly with companies, we have discovered that managers often fail to recognize the less obvious but profound ways these trends are influencing consumers' aspi",
               "explanationThai": "Coach พบว่าลูกค้า eager to lift themselves and the country out of tough times ข้อความที่เกี่ยวกับ \"positive attitude towards dealing with difficult circumstances\" ชี้ไปที่บริษัท A (Coach) มากที่สุด",
               "paraphrasedVocabulary": "positive attitude difficult circumstances = eager to lift themselves and country out of tough times = มองวิกฤตเป็นพลัง"
             },
@@ -1269,7 +1269,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "But consider Nike’s move to integrate the digital revolution into its reputation for high-performance athletic footwear.",
+              "exactPortion": "But consider Nike's move to integrate the digital revolution into its reputation for high-performance athletic footwear.",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"But consider Nike’s move to integrate the digital revolution into its reputation for …\") จึงตอบ C",
               "paraphrasedVocabulary": "responded growing lifestyle = consider integrate digital = C"
             },
@@ -1408,7 +1408,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 3 Passage 1",
               "answerType": "text",
-              "exactPortion": "The thick fibrous middle layer produces coconut fibre, ‘coir’, which has numerous uses and is particularly important in manufacturing ropes.",
+              "exactPortion": "The thick fibrous middle layer produces coconut fibre, 'coir', which has numerous uses and is particularly important in manufacturing ropes.",
               "explanationThai": "บทความระบุว่า เส้นใยกลาง coir ใช้ทำเชือกเป็นหลัก คำว่า used for ropes ในข้อจึงตอบ ropes เพราะตรงกับ \"particularly important in manufacturing ropes\" ในบทความ",
               "paraphrasedVocabulary": "used for ropes = particularly important in manufacturing ropes = เชือก"
             },
@@ -1460,7 +1460,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 3 Passage 1",
               "answerType": "text",
-              "exactPortion": "Dried coconut flesh, ‘copra’, is made into coconut oil and coconut milk, which are widely used in cooking in different parts of the world, as well as in cosmetics.",
+              "exactPortion": "Dried coconut flesh, 'copra', is made into coconut oil and coconut milk, which are widely used in cooking in different parts of the world, as well as in cosmetics.",
               "explanationThai": "บทความระบุว่า น้ำมันและน้ำกะทิใช้ปรุงอาหารและเครื่องสำอาง คำว่า oil and milk for cosmetics ในข้อจึงตอบ cosmetics เพราะตรงกับ \"used in cosmetics\" ในบทความ",
               "paraphrasedVocabulary": "oil and milk for cosmetics = used in cosmetics = เครื่องสำอาง"
             },
@@ -1627,7 +1627,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Fathers don’t use baby talk as often or in the same ways as mothers – and that’s perfectly OK, according to a new study.",
+              "exactPortion": "Fathers don't use baby talk as often or in the same ways as mothers – and that's perfectly OK, according to a new study.",
               "explanationThai": "VanDam: พ่อใช้ภาษาแบบผู้ใหญ่กว่าแม่ ตาม bridge hypothesis ข้อความที่เกี่ยวกับ \"bridge hypothesis\" ชี้ไปที่ตัวเลือก A มากที่สุด",
               "paraphrasedVocabulary": "two parents different way = bridge hypothesis|fathers less familial language = พ่อแม่พูดคนละแบบ"
             },
@@ -1667,7 +1667,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 3 Passage 2",
               "answerType": "text",
-              "exactPortion": "The typical way of talking to a baby – high-pitched, exaggerated and repetitious – is a source of fascination for linguists who hope to understand how ‘baby talk’ impacts on learning.",
+              "exactPortion": "The typical way of talking to a baby – high-pitched, exaggerated and repetitious – is a source of fascination for linguists who hope to understand how 'baby talk' impacts on learning.",
               "explanationThai": "บทความระบุว่า พ่อไม่เอียงเสียงเหมือนแม่เมื่อคุยกับลูก คำว่า fathers ในข้อจึงตอบ fathers เพราะตรงกับ \"dads didnt raise their pitch\" ในบทความ",
               "paraphrasedVocabulary": "fathers = dads didnt raise their pitch = พ่อ"
             },
@@ -2300,7 +2300,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 2",
               "answerType": "text",
-              "exactPortion": "Soils also store water, preventing flood damage: in the UK, damage to buildings, roads and bridges from floods caused by soil degradation costs £233 million every year.",
+              "exactPortion": "Soils also store water, preventing flood damage: in the UK, damage to buildings, roads and bridges from floods caused by soil degradation costs &pound;233 million every",
               "explanationThai": "บทความระบุว่า ดินเก็บน้ำ ลดความเสียหายจากน้ำท่วม คำว่า holds water ในข้อจึงตอบ water เพราะตรงกับ \"soils also store water|prevent flood damage\" ในบทความ",
               "paraphrasedVocabulary": "holds water = soils also store water|prevent flood damage = เก็บน้ำ"
             },
@@ -2352,7 +2352,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "One of the people looking for a solution to his problem is Pius Floris, who started out running a tree-care business in the Netherlands, and now advises some of the world’s top soil scientists.",
+              "exactPortion": "One of the people looking for a solution to this problem is Pius Floris, who started out running a tree-care business in the Netherlands, and now advises some of the world's top soil scientists",
               "explanationThai": "ประโยคในข้อเชื่อมกับ \"mixture improved plants\" ในบทความ สูตร Floris ทำให้พืชโตแข็งแรงแม้ดินแข็ง จึงเลือกคำลงท้าย A",
               "paraphrasedVocabulary": "mixture improved plants = good crop emerged|roots pierce dirt hard as rock = ปรับปรุงพืช"
             },
@@ -2378,7 +2378,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "One of the people looking for a solution to his problem is Pius Floris, who started out running a tree-care business in the Netherlands, and now advises some of the world’s top soil scientists.",
+              "exactPortion": "One of the people looking for a solution to this problem is Pius Floris, who started out running a tree-care business in the Netherlands, and now advises some of the world's top soil scientists",
               "explanationThai": "ย่อหน้า E อธิบายว่า Pius Floris เริ่มจากธุรกิจดูแลต้นไม้ แล้วเห็นว่าต้นสมบูรณ์เมื่อดูแลดิน ข้อถามถามแรงจูงใจโครงการปรับดิน จึงตอบ E",
               "paraphrasedVocabulary": "motivation soil project = started tree-care business|best way trees flourished take care of soil = แรงจูงใจ"
             },
@@ -2527,7 +2527,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "In the 1790s, he wrote to the Home Office suggesting that the departments of government be linked together through a set of ‘conversation tubes’, and to the Bank of England with a design for a printing device that could produce unforgeable ",
+              "exactPortion": "In the 1790s, he wrote to the Home Office suggesting that the departments of government be linked together through a set of 'conversation tubes', and to the Bank of England with a design for a printing device that could produce unforgeable ",
               "explanationThai": "1790s เสนอ conversation tubes เชื่อมหน่วยงานรัฐ ข้อความที่เกี่ยวกับ \"conversation tubes\" ชี้ไปที่ตัวเลือก F มากที่สุด",
               "paraphrasedVocabulary": "Government departments = conversation tubes|departments linked = สื่อสารระหว่างหน่วยงาน"
             },
@@ -2540,7 +2540,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "In the 1790s, he wrote to the Home Office suggesting that the departments of government be linked together through a set of ‘conversation tubes’, and to the Bank of England with a design for a printing device that could produce unforgeable ",
+              "exactPortion": "In the 1790s, he wrote to the Home Office suggesting that the departments of government be linked together through a set of 'conversation tubes', and to the Bank of England with a design for a printing device that could produce unforgeable ",
               "explanationThai": "ออกแบบเครื่องพิมพ์ธนบัตรปลอมยาก ข้อความที่เกี่ยวกับ \"unforgeable\" ชี้ไปที่ตัวเลือก B มากที่สุด",
               "paraphrasedVocabulary": "increase security = unforgeable banknotes|Bank of England = ความปลอดภัย"
             },
@@ -2553,7 +2553,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "He drew up plans for a ‘frigidarium’ to keep provisions such as meat, fish, fruit and vegetables fresh.",
+              "exactPortion": "He drew up plans for a 'frigidarium' to keep provisions such as meat, fish, fruit and vegetables fresh.",
               "explanationThai": "frigidarium เก็บเนื้อ ปลา ผัก ผลไม้ให้สด ข้อความที่เกี่ยวกับ \"frigidarium\" ชี้ไปที่ตัวเลือก G มากที่สุด",
               "paraphrasedVocabulary": "preservation of food = frigidarium keep provisions fresh = การเก็บรักษาอาหาร"
             },
@@ -2566,7 +2566,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "His celebrated design for a prison to be known as a ‘Panopticon’, in which prisoners would be kept in solitary confinement while being visible at all times to the guards, was very nearly adopted.",
+              "exactPortion": "His celebrated design for a prison to be known as a 'Panopticon', in which prisoners would be kept in solitary confinement while being visible at all times to the guards, was very nearly adopted.",
               "explanationThai": "Panopticon ให้ผู้คุมเห็นนักโทษตลอดเวลา ข้อความที่เกี่ยวกับ \"Panopticon\" ชี้ไปที่ตัวเลือก E มากที่สุด",
               "paraphrasedVocabulary": "observation of prisoners = visible at all times to guards = เฝ้าระวัง"
             },
@@ -2579,7 +2579,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "The Happiness Industry: How the Government and Big Business Sold Us Well-Being – By William Davies ‘Happiness is the ultimate goal because it is self-evidently good.",
+              "exactPortion": "The Happiness Industry: How the Government and Big Business Sold Us Well-Being By William Davies 'Happiness is the ultimate goal because it is self-evidently good. I",
               "explanationThai": "วิจัยความสุขพยายามหาวิธี measurement เช่นชีพจรหรือเงิน ข้อความที่เกี่ยวกับ \"measure\" ชี้ไปที่ตัวเลือก A มากที่สุด",
               "paraphrasedVocabulary": "measurement = quantified by pulse rate|money as standard = การวัด"
             },
@@ -2618,7 +2618,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "When he became president of the American Psychological Association in 1915, he ‘had never even studied a single human being’: his research had been confined to experiments on white rats.",
+              "exactPortion": "When he became president of the American Psychological Association in 1915, he 'had never even studied a single human being': his research had been confined to experiments on white rats.",
               "explanationThai": "มุมมองของผู้เขียนขัดแย้งกับข้อนี้ โดยอ้างอิงจาก \"When he became president of the American Psychological Association in 1915, he ‘had n…\" จึงตอบ NO",
               "paraphrasedVocabulary": "watson ideas behaviourism = became president american = NO"
             },
@@ -2631,7 +2631,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
               ],
               "answerGroup": "Cambridge 13 Test 4 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "ied, with ‘behaviour change’ becoming the goal of governments: in Britain, a ‘Behaviour Insights Team’ has been established by the government to study how people can be encouraged, at minimum cost to the public purse, to live in what are co",
+              "exactPortion": "ied, with 'behaviour change' becoming the goal of governments: in Britain, a 'Behaviour Insights Team' has been established by the government to study how people can be encouraged, at minimum cost to the public purse, to live in what are co",
               "explanationThai": "บทความไม่ได้ให้ข้อมูลเพียงพอเกี่ยวกับประเด็นในข้อ (อ้างอิง: \"ied, with ‘behaviour change’ becoming the goal of governments: in Britain, a ‘Behavio…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "watson ideas influential = behaviour change becoming = NOT GIVEN"
             },

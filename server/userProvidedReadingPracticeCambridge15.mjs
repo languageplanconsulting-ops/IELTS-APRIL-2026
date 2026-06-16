@@ -502,7 +502,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "That, however, doesn’t take away from the fact that we all have this enquiring instinct, even today; and that in all sorts of professions",
+              "exactPortion": "That, however, doesn't take away from the fact that we all have this enquiring instinct, even today; and that in all sorts of professions",
               "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (According to the second paragraph, what is the writer's view of explorers?) โดยเฉพาะประโยค \"That, however, doesn’t take away from the fact that we all have this enquiring instinct, even t…\" จึงเลือก C",
               "paraphrasedVocabulary": "according second writer's = however enquiring instinct professions = C"
             },
@@ -528,7 +528,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "as if the process of discovery is now on the decline, though the truth is that we have named only one and a half million of this planet’s species, and there may be more than 10 million – and that’s not including bacteria",
+              "exactPortion": "as if the process of discovery is now on the decline, though the truth is that we have named only one and a half million of this planet's species, and there may be more than 10 million – and that's not including bacteria",
               "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (In the fourth paragraph, the writer refers to 'a golden age' to suggest that) โดยเฉพาะประโยค \"as if the process of discovery is now on the decline, though the truth is that we have named on…\" จึงเลือก D",
               "paraphrasedVocabulary": "golden age' suggest = process discovery decline though = D"
             },
@@ -593,7 +593,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "a campaigner on behalf of remote so-called ‘tribal’ peoples",
+              "exactPortion": "a campaigner on behalf of remote so-called 'tribal' peoples",
               "explanationThai": "คำถาม: \"He worked for the benefit of specific groups of people. … … … … …\" หลักฐานในบทความคือ \"a campaigner on behalf of remote so-called ‘tribal’ peoples\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
               "paraphrasedVocabulary": "worked benefit specific = campaigner behalf remote so-called = D"
             },
@@ -626,7 +626,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             {
               "number": 38,
               "prompt": "… , and was the first stranger that certain previously",
-              "correctAnswer": "unique expeditions",
+              "correctAnswer": "expeditions",
               "acceptedAnswers": [
                 "expeditions",
                 "unique expeditions"
@@ -634,7 +634,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "I’ve done a great many expeditions and each one was unique",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , and was the first stranger that certain previously\" บทความมีถ้อยคำที่ตรงกันคือ \"I’ve done a great many expeditions and each one was unique\" จึงคำตอบคือ \"unique expeditions\" (paraphrase จากข้อความใน passage)",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"I’ve done a great many ___ and each one was unique\" บทความมีถ้อยคำที่ตรงกันคือ \"I’ve done a great many expeditions and each one was unique\" จึงตอบ \"expeditions\" (คำว่า unique อยู่ในอนุประโยคถัดไป ไม่ใช่คำตอบของช่องว่าง)",
               "paraphrasedVocabulary": "stranger certain previously = expeditions unique = unique expeditions"
             },
             {
@@ -654,7 +654,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             {
               "number": 40,
               "prompt": "… , except to answer specific questions such as how buffalo eat.",
-              "correctAnswer": "land surface",
+              "correctAnswer": "surface",
               "acceptedAnswers": [
                 "surface",
                 "land surface"
@@ -662,7 +662,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "We know how the land surface of our planet lies; exploration of it is now down to the details – the habits of microbes, say, or the grazing behaviour of buffalo",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , except to answer specific questions such as how buffalo eat.\" บทความมีถ้อยคำที่ตรงกันคือ \"We know how the land surface of our planet lies; exploration of it is now down to the details –…\" จึงคำตอบคือ \"land surface\" (paraphrase จากข้อความใน passage)",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"We know how the land ___ of our planet lies\" บทความมีถ้อยคำที่ตรงกันคือ \"We know how the land surface of our planet lies; exploration of it is now down to the details\" คำตอบหลักคือ \"surface\" (ยอมรับ land surface ด้วย)",
               "paraphrasedVocabulary": "except specific questions = surface planet exploration details = land surface"
             }
           ]
@@ -858,7 +858,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "text",
-              "exactPortion": "These barriers don’t just make it harder to cross the road: they divide communities",
+              "exactPortion": "These barriers don't just make it harder to cross the road: they divide communities",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , and make it more difficult to introduce forms of transport that are\" บทความมีถ้อยคำที่ตรงกันคือ \"These barriers don’t just make it harder to cross the road: they divide communities\" จึงคำตอบคือ \"communities\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "difficult introduce forms = barriers harder divide = communities"
             },
@@ -969,7 +969,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Sadly, the passenger pigeon’s existence came to an end on 1 September 1914, when the last living specimen died at Cincinnati Zoo.",
+              "exactPortion": "Sadly, the passenger pigeon's existence came to an end on 1 September 1914, when the last living specimen died at Cincinnati Zoo.",
               "explanationThai": "คำถาม: \"mention of the exact point at which\" หลักฐานในบทความคือ \"Sadly, the passenger pigeon’s existence came to an end on 1 September 1914, when the last livin…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "exact point = passenger pigeon existence september = A"
             },
@@ -982,7 +982,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "text",
-              "exactPortion": "By pinpointing which genetic traits made it possible for mammoths to survive the icy climate of the tundra, the project’s goal is to return mammoths, or a mammoth-like species, to the area",
+              "exactPortion": "By pinpointing which genetic traits made it possible for mammoths to survive the icy climate of the tundra, the project's goal is to return mammoths, or a mammoth-like species, to the area",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… which enabled mammoths to live in the tundra. The findings could help preserve the mammoth’s close relative, the endangered Asia…\" บทความมีถ้อยคำที่ตรงกันคือ \"By pinpointing which genetic traits made it possible for mammoths to survive the icy climate of…\" จึงคำตอบคือ \"genetic traits\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "elephant according church = pinpointing genetic traits possible = genetic traits"
             },
@@ -1029,15 +1029,15 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             {
               "number": 22,
               "prompt": "… Questions 23-26 Look at the following statements and the",
-              "correctAnswer": "emissions",
+              "correctAnswer": "carbon emissions",
               "acceptedAnswers": [
                 "emissions",
                 "carbon emissions"
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "text",
-              "exactPortion": "This grass growth would reduce temperature, and mitigate emissions from melting permafrost",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Questions 23-26 Look at the following statements and the list of people below. Match each statement with the correct person,\" บทความมีถ้อยคำที่ตรงกันคือ \"This grass growth would reduce temperature, and mitigate emissions from melting permafrost\" จึงคำตอบคือ \"emissions\" (paraphrase จากข้อความใน passage)",
+              "exactPortion": "a useful factor in reducing carbon emissions",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"could also be a useful factor in reducing ___\" บทความมีถ้อยคำที่ตรงกันคือ \"could also be a useful factor in reducing carbon emissions\" จึงตอบ \"carbon emissions\" (ยอมรับ emissions ด้วย)",
               "paraphrasedVocabulary": "questions 23-26 below = growth reduce temperature mitigate = emissions"
             },
             {
@@ -1160,7 +1160,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Back in 1950, US sound engineer Charley Douglass hated dealing with the unpredictable laughter of live audiences, so started recording his own ‘laugh tracks’. These were intended to help people at home feel like they were in a social situation, such as a crowded theatre.",
+              "exactPortion": "Back in 1950, US sound engineer Charley Douglass hated dealing with the unpredictable laughter of live audiences, so started recording his own 'laugh tracks'. These were intended to help people at home feel like they were in a social situation, such as a crowded theatre.",
               "explanationThai": "คำถาม: \"What does the writer suggest about Charley Douglass?\" หลักฐานในบทความคือ \"Back in 1950, US sound engineer Charley Douglass hated dealing with the unpredictable laughter …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "suggest charley douglass = engineer charley douglass dealing = A"
             },
@@ -1277,7 +1277,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "worldwide, people’s guesses were correct approximately 60% of the time",
+              "exactPortion": "worldwide, people's guesses were correct approximately 60% of the time",
               "explanationThai": "ข้อความในข้อว่า \"Participants in the Santa Cruz study were more accurate at identifying the laughs of friends than those of strangers.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"worldwide, people’s guesses were correct approximately 60% of the time\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "cruz study accurate = worldwide guesses approximately = NOT GIVEN"
             },
@@ -1316,7 +1316,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "traditional view of task performance implies that individuals should avoid things such as humour that may distract them from the accomplishment of task goals,’ Cheng and Wang conclude. ‘We suggest that humour is not only enjoyable but more importantly, energising.",
+              "exactPortion": "traditional view of task performance implies that individuals should avoid things such as humour that may distract them from the accomplishment of task goals,' Cheng and Wang conclude.'We suggest that humour is not only enjoyable but more importantly, energising.'",
               "explanationThai": "ข้อความในข้อว่า \"Cheng and Wang's conclusions were in line with established notions regarding task performance.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"traditional view of task performance implies that individuals should avoid things such as humou…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ NO",
               "paraphrasedVocabulary": "cheng wang's conclusions = traditional performance implies individuals = FALSE"
             }
@@ -1427,7 +1427,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "When he visited the Trocadero Museum in Paris, he was impressed by a cast of a Mayan* sculpture of the rain spirit",
+              "exactPortion": "When he visited the Trocadero Museum in Paris, he was impressed by a cast of a Mayan sculpture of the rain spirit.",
               "explanationThai": "ข้อความในข้อว่า \"The Trocadero Museum's Mayan sculpture attracted\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"When he visited the Trocadero Museum in Paris, he was impressed by a cast of a Mayan* sculpture…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "sculpture attracted = visited trocadero museum impressed = NOT GIVEN"
             },
@@ -1618,7 +1618,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Its main selling point is that unlike standard desalination techniques, it doesn’t require a generated power supply",
+              "exactPortion": "Its main selling point is that unlike standard | desalination techniques, it doesn’t require a generated power supp",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Its main selling point is that unlike standard desalination techniques, it doesn’t require a ge…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = selling unlike standard desalination = v"
             },
@@ -1644,7 +1644,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The device is aimed at a wide variety of users – from homeowners in the developing world who do not have a constant supply of water to people living off the grid in rural parts of the US.",
+              "exactPortion": "The device is aimed at a wide variety of users - from homeowners in the developing world who do not have a constant supply of water to people living off the grid in rural parts of the US.",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The device is aimed at a wide variety of users – from homeowners in the developing world who do…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = device variety homeowners developing = iv"
             },
@@ -1683,7 +1683,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
-              "exactPortion": "It measures 120 cm by 90 cm, and it easy to transport, thanks to its two wheels",
+              "exactPortion": "It measures 120cm by 90cm, and is easy to transport, thanks to its two wheels. ",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . Water is fed into\" บทความมีถ้อยคำที่ตรงกันคือ \"It measures 120 cm by 90 cm, and it easy to transport, thanks to its two wheels\" จึงคำตอบคือ \"wheels\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "water = measures transport thanks = wheels"
             },
@@ -1722,7 +1722,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
-              "exactPortion": "There are two tubes for liquid coming out: one for the waste – salt from seawater, fluoride, etc. – and another for the distilled water",
+              "exactPortion": "There are two tubes | for liquid coming out: one for the waste - salt from seawater, fluoride, etc. - and another for the distilled wat",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… come out through another.\" บทความมีถ้อยคำที่ตรงกันคือ \"There are two tubes for liquid coming out: one for the waste – salt from seawater, fluoride, et…\" จึงคำตอบคือ \"waste\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "another = liquid coming seawater fluoride = waste"
             },
@@ -1735,7 +1735,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
-              "exactPortion": "The performance of the unit is shown on an LCD screen",
+              "exactPortion": "The performance of the unit is shown on an LCD | scre",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of the device, and transmits the information to the company so that they know when the Desolenator requires\" บทความมีถ้อยคำที่ตรงกันคือ \"The performance of the unit is shown on an LCD screen\" จึงคำตอบคือ \"performance\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "device transmits company = screen = performance"
             },
@@ -2049,7 +2049,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 1",
               "answerType": "text",
-              "exactPortion": "the huarango was key to the ancient people’s diet",
+              "exactPortion": "the huarango was key to the ancient people's diet",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Complete the summary/diagram for \"The return of the huarango\" — ONE WORD ONLY from the passage (Question 2) …\" บทความมีถ้อยคำที่ตรงกันคือ \"the huarango was key to the ancient people’s diet\" จึงคำตอบคือ \"diet\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "complete summary diagram = huarango ancient = diet"
             },
@@ -2162,7 +2162,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "His farm is relatively small and doesn’t yet provide him with enough to live on, but he hopes this will change",
+              "exactPortion": "His farm is relatively small and doesn't yet provide him with enough to live on, but he hopes this will change",
               "explanationThai": "ข้อความในข้อว่า \"Farmer Alberto Benevides is now making\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"His farm is relatively small and doesn’t yet provide him with enough to live on, but he hopes t…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
               "paraphrasedVocabulary": "farmer alberto benevides = relatively provide enough change = FALSE"
             },
@@ -2201,7 +2201,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "If we can do it here, in the most fragile system on Earth, then that’s a real message of hope for lots of places, including Africa",
+              "exactPortion": "If we can do it here, in the most fragile system on Earth, then that's a real message of hope for lots of places, including Africa",
               "explanationThai": "ข้อความในข้อว่า \"Whaley has plans to go to Africa to set up\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"If we can do it here, in the most fragile system on Earth, then that’s a real message of hope f…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "Whaley has plans to go to Africa to set up = If we can do it here, in the most fragile system on Earth, t… = NOT GIVEN"
             }
@@ -2324,7 +2324,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 2",
               "answerType": "true-false-not-given",
-              "exactPortion": "Since 1999, Silbo Gomero has been taught in all of the island’s elementary schools",
+              "exactPortion": "Since 1999, Silbo Gomero has been taught in all of the island's elementary schools",
               "explanationThai": "ข้อความในข้อว่า \"The children of Gomera now learn Silbo.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Since 1999, Silbo Gomero has been taught in all of the island’s elementary schools\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
               "paraphrasedVocabulary": "learn silbo = gomero taught island elementary = TRUE"
             },
@@ -2350,7 +2350,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 2",
               "answerType": "text",
-              "exactPortion": "A whistler – or silbador – puts a finger in his or her mouth to increase the whistle’s pitch",
+              "exactPortion": "A whistler – or silbador – puts a finger in his or her mouth to increase the whistle's pitch",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"pitch of whistle is controlled using silbador’s … …\" บทความมีถ้อยคำที่ตรงกันคือ \"A whistler – or silbador – puts a finger in his or her mouth to increase the whistle’s pitch\" จึงคำตอบคือ \"finger\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "pitch whistle controlled = whistler silbador increase whistle = finger"
             },
@@ -2638,7 +2638,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "I predict that in the future, just as in the past, changes in public attitudes will be essential for changes in businesses’ environmental practices.",
+              "exactPortion": "I predict that in the future, just as in the past, changes in public attitudes will be essential for changes in businesses' environmental practices.",
               "explanationThai": "ข้อความในข้อว่า \"In the future, businesses will show more concern for the environment.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"I predict that in the future, just as in the past, changes in public attitudes will be essentia…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "future businesses concern = predict future changes public = NOT GIVEN"
             },

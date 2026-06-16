@@ -136,7 +136,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 1",
               "answerType": "text",
-              "exactPortion": "thorough customisation process.’ They explain how they have adjusted not only racket length, but even experimented with different kinds of paint.",
+              "exactPortion": "thorough customisation process.' They explain how they have adjusted not only racket length, but even experimented with different kinds of paint.",
               "explanationThai": "บทความใช้คำว่า \"paint\" ตรงกับช่องว่างในข้อ (Mike and Bob Bryan made changes to the types of … used on their racket frames.) โดยอ้างอิงจาก \"thorough customisation process.’ They explain how they have adjusted not only racket …\"",
               "paraphrasedVocabulary": "bryan changes types = thorough customisation process = paint"
             },
@@ -202,7 +202,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 1",
               "answerType": "text",
-              "exactPortion": "The professional Portuguese player Gonçalo Oliveira replaced the original grips of his rackets with something thinner because they had previously felt uncomfortable to hold.",
+              "exactPortion": "The professional Portuguese player Gon&ccedil;alo Oliveira replaced the original grips of his rackets with something thinner because they had previously felt uncomfortable t",
               "explanationThai": "บทความใช้คำว่า \"grips\" ตรงกับช่องว่างในข้อ (Gonçalo Oliveira changed the … on his racket handles.) โดยอ้างอิงจาก \"The professional Portuguese player Gonçalo Oliveira replaced the original grips of hi…\"",
               "paraphrasedVocabulary": "oliveira changed racket = professional portuguese player = grips"
             }
@@ -267,7 +267,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "In the letters, the king of Alashiya (modern Cyprus) rejected Akhenaten’s claims of a connection with the Lukka (based in modern-day Turkey).",
+              "exactPortion": "In the letters, the king of Alashiya (modern Cyprus) rejected Akhenaten's claims of a connection with the Lukka (based in modern-day Turkey).",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"In the letters, the king of Alashiya (modern Cyprus) rejected Akhenaten’s claims of a…\") จึงตอบ D",
               "paraphrasedVocabulary": "denial involvement piracy = alashiya modern cyprus = D"
             },
@@ -293,7 +293,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "One should also add that it was not unknown in the first and second millennia BCE for governments to resort to pirates’ services, especially during wartime, employing their skills and numbers against their opponents.",
+              "exactPortion": "One should also add that it was not unknown in the first and second millennia BCE for governments to resort to pirates' services, especially during wartime, employing their skills and numbers against their opponents.",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"One should also add that it was not unknown in the first and second millennia BCE for…\") จึงตอบ C",
               "paraphrasedVocabulary": "circumstances states ancient = should unknown second = C"
             },
@@ -306,7 +306,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "When one mentions pirates, an image springs to most people’s minds of a crew of misfits, daredevils and adventurers in command of a tall sailing ship in the Caribbean Sea.",
+              "exactPortion": "When one mentions pirates, an image springs to most people's minds of a crew of misfits, daredevils and adventurers in command of a tall sailing ship in the Caribbean Sea.",
               "explanationThai": "เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"When one mentions pirates, an image springs to most people’s minds of a crew of misfi…\") จึงตอบ A",
               "paraphrasedVocabulary": "today commonly view = mentions pirates image = A"
             },
@@ -346,7 +346,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Although piracy in the Mediterranean is first recorded in ancient Egypt during the reign of Pharaoh Amenhotep III (c 1390–1353 BCE), it is reasonable to assume it predated this powerful civilisation.",
+              "exactPortion": "Although piracy in the Mediterranean is first recorded in ancient Egypt during the reign of Pharaoh Amenhotep III (c 1390-1353 BCE), it is reasonable to assume it predated this powerful civilisation.",
               "explanationThai": "เนื้อหาในย่อหน้า B ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Although piracy in the Mediterranean is first recorded in ancient Egypt during the re…\") จึงตอบ B",
               "paraphrasedVocabulary": "inhabitants mediterranean region = although piracy mediterranean = B"
             },
@@ -360,7 +360,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The first known record of a named group of Mediterranean pirates, made during the rule of ancient Egyptian Pharaoh Akhenaten (c 1353–1336 BCE), was in the Amarna Letters.",
+              "exactPortion": "The first known record of a named group of Mediterranean pirates, made during the rule of ancient Egyptian Pharaoh Akhenaten (c 1353-1336 BCE), was in the Amarna Letters.",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"The first known record of a named group of Mediterranean pirates, made during the rul…\") จึงตอบ D",
               "paraphrasedVocabulary": "inhabitants mediterranean region = known record named = D"
             },
@@ -374,7 +374,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "One should also add that it was not unknown in the first and second millennia BCE for governments to resort to pirates’ services, especially during wartime, employing their skills and numbers against their opponents.",
+              "exactPortion": "One should also add that it was not unknown in the first and second millennia BCE for governments to resort to pirates' services, especially during wartime, employing their skills and numbers against their opponents.",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"One should also add that it was not unknown in the first and second millennia BCE for…\") จึงตอบ C",
               "paraphrasedVocabulary": "piracy ancient greece = should unknown second = C"
             },
@@ -388,7 +388,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The ancient Greek world’s experience of piracy was different from that of Egyptian rulers.",
+              "exactPortion": "The ancient Greek world's experience of piracy was different from that of Egyptian rulers.",
               "explanationThai": "เนื้อหาในย่อหน้า E ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"The ancient Greek world’s experience of piracy was different from that of Egyptian ru…\") จึงตอบ E",
               "paraphrasedVocabulary": "piracy ancient greece = ancient greek experience = E"
             },
@@ -487,7 +487,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the world in which we live, but it is not a new problem.",
+              "exactPortion": "the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared -is perhaps an inevitable part of the world in which we live, but it is not a new problem. ",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"the challenges of battling widespread falsehoods Misinformation – both deliberately p…\") จึงตอบ D",
               "paraphrasedVocabulary": "point misinformation = challenges battling widespread = D"
             },
@@ -500,7 +500,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "However, we currently live in an era in which technology enables information to reach large audiences distributed across the globe, and thus the potential for immediate and widespread effects from misinformation now looms larger than in the",
+              "exactPortion": "However, we currently live in an era in which technology enables information to reach large audiences distributed across the globe,and thus the potential for immediate and widespread effects from misinformation now looms larger than in the ",
               "explanationThai": "เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"However, we currently live in an era in which technology enables information to reach…\") จึงตอบ A",
               "paraphrasedVocabulary": "technology = however currently technology = A"
             },
@@ -513,7 +513,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Brian Southwell looks at how human brains verify information and discusses some of the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the w",
+              "exactPortion": "Brian Southwell looks at how human brains verify information and discusses some of the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared -is perhaps an inevitable part of the wo",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Brian Southwell looks at how human brains verify information and discusses some of th…\") จึงตอบ C",
               "paraphrasedVocabulary": "doing fourth = brian southwell looks = C"
             },
@@ -526,7 +526,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Even with journalists and scholars pointing to the phenomenon of ‘fake news’, people do not distinguish between demonstrably false stories and those based in fact when scanning and processing written information.",
+              "exactPortion": "Even with journalists and scholars pointing to the phenomenon of 'fake news', people do not distinguish between demonstrably false stories and those based in fact when scanning and processing written information.",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Even with journalists and scholars pointing to the phenomenon of ‘fake news’, people …\") จึงตอบ D",
               "paraphrasedVocabulary": "point regulation = journalists scholars pointing = D"
             },
@@ -539,7 +539,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the world in which we live, but it is not a new problem.",
+              "exactPortion": "the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared -is perhaps an inevitable part of the world in which we live, but it is not a new problem. ",
               "explanationThai": "เนื้อหาในย่อหน้า G ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"the challenges of battling widespread falsehoods Misinformation – both deliberately p…\") จึงตอบ G",
               "paraphrasedVocabulary": "although misinformation = challenges battling widespread = G"
             },
@@ -552,7 +552,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "text",
-              "exactPortion": "st between how the 17th-century philosophers René Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.",
+              "exactPortion": "st between how the 17th-century philosophers Rene Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.",
               "explanationThai": "บทความใช้คำว่า \"J\" ตรงกับช่องว่างในข้อ (Descartes and Spinoza had … about how people engage with information) โดยอ้างอิงจาก \"st between how the 17th-century philosophers René Descartes and Baruch Spinoza descri…\"",
               "paraphrasedVocabulary": "descartes spinoza engage = between 17th-century philosophers = J"
             },
@@ -565,7 +565,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "th-century philosophers René Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.",
+              "exactPortion": "th-century philosophers Rene Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.",
               "explanationThai": "เนื้อหาในย่อหน้า H ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"th-century philosophers René Descartes and Baruch Spinoza described human information…\") จึงตอบ H",
               "paraphrasedVocabulary": "spinoza believes distinct = th-century philosophers descartes = H"
             },
@@ -643,7 +643,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 1 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the world in which we live, but it is not a new problem.",
+              "exactPortion": "the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared -is perhaps an inevitable part of the world in which we live, but it is not a new problem. ",
               "explanationThai": "มุมมองของผู้เขียนขัดแย้งกับข้อนี้ โดยอ้างอิงจาก \"the challenges of battling widespread falsehoods Misinformation – both deliberately p…\" จึงตอบ NO",
               "paraphrasedVocabulary": "possible overcome problem = challenges battling widespread = NO"
             },
@@ -752,7 +752,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 1",
               "answerType": "text",
-              "exactPortion": "With these machines, relatively little labour was required to produce cloth.",
+              "exactPortion": "With these machines, relatively little labour was required to produce cloth,",
               "explanationThai": "บทความใช้คำว่า \"labour\" ตรงกับช่องว่างในข้อ (Not as much … was needed to produce cloth once the spinning jenny and power loom were invented.) โดยอ้างอิงจาก \"With these machines, relatively little labour was required to produce cloth, and the …\"",
               "paraphrasedVocabulary": "needed produce cloth = machines relatively little = labour"
             },
@@ -765,7 +765,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 1",
               "answerType": "text",
-              "exactPortion": "This method was cheaper and produced metals that were of a higher quality.",
+              "exactPortion": "This method was cheaper and produced metals that were of a higher quality,",
               "explanationThai": "บทความใช้คำว่า \"quality\" ตรงกับช่องว่างในข้อ (Smelting of iron ore with coke resulted in material that was better …) โดยอ้างอิงจาก \"that were of a higher quality, enabling Britain’s iron and steel production to expand…\"",
               "paraphrasedVocabulary": "smelting resulted material = higher enabling britain = quality"
             },
@@ -817,7 +817,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "This method was cheaper and produced metals that were of a higher quality.",
+              "exactPortion": "This method was cheaper and produced metals that were of a higher quality,",
               "explanationThai": "บทความระบุว่า \"Chief among the new techniques was the smelting of iron ore with coke (a material mad…\" ซึ่งขัดกับข้อความในข้อ จึงตอบ FALSE",
               "paraphrasedVocabulary": "costs industry technique = chief among techniques = FALSE"
             },
@@ -945,7 +945,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Positive stress responses can be promoted through the language that they and others – such as coaches or parents — use.",
+              "exactPortion": "Positive stress responses can be promoted through the language that they and others – such as coaches or parents – use.",
               "explanationThai": "เนื้อหาในย่อหน้า F ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Positive stress responses can be promoted through the language that they and others –…\") จึงตอบ F",
               "paraphrasedVocabulary": "examples strategies minimising = positive stress responses = F"
             },
@@ -984,7 +984,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Positive stress responses can be promoted through the language that they and others – such as coaches or parents — use.",
+              "exactPortion": "Positive stress responses can be promoted through the language that they and others – such as coaches or parents – use.",
               "explanationThai": "เนื้อหาในย่อหน้า F ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Positive stress responses can be promoted through the language that they and others –…\") จึงตอบ F",
               "paraphrasedVocabulary": "influence athletes perceive = positive stress responses = F"
             },
@@ -997,7 +997,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 2",
               "answerType": "text",
-              "exactPortion": "These demands include the high level of physical and mental effort required to succeed, and also the athlete’s concerns about the difficulty of the event, their chance of succeeding, and any potential dangers such as injury.",
+              "exactPortion": "These demands include the high level of physical and mental effort required to succeed, and also the athlete's concerns about the difficulty of the event, their chance of succeeding, and any potential dangers such as injury.",
               "explanationThai": "บทความใช้คำว่า \"injury\" ตรงกับช่องว่างในข้อ (coping with the possible risk of …) โดยอ้างอิงจาก \"These demands include the high level of physical and mental effort required to succee…\"",
               "paraphrasedVocabulary": "coping possible = demands include level = injury"
             },
@@ -1023,7 +1023,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 2",
               "answerType": "text",
-              "exactPortion": "Though the young player had been doing well in the tournament, she began having difficulty regulating her breathing and heart rate during a match, which she later attributed to ‘the accumulation of the excitement and the buzz’.",
+              "exactPortion": "Though the young player had been doing well in the tournament, she began having difficulty regulating her breathing and heart rate during a match, which she later attributed to 'the accumulation of the excitement and the buzz'.",
               "explanationThai": "บทความใช้คำว่า \"excitement\" ตรงกับช่องว่างในข้อ (view their physiological responses as the effect of a positive feeling such as …) โดยอ้างอิงจาก \"Though the young player had been doing well in the tournament, she began having diffi…\"",
               "paraphrasedVocabulary": "physiological responses effect = though young player = excitement"
             },
@@ -1078,7 +1078,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Though the young player had been doing well in the tournament, she began having difficulty regulating her breathing and heart rate during a match, which she later attributed to ‘the accumulation of the excitement and the buzz’.",
+              "exactPortion": "Though the young player had been doing well in the tournament, she began having difficulty regulating her breathing and heart rate during a match, which she later attributed to 'the accumulation of the excitement and the buzz'.",
               "explanationThai": "เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Though the young player had been doing well in the tournament, she began having diffi…\") จึงตอบ A",
               "paraphrasedVocabulary": "facts anxiety = though young player = A"
             },
@@ -1092,7 +1092,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "That said, anxiety is also a common experience for athletes when they’re under pressure.",
+              "exactPortion": "That said, anxiety is also a common experience for athletes when they're under pressure.",
               "explanationThai": "เนื้อหาในย่อหน้า E ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"That said, anxiety is also a common experience for athletes when they’re under pressu…\") จึงตอบ E",
               "paraphrasedVocabulary": "facts anxiety = anxiety common experience = E"
             }
@@ -1153,7 +1153,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the early age of 40.",
+              "exactPortion": "Let us start by looking at a modern 'genius', Maryam Mirzakhani, who died at the early age of 40.",
               "explanationThai": "เนื้อหาในย่อหน้า H ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the earl…\") จึงตอบ H",
               "paraphrasedVocabulary": "maryam mirzakhani regarded = start looking modern = H"
             },
@@ -1166,7 +1166,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "It would be easy to assume that someone as special as Mirzakhani must have been one of those ‘gifted’ children, those who have an extraordinary ability in a specific sphere of activity or knowledge.",
+              "exactPortion": "It would be easy to assume that someone as special as Mirzakhani must have been one of those 'gifted' children, those who have an extraordinary ability in a specific sphere of activity or knowledge.",
               "explanationThai": "เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"It would be easy to assume that someone as special as Mirzakhani must have been one o…\") จึงตอบ A",
               "paraphrasedVocabulary": "maths little child = assume someone special = A"
             },
@@ -1192,7 +1192,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the early age of 40.",
+              "exactPortion": "Let us start by looking at a modern 'genius', Maryam Mirzakhani, who died at the early age of 40.",
               "explanationThai": "เนื้อหาในย่อหน้า B ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the earl…\") จึงตอบ B",
               "paraphrasedVocabulary": "proved herself things = start looking modern = B"
             },
@@ -1205,7 +1205,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "text",
-              "exactPortion": "edness being innate and other factors potentially making the difference,  what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught – even traits such as curiosity.",
+              "exactPortion": "edness being innate and other factors potentially making the difference, what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught even traits such as curiosity. Ac",
               "explanationThai": "บทความใช้คำว่า \"J\" ตรงกับช่องว่างในข้อ (she got the greatest … from making ground-breaking discoveries) โดยอ้างอิงจาก \"edness being innate and other factors potentially making the difference,  what is cer…\"",
               "paraphrasedVocabulary": "greatest making ground-breaking = edness innate factors = J"
             },
@@ -1218,7 +1218,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "She was the only woman to win the Fields Medal – the mathematical equivalent of a Nobel prize.",
+              "exactPortion": "She was the only woman to win the Fields Medal the mathematical equivalent of a Nobel prize. I",
               "explanationThai": "บทความใช้คำว่า \"I\" ตรงกับช่องว่างในข้อ (she was responsible for some extremely … mathematical studies) โดยอ้างอิงจาก \"She was the only woman to win the Fields Medal – the mathematical equivalent of a Nob…\"",
               "paraphrasedVocabulary": "responsible extremely mathematical = woman fields medal = I"
             },
@@ -1257,7 +1257,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "It would be easy to assume that someone as special as Mirzakhani must have been one of those ‘gifted’ children, those who have an extraordinary ability in a specific sphere of activity or knowledge.",
+              "exactPortion": "It would be easy to assume that someone as special as Mirzakhani must have been one of those 'gifted' children, those who have an extraordinary ability in a specific sphere of activity or knowledge.",
               "explanationThai": "มุมมองของผู้เขียนสอดคล้องกับข้อนี้ โดยอ้างอิงจาก \"It would be easy to assume that someone as special as Mirzakhani must have been one o…\" จึงตอบ YES",
               "paraphrasedVocabulary": "difficult reach agreement = assume someone special = YES"
             },
@@ -1270,7 +1270,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "However, they must be taught the right attitudes and approaches to their learning and develop the attributes of high performers – curiosity, persistence and hard work, for example – an approach Eyre calls ‘high performance learning’.",
+              "exactPortion": "However, they must be taught the right attitudes and approaches to their learning and develop the attributes of high performers-curiosity, persistence and hard work, for example an approach Eyre calls 'high performance learning'. Cri",
               "explanationThai": "มุมมองของผู้เขียนขัดแย้งกับข้อนี้ โดยอ้างอิงจาก \"However, they must be taught the right attitudes and approaches to their learning and…\" จึงตอบ NO",
               "paraphrasedVocabulary": "einstein upset public's = however taught right = NO"
             },
@@ -1296,7 +1296,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "It would be easy to assume that someone as special as Mirzakhani must have been one of those ‘gifted’ children, those who have an extraordinary ability in a specific sphere of activity or knowledge.",
+              "exactPortion": "It would be easy to assume that someone as special as Mirzakhani must have been one of those 'gifted' children, those who have an extraordinary ability in a specific sphere of activity or knowledge.",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"It would be easy to assume that someone as special as Mirzakhani must have been one o…\") จึงตอบ C",
               "paraphrasedVocabulary": "believe needed children = assume someone special = C"
             },
@@ -1322,7 +1322,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the early age of 40.",
+              "exactPortion": "Let us start by looking at a modern 'genius', Maryam Mirzakhani, who died at the early age of 40.",
               "explanationThai": "เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the earl…\") จึงตอบ D",
               "paraphrasedVocabulary": "deprived children's success = start looking modern = D"
             }
@@ -1406,7 +1406,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "At this time the climate was drier and colder than today, and the island’s dense rainforests would likely have been much less impenetrable than they are now.",
+              "exactPortion": "At this time the climate was drier and colder than today, and the island's dense rainforests would likely have been much less impenetrable than they are now.",
               "explanationThai": "บทความระบุว่า \"At this time the climate was drier and colder than today, and the island’s dense rain…\" ซึ่งสอดคล้องกับข้อความในข้อ จึงตอบ TRUE",
               "paraphrasedVocabulary": "today years = climate drier colder = TRUE"
             },
@@ -1432,7 +1432,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "Roughly 11,700 years ago, as the most recent ice age ended, the climate became significantly warmer and wetter, no doubt making Obi’s jungle much thicker.",
+              "exactPortion": "Roughly 11,700 years ago, as the most recent ice age ended, the climate became significantly warmer and wetter, no doubt making Obi's jungle much thicker.",
               "explanationThai": "บทความระบุว่า \"Roughly 11,700 years ago, as the most recent ice age ended, the climate became signif…\" ซึ่งสอดคล้องกับข้อความในข้อ จึงตอบ TRUE",
               "paraphrasedVocabulary": "researchers believe connection = roughly years recent = TRUE"
             },
@@ -1445,7 +1445,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "The research team’s discoveries suggest that the prehistoric people who lived on Obi were adept on both land and sea, hunting in the dense rainforest, foraging on the seashore, and possibly even voyaging between islands.",
+              "exactPortion": "The research team's discoveries suggest that the prehistoric people who lived on Obi were adept on both land and sea, hunting in the dense rainforest, foraging on the seashore, and possibly even voyaging between islands.",
               "explanationThai": "บทความไม่ได้ให้ข้อมูลเพียงพอเกี่ยวกับประเด็นในข้อ (อ้างอิง: \"The research team’s discoveries suggest that the prehistoric people who lived on Obi …\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "shipton's surprised evidence = research discoveries suggest = NOT GIVEN"
             },
@@ -1471,7 +1471,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 1",
               "answerType": "text",
-              "exactPortion": "Just inland from the village of Kelo on Obi’s northern coast, Shipton and his colleagues found two caves containing prehistoric rock shelters that were suitable for excavation.",
+              "exactPortion": "Just inland from the village of Kelo on Obi's northern coast, Shipton and his colleagues found two caves containing prehistoric rock shelters that were suitable for excavation.",
               "explanationThai": "บทความใช้คำว่า \"caves\" ตรงกับช่องว่างในข้อ (Excavations of rock shelters inside … near Kelo) โดยอ้างอิงจาก \"Just inland from the village of Kelo on Obi’s northern coast, Shipton and his colleag…\"",
               "paraphrasedVocabulary": "excavations shelters inside = inland village northern = caves"
             },
@@ -1484,7 +1484,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 1",
               "answerType": "text",
-              "exactPortion": "It also seemed likely that these islands were crucial ‘stepping stones’ on humans’ island-hopping voyages through this region millennia ago.",
+              "exactPortion": "It also seemed likely that these islands were crucial 'stepping stones' on humans' island-hopping voyages through this region millennia ago.",
               "explanationThai": "บทความใช้คำว่า \"stone\" ตรงกับช่องว่างในข้อ (axes made out of …, dating from around 11,700 years ago) โดยอ้างอิงจาก \"It also seemed likely that these islands were crucial ‘stepping stones’ on humans’ is…\"",
               "paraphrasedVocabulary": "dating around years = seemed likely islands = stone"
             },
@@ -1497,7 +1497,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 1",
               "answerType": "text",
-              "exactPortion": "Judging by the bones which the researchers unearthed in the Kelo caves, people living there mainly hunted the Rothschild’s cuscus, a possum-like creature that still lives on Obi today.",
+              "exactPortion": "Judging by the bones which the researchers unearthed in the Kelo caves, people living there mainly hunted the Rothschild's cuscus, a possum-like creature that still lives on Obi today.",
               "explanationThai": "บทความใช้คำว่า \"bones\" ตรงกับช่องว่างในข้อ (… of an animal: evidence of what ancient islanders ate) โดยอ้างอิงจาก \"Judging by the bones which the researchers unearthed in the Kelo caves, people living…\"",
               "paraphrasedVocabulary": "animal evidence ancient = judging researchers unearthed = bones"
             },
@@ -1536,7 +1536,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 1",
               "answerType": "text",
-              "exactPortion": "It seems likely, in view of Obi’s location, that this final phase of occupation also saw the Kelo shelters used by people involved in the historic trade in spices between the Maluku islands and the rest of the world.",
+              "exactPortion": "It seems likely, in view of Obi's location, that this final phase of occupation also saw the Kelo shelters used by people involved in the historic trade in spices between the Maluku islands and the rest of the world.",
               "explanationThai": "บทความใช้คำว่า \"spices\" ตรงกับช่องว่างในข้อ (production and sale of …) โดยอ้างอิงจาก \"It seems likely, in view of Obi’s location, that this final phase of occupation also …\"",
               "paraphrasedVocabulary": "production = seems likely location = spices"
             }
@@ -1838,7 +1838,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Douglas Adams’ science fiction novel, The Hitchhiker’s Guide to the Galaxy, published in 1979, featured a life form called the ‘Babel fish’ which, when placed in the ear, enabled a listener to understand any language in the universe.",
+              "exactPortion": "Douglas Adams' science fiction novel, The Hitchhiker's Guide to the Galaxy, published in 1979, featured a life form called the 'Babel fish' which, when placed in the ear, enabled a listener to understand any language in the universe.",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Douglas Adams’ science fiction novel, The Hitchhiker’s Guide to the Galaxy, published…\") จึงตอบ C",
               "paraphrasedVocabulary": "referring hitchhiker's guide = douglas adams science = C"
             },
@@ -2269,7 +2269,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The oceans occupy around 70% of the planet and are relatively unexplored",
+              "exactPortion": "The oceans occupy around 70% of the planet and arc relatively unexplored",
               "explanationThai": "ย่อหน้า F ระบุว่ามหาสมุทรครอบคลุมประมาณ 70% ของโลก ข้อความที่เกี่ยวกับ 70% of the planet ชี้ไปที่ย่อหน้า F",
               "paraphrasedVocabulary": "area covered by oceans = occupy around 70% of the planet = 70% ของโลก"
             },
@@ -2334,7 +2334,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "When Professor Mat Upton found that a microbe from a deep-sea sponge was killing pathogenic bugs in his laboratory, he realised it could be a breakthrough in the light against antibiotic-resistant superbugs, which are responsible for thousa",
+              "exactPortion": "When Professor Mat IJpton found that a microbe from a deep-sea sponge was killing pathogenic bugs in his laboratory, he realised it could be a breakthrough in the fight against antibiotic-resistant superbugs, which are responsible for thous",
               "explanationThai": "เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"When Professor Mat Upton found that a microbe from a deep-sea sponge was killing path…\") จึงตอบ A",
               "paraphrasedVocabulary": "There → When Professor Mat Upton found that a microbe from a de… = A"
             },
@@ -2485,7 +2485,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "This bleak view of human nature is closely associated with the science writer Richard Dawkins, whose 1976 book The Selfish Gene became popular because it fitted so well with – and helped to justify – the competitive and individualistic etho",
+              "exactPortion": "This bleak view of human nature is closely associated with the science writer Richard Dawkins, whose 1976 book The Selfish Gene became popular because it fitted so well with-and helped to justify-the competitive and individualistic ethos th",
               "explanationThai": "เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"This bleak view of human nature is closely associated with the science writer Richard…\") จึงตอบ C",
               "paraphrasedVocabulary": "point = bleak human nature = C"
             },

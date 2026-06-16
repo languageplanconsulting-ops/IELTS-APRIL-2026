@@ -277,7 +277,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "the council unanimously rejected the plan. 'They said that the bicycle belongs to the past. They saw a glorious future for the car'",
+              "exactPortion": "the council unanimously rejected the plan. 'They said that the bicycle belongs to the past. They saw a glorious future for the car,",
               "explanationThai": "คำถาม: \"an explanation of why\" หลักฐานในบทความคือ \"the council unanimously rejected the plan. ‘They said that the bicycle belongs to the past. The…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
               "paraphrasedVocabulary": "explanation = council unanimously rejected bicycle = C"
             },
@@ -358,7 +358,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "'People who travel on the underground don't carry their bikes around. But often they need additional transport to reach their final destination.' / it is regarded as one of the two most cycle-friendly capitals in the world",
+              "exactPortion": "People who travel on the underground don't carry their bikes around. But often they need additional transport to reach their final destination.' Although he thinks it is strange that a city like Amsterdam does not have a s",
               "explanationThai": "คำถามถามว่า \"Which TWO of the following statements are made in the text about Amsterdam today?\" ตัวเลือก E มีหลักฐานในบทความ (เช่น \"People who travel on the underground don’t carry their bikes around. But often they need additi…\") จึงเลือก E เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "amsterdam today = travel underground around additional = E"
             },
@@ -452,10 +452,10 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
           "bodyParagraphs": [
             "Motivational factors and the hospitality industry A critical ingredient in the success of hotels is developing and maintaining superior performance from their employees. What Human Resource Management (HRM) practices should organizations invest in to acquire and retain great employees? Some hotels aim to provide superior working conditions for their employees. The idea originated from workplaces – usually in the non-service sector – that emphasized fun and enjoyment as part of work-life balance. By contrast, the service sector, and more specifically hotels, has traditionally not extended these practices to address basic employee needs, such as good working conditions.",
             "Pfeffer (1994) emphasizes that in order to succeed in a global business environment, organizations must make investment in Human Resource Management (HRM) to allow them to acquire employees who possess better skills and capabilities than their competitors. This investment will be to their competitive advantage. Despite this recognition of the importance of employee development, the hospitality industry has historically been dominated by underdeveloped HR practices (Lucas, 2002).",
-            "Lucas also points out that 'the substance of HRM practices does not appear to be designed to foster constructive relations with employees or to represent a managerial approach that enables developing and drawing out the full potential of people, even though employees may be broadly satisfied with many aspects of their work' (Lucas, 2002). In addition, or maybe as a result, high employee turnover has been a recurring problem throughout the hospitality industry. , 2008).",
-            "Ng and Sorensen (2008) demonstrated that when managers provide recognition to employees, motivate employees to work together, and remove obstacles preventing effective performance, employees feel more obligated to stay with the company. This was succinctly summarized by Michel et al. (2013): '[P]roviding support to employees gives them the confidence to perform their jobs better and the motivation to stay with the organization.' Hospitality organizations can therefore enhance employee motivation and retention through the development and improvement of their working conditions. These conditions are inherently linked to the working environment. , 2000). However, given the opportunity, many people will find something to complain about in relation to their workplace (Poulston, 2009).",
+            "Lucas also points out that 'the substance of HRM practices does not appear to be designed to foster constructive relations with employees or to represent a managerial approach that enables developing and drawing out the full potential of people, even though employees may be broadly satisfied with many aspects of their work' (Lucas, 2002). In addition, or maybe as a result, high employee turnover has been a recurring problem throughout the hospitality industry. Among the many cited reasons are low compensation, inadequate benefits, poor working conditions and compromised employee morale and attitudes (Maroudas et al., 2008).",
+            "Ng and Sorensen (2008) demonstrated that when managers provide recognition to employees, motivate employees to work together, and remove obstacles preventing effective performance, employees feel more obligated to stay with the company. This was succinctly summarized by Michel et al. (2013): '[P]roviding support to employees gives them the confidence to perform their jobs better and the motivation to stay with the organization.' Hospitality organizations can therefore enhance employee motivation and retention through the development and improvement of their working conditions. These conditions are inherently linked to the working environment. While it seems likely that employees' reactions to their job characteristics could be affected by a variety of situational and dispositional variables, Enz and Siguaw (2000) propose However, given the opportunity, many people will find something to complain about in relation to their workplace (Poulston, 2009).",
             "There is a strong link between the perceptions of employees and particular factors of their work environment that are separate from the work itself, including company policies, salary and vacations. , 2008). In a real sense, the services of hotel employees represent their industry (Schneider and Bowen, 1993). This representation has commonly been limited to guest experiences. This suggests that there has been a dichotomy between the guest environment provided in luxury hotels and the working conditions of their employees. It is therefore essential for hotel management to develop HRM practices that enable them to inspire and retain competent employees. This requires an understanding of what motivates employees at different levels of management and different stages of their careers (Enz and Siguaw, 2000).",
-            "This implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention. Herzberg (1966) proposes that people have two major types of needs, the first being extrinsic motivation factors relating to the context in which work is performed, rather than the work itself. These include working conditions and job security. When these factors are unfavorable, job dissatisfaction may result. , 2008). Employees also have intrinsic motivation needs or motivators, which include such factors as achievement and recognition. , 2008). Herzberg's (1966) theory discusses the need for a 'balance' of these two types of needs. The impact of fun as a motivating factor at work has also been explored. For example, Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed restaurants in the United States.",
+            "This implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention. Herzberg (1966) proposes that people have two major types of needs, the first being extrinsic motivation factors relating to the context in which work is performed, rather than the work itself. These include working conditions and job security. When these factors are unfavorable, job dissatisfaction may result. Significantly, though, just fulfilling these needs does not result in satisfaction, but only in the reduction of dissatisfaction (Maroudas et al., 2008). Employees also have intrinsic motivation needs or motivators, which include such factors as achievement and recognition. , 2008). Herzberg's (1966) theory discusses the need for a 'balance' of these two types of needs. The impact of fun as a motivating factor at work has also been explored. For example, Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed restaurants in the United States.",
             "It was found that fun activities had a favorable impact on performance and manager support for fun had a favorable impact in reducing turnover. Their findings support the view that fun may indeed have a beneficial effect, but the framing of that fun must be carefully aligned with both organizational goals and employee characteristics. , 2013). Deery (2008) has recommended several actions that can be adopted at the organizational level to retain good staff as well as assist in balancing work and family life.",
             "Those particularly appropriate to the hospitality industry include allowing adequate breaks during the working day, staff functions that involve families, and providing health and well-being opportunities."
           ],
@@ -853,7 +853,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 1",
               "answerType": "text",
-              "exactPortion": "often travelled by canoe on the Blanche, du Lièvre, and other noted eastern rivers",
+              "exactPortion": "often travelled by canoe on the Blanche, du Li&egrave;vre, and other noted eastern",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"took many trips along eastern rivers in a … …\" บทความมีถ้อยคำที่ตรงกันคือ \"often travelled by canoe on the Blanche, du Lièvre, and other noted eastern rivers\" จึงคำตอบคือ \"canoe\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "took many trips along eastern rivers in a … … = often travelled by canoe on the Blanche, du Lièvre, and othe… = canoe"
             },
@@ -924,7 +924,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Foul air, rather than germs, was believed to be the main driver of ‘hospital fever’, leading to disease and frequent death. The prosperous steered clear of hospitals.",
+              "exactPortion": "Foul air, rather than germs, was believed to be the main driver of 'hospital fever', leading to disease and frequent death. The prosperous steered clear of hospitals.",
               "explanationThai": "คำถาม: \"why some people avoided hospitals in the 19th century … … … … … … … … …\" หลักฐานในบทความคือ \"Foul air, rather than germs, was believed to be the main driver of ‘hospital fever’, leading to…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
               "paraphrasedVocabulary": "avoided hospitals century = rather believed driver hospital = F"
             },
@@ -950,7 +950,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "We discovered that 19th-century hospital wards could generate up to 24 air changes an hour – that’s similar to the performance of a modern-day, computer-controlled operating theatre",
+              "exactPortion": "We discovered that 19th-century hospital wards could generate up to 24 air changes an hour – that's similar to the performance of a modern-day, computer-controlled operating theatre",
               "explanationThai": "คำถาม: \"a comparison between the circulation of air in a 19th-century building and modern standards … … … … … … … … …\" หลักฐานในบทความคือ \"We discovered that 19th-century hospital wards could generate up to 24 air changes an hour – th…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
               "paraphrasedVocabulary": "comparison between circulation = discovered 19th-century hospital generate = E"
             },
@@ -976,7 +976,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "the widespread introduction of air conditioning systems, which were ‘relentlessly and aggressively marketed’ by their inventors",
+              "exactPortion": "the widespread introduction of air conditioning systems, which were 'relentlessly and aggressively marketed' by their inventors",
               "explanationThai": "คำถาม: \"an implication that advertising led to the large increase in the use of air conditioning … … … … … … … … … Questions 19-26 Complet…\" หลักฐานในบทความคือ \"the widespread introduction of air conditioning systems, which were ‘relentlessly and aggressiv…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
               "paraphrasedVocabulary": "implication advertising large = widespread introduction conditioning systems = B"
             },
@@ -1042,7 +1042,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
-              "exactPortion": "Communal wards appropriate for certain patients – older people with dementia, for example – would work just as well in today’s hospitals, at a fraction of the energy cost",
+              "exactPortion": "Communal wards appropriate for certain patients – older people with dementia, for example – would work just as well in today's hospitals, at a fraction of the energy cost",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… areas.\" บทความมีถ้อยคำที่ตรงกันคือ \"Communal wards appropriate for certain patients – older people with dementia, for example – wou…\" จึงคำตอบคือ \"communal\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "areas = appropriate certain patients dementia = communal"
             },
@@ -1140,7 +1140,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "We are told that we ought to organize our company, our home life, our week, our day and even our sleep, all as a means to becoming more productive",
+              "exactPortion": "We are told that we ought to organise our company, our home life, our week, our day and even our sleep, all as a means to becoming more productive",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"We are told that we ought to organize our company, our home life, our week, our day and even ou…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = organize company becoming productive = vi"
             },
@@ -1179,7 +1179,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "This assumption has also fostered the idea that disorder must be detrimental to organizational productivity. The result is that businesses and people spend time and money organising themselves for the sake of organising, rather than actually looking at the end goal and usefulness of such an effort.",
+              "exactPortion": "This assumption has also-fostered the idea that disorder must be detrimental to organisational productivity. The result is that businesses and people spend time and money organising themselves for the sake of organising, rather than actually looking at the end goal and usefulness of such an effort.",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"This assumption has also fostered the idea that disorder must be detrimental to organizational …\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = assumption fostered disorder detrimental = ii"
             },
@@ -1205,7 +1205,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "These environments can lead to new solutions that, under conventionally structured environments (filled with bottlenecks in term of information flow, power structures, rules, and routines) would never be reached.",
+              "exactPortion": "These environments can lead to new solutions that, under conventionally structured environments (filled with bottlenecks in terms of information flow, power structures, rules, and routines) would never be reached",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"These environments can lead to new solutions that, under conventionally structured environments…\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = environments solutions conventionally structured = vii"
             },
@@ -1385,7 +1385,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "In other words, people all have unconscious notions – known as ‘implicit theories’ – of intelligence, but no one knows for certain what it actually is.",
+              "exactPortion": "In other words, people all have unconscious notions – known as 'implicit theories' – of intelligence, but no one knows for certain what it actually is.",
               "explanationThai": "คำถาม: \"a reference to lack of clarity over the definition of intelligence … … … … … … … … … …\" หลักฐานในบทความคือ \"In other words, people all have unconscious notions – known as ‘implicit theories’ – of intelli…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "lack clarity definition = unconscious notions implicit theories = A"
             },
@@ -1776,11 +1776,11 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             "The power of play Virtually every child, the world over, plays. The drive to play is so intense that children will do so in any circumstances, for instance when they have no real toys, or when parents do not actively encourage the behavior. In the eyes of a young child, running, pretending, and building are fun. Researchers and educators know that these playful activities benefit the development of the whole child across social, cognitive, physical, and emotional domains.",
             "Indeed, play is such an instrumental component to healthy child development that the United Nation High Commission on Human Rights (1989) recognized play as a fundamental right of every child. Yet, while experts continue to expound a powerful argument for the importance of play in children's lives, the actual time children spend playing continues to decrease. Today, children play eight hours less each week than their counterparts did two decades ago (Elkind 2008).",
             "Under pressure of rising academic standards, play is being replaced by test preparation in kindergartens and grade schools, and parents who aim to give their preschoolers a leg up are led to believe that flashcards and educational 'toys' are the path to success. Our society has created a false dichotomy between play and learning.",
-            "Through play, children learn to regulate their behavior, lay the foundations for later learning in science and mathematics, figure out the complex negotiations of social relationships, build a repertoire of creative problem-solving skills, and so much more. There is also an important role for adults in guiding children through playful learning opportunities. Full consensus on a formal definition of play continues to elude the researchers and theorists who study it. g. A majority of the contemporary definitions of play focus on several key criteria. The founder of the National Institute for Play, Stuart Brown, has described play as 'anything that spontaneously is done for its own sake'. More specifically, he says it 'appears purposeless, produces pleasure and joy, [and] leads one to the next stage of mastery' (as quoted in Tippett 2008).",
-            "Similarly, Miller and Almon (2009) say that play includes 'activities that are freely chosen and directed by children and arise from intrinsic motivation'. g. Play is pleasurable: Children must enjoy the activity or it is not play. It is intrinsically motivated: Children engage in play simply for the satisfaction the behavior itself brings. It has no extrinsically motivated function or goal. Play is process oriented: When children play, the means are more important than the ends. It is freely chosen, spontaneous and voluntary. If a child is pressured, they will likely not think of the activity as play. Play is actively engaged: Players must be physically and/or mentally involved in the activity. According to this view, children's playful behaviors can range in degree from 0% to 100% playful. g. From the perspective of a continuum, play can thus blend with other motives and attitudes that are less playful, such as work. e.",
+            "Through play, children learn to regulate their behavior, lay the foundations for later learning in science and mathematics, figure out the complex negotiations of social relationships, build a repertoire of creative problem-solving skills, and so much more. There is also an important role for adults in guiding children through playful learning opportunities. Full consensus on a formal definition of play continues to elude the researchers and theorists who study it. Definitions range from discrete descriptions of various types of play such as physical, construction, language, or symbolic play (Miler & Almon 2009), to lists of broad criteria, based on observations. g. A majority of the contemporary definitions of play focus on several key criteria. The founder of the National Institute for Play, Stuart Brown, has described play as 'anything that spontaneously is done for its own sake'. More specifically, he says it 'appears purposeless, produces pleasure and joy, [and] leads one to the next stage of mastery' (as quoted in Tippett 2008).",
+            "Similarly, Miller and Almon (2009) say that play includes 'activities that are freely chosen and directed by children and arise from intrinsic motivation'. g. Play is pleasurable: Children must enjoy the activity or it is not play. It is intrinsically motivated: Children engage in play simply for the satisfaction the behavior itself brings. It has no extrinsically motivated function or goal. Play is process oriented: When children play, the means are more important than the ends. It is freely chosen, spontaneous and voluntary. If a child is pressured, they will likely not think of the activity as play. Play is actively engaged: Players must be physically and/or mentally involved in the activity. According to this view, children's playful behaviors can range in degree from 0% to 100% playful. Rubin and colleagues did not assign greater weight to any one dimension in determining playfulness; however, other researchers have suggested that pro-social behavior should be given more weight. g. From the perspective of a continuum, play can thus blend with other motives and attitudes that are less playful, such as work. e.",
             "it is goal oriented). Researcher Joan Goodman (1994) suggested that hybrid forms of work and play are not a detriment to learning; rather, they can provide optimal contexts for learning. For example, a child may be engaged in a difficult, goal-directed activity set up by their teacher, but they may still be actively engaged and intrinsically motivated. At this mid-point between play and work, the child's motivation, coupled with guidance from an adult, can create robust opportunities for playful learning.",
             "Critically, recent research supports the idea that adults can facilitate children's learning while maintaining a playful approach in interactions known as 'guided play' (Fisher et al. 2011). The adult's role in play varies as a function of their educational goals and the child's developmental level (Hirsch-Pasek et al. 2009). At a very basic level, adults can enrich the child's environment by providing objects or experiences that promote aspects of a curriculum.",
-            "In the more direct form of guided play, parents or other adults can support children's play by joining in the fun as a co-player, raising thoughtful questions, commenting on children's discoveries, or encouraging further exploration or new facets to the child's activity. Although playful learning can be somewhat structured, it must also be child-centered (Nicolopolou et al. 2006). Both free and guided play are essential elements in a child-centered approach to playful learning.",
+            "In the more direct form of guided play, parents or other adults can support children's play by joining in the fun as a co-player, raising thoughtful questions, commenting on children's discoveries, or encouraging further exploration or new facets to the child's activity. Although playful learning can be somewhat structured, it must also be child-centered (Nicolopolou et al. 2006). Play should stem from the child's own desire. Both free and guided play are essential elements in a child-centered approach to playful learning.",
             "Intrinsically motivated free play provides the child with true autonomy, while guided play is an avenue through which parents and educators can provide more targeted learning experiences. In either case, play should be actively engaged, it should be predominantly child-directed, and it must be fun."
           ],
           "questionSectionText": "Questions 27-31\nLook at the following statements (Questions 27-31) and the list of researchers below.\nMatch each statement with the correct researcher, A-G.\nWrite the correct letter, A-G, in boxes 27-31 on your answer sheet.\n27 Play can be divided into a number of separate categories.\n28 Adults’ intended goals affect how they play with children.\n29 Combining work with play may be the best way for children to learn.\n30 Certain elements of play are more significant than others.\n31 Activities can be classified on a scale of playfulness.\nList of Researchers\nA Elkind\nB Miller & Almon\nC Rubin et al.\nD Stuart Brown\nE Pellegrini\nF Joan Goodman\nG__Hirsch-Pasek et al.\nEd\n\nQuestions 32-36\nDo the following statements agree with the claims of the writer in Reading Passage 3?\nIn boxes 32-36 on your answer sheet, write\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n32 Children need toys in order to play.\n33  Itis a mistake to treat play and learning as separate types of activities.\n34 Play helps children to develop their artistic talents.\n35 Researchers have agreed on a definition of play.\n36 Work and play differ in terms of whether or not they have a target.\n70 Sein WEE OIDUZDOANTIKVINANGICHINGXAC eT ee\neX} et [Ln TAT\n\nEd\n\na NN ______________T__é______ ______¥HHHHHH HHH HHH _HsHHHHfHHHHHkf __s#se\nQuestions 37-40\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 37-40 on your answer sheet.\nGuided play\nIn the simplest form of guided play, an adult contributes to the environment in which\nthe child is playing. Alternatively, an adult can play with a child and develop the play,\nfor instance by 37.0 … te child to investigate different aspects of their\ngame. Adults can help children to learn through play, and may make the activity rather\nstructured, but it should still be based on the child’s 38 ocd... TO play.\n\nPlay without the intervention of adults gives children real 39 wu.\nwith\nAdults, Play CAN DE 40 vnmcinsarennnnmm at Particular goals. However, all forms of play\nshould be an opportunity for children to have tun.\n|",
@@ -1860,7 +1860,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "According to this view, children’s playful behaviors can range in degree from 0% to 100% playful",
+              "exactPortion": "According to this view, children's playful behaviors can range in degree from 0% to 100% playful",
               "explanationThai": "คำถาม: \"Activities can be classified on\" หลักฐานในบทความคือ \"According to this view, children’s playful behaviors can range in degree from 0% to 100% playfu…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
               "paraphrasedVocabulary": "classified = according children playful behaviors = C"
             },
@@ -1938,7 +1938,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "text",
-              "exactPortion": "encouraging further exploration or new facets to the child’s activity",
+              "exactPortion": "encouraging further exploration or new facets to the child's activity",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… the child to investigate different aspects of their game. Adults can help children to learn through play, and may make the activ…\" บทความมีถ้อยคำที่ตรงกันคือ \"encouraging further exploration or new facets to the child’s activity\" จึงคำตอบคือ \"encouraging\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "help children learn = further exploration facets activity = encouraging"
             },
@@ -2123,7 +2123,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 1",
               "answerType": "text",
-              "exactPortion": "the old ants didn’t experience any drop in the levels of either serotonin or dopamine – brain chemicals whose decline often coincides with aging.",
+              "exactPortion": "the old ants didn't experience any drop in the levels of either serotonin or dopamine – brain chemicals whose decline often coincides with aging.",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"level of two … … in the brain associated with ageing.\" บทความมีถ้อยคำที่ตรงกันคือ \"the old ants didn’t experience any drop in the levels of either serotonin or dopamine – brain c…\" จึงคำตอบคือ \"chemicals\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "level brain associated = experience levels either serotonin = chemicals"
             },
@@ -2175,7 +2175,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "the results of recent bee studies were mixed – some studies showed age-related declines, which biologists call senescence, and others didn’t.",
+              "exactPortion": "the results of recent bee studies were mixed – some studies showed age-related declines, which biologists call senescence, and others didn't.",
               "explanationThai": "ข้อความในข้อว่า \"The recent studies of bees used different methods of measuring age-related decline.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"the results of recent bee studies were mixed – some studies showed age-related declines, which …\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "recent studies different = results recent studies studies = NOT GIVEN"
             },
@@ -2188,7 +2188,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "Out in the wild, the ants probably don’t live for a full 140 days thanks to predators, disease and just being in an environment that’s much harsher than the comforts of the lab",
+              "exactPortion": "Out in the wild, the ants probably don't live for a full 140 days thanks to predators, disease and just being in an environment that's much harsher than the comforts of the lab",
               "explanationThai": "ข้อความในข้อว่า \"Pheidole dentata ants kept in laboratory conditions tend to live longer lives.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Out in the wild, the ants probably don’t live for a full 140 days thanks to predators, disease …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
               "paraphrasedVocabulary": "ants kept laboratory = probably thanks predators disease = TRUE"
             }
@@ -2526,7 +2526,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "only one well-designed study failed to find the effect it was looking for, an investigation of mussels ingesting microscopic bits. The plastic moved from the mussels’ stomachs to their bloodstreams, scientists found, and stayed there for weeks – but didn’t seem to stress out the shellfish.",
+              "exactPortion": "only one well-designed study failed to find the effect it was looking for, an investigation of mussels ingesting microscopic bits. The plastic moved from the mussels' stomachs to their bloodstreams, scientists found, and stayed there for weeks – but didn't seem to stress out the shellfish.",
               "explanationThai": "ข้อความในข้อว่า \"One study examined by Rochman was expecting to find that mussels were harmed by eating plastic.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"only one well-designed study failed to find the effect it was looking for, an investigation of …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
               "paraphrasedVocabulary": "expecting find mussels = well-designed failed effect looking = TRUE"
             },
@@ -2578,7 +2578,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
-              "exactPortion": "Many studies have looked at how plastic affects an individual animal, or that animal’s tissues or cells, rather than whole populations.",
+              "exactPortion": "Many studies have looked at how plastic affects an individual animal, or that animal's tissues or cells, rather than whole populations.",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"most of them focused on individual animals, not entire … …\" บทความมีถ้อยคำที่ตรงกันคือ \"Many studies have looked at how plastic affects an individual animal, or that animal’s tissues …\" จึงคำตอบคือ \"populations\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "focused individual animals = studies looked plastic affects = populations"
             },
@@ -2591,7 +2591,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
-              "exactPortion": "in the lab, scientists often use higher concentrations of plastic than what’s really in the ocean",
+              "exactPortion": "in the lab, scientists often use higher concentrations of plastic than what's really in the ocean",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"the … … of plastic used in the lab did not always reflect those in the ocean\" บทความมีถ้อยคำที่ตรงกันคือ \"in the lab, scientists often use higher concentrations of plastic than what’s really in the oce…\" จึงคำตอบคือ \"concentrations\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "plastic always reflect = scientists higher plastic really = concentrations"
             },
@@ -2604,7 +2604,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
-              "exactPortion": "how deaths in one species could affect that animal’s predators",
+              "exactPortion": "how deaths in one species could affect that animal's predators",
               "explanationThai": "ในข้อ: \"the impact of\" หลักฐานในบทความคือ \"how deaths in one species could affect that animal’s predators\" จึงตอบ predators",
               "paraphrasedVocabulary": "impact = deaths species affect animal = predators"
             },
