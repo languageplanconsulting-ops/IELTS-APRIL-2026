@@ -240,7 +240,7 @@ type AdminWorkspaceSection =
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
-type ReadingBankCategory = 'normal' | 'general-training'
+type ReadingBankCategory = 'normal' | 'passage3' | 'general-training'
 type ReadingEntryView = 'levels' | 'monthly' | 'journey' | 'full-test' | 'general-training'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
 type ReadingPdoyLessonType = 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'fill-in-the-blank'
@@ -2627,11 +2627,13 @@ type AdminReadingGeneratorValidationResult = {
 
 const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   normal: 'Normal Reading',
+  passage3: 'Passage 3 · Band 7',
   'general-training': 'General Training Reading'
 }
 
 const READING_BRIEFING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   normal: 'Reading ปกติ',
+  passage3: 'Passage 3 · Band 7',
   'general-training': 'General Training Reading'
 }
 
@@ -2724,6 +2726,13 @@ const READING_ENTRY_CHOICES: Array<{
     subtitle: 'ข้อสอบระดับง่าย',
     detail: 'สำหรับ Band 4-6.5',
     tone: 'Core'
+  },
+  {
+    category: 'passage3',
+    title: 'Passage 3 · Band 7',
+    subtitle: 'ข้อสอบระดับยาก',
+    detail: 'สำหรับ Band 7+',
+    tone: 'Challenge'
   }
 ]
 
@@ -2732,6 +2741,7 @@ const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
   if (normalized === 'general-training' || normalized === 'general training' || normalized === 'gt') {
     return 'general-training'
   }
+  if (normalized === 'passage3') return 'passage3'
   return 'normal'
 }
 
@@ -21210,7 +21220,7 @@ function App() {
                       className={`readingEntryCard readingEntryCard-${choice.category}`}
                       style={
                         {
-                          '--motion-stagger': 1
+                          '--motion-stagger': choice.category === 'normal' ? 1 : 2
                         } as CSSProperties
                       }
                       onClick={() => openReadingCategoryBank(choice.category)}
@@ -21218,7 +21228,11 @@ function App() {
                       <span className="readingEntryLabel">{choice.tone}</span>
                       <strong>{choice.title}</strong>
                       <span className="readingEntrySubtitle">{choice.subtitle}</span>
-                      <small>{`${choice.detail} · Quest Log ด่านล่าด่าน · ปลดล็อก ${READING_JOURNEY_UNLOCK_PERCENT}%+`}</small>
+                      <small>
+                        {choice.category === 'normal'
+                          ? `${choice.detail} · Quest Log ด่านล่าด่าน · ปลดล็อก ${READING_JOURNEY_UNLOCK_PERCENT}%+`
+                          : choice.detail}
+                      </small>
                       <span className="readingEntryCount">{categoryCount} exams</span>
                     </button>
                   )

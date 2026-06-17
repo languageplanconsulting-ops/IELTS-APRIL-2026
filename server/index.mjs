@@ -11933,6 +11933,7 @@ app.get('/api/reading/exams', requireAuth, async (req, res) => {
         headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
       }
     )
+    const normalizeBuiltInCategory = (exam) => exam.category === 'advanced' ? { ...exam, category: 'passage3' } : exam
     const uploadedExams = (Array.isArray(rows) ? rows : [])
       .map(mapReadingExamRecord)
       .filter(isReadingBankExamRecord)
@@ -11940,7 +11941,7 @@ app.get('/api/reading/exams', requireAuth, async (req, res) => {
       .filter((exam) => exam.category !== 'advanced')
     return res.json({
       exams: [
-        ...BUILT_IN_READING_EXAMS.filter((exam) => canViewReadingExam(exam, viewerRole, now)).filter((exam) => exam.category !== 'advanced'),
+        ...BUILT_IN_READING_EXAMS.map(normalizeBuiltInCategory).filter((exam) => canViewReadingExam(exam, viewerRole, now)),
         ...uploadedExams
       ]
     })

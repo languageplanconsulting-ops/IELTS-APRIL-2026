@@ -18470,6 +18470,12 @@ select:focus,
 }
 
 
+.readingPage .readingEntryCard-passage3::before {
+  background:
+    linear-gradient(135deg, rgba(0, 74, 173, 0.24), transparent 44%),
+    linear-gradient(160deg, rgba(239, 68, 68, 0.14), transparent 64%);
+}
+
 .readingPage .readingEntryCard-generalTraining::before {
   background:
     linear-gradient(135deg, rgba(0, 74, 173, 0.28), transparent 44%),
