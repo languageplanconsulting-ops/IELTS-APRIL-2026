@@ -11937,9 +11937,10 @@ app.get('/api/reading/exams', requireAuth, async (req, res) => {
       .map(mapReadingExamRecord)
       .filter(isReadingBankExamRecord)
       .filter((exam) => canViewReadingExam(exam, viewerRole, now))
+      .filter((exam) => exam.category !== 'advanced')
     return res.json({
       exams: [
-        ...BUILT_IN_READING_EXAMS.filter((exam) => canViewReadingExam(exam, viewerRole, now)),
+        ...BUILT_IN_READING_EXAMS.filter((exam) => canViewReadingExam(exam, viewerRole, now)).filter((exam) => exam.category !== 'advanced'),
         ...uploadedExams
       ]
     })

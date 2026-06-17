@@ -240,7 +240,7 @@ type AdminWorkspaceSection =
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
-type ReadingBankCategory = 'normal' | 'advanced' | 'general-training'
+type ReadingBankCategory = 'normal' | 'general-training'
 type ReadingEntryView = 'levels' | 'monthly' | 'journey' | 'full-test' | 'general-training'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
 type ReadingPdoyLessonType = 'true-false-not-given' | 'yes-no-not-given' | 'multiple-choice' | 'fill-in-the-blank'
@@ -2627,13 +2627,11 @@ type AdminReadingGeneratorValidationResult = {
 
 const READING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   normal: 'Normal Reading',
-  advanced: 'Advanced Reading',
   'general-training': 'General Training Reading'
 }
 
 const READING_BRIEFING_CATEGORY_LABELS: Record<ReadingBankCategory, string> = {
   normal: 'Reading ปกติ',
-  advanced: 'Advanced Reading',
   'general-training': 'General Training Reading'
 }
 
@@ -2726,13 +2724,6 @@ const READING_ENTRY_CHOICES: Array<{
     subtitle: 'ข้อสอบระดับง่าย',
     detail: 'สำหรับ Band 4-6.5',
     tone: 'Core'
-  },
-  {
-    category: 'advanced',
-    title: 'Advanced Reading',
-    subtitle: 'ข้อสอบระดับยาก',
-    detail: 'สำหรับ Band 7+',
-    tone: 'Challenge'
   }
 ]
 
@@ -2741,7 +2732,6 @@ const normalizeReadingBankCategory = (value: unknown): ReadingBankCategory => {
   if (normalized === 'general-training' || normalized === 'general training' || normalized === 'gt') {
     return 'general-training'
   }
-  if (normalized === 'advanced' || normalized === 'passage3') return 'advanced'
   return 'normal'
 }
 
@@ -3251,31 +3241,6 @@ PASTE THE ORIGINAL QUESTION BLOCK HERE`,
 Question 1: PASTE QUESTION 1 PROMPT HERE
 
 Correct Answer: TRUE / FALSE / NOT GIVEN / actual answer
-
-Exact Portion: "Paste the exact evidence from the passage here."
-
-Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
-
-Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ`
-    }
-  ],
-  advanced: [
-    {
-      title: 'Advanced Reading Template',
-      category: 'advanced',
-      collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
-      releaseAt: '',
-      rawPassageText: `READING PASSAGE 3
-PASTE ADVANCED READING TITLE HERE
-
-PASTE THE FULL ADVANCED READING PASSAGE TEXT HERE
-
-Questions 27-40
-PASTE THE ORIGINAL QUESTION BLOCK HERE`,
-      rawAnswerKey: `READING PASSAGE 3: PASTE ADVANCED READING TITLE HERE
-Question 27: PASTE QUESTION 27 PROMPT HERE
-
-Correct Answer: A / B / C / D / YES / NO / NOT GIVEN / actual answer
 
 Exact Portion: "Paste the exact evidence from the passage here."
 
@@ -7507,7 +7472,7 @@ function App() {
     updateAdminReadingGeneratorPassage(passageId, {
       title: prototype.title,
       sourcePassage: prototype.text,
-      category: 'advanced',
+      category: 'normal',
       questionTypes: prototype.questionTypes as AdminReadingGeneratorQuestionType[],
       questionCount: '14',
       requirements: prototype.requirements
@@ -7608,7 +7573,7 @@ function App() {
       '',
       'Return ONLY valid JSON. No Markdown fences. The JSON must be an array of ReadingBulkUploadInput objects.',
       'Each object must have these fields: title, category, collectionTitle, rawPassageText, rawAnswerKey. Optional field: releaseAt.',
-      'category must be either "normal" or "advanced".',
+      'category must be "normal", "advanced", or "general-training".',
       'collectionTitle must be the monthly bank name, for example "IELTS Academic Reading Jan 2026". If releaseAt is omitted, the app auto-releases monthly collections to learners on the 20th of that month.',
       'Important JSON formatting rule: output JSON.stringify-safe strings only. Escape all internal quotation marks as \\" and represent line breaks as \\n. Do not put literal unescaped line breaks inside string values.',
       '',
@@ -9091,7 +9056,7 @@ function App() {
     activeReadingPassages.find((passage) => passage.number === readingActivePassageNumber) ??
     activeReadingPassages[0] ??
     null
-  const isAdvancedReadingExam = activeReadingExam?.category === 'advanced'
+  const isAdvancedReadingExam = false
   const isAdminUser = authSession?.role === 'admin'
   const adminBypassNormalReadingQuestionLocks =
     isAdminUser &&
@@ -21245,8 +21210,7 @@ function App() {
                       className={`readingEntryCard readingEntryCard-${choice.category}`}
                       style={
                         {
-                          '--motion-stagger':
-                            choice.category === 'normal' ? 1 : choice.category === 'advanced' ? 2 : 3
+                          '--motion-stagger': 1
                         } as CSSProperties
                       }
                       onClick={() => openReadingCategoryBank(choice.category)}
@@ -21254,11 +21218,7 @@ function App() {
                       <span className="readingEntryLabel">{choice.tone}</span>
                       <strong>{choice.title}</strong>
                       <span className="readingEntrySubtitle">{choice.subtitle}</span>
-                      <small>
-                        {choice.category === 'normal'
-                          ? `${choice.detail} · Quest Log ด่านล่าด่าน · ปลดล็อก ${READING_JOURNEY_UNLOCK_PERCENT}%+`
-                          : `${choice.detail} · ด่านฝึกตามชุดเดิม`}
-                      </small>
+                      <small>{`${choice.detail} · Quest Log ด่านล่าด่าน · ปลดล็อก ${READING_JOURNEY_UNLOCK_PERCENT}%+`}</small>
                       <span className="readingEntryCount">{categoryCount} exams</span>
                     </button>
                   )
@@ -22468,92 +22428,6 @@ function App() {
                           activeReadingQuestions.some((question) => question.number === activeReadingHint.number)
                             ? activeReadingHintNeedles
                             : ''
-                        if (isAdvancedReadingExam) {
-                          type AdvSection = { label: string; paragraphs: string[] }
-
-                          const buildSections = (paragraphs: string[]): AdvSection[] => {
-                            const result: AdvSection[] = []
-                            for (const raw of paragraphs) {
-                              const paragraph = String(raw || '').trim()
-                              if (!paragraph) continue
-                              const sectionMatch = paragraph.match(/^([A-G])(?:\.|:)?\s+([\s\S]+)$/)
-                              if (sectionMatch) {
-                                result.push({ label: sectionMatch[1], paragraphs: [sectionMatch[2].trim()] })
-                              } else if (result.length) {
-                                result[result.length - 1].paragraphs.push(paragraph)
-                              } else {
-                                result.push({ label: '', paragraphs: [paragraph] })
-                              }
-                            }
-                            return result
-                          }
-
-                          let sections = buildSections(activeReadingPassage.bodyParagraphs)
-
-                          // Fallback: whole passage is one blob — split on section letter boundaries
-                          if (!sections.some((section) => section.label)) {
-                            const fullText = activeReadingPassage.bodyParagraphs.map((p) => String(p || '').trim()).join(' ')
-                            const parts = fullText
-                              .split(/(?=\b[A-G]\.?\s+[A-Z"'(])/)
-                              .map((p) => p.trim())
-                              .filter(Boolean)
-                            const candidate = buildSections(parts)
-                            if (candidate.some((section) => section.label)) {
-                              sections = candidate
-                            }
-                          }
-
-                          if (sections.some((section) => section.label)) {
-                            const labelledSections = sections.filter((section) => section.label)
-                            return (
-                              <>
-                                {labelledSections.length > 1 && (
-                                  <div className="readingSectionJump" aria-label="Jump to paragraph">
-                                    <span className="readingSectionJumpLabel">Jump to</span>
-                                    {labelledSections.map((section) => (
-                                      <button
-                                        key={`reading-adv-jump-${section.label}`}
-                                        type="button"
-                                        className="readingSectionJumpBtn"
-                                        onClick={() => {
-                                          document
-                                            .getElementById(`reading-adv-sec-${section.label}`)
-                                            ?.scrollIntoView({ block: 'start', behavior: 'smooth' })
-                                        }}
-                                      >
-                                        {section.label}
-                                      </button>
-                                    ))}
-                                  </div>
-                                )}
-                                {sections.map((section, index) => (
-                                  <section
-                                    key={`reading-section-${index}`}
-                                    id={section.label ? `reading-adv-sec-${section.label}` : undefined}
-                                    className={`readingPassageSection ${section.label ? '' : 'readingPassageSection-noLabel'}`.trim()}
-                                  >
-                                    {section.label && (
-                                      <p className="readingPassageSectionLabel" aria-hidden="true">
-                                        {section.label}
-                                      </p>
-                                    )}
-                                    <div className="readingPassageSectionText">
-                                      {section.paragraphs.map((para, paraIndex) => (
-                                        <p key={`reading-section-${index}-para-${paraIndex}`}>
-                                          {renderPassageParagraphWithHighlights(
-                                            para,
-                                            activeReadingPassage.number,
-                                            highlightNeedles
-                                          )}
-                                        </p>
-                                      ))}
-                                    </div>
-                                  </section>
-                                ))}
-                              </>
-                            )
-                          }
-                        }
                         if (!activeReadingPassage.bodyParagraphs.length) {
                           return (
                             <p className="meta readingPassageEmpty">
@@ -22628,11 +22502,7 @@ function App() {
                   <div className="readingQuestionsHeader">
                     <div>
                       <p className="sectionLabel">Questions</p>
-                      <h3>
-                        {isAdvancedReadingExam
-                          ? `${activeReadingQuestions.length} questions · use the number strip to jump`
-                          : 'Answer below — scroll this panel for more questions'}
-                      </h3>
+                      <h3>Answer below — scroll this panel for more questions</h3>
                     </div>
                     <span className="bandPill">{activeReadingQuestions.length} questions</span>
                   </div>
@@ -22661,8 +22531,7 @@ function App() {
                     })}
                   </div>
 
-                  {!isAdvancedReadingExam &&
-                    activeReadingPassage.questionSectionText &&
+                  {activeReadingPassage.questionSectionText &&
                     activeReadingFillQuestionGroups.length === 0 && (
                     <details className="readingQuestionReference">
                       <summary>Show original question block</summary>
