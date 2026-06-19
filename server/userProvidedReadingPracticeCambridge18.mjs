@@ -441,28 +441,22 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
           "number": 3,
           "title": "Conquering Earth's space junk problem",
           "bodyParagraphs": [
-            "Satellites, rocket shards and collision debris are creating major traffic risks in orbit around the planet. Researchers are working to reduce these threats",
-            "A",
-            "Last year, commercial companies, military and civil departments and amateurs sent more than 400 satellites into orbit, over four times the yearly average in the previous decade. Numbers could rise even more sharply if leading space companies follow through on plans to deploy hundreds to thousands of large constellations of satellites to space in the next few years.",
-            "All that traffic can lead to disaster. Ten years ago, a US commercial Iridium satellite smashed into an inactive Russian communications satellite called Cosmos-2251, creating thousands of new pieces of space shrapnel that now threaten other satellites in low Earth orbit – the zone stretching up to 2,000 kilometres in altitude. Altogether, there are roughly 20,000 human-made objects in orbit, from working satellites to small rocket pieces. And satellite operators can't steer away from every potential crash, because each move consumes time and fuel that could otherwise be used for the spacecraft's main job.",
-            "B",
-            "Concern about space junk goes back to the beginning of the satellite era, but the number of objects in orbit is rising so rapidly that researchers are investigating new ways of attacking the problem. Several teams are trying to improve methods for assessing what is in orbit, so that satellite operators can work more efficiently in ever-more-crowded space. Some researchers are now starting to compile a massive data set that includes the best possible information on where everything is in orbit. Others are developing taxonomies of space – working on measuring properties such as the shape and size of an object, so that satellite operators know how much to worry about what's coming their way.",
-            "The alternative, many say, is unthinkable. Just a few uncontrolled space crashes could generate enough debris to set off a runaway cascade of fragments, rendering near-Earth space unusable. 'If we go on like this, we will reach a point of no return,' says Carolin Frueh, an astrodynamical researcher at Purdue University in West Lafayette, Indiana.",
-            "C",
-            "Even as our ability to monitor space objects increases, so too does the total number of items in orbit. That means companies, governments and other players in space are collaborating in new ways to avoid a shared threat. International groups such as the Inter-Agency Space Debris Coordination Committee have developed guidelines on space sustainability. Those include inactivating satellites at the end of their useful life by venting pressurised materials or leftover fuel that might lead to explosions. The intergovernmental groups also advise lowering satellites deep enough into the atmosphere that they will burn up or disintegrate within 25 years. But so far, only about half of all missions have abided by this 25-year goal, says Holger Krag, head of the European Space Agency's space-debris office in Darmstadt, Germany. Operators of the planned large constellations of satellites say they will be responsible stewards in their enterprises in space, but Krag worries that problems could increase, despite their best intentions. 'What happens to those that fail or go bankrupt?' he asks. They are probably not going to spend money to remove their satellites from space.'",
-            "D",
+            "Last year, commercial companies, military and civil departments and amateurs sent more than 400 satellites into orbit, over four times the yearly average in the previous decade. Numbers could rise even more sharply if leading space companies follow through on plans to deploy hundreds to thousands of large constellations of satellites to space in the next few years.\n\nAll that traffic can lead to disaster. Ten years ago, a US commercial Iridium satellite smashed into an inactive Russian communications satellite called Cosmos-2251, creating thousands of new pieces of space shrapnel that now threaten other satellites in low Earth orbit – the zone stretching up to 2,000 kilometres in altitude. Altogether, there are roughly 20,000 human-made objects in orbit, from working satellites to small rocket pieces. And satellite operators can't steer away from every potential crash, because each move consumes time and fuel that could otherwise be used for the spacecraft's main job.",
+            "Concern about space junk goes back to the beginning of the satellite era, but the number of objects in orbit is rising so rapidly that researchers are investigating new ways of attacking the problem. Several teams are trying to improve methods for assessing what is in orbit, so that satellite operators can work more efficiently in ever-more-crowded space. Some researchers are now starting to compile a massive data set that includes the best possible information on where everything is in orbit. Others are developing taxonomies of space – working on measuring properties such as the shape and size of an object, so that satellite operators know how much to worry about what's coming their way.\n\nThe alternative, many say, is unthinkable. Just a few uncontrolled space crashes could generate enough debris to set off a runaway cascade of fragments, rendering near-Earth space unusable. 'If we go on like this, we will reach a point of no return,' says Carolin Frueh, an astrodynamical researcher at Purdue University in West Lafayette, Indiana.",
+            "Even as our ability to monitor space objects increases, so too does the total number of items in orbit. That means companies, governments and other players in space are collaborating in new ways to avoid a shared threat. International groups such as the Inter-Agency Space Debris Coordination Committee have developed guidelines on space sustainability. Those include inactivating satellites at the end of their useful life by venting pressurised materials or leftover fuel that might lead to explosions. The intergovernmental groups also advise lowering satellites deep enough into the atmosphere that they will burn up or disintegrate within 25 years. But so far, only about half of all missions have abided by this 25-year goal, says Holger Krag, head of the European Space Agency's space-debris office in Darmstadt, Germany. Operators of the planned large constellations of satellites say they will be responsible stewards in their enterprises in space, but Krag worries that problems could increase, despite their best intentions. 'What happens to those that fail or go bankrupt?' he asks. 'They are probably not going to spend money to remove their satellites from space.'",
             "In theory, given the vastness of space, satellite operators should have plenty of room for all these missions to fly safely without ever nearing another object. So some scientists are tackling the problem of space junk by trying to find out where all the debris is to a high degree of precision. That would alleviate the need for many of the unnecessary manoeuvres that are carried out to avoid potential collisions. 'If you knew precisely where everything was, you would almost never have a problem,' says Marlon Sorge, a space-debris specialist at the Aerospace Corporation in El Segundo, California.",
-            "E",
             "The field is called space traffic management, because it's similar to managing traffic on the roads or in the air. Think about a busy day at an airport, says Moriba Jah, an astrodynamicist at the University of Texas at Austin: planes line up in the sky, landing and taking off close to one another in a carefully choreographed routine. Air-traffic controllers know the location of the planes down to one metre in accuracy. The same can't be said for space debris. Not all objects in orbit are known, and even those included in databases are not tracked consistently.",
-            "F",
-            "An additional problem is that there is no authoritative catalogue that accurately lists the orbits of all known space debris. Jah illustrates this with a web-based database that he has developed. It draws on several sources, such as catalogues maintained by the US and Russian governments, to visualise where objects are in space. When he types in an identifier for a particular space object, the database draws a purple line to designate its orbit. Only this doesn't quite work for a number of objects, such as a Russian rocket body designated in the database as object number 32280. When Jah enters that number, the database draws two purple lines: the US and Russian sources contain two completely different orbits for the same object. Jah says that it is almost impossible to tell which is correct, unless a third source of information made it possible to cross-correlate.",
-            "Jah describes himself as a space environmentalist: 'I want to make space a place that is safe to operate, that is free and useful for generations to come.' Until that happens, he argues, the space community will continue devolving into a tragedy in which all spaceflight operators are polluting a common resource."
+            "An additional problem is that there is no authoritative catalogue that accurately lists the orbits of all known space debris. Jah illustrates this with a web-based database that he has developed. It draws on several sources, such as catalogues maintained by the US and Russian governments, to visualise where objects are in space. When he types in an identifier for a particular space object, the database draws a purple line to designate its orbit. Only this doesn't quite work for a number of objects, such as a Russian rocket body designated in the database as object number 32280. When Jah enters that number, the database draws two purple lines: the US and Russian sources contain two completely different orbits for the same object. Jah says that it is almost impossible to tell which is correct, unless a third source of information made it possible to cross-correlate.\n\nJah describes himself as a space environmentalist: 'I want to make space a place that is safe to operate, that is free and useful for generations to come.' Until that happens, he argues, the space community will continue devolving into a tragedy in which all spaceflight operators are polluting a common resource."
           ],
-          "questionSectionText": "Questions 27-40\n27. a reference to the cooperation that takes place to try and minimise risk …  …  …  …  …  …\n28. an explanation of\n29. a description of\n30. a comparison between tracking objects in space and the efficiency of\n31. a reference to efforts to classify space junk …  …  …  …  …  … Questions 32-35 Complete the summary below. Choose\n32. … of space can be achieved. The committee advises that when satellites are no longer active, any unused\n33. … or pressurised material that could cause\n34. … should be removed. Although operators of large satellite constellations accept that they have obligations as stewards of space, Holger Krag points out that the operators that become\n35. … are unlikely to prioritise removing their satellites from space.\nQuestions 36-40 Look at the following statements and the list of people below. Match each statement with the correct person,\n36. Knowing the exact location of space junk would help prevent any possible danger. …  …  …  …\n37. Space should be available to everyone and should be preserved for the future. …  …  …  …\n38. A recommendation regarding satellites is widely ignored. …  …  …  …\n39. There is conflicting information about where some satellites are in space. …  …  …  …\n40. There is",
+          "questionSectionText": "Questions 27-31\nReading Passage 3 has six sections, A-F.\nWhich section contains the following information?\nWrite the correct letter, A-F, in boxes 27-31 on your answer sheet.\n\n27   a reference to the cooperation that takes place to try and minimise risk\n28   an explanation of a person's aims\n29   a description of a major collision that occurred in space\n30   a comparison between tracking objects in space and the efficiency of a transportation system\n31   a reference to efforts to classify space junk\n\nQuestions 32-35\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 32-35 on your answer sheet.\n\nThe Inter-Agency Space Debris Coordination Committee\n\nThe committee gives advice on how the 32 ……………… of space can be achieved. The committee advises that when satellites are no longer active, any unused 33 ……………… or pressurised material that could cause 34 ……………… should be removed.\nAlthough operators of large satellite constellations accept that they have obligations as stewards of space, Holger Krag points out that the operators that become 35 ……………… are unlikely to prioritise removing their satellites from space.\n\nQuestions 36-40\nLook at the following statements (Questions 36-40) and the list of people below.\nMatch each statement with the correct person, A, B, C or D.\nWrite the correct letter, A, B, C or D, in boxes 36-40 on your answer sheet.\nNB   You may use any letter more than once.\n\n36   Knowing the exact location of space junk would help prevent any possible danger.\n37   Space should be available to everyone and should be preserved for the future.\n38   A recommendation regarding satellites is widely ignored.\n39   There is conflicting information about where some satellites are in space.\n40   There is a risk we will not be able to undo the damage that occurs in space.\n\nList of People\nA     Carolin Frueh\nB     Holger Krag\nC     Marlon Sorge\nD     Moriba Jah",
           "questionRanges": [
             {
               "start": 27,
-              "end": 40
+              "end": 31
+            },
+            {
+              "start": 32,
+              "end": 35
             },
             {
               "start": 36,
@@ -472,185 +466,185 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "a reference to the cooperation that takes place to try and minimise risk … … … … … …",
+              "prompt": "a reference to the cooperation that takes place to try and minimise risk",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
+              "answerType": "section-matching",
               "exactPortion": "That means companies, governments and other players in space are collaborating in new ways to avoid a shared threat.",
-              "explanationThai": "คำถาม: \"a reference to the cooperation that takes place to try and minimise risk … … … … … …\" หลักฐานในบทความคือ \"That means companies, governments and other players in space are collaborating in new ways to a…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "cooperation takes place = companies governments players collaborating = C"
+              "explanationThai": "คำถาม: \"a reference to the cooperation that takes place to try and minimise risk\" ส่วน C กล่าวว่า \"companies, governments and other players in space are collaborating in new ways\" ซึ่งตรงกับ cooperation จึงตอบ C",
+              "paraphrasedVocabulary": "cooperation = collaborating / minimise risk = avoid a shared threat → C"
             },
             {
               "number": 28,
-              "prompt": "an explanation of",
+              "prompt": "an explanation of a person’s aims",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
+              "answerType": "section-matching",
               "exactPortion": "Jah describes himself as a space environmentalist: ‘I want to make space a place that is safe to operate, that is free and useful for generations to come.’",
-              "explanationThai": "คำถาม: \"an explanation of\" หลักฐานในบทความคือ \"Jah describes himself as a space environmentalist: ‘I want to make space a place that is safe t…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "explanation = describes himself environmentalist operate = F"
+              "explanationThai": "คำถาม: \"an explanation of a person’s aims\" ส่วน F อธิบายเป้าหมายของ Jah ที่ต้องการให้อวกาศปลอดภัยสำหรับทุกคน จึงตอบ F",
+              "paraphrasedVocabulary": "aims = ‘I want to make space a place that is safe to operate’ → F"
             },
             {
               "number": 29,
-              "prompt": "a description of",
+              "prompt": "a description of a major collision that occurred in space",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "Ten years ago, a US commercial Iridium satellite smashed into an inactive Russian communications satellite called Cosmos-2251, creating thousands of new pieces of space shrapnel that now threaten other satellites in low Earth orbit",
-              "explanationThai": "คำถาม: \"a description of\" หลักฐานในบทความคือ \"Ten years ago, a US commercial Iridium satellite smashed into an inactive Russian communication…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "description = commercial iridium satellite smashed = A"
+              "answerType": "section-matching",
+              "exactPortion": "Ten years ago, a US commercial Iridium satellite smashed into an inactive Russian communications satellite called Cosmos-2251, creating thousands of new pieces of space shrapnel",
+              "explanationThai": "คำถาม: \"a description of a major collision that occurred in space\" ส่วน A บรรยายการชนกันของดาวเทียม Iridium กับ Cosmos-2251 จึงตอบ A",
+              "paraphrasedVocabulary": "collision = smashed into / occurred in space = satellite = A"
             },
             {
               "number": 30,
-              "prompt": "a comparison between tracking objects in space and the efficiency of",
+              "prompt": "a comparison between tracking objects in space and the efficiency of a transportation system",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "Air-traffic controllers know the location of the planes down to one metre in accuracy. The same can’t be said for space debris. Not all objects in orbit are known, and even those included in databases are not tracked consistently.",
-              "explanationThai": "คำถาม: \"a comparison between tracking objects in space and the efficiency of\" หลักฐานในบทความคือ \"Air-traffic controllers know the location of the planes down to one metre in accuracy. The same…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "comparison between tracking = air-traffic controllers location planes = E"
+              "answerType": "section-matching",
+              "exactPortion": "Think about a busy day at an airport, says Moriba Jah: planes line up in the sky, landing and taking off close to one another in a carefully choreographed routine. Air-traffic controllers know the location of the planes down to one metre in accuracy. The same can’t be said for space debris.",
+              "explanationThai": "คำถาม: \"a comparison between tracking objects in space and the efficiency of a transportation system\" ส่วน E เปรียบเทียบการติดตามดาวเทียมกับระบบจราจรทางอากาศ จึงตอบ E",
+              "paraphrasedVocabulary": "transportation system = airport / tracking = air-traffic controllers → E"
             },
             {
               "number": 31,
-              "prompt": "a reference to efforts to classify space junk … … … … … …",
+              "prompt": "a reference to efforts to classify space junk",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "Others are developing taxonomies of space – working on measuring properties such as the shape and size of an object, so that satellite operators know how much to worry about what’s coming their way.",
-              "explanationThai": "คำถาม: \"a reference to efforts to classify space junk … … … … … … Questions 32-35 Complete the summary below. Choose\" หลักฐานในบทความคือ \"Others are developing taxonomies of space – working on measuring properties such as the shape a…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "efforts classify space = others developing taxonomies working = B"
+              "answerType": "section-matching",
+              "exactPortion": "Others are developing taxonomies of space – working on measuring properties such as the shape and size of an object",
+              "explanationThai": "คำถาม: \"a reference to efforts to classify space junk\" ส่วน B กล่าวถึงการพัฒนา taxonomies เพื่อวัด shape และ size ของวัตถุ จึงตอบ B",
+              "paraphrasedVocabulary": "classify = taxonomies / efforts = developing → B"
             },
             {
               "number": 32,
-              "prompt": "… of space can be achieved. The committee advises that when satellites are no longer active, any unused",
+              "prompt": "how the _______ of space can be achieved",
               "correctAnswer": "sustainability",
               "acceptedAnswers": [
                 "sustainability"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "text",
+              "answerType": "fill-in-blank",
               "exactPortion": "International groups such as the Inter-Agency Space Debris Coordination Committee have developed guidelines on space sustainability.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of space can be achieved. The committee advises that when satellites are no longer active, any unused\" บทความมีถ้อยคำที่ตรงกันคือ \"International groups such as the Inter-Agency Space Debris Coordination Committee have develope…\" จึงคำตอบคือ \"sustainability\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "achieved committee advises = international groups inter-agency debris = sustainability"
+              "explanationThai": "ช่องว่าง: \"how the ___ of space can be achieved\" คำตอบจากบทความคือ sustainability (จาก \"guidelines on space sustainability\") จึงตอบ sustainability",
+              "paraphrasedVocabulary": "of space can be achieved = space sustainability → sustainability"
             },
             {
               "number": 33,
-              "prompt": "… or pressurised material that could cause",
+              "prompt": "any unused _______ or pressurised material",
               "correctAnswer": "fuel",
               "acceptedAnswers": [
                 "fuel"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "text",
-              "exactPortion": "Those include inactivating satellites at the end of their useful life by venting pressurised materials or leftover fuel",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… or pressurised material that could cause\" บทความมีถ้อยคำที่ตรงกันคือ \"Those include inactivating satellites at the end of their useful life by venting pressurised ma…\" จึงคำตอบคือ \"fuel\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "pressurised material cause = include inactivating satellites useful = fuel"
+              "answerType": "fill-in-blank",
+              "exactPortion": "Those include inactivating satellites at the end of their useful life by venting pressurised materials or leftover fuel that might lead to explosions.",
+              "explanationThai": "ช่องว่าง: \"any unused ___ or pressurised material\" คำตอบจากบทความคือ fuel (จาก \"leftover fuel\") จึงตอบ fuel",
+              "paraphrasedVocabulary": "unused = leftover / material = fuel → fuel"
             },
             {
               "number": 34,
-              "prompt": "… should be removed. Although operators of large satellite constellations accept that they have obligations as stewards of space, Holger Krag points out that the operators that become",
+              "prompt": "that could cause _______",
               "correctAnswer": "explosions",
               "acceptedAnswers": [
                 "explosions"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "text",
+              "answerType": "fill-in-blank",
               "exactPortion": "that might lead to explosions",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… should be removed. Although operators of large satellite constellations accept that they have obligations as stewards of space, …\" บทความมีถ้อยคำที่ตรงกันคือ \"that might lead to explosions\" จึงคำตอบคือ \"explosions\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "… should be removed. Although operators of large s… = that might lead to explosions = explosions"
+              "explanationThai": "ช่องว่าง: \"that could cause ___\" คำตอบจากบทความคือ explosions จึงตอบ explosions",
+              "paraphrasedVocabulary": "could cause = might lead to / ___ = explosions → explosions"
             },
             {
               "number": 35,
-              "prompt": "… are unlikely to prioritise removing their satellites from space.",
+              "prompt": "operators that become _______",
               "correctAnswer": "bankrupt",
               "acceptedAnswers": [
                 "bankrupt"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "text",
-              "exactPortion": "‘What happens to those that fail or go bankrupt?’",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… are unlikely to prioritise removing their satellites from space. Questions 36-40 Look at the following statements and the list o…\" บทความมีถ้อยคำที่ตรงกันคือ \"‘What happens to those that fail or go bankrupt?’\" จึงคำตอบคือ \"bankrupt\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "unlikely prioritise removing = happens = bankrupt"
+              "answerType": "fill-in-blank",
+              "exactPortion": "’What happens to those that fail or go bankrupt?’",
+              "explanationThai": "ช่องว่าง: \"operators that become ___\" คำตอบจากบทความคือ bankrupt (จาก \"go bankrupt\") จึงตอบ bankrupt",
+              "paraphrasedVocabulary": "become = go / ___ = bankrupt → bankrupt"
             },
             {
               "number": 36,
-              "prompt": "Knowing the exact location of space junk would help prevent any possible danger. … … … …",
+              "prompt": "Knowing the exact location of space junk would help prevent any possible danger.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "‘If you knew precisely where everything was, you would almost never have a problem,’ says Marlon Sorge",
-              "explanationThai": "คำถาม: \"Knowing the exact location of space junk would help prevent any possible danger. … … … …\" หลักฐานในบทความคือ \"‘If you knew precisely where everything was, you would almost never have a problem,’ says Marlo…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "knowing exact location = precisely everything almost problem = C"
+              "answerType": "matching",
+              "exactPortion": "’If you knew precisely where everything was, you would almost never have a problem,’ says Marlon Sorge",
+              "explanationThai": "ข้อ 36: Marlon Sorge (C) กล่าวว่า \"If you knew precisely where everything was, you would almost never have a problem\" ซึ่งตรงกับข้อความในคำถาม จึงตอบ C",
+              "paraphrasedVocabulary": "exact location = precisely where / prevent danger = almost never have a problem → C (Sorge)"
             },
             {
               "number": 37,
-              "prompt": "Space should be available to everyone and should be preserved for the future. … … … …",
+              "prompt": "Space should be available to everyone and should be preserved for the future.",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "Jah describes himself as a space environmentalist: ‘I want to make space a place that is safe to operate, that is free and useful for generations to come.’",
-              "explanationThai": "คำถาม: \"Space should be available to everyone and should be preserved for the future. … … … …\" หลักฐานในบทความคือ \"Jah describes himself as a space environmentalist: ‘I want to make space a place that is safe t…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "space should available = describes himself environmentalist operate = D"
+              "answerType": "matching",
+              "exactPortion": "’I want to make space a place that is safe to operate, that is free and useful for generations to come.’ — Moriba Jah",
+              "explanationThai": "ข้อ 37: Moriba Jah (D) ต้องการให้อวกาศเป็นที่ปลอดภัยและมีประโยชน์สำหรับรุ่นต่อๆ ไป จึงตอบ D",
+              "paraphrasedVocabulary": "available to everyone = free / preserved for future = generations to come → D (Jah)"
             },
             {
               "number": 38,
-              "prompt": "A recommendation regarding satellites is widely ignored. … … … …",
+              "prompt": "A recommendation regarding satellites is widely ignored.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
+              "answerType": "matching",
               "exactPortion": "But so far, only about half of all missions have abided by this 25-year goal, says Holger Krag",
-              "explanationThai": "คำถาม: \"A recommendation regarding satellites is widely ignored. … … … …\" หลักฐานในบทความคือ \"But so far, only about half of all missions have abided by this 25-year goal, says Holger Krag\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "recommendation regarding satellites = missions abided 25-year holger = B"
+              "explanationThai": "ข้อ 38: Holger Krag (B) ระบุว่ามีเพียงครึ่งหนึ่งที่ปฏิบัติตามข้อกำหนด 25 ปี จึงตอบ B",
+              "paraphrasedVocabulary": "recommendation widely ignored = only about half have abided → B (Krag)"
             },
             {
               "number": 39,
-              "prompt": "There is conflicting information about where some satellites are in space. … … … …",
+              "prompt": "There is conflicting information about where some satellites are in space.",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "When Jah enters that number, the database draws two purple lines: the US and Russian sources contain two completely different orbits for the same object. Jah says that it is almost impossible to tell which is correct, unless a third source of information made it possible to cross-correlate.",
-              "explanationThai": "คำถาม: \"There is conflicting information about where some satellites are in space. … … … …\" หลักฐานในบทความคือ \"When Jah enters that number, the database draws two purple lines: the US and Russian sources co…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "conflicting satellites space = enters number database purple = D"
+              "answerType": "matching",
+              "exactPortion": "the database draws two purple lines: the US and Russian sources contain two completely different orbits for the same object. Jah says that it is almost impossible to tell which is correct, unless a third source of information made it possible to cross-correlate",
+              "explanationThai": "ข้อ 39: Moriba Jah (D) แสดงให้เห็นว่าข้อมูล orbit ของวัตถุเดียวกันมีความขัดแย้งกัน จึงตอบ D",
+              "paraphrasedVocabulary": "conflicting information = two completely different orbits → D (Jah)"
             },
             {
               "number": 40,
-              "prompt": "There is",
+              "prompt": "There is a risk we will not be able to undo the damage that occurs in space.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "‘If we go on like this, we will reach a point of no return,’ says Carolin Frueh",
-              "explanationThai": "คำถาม: \"There is\" หลักฐานในบทความคือ \"‘If we go on like this, we will reach a point of no return,’ says Carolin Frueh\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "There is = ‘If we go on like this, we will reach a point of no return,’… = A"
+              "answerType": "matching",
+              "exactPortion": "’If we go on like this, we will reach a point of no return,’ says Carolin Frueh",
+              "explanationThai": "ข้อ 40: Carolin Frueh (A) เตือนว่าอาจถึงจุดที่ \"ไม่มีทางย้อนกลับ\" ซึ่งตรงกับ \"not be able to undo the damage\" จึงตอบ A",
+              "paraphrasedVocabulary": "cannot undo damage = point of no return → A (Frueh)"
             }
           ]
         }
@@ -1104,37 +1098,40 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
           "number": 3,
           "title": "An ideal city",
           "bodyParagraphs": [
-            "Leonardo da Vinci's ideal city was centuries ahead of its time",
-            "The word 'genius' is universally associated with the name of Leonardo da Vinci. A true Renaissance man, he embodied scientific spirit, artistic talent and humanist sensibilities. Five hundred years have passed since Leonardo died in his home at Chateau du Clos Luce, outside Tours, France. Yet far from fading into insignificance, his thinking has carried down the centuries and still surprises today.",
+            "The word ‘genius’ is universally associated with the name of Leonardo da Vinci. A true Renaissance man, he embodied scientific spirit, artistic talent and humanist sensibilities. Five hundred years have passed since Leonardo died in his home at Chateau du Clos Luce, outside Tours, France. Yet far from fading into insignificance, his thinking has carried down the centuries and still surprises today.",
             "The Renaissance marked the transition from the 15th century to modernity and took place after the spread of the plague in the 14th century, which caused a global crisis resulting in some 200 million deaths across Europe and Asia. Today, the world is on the cusp of a climate crisis, which is predicted to cause widespread displacement, extinctions and death, if left unaddressed. Then, as now, radical solutions were called for to revolutionise the way people lived and safeguard humanity against catastrophe.",
-            "Around 1486 – after a pestilence that killed half the population in Milan, Italy – Leonardo turned his thoughts to urban planning problems. Following a typical Renaissance trend, he began to work on an 'ideal city' project, which – due to its excessive costs – would remain unfulfilled. Yet given that unsustainable urban models are a key cause of global climate change today, it's only natural to wonder how Leonardo might have changed the shape of modem cities.",
-            "Although the Renaissance is renowned as an era of incredible progress in art and architecture, it is rarely noted that the 15th century also marked the birth of urbanism as a true academic discipline. The rigour and method behind the conscious conception of a city had been largely missing in Western thought until the moment when prominent Renaissance men pushed forward large-scale urban projects in Italy, such as the reconfiguration of the town of Pienza and the expansion of the city of Ferrara. These works surely inspired Leonardo's decision to rethink the design of medieval cities, with their winding and overcrowded streets and with houses piled against one another.",
-            "It is not easy to identify a coordinated vision of Leonardo's ideal city because of his disordered way of working with notes and sketches. But from the largest collection of Leonardo's papers ever assembled, a series of innovative thoughts can be reconstructed regarding the foundation of a new city along the Ticino River, which runs from Switzerland into Italy and is 248 kilometres long. He designed the city for the easy transport of goods and clean urban spaces, and he wanted a comfortable and spacious city, with well-ordered streets and architecture. He recommended 'high, strong walls', with 'towers and battlements of all necessary and pleasant beauty'.",
-            "His plans for a modem and 'rational' city were consistent with Renaissance ideals. But, in keeping with his personality, Leonardo included several innovations in his urban design. Leonardo wanted the city to be built on several levels, linked with vertical outdoor staircases. This design can be seen in some of today's high-rise buildings but was unconventional at the time. Indeed, this idea of taking full advantage of the interior spaces wasn't implemented until the 1920s and 1930s, with the birth of the Modernist movement.",
-            "While in the upper layers of the city, people could walk undisturbed between elegant palaces and streets, the lower layer was the place for services, trade, transport and industry. But the true originality of Leonardo's vision was its fusion of architecture and engineering. Leonardo designed extensive hydraulic plants to create artificial canals throughout the city. The canals, regulated by clocks and basins, were supposed to make it easier for boats to navigate inland. Leonardo also thought that the width of the streets ought to match the average height of the adjacent houses: a rule still followed in many contemporary cities across Italy, to allow access to sun and reduce the risk of damage from earthquakes.",
-            "Although some of these features existed in Roman cities, before Leonardo's drawings there had never been a multi-level, compact modem city which was thoroughly technically conceived. Indeed, it wasn't until the 19th century that some of his ideas were applied. For example, the subdivision of the city by function- with services and infrastructures located in the lower levels and wide and well-ventilated boulevards and walkways above for residents – is an idea that can be found in Georges-Eugene Haussmann's renovation of Paris under Emperor Napoleon III between 1853 and 1870.",
-            "Today, Leonardo's ideas are not simply valid, they actually suggest a way forward for urban planning. Many scholars think that the compact city, built upwards instead of outwards, integrated with nature (especially water systems), with efficient transport infrastructure, could help modem cities become more efficient and sustainable. This is yet another reason why Leonardo was aligned so closely with modem urban planning and centuries ahead of his time."
+            "Around 1486 – after a pestilence that killed half the population in Milan, Italy – Leonardo turned his thoughts to urban planning problems. Following a typical Renaissance trend, he began to work on an ‘ideal city’ project, which – due to its excessive costs – would remain unfulfilled. Yet given that unsustainable urban models are a key cause of global climate change today, it’s only natural to wonder how Leonardo might have changed the shape of modern cities.",
+            "Although the Renaissance is renowned as an era of incredible progress in art and architecture, it is rarely noted that the 15th century also marked the birth of urbanism as a true academic discipline. The rigour and method behind the conscious conception of a city had been largely missing in Western thought until the moment when prominent Renaissance men pushed forward large-scale urban projects in Italy, such as the reconfiguration of the town of Pienza and the expansion of the city of Ferrara. These works surely inspired Leonardo’s decision to rethink the design of medieval cities, with their winding and overcrowded streets and with houses piled against one another.",
+            "It is not easy to identify a coordinated vision of Leonardo’s ideal city because of his disordered way of working with notes and sketches. But from the largest collection of Leonardo’s papers ever assembled, a series of innovative thoughts can be reconstructed regarding the foundation of a new city along the Ticino River, which runs from Switzerland into Italy and is 248 kilometres long. He designed the city for the easy transport of goods and clean urban spaces, and he wanted a comfortable and spacious city, with well-ordered streets and architecture. He recommended ‘high, strong walls’, with ‘towers and battlements of all necessary and pleasant beauty’.",
+            "His plans for a modern and ‘rational’ city were consistent with Renaissance ideals. But, in keeping with his personality, Leonardo included several innovations in his urban design. Leonardo wanted the city to be built on several levels, linked with vertical outdoor staircases. This design can be seen in some of today’s high-rise buildings but was unconventional at the time. Indeed, this idea of taking full advantage of the interior spaces wasn’t implemented until the 1920s and 1930s, with the birth of the Modernist movement.",
+            "While in the upper layers of the city, people could walk undisturbed between elegant palaces and streets, the lower layer was the place for services, trade, transport and industry. But the true originality of Leonardo’s vision was its fusion of architecture and engineering. Leonardo designed extensive hydraulic plants to create artificial canals throughout the city. The canals, regulated by clocks and basins, were supposed to make it easier for boats to navigate inland. Leonardo also thought that the width of the streets ought to match the average height of the adjacent houses: a rule still followed in many contemporary cities across Italy, to allow access to sun and reduce the risk of damage from earthquakes.",
+            "Although some of these features existed in Roman cities, before Leonardo’s drawings there had never been a multi-level, compact modern city which was thoroughly technically conceived. Indeed, it wasn’t until the 19th century that some of his ideas were applied. For example, the subdivision of the city by function – with services and infrastructures located in the lower levels and wide and well-ventilated boulevards and walkways above for residents – is an idea that can be found in Georges-Eugène Haussmann’s renovation of Paris under Emperor Napoleon III between 1853 and 1870.",
+            "Today, Leonardo’s ideas are not simply valid, they actually suggest a way forward for urban planning. Many scholars think that the compact city, built upwards instead of outwards, integrated with nature (especially water systems), with efficient transport infrastructure, could help modern cities become more efficient and sustainable. This is yet another reason why Leonardo was aligned so closely with modern urban planning and centuries ahead of his time."
           ],
-          "questionSectionText": "Questions 27-40\n27. People first referred to Leonardo da Vinci as\n28. The current climate crisis is predicted to cause more deaths than the plague.\n29. Some of the challenges we face today can be compared to those of earlier times.\n30. Leonardo da Vinci's 'ideal city' was constructed in the 15th century.\n31. Poor town planning is\n32. In Renaissance times, local people fought against the changes to Pienza and Ferrara.\n33. Leonardo da Vinci kept\n34. … for trade and\n35. … on the exterior of\n36. … was evident in his plans for artificial canals within his ideal city. He also believed that the height of houses should relate to the width of streets in case earthquakes occurred. The design of many cities in Italy today follows this\n37. … . While some cities from\n38. … times have aspects that can also be found in Leonardo’s designs, his ideas weren’t put into practice until long after his death.\n39. … is one example of\n40. … no longer seems to be the best approach.",
+          "questionSectionText": "Questions 27-33\nDo the following statements agree with the information given in Reading Passage 3?\nIn boxes 27-33 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this\n\n27   People first referred to Leonardo da Vinci as a genius 500 years ago.\n28   The current climate crisis is predicted to cause more deaths than the plague.\n29   Some of the challenges we face today can be compared to those of earlier times.\n30   Leonardo da Vinci’s ‘ideal city’ was constructed in the 15th century.\n31   Poor town planning is a major contributor to climate change.\n32   In Renaissance times, local people fought against the changes to Pienza and Ferrara.\n33   Leonardo da Vinci kept a neat, organised record of his designs.\n\nQuestions 34-40\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 34-40 on your answer sheet.\n\nLeonardo da Vinci’s ideal city\n\nA collection of Leonardo da Vinci’s paperwork reveals his design of a new city beside the Ticino River. This was to provide better 34 ……………… for trade and a less polluted environment. Although Leonardo da Vinci’s city shared many of the ideals of his time, some of his innovations were considered unconventional in their design. They included features that can be seen in some tower blocks today, such as 35 ……………… on the exterior of a building.\n\nLeonardo da Vinci wasn’t only an architect. His expertise in 36 ……………… was evident in his plans for artificial canals within his ideal city. He also believed that the height of houses should relate to the width of streets in case earthquakes occurred. The design of many cities in Italy today follows this 37 ……………… .\n\nWhile some cities from 38 ……………… times have aspects that can also be found in Leonardo’s designs, his ideas weren’t put into practice until long after his death. 39 ……………… is one example of a city that was redesigned in the 19th century in the way that Leonardo had envisaged. His ideas are also relevant to today’s world, where building 40 ……………… no longer seems to be the best approach.",
           "questionRanges": [
             {
               "start": 27,
+              "end": 33
+            },
+            {
+              "start": 34,
               "end": 40
             }
           ],
           "questions": [
             {
               "number": 27,
-              "prompt": "People first referred to Leonardo da Vinci as",
+              "prompt": "People first referred to Leonardo da Vinci as a genius 500 years ago.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "The word ‘genius’ is universally associated with the name of Leonardo da Vinci. A true Renaissance man, he embodied scientific spirit, artistic talent and humanist sensibilities. Five hundred years have passed since Leonardo died in his home at Chateau du Clos Luce, outside Tours, France.",
-              "explanationThai": "ข้อความในข้อว่า \"People first referred to Leonardo da Vinci as\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"The word ‘genius’ is universally associated with the name of Leonardo da Vinci. A true Renaissa…\") จึงตอบ NOT GIVEN",
-              "paraphrasedVocabulary": "vinci = genius universally associated leonardo = NOT GIVEN"
+              "exactPortion": "The word ‘genius’ is universally associated with the name of Leonardo da Vinci. Five hundred years have passed since Leonardo died",
+              "explanationThai": "ข้อ 27: บทความไม่ได้กล่าวว่าคนเรียก Leonardo ว่า genius 500 ปีที่แล้ว จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "first referred 500 years ago = not stated in passage → NOT GIVEN"
             },
             {
               "number": 28,
@@ -1145,9 +1142,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "the spread of the plague in the 14th century, which caused a global crisis resulting in some 200 million deaths across Europe and Asia. Today, the world is on the cusp of a climate crisis, which is predicted to cause widespread displacement, extinctions and death, if left unaddressed.",
-              "explanationThai": "ข้อความในข้อว่า \"The current climate crisis is predicted to cause more deaths than the plague.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"the spread of the plague in the 14th century, which caused a global crisis resulting in some 20…\") จึงตอบ NOT GIVEN",
-              "paraphrasedVocabulary": "plague = spread plague century caused = NOT GIVEN"
+              "exactPortion": "the plague... caused a global crisis resulting in some 200 million deaths... Today, the world is on the cusp of a climate crisis, which is predicted to cause widespread displacement, extinctions and death",
+              "explanationThai": "ข้อ 28: บทความกล่าวถึงผลกระทบแต่ไม่ได้เปรียบเทียบจำนวนผู้เสียชีวิตโดยตรง จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "more deaths = not compared in passage → NOT GIVEN"
             },
             {
               "number": 29,
@@ -1159,34 +1156,34 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
               "exactPortion": "Then, as now, radical solutions were called for to revolutionise the way people lived and safeguard humanity against catastrophe.",
-              "explanationThai": "ข้อความในข้อว่า \"Some of the challenges we face today can be compared to those of earlier times.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Then, as now, radical solutions were called for to revolutionise the way people lived and safeg…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
-              "paraphrasedVocabulary": "compared earlier times = radical solutions called revolutionise = TRUE"
+              "explanationThai": "ข้อ 29: บทความกล่าวว่า ‘Then, as now’ แสดงให้เห็นว่าความท้าทายในอดีตและปัจจุบันมีความคล้ายคลึงกัน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "challenges today compared to earlier = Then, as now, radical solutions → TRUE"
             },
             {
               "number": 30,
-              "prompt": "Leonardo da Vinci's 'ideal city' was constructed in the 15th century.",
+              "prompt": "Leonardo da Vinci’s ‘ideal city’ was constructed in the 15th century.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "Around 1486 – after a pestilence that killed half the population in Milan, Italy – Leonardo turned his thoughts to urban planning problems. Following a typical Renaissance trend, he began to work on an ‘ideal city’ project, which – due to its excessive costs – would remain unfulfilled.",
-              "explanationThai": "ข้อความในข้อว่า \"Leonardo da Vinci's 'ideal city' was constructed in the 15th century.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Around 1486 – after a pestilence that killed half the population in Milan, Italy – Leonardo tur…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
-              "paraphrasedVocabulary": "vinci's 'ideal city' = around pestilence killed population = FALSE"
+              "exactPortion": "he began to work on an ‘ideal city’ project, which – due to its excessive costs – would remain unfulfilled.",
+              "explanationThai": "ข้อ 30: บทความระบุว่าโครงการ ideal city ไม่เคยสำเร็จ จึงตอบ FALSE",
+              "paraphrasedVocabulary": "constructed = would remain unfulfilled (never built) → FALSE"
             },
             {
               "number": 31,
-              "prompt": "Poor town planning is",
+              "prompt": "Poor town planning is a major contributor to climate change.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "Yet given that unsustainable urban models are a key cause of global climate change today,",
-              "explanationThai": "ข้อความในข้อว่า \"Poor town planning is\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Yet given that unsustainable urban models are a key cause of global climate change today,\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
-              "paraphrasedVocabulary": "planning = unsustainable models global climate = TRUE"
+              "exactPortion": "unsustainable urban models are a key cause of global climate change today",
+              "explanationThai": "ข้อ 31: บทความกล่าวว่า ‘unsustainable urban models are a key cause of global climate change’ ซึ่งตรงกับข้อความในคำถาม จึงตอบ TRUE",
+              "paraphrasedVocabulary": "poor town planning = unsustainable urban models / major contributor = key cause → TRUE"
             },
             {
               "number": 32,
@@ -1198,12 +1195,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
               "exactPortion": "prominent Renaissance men pushed forward large-scale urban projects in Italy, such as the reconfiguration of the town of Pienza and the expansion of the city of Ferrara.",
-              "explanationThai": "ข้อความในข้อว่า \"In Renaissance times, local people fought against the changes to Pienza and Ferrara.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"prominent Renaissance men pushed forward large-scale urban projects in Italy, such as the recon…\") จึงตอบ NOT GIVEN",
-              "paraphrasedVocabulary": "ferrara = prominent renaissance pushed forward = NOT GIVEN"
+              "explanationThai": "ข้อ 32: บทความไม่ได้กล่าวถึงการต่อต้านจากชาวบ้าน จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "fought against = not mentioned in passage → NOT GIVEN"
             },
             {
               "number": 33,
-              "prompt": "Leonardo da Vinci kept",
+              "prompt": "Leonardo da Vinci kept a neat, organised record of his designs.",
               "correctAnswer": "FALSE",
               "acceptedAnswers": [
                 "FALSE"
@@ -1211,99 +1208,99 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
               "exactPortion": "It is not easy to identify a coordinated vision of Leonardo’s ideal city because of his disordered way of working with notes and sketches.",
-              "explanationThai": "ข้อความในข้อว่า \"Leonardo da Vinci kept\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"It is not easy to identify a coordinated vision of Leonardo’s ideal city because of his disorde…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
-              "paraphrasedVocabulary": "vinci kept = identify coordinated vision leonardo = FALSE"
+              "explanationThai": "ข้อ 33: บทความกล่าวว่า Leonardo มีวิธีทำงาน ‘disordered’ ซึ่งขัดแย้งกับ ‘neat, organised’ จึงตอบ FALSE",
+              "paraphrasedVocabulary": "neat organised = disordered way of working (opposite) → FALSE"
             },
             {
               "number": 34,
-              "prompt": "… for trade and",
+              "prompt": "better _______ for trade",
               "correctAnswer": "transport",
               "acceptedAnswers": [
                 "transport"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
-              "answerType": "text",
+              "answerType": "fill-in-blank",
               "exactPortion": "He designed the city for the easy transport of goods and clean urban spaces",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… for trade and\" บทความมีถ้อยคำที่ตรงกันคือ \"He designed the city for the easy transport of goods and clean urban spaces\" จึงคำตอบคือ \"transport\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "trade = designed spaces = transport"
+              "explanationThai": "ช่องว่าง: \"better ___ for trade\" คำตอบจากบทความคือ transport (จาก ‘easy transport of goods’) จึงตอบ transport",
+              "paraphrasedVocabulary": "better for trade = easy transport of goods → transport"
             },
             {
               "number": 35,
-              "prompt": "… on the exterior of",
+              "prompt": "features that can be seen in some tower blocks today, such as _______ on the exterior of a building",
               "correctAnswer": "staircases",
               "acceptedAnswers": [
                 "staircases"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
-              "answerType": "text",
-              "exactPortion": "Leonardo wanted the city to be built on several levels, linked with vertical outdoor staircases.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… on the exterior of\" บทความมีถ้อยคำที่ตรงกันคือ \"Leonardo wanted the city to be built on several levels, linked with vertical outdoor staircases…\" จึงคำตอบคือ \"staircases\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "exterior = leonardo wanted several levels = staircases"
+              "answerType": "fill-in-blank",
+              "exactPortion": "Leonardo wanted the city to be built on several levels, linked with vertical outdoor staircases. This design can be seen in some of today’s high-rise buildings",
+              "explanationThai": "ช่องว่าง: \"such as ___ on the exterior of a building\" คำตอบจากบทความคือ staircases (จาก ‘vertical outdoor staircases’) จึงตอบ staircases",
+              "paraphrasedVocabulary": "exterior of building = outdoor / tower blocks = high-rise buildings → staircases"
             },
             {
               "number": 36,
-              "prompt": "… was evident in his plans for artificial canals within his ideal city. He also believed that the height of houses should relate to the width of streets in case earthquakes occurred. The design of many cities in Italy today follows this",
+              "prompt": "His expertise in _______ was evident in his plans for artificial canals",
               "correctAnswer": "engineering",
               "acceptedAnswers": [
                 "engineering"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
-              "answerType": "text",
-              "exactPortion": "But the true originality of Leonardo’s vision was its fusion of architecture and engineering.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… was evident in his plans for artificial canals within his ideal city. He also believed that the height of houses should relate t…\" บทความมีถ้อยคำที่ตรงกันคือ \"But the true originality of Leonardo’s vision was its fusion of architecture and engineering.\" จึงคำตอบคือ \"engineering\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "evident plans artificial = originality leonardo vision fusion = engineering"
+              "answerType": "fill-in-blank",
+              "exactPortion": "the true originality of Leonardo’s vision was its fusion of architecture and engineering. Leonardo designed extensive hydraulic plants to create artificial canals throughout the city.",
+              "explanationThai": "ช่องว่าง: \"expertise in ___ was evident in plans for artificial canals\" คำตอบจากบทความคือ engineering จึงตอบ engineering",
+              "paraphrasedVocabulary": "expertise in = fusion of architecture and / canals = engineering → engineering"
             },
             {
               "number": 37,
-              "prompt": "… . While some cities from",
+              "prompt": "The design of many cities in Italy today follows this _______",
               "correctAnswer": "rule",
               "acceptedAnswers": [
                 "rule"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
-              "answerType": "text",
-              "exactPortion": "a rule still followed in many contemporary cities across Italy",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . While some cities from\" บทความมีถ้อยคำที่ตรงกันคือ \"a rule still followed in many contemporary cities across Italy\" จึงคำตอบคือ \"rule\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "cities = followed contemporary cities across = rule"
+              "answerType": "fill-in-blank",
+              "exactPortion": "Leonardo also thought that the width of the streets ought to match the average height of the adjacent houses: a rule still followed in many contemporary cities across Italy",
+              "explanationThai": "ช่องว่าง: \"The design of many cities in Italy today follows this ___\" คำตอบจากบทความคือ rule (จาก ‘a rule still followed in many contemporary cities’) จึงตอบ rule",
+              "paraphrasedVocabulary": "design cities Italy follows = a rule still followed in contemporary cities → rule"
             },
             {
               "number": 38,
-              "prompt": "… times have aspects that can also be found in Leonardo’s designs, his ideas weren’t put into practice until long after his death.",
+              "prompt": "While some cities from _______ times",
               "correctAnswer": "Roman",
               "acceptedAnswers": [
                 "Roman"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
-              "answerType": "text",
-              "exactPortion": "Although some of these features existed in Roman cities, before Leonardo’s drawings there had never been a multi-level",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… times have aspects that can also be found in Leonardo’s designs, his ideas weren’t put into practice until long after his death.\" บทความมีถ้อยคำที่ตรงกันคือ \"Although some of these features existed in Roman cities, before Leonardo’s drawings there had n…\" จึงคำตอบคือ \"Roman\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "found leonardo designs = although features existed cities = Roman"
+              "answerType": "fill-in-blank",
+              "exactPortion": "Although some of these features existed in Roman cities",
+              "explanationThai": "ช่องว่าง: \"While some cities from ___ times\" คำตอบจากบทความคือ Roman จึงตอบ Roman",
+              "paraphrasedVocabulary": "cities from ___ times = Roman cities → Roman"
             },
             {
               "number": 39,
-              "prompt": "… is one example of",
+              "prompt": "_______ is one example of a city that was redesigned in the 19th century",
               "correctAnswer": "Paris",
               "acceptedAnswers": [
                 "Paris"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
-              "answerType": "text",
-              "exactPortion": "is an idea that can be found in Georges-Eugene Haussmann’s renovation of Paris under Emperor Napoleon III between 1853 and 1870.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… is one example of\" บทความมีถ้อยคำที่ตรงกันคือ \"is an idea that can be found in Georges-Eugene Haussmann’s renovation of Paris under Emperor Na…\" จึงคำตอบคือ \"Paris\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "example = georges-eugene haussmann renovation emperor = Paris"
+              "answerType": "fill-in-blank",
+              "exactPortion": "an idea that can be found in Georges-Eugène Haussmann’s renovation of Paris under Emperor Napoleon III between 1853 and 1870.",
+              "explanationThai": "ช่องว่าง: \"___ is one example of a city that was redesigned in the 19th century\" คำตอบจากบทความคือ Paris จึงตอบ Paris",
+              "paraphrasedVocabulary": "redesigned 19th century = Haussmann’s renovation of Paris → Paris"
             },
             {
               "number": 40,
-              "prompt": "… no longer seems to be the best approach.",
+              "prompt": "where building _______ no longer seems to be the best approach",
               "correctAnswer": "outwards",
               "acceptedAnswers": [
                 "outwards"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
-              "answerType": "text",
-              "exactPortion": "Many scholars think that the compact city, built upwards instead of outwards,",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… no longer seems to be the best approach.\" บทความมีถ้อยคำที่ตรงกันคือ \"Many scholars think that the compact city, built upwards instead of outwards,\" จึงคำตอบคือ \"outwards\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "longer seems approach = scholars compact upwards instead = outwards"
+              "answerType": "fill-in-blank",
+              "exactPortion": "Many scholars think that the compact city, built upwards instead of outwards",
+              "explanationThai": "ช่องว่าง: \"where building ___ no longer seems to be the best approach\" คำตอบจากบทความคือ outwards (จาก ‘instead of outwards’) จึงตอบ outwards",
+              "paraphrasedVocabulary": "no longer best approach = instead of outwards → outwards"
             }
           ]
         }
@@ -1763,7 +1760,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "As a teacher myself, I'd think my lesson would be going rather well if the discussion went as described above. But wouldn't this kind of class work better if there weren't such a huge gap between the top and the bottom? If we put all the kids who needed literacy support into one class, and all the students who want to discuss the virtue of moderation into another?",
             "The practice of 'streaming', or 'tracking', involves separating students into classes depending on their diagnosed levels of attainment. At a macro level, it requires the establishment of academically selective schools for the brightest students, and comprehensive schools for the rest. Within schools, it means selecting students into a 'stream' of general ability, or 'sets' of subject-specific ability. The practice is intuitively appealing to almost every stakeholder.",
             "I have heard the mixed-ability model attacked by way of analogy: a group hike. The fittest in the group take the lead and set a brisk pace, only to have to stop and wait every 20 minutes. This is frustrating, and their enthusiasm wanes. Meanwhile, the slowest ones are not only embarrassed but physically struggling to keep up. What's worse, they never get a long enough break. They honestly just want to quit. Hiking, they feel, is not for them.",
-            "Mixed-ability classes bore students, frustrate parents and bum out teachers. The brightest ones will never summit Mount Qomolangma, and the stragglers won't enjoy the lovely stroll in the park they are perhaps more suited to. Individuals suffer at the demands of the collective, mediocrity prevails. So: is learning like hiking?",
+            "Mixed-ability classes bore students, frustrate parents and burn out teachers. The brightest ones will never summit Mount Qomolangma, and the stragglers won't enjoy the lovely stroll in the park they are perhaps more suited to. Individuals suffer at the demands of the collective, mediocrity prevails. So: is learning like hiking?",
             "The current pedagogical paradigm is arguably that of constructivism, which emerged out of the work of psychologist Lev Vygotsky. In the 1930s, Vygotsky emphasised the importance of targeting a student's specific 'zone of proximal development' (ZPD). This is the gap between what they can achieve only with support – teachers, textbooks, worked examples, parents and so on – and what they can achieve independently. The purpose of teaching is to provide and then gradually remove this 'scaffolding' until they are autonomous. If we accept this model, it follows that streaming students with similar ZPDs would be an efficient and effective solution. And that forcing everyone on the same hike – regardless of aptitude – would be madness.",
             "Despite all this, there is limited empirical evidence to suggest that streaming results in better outcomes for students. Professor John Hattie, director of the Melbourne Education Research Institute, notes that 'tracking has minimal effects on learning outcomes'. What is more, streaming appears to significantly – and negatively – affect those students assigned to the lowest sets. These students tend to have much higher representation of low socioeconomic class. Less significant is the small benefit for those lucky clever students in the higher sets. The overall result is that the smart stay smart and the dumb get dumber, further entrenching the social divide.",
             "In the latest update of Hattie's influential meta-analysis of factors influencing student achievement, one of the most significant factors is the teachers' estimate of achievement. Streaming students by diagnosed achievement automatically limits what the teacher feels the student is capable of. Meanwhile, in a mixed environment, teachers' estimates need to be more diverse and flexible.",
@@ -1771,10 +1768,18 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "I find it amazing to watch students get over an idea to their peers in ways that I would never think of. They operate with different language tools and different social tools from teachers and, having just learnt it themselves, they possess similar cognitive structures to their struggling classmates. There is also something exciting about passing on skills and knowledge that you yourself have just mastered – a certain pride and zeal, a certain freshness to the interaction between 'teacher' and 'learner' that is often lost by the expert for whom the steps are obvious and the joy of discovery forgotten.",
             "Having a variety of different abilities in a collaborative learning environment provides valuable resources for helping students meet their learning needs, not to mention improving their communication and social skills. And today, more than ever, we need the many to flourish – not suffer at the expense of a few bright stars. Once a year, I go on a hike with my class, a mixed bunch of students. It is challenging. The fittest students realise they need to encourage the reluctant. There are lookouts who report back, and extra items to carry for others. We make it – together."
           ],
-          "questionSectionText": "Questions 27-40\n27. The writer describes the Romeo and Juliet lesson in order to demonstrate\n28. What does the writer say about streaming in the third paragraph?\n29. What idea is suggested by the reference to Mount Qomolangma in the fifth paragraph?\n30. What does the word 'scaffolding' in the sixth paragraph refer to?\n31. . He points out that, in schools which use streaming, the most significant impact is on those students placed in the\n32. , especially where\n33. . Meanwhile, for the\n34. , there appears to be only minimal advantage.\n35. of students in streamed groups.\n36. The Vygotsky model of education supports the concept of\n37. Some teachers are uncertain about allowing students to take on MKO roles in the classroom.\n38. It can be rewarding to teach knowledge which you have only recently acquired.\n39. The priority should be to ensure that the highest-achieving students attain their goals.\n40. Taking part in collaborative outdoor activities with teachers and classmates can improve student outcomes in the classroom.",
+          "questionSectionText": "Questions 27-30\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 27-30 on your answer sheet.\n\n27   The writer describes the Romeo and Juliet lesson in order to demonstrate\nA   how few students are interested in literature.\nB   how a teacher handles a range of learning needs.\nC   how unsuitable Shakespeare is for most teenagers.\nD   how weaker students can disrupt their classmates' learning.\n\n28   What does the writer say about streaming in the third paragraph?\nA   It has a very broad appeal.\nB   It favours cleverer students.\nC   It is relatively simple to implement.\nD   It works better in some schools than others.\n\n29   What idea is suggested by the reference to Mount Qomolangma in the fifth paragraph?\nA   students following unsuitable paths\nB   students attempting interesting tasks\nC   students not achieving their full potential\nD   students not being aware of their limitations\n\n30   What does the word 'scaffolding' in the sixth paragraph refer to?\nA   the factors which prevent a student from learning effectively\nB   the environment where most of a student's learning takes place\nC   the assistance given to a student in their initial stages of learning\nD   the setting of appropriate learning targets for a student's aptitude\n\nQuestions 31-35\nComplete the summary using the list of phrases, A-I, below.\nWrite the correct letter, A-I, in boxes 31-35 on your answer sheet.\n\nIs streaming effective?\n\nAccording to Professor John Hattie of the Melbourne Education Research Institute there is very little indication that streaming leads to 31 ………………… . He points out that, in schools which use streaming, the most significant impact is on those students placed in the 32 …………………, especially where a large proportion of them have 33 ………………… . Meanwhile, for the 34 …………………, there appears to be only minimal advantage. A further issue is that teachers tend to have 35 ………………… of students in streamed groups.\n\nA   wrong classes      B   lower expectations\nC   average learners     D   bottom sets\nE   brightest pupils      F   disadvantaged backgrounds\nG   weaker students     H   higher achievements\nI    positive impressions\n\nQuestions 36-40\nDo the following statements agree with the views of the writer in Reading Passage 3?\nIn boxes 36-40 on your answer sheet, write\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n\n36   The Vygotsky model of education supports the concept of a mixed-ability class.\n37   Some teachers are uncertain about allowing students to take on MKO roles in the classroom.\n38   It can be rewarding to teach knowledge which you have only recently acquired.\n39   The priority should be to ensure that the highest-achieving students attain their goals.\n40   Taking part in collaborative outdoor activities with teachers and classmates can improve student outcomes in the classroom.",
           "questionRanges": [
             {
               "start": 27,
+              "end": 30
+            },
+            {
+              "start": 31,
+              "end": 35
+            },
+            {
+              "start": 36,
               "end": 40
             }
           ],
@@ -2424,10 +2429,18 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "—————",
             "* Paleoclimatology – The study of past climates"
           ],
-          "questionSectionText": "Questions 27-40\n27. Wegener's ideas about continental drift were widely disputed while he was alive.\n28. The idea that the continents remained fixed in place was defended in\n29. Wegener relied on\n30. The similarities between Wegener's theory of continental drift and modern-day plate tectonics are enormous.\n31. is that although he proposed\n32. were limited to atmospheric physics. However, at the time he proposed his theory of continental drift in 1912, he was already\n33. . Six years previously, there had been his\n34. of 52 hours in\n35. of Greenland’s coast. With the publication of his textbook on thermodynamics, he had also come to the attention of a\n36. of German scientists.\n37. What is Mott T Greene doing in the fifth paragraph?\n38. What is said about Wegener in the sixth paragraph?\n39. What does Greene say about some other famous scientists?\n40. What is Greene's main point in the final paragraph?",
+          "questionSectionText": "Questions 27-30\nDo the following statements agree with the views of the writer in Reading Passage 3?\nIn boxes 27-30 on your answer sheet, write\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n\n27   Wegener’s ideas about continental drift were widely disputed while he was alive.\n28   The idea that the continents remained fixed in place was defended in several published works.\n29   Wegener relied on evidence from just one area of science to develop his theory.\n30   The similarities between Wegener’s theory of continental drift and modern-day plate tectonics are enormous.\n\nQuestions 31-36\nComplete each sentence with the correct ending, A-J, below.\nWrite the correct letter, A-J, in boxes 31-36 on your answer sheet.\n\n31   One interesting aspect of Greene’s background research\n32   Greene suggests that Wegener’s interests\n33   At the time he proposed his theory of continental drift, Wegener already had\n34   Wegener’s record-breaking achievement involved staying airborne for a period\n35   Wegener gained recognition from a small group of scientists through his involvement in\n36   Wegener’s textbook helped him become known to a\n\nA   modest fame\nB   vast range\nC   record-breaking achievement\nD   research methods\nE   select group\nF   professional interests\nG   scientific debate\nH   hazardous exploration\nI   biographer’s perspective\nJ   narrow investigation\n\nQuestions 37-40\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 37-40 on your answer sheet.\n\n37   What is Mott T Greene doing in the fifth paragraph?\n38   What is said about Wegener in the sixth paragraph?\n39   What does Greene say about some other famous scientists?\n40   What is Greene’s main point in the final paragraph?",
           "questionRanges": [
             {
               "start": 27,
+              "end": 30
+            },
+            {
+              "start": 31,
+              "end": 36
+            },
+            {
+              "start": 37,
               "end": 40
             }
           ],
@@ -2447,20 +2460,20 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "The idea that the continents remained fixed in place was defended in",
+              "prompt": "The idea that the continents remained fixed in place was defended in several published works.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
               ],
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
-              "answerType": "true-false-not-given",
+              "answerType": "yes-no-not-given",
               "exactPortion": "they remained fixed in place.",
               "explanationThai": "ข้อความในข้อว่า \"The idea that the continents remained fixed in place was defended in\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"they remained fixed in place.\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "continents remained fixed = remained = NOT GIVEN"
             },
             {
               "number": 29,
-              "prompt": "Wegener relied on",
+              "prompt": "Wegener relied on evidence from just one area of science to develop his theory.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -2486,10 +2499,10 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "is that although he proposed",
-              "correctAnswer": "i",
+              "prompt": "One interesting aspect of Greene's background research",
+              "correctAnswer": "I",
               "acceptedAnswers": [
-                "i"
+                "I"
               ],
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
               "answerType": "multiple-choice",
@@ -2499,7 +2512,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "were limited to atmospheric physics. However, at the time he proposed his theory of continental drift in 1912, he was already",
+              "prompt": "Greene suggests that Wegener's interests",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -2512,7 +2525,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "Six years previously, there had been his",
+              "prompt": "At the time he proposed his theory of continental drift, Wegener already had",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -2525,7 +2538,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "of 52 hours in",
+              "prompt": "Wegener's record-breaking achievement involved staying airborne for a period",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -2538,7 +2551,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "of Greenland’s coast. With the publication of his textbook on thermodynamics, he had also come to the attention of a",
+              "prompt": "Wegener gained recognition from a small group of scientists through his involvement in",
               "correctAnswer": "H",
               "acceptedAnswers": [
                 "H"
@@ -2551,7 +2564,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "of German scientists.",
+              "prompt": "Wegener's textbook helped him become known to a",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
