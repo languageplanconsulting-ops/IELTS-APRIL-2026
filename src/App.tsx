@@ -2862,7 +2862,7 @@ const createAdminReadingGeneratorPassage = (index: number): AdminReadingGenerato
   title: '',
   sourcePassage: '',
   newTopic: '',
-  category: index >= 2 ? 'advanced' : 'normal',
+  category: index >= 2 ? 'passage3' : 'normal',
   collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
   questionTypes:
     index === 0
@@ -3283,6 +3283,31 @@ Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษ
 
 Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ`
     }
+  ],
+  passage3: [
+    {
+      title: 'Passage 3 Reading Template',
+      category: 'passage3',
+      collectionTitle: DEFAULT_READING_COLLECTION_TITLE,
+      releaseAt: '',
+      rawPassageText: `READING PASSAGE 3
+PASTE PASSAGE 3 TITLE HERE
+
+PASTE THE FULL PASSAGE 3 TEXT HERE
+
+Questions 27-40
+PASTE THE ORIGINAL QUESTION BLOCK HERE`,
+      rawAnswerKey: `READING PASSAGE 3: PASTE PASSAGE 3 TITLE HERE
+Question 27: PASTE QUESTION 27 PROMPT HERE
+
+Correct Answer: TRUE / FALSE / NOT GIVEN / actual answer
+
+Exact Portion: "Paste the exact evidence from the passage here."
+
+Short Thai Explanation: อธิบายสั้น ๆ เป็นภาษาไทยที่ user เข้าใจได้
+
+Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ`
+    }
   ]
 }
 
@@ -3552,7 +3577,7 @@ const hasExplicitReadingCollection = (exam: Pick<ReadingExamRecord, 'collectionT
 const inferReadingCategoryFromSource = (value: string): ReadingBankCategory => {
   const text = String(value || '')
   const passageMatches = [...text.matchAll(/READING PASSAGE\s+(\d+)/gi)].map((match) => Number(match[1]))
-  if (passageMatches.includes(3) && !passageMatches.includes(1) && !passageMatches.includes(2)) return 'advanced'
+  if (passageMatches.includes(3) && !passageMatches.includes(1) && !passageMatches.includes(2)) return 'passage3'
   return 'normal'
 }
 

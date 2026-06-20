@@ -17,7 +17,7 @@ import {
   applyIntensiveQuestionSolutions
 } from './intensiveJourneyQuestionSolutions.ts'
 
-export type ReadingBankCategory = 'normal' | 'advanced' | 'general-training'
+export type ReadingBankCategory = 'normal' | 'passage3' | 'general-training'
 
 type ReadingQuestion = {
   number: number
