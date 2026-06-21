@@ -4,6 +4,7 @@ import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
 import { LandingPageDraft } from './admin/LandingPageDraft'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
+import ExamFeedPage from './ExamFeedPage'
 import { AdminVideoStudio } from './AdminVideoStudio'
 import {
   findNewFillBlankQuestion,
@@ -46,7 +47,6 @@ import {
   READING_FULL_TEST_LABEL,
   READING_FULL_TEST_LEAD,
   READING_FULL_TEST_DETAIL_TH,
-  READING_FULL_TEST_CATALOG_SUMMARY,
   READING_FULL_TEST_SPECS,
   FULL_READING_TESTS_PER_BOOK,
   buildReadingFullTestExam,
@@ -226,7 +226,7 @@ const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
   set.audioCacheKey || `listening-foundation-${set.id}`
 
 type Role = 'student' | 'admin' | 'trial'
-type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin'
+type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin' | 'examfeed'
 type AdminWorkspaceSection =
   | 'landing'
   | 'reading'
@@ -19768,17 +19768,6 @@ function App() {
     )
   }
 
-  const formatReadingAttemptDate = (attempt: ReadingAttemptSummary) => {
-    const date = new Date(attempt.completedAt)
-    if (Number.isNaN(date.getTime())) return 'Last attempt'
-    return date.toLocaleDateString(undefined, {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
-
   const renderListeningAnswerField = (question: ListeningQuestion) => {
     const value = listeningAnswers[question.number] || ''
     if (question.answerType === 'multiple-choice') {
@@ -19946,6 +19935,15 @@ function App() {
                   {isStudentNotebookLocked ? 'Notebook (Coming Soon)' : 'Notebook'}
                 </button>
               </>
+            )}
+            {authSession?.role === 'admin' && (
+              <button
+                className={activePage === 'examfeed' ? 'active' : ''}
+                onClick={() => setActivePage('examfeed')}
+                type="button"
+              >
+                ข้อสอบล่าสุด
+              </button>
             )}
             {authSession?.role === 'admin' && (
               <button
@@ -21223,75 +21221,112 @@ function App() {
 
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && readingEntryView === 'levels' && (
             <div className="readingEntryShell">
-              <div className="readingEntryChooser">
+              <div className="readingHubList">
                 <button
                   type="button"
-                  className="readingEntryCard readingEntryCard-generalTraining"
+                  className="readingHubRow"
                   style={{ '--motion-stagger': 0 } as CSSProperties}
+                  onClick={() => openReadingCategoryBank('normal')}
+                >
+                  <span className="readingHubIcon readingHubIcon-normal" aria-hidden="true">📖</span>
+                  <span className="readingHubText">
+                    <span className="readingHubTitleRow">
+                      <strong>การอ่านพื้นฐาน</strong>
+                      <span className="readingHubTone">พื้นฐาน</span>
+                    </span>
+                    <span className="readingHubSub">
+                      ระดับ Band 4–6.5 · เล่นเป็นด่าน ปลดล็อกด่านถัดไปที่ {READING_JOURNEY_UNLOCK_PERCENT}%+
+                    </span>
+                  </span>
+                  <span className="readingHubCount">
+                    {readingExamCountsByCategory.find((group) => group.category === 'normal')?.count || 0} ชุด
+                  </span>
+                  <span className="readingHubChevron" aria-hidden="true">›</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="readingHubRow"
+                  style={{ '--motion-stagger': 1 } as CSSProperties}
+                  onClick={() => openReadingCategoryBank('passage3')}
+                >
+                  <span className="readingHubIcon readingHubIcon-passage3" aria-hidden="true">🔥</span>
+                  <span className="readingHubText">
+                    <span className="readingHubTitleRow">
+                      <strong>Passage 3 · Band 7</strong>
+                      <span className="readingHubTone">ระดับยาก</span>
+                    </span>
+                    <span className="readingHubSub">ระดับ Band 7+ · บทความวิชาการที่ยากที่สุด</span>
+                  </span>
+                  <span className="readingHubCount">
+                    {readingExamCountsByCategory.find((group) => group.category === 'passage3')?.count || 0} ชุด
+                  </span>
+                  <span className="readingHubChevron" aria-hidden="true">›</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="readingHubRow"
+                  style={{ '--motion-stagger': 2 } as CSSProperties}
+                  onClick={openReadingFullTestBank}
+                >
+                  <span className="readingHubIcon readingHubIcon-fullTest" aria-hidden="true">📝</span>
+                  <span className="readingHubText">
+                    <span className="readingHubTitleRow">
+                      <strong>ข้อสอบเต็มชุด</strong>
+                      <span className="readingHubTone">สอบเต็ม</span>
+                    </span>
+                    <span className="readingHubSub">Cambridge · 3 passages · 40 ข้อ · จับเวลาเหมือนสอบจริง</span>
+                  </span>
+                  <span className="readingHubCount">{readingFullTestExams.length} ชุด</span>
+                  <span className="readingHubChevron" aria-hidden="true">›</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="readingHubRow"
+                  style={{ '--motion-stagger': 3 } as CSSProperties}
                   onClick={openGeneralTrainingReadingHub}
                 >
-                  <span className="readingEntryLabel">General Training</span>
-                  <strong>{GENERAL_TRAINING_READING_LABEL}</strong>
-                  <span className="readingEntrySubtitle">GT Reading · Section 1–3 · Full Test</span>
-                  <small>{GENERAL_TRAINING_READING_LEAD}</small>
-                  <span className="readingEntryCount">{generalTrainingFullTestExams.length} full tests · Sections 1–3</span>
+                  <span className="readingHubIcon readingHubIcon-gt" aria-hidden="true">🎓</span>
+                  <span className="readingHubText">
+                    <span className="readingHubTitleRow">
+                      <strong>General Training</strong>
+                      <span className="readingHubTone">GT</span>
+                    </span>
+                    <span className="readingHubSub">GT Reading · Section 1–3 · ข้อสอบเต็มชุด</span>
+                  </span>
+                  <span className="readingHubCount">{generalTrainingFullTestExams.length} ชุด</span>
+                  <span className="readingHubChevron" aria-hidden="true">›</span>
                 </button>
-                {READING_ENTRY_CHOICES.map((choice) => {
-                  const categoryCount = readingExamCountsByCategory.find((group) => group.category === choice.category)?.count || 0
-                  return (
-                    <button
-                      key={choice.category}
-                      type="button"
-                      className={`readingEntryCard readingEntryCard-${choice.category}`}
-                      style={
-                        {
-                          '--motion-stagger': choice.category === 'normal' ? 1 : 2
-                        } as CSSProperties
-                      }
-                      onClick={() => openReadingCategoryBank(choice.category)}
-                    >
-                      <span className="readingEntryLabel">{choice.tone}</span>
-                      <strong>{choice.title}</strong>
-                      <span className="readingEntrySubtitle">{choice.subtitle}</span>
-                      <small>
-                        {choice.category === 'normal'
-                          ? `${choice.detail} · Quest Log ด่านล่าด่าน · ปลดล็อก ${READING_JOURNEY_UNLOCK_PERCENT}%+`
-                          : choice.detail}
-                      </small>
-                      <span className="readingEntryCount">{categoryCount} exams</span>
-                    </button>
-                  )
-                })}
+
                 <button
                   type="button"
-                  className={`readingEntryCard readingEntryCard-monthly ${
-                    !isAdminUser ? 'readingEntryCard-locked' : ''
-                  }`.trim()}
+                  className={`readingHubRow readingHubRow-monthly ${!isAdminUser ? 'is-locked' : ''}`.trim()}
                   style={{ '--motion-stagger': 4 } as CSSProperties}
                   onClick={openReadingMonthlyBank}
                   disabled={!isAdminUser}
                   aria-disabled={!isAdminUser}
                   title={!isAdminUser ? 'ยังไม่เปิดให้ใช้งาน' : undefined}
                 >
-                  <span className="readingEntryLabel">{!isAdminUser ? '🔒 Monthly' : 'Monthly'}</span>
-                  <strong>Monthly Exams</strong>
-                  <span className="readingEntrySubtitle">ข้อสอบรายเดือน · Recent Exam</span>
-                  <small>{!isAdminUser ? 'ยังไม่เปิดให้ใช้งาน — เร็ว ๆ นี้' : READING_MONTHLY_EXAM_LEAD}</small>
-                  <span className="readingEntryCount">
-                    {!isAdminUser ? 'ล็อก' : `${monthlyReadingExams.length} exams`}
+                  <span className="readingHubIcon readingHubIcon-monthly" aria-hidden="true">📅</span>
+                  <span className="readingHubText">
+                    <span className="readingHubTitleRow">
+                      <strong>ข้อสอบรายเดือน</strong>
+                      <span className="readingHubTone">รายเดือน</span>
+                    </span>
+                    <span className="readingHubSub">
+                      {!isAdminUser
+                        ? 'ยังไม่เปิดให้ใช้งาน — เร็ว ๆ นี้'
+                        : 'ชุดใหม่ 4 ชุดทุกเดือน · แนวข้อสอบล่าสุด'}
+                    </span>
                   </span>
-                </button>
-                <button
-                  type="button"
-                  className="readingEntryCard readingEntryCard-fullTest"
-                  style={{ '--motion-stagger': 5 } as CSSProperties}
-                  onClick={openReadingFullTestBank}
-                >
-                  <span className="readingEntryLabel">Full Exam</span>
-                  <strong>{READING_FULL_TEST_LABEL}</strong>
-                  <span className="readingEntrySubtitle">Cambridge · สอบเต็ม 3 passages · 40 ข้อ</span>
-                  <small>{READING_FULL_TEST_LEAD}</small>
-                  <span className="readingEntryCount">{READING_FULL_TEST_CATALOG_SUMMARY}</span>
+                  {!isAdminUser ? (
+                    <span className="readingHubCount readingHubCount-lock">🔒 ล็อก</span>
+                  ) : (
+                    <span className="readingHubCount">{monthlyReadingExams.length} ชุด</span>
+                  )}
+                  <span className="readingHubChevron" aria-hidden="true">›</span>
                 </button>
               </div>
             </div>
@@ -21430,55 +21465,130 @@ function App() {
                     <p>ยังไม่มีชุด Monthly Reading ในระบบ — ชุดแรกจะเริ่ม January 2026 (4 ชุดต่อเดือน)</p>
                   </div>
                 ) : (
-                  <div className="readingStageBoard readingMonthBoard">
-                    {readingMonthGroups.map((group) => (
-                      <section key={`reading-month-all-${group.title}`} className="readingStagePanel readingMonthPanel">
-                        <div className="readingStageHeader">
-                          <div>
-                            <p className="sectionLabel">Monthly Reading</p>
-                            <h4>{group.displayTitle}</h4>
-                            <p>{group.exams.length} exams</p>
+                  <div className="readingIssueBoard">
+                    {readingMonthGroups.map((group, groupIndex) => {
+                      const isCurrent = groupIndex === 0
+                      const monthAttempts = group.exams
+                        .map((exam) => readingAttemptByExamId[exam.id])
+                        .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
+                      const takenCount = monthAttempts.length
+                      const avgAccuracy = takenCount
+                        ? Math.round(
+                            monthAttempts.reduce((sum, entry) => sum + (entry.accuracy || 0), 0) / takenCount
+                          )
+                        : null
+                      return (
+                        <section
+                          key={`reading-month-all-${group.title}`}
+                          className={`readingIssueMonth ${isCurrent ? 'is-current' : ''}`.trim()}
+                        >
+                          <div className="readingIssueMonthHeader">
+                            <p className="readingIssueMonthLabel">{group.displayTitle}</p>
+                            {isCurrent && <span className="readingIssuePill is-current">current</span>}
+                            <span className="readingIssueMonthMeta">
+                              {takenCount} of {group.exams.length} done
+                              {avgAccuracy !== null ? ` · avg ${avgAccuracy}%` : ''}
+                            </span>
                           </div>
-                        </div>
 
-                        <div className="readingStageExamGrid">
-                          {group.exams.map((exam, index) => {
-                            const attempt = readingAttemptByExamId[exam.id]
-                            const isPerfect = attempt?.accuracy === 100
-                            return (
-                              <article key={exam.id} className={`readingStageExamCard ${isPerfect ? 'is-perfect' : ''}`}>
-                                <div className="readingStageExamThumb">
-                                  <span>{attempt ? `${attempt.correctCount}/${attempt.totalQuestions}` : `ชุด ${index + 1}`}</span>
-                                  <small>{attempt ? `${attempt.accuracy}% ล่าสุด` : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
-                                </div>
-                                <div className="readingStageExamBody">
-                                  <p className="promptPill">{getReadingExamTypeSummary(exam)}</p>
-                                  <h5>{exam.title}</h5>
-                                  <p className="meta">
-                                    {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
-                                  </p>
-                                  {attempt && (
-                                    <p className="readingStageAttemptMeta">
-                                      Last attempt · {attempt.wrongCount} wrong · {formatReadingAttemptDate(attempt)}
+                          <div className={`readingIssueGrid ${isCurrent ? '' : 'is-compact'}`.trim()}>
+                            {group.exams.map((exam, index) => {
+                              const attempt = readingAttemptByExamId[exam.id]
+                              const pct = attempt ? attempt.accuracy : null
+                              const isPerfect = pct === 100
+                              const tier =
+                                pct === null ? 'todo' : pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low'
+
+                              if (!isCurrent) {
+                                return (
+                                  <article
+                                    key={exam.id}
+                                    className={`readingIssueCard is-compact tier-${tier} ${isPerfect ? 'is-perfect' : ''}`.trim()}
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() =>
+                                      attempt
+                                        ? openReadingReview(exam.id, 'report')
+                                        : startReadingExam(exam.id)
+                                    }
+                                    onKeyDown={(event) => {
+                                      if (event.key === 'Enter' || event.key === ' ') {
+                                        event.preventDefault()
+                                        attempt
+                                          ? openReadingReview(exam.id, 'report')
+                                          : startReadingExam(exam.id)
+                                      }
+                                    }}
+                                  >
+                                    <div className="readingIssueCompactTop">
+                                      <span className="readingIssueNum">{index + 1}</span>
+                                      {isPerfect && (
+                                        <span className="readingIssueStar" aria-hidden="true">★</span>
+                                      )}
+                                    </div>
+                                    <h5 className="readingIssueTitle">{exam.title}</h5>
+                                    <span className="readingIssueScore">
+                                      {pct !== null ? `${pct}%` : 'Start →'}
+                                    </span>
+                                  </article>
+                                )
+                              }
+
+                              return (
+                                <article
+                                  key={exam.id}
+                                  className={`readingIssueCard tier-${tier} ${attempt ? '' : 'is-todo'} ${isPerfect ? 'is-perfect' : ''}`
+                                    .replace(/\s+/g, ' ')
+                                    .trim()}
+                                >
+                                  <div className="readingIssueCardTop">
+                                    <span className="readingIssueNum">{index + 1}</span>
+                                    <div
+                                      className="readingIssueRing"
+                                      data-tier={tier}
+                                      style={{ '--ring-pct': pct ?? 0 } as CSSProperties}
+                                    >
+                                      <span>{pct !== null ? `${pct}%` : '—'}</span>
+                                    </div>
+                                  </div>
+                                  <div className="readingIssueCardBody">
+                                    <h5 className="readingIssueTitle">{exam.title}</h5>
+                                    <p className="readingIssueMeta">
+                                      {exam.parsedPayload?.passages?.length || 0} passages ·{' '}
+                                      {exam.parsedPayload?.questionCount || 0} questions
                                     </p>
-                                  )}
-                                </div>
-                                <div className="readingStageExamActions">
-                                  <button type="button" onClick={() => startReadingExam(exam.id)}>
-                                    {attempt ? 'Retry Exam' : 'Open Exam'}
-                                  </button>
-                                  {attempt && (
-                                    <button type="button" className="secondary" onClick={() => openReadingReview(exam.id, 'report')}>
-                                      ดู report
-                                    </button>
-                                  )}
-                                </div>
-                              </article>
-                            )
-                          })}
-                        </div>
-                      </section>
-                    ))}
+                                  </div>
+                                  <div className="readingIssueActions">
+                                    {attempt ? (
+                                      <>
+                                        <button type="button" onClick={() => startReadingExam(exam.id)}>
+                                          Retry
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="secondary"
+                                          onClick={() => openReadingReview(exam.id, 'report')}
+                                        >
+                                          Report
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        className="readingIssueStart"
+                                        onClick={() => startReadingExam(exam.id)}
+                                      >
+                                        Start exam
+                                      </button>
+                                    )}
+                                  </div>
+                                </article>
+                              )
+                            })}
+                          </div>
+                        </section>
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -23188,6 +23298,19 @@ function App() {
               <p>This section is not available on your account yet.</p>
               <button type="button" onClick={() => setActivePage('home')}>
                 Back Home
+              </button>
+            </div>
+          </section>
+        )
+      ) : activePage === 'examfeed' ? (
+        isAdminUser ? (
+          <ExamFeedPage onOpenCourse={() => setActivePage('home')} />
+        ) : (
+          <section className="panel full">
+            <div className="emptyState">
+              <h3>หน้านี้สำหรับแอดมินเท่านั้น</h3>
+              <button type="button" onClick={() => setActivePage('home')}>
+                กลับหน้าแรก
               </button>
             </div>
           </section>
