@@ -1205,7 +1205,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "edness being innate and other factors potentially making the difference, what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught even traits such as curiosity. Ac",
+              "exactPortion": "While the jury is out on giftedness being innate and other factors potentially making the difference, what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught even traits such as curiosity.",
               "explanationThai": "บทความใช้คำว่า \"J\" ตรงกับช่องว่างในข้อ (she got the greatest … from making ground-breaking discoveries) โดยอ้างอิงจาก \"edness being innate and other factors potentially making the difference,  what is cer…\"",
               "paraphrasedVocabulary": "greatest making ground-breaking = edness innate factors = J"
             },
@@ -1218,7 +1218,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "She was the only woman to win the Fields Medal the mathematical equivalent of a Nobel prize. I",
+              "exactPortion": "She was the only woman to win the Fields Medal the mathematical equivalent of a Nobel prize.",
               "explanationThai": "บทความใช้คำว่า \"I\" ตรงกับช่องว่างในข้อ (she was responsible for some extremely … mathematical studies) โดยอ้างอิงจาก \"She was the only woman to win the Fields Medal – the mathematical equivalent of a Nob…\"",
               "paraphrasedVocabulary": "responsible extremely mathematical = woman fields medal = I"
             },
@@ -1596,7 +1596,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "‘It’s not that we just want to restore the biodiversity of wetlands – which we do – but we recognise there’s a need to provide an income for local people.’ This approach is supported by IWMI.",
+              "exactPortion": "'It's not that we just want to restore the biodiversity of wetlands – which we do – but we recognise there's a need to provide an income for local people.' 'The idea is that people in a developing country will only protect wetlands if they value and profit from them,' says McCartney.",
               "explanationThai": "เนื้อหาในย่อหน้า G ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"‘It’s not that we just want to restore the biodiversity of wetlands – which we do – b…\") จึงตอบ G",
               "paraphrasedVocabulary": "need ensure inhabitants = restore biodiversity wetlands = G"
             },
@@ -2079,7 +2079,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "In Britain, as the average spring temperature has increased by roughly 0.5°C over the past 20 years, species have advanced by between three days and a week on average, to keep in line with cooler temperatures.",
+              "exactPortion": "5&deg;C over the past 20 years, species have advanced by between three days and a week on average, to keep in line with cooler temperatures.",
               "explanationThai": "บทความไม่ได้ให้ข้อมูลเพียงพอเกี่ยวกับประเด็นในข้อ (อ้างอิง: \"In Britain, as the average spring temperature has increased by roughly 0.5°C over the…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "species butterfly reduced = britain average spring = NOT GIVEN"
             },
@@ -2131,7 +2131,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 4 Passage 1",
               "answerType": "text",
-              "exactPortion": "In Britain, as the average spring temperature has increased by roughly 0.5°C over the past 20 years, species have advanced by between three days and a week on average, to keep in line with cooler temperatures.",
+              "exactPortion": "5&deg;C over the past 20 years, species have advanced by between three days and a week on average, to keep in line with cooler temperatures.",
               "explanationThai": "บทความบอกว่าบางตัวกลายเป็นผีเสื้อ early in spring คำว่า first appears at the start of จึงตอบ spring",
               "paraphrasedVocabulary": "start of = early in = spring = ต้นฤดูใบไม้ผลิ"
             },
@@ -2295,7 +2295,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
               ],
               "answerGroup": "Cambridge 19 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The authors say that knowledge of the deep seabed remains extremely limited.",
+              "exactPortion": "'Despite arising in the last half century, the \"new global gold rush\" of deep-sea mining shares many features with past resource scrambles -including a general disregard for environmental and social impacts, and the marginalisation of indigenous peoples and their rights,a paper, written by Julie Hunter and Julian Aguon, from Blue Ocean Law,and Pradeep Singh, from the Center for Marine Environmental Sciences, Bremen, argues, 'flic authors say that knowledge of the deep seabed remains extremely limited.'The surface of the Moon, Mars and even Venus have all been mapped and studied in much greater detail, leading marine scientists to commonly remark that, with respect to the deep sea, \"We don't yet know what we need to know\".",
               "explanationThai": "ย่อหน้า D บอกว่า global regulatory framework is not yet drafted ข้อความที่เกี่ยวกับ rules for exploration ชี้ไปที่ย่อหน้า D",
               "paraphrasedVocabulary": "yet to agree on rules = regulatory framework is not yet drafted = ยังไม่มีกรอบกฎหมาย"
             },

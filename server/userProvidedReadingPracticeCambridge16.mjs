@@ -400,7 +400,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Djoser is thought to have reigned for 19 years, but some historians and scholars attribute a much longer time for his rule, owing to the number and size of the monuments he built.\nDjoser’s grave goods, and even his body, were stolen at some point in the past and all archaeologists found were a small number of his valuables overlooked by the thieves.",
+              "exactPortion": "Djoser is thought to have reigned for 19 years, but some historians and scholars attribute a much longer time for his rule, owing to the number and size of the monuments he built.",
               "explanationThai": "คำถามถามว่า \"Which TWO of the following points does the writer make about King Djoser?\" ตัวเลือก D มีหลักฐานในบทความ (เช่น \"Djoser is thought to have reigned for 19 years, but some historians and scholars attribute a mu…\") จึงเลือก D เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "points djoser = djoser thought reigned historians = D"
             },
@@ -414,7 +414,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 1 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Djoser is thought to have reigned for 19 years, but some historians and scholars attribute a much longer time for his rule, owing to the number and size of the monuments he built.\nDjoser’s grave goods, and even his body, were stolen at some point in the past and all archaeologists found were a small number of his valuables overlooked by the thieves.",
+              "exactPortion": "Djoser is thought to have reigned for 19 years, but some historians and scholars attribute a much longer time for his rule, owing to the number and size of the monuments he built.",
               "explanationThai": "คำถามถามว่า \"Which TWO of the following points does the writer make about King Djoser?\" ตัวเลือก B มีหลักฐานในบทความ (เช่น \"Djoser is thought to have reigned for 19 years, but some historians and scholars attribute a mu…\") จึงเลือก B เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "points djoser = djoser thought reigned historians = B"
             }
@@ -589,7 +589,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "‘In many cases, they can outperform humans,’ says Pachidi. ‘Organisations are attracted to using algorithms because they want to make choices based on what they consider is “perfect information”, as well as to reduce costs and enhance productivity.’",
+              "exactPortion": "“In many cases, they can outperform humans,’ says Pachidi.’ “But these enhancements are not without consequences,’ says Pachidi.’ she asks.‘One way of learning about a job is “legitimate peripheral participation” - a novice stands next to experts and learns by observation.’ Another issue is the extent to which the technology influences or even controls the workforce.",
               "explanationThai": "คำถาม: \"There are several reasons why AI is appealing to businesses. … … …\" หลักฐานในบทความคือ \"‘In many cases, they can outperform humans,’ says Pachidi. ‘Organisations are attracted to usin…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "several reasons appealing = outperform humans pachidi organisations = A"
             },
@@ -602,7 +602,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "‘The promises of these new technologies are astounding. They deliver humankind the capacity to live in a way that nobody could have once imagined,’ he adds. ‘Just as the industrial revolution brought people past subsistence agriculture, and the corporate revolution enabled mass production, a third revolution has been pronounced. But it will not only be one of technology.’",
+              "exactPortion": "‘Just as the industrial revolution brought people past subsistence agriculture, and the corporate revolution enabled mass production, a third revolution has been pronounced.",
               "explanationThai": "คำถาม: \"AI's potential to transform people's lives has parallels with major cultural shifts which occurred in previous eras. … … …\" หลักฐานในบทความคือ \"‘The promises of these new technologies are astounding. They deliver humankind the capacity to …\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
               "paraphrasedVocabulary": "potential transform people's = promises technologies astounding deliver = C"
             },
@@ -615,7 +615,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "‘But these enhancements are not without consequences,’ says Pachidi. ‘If routine cognitive tasks are taken over by AI, how do professions develop their future experts?’ she asks.",
+              "exactPortion": "“In many cases, they can outperform humans,’ says Pachidi.’ “But these enhancements are not without consequences,’ says Pachidi.’ she asks.‘One way of learning about a job is “legitimate peripheral participation” - a novice stands next to experts and learns by observation.’ Another issue is the extent to which the technology influences or even controls the workforce.",
               "explanationThai": "คำถาม: \"It is important to be aware of the range of problems that AI causes. … … …\" หลักฐานในบทความคือ \"‘But these enhancements are not without consequences,’ says Pachidi. ‘If routine cognitive task…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "important aware range = enhancements without consequences pachidi = A"
             },
@@ -1721,7 +1721,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Business must have been good for hunters.\nthese recent discoveries show that plenty of goods travelled on overland routes, like the mountain passes of Oppland",
+              "exactPortion": "Although we usually think of ships when we think of Scandinavian expansion, these recent discoveries show that plenty of goods travelled on overland routes, like the mountain passes of Oppland.",
               "explanationThai": "คำถามถามว่า \"Which TWO of the following statements does the writer make about the Viking Age?\" ตัวเลือก C มีหลักฐานในบทความ (เช่น \"Business must have been good for hunters.\nthese recent discoveries show that plenty of goods t…\") จึงเลือก C เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "viking = business hunters recent discoveries = C"
             },
@@ -1735,7 +1735,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Business must have been good for hunters.\nthese recent discoveries show that plenty of goods travelled on overland routes, like the mountain passes of Oppland",
+              "exactPortion": "Although we usually think of ships when we think of Scandinavian expansion, these recent discoveries show that plenty of goods travelled on overland routes, like the mountain passes of Oppland.",
               "explanationThai": "คำถามถามว่า \"Which TWO of the following statements does the writer make about the Viking Age?\" ตัวเลือก A มีหลักฐานในบทความ (เช่น \"Business must have been good for hunters.\nthese recent discoveries show that plenty of goods t…\") จึงเลือก A เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "viking = business hunters recent discoveries = A"
             }
@@ -1794,7 +1794,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 3 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "An international team of scientists led by the University of Cambridge has discovered that the ‘thermometer’ molecule in plants enables them to develop according to seasonal temperature changes.",
+              "exactPortion": "discovered that the ‘thermometer’ molecule in plants enables them to develop according to seasonal temperature changes.",
               "explanationThai": "ข้อความในข้อว่า \"The Cambridge scientists' discovery of the 'thermometer molecule' caused surprise among other scientists.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"An international team of scientists led by the University of Cambridge has discovered that the …\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "cambridge scientists' discovery = international scientists university cambridge = NOT GIVEN"
             },
@@ -2190,7 +2190,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 4 Passage 1",
               "answerType": "text",
-              "exactPortion": "the 1.4-kilometer Cevlik tunnel in Turkey, built to divert the floodwater threatening the harbor of the ancient city of Seleuceia Pieria",
+              "exactPortion": "Most tunnels had inscriptions showing the names of patrons who ordered construction and sometimes the name of the architect.4-kilometer Cevlik tunnel in Turkey, built to divert the floodwater threatening the harbor of the ancient city of Seleuceia Pieria, had inscriptions on the entrance, still visible today, that also indicate that the tunnel was started in 69 CE and was completed in 81 CE.",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"What part of Seleuceia Pieria was the &Ccedil;evlik tunnel built to protect? … Questions 14-17 Choose the correct letter,\" บทความมีถ้อยคำที่ตรงกันคือ \"the 1.4-kilometer Cevlik tunnel in Turkey, built to divert the floodwater threatening the harbo…\" จึงคำตอบคือ \"harbour\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "pieria ccedil evlik = 4-kilometer cevlik tunnel turkey = harbour"
             }
@@ -2534,7 +2534,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Research suggests that allowing people some control over AI decision-making could also improve trust and enable AI to learn from human experience.",
+              "exactPortion": "F Research suggests that allowing people some control over AI decision-making could",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Research suggests that allowing people some control over AI decision-making could also improve …\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = research suggests allowing control = v"
             },
@@ -2625,7 +2625,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
               ],
               "answerGroup": "Cambridge 16 Test 4 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "Simply having previous experience with AI can significantly improve people’s opinions about the technology",
+              "exactPortion": "having previous experience with AI can significantly improve people’s opinions about the technology, as was found in the study mentioned above.",
               "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"Familiarity with AI has very little impact on people's attitudes to the technology.\" โดยเฉพาะจากข้อความ \"Simply having previous experience with AI can significantly improve people’s opinions about the…\" จึงตอบ NO",
               "paraphrasedVocabulary": "familiarity little impact = simply having previous experience = NO"
             },

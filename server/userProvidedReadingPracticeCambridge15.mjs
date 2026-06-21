@@ -486,7 +486,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "We are all explores. Our desire to discover, and then share that new-found knowledge, is part of what makes us human – indeed, this has played an important part in our success as a species.",
+              "exactPortion": "Our desire to discover, and then share that new-found knowledge, is part of what makes us human – indeed, this has played an important part in our success as a species.",
               "explanationThai": "คำถาม: \"The writer refers to visitors to New York to illustrate the point that\" หลักฐานในบทความคือ \"We are all explores. Our desire to discover, and then share that new-found knowledge, is part o…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "refers visitors illustrate = explores desire discover new-found = A"
             },
@@ -1186,7 +1186,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "older student took a turn at being teased by the others, involving the use of mildly insulting nicknames",
+              "exactPortion": "Over the course of three meetings, each student took a turn at being teased by the others, involving the use of mildly insulting nicknames.",
               "explanationThai": "คำถาม: \"Which of the following happened in the San Diego study?\" หลักฐานในบทความคือ \"older student took a turn at being teased by the others, involving the use of mildly insulting …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
               "paraphrasedVocabulary": "diego study = student teased others involving = B"
             },
@@ -1605,7 +1605,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The Desolenator operates as a mobile desalination unit that can take water from different places, such as the sea, rivers, boreholes and rain, and purify it for human consumption.",
+              "exactPortion": "B The Desolenator operates as a mobile desalination unit that can take water from",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The Desolenator operates as a mobile desalination unit that can take water from different place…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = desolenator operates mobile desalination = vi"
             },
@@ -1644,7 +1644,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The device is aimed at a wide variety of users - from homeowners in the developing world who do not have a constant supply of water to people living off the grid in rural parts of the US.",
+              "exactPortion": "world who do not have a constant supply of water to people living off the grid in rural parts of the US.",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The device is aimed at a wide variety of users – from homeowners in the developing world who do…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = device variety homeowners developing = iv"
             },
@@ -1696,7 +1696,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
-              "exactPortion": "Water enters through a pipe, and flows as a thin film between a sheet of double glazing and the surface of a solar panel",
+              "exactPortion": "Water | enters through a pipe, and flows as a thin film between a sheet of double glazing and the surface of a solar panel, where it is heated by the sun.",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of water flows over\" บทความมีถ้อยคำที่ตรงกันคือ \"Water enters through a pipe, and flows as a thin film between a sheet of double glazing and the…\" จึงคำตอบคือ \"film\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "water flows = enters between double glazing = film"
             },
@@ -1836,7 +1836,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "That hasn’t stopped anthropologists, folklorists* and other academics devising theories to explain the importance of fairy tales in human society",
+              "exactPortion": "That hasn’t stopped anthropologists, folklorists and other academics devising theories to explain the importance of fairy tales in human society.",
               "explanationThai": "คำถาม: \"Drop answer here … • Insights into the development of fairy tales\" หลักฐานในบทความคือ \"That hasn’t stopped anthropologists, folklorists* and other academics devising theories to expl…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
               "paraphrasedVocabulary": "insights development fairy = stopped anthropologists folklorists academics = F"
             },
@@ -2481,7 +2481,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Depending on the circumstances, a business may maximize the amount of money it makes, at least in the short term, by damaging the environment and hurting people",
+              "exactPortion": "Depending on the circumstances, a business may maximise the amount of money it makes, at least in the short term, by damaging the environment and hurting people.",
               "explanationThai": "คำถาม: \"Drop answer here … . Lack of\" หลักฐานในบทความคือ \"Depending on the circumstances, a business may maximize the amount of money it makes, at least …\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
               "paraphrasedVocabulary": "Drop answer here … . Lack of = Depending on the circumstances, a business may maximize the … = D"
             },
@@ -2572,7 +2572,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "But for five years the meat packers refused to follow these, claiming that they would be too expensive to obey. However, when a major fast-food company then made the same demands after customer purchases of its hamburgers plummeted, the meat industry complied within weeks.",
+              "exactPortion": "However, when a major fast-food company then made the same demands after customer purchases of its hamburgers plummeted, the meat industry complied within weeks.",
               "explanationThai": "คำถาม: \"What pressure was exerted by big business in the case of the disease BSE?\" หลักฐานในบทความคือ \"But for five years the meat packers refused to follow these, claiming that they would be too ex…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
               "paraphrasedVocabulary": "pressure exerted business = packers refused follow claiming = B"
             },
@@ -2624,7 +2624,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               ],
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "In the past, businesses have changed when the public came to expect and require different behavior",
+              "exactPortion": "In the past, businesses have changed when the public came to expect and require different behaviour, to reward businesses for behaviour that the public wanted, and to make things difficult for businesses practising behaviours that the public didn't want.",
               "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"The public have successfully influenced businesses in the past.\" โดยเฉพาะจากข้อความ \"In the past, businesses have changed when the public came to expect and require different behav…\" จึงตอบ YES",
               "paraphrasedVocabulary": "public successfully influenced = businesses changed public expect = YES"
             },

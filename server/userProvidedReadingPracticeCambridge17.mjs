@@ -1069,7 +1069,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 2 Passage 2",
               "answerType": "text",
-              "exactPortion": "‘Then we might try to domesticate plants that have never been domesticated.’ B Wild tomatoes, which are native to the Andes region in South America, produce pea-sized fruits.",
+              "exactPortion": "Wild tomatoes, which are native to the Andes region in South America, produce pea-sized fruits.",
               "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"By modifying one gene in a tomato plant, researchers made the tomato three times its original …\" บทความมีถ้อยคำที่ตรงกันคือ \"’Then we might try to domesticate plants that have never been domesticated.’ B Wild tomatoes, w…\" จึงคำตอบคือ \"size\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "tomato plant researchers = domesticate plants domesticated tomatoes = size"
             },
@@ -1587,7 +1587,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "That's a problem.' This has led to some radical questions among environmentalists, such as whether consumers should try to boycott palm oil entirely.",
+              "exactPortion": "This has led to some radical questions among environmentalists, such as whether consumers should try to boycott palm oil entirely.",
               "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (examples of a range of potential environmental advantages of oil palm tree cultivation) โดยเฉพาะประโยค \"That's a problem.' This has led to some radical questions among environmentalists, such as whet…\" จึงเลือก F",
               "paraphrasedVocabulary": "range potential environmental = that's problem radical questions = F"
             },
@@ -1600,7 +1600,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "That's a problem.' This has led to some radical questions among environmentalists, such as whether consumers should try to boycott palm oil entirely.",
+              "exactPortion": "This has led to some radical questions among environmentalists, such as whether consumers should try to boycott palm oil entirely.",
               "explanationThai": "ย่อหน้า G มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (description of an organisation which controls the environmental impact of palm oil production) โดยเฉพาะประโยค \"That's a problem.' This has led to some radical questions among environmentalists, such as whet…\" จึงเลือก G",
               "paraphrasedVocabulary": "organisation controls environmental = that's problem radical questions = G"
             },
@@ -1613,7 +1613,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Palmoil is an edible oil derived from the fruit of the African oil palm tree, and is currently the most consumed vegetable oil in the world.",
+              "exactPortion": "Palm oil is an edible oil derived from the fruit of the African oil palm tree, and is currently the most consumed vegetable oil in the world.",
               "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (examples of the widespread global use of palm oil) โดยเฉพาะประโยค \"Palmoil is an edible oil derived from the fruit of the African oil palm tree, and is currently …\" จึงเลือก A",
               "paraphrasedVocabulary": "widespread global palm = palmoil edible derived african = A"
             },
@@ -1652,7 +1652,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "le, it might actually sequester more carbon.' G. The industry is now regulated by a group called the Roundtable on Sustainable Palm Oil (RSPO), consisting of palm growers, retailers, product manufacturers, and other interested parti",
+              "exactPortion": "The industry is now regulated by a group called the Roundtable on Sustainable Palm Oil (RSPO), consisting of palm growers, retailers, product manufacturers, and other interested parties.",
               "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (an economic justification for not opposing the palm oil industry) โดยเฉพาะประโยค \"le, it might actually sequester more carbon.’ The industry is now regulated by a group called t…\" จึงเลือก E",
               "paraphrasedVocabulary": "economic justification opposing = actually sequester carbon industry = E"
             },
@@ -2263,7 +2263,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Overthe last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University’s Faculty of Economics.",
+              "exactPortion": "Over the last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University's Faculty of Economics.",
               "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Examples of the sources the database has been compiled from) โดยเฉพาะประโยค \"Overthe last decade, a huge database about the lives of southwest German villagers between 1600…\" จึงเลือก A",
               "paraphrasedVocabulary": "sources database compiled = overthe decade database southwest = A"
             },
@@ -2276,7 +2276,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "A Overthe last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University’s Faculty of Economics.",
+              "exactPortion": "Over the last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University's Faculty of Economics.",
               "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (An account of one individual's refusal to obey an order) โดยเฉพาะประโยค \"A Overthe last decade, a huge database about the lives of southwest German villagers between 16…\" จึงเลือก D",
               "paraphrasedVocabulary": "account individual's refusal = overthe decade database southwest = D"
             },
@@ -2315,7 +2315,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "text",
-              "exactPortion": "‘We can follow the same people — and their descendants — across 300 years of educational and economic change,’ she says.",
+              "exactPortion": "'We can follow the same people - and their descendants - across 300 years of educational and economic change,' she says.",
               "explanationThai": "ในข้อ: \"The database sheds light on the lives of individuals, as well as those of their ___\" หลักฐานในบทความคือ \"‘We can follow the same people — and their descendants — across 300 years of educational and ec…\" จึงตอบ descendants",
               "paraphrasedVocabulary": "database sheds light = follow across educational economic = descendants"
             },
@@ -2470,7 +2470,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Tothe uninitiated, blindfold chess seems to call for superhuman skill.",
+              "exactPortion": "To the uninitiated, blindfold chess seems to call for superhuman skill.",
               "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (a reference to earlier examples of blindfold chess) โดยเฉพาะประโยค \"Tothe uninitiated, blindfold chess seems to call for superhuman skill.\" จึงเลือก D",
               "paraphrasedVocabulary": "earlier examples blindfold = uninitiated blindfold superhuman = D"
             },
@@ -2479,13 +2479,13 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               "prompt": "an outline of what blindfold chess involves",
               "correctAnswer": "E",
               "acceptedAnswers": [
-                "A"
+                "E"
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "The nature of the game is to run through possible moves in the mind to see how they play out.",
               "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (an outline of what blindfold chess involves) โดยเฉพาะประโยค \"The nature of the game is to run through possible moves in the mind to see how they play out.\" ซึ่งอธิบายกระบวนการของการเล่นหมากรุกโดยไม่มองกระดาน จึงเลือก E",
-              "paraphrasedVocabulary": "outline blindfold chess = 28-year-old already stands rarefied = A"
+              "paraphrasedVocabulary": "outline blindfold chess = nature of the game run through possible moves in the mind = E"
             },
             {
               "number": 29,

@@ -146,7 +146,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "The equipment weighs little, can be installed on almost any flat surface and is cheap to buy: roughly €100 to €150 per square metre",
+              "exactPortion": "The equipment weighs little, can be installed on almost any flat surface and is cheap to buy: roughly &euro;100 to &euro;150 per square metre.",
               "explanationThai": "ข้อความในข้อว่า \"Some of the equipment used in aeroponic farming can be made by hand.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"The equipment weighs little, can be installed on almost any flat surface and is cheap to buy: r…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "hand = equipment weighs little installed = NOT GIVEN"
             },
@@ -512,7 +512,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
               "answerType": "section-matching",
-              "exactPortion": "Think about a busy day at an airport, says Moriba Jah: planes line up in the sky, landing and taking off close to one another in a carefully choreographed routine. Air-traffic controllers know the location of the planes down to one metre in accuracy. The same can’t be said for space debris.",
+              "exactPortion": "Think about a busy day at an airport, says Moriba Jah, an astrodynamicist at the University of Texas at Austin: planes line up in the sky, landing and taking off close to one another in a carefully choreographed routine.",
               "explanationThai": "คำถาม: \"a comparison between tracking objects in space and the efficiency of a transportation system\" ส่วน E เปรียบเทียบการติดตามดาวเทียมกับระบบจราจรทางอากาศ จึงตอบ E",
               "paraphrasedVocabulary": "transportation system = airport / tracking = air-traffic controllers → E"
             },
@@ -603,7 +603,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               ],
               "answerGroup": "Cambridge 18 Test 1 Passage 3",
               "answerType": "matching",
-              "exactPortion": "’I want to make space a place that is safe to operate, that is free and useful for generations to come.’ — Moriba Jah",
+              "exactPortion": "Jah describes himself as a space environmentalist: 'I want to make space a place that is safe to operate, that is free and useful for generations to come.' Until that happens, he argues, the space community will continue devolving into a tragedy in which all spaceflight operators are polluting a common resource.",
               "explanationThai": "ข้อ 37: Moriba Jah (D) ต้องการให้อวกาศเป็นที่ปลอดภัยและมีประโยชน์สำหรับรุ่นต่อๆ ไป จึงตอบ D",
               "paraphrasedVocabulary": "available to everyone = free / preserved for future = generations to come → D (Jah)"
             },
@@ -1129,7 +1129,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "The word ‘genius’ is universally associated with the name of Leonardo da Vinci. Five hundred years have passed since Leonardo died",
+              "exactPortion": "The word ‘genius’ is universally associated with the name of Leonardo da Vinci.",
               "explanationThai": "ข้อ 27: บทความไม่ได้กล่าวว่าคนเรียก Leonardo ว่า genius 500 ปีที่แล้ว จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "first referred 500 years ago = not stated in passage → NOT GIVEN"
             },
@@ -2166,7 +2166,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               ],
               "answerGroup": "Cambridge 18 Test 4 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "‘brown roofs’ which are wilder in nature and maximise biodiversity.\nThere are also combinations of green roofs with solar panels,",
+              "exactPortion": "There are also combinations of green roofs with solar panels, and 'brown roofs' which are wilder in nature and maximise biodiversity.",
               "explanationThai": "คำถามถามว่า \"Which TWO aims of new variations on the concept of green roofs are mentioned in Paragraph E of the passage?\" ตัวเลือก D มีหลักฐานในบทความ (เช่น \"‘brown roofs’ which are wilder in nature and maximise biodiversity.\nThere are also combination…\") จึงเลือก D เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "variations concept green = wilder nature maximise biodiversity = D"
             },
@@ -2180,7 +2180,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               ],
               "answerGroup": "Cambridge 18 Test 4 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "‘brown roofs’ which are wilder in nature and maximise biodiversity.\nThere are also combinations of green roofs with solar panels,",
+              "exactPortion": "There are also combinations of green roofs with solar panels, and 'brown roofs' which are wilder in nature and maximise biodiversity.",
               "explanationThai": "คำถามถามว่า \"Which TWO aims of new variations on the concept of green roofs are mentioned in Paragraph E of the passage?\" ตัวเลือก A มีหลักฐานในบทความ (เช่น \"‘brown roofs’ which are wilder in nature and maximise biodiversity.\nThere are also combination…\") จึงเลือก A เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "variations concept green = wilder nature maximise biodiversity = A"
             }

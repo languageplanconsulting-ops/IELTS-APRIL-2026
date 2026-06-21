@@ -769,7 +769,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 1",
               "answerType": "multiple-choice",
-              "exactPortion": "In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’ F. Nwanze, Murphy and Fan argued that private risk management tools, like private insuranc",
+              "exactPortion": "In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’",
               "explanationThai": "อุดหนุนไปหมดคนรวย ไม่ใช่คนจน ข้อความที่เกี่ยวกับ \"sixty percent of beneficiaries of subsidies are not poor\" ชี้ไปที่ตัวเลือก D มากที่สุด",
               "paraphrasedVocabulary": "financial assistance = subsidies = อุดหนุน"
             },
@@ -1255,7 +1255,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
+              "exactPortion": "According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
               "explanationThai": "ไม่ได้เปรียบเทียบพหุภาษา vs ภาษาเดียว บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "better at guessing = not compared"
             },
@@ -1294,7 +1294,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
+              "exactPortion": "According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
               "explanationThai": "ไม่ได้บอกว่าป่วยน้อยกว่า แค่อาการมาช้ากว่า บทความไม่ได้ให้ข้อมูลเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้ จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "fewer suffer = symptoms later (not fewer)"
             },
@@ -1333,7 +1333,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "The Benefits of Being Bilingual A According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
+              "exactPortion": "According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages.",
               "explanationThai": "กระบวนการเดา/รับรู้คำ ข้อความที่เกี่ยวกับ \"When we hear a word, we don't hear the entire word all at once\" ชี้ไปที่ตัวเลือก B มากที่สุด",
               "paraphrasedVocabulary": "identify words = guess what that word might be"
             },
@@ -1673,7 +1673,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "The Intersection of Health Sciences and Geography A. While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wo",
+              "exactPortion": "While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the world where certain health issues are more prevalent.",
               "explanationThai": "ผสานสองสาขา ข้อความที่เกี่ยวกับ \"combination of knowledge regarding geography and the study of health\" ชี้ไปที่ตัวเลือก D มากที่สุด",
               "paraphrasedVocabulary": "mixture = combination = สองสาขา"
             },
@@ -1699,7 +1699,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 2",
               "answerType": "text",
-              "exactPortion": "The Intersection of Health Sciences and Geography A. While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the wo",
+              "exactPortion": "While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the world where certain health issues are more prevalent.",
               "explanationThai": "โรคหายไปเพราะ improvements in vaccinations และการเข้าถึง healthcare คำว่า better … จึงตอบ vaccinations",
               "paraphrasedVocabulary": "better = improvements in = vaccinations"
             },
@@ -1932,7 +1932,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?",
+              "exactPortion": "Neuroscientist Jonah Lehrer considers the emotional power of music",
               "explanationThai": "จังหวะก่อนถึงจุดไฮไลต์ ข้อความที่เกี่ยวกับ \"most active around 15 seconds before the participants' favourite moments\" ชี้ไปที่ตัวเลือก A มากที่สุด",
               "paraphrasedVocabulary": "interesting = timing = A"
             },
@@ -1945,7 +1945,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
               ],
               "answerGroup": "Cambridge 12 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Music and the emotions Neuroscientist Jonah Lehrer considers the emotional power of music Why does music make us feel?",
+              "exactPortion": "Neuroscientist Jonah Lehrer considers the emotional power of music",
               "explanationThai": "สนับสนุนผล Montreal ข้อความที่เกี่ยวกับ \"offer support for the findings of the Montreal study\" ชี้ไปที่ตัวเลือก B มากที่สุด",
               "paraphrasedVocabulary": "refer = offer support = B"
             },

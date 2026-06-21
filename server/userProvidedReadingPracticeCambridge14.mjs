@@ -484,7 +484,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "This requires an understanding of what motivates employees at different levels of management and different stages of their careers (Enz and Siguaw, 2000). This implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention.",
+              "exactPortion": "This implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention.",
               "explanationThai": "คำถาม: \"Hotel managers need to know what would encourage good staff to remain. … … … … … …\" หลักฐานในบทความคือ \"This requires an understanding of what motivates employees at different levels of management an…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
               "paraphrasedVocabulary": "hotel managers encourage = requires understanding motivates employees = E"
             },
@@ -562,7 +562,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "yes-no-not-given",
-              "exactPortion": "While it seems likely that employees’ reactions to their job characteristics could be affected by a predisposition to view their work environment negatively, no evidence exists to support this hypothesis",
+              "exactPortion": "While it seems likely that employees' reactions to their job characteristics could be affected by a variety of situational and dispositional variables, Enz and Siguaw (2000) propose However, given the opportunity, many people will find something to complain about in relation to their workplace (Poulston, 2009).",
               "explanationThai": "มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"Research has shown that staff have\" โดยเฉพาะจากข้อความ \"While it seems likely that employees’ reactions to their job characteristics could be affected …\" จึงตอบ NO",
               "paraphrasedVocabulary": "research shown staff = likely employees reactions characteristics = NO"
             },
@@ -2286,7 +2286,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "it is perfectly possible for many species of animals living in zoos or wildlife parks to have a quality of life as high as, or higher than, in the wild. Animals in good zoos get a varied and high-quality diet with all the supplements required, and any illnesses they might have will be treated.",
+              "exactPortion": "Why zoos are good Animals in good zoos get a varied and high-quality diet with all the supplements required, and any illnesses they might have will be treated.",
               "explanationThai": "คำถาม: \"reasons why animals in zoos may by healthier than those in the wild … … … … … … Questions 18-22 Do the following statements agree …\" หลักฐานในบทความคือ \"it is perfectly possible for many species of animals living in zoos or wildlife parks to have a…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
               "paraphrasedVocabulary": "wild questions 18-22 = perfectly possible species animals = A"
             },
@@ -2365,7 +2365,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "send their animal keepers abroad\nMany zoos also work directly to educate conservation workers in other countries",
+              "exactPortion": "Many zoos also work directly to educate conservation workers in other countries, or send their animal keepers abroad to contribute their knowledge and skills to those working in zoos and reserves, thereby helping to improve conditions and reintroductions all over the world.",
               "explanationThai": "คำถาม: \"hich TWO of the following are stated about zoo staff in the text?\" หลักฐานในบทความคือ \"send their animal keepers abroad\nMany zoos also work directly to educate conservation workers …\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
               "paraphrasedVocabulary": "stated staff = animal keepers abroad directly = D"
             },
@@ -2379,7 +2379,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "send their animal keepers abroad\nMany zoos also work directly to educate conservation workers in other countries",
+              "exactPortion": "Many zoos also work directly to educate conservation workers in other countries, or send their animal keepers abroad to contribute their knowledge and skills to those working in zoos and reserves, thereby helping to improve conditions and reintroductions all over the world.",
               "explanationThai": "คำถาม: \"hich TWO of the following are stated about zoo staff in the text?\" หลักฐานในบทความคือ \"send their animal keepers abroad\nMany zoos also work directly to educate conservation workers …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
               "paraphrasedVocabulary": "stated staff = animal keepers abroad directly = B"
             },
@@ -2393,7 +2393,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "educating and informing the general population about these animals and their world so that they can assist or at least accept the need to be more environmentally conscious\nStill more only exist in the wild because they have been reintroduced from zoos, or have wild populations that have been boosted by captive bred animals",
+              "exactPortion": "They are vital not just in terms of protecting animals, but as a means of learning about them to aid those still in the wild, as well as educating and informing the general population about these animals and their world so that they can assist or at least accept the need to be more environmentally conscious.",
               "explanationThai": "คำถามถามว่า \"Which TWO of these beliefs about zoos does the writer mention in the text?\" ตัวเลือก E มีหลักฐานในบทความ (เช่น \"educating and informing the general population about these animals and their world so that they…\") จึงเลือก E เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "beliefs = educating informing general population = E"
             },
@@ -2407,7 +2407,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "educating and informing the general population about these animals and their world so that they can assist or at least accept the need to be more environmentally conscious\nStill more only exist in the wild because they have been reintroduced from zoos, or have wild populations that have been boosted by captive bred animals",
+              "exactPortion": "They are vital not just in terms of protecting animals, but as a means of learning about them to aid those still in the wild, as well as educating and informing the general population about these animals and their world so that they can assist or at least accept the need to be more environmentally conscious.",
               "explanationThai": "คำถามถามว่า \"Which TWO of these beliefs about zoos does the writer mention in the text?\" ตัวเลือก B มีหลักฐานในบทความ (เช่น \"educating and informing the general population about these animals and their world so that they…\") จึงเลือก B เป็นหนึ่งในสองคำตอบ",
               "paraphrasedVocabulary": "beliefs = educating informing general population = B"
             }
@@ -2487,7 +2487,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               ],
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "‘But the truth was that nobody had yet tested those perceived threats,’ Rochman says. ‘There wasn’t a lot of information.’",
+              "exactPortion": "'But the truth was that nobody had yet tested those perceived threats,' Rochman says.",
               "explanationThai": "ข้อความในข้อว่า \"The studies Rochman has reviewed have already proved that populations of some birds will soon become extinct.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"‘But the truth was that nobody had yet tested those perceived threats,’ Rochman says. ‘There wa…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
               "paraphrasedVocabulary": "reviewed already proved = nobody tested perceived threats = FALSE"
             },

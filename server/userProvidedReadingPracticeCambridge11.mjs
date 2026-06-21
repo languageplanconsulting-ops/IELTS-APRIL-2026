@@ -272,7 +272,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 1 Passage 2",
               "answerType": "true-false-not-given",
-              "exactPortion": "Numerous ideas were submitted for the project, including concepts ranging from rolling eggs to tilting tanks, from giant seesaws to overhead monorails. The eventual winner was a plan for the huge rotating steel boat lift which was to become The Falkirk Wheel.",
+              "exactPortion": "Numerous ideas were submitted for the project, including concepts ranging from rolling eggs to tilting tanks, from giant seesaws to overhead monorails.",
               "explanationThai": "ข้อความในข้อว่า \"There was some opposition to the design of the Falkirk Wheel at first.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Numerous ideas were submitted for the project, including concepts ranging from rolling eggs to …\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "opposition design falkirk = numerous submitted project including = NOT GIVEN"
             },
@@ -2478,7 +2478,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "In its own right it is a tool of extraordinary sophistication, yet based on an idea of ingenious simplicity",
+              "exactPortion": "extraordinary sophistication, yet based on an idea of ingenious simplicity: 'this marvellous invention of composing out of twenty-five or thirty sounds that infinite variety of expressions which, whilst having in themselves no likeness to what is in our mind, allow us to disclose to others its whole secret, and to make known to those who cannot penetrate it all that we imagine, and all the various stirrings of our soul'.",
               "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"In its own right it is a tool of extraordinary sophistication, yet based on an idea of ingeniou…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
               "paraphrasedVocabulary": "heading = extraordinary sophistication ingenious simplicity = iv"
             },
@@ -2543,7 +2543,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Other inventions - the wheel, agriculture, sliced bread - may have transformed our material existenc",
+              "exactPortion": "the wheel, agriculture, sliced bread - may have transformed our material existence, but the advent of language is what made us human.",
               "explanationThai": "คำถาม: \"Drop answer here … aspects of life, but no impact has been as\" หลักฐานในบทความคือ \"Other inventions -the wheel, agriculture, sliced bread – may have transformed our material exis…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
               "paraphrasedVocabulary": "aspects impact = inventions agriculture sliced transformed = E"
             },
@@ -2569,7 +2569,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
               ],
               "answerGroup": "Cambridge 11 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "In its own right it is a tool of extraordinary sophistication, yet based on an idea of ingenious simplicity",
+              "exactPortion": "extraordinary sophistication, yet based on an idea of ingenious simplicity: 'this marvellous invention of composing out of twenty-five or thirty sounds that infinite variety of expressions which, whilst having in themselves no likeness to what is in our mind, allow us to disclose to others its whole secret, and to make known to those who cannot penetrate it all that we imagine, and all the various stirrings of our soul'.",
               "explanationThai": "คำถาม: \"Drop answer here … , yet composed of just\" หลักฐานในบทความคือ \"In its own right it is a tool of extraordinary sophistication, yet based on an idea of ingeniou…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
               "paraphrasedVocabulary": "composed = extraordinary sophistication ingenious simplicity = B"
             },
