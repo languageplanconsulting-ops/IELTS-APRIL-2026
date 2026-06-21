@@ -191,6 +191,7 @@ import {
   sanitizeReadingPromptForDisplay as sanitizeReadingPromptForDisplayShared,
   sanitizeReadingQuestionSectionTextForDisplay as sanitizeReadingQuestionSectionTextShared
 } from './readingOcrCleanup'
+import { lookupReadingVocabBridge } from './readingPassage3VocabBridge'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -23074,6 +23075,7 @@ function App() {
                 {visibleReadingReportItems.map((item) => {
                   const vocabSupport = buildReadingVocabSupport(item, pickReadingPdoyQuestionClue(item))
                   const paraphraseEquation = buildReadingParaphraseEquation(item, vocabSupport)
+                  const vocabBridge = lookupReadingVocabBridge(item.answerGroup, item.number)
                   const reportPassage =
                     activeReadingPassages.find((passage) =>
                       passage.questions.some((question) => question.number === item.number)
@@ -23118,7 +23120,47 @@ function App() {
 
                       {/* Evidence / explanation */}
                       <div className="readingReportEvidence">
-                        {paraphraseEquation && (() => {
+                        {vocabBridge && (
+                          <div className="vbWrap">
+                            <p className="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
+                            <div className="vbGrid">
+                              <div className="vbHd vbHd-q">❓ ในโจทย์</div>
+                              <div className="vbHd vbHd-p">📖 ในบทความ</div>
+                              <div className="vbCell vbCell-q">
+                                <div className="vbEn">{vocabBridge.questionPhrase.en}</div>
+                                <div className="vbTh">{vocabBridge.questionPhrase.th}</div>
+                              </div>
+                              <div className="vbCell vbCell-p">
+                                <div className="vbEn">{vocabBridge.passagePhrase.en}</div>
+                                <div className="vbTh">{vocabBridge.passagePhrase.th}</div>
+                              </div>
+                            </div>
+                            {vocabBridge.keyVocab && (
+                              <>
+                                <p className="vbVocabLabel">คำศัพท์ที่ต้องรู้</p>
+                                <div className="vbVocabRow">
+                                  <span className="vbVocabWord">{vocabBridge.keyVocab.word}</span>
+                                  <span className="vbVocabEq">=</span>
+                                  <span className="vbVocabTh">{vocabBridge.keyVocab.th}</span>
+                                  {vocabBridge.keyVocab.contrastA && vocabBridge.keyVocab.contrastB && (
+                                    <>
+                                      <span className="vbVocabSep" />
+                                      <span className="vbVocabContrast">
+                                        {vocabBridge.keyVocab.contrastA}
+                                        <span className="vbVocabVs">VS</span>
+                                        {vocabBridge.keyVocab.contrastB}
+                                      </span>
+                                    </>
+                                  )}
+                                  {vocabBridge.keyVocab.note && (
+                                    <p className="vbVocabExplain">{vocabBridge.keyVocab.note}</p>
+                                  )}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+                        {!vocabBridge && paraphraseEquation && (() => {
                           const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
                           const hasMeaningfulBridge = isIntensive || Boolean(parseParaphraseBridge(item.paraphrasedVocabulary))
                           const isJudgement = isReadingJudgementQuestion(item)
@@ -23223,13 +23265,13 @@ function App() {
                             </div>
                           )
                         })()}
-                        {!paraphraseEquation && item.explanationThai && (
+                        {!vocabBridge && !paraphraseEquation && item.explanationThai && (
                           <p className="readingReportThaiExplanation">{item.explanationThai}</p>
                         )}
-                        {paraphraseEquation && item.explanationThai && !parseIntensiveExplanationEquation(item.explanationThai) && (
+                        {!vocabBridge && paraphraseEquation && item.explanationThai && !parseIntensiveExplanationEquation(item.explanationThai) && (
                           <p className="readingReportThaiExplanation">{item.explanationThai}</p>
                         )}
-                        {isNotGivenReport && (
+                        {!vocabBridge && isNotGivenReport && (
                           <p className="meta" style={{fontSize: '0.78rem', color: '#64748b', margin: 0}}>หมายเหตุ: ข้อนี้เกี่ยวข้องกับหัวข้อแต่บทความไม่ได้ระบุชัดเจน (NOT GIVEN)</p>
                         )}
                         <blockquote>{reportBlockquote}</blockquote>
@@ -23237,7 +23279,7 @@ function App() {
 
                       {/* Actions */}
                       <div className="readingParaphraseCard readingParaphraseCard-report">
-                        {!parseIntensiveExplanationEquation(item.explanationThai) && (item.paraphrasedVocabulary || vocabSupport?.meaning) && (
+                        {!vocabBridge && !parseIntensiveExplanationEquation(item.explanationThai) && (item.paraphrasedVocabulary || vocabSupport?.meaning) && (
                           <>
                             <p className="sectionLabel">คำ / วลีสำคัญ</p>
                             {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
