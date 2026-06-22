@@ -73,6 +73,9 @@ export type ListeningSectionExamConfig = {
   excerptDrill?: boolean
   /** Part 1 gap-fill: grade answers only — no script evidence highlight. */
   answerOnlyMode?: boolean
+  /** Show a "Show hint" button that reveals the audioscript evidence on demand
+   *  (reading-style hint) instead of requiring the learner to highlight it first. */
+  evidenceHintMode?: boolean
   /** Advanced Listening: evidence passes when highlight covers answer phrase + word before. */
   evidenceAnchorMode?: boolean
   /** Official Cambridge Part 1 notes form layout. */
@@ -228,7 +231,10 @@ export const foundationSetToExamConfig = (set: ListeningFoundationSet): Listenin
     audioUrl: set.audioUrl,
     passage,
     excerptDrill: isListeningExcerptDrillSet(set),
-    answerOnlyMode: set.category === 'part1-detail',
+    // Highlighting is no longer required to answer. Every set grades answers only;
+    // the former evidence-highlighting sets instead expose a reading-style "Show hint".
+    answerOnlyMode: true,
+    evidenceHintMode: set.category !== 'part1-detail',
     evidenceAnchorMode: set.category === 'advanced-listening',
     part1Form: formKey ? CAMBRIDGE_PART1_FORM_BY_TEST[formKey] : undefined,
     questions,

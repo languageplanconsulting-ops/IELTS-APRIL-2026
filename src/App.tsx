@@ -9729,6 +9729,9 @@ function App() {
       sectionNumber: activeListeningBuilderExamSet.sectionNumber,
       audioUrl: `https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam${activeListeningBuilderExamSet.bookNumber}-Test${activeListeningBuilderExamTest.testNumber}-Section${activeListeningBuilderExamSet.sectionNumber}.mp3`,
       passage: activeListeningBuilderExamTest.scriptParagraphs.join('\n\n'),
+      // Answer-only with a reading-style "Show hint" reveal instead of forced highlighting.
+      answerOnlyMode: true,
+      evidenceHintMode: true,
       questions,
       groups: buildListeningSectionExamGroups(questions)
     }

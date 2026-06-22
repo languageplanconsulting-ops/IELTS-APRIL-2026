@@ -237,8 +237,19 @@ export function ListeningSectionExamView({
   const [scriptCollapsed, setScriptCollapsed] = useState(false)
   const [evidenceTutorialOpen, setEvidenceTutorialOpen] = useState(false)
   const [evidenceTutorialStep, setEvidenceTutorialStep] = useState(0)
+  const [revealedHintIds, setRevealedHintIds] = useState<Set<string>>(() => new Set())
   const answerOnlyMode = Boolean(config.answerOnlyMode)
+  const evidenceHintMode = Boolean(config.evidenceHintMode)
   const evidenceAnchorMode = Boolean(config.evidenceAnchorMode)
+
+  const toggleQuestionHint = useCallback((questionId: string) => {
+    setRevealedHintIds((current) => {
+      const next = new Set(current)
+      if (next.has(questionId)) next.delete(questionId)
+      else next.add(questionId)
+      return next
+    })
+  }, [])
 
   const resolveListeningAnswerPhrase = useCallback((question: ListeningSectionExamQuestion) => {
     if (question.layout === 'gap-fill') {
@@ -934,6 +945,20 @@ export function ListeningSectionExamView({
         </div>
       </header>
 
+      {evidenceHintMode && examStage === 'answering' ? (
+        <div className="listeningSectionExamUnderstandingNote">
+          <span className="listeningSectionExamUnderstandingIcon" aria-hidden>💡</span>
+          <div>
+            <strong>ฝึก “ความเข้าใจ” ไม่ใช่แค่ “การฟัง”</strong>
+            <p>
+              นักเรียนส่วนใหญ่ไม่ได้มีปัญหาเรื่องการฟัง แต่มีปัญหาเรื่อง “ความเข้าใจ” —
+              แบบฝึกนี้ให้คุณทั้งฟังและอ่าน audioscript ไปพร้อมกัน และกด “ดู hint”
+              เพื่อดูจุดหลักฐานได้ เพื่อฝึก “ทักษะความเข้าใจ” ซึ่งจะช่วยให้การฟังของคุณดีขึ้นครับ
+            </p>
+          </div>
+        </div>
+      ) : null}
+
       <div className="listeningSectionExamLayout">
         <aside
           className={`listeningSectionExamScriptPane ${
@@ -993,7 +1018,9 @@ export function ListeningSectionExamView({
                 <p className="listeningSectionExamScriptHint">
                   {excerptDrill
                     ? 'Practice script: all study excerpts for this drill are shown below (condensed format).'
-                    : answerOnlyMode
+                    : evidenceHintMode
+                      ? 'ฟังแล้วตอบทางขวาได้เลย ไม่ต้องไฮไลต์เอง — ถ้าติด กด “ดู hint” ใต้คำถามเพื่อเฉลยจุดหลักฐานใน audioscript'
+                      : answerOnlyMode
                       ? 'Audioscript for reference while you listen. Fill each gap on the right — no highlighting needed.'
                       : evidenceAnchorMode
                         ? activeQuestion
@@ -1503,6 +1530,28 @@ export function ListeningSectionExamView({
             </span>
           ) : null}
         </div>
+        {evidenceHintMode && question.evidence ? (
+          <div className="listeningSectionExamHint">
+            <button
+              type="button"
+              className="listeningSectionExamHintToggle"
+              onClick={(event) => {
+                event.stopPropagation()
+                toggleQuestionHint(question.id)
+              }}
+            >
+              {revealedHintIds.has(question.id)
+                ? 'ซ่อน hint'
+                : '💡 ดู hint — เฉลยจุดหลักฐานใน audioscript'}
+            </button>
+            {revealedHintIds.has(question.id) ? (
+              <p className="listeningSectionExamHintText">
+                <span className="listeningSectionExamHintLabel">หลักฐานใน audioscript</span>
+                “{question.evidence}”
+              </p>
+            ) : null}
+          </div>
+        ) : null}
         {attempt.feedback ? (
           <p
             className={
