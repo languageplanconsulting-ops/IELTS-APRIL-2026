@@ -101,9 +101,40 @@ const normalizeOcrFillLine = (line: string, questionNumbers: Set<number>) => {
       (match, word: string) =>
         isLikelyOcrGarbageWord(word) ? `${questionNumber} …` : match
     )
+    // Any known fill number that is STILL not followed by a blank marker is an
+    // OCR-mangled blank where the dots were replaced by a short token / stray
+    // punctuation (e.g. "24 wuss »", "25 ccs:", "26 oo..."). Force a clean blank and
+    // swallow that short garbage so the summary reads cleanly for the learner.
+    result = result.replace(
+      new RegExp(
+        `\\b${questionNumber}\\b(?!\\s*(?:[.．…⋯·•_\\-–—]{2,}|…))` +
+          `\\s*[.．…⋯·•_\\-–—]*\\s*[a-z0-9]{0,8}\\s*[»:]?[.．…⋯·•_\\-–—]*`,
+        'i'
+      ),
+      `${questionNumber} ……………`
+    )
   }
 
   return result.replace(/\s+/g, ' ').trim()
+}
+
+/**
+ * A summary line that is mostly OCR noise (a long garbage token with almost no real
+ * words) — e.g. "24 : BOJDUJDOANMIKVINANGICHINEDXAG ere of a". Dropping these stops a
+ * stray question number inside them from rendering as a phantom duplicate blank.
+ */
+const isJunkFillContentLine = (line: string, _questionNumbers: Set<number>) => {
+  const stripped = String(line || '')
+    .replace(/\b\d+\b/g, ' ')
+    .replace(/[.．…⋯·•_\-–—»:|<>]+/g, ' ')
+    .trim()
+  if (!stripped) return false
+  const realWords = (stripped.match(/\b[a-z]{3,}\b/gi) || []).filter(
+    (word) => !isLikelyOcrGarbageWord(word)
+  )
+  const hasLongGarbage =
+    /[A-Za-z]{16,}/.test(stripped) || /[bcdfghjklmnpqrstvwxz]{6,}/i.test(stripped)
+  return hasLongGarbage && realWords.length < 3
 }
 
 const assignImplicitBlankNumbers = (
@@ -584,6 +615,7 @@ export const extractReadingFillDisplayLines = (
     .map((line) => line.trim())
     .filter(Boolean)
     .filter((line) => !isReadingFillBoilerplateLine(line))
+    .filter((line) => !isJunkFillContentLine(line, questionNumbers))
     .map((line) => normalizeOcrFillLine(line, questionNumbers))
 
   const contentLines = assignImplicitBlankNumbers(
