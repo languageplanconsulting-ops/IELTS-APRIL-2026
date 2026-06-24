@@ -6742,7 +6742,34 @@ function App() {
   const [readingAutosaveLabel, setReadingAutosaveLabel] = useState('')
   const [isSubmittingReading, setIsSubmittingReading] = useState(false)
   const [readingSubmitConfirmOpen, setReadingSubmitConfirmOpen] = useState(false)
-  const [readingSplitRatio, setReadingSplitRatio] = useState(0.5)
+  const [readingSplitRatio, setReadingSplitRatio] = useState(0.6)
+  const readReaderPref = (key: string, fallback: number) => {
+    if (typeof window === 'undefined') return fallback
+    const value = Number(window.localStorage.getItem(key))
+    return value >= 0.9 && value <= 1.6 ? value : fallback
+  }
+  const [readingFontScale, setReadingFontScale] = useState(() => readReaderPref('reading-font-scale', 1.08))
+  const [readingLineScale, setReadingLineScale] = useState(() => readReaderPref('reading-line-scale', 1.05))
+  const [readingSepia, setReadingSepia] = useState(
+    () => typeof window !== 'undefined' && window.localStorage.getItem('reading-sepia') === '1'
+  )
+  const adjustReadingFont = (delta: number) =>
+    setReadingFontScale((current) => {
+      const next = Math.min(1.5, Math.max(0.9, Math.round((current + delta) * 100) / 100))
+      if (typeof window !== 'undefined') window.localStorage.setItem('reading-font-scale', String(next))
+      return next
+    })
+  const cycleReadingLine = () =>
+    setReadingLineScale((current) => {
+      const next = current >= 1.3 ? 1.0 : Math.round((current + 0.15) * 100) / 100
+      if (typeof window !== 'undefined') window.localStorage.setItem('reading-line-scale', String(next))
+      return next
+    })
+  const toggleReadingSepia = () =>
+    setReadingSepia((current) => {
+      if (typeof window !== 'undefined') window.localStorage.setItem('reading-sepia', current ? '0' : '1')
+      return !current
+    })
   const readingSplitDragRef = useRef<{
     layout: HTMLElement
     startX: number
@@ -22551,8 +22578,48 @@ function App() {
               >
                 <section
                   key={readingActivePassageNumber}
-                  className="readingPassagePanel readingPassagePanel-exam"
+                  className={`readingPassagePanel readingPassagePanel-exam ${readingSepia ? 'is-sepia' : ''}`.trim()}
+                  style={{
+                    ['--reading-font-scale' as never]: readingFontScale,
+                    ['--reading-line-scale' as never]: readingLineScale
+                  }}
                 >
+                  <div className="readingReaderBar">
+                    <span className="readingReaderLabel">อ่านสบายตา</span>
+                    <button
+                      type="button"
+                      className="readingReaderBtn"
+                      onClick={() => adjustReadingFont(-0.07)}
+                      aria-label="ลดขนาดตัวอักษร"
+                    >
+                      A−
+                    </button>
+                    <button
+                      type="button"
+                      className="readingReaderBtn"
+                      onClick={() => adjustReadingFont(0.07)}
+                      aria-label="เพิ่มขนาดตัวอักษร"
+                    >
+                      A+
+                    </button>
+                    <button
+                      type="button"
+                      className="readingReaderBtn"
+                      onClick={cycleReadingLine}
+                      title="ปรับระยะบรรทัด"
+                      aria-label="ปรับระยะบรรทัด"
+                    >
+                      ↕ บรรทัด
+                    </button>
+                    <button
+                      type="button"
+                      className={`readingReaderBtn ${readingSepia ? 'is-on' : ''}`.trim()}
+                      onClick={toggleReadingSepia}
+                      aria-pressed={readingSepia}
+                    >
+                      ☼ Sepia
+                    </button>
+                  </div>
                   <div className="readingPassageHeader">
                     <div>
                       <p className="sectionLabel">Passage {activeReadingPassage.number}</p>
@@ -22701,7 +22768,7 @@ function App() {
                       // ignore
                     }
                   }}
-                  onDoubleClick={() => setReadingSplitRatio(0.5)}
+                  onDoubleClick={() => setReadingSplitRatio(0.6)}
                 />
 
                 <section

@@ -10226,6 +10226,59 @@ body,
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  font-size: calc(1.02rem * var(--reading-font-scale, 1));
+  line-height: calc(1.8 * var(--reading-line-scale, 1));
+}
+
+/* Reader controls: comfortable-reading toolbar above the passage */
+.readingReaderBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 0 10px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e4ebf6;
+}
+
+.readingReaderLabel {
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #5b6b86;
+  margin-right: 2px;
+}
+
+.readingReaderBtn {
+  min-height: 32px;
+  padding: 4px 12px !important;
+  border: 1px solid #cdd9eb !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #0f2e85 !important;
+  font-weight: 900 !important;
+  font-size: 0.82rem !important;
+  cursor: pointer;
+}
+
+.readingReaderBtn:hover {
+  background: #eef3ff !important;
+  border-color: #9fb4d6 !important;
+}
+
+.readingReaderBtn.is-on {
+  background: #0f2e85 !important;
+  color: #ffffff !important;
+  border-color: #0f2e85 !important;
+}
+
+/* Sepia eye-comfort mode */
+.readingPassagePanel-exam.is-sepia {
+  background: #f6efe0 !important;
+}
+
+.readingPassagePanel-exam.is-sepia .readingReaderBar {
+  border-bottom-color: #e6dcc4;
 }
 
 .readingPencilStage {
