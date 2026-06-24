@@ -12562,8 +12562,38 @@ body,
 }
 
 .readingUserMark {
-  background: #bfdbfe;
+  background: #fdf0a6;
   padding: 0 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.readingHighlightColorMenu {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #d6e0ef;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+  transform: translate(6px, 6px);
+}
+
+.readingHighlightColorSwatch {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.readingHighlightColorSwatch:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 3px rgba(15, 46, 133, 0.15);
 }
 
 .readingHintMark {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent, type ReactNode } from 'react'
 import './App.css'
 import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
@@ -6757,7 +6757,8 @@ function App() {
   )
   const [readingActivePassageNumber, setReadingActivePassageNumber] = useState(1)
   const [readingSelectionText, setReadingSelectionText] = useState('')
-  const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string }>>([])
+  const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string; color?: string }>>([])
+  const [readingHighlightMenu, setReadingHighlightMenu] = useState<{ x: number; y: number; text: string } | null>(null)
   const [readingSmartPencilMode, setReadingSmartPencilMode] = useState(false)
   const [readingPencilStrokes, setReadingPencilStrokes] = useState<Record<number, ReadingPencilStroke[]>>({})
   const [readingHintQuestionNumber, setReadingHintQuestionNumber] = useState<number | null>(null)
@@ -18383,6 +18384,13 @@ function App() {
     }))
   }
 
+  const READING_HIGHLIGHT_COLORS: Array<{ key: string; label: string; color: string }> = [
+    { key: 'yellow', label: 'เหลือง', color: '#fdf0a6' },
+    { key: 'green', label: 'เขียว', color: '#cdeccf' },
+    { key: 'pink', label: 'ชมพู', color: '#ffd9e6' }
+  ]
+  const READING_DEFAULT_HIGHLIGHT_COLOR = READING_HIGHLIGHT_COLORS[0].color
+
   const handleReadingSelection = () => {
     if (readingSmartPencilMode) return
     const selection = window.getSelection()
@@ -18390,28 +18398,62 @@ function App() {
     setReadingSelectionText(text)
   }
 
-  const addReadingHighlight = () => {
-    if (!activeReadingPassage || !readingSelectionText) return
+  // Right-click a text selection in the passage to open a small colour menu.
+  const handleReadingHighlightContextMenu = (event: ReactMouseEvent<HTMLElement>) => {
+    if (readingSmartPencilMode) return
+    const text = String(window.getSelection()?.toString() || '').trim()
+    if (!text) return
+    event.preventDefault()
+    setReadingHighlightMenu({ x: event.clientX, y: event.clientY, text })
+  }
+
+  const addReadingHighlight = (text: string, color: string) => {
+    const value = String(text || '').trim()
+    if (!activeReadingPassage || !value) return
     setReadingUserHighlights((current) => {
-      if (current.some((item) => item.passageNumber === activeReadingPassage.number && item.text === readingSelectionText)) {
-        return current
+      const existing = current.find(
+        (item) => item.passageNumber === activeReadingPassage.number && item.text === value
+      )
+      if (existing) {
+        // Re-colour an existing highlight instead of duplicating it.
+        return current.map((item) => (item === existing ? { ...item, color } : item))
       }
       return [
         ...current,
         {
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           passageNumber: activeReadingPassage.number,
-          text: readingSelectionText
+          text: value,
+          color
         }
       ]
     })
     setReadingSelectionText('')
+    setReadingHighlightMenu(null)
     window.getSelection()?.removeAllRanges()
   }
 
   const removeReadingHighlight = (highlightId: string) => {
     setReadingUserHighlights((current) => current.filter((item) => item.id !== highlightId))
   }
+
+  useEffect(() => {
+    if (!readingHighlightMenu) return undefined
+    const close = () => setReadingHighlightMenu(null)
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') close()
+    }
+    window.addEventListener('mousedown', close)
+    window.addEventListener('scroll', close, true)
+    window.addEventListener('resize', close)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('mousedown', close)
+      window.removeEventListener('scroll', close, true)
+      window.removeEventListener('resize', close)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [readingHighlightMenu])
 
   const renderPassageParagraphWithHighlights = (
     rawText: string,
@@ -18426,8 +18468,13 @@ function App() {
     const highlights = [
       ...readingUserHighlights
         .filter((item) => item.passageNumber === passageNumber)
-        .map((item) => ({ text: item.text, tone: 'user' as const })),
-      ...hintNeedles.map((item) => ({ text: item, tone: 'hint' as const }))
+        .map((item) => ({
+          text: item.text,
+          tone: 'user' as const,
+          id: item.id,
+          color: item.color || READING_DEFAULT_HIGHLIGHT_COLOR
+        })),
+      ...hintNeedles.map((item) => ({ text: item, tone: 'hint' as const, id: '', color: '' }))
     ].filter((item) => item.text.trim().length > 0)
 
     if (!highlights.length) return text
@@ -18437,12 +18484,25 @@ function App() {
     return parts.map((part, index) => {
       const found = highlights.find((item) => item.text.toLowerCase() === part.toLowerCase())
       if (!found) return <span key={`reading-text-${index}`}>{part}</span>
+      if (found.tone === 'user') {
+        return (
+          <mark
+            key={`reading-text-${index}`}
+            className="readingUserMark"
+            style={{ backgroundColor: found.color }}
+            title="คลิกเพื่อลบไฮไลต์"
+            onClick={() => removeReadingHighlight(found.id)}
+          >
+            {part}
+          </mark>
+        )
+      }
       return (
         <mark
           key={`reading-text-${index}`}
-          className={found.tone === 'hint' ? 'readingHintMark' : 'readingUserMark'}
+          className="readingHintMark"
           ref={(node) => {
-            if (found.tone === 'hint' && node && !readingHintMarkRef.current) {
+            if (node && !readingHintMarkRef.current) {
               readingHintMarkRef.current = node
             }
           }}
@@ -22510,8 +22570,8 @@ function App() {
                       {readingSmartPencilMode
                         ? 'Smart Pencil mode: draw highlights directly on the passage. The question panel stays active.'
                         : readingSelectionText
-                          ? `Selected: "${readingSelectionText}"`
-                          : 'Select any passage text to highlight it for yourself.'}
+                          ? 'คลิกขวาที่ข้อความที่เลือก แล้วเลือกสีไฮไลต์'
+                          : 'ไฮไลต์: ลากเลือกข้อความในบทความ แล้วคลิกขวาเพื่อเลือกสี · คลิกที่ไฮไลต์เพื่อลบ'}
                     </p>
                     <div className="controls">
                       <button
@@ -22525,14 +22585,6 @@ function App() {
                         }}
                       >
                         Smart Pencil
-                      </button>
-                      <button
-                        type="button"
-                        className="secondary"
-                        disabled={!readingSelectionText || readingSmartPencilMode}
-                        onClick={addReadingHighlight}
-                      >
-                        Highlight selection
                       </button>
                       {readingSmartPencilMode && (
                         <button
@@ -22552,27 +22604,10 @@ function App() {
                     </div>
                   </div>
 
-                  {readingUserHighlights.filter((item) => item.passageNumber === activeReadingPassage.number).length > 0 && (
-                    <div className="readingHighlightChipRow">
-                      {readingUserHighlights
-                        .filter((item) => item.passageNumber === activeReadingPassage.number)
-                        .map((highlight) => (
-                          <button
-                            key={highlight.id}
-                            type="button"
-                            className="readingHighlightChip"
-                            onClick={() => removeReadingHighlight(highlight.id)}
-                            title="Remove this highlight"
-                          >
-                            {highlight.text}
-                          </button>
-                      ))}
-                    </div>
-                  )}
-
                   <div
                     className={`readingPassageBody ${readingSmartPencilMode ? 'readingPassageBody-pencilMode' : ''}`.trim()}
                     onMouseUp={handleReadingSelection}
+                    onContextMenu={handleReadingHighlightContextMenu}
                   >
                     <div className="readingPencilStage" ref={readingPencilStageRef}>
                       {(() => {
@@ -22611,6 +22646,27 @@ function App() {
                     </div>
                   </div>
                 </section>
+
+                {readingHighlightMenu && (
+                  <div
+                    className="readingHighlightColorMenu"
+                    style={{ top: readingHighlightMenu.y, left: readingHighlightMenu.x }}
+                    role="menu"
+                    onMouseDown={(event) => event.stopPropagation()}
+                  >
+                    {READING_HIGHLIGHT_COLORS.map((option) => (
+                      <button
+                        key={option.key}
+                        type="button"
+                        className="readingHighlightColorSwatch"
+                        style={{ backgroundColor: option.color }}
+                        title={`ไฮไลต์สี${option.label}`}
+                        aria-label={`ไฮไลต์สี${option.label}`}
+                        onClick={() => addReadingHighlight(readingHighlightMenu.text, option.color)}
+                      />
+                    ))}
+                  </div>
+                )}
 
                 <button
                   type="button"
