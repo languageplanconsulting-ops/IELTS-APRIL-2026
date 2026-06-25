@@ -58,10 +58,14 @@ const defaultAttempt = (): QuestionAttempt => ({
 type ScriptDecoration = {
   start: number
   end: number
-  kind: 'correct' | 'wrong' | 'draft'
+  kind: 'correct' | 'wrong' | 'draft' | 'hint'
   questionId: string
   questionNumber: number
 }
+
+/** The exact answer phrase in the script (narrow), not the broad evidence span. */
+const listeningExactPortion = (question: ListeningSectionExamQuestion) =>
+  String(question.passageKeyword || '').trim() || String(question.evidence || '').trim()
 
 type LatestEvidenceSelection = {
   questionId: string
@@ -85,18 +89,32 @@ const formatListeningPlaybackTime = (seconds: number) => {
 const buildPassageDecorations = (
   passage: string,
   questions: ListeningSectionExamQuestion[],
-  attempts: Record<string, QuestionAttempt>
+  attempts: Record<string, QuestionAttempt>,
+  revealedHintIds?: Set<string>
 ): ScriptDecoration[] => {
   const lowerPassage = passage.toLowerCase()
   const decorations: ScriptDecoration[] = []
 
   for (const question of questions) {
     const attempt = attempts[question.id] || defaultAttempt()
-    const highlightText = attempt.completed
-      ? attempt.evidenceDraft || question.evidence
-      : attempt.evidenceStatus === 'wrong'
-        ? attempt.wrongEvidence || attempt.evidenceDraft
-        : attempt.evidenceDraft
+    // Completed / hint-reveal highlight only the EXACT answer phrase, not the broad
+    // evidence span (which also contains distractors).
+    const exact = listeningExactPortion(question)
+    let highlightText = ''
+    let kind: ScriptDecoration['kind'] = 'draft'
+    if (attempt.completed) {
+      highlightText = attempt.evidenceDraft || exact
+      kind = 'correct'
+    } else if (attempt.evidenceStatus === 'wrong') {
+      highlightText = attempt.wrongEvidence || attempt.evidenceDraft
+      kind = 'wrong'
+    } else if (revealedHintIds?.has(question.id)) {
+      highlightText = exact
+      kind = 'hint'
+    } else {
+      highlightText = attempt.evidenceDraft
+      kind = 'draft'
+    }
 
     if (!highlightText.trim()) continue
 
@@ -107,11 +125,7 @@ const buildPassageDecorations = (
       start,
       end: start + highlightText.length,
       questionId: question.id,
-      kind: attempt.completed
-        ? 'correct'
-        : attempt.evidenceStatus === 'wrong'
-          ? 'wrong'
-          : 'draft',
+      kind,
       questionNumber: question.number
     })
   }
@@ -145,14 +159,15 @@ const renderDecoratedPassage = (
         key={`${decoration.questionNumber}-${index}`}
         className={`listeningSectionExamEvidenceMark is-${decoration.kind}`}
         onContextMenu={
-          decoration.kind === 'correct' || !onHighlightContextMenu
+          decoration.kind === 'correct' || decoration.kind === 'hint' || !onHighlightContextMenu
             ? undefined
             : (event) => onHighlightContextMenu(event, decoration)
         }
       >
         {decoration.kind !== 'draft' ? (
           <span className="listeningSectionExamEvidenceBadge">
-            Q{decoration.questionNumber} {decoration.kind === 'correct' ? 'correct evidence' : 'wrong evidence'}
+            Q{decoration.questionNumber}{' '}
+            {decoration.kind === 'hint' ? 'hint' : decoration.kind === 'correct' ? 'correct evidence' : 'wrong evidence'}
           </span>
         ) : null}
         {slice}
@@ -322,8 +337,8 @@ export function ListeningSectionExamView({
   )
 
   const decorations = useMemo(
-    () => buildPassageDecorations(config.passage, config.questions, attempts),
-    [config.passage, config.questions, attempts]
+    () => buildPassageDecorations(config.passage, config.questions, attempts, revealedHintIds),
+    [config.passage, config.questions, attempts, revealedHintIds]
   )
 
   const completedCount = config.questions.filter((item) => attempts[item.id]?.completed).length
@@ -1546,8 +1561,8 @@ export function ListeningSectionExamView({
             </button>
             {revealedHintIds.has(question.id) ? (
               <p className="listeningSectionExamHintText">
-                <span className="listeningSectionExamHintLabel">หลักฐานใน audioscript</span>
-                “{question.evidence}”
+                <span className="listeningSectionExamHintLabel">จุดหลักฐานใน audioscript (ไฮไลต์ทางซ้าย)</span>
+                “{listeningExactPortion(question)}”
               </p>
             ) : null}
           </div>

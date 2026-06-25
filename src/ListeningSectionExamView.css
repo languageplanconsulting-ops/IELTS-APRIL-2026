@@ -396,6 +396,17 @@
   background: var(--lse-warn-bg);
 }
 
+.listeningSectionExamEvidenceMark.is-hint {
+  background: #fdf0a6;
+  box-shadow: inset 0 0 0 1px rgba(191, 139, 48, 0.4);
+  cursor: default;
+}
+
+.listeningSectionExamEvidenceMark.is-hint .listeningSectionExamEvidenceBadge {
+  background: #bf8b30;
+  color: #fff;
+}
+
 .listeningSectionExamHighlightMenu {
   position: fixed;
   z-index: 80;
