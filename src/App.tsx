@@ -4883,6 +4883,16 @@ const getReadingExamTypeSummary = (exam: ReadingExamRecord) => {
   return Array.from(labels).slice(0, 4).join(' · ') || 'IELTS Reading'
 }
 
+const getReadingTypeTagVariant = (raw: string): string => {
+  const t = raw.toLowerCase()
+  if (/yes\s*\/\s*no|yes\/no/.test(t)) return 'yn'
+  if (/true|false|not given/.test(t)) return 'tfng'
+  if (/match|heading/.test(t)) return 'match'
+  if (/multiple choice|mcq/.test(t)) return 'mc'
+  if (/fill|blank|complete|summary|sentence|note|table|diagram|flow/.test(t)) return 'fill'
+  return 'mc'
+}
+
 const isReadingNotGivenAnswer = (answer: string) => {
   const normalized = String(answer || '')
     .trim()
@@ -21945,7 +21955,20 @@ function App() {
                                 <small>{attempt ? 'คะแนนล่าสุด' : `${exam.parsedPayload?.questionCount || 0} ข้อ`}</small>
                               </div>
                               <div className="readingStageExamBody">
-                                <p className="promptPill">{exerciseMeta?.label || getReadingExamTypeSummary(exam)}</p>
+                                <div className="readingTypeTags">
+                                  {(exerciseMeta?.label || getReadingExamTypeSummary(exam))
+                                    .split('·')
+                                    .map((part) => part.trim())
+                                    .filter(Boolean)
+                                    .map((label) => (
+                                      <span
+                                        key={label}
+                                        className={`readingTypeTag is-${getReadingTypeTagVariant(label)}`}
+                                      >
+                                        {label}
+                                      </span>
+                                    ))}
+                                </div>
                                 <h5>{exam.title}</h5>
                                 <p className="meta">
                                   {exam.parsedPayload?.passages?.length || 0} passages · {exam.parsedPayload?.questionCount || 0} questions
