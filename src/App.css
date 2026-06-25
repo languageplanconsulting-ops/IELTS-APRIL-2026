@@ -13945,6 +13945,32 @@ body,
   gap: 14px;
 }
 
+.vbBrandTitle {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin: 0;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #eef2ff, #faf5ff);
+  border: 1px solid #c7d2fe;
+  color: #4338ca;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.vbBrandMark {
+  color: #c2410c;
+}
+
+.vbBrandTitle::before {
+  content: "✦";
+  color: #c2410c;
+  font-size: 0.8rem;
+  margin-right: 6px;
+}
+
 .vbLabel {
   font-size: 0.66rem;
   font-weight: 800;

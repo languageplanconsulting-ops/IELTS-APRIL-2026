@@ -23296,6 +23296,7 @@ function App() {
                       <div className="readingReportEvidence">
                         {vocabBridge && (
                           <div className="vbWrap">
+                            <p className="vbBrandTitle"><span className="vbBrandMark">พี่ดอย</span>สอน Vocab</p>
                             <p className="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
                             {vocabBridge.pairs && vocabBridge.pairs.length > 0 ? (
                               <ul className="vbPairList">
@@ -23371,6 +23372,7 @@ function App() {
                         )}
                         {!vocabBridge && item.pairs && item.pairs.length > 0 && (
                           <div className="vbWrap">
+                            <p className="vbBrandTitle"><span className="vbBrandMark">พี่ดอย</span>สอน Vocab</p>
                             <p className="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
                             <ul className="vbPairList">
                               <li className="vbPairHead">
