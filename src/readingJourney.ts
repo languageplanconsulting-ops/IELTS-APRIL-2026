@@ -16,6 +16,10 @@ import {
   INTENSIVE_SOLUTIONS_BY_STAGE,
   applyIntensiveQuestionSolutions
 } from './intensiveJourneyQuestionSolutions.ts'
+import {
+  INTENSIVE_VOCAB_PAIRS_BY_STAGE,
+  applyIntensiveVocabPairs
+} from './intensiveJourneyVocabPairs.ts'
 
 export type ReadingBankCategory = 'normal' | 'passage3' | 'general-training'
 
@@ -541,12 +545,14 @@ export const buildIntensiveJourneyExam = (stageNumber: number): ReadingExamRecor
         const slot = (index + 1) as 1 | 2
         const passage = buildIntensivePassage(slot, layout)
         applyIntensiveQuestionSolutions(passage, INTENSIVE_SOLUTIONS_BY_STAGE[stageNumber]?.[slot])
+        applyIntensiveVocabPairs(passage, INTENSIVE_VOCAB_PAIRS_BY_STAGE[stageNumber]?.[slot])
         return remapPassageForSlot(passage, slot, starts[slot - 1] - 1)
       })
     : legacyPair!.map((input, index) => {
         const slot = (index + 1) as 1 | 2
         const passage = makeCustomJourneyPassage(slot, input)
         applyIntensiveQuestionSolutions(passage, INTENSIVE_SOLUTIONS_BY_STAGE[stageNumber]?.[slot])
+        applyIntensiveVocabPairs(passage, INTENSIVE_VOCAB_PAIRS_BY_STAGE[stageNumber]?.[slot])
         return remapPassageForSlot(passage, slot, starts[slot - 1] - 1)
       })
 

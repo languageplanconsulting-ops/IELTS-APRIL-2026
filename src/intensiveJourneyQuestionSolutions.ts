@@ -1,7 +1,11 @@
+import type { ReadingVocabBridgePair } from './readingPassage3VocabBridge.ts'
+
 export type IntensiveQuestionSolution = {
   passageKeyword: string
   questionKeyword: string
   thaiMeaning: string
+  /** Word-level paraphrase pairs (โจทย์ term = บทความ term + Thai), rendered in the report card. */
+  pairs?: ReadingVocabBridgePair[]
 }
 
 /** Local question numbers before journey remap. Stages 1–10: P1 1–14, P2 1–13. */
@@ -30,7 +34,7 @@ export const INTENSIVE_SOLUTIONS_BY_STAGE = mergeStageSolutions(
 )
 
 export const applyIntensiveQuestionSolutions = (
-  passage: { questions: Array<{ number: number; paraphrasedVocabulary: string; explanationThai: string }> },
+  passage: { questions: Array<{ number: number; paraphrasedVocabulary: string; explanationThai: string; pairs?: ReadingVocabBridgePair[] }> },
   solutions: Record<number, IntensiveQuestionSolution> | undefined
 ) => {
   if (!solutions) return
@@ -39,5 +43,6 @@ export const applyIntensiveQuestionSolutions = (
     if (!solution) continue
     question.paraphrasedVocabulary = `${solution.passageKeyword} = ${solution.questionKeyword}`
     question.explanationThai = `${solution.passageKeyword} = ${solution.questionKeyword} = ${solution.thaiMeaning}`
+    if (solution.pairs && solution.pairs.length) question.pairs = solution.pairs
   }
 }

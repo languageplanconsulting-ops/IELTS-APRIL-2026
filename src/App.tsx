@@ -191,7 +191,7 @@ import {
   sanitizeReadingPromptForDisplay as sanitizeReadingPromptForDisplayShared,
   sanitizeReadingQuestionSectionTextForDisplay as sanitizeReadingQuestionSectionTextShared
 } from './readingOcrCleanup'
-import { lookupReadingVocabBridge } from './readingPassage3VocabBridge'
+import { lookupReadingVocabBridge, type ReadingVocabBridgePair } from './readingPassage3VocabBridge'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -259,6 +259,8 @@ type ReadingQuestion = {
   exactPortion: string
   explanationThai: string
   paraphrasedVocabulary: string
+  /** Word-level paraphrase pairs (Normal Reading) — same shape as the vocab-bridge pairs. */
+  pairs?: ReadingVocabBridgePair[]
 }
 
 type ReadingPencilPoint = {
@@ -17689,6 +17691,29 @@ function App() {
     })
   }
 
+  // Dedicated vocab notebook fed by the per-pair save buttons in the reading
+  // report card. Lands in a "พี่ดอยสอน Vocab" tab so paraphrase pairs collect
+  // in one curated word list separate from the per-question #reading saves.
+  const PDOY_VOCAB_SECTION = 'พี่ดอยสอน Vocab'
+  const saveVocabPairToNotebook = (
+    pair: ReadingVocabBridgePair,
+    context: { questionNumber: number; answerGroup: string }
+  ) => {
+    if (!customSectionsRef.current.includes(PDOY_VOCAB_SECTION)) {
+      setCustomSections((current) =>
+        current.includes(PDOY_VOCAB_SECTION) ? current : [...current, PDOY_VOCAB_SECTION]
+      )
+    }
+    handlePracticeSaveToNotebook({
+      criterion: `${context.answerGroup} · Q${context.questionNumber}`,
+      quote: `${pair.q}  =  ${pair.p}`,
+      fix: pair.note || pair.p,
+      thaiMeaning: pair.th,
+      preferredSection: PDOY_VOCAB_SECTION,
+      successNotice: 'บันทึกลง พี่ดอยสอน Vocab แล้ว'
+    })
+  }
+
   const openWritingLanding = () => {
     setActivePage('writing')
   }
@@ -23272,18 +23297,53 @@ function App() {
                         {vocabBridge && (
                           <div className="vbWrap">
                             <p className="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
-                            <div className="vbGrid">
-                              <div className="vbHd vbHd-q">❓ ในโจทย์</div>
-                              <div className="vbHd vbHd-p">📖 ในบทความ</div>
-                              <div className="vbCell vbCell-q">
-                                <div className="vbEn">{vocabBridge.questionPhrase.en}</div>
-                                <div className="vbTh">{vocabBridge.questionPhrase.th}</div>
+                            {vocabBridge.pairs && vocabBridge.pairs.length > 0 ? (
+                              <ul className="vbPairList">
+                                <li className="vbPairHead">
+                                  <span className="vbPairHd vbPairHd-q">❓ ในโจทย์</span>
+                                  <span className="vbPairHd vbPairHd-eq" />
+                                  <span className="vbPairHd vbPairHd-p">📖 ในบทความ</span>
+                                  <span className="vbPairHd vbPairHd-save" />
+                                </li>
+                                {vocabBridge.pairs.map((pair, pairIdx) => (
+                                  <li key={`vbpair-${item.number}-${pairIdx}`} className="vbPairRow">
+                                    <div className="vbPairMain">
+                                      <span className="vbPairQ">{pair.q}</span>
+                                      <span className="vbPairEq">=</span>
+                                      <span className="vbPairP">{pair.p}</span>
+                                      <button
+                                        type="button"
+                                        className="vbPairSave"
+                                        title="บันทึกคู่ศัพท์นี้ลง พี่ดอยสอน Vocab"
+                                        onClick={() =>
+                                          saveVocabPairToNotebook(pair, {
+                                            questionNumber: item.number,
+                                            answerGroup: item.answerGroup || 'Reading'
+                                          })
+                                        }
+                                      >
+                                        ＋ บันทึกศัพท์
+                                      </button>
+                                    </div>
+                                    <div className="vbPairTh">{pair.th}</div>
+                                    {pair.note && <div className="vbPairNote">{pair.note}</div>}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <div className="vbGrid">
+                                <div className="vbHd vbHd-q">❓ ในโจทย์</div>
+                                <div className="vbHd vbHd-p">📖 ในบทความ</div>
+                                <div className="vbCell vbCell-q">
+                                  <div className="vbEn">{vocabBridge.questionPhrase.en}</div>
+                                  <div className="vbTh">{vocabBridge.questionPhrase.th}</div>
+                                </div>
+                                <div className="vbCell vbCell-p">
+                                  <div className="vbEn">{vocabBridge.passagePhrase.en}</div>
+                                  <div className="vbTh">{vocabBridge.passagePhrase.th}</div>
+                                </div>
                               </div>
-                              <div className="vbCell vbCell-p">
-                                <div className="vbEn">{vocabBridge.passagePhrase.en}</div>
-                                <div className="vbTh">{vocabBridge.passagePhrase.th}</div>
-                              </div>
-                            </div>
+                            )}
                             {vocabBridge.keyVocab && (
                               <>
                                 <p className="vbVocabLabel">คำศัพท์ที่ต้องรู้</p>
@@ -23309,7 +23369,44 @@ function App() {
                             )}
                           </div>
                         )}
-                        {!vocabBridge && paraphraseEquation && (() => {
+                        {!vocabBridge && item.pairs && item.pairs.length > 0 && (
+                          <div className="vbWrap">
+                            <p className="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
+                            <ul className="vbPairList">
+                              <li className="vbPairHead">
+                                <span className="vbPairHd vbPairHd-q">❓ ในโจทย์</span>
+                                <span className="vbPairHd vbPairHd-eq" />
+                                <span className="vbPairHd vbPairHd-p">📖 ในบทความ</span>
+                                <span className="vbPairHd vbPairHd-save" />
+                              </li>
+                              {item.pairs.map((pair, pairIdx) => (
+                                <li key={`vbpair-normal-${item.number}-${pairIdx}`} className="vbPairRow">
+                                  <div className="vbPairMain">
+                                    <span className="vbPairQ">{pair.q}</span>
+                                    <span className="vbPairEq">=</span>
+                                    <span className="vbPairP">{pair.p}</span>
+                                    <button
+                                      type="button"
+                                      className="vbPairSave"
+                                      title="บันทึกคู่ศัพท์นี้ลง พี่ดอยสอน Vocab"
+                                      onClick={() =>
+                                        saveVocabPairToNotebook(pair, {
+                                          questionNumber: item.number,
+                                          answerGroup: activeReadingExam?.title || item.answerGroup || 'Normal Reading'
+                                        })
+                                      }
+                                    >
+                                      ＋ บันทึกศัพท์
+                                    </button>
+                                  </div>
+                                  <div className="vbPairTh">{pair.th}</div>
+                                  {pair.note && <div className="vbPairNote">{pair.note}</div>}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {!vocabBridge && !(item.pairs && item.pairs.length > 0) && paraphraseEquation && (() => {
                           const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
                           const hasMeaningfulBridge = isIntensive || Boolean(parseParaphraseBridge(item.paraphrasedVocabulary))
                           const isJudgement = isReadingJudgementQuestion(item)

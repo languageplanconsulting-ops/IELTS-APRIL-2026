@@ -1,0 +1,28 @@
+// Combined Normal-Reading word-level paraphrase pairs across all ด่าน ranges,
+// keyed by stage -> slot (1|2) -> local question number (pre-journey-remap).
+// Attached onto report questions by buildIntensiveJourneyExam via applyIntensiveVocabPairs.
+import type { ReadingVocabBridgePair } from './readingPassage3VocabBridge.ts'
+import { INTENSIVE_PAIRS_STAGE_1_5 } from './intensiveJourneyVocabPairs1to5.ts'
+import { INTENSIVE_PAIRS_STAGE_6_15 } from './intensiveJourneyVocabPairs6to15.ts'
+import { INTENSIVE_PAIRS_STAGE_16_20 } from './intensiveJourneyVocabPairs16to20.ts'
+
+type SlotNumberPairs = Record<number, ReadingVocabBridgePair[]>
+type StagePairs = Record<1 | 2, SlotNumberPairs>
+
+export const INTENSIVE_VOCAB_PAIRS_BY_STAGE: Record<number, StagePairs> = {
+  ...INTENSIVE_PAIRS_STAGE_1_5,
+  ...INTENSIVE_PAIRS_STAGE_6_15,
+  ...INTENSIVE_PAIRS_STAGE_16_20
+}
+
+/** Attach the word-level pairs (if any) for one passage slot onto its questions, by local number. */
+export const applyIntensiveVocabPairs = (
+  passage: { questions: Array<{ number: number; pairs?: ReadingVocabBridgePair[] }> },
+  slotPairs: SlotNumberPairs | undefined
+) => {
+  if (!slotPairs) return
+  for (const question of passage.questions) {
+    const pairs = slotPairs[question.number]
+    if (pairs && pairs.length) question.pairs = pairs
+  }
+}

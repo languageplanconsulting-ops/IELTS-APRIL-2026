@@ -40,3 +40,12 @@ design-preview.html
 public/header-fix.html
 public/reading-minimal.html
 public/vocab-layout-proposals.html
+
+# Vocab-pairs pipeline scratch (regenerated on demand)
+scripts/.passage3-extract/
+scripts/.passage3-pairs/
+scripts/.passage3-bridges/
+scripts/.intensive1to5/
+scripts/.intensive1to5-pairs/
+scripts/.intensive6to20/
+scripts/.intensive6to20-pairs/
