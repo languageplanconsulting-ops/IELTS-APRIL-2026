@@ -13618,14 +13618,32 @@ body,
 }
 
 .readingFillLine-flowing {
-  margin: 0;
-  text-align: justify;
-  text-justify: inter-word;
+  margin: 0 0 6px;
+  text-align: left;
   hyphens: auto;
 }
 
 .readingFillLine-flowing > span {
   display: inline;
+}
+
+/* Bullet item on its own line within a flowing note-completion block, with a
+   hanging marker so multi-line items stay easy to follow. */
+.readingFillFlowBullet {
+  position: relative;
+  margin: 8px 0;
+  padding-left: 22px;
+  text-align: left;
+  line-height: 2.05;
+}
+
+.readingFillFlowBullet::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  color: #2563eb;
+  font-weight: 800;
 }
 
 .readingFillLine {

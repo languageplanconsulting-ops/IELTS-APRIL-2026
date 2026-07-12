@@ -19179,14 +19179,37 @@ function App() {
                       </p>
                     )
                   }
-                  // Flowing paragraph: render all lines' segments end-to-end.
-                  return (
-                    <p
-                      key={`${group.id}-flow-para-${chunkIndex}`}
-                      className="readingFillLine readingFillLine-flowing"
-                    >
-                      {chunk.lines.map((line, lineIdx) => (
-                        <span key={`flow-line-${lineIdx}`}>
+                  // Flowing paragraph: render lines end-to-end, but break each
+                  // bullet line onto its own line so bullet items are easy to
+                  // follow instead of being merged into one justified block.
+                  const isBulletFlowLine = (line: typeof group.displayLines[number]) => {
+                    const first = line.segments.find(
+                      (segment) => segment.kind === 'text' || segment.kind === 'blank'
+                    )
+                    const lead =
+                      first?.kind === 'text'
+                        ? first.text
+                        : first?.kind === 'blank'
+                          ? first.before
+                          : ''
+                    return /^\s*[•\-*]/.test(String(lead || ''))
+                  }
+                  const stripLeadingBullet = (
+                    segments: typeof group.displayLines[number]['segments']
+                  ) => {
+                    let done = false
+                    return segments.map((segment) => {
+                      if (!done && segment.kind === 'text') {
+                        done = true
+                        return { ...segment, text: segment.text.replace(/^\s*[•\-*]\s*/, '') }
+                      }
+                      return segment
+                    })
+                  }
+                  const renderFlowRun = (lines: typeof group.displayLines, keyBase: string) => (
+                    <p key={keyBase} className="readingFillLine readingFillLine-flowing">
+                      {lines.map((line, lineIdx) => (
+                        <span key={`${keyBase}-line-${lineIdx}`}>
                           {renderFillSegmentsForFlow(line.segments)}
                           {/* Inject a sentence separator between consecutive
                               lines that don't already end with terminal
@@ -19200,13 +19223,46 @@ function App() {
                                   ? lastSegment.after
                                   : ''
                             const needsTerminator =
-                              lineIdx < chunk.lines.length - 1 &&
+                              lineIdx < lines.length - 1 &&
                               !/[.!?]\s*$/.test(String(lastText || ''))
                             return needsTerminator ? '. ' : ' '
                           })()}
                         </span>
                       ))}
                     </p>
+                  )
+
+                  // Split the chunk into flowing runs and standalone bullet
+                  // lines, so each bullet item sits on its own line.
+                  const parts: Array<
+                    | { kind: 'flow'; lines: typeof group.displayLines }
+                    | { kind: 'bullet'; line: typeof group.displayLines[number] }
+                  > = []
+                  for (const line of chunk.lines) {
+                    if (isBulletFlowLine(line)) {
+                      parts.push({ kind: 'bullet', line })
+                    } else {
+                      const last = parts[parts.length - 1]
+                      if (last && last.kind === 'flow') last.lines.push(line)
+                      else parts.push({ kind: 'flow', lines: [line] })
+                    }
+                  }
+
+                  return (
+                    <div key={`${group.id}-flow-para-${chunkIndex}`}>
+                      {parts.map((part, partIdx) =>
+                        part.kind === 'bullet' ? (
+                          <div
+                            key={`${group.id}-flow-bullet-${chunkIndex}-${partIdx}`}
+                            className="readingFillFlowBullet"
+                          >
+                            {renderFillSegmentsForFlow(stripLeadingBullet(part.line.segments))}
+                          </div>
+                        ) : (
+                          renderFlowRun(part.lines, `${group.id}-flow-run-${chunkIndex}-${partIdx}`)
+                        )
+                      )}
+                    </div>
                   )
                 })}
               </div>
