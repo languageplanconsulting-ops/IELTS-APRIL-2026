@@ -1,8 +1,12 @@
 export type WritingTimelineChartType = 'line-graph' | 'bar-chart' | 'table'
+export type WritingSnapshotChartType = 'pie-chart' | 'bar-chart' | 'table'
+
+export type WritingLineSeries = { label: string; color: string; values: number[] }
 
 export type WritingTimelinePracticePrompt = {
   id: string
   number: number
+  kind: 'timeline'
   chartType: WritingTimelineChartType
   chartTypeLabel: string
   title: string
@@ -14,11 +18,108 @@ export type WritingTimelinePracticePrompt = {
   years: number[]
   values: number[]
   mainTrend: string
+  series?: WritingLineSeries[]
 }
 
-export const getIeltsTask1ChartNoun = (chartType: WritingTimelineChartType) => {
+export type WritingSnapshotPracticePrompt = {
+  id: string
+  number: number
+  kind: 'snapshot'
+  chartType: WritingSnapshotChartType
+  chartTypeLabel: string
+  title: string
+  chartCaption: string
+  subjectPhrase: string
+  unit: string
+  valueLabel: string
+  mainFeature: string
+  pies?: Array<{ title: string; slices: Array<{ label: string; value: number; color: string }> }>
+  categories?: string[]
+  series?: WritingLineSeries[]
+  tableHeaders?: string[]
+  tableRows?: Array<{ entity: string; values: (string | number)[] }>
+}
+
+export type WritingMixedSnapshotPanel = {
+  kind: 'snapshot'
+  chartType: WritingSnapshotChartType
+  chartCaption: string
+  unit: string
+  valueLabel: string
+  pies?: Array<{ title: string; slices: Array<{ label: string; value: number; color: string }> }>
+  categories?: string[]
+  series?: WritingLineSeries[]
+  tableHeaders?: string[]
+  tableRows?: Array<{ entity: string; values: (string | number)[] }>
+}
+
+export type WritingMixedTimelinePanel = {
+  kind: 'timeline'
+  chartType: WritingTimelineChartType
+  chartCaption: string
+  unit: string
+  yAxisLabel: string
+  valueLabel: string
+  years: number[]
+  values: number[]
+  series?: WritingLineSeries[]
+}
+
+export type WritingMixedPanel = WritingMixedSnapshotPanel | WritingMixedTimelinePanel
+
+export type WritingMixedPracticePrompt = {
+  id: string
+  number: number
+  kind: 'mixed'
+  chartTypeLabel: string
+  title: string
+  subjectPhrase: string
+  mainFeature: string
+  panels: WritingMixedPanel[]
+}
+
+export type WritingMapPracticePrompt = {
+  id: string
+  number: number
+  kind: 'map'
+  chartTypeLabel: string
+  title: string
+  chartCaption: string
+  subjectPhrase: string
+  mainFeature: string
+  before: { year: string; zones: Task1MapZone[] }
+  after: { year: string; zones: Task1MapZone[] }
+}
+
+export type WritingProcessStage = {
+  id: string
+  label: string
+  detail: string
+}
+
+export type WritingProcessPracticePrompt = {
+  id: string
+  number: number
+  kind: 'process'
+  chartTypeLabel: string
+  title: string
+  chartCaption: string
+  subjectPhrase: string
+  mainFeature: string
+  stages: WritingProcessStage[]
+}
+
+export type WritingTask1PracticePrompt =
+  | WritingTimelinePracticePrompt
+  | WritingSnapshotPracticePrompt
+  | WritingMixedPracticePrompt
+  | WritingMapPracticePrompt
+  | WritingProcessPracticePrompt
+
+export const getIeltsTask1ChartNoun = (chartType: WritingTimelineChartType | WritingSnapshotChartType) => {
   if (chartType === 'line-graph') return 'line graph'
   if (chartType === 'bar-chart') return 'bar chart'
+  if (chartType === 'pie-chart') return 'pie chart'
   return 'table'
 }
 
@@ -28,6 +129,27 @@ export const getIeltsTask1OpeningLine = (prompt: WritingTimelinePracticePrompt) 
   const endYear = prompt.years[prompt.years.length - 1]
   return `The ${chartNoun} below shows ${prompt.subjectPhrase} between ${startYear} and ${endYear}.`
 }
+
+export const getIeltsTask1SnapshotOpeningLine = (prompt: WritingSnapshotPracticePrompt) => {
+  const chartNoun = getIeltsTask1ChartNoun(prompt.chartType)
+  return `The ${chartNoun} below shows ${prompt.subjectPhrase}.`
+}
+
+export const getIeltsTask1MixedOpeningLine = (prompt: WritingMixedPracticePrompt) => {
+  const chartNouns = prompt.panels.map((panel) => getIeltsTask1ChartNoun(panel.chartType))
+  const uniqueNouns = Array.from(new Set(chartNouns))
+  const chartList =
+    uniqueNouns.length > 2
+      ? `${uniqueNouns.slice(0, -1).join(', ')}, and ${uniqueNouns[uniqueNouns.length - 1]}`
+      : uniqueNouns.join(' and ')
+  return `The ${chartList} below show ${prompt.subjectPhrase}.`
+}
+
+export const getIeltsTask1MapOpeningLine = (prompt: WritingMapPracticePrompt) =>
+  `The two maps below show ${prompt.subjectPhrase}.`
+
+export const getIeltsTask1ProcessOpeningLine = (prompt: WritingProcessPracticePrompt) =>
+  `The diagram below shows ${prompt.subjectPhrase}.`
 
 export const IELTS_TASK1_TIME_NOTE = 'You should spend about 20 minutes on this task.'
 export const IELTS_TASK1_SUMMARY_INSTRUCTION =
@@ -55,7 +177,7 @@ export type WritingTask1Section = {
   accent: 'timeline' | 'chart' | 'map' | 'process' | 'all'
   chipGroups?: WritingGuideChipGroup[]
   structures?: WritingGuideStructure[]
-  practicePrompts?: WritingTimelinePracticePrompt[]
+  practicePrompts?: WritingTask1PracticePrompt[]
 }
 
 export const WRITING_TIMELINE_YEARS = [2014, 2016, 2018, 2020, 2022, 2024] as const
@@ -64,6 +186,7 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
   {
     id: 'timeline-online-learning',
     number: 1,
+    kind: 'timeline',
     chartType: 'line-graph',
     chartTypeLabel: 'Line Graph',
     title: 'Percentage of students using online learning platforms',
@@ -79,6 +202,7 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
   {
     id: 'timeline-food-delivery',
     number: 2,
+    kind: 'timeline',
     chartType: 'line-graph',
     chartTypeLabel: 'Line Graph',
     title: 'Average monthly spending on food delivery',
@@ -94,6 +218,7 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
   {
     id: 'timeline-work-from-home',
     number: 3,
+    kind: 'timeline',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
     title: 'Number of people working from home',
@@ -109,6 +234,7 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
   {
     id: 'timeline-electric-bicycles',
     number: 4,
+    kind: 'timeline',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
     title: 'Sales of electric bicycles',
@@ -124,6 +250,7 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
   {
     id: 'timeline-smart-tvs',
     number: 5,
+    kind: 'timeline',
     chartType: 'table',
     chartTypeLabel: 'Table',
     title: 'Percentage of households with smart TVs',
@@ -135,6 +262,288 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     years: [...WRITING_TIMELINE_YEARS],
     values: [12, 24, 39, 55, 68, 76],
     mainTrend: 'Smart TV ownership rose rapidly and became common by 2024.'
+  },
+  {
+    id: 'timeline-online-shopping-3country',
+    number: 6,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title: 'Adults making at least one online purchase per month in three countries',
+    chartCaption: 'Percentage of adults making at least one online purchase per month (UK, USA, Australia)',
+    subjectPhrase: 'the percentage of adults who made at least one online purchase per month in three countries: the UK, the USA, and Australia',
+    unit: '% of adults',
+    yAxisLabel: 'Percentage of adults (%)',
+    valueLabel: 'Percentage',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [28, 38, 51, 72, 79, 86],
+    mainTrend: 'Online shopping rose in all three countries, with the USA consistently the highest and Australia the lowest.',
+    series: [
+      { label: 'UK',        color: '#0f53c9', values: [28, 38, 51, 72, 79, 86] },
+      { label: 'USA',       color: '#d97706', values: [35, 45, 58, 75, 83, 89] },
+      { label: 'Australia', color: '#0d9488', values: [22, 31, 44, 65, 76, 84] }
+    ]
+  },
+  {
+    id: 'timeline-social-media-4region',
+    number: 7,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title: 'People using social media platforms in four regions',
+    chartCaption: 'Percentage of people using social media platforms (North America, Europe, Asia-Pacific, Latin America)',
+    subjectPhrase: 'the percentage of people who used social media platforms in four regions: North America, Europe, Asia-Pacific, and Latin America',
+    unit: '% of population',
+    yAxisLabel: 'Percentage of population (%)',
+    valueLabel: 'Percentage',
+    years: [2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024],
+    values: [48, 56, 65, 71, 75, 80, 83, 85],
+    mainTrend: 'Social media use rose across all four regions, with Asia-Pacific growing fastest and closing much of the gap on North America.',
+    series: [
+      { label: 'N. America',    color: '#0f53c9', values: [48, 56, 65, 71, 75, 80, 83, 85] },
+      { label: 'Europe',        color: '#d97706', values: [38, 44, 52, 59, 65, 70, 74, 77] },
+      { label: 'Asia-Pacific',  color: '#0d9488', values: [15, 22, 31, 42, 52, 61, 68, 73] },
+      { label: 'Latin America', color: '#7c3aed', values: [28, 35, 44, 54, 62, 68, 72, 75] }
+    ]
+  }
+]
+
+export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] = [
+  {
+    id: 'snapshot-vietnam-us-exports',
+    number: 1,
+    kind: 'snapshot',
+    chartType: 'pie-chart',
+    chartTypeLabel: 'Pie Chart',
+    title: 'Exports between the US and Vietnam',
+    chartCaption: 'Value of exports between the US and Vietnam, by product category (2023)',
+    subjectPhrase: 'the value of exports between the US and Vietnam, broken down by product category, in 2023',
+    unit: 'US$ million',
+    valueLabel: 'Value',
+    mainFeature:
+      'Coffee and aircraft parts were the leading export categories in their respective directions, together accounting for a substantial share of total export value on each side.',
+    pies: [
+      {
+        title: 'Exports: Vietnam to US ($million)',
+        slices: [
+          { label: 'Coffee', value: 23, color: '#0f53c9' },
+          { label: 'Fruit and vegetables', value: 16, color: '#0d9488' },
+          { label: 'Seafood', value: 4.4, color: '#d97706' },
+          { label: 'Rice', value: 4.3, color: '#7c3aed' },
+          { label: 'Garments', value: 2, color: '#64748b' },
+          { label: 'Other', value: 2, color: '#e2e8f0' }
+        ]
+      },
+      {
+        title: 'Exports: US to Vietnam ($million)',
+        slices: [
+          { label: 'Aircraft parts', value: 72, color: '#0f53c9' },
+          { label: 'Machinery', value: 30.5, color: '#0d9488' },
+          { label: 'Fertiliser', value: 16.5, color: '#d97706' },
+          { label: 'Cotton', value: 12, color: '#7c3aed' },
+          { label: 'Cars', value: 6, color: '#64748b' },
+          { label: 'Other', value: 35, color: '#e2e8f0' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'snapshot-uk-thailand-spending',
+    number: 2,
+    kind: 'snapshot',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title: 'Average household spending on five categories in the UK and Thailand',
+    chartCaption: 'Average household spending by category, UK vs Thailand (2023)',
+    subjectPhrase:
+      'the average household spending on five categories — food, transport, housing, healthcare, and leisure — in the UK and Thailand in 2023',
+    unit: '% of total spending',
+    valueLabel: 'Percentage of spending',
+    mainFeature:
+      'Housing made up the largest proportion of spending in the UK, whereas food accounted for the largest share of spending in Thailand.',
+    categories: ['Food', 'Transport', 'Housing', 'Healthcare', 'Leisure'],
+    series: [
+      { label: 'UK', color: '#0f53c9', values: [18, 14, 28, 12, 15] },
+      { label: 'Thailand', color: '#bf8b30', values: [25, 18, 22, 8, 10] }
+    ]
+  },
+  {
+    id: 'snapshot-germany-australia-energy',
+    number: 3,
+    kind: 'snapshot',
+    chartType: 'pie-chart',
+    chartTypeLabel: 'Pie Chart',
+    title: 'Electricity generation by energy source in Germany and Australia',
+    chartCaption: 'Distribution of energy sources used to generate electricity, Germany vs Australia (2020)',
+    subjectPhrase:
+      'the distribution of energy sources used to generate electricity in two countries — Germany and Australia — in 2020',
+    unit: '% of electricity generated',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'Renewables made up the largest proportion of electricity generation in Germany, whereas coal remained by far the dominant source in Australia.',
+    pies: [
+      {
+        title: 'Germany 2020',
+        slices: [
+          { label: 'Renewables', value: 44, color: '#0d9488' },
+          { label: 'Coal', value: 25, color: '#64748b' },
+          { label: 'Gas', value: 16, color: '#0f53c9' },
+          { label: 'Nuclear', value: 6, color: '#bf8b30' },
+          { label: 'Other', value: 9, color: '#e2e8f0' }
+        ]
+      },
+      {
+        title: 'Australia 2020',
+        slices: [
+          { label: 'Coal', value: 52, color: '#64748b' },
+          { label: 'Gas', value: 22, color: '#0f53c9' },
+          { label: 'Renewables', value: 21, color: '#0d9488' },
+          { label: 'Other', value: 5, color: '#e2e8f0' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'snapshot-universities-table',
+    number: 4,
+    kind: 'snapshot',
+    chartType: 'table',
+    chartTypeLabel: 'Table',
+    title: 'Data on five universities across four indicators',
+    chartCaption: 'Research output, satisfaction, employment, and international students across five universities (2024)',
+    subjectPhrase:
+      'data on five universities — Oxford, MIT, the University of Sydney, Chulalongkorn University, and Seoul National University — across four indicators: research output, student satisfaction, graduate employment, and the percentage of international students, in 2024',
+    unit: 'mixed units (see table)',
+    valueLabel: 'Indicator value',
+    mainFeature:
+      'Oxford recorded the highest research output, while MIT led in student satisfaction and graduate employment; Chulalongkorn recorded the lowest figures across every indicator.',
+    tableHeaders: ['Research Output', 'Satisfaction', 'Employment', "Int'l Students"],
+    tableRows: [
+      { entity: 'Oxford', values: ['48,500', '87%', '94%', '42%'] },
+      { entity: 'MIT', values: ['42,000', '91%', '97%', '35%'] },
+      { entity: 'Univ. Sydney', values: ['18,200', '83%', '89%', '38%'] },
+      { entity: 'Chulalongkorn', values: ['4,300', '79%', '82%', '12%'] },
+      { entity: "Seoul Nat'l", values: ['22,100', '85%', '91%', '28%'] }
+    ]
+  }
+]
+
+export const WRITING_MIXED_PRACTICE_PROMPTS: WritingMixedPracticePrompt[] = [
+  {
+    id: 'mixed-riverside-language-school',
+    number: 1,
+    kind: 'mixed',
+    chartTypeLabel: 'Pie Chart + Table + Bar Chart',
+    title: 'Riverside Language School: student profile and enrolment trends',
+    subjectPhrase:
+      'the nationality of students at Riverside Language School in 2023, enrolments by course type in the same year, and total student enrolments at the school between 2014 and 2023',
+    mainFeature:
+      'Chinese students made up the largest proportion of the intake and General English was the most popular course, while total enrolments fell sharply in 2020 before recovering to a new peak in 2023.',
+    panels: [
+      {
+        kind: 'snapshot',
+        chartType: 'pie-chart',
+        chartCaption: 'Nationality of students at Riverside Language School (2023)',
+        unit: '% of students',
+        valueLabel: 'Percentage',
+        pies: [
+          {
+            title: 'Student Nationality 2023',
+            slices: [
+              { label: 'Chinese', value: 32, color: '#0f53c9' },
+              { label: 'Japanese', value: 21, color: '#0d9488' },
+              { label: 'Brazilian', value: 15, color: '#d97706' },
+              { label: 'Saudi', value: 12, color: '#7c3aed' },
+              { label: 'Korean', value: 9, color: '#64748b' },
+              { label: 'Other', value: 11, color: '#e2e8f0' }
+            ]
+          }
+        ]
+      },
+      {
+        kind: 'snapshot',
+        chartType: 'table',
+        chartCaption: 'Course enrolments at Riverside Language School (2023)',
+        unit: 'students, weeks, %',
+        valueLabel: 'Enrolments',
+        tableHeaders: ['Enrolments', 'Avg. Course Length (weeks)', 'Pass Rate'],
+        tableRows: [
+          { entity: 'General English', values: [420, '12', '81%'] },
+          { entity: 'Business English', values: [180, '8', '88%'] },
+          { entity: 'IELTS Preparation', values: [260, '10', '76%'] },
+          { entity: 'Exam Prep (other)', values: [90, '6', '85%'] },
+          { entity: 'Summer Intensive', values: [150, '4', '90%'] }
+        ]
+      },
+      {
+        kind: 'timeline',
+        chartType: 'bar-chart',
+        chartCaption: 'Total student enrolments at Riverside Language School (2014–2023)',
+        unit: 'students',
+        yAxisLabel: 'Number of students',
+        valueLabel: 'Enrolments',
+        years: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+        values: [640, 710, 760, 830, 890, 950, 310, 480, 820, 1100]
+      }
+    ]
+  }
+]
+
+export const WRITING_MAP_PRACTICE_PROMPTS: WritingMapPracticePrompt[] = [
+  {
+    id: 'map-town-centre',
+    number: 1,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'Town centre redevelopment, 2005–2025',
+    chartCaption: 'Changes in the layout of a town centre between 2005 and 2025',
+    subjectPhrase: 'the layout of a town centre in 2005 and 2025',
+    mainFeature:
+      'The industrial zone in the southwest was converted into a tech park with an identical footprint, while the shopping mall and car park in the north were demolished and replaced by residential housing and a civic centre.',
+    before: {
+      year: '2005',
+      zones: [
+        { x: 4, y: 4, w: 54, h: 36, label: 'Shopping\nMall', color: '#bfdbfe' },
+        { x: 62, y: 4, w: 34, h: 36, label: 'Car Park', color: '#e2e8f0' },
+        { x: 4, y: 44, w: 34, h: 36, label: 'Industrial\nZone', color: '#fde68a' },
+        { x: 42, y: 44, w: 54, h: 18, label: 'Market', color: '#bbf7d0' },
+        { x: 42, y: 64, w: 54, h: 16, label: 'Open Space', color: '#d1fae5' }
+      ]
+    },
+    after: {
+      year: '2025',
+      zones: [
+        { x: 4, y: 4, w: 38, h: 36, label: 'Residential', color: '#c7d2fe' },
+        { x: 46, y: 4, w: 50, h: 36, label: 'Civic Centre', color: '#bfdbfe' },
+        { x: 4, y: 44, w: 34, h: 36, label: 'Tech Park', color: '#fde68a' },
+        { x: 42, y: 44, w: 24, h: 36, label: 'Library', color: '#bbf7d0' },
+        { x: 70, y: 44, w: 26, h: 36, label: 'Park', color: '#d1fae5' }
+      ]
+    }
+  }
+]
+
+export const WRITING_PROCESS_PRACTICE_PROMPTS: WritingProcessPracticePrompt[] = [
+  {
+    id: 'process-instant-coffee',
+    number: 1,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'How instant coffee is produced',
+    chartCaption: 'The instant coffee production process',
+    subjectPhrase: 'the process by which instant coffee is produced',
+    mainFeature:
+      'The process begins with the harvesting of coffee cherries and ends with the packaging of instant coffee granules, and it involves eight main stages.',
+    stages: [
+      { id: 'harvest', label: 'Harvesting', detail: 'Ripe coffee cherries are picked by hand or machine.' },
+      { id: 'pulp', label: 'Pulping', detail: 'The cherries are pulped to remove the outer skin and flesh.' },
+      { id: 'dry', label: 'Drying', detail: 'The beans are spread out and dried in the sun for several days.' },
+      { id: 'roast', label: 'Roasting', detail: 'The dried beans are roasted at a high temperature.' },
+      { id: 'grind', label: 'Grinding', detail: 'The roasted beans are ground into a fine powder.' },
+      { id: 'extract', label: 'Extraction', detail: 'The powder is dissolved in hot water to extract a coffee concentrate.' },
+      { id: 'spray-dry', label: 'Spray-Drying', detail: 'The liquid concentrate is spray-dried into fine granules.' },
+      { id: 'package', label: 'Packaging', detail: 'The granules are packaged into jars, ready for sale.' }
+    ]
   }
 ]
 
@@ -149,7 +558,7 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   {
     id: 'timeline',
     title: 'Timeline / Line Graph',
-    subtitle: 'Trend language · 5 practice prompts (2 line graphs, 2 bar charts, 1 table)',
+    subtitle: 'Trend language · 7 practice prompts (4 line graphs, 2 bar charts, 1 table)',
     accent: 'timeline',
     practicePrompts: WRITING_TIMELINE_PRACTICE_PROMPTS,
     chipGroups: [
@@ -183,8 +592,9 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   {
     id: 'no-timeline',
     title: 'Bar / Pie / Table (No Timeline)',
-    subtitle: 'Proportion and ranking language',
+    subtitle: 'Proportion and ranking language · 4 practice prompts (2 pie charts, 1 bar chart, 1 table)',
     accent: 'chart',
+    practicePrompts: WRITING_SNAPSHOT_PRACTICE_PROMPTS,
     chipGroups: [
       {
         id: 'proportion',
@@ -211,10 +621,38 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
     ]
   },
   {
+    id: 'mixed',
+    title: 'Mixed Chart',
+    subtitle: 'Combined proportion and trend language · 1 practice prompt (pie + table + bar chart)',
+    accent: 'chart',
+    practicePrompts: WRITING_MIXED_PRACTICE_PROMPTS,
+    chipGroups: [
+      {
+        id: 'proportion',
+        label: 'Proportion verbs',
+        hint: 'Use for the pie chart and table panels',
+        chips: ['account for', 'make up', 'represent', 'constitute']
+      },
+      {
+        id: 'trend',
+        label: 'Trend verbs',
+        hint: 'Use for the bar chart / timeline panel',
+        chips: ['increase', 'decline', 'recover', 'peak']
+      },
+      {
+        id: 'blend',
+        label: 'Blended overview',
+        hint: 'Combine both registers in one overview sentence',
+        chips: ['while', 'whereas', 'meanwhile']
+      }
+    ]
+  },
+  {
     id: 'map',
     title: 'Map',
-    subtitle: 'Location and development changes',
+    subtitle: 'Location and development changes · 1 practice prompt (before/after map)',
     accent: 'map',
+    practicePrompts: WRITING_MAP_PRACTICE_PROMPTS,
     chipGroups: [
       {
         id: 'build',
@@ -246,8 +684,9 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   {
     id: 'process',
     title: 'Process Diagram',
-    subtitle: 'Stage-by-stage sequencing language',
+    subtitle: 'Stage-by-stage sequencing language · 1 practice prompt (8-stage process)',
     accent: 'process',
+    practicePrompts: WRITING_PROCESS_PRACTICE_PROMPTS,
     chipGroups: [
       {
         id: 'sequence',
@@ -464,6 +903,7 @@ export const WRITING_FEATURED_TASK1: WritingFeaturedTask1 = {
   prompt: {
     id: 'featured-task1-june-2026-online-shopping',
     number: 1,
+    kind: 'timeline',
     chartType: 'line-graph',
     chartTypeLabel: 'Line Graph',
     title: 'Adults making at least one online purchase per month (%)',
@@ -623,6 +1063,7 @@ export const WRITING_MONTHLY_SETS_2026: WritingMonthlyQuestionSet[] = [
     task1Prompt: {
       id: 'monthly-jan-t1',
       number: 1,
+      kind: 'timeline',
       chartType: 'line-graph',
       chartTypeLabel: 'Line Graph',
       title: 'Adults making at least one online purchase per month (%)',

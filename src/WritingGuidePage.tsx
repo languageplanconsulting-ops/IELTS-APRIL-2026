@@ -1,5 +1,10 @@
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useMemo, useState, type CSSProperties, type DragEvent } from 'react'
 import './WritingGuidePage.css'
+import {
+  getWritingDragDropExercise,
+  type WritingDragDropExercise,
+  type WritingDragDropLine
+} from './writingLineGraphDragDrop'
 import {
   WRITING_TASK1_SECTIONS,
   WRITING_TASK2_TYPES,
@@ -15,10 +20,21 @@ import {
   IELTS_TASK1_TIME_NOTE,
   IELTS_TASK1_WORD_LIMIT,
   getIeltsTask1OpeningLine,
+  getIeltsTask1SnapshotOpeningLine,
+  getIeltsTask1MixedOpeningLine,
+  getIeltsTask1MapOpeningLine,
+  getIeltsTask1ProcessOpeningLine,
   type WritingGuideChipGroup,
   type WritingGuideStructure,
   type WritingTask1Section,
   type WritingTimelinePracticePrompt,
+  type WritingSnapshotPracticePrompt,
+  type WritingMixedPracticePrompt,
+  type WritingMixedPanel,
+  type WritingMapPracticePrompt,
+  type WritingProcessPracticePrompt,
+  type WritingTask1PracticePrompt,
+  type WritingLineSeries,
   type WritingBand7Highlight,
   type WritingBand7Sample,
   type Task1LineGraphData,
@@ -38,6 +54,7 @@ type WritingFlow =
   | { step: 'task1-categories' }
   | { step: 'task1-questions'; categoryId: string }
   | { step: 'task1-exam'; categoryId: string; promptId: string }
+  | { step: 'task1-drill'; categoryId: string; promptId: string }
   | { step: 'task1-guide'; categoryId: string }
   | { step: 'task2-types' }
 
@@ -56,19 +73,34 @@ const getNiceYScale = (values: number[]) => {
   return { min: 0, max: top, ticks }
 }
 
-function buildPlotPoints(values: number[], yMax: number) {
+function xPositionsFor(n: number) {
   const plotWidth = CHART_SIZE.width - CHART_PAD.left - CHART_PAD.right
+  return Array.from({ length: n }, (_, index) =>
+    CHART_PAD.left + (n <= 1 ? plotWidth / 2 : (index / (n - 1)) * plotWidth)
+  )
+}
+
+function buildPlotPoints(values: number[], yMax: number) {
   const plotHeight = CHART_SIZE.height - CHART_PAD.top - CHART_PAD.bottom
+  const xPositions = xPositionsFor(values.length)
 
   return values.map((value, index) => {
-    const x =
-      CHART_PAD.left + (values.length <= 1 ? plotWidth / 2 : (index / (values.length - 1)) * plotWidth)
     const y = CHART_PAD.top + plotHeight - (value / yMax) * plotHeight
-    return { x, y, value }
+    return { x: xPositions[index], y, value }
   })
 }
 
-function WritingIeltsYAxis({ ticks, yMax, label }: { ticks: number[]; yMax: number; label: string }) {
+function WritingIeltsYAxis({
+  ticks,
+  yMax,
+  label,
+  xAxisLabel = 'Year'
+}: {
+  ticks: number[]
+  yMax: number
+  label: string
+  xAxisLabel?: string
+}) {
   const plotHeight = CHART_SIZE.height - CHART_PAD.top - CHART_PAD.bottom
   return (
     <>
@@ -118,16 +150,20 @@ function WritingIeltsYAxis({ ticks, yMax, label }: { ticks: number[]; yMax: numb
         className="writingIeltsChartAxisTitle"
         textAnchor="middle"
       >
-        Year
+        {xAxisLabel}
       </text>
     </>
   )
 }
 
 function WritingLineGraphSvg({ prompt }: { prompt: WritingTimelinePracticePrompt }) {
-  const { max: yMax, ticks } = getNiceYScale(prompt.values)
-  const points = buildPlotPoints(prompt.values, yMax)
-  const linePath = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')
+  const seriesList: WritingLineSeries[] = prompt.series?.length
+    ? prompt.series
+    : [{ label: prompt.valueLabel, color: '#111827', values: prompt.values }]
+
+  const { max: yMax, ticks } = getNiceYScale(seriesList.flatMap((s) => s.values))
+  const xPositions = xPositionsFor(prompt.years.length)
+  const isMultiSeries = seriesList.length > 1
 
   return (
     <figure className="writingIeltsFigure">
@@ -139,21 +175,53 @@ function WritingLineGraphSvg({ prompt }: { prompt: WritingTimelinePracticePrompt
         aria-label={`Line graph showing ${prompt.chartCaption}`}
       >
         <WritingIeltsYAxis ticks={ticks} yMax={yMax} label={prompt.yAxisLabel} />
-        <path d={linePath} className="writingIeltsChartLine" />
-        {points.map((point, index) => (
-          <g key={`${prompt.years[index]}-${point.value}`}>
-            <rect x={point.x - 4} y={point.y - 4} width={8} height={8} className="writingIeltsChartMarker" />
-            <text
-              x={point.x}
-              y={CHART_SIZE.height - CHART_PAD.bottom + 22}
-              className="writingIeltsChartTick"
-              textAnchor="middle"
-            >
-              {prompt.years[index]}
-            </text>
-          </g>
+        {xPositions.map((x, index) => (
+          <text
+            key={prompt.years[index]}
+            x={x}
+            y={CHART_SIZE.height - CHART_PAD.bottom + 22}
+            className="writingIeltsChartTick"
+            textAnchor="middle"
+          >
+            {prompt.years[index]}
+          </text>
         ))}
+        {seriesList.map((series) => {
+          const points = buildPlotPoints(series.values, yMax)
+          const linePath = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')
+          const color = isMultiSeries ? series.color : undefined
+          return (
+            <g key={series.label}>
+              <path
+                d={linePath}
+                className="writingIeltsChartLine"
+                style={color ? { stroke: color } : undefined}
+              />
+              {points.map((point, index) => (
+                <rect
+                  key={`${series.label}-${prompt.years[index]}`}
+                  x={point.x - 4}
+                  y={point.y - 4}
+                  width={8}
+                  height={8}
+                  className="writingIeltsChartMarker"
+                  style={color ? { fill: color } : undefined}
+                />
+              ))}
+            </g>
+          )
+        })}
       </svg>
+      {isMultiSeries ? (
+        <div className="writingIeltsChartLegend">
+          {seriesList.map((series) => (
+            <span key={series.label} className="writingIeltsChartLegendItem">
+              <span className="writingIeltsChartLegendSwatch" style={{ background: series.color }} />
+              {series.label}
+            </span>
+          ))}
+        </div>
+      ) : null}
     </figure>
   )
 }
@@ -228,15 +296,519 @@ function WritingTableChart({ prompt }: { prompt: WritingTimelinePracticePrompt }
   )
 }
 
+function WritingPieChartSvg({ prompt }: { prompt: WritingSnapshotPracticePrompt }) {
+  const pies = prompt.pies || []
+  const n = Math.max(pies.length, 1)
+  const R = n > 1 ? 78 : 100
+  const cy = 132
+  const centers =
+    n > 1
+      ? Array.from({ length: n }, (_, i) => (CHART_SIZE.width / (n + 1)) * (i + 1))
+      : [CHART_SIZE.width / 2]
+
+  return (
+    <figure className="writingIeltsFigure">
+      <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
+      <svg
+        viewBox={`0 0 ${CHART_SIZE.width} ${CHART_SIZE.height}`}
+        className="writingIeltsChartSvg"
+        role="img"
+        aria-label={`Pie chart showing ${prompt.chartCaption}`}
+      >
+        {pies.map((pie, pieIndex) => {
+          const cx = centers[pieIndex]
+          const total = pie.slices.reduce((sum, slice) => sum + slice.value, 0) || 1
+          let cursor = 0
+          return (
+            <g key={pie.title}>
+              <text x={cx} y={cy - R - 16} textAnchor="middle" className="writingIeltsPieChartTitle">
+                {pie.title}
+              </text>
+              {pie.slices.map((slice) => {
+                const sweep = (slice.value / total) * 360
+                const path = pieSlicePath(cx, cy, R, cursor, cursor + sweep)
+                const mid = cursor + sweep / 2
+                const labelPos = polarToXY(cx, cy, R * 0.62, mid)
+                const percent = Math.round((slice.value / total) * 100)
+                cursor += sweep
+                return (
+                  <g key={slice.label}>
+                    <path d={path} fill={slice.color} stroke="#fff" strokeWidth={1.5} />
+                    {percent >= 6 ? (
+                      <text
+                        x={labelPos.x}
+                        y={labelPos.y + 4}
+                        textAnchor="middle"
+                        className="writingIeltsPieChartSliceLabel"
+                      >
+                        {percent}%
+                      </text>
+                    ) : null}
+                  </g>
+                )
+              })}
+            </g>
+          )
+        })}
+      </svg>
+      <div className="writingIeltsPieChartLegend">
+        {pies.map((pie) => (
+          <div key={pie.title} className="writingIeltsPieChartLegendGroup">
+            <span className="writingIeltsPieChartLegendTitle">{pie.title}</span>
+            <div className="writingIeltsChartLegend">
+              {pie.slices.map((slice) => (
+                <span key={slice.label} className="writingIeltsChartLegendItem">
+                  <span className="writingIeltsChartLegendSwatch" style={{ background: slice.color }} />
+                  {slice.label} ({slice.value})
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="writingIeltsTableNote">Units: {prompt.unit}</p>
+    </figure>
+  )
+}
+
+function WritingSnapshotBarChartSvg({ prompt }: { prompt: WritingSnapshotPracticePrompt }) {
+  const categories = prompt.categories || []
+  const seriesList = prompt.series || []
+  const { max: yMax, ticks } = getNiceYScale(seriesList.flatMap((s) => s.values))
+  const plotHeight = CHART_SIZE.height - CHART_PAD.top - CHART_PAD.bottom
+  const barWidth = 26
+  const barGap = 6
+  const clusterGap = 30
+  const seriesCount = Math.max(seriesList.length, 1)
+  const clusterWidth = seriesCount * barWidth + (seriesCount - 1) * barGap
+  const totalWidth = categories.length * clusterWidth + (categories.length - 1) * clusterGap
+  const startX = (CHART_SIZE.width - totalWidth) / 2
+
+  return (
+    <figure className="writingIeltsFigure">
+      <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
+      <svg
+        viewBox={`0 0 ${CHART_SIZE.width} ${CHART_SIZE.height}`}
+        className="writingIeltsChartSvg"
+        role="img"
+        aria-label={`Bar chart showing ${prompt.chartCaption}`}
+      >
+        <WritingIeltsYAxis ticks={ticks} yMax={yMax} label={prompt.unit} xAxisLabel="Category" />
+        {categories.map((category, categoryIndex) => {
+          const clusterX = startX + categoryIndex * (clusterWidth + clusterGap)
+          return (
+            <g key={category} className="writingIeltsChartBarGroup">
+              {seriesList.map((series, seriesIndex) => {
+                const value = series.values[categoryIndex] ?? 0
+                const height = (value / yMax) * plotHeight
+                const x = clusterX + seriesIndex * (barWidth + barGap)
+                const y = CHART_PAD.top + plotHeight - height
+                return (
+                  <rect
+                    key={series.label}
+                    x={x}
+                    y={y}
+                    width={barWidth}
+                    height={height}
+                    className="writingIeltsChartBar"
+                    style={{ fill: series.color }}
+                  />
+                )
+              })}
+              <text
+                x={clusterX + clusterWidth / 2}
+                y={CHART_SIZE.height - CHART_PAD.bottom + 22}
+                className="writingIeltsChartTick"
+                textAnchor="middle"
+              >
+                {category}
+              </text>
+            </g>
+          )
+        })}
+      </svg>
+      {seriesList.length > 1 ? (
+        <div className="writingIeltsChartLegend">
+          {seriesList.map((series) => (
+            <span key={series.label} className="writingIeltsChartLegendItem">
+              <span className="writingIeltsChartLegendSwatch" style={{ background: series.color }} />
+              {series.label}
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </figure>
+  )
+}
+
+function WritingSnapshotTable({ prompt }: { prompt: WritingSnapshotPracticePrompt }) {
+  const headers = prompt.tableHeaders || []
+  const rows = prompt.tableRows || []
+  return (
+    <figure className="writingIeltsFigure writingIeltsFigure-table">
+      <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
+      <table className="writingIeltsTable">
+        <thead>
+          <tr>
+            <th scope="col" />
+            {headers.map((header) => (
+              <th scope="col" key={header}>
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.entity}>
+              <th scope="row">{row.entity}</th>
+              {row.values.map((value, index) => (
+                <td key={`${row.entity}-${index}`}>{value}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </figure>
+  )
+}
+
+function renderMixedPanel(prompt: WritingMixedPracticePrompt, panel: WritingMixedPanel, index: number) {
+  const panelId = `${prompt.id}-panel-${index}`
+  if (panel.kind === 'snapshot') {
+    const snapshotPrompt: WritingSnapshotPracticePrompt = {
+      id: panelId,
+      number: prompt.number,
+      kind: 'snapshot',
+      chartType: panel.chartType,
+      chartTypeLabel: '',
+      title: '',
+      chartCaption: panel.chartCaption,
+      subjectPhrase: '',
+      unit: panel.unit,
+      valueLabel: panel.valueLabel,
+      mainFeature: '',
+      pies: panel.pies,
+      categories: panel.categories,
+      series: panel.series,
+      tableHeaders: panel.tableHeaders,
+      tableRows: panel.tableRows
+    }
+    if (panel.chartType === 'pie-chart') return <WritingPieChartSvg key={panelId} prompt={snapshotPrompt} />
+    if (panel.chartType === 'bar-chart') return <WritingSnapshotBarChartSvg key={panelId} prompt={snapshotPrompt} />
+    return <WritingSnapshotTable key={panelId} prompt={snapshotPrompt} />
+  }
+  const timelinePrompt: WritingTimelinePracticePrompt = {
+    id: panelId,
+    number: prompt.number,
+    kind: 'timeline',
+    chartType: panel.chartType,
+    chartTypeLabel: '',
+    title: '',
+    chartCaption: panel.chartCaption,
+    subjectPhrase: '',
+    unit: panel.unit,
+    yAxisLabel: panel.yAxisLabel,
+    valueLabel: panel.valueLabel,
+    years: panel.years,
+    values: panel.values,
+    mainTrend: '',
+    series: panel.series
+  }
+  if (panel.chartType === 'line-graph') return <WritingLineGraphSvg key={panelId} prompt={timelinePrompt} />
+  if (panel.chartType === 'bar-chart') return <WritingBarChartSvg key={panelId} prompt={timelinePrompt} />
+  return <WritingTableChart key={panelId} prompt={timelinePrompt} />
+}
+
+const MAP_BASE_W = 100
+const MAP_BASE_H = 80
+
+function zoneIcon(label: string) {
+  const key = label.toLowerCase()
+  if (key.includes('resident') || key.includes('hous')) return '\u{1F3E0}'
+  if (key.includes('mall') || key.includes('shop')) return '\u{1F6CD}\u{FE0F}'
+  if (key.includes('market')) return '\u{1F9FA}'
+  if (key.includes('industrial') || key.includes('factory')) return '\u{1F3ED}'
+  if (key.includes('tech')) return '\u{1F4BB}'
+  if (key.includes('car park') || key.includes('parking')) return 'P'
+  if (key.includes('library')) return '\u{1F4DA}'
+  if (key.includes('park') || key.includes('open space') || key.includes('garden')) return '\u{1F333}'
+  if (key.includes('civic') || key.includes('hall') || key.includes('centre') || key.includes('center')) return '\u{1F3DB}\u{FE0F}'
+  if (key.includes('school')) return '\u{1F3EB}'
+  if (key.includes('hospital')) return '\u{1F3E5}'
+  return '\u{1F4CD}'
+}
+
+function WritingMapDiagramSvg({ prompt }: { prompt: WritingMapPracticePrompt }) {
+  const W = CHART_SIZE.width
+  const mapW = 270
+  const mapH = 188
+  const gap = 46
+  const x1 = (W - (mapW * 2 + gap)) / 2
+  const x2 = x1 + mapW + gap
+  const y0 = 30
+  const scaleX = mapW / MAP_BASE_W
+  const scaleY = mapH / MAP_BASE_H
+  const roadStep = 34
+
+  const legendEntries: { label: string; color: string }[] = []
+  const seenLabels = new Set<string>()
+  ;[...prompt.before.zones, ...prompt.after.zones].forEach((zone) => {
+    const key = zone.label.replace(/\n/g, ' ')
+    if (!seenLabels.has(key)) {
+      seenLabels.add(key)
+      legendEntries.push({ label: key, color: zone.color })
+    }
+  })
+
+  const verticals: number[] = []
+  for (let rx = roadStep; rx < MAP_BASE_W; rx += roadStep) verticals.push(rx)
+  const horizontals: number[] = []
+  for (let ry = roadStep; ry < MAP_BASE_H; ry += roadStep) horizontals.push(ry)
+
+  return (
+    <figure className="writingIeltsFigure">
+      <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
+      <svg
+        viewBox={`0 0 ${W} ${y0 + mapH + 40}`}
+        className="writingIeltsChartSvg writingIeltsMapDiagram"
+        role="img"
+        aria-label={`Map diagram showing ${prompt.chartCaption}`}
+      >
+        <g transform={`translate(${W - 34}, 26)`}>
+          <circle r={16} fill="#fff" stroke="#94a3b8" strokeWidth={1.2} />
+          <path d="M0,-12 L3.5,0 L0,12 L-3.5,0 Z" fill="#334155" />
+          <text y={-19} textAnchor="middle" fontSize={9} fontWeight={700} fill="#334155">
+            N
+          </text>
+        </g>
+
+        <text x={(x1 + mapW + x2) / 2} y={y0 + mapH / 2 + 6} textAnchor="middle" fontSize={22} fill="#94a3b8">
+          →
+        </text>
+
+        {[prompt.before, prompt.after].map((panel, pi) => {
+          const ox = pi === 0 ? x1 : x2
+          return (
+            <g key={pi}>
+              <text x={ox + mapW / 2} y={y0 - 10} textAnchor="middle" className="writingIeltsMapYear">
+                {panel.year}
+              </text>
+              <rect x={ox} y={y0} width={mapW} height={mapH} className="writingIeltsMapGround" rx={5} />
+              {verticals.map((rx) => (
+                <line
+                  key={`v-${rx}`}
+                  x1={ox + rx * scaleX}
+                  y1={y0}
+                  x2={ox + rx * scaleX}
+                  y2={y0 + mapH}
+                  className="writingIeltsMapRoad"
+                />
+              ))}
+              {horizontals.map((ry) => (
+                <line
+                  key={`h-${ry}`}
+                  x1={ox}
+                  y1={y0 + ry * scaleY}
+                  x2={ox + mapW}
+                  y2={y0 + ry * scaleY}
+                  className="writingIeltsMapRoad"
+                />
+              ))}
+              {panel.zones.map((zone, zi) => {
+                const zx = ox + zone.x * scaleX
+                const zy = y0 + zone.y * scaleY
+                const zw = zone.w * scaleX
+                const zh = zone.h * scaleY
+                const lines = zone.label.split('\n')
+                const icon = zoneIcon(zone.label)
+                const labelStartY = zy + zh / 2 - ((lines.length - 1) * 6) + 12
+                return (
+                  <g key={zi}>
+                    <rect x={zx} y={zy} width={zw} height={zh} fill={zone.color} stroke="#fff" strokeWidth={2} rx={4} />
+                    <text x={zx + zw / 2} y={zy + zh / 2 - 8} textAnchor="middle" fontSize={15}>
+                      {icon}
+                    </text>
+                    {lines.map((line, li) => (
+                      <text
+                        key={li}
+                        x={zx + zw / 2}
+                        y={labelStartY + li * 11}
+                        textAnchor="middle"
+                        className="writingIeltsMapZoneLabel"
+                      >
+                        {line}
+                      </text>
+                    ))}
+                  </g>
+                )
+              })}
+              <rect x={ox} y={y0} width={mapW} height={mapH} className="writingIeltsMapBorder" rx={5} />
+            </g>
+          )
+        })}
+      </svg>
+      <div className="writingIeltsChartLegend">
+        {legendEntries.map((entry) => (
+          <span key={entry.label} className="writingIeltsChartLegendItem">
+            <span className="writingIeltsChartLegendSwatch" style={{ background: entry.color }} />
+            {entry.label}
+          </span>
+        ))}
+      </div>
+    </figure>
+  )
+}
+
+function WritingProcessDiagramSvg({ prompt }: { prompt: WritingProcessPracticePrompt }) {
+  const columns = 4
+  const boxW = 148
+  const boxH = 74
+  const gapX = 26
+  const gapY = 44
+  const rows = Math.ceil(prompt.stages.length / columns)
+  const totalW = columns * boxW + (columns - 1) * gapX
+  const totalH = rows * boxH + (rows - 1) * gapY
+  const startX = (CHART_SIZE.width - totalW) / 2
+
+  const positions = prompt.stages.map((stage, index) => {
+    const row = Math.floor(index / columns)
+    const isReverseRow = row % 2 === 1
+    const colInRow = index % columns
+    const col = isReverseRow ? columns - 1 - colInRow : colInRow
+    const x = startX + col * (boxW + gapX)
+    const y = row * (boxH + gapY)
+    return { stage, x, y, row, col, isReverseRow }
+  })
+
+  return (
+    <figure className="writingIeltsFigure">
+      <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
+      <svg
+        viewBox={`0 0 ${CHART_SIZE.width} ${totalH + 20}`}
+        className="writingIeltsChartSvg writingIeltsProcessDiagram"
+        role="img"
+        aria-label={`Process diagram showing ${prompt.chartCaption}`}
+      >
+        {positions.map((pos, index) => {
+          if (index === positions.length - 1) return null
+          const next = positions[index + 1]
+          const sameRow = next.row === pos.row
+          if (sameRow) {
+            const fromX = pos.isReverseRow ? pos.x : pos.x + boxW
+            const toX = next.isReverseRow ? next.x + boxW : next.x
+            const midY = pos.y + boxH / 2
+            return (
+              <path
+                key={`arrow-${index}`}
+                d={`M${fromX},${midY} L${toX - 8},${midY}`}
+                className="writingIeltsProcessArrow"
+                markerEnd="url(#writingIeltsProcessArrowHead)"
+              />
+            )
+          }
+          const fromX = pos.x + boxW / 2
+          const fromY = pos.y + boxH
+          const toX = next.x + boxW / 2
+          const toY = next.y
+          return (
+            <path
+              key={`arrow-${index}`}
+              d={`M${fromX},${fromY} L${fromX},${fromY + gapY / 2} L${toX},${fromY + gapY / 2} L${toX},${toY - 8}`}
+              fill="none"
+              className="writingIeltsProcessArrow"
+              markerEnd="url(#writingIeltsProcessArrowHead)"
+            />
+          )
+        })}
+
+        <defs>
+          <marker id="writingIeltsProcessArrowHead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#0f53c9" />
+          </marker>
+        </defs>
+
+        {positions.map((pos, index) => (
+          <g key={pos.stage.id}>
+            <rect x={pos.x} y={pos.y} width={boxW} height={boxH} className="writingIeltsProcessBox" rx={8} />
+            <text x={pos.x + boxW / 2} y={pos.y + 20} textAnchor="middle" className="writingIeltsProcessStageNumber">
+              {index + 1}. {pos.stage.label}
+            </text>
+            {wrapProcessDetail(pos.stage.detail).map((line, li) => (
+              <text
+                key={li}
+                x={pos.x + boxW / 2}
+                y={pos.y + 38 + li * 13}
+                textAnchor="middle"
+                className="writingIeltsProcessStageDetail"
+              >
+                {line}
+              </text>
+            ))}
+          </g>
+        ))}
+      </svg>
+    </figure>
+  )
+}
+
+function wrapProcessDetail(detail: string) {
+  const words = detail.split(' ')
+  const lines: string[] = []
+  let current = ''
+  words.forEach((word) => {
+    const candidate = current ? `${current} ${word}` : word
+    if (candidate.length > 24) {
+      if (current) lines.push(current)
+      current = word
+    } else {
+      current = candidate
+    }
+  })
+  if (current) lines.push(current)
+  return lines.slice(0, 3)
+}
+
+function renderPromptChart(prompt: WritingTask1PracticePrompt) {
+  if (prompt.kind === 'timeline') {
+    if (prompt.chartType === 'line-graph') return <WritingLineGraphSvg prompt={prompt} />
+    if (prompt.chartType === 'bar-chart') return <WritingBarChartSvg prompt={prompt} />
+    return <WritingTableChart prompt={prompt} />
+  }
+  if (prompt.kind === 'mixed') {
+    return (
+      <div className="writingIeltsMixedChartGroup">
+        {prompt.panels.map((panel, index) => renderMixedPanel(prompt, panel, index))}
+      </div>
+    )
+  }
+  if (prompt.kind === 'map') return <WritingMapDiagramSvg prompt={prompt} />
+  if (prompt.kind === 'process') return <WritingProcessDiagramSvg prompt={prompt} />
+  if (prompt.chartType === 'pie-chart') return <WritingPieChartSvg prompt={prompt} />
+  if (prompt.chartType === 'bar-chart') return <WritingSnapshotBarChartSvg prompt={prompt} />
+  return <WritingSnapshotTable prompt={prompt} />
+}
+
 function WritingIeltsTask1Paper({
   prompt,
   answer,
   onAnswerChange
 }: {
-  prompt: WritingTimelinePracticePrompt
+  prompt: WritingTask1PracticePrompt
   answer: string
   onAnswerChange: (value: string) => void
 }) {
+  const openingLine =
+    prompt.kind === 'timeline'
+      ? getIeltsTask1OpeningLine(prompt)
+      : prompt.kind === 'snapshot'
+        ? getIeltsTask1SnapshotOpeningLine(prompt)
+        : prompt.kind === 'mixed'
+          ? getIeltsTask1MixedOpeningLine(prompt)
+          : prompt.kind === 'map'
+            ? getIeltsTask1MapOpeningLine(prompt)
+            : getIeltsTask1ProcessOpeningLine(prompt)
+
   return (
     <article className="writingIeltsPaper">
       <header className="writingIeltsPaperHead">
@@ -245,13 +817,11 @@ function WritingIeltsTask1Paper({
       </header>
 
       <div className="writingIeltsPaperBody">
-        <p className="writingIeltsPromptLine">{getIeltsTask1OpeningLine(prompt)}</p>
+        <p className="writingIeltsPromptLine">{openingLine}</p>
         <p className="writingIeltsPromptLine">{IELTS_TASK1_SUMMARY_INSTRUCTION}</p>
         <p className="writingIeltsPromptLine writingIeltsPromptLine-limit">{IELTS_TASK1_WORD_LIMIT}</p>
 
-        {prompt.chartType === 'line-graph' ? <WritingLineGraphSvg prompt={prompt} /> : null}
-        {prompt.chartType === 'bar-chart' ? <WritingBarChartSvg prompt={prompt} /> : null}
-        {prompt.chartType === 'table' ? <WritingTableChart prompt={prompt} /> : null}
+        {renderPromptChart(prompt)}
       </div>
 
       <label className="writingIeltsAnswerSheet">
@@ -264,6 +834,199 @@ function WritingIeltsTask1Paper({
         />
       </label>
     </article>
+  )
+}
+
+function shuffleArray<T>(items: T[]): T[] {
+  const result = [...items]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[result[i], result[j]] = [result[j], result[i]]
+  }
+  return result
+}
+
+const DRAG_DROP_ROLE_LABEL: Record<WritingDragDropLine['role'], string> = {
+  intro: 'Introduction',
+  overview: 'Overview',
+  body1: 'Body Paragraph 1',
+  body2: 'Body Paragraph 2'
+}
+
+function WritingDragDropExerciseView({ exercise }: { exercise: WritingDragDropExercise }) {
+  const [state, setState] = useState<{ bank: string[]; placements: Record<string, string | null> }>(() => ({
+    bank: shuffleArray(exercise.wordBank),
+    placements: {}
+  }))
+  const [armedChip, setArmedChip] = useState<string | null>(null)
+  const [checked, setChecked] = useState(false)
+  const [showAnswers, setShowAnswers] = useState(false)
+
+  const allBlanks = useMemo(
+    () =>
+      exercise.lines.flatMap((line) =>
+        line.segments.filter((segment) => segment.kind === 'blank').map((segment) => segment.blank)
+      ),
+    [exercise]
+  )
+
+  const placeChip = (chipText: string, blankId: string) => {
+    setChecked(false)
+    setShowAnswers(false)
+    setState((current) => {
+      const existing = current.placements[blankId]
+      let bank = current.bank.filter((chip) => chip !== chipText)
+      if (existing) bank = [...bank, existing]
+      return { bank, placements: { ...current.placements, [blankId]: chipText } }
+    })
+    setArmedChip(null)
+  }
+
+  const clearBlank = (blankId: string) => {
+    setChecked(false)
+    setShowAnswers(false)
+    setState((current) => {
+      const chip = current.placements[blankId]
+      if (!chip) return current
+      return { bank: [...current.bank, chip], placements: { ...current.placements, [blankId]: null } }
+    })
+  }
+
+  const handleChipClick = (chipText: string) => {
+    setArmedChip((current) => (current === chipText ? null : chipText))
+  }
+
+  const handleBlankClick = (blankId: string) => {
+    if (state.placements[blankId]) {
+      clearBlank(blankId)
+      return
+    }
+    if (armedChip) placeChip(armedChip, blankId)
+  }
+
+  const handleDragStart = (event: DragEvent<HTMLSpanElement>, chipText: string) => {
+    event.dataTransfer.setData('text/plain', chipText)
+  }
+
+  const handleDrop = (event: DragEvent<HTMLSpanElement>, blankId: string) => {
+    event.preventDefault()
+    const chipText = event.dataTransfer.getData('text/plain')
+    if (chipText) placeChip(chipText, blankId)
+  }
+
+  const reset = () => {
+    setState({ bank: shuffleArray(exercise.wordBank), placements: {} })
+    setArmedChip(null)
+    setChecked(false)
+    setShowAnswers(false)
+  }
+
+  const score = allBlanks.filter((blank) => {
+    const placed = state.placements[blank.id]
+    return placed != null && blank.answers.includes(placed)
+  }).length
+
+  const scoreTier: 'perfect' | 'good' | 'retry' | null = !checked
+    ? null
+    : score === allBlanks.length
+      ? 'perfect'
+      : score / allBlanks.length >= 0.6
+        ? 'good'
+        : 'retry'
+
+  const encouragementMessage: Record<'perfect' | 'good' | 'retry', string> = {
+    perfect: 'เยี่ยมมาก! ถูกทุกช่องเลย 🎉',
+    good: 'ทำได้ดีมาก! ใกล้เต็มแล้ว ลองดูช่องที่ผิดอีกครั้ง 💪',
+    retry: 'ยังไม่ครบนะ ลองทบทวนโครงสร้างประโยคแล้วลองใหม่อีกครั้ง 🙂'
+  }
+
+  return (
+    <div className="writingDragDropExercise">
+      <p className="writingDragDropInstructions">{exercise.instructionsTh}</p>
+
+      <div className="writingDragDropPassage">
+        {exercise.lines.map((line) => (
+          <div key={line.id} className="writingDragDropParagraph">
+            <span className="writingDragDropRoleTag">{DRAG_DROP_ROLE_LABEL[line.role]}</span>
+            <p>
+              {line.segments.map((segment, index) => {
+                if (segment.kind === 'text') {
+                  return <span key={index}>{segment.text}</span>
+                }
+                const blank = segment.blank
+                const placed = state.placements[blank.id] || null
+                const isCorrect = placed ? blank.answers.includes(placed) : false
+                let stateClass = ''
+                if (checked) {
+                  stateClass = isCorrect ? 'is-correct' : 'is-incorrect'
+                } else if (placed) {
+                  stateClass = 'is-filled'
+                } else if (armedChip) {
+                  stateClass = 'is-armed-target'
+                }
+                return (
+                  <span
+                    key={blank.id}
+                    role="button"
+                    tabIndex={0}
+                    className={`writingDragDropBlank ${stateClass}`}
+                    onClick={() => handleBlankClick(blank.id)}
+                    onKeyDown={(event) => event.key === 'Enter' && handleBlankClick(blank.id)}
+                    onDragOver={(event) => event.preventDefault()}
+                    onDrop={(event) => handleDrop(event, blank.id)}
+                  >
+                    {placed}
+                    {checked && showAnswers && !isCorrect ? (
+                      <em className="writingDragDropAnswerReveal">({blank.answers.join(' / ')})</em>
+                    ) : null}
+                  </span>
+                )
+              })}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="writingDragDropBank">
+        {state.bank.map((chip, index) => (
+          <span
+            key={`${chip}-${index}`}
+            draggable
+            role="button"
+            tabIndex={0}
+            className={`writingDragDropChip ${armedChip === chip ? 'is-armed' : ''}`}
+            onClick={() => handleChipClick(chip)}
+            onDragStart={(event) => handleDragStart(event, chip)}
+            onKeyDown={(event) => event.key === 'Enter' && handleChipClick(chip)}
+          >
+            {chip}
+          </span>
+        ))}
+      </div>
+
+      <div className="writingDragDropToolbar">
+        <button type="button" className="wlpBtn wlpBtn-primary" onClick={() => setChecked(true)}>
+          ตรวจคำตอบ
+        </button>
+        <button type="button" className="wlpBtn wlpBtn-secondary" onClick={reset}>
+          ลองใหม่
+        </button>
+        {checked ? (
+          <button type="button" className="wlpBtn wlpBtn-secondary" onClick={() => setShowAnswers((v) => !v)}>
+            {showAnswers ? 'ซ่อนเฉลย' : 'ดูเฉลย'}
+          </button>
+        ) : null}
+        <span className={`writingDragDropScore ${checked ? 'is-revealed' : ''}`}>
+          {score} / {allBlanks.length} ถูกต้อง
+        </span>
+      </div>
+
+      {checked && scoreTier ? (
+        <div className={`writingDragDropCelebration writingDragDropCelebration-${scoreTier}`} role="status">
+          {encouragementMessage[scoreTier]}
+        </div>
+      ) : null}
+    </div>
   )
 }
 
@@ -725,7 +1488,7 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
   }, [flow])
 
   const activePrompt = useMemo(() => {
-    if (flow.step !== 'task1-exam') return null
+    if (flow.step !== 'task1-exam' && flow.step !== 'task1-drill') return null
     const prompts = activeCategory?.practicePrompts || WRITING_TIMELINE_PRACTICE_PROMPTS
     return prompts.find((prompt) => prompt.id === flow.promptId) || null
   }, [flow, activeCategory])
@@ -746,6 +1509,10 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
     }
     if (flow.step === 'task1-exam') {
       setFlow({ step: 'task1-questions', categoryId: flow.categoryId })
+      return
+    }
+    if (flow.step === 'task1-drill') {
+      setFlow({ step: 'task1-exam', categoryId: flow.categoryId, promptId: flow.promptId })
     }
   }
 
@@ -1086,7 +1853,9 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
                   <span className="writingGuideExamListNum">Question {prompt.number}</span>
                   <strong>{prompt.title}</strong>
                   <span className="writingGuideExamListMeta">
-                    {prompt.chartTypeLabel} · {prompt.years[0]}–{prompt.years[prompt.years.length - 1]}
+                    {prompt.kind === 'timeline'
+                      ? `${prompt.chartTypeLabel} · ${prompt.years[0]}–${prompt.years[prompt.years.length - 1]}`
+                      : prompt.chartTypeLabel}
                   </span>
                   <span className="writingGuideExamListAction">Start exam →</span>
                 </button>
@@ -1109,6 +1878,17 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
               >
                 ตัวช่วย
               </button>
+              {getWritingDragDropExercise(activePrompt.id) ? (
+                <button
+                  type="button"
+                  className="writingGuideHelperBtn"
+                  onClick={() =>
+                    setFlow({ step: 'task1-drill', categoryId: activeCategory.id, promptId: activePrompt.id })
+                  }
+                >
+                  ฝึกไวยากรณ์ (Drag & Drop)
+                </button>
+              ) : null}
             </div>
             {showHelper ? (
               <WritingVocabularyHelper
@@ -1124,6 +1904,29 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
               }
             />
           </div>
+        ) : null}
+
+        {flow.step === 'task1-drill' && activePrompt ? (
+          (() => {
+            const exercise = getWritingDragDropExercise(activePrompt.id)
+            return (
+              <div className="writingGuideExamShell">
+                <div className="writingGuideExamToolbar">
+                  <button type="button" className="writingGuideFlowBack" onClick={goBack}>
+                    ← Back to exam
+                  </button>
+                </div>
+                {renderPromptChart(activePrompt)}
+                {exercise ? (
+                  <WritingDragDropExerciseView key={exercise.id} exercise={exercise} />
+                ) : (
+                  <div className="writingGuideComingSoon">
+                    <p>Grammar drill for this question is not ready yet.</p>
+                  </div>
+                )}
+              </div>
+            )
+          })()
         ) : null}
 
         {flow.step === 'task1-guide' && activeCategory ? (

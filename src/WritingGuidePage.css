@@ -1005,6 +1005,80 @@
   fill: #111827;
 }
 
+.writingIeltsChartLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.writingIeltsChartLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.writingIeltsChartLegendSwatch {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.writingIeltsPieChartTitle {
+  font-size: 12px;
+  font-weight: 800;
+  fill: #111827;
+}
+
+.writingIeltsPieChartSliceLabel {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #fff;
+}
+
+.writingIeltsPieChartLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.writingIeltsPieChartLegendGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.writingIeltsPieChartLegendGroup .writingIeltsChartLegend {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  gap: 8px 14px;
+}
+
+.writingIeltsPieChartLegendTitle {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.writingIeltsPieChartLegend .writingIeltsChartLegendSwatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
 .writingIeltsTable {
   width: 100%;
   border-collapse: collapse;
@@ -1039,6 +1113,74 @@
   font-size: 0.82rem;
   color: #4b5563;
   font-style: italic;
+}
+
+.writingIeltsMixedChartGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.writingIeltsMapDiagram {
+  overflow: visible;
+}
+
+.writingIeltsMapGround {
+  fill: #eef2f6;
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+}
+
+.writingIeltsMapBorder {
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+}
+
+.writingIeltsMapRoad {
+  stroke: #cbd5e1;
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+
+.writingIeltsMapYear {
+  font-size: 13px;
+  font-weight: 800;
+  fill: #1e3a6e;
+}
+
+.writingIeltsMapZoneLabel {
+  font-size: 9.5px;
+  font-weight: 700;
+  fill: #1e3a6e;
+}
+
+.writingIeltsProcessDiagram {
+  overflow: visible;
+}
+
+.writingIeltsProcessBox {
+  fill: #eef4ff;
+  stroke: #0f53c9;
+  stroke-width: 1.5;
+}
+
+.writingIeltsProcessArrow {
+  fill: none;
+  stroke: #0f53c9;
+  stroke-width: 2;
+}
+
+.writingIeltsProcessStageNumber {
+  font-size: 11.5px;
+  font-weight: 800;
+  fill: #0f2f6e;
+}
+
+.writingIeltsProcessStageDetail {
+  font-size: 9.5px;
+  font-weight: 600;
+  fill: #374151;
 }
 
 .writingIeltsAnswerSheet {
@@ -2441,5 +2583,267 @@
 
   .wlpBand7LegendRow {
     flex-wrap: wrap;
+  }
+}
+
+/* Line graph grammar drag-and-drop drill */
+
+.writingDragDropExercise {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.writingDragDropInstructions {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(239, 246, 255, 0.7);
+  border: 1px dashed rgba(0, 74, 173, 0.22);
+  color: #334155;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.writingDragDropPassage {
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.writingDragDropParagraph {
+  display: grid;
+  gap: 6px;
+}
+
+.writingDragDropParagraph p {
+  margin: 0;
+  color: #111827;
+  font-size: 0.95rem;
+  line-height: 2.1;
+}
+
+.writingDragDropRoleTag {
+  display: inline-flex;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 204, 0, 0.22);
+  color: #92400e;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.writingDragDropBlank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  margin: 0 3px;
+  padding: 2px 10px;
+  border-radius: 8px;
+  border: 1.5px dashed rgba(0, 74, 173, 0.4);
+  background: rgba(239, 246, 255, 0.6);
+  color: #0f2e85;
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  cursor: pointer;
+  vertical-align: middle;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    transform 120ms ease;
+}
+
+.writingDragDropBlank:empty::before {
+  content: '\00a0\00a0\00a0\00a0\00a0\00a0';
+}
+
+.writingDragDropBlank.is-filled {
+  border-style: solid;
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.writingDragDropBlank.is-armed-target {
+  border-color: var(--bc-blue);
+  background: rgba(96, 165, 250, 0.16);
+  transform: translateY(-1px);
+}
+
+.writingDragDropBlank.is-correct {
+  border-style: solid;
+  border-color: #16a34a;
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+}
+
+.writingDragDropBlank.is-incorrect {
+  border-style: solid;
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+  color: #b91c1c;
+}
+
+.writingDragDropAnswerReveal {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-style: normal;
+  color: #92400e;
+  white-space: nowrap;
+}
+
+.writingDragDropBank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.9);
+  min-height: 48px;
+}
+
+.writingDragDropChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 74, 173, 0.16);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.92));
+  color: #0f172a;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.3;
+  box-shadow: 0 6px 16px rgba(0, 74, 173, 0.06);
+  cursor: grab;
+  user-select: none;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    border-color 120ms ease;
+}
+
+.writingDragDropChip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 74, 173, 0.12);
+}
+
+.writingDragDropChip.is-armed {
+  border-color: var(--bc-blue);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.24), rgba(239, 246, 255, 0.92));
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.35);
+}
+
+.writingDragDropToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.writingDragDropScore {
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(15, 46, 133, 0.08);
+  color: #0f2e85;
+  font-size: 0.82rem;
+  font-weight: 800;
+  transition: transform 120ms ease;
+}
+
+.writingDragDropScore.is-revealed {
+  animation: writingDragDropScorePulse 420ms ease;
+}
+
+@keyframes writingDragDropScorePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(15, 46, 133, 0.35);
+  }
+  40% {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 6px rgba(15, 46, 133, 0.14);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(15, 46, 133, 0);
+  }
+}
+
+@keyframes writingDragDropChipPop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.writingDragDropBlank.is-filled,
+.writingDragDropBlank.is-correct,
+.writingDragDropBlank.is-incorrect {
+  animation: writingDragDropChipPop 220ms ease;
+}
+
+@keyframes writingDragDropCelebrationIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.writingDragDropCelebration {
+  margin-top: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: center;
+  animation: writingDragDropCelebrationIn 260ms ease;
+}
+
+.writingDragDropCelebration-perfect {
+  background: rgba(22, 163, 74, 0.12);
+  border: 1px solid rgba(22, 163, 74, 0.35);
+  color: #15803d;
+}
+
+.writingDragDropCelebration-good {
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.35);
+  color: #b45309;
+}
+
+.writingDragDropCelebration-retry {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #b91c1c;
+}
+
+@media (max-width: 640px) {
+  .writingDragDropPassage {
+    padding: 14px 16px;
+  }
+
+  .writingDragDropScore {
+    margin-left: 0;
   }
 }
