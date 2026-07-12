@@ -4467,6 +4467,39 @@ const getReadingMatchingAnswerOptions = (
 }
 
 
+/** Signature that ignores the trailing "Write … A–H" clause so two variants of
+ *  the same instruction (e.g. "Write A–H." vs "Write the correct letter, A–G.")
+ *  collapse to one line. */
+const normalizeReadingInstructionSignature = (line: string) =>
+  line.toLowerCase().replace(/\bwrite\b.*$/i, '').replace(/[^a-z0-9]+/g, ' ').trim()
+
+/** Remove exact and near-duplicate instruction lines that OCR/source artifacts
+ *  sometimes leave behind, so the question card never shows two contradictory
+ *  instructions at once. The answer dropdown remains authoritative for letters. */
+const dedupeReadingInstructionLines = (lines: string[]): string[] => {
+  const order: string[] = []
+  const bySignature = new Map<string, string>()
+  const seenExact = new Set<string>()
+  for (const raw of lines) {
+    const line = raw.replace(/\s+/g, ' ').trim()
+    if (!line) continue
+    const exact = line.toLowerCase()
+    if (seenExact.has(exact)) continue
+    seenExact.add(exact)
+    const sig = normalizeReadingInstructionSignature(line) || exact
+    if (!bySignature.has(sig)) {
+      bySignature.set(sig, line)
+      order.push(sig)
+      continue
+    }
+    // Near-duplicate stem: keep the canonical "write the correct letter" phrasing.
+    const existing = bySignature.get(sig) as string
+    const canonical = /write the correct letter/i
+    if (canonical.test(line) && !canonical.test(existing)) bySignature.set(sig, line)
+  }
+  return order.map((sig) => bySignature.get(sig) as string)
+}
+
 const extractReadingMatchingGroupInstruction = (
   passage: ReadingPassageRecord | null,
   kind: ReadingMatchingGroupKind,
@@ -4489,7 +4522,7 @@ const extractReadingMatchingGroupInstruction = (
         /^write\s+[A-Z]/i.test(line) ||
         /^nb\b/i.test(line)
     )
-    if (instructionLines.length) return instructionLines.join('\n')
+    if (instructionLines.length) return dedupeReadingInstructionLines(instructionLines).join('\n')
   }
 
   if (kind === 'heading') {
@@ -4498,7 +4531,7 @@ const extractReadingMatchingGroupInstruction = (
         /choose the correct heading|list of headings|write the correct number/i.test(line) ||
         /paragraphs?,\s*[A-Z]/i.test(line)
     )
-    if (instructionLines.length) return instructionLines.join('\n')
+    if (instructionLines.length) return dedupeReadingInstructionLines(instructionLines).join('\n')
     return 'Choose the correct heading for each paragraph from the list below.'
   }
 
@@ -4515,7 +4548,7 @@ const extractReadingMatchingGroupInstruction = (
         /list of (?:ideas|researchers|people|statements|companies|dates|words|phrases)/i.test(line) ||
         /^nb\b/i.test(line)
     )
-    if (instructionLines.length) return instructionLines.join('\n')
+    if (instructionLines.length) return dedupeReadingInstructionLines(instructionLines).join('\n')
   }
 
   return block.trim()
@@ -22843,10 +22876,16 @@ function App() {
                           className={`${hasAnswer ? 'is-answered' : ''} ${isHinting ? 'is-active' : ''}`.trim()}
                           onClick={() => {
                             setReadingHintQuestionNumber(question.number)
-                            document.getElementById(`reading-question-${question.number}`)?.scrollIntoView({
-                              behavior: 'smooth',
-                              block: 'start'
-                            })
+                            // Scroll the questions pane vertically only. scrollIntoView would
+                            // also shift the pane horizontally when a wide row (e.g. a table)
+                            // makes it programmatically scrollable, clipping text at the edges.
+                            const target = document.getElementById(`reading-question-${question.number}`)
+                            const scroller = target?.closest('.readingQuestionsScroll') as HTMLElement | null
+                            if (target && scroller) {
+                              const delta =
+                                target.getBoundingClientRect().top - scroller.getBoundingClientRect().top
+                              scroller.scrollBy({ top: delta - 8, behavior: 'smooth' })
+                            }
                           }}
                         >
                           {question.number}

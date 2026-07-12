@@ -105,10 +105,16 @@ const normalizeOcrFillLine = (line: string, questionNumbers: Set<number>) => {
     // OCR-mangled blank where the dots were replaced by a short token / stray
     // punctuation (e.g. "24 wuss »", "25 ccs:", "26 oo..."). Force a clean blank and
     // swallow that short garbage so the summary reads cleanly for the learner.
+    //
+    // The trailing `(?=…)` anchor is essential: only fire when the number + short
+    // junk reaches the end of the line (or runs straight into the next question
+    // number). Without it, this would eat the first word of a "Complete the
+    // sentences" item — e.g. "1 Some food plants, including … are grown indoors"
+    // where the number is a list marker and the real blank sits mid-sentence.
     result = result.replace(
       new RegExp(
         `\\b${questionNumber}\\b(?!\\s*(?:[.．…⋯·•_\\-–—]{2,}|…))` +
-          `\\s*[.．…⋯·•_\\-–—]*\\s*[a-z0-9]{0,8}\\s*[»:]?[.．…⋯·•_\\-–—]*`,
+          `\\s*[.．…⋯·•_\\-–—]*\\s*[a-z0-9]{0,8}\\s*[»:]?[.．…⋯·•_\\-–—]*(?=\\s*$|\\s+\\d)`,
         'i'
       ),
       `${questionNumber} ……………`
@@ -604,6 +610,60 @@ export const parseReadingFillLineSegments = (
   return coalesceFillLineSegments(segments)
 }
 
+const normalizeFillTextForDedup = (text: string) =>
+  String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+
+/** Collapse an immediately-repeated trailing phrase, e.g. a wrapped continuation
+ *  that got both merged into a blank's `after` and appended again:
+ *  "would be unnecessary. unnecessary." → "would be unnecessary." */
+const collapseRepeatedTail = (text: string) => {
+  const normalized = String(text || '').replace(/\s+/g, ' ').trim()
+  const words = normalized.split(' ')
+  for (let k = Math.floor(words.length / 2); k >= 1; k -= 1) {
+    const tail = words.slice(words.length - k).join(' ').toLowerCase()
+    const prev = words.slice(words.length - 2 * k, words.length - k).join(' ').toLowerCase()
+    if (tail && tail === prev) return words.slice(0, words.length - k).join(' ')
+  }
+  return normalized
+}
+
+/** Remove redundancy that OCR continuation-line handling can introduce: a repeated
+ *  tail inside a blank's context, and stray text/clue lines whose content is already
+ *  shown next to a blank (so the learner never sees the same fragment twice). */
+const dedupeFillDisplayNoise = (lines: ReadingFillDisplayLine[]): ReadingFillDisplayLine[] => {
+  const cleaned = lines.map((line) => ({
+    ...line,
+    segments: line.segments.map((segment) =>
+      segment.kind === 'blank'
+        ? {
+            ...segment,
+            before: collapseRepeatedTail(segment.before),
+            after: collapseRepeatedTail(segment.after)
+          }
+        : segment
+    )
+  }))
+
+  const blankContext: string[] = []
+  for (const line of cleaned) {
+    for (const segment of [...line.segments, ...(line.procedureSegments || [])]) {
+      if (segment.kind === 'blank') {
+        if (segment.before) blankContext.push(normalizeFillTextForDedup(segment.before))
+        if (segment.after) blankContext.push(normalizeFillTextForDedup(segment.after))
+      }
+    }
+  }
+
+  return cleaned.filter((line) => {
+    if (line.segments.length !== 1) return true
+    const segment = line.segments[0]
+    if (segment.kind !== 'text' && segment.kind !== 'clue') return true
+    const normalized = normalizeFillTextForDedup(segment.text)
+    if (normalized.length < 4) return true
+    return !blankContext.some((context) => context.includes(normalized))
+  })
+}
+
 export const extractReadingFillDisplayLines = (
   block: string,
   questionNumbers: Set<number>,
@@ -647,7 +707,8 @@ export const extractReadingFillDisplayLines = (
     const enriched = enrichFillDisplayLines(displayLines, questions)
     const merged = mergeFillDisplayLineContinuations(enriched)
     const split = splitMultiBlankDisplayLines(merged)
-    return supplementMissingFillDisplayLines(split, questionNumbers, questions, block)
+    const supplemented = supplementMissingFillDisplayLines(split, questionNumbers, questions, block)
+    return dedupeFillDisplayNoise(supplemented)
   }
 
   return [...questionNumbers]

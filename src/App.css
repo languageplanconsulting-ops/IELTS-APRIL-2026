@@ -10382,6 +10382,59 @@ body,
   flex: 1 1 auto;
 }
 
+/* ── Keep exam question content inside the panel (no horizontal overflow) ──
+   `.readingQuestionsScroll` is overflow-x:hidden but still *programmatically*
+   scrollable, so any content wider than the panel (a note-completion table, a
+   long unbreakable token) let scrollIntoView shift the pane sideways and clip
+   text at the right edge. Force every question block to wrap within the pane. */
+.readingExamLayout-bank .readingPassagePanel-exam,
+.readingExamLayout-bank .readingQuestionsPanel-exam,
+.readingExamLayout-bank .readingQuestionsScroll,
+.readingExamLayout-bank .readingQuestionList,
+.readingExamLayout-bank .readingQuestionSections {
+  min-width: 0;
+}
+
+.readingExamLayout-bank .readingQuestionsScroll .readingQuestionCard,
+.readingExamLayout-bank .readingQuestionsScroll .readingJudgementRow,
+.readingExamLayout-bank .readingQuestionsScroll .readingMcqQuestionRow,
+.readingExamLayout-bank .readingQuestionsScroll .readingMatchingInfoGroup,
+.readingExamLayout-bank .readingQuestionsScroll .readingTaskInstruction,
+.readingExamLayout-bank .readingQuestionsScroll .readingFillNewInstruction {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* Note / table completion: wrap cells instead of pushing the table past the
+   panel edge (which cut off the rightmost column, e.g. "OTHER NOTES"). */
+.readingExamLayout-bank .readingQuestionsScroll table {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+}
+
+.readingExamLayout-bank .readingQuestionsScroll table th,
+.readingExamLayout-bank .readingQuestionsScroll table td {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.readingExamLayout-bank .readingQuestionsScroll .readingFillNewTableName {
+  white-space: normal;
+}
+
+/* Give the last question room to clear the sticky submit bar, and make the bar
+   opaque so scrolled content never shows through it (perceived overlap). */
+.readingExamLayout-bank .readingQuestionsScroll {
+  padding-bottom: 8px;
+  scroll-padding-bottom: 16px;
+}
+
+.readingExamLayout-bank .readingExamSubmitBar {
+  background: #fffef9;
+}
+
 /* ── Grouped accordion question sections (V3) ── */
 .readingQuestionSections {
   display: flex;

@@ -2458,7 +2458,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "Correct Answer: vi",
+              "prompt": "Paragraph A",
               "correctAnswer": "vi",
               "acceptedAnswers": [
                 "vi"
@@ -2471,7 +2471,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "Correct Answer: iv",
+              "prompt": "Paragraph B",
               "correctAnswer": "iv",
               "acceptedAnswers": [
                 "iv"
@@ -2484,7 +2484,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "Correct Answer: ii",
+              "prompt": "Paragraph C",
               "correctAnswer": "ii",
               "acceptedAnswers": [
                 "ii"
@@ -2497,7 +2497,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "Correct Answer: vii",
+              "prompt": "Paragraph D",
               "correctAnswer": "vii",
               "acceptedAnswers": [
                 "vii"
@@ -2510,7 +2510,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "Correct Answer: i",
+              "prompt": "Paragraph E",
               "correctAnswer": "i",
               "acceptedAnswers": [
                 "i"
@@ -2523,7 +2523,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "Correct Answer: v",
+              "prompt": "Paragraph F",
               "correctAnswer": "v",
               "acceptedAnswers": [
                 "v"

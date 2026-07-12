@@ -100,26 +100,6 @@ export type ReadingJourneyProgress = {
 }
 
 const QUESTION_START_BY_PASSAGE_SLOT = [1, 14] as const
-/** Stages 1–5 use 14 questions on passage 1, so passage 2 starts at 15. */
-const INTENSIVE_QUESTION_START_BY_STAGE: Record<number, readonly [number, number]> = {
-  1: [1, 15],
-  2: [1, 15],
-  3: [1, 15],
-  4: [1, 15],
-  5: [1, 15],
-  6: [1, 15],
-  7: [1, 15],
-  8: [1, 15],
-  9: [1, 15],
-  10: [1, 15],
-  11: [1, 15],
-  12: [1, 15],
-  13: [1, 15],
-  14: [1, 15],
-  15: [1, 15],
-  16: [1, 15],
-  17: [1, 15]
-}
 const FULL_READING_QUESTION_START_BY_PASSAGE_SLOT = [1, 14, 27] as const
 
 export const getReadingJourneyStageId = (stageNumber: number) =>
@@ -538,7 +518,9 @@ export const buildIntensiveJourneyExam = (stageNumber: number): ReadingExamRecor
   const legacyPair = INTENSIVE_PASSAGES_BY_STAGE[stageNumber]
   if (!layouts && !legacyPair) return null
 
-  const starts = INTENSIVE_QUESTION_START_BY_STAGE[stageNumber] || QUESTION_START_BY_PASSAGE_SLOT
+  // Passage 1 always holds 13 questions, so passage 2 starts at Q14 — keeping the
+  // exam numbered 1..26 with no gap. (Previously reserved 14 for P1, skipping Q14.)
+  const starts = QUESTION_START_BY_PASSAGE_SLOT
 
   const passages = layouts
     ? layouts.map((layout, index) => {
