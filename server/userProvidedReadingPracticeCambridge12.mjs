@@ -684,9 +684,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
       "passages": [
         {
           "number": 1,
-          "title": "The Risks Agriculture Faces in Developing Countries",
+          "title": "The Risks Agriculture Faces in Developing Countries Synthesis of an online debate*",
           "bodyParagraphs": [
-            "The risks agriculture faces in developing countries Synthesis of an online debate*",
             "A. Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a right to it; and second, it is hugely dependent on nature. These two unique aspects, one political, the other natural, make food production highly vulnerable and different from any other business. At the same time, cultural values are highly entrenched in food and agricultural systems worldwide.",
             "B. Farmers everywhere face major risks, including extreme weather, long-term climate change, and price volatility in input and product markets. However, smallholder farmers in developing countries must in addition deal with adverse environments, both natural, in terms of soil quality, rainfall, etc., and human, in terms of infrastructure, financial systems, markets, knowledge and technology. Counter-intuitively, hunger is prevalent among many smallholder farmers in the developing world.",
             "C. Participants in the online debate argued that our biggest challenge is to address the underlying causes of the agricultural system’s inability to ensure sufficient food for all, and they identified as drivers of this problem our dependency on fossil fuels and unsupportive government policies.",
@@ -1132,7 +1131,6 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "number": 3,
           "title": "The Benefits of Being Bilingual",
           "bodyParagraphs": [
-            "The Benefits of Being Bilingual",
             "A",
             "According to the latest figures, the majority of the world’s population is now bilingual or multilingual, having grown up speaking two or more languages. In the past, such children were considered to be at a disadvantage compared with their monolingual peers. Over the past few decades, however, technological advances have allowed researchers to look more deeply at how bilingualism interacts with and changes the cognitive and neurological systems, thereby identifying several clear benefits of being bilingual.",
             "B",
@@ -1587,7 +1585,6 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "number": 2,
           "title": "The Intersection of Health Sciences and Geography",
           "bodyParagraphs": [
-            "The Intersection of Health Sciences and Geography",
             "A. While many diseases that affect humans have been eradicated due to improvements in vaccinations and the availability of healthcare, there are still areas around the world where certain health issues are more prevalent. In a world that is far more globalised than ever before, people come into contact with one another through travel and living closer and closer to each other. As a result, super-viruses and other infections resistant to antibiotics are becoming more and more common.",
             "B. Geography can often play a very large role in the health concerns of certain populations. For instance, depending on where you live, you will not have the same health concerns as someone who lives in a different geographical region. Perhaps one of the most obvious examples of this idea is malaria-prone areas, which are usually tropical regions that foster a warm and damp environment in which the mosquitos that can give people this disease can grow. Malaria is much less of a problem in high-altitude deserts, for instance.",
             "C. In some countries, geographical factors influence the health and well-being of the population in very obvious ways. In many large cities, the wind is not strong enough to clear the air of the massive amounts of smog and pollution that cause asthma, lung problems, eyesight issues and more in the people who live there. Part of the problem is, of course, the massive number of cars being driven, in addition to factories that run on coal power. The rapid industrialisation of some countries in recent years has also led to the cutting down of forests to allow for the expansion of big cities, which makes it even harder to fight the pollution with the fresh air that is produced by plants.",
@@ -2473,7 +2470,6 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "number": 3,
           "title": "UK Companies Need More Effective Boards of Directors",
           "bodyParagraphs": [
-            "UK companies need more effective boards of directors",
             "A",
             "After a number of serious failures of governance (that is, how they are managed at the highest level), companies in Britain, as well as elsewhere, should consider radical changes to their directors’ roles. It is clear that the role of a board director today is not an easy one. Following the 2008 financial meltdown, which resulted in a deeper and more prolonged period of economic downturn than anyone expected, the search for explanations in the many post-mortems of the crisis has meant blame has been spread far and wide. Governments, regulators, central banks and auditors have all been in the frame. The role of bank directors and management and their widely publicised failures have been extensively picked over and examined in reports, inquiries and commentaries.",
             "B",

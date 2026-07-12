@@ -1759,9 +1759,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_16_EXAMS = [
       "passages": [
         {
           "number": 3,
-          "title": "Plant 'thermometer' triggers springtime growth by measuring night-time heat",
+          "title": "Plant 'thermometer' triggers springtime growth by measuring night-time heat A photoreceptor molecule in plant cells has been found to have a second job as a thermometer after dark - allowing plants to read seasonal temperature changes. Scientists say the discovery could help breed crops that are more resilient to the temperatures expected to result from climate change",
           "bodyParagraphs": [
-            "Plant ‘thermometer’ triggers springtime growth by measuring night-time heat A photoreceptor molecule in plant cells has been found to have a second job as a thermometer after dark - allowing plants to read seasonal temperature changes. Scientists say the discovery could help breed crops that are more resilient to the temperatures expected to result from climate change",
             "A An international team of scientists led by the University of Cambridge has",
             "discovered that the ‘thermometer’ molecule in plants enables them to develop according to seasonal temperature changes. Researchers have revealed that molecules called phytochromes - used by plants to detect light during the day - actually change their function in darkness to become cellular temperature gauges that measure the heat of the night. The new findings, published in the journal Science, show that phytochromes control genetic switches in response to temperature as well as light to dictate plant development. B_ Atnight, these molecules change states, and the pace at which they change is ‘directly proportional to temperature’, say scientists, who compare phytochromes to mercury in a thermometer. The warmer it is, the faster the molecular change - stimulating plant growth.",
             "C Farmers and gardeners have known for hundreds of years how responsive plants are",

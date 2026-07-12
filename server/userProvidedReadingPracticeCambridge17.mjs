@@ -2380,9 +2380,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "h history, there's no evidence that having a high literacy rate made a country industrialise earlier.' Between 1600 and 1900, England had only mediocre literacy rates by European standards, yet its economy grew fast and it was the first cou",
-              "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Which TWO statements does the writer make about literacy rates in Section B?) โดยเฉพาะประโยค \"h history, there’s no evidence that having a high literacy rate made a country industrialise ea…\" จึงเลือก E",
-              "paraphrasedVocabulary": "literacy rates section = history evidence having literacy = E"
+              "exactPortion": "'Modern cross-country analyses have also struggled to find evidence that education causes economic growth, even though there is plenty of evidence that growth increases education,' she adds.",
+              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Which TWO statements does the writer make about literacy rates in Section B?) โดยเฉพาะประโยค \"'Modern cross-country analyses have also struggled to find evidence that education causes eco…\" จึงเลือก E",
+              "paraphrasedVocabulary": "literacy rates section = modern cross-country analyses growth increases = E"
             },
             {
               "number": 25,
@@ -2394,9 +2394,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "As Ogilvie explains, 'Education helps us to work more productively, invent better technology, and earn more ...",
-              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Which TWO statements does the writer make in Section F about guilds in German-speaking Central Europe?) โดยเฉพาะประโยค \"As Ogilvie explains, “Education helps us to work more productively, invent better technology, a…\" จึงเลือก B",
-              "paraphrasedVocabulary": "section guilds german-speaking = ogilvie explains education productively = B"
+              "exactPortion": "In villages throughout the region, guilds blocked labour migration and resisted changes that might reduce their influence.",
+              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Which TWO statements does the writer make in Section F about guilds in German-speaking Central Europe?) โดยเฉพาะประโยค \"In villages throughout the region, guilds blocked labour migration and resisted changes that m…\" จึงเลือก B",
+              "paraphrasedVocabulary": "opposed people moving work = villages guilds blocked labour migration = B"
             },
             {
               "number": 26,
@@ -2408,9 +2408,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "s reveal obstacles (such as the activities of the guilds*) that stifled industry.",
-              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Which TWO statements does the writer make in Section F about guilds in German-speaking Central Europe?) โดยเฉพาะประโยค \"s reveal obstacles (such as the activities of the guilds*) that stifled industry.\" จึงเลือก D",
-              "paraphrasedVocabulary": "section guilds german-speaking = reveal obstacles activities guilds = D"
+              "exactPortion": "It was also the case that local guilds and merchant associations were extremely powerful and legislated against anything that undermined their monopolies.",
+              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Which TWO statements does the writer make in Section F about guilds in German-speaking Central Europe?) โดยเฉพาะประโยค \"It was also the case that local guilds and merchant associations were extremely powerful and l…\" จึงเลือก D",
+              "paraphrasedVocabulary": "opposed practices threatened trade = guilds merchant associations legislated monopolies = D"
             }
           ]
         }
@@ -2432,9 +2432,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 3,
-          "title": "Timur Gareyev - blindfold chess champion A Next",
+          "title": "Timur Gareyev - blindfold chess champion",
           "bodyParagraphs": [
-            "Timur Gareyev - blindfold chess champion",
             "A. Next month, a chess player named Timur Gareyev will take on nearly 50 opponents at once. While his challengers will play the games as normal, Gareyev himself will be blindfolded. Even by world record standards, it sets a high bar for human performance. The 28-year-old already stands out in the rarefied world of blindfold chess. He has a fondness for bright clothes and unusual hairstyles, and he gets his kicks from the adventure sport of BASE jumping. He has already proved himself a strong chess player, too. In a 10-hour chess marathon in 2013, Gareyev played 33 games in his head simultaneously. The skill has become his brand: he calls himself the Blindfold King.",
             "B. But Gareyev's prowess has drawn interest from beyond the chess-playing community. In the hope of understanding how he and others like him can perform such mental feats, researchers at the University of California in Los Angeles (UCLA) called him in for tests. The ability to play a game of chess with your eyes closed is not a far reach for most accomplished players,' said Jesse Rissman, who runs a memory lab at UCLA. 'But the thing that's so remarkable about Timur and a few other individuals is the number of games they can keep active at once.",
             "C. Gareyev learned to play chess in his native Uzbekistan when he was six years old. Tutored by his grandfather, he entered his first tournament aged eight and soon became obsessed with competitions. At 16, he was crowned Asia's youngest ever chess grandmaster. He moved to the US soon after, and as a student helped his university win its first national chess championship. In 2013, Gareyev was ranked the third best chess player in the US.",
@@ -2494,9 +2493,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "A Next month, a chess player named Timur Gareyev will take on nearly 50 opponents at once.",
-              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (a claim that Gareyev's skill is limited to chess) โดยเฉพาะประโยค \"A Next month, a chess player named Timur Gareyev will take on nearly 50 opponents at once.\" จึงเลือก F",
-              "paraphrasedVocabulary": "claim gareyev's skill = player gareyev nearly opponents = F"
+              "exactPortion": "We didn't find anything other than playing chess that he seems to be supremely gifted at.",
+              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (a claim that Gareyev's skill is limited to chess) โดยเฉพาะประโยค \"We didn't find anything other than playing chess that he seems to be supremely gifted at.\" จึงเลือก F",
+              "paraphrasedVocabulary": "skill limited chess = didn't find anything other supremely gifted = F"
             },
             {
               "number": 30,
@@ -2520,9 +2519,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "A Next month, a chess player named Timur Gareyev will take on nearly 50 opponents at once.",
-              "explanationThai": "ย่อหน้า H มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (an outline of Gareyev's priorities) โดยเฉพาะประโยค \"A Next month, a chess player named Timur Gareyev will take on nearly 50 opponents at once.\" จึงเลือก H",
-              "paraphrasedVocabulary": "outline gareyev's priorities = player gareyev nearly opponents = H"
+              "exactPortion": "I don't worry too much about the winning percentage, that's never been an issue for me,' he said. 'The most important part of blindfold chess for me is that I have found the one thing that I can fully dedicate myself to.",
+              "explanationThai": "ย่อหน้า H มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (an outline of Gareyev's priorities) โดยเฉพาะประโยค \"I don't worry too much about the winning percentage, that's never been an issue for me,' he sa…\" จึงเลือก H",
+              "paraphrasedVocabulary": "outline gareyev's priorities = don't worry winning percentage important dedicate = H"
             },
             {
               "number": 32,
@@ -2546,9 +2545,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 3",
               "answerType": "true-false-not-given",
-              "exactPortion": "‘The ability to play a game of chess with your eyes closed is not a far reach for most accomplished players,’ said Jesse Rissman, who runs a memory lab at UCLA.",
-              "explanationThai": "ข้อความในข้อว่า \"In the forthcoming games, all the participants will be blindfolded.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"‘The ability to play a game of chess with your eyes closed is not a far reach for most accompli…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
-              "paraphrasedVocabulary": "forthcoming games participants = ability closed accomplished players = FALSE"
+              "exactPortion": "While his challengers will play the games as normal, Gareyev himself will be blindfolded.",
+              "explanationThai": "ข้อความในข้อว่า \"In the forthcoming games, all the participants will be blindfolded.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"While his challengers will play the games as normal, Gareyev himself will be blindfolded.\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "forthcoming games participants = challengers play normal gareyev blindfolded = FALSE"
             },
             {
               "number": 34,
@@ -2598,9 +2597,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 3",
               "answerType": "text",
-              "exactPortion": "‘The ability to play a game of chess with your eyes closed is not a far reach for most accomplished players,’ said Jesse Rissman, who runs a memory lab at UCLA.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The researchers started by testing Gareyev's 37 …\" บทความมีถ้อยคำที่ตรงกันคือ \"‘The ability to play a game of chess with your eyes closed is not a far reach for most accompli…\" จึงคำตอบคือ \"memory\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "researchers started testing = ability closed accomplished players = memory"
+              "exactPortion": "The scientists first had Gareyev perform some standard memory tests.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The researchers started by testing Gareyev's 37 …\" บทความมีถ้อยคำที่ตรงกันคือ \"The scientists first had Gareyev perform some standard memory tests.\" จึงคำตอบคือ \"memory\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "researchers started testing = scientists first gareyev perform standard = memory"
             },
             {
               "number": 38,

@@ -44,6 +44,31 @@ const isBadPrompt = (question) => {
   return ''
 }
 
+const normalizeForOverlap = (s) =>
+  String(s || '')
+    .toLowerCase()
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/[–—]/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/** Detects the "title leaked into bodyParagraphs[0]" import artefact (title duplicated as the paragraph's lead-in). */
+const findTitleBodyOverlap = (title, body0) => {
+  const titleWords = String(title || '').split(/\s+/).filter(Boolean)
+  if (titleWords.length < 5) return 0 // short titles overlap body text coincidentally (e.g. "Cork", "polar bears")
+
+  const bodyWordsNorm = normalizeForOverlap(body0).split(' ').filter(Boolean)
+  const titleWordsNorm = normalizeForOverlap(title).split(' ').filter(Boolean)
+  const maxN = Math.min(12, titleWordsNorm.length, bodyWordsNorm.length)
+  for (let n = maxN; n >= 3; n -= 1) {
+    const tail = titleWordsNorm.slice(-n).join(' ')
+    const head = bodyWordsNorm.slice(0, n).join(' ')
+    if (tail === head) return n
+  }
+  return 0
+}
+
 const failures = []
 let textAnswerCount = 0
 let totalQuestionCount = 0
@@ -51,6 +76,17 @@ let totalQuestionCount = 0
 for (const exam of EXAMS) {
   const parsedPayload = buildReadingExamPayload(exam)
   for (const passage of parsedPayload.passages || []) {
+    const overlapN = findTitleBodyOverlap(passage.title, passage.bodyParagraphs?.[0])
+    if (overlapN > 0) {
+      failures.push({
+        exam: exam.title,
+        passage: passage.number,
+        question: '-',
+        answerType: '-',
+        reason: `title duplicated into bodyParagraphs[0] (${overlapN}-word overlap)`,
+        prompt: `title="${passage.title}" body0="${String(passage.bodyParagraphs[0]).slice(0, 80)}..."`
+      })
+    }
     for (const question of passage.questions || []) {
       totalQuestionCount += 1
       if (question.answerType === 'text') textAnswerCount += 1
