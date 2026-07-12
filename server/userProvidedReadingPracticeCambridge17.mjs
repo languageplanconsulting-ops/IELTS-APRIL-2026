@@ -2030,9 +2030,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "The result is devastating habitat and biodiversity loss on the island, but not all species are suffering.",
-              "explanationThai": "ข้อความในข้อว่า \"Many Madagascan forests are being destroyed by attacks from insects.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"The result is devastating habitat and biodiversity loss on the island, but not all species are …\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
-              "paraphrasedVocabulary": "forests destroyed attacks = result devastating habitat biodiversity = FALSE"
+              "exactPortion": "And a key reason for this destruction is that insect pests are destroying vast quantities of what is grown by local subsistence farmers, leading them to clear forest to create new paddy fields.",
+              "explanationThai": "ข้อความในข้อว่า \"Many Madagascan forests are being destroyed by attacks from insects.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"And a key reason for this destruction is that insect pests are destroying vast quantities of wha…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE",
+              "paraphrasedVocabulary": "forests destroyed attacks = key reason insect pests destroying = FALSE"
             },
             {
               "number": 2,
@@ -2210,7 +2210,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 2,
-          "title": "Does education fuel economic growth? A Over the",
+          "title": "Does education fuel economic growth?",
           "bodyParagraphs": [
             "A. Over the last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University's Faculty of Economics. It includes court records, guild ledgers, parish registers, village censuses, tax lists and - the most recent addition - 9,000 handwritten inventories listing over a million personal possessions belonging to ordinary women and men across three centuries. Ogilvie, who discovered the inventories in the archives of two German communities 30 years ago, believes they may hold the answer to a conundrum that has long puzzled economists: the lack of evidence for a causal link between education and a country's economic growth.",
             "B. As Ogilvie explains, 'Education helps us to work more productively, invent better technology, and earn more ... surely it must be critical for economic growth? But, if you look back through history, there's no evidence that having a high literacy rate made a country industrialise earlier.' Between 1600 and 1900, England had only mediocre literacy rates by European standards, yet its economy grew fast and it was the first country to industrialise. During this period, Germany and Scandinavia had excellent literacy rates, but their economies grew slowly and they industrialised late. 'Modern cross-country analyses have also struggled to find evidence that education causes economic growth, even though there is plenty of evidence that growth increases education,' she adds.",
@@ -2248,9 +2248,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "According to Ogilvie, the database provides multiple indicators for the same individuals, making it possible to analyse links between literacy, numeracy, wealth, and industriousness, for individual women and men over the long term.",
-              "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (An explanation of the need for research to focus on individuals with a fairly consistent income) โดยเฉพาะประโยค \"According to Ogilvie, the database provides multiple indicators for the same individuals, makin…\" จึงเลือก E",
-              "paraphrasedVocabulary": "explanation need research = according ogilvie database provides = E"
+              "exactPortion": "One way to look at whether education causes economic growth is to 'hold wealth constant'. This involves following the lives of different people with the same level of wealth over a period of time.",
+              "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (An explanation of the need for research to focus on individuals with a fairly consistent income) โดยเฉพาะประโยค \"One way to look at whether education causes economic growth is to 'hold wealth constant'. This…\" จึงเลือก E",
+              "paraphrasedVocabulary": "consistent income research = hold wealth constant same level = E"
             },
             {
               "number": 15,
@@ -2274,9 +2274,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "Over the last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University's Faculty of Economics.",
-              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (An account of one individual's refusal to obey an order) โดยเฉพาะประโยค \"A Overthe last decade, a huge database about the lives of southwest German villagers between 16…\" จึงเลือก D",
-              "paraphrasedVocabulary": "account individual's refusal = overthe decade database southwest = D"
+              "exactPortion": "When Juliana continued taking jobs reserved for male guild members, she was summoned before the guild court and told to pay a fine equivalent to one third of a servant's annual wage.",
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (An account of one individual's refusal to obey an order) โดยเฉพาะประโยค \"When Juliana continued taking jobs reserved for male guild members, she was summoned before t…\" จึงเลือก D",
+              "paraphrasedVocabulary": "account individual's refusal = juliana continued taking reserved = D"
             },
             {
               "number": 17,
