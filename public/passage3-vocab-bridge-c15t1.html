@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passage 3 Vocab Bridge — C15 T1 P3 (real data)</title>
+<style>
+  :root{--bc-blue:#004aad;--bc-yellow:#ffcc00;--bc-black:#0d0d0d}
+  *{box-sizing:border-box}
+  body{margin:0;padding:28px 16px;background:#eef2f8;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Roboto,sans-serif;color:#1e293b}
+  .pageHead{max-width:760px;margin:0 auto 16px}
+  .pageHead h1{font-size:1.02rem;margin:0 0 4px}
+  .pageHead p{margin:0;font-size:.8rem;color:#64748b}
+  .list{max-width:760px;margin:0 auto;display:grid;gap:16px}
+  .card{background:#fff;border:1px solid #e3e9f2;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(15,23,42,.05)}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:14px 18px 10px;border-bottom:1px solid #eef1f7}
+  .qNum{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin:0 0 4px}
+  .qPrompt{margin:0;font-size:.9rem;line-height:1.5;color:#0f172a;font-weight:600}
+  .status{flex-shrink:0;border-radius:4px;border:1.5px solid;padding:4px 11px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  .sw{border-color:#fca5a5;background:#fff0f0;color:#b91c1c}
+  .ansRow{display:flex;gap:8px;padding:11px 18px;border-bottom:1px solid #e8edf5;flex-wrap:wrap}
+  .ansItem{padding:6px 13px;border-radius:4px;font-size:.8rem}
+  .ansLabel{display:block;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.55;margin-bottom:3px}
+  .ansVal{font-weight:700;font-size:.92rem}
+  .ay{background:#fff0f0;color:#b91c1c}.ac{background:#f0fdf4;color:#15803d}
+  /* production vb* classes */
+  .readingReportEvidence{padding:14px 18px;display:grid;gap:11px}
+  .vbWrap{display:grid;gap:14px}
+  .vbLabel{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--bc-blue);margin:0 0 -2px}
+  .vbGrid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden}
+  .vbHd{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:7px 12px;text-align:center}
+  .vbHd-q{background:#fffbeb;color:#a16207;border-right:1px solid #e2e8f0}
+  .vbHd-p{background:#f0f6ff;color:var(--bc-blue)}
+  .vbCell{padding:11px 12px;border-top:1px solid #e2e8f0}
+  .vbCell-q{border-right:1px solid #e2e8f0;background:#fffdf7}
+  .vbCell-p{background:#f8fbff}
+  .vbEn{font-size:.88rem;font-weight:700;line-height:1.35}
+  .vbCell-q .vbEn{color:var(--bc-black)}.vbCell-p .vbEn{color:var(--bc-blue)}
+  .vbTh{font-size:.82rem;color:#64748b;margin-top:4px;line-height:1.5}
+  .vbVocabLabel{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin:0 0 -4px}
+  .vbVocabRow{display:flex;align-items:center;gap:12px;background:#fef9f3;border:1px solid #fcd9b6;border-radius:10px;padding:12px 15px;flex-wrap:wrap}
+  .vbVocabWord{font-size:1rem;font-weight:800;color:#c2410c}
+  .vbVocabEq{color:#ea580c;font-weight:800}
+  .vbVocabTh{font-size:.9rem;font-weight:700;color:#9a3412}
+  .vbVocabSep{width:1px;align-self:stretch;background:#fcd9b6}
+  .vbVocabContrast{display:flex;align-items:center;gap:8px;font-size:.84rem;font-weight:700;color:#7c2d12}
+  .vbVocabVs{font-size:.66rem;font-weight:800;color:#fff;background:#ea580c;border-radius:4px;padding:2px 7px}
+  .vbVocabExplain{font-size:.83rem;line-height:1.6;color:#7c2d12;margin:6px 0 0;width:100%}
+  blockquote{margin:0;padding:8px 12px;border-left:2px solid #cbd5e1;color:#64748b;font-style:italic;font-size:.82rem;line-height:1.6}
+  @media(max-width:540px){.vbGrid{grid-template-columns:1fr}.vbCell-q,.vbHd-q{border-right:none}}
+</style>
+</head>
+<body>
+  <div class="pageHead">
+    <h1>Passage 3 · Band 7 — V2 vocab bridge (ข้อมูลจริง C15 Test 1 Passage 3)</h1>
+    <p>เรนเดอร์จาก src/readingPassage3VocabBridge.ts ด้วย class การ์ดจริงในแอป — Q27–40</p>
+  </div>
+  <div class="list" id="list"></div>
+<script>
+const answers = {27:"A",28:"C",29:"C",30:"D",31:"A",32:"B",33:"E",34:"A",35:"D",36:"E",37:"B",38:"unique expeditions",39:"uncontacted",40:"land surface"};
+const prompts = {
+27:"The writer refers to visitors to New York to illustrate the point that",
+28:"According to the second paragraph, what is the writer's view of explorers?",
+29:"The writer refers to a description of Egdon Heath to suggest that",
+30:"In the fourth paragraph, the writer refers to 'a golden age' to suggest that",
+31:"In the sixth paragraph, when discussing the definition of exploration, the writer argues that",
+32:"In the last paragraph, the writer explains that he is interested in",
+33:"He referred to the relevance of the form of transport used.",
+34:"He described feelings on coming back home after a long journey.",
+35:"He worked for the benefit of specific groups of people.",
+36:"He did not consider learning about oneself an essential part of exploration.",
+37:"He defined exploration as being both unique and of value to others.",
+38:"The writer has experience of a large number of 38 ……, and",
+39:"… and was the first stranger that certain previously 39 …… people had encountered.",
+40:"He believes there is no need for further exploration of Earth's 40 ……"
+};
+const bridges = {
+27:{q:{en:"illustrate the point that",th:"ยกตัวอย่างเพื่อชี้ให้เห็นว่า"},p:{en:"part of what makes us human",th:"เป็นส่วนหนึ่งของความเป็นมนุษย์"},v:{w:"intrinsic",th:"ที่เป็นเนื้อแท้ / ติดตัวมาแต่เกิด",note:"การสำรวจเป็นสิ่งที่ \"ติดตัว\" มนุษย์ = intrinsic element of being human จึงตอบ A"}},
+28:{q:{en:"the writer's view of explorers",th:"มุมมองของผู้เขียนต่อนักสำรวจ"},p:{en:"we all have this enquiring instinct",th:"เราทุกคนมีสัญชาตญาณอยากรู้อยากเห็นนี้"},v:{w:"instinct",th:"สัญชาตญาณ",a:"explorers · นักสำรวจ",b:"everyone · คนทั่วไป",note:"ผู้เขียนบอกว่าสัญชาตญาณนี้มีใน \"ทุกคน\" ไม่ใช่แค่นักสำรวจ จึงตอบ C"}},
+29:{q:{en:"refers to a description of Egdon Heath to suggest that",th:"อ้างถึงการบรรยาย Egdon Heath เพื่อสื่อว่า"},p:{en:"to suggest the desires and fears of his characters",th:"เพื่อสื่อถึงความปรารถนาและความกลัวของตัวละคร"},v:{w:"desires and fears",th:"ความปรารถนาและความกลัว (= สภาวะอารมณ์)",note:"desires and fears = emotional states จึงตอบ C (สำรวจ \"จิตใจ\" ของคน)"}},
+30:{q:{en:"refers to 'a golden age' to suggest that",th:"อ้างถึง 'ยุคทอง' เพื่อสื่อว่า"},p:{en:"the truth is that we have named only one and a half million of this planet's species",th:"ความจริงคือเราเพิ่งตั้งชื่อสิ่งมีชีวิตได้แค่ 1.5 ล้านชนิด (ยังเหลืออีกมาก)"},v:{w:"on the decline",th:"กำลังถดถอย / ลดน้อยลง",note:"ผู้เขียนแย้งว่าการสำรวจ \"ไม่ได้\" หมดความจำเป็น — ยังมีให้ค้นอีกมาก จึงตอบ D"}},
+31:{q:{en:"the writer argues that",th:"ผู้เขียนโต้แย้งว่า"},p:{en:"tends to reflect the field of endeavour of each pioneer",th:"มักสะท้อนสาขาอาชีพของผู้บุกเบิกแต่ละคน"},v:{w:"field of endeavour",th:"สาขา/แวดวงอาชีพที่ทุ่มเท",note:"แต่ละคนนิยามการสำรวจตาม \"อาชีพของตัวเอง\" = relate to their own professional interests จึงตอบ A"}},
+32:{q:{en:"the writer explains that he is interested in",th:"ผู้เขียนบอกว่าเขาสนใจเรื่อง"},p:{en:"how a fresh interpretation, even of a well-travelled route, can give its readers new insights",th:"การตีความใหม่ แม้กับเส้นทางที่คนไปบ่อย ก็ให้มุมมองใหม่แก่ผู้อ่านได้"},v:{w:"fresh interpretation",th:"การตีความใหม่ / มุมมองใหม่",note:"fresh interpretation of a well-travelled route = cast new light on familiar places จึงตอบ B"}},
+33:{q:{en:"referred to the relevance of the form of transport used",th:"พูดถึงความสำคัญของรูปแบบการเดินทางที่ใช้"},p:{en:"If I'd gone across by camel when I could have gone by car, it would have been a stunt",th:"ถ้าข้ามด้วยอูฐทั้งที่ไปด้วยรถได้ มันก็แค่การโชว์"},v:{w:"stunt",th:"การแสดงเรียกร้องความสนใจ (ไม่ใช่การสำรวจจริง)",a:"camel · อูฐ",b:"car · รถยนต์",note:"พูดถึง \"วิธีเดินทาง\" (อูฐ vs รถ) ตรงกับ Thesiger จึงตอบ E"}},
+34:{q:{en:"described feelings on coming back home after a long journey",th:"บรรยายความรู้สึกตอนกลับบ้านหลังเดินทางไกล"},p:{en:"the moment when the explorer returns to the existence he has left behind",th:"ช่วงเวลาที่นักสำรวจกลับสู่ชีวิตที่เขาทิ้งไว้"},v:{w:"returns",th:"กลับคืน (สู่บ้าน/ชีวิตเดิม)",note:"returns to the existence he left behind = coming back home ตรงกับ Peter Fleming จึงตอบ A"}},
+35:{q:{en:"worked for the benefit of specific groups of people",th:"ทำงานเพื่อประโยชน์ของคนกลุ่มเฉพาะ"},p:{en:"a campaigner on behalf of remote so-called 'tribal' peoples",th:"นักรณรงค์เพื่อชนเผ่าห่างไกล"},v:{w:"campaigner",th:"นักรณรงค์ / ผู้เรียกร้องเพื่อผู้อื่น",note:"campaigner on behalf of tribal peoples = worked for specific groups ตรงกับ Hanbury-Tenison จึงตอบ D"}},
+36:{q:{en:"did not consider learning about oneself an essential part of exploration",th:"ไม่ถือว่าการเรียนรู้เกี่ยวกับตัวเองเป็นส่วนสำคัญของการสำรวจ"},p:{en:"bringing back information from a remote place regardless of any great self-discovery",th:"นำข้อมูลกลับมาจากที่ห่างไกล โดยไม่สนใจการค้นพบตัวเอง"},v:{w:"regardless of",th:"โดยไม่คำนึงถึง / ไม่สนใจ",note:"regardless of self-discovery = ไม่ถือว่าการรู้จักตัวเองสำคัญ ตรงกับ Thesiger จึงตอบ E"}},
+37:{q:{en:"defined exploration as being both unique and of value to others",th:"นิยามการสำรวจว่าต้องทั้งแปลกใหม่และมีคุณค่าต่อผู้อื่น"},p:{en:"done something that no human has done before – and also done something scientifically useful",th:"ทำสิ่งที่ไม่เคยมีใครทำมาก่อน และเป็นประโยชน์เชิงวิทยาศาสตร์ด้วย"},v:{w:"scientifically useful",th:"มีประโยชน์เชิงวิทยาศาสตร์ (= มีคุณค่าต่อผู้อื่น)",note:"no human has done before (unique) + scientifically useful (value) ตรงกับ Ran Fiennes จึงตอบ B"}},
+38:{q:{en:"experience of a large number of …",th:"มีประสบการณ์เกี่ยวกับ … จำนวนมาก"},p:{en:"I've done a great many expeditions and each one was unique",th:"ผมทำการเดินทางสำรวจมามากมาย และแต่ละครั้งไม่ซ้ำกัน"},v:{w:"expeditions",th:"การเดินทางสำรวจ (คำตอบ: unique expeditions)",note:"a great many expeditions = a large number of expeditions"}},
+39:{q:{en:"the first stranger that certain previously … people had encountered",th:"คนแปลกหน้าคนแรกที่กลุ่มคนซึ่ง … เคยพบ"},p:{en:"isolated groups of people … even two 'uncontacted tribes'",th:"กลุ่มคนที่อยู่โดดเดี่ยว … แม้แต่ชนเผ่าที่ไม่เคยติดต่อใคร"},v:{w:"uncontacted",th:"ที่ไม่เคยติดต่อโลกภายนอก (คำตอบ)",note:"'uncontacted tribes' = previously uncontacted people"}},
+40:{q:{en:"no need for further exploration of Earth's …",th:"ไม่จำเป็นต้องสำรวจ … ของโลกเพิ่ม"},p:{en:"We know how the land surface of our planet lies",th:"เรารู้แล้วว่าพื้นผิวดินของโลกเป็นอย่างไร"},v:{w:"land surface",th:"พื้นผิวดิน (คำตอบ)",note:"land surface … is now down to the details = ไม่ต้องสำรวจพื้นผิวเพิ่ม"}}
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+let html='';
+for(const n of Object.keys(bridges)){
+  const b=bridges[n];
+  let vocab='';
+  if(b.v){
+    const contrast=(b.v.a&&b.v.b)?`<span class="vbVocabSep"></span><span class="vbVocabContrast">${esc(b.v.a)}<span class="vbVocabVs">VS</span>${esc(b.v.b)}</span>`:'';
+    const note=b.v.note?`<p class="vbVocabExplain">${esc(b.v.note)}</p>`:'';
+    vocab=`<p class="vbVocabLabel">คำศัพท์ที่ต้องรู้</p><div class="vbVocabRow"><span class="vbVocabWord">${esc(b.v.w)}</span><span class="vbVocabEq">=</span><span class="vbVocabTh">${esc(b.v.th)}</span>${contrast}${note}</div>`;
+  }
+  html+=`<div class="card"><div class="head"><div><p class="qNum">Question ${n}</p><p class="qPrompt">${esc(prompts[n])}</p></div><span class="status sw">✗ Wrong</span></div>
+  <div class="ansRow"><div class="ansItem ay"><span class="ansLabel">คุณตอบ</span><span class="ansVal">— ไม่ได้ตอบ</span></div><div class="ansItem ac"><span class="ansLabel">คำตอบที่ถูก</span><span class="ansVal">${esc(answers[n])}</span></div></div>
+  <div class="readingReportEvidence"><div class="vbWrap"><p class="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
+  <div class="vbGrid"><div class="vbHd vbHd-q">❓ ในโจทย์</div><div class="vbHd vbHd-p">📖 ในบทความ</div>
+  <div class="vbCell vbCell-q"><div class="vbEn">${esc(b.q.en)}</div><div class="vbTh">${esc(b.q.th)}</div></div>
+  <div class="vbCell vbCell-p"><div class="vbEn">${esc(b.p.en)}</div><div class="vbTh">${esc(b.p.th)}</div></div></div>
+  ${vocab}</div></div></div>`;
+}
+document.getElementById('list').innerHTML=html;
+</script>
+</body>
+</html>

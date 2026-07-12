@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ENGLISHPLAN IELTS — Landing concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#004aad; --blue-d:#003a87; --blue-l:#e8f0fb; --blue-2:#1466d6;
+  --yellow:#ffcc00; --yellow-d:#e6b800; --ink:#0d0d0d; --white:#fff;
+  --grey:#5b6573; --line:#e6e9ef; --bg:#f5f7fb;
+  --th:'Noto Sans Thai',Inter,system-ui,sans-serif;
+  --en:Inter,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--th);color:var(--ink);background:var(--bg)}
+.section{display:none}
+.section.active{display:block}
+/* switcher */
+.switch{position:sticky;top:0;z-index:50;display:flex;gap:6px;justify-content:center;align-items:center;
+  background:#0d1b33;padding:10px;border-bottom:2px solid var(--yellow);flex-wrap:wrap}
+.switch b{color:#fff;font-size:.8rem;margin-right:8px;font-family:var(--en);letter-spacing:.04em}
+.switch button{font-family:var(--th);font-weight:700;font-size:.82rem;border:1px solid #34507f;background:#16294a;color:#cdd9ee;
+  border-radius:999px;padding:7px 15px;cursor:pointer}
+.switch button.on{background:var(--yellow);color:#0d1b33;border-color:var(--yellow)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+a{text-decoration:none;color:inherit}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:800;border-radius:12px;padding:13px 22px;cursor:pointer;border:0;font-family:var(--th);font-size:.95rem}
+.btn-y{background:var(--yellow);color:#1a1a00}
+.btn-b{background:var(--blue);color:#fff}
+.btn-o{background:transparent;border:1.5px solid currentColor}
+.eyebrow{font-family:var(--en);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:.72rem}
+.skill-ico{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:1.3rem}
+footer.f{background:#0d1b33;color:#aebfd8;padding:30px 0;font-size:.85rem}
+.tag{display:inline-block;font-family:var(--en);font-weight:700;font-size:.66rem;letter-spacing:.05em;border-radius:6px;padding:3px 9px}
+
+/* ============ V1 — Clean Product ============ */
+#v1 .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+#v1 .logo{font-family:var(--en);font-weight:900;font-size:1.15rem;color:var(--blue)}
+#v1 .logo span{color:var(--yellow);-webkit-text-stroke:.6px var(--blue-d)}
+#v1 .nav a{font-size:.9rem;font-weight:600;color:var(--grey);margin-left:22px}
+#v1 .hero{background:linear-gradient(180deg,#fff,var(--blue-l));padding:54px 0 60px;text-align:center}
+#v1 .pill{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.8rem;font-weight:700;color:var(--blue)}
+#v1 h1{font-size:3rem;line-height:1.12;margin:18px 0 10px;font-weight:800}
+#v1 h1 em{font-style:normal;color:var(--blue)}
+#v1 .sub{color:var(--grey);font-size:1.08rem;max-width:620px;margin:0 auto 24px}
+#v1 .cta{display:flex;gap:12px;justify-content:center}
+#v1 .seg{display:inline-flex;margin-top:26px;border:1px solid var(--line);background:#fff;border-radius:12px;overflow:hidden;font-weight:700}
+#v1 .seg span{padding:10px 22px;font-size:.9rem}
+#v1 .seg .a{background:var(--blue);color:#fff}
+#v1 .skills{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:-34px;position:relative;z-index:2}
+#v1 .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 8px 24px rgba(0,40,90,.06)}
+#v1 .card h3{margin:12px 0 4px;font-size:1.05rem}
+#v1 .card p{margin:0;color:var(--grey);font-size:.86rem}
+#v1 .sec{padding:46px 0}
+#v1 .sec h2{font-size:1.7rem;margin:0 0 6px}
+#v1 .sec .lead{color:var(--grey);margin:0 0 22px}
+#v1 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#v1 .panel{border:1px solid var(--line);background:#fff;border-radius:16px;padding:22px}
+#v1 .panel .tag{background:var(--blue-l);color:var(--blue)}
+#v1 .panel ul{margin:12px 0 0;padding-left:18px;color:var(--grey);font-size:.9rem;line-height:1.8}
+#v1 .news{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-left:4px solid var(--yellow);background:#fffdf5;border-radius:12px;padding:16px;margin-bottom:12px}
+#v1 .freecta{background:var(--blue);color:#fff;border-radius:20px;padding:34px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+#v1 .freecta h2{margin:0 0 6px}
+#v1 .freecta p{margin:0;color:#cfe0fb}
+
+/* ============ V2 — Bold Editorial ============ */
+#v2{background:var(--blue)}
+#v2 .topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0;color:#fff}
+#v2 .logo{font-family:var(--en);font-weight:900;font-size:1.2rem}
+#v2 .logo span{color:var(--yellow)}
+#v2 .nav a{color:#cfe0fb;font-weight:600;font-size:.9rem;margin-left:20px}
+#v2 .hero{color:#fff;padding:30px 0 70px;position:relative}
+#v2 .ribbon{display:inline-flex;align-items:center;gap:10px;background:var(--yellow);color:#1a1a00;font-weight:800;border-radius:999px;padding:8px 16px;font-size:.82rem}
+#v2 h1{font-size:4.2rem;line-height:1.02;font-weight:900;margin:22px 0 14px;letter-spacing:-.01em}
+#v2 h1 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--yellow) 62%);padding:0 4px}
+#v2 .sub{color:#d3e3fb;font-size:1.15rem;max-width:640px}
+#v2 .cta{display:flex;gap:12px;margin-top:26px}
+#v2 .skills{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid #2f63a8;border-radius:18px;overflow:hidden;margin-top:46px}
+#v2 .skill{padding:24px;color:#fff;border-right:1px solid #2f63a8}
+#v2 .skill:last-child{border-right:0}
+#v2 .skill h3{margin:14px 0 4px;font-size:1.1rem}
+#v2 .skill p{margin:0;color:#bcd3f5;font-size:.85rem}
+#v2 .light{background:#fff;border-radius:34px 34px 0 0;margin-top:50px;padding:48px 0}
+#v2 .light h2{font-size:2rem;margin:0 0 4px}
+#v2 .light .lead{color:var(--grey);margin:0 0 24px}
+#v2 .structgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+#v2 .struct{border-radius:18px;padding:26px;color:#fff}
+#v2 .struct.g{background:linear-gradient(135deg,var(--blue),var(--blue-2))}
+#v2 .struct.a{background:linear-gradient(135deg,#1a1a1a,#33405a)}
+#v2 .struct h3{margin:0 0 10px;font-size:1.3rem}
+#v2 .struct ul{margin:0;padding-left:18px;line-height:1.8;color:#dfe8f6;font-size:.9rem}
+#v2 .qrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+#v2 .qcard{border:1px solid var(--line);border-radius:18px;padding:24px;background:var(--bg)}
+#v2 .qcard h3{margin:0 0 12px}
+#v2 .chip{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:0 6px 8px 0;font-size:.85rem;font-weight:600}
+#v2 .free{margin-top:30px;background:var(--yellow);border-radius:20px;padding:30px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+#v2 .free h2{margin:0;color:#1a1a00}
+
+/* ============ V3 — Dashboard / App ============ */
+#v3 .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+#v3 .logo{font-family:var(--en);font-weight:900;color:var(--blue)}
+#v3 .logo span{color:var(--yellow-d)}
+#v3 .nav a{font-size:.88rem;font-weight:600;color:var(--grey);margin-left:18px}
+#v3 .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center;padding:34px 0 30px}
+#v3 .eyebrow{color:var(--blue)}
+#v3 h1{font-size:2.7rem;line-height:1.14;font-weight:800;margin:12px 0}
+#v3 .sub{color:var(--grey);font-size:1.02rem;margin:0 0 22px}
+#v3 .cta{display:flex;gap:10px}
+#v3 .stats{display:flex;gap:26px;margin-top:24px}
+#v3 .stats div b{display:block;font-family:var(--en);font-size:1.5rem;color:var(--blue)}
+#v3 .stats div span{font-size:.8rem;color:var(--grey)}
+#v3 .appcard{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 40px rgba(0,40,90,.10);overflow:hidden}
+#v3 .appcard .bar{background:var(--blue);color:#fff;padding:12px 16px;font-weight:700;font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+#v3 .appcard .bar .tag{background:var(--yellow);color:#1a1a00}
+#v3 .appcard .body{padding:16px}
+#v3 .exrow{display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:11px;margin-bottom:9px}
+#v3 .exrow small{color:var(--grey)}
+#v3 .exrow .go{background:var(--blue-l);color:var(--blue);font-weight:800;border-radius:8px;padding:5px 11px;font-size:.78rem}
+#v3 .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:24px 0}
+#v3 .tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+#v3 .tile h3{margin:10px 0 2px;font-size:1rem}
+#v3 .tile p{margin:0;color:var(--grey);font-size:.82rem}
+#v3 .band{background:#0d1b33;color:#fff;border-radius:20px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:8px 0 28px}
+#v3 .band h2{margin:0 0 4px;font-size:1.4rem}
+#v3 .band .lead{color:#aebfd8;margin:0 0 14px;font-size:.9rem}
+#v3 .band a.mini{display:block;background:#16294a;border:1px solid #2c4267;border-radius:11px;padding:12px 14px;margin-bottom:9px;color:#dce7f8;font-size:.88rem;font-weight:600}
+#v3 .band a.mini b{color:var(--yellow)}
+#v3 .free{background:var(--blue);color:#fff;border-radius:18px;padding:26px;display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:30px}
+#v3 .free p{margin:4px 0 0;color:#cfe0fb}
+
+/* ============ V4 — Warm / พี่ดอย ============ */
+#v4{background:#fffdf6}
+#v4 .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+#v4 .logo{font-weight:900;color:var(--blue);font-family:var(--en)}
+#v4 .logo span{color:var(--yellow-d)}
+#v4 .nav a{font-size:.9rem;font-weight:600;color:var(--grey);margin-left:18px}
+#v4 .hero{display:grid;grid-template-columns:1fr .8fr;gap:30px;align-items:center;padding:30px 0 40px}
+#v4 .hello{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1.5px solid var(--yellow);border-radius:999px;padding:7px 15px;font-weight:700;font-size:.85rem;color:var(--blue)}
+#v4 h1{font-size:2.9rem;line-height:1.18;font-weight:800;margin:16px 0 10px}
+#v4 h1 em{font-style:normal;color:var(--blue);position:relative}
+#v4 h1 em::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:9px;background:var(--yellow);opacity:.6;z-index:-1;border-radius:4px}
+#v4 .sub{color:var(--grey);font-size:1.05rem;margin:0 0 22px}
+#v4 .cta{display:flex;gap:12px;flex-wrap:wrap}
+#v4 .coach{background:#fff;border:1.5px solid var(--line);border-radius:26px;padding:24px;box-shadow:0 14px 34px rgba(0,40,90,.07);text-align:center}
+#v4 .avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-2));margin:0 auto;display:grid;place-items:center;color:#fff;font-size:2rem;font-weight:800}
+#v4 .coach h4{margin:14px 0 2px}
+#v4 .coach p{margin:0;color:var(--grey);font-size:.86rem}
+#v4 .coach .quote{margin-top:14px;background:var(--blue-l);border-radius:14px;padding:12px;font-size:.86rem;color:var(--blue-d)}
+#v4 .skills{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:6px 0 36px}
+#v4 .scard{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:20px;text-align:center;transition:.2s}
+#v4 .scard:hover{border-color:var(--yellow);transform:translateY(-3px)}
+#v4 .scard h3{margin:10px 0 3px;font-size:1rem}
+#v4 .scard p{margin:0;color:var(--grey);font-size:.82rem}
+#v4 .soft{background:#fff;border:1.5px solid var(--line);border-radius:26px;padding:34px;margin-bottom:22px}
+#v4 .soft h2{margin:0 0 4px;font-size:1.6rem}
+#v4 .soft .lead{color:var(--grey);margin:0 0 20px}
+#v4 .pillrow{display:flex;flex-wrap:wrap;gap:10px}
+#v4 .p2{background:var(--blue-l);color:var(--blue);border-radius:999px;padding:10px 16px;font-weight:700;font-size:.88rem}
+#v4 .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#v4 .note{border:1.5px solid var(--yellow);background:#fffdf5;border-radius:18px;padding:20px}
+#v4 .note h3{margin:0 0 8px}
+#v4 .note .chip{background:#fff;border:1px solid var(--line);color:var(--ink);margin:0 6px 8px 0}
+#v4 .free{background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;border-radius:24px;padding:32px;text-align:center;margin-bottom:30px}
+#v4 .free h2{margin:0 0 6px}
+#v4 .free p{margin:0 0 16px;color:#cfe0fb}
+@media(max-width:880px){
+  #v1 .skills,#v2 .skills,#v3 .tiles,#v4 .skills{grid-template-columns:repeat(2,1fr)}
+  #v1 .grid2,#v2 .structgrid,#v2 .qrow,#v3 .hero,#v3 .band,#v4 .hero,#v4 .twocol{grid-template-columns:1fr}
+  #v1 h1{font-size:2.2rem}#v2 h1{font-size:2.7rem}#v3 h1,#v4 h1{font-size:2.1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="switch">
+  <b>LANDING CONCEPTS</b>
+  <button class="on" data-v="v1">1 · Clean Product</button>
+  <button data-v="v2">2 · Bold Editorial</button>
+  <button data-v="v3">3 · Dashboard</button>
+  <button data-v="v4">4 · Warm · พี่ดอย</button>
+</div>
+
+<!-- ===================== V1 ===================== -->
+<section class="section active" id="v1">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">ENGLISH<span>PLAN</span> · IELTS</div>
+      <div class="nav"><a>Reading</a><a>Writing</a><a>Listening</a><a>Speaking</a><a>ข้อสอบ 2026</a></div>
+    </div>
+  </div>
+  <div class="hero"><div class="wrap">
+    <span class="pill">🇬🇧 Academic & General Training</span>
+    <h1>แพลตฟอร์มฝึก <em>IELTS</em> ครบทั้ง 4 ทักษะ</h1>
+    <p class="sub">ฝึก Reading · Writing · Listening · Speaking พร้อมข้อสอบใหม่ล่าสุดปี 2026 และเฉลยละเอียดแบบเข้าใจง่าย</p>
+    <div class="cta"><a class="btn btn-y">เริ่มฝึกฟรี →</a><a class="btn btn-o" style="color:var(--blue)">ดูข้อสอบ 2026</a></div>
+    <div class="seg"><span class="a">Academic</span><span>General Training</span></div>
+  </div></div>
+  <div class="wrap">
+    <div class="skills">
+      <div class="card"><div class="skill-ico" style="background:#e8f0fb;color:var(--blue)">📖</div><h3>Reading</h3><p>ฝึกอ่านจับใจความ + เฉลยคำต่อคำ</p></div>
+      <div class="card"><div class="skill-ico" style="background:#fff5d6;color:var(--yellow-d)">✍️</div><h3>Writing</h3><p>Task 1 & 2 พร้อมหัวข้อล่าสุด</p></div>
+      <div class="card"><div class="skill-ico" style="background:#e8f0fb;color:var(--blue)">🎧</div><h3>Listening</h3><p>ฝึกฟังทุก Section</p></div>
+      <div class="card"><div class="skill-ico" style="background:#fff5d6;color:var(--yellow-d)">🎙️</div><h3>Speaking</h3><p>Part 1–3 + ฟีดแบ็ก</p></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="sec">
+      <span class="eyebrow" style="color:var(--blue)">ประกาศจาก IELTS ปี 2026</span>
+      <h2>โครงสร้างข้อสอบ IELTS 2026</h2>
+      <p class="lead">อัปเดตรูปแบบล่าสุดของทั้งสองประเภท เตรียมตัวให้ตรงจุด</p>
+      <div class="grid2">
+        <div class="panel"><span class="tag">GENERAL</span><h3 style="margin:12px 0 0">โครงสร้าง 2026 · General Training</h3><ul><li>Listening 4 sections</li><li>Reading 3 sections (ชีวิตประจำวัน + งาน)</li><li>Writing: จดหมาย + เรียงความ</li><li>Speaking 3 parts</li></ul></div>
+        <div class="panel"><span class="tag">ACADEMIC</span><h3 style="margin:12px 0 0">โครงสร้าง 2026 · Academic</h3><ul><li>Listening 4 sections</li><li>Reading 3 บทความวิชาการ</li><li>Writing: กราฟ/ตาราง + เรียงความ</li><li>Speaking 3 parts</li></ul></div>
+      </div>
+    </div>
+    <div class="sec" style="padding-top:0">
+      <h2>ข้อสอบใหม่ล่าสุด <span style="color:var(--blue)">ม.ค.–มิ.ย. 2026</span></h2>
+      <p class="lead">รวบรวมหัวข้อจากฟอรัมผู้สอบจริง แยกตาม General / Academic</p>
+      <div class="news"><div style="font-size:1.4rem">📝</div><div><b>หัวข้อ Writing ล่าสุด</b><div style="color:var(--grey);font-size:.9rem">รวมหัวข้อ Task 2 ที่ออกบ่อย ม.ค.–มิ.ย. 2026 · แยก General / Academic</div></div></div>
+      <div class="news"><div style="font-size:1.4rem">🗣️</div><div><b>หัวข้อ Speaking ล่าสุด</b><div style="color:var(--grey);font-size:.9rem">รวมคำถาม Part 1–3 ที่เจอจริงในห้องสอบปีนี้</div></div></div>
+    </div>
+    <div class="sec" style="padding-top:0">
+      <div class="freecta"><div><h2>ทำแบบฝึกหัด IELTS Reading ฟรี</h2><p>ชุดข้อสอบใหม่ นอกเหนือจากหนังสือ Cambridge — ฝึกได้ไม่จำกัด</p></div><a class="btn btn-y">เริ่มทำเลย →</a></div>
+    </div>
+  </div>
+  <footer class="f"><div class="wrap">© 2026 English Plan IELTS · แพลตฟอร์มฝึก IELTS โดยพี่ดอย</div></footer>
+</section>
+
+<!-- ===================== V2 ===================== -->
+<section class="section" id="v2">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">ENGLISH<span>PLAN</span></div>
+      <div class="nav"><a>4 ทักษะ</a><a>ข้อสอบ 2026</a><a>หัวข้อล่าสุด</a><a>Reading ฟรี</a></div>
+    </div>
+    <div class="hero">
+      <span class="ribbon">🔔 ประกาศจาก IELTS ปี 2026 — อัปเดตแล้ว</span>
+      <h1>ฝึก IELTS<br>ให้พร้อม<u>สอบจริง</u></h1>
+      <p class="sub">แพลตฟอร์มฝึกครบทั้ง Academic และ General Training — Reading · Writing · Listening · Speaking พร้อมข้อสอบและหัวข้อใหม่ล่าสุดปี 2026</p>
+      <div class="cta"><a class="btn btn-y">เริ่มฝึกฟรี →</a><a class="btn btn-o" style="color:#fff">ดูโครงสร้าง 2026</a></div>
+      <div class="skills">
+        <div class="skill"><div class="skill-ico" style="background:#0f59b8">📖</div><h3>Reading</h3><p>อ่าน + เฉลยคำต่อคำ</p></div>
+        <div class="skill"><div class="skill-ico" style="background:#0f59b8">✍️</div><h3>Writing</h3><p>Task 1 & 2</p></div>
+        <div class="skill"><div class="skill-ico" style="background:#0f59b8">🎧</div><h3>Listening</h3><p>ทุก Section</p></div>
+        <div class="skill"><div class="skill-ico" style="background:#0f59b8">🎙️</div><h3>Speaking</h3><p>Part 1–3</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="light"><div class="wrap">
+    <h2>โครงสร้างข้อสอบ IELTS 2026</h2>
+    <p class="lead">เลือกประเภทที่คุณจะสอบ แล้วเตรียมให้ตรงรูปแบบล่าสุด</p>
+    <div class="structgrid">
+      <div class="struct g"><h3>General Training</h3><ul><li>Listening · 4 sections</li><li>Reading · เนื้อหาชีวิตประจำวัน + งาน</li><li>Writing · จดหมาย + เรียงความ</li><li>Speaking · 3 parts</li></ul></div>
+      <div class="struct a"><h3>Academic</h3><ul><li>Listening · 4 sections</li><li>Reading · 3 บทความวิชาการ</li><li>Writing · กราฟ/ตาราง + เรียงความ</li><li>Speaking · 3 parts</li></ul></div>
+    </div>
+    <div class="qrow">
+      <div class="qcard"><h3>📝 หัวข้อ Writing ล่าสุด</h3><div><span class="chip">Task 2 · ม.ค.–มิ.ย. 2026</span><span class="chip">General</span><span class="chip">Academic</span></div><p style="color:var(--grey);font-size:.9rem;margin:6px 0 0">รวบรวมจากฟอรัมผู้สอบจริง แยกตามประเภท</p></div>
+      <div class="qcard"><h3>🗣️ หัวข้อ Speaking ล่าสุด</h3><div><span class="chip">Part 1</span><span class="chip">Part 2 Cue Card</span><span class="chip">Part 3</span></div><p style="color:var(--grey);font-size:.9rem;margin:6px 0 0">คำถามที่เจอจริงในห้องสอบ ม.ค.–มิ.ย. 2026</p></div>
+    </div>
+    <div class="free"><h2>ทำแบบฝึกหัด Reading ฟรี — นอกเหนือจาก Cambridge</h2><a class="btn btn-b">เริ่มทำ →</a></div>
+  </div></div>
+  <footer class="f"><div class="wrap">© 2026 English Plan IELTS</div></footer>
+</section>
+
+<!-- ===================== V3 ===================== -->
+<section class="section" id="v3">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">ENGLISH<span>PLAN</span> IELTS</div>
+      <div class="nav"><a>แดชบอร์ด</a><a>ข้อสอบ 2026</a><a>หัวข้อล่าสุด</a><a class="btn btn-b" style="padding:8px 16px;color:#fff">เข้าสู่ระบบ</a></div>
+    </div>
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Academic · General Training</span>
+        <h1>ฝึก IELTS อย่างมีระบบ<br>ในที่เดียว</h1>
+        <p class="sub">Reading · Writing · Listening · Speaking + ข้อสอบและหัวข้อใหม่ล่าสุดปี 2026 พร้อมเฉลยและฟีดแบ็กรายข้อ</p>
+        <div class="cta"><a class="btn btn-y">เริ่มฝึกฟรี →</a><a class="btn btn-o" style="color:var(--blue)">โครงสร้าง 2026</a></div>
+        <div class="stats"><div><b>4</b><span>ทักษะครบ</span></div><div><b>2026</b><span>ข้อสอบล่าสุด</span></div><div><b>ฟรี</b><span>Reading ไม่จำกัด</span></div></div>
+      </div>
+      <div class="appcard">
+        <div class="bar"><span>ข้อสอบใหม่ล่าสุด</span><span class="tag">2026</span></div>
+        <div class="body">
+          <div class="exrow"><div><b>Reading · Academic</b><br><small>นอกเหนือจาก Cambridge</small></div><span class="go">ทำ</span></div>
+          <div class="exrow"><div><b>Writing Task 2</b><br><small>หัวข้อ มิ.ย. 2026</small></div><span class="go">ดู</span></div>
+          <div class="exrow"><div><b>Speaking Part 2</b><br><small>Cue card ล่าสุด</small></div><span class="go">ฝึก</span></div>
+          <div class="exrow"><div><b>Listening · Section 3</b><br><small>บทสนทนา</small></div><span class="go">ฟัง</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><div class="skill-ico" style="background:#e8f0fb;color:var(--blue)">📖</div><h3>Reading</h3><p>เฉลยคำต่อคำ + พี่ดอยสอน Vocab</p></div>
+      <div class="tile"><div class="skill-ico" style="background:#fff5d6;color:var(--yellow-d)">✍️</div><h3>Writing</h3><p>Task 1 & 2 + หัวข้อล่าสุด</p></div>
+      <div class="tile"><div class="skill-ico" style="background:#e8f0fb;color:var(--blue)">🎧</div><h3>Listening</h3><p>ทุก Section</p></div>
+      <div class="tile"><div class="skill-ico" style="background:#fff5d6;color:var(--yellow-d)">🎙️</div><h3>Speaking</h3><p>Part 1–3 + ฟีดแบ็ก</p></div>
+    </div>
+    <div class="band">
+      <div><h2>ประกาศจาก IELTS ปี 2026</h2><p class="lead">โครงสร้างข้อสอบล่าสุด แยกตามประเภทที่คุณจะสอบ</p>
+        <a class="mini"><b>General Training</b> — โครงสร้าง 2026 ฉบับเต็ม</a>
+        <a class="mini"><b>Academic</b> — โครงสร้าง 2026 ฉบับเต็ม</a></div>
+      <div><h2>หัวข้อใหม่ล่าสุด</h2><p class="lead">รวบรวมจากฟอรัมผู้สอบจริง ม.ค.–มิ.ย. 2026</p>
+        <a class="mini"><b>Writing</b> — หัวข้อ General / Academic</a>
+        <a class="mini"><b>Speaking</b> — Part 1–3 ที่เจอจริง</a></div>
+    </div>
+    <div class="free"><div><h2 style="margin:0">ทำแบบฝึกหัด IELTS Reading ฟรี</h2><p>ชุดใหม่ นอกเหนือจากหนังสือ Cambridge — ฝึกได้ไม่จำกัด</p></div><a class="btn btn-y">เริ่มเลย →</a></div>
+  </div>
+  <footer class="f"><div class="wrap">© 2026 English Plan IELTS · by พี่ดอย</div></footer>
+</section>
+
+<!-- ===================== V4 ===================== -->
+<section class="section" id="v4">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">ENGLISH<span>PLAN</span> · IELTS</div>
+      <div class="nav"><a>4 ทักษะ</a><a>ข้อสอบ 2026</a><a>หัวข้อล่าสุด</a><a>Reading ฟรี</a></div>
+    </div>
+    <div class="hero">
+      <div>
+        <span class="hello">👋 สวัสดีครับ พี่ดอยเองนะ</span>
+        <h1>มาฝึก <em>IELTS</em> ไปด้วยกัน<br>ครบทั้ง 4 ทักษะ</h1>
+        <p class="sub">ไม่ว่าจะสอบ Academic หรือ General — เรามีข้อสอบใหม่ล่าสุดปี 2026 พร้อมเฉลยที่อ่านแล้วเข้าใจจริง</p>
+        <div class="cta"><a class="btn btn-y">เริ่มฝึกฟรี →</a><a class="btn btn-o" style="color:var(--blue)">ดูข้อสอบ 2026</a></div>
+      </div>
+      <div class="coach">
+        <div class="avatar">พ</div>
+        <h4>พี่ดอย</h4>
+        <p>ติวเตอร์ IELTS ของคุณ</p>
+        <div class="quote">“ฝึกวันละนิด เฉลยละเอียดทุกข้อ แล้วคะแนนจะขยับเองครับ”</div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="skills">
+      <div class="scard"><div class="skill-ico" style="background:#e8f0fb;color:var(--blue);margin:0 auto">📖</div><h3>Reading</h3><p>อ่าน + พี่ดอยสอน Vocab</p></div>
+      <div class="scard"><div class="skill-ico" style="background:#fff5d6;color:var(--yellow-d);margin:0 auto">✍️</div><h3>Writing</h3><p>Task 1 & 2</p></div>
+      <div class="scard"><div class="skill-ico" style="background:#e8f0fb;color:var(--blue);margin:0 auto">🎧</div><h3>Listening</h3><p>ฝึกฟังทุก Section</p></div>
+      <div class="scard"><div class="skill-ico" style="background:#fff5d6;color:var(--yellow-d);margin:0 auto">🎙️</div><h3>Speaking</h3><p>Part 1–3 + ฟีดแบ็ก</p></div>
+    </div>
+    <div class="soft">
+      <span class="eyebrow" style="color:var(--blue)">ประกาศจาก IELTS ปี 2026</span>
+      <h2>โครงสร้างข้อสอบ 2026</h2>
+      <p class="lead">เลือกประเภทที่จะสอบ แล้วพี่ดอยจะพาเตรียมให้ตรงจุด</p>
+      <div class="pillrow"><span class="p2">📘 General Training — โครงสร้างเต็ม</span><span class="p2">🎓 Academic — โครงสร้างเต็ม</span></div>
+    </div>
+    <div class="twocol" style="margin-bottom:22px">
+      <div class="note"><h3>📝 หัวข้อ Writing ล่าสุด</h3><div><span class="tag chip">General</span><span class="tag chip">Academic</span></div><p style="color:var(--grey);font-size:.9rem;margin:8px 0 0">รวมหัวข้อ ม.ค.–มิ.ย. 2026 จากผู้สอบจริง</p></div>
+      <div class="note"><h3>🗣️ หัวข้อ Speaking ล่าสุด</h3><div><span class="tag chip">Part 1</span><span class="tag chip">Part 2</span><span class="tag chip">Part 3</span></div><p style="color:var(--grey);font-size:.9rem;margin:8px 0 0">คำถามที่เจอจริงในห้องสอบปีนี้</p></div>
+    </div>
+    <div class="free">
+      <h2>ทำแบบฝึกหัด IELTS Reading ฟรี 🎉</h2>
+      <p>ชุดข้อสอบใหม่ นอกเหนือจากหนังสือ Cambridge — ฝึกกับพี่ดอยได้ไม่จำกัด</p>
+      <a class="btn btn-y">เริ่มทำเลย →</a>
+    </div>
+  </div>
+  <footer class="f"><div class="wrap">© 2026 English Plan IELTS · ฝึก IELTS กับพี่ดอย</div></footer>
+</section>
+
+<script>
+  document.querySelectorAll('.switch button').forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll('.switch button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      document.getElementById(b.dataset.v).classList.add('active');
+      window.scrollTo(0,0);
+    };
+  });
+</script>
+</body>
+</html>

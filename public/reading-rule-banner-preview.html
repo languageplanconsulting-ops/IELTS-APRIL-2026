@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ด่าน explanation — improved (shipped)</title>
+<style>
+  body{margin:0;background:#eef1f6;color:#1a2230;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Roboto,sans-serif;line-height:1.55}
+  .wrap{max-width:720px;margin:0 auto;padding:26px 18px 60px}
+  h3{font-size:13px;color:#5d6b80;margin:22px 0 8px;text-transform:uppercase;letter-spacing:.5px}
+  .card{background:#fff;border:1px solid #dde3ec;border-radius:14px;padding:16px 18px;box-shadow:0 1px 2px rgba(20,30,60,.05),0 8px 22px rgba(20,30,60,.06)}
+  .qn{font-size:11px;font-weight:800;color:#003a86;letter-spacing:.4px}
+  .qt{font-size:15px;font-weight:700;margin:3px 0 12px}
+  .lbl{font-size:13px;font-weight:800;color:#003a86;margin:0 0 6px}
+  /* rule banner (shipped commit 6955dfa) */
+  .ban{display:flex;align-items:center;gap:10px;background:#e7f5ee;border:1px solid #bfe3cf;border-radius:10px;padding:9px 12px;margin:6px 0 10px}
+  .ans{font-size:.8rem;font-weight:800;color:#0f5e42;background:#fff;border:1px solid #bfe3cf;border-radius:7px;padding:3px 9px;white-space:nowrap}
+  .rt{font-size:.82rem;color:#1f4a39}
+  /* color-coded comparison (new CSS, all stages) */
+  .row{display:flex;align-items:stretch;gap:10px}
+  .side{flex:1;border-radius:9px;padding:9px 12px;border:1px solid #e6ecf5;background:#f8fafc}
+  .side.p{background:#eef4ff;border-color:#d6e4ff}
+  .side.q{background:#fbf4e6;border-color:#f0e0bd}
+  .sl{display:block;font-size:.66rem;font-weight:800;letter-spacing:.3px;text-transform:uppercase;margin-bottom:4px}
+  .side.p .sl{color:#1d4ed8}.side.q .sl{color:#b45309}
+  .kw{font-size:13.5px;font-weight:700}.side.p .kw{color:#1d4ed8}.side.q .kw{color:#b45309}
+  .vs{align-self:center;color:#94a3b8;font-weight:800;font-size:.72rem}
+  .meaning{font-size:13px;color:#33405c;margin-top:10px;line-height:1.6}
+  blockquote{margin:12px 0 0;font-size:12.5px;color:#475569;border-left:3px solid #cbd5e1;padding:6px 0 6px 12px;font-style:italic}
+  .note{font-size:12px;color:#94a3b8;margin-top:18px;line-height:1.5}
+</style></head>
+<body><div class="wrap">
+
+  <h3>ด่าน — TFNG explanation (หลังปรับ · ตัวอย่าง stage 12)</h3>
+  <div class="card">
+    <div class="qn">QUESTION 3 · TRUE / FALSE / NOT GIVEN</div>
+    <div class="qt">The new railway was funded entirely by the national government.</div>
+    <p class="lbl">ทำไมถึงตอบ FALSE?</p>
+
+    <!-- 1) decision rule banner (shipped) -->
+    <div class="ban"><span class="ans">FALSE</span><span class="rt">บทความ “ขัด” กับโจทย์ — ไม่ใช่แค่ไม่พูดถึง (ถ้าบทความไม่พูดถึงเลย จะเป็น NOT GIVEN)</span></div>
+
+    <!-- 2) color-coded comparison (new) -->
+    <div class="row">
+      <div class="side p"><span class="sl">บทความบอกว่า</span><span class="kw">funded by private investors</span></div>
+      <span class="vs">vs</span>
+      <div class="side q"><span class="sl">โจทย์อ้างว่า</span><span class="kw">funded by the government</span></div>
+    </div>
+
+    <p class="meaning">บทความระบุว่าเงินทุนมาจากนักลงทุนเอกชน ซึ่งขัดกับที่โจทย์อ้างว่ารัฐบาลออกทั้งหมด จึงตอบ FALSE</p>
+
+    <!-- 3) evidence sentence (already in data, reportBlockquote) -->
+    <blockquote>"The line was financed largely by private investors, with only a small grant from the state."</blockquote>
+  </div>
+
+  <p class="note">
+    เปลี่ยนที่ทำไปแล้ว (renderer, ครอบคลุม ด่าน 1-20 ทุกด่าน · ไม่แตะข้อมูลที่ audit):<br>
+    1) แถบกฎ FALSE-vs-NOT-GIVEN (commit 6955dfa)  ·  2) คู่เทียบ “บทความ ↔ โจทย์” สีฟ้า/เหลือง ให้เห็นความต่างทันที (Tidwell)
+  </p>
+
+</div></body></html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Exam Simulator — 4 readability variants</title>
+<style>
+  :root{
+    --navy:#0f2e85; --navy-deep:#0b1f44; --navy-mid:#1a4cb5;
+    --gold:#bf8b30; --gold-soft:#fff9ed;
+    --yellow:#ffcc00; --yellow-ink:#3a2e00;
+    --ink:#13203f; --muted:#5b6b86; --line:#dfe5ee; --bg:#eef2f7; --card:#fff;
+    --soft:#eef3ff; --good:#0f6e56;
+    --p-yellow:#fdf0a6; --p-green:#cdeccf; --p-pink:#ffd9e6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Inter,'Noto Sans Thai',system-ui,-apple-system,sans-serif;line-height:1.5}
+  .switcher{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    padding:11px 18px;background:var(--navy-deep);color:#fff}
+  .switcher b{font-size:.9rem;margin-right:4px}
+  .switcher button{padding:7px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;
+    background:transparent;color:#cbd6e6;font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit}
+  .switcher button.on{background:var(--yellow);color:#2a2200;border-color:var(--yellow)}
+  .note{margin-left:auto;font-size:.78rem;opacity:.85}
+  .page{display:none}.page.on{display:block}
+  .ph{font-size:.85rem;color:var(--muted);padding:9px 22px 0;max-width:1280px;margin:0 auto}
+
+  /* exam bar (brand) */
+  .exambar{display:flex;align-items:center;gap:16px;padding:10px 22px;max-width:1280px;margin:0 auto;
+    background:var(--navy);color:#fff}
+  .exambar .ttl{font-weight:900}
+  .exambar .timer{margin-left:auto;background:rgba(255,255,255,.14);padding:6px 15px;border-radius:999px;font-weight:900;
+    border:1px solid rgba(255,255,255,.2)}
+  .exambar .flag{background:var(--gold);color:#2a2000;border:none;border-radius:999px;padding:7px 15px;font-weight:800;cursor:pointer}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:14px 18px 130px}
+  .twopane{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  .pane{background:var(--card);border:1px solid var(--line);border-radius:16px}
+  .left{padding:0;max-height:74vh;overflow:auto}
+  .leftPad{padding:20px 24px}
+  .right{padding:0;max-height:74vh;overflow:auto;background:transparent;border:none}
+  .pill{display:inline-block;padding:6px 15px;border-radius:11px;background:var(--soft);color:var(--navy);
+    font-weight:900;font-size:1rem;border:1px solid #d7e3fb}
+  .ptitle{font-size:1.3rem;font-weight:950;margin:13px 0 14px;letter-spacing:-.01em;color:var(--navy-deep)}
+  .ptext p{margin:0 0 1em}
+  .pmark{border-radius:3px;padding:0 2px}
+
+  /* questions */
+  .qcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px;margin-bottom:12px}
+  .qhead{display:flex;gap:10px;align-items:baseline;margin-bottom:10px}
+  .qnum{flex:0 0 auto;min-width:30px;height:30px;display:grid;place-items:center;border-radius:8px;
+    background:var(--navy);color:#fff;font-weight:900;font-size:.82rem;padding:0 6px}
+  .qtext{font-weight:700;font-size:1rem;color:var(--ink)}
+  .qtype{display:inline-block;margin-left:8px;font-size:.64rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--navy);background:#e9f0ff;border-radius:999px;padding:2px 9px;vertical-align:middle}
+  .checkhead{display:flex;align-items:center;gap:8px;margin:0 0 9px;font-size:.82rem;font-weight:800;color:var(--muted)}
+  .checkcount{margin-left:auto;background:#fff4cc;color:var(--yellow-ink);border-radius:999px;padding:3px 11px;font-weight:900}
+  .opt{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;
+    margin-bottom:8px;cursor:pointer;background:#fff}
+  .opt:hover{border-color:#bcd0f0;background:#f6f9ff}
+  .opt.sel{border-color:var(--navy);background:#eaf1ff}
+  .opt .box{flex:0 0 auto;width:22px;height:22px;border:2px solid #c2cfe2;border-radius:6px;display:grid;place-items:center;
+    font-size:.78rem;color:#fff;background:#fff;margin-top:1px}
+  .opt.sel .box{background:var(--navy);border-color:var(--navy)}
+  .opt .lt{flex:0 0 auto;font-weight:900;color:var(--navy);min-width:16px}
+  .opt.dim{opacity:.5}
+  .tfng button{border:1px solid #d7e3fb;border-radius:999px;background:var(--soft);color:var(--navy);font-weight:800;padding:9px 16px;font-size:.85rem;cursor:pointer;margin-right:8px}
+  select{height:42px;border:1px solid #c8d6ef;border-radius:10px;padding:0 12px;font-size:.95rem;min-width:170px;font-family:inherit}
+  .hintbtn{border:1px solid #d7e3fb;border-radius:999px;background:var(--soft);color:var(--navy);font-weight:800;font-size:.76rem;padding:5px 12px;cursor:pointer}
+
+  /* bottom palette bar (brand) */
+  .palbar{position:fixed;bottom:0;left:0;right:0;z-index:50;background:#fff;border-top:1px solid var(--line);
+    box-shadow:0 -6px 18px rgba(11,31,68,.06);padding:10px 22px;display:flex;flex-direction:column;gap:9px}
+  .palette{display:flex;gap:6px;flex-wrap:wrap}
+  .pchip{width:34px;height:34px;border:1px solid #cdd9eb;border-radius:8px;background:#fff;font-weight:900;font-size:.8rem;cursor:pointer;color:var(--ink)}
+  .pchip.done{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .pchip.cur{outline:3px solid var(--yellow)}
+  .pchip.flag{position:relative}.pchip.flag::after{content:'';position:absolute;top:-3px;right:-3px;width:9px;height:9px;background:var(--gold);border-radius:50%}
+  .palrow2{display:flex;align-items:center;gap:14px}
+  .palrow2 .prog{font-weight:900}
+  .palrow2 .legend{font-size:.78rem;color:var(--muted)}
+  .subbtn{margin-left:auto;border:none;border-radius:12px;background:var(--navy);color:#fff;font-weight:900;padding:11px 24px;cursor:pointer}
+
+  /* reader toolbar (variant C) */
+  .readbar{display:flex;align-items:center;gap:8px;padding:9px 24px;border-bottom:1px solid var(--line);background:#fbfcfe;
+    position:sticky;top:0;z-index:4}
+  .readbar .rb{border:1px solid #cdd9eb;border-radius:8px;background:#fff;font-weight:900;cursor:pointer;padding:6px 11px;font-size:.85rem;color:var(--navy)}
+  .readbar .rb.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .readbar span.lab{font-size:.78rem;color:var(--muted);margin-right:2px}
+
+  @media(max-width:900px){.twopane{grid-template-columns:1fr}.left{max-height:none}}
+</style>
+</head>
+<body>
+
+<div class="switcher">
+  <b>Exam Sim · readability:</b>
+  <button class="on" onclick="show(1)">A · Comfort Reading</button>
+  <button onclick="show(2)">B · Wide Passage</button>
+  <button onclick="show(3)">C · Reader Controls</button>
+  <button onclick="show(4)">D · Focus Guide</button>
+  <span class="note">🔒 brand colours</span>
+</div>
+
+<div class="page on" id="p1"></div>
+<div class="page" id="p2"></div>
+<div class="page" id="p3"></div>
+<div class="page" id="p4"></div>
+
+<script>
+  const PARAS=[
+    {l:'A',html:`<span class="pmark" style="background:var(--p-yellow)">The bandits of the ancient mountain roads were not simply criminals.</span> For centuries they shaped how people and goods moved across the highlands, and their presence forced rulers, merchants and villagers to adapt.`},
+    {l:'B',html:`The geography of the region made banditry difficult to prevent. The roads passed through narrow valleys, steep forests and rocky passes. Some villages had small areas of farmland, but many local communities depended more on <span class="pmark" style="background:var(--p-green)">herding, woodcutting and trade</span> than on agriculture. Their knowledge of springs, hidden tracks and seasonal paths was far greater than that of outsiders.`},
+    {l:'C',html:`Merchant caravans, by contrast, had limited choices. Pack animals could not cross every ridge, so traders were forced to use a small number of known passes. This made their movements predictable. When soldiers arrived, the bandits often escaped because they understood the local landscape so well.`},
+    {l:'D',html:`Authorities tried many responses. Some captured bandits were executed, while prisoners were used as workers on farms and road-building projects. However, attacks on convoys transporting goods to the capital led officials to demand harsher punishments. Later, some bandits captured important envoys and demanded a ransom before releasing them.`}
+  ];
+  const QS=[
+    {n:14,type:'Matching',kind:'select',q:'Which paragraph mentions the predictability of merchant routes?',pa:2},
+    {n:18,type:'True / False / Not Given',kind:'tfng',q:'Local communities relied mainly on farming for their income.',pa:1},
+    {n:'20–21',type:'Multiple choice',kind:'multi',pick:2,pa:1,
+      q:'Which TWO statements does the writer make about inhabitants of the mountain region?',
+      opts:[['A','They knew the landscape better than outsiders did.'],['B','They were mostly dependent on growing crops.'],
+            ['C','Many earned a living from herding, woodcutting or trade.'],['D','They rarely travelled beyond their own villages.'],
+            ['E','They were employed by the authorities to guard the roads.']]}
+  ];
+  const passage=(opts={})=>`<div class="ptext" style="font-size:${opts.fs||'1.02rem'};line-height:${opts.lh||'1.85'};${opts.serif?'font-family:Georgia,\'Times New Roman\',serif;':''}${opts.paper?'':''}">${
+    PARAS.map(p=>`<p data-para="${p.l}"><strong>${p.l}.</strong> ${p.html}</p>`).join('')}</div>`;
+
+  function multi(qq){
+    const id='m'+Math.random().toString(36).slice(2,6);
+    return `<div class="checkhead">เลือก ${qq.pick} ข้อ<span class="checkcount" id="cc-${id}">เลือกแล้ว 0/${qq.pick}</span></div>`+
+      qq.opts.map(o=>`<label class="opt" data-g="${id}" onclick="pick2(this,'${id}',${qq.pick})"><span class="box">✓</span><span class="lt">${o[0]}</span><span>${o[1]}</span></label>`).join('');
+  }
+  function body(qq){
+    if(qq.kind==='select')return `<select><option>Select paragraph</option>${['A','B','C','D'].map(x=>`<option>Paragraph ${x}</option>`).join('')}</select>`;
+    if(qq.kind==='tfng')return `<div class="tfng">${['TRUE','FALSE','NOT GIVEN'].map(c=>`<button>${c}</button>`).join('')}</div>`;
+    if(qq.kind==='multi')return multi(qq);
+    return '';
+  }
+  function card(qq,onclick=''){
+    return `<div class="qcard" ${onclick}><div class="qhead"><span class="qnum">${qq.n}</span>
+      <div class="qtext">${qq.q}<span class="qtype">${qq.type}</span></div>
+      <button class="hintbtn" style="margin-left:auto">✦ Show hint</button></div>${body(qq)}</div>`;
+  }
+  window.pick2=(el,g,max)=>{
+    const sel=[...document.querySelectorAll(`[data-g="${g}"].sel`)];
+    if(el.classList.contains('sel'))el.classList.remove('sel');
+    else{if(sel.length>=max)return;el.classList.add('sel')}
+    const now=document.querySelectorAll(`[data-g="${g}"].sel`).length;
+    document.getElementById('cc-'+g).textContent=`เลือกแล้ว ${now}/${max}`;
+    document.querySelectorAll(`[data-g="${g}"]`).forEach(o=>o.classList.toggle('dim',now>=max&&!o.classList.contains('sel')));
+  };
+  const bar=(ttl)=>`<div class="exambar"><span class="ttl">${ttl}</span><span class="timer">⏱ 18:24</span><button class="flag">⚑ ปักธงข้อนี้</button></div>`;
+  const palbar=()=>`<div class="palbar"><div class="palette">${[14,15,16,17,18,19,20,21,22,23,24,25,26].map((x,i)=>`<button class="pchip ${i<3?'done':''} ${i===5?'flag':''} ${i===6?'cur':''}">${x}</button>`).join('')}</div>
+    <div class="palrow2"><span class="prog">ตอบแล้ว 3/13</span><span class="legend">⬛ ตอบแล้ว · ⬜ ยังไม่ตอบ · 🟡 ปักธงไว้ทบทวน</span><button class="subbtn">รีวิว &amp; ส่งคำตอบ</button></div></div>`;
+
+  // A · Comfort Reading (serif, warm paper, big line-height)
+  document.getElementById('p1').innerHTML=`<div class="ph">อ่านสบายตา: ตัวอักษร serif ใหญ่ขึ้น เว้นบรรทัดกว้าง พื้นหลังกระดาษครีม — เหมือนอ่านหนังสือจริง</div>
+    ${bar('Reading · Passage 2 of 3')}
+    <div class="wrap"><div class="twopane">
+      <div class="pane left" style="background:#fffdf6">
+        <div class="leftPad"><span class="pill">Passage 2</span><div class="ptitle">The bandits of the ancient mountain roads</div>
+        ${passage({fs:'1.16rem',lh:'2.05',serif:true})}</div>
+      </div>
+      <div class="pane right">${QS.map(q=>card(q)).join('')}</div>
+    </div></div>${palbar()}`;
+
+  // B · Wide Passage (62/38, bigger passage text)
+  document.getElementById('p2').innerHTML=`<div class="ph">ให้บทความกว้างขึ้น (62%) เพราะการอ่านคือส่วนที่ยาก — ตัวอักษรใหญ่ คอลัมน์คำถามกระชับ</div>
+    ${bar('Reading · Passage 2 of 3')}
+    <div class="wrap"><div class="twopane" style="grid-template-columns:1.62fr 1fr">
+      <div class="pane left"><div class="leftPad"><span class="pill">Passage 2</span><div class="ptitle">The bandits of the ancient mountain roads</div>
+        ${passage({fs:'1.18rem',lh:'1.95'})}</div></div>
+      <div class="pane right">${QS.map(q=>card(q)).join('')}</div>
+    </div></div>${palbar()}`;
+
+  // C · Reader Controls (A-/A+, spacing, sepia)
+  document.getElementById('p3').innerHTML=`<div class="ph">ผู้เรียนปรับเองได้: ขนาดตัวอักษร A−/A+ · ระยะบรรทัด · โหมดถนอมสายตา (sepia)</div>
+    ${bar('Reading · Passage 2 of 3')}
+    <div class="wrap"><div class="twopane">
+      <div class="pane left">
+        <div class="readbar">
+          <span class="lab">ขนาด</span><button class="rb" onclick="rdFont(-1)">A−</button><button class="rb" onclick="rdFont(1)">A+</button>
+          <span class="lab" style="margin-left:8px">บรรทัด</span><button class="rb" onclick="rdLine()">↕</button>
+          <button class="rb" id="sepiaBtn" style="margin-left:8px" onclick="rdSepia()">☼ Sepia</button>
+        </div>
+        <div class="leftPad" id="rdBody"><span class="pill">Passage 2</span><div class="ptitle">The bandits of the ancient mountain roads</div>
+          <div id="rdText">${passage({fs:'1.12rem',lh:'1.95'})}</div></div>
+      </div>
+      <div class="pane right">${QS.map(q=>card(q)).join('')}</div>
+    </div></div>${palbar()}`;
+
+  // D · Focus Guide (click a question -> spotlight its paragraph, dim others)
+  document.getElementById('p4').innerHTML=`<div class="ph">ลดภาระสายตา: คลิกคำถาม แล้วย่อหน้าที่เกี่ยวข้องจะถูกไฮไลต์ ส่วนอื่นจางลง ช่วยให้รู้ว่าควรอ่านตรงไหน</div>
+    ${bar('Reading · Passage 2 of 3')}
+    <div class="wrap"><div class="twopane">
+      <div class="pane left"><div class="leftPad" id="fgText"><span class="pill">Passage 2</span><div class="ptitle">The bandits of the ancient mountain roads</div>
+        ${passage({fs:'1.14rem',lh:'1.95'})}</div></div>
+      <div class="pane right">${QS.map((q,i)=>card(q,`onclick="fgFocus('${PARAS[q.pa].l}',this)"`)).join('')}</div>
+    </div></div>${palbar()}`;
+
+  // reader controls state
+  let fs=1.12,lh=1.95,sepia=false;
+  const rdApply=()=>{const t=document.querySelector('#rdText .ptext');if(!t)return;t.style.fontSize=fs.toFixed(2)+'rem';t.style.lineHeight=lh;
+    document.getElementById('rdBody').parentElement.style.background=sepia?'#f6efe0':'#fff';
+    document.getElementById('sepiaBtn').classList.toggle('on',sepia);};
+  window.rdFont=(d)=>{fs=Math.max(0.95,Math.min(1.6,fs+d*0.07));rdApply()};
+  window.rdLine=()=>{lh=lh>=2.2?1.7:lh+0.2;rdApply()};
+  window.rdSepia=()=>{sepia=!sepia;rdApply()};
+  // focus guide
+  window.fgFocus=(letter,card)=>{
+    document.querySelectorAll('#fgText [data-para]').forEach(p=>{
+      const on=p.getAttribute('data-para')===letter;
+      p.style.transition='all .2s';p.style.opacity=on?'1':'.32';
+      p.style.background=on?'#eef3ff':'transparent';p.style.borderRadius='8px';p.style.padding=on?'6px 10px':'0';p.style.margin=on?'0 -10px 1em':'0 0 1em';
+    });
+    document.querySelectorAll('#p4 .qcard').forEach(c=>c.style.outline='');
+    card.style.outline='2px solid var(--navy)';card.style.borderRadius='14px';
+  };
+
+  window.show=(n)=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+    document.querySelectorAll('.switcher button').forEach(b=>b.classList.remove('on'));
+    document.getElementById('p'+n).classList.add('on');document.querySelectorAll('.switcher button')[n-1].classList.add('on');window.scrollTo(0,0);};
+</script>
+</body>
+</html>

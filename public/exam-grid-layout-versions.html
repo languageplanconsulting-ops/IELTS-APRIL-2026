@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Passage 3 · Band 7 — 4 layout versions</title>
+<style>
+  :root{
+    --bg:#eef1f6; --ink:#16203a; --muted:#5d6b80; --faint:#94a0b3; --line:#dde3ec;
+    --accent:#1a4fd6; --accent-ink:#143c9e; --accent-soft:#e6edfb; --card:#ffffff;
+    --cream:#fbf3da; --cream-line:#efe2bd;
+    --gold:#f5c518; --gold-ink:#7a5c00;
+    --red:#e5484d;
+    --shadow:0 1px 2px rgba(20,30,60,.05),0 8px 26px rgba(20,30,60,.07);
+    --shadow-sm:0 1px 2px rgba(20,30,60,.06),0 3px 10px rgba(20,30,60,.05);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 16px 70px}
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(238,241,246,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 -16px 18px;padding:12px 16px}
+  .topbar h1{font-size:14px;margin:0 0 9px;font-weight:800}
+  .topbar h1 small{font-weight:500;color:var(--muted)}
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg button{border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:12.5px;padding:8px 13px;border-radius:10px;cursor:pointer;font-family:inherit}
+  .seg button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ver{display:none}.ver.show{display:block;animation:f .25s ease}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .why{font-size:12.5px;color:var(--muted);background:var(--accent-soft);border:1px solid #cfdcf7;border-radius:12px;padding:11px 14px;margin-bottom:18px;line-height:1.6}
+  .why b{color:var(--accent-ink)}
+
+  /* ===== shared page header (the "Passage 3 · Band 7" banner) ===== */
+  .hero{background:linear-gradient(180deg,#f3f6fc,#eaf0fb);border:1px solid var(--line);border-radius:16px;padding:20px 24px;margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .hero .kick{font-size:10.5px;font-weight:800;letter-spacing:1.4px;color:var(--accent);background:var(--accent-soft);border:1px solid #cfdcf7;padding:3px 9px;border-radius:6px;display:inline-block;margin-bottom:9px}
+  .hero h2{margin:0;font-size:30px;letter-spacing:-.8px;font-weight:900}
+  .hero .sub{margin:6px 0 0;font-size:13px;color:var(--muted)}
+  .hero .sub b{color:var(--ink)}
+  .hero .right{display:flex;align-items:center;gap:10px}
+  .pill-count{background:var(--gold);color:var(--gold-ink);font-weight:800;font-size:12px;padding:6px 12px;border-radius:20px}
+  .btn-back{background:#fff;color:var(--red);border:1.5px solid var(--red);font-weight:800;font-size:12.5px;padding:7px 14px;border-radius:10px;cursor:pointer;font-family:inherit}
+  .filterbar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+  .chip{font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;font-family:inherit}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chip.ghost{border-style:dashed}
+
+  /* type tag colors */
+  .t{font-size:10.5px;font-weight:800;letter-spacing:.2px;padding:3px 8px;border-radius:6px;white-space:nowrap;display:inline-block}
+  .t-tfng{background:#e7f5ee;color:#15794a}
+  .t-yn{background:#fdeede;color:#b06a08}
+  .t-mc{background:#e6edfb;color:#1a4fd6}
+  .t-match{background:#f0e9fb;color:#6b3fc9}
+  .t-fill{background:#fbe9ef;color:#bf2d5c}
+
+  /* ============================================================
+     V1 — UNIFORM CARDS (fix clipping, consistent structure)
+     ============================================================ */
+  .g1{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:880px){.g1{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.g1{grid-template-columns:1fr}}
+  .c1{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;display:flex;flex-direction:column;transition:transform .12s,box-shadow .12s}
+  .c1:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .c1 .strip{background:linear-gradient(135deg,#1a4fd6,#3b6ae0);color:#fff;padding:13px 16px 12px;display:flex;align-items:center;justify-content:space-between}
+  .c1 .strip .bk{font-size:12px;font-weight:800;letter-spacing:.3px}
+  .c1 .strip .qn{font-size:11px;font-weight:700;background:rgba(255,255,255,.2);padding:3px 9px;border-radius:20px}
+  .c1 .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:11px;flex:1}
+  .c1 .title{font-size:15px;font-weight:800;line-height:1.35;letter-spacing:-.2px;min-height:40px}
+  .c1 .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .c1 .open{margin-top:auto;text-align:center;background:#f4f6fb;border:1px solid var(--line);color:var(--accent-ink);font-weight:800;font-size:13px;padding:10px;border-radius:10px;cursor:pointer;font-family:inherit;transition:background .12s}
+  .c1 .open:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  /* ============================================================
+     V2 — COMPACT ROWS (scannable list)
+     ============================================================ */
+  .g2{display:flex;flex-direction:column;gap:9px}
+  .r2{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-sm);padding:13px 16px;display:flex;align-items:center;gap:16px;transition:border-color .12s,transform .12s}
+  .r2:hover{border-color:#b8c6e6;transform:translateX(2px)}
+  .r2 .num{flex:none;width:46px;height:46px;border-radius:11px;background:var(--cream);border:1px solid var(--cream-line);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+  .r2 .num b{font-size:17px;color:var(--accent-ink);font-weight:900}
+  .r2 .num span{font-size:8.5px;color:var(--muted);margin-top:2px;font-weight:700}
+  .r2 .mid{flex:1;min-width:0}
+  .r2 .mid .title{font-size:14.5px;font-weight:800;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .r2 .mid .meta{display:flex;align-items:center;gap:7px;margin-top:5px;flex-wrap:wrap}
+  .r2 .mid .meta .q{font-size:11.5px;color:var(--muted);font-weight:600}
+  .r2 .open2{flex:none;background:#f4f6fb;border:1px solid var(--line);color:var(--accent-ink);font-weight:800;font-size:12.5px;padding:9px 18px;border-radius:9px;cursor:pointer;font-family:inherit}
+  .r2 .open2:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+  @media(max-width:620px){.r2 .open2{padding:9px 12px}.r2{gap:11px}}
+
+  /* ============================================================
+     V3 — GROUPED BY CAMBRIDGE BOOK
+     ============================================================ */
+  .grp{margin-bottom:22px}
+  .grphd{display:flex;align-items:center;gap:11px;margin:0 2px 12px}
+  .grphd .spine{width:34px;height:44px;border-radius:4px;background:linear-gradient(160deg,#d4263b,#a01828);box-shadow:inset -3px 0 6px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px;flex:none}
+  .grphd h3{margin:0;font-size:16px;font-weight:900;letter-spacing:-.3px}
+  .grphd .n{font-size:11.5px;color:var(--muted);font-weight:700}
+  .grphd .ln{flex:1;height:1px;background:var(--line)}
+  .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:880px){.g3{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.g3{grid-template-columns:1fr}}
+  .c3{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow-sm);padding:15px 16px;display:flex;flex-direction:column;gap:9px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+  .c3:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .c3 .tst{font-size:10.5px;font-weight:800;letter-spacing:.5px;color:var(--accent);text-transform:uppercase}
+  .c3 .title{font-size:14.5px;font-weight:800;line-height:1.35;letter-spacing:-.2px}
+  .c3 .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .c3 .foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px;padding-top:10px;border-top:1px solid var(--line)}
+  .c3 .foot .q{font-size:11.5px;color:var(--muted);font-weight:600}
+  .c3 .foot .go{font-size:12.5px;font-weight:800;color:var(--accent-ink)}
+
+  /* ============================================================
+     V4 — MINIMAL TYPographic INDEX
+     ============================================================ */
+  .g4{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden}
+  .r4{display:flex;align-items:center;gap:16px;padding:15px 20px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .12s}
+  .r4:last-child{border-bottom:0}
+  .r4:hover{background:#f6f8fc}
+  .r4 .idx{flex:none;font-size:13px;font-weight:900;color:var(--faint);width:30px;font-variant-numeric:tabular-nums}
+  .r4 .mid{flex:1;min-width:0}
+  .r4 .mid .bk{font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.3px;margin-bottom:2px}
+  .r4 .mid .title{font-size:15px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .r4 .tags{flex:none;display:flex;gap:5px}
+  .r4 .q{flex:none;font-size:11.5px;color:var(--muted);font-weight:600;width:80px;text-align:right}
+  .r4 .arr{flex:none;color:var(--faint);font-weight:900;font-size:16px}
+  .r4:hover .arr{color:var(--accent)}
+  @media(max-width:680px){.r4 .tags,.r4 .q{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <h1>Passage 3 · Band 7 — exam grid <small>· 4 layout proposals</small></h1>
+    <div class="seg">
+      <button class="active" data-v="v1">V1 · Uniform cards</button>
+      <button data-v="v2">V2 · Compact rows</button>
+      <button data-v="v3">V3 · Grouped by book</button>
+      <button data-v="v4">V4 · Minimal index</button>
+    </div>
+  </div>
+
+  <!-- ============ V1 ============ -->
+  <section class="ver show" id="v1">
+    <div class="why"><b>V1 · Uniform cards.</b> Fixes the core bug in the current page — the clipped colour banners and inconsistent card heights. Every card now has a solid blue header strip (book + question count), a fixed-height title, neat colour-coded type pills that never wrap off-card, and a full-width action button. Clean, predictable, 3-up grid.</div>
+    <div class="hero">
+      <div>
+        <span class="kick">CHALLENGE</span>
+        <h2>Passage 3 · Band 7</h2>
+        <p class="sub">ข้อสอบระดับยาก · สำหรับ <b>Band 7+</b></p>
+      </div>
+      <div class="right"><span class="pill-count">32 EXAMS</span><button class="btn-back">Back to Categories</button></div>
+    </div>
+    <div class="g1">
+      <div class="c1"><div class="strip"><span class="bk">Cambridge 11 · Test 4</span><span class="qn">14 Q</span></div><div class="body"><div class="title">This Marvellous Invention</div><div class="tags"><span class="t t-tfng">T/F/NG</span></div><button class="open">Open exam</button></div></div>
+      <div class="c1"><div class="strip"><span class="bk">Cambridge 12 · Test 1</span><span class="qn">14 Q</span></div><div class="body"><div class="title">What's the Purpose of Gaining Knowledge?</div><div class="tags"><span class="t t-yn">Y/N/NG</span></div><button class="open">Open exam</button></div></div>
+      <div class="c1"><div class="strip"><span class="bk">Cambridge 12 · Test 2</span><span class="qn">14 Q</span></div><div class="body"><div class="title">The Benefits of Being Bilingual</div><div class="tags"><span class="t t-match">Matching</span></div><button class="open">Open exam</button></div></div>
+      <div class="c1"><div class="strip"><span class="bk">Cambridge 14 · Test 4</span><span class="qn">14 Q</span></div><div class="body"><div class="title">How Bad Is Ocean Garbage, Really?</div><div class="tags"><span class="t t-tfng">T/F/NG</span><span class="t t-fill">Fill blanks</span><span class="t t-mc">MCQ</span></div><button class="open">Open exam</button></div></div>
+      <div class="c1"><div class="strip"><span class="bk">Cambridge 15 · Test 1</span><span class="qn">14 Q</span></div><div class="body"><div class="title">What is Exploration?</div><div class="tags"><span class="t t-mc">MCQ</span><span class="t t-match">Matching</span><span class="t t-fill">Fill blanks</span></div><button class="open">Open exam</button></div></div>
+      <div class="c1"><div class="strip"><span class="bk">Cambridge 15 · Test 2</span><span class="qn">14 Q</span></div><div class="body"><div class="title">Having a Laugh</div><div class="tags"><span class="t t-mc">MCQ</span><span class="t t-yn">Y/N/NG</span></div><button class="open">Open exam</button></div></div>
+    </div>
+  </section>
+
+  <!-- ============ V2 ============ -->
+  <section class="ver" id="v2">
+    <div class="why"><b>V2 · Compact rows.</b> For 32+ exams, a list beats a grid for scanning. Each row keeps the familiar cream number tile, truncates the long title cleanly, shows type pills + question count inline, and has a dedicated Open button. Twice the density, no clipping, instantly sortable in your head.</div>
+    <div class="hero">
+      <div>
+        <span class="kick">CHALLENGE</span>
+        <h2>Passage 3 · Band 7</h2>
+        <p class="sub">ข้อสอบระดับยาก · สำหรับ <b>Band 7+</b></p>
+      </div>
+      <div class="right"><span class="pill-count">32 EXAMS</span><button class="btn-back">Back to Categories</button></div>
+    </div>
+    <div class="g2">
+      <div class="r2"><div class="num"><b>11</b><span>TEST 4</span></div><div class="mid"><div class="title">This Marvellous Invention</div><div class="meta"><span class="t t-tfng">T/F/NG</span><span class="q">· 14 questions</span></div></div><button class="open2">Open</button></div>
+      <div class="r2"><div class="num"><b>12</b><span>TEST 1</span></div><div class="mid"><div class="title">What's the Purpose of Gaining Knowledge?</div><div class="meta"><span class="t t-yn">Y/N/NG</span><span class="q">· 14 questions</span></div></div><button class="open2">Open</button></div>
+      <div class="r2"><div class="num"><b>12</b><span>TEST 2</span></div><div class="mid"><div class="title">The Benefits of Being Bilingual</div><div class="meta"><span class="t t-match">Matching</span><span class="q">· 14 questions</span></div></div><button class="open2">Open</button></div>
+      <div class="r2"><div class="num"><b>14</b><span>TEST 4</span></div><div class="mid"><div class="title">How Bad Is Ocean Garbage, Really?</div><div class="meta"><span class="t t-tfng">T/F/NG</span><span class="t t-fill">Fill</span><span class="t t-mc">MCQ</span><span class="q">· 14 questions</span></div></div><button class="open2">Open</button></div>
+      <div class="r2"><div class="num"><b>15</b><span>TEST 1</span></div><div class="mid"><div class="title">What is Exploration?</div><div class="meta"><span class="t t-mc">MCQ</span><span class="t t-match">Matching</span><span class="t t-fill">Fill</span><span class="q">· 14 questions</span></div></div><button class="open2">Open</button></div>
+      <div class="r2"><div class="num"><b>16</b><span>TEST 3</span></div><div class="mid"><div class="title">Plant 'thermometer' triggers springtime growth by measuring night-time heat</div><div class="meta"><span class="t t-tfng">T/F/NG</span><span class="t t-match">Matching</span><span class="t t-fill">Fill</span><span class="q">· 14 questions</span></div></div><button class="open2">Open</button></div>
+    </div>
+  </section>
+
+  <!-- ============ V3 ============ -->
+  <section class="ver" id="v3">
+    <div class="why"><b>V3 · Grouped by Cambridge book.</b> The titles already say "Cambridge 11/12/14…" — so group by it. A book "spine" header organises the 32 exams into scannable sections, removing the repeated "Cambridge N" from every card. Cleaner cards, obvious structure, easy to find the book you want.</div>
+    <div class="hero">
+      <div>
+        <span class="kick">CHALLENGE</span>
+        <h2>Passage 3 · Band 7</h2>
+        <p class="sub">ข้อสอบระดับยาก · สำหรับ <b>Band 7+</b></p>
+      </div>
+      <div class="right"><span class="pill-count">32 EXAMS</span><button class="btn-back">Back to Categories</button></div>
+    </div>
+
+    <div class="grp">
+      <div class="grphd"><span class="spine">15</span><h3>Cambridge 15</h3><span class="n">3 exams</span><span class="ln"></span></div>
+      <div class="g3">
+        <div class="c3"><div class="tst">Test 1 · Passage 3</div><div class="title">What is Exploration?</div><div class="tags"><span class="t t-mc">MCQ</span><span class="t t-match">Matching</span><span class="t t-fill">Fill</span></div><div class="foot"><span class="q">14 questions</span><span class="go">Open →</span></div></div>
+        <div class="c3"><div class="tst">Test 2 · Passage 3</div><div class="title">Having a Laugh</div><div class="tags"><span class="t t-mc">MCQ</span><span class="t t-yn">Y/N/NG</span></div><div class="foot"><span class="q">14 questions</span><span class="go">Open →</span></div></div>
+        <div class="c3"><div class="tst">Test 4 · Passage 3</div><div class="title">The Future of Work</div><div class="tags"><span class="t t-tfng">T/F/NG</span><span class="t t-mc">MCQ</span></div><div class="foot"><span class="q">14 questions</span><span class="go">Open →</span></div></div>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="grphd"><span class="spine">16</span><h3>Cambridge 16</h3><span class="n">4 exams</span><span class="ln"></span></div>
+      <div class="g3">
+        <div class="c3"><div class="tst">Test 2 · Passage 3</div><div class="title">How to Make Wise Decisions</div><div class="tags"><span class="t t-mc">MCQ</span><span class="t t-tfng">T/F/NG</span></div><div class="foot"><span class="q">14 questions</span><span class="go">Open →</span></div></div>
+        <div class="c3"><div class="tst">Test 3 · Passage 3</div><div class="title">Plant 'thermometer' triggers springtime growth</div><div class="tags"><span class="t t-tfng">T/F/NG</span><span class="t t-match">Matching</span><span class="t t-fill">Fill</span></div><div class="foot"><span class="q">14 questions</span><span class="go">Open →</span></div></div>
+        <div class="c3"><div class="tst">Test 4 · Passage 3</div><div class="title">Attitudes towards Artificial Intelligence</div><div class="tags"><span class="t t-match">Matching</span><span class="t t-mc">MCQ</span><span class="t t-yn">Y/N/NG</span></div><div class="foot"><span class="q">14 questions</span><span class="go">Open →</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ V4 ============ -->
+  <section class="ver" id="v4">
+    <div class="why"><b>V4 · Minimal index.</b> The most information-dense and the calmest. A single bordered table-like list: index number, book label, title, type pills and question count all on one line. Feels like a clean syllabus / table of contents. Best if learners just want to pick fast and go.</div>
+    <div class="hero">
+      <div>
+        <span class="kick">CHALLENGE</span>
+        <h2>Passage 3 · Band 7</h2>
+        <p class="sub">ข้อสอบระดับยาก · สำหรับ <b>Band 7+</b></p>
+      </div>
+      <div class="right"><span class="pill-count">32 EXAMS</span><button class="btn-back">Back to Categories</button></div>
+    </div>
+    <div class="filterbar">
+      <button class="chip on">All</button>
+      <button class="chip">T/F/NG</button>
+      <button class="chip">Y/N/NG</button>
+      <button class="chip">Matching</button>
+      <button class="chip">MCQ</button>
+      <button class="chip ghost">Fill in the blanks</button>
+    </div>
+    <div class="g4">
+      <div class="r4"><span class="idx">01</span><div class="mid"><div class="bk">CAMBRIDGE 11 · TEST 4</div><div class="title">This Marvellous Invention</div></div><div class="tags"><span class="t t-tfng">T/F/NG</span></div><span class="q">14 questions</span><span class="arr">→</span></div>
+      <div class="r4"><span class="idx">02</span><div class="mid"><div class="bk">CAMBRIDGE 12 · TEST 1</div><div class="title">What's the Purpose of Gaining Knowledge?</div></div><div class="tags"><span class="t t-yn">Y/N/NG</span></div><span class="q">14 questions</span><span class="arr">→</span></div>
+      <div class="r4"><span class="idx">03</span><div class="mid"><div class="bk">CAMBRIDGE 12 · TEST 2</div><div class="title">The Benefits of Being Bilingual</div></div><div class="tags"><span class="t t-match">Matching</span></div><span class="q">14 questions</span><span class="arr">→</span></div>
+      <div class="r4"><span class="idx">04</span><div class="mid"><div class="bk">CAMBRIDGE 14 · TEST 4</div><div class="title">How Bad Is Ocean Garbage, Really?</div></div><div class="tags"><span class="t t-tfng">T/F/NG</span><span class="t t-fill">Fill</span><span class="t t-mc">MCQ</span></div><span class="q">14 questions</span><span class="arr">→</span></div>
+      <div class="r4"><span class="idx">05</span><div class="mid"><div class="bk">CAMBRIDGE 15 · TEST 1</div><div class="title">What is Exploration?</div></div><div class="tags"><span class="t t-mc">MCQ</span><span class="t t-match">Matching</span><span class="t t-fill">Fill</span></div><span class="q">14 questions</span><span class="arr">→</span></div>
+      <div class="r4"><span class="idx">06</span><div class="mid"><div class="bk">CAMBRIDGE 15 · TEST 2</div><div class="title">Having a Laugh</div></div><div class="tags"><span class="t t-mc">MCQ</span><span class="t t-yn">Y/N/NG</span></div><span class="q">14 questions</span><span class="arr">→</span></div>
+      <div class="r4"><span class="idx">07</span><div class="mid"><div class="bk">CAMBRIDGE 16 · TEST 3</div><div class="title">Plant 'thermometer' triggers springtime growth by measuring night-time heat</div></div><div class="tags"><span class="t t-tfng">T/F/NG</span><span class="t t-match">Matching</span><span class="t t-fill">Fill</span></div><span class="q">14 questions</span><span class="arr">→</span></div>
+    </div>
+  </section>
+</div>
+<script>
+  const btns=document.querySelectorAll('.seg button');
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    document.querySelectorAll('.ver').forEach(v=>v.classList.remove('show'));
+    document.getElementById(b.dataset.v).classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+</script>
+</body>
+</html>

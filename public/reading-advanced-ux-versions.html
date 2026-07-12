@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced Reading — 4 UX versions (visibility)</title>
+<style>
+  :root{
+    --bg:#eef1f6; --ink:#1a2230; --muted:#5d6b80; --faint:#94a0b3; --line:#dde3ec;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#ffffff;
+    --good:#15915f; --good-bg:#e7f5ee; --warn:#b5791f; --warn-bg:#fbf1dd;
+    --hl:#ffe39c; --shadow:0 1px 2px rgba(20,30,60,.05),0 8px 26px rgba(20,30,60,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 16px 60px}
+  .topbar{position:sticky;top:0;z-index:60;background:rgba(238,241,246,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:12px 16px}
+  .topbar h1{font-size:14px;margin:0 0 9px;font-weight:800}
+  .topbar h1 small{font-weight:500;color:var(--muted)}
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg button{border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:12.5px;padding:8px 12px;border-radius:10px;cursor:pointer;font-family:inherit}
+  .seg button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ver{display:none}.ver.show{display:block;animation:f .25s ease}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .why{font-size:12.5px;color:var(--muted);background:var(--accent-soft);border:1px solid #cfe0f7;border-radius:12px;padding:10px 13px;margin-bottom:14px;line-height:1.55}
+  .why b{color:var(--accent-ink)}
+
+  .pane{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:780px){.pane{grid-template-columns:1fr}}
+  .col{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+  .colhead{padding:10px 16px;border-bottom:1px solid var(--line);font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--faint)}
+  .passage{padding:16px 18px;max-height:460px;overflow:auto}
+  .sec{display:grid;grid-template-columns:26px 1fr;gap:10px;margin-bottom:13px}
+  .sec .pl{width:24px;height:24px;border-radius:7px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;font-size:13px;display:grid;place-items:center}
+  .sec p{margin:0;font-size:14px;line-height:1.7;color:#2a3444}
+  .sec.dim p{opacity:.4}
+  mark{background:var(--hl);padding:0 2px;border-radius:3px}
+  .evid{background:var(--hl);border-radius:4px;transition:background .2s}
+  .qbody{padding:16px 18px;max-height:460px;overflow:auto}
+  .qtitle{font-size:15px;font-weight:800;margin:0 0 8px}
+  .summary{font-size:14.5px;line-height:2.1;color:#2a3444}
+
+  /* default blank */
+  .blk{display:inline-flex;align-items:center;gap:6px;border-bottom:2px solid var(--accent);min-width:74px;padding:0 4px;position:relative}
+  .blk .n{font-size:10px;font-weight:800;color:#fff;background:#334155;border-radius:4px;padding:1px 5px}
+  .blk input{border:0;background:transparent;font-size:13.5px;font-family:inherit;width:80px;outline:none}
+  .blk .q{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--accent-ink);font-size:11px;font-weight:800;cursor:pointer;display:grid;place-items:center}
+
+  /* ===== V1 status-first ===== */
+  .statusbar{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:12px;flex-wrap:wrap}
+  .statusbar .prog{flex:1;min-width:160px}
+  .statusbar .track{height:8px;border-radius:99px;background:#e7ecf3;overflow:hidden;margin-top:5px}
+  .statusbar .track i{display:block;height:100%;width:50%;background:var(--accent);border-radius:99px}
+  .statusbar .pl1{font-size:12px;font-weight:800}
+  .statusbar .rule{font-size:11.5px;font-weight:800;color:var(--warn);background:var(--warn-bg);border:1px solid #f0dcae;border-radius:8px;padding:5px 10px}
+  .statusbar .save{font-size:11.5px;font-weight:700;color:var(--good);background:var(--good-bg);border:1px solid #bfe3cf;border-radius:8px;padding:5px 10px}
+  .blk.active{background:var(--accent-soft);border-radius:5px 5px 0 0}
+  .formathint{font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:700}
+
+  /* ===== V2 linked evidence ===== */
+  .linknote{font-size:12px;color:var(--muted);margin:0 0 10px}
+  .blk.lk{cursor:pointer}
+  .blk.lk.sel{background:#fff3cf;border-bottom-color:var(--warn)}
+  .sec.lit p{background:#fff8e0;border-radius:6px;box-shadow:0 0 0 2px #ffe39c}
+
+  /* ===== V3 affordances ===== */
+  .blk3{display:inline-flex;flex-direction:column;vertical-align:bottom;margin:0 3px}
+  .blk3 .field{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--accent);background:#fff;border-radius:9px;padding:6px 10px;min-width:120px}
+  .blk3 .field .n{font-size:10px;font-weight:800;color:#fff;background:var(--accent);border-radius:4px;padding:1px 6px}
+  .blk3 .field input{border:0;outline:none;font-size:14px;font-family:inherit;width:90px}
+  .blk3 .field .hint{font-size:11px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border:1px solid #cfe0f7;border-radius:7px;padding:3px 8px;cursor:pointer;white-space:nowrap}
+  .blk3 .fmt{font-size:10px;color:var(--faint);margin:3px 0 0 4px;font-weight:700}
+
+  /* ===== V4 section map ===== */
+  .v4grid{display:grid;grid-template-columns:120px 1fr 1fr;gap:14px}
+  @media(max-width:880px){.v4grid{grid-template-columns:1fr}}
+  .map{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px;align-self:start}
+  .map h4{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--faint);margin:0 0 8px}
+  .map a{display:flex;align-items:center;justify-content:space-between;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:6px;font-size:12.5px;font-weight:700}
+  .map a .lt{width:20px;height:20px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;display:grid;place-items:center;font-size:11px}
+  .map a .qs{font-size:10.5px;color:var(--muted);font-weight:700}
+  .map a.done{background:var(--good-bg);border-color:#bfe3cf}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <h1>Advanced Reading · 4 UX versions &nbsp;<small>visibility-focused · same sample passage + summary</small></h1>
+    <div class="seg">
+      <button data-v="a" class="active">A · Status-First</button>
+      <button data-v="b">B · Linked Evidence</button>
+      <button data-v="c">C · Clear Affordances</button>
+      <button data-v="d">D · Section Map</button>
+    </div>
+  </div>
+  <div class="why" id="why"></div>
+
+  <!-- ============ A · STATUS-FIRST ============ -->
+  <section class="ver show" id="a">
+    <div class="statusbar">
+      <div class="prog"><div class="pl1">2 of 4 answered · Passage 3</div><div class="track"><i></i></div></div>
+      <div class="rule">⚑ NO MORE THAN TWO WORDS</div>
+      <div class="save">✓ Saved</div>
+    </div>
+    <div class="pane">
+      <div class="col">
+        <div class="colhead">Passage</div>
+        <div class="passage">
+          <div class="sec"><span class="pl">A</span><p>Across many cities, rooftops and balconies are quietly being turned into <strong>homes</strong> for honeybees.</p></div>
+          <div class="sec"><span class="pl">B</span><p>Supporters argue that urban hives boost the <strong>pollination</strong> of nearby parks and gardens.</p></div>
+          <div class="sec"><span class="pl">C</span><p>Critics warn that too many managed hives can crowd out the <strong>wild</strong> pollinators already under pressure.</p></div>
+          <div class="sec"><span class="pl">D</span><p>Researchers now recommend planting more <strong>flowering</strong> species near every new hive.</p></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="colhead">Questions 1–4 · Summary completion</div>
+        <div class="qbody">
+          <p class="formathint">↳ Active blank is highlighted in this panel and tracked in the bar above.</p>
+          <p class="qtitle">Urban beekeeping</p>
+          <p class="summary">City beekeeping turns rooftops into
+            <span class="blk active"><span class="n">1</span><input value="homes" /></span> for bees. Fans say it boosts the
+            <span class="blk"><span class="n">2</span><input value="pollination" /></span> of parks. Critics fear it crowds out
+            <span class="blk"><span class="n">3</span><input placeholder="type…" /><span class="q">?</span></span> pollinators. Experts advise planting more
+            <span class="blk"><span class="n">4</span><input placeholder="type…" /><span class="q">?</span></span> species.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ B · LINKED EVIDENCE ============ -->
+  <section class="ver" id="b">
+    <div class="pane">
+      <div class="col">
+        <div class="colhead">Passage · evidence lights up for the selected blank</div>
+        <div class="passage">
+          <div class="sec" id="s1"><span class="pl">A</span><p>Across many cities, rooftops and balconies are quietly being turned into homes for honeybees.</p></div>
+          <div class="sec" id="s2"><span class="pl">B</span><p>Supporters argue that urban hives boost the pollination of nearby parks and gardens.</p></div>
+          <div class="sec" id="s3"><span class="pl">C</span><p>Critics warn that too many managed hives can crowd out the wild pollinators already under pressure.</p></div>
+          <div class="sec" id="s4"><span class="pl">D</span><p>Researchers now recommend planting more flowering species near every new hive.</p></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="colhead">Questions 1–4</div>
+        <div class="qbody">
+          <p class="linknote">👆 Tap a blank — its proof sentence highlights on the left.</p>
+          <p class="qtitle">Urban beekeeping</p>
+          <p class="summary">City beekeeping turns rooftops into
+            <span class="blk lk" data-ev="s1"><span class="n">1</span><input value="homes" /></span> for bees. Fans say it boosts the
+            <span class="blk lk" data-ev="s2"><span class="n">2</span><input value="pollination" /></span> of parks. Critics fear it crowds out
+            <span class="blk lk" data-ev="s3"><span class="n">3</span><input placeholder="type…" /></span> pollinators. Experts advise planting more
+            <span class="blk lk" data-ev="s4"><span class="n">4</span><input placeholder="type…" /></span> species.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ C · CLEAR AFFORDANCES ============ -->
+  <section class="ver" id="c">
+    <div class="pane">
+      <div class="col">
+        <div class="colhead">Passage</div>
+        <div class="passage">
+          <div class="sec"><span class="pl">A</span><p>Across many cities, rooftops and balconies are quietly being turned into homes for honeybees.</p></div>
+          <div class="sec"><span class="pl">B</span><p>Supporters argue that urban hives boost the pollination of nearby parks and gardens.</p></div>
+          <div class="sec"><span class="pl">C</span><p>Critics warn that too many managed hives can crowd out the wild pollinators already under pressure.</p></div>
+          <div class="sec"><span class="pl">D</span><p>Researchers now recommend planting more flowering species near every new hive.</p></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="colhead">Questions 1–4</div>
+        <div class="qbody">
+          <p class="qtitle">Urban beekeeping</p>
+          <p class="summary" style="line-height:2.8">City beekeeping turns rooftops into
+            <span class="blk3"><span class="field"><span class="n">1</span><input value="homes" /><span class="hint">💡 Hint</span></span><span class="fmt">max 2 words</span></span> for bees. Fans say it boosts the
+            <span class="blk3"><span class="field"><span class="n">2</span><input placeholder="answer" /><span class="hint">💡 Hint</span></span><span class="fmt">max 2 words</span></span> of parks. Critics fear it crowds out
+            <span class="blk3"><span class="field"><span class="n">3</span><input placeholder="answer" /><span class="hint">💡 Hint</span></span><span class="fmt">max 2 words</span></span> pollinators.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ D · SECTION MAP ============ -->
+  <section class="ver" id="d">
+    <div class="v4grid">
+      <div class="map">
+        <h4>Sections</h4>
+        <a class="done" href="#"><span class="lt">A</span><span>Intro</span><span class="qs">Q1</span></a>
+        <a class="done" href="#"><span class="lt">B</span><span>Benefits</span><span class="qs">Q2</span></a>
+        <a href="#"><span class="lt">C</span><span>Risks</span><span class="qs">Q3</span></a>
+        <a href="#"><span class="lt">D</span><span>Advice</span><span class="qs">Q4</span></a>
+      </div>
+      <div class="col">
+        <div class="colhead">Passage</div>
+        <div class="passage">
+          <div class="sec"><span class="pl">A</span><p>Across many cities, rooftops and balconies are quietly being turned into homes for honeybees.</p></div>
+          <div class="sec"><span class="pl">B</span><p>Supporters argue that urban hives boost the pollination of nearby parks and gardens.</p></div>
+          <div class="sec"><span class="pl">C</span><p>Critics warn that too many managed hives can crowd out the wild pollinators already under pressure.</p></div>
+          <div class="sec"><span class="pl">D</span><p>Researchers now recommend planting more flowering species near every new hive.</p></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="colhead">Questions 1–4</div>
+        <div class="qbody">
+          <p class="qtitle">Urban beekeeping</p>
+          <p class="summary">Rooftops become
+            <span class="blk"><span class="n">1</span><input value="homes" /></span> for bees, boosting
+            <span class="blk"><span class="n">2</span><input value="pollination" /></span>, but may crowd out
+            <span class="blk"><span class="n">3</span><input placeholder="type…" /></span> pollinators, so plant more
+            <span class="blk"><span class="n">4</span><input placeholder="type…" /></span> species.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p style="margin-top:18px;font-size:11px;color:var(--faint);text-align:center;line-height:1.5">Sample passage is original (not Cambridge) — focus is the interaction design. Real page keeps Smart Pencil, highlight, autosave, resize.</p>
+</div>
+
+<script>
+  var why={
+    a:'<b>A · Status-First</b> — Nielsen "visibility of system status" + Krug: a persistent bar always shows progress, the answer-format rule (NO MORE THAN TWO WORDS), and autosave; the active blank is highlighted so you always know where you are and what counts as a valid answer.',
+    b:'<b>B · Linked Evidence</b> — Tidwell + Krug: tap any blank and its proof sentence lights up in the passage. Makes the passage↔question relationship visible instead of leaving students hunting.',
+    c:'<b>C · Clear Affordances</b> — Joel Marsh <i>UX for Beginners</i> + Krug: blanks look like real input fields with a labelled "Hint" (not a cryptic "?") and an inline "max 2 words" reminder, so it is obvious what to do and what fits.',
+    d:'<b>D · Section Map</b> — Tidwell overview+detail: an A–H rail maps each paragraph to its questions and shows done/!done, so the structure of a long advanced passage is visible and navigable at a glance.'
+  };
+  var whyEl=document.getElementById('why');
+  function show(v){
+    document.querySelectorAll('.ver').forEach(function(s){s.classList.toggle('show',s.id===v)});
+    document.querySelectorAll('.seg button').forEach(function(b){b.classList.toggle('active',b.dataset.v===v)});
+    whyEl.innerHTML=why[v];window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+  // V2 link behaviour
+  document.querySelectorAll('#b .blk.lk').forEach(function(blk){
+    blk.addEventListener('click',function(){
+      document.querySelectorAll('#b .blk.lk').forEach(function(x){x.classList.remove('sel')});
+      document.querySelectorAll('#b .sec').forEach(function(x){x.classList.remove('lit')});
+      blk.classList.add('sel');
+      var ev=document.getElementById(blk.dataset.ev);
+      if(ev){ev.classList.add('lit');ev.scrollIntoView({block:'center',behavior:'smooth'});}
+    });
+  });
+  whyEl.innerHTML=why.a;
+</script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reading Questions Panel — 3 UX versions</title>
+<style>
+  :root{
+    --blue:#1a4fd6; --blue-dark:#123f91; --navy:#0b1f44;
+    --yellow:#ffcc00; --yellow-ink:#3a2e00;
+    --ink:#0f172a; --muted:#5b6b86; --line:#e3e9f2; --bg:#eef2f7; --card:#fff;
+    --soft:#eef4ff; --good:#16a34a; --good-dark:#15803d;
+    --black:#0b1220;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Inter,'Noto Sans Thai',system-ui,-apple-system,sans-serif;line-height:1.5}
+
+  /* switcher */
+  .switcher{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    padding:11px 18px;background:var(--navy);color:#fff}
+  .switcher b{font-size:.9rem;margin-right:4px}
+  .switcher button{padding:7px 15px;border:1px solid rgba(255,255,255,.25);border-radius:999px;
+    background:transparent;color:#cbd6e6;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit}
+  .switcher button.on{background:var(--yellow);color:#2a2200;border-color:var(--yellow)}
+  .note{margin-left:auto;font-size:.78rem;opacity:.85}
+
+  .page{display:none}
+  .page.on{display:block}
+  .ph{font-size:.86rem;color:var(--muted);max-width:520px;margin:14px auto 4px;padding:0 18px}
+  .ph b{color:var(--ink)}
+
+  /* the fixed-height panel frame, mimics the real exam right pane */
+  .frame{max-width:520px;margin:12px auto 40px;padding:0 18px}
+  .panel{background:var(--card);border:2px solid var(--black);border-radius:16px;
+    box-shadow:6px 6px 0 var(--black);height:600px;display:flex;flex-direction:column;overflow:hidden}
+
+  /* shared header */
+  .phead{flex:0 0 auto;padding:12px 16px;border-bottom:2px solid var(--line);
+    display:flex;align-items:center;gap:10px;background:#fbfcff}
+  .phead .lab{font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .phead .badge{margin-left:auto;background:var(--yellow);color:var(--yellow-ink);font-weight:900;
+    font-size:.72rem;padding:5px 11px;border-radius:8px;border:2px solid var(--black)}
+
+  /* type banner */
+  .typeband{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--soft);
+    border-bottom:1px solid #dbe6fb;font-size:.78rem;color:var(--blue-dark)}
+  .typeband .t{font-weight:900;font-size:.8rem;color:var(--navy)}
+  .typeband .rng{background:#fff;border:1px solid #c9d8f5;border-radius:999px;padding:2px 10px;font-weight:800;font-size:.72rem}
+
+  /* answer inputs shared */
+  .tfng{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .tfng button{flex:1;min-width:74px;border:2px solid var(--black);background:#fff;border-radius:10px;
+    padding:11px 8px;font-weight:900;font-size:.82rem;cursor:pointer;color:var(--ink);
+    box-shadow:3px 3px 0 var(--black);transition:transform .06s}
+  .tfng button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--black)}
+  .tfng button.sel{background:var(--blue);color:#fff}
+
+  .qtext{font-weight:750;font-size:1rem;line-height:1.5}
+  .qnum{font-size:.72rem;font-weight:900;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:5px}
+
+  /* hint — the star of the show */
+  .hintbtn{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--black);border-radius:10px;
+    background:var(--yellow);color:var(--yellow-ink);font-weight:900;font-size:.82rem;padding:9px 14px;cursor:pointer;
+    box-shadow:3px 3px 0 var(--black);font-family:inherit;transition:transform .06s}
+  .hintbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--black)}
+  .hintbtn.open{background:#fff4cc}
+  .hintbtn .ic{font-size:.95rem}
+  .hintbox{margin-top:11px;border:2px solid #e3d6ad;border-left:5px solid var(--yellow);background:#fffdf3;
+    border-radius:10px;padding:11px 13px;font-size:.86rem;color:#5c4a00;line-height:1.6;display:none;
+    animation:pop .18s ease}
+  .hintbox.show{display:block}
+  .hintbox .ev{background:#fff0b3;border-radius:4px;padding:1px 4px;font-weight:700;color:#4a3b00}
+  .hintbox .thai{display:block;margin-top:6px;color:#7a6a2e;font-size:.82rem}
+  @keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+  /* submit bar shared */
+  .subbar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:11px 16px;border-top:2px solid var(--line);
+    background:#fbfcff}
+  .subbar .prog{font-weight:900;font-size:.86rem}
+  .subbar .left{color:#b4651e;font-size:.76rem;font-weight:700}
+  .subbtn{margin-left:auto;border:2px solid var(--black);border-radius:10px;background:var(--blue);color:#fff;
+    font-weight:900;font-size:.86rem;padding:11px 20px;cursor:pointer;box-shadow:3px 3px 0 var(--black);font-family:inherit}
+
+  /* =========================================================
+     V1 — SINGLE-QUESTION FOCUS
+     one question fills the space; nothing ever gets cut off
+     ========================================================= */
+  .v1body{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;padding:0}
+  .v1dots{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px 4px;overflow-y:auto;max-height:96px}
+  .v1dot{width:34px;height:34px;flex:0 0 auto;border:2px solid var(--black);border-radius:9px;background:#fff;
+    font-weight:900;font-size:.78rem;cursor:pointer;color:var(--ink);position:relative;box-shadow:2px 2px 0 var(--black)}
+  .v1dot.cur{background:var(--yellow);outline:3px solid var(--blue)}
+  .v1dot.done{background:var(--good);color:#fff;border-color:var(--good-dark)}
+  .v1dot.done::after{content:'✓';position:absolute;top:-8px;right:-6px;background:var(--good-dark);color:#fff;
+    width:16px;height:16px;border-radius:50%;font-size:.6rem;display:grid;place-items:center;border:1.5px solid #fff}
+  .v1stage{flex:1 1 auto;min-height:0;overflow-y:auto;padding:14px 18px}
+  .v1card{border:2px solid var(--line);border-radius:14px;padding:18px;background:#fff}
+  .v1nav{flex:0 0 auto;display:flex;gap:10px;padding:10px 16px;border-top:1px dashed var(--line)}
+  .v1nav button{flex:1;border:2px solid var(--black);background:#fff;border-radius:10px;padding:10px;font-weight:900;
+    cursor:pointer;font-family:inherit;box-shadow:3px 3px 0 var(--black);color:var(--ink)}
+  .v1nav button.prim{background:var(--navy);color:#fff}
+  .v1nav button:disabled{opacity:.4;box-shadow:none;cursor:default}
+
+  /* =========================================================
+     V2 — COMFORTABLE SCROLL LIST
+     keeps the list but fixes cut-off cues + prominent hints
+     ========================================================= */
+  .v2scrollwrap{flex:1 1 auto;min-height:0;position:relative}
+  .v2scroll{height:100%;overflow-y:auto;padding:14px 16px 18px;scroll-behavior:smooth}
+  .v2scroll::-webkit-scrollbar{width:10px}
+  .v2scroll::-webkit-scrollbar-thumb{background:#c3d0e6;border-radius:6px;border:2px solid #fbfcff}
+  .fade{position:absolute;left:0;right:0;height:34px;pointer-events:none;z-index:3}
+  .fade.top{top:0;background:linear-gradient(#fff,rgba(255,255,255,0))}
+  .fade.bot{bottom:0;background:linear-gradient(rgba(255,255,255,0),#fff)}
+  .scrollcue{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:4;
+    background:var(--navy);color:#fff;font-size:.72rem;font-weight:800;padding:5px 13px;border-radius:999px;
+    box-shadow:0 4px 12px rgba(11,31,68,.3);display:flex;align-items:center;gap:6px;animation:bob 1.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateX(-50%)}50%{transform:translateX(-50%) translateY(3px)}}
+  .v2card{border:2px solid var(--line);border-radius:13px;padding:15px 16px;margin-bottom:13px;background:#fff}
+  .v2card.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,79,214,.12)}
+  .v2top{display:flex;align-items:flex-start;gap:10px}
+  .v2num{flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:var(--navy);
+    color:#fff;font-weight:900;font-size:.82rem}
+  .v2railwrap{display:flex;gap:0}
+  .v2rail{flex:0 0 auto;width:52px;border-right:1px solid var(--line);padding:12px 0;overflow-y:auto;background:#fafbfe;
+    display:flex;flex-direction:column;gap:7px;align-items:center}
+  .v2rail button{width:34px;height:32px;border:2px solid var(--black);border-radius:8px;background:#fff;font-weight:900;
+    font-size:.74rem;cursor:pointer;color:var(--ink);position:relative}
+  .v2rail button.done{background:var(--good);color:#fff;border-color:var(--good-dark)}
+  .v2rail button.cur{outline:3px solid var(--yellow)}
+
+  /* =========================================================
+     V3 — GROUPED ACCORDION
+     collapse by question-type; only current group open
+     ========================================================= */
+  .v3scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 14px 18px}
+  .grp{border:2px solid var(--line);border-radius:13px;margin-bottom:12px;overflow:hidden;background:#fff}
+  .grphead{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;background:#f7faff;
+    border-bottom:2px solid transparent}
+  .grp.open .grphead{border-bottom-color:var(--line)}
+  .grphead .gt{font-weight:900;font-size:.82rem;color:var(--navy)}
+  .grphead .grng{font-size:.7rem;font-weight:800;color:var(--blue);background:#e7f0ff;border-radius:999px;padding:2px 9px}
+  .grphead .gcount{margin-left:auto;font-size:.72rem;font-weight:800;color:var(--muted)}
+  .grphead .chev{transition:transform .18s;color:var(--muted);font-size:.9rem}
+  .grp.open .chev{transform:rotate(90deg)}
+  .grpbody{display:none;padding:6px 14px 12px}
+  .grp.open .grpbody{display:block}
+  .v3q{padding:13px 0;border-bottom:1px dashed var(--line)}
+  .v3q:last-child{border-bottom:none}
+  .v3done{display:inline-block;width:9px;height:9px;border-radius:50%;background:#d3dcea;margin-right:6px;vertical-align:middle}
+  .v3q.answered .v3done{background:var(--good)}
+
+  @media(max-width:560px){.frame,.ph{max-width:100%}}
+</style>
+</head>
+<body>
+
+<div class="switcher">
+  <b>Questions panel:</b>
+  <button class="on" onclick="show(1)">V1 · Single-Question Focus</button>
+  <button onclick="show(2)">V2 · Comfortable Scroll</button>
+  <button onclick="show(3)">V3 · Grouped Accordion</button>
+  <span class="note">🔒 admin preview</span>
+</div>
+
+<div class="page on" id="p1">
+  <div class="ph"><b>V1 · Single-Question Focus.</b> One question fills the pane — nothing ever gets cut off. Big prev/next, a progress strip on top, and the hint button is impossible to miss. Best for reducing overwhelm.</div>
+  <div class="frame"><div class="panel" id="v1panel"></div></div>
+</div>
+
+<div class="page" id="p2">
+  <div class="ph"><b>V2 · Comfortable Scroll.</b> Keeps the familiar list but fixes the cut-off feeling: a fixed number-rail on the left, top/bottom fade edges, a bouncing "scroll" cue, and a full-width yellow hint button on every card.</div>
+  <div class="frame"><div class="panel" id="v2panel"></div></div>
+</div>
+
+<div class="page" id="p3">
+  <div class="ph"><b>V3 · Grouped Accordion.</b> Questions collapse by type (1–5 TFNG, 6–9 Matching…). Only the group you're working on is open, so the pane stays short and scannable. Clear structure for long passages.</div>
+  <div class="frame"><div class="panel" id="v3panel"></div></div>
+</div>
+
+<script>
+  // ---- shared mock data (13 questions, mixed types) ----
+  const Q = [
+    {n:1, type:'TFNG', rng:'1–5', tlabel:'True / False / Not Given',
+     text:'Examples of ancient stepwells can be found all over the world.',
+     hint:'Unique to the region, stepwells are often architecturally complex…',
+     ev:'Unique to the region', thai:'“เฉพาะของภูมิภาคนี้” → ไม่ได้พบทั่วโลก จึงเป็น FALSE'},
+    {n:2, type:'TFNG', rng:'1–5', tlabel:'True / False / Not Given',
+     text:'During their heyday, stepwells were places of gathering, of leisure and of worship.',
+     hint:'they were places of gathering, of leisure and of relaxation for villagers of all but the lowest social classes.',
+     ev:'places of gathering, of leisure', thai:'บทความพูดถึง gathering + leisure แต่ไม่พูดถึง worship'},
+    {n:3, type:'TFNG', rng:'1–5', tlabel:'True / False / Not Given',
+     text:'The few existing stepwells in Delhi are more attractive than those found elsewhere.',
+     hint:'not mentioned that Delhi stepwells are more attractive',
+     ev:'', thai:'ไม่มีการเปรียบเทียบความสวยงาม → NOT GIVEN'},
+    {n:4, type:'TFNG', rng:'1–5', tlabel:'True / False / Not Given',
+     text:'It took workers many years to build the earliest stepwells.',
+     hint:'construction of some of the earliest stepwells…', ev:'earliest stepwells', thai:'ตรวจช่วงเวลาการก่อสร้าง'},
+    {n:5, type:'TFNG', rng:'1–5', tlabel:'True / False / Not Given',
+     text:'The number of steps in a stepwell is related to the water level.',
+     hint:'the level of the water table determined the number of steps', ev:'level of the water table', thai:'ระดับน้ำ = จำนวนขั้นบันได → TRUE'},
+    {n:6, type:'FILL', rng:'6–9', tlabel:'Sentence completion',
+     text:'The stepwell at Chand Baori has ____ storeys and around 3,500 steps.',
+     hint:'Chand Baori… thirteen storeys', ev:'thirteen storeys', thai:'thirteen = สิบสาม'},
+    {n:7, type:'FILL', rng:'6–9', tlabel:'Sentence completion',
+     text:'The Rani Ki Vav was built as a ____ to a king.',
+     hint:'constructed as a memorial to a king', ev:'memorial', thai:'memorial = อนุสรณ์'},
+    {n:8, type:'FILL', rng:'6–9', tlabel:'Sentence completion',
+     text:'By the 19th century, many stepwells were seen as ____ by colonial rulers.',
+     hint:'regarded as unhygienic by the British', ev:'unhygienic', thai:'unhygienic = ไม่ถูกสุขอนามัย'},
+    {n:9, type:'FILL', rng:'6–9', tlabel:'Sentence completion',
+     text:'Modern ____ has helped return the stepwells to their former glory.',
+     hint:'recent restoration has returned them to their former glory', ev:'restoration', thai:'restoration = การบูรณะ'},
+    {n:10, type:'TFNG', rng:'10–13', tlabel:'True / False / Not Given',
+     text:'Stepwells were used only during the dry season.',
+     hint:'during the dry season for drinking, bathing…', ev:'during the dry season', thai:'“only” = ตรวจคำเด็ดขาด'},
+    {n:11, type:'TFNG', rng:'10–13', tlabel:'True / False / Not Given',
+     text:'Richard Cox is an architect.', hint:'Richard Cox travelled to document these monuments', ev:'travelled to document', thai:'อาชีพไม่ระบุ → NOT GIVEN'},
+    {n:12, type:'TFNG', rng:'10–13', tlabel:'True / False / Not Given',
+     text:'Some stepwells served an irrigation purpose.', hint:'watering animals and irrigation', ev:'irrigation', thai:'irrigation = ชลประทาน → TRUE'},
+    {n:13, type:'TFNG', rng:'10–13', tlabel:'True / False / Not Given',
+     text:'All stepwells share the same shape.', hint:'vary widely in size and shape', ev:'vary widely in size and shape', thai:'หลากหลาย → FALSE'},
+  ];
+  const answered = {}; // n -> value
+
+  function ansField(q, onPick){
+    if(q.type==='TFNG'){
+      const wrap=document.createElement('div'); wrap.className='tfng';
+      ['TRUE','FALSE','NOT GIVEN'].forEach(v=>{
+        const b=document.createElement('button'); b.textContent=v;
+        if(answered[q.n]===v) b.classList.add('sel');
+        b.onclick=()=>{answered[q.n]=v; onPick&&onPick();};
+        wrap.appendChild(b);
+      });
+      return wrap;
+    }
+    const inp=document.createElement('input');
+    inp.style.cssText='margin-top:12px;width:100%;border:2px solid var(--black);border-radius:10px;padding:11px 12px;font-size:.95rem;font-family:inherit;box-shadow:3px 3px 0 var(--black)';
+    inp.placeholder='พิมพ์คำตอบ…'; inp.value=answered[q.n]||'';
+    inp.oninput=()=>{answered[q.n]=inp.value.trim(); onPick&&onPick();};
+    return inp;
+  }
+
+  function hintBlock(q){
+    const wrap=document.createElement('div');
+    const btn=document.createElement('button'); btn.className='hintbtn';
+    btn.innerHTML='<span class="ic">💡</span> ดูคำใบ้ · See hint';
+    const box=document.createElement('div'); box.className='hintbox';
+    box.innerHTML = q.ev
+      ? 'ในบทความ: “…<span class="ev">'+q.ev+'</span>…” <span class="thai">'+q.thai+'</span>'
+      : 'ไม่มีข้อความตรงในบทความ <span class="thai">'+q.thai+'</span>';
+    btn.onclick=()=>{const on=box.classList.toggle('show'); btn.classList.toggle('open',on);
+      btn.innerHTML=(on?'<span class="ic">🙈</span> ซ่อนคำใบ้ · Hide':'<span class="ic">💡</span> ดูคำใบ้ · See hint')};
+    wrap.append(btn, box);
+    return wrap;
+  }
+  const doneCount=()=>Object.values(answered).filter(v=>v&&v!=='').length;
+
+  /* ================= V1 ================= */
+  function renderV1(){
+    const p=document.getElementById('v1panel'); p.innerHTML='';
+    let cur = window._v1cur||1;
+    const head=el('div','phead','<span class="lab">Questions</span><span class="badge">'+Q.length+' ข้อ</span>');
+    const body=el('div','v1body');
+    const dots=el('div','v1dots');
+    Q.forEach(q=>{const d=document.createElement('button');d.className='v1dot';d.textContent=q.n;
+      if(answered[q.n])d.classList.add('done'); if(q.n===cur)d.classList.add('cur');
+      d.onclick=()=>{window._v1cur=q.n;renderV1()};dots.appendChild(d)});
+    const stage=el('div','v1stage');
+    const q=Q.find(x=>x.n===cur);
+    const card=el('div','v1card');
+    const band=el('div','typeband','<span class="t">'+q.tlabel+'</span><span class="rng">ข้อ '+q.rng+'</span>');
+    band.style.cssText='display:flex;gap:8px;margin:-2px 0 12px;border:none;padding:0;background:none';
+    card.appendChild(band);
+    card.appendChild(el('div','qnum','Question '+q.n));
+    card.appendChild(el('div','qtext',q.text));
+    card.appendChild(ansField(q, renderV1));
+    const hb=hintBlock(q); hb.style.marginTop='14px'; card.appendChild(hb);
+    stage.appendChild(card);
+    const nav=el('div','v1nav');
+    const prev=document.createElement('button');prev.textContent='← ก่อนหน้า';prev.disabled=cur===1;
+    prev.onclick=()=>{window._v1cur=cur-1;renderV1()};
+    const next=document.createElement('button');next.className='prim';
+    next.textContent = cur===Q.length?'ส่งข้อสอบ':'ถัดไป →';
+    next.onclick=()=>{if(cur<Q.length){window._v1cur=cur+1;renderV1()}};
+    nav.append(prev,next);
+    body.append(dots,stage,nav);
+    const sub=subbar();
+    p.append(head,body,sub);
+  }
+
+  /* ================= V2 ================= */
+  function renderV2(){
+    const p=document.getElementById('v2panel'); p.innerHTML='';
+    const head=el('div','phead','<span class="lab">Questions</span><span class="badge">'+Q.length+' ข้อ</span>');
+    const railwrap=el('div','v2railwrap'); railwrap.style.cssText='flex:1 1 auto;min-height:0;display:flex';
+    const rail=el('div','v2rail');
+    Q.forEach(q=>{const b=document.createElement('button');b.textContent=q.n;
+      if(answered[q.n])b.classList.add('done');
+      b.onclick=()=>{document.getElementById('v2q'+q.n).scrollIntoView({behavior:'smooth',block:'center'})};
+      rail.appendChild(b)});
+    const sw=el('div','v2scrollwrap');
+    const scroll=el('div','v2scroll');
+    let lastType=null;
+    Q.forEach(q=>{
+      if(q.rng!==lastType){lastType=q.rng;
+        scroll.appendChild(el('div','typeband','<span class="t">'+q.tlabel+'</span><span class="rng">ข้อ '+q.rng+'</span>'));}
+      const c=el('div','v2card');c.id='v2q'+q.n;
+      const top=el('div','v2top');
+      top.appendChild(el('div','v2num',q.n));
+      top.appendChild(el('div','qtext',q.text));
+      c.appendChild(top);
+      c.appendChild(ansField(q, renderV2));
+      const hb=hintBlock(q);hb.style.marginTop='12px';
+      hb.querySelector('.hintbtn').style.width='100%';
+      hb.querySelector('.hintbtn').style.justifyContent='center';
+      c.appendChild(hb);
+      scroll.appendChild(c);
+    });
+    const fadeT=el('div','fade top'), fadeB=el('div','fade bot');
+    const cue=el('div','scrollcue','↓ เลื่อนดูข้ออื่น');
+    sw.append(fadeT,scroll,fadeB,cue);
+    scroll.onscroll=()=>{cue.style.display = scroll.scrollTop>40?'none':'flex';
+      fadeT.style.opacity=scroll.scrollTop>10?1:0;};
+    railwrap.append(rail,sw);
+    const sub=subbar();
+    p.append(head,railwrap,sub);
+  }
+
+  /* ================= V3 ================= */
+  function renderV3(){
+    const p=document.getElementById('v3panel'); p.innerHTML='';
+    const head=el('div','phead','<span class="lab">Questions</span><span class="badge">'+Q.length+' ข้อ</span>');
+    const scroll=el('div','v3scroll');
+    const groups={};
+    Q.forEach(q=>{(groups[q.rng]=groups[q.rng]||{tlabel:q.tlabel,items:[]}).items.push(q)});
+    const openGrp = window._v3open || Object.keys(groups)[0];
+    Object.entries(groups).forEach(([rng,g])=>{
+      const done=g.items.filter(q=>answered[q.n]).length;
+      const grp=el('div','grp'); if(rng===openGrp)grp.classList.add('open');
+      const gh=el('div','grphead',
+        '<span class="chev">▶</span><span class="gt">'+g.tlabel+'</span><span class="grng">ข้อ '+rng+'</span>'
+        +'<span class="gcount">'+done+'/'+g.items.length+' ตอบแล้ว</span>');
+      gh.onclick=()=>{window._v3open = (rng===openGrp?null:rng); renderV3()};
+      const gb=el('div','grpbody');
+      g.items.forEach(q=>{
+        const qd=el('div','v3q'); if(answered[q.n])qd.classList.add('answered');
+        qd.appendChild(el('div','qnum','<span class="v3done"></span>Question '+q.n));
+        qd.appendChild(el('div','qtext',q.text));
+        qd.appendChild(ansField(q, renderV3));
+        const hb=hintBlock(q);hb.style.marginTop='11px';qd.appendChild(hb);
+        gb.appendChild(qd);
+      });
+      grp.append(gh,gb); scroll.appendChild(grp);
+    });
+    const sub=subbar();
+    p.append(head,scroll,sub);
+  }
+
+  /* ---- helpers ---- */
+  function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function subbar(){
+    const s=el('div','subbar');
+    const done=doneCount();
+    s.innerHTML='<span class="prog">'+done+'/'+Q.length+' ตอบแล้ว</span><span class="left">'+(Q.length-done)+' เหลือ</span>';
+    const b=document.createElement('button');b.className='subbtn';b.textContent='ส่งข้อสอบ Reading';
+    s.appendChild(b);return s;
+  }
+
+  function show(n){
+    document.querySelectorAll('.switcher button').forEach((b,i)=>b.classList.toggle('on',i===n-1));
+    document.querySelectorAll('.page').forEach((pg,i)=>pg.classList.toggle('on',i===n-1));
+    if(n===1)renderV1(); if(n===2)renderV2(); if(n===3)renderV3();
+  }
+  renderV1();renderV2();renderV3();
+</script>
+</body>
+</html>

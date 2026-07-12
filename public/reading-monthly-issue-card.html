@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Monthly Exam · Issue Card preview</title>
+<style>
+  :root {
+    --duration-luxury: 0.32s;
+    --duration-luxury-fast: 0.18s;
+    --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-luxury-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #eef2f8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #0f172a;
+    padding: 40px 28px 80px;
+  }
+  .previewShell { max-width: 1180px; margin: 0 auto; }
+  .previewNote {
+    margin: 0 0 28px;
+    padding: 14px 18px;
+    border: 1px solid #cdd9eb;
+    border-left: 4px solid #004aad;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .previewNote strong { color: #004aad; }
+
+  /* ── Monthly Exam · Issue Card layout (copied from App.css) ── */
+  .readingPage .readingIssueBoard { display: grid; gap: 30px; max-width: 1180px; }
+  .readingPage .readingIssueMonth { display: grid; gap: 14px; }
+  .readingPage .readingIssueMonthHeader {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding-bottom: 12px; border-bottom: 1px solid #e4ebf6;
+  }
+  .readingPage .readingIssueMonthLabel {
+    margin: 0; color: #475569; font-size: 0.8rem; font-weight: 900;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .readingPage .readingIssuePill.is-current {
+    padding: 3px 11px; border: 1px solid rgba(0, 74, 173, 0.22); border-radius: 999px;
+    background: rgba(0, 74, 173, 0.1); color: #004aad; font-size: 0.68rem;
+    font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .readingPage .readingIssueMonthMeta {
+    margin-left: auto; color: #94a3b8; font-size: 0.84rem; font-weight: 850;
+  }
+  .readingPage .readingIssueGrid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;
+  }
+  .readingPage .readingIssueGrid.is-compact {
+    grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+  }
+  .readingPage .readingIssueCard {
+    display: grid; gap: 13px; padding: 16px; border: 1px solid #dce4f0;
+    border-radius: 16px; background: #ffffff; box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+    transition: transform var(--duration-luxury) var(--ease-luxury),
+      box-shadow var(--duration-luxury) var(--ease-luxury),
+      border-color var(--duration-luxury-fast) var(--ease-luxury-soft);
+  }
+  .readingPage .readingIssueCard:hover {
+    transform: translateY(-3px); border-color: #b9c9e4; box-shadow: 0 18px 40px rgba(0, 51, 122, 0.14);
+  }
+  .readingPage .readingIssueCard.is-todo { background: #f8fafd; border-style: dashed; }
+  .readingPage .readingIssueCard.is-perfect { border-color: #b6dcc2; background: #fbfffc; }
+  .readingPage .readingIssueCardTop { display: flex; align-items: center; justify-content: space-between; }
+  .readingPage .readingIssueNum {
+    width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%;
+    background: #eef2fb; color: #475569; font-size: 0.82rem; font-weight: 900;
+  }
+  .readingPage .readingIssueRing {
+    position: relative; width: 54px; height: 54px; display: grid; place-items: center;
+    border-radius: 50%;
+    background: conic-gradient(var(--ring-c, #cbd5e1) calc(var(--ring-pct, 0) * 1%), #e8edf5 0);
+  }
+  .readingPage .readingIssueRing::after {
+    content: ''; position: absolute; inset: 5px; border-radius: 50%; background: #ffffff;
+  }
+  .readingPage .readingIssueRing span {
+    position: relative; z-index: 1; color: var(--ring-c, #94a3b8);
+    font-size: 0.82rem; font-weight: 900; letter-spacing: -0.02em;
+  }
+  .readingPage .readingIssueRing[data-tier='high'] { --ring-c: #16a34a; }
+  .readingPage .readingIssueRing[data-tier='mid'] { --ring-c: #d97706; }
+  .readingPage .readingIssueRing[data-tier='low'] { --ring-c: #dc2626; }
+  .readingPage .readingIssueRing[data-tier='todo'] { --ring-c: #94a3b8; }
+  .readingPage .readingIssueCardBody { display: grid; gap: 4px; align-content: start; }
+  .readingPage .readingIssueTitle {
+    margin: 0; color: #0f172a; font-size: 1rem; font-weight: 950; line-height: 1.25; letter-spacing: -0.01em;
+  }
+  .readingPage .readingIssueMeta { margin: 0; color: #64748b; font-size: 0.82rem; font-weight: 750; }
+  .readingPage .readingIssueActions { display: flex; align-items: stretch; gap: 8px; }
+  .readingPage .readingIssueActions button {
+    flex: 1 1 110px; min-height: 40px; padding: 0 12px; border: 1px solid #cbd8ef;
+    border-radius: 12px; background: #f1f3f6; color: #0f172a; font-weight: 850; font-size: 0.92rem; cursor: pointer;
+  }
+  .readingPage .readingIssueActions button.secondary { background: #ffffff; border-color: #f0b5b5; color: #c0392b; }
+  .readingPage .readingIssueStart { width: 100%; }
+  .readingPage .readingIssueCard.is-compact {
+    gap: 8px; padding: 13px; min-height: 108px; grid-template-rows: auto 1fr auto; cursor: pointer;
+  }
+  .readingPage .readingIssueCompactTop { display: flex; align-items: center; justify-content: space-between; }
+  .readingPage .readingIssueCard.is-compact .readingIssueNum { width: 24px; height: 24px; font-size: 0.74rem; }
+  .readingPage .readingIssueStar { color: #16a34a; font-size: 0.95rem; }
+  .readingPage .readingIssueCard.is-compact .readingIssueTitle { font-size: 0.86rem; font-weight: 900; }
+  .readingPage .readingIssueScore { font-size: 0.86rem; font-weight: 950; letter-spacing: -0.02em; }
+  .readingPage .readingIssueCard.is-compact.tier-high .readingIssueScore { color: #16a34a; }
+  .readingPage .readingIssueCard.is-compact.tier-mid .readingIssueScore { color: #d97706; }
+  .readingPage .readingIssueCard.is-compact.tier-low .readingIssueScore { color: #dc2626; }
+  .readingPage .readingIssueCard.is-compact.tier-todo .readingIssueScore { color: #004aad; }
+  @media (max-width: 760px) {
+    .readingPage .readingIssueGrid { grid-template-columns: 1fr; }
+    .readingPage .readingIssueGrid.is-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* ── Reading category hub · Icon Rows ── */
+  .readingPage .readingHubList {
+    display: grid; gap: 0; max-width: 920px; border: 1px solid #d6e0ef; border-radius: 20px;
+    background: #fff; overflow: hidden; box-shadow: 0 24px 60px rgba(15,23,42,0.1); margin-bottom: 40px;
+  }
+  .readingPage .readingHubRow {
+    display: flex; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 18px 22px;
+    border: none; border-bottom: 1px solid #eef2f8; background: #fff; color: #0f172a; cursor: pointer;
+    font-family: inherit; transition: background-color .18s;
+  }
+  .readingPage .readingHubRow:last-child { border-bottom: none; }
+  .readingPage .readingHubRow:hover { background: #f6f9ff; }
+  .readingPage .readingHubRow.is-locked { cursor: not-allowed; background: #f8fafc; }
+  .readingPage .readingHubRow.is-locked .readingHubText strong,
+  .readingPage .readingHubRow.is-locked .readingHubSub { color: #94a3b8; }
+  .readingPage .readingHubIcon {
+    flex-shrink: 0; width: 52px; height: 52px; display: grid; place-items: center;
+    border-radius: 15px; font-size: 1.55rem; line-height: 1;
+  }
+  .readingPage .readingHubIcon-normal { background: #e7f6ee; }
+  .readingPage .readingHubIcon-passage3 { background: #fdeee8; }
+  .readingPage .readingHubIcon-fullTest { background: #efebfb; }
+  .readingPage .readingHubIcon-gt { background: #e6f1fb; }
+  .readingPage .readingHubIcon-monthly { background: #fdf3e0; }
+  .readingPage .readingHubRow.is-locked .readingHubIcon { filter: grayscale(0.7); opacity: 0.7; }
+  .readingPage .readingHubText { flex: 1; min-width: 0; display: grid; gap: 3px; }
+  .readingPage .readingHubTitleRow { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .readingPage .readingHubTitleRow strong { color: #0f172a; font-size: 1.18rem; font-weight: 950; letter-spacing: -0.02em; line-height: 1.1; }
+  .readingPage .readingHubTone { padding: 2px 10px; border-radius: 999px; background: #eef2fb; color: #475569; font-size: 0.72rem; font-weight: 900; }
+  .readingPage .readingHubSub { color: #64748b; font-size: 0.92rem; font-weight: 700; line-height: 1.4; }
+  .readingPage .readingHubCount { flex-shrink: 0; padding: 6px 14px; border-radius: 999px; background: #fff4cc; color: #5c4a00; font-size: 0.86rem; font-weight: 900; white-space: nowrap; }
+  .readingPage .readingHubCount-lock { background: #eef2f6; color: #64748b; }
+  .readingPage .readingHubChevron { flex-shrink: 0; color: #b6c2d6; font-size: 1.5rem; font-weight: 900; line-height: 1; }
+  .readingPage .readingHubRow:hover .readingHubChevron { color: #004aad; }
+</style>
+</head>
+<body>
+<div class="previewShell">
+  <p class="previewNote">
+    <strong>หน้าเลือกหมวด Reading (Icon Rows)</strong> — ดีไซน์ใหม่แบบแถวไอคอน · ด้านล่างคือ Monthly Exam · Issue Card
+  </p>
+  <div class="readingPage">
+    <div class="readingHubList">
+      <button type="button" class="readingHubRow">
+        <span class="readingHubIcon readingHubIcon-normal">📖</span>
+        <span class="readingHubText">
+          <span class="readingHubTitleRow"><strong>การอ่านพื้นฐาน</strong><span class="readingHubTone">พื้นฐาน</span></span>
+          <span class="readingHubSub">ระดับ Band 4–6.5 · เล่นเป็นด่าน ปลดล็อกด่านถัดไปที่ 80%+</span>
+        </span>
+        <span class="readingHubCount">84 ชุด</span>
+        <span class="readingHubChevron">›</span>
+      </button>
+      <button type="button" class="readingHubRow">
+        <span class="readingHubIcon readingHubIcon-passage3">🔥</span>
+        <span class="readingHubText">
+          <span class="readingHubTitleRow"><strong>Passage 3 · Band 7</strong><span class="readingHubTone">ระดับยาก</span></span>
+          <span class="readingHubSub">ระดับ Band 7+ · บทความวิชาการที่ยากที่สุด</span>
+        </span>
+        <span class="readingHubCount">32 ชุด</span>
+        <span class="readingHubChevron">›</span>
+      </button>
+      <button type="button" class="readingHubRow">
+        <span class="readingHubIcon readingHubIcon-fullTest">📝</span>
+        <span class="readingHubText">
+          <span class="readingHubTitleRow"><strong>ข้อสอบเต็มชุด</strong><span class="readingHubTone">สอบเต็ม</span></span>
+          <span class="readingHubSub">Cambridge · 3 passages · 40 ข้อ · จับเวลาเหมือนสอบจริง</span>
+        </span>
+        <span class="readingHubCount">64 ชุด</span>
+        <span class="readingHubChevron">›</span>
+      </button>
+      <button type="button" class="readingHubRow">
+        <span class="readingHubIcon readingHubIcon-gt">🎓</span>
+        <span class="readingHubText">
+          <span class="readingHubTitleRow"><strong>General Training</strong><span class="readingHubTone">GT</span></span>
+          <span class="readingHubSub">GT Reading · Section 1–3 · ข้อสอบเต็มชุด</span>
+        </span>
+        <span class="readingHubCount">12 ชุด</span>
+        <span class="readingHubChevron">›</span>
+      </button>
+      <button type="button" class="readingHubRow readingHubRow-monthly is-locked" disabled>
+        <span class="readingHubIcon readingHubIcon-monthly">📅</span>
+        <span class="readingHubText">
+          <span class="readingHubTitleRow"><strong>ข้อสอบรายเดือน</strong><span class="readingHubTone">รายเดือน</span></span>
+          <span class="readingHubSub">ยังไม่เปิดให้ใช้งาน — เร็ว ๆ นี้</span>
+        </span>
+        <span class="readingHubCount readingHubCount-lock">🔒 ล็อก</span>
+        <span class="readingHubChevron">›</span>
+      </button>
+    </div>
+
+    <p class="previewNote"><strong>Monthly Exam · Issue Card</strong> — เลื่อนดูด้านล่าง</p>
+    <div class="readingIssueBoard" id="board"></div>
+  </div>
+</div>
+
+<script>
+  const months = [
+    {
+      label: 'June 2026', current: true,
+      exams: [
+        { n: 1, title: 'The Psychology of Risk', p: 3, q: 13, pct: 88 },
+        { n: 2, title: 'Urban Migration Patterns', p: 3, q: 13, pct: 78 },
+        { n: 3, title: 'Biomimicry in Architecture', p: 3, q: 13, pct: null },
+        { n: 4, title: 'The Language of Colour', p: 3, q: 13, pct: null }
+      ]
+    },
+    {
+      label: 'May 2026', current: false,
+      exams: [
+        { n: 1, title: 'Circular Economy', pct: 100 },
+        { n: 2, title: 'Marine Noise Pollution', pct: 95 },
+        { n: 3, title: 'Digital Nomads', pct: 83 },
+        { n: 4, title: 'Sleep Architecture', pct: 73 }
+      ]
+    },
+    {
+      label: 'April 2026', current: false,
+      exams: [
+        { n: 1, title: 'The Ethics of Gene Editing', pct: 90 },
+        { n: 2, title: 'Ancient Trade Routes', pct: 68 },
+        { n: 3, title: 'The Science of Sleep Debt', pct: 55 },
+        { n: 4, title: 'Renewable Grids', pct: null }
+      ]
+    }
+  ];
+
+  const tierOf = (pct) => pct === null ? 'todo' : pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low';
+
+  const board = document.getElementById('board');
+  board.innerHTML = months.map((m) => {
+    const taken = m.exams.filter((e) => e.pct !== null);
+    const avg = taken.length ? Math.round(taken.reduce((s, e) => s + e.pct, 0) / taken.length) : null;
+    const meta = `${taken.length} of ${m.exams.length} done${avg !== null ? ' · avg ' + avg + '%' : ''}`;
+
+    const cards = m.exams.map((e) => {
+      const tier = tierOf(e.pct);
+      const perfect = e.pct === 100;
+      if (!m.current) {
+        return `<article class="readingIssueCard is-compact tier-${tier} ${perfect ? 'is-perfect' : ''}" role="button" tabindex="0">
+          <div class="readingIssueCompactTop"><span class="readingIssueNum">${e.n}</span>${perfect ? '<span class="readingIssueStar">★</span>' : ''}</div>
+          <h5 class="readingIssueTitle">${e.title}</h5>
+          <span class="readingIssueScore">${e.pct !== null ? e.pct + '%' : 'Start →'}</span>
+        </article>`;
+      }
+      return `<article class="readingIssueCard tier-${tier} ${e.pct === null ? 'is-todo' : ''} ${perfect ? 'is-perfect' : ''}">
+        <div class="readingIssueCardTop">
+          <span class="readingIssueNum">${e.n}</span>
+          <div class="readingIssueRing" data-tier="${tier}" style="--ring-pct:${e.pct ?? 0}"><span>${e.pct !== null ? e.pct + '%' : '—'}</span></div>
+        </div>
+        <div class="readingIssueCardBody">
+          <h5 class="readingIssueTitle">${e.title}</h5>
+          <p class="readingIssueMeta">${e.p} passages · ${e.q} questions</p>
+        </div>
+        <div class="readingIssueActions">
+          ${e.pct !== null
+            ? '<button type="button">Retry</button><button type="button" class="secondary">Report</button>'
+            : '<button type="button" class="readingIssueStart">Start exam</button>'}
+        </div>
+      </article>`;
+    }).join('');
+
+    return `<section class="readingIssueMonth ${m.current ? 'is-current' : ''}">
+      <div class="readingIssueMonthHeader">
+        <p class="readingIssueMonthLabel">${m.label}</p>
+        ${m.current ? '<span class="readingIssuePill is-current">current</span>' : ''}
+        <span class="readingIssueMonthMeta">${meta}</span>
+      </div>
+      <div class="readingIssueGrid ${m.current ? '' : 'is-compact'}">${cards}</div>
+    </section>`;
+  }).join('');
+</script>
+</body>
+</html>

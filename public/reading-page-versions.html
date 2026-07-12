@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Normal Reading page — 4 design versions</title>
+<style>
+  :root{
+    --bg:#eef1f6; --ink:#1a2230; --muted:#5d6b80; --faint:#94a0b3; --line:#dde3ec;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#ffffff;
+    --good:#15915f; --good-bg:#e7f5ee; --warn:#c47d12; --warn-bg:#fbf1dd;
+    --shadow:0 1px 2px rgba(20,30,60,.05),0 8px 26px rgba(20,30,60,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 16px 60px}
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(238,241,246,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 -16px 16px;padding:12px 16px}
+  .topbar h1{font-size:14px;margin:0 0 9px;font-weight:800}
+  .topbar h1 small{font-weight:500;color:var(--muted)}
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg button{border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:12.5px;padding:8px 12px;border-radius:10px;cursor:pointer;font-family:inherit}
+  .seg button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ver{display:none}.ver.show{display:block;animation:f .25s ease}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .why{font-size:12.5px;color:var(--muted);background:var(--accent-soft);border:1px solid #cfe0f7;border-radius:12px;padding:10px 13px;margin-bottom:16px;line-height:1.55}
+  .why b{color:var(--accent-ink)}
+  .pane{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.pane{grid-template-columns:1fr}}
+  .col{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+  .colhead{padding:11px 16px;border-bottom:1px solid var(--line);font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--faint)}
+  .passage{padding:18px 20px;max-height:520px;overflow:auto}
+  .passage h2{font-size:18px;margin:0 0 12px;letter-spacing:-.2px}
+  .passage .para{margin:0 0 14px;font-size:14.5px;line-height:1.75;color:#2a3444}
+  .passage .pl{font-weight:800;color:var(--accent-ink);margin-right:6px}
+  mark{background:#fff3bf;padding:0 2px;border-radius:3px}
+  .qscroll{padding:14px 16px;max-height:520px;overflow:auto}
+  .q{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+  .q .qn{font-size:11px;font-weight:800;color:var(--accent-ink);letter-spacing:.4px}
+  .q .qp{font-size:14px;font-weight:600;margin:4px 0 10px;line-height:1.5}
+  .opts{display:grid;gap:7px}
+  .opt{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;cursor:pointer;background:#fff}
+  .opt:hover{border-color:#b9c6da}
+  .opt.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+  .opt .k{width:20px;height:20px;border-radius:5px;background:#eef1f6;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+  .opt.sel .k{background:rgba(255,255,255,.25)}
+  .tfng{display:flex;gap:7px}
+  .tfng button{flex:1;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--muted)}
+  .tfng button.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+  select.msel{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;background:#fff}
+  .fill{font-size:14px;line-height:2;color:#2a3444}
+  .fill input{border:0;border-bottom:2px solid var(--accent);background:#f3f7ff;font-size:13.5px;padding:2px 6px;min-width:90px;font-family:inherit}
+
+  /* selection hint (B) */
+  .selhint{font-size:11.5px;color:var(--faint);padding:0 20px 10px}
+
+  /* ===== A · EXAM-REAL ===== */
+  .examTop{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:12px}
+  .examTop .ttl{font-size:13.5px;font-weight:800}
+  .examTop .ttl small{color:var(--muted);font-weight:500}
+  .examTop .timer{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:8px;padding:6px 12px}
+  .palette{position:sticky;bottom:0;margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 -4px 14px rgba(20,30,60,.06)}
+  .palette .pgrp{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+  .pnum{width:30px;height:30px;border-radius:7px;border:1px solid var(--line);background:#fff;font-size:12.5px;font-weight:800;cursor:pointer;color:var(--muted)}
+  .pnum.done{background:var(--good-bg);border-color:#bfe3cf;color:var(--good)}
+  .pnum.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+  .palette .sub{font-size:14px;font-weight:800;background:var(--accent);color:#fff;border:0;border-radius:9px;padding:10px 18px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .plain .col{box-shadow:none}
+  .plain mark{background:transparent}
+
+  /* ===== B · READER-FIRST ===== */
+  .reader .col{box-shadow:var(--shadow);border-color:#e7e2d6}
+  .reader{--paper:#faf8f3}
+  .reader .passage{background:var(--paper)}
+  .reader .passage h2{font-family:Georgia,"Times New Roman",serif;font-size:21px}
+  .reader .passage .para{font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.9;color:#33302a}
+  .reader .q{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:16px 4px}
+  .reader .q:last-child{border-bottom:0}
+  .reader .opt,.reader .tfng button,.reader select.msel{border-radius:10px}
+  .reader .softbar{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin-bottom:12px}
+  .reader .softbar .track{flex:1;height:6px;border-radius:99px;background:#e7e2d6;overflow:hidden}
+  .reader .softbar .track i{display:block;height:100%;width:38%;background:var(--accent);border-radius:99px}
+
+  /* ===== C · PACING ===== */
+  .pace{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:12px}
+  .pace .ring{--v:38;width:54px;height:54px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--v)*3.6deg),#e7ecf3 0);display:grid;place-items:center;flex:none;position:relative}
+  .pace .ring::before{content:"";position:absolute;inset:6px;background:var(--card);border-radius:50%}
+  .pace .ring b{position:relative;font-size:13px;font-weight:800}
+  .pace .pm{flex:1}
+  .pace .pm .l1{font-size:13.5px;font-weight:800}
+  .pace .pm .l2{font-size:12px;color:var(--muted);margin-top:2px}
+  .pace .ontrack{font-size:12px;font-weight:800;color:var(--good);background:var(--good-bg);border-radius:99px;padding:6px 12px;white-space:nowrap}
+  .pace .behind{color:var(--warn);background:var(--warn-bg)}
+  .paceTimes{display:flex;gap:8px;margin-bottom:12px}
+  .ptile{flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;text-align:center}
+  .ptile.cur{border-color:var(--accent);background:var(--accent-soft)}
+  .ptile .pt{font-size:11px;color:var(--muted);font-weight:700}
+  .ptile .pv{font-size:13px;font-weight:800;margin-top:2px}
+
+  /* ===== D · FOCUS ===== */
+  .focusWrap{}
+  .focusQ{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px;min-height:230px}
+  .focusQ .fqn{font-size:12px;font-weight:800;color:var(--accent-ink);letter-spacing:.5px}
+  .focusQ .fqp{font-size:16px;font-weight:600;margin:6px 0 16px;line-height:1.55}
+  .focusNav{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+  .focusNav button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--accent-ink)}
+  .focusNav button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .fpalette{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+  .fpalette .pnum.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+  .focusHint{font-size:12px;color:var(--muted);margin-top:10px;background:var(--accent-soft);border-radius:9px;padding:9px 12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <h1>Normal Reading page · 4 design versions &nbsp;<small>same passage + questions · pick a direction</small></h1>
+    <div class="seg">
+      <button data-v="a" class="active">A · Exam-Real</button>
+      <button data-v="b">B · Reader-First</button>
+      <button data-v="c">C · Pacing Coach</button>
+      <button data-v="d">D · Focus Mode</button>
+    </div>
+  </div>
+  <div class="why" id="why"></div>
+
+  <!-- ============ A · EXAM-REAL ============ -->
+  <section class="ver show" id="a">
+    <div class="examTop">
+      <div class="ttl">Cambridge 15 · Test 1 — Passage 1 <small>· The Dawn of Tea</small></div>
+      <div class="timer">⏱ 19:32 <small style="font-weight:600;opacity:.8">/ 20:00</small></div>
+    </div>
+    <div class="pane plain">
+      <div class="col">
+        <div class="colhead">Passage</div>
+        <div class="passage">
+          <h2>The Dawn of Tea</h2>
+          <p class="para"><span class="pl">A</span>Tea is the most widely consumed beverage in the world <mark>after water</mark>, yet its origins are wrapped in legend. According to Chinese tradition, the emperor Shen Nung discovered tea in 2737 BC when leaves from a wild tree blew into his pot of boiling water entirely by accident.</p>
+          <p class="para"><span class="pl">B</span>For centuries tea remained a closely guarded Chinese secret. It was not until the ninth century that a Japanese monk, returning from study abroad, carried seeds home and began the first cultivation outside China.</p>
+          <p class="para"><span class="pl">C</span>Tea reached Europe through Portuguese and Dutch traders in the early seventeenth century. The British, later the world's most devoted tea drinkers, were comparatively late to adopt the habit.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="colhead">Questions 1–4</div>
+        <div class="qscroll">
+          <div class="q"><div class="qn">QUESTION 1 · True / False / Not Given</div><div class="qp">Tea is the most consumed drink in the world.</div><div class="tfng"><button>TRUE</button><button class="sel">FALSE</button><button>NOT GIVEN</button></div></div>
+          <div class="q"><div class="qn">QUESTION 2 · True / False / Not Given</div><div class="qp">Shen Nung deliberately created the first cup of tea.</div><div class="tfng"><button>TRUE</button><button>FALSE</button><button>NOT GIVEN</button></div></div>
+          <div class="q"><div class="qn">QUESTION 3 · Multiple choice</div><div class="qp">Tea first reached Europe through —</div><div class="opts"><div class="opt"><span class="k">A</span> British traders</div><div class="opt sel"><span class="k">B</span> Portuguese and Dutch traders</div><div class="opt"><span class="k">C</span> a Japanese monk</div></div></div>
+          <div class="q"><div class="qn">QUESTION 4 · Sentence completion</div><div class="qp fill">A Japanese <input value="monk" /> carried tea seeds home in the ninth century.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="palette">
+      <div class="pgrp">
+        <button class="pnum done">1</button><button class="pnum cur">2</button><button class="pnum done">3</button><button class="pnum done">4</button>
+        <button class="pnum">5</button><button class="pnum">6</button><button class="pnum">7</button><button class="pnum">8</button>
+        <button class="pnum">9</button><button class="pnum">10</button><button class="pnum">11</button><button class="pnum">12</button><button class="pnum">13</button>
+      </div>
+      <button class="sub">Submit ▸</button>
+    </div>
+  </section>
+
+  <!-- ============ B · READER-FIRST ============ -->
+  <section class="ver" id="b">
+    <div class="reader">
+      <div class="softbar">Passage 1 of 3 · The Dawn of Tea <span class="track"><i></i></span> 5 / 13 answered</div>
+      <div class="pane">
+        <div class="col">
+          <div class="passage">
+            <h2>The Dawn of Tea</h2>
+            <p class="para">Tea is the most widely consumed beverage in the world after water, yet its origins are wrapped in legend. According to Chinese tradition, the emperor Shen Nung discovered tea in 2737 BC when leaves from a wild tree blew into his pot of boiling water entirely by accident.</p>
+            <p class="para">For centuries tea remained a closely guarded Chinese secret. It was not until the ninth century that a Japanese monk, returning from study abroad, carried seeds home and began the first cultivation outside China.</p>
+            <p class="para">Tea reached Europe through Portuguese and Dutch traders in the early seventeenth century. The British, later the world's most devoted tea drinkers, were comparatively late to adopt the habit.</p>
+          </div>
+          <div class="selhint">Tip: select any sentence to highlight it — no toolbar needed.</div>
+        </div>
+        <div class="col">
+          <div class="qscroll">
+            <div class="q"><div class="qn">1 · TRUE / FALSE / NOT GIVEN</div><div class="qp">Tea is the most consumed drink in the world.</div><div class="tfng"><button>TRUE</button><button class="sel">FALSE</button><button>NG</button></div></div>
+            <div class="q"><div class="qn">2 · TRUE / FALSE / NOT GIVEN</div><div class="qp">Shen Nung deliberately created the first cup of tea.</div><div class="tfng"><button>TRUE</button><button>FALSE</button><button>NG</button></div></div>
+            <div class="q"><div class="qn">3 · MULTIPLE CHOICE</div><div class="qp">Tea first reached Europe through —</div><div class="opts"><div class="opt"><span class="k">A</span> British traders</div><div class="opt sel"><span class="k">B</span> Portuguese and Dutch traders</div><div class="opt"><span class="k">C</span> a Japanese monk</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ C · PACING ============ -->
+  <section class="ver" id="c">
+    <div class="pace">
+      <div class="ring" style="--v:38"><b>5/13</b></div>
+      <div class="pm"><div class="l1">Passage 1 · target 20:00</div><div class="l2">19:32 elapsed · ~4 min for the remaining 9 questions</div></div>
+      <div class="ontrack">✓ On track</div>
+    </div>
+    <div class="paceTimes">
+      <div class="ptile cur"><div class="pt">Passage 1</div><div class="pv">20 min</div></div>
+      <div class="ptile"><div class="pt">Passage 2</div><div class="pv">20 min</div></div>
+      <div class="ptile"><div class="pt">Passage 3</div><div class="pv">20 min</div></div>
+    </div>
+    <div class="pane">
+      <div class="col">
+        <div class="colhead">Passage 1 · The Dawn of Tea</div>
+        <div class="passage">
+          <p class="para"><span class="pl">A</span>Tea is the most widely consumed beverage in the world after water, yet its origins are wrapped in legend. The emperor Shen Nung is said to have discovered tea in 2737 BC when leaves blew into his boiling water by accident.</p>
+          <p class="para"><span class="pl">B</span>For centuries tea remained a closely guarded Chinese secret. In the ninth century a Japanese monk carried seeds home and began the first cultivation outside China.</p>
+          <p class="para"><span class="pl">C</span>Tea reached Europe through Portuguese and Dutch traders in the early seventeenth century.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="colhead">Questions · 5 of 13 done</div>
+        <div class="qscroll">
+          <div class="q"><div class="qn">QUESTION 2</div><div class="qp">Shen Nung deliberately created the first cup of tea.</div><div class="tfng"><button>TRUE</button><button>FALSE</button><button>NOT GIVEN</button></div></div>
+          <div class="q"><div class="qn">QUESTION 3</div><div class="qp">Tea first reached Europe through —</div><div class="opts"><div class="opt"><span class="k">A</span> British traders</div><div class="opt sel"><span class="k">B</span> Portuguese and Dutch traders</div><div class="opt"><span class="k">C</span> a Japanese monk</div></div></div>
+          <div class="q"><div class="qn">QUESTION 4 · Matching headings</div><div class="qp">Choose the best heading for paragraph B.</div><select class="msel"><option>Select heading…</option><option>i · Tea spreads beyond China</option><option>ii · A legendary accident</option><option>iii · Europe's late arrival</option></select></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ D · FOCUS ============ -->
+  <section class="ver" id="d">
+    <div class="pane">
+      <div class="col">
+        <div class="colhead">Passage · relevant part highlighted for Q2</div>
+        <div class="passage">
+          <p class="para" style="opacity:.5"><span class="pl">A</span>Tea is the most widely consumed beverage in the world after water, yet its origins are wrapped in legend.</p>
+          <p class="para"><span class="pl">A</span><mark>The emperor Shen Nung discovered tea in 2737 BC when leaves from a wild tree blew into his pot of boiling water entirely by accident.</mark></p>
+          <p class="para" style="opacity:.5"><span class="pl">B</span>For centuries tea remained a closely guarded Chinese secret… a Japanese monk carried seeds home.</p>
+        </div>
+      </div>
+      <div class="col" style="background:transparent;border:0;box-shadow:none">
+        <div class="focusQ">
+          <div class="fqn">QUESTION 2 OF 13 · TRUE / FALSE / NOT GIVEN</div>
+          <div class="fqp">Shen Nung deliberately created the first cup of tea.</div>
+          <div class="tfng"><button>TRUE</button><button class="sel">FALSE</button><button>NOT GIVEN</button></div>
+          <div class="focusHint">💡 Look at the highlighted line — “by accident” contradicts “deliberately”.</div>
+          <div class="focusNav"><button>‹ Prev</button><button class="primary">Next ›</button></div>
+        </div>
+        <div class="fpalette">
+          <button class="pnum done">1</button><button class="pnum cur">2</button><button class="pnum">3</button><button class="pnum">4</button><button class="pnum">5</button><button class="pnum">6</button><button class="pnum">7</button><button class="pnum">8</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p style="margin-top:18px;font-size:11px;color:var(--faint);text-align:center;line-height:1.5">ทั้ง 4 แบบใช้บทความ + คำถามชุดเดียวกัน — ต่างกันที่บรรยากาศและการจัดวาง · ของจริงยังมี Smart Pencil, hint, autosave, resize เหมือนเดิม</p>
+</div>
+
+<script>
+  var why={
+    a:'<b>A · Exam-Real</b> — Cagan (<i>Inspired</i>) + Tidwell: เลียนแบบหน้าจอ IELTS คอมพิวเตอร์จริง — สีขาวสงบ, timer ด้านบน, <b>แถบเลขคำถามอยู่ด้านล่าง</b> (เหมือนของจริง), เครื่องมือไฮไลต์โผล่เมื่อเลือกข้อความเท่านั้น ลดอาการตื่นสนามสอบ',
+    b:'<b>B · Reader-First</b> — Krug (<i>Don\'t Make Me Think</i>) + Brown: ตัด border ดำหนา ๆ ออก ใช้ตัวอักษร serif อ่านสบาย บรรทัดห่าง การ์ดนุ่ม สีเน้นสีเดียว ไฮไลต์ด้วยการลากเลือก (ไม่มี toolbar รก) — ลดภาระสายตาและความเครียด',
+    c:'<b>C · Pacing Coach</b> — Nodder (<i>Evil by Design</i>) + Cagan: เพิ่มระบบจับจังหวะเวลา — เป้าเวลาแต่ละ passage, วงแหวนความคืบหน้า, ป้าย “on track / behind” ดันให้ทำทันเวลาแบบสอบจริง',
+    d:'<b>D · Focus Mode</b> — Tidwell (one-window drilldown) + Krug: โฟกัสทีละคำถาม (มี palette กดข้ามได้) พร้อมไฮไลต์ย่อหน้าที่เกี่ยวข้องในบทความ — ลดความล้นของคำถามยาว ๆ'
+  };
+  var whyEl=document.getElementById('why');
+  function show(v){
+    document.querySelectorAll('.ver').forEach(function(s){s.classList.toggle('show',s.id===v)});
+    document.querySelectorAll('.seg button').forEach(function(b){b.classList.toggle('active',b.dataset.v===v)});
+    whyEl.innerHTML=why[v];window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+  document.querySelectorAll('.opt,.tfng button').forEach(function(el){el.onclick=function(){
+    if(el.classList.contains('opt')){el.parentElement.querySelectorAll('.opt').forEach(function(x){x.classList.remove('sel')})}
+    else{el.parentElement.querySelectorAll('button').forEach(function(x){x.classList.remove('sel')})}
+    el.classList.add('sel');
+  }});
+  whyEl.innerHTML=why.a;
+</script>
+</body>
+</html>

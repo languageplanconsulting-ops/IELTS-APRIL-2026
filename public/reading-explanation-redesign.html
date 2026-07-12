@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reading explanation — rebuilt</title>
+<style>
+  :root{
+    --bg:#eef1f6; --ink:#1a2230; --muted:#5d6b80; --faint:#94a0b3; --line:#dde3ec;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#ffffff;
+    --good:#15915f; --good-bg:#e7f5ee; --bad:#c5372e; --bad-bg:#fdecea;
+    --warn:#b5791f; --warn-bg:#fbf1dd; --quote:#fff8e6;
+    --shadow:0 1px 2px rgba(20,30,60,.05),0 8px 26px rgba(20,30,60,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:780px;margin:0 auto;padding:26px 18px 60px}
+  .lead{font-size:13px;color:var(--muted);background:var(--accent-soft);border:1px solid #cfe0f7;border-radius:12px;padding:11px 14px;margin-bottom:18px;line-height:1.6}
+  .lead b{color:var(--accent-ink)}
+  .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.3px;color:#7a64d8;background:#efeaff;border:1px solid #ddd3fb;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  .chead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .chead .qn{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--accent-ink)}
+  .chead .qt{font-size:15px;font-weight:700;margin-top:3px;line-height:1.4}
+  .wrongpill{flex:none;font-size:11px;font-weight:800;color:var(--bad);background:var(--bad-bg);border:1px solid #f3c6c1;border-radius:8px;padding:5px 10px;white-space:nowrap}
+
+  .body{padding:16px 18px}
+
+  /* answer + rule banner */
+  .ruleban{display:flex;gap:12px;align-items:flex-start;background:var(--good-bg);border:1px solid #bfe3cf;border-radius:12px;padding:13px 15px}
+  .ruleban .big{font-size:20px;font-weight:800;color:var(--good);line-height:1;white-space:nowrap}
+  .ruleban .rx{font-size:13px;color:#1f4a39;line-height:1.55}
+  .ruleban .rx b{color:#0f5e42}
+
+  /* comparison */
+  .cmp{margin-top:16px;display:grid;gap:10px}
+  .cmp .row{border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+  .cmp .lbl{font-size:11px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  .cmp .claim{background:#fff7f6;border-color:#f3d6d2}
+  .cmp .claim .lbl{color:var(--bad)}
+  .cmp .ev{background:var(--quote);border-color:#f0e2b8}
+  .cmp .ev .lbl{color:var(--warn)}
+  .cmp .txt{font-size:14px;line-height:1.6}
+  .cmp .txt mark{background:#ffe39c;padding:0 3px;border-radius:3px;font-weight:600}
+  .cmp .txt .x{color:var(--bad);font-weight:700;text-decoration:underline;text-decoration-color:#e8a39c}
+  .cmp .th{font-size:12px;color:var(--muted);margin-top:4px}
+
+  .bridge{margin-top:14px;font-size:14px;line-height:1.65;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 14px}
+  .bridge b{color:var(--accent-ink)}
+
+  .trap{margin-top:12px;display:flex;gap:10px;font-size:13px;line-height:1.55;background:var(--warn-bg);border:1px solid #f0dcae;border-radius:11px;padding:11px 13px;color:#5b4a28}
+  .trap b{color:var(--warn)}
+
+  .vocab{margin-top:14px}
+  .vocab .vh{font-size:11px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .vchips{display:flex;flex-wrap:wrap;gap:7px}
+  .vchip{font-size:12.5px;background:#f4f6fb;border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+  .vchip b{color:var(--accent-ink)}
+  .vchip span{color:var(--muted)}
+
+  .acts{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line)}
+  .acts button{flex:1;border-radius:11px;padding:12px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:inherit}
+  .acts .know{background:#fff;border:1px solid var(--line);color:var(--muted)}
+  .acts .save{background:var(--accent);border:1px solid var(--accent);color:#fff}
+
+  .compare{margin-top:24px;font-size:12.5px;color:var(--muted)}
+  .compare h3{font-size:13px;color:var(--ink);margin:0 0 8px}
+  .compare li{margin:5px 0;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lead">
+    <b>Rebuilt reading explanation</b> — same question & answer, restructured to <b>teach the skill</b>, not just explain the item. Each block is tagged with the book principle behind it.
+  </div>
+
+  <div class="card">
+    <div class="chead">
+      <div>
+        <div class="qn">QUESTION 1 · TRUE / FALSE / NOT GIVEN</div>
+        <div class="qt">Many Madagascan forests are being destroyed by attacks from insects.</div>
+      </div>
+      <div class="wrongpill">✗ ผิด · ไม่ได้ตอบ</div>
+    </div>
+
+    <div class="body">
+      <!-- answer + the transferable rule -->
+      <div class="ruleban">
+        <div class="big">FALSE</div>
+        <div class="rx">บทความให้ <b>“สาเหตุที่ต่างออกไป”</b> ซึ่ง<b>ขัด</b>กับโจทย์ → ตอบ FALSE<br>
+          <span style="color:#3f6b58">📌 ถ้าบทความ “ไม่พูดถึงสาเหตุเลย” ถึงจะเป็น NOT GIVEN — แต่นี่มันบอกสาเหตุอื่นที่ขัดกัน</span>
+        </div>
+      </div>
+      <span class="tag">Cagan · สอนทักษะที่เอาไปใช้ต่อได้ ไม่ใช่แค่เฉลยข้อนี้</span>
+
+      <!-- side-by-side evidence (real sentences) -->
+      <div class="cmp">
+        <div class="row claim">
+          <div class="lbl">โจทย์อ้างว่า</div>
+          <div class="txt">ป่าถูกทำลายโดย <span class="x">การโจมตีของแมลง (insects)</span></div>
+        </div>
+        <div class="row ev">
+          <div class="lbl">บทความบอกจริง ๆ · Para A</div>
+          <div class="txt">“Madagascar's forests are being <mark>converted to agricultural land</mark> for rice cultivation.”</div>
+          <div class="th">ป่าถูกเปลี่ยนเป็นพื้นที่เกษตรเพื่อปลูกข้าว — โดยมนุษย์</div>
+        </div>
+        <div class="row ev">
+          <div class="lbl">บทความพูดถึงแมลง · Para B</div>
+          <div class="txt">Insects destroy the <mark>crops</mark>, forcing farmers to clear <mark>new</mark> forest.</div>
+          <div class="th">แมลงทำลาย “พืชผล” (ไม่ใช่ป่า) → ชาวนาเลยถางป่าใหม่</div>
+        </div>
+      </div>
+
+      <!-- the reasoning bridge, one clear line -->
+      <div class="bridge">
+        ป่าถูกถางโดย <b>มนุษย์เพื่อการเกษตร</b> ไม่ใช่ถูกแมลงทำลายโดยตรง — <b>คนละสาเหตุ = ขัดกับบทความ → FALSE</b>
+      </div>
+      <span class="tag">Tidwell · เทียบ claim ↔ หลักฐาน + Krug · ประโยคจริง ไม่ใช่คำคีย์เวิร์ด</span>
+
+      <!-- the trap -->
+      <div class="trap">
+        <span style="font-size:15px">⚠️</span>
+        <div><b>กับดักของข้อนี้:</b> บทความ “มี” คำว่า insects จริง ทำให้หลายคนเผลอตอบ TRUE — แต่แมลงทำลาย <b>พืชผล</b> ไม่ใช่ <b>ป่า</b>. อย่าจับแค่คำตรงกัน ให้จับ <b>ความหมาย</b></div>
+      </div>
+      <span class="tag">Brown · เข้าใจว่าทำไมนักเรียนถึงพลาด</span>
+
+      <!-- relevant vocab (replaces the irrelevant italic note) -->
+      <div class="vocab">
+        <div class="vh">คำศัพท์ที่ทำให้ข้อนี้ยาก</div>
+        <div class="vchips">
+          <span class="vchip"><b>convert</b> <span>= เปลี่ยน (…ให้เป็น)</span></span>
+          <span class="vchip"><b>cultivation</b> <span>= การเพาะปลูก</span></span>
+          <span class="vchip"><b>clear (land)</b> <span>= ถางป่า</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="acts">
+      <button class="know">✓ รู้แล้ว</button>
+      <button class="save">✦ + บันทึก Notebook</button>
+    </div>
+  </div>
+
+  <div class="compare">
+    <h3>สิ่งที่เปลี่ยนจากของเดิม</h3>
+    <ul>
+      <li>คีย์เวิร์ดห้วน ๆ “forests converted agricultural land rice cultivation” → <b>ประโยคจริงจากบทความ</b> พร้อมไฮไลต์คำที่ขัดกัน</li>
+      <li>เพิ่ม <b>กฎ FALSE vs NOT GIVEN</b> ที่เอาไปใช้ข้ออื่นได้ (หัวใจของ T/F/NG)</li>
+      <li>ตัด note ที่ไม่เกี่ยว (“biodiversity loss… not all species are suffering”) ออก → ใส่ <b>คำศัพท์ที่เกี่ยวจริง</b> แทน</li>
+      <li>เพิ่ม <b>“กับดัก”</b> อธิบายว่าทำไมคนถึงตอบผิด</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ข้อสอบ IELTS ล่าสุด — Landing page preview (3 versions)</title>
+<style>
+  :root{
+    --blue:#0f2e85; --blue-dark:#0b1f44; --blue-mid:#1a4cb5; --blue-bright:#2060d0;
+    --gold:#bf8b30; --gold-bg:#fff9ed;
+    --yellow:#ffcc00; --yellow-dark:#0b1f44;
+    --ink:#0b1f44; --muted:#5b6b86; --line:#dfe5ee; --bg:#f5f6f8; --card:#ffffff;
+    --green:#0f6e56; --green-bg:#e1f5ee; --coral:#bf8b30; --coral-bg:#fff9ed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Inter,'Noto Sans Thai',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+  .switcher{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:12px 20px;background:#0b1f3a;color:#fff;}
+  .switcher b{font-size:.92rem;margin-right:6px}
+  .switcher button{padding:7px 16px;border:1px solid rgba(255,255,255,.25);border-radius:999px;
+    background:transparent;color:#cbd6e6;font-size:.86rem;font-weight:700;cursor:pointer;font-family:inherit}
+  .switcher button.on{background:var(--yellow);color:#2a2200;border-color:var(--yellow)}
+  .adminFlag{margin-left:auto;font-size:.78rem;background:rgba(255,255,255,.12);
+    padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.2)}
+  .page{display:none;max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+  .page.on{display:block}
+
+  /* shared bits */
+  .nav{display:flex;align-items:center;gap:14px;padding:6px 2px 22px}
+  .logo{font-weight:900;letter-spacing:-.02em;color:var(--blue-dark);font-size:1.1rem}
+  .logo span{color:var(--gold)}
+  .navlinks{margin-left:auto;display:flex;gap:18px;color:var(--muted);font-size:.9rem;font-weight:700}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:999px;
+    font-size:.74rem;font-weight:800}
+  .pill-blue{background:#eef3ff;color:var(--blue)}
+  .pill-green{background:var(--green-bg);color:#0f6e56}
+  .pill-coral{background:var(--gold-bg);color:#8a6420}
+  .pill-yellow{background:#fff4cc;color:var(--yellow-dark)}
+  .pill-date{background:#eef2f6;color:#475569}
+  .disclaimer{font-size:.8rem;color:var(--muted);background:#fff;border:1px solid var(--line);
+    border-left:4px solid var(--yellow);border-radius:10px;padding:12px 14px;line-height:1.6;margin-top:26px}
+  .cta{display:inline-block;margin-top:6px;padding:13px 26px;border-radius:12px;background:var(--blue);
+    color:#fff;font-weight:900;text-decoration:none;font-size:1rem}
+  .cta-band{margin-top:34px;padding:26px;border-radius:20px;
+    background:linear-gradient(155deg,#0f2e85 0%,#1a4cb5 55%,#2060d0 100%);
+    color:#fff;text-align:center}
+  .cta-band h3{margin:0 0 6px;font-size:1.5rem;font-weight:900}
+  .cta-band p{margin:0 0 16px;color:#cdddf5}
+  .cta-band .cta{background:var(--yellow);color:#2a2200}
+  h2.sec{font-size:1.35rem;font-weight:900;margin:30px 0 4px;letter-spacing:-.02em}
+  .sec-sub{color:var(--muted);font-size:.9rem;margin:0 0 16px}
+
+  /* V1 magazine */
+  .v1hero{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 32px;
+    box-shadow:0 18px 44px rgba(15,23,42,.07)}
+  .v1hero .pill{margin-bottom:12px}
+  .v1hero h1{margin:0 0 10px;font-size:2.1rem;line-height:1.18;font-weight:950;letter-spacing:-.03em}
+  .v1hero p{margin:0;color:var(--muted);font-size:1.02rem;line-height:1.6;max-width:62ch}
+  .feed{display:grid;gap:14px;margin-top:18px}
+  .feedCard{display:grid;grid-template-columns:auto 1fr;gap:16px;background:var(--card);
+    border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 10px 24px rgba(15,23,42,.05)}
+  .feedDate{text-align:center;min-width:64px;padding:10px;background:#f6f9ff;border-radius:12px;align-self:start}
+  .feedDate b{display:block;font-size:1.5rem;font-weight:950;color:var(--blue-dark);line-height:1}
+  .feedDate small{color:var(--muted);font-size:.74rem;font-weight:800}
+  .feedBody .row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .feedBody h3{margin:0 0 6px;font-size:1.12rem;font-weight:850;line-height:1.35}
+  .feedBody .meta{margin:0;color:var(--muted);font-size:.88rem;line-height:1.55}
+
+  /* V2 dashboard */
+  .v2head{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;box-shadow:0 12px 30px rgba(15,23,42,.06)}
+  .v2head h1{margin:0;font-size:1.7rem;font-weight:950;letter-spacing:-.02em}
+  .v2head p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+  .stat{margin-left:auto;display:flex;gap:10px}
+  .statBox{background:#f6f9ff;border:1px solid var(--line);border-radius:12px;padding:10px 16px;text-align:center}
+  .statBox b{display:block;font-size:1.5rem;font-weight:950;color:var(--blue-dark);line-height:1}
+  .statBox small{color:var(--muted);font-size:.74rem;font-weight:800}
+  .tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+  .tabs button{padding:9px 18px;border:1px solid var(--line);border-radius:999px;background:#fff;
+    color:var(--muted);font-weight:800;font-size:.9rem;cursor:pointer;font-family:inherit}
+  .tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .dbtable{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 10px 24px rgba(15,23,42,.05)}
+  .dbrow{display:grid;grid-template-columns:96px 110px 1fr;gap:14px;padding:15px 18px;
+    border-bottom:1px solid #eef2f8;align-items:center}
+  .dbrow:last-child{border-bottom:none}
+  .dbrow:hover{background:#f7faff}
+  .dbrow .d{color:var(--muted);font-size:.84rem;font-weight:800}
+  .dbrow h3{margin:0;font-size:1rem;font-weight:800;line-height:1.4}
+  .dbrow .src{margin:3px 0 0;color:var(--muted);font-size:.8rem}
+
+  /* V3 spotlight */
+  .v3hero{text-align:center;padding:34px 20px 10px}
+  .v3hero .pill{margin-bottom:14px}
+  .v3hero h1{margin:0 auto 14px;font-size:2.5rem;line-height:1.14;font-weight:950;letter-spacing:-.03em;max-width:18ch}
+  .v3hero h1 em{font-style:normal;color:var(--blue);background:linear-gradient(transparent 62%,#ffe9a6 0);}
+  .v3hero p{margin:0 auto 18px;color:var(--muted);font-size:1.06rem;max-width:60ch;line-height:1.6}
+  .trustrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .spotGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+  .spotCard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;
+    box-shadow:0 14px 34px rgba(15,23,42,.07)}
+  .spotCard .top{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .spotCard h3{margin:0 0 12px;font-size:1.22rem;font-weight:900}
+  .spotItem{padding:12px 0;border-top:1px dashed var(--line)}
+  .spotItem:first-of-type{border-top:none}
+  .spotItem b{font-size:.98rem;font-weight:800;line-height:1.4;display:block;margin-bottom:3px}
+  .spotItem small{color:var(--muted);font-size:.82rem}
+
+  @media(max-width:720px){
+    .spotGrid{grid-template-columns:1fr}
+    .v1hero h1{font-size:1.6rem}
+    .v3hero h1{font-size:1.8rem}
+    .dbrow{grid-template-columns:1fr;gap:6px}
+    .navlinks{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="switcher">
+  <b>Preview:</b>
+  <button class="on" onclick="show(1)">V1 · นิตยสารข่าวสอบ</button>
+  <button onclick="show(2)">V2 · ฐานข้อมูล</button>
+  <button onclick="show(3)">V3 · สปอตไลต์</button>
+  <span class="adminFlag">🔒 Admin preview — ผู้ใช้ทั่วไปยังไม่เห็น</span>
+</div>
+
+<!-- ═════════ V1 · MAGAZINE / NEWS FEED ═════════ -->
+<div class="page on" id="p1">
+  <div class="nav">
+    <span class="logo">ENGLISH <span>PLAN</span></span>
+    <span class="navlinks"><span>หน้าแรก</span><span>คอร์สเรียน</span><span>ข้อสอบล่าสุด</span><span>บทความ</span></span>
+  </div>
+  <div class="v1hero">
+    <span class="pill pill-coral">🔥 อัปเดต 12 มิถุนายน 2026</span>
+    <h1>ข้อสอบ IELTS Speaking &amp; Writing ล่าสุด ที่ออกสอบเดือนนี้</h1>
+    <p>รวมหัวข้อที่ผู้สอบจริงรายงานจากฟอรั่มและกลุ่มติว IELTS ทั่วไทย อัปเดตทุกสัปดาห์ เพื่อให้คุณเตรียมตัวตรงแนวที่สุด — รวบรวมโดยทีม English Plan</p>
+  </div>
+
+  <h2 class="sec">🗣️ IELTS Speaking — หัวข้อที่เจอล่าสุด</h2>
+  <p class="sec-sub">รายงานจากผู้สอบในฟอรั่ม · ไม่ใช่ข้อสอบทางการ</p>
+  <div class="feed" id="v1speaking"></div>
+
+  <h2 class="sec">✍️ IELTS Writing — โจทย์ที่เจอล่าสุด</h2>
+  <p class="sec-sub">Task 1 &amp; Task 2 ที่ผู้สอบรายงาน</p>
+  <div class="feed" id="v1writing"></div>
+
+  <div class="cta-band">
+    <h3>อยากได้คำตอบแบบ Band 7+ ของโจทย์เหล่านี้?</h3>
+    <p>เรียนกับ English Plan แล้วฝึกตอบข้อสอบแนวล่าสุดพร้อมเฉลยละเอียด</p>
+    <a class="cta" href="#">ดูคอร์สเรียน IELTS</a>
+  </div>
+  <p class="disclaimer">📌 หมายเหตุ: หัวข้อทั้งหมดมาจากการรายงานของผู้สอบในฟอรั่มและโซเชียล ไม่ใช่ข้อสอบทางการจาก British Council หรือ IDP — ใช้เพื่อการเตรียมตัวฝึกฝนเท่านั้น</p>
+</div>
+
+<!-- ═════════ V2 · DASHBOARD / DATABASE ═════════ -->
+<div class="page" id="p2">
+  <div class="nav">
+    <span class="logo">ENGLISH <span>PLAN</span></span>
+    <span class="navlinks"><span>หน้าแรก</span><span>คอร์สเรียน</span><span>คลังข้อสอบ</span><span>บทความ</span></span>
+  </div>
+  <div class="v2head">
+    <div>
+      <h1>คลังข้อสอบ IELTS ล่าสุด</h1>
+      <p>ฐานข้อมูลหัวข้อ Speaking &amp; Writing จากผู้สอบจริง · อัปเดต 12 มิ.ย. 2026</p>
+    </div>
+    <div class="stat">
+      <div class="statBox"><b>248</b><small>หัวข้อทั้งหมด</small></div>
+      <div class="statBox"><b>32</b><small>เพิ่มเดือนนี้</small></div>
+      <div class="statBox"><b>ทุกสัปดาห์</b><small>อัปเดต</small></div>
+    </div>
+  </div>
+
+  <div class="tabs" id="v2tabs">
+    <button class="on" onclick="v2filter('all',this)">ทั้งหมด</button>
+    <button onclick="v2filter('speaking',this)">🗣️ Speaking</button>
+    <button onclick="v2filter('writing',this)">✍️ Writing</button>
+  </div>
+  <div class="dbtable" id="v2table"></div>
+
+  <div class="cta-band">
+    <h3>ปลดล็อกเฉลย + เทคนิคตอบทุกหัวข้อ</h3>
+    <p>สมาชิก English Plan เข้าถึงคลังข้อสอบเต็มพร้อมแนวคำตอบ Band 7–9</p>
+    <a class="cta" href="#">สมัครเรียน</a>
+  </div>
+  <p class="disclaimer">📌 ข้อมูลรวบรวมจากการรายงานของผู้สอบในฟอรั่ม/โซเชียล ไม่ใช่ข้อสอบทางการ ใช้เพื่อการเตรียมตัวเท่านั้น</p>
+</div>
+
+<!-- ═════════ V3 · SPOTLIGHT / PREDICTION ═════════ -->
+<div class="page" id="p3">
+  <div class="nav" style="justify-content:center">
+    <span class="logo">ENGLISH <span>PLAN</span></span>
+  </div>
+  <div class="v3hero">
+    <span class="pill pill-blue">แหล่งข้อสอบ IELTS ที่คนไทยไว้ใจ</span>
+    <h1>ข้อสอบ IELTS ล่าสุด <em>มิถุนายน 2026</em></h1>
+    <p>หัวข้อ Speaking และ Writing ที่ผู้สอบจริงเจอในเดือนนี้ รวบรวมและคัดกรองโดยทีม English Plan เพื่อคนไทยทุกคน</p>
+    <div class="trustrow">
+      <span class="pill pill-green">✓ จากผู้สอบจริง</span>
+      <span class="pill pill-yellow">✓ อัปเดตทุกสัปดาห์</span>
+      <span class="pill pill-blue">✓ ฟรี ไม่มีค่าใช้จ่าย</span>
+    </div>
+  </div>
+
+  <div class="spotGrid">
+    <div class="spotCard">
+      <div class="top"><span class="pill pill-coral">🗣️ Speaking</span><span class="pill pill-date">เด่นเดือนนี้</span></div>
+      <h3>หัวข้อ Speaking มาแรง</h3>
+      <div id="v3speaking"></div>
+    </div>
+    <div class="spotCard">
+      <div class="top"><span class="pill pill-blue">✍️ Writing</span><span class="pill pill-date">เด่นเดือนนี้</span></div>
+      <h3>โจทย์ Writing มาแรง</h3>
+      <div id="v3writing"></div>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h3>เตรียมสอบ IELTS ให้ตรงแนว ได้ Band ที่ต้องการ</h3>
+    <p>เริ่มฝึกกับ English Plan วันนี้ — ฟรีบทเรียนแรก</p>
+    <a class="cta" href="#">เริ่มเรียนฟรี</a>
+  </div>
+  <p class="disclaimer">📌 หัวข้อมาจากการรายงานของผู้สอบในฟอรั่ม ไม่ใช่ข้อสอบทางการจาก British Council/IDP — เพื่อการเตรียมตัวเท่านั้น</p>
+</div>
+
+<script>
+  const speaking = [
+    {dd:'12',mm:'มิ.ย.',part:'Part 2',center:'IDP กรุงเทพฯ',topic:'Describe a person who inspired you to do something',meta:'ผู้สอบหลายคนรายงานว่าเจอ cue card แนวนี้บ่อยในเดือนนี้ · ตามด้วยคำถาม Part 3 เรื่องแรงบันดาลใจ'},
+    {dd:'08',mm:'มิ.ย.',part:'Part 2',center:'British Council เชียงใหม่',topic:'Describe a place full of colour that you visited',meta:'Part 3 ถามต่อเรื่องสีและวัฒนธรรม'},
+    {dd:'05',mm:'มิ.ย.',part:'Part 1',center:'IDP กรุงเทพฯ',topic:'Hometown · Work or study · Mobile phones',meta:'ชุดคำถาม Part 1 ที่พบบ่อยช่วงต้นเดือน'},
+    {dd:'01',mm:'มิ.ย.',part:'Part 3',center:'British Council กรุงเทพฯ',topic:'Technology and the way people communicate',meta:'ต่อยอดจาก cue card เรื่องโทรศัพท์'},
+  ];
+  const writing = [
+    {dd:'12',mm:'มิ.ย.',type:'Academic · Task 2',center:'IDP กรุงเทพฯ',topic:'รัฐบาลควรลงทุนกับขนส่งสาธารณะมากกว่าสร้างถนนใหม่ — เห็นด้วยหรือไม่?',meta:'แนว opinion (agree/disagree) เรื่องนโยบายรัฐ'},
+    {dd:'08',mm:'มิ.ย.',type:'Academic · Task 1',center:'British Council เชียงใหม่',topic:'Bar chart เปรียบเทียบจำนวนนักศึกษาต่างชาติใน 4 ประเทศ ปี 2010–2020',meta:'กราฟแท่งเปรียบเทียบช่วงเวลา'},
+    {dd:'05',mm:'มิ.ย.',type:'General · Task 1',center:'IDP กรุงเทพฯ',topic:'เขียนจดหมายถึงหัวหน้างานเพื่อขอลาหยุด',meta:'จดหมายแบบกึ่งทางการ'},
+    {dd:'01',mm:'มิ.ย.',type:'Academic · Task 2',center:'British Council กรุงเทพฯ',topic:'การเรียนออนไลน์จะแทนที่ห้องเรียนแบบเดิม — เห็นด้วยทั้งสองมุมแล้วให้ความเห็น',meta:'แนว discuss both views'},
+  ];
+
+  // V1 feed
+  const feedCard = (it, kind) => `
+    <div class="feedCard">
+      <div class="feedDate"><b>${it.dd}</b><small>${it.mm}</small></div>
+      <div class="feedBody">
+        <div class="row">
+          <span class="pill ${kind==='sp'?'pill-coral':'pill-blue'}">${kind==='sp'?it.part:it.type}</span>
+          <span class="pill pill-date">${it.center}</span>
+        </div>
+        <h3>${it.topic}</h3>
+        <p class="meta">${it.meta}</p>
+      </div>
+    </div>`;
+  document.getElementById('v1speaking').innerHTML = speaking.map(it=>feedCard(it,'sp')).join('');
+  document.getElementById('v1writing').innerHTML = writing.map(it=>feedCard(it,'wr')).join('');
+
+  // V2 table
+  const rows = [
+    ...speaking.map(it=>({...it,kind:'speaking',tag:it.part})),
+    ...writing.map(it=>({...it,kind:'writing',tag:it.type})),
+  ].sort((a,b)=>Number(b.dd)-Number(a.dd));
+  const rowHtml = (it)=>`
+    <div class="dbrow" data-kind="${it.kind}">
+      <span class="d">${it.dd} ${it.mm} 2026</span>
+      <span class="pill ${it.kind==='speaking'?'pill-coral':'pill-blue'}" style="justify-self:start">${it.tag}</span>
+      <div><h3>${it.topic}</h3><p class="src">รายงานจาก: ฟอรั่มผู้สอบ · ${it.center}</p></div>
+    </div>`;
+  const v2table=document.getElementById('v2table');
+  function renderV2(){v2table.innerHTML=rows.map(rowHtml).join('')}
+  renderV2();
+  window.v2filter=(k,btn)=>{
+    document.querySelectorAll('#v2tabs button').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    v2table.querySelectorAll('.dbrow').forEach(r=>{
+      r.style.display = (k==='all'||r.dataset.kind===k)?'':'none';
+    });
+  };
+
+  // V3 spotlight
+  const spot = (it,kind)=>`
+    <div class="spotItem">
+      <b>${it.topic}</b>
+      <small>${kind==='sp'?it.part:it.type} · ${it.dd} ${it.mm} · ${it.center}</small>
+    </div>`;
+  document.getElementById('v3speaking').innerHTML = speaking.slice(0,3).map(it=>spot(it,'sp')).join('');
+  document.getElementById('v3writing').innerHTML = writing.slice(0,3).map(it=>spot(it,'wr')).join('');
+
+  // page switch
+  window.show=(n)=>{
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+    document.querySelectorAll('.switcher button').forEach(b=>b.classList.remove('on'));
+    document.getElementById('p'+n).classList.add('on');
+    document.querySelectorAll('.switcher button')[n-1].classList.add('on');
+    window.scrollTo(0,0);
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Band-ladder report — 3 display revisions</title>
+<style>
+  :root{
+    --paper:#f5f3ee; --ink:#181511; --muted:#6f685d; --faint:#a39a8c; --line:#e6e1d6;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#fffdf9;
+    --met:#1d7a55; --met-bg:#e8f4ed; --gap:#b5791f; --gap-bg:#fbf1dd;
+    --strike:#b9433b; --up:#1d7a55; --up-bg:#e7f4ec; --up-ink:#0e5e3f;
+    --shadow:0 1px 2px rgba(40,33,20,.05),0 12px 34px rgba(40,33,20,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .phone{max-width:460px;margin:0 auto;padding:0 16px 48px}
+  .topbar{position:sticky;top:0;z-index:40;background:rgba(245,243,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:12px 16px}
+  .topbar .t{font-size:13px;font-weight:800;margin-bottom:9px}
+  .topbar .t small{font-weight:500;color:var(--muted)}
+  .seg{display:flex;gap:6px}
+  .seg button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:12px;padding:9px 6px;border-radius:10px;cursor:pointer;font-family:inherit;line-height:1.25}
+  .seg button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ver{display:none}.ver.show{display:block;animation:f .25s ease}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .why{font-size:12px;color:var(--muted);background:var(--accent-soft);border:1px solid #cfe0f7;border-radius:12px;padding:10px 13px;margin-bottom:16px;line-height:1.55}
+  .why b{color:var(--accent-ink)}
+
+  /* shared score card */
+  .qline{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px}
+  .qline b{color:var(--ink)}
+  .scorecard{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+  .scoretop{display:flex;align-items:center;gap:14px;padding:16px 16px 12px}
+  .ring{--v:8;width:80px;height:80px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--v)*36deg),#e7e2d6 0);position:relative}
+  .ring::before{content:"";position:absolute;inset:7px;background:var(--card);border-radius:50%}
+  .ring b{position:relative;font-size:25px;font-weight:800}
+  .ring span{position:relative;font-size:9px;color:var(--muted);font-weight:800;letter-spacing:.5px}
+  .scoremeta h1{margin:0;font-size:17px;letter-spacing:-.3px}
+  .calc{font-size:11px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+  .calc code{background:#faf7f1;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:10.5px}
+
+  /* ===== A · FOCUS ===== */
+  .focusLead{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--gap);margin:4px 2px 8px}
+  .ladblock{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:15px 17px;margin-bottom:10px}
+  .ladhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .ladhead h3{margin:0;font-size:16px}
+  .ladhead .now{font-size:11.5px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:99px;padding:3px 10px}
+  .ladder{position:relative;margin-top:6px;padding-left:24px}
+  .ladder::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .rung{position:relative;padding:0 0 14px}
+  .rung:last-child{padding-bottom:0}
+  .rung .dot{position:absolute;left:-21px;top:1px;width:15px;height:15px;border-radius:50%;background:#fff;border:2px solid var(--line)}
+  .rung.done .dot{background:var(--met);border-color:var(--met)}
+  .rung.cur .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .rung .rb{font-size:12.5px;font-weight:800}
+  .rung.done .rb{color:var(--met)}.rung.cur .rb{color:var(--accent-ink)}.rung.todo .rb{color:var(--gap)}
+  .rung .task{font-size:12.5px;color:#43403a;margin-top:3px;line-height:1.5}
+  .rung .swap{margin-top:7px;display:grid;gap:5px}
+  .rung .swap .from{font-size:11.5px;color:var(--strike);background:#fcefed;border-radius:8px;padding:7px 9px;line-height:1.4}
+  .rung .swap .to{font-size:12px;color:var(--up-ink);background:var(--up-bg);border-radius:8px;padding:7px 9px;line-height:1.45}
+  .rung .swap .to b{font-weight:700}
+  details.mini{background:var(--card);border:1px solid var(--line);border-radius:13px;margin-bottom:8px;overflow:hidden}
+  details.mini>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 15px;font-size:13.5px}
+  details.mini>summary::-webkit-details-marker{display:none}
+  details.mini .mn{font-weight:800}
+  details.mini .mj{margin-left:auto;font-weight:800;font-size:12.5px;color:var(--met)}
+  details.mini .arw{color:var(--faint);transition:.2s}
+  details.mini[open] .arw{transform:rotate(90deg)}
+  details.mini .inner{padding:0 15px 14px 24px;font-size:12.5px;color:#43403a;line-height:1.6}
+
+  /* ===== B · MOMENTUM ===== */
+  .mhero{background:linear-gradient(135deg,var(--accent),#1f63c9);color:#fff;border-radius:18px;padding:18px;margin-bottom:14px}
+  .mhero .k{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;opacity:.85}
+  .mhero h2{margin:6px 0 0;font-size:22px}
+  .mhero p{margin:6px 0 0;font-size:13px;opacity:.95;line-height:1.5}
+  .track{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:14px 15px;margin-bottom:10px}
+  .track .ttop{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+  .track .tname{font-size:14px;font-weight:800}
+  .track .tpct{font-size:11.5px;font-weight:800;color:var(--accent-ink)}
+  .dots{display:flex;align-items:center;gap:6px;margin-bottom:11px}
+  .dots .d{flex:1;height:7px;border-radius:99px;background:#eae5db;position:relative;overflow:hidden}
+  .dots .d.fill{background:var(--accent)}
+  .dots .d.next{background:repeating-linear-gradient(90deg,var(--gap) 0 5px,transparent 5px 9px)}
+  .dots .lab{font-size:9.5px;font-weight:800;color:var(--muted);width:26px;text-align:center;flex:none}
+  .unlock{display:flex;align-items:center;gap:10px;background:var(--gap-bg);border:1px solid #f0dcae;border-radius:11px;padding:10px 12px}
+  .unlock .ic{font-size:15px}
+  .unlock .ux b{font-size:12.5px;color:var(--gap)}
+  .unlock .ux p{margin:2px 0 0;font-size:12px;color:#5b4a28;line-height:1.4}
+  .mcta{width:100%;margin-top:6px;background:var(--accent);color:#fff;border:0;border-radius:14px;padding:15px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer}
+
+  /* ===== C · EXAMINER SHEET ===== */
+  .sheetNote{font-size:12px;color:var(--muted);margin:0 2px 10px}
+  .sheetScroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
+  .sheet{display:grid;grid-template-columns:repeat(3,minmax(190px,1fr));gap:10px;min-width:600px}
+  .col{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .col .ch{padding:11px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .col .ch h4{margin:0;font-size:14px}
+  .col .ch .bj{font-size:12px;font-weight:800}
+  .col .ch .bj .c{color:var(--ink)}.col .ch .bj .a{color:var(--faint)}.col .ch .bj .t{color:var(--gap)}
+  .col .body{padding:10px 12px}
+  .srow{padding:8px 0;border-top:1px solid #f0ece3}
+  .srow:first-child{border-top:0}
+  .srow .mk{font-size:12px;font-weight:800}
+  .srow.yes .mk{color:var(--met)}.srow.no .mk{color:var(--gap)}
+  .srow .rq{font-size:12px;font-weight:600;display:inline}
+  .srow .ev{font-size:11px;color:var(--muted);font-style:italic;margin-top:3px;line-height:1.4}
+  .srow.no{background:var(--gap-bg);margin:0 -12px;padding:8px 12px;border-top:0}
+  .srow.no .ev{color:var(--gap);font-style:normal}
+  .printbtn{margin-top:12px;width:100%;background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:12px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="topbar">
+    <div class="t">Band-ladder report · 3 display revisions &nbsp;<small>Part 2 · Hermione · same data</small></div>
+    <div class="seg">
+      <button data-v="a" class="active">A · Focus</button>
+      <button data-v="b">B · Momentum</button>
+      <button data-v="c">C · Examiner sheet</button>
+    </div>
+  </div>
+  <div class="why" id="why"></div>
+
+  <!-- shared score card markup duplicated per version for self-containment -->
+
+  <!-- ===== A ===== -->
+  <section class="ver show" id="a">
+    <div class="qline">Part 2 · Hermione Granger</div>
+    <div class="scorecard">
+      <div class="scoretop">
+        <div class="ring" style="--v:8"><b>8.0</b><span>OVERALL</span></div>
+        <div class="scoremeta">
+          <h1>Band 8.0</h1>
+          <div class="calc"><code>(8.0 + 8.0 + 7.5) ÷ 3 = 7.83</code> → 8.0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="focusLead">🎯 โฟกัสจุดเดียว · Grammar ใกล้ขยับสุด</div>
+    <div class="ladblock">
+      <div class="ladhead"><h3>Grammar</h3><span class="now">7.5 → 8.0</span></div>
+      <div class="ladder">
+        <div class="rung done"><span class="dot"></span><div class="rb">✓ Band 7 — simple + subordinating</div><div class="task">“even though she wasn’t born talented”</div></div>
+        <div class="rung cur"><span class="dot"></span><div class="rb">● Band 7.5 — perfect/past เริ่มปรากฏ</div><div class="task">“I have admired…”, “she worked really hard”</div></div>
+        <div class="rung todo"><span class="dot"></span><div class="rb">○ Band 8.0 — complex range error-free</div><div class="task">เพิ่ม conditional 1 ครั้ง:</div>
+          <div class="swap"><div class="from"><s>“because she worked really hard, not because it was given to her”</s></div><div class="to">“<b>Had</b> it <b>been</b> given to her, she might never have tried so hard.”</div></div>
+        </div>
+      </div>
+    </div>
+
+    <details class="mini"><summary><span class="mn">Vocabulary</span><span class="mj">8.0 → 8.5</span><span class="arw">›</span></summary><div class="inner">ทำได้: “exemplifies”, “cultivate relationships” · ปลดล็อก 8.5: ใส่ C1–C2 อีก 1 คำ เช่น very smart → <b>academically gifted</b></div></details>
+    <details class="mini"><summary><span class="mn">Fluency</span><span class="mj">8.0 → 8.5</span><span class="arw">›</span></summary><div class="inner">ทำได้: referencing ต่อเนื่อง, “to begin with…” · ปลดล็อก 8.5: เพิ่มเหตุผลที่ 3 ให้ถึง ~310 คำ ลด “you know”</div></details>
+  </section>
+
+  <!-- ===== B ===== -->
+  <section class="ver" id="b">
+    <div class="mhero">
+      <div class="k">Band 8.0 · เหลืออีกนิด</div>
+      <h2>คุณอยู่ห่างจาก 8.5 แค่ 3 ก้าว ✦</h2>
+      <p>เก็บทีละครึ่ง band — เริ่มจาก Grammar ที่ใกล้สุด แล้วไล่เก็บ Vocabulary กับ Fluency</p>
+    </div>
+
+    <div class="track">
+      <div class="ttop"><span class="tname">Grammar</span><span class="tpct">75% → Band 8.0</span></div>
+      <div class="dots"><span class="lab">7</span><span class="d fill"></span><span class="lab">7.5</span><span class="d fill"></span><span class="lab">8</span><span class="d next"></span><span class="lab">8.5</span></div>
+      <div class="unlock"><span class="ic">🔓</span><div class="ux"><b>ปลดล็อก Band 8.0</b><p>ใส่ conditional: “Had it been given to her…”</p></div></div>
+    </div>
+    <div class="track">
+      <div class="ttop"><span class="tname">Vocabulary</span><span class="tpct">80% → Band 8.5</span></div>
+      <div class="dots"><span class="lab">7.5</span><span class="d fill"></span><span class="lab">8</span><span class="d fill"></span><span class="lab">8.5</span><span class="d next"></span><span class="lab">9</span></div>
+      <div class="unlock"><span class="ic">🔓</span><div class="ux"><b>ปลดล็อก Band 8.5</b><p>C1–C2 อีก 1 คำ: very smart → academically gifted</p></div></div>
+    </div>
+    <div class="track">
+      <div class="ttop"><span class="tname">Fluency</span><span class="tpct">80% → Band 8.5</span></div>
+      <div class="dots"><span class="lab">7.5</span><span class="d fill"></span><span class="lab">8</span><span class="d fill"></span><span class="lab">8.5</span><span class="d next"></span><span class="lab">9</span></div>
+      <div class="unlock"><span class="ic">🔓</span><div class="ux"><b>ปลดล็อก Band 8.5</b><p>เพิ่มเหตุผลที่ 3 ให้ถึง ~310 คำ</p></div></div>
+    </div>
+    <button class="mcta">🎙 อัดใหม่ เก็บ 3 ก้าวนี้</button>
+  </section>
+
+  <!-- ===== C ===== -->
+  <section class="ver" id="c">
+    <div class="qline">Part 2 · Hermione Granger — <b>Band 8.0</b></div>
+    <p class="sheetNote">มุมมองสำหรับครู/consult — 3 เกณฑ์เทียบกันพร้อมหลักฐานจากคำตอบจริง (เลื่อนแนวนอนได้)</p>
+    <div class="sheetScroll">
+      <div class="sheet">
+        <div class="col">
+          <div class="ch"><h4>Grammar</h4><div class="bj"><span class="c">7.5</span><span class="a">→</span><span class="t">8.0</span></div></div>
+          <div class="body">
+            <div class="srow yes"><span class="mk">✓</span> <span class="rq">Perfect tense</span><div class="ev">“I have admired so many people”</div></div>
+            <div class="srow yes"><span class="mk">✓</span> <span class="rq">Past tense</span><div class="ev">“she worked really hard”</div></div>
+            <div class="srow yes"><span class="mk">✓</span> <span class="rq">Subordinating clause</span><div class="ev">“even though she wasn’t born talented”</div></div>
+            <div class="srow no"><span class="mk">✗</span> <span class="rq">Conditional / passive (+0.5)</span><div class="ev">ยังไม่พบ — เพิ่ม “Had it been given to her…”</div></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="ch"><h4>Vocabulary</h4><div class="bj"><span class="c">8.0</span><span class="a">→</span><span class="t">8.5</span></div></div>
+          <div class="body">
+            <div class="srow yes"><span class="mk">✓</span> <span class="rq">B1+ collocation 4–5</span><div class="ev">“street smart and book smart”, “cultivate relationships”</div></div>
+            <div class="srow yes"><span class="mk">✓</span> <span class="rq">C1–C2 ≥1</span><div class="ev">“exemplifies”</div></div>
+            <div class="srow no"><span class="mk">✗</span> <span class="rq">C1–C2 ครบ 2 (+0.5)</span><div class="ev">very smart → academically gifted</div></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="ch"><h4>Fluency</h4><div class="bj"><span class="c">8.0</span><span class="a">→</span><span class="t">8.5</span></div></div>
+          <div class="body">
+            <div class="srow yes"><span class="mk">✓</span> <span class="rq">Referencing &gt;3</span><div class="ev">“she / her / who” ถูกต้อง</div></div>
+            <div class="srow yes"><span class="mk">✓</span> <span class="rq">Discourse markers</span><div class="ev">“to begin with”, “moving on to”</div></div>
+            <div class="srow no"><span class="mk">✗</span> <span class="rq">≥310 คำ (+0.5)</span><div class="ev">~290 คำ — เพิ่มเหตุผลที่ 3</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="printbtn">🖨 พิมพ์ / บันทึกเป็น PDF สำหรับ consult</button>
+  </section>
+
+  <p style="margin-top:18px;font-size:11px;color:var(--faint);text-align:center;line-height:1.5">ทั้ง 3 แบบใช้ band-ladder + ข้อมูลชุดเดียวกัน (componentReports · requiredTicks · plusOneChecklist) — ต่างกันที่ “วิธีจัดวาง”</p>
+</div>
+
+<script>
+  var why={
+    a:'<b>A · Focus</b> — Krug (<i>Don\'t Make Me Think</i>) + Cagan: ชูเกณฑ์ที่อ่อนสุด (Grammar) เป็นบันไดเต็ม ส่วนอีก 2 เกณฑ์ยุบเป็นบรรทัดเดียว แตะเพื่อขยาย — ลดการ scroll เหลือ “จุดเดียวที่ต้องทำ”',
+    b:'<b>B · Momentum</b> — Nodder (<i>Evil by Design</i>) + Brown: แปลงบันไดเป็นแถบความคืบหน้า %, จุดที่เก็บแล้ว/จุดถัดไป และปุ่มปลดล็อก — เน้นกำลังใจและดันให้ลองอัดใหม่',
+    c:'<b>C · Examiner sheet</b> — Tidwell (เปรียบเทียบแบบคอลัมน์) + The Mom Test: 3 เกณฑ์เรียงข้างกัน เน้นหลักฐานคำพูดจริง พิมพ์เป็น PDF ไปคุยกับครู/พี่ดอยได้'
+  };
+  var whyEl=document.getElementById('why');
+  function show(v){
+    document.querySelectorAll('.ver').forEach(function(s){s.classList.toggle('show',s.id===v)});
+    document.querySelectorAll('.seg button').forEach(function(b){b.classList.toggle('active',b.dataset.v===v)});
+    whyEl.innerHTML=why[v];window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+  whyEl.innerHTML=why.a;
+</script>
+</body>
+</html>

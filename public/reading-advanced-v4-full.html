@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced Reading — V4 Section Map (full)</title>
+<style>
+  :root{
+    --bg:#eef1f6; --ink:#1a2230; --muted:#5d6b80; --faint:#94a0b3; --line:#dde3ec;
+    --accent:#004aad; --accent-ink:#003a86; --accent-soft:#e3ecf9; --card:#ffffff;
+    --good:#15915f; --good-bg:#e7f5ee; --warn:#b5791f; --warn-bg:#fbf1dd;
+    --hl:#ffe39c; --shadow:0 1px 2px rgba(20,30,60,.05),0 8px 26px rgba(20,30,60,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1240px;margin:0 auto;padding:14px 16px 60px}
+  .examtop{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 16px;margin-bottom:12px;flex-wrap:wrap}
+  .examtop .ttl{font-size:14px;font-weight:800}
+  .examtop .ttl small{color:var(--muted);font-weight:500}
+  .examtop .rule{font-size:11.5px;font-weight:800;color:var(--warn);background:var(--warn-bg);border:1px solid #f0dcae;border-radius:8px;padding:5px 10px;margin-left:auto}
+  .examtop .prog{font-size:12px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:8px;padding:5px 10px}
+
+  .grid{display:grid;grid-template-columns:188px 1fr 1fr;gap:14px;align-items:start}
+  @media(max-width:1000px){.grid{grid-template-columns:1fr}}
+
+  /* section map rail */
+  .map{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px}
+  .map h4{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--faint);margin:0 0 4px}
+  .map .sub{font-size:11px;color:var(--muted);margin:0 0 10px}
+  .map a{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:9px;padding:7px 9px;margin-bottom:6px;cursor:pointer}
+  .map a:hover{border-color:#b9c6da;background:#f7f9fd}
+  .map a.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+  .map a .lt{width:22px;height:22px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;display:grid;place-items:center;font-size:12px}
+  .map a.done .lt{background:var(--good-bg);color:var(--good)}
+  .map a .nm{font-size:12px;font-weight:700;line-height:1.2}
+  .map a .qs{font-size:10px;color:var(--muted);font-weight:800;white-space:nowrap}
+  .map a.done .qs{color:var(--good)}
+  .map .legend{display:flex;gap:10px;font-size:10px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+  .map .legend i{width:9px;height:9px;border-radius:3px;display:inline-block;vertical-align:middle;margin-right:3px}
+
+  .col{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+  .colhead{padding:10px 16px;border-bottom:1px solid var(--line);font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--faint)}
+  .passage{padding:16px 18px;max-height:620px;overflow:auto}
+  .passage h2{font-size:17px;margin:0 0 14px}
+  .sec{display:grid;grid-template-columns:26px 1fr;gap:11px;margin-bottom:15px;scroll-margin-top:10px;padding:4px;border-radius:8px}
+  .sec.flash{background:#fff8e0;box-shadow:0 0 0 2px var(--hl)}
+  .sec .pl{width:24px;height:24px;border-radius:7px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;font-size:13px;display:grid;place-items:center}
+  .sec p{margin:0;font-size:13.5px;line-height:1.7;color:#2a3444}
+
+  .qbody{padding:14px 18px;max-height:620px;overflow:auto}
+  .qgroup{margin-bottom:18px}
+  .qgroup .gi{font-size:11px;font-weight:800;color:var(--accent-ink);letter-spacing:.3px;text-transform:uppercase;margin-bottom:3px}
+  .qgroup .gr{font-size:12px;color:var(--muted);margin-bottom:9px}
+  .mq{display:grid;grid-template-columns:30px 1fr 88px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #f0ece3}
+  .mq:first-of-type{border-top:0}
+  .mq .qn{font-size:11px;font-weight:800;color:#fff;background:#334155;border-radius:5px;padding:3px 0;text-align:center}
+  .mq .qt{font-size:13px}
+  .mq select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;font-family:inherit;background:#fff}
+  .mq.done .qn{background:var(--good)}
+  .summary{font-size:14px;line-height:2.4;color:#2a3444}
+  .stitle{font-size:13.5px;font-weight:800;margin:0 0 6px}
+  .blk{display:inline-flex;align-items:center;gap:6px;border-bottom:2px solid var(--accent);padding:0 4px;background:#f3f7ff;border-radius:5px 5px 0 0}
+  .blk .n{font-size:10px;font-weight:800;color:#fff;background:#334155;border-radius:4px;padding:1px 5px}
+  .blk input{border:0;background:transparent;font-size:13.5px;font-family:inherit;width:84px;outline:none}
+  .blk .fmt{font-size:9.5px;color:var(--faint);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="examtop">
+    <div class="ttl">Advanced Reading · Passage 3 <small>— Cooling the concrete city &nbsp;(sample)</small></div>
+    <div class="prog">4 / 10 answered</div>
+    <div class="rule">⚑ Q34–37: NO MORE THAN TWO WORDS</div>
+  </div>
+
+  <div class="grid">
+    <!-- SECTION MAP -->
+    <nav class="map">
+      <h4>Sections</h4>
+      <p class="sub">Jump to a paragraph</p>
+      <a class="done" data-go="A"><span class="lt">A</span><span class="nm">The warmer city</span><span class="qs">Q27</span></a>
+      <a class="done" data-go="B"><span class="lt">B</span><span class="nm">Why heat builds</span><span class="qs">Q34</span></a>
+      <a data-go="C"><span class="lt">C</span><span class="nm">The energy cost</span><span class="qs">Q28</span></a>
+      <a class="done" data-go="D"><span class="lt">D</span><span class="nm">Who is at risk</span><span class="qs">Q29</span></a>
+      <a data-go="E"><span class="lt">E</span><span class="nm">Cool roofs</span><span class="qs">Q35</span></a>
+      <a data-go="F"><span class="lt">F</span><span class="nm">Greening streets</span><span class="qs">Q36</span></a>
+      <a class="done" data-go="G"><span class="lt">G</span><span class="nm">A field study</span><span class="qs">Q30 · Q37</span></a>
+      <a data-go="H"><span class="lt">H</span><span class="nm">City policy</span><span class="qs">Q31</span></a>
+      <div class="legend"><span><i style="background:var(--good-bg);border:1px solid #bfe3cf"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>to do</span></div>
+    </nav>
+
+    <!-- PASSAGE -->
+    <div class="col">
+      <div class="colhead">Passage</div>
+      <div class="passage" id="passage">
+        <h2>Cooling the concrete city</h2>
+        <div class="sec" id="secA"><span class="pl">A</span><p>On a summer night, the centre of a large city can be several degrees warmer than the fields that surround it. Scientists call this gap the "urban heat island", and it has grown as cities have spread.</p></div>
+        <div class="sec" id="secB"><span class="pl">B</span><p>The cause is mostly the materials cities are built from. Dark roads and rooftops absorb sunlight during the day and release it slowly after dark, while tall buildings trap the warm air between them.</p></div>
+        <div class="sec" id="secC"><span class="pl">C</span><p>The extra warmth is expensive. Air-conditioning units work harder and for longer, pushing up electricity bills and straining the power grid on the hottest days of the year.</p></div>
+        <div class="sec" id="secD"><span class="pl">D</span><p>The heat is not shared equally. Elderly residents and those with existing illnesses are the most vulnerable, and hospital admissions tend to rise sharply during prolonged hot spells.</p></div>
+        <div class="sec" id="secE"><span class="pl">E</span><p>One simple remedy is to change what sits on top of a building. Painting a roof a pale colour — a so-called "cool roof" — reflects sunlight instead of soaking it up, lowering the temperature inside.</p></div>
+        <div class="sec" id="secF"><span class="pl">F</span><p>Plants help too. Street trees cast shade and release moisture, and gardens planted on rooftops insulate the floors below, so green spaces can cool a neighbourhood as well as brighten it.</p></div>
+        <div class="sec" id="secG"><span class="pl">G</span><p>In one trial, researchers fitted sensors across a district before and after these measures were introduced. They recorded an average fall of three degrees on summer afternoons compared with untreated streets nearby.</p></div>
+        <div class="sec" id="secH"><span class="pl">H</span><p>Convinced by such findings, a growing number of city governments now write cooling targets into their planning rules, requiring reflective surfaces and new planting in major developments.</p></div>
+      </div>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="col">
+      <div class="colhead">Questions 27–37</div>
+      <div class="qbody">
+        <div class="qgroup">
+          <div class="gi">Questions 27–31 · Matching information</div>
+          <div class="gr">Which paragraph (A–H) contains the following? <em>Pick from the map ←</em></div>
+          <div class="mq done"><span class="qn">27</span><span class="qt">a definition of a temperature difference</span><select><option>A ✓</option><option>…</option></select></div>
+          <div class="mq"><span class="qn">28</span><span class="qt">a reference to rising costs</span><select><option>Select…</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+          <div class="mq done"><span class="qn">29</span><span class="qt">who is most affected by heat</span><select><option>D ✓</option><option>…</option></select></div>
+          <div class="mq done"><span class="qn">30</span><span class="qt">the results of a measurement study</span><select><option>G ✓</option><option>…</option></select></div>
+          <div class="mq"><span class="qn">31</span><span class="qt">action taken by authorities</span><select><option>Select…</option><option>F</option><option>G</option><option>H</option></select></div>
+        </div>
+
+        <div class="qgroup">
+          <div class="gi">Questions 34–37 · Summary completion</div>
+          <div class="gr">Choose NO MORE THAN TWO WORDS from the passage for each answer.</div>
+          <p class="stitle">How cities can cool down</p>
+          <p class="summary">Cities grow hot mainly because dark
+            <span class="blk"><span class="n">34</span><input value="surfaces" /></span> absorb sunlight by day. One fix is to paint roofs pale, creating a
+            <span class="blk"><span class="n">35</span><input placeholder="type…" /><span class="fmt">≤2</span></span> roof that reflects the light. Planting more
+            <span class="blk"><span class="n">36</span><input value="trees" /></span> adds shade and moisture. In a trial, sensors recorded a fall of three
+            <span class="blk"><span class="n">37</span><input placeholder="type…" /><span class="fmt">≤2</span></span> on summer afternoons.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.map a').forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      document.querySelectorAll('.map a').forEach(function(x){x.classList.remove('cur')});
+      a.classList.add('cur');
+      var sec=document.getElementById('sec'+a.dataset.go);
+      if(sec){
+        document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('flash')});
+        sec.classList.add('flash');
+        sec.scrollIntoView({block:'start',behavior:'smooth'});
+      }
+    });
+  });
+</script>
+</body>
+</html>

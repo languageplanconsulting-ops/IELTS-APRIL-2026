@@ -22875,7 +22875,6 @@ function App() {
                           type="button"
                           className={`${hasAnswer ? 'is-answered' : ''} ${isHinting ? 'is-active' : ''}`.trim()}
                           onClick={() => {
-                            setReadingHintQuestionNumber(question.number)
                             // Scroll the questions pane vertically only. scrollIntoView would
                             // also shift the pane horizontally when a wide row (e.g. a table)
                             // makes it programmatically scrollable, clipping text at the edges.

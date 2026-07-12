@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>English Plan IELTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0c11; --ink-2:#454c59; --ink-3:#6b7280;
+  --line:#e8eaef; --line-2:#f0f2f5; --bg:#ffffff; --bg-2:#f7f8fa;
+  --blue:#004aad; --blue-2:#1763cf; --blue-tint:#eef3fb; --blue-deep:#06182f;
+  --yellow:#ffcc00;
+  --en:'Inter',system-ui,sans-serif; --th:'Noto Sans Thai','Inter',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace;
+  --maxw:1160px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--th);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+.en{font-family:var(--en)}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:inline-flex;align-items:center;gap:9px}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 3px rgba(255,204,0,.18)}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--th);font-weight:700;font-size:.95rem;border-radius:10px;padding:13px 20px;cursor:pointer;border:1px solid transparent;transition:.16s ease;white-space:nowrap}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(10,12,17,.55)}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:#c9ced8}
+.btn-link{font-weight:700;display:inline-flex;align-items:center;gap:7px;color:var(--ink)}
+.btn-link svg{transition:.18s}.btn-link:hover svg{transform:translateX(4px)}
+svg.ico{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* nav */
+nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.82);backdrop-filter:saturate(160%) blur(12px);border-bottom:1px solid var(--line)}
+nav .row{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .mark{width:30px;height:30px;border-radius:8px;display:block}
+.brand b{font-family:var(--en);font-weight:800;letter-spacing:-.01em;font-size:1.02rem}
+.brand b span{color:var(--blue)}
+.navlinks{display:flex;align-items:center;gap:30px}
+.navlinks a{font-size:.9rem;font-weight:500;color:var(--ink-2)}
+.navlinks a:hover{color:var(--ink)}
+.navcta{display:flex;align-items:center;gap:14px}
+.navcta a.signin{font-size:.9rem;font-weight:600}
+
+/* hero */
+.hero{padding:84px 0 40px;position:relative;overflow:hidden}
+.hero .grid{display:grid;grid-template-columns:1.02fr 1fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(2.5rem,4.4vw,3.7rem);line-height:1.06;font-weight:800;letter-spacing:-.022em;margin:22px 0 0}
+.hero h1 .en{font-weight:800}
+.hero h1 .hl{color:var(--blue);position:relative;white-space:nowrap}
+.hero p.sub{margin:22px 0 0;font-size:1.12rem;color:var(--ink-2);max-width:40ch}
+.hero .cta{display:flex;align-items:center;gap:18px;margin-top:32px}
+.hero .meta{display:flex;gap:26px;margin-top:40px;padding-top:26px;border-top:1px solid var(--line)}
+.hero .meta div .n{font-family:var(--en);font-weight:800;font-size:1.45rem;letter-spacing:-.02em}
+.hero .meta div .l{font-size:.82rem;color:var(--ink-3);margin-top:2px}
+.glow{position:absolute;right:-10%;top:-20%;width:680px;height:680px;background:radial-gradient(circle,rgba(0,74,173,.10),transparent 62%);pointer-events:none}
+
+/* product frame (reading report shot) */
+.shot{position:relative;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 40px 80px -42px rgba(6,24,47,.34),0 6px 18px -10px rgba(6,24,47,.12);overflow:hidden}
+.shot .chrome{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid var(--line);background:#fbfcfd}
+.shot .dot{width:9px;height:9px;border-radius:50%;background:#dfe3ea}
+.shot .url{margin-left:10px;font-family:var(--mono);font-size:.72rem;color:var(--ink-3);background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 12px}
+.shot .body{padding:18px}
+.rr-top{display:flex;align-items:center;justify-content:space-between}
+.rr-q{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);font-weight:600}
+.rr-status{font-size:.7rem;font-weight:700;color:#15803d;background:#eafaf0;border:1px solid #bbf0cd;border-radius:999px;padding:3px 10px}
+.rr-prompt{font-weight:700;margin:6px 0 14px;font-size:1.02rem}
+.rr-badge{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:#9aa1ad;text-transform:uppercase;margin:0 0 8px}
+.rr-list{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.rr-head{display:grid;grid-template-columns:1fr 18px 1fr;background:#f8fafc;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase}
+.rr-head span{padding:7px 12px}.rr-head .q{color:#9a7400}.rr-head .p{color:var(--blue)}
+.rr-row{padding:11px 12px;border-top:1px solid var(--line)}
+.rr-pair{display:grid;grid-template-columns:1fr 18px 1fr;align-items:center;font-size:.88rem;font-weight:700}
+.rr-pair .q{color:#92520e}.rr-pair .eq{text-align:center;color:#b8bdc7;font-weight:800}.rr-pair .p{color:var(--blue)}
+.rr-th{font-size:.78rem;color:var(--ink-3);margin-top:4px}
+.rr-note{font-size:.74rem;color:var(--ink-3);border-left:2px solid var(--yellow);padding:4px 0 4px 9px;margin-top:6px;background:#fffdf5}
+.rr-chip{position:absolute;left:-18px;bottom:24px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 40px -18px rgba(6,24,47,.35);padding:11px 14px;display:flex;align-items:center;gap:10px}
+.rr-chip .pin{width:30px;height:30px;border-radius:8px;background:var(--blue-tint);color:var(--blue);display:grid;place-items:center}
+.rr-chip b{font-size:.82rem}.rr-chip span{display:block;font-size:.68rem;color:var(--ink-3)}
+
+/* logo / proof strip */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2)}
+.strip .row{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.strip .item{flex:1;min-width:180px;padding:22px 26px;border-right:1px solid var(--line);font-size:.88rem;color:var(--ink-2);display:flex;align-items:center;gap:11px}
+.strip .item:last-child{border-right:0}
+.strip .item b{color:var(--ink);font-weight:700}
+.strip .item svg{width:18px;height:18px;color:var(--blue);flex:none}
+
+/* section */
+section.s{padding:104px 0}
+.s-head{max-width:620px}
+.s-head h2{font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.12;margin:14px 0 0}
+.s-head p{color:var(--ink-2);font-size:1.08rem;margin:16px 0 0}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(4,1fr);margin-top:52px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.skill{padding:30px 26px;border-right:1px solid var(--line)}
+.skill:last-child{border-right:0}
+.skill .ic{width:44px;height:44px;border-radius:11px;border:1px solid var(--line);display:grid;place-items:center;color:var(--blue);margin-bottom:18px}
+.skill h3{font-size:1.08rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.skill h3 .en{font-weight:700}
+.skill p{color:var(--ink-3);font-size:.9rem;margin-top:6px}
+.skill .lk{margin-top:16px;font-size:.85rem;font-weight:600;color:var(--blue);display:inline-flex;align-items:center;gap:6px}
+
+/* feature split */
+.feat{background:var(--blue-deep);color:#fff;border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center}
+.feat .txt{padding:64px 56px}
+.feat .eyebrow{color:#8fb4ea}.feat .eyebrow::before{box-shadow:0 0 0 3px rgba(255,204,0,.22)}
+.feat h2{font-size:2.1rem;font-weight:800;letter-spacing:-.02em;line-height:1.14;margin:16px 0 0}
+.feat p{color:#c2d2ea;margin:18px 0 0;font-size:1.05rem;max-width:38ch}
+.feat ul{list-style:none;margin:26px 0 0;display:grid;gap:13px}
+.feat li{display:flex;gap:12px;align-items:flex-start;font-size:.96rem;color:#dde7f5}
+.feat li svg{width:20px;height:20px;color:var(--yellow);flex:none;margin-top:1px}
+.feat .vis{padding:46px;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 70% 20%,rgba(23,99,207,.4),transparent 60%)}
+.feat .vis .shot{box-shadow:0 50px 90px -40px rgba(0,0,0,.6)}
+
+/* structure compare */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.cmp .col{border:1px solid var(--line);border-radius:18px;padding:34px}
+.cmp .col .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:5px 11px;border-radius:6px}
+.cmp .gt .tag{background:var(--blue-tint);color:var(--blue)}
+.cmp .ac .tag{background:#fef6da;color:#8a6d00}
+.cmp .col h3{font-size:1.4rem;font-weight:800;margin:16px 0 0;letter-spacing:-.01em}
+.cmp .col ul{list-style:none;margin:22px 0 0;display:grid;gap:0}
+.cmp .col li{display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--line-2);font-size:.94rem}
+.cmp .col li:first-child{border-top:0}
+.cmp .col li b{color:var(--ink-3);font-weight:500}
+.cmp .col li span{font-weight:600;text-align:right}
+.cmp .col .go{margin-top:26px;font-size:.9rem;font-weight:700;color:var(--blue);display:inline-flex;gap:7px;align-items:center}
+
+/* latest topics */
+.lat{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.lat .card{border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.lat .card .h{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}
+.lat .card .h h3{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.lat .card .h h3 svg{width:20px;height:20px;color:var(--blue)}
+.lat .card .h .cnt{font-family:var(--mono);font-size:.72rem;color:var(--ink-3)}
+.lat .row2{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 24px;border-top:1px solid var(--line-2)}
+.lat .row2:first-child{border-top:0}
+.lat .row2 .t{font-weight:600;font-size:.95rem}
+.lat .row2 .d{font-family:var(--mono);font-size:.72rem;color:var(--ink-3)}
+.lat .row2 .pill{font-size:.7rem;font-weight:700;border-radius:6px;padding:3px 9px;background:var(--bg-2);border:1px solid var(--line);color:var(--ink-2)}
+.lat .card .f{padding:16px 24px;border-top:1px solid var(--line);font-size:.86rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:7px}
+
+/* free cta */
+.free{margin:0 0 104px}
+.free .box{background:var(--ink);color:#fff;border-radius:24px;padding:66px 64px;display:flex;align-items:center;justify-content:space-between;gap:40px;position:relative;overflow:hidden}
+.free .box .gl{position:absolute;left:-8%;bottom:-60%;width:520px;height:520px;background:radial-gradient(circle,rgba(0,74,173,.55),transparent 60%)}
+.free h2{font-size:2.3rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;position:relative}
+.free p{color:#aeb6c4;margin-top:14px;font-size:1.05rem;max-width:46ch;position:relative}
+.free .btn-y{background:var(--yellow);color:#1a1500;position:relative}
+.free .btn-y:hover{transform:translateY(-1px);box-shadow:0 14px 30px -12px rgba(255,204,0,.5)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:46px 0;color:var(--ink-3);font-size:.86rem}
+footer .row{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+footer .brand b{color:var(--ink)}
+
+@media(max-width:900px){
+  .hero .grid,.feat,.cmp,.lat{grid-template-columns:1fr}
+  .hero{padding:54px 0 20px}
+  .skills{grid-template-columns:1fr 1fr}
+  .skill:nth-child(2n){border-right:0}
+  .skill{border-bottom:1px solid var(--line)}
+  .feat .txt{padding:42px 32px}.feat .vis{padding:0 32px 42px}
+  .free .box{flex-direction:column;align-items:flex-start;padding:44px 32px}
+  .navlinks{display:none}
+  .rr-chip{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav><div class="wrap"><div class="row">
+  <a class="brand" href="#">
+    <img class="mark" src="/favicon.svg" alt="" />
+    <b class="en">English<span>Plan</span></b>
+  </a>
+  <div class="navlinks">
+    <a href="#skills">ฝึก 4 ทักษะ</a>
+    <a href="#vocab">เฉลยคำต่อคำ</a>
+    <a href="#exam2026">ข้อสอบ 2026</a>
+    <a href="#latest">หัวข้อล่าสุด</a>
+  </div>
+  <div class="navcta">
+    <a class="signin" href="#">เข้าสู่ระบบ</a>
+    <a class="btn btn-ink" href="#">เริ่มฝึกฟรี</a>
+  </div>
+</div></div></nav>
+
+<!-- HERO -->
+<header class="hero"><div class="glow"></div><div class="wrap"><div class="grid">
+  <div>
+    <span class="eyebrow">IELTS Academic &amp; General · 2026</span>
+    <h1>เตรียมสอบ <span class="en hl">IELTS</span> ด้วยข้อสอบจริง<br>และเฉลยที่<span class="hl">เข้าใจทุกคำ</span></h1>
+    <p class="sub">ฝึกครบทั้ง Reading, Writing, Listening และ Speaking — พร้อมข้อสอบใหม่ปี 2026 และเฉลยแบบคำต่อคำที่บอกว่าทำไมถึงตอบข้อนั้น</p>
+    <div class="cta">
+      <a class="btn btn-ink" href="#">เริ่มฝึกฟรี <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn-link" href="#exam2026">ดูโครงสร้างข้อสอบ 2026 <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="meta">
+      <div><div class="n">10–19</div><div class="l">Cambridge ครบชุด</div></div>
+      <div><div class="n en">2026</div><div class="l">ข้อสอบใหม่ล่าสุด</div></div>
+      <div><div class="n">4</div><div class="l">ทักษะในที่เดียว</div></div>
+    </div>
+  </div>
+
+  <!-- real product shot: reading report word-pairs -->
+  <div class="shot">
+    <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url mono">englishplan-ielts.com/reading</span></div>
+    <div class="body">
+      <div class="rr-top"><span class="rr-q">Question 27 · Heading</span><span class="rr-status">✓ Correct</span></div>
+      <p class="rr-prompt">Paragraph A</p>
+      <p class="rr-badge">คำในโจทย์ ↔ คำในบทความ</p>
+      <div class="rr-list">
+        <div class="rr-head"><span class="q">ในโจทย์</span><span></span><span class="p">ในบทความ</span></div>
+        <div class="rr-row">
+          <div class="rr-pair"><span class="q">Many external bodies</span><span class="eq">=</span><span class="p">governments, regulators…</span></div>
+          <div class="rr-th">หน่วยงานภายนอกหลายแห่ง</div>
+        </div>
+        <div class="rr-row">
+          <div class="rr-pair"><span class="q">held responsible</span><span class="eq">=</span><span class="p">blame</span></div>
+          <div class="rr-th">ถูกโยนความผิด / ต้องรับผิดชอบ</div>
+          <div class="rr-note">'blame spread far and wide' = 'held responsible' จึงตอบ iv</div>
+        </div>
+      </div>
+    </div>
+    <div class="rr-chip"><div class="pin"><svg class="ico" style="width:17px;height:17px" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v16l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></div><div><b>พี่ดอยสอน Vocab</b><span>บันทึกคำศัพท์รายคู่</span></div></div>
+  </div>
+</div></div></header>
+
+<!-- PROOF STRIP -->
+<div class="strip"><div class="wrap"><div class="row">
+  <div class="item"><svg class="ico" viewBox="0 0 24 24"><path d="M4 19V5a1 1 0 0 1 1-1h11l4 4v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M8 9h6M8 13h8"/></svg><span><b>ข้อสอบนอกเหนือ Cambridge</b> ฝึกได้ไม่ซ้ำ</span></div>
+  <div class="item"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5"/><path d="M5 8v8l7 5 7-5V8"/></svg><span>เฉลย <b>คำต่อคำ</b> ทุกข้อ พร้อมเหตุผล</span></div>
+  <div class="item"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>อัปเดตหัวข้อจริง <b>ม.ค.–มิ.ย. 2026</b></span></div>
+</div></div></div>
+
+<!-- SKILLS -->
+<section class="s" id="skills"><div class="wrap">
+  <div class="s-head">
+    <span class="eyebrow">ฝึกครบทุกทักษะ</span>
+    <h2>ทักษะเดียวไม่พอ — เราฝึกให้ครบทั้งสี่</h2>
+    <p>แต่ละทักษะมีข้อสอบ เฉลย และเครื่องมือฝึกเฉพาะของตัวเอง ออกแบบให้ขยับคะแนนได้จริง</p>
+  </div>
+  <div class="skills">
+    <div class="skill">
+      <div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5A2.5 2.5 0 0 1 20 21.5z"/></svg></div>
+      <h3><span class="en">Reading</span></h3>
+      <p>อ่านจับใจความ + เฉลยคำต่อคำ และคลังคำศัพท์พี่ดอยสอน</p>
+      <a class="lk" href="#">ฝึก Reading <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="skill">
+      <div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M4 20l4-1L19 8a2 2 0 0 0-3-3L5 16z"/><path d="M14 6l3 3"/></svg></div>
+      <h3><span class="en">Writing</span></h3>
+      <p>Task 1 &amp; 2 พร้อมหัวข้อล่าสุดและแนวการเขียนที่ได้คะแนน</p>
+      <a class="lk" href="#">ฝึก Writing <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="skill">
+      <div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="7" rx="1.5"/><rect x="17" y="13" width="4" height="7" rx="1.5"/></svg></div>
+      <h3><span class="en">Listening</span></h3>
+      <p>ฝึกฟังครบทุก Section พร้อมสคริปต์และจุดที่เป็นคำตอบ</p>
+      <a class="lk" href="#">ฝึก Listening <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="skill">
+      <div class="ic"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div>
+      <h3><span class="en">Speaking</span></h3>
+      <p>Part 1–3 พร้อมคำถามจริงและฟีดแบ็กระดับ Band</p>
+      <a class="lk" href="#">ฝึก Speaking <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</div></section>
+
+<!-- FEATURE: vocab -->
+<section class="s" id="vocab" style="padding-top:0"><div class="wrap">
+  <div class="feat">
+    <div class="txt">
+      <span class="eyebrow">พี่ดอยสอน Vocab</span>
+      <h2>เฉลยที่บอกว่า<br>“คำไหน = คำไหน”</h2>
+      <p>ไม่ใช่แค่บอกว่าตอบอะไร แต่แตกให้เห็นทุกคู่คำ — คำในโจทย์ตรงกับคำไหนในบทความ พร้อมความหมายไทย</p>
+      <ul>
+        <li><svg class="ico" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg> จับคู่ paraphrase แบบคำต่อคำ ไม่ใช่ทั้งประโยค</li>
+        <li><svg class="ico" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg> ความหมายไทยทุกคู่ + เหตุผลว่าทำไมตอบข้อนั้น</li>
+        <li><svg class="ico" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg> กดบันทึกคำศัพท์รายคู่ไว้ทบทวนทีหลังได้</li>
+      </ul>
+    </div>
+    <div class="vis">
+      <div class="shot">
+        <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="body">
+          <p class="rr-badge" style="color:#9aa1ad">คำในโจทย์ ↔ คำในบทความ</p>
+          <div class="rr-list">
+            <div class="rr-head"><span class="q">ในโจทย์</span><span></span><span class="p">ในบทความ</span></div>
+            <div class="rr-row"><div class="rr-pair"><span class="q">all directors</span><span class="eq">=</span><span class="p">the board</span></div><div class="rr-th">กรรมการทั้งหมด / บอร์ดทั้งคณะ</div></div>
+            <div class="rr-row"><div class="rr-pair"><span class="q">take part</span><span class="eq">=</span><span class="p">involved</span></div><div class="rr-th">มีส่วนร่วม</div></div>
+            <div class="rr-row"><div class="rr-pair"><span class="q">solving</span><span class="eq">=</span><span class="p">addressing</span></div><div class="rr-th">จัดการ / แก้ไข</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 2026 STRUCTURE -->
+<section class="s" id="exam2026" style="padding-top:0"><div class="wrap">
+  <div class="s-head">
+    <span class="eyebrow">ประกาศจาก IELTS · 2026</span>
+    <h2>โครงสร้างข้อสอบ 2026 — เลือกแบบที่คุณจะสอบ</h2>
+    <p>ดูรูปแบบล่าสุดของทั้งสองประเภท แล้วเตรียมตัวให้ตรงจุดก่อนเข้าห้องสอบจริง</p>
+  </div>
+  <div class="cmp">
+    <div class="col gt">
+      <span class="tag">General Training</span>
+      <h3>General Training</h3>
+      <ul>
+        <li><b>Listening</b><span>4 sections</span></li>
+        <li><b>Reading</b><span>ชีวิตประจำวัน + งาน</span></li>
+        <li><b>Writing</b><span>จดหมาย + เรียงความ</span></li>
+        <li><b>Speaking</b><span>3 parts</span></li>
+      </ul>
+      <a class="go" href="#">ดูโครงสร้างเต็ม <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="col ac">
+      <span class="tag">Academic</span>
+      <h3>Academic</h3>
+      <ul>
+        <li><b>Listening</b><span>4 sections</span></li>
+        <li><b>Reading</b><span>3 บทความวิชาการ</span></li>
+        <li><b>Writing</b><span>กราฟ/ตาราง + เรียงความ</span></li>
+        <li><b>Speaking</b><span>3 parts</span></li>
+      </ul>
+      <a class="go" href="#">ดูโครงสร้างเต็ม <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</div></section>
+
+<!-- LATEST TOPICS -->
+<section class="s" id="latest" style="padding-top:0"><div class="wrap">
+  <div class="s-head">
+    <span class="eyebrow">หัวข้อใหม่ล่าสุด · ม.ค.–มิ.ย. 2026</span>
+    <h2>รวมหัวข้อจริงจากห้องสอบ ปีนี้</h2>
+    <p>รวบรวมและจัดหมวดจากฟอรัมผู้สอบจริง แยกตาม General และ Academic ให้ฝึกตรงแนว</p>
+  </div>
+  <div class="lat">
+    <div class="card">
+      <div class="h"><h3><svg class="ico" viewBox="0 0 24 24"><path d="M4 20l4-1L19 8a2 2 0 0 0-3-3L5 16z"/><path d="M14 6l3 3"/></svg> หัวข้อ Writing</h3><span class="cnt">Task 1 &amp; 2</span></div>
+      <div class="row2"><div><div class="t">Technology in education</div><div class="d">มิ.ย. 2026</div></div><span class="pill">Academic</span></div>
+      <div class="row2"><div><div class="t">Letter: complaint about a service</div><div class="d">พ.ค. 2026</div></div><span class="pill">General</span></div>
+      <div class="row2"><div><div class="t">Economic growth vs the environment</div><div class="d">เม.ย. 2026</div></div><span class="pill">Academic</span></div>
+      <a class="f" href="#">ดูหัวข้อ Writing ทั้งหมด <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="card">
+      <div class="h"><h3><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg> หัวข้อ Speaking</h3><span class="cnt">Part 1–3</span></div>
+      <div class="row2"><div><div class="t">Describe a skill you learned</div><div class="d">มิ.ย. 2026</div></div><span class="pill">Part 2</span></div>
+      <div class="row2"><div><div class="t">Hometown &amp; daily routine</div><div class="d">พ.ค. 2026</div></div><span class="pill">Part 1</span></div>
+      <div class="row2"><div><div class="t">Technology in society</div><div class="d">เม.ย. 2026</div></div><span class="pill">Part 3</span></div>
+      <a class="f" href="#">ดูหัวข้อ Speaking ทั้งหมด <svg class="ico" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</div></section>
+
+<!-- FREE CTA -->
+<div class="free"><div class="wrap"><div class="box">
+  <div class="gl"></div>
+  <div>
+    <h2>ทำแบบฝึกหัด IELTS Reading ฟรี</h2>
+    <p>ชุดข้อสอบใหม่ นอกเหนือจากหนังสือ Cambridge พร้อมเฉลยคำต่อคำ — เริ่มได้เลย ไม่ต้องสมัครก่อน</p>
+  </div>
+  <a class="btn btn-y" href="#">เริ่มทำแบบฝึกหัด <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+</div></div></div>
+
+<!-- FOOTER -->
+<footer><div class="wrap"><div class="row">
+  <a class="brand" href="#"><img class="mark" src="/favicon.svg" alt=""/><b class="en">English<span style="color:var(--blue)">Plan</span></b></a>
+  <span>© 2026 English Plan · แพลตฟอร์มเตรียมสอบ IELTS</span>
+</div></div></footer>
+
+</body>
+</html>
