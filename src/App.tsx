@@ -19535,8 +19535,8 @@ function App() {
                 </div>
                 {isHinting && (
                   <p className="readingMatchingInfoHintNote">
-                    Four possible evidence portions are highlighted in the passage on the left. Decide which
-                    one actually supports this answer.
+                    มีข้อความมากกว่า 2 ส่วนถูกไฮไลต์ไว้ในบทความทางด้านซ้าย ให้ลองอ่านส่วนที่ไฮไลต์เหล่านั้น
+                    แล้วตัดสินใจด้วยตัวเองว่าส่วนใดตรงกับหัวข้อ (heading) ของคำตอบนี้มากที่สุด
                   </p>
                 )}
               </div>
@@ -19545,8 +19545,8 @@ function App() {
         </div>
         {hintedQuestion && (
           <div className="readingHintBox">
-            <strong>Hint:</strong> four possible evidence portions are highlighted in the passage — pick the one
-            that supports your answer.
+            <strong>คำใบ้:</strong> มีข้อความมากกว่า 2 ส่วนถูกไฮไลต์ไว้ในบทความ ให้อ่านแต่ละส่วน
+            แล้วเลือกส่วนที่ตรงกับหัวข้อของคำตอบคุณมากที่สุด
           </div>
         )}
       </article>
