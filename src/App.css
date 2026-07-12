@@ -10382,6 +10382,116 @@ body,
   flex: 1 1 auto;
 }
 
+/* ── Grouped accordion question sections (V3) ── */
+.readingQuestionSections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.readingQuestionGroup {
+  border: 2px solid #e3e9f2;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.readingQuestionGroup.is-open {
+  border-color: #c9d8f5;
+}
+
+.readingQuestionGroupHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: none;
+  background: #f7faff;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.readingQuestionGroup.is-open .readingQuestionGroupHeader {
+  border-bottom: 2px solid #e3e9f2;
+}
+
+.readingQuestionGroupChevron {
+  color: #64748b;
+  font-size: 0.85rem;
+  transition: transform 0.18s ease;
+}
+
+.readingQuestionGroup.is-open .readingQuestionGroupChevron {
+  transform: rotate(90deg);
+}
+
+.readingQuestionGroupTitle {
+  font-weight: 900;
+  font-size: 0.85rem;
+  color: #0b1f44;
+}
+
+.readingQuestionGroupRange {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #1a4fd6;
+  background: #e7f0ff;
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+.readingQuestionGroupCount {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.readingQuestionGroupBody {
+  display: none;
+  padding: 8px 12px 12px;
+}
+
+.readingQuestionGroup.is-open .readingQuestionGroupBody {
+  display: block;
+}
+
+.readingQuestionGroup.is-open .readingQuestionGroupBody .readingQuestionList {
+  margin-top: 0;
+}
+
+/* Prominent hint trigger (replaces the small grey link) */
+.readingHintTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  border: 2px solid #0b1220;
+  border-radius: 10px;
+  background: #ffcc00;
+  color: #3a2e00;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 #0b1220;
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+
+.readingHintTrigger:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.readingHintTrigger.is-open {
+  background: #fff4cc;
+}
+
 /* ── Unified single-bar toolbar (Option 1 redesign) ── */
 .readingUnifiedBar {
   display: flex;

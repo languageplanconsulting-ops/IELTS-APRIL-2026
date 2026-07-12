@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import type { ReadingExamRecord } from '../readingJourney'
 import { getLandingReadingPassageTitle } from './landingReadingAcademicUtils'
 import {
@@ -63,6 +63,7 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
   const [stage, setStage] = useState<SessionStage>('exam')
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [hintQuestionNumber, setHintQuestionNumber] = useState<number | null>(null)
+  const [openSectionId, setOpenSectionId] = useState<string | null>(null)
   const [reportItems, setReportItems] = useState<ReadingReportItem[]>([])
 
   const fillGroups = useMemo(
@@ -226,6 +227,33 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
     )
   }
 
+  const renderQuestionCard = (question: ReadingQuestion) => {
+    const isHinting = hintQuestionNumber === question.number
+    return (
+      <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
+        <div className="readingQuestionCardTop">
+          <div>
+            <p className="readingQuestionNumber">Question {question.number}</p>
+            <p className="readingQuestionPrompt">{getDisplayPrompt(question)}</p>
+          </div>
+          <button
+            type="button"
+            className={`readingHintTrigger ${isHinting ? 'is-open' : ''}`.trim()}
+            onClick={() => setHintQuestionNumber(isHinting ? null : question.number)}
+          >
+            {isHinting ? '🙈 ซ่อนคำใบ้' : '💡 ดูคำใบ้ · Hint'}
+          </button>
+        </div>
+        {isHinting && !isJudgementQuestion(question) && (
+          <div className="readingHintBox">
+            <strong>Hint:</strong> evidence highlighted in the passage.
+          </div>
+        )}
+        <div className="readingAnswerField">{renderAnswerField(question)}</div>
+      </article>
+    )
+  }
+
   const hintExcerpt =
     hintQuestionNumber === null
       ? ''
@@ -335,6 +363,69 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
     )
   }
 
+  const getQuestionSectionMeta = (question: ReadingQuestion): { typeKey: string; label: string } => {
+    if (
+      isReadingFillQuestion(passage, question, noopMatchingCheck) ||
+      (question.answerType === 'text' && isReadingFillStylePrompt(question.prompt, question.number))
+    ) {
+      return { typeKey: 'completion', label: 'Sentence / Note Completion' }
+    }
+    switch (question.answerType) {
+      case 'true-false-not-given':
+        return { typeKey: 'tfng', label: 'True / False / Not Given' }
+      case 'yes-no-not-given':
+        return { typeKey: 'ynng', label: 'Yes / No / Not Given' }
+      case 'multiple-choice':
+        return { typeKey: 'mc', label: 'Multiple Choice' }
+      default:
+        return { typeKey: 'short', label: 'Short Answer' }
+    }
+  }
+
+  type QuestionSection = { id: string; label: string; numbers: number[]; content: ReactNode[] }
+  const questionSections: QuestionSection[] = []
+  let sectionBuild: QuestionSection | null = null
+  let sectionTypeKey: string | null = null
+  const pushSectionNode = (typeKey: string, label: string, numbers: number[], node: ReactNode, forceNew: boolean) => {
+    if (forceNew || !sectionBuild || sectionTypeKey !== typeKey) {
+      sectionBuild = { id: `qsec-${questionSections.length}`, label, numbers: [], content: [] }
+      questionSections.push(sectionBuild)
+      sectionTypeKey = forceNew ? null : typeKey
+    }
+    sectionBuild.numbers.push(...numbers)
+    sectionBuild.content.push(node)
+  }
+
+  questions.forEach((question) => {
+    if (fillGroupQuestionNumbers.has(question.number)) {
+      const fillGroup = fillGroupByNumber.get(question.number)
+      if (fillGroup && fillGroup.questions[0]?.number === question.number) {
+        pushSectionNode(
+          `fill-${fillGroup.id}`,
+          'Sentence / Note Completion',
+          fillGroup.questions.map((item) => item.number),
+          renderFillGroup(fillGroup),
+          true
+        )
+      }
+      return
+    }
+    if (
+      isReadingFillQuestion(passage, question, noopMatchingCheck) ||
+      (question.answerType === 'text' && isReadingFillStylePrompt(question.prompt, question.number))
+    ) {
+      const meta = getQuestionSectionMeta(question)
+      pushSectionNode(meta.typeKey, meta.label, [question.number], renderFillFallback(question), false)
+      return
+    }
+    const meta = getQuestionSectionMeta(question)
+    pushSectionNode(meta.typeKey, meta.label, [question.number], renderQuestionCard(question), false)
+  })
+
+  const numberToSectionId = new Map<number, string>()
+  questionSections.forEach((section) => section.numbers.forEach((n) => numberToSectionId.set(n, section.id)))
+  const activeSectionId = openSectionId ?? questionSections[0]?.id ?? null
+
   return (
     <div className="readingExamWrap">
       <div className="readingAttemptToolbar">
@@ -417,10 +508,13 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
                     className={`${hasAnswer ? 'is-answered' : ''} ${isHinting ? 'is-active' : ''}`.trim()}
                     onClick={() => {
                       setHintQuestionNumber(question.number)
-                      document.getElementById(`reading-question-${question.number}`)?.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                      })
+                      setOpenSectionId(numberToSectionId.get(question.number) ?? null)
+                      window.setTimeout(() => {
+                        document.getElementById(`reading-question-${question.number}`)?.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'start'
+                        })
+                      }, 0)
                     }}
                   >
                     {question.number}
@@ -436,44 +530,35 @@ export function LandingReadingExamSession({ exam, onBack }: LandingReadingExamSe
               </details>
             )}
 
-            <div className="readingQuestionList">
-              {questions.map((question) => {
-                if (fillGroupQuestionNumbers.has(question.number)) {
-                  const fillGroup = fillGroupByNumber.get(question.number)
-                  if (fillGroup?.questions[0]?.number === question.number) {
-                    return renderFillGroup(fillGroup)
-                  }
-                  return null
-                }
-                if (isReadingFillQuestion(passage, question, noopMatchingCheck)) {
-                  return renderFillFallback(question)
-                }
-                if (question.answerType === 'text' && isReadingFillStylePrompt(question.prompt, question.number)) {
-                  return renderFillFallback(question)
-                }
-                const isHinting = hintQuestionNumber === question.number
+            <div className="readingQuestionSections">
+              {questionSections.map((section) => {
+                const isOpen = section.id === activeSectionId
+                const rangeStart = Math.min(...section.numbers)
+                const rangeEnd = Math.max(...section.numbers)
+                const answeredInSection = section.numbers.filter((n) => String(answers[n] || '').trim()).length
                 return (
-                  <article key={question.number} id={`reading-question-${question.number}`} className="readingQuestionCard">
-                    <div className="readingQuestionCardTop">
-                      <div>
-                        <p className="readingQuestionNumber">Question {question.number}</p>
-                        <p className="readingQuestionPrompt">{getDisplayPrompt(question)}</p>
-                      </div>
-                      <button
-                        type="button"
-                        className={`secondary ${isHinting ? 'active' : ''}`.trim()}
-                        onClick={() => setHintQuestionNumber(isHinting ? null : question.number)}
-                      >
-                        Hint
-                      </button>
+                  <div key={section.id} className={`readingQuestionGroup ${isOpen ? 'is-open' : ''}`.trim()}>
+                    <button
+                      type="button"
+                      className="readingQuestionGroupHeader"
+                      aria-expanded={isOpen}
+                      onClick={() => setOpenSectionId(isOpen ? null : section.id)}
+                    >
+                      <span className="readingQuestionGroupChevron" aria-hidden>
+                        ▶
+                      </span>
+                      <span className="readingQuestionGroupTitle">{section.label}</span>
+                      <span className="readingQuestionGroupRange">
+                        {rangeStart === rangeEnd ? `Q${rangeStart}` : `Q${rangeStart}–${rangeEnd}`}
+                      </span>
+                      <span className="readingQuestionGroupCount">
+                        {answeredInSection}/{section.numbers.length} answered
+                      </span>
+                    </button>
+                    <div className="readingQuestionGroupBody">
+                      <div className="readingQuestionList">{section.content}</div>
                     </div>
-                    {isHinting && !isJudgementQuestion(question) && (
-                      <div className="readingHintBox">
-                        <strong>Hint:</strong> evidence highlighted in the passage.
-                      </div>
-                    )}
-                    <div className="readingAnswerField">{renderAnswerField(question)}</div>
-                  </article>
+                  </div>
                 )
               })}
             </div>
