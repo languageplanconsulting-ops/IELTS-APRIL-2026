@@ -1069,6 +1069,8 @@ let readingPdoyProgressBucketReady = false
 let readingPdoyProgressIndexCache = null
 const SUPABASE_READING_ATTEMPTS_BUCKET = String(process.env.SUPABASE_READING_ATTEMPTS_BUCKET || 'reading-attempt-history').trim()
 let readingAttemptsBucketReady = false
+const SUPABASE_LISTENING_ATTEMPTS_BUCKET = String(process.env.SUPABASE_LISTENING_ATTEMPTS_BUCKET || 'listening-attempt-history').trim()
+let listeningAttemptsBucketReady = false
 
 const ensureSupabaseConfigured = () => {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -2149,6 +2151,58 @@ const loadReadingAttemptsJson = async (objectPath) => {
   return parseJsonSafe(response)
 }
 
+const ensureListeningAttemptsBucket = async () => {
+  if (listeningAttemptsBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_LISTENING_ATTEMPTS_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+  } catch (error) {
+    if (error?.status !== 404) throw error
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({
+        id: SUPABASE_LISTENING_ATTEMPTS_BUCKET,
+        name: SUPABASE_LISTENING_ATTEMPTS_BUCKET,
+        public: false
+      })
+    })
+  }
+  listeningAttemptsBucketReady = true
+}
+
+const buildListeningAttemptsObjectPath = (userId) => `users/${normalizeOptionalUuid(userId) || 'unknown'}.json`
+
+const uploadListeningAttemptsJson = async ({ objectPath, payload }) => {
+  await ensureListeningAttemptsBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_LISTENING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '3600'
+      },
+      body: JSON.stringify(payload)
+    }
+  )
+}
+
+const loadListeningAttemptsJson = async (objectPath) => {
+  await ensureListeningAttemptsBucket()
+  const response = await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_LISTENING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    }
+  )
+  return parseJsonSafe(response)
+}
+
 const normalizeReadingPdoyStep = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
   if (['intro', 'evidence', 'decide', 'result', 'complete'].includes(normalized)) return normalized
@@ -2957,6 +3011,14 @@ const mapNotebookRecord = (row) => ({
   updatedAt: row?.updated_at || null
 })
 
+const mapActivityEventRecord = (row) => ({
+  id: String(row?.id || ''),
+  page: String(row?.page || ''),
+  label: String(row?.label || ''),
+  metadata: row?.metadata && typeof row.metadata === 'object' ? row.metadata : {},
+  createdAt: row?.created_at || null
+})
+
 const normalizeReadingCategory = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
   if (normalized === 'general-training' || normalized === 'general training' || normalized === 'gt') {
@@ -3039,6 +3101,70 @@ const sanitizeReadingAttemptHistory = (value) => {
       .map(([examId, attempt]) => sanitizeReadingAttemptSummary(attempt, examId))
       .filter(Boolean)
       .map((attempt) => [attempt.examId, attempt])
+  )
+}
+
+const sanitizeListeningReportItems = (value) =>
+  (Array.isArray(value) ? value : [])
+    .slice(0, 200)
+    .map((item) => ({
+      number: Math.max(0, Number(item?.number || 0)),
+      prompt: String(item?.prompt || '').slice(0, 2000),
+      answerType: item?.answerType === 'multiple-choice' ? 'multiple-choice' : 'text',
+      correctAnswer: String(item?.correctAnswer || '').slice(0, 500),
+      acceptedAnswers: Array.isArray(item?.acceptedAnswers)
+        ? item.acceptedAnswers.map((answer) => String(answer || '').slice(0, 500)).slice(0, 20)
+        : undefined,
+      options: Array.isArray(item?.options)
+        ? item.options
+            .slice(0, 20)
+            .map((option) => ({
+              key: String(option?.key || '').slice(0, 20),
+              text: String(option?.text || '').slice(0, 500)
+            }))
+        : undefined,
+      exactPortion: String(item?.exactPortion || '').slice(0, 4000),
+      explanationThai: String(item?.explanationThai || '').slice(0, 4000),
+      paraphrasedVocabulary: String(item?.paraphrasedVocabulary || '').slice(0, 2000),
+      userAnswer: String(item?.userAnswer || '').slice(0, 1000),
+      isCorrect: Boolean(item?.isCorrect)
+    }))
+    .filter((item) => item.number > 0)
+
+const sanitizeListeningAttemptSummary = (value, fallbackExerciseId = '') => {
+  if (!value || typeof value !== 'object') return null
+  const exerciseId = String(value.exerciseId || fallbackExerciseId || '').trim().slice(0, 180)
+  if (!exerciseId) return null
+  const reportItems = sanitizeListeningReportItems(value.reportItems)
+  const computedCorrect = reportItems.filter((item) => item.isCorrect).length
+  const computedTotal = reportItems.length
+  const totalQuestions = computedTotal || Math.max(0, Number(value.totalQuestions || 0))
+  const correctCount = computedTotal ? computedCorrect : Math.max(0, Number(value.correctCount || 0))
+  const accuracy = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : Math.max(0, Number(value.accuracy || 0))
+  return {
+    exerciseId,
+    exerciseTitle: String(value.exerciseTitle || '').slice(0, 300),
+    correctCount,
+    totalQuestions,
+    accuracy: Math.max(0, Math.min(100, accuracy)),
+    wrongCount: Math.max(0, totalQuestions - correctCount),
+    completedAt: String(value.completedAt || new Date().toISOString()),
+    reportItems
+  }
+}
+
+const sanitizeListeningAttemptHistory = (value) => {
+  const source =
+    value && typeof value === 'object'
+      ? Array.isArray(value)
+        ? value.map((attempt) => [attempt?.exerciseId, attempt])
+        : Object.entries(value)
+      : []
+  return Object.fromEntries(
+    source
+      .map(([exerciseId, attempt]) => sanitizeListeningAttemptSummary(attempt, exerciseId))
+      .filter(Boolean)
+      .map((attempt) => [attempt.exerciseId, attempt])
   )
 }
 
@@ -11480,6 +11606,28 @@ app.put('/api/me/notebook', requireAuth, async (req, res) => {
   }
 })
 
+app.post('/api/activity', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) return res.json({ ok: true })
+    const page = String(req.body?.page || '').trim().slice(0, 80)
+    if (!page) return res.json({ ok: true })
+    await supabaseRequest('/rest/v1/user_activity_events', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=minimal' }),
+      body: JSON.stringify({
+        user_id: userId,
+        page,
+        label: String(req.body?.label || '').trim().slice(0, 200),
+        metadata: req.body?.metadata && typeof req.body.metadata === 'object' ? req.body.metadata : {}
+      })
+    })
+    return res.json({ ok: true })
+  } catch {
+    return res.json({ ok: true })
+  }
+})
+
 app.get('/api/me/reading-attempts', requireAuth, async (req, res) => {
   try {
     const userId = normalizeOptionalUuid(req.auth?.user?.id)
@@ -11544,6 +11692,75 @@ app.put('/api/me/reading-attempts', requireAuth, async (req, res) => {
         status: error?.status || 500,
         type: 'reading_attempts_save_error',
         message: error instanceof Error ? error.message : 'Could not save reading reports.'
+      }
+    })
+  }
+})
+
+app.get('/api/me/listening-attempts', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'listening_attempts_auth_error',
+          message: 'Please sign in before loading listening reports.'
+        }
+      })
+    }
+    const objectPath = buildListeningAttemptsObjectPath(userId)
+    try {
+      const payload = await loadListeningAttemptsJson(objectPath)
+      return res.json({
+        attempts: sanitizeListeningAttemptHistory(payload?.attempts),
+        updatedAt: payload?.updatedAt || null
+      })
+    } catch (error) {
+      if (error?.status !== 400 && error?.status !== 404) throw error
+      return res.json({ attempts: {}, updatedAt: null })
+    }
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'listening_attempts_load_error',
+        message: error instanceof Error ? error.message : 'Could not load listening reports.'
+      }
+    })
+  }
+})
+
+app.put('/api/me/listening-attempts', requireAuth, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    if (!userId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'listening_attempts_auth_error',
+          message: 'Please sign in before saving listening reports.'
+        }
+      })
+    }
+    const attempts = sanitizeListeningAttemptHistory(req.body?.attempts)
+    const updatedAt = new Date().toISOString()
+    const payload = {
+      userId,
+      updatedAt,
+      attempts
+    }
+    await uploadListeningAttemptsJson({
+      objectPath: buildListeningAttemptsObjectPath(userId),
+      payload
+    })
+    return res.json({ attempts, updatedAt })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'listening_attempts_save_error',
+        message: error instanceof Error ? error.message : 'Could not save listening reports.'
       }
     })
   }
@@ -11818,6 +12035,125 @@ app.get('/api/admin/support-reports', requireAdmin, async (_req, res) => {
         status: error?.status || 500,
         type: 'admin_support_reports_error',
         message: error instanceof Error ? error.message : 'Could not load support reports.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/users/:userId/activity', requireAdmin, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.params.userId)
+    if (!userId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'A valid user id is required.' }
+      })
+    }
+    const rows = await fetchSupabaseJson(
+      `/rest/v1/user_activity_events?select=id,page,label,metadata,created_at&user_id=eq.${encodeURIComponent(
+        userId
+      )}&order=created_at.desc&limit=200`,
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+    return res.json({
+      events: (Array.isArray(rows) ? rows : []).map(mapActivityEventRecord)
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_user_activity_error',
+        message: error instanceof Error ? error.message : 'Could not load user activity.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/users/:userId/reading-attempts', requireAdmin, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.params.userId)
+    if (!userId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'A valid user id is required.' }
+      })
+    }
+    const objectPath = buildReadingAttemptsObjectPath(userId)
+    try {
+      const payload = await loadReadingAttemptsJson(objectPath)
+      return res.json({
+        attempts: sanitizeReadingAttemptHistory(payload?.attempts),
+        updatedAt: payload?.updatedAt || null
+      })
+    } catch (error) {
+      if (error?.status !== 400 && error?.status !== 404) throw error
+      return res.json({ attempts: {}, updatedAt: null })
+    }
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_user_reading_attempts_error',
+        message: error instanceof Error ? error.message : 'Could not load reading reports.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/users/:userId/listening-attempts', requireAdmin, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.params.userId)
+    if (!userId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'A valid user id is required.' }
+      })
+    }
+    const objectPath = buildListeningAttemptsObjectPath(userId)
+    try {
+      const payload = await loadListeningAttemptsJson(objectPath)
+      return res.json({
+        attempts: sanitizeListeningAttemptHistory(payload?.attempts),
+        updatedAt: payload?.updatedAt || null
+      })
+    } catch (error) {
+      if (error?.status !== 400 && error?.status !== 404) throw error
+      return res.json({ attempts: {}, updatedAt: null })
+    }
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_user_listening_attempts_error',
+        message: error instanceof Error ? error.message : 'Could not load listening reports.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/users/:userId/notebook', requireAdmin, async (req, res) => {
+  try {
+    const userId = normalizeOptionalUuid(req.params.userId)
+    if (!userId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'A valid user id is required.' }
+      })
+    }
+    const rows = await fetchSupabaseJson(
+      `/rest/v1/user_notebooks?select=user_id,entries,custom_sections,updated_at&user_id=eq.${encodeURIComponent(
+        userId
+      )}&limit=1`,
+      {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      }
+    )
+    const row = Array.isArray(rows) ? rows[0] || null : null
+    return res.json(row ? mapNotebookRecord(row) : { entries: [], customSections: [], updatedAt: null })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'admin_user_notebook_error',
+        message: error instanceof Error ? error.message : 'Could not load notebook.'
       }
     })
   }

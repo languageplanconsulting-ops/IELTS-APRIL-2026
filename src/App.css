@@ -2401,6 +2401,159 @@ body,
   }
 }
 
+.adminUserDetailOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 170;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.2), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(15, 74, 173, 0.22), transparent 28%),
+    rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.adminUserDetailCard {
+  width: min(1080px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  border: 3px solid var(--bc-black);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top right, rgba(251, 191, 36, 0.2), transparent 26%),
+    linear-gradient(145deg, #fffdf4 0%, #eef6ff 100%);
+  box-shadow: 10px 10px 0 var(--bc-black);
+  animation: full-exam-pop 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.adminUserDetailHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 26px 28px 16px;
+  border-bottom: 2px solid rgba(15, 23, 42, 0.08);
+}
+
+.adminUserDetailHeader h3 {
+  margin: 4px 0 0;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: 0.02em;
+  color: #0f172a;
+}
+
+.adminUserDetailHeader p {
+  margin: 0;
+  color: #475569;
+  font-weight: 600;
+}
+
+.adminUserDetailTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 28px 0;
+}
+
+.adminUserDetailTabs button {
+  border: 3px solid var(--bc-black);
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 900;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--bc-black);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.adminUserDetailTabs button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--bc-black);
+}
+
+.adminUserDetailTabs button.active {
+  background: linear-gradient(135deg, #38bdf8 0%, #0f4aa3 100%);
+  color: #fff;
+}
+
+.adminUserDetailBody {
+  padding: 20px 28px 28px;
+}
+
+.adminUserActivityList {
+  display: grid;
+  gap: 10px;
+}
+
+.adminUserActivityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 2px solid rgba(15, 23, 42, 0.12);
+  border-radius: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.adminUserActivityRow .adminUserActivityPage {
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.adminUserActivityRow .adminUserActivityLabel {
+  color: #475569;
+  font-weight: 600;
+}
+
+.adminUserActivityRow .adminUserActivityTime {
+  color: #64748b;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.adminUserScoresSections {
+  display: grid;
+  gap: 24px;
+}
+
+.adminUserScoresSection h4 {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2c7a7b;
+}
+
+.adminUserScoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 2px solid rgba(15, 23, 42, 0.12);
+  border-radius: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.85);
+  margin-bottom: 10px;
+}
+
+.adminUserScoreRow .adminUserScoreTitle {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.adminUserScoreRow .adminUserScoreMeta {
+  color: #475569;
+  font-size: 0.88rem;
+}
+
 .speakingPromptCard,
 .speakingControlCard {
   background: #ffffff;
@@ -25984,3 +26137,180 @@ textarea {
   box-shadow: 2px 2px 0 var(--bc-black) !important;
   font-size: 0.8rem !important;
 }
+
+/* =====================================================================
+   ETS-style reading reskin (V1 "Editorial Clean")
+   Purely cosmetic overrides scoped to reading classes. No layout,
+   state, or logic touched. Remove this whole block to revert.
+   ===================================================================== */
+
+/* Headings — ETS bold neo-grotesque look (Inter 800, tight tracking) */
+.readingExamWrap h3,
+.readingExamWrap h4,
+.readingReportWrap h3,
+.readingReportWrap h4,
+.readingExamWrap .readingPassageHeader h3,
+.readingExamWrap .readingQuestionsHeader h3 {
+  font-family: Inter, system-ui, -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: #10182d !important;
+}
+.readingExamWrap .readingPassageHeader h3 {
+  font-size: 1.3rem !important;
+  line-height: 1.2 !important;
+}
+
+/* Small-caps section labels in brand blue */
+.readingExamWrap .sectionLabel,
+.readingReportWrap .sectionLabel {
+  color: #0754b8 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  font-size: 0.68rem !important;
+}
+
+/* Flat editorial panels */
+.readingExamWrap .readingPassagePanel-exam,
+.readingExamWrap .readingQuestionsPanel-exam {
+  background: #ffffff !important;
+  border: 1px solid #e6eaf0 !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+
+/* Comfortable reading measure */
+.readingExamWrap .readingPassageBody p {
+  font-size: 1rem !important;
+  line-height: 1.85 !important;
+  color: #28324a !important;
+}
+
+/* Signature ETS highlighter marker — the hint evidence in the passage */
+.readingExamWrap .readingPassageHighlight-hint,
+.readingPassageHighlight.readingPassageHighlight-hint {
+  background: transparent !important;
+  color: inherit !important;
+  box-shadow: inset 0 -0.5em 0 rgba(255, 204, 0, 0.9) !important;
+  border-radius: 2px !important;
+  padding: 0 1px !important;
+  font-weight: 600 !important;
+}
+
+/* Flat question cards */
+.readingExamWrap .readingQuestionCard {
+  background: #ffffff !important;
+  border: 1px solid #e6eaf0 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.readingExamWrap .readingQuestionCard .readingQuestionNumber {
+  color: #0754b8 !important;
+  font-weight: 700 !important;
+}
+
+/* Hint button as a clean brand pill */
+.readingExamWrap .readingHintTrigger {
+  background: #eaf1fd !important;
+  color: #0754b8 !important;
+  border: 1px solid #cfe0fb !important;
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+.readingExamWrap .readingHintTrigger:hover {
+  background: #dfeafb !important;
+}
+.readingExamWrap .readingHintTrigger.is-open {
+  background: #0754b8 !important;
+  color: #ffffff !important;
+  border-color: #0754b8 !important;
+}
+
+/* Hint note as a soft yellow callout */
+.readingExamWrap .readingHintBox {
+  background: #fff7db !important;
+  border: 1px solid #ffe08a !important;
+  color: #5c4a00 !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+.readingExamWrap .readingHintBox strong {
+  color: #5c4a00 !important;
+}
+
+/* Question navigator — flat ETS pills, brand states */
+.readingExamWrap .readingQuestionNavigator button {
+  background: #ffffff !important;
+  border: 1px solid #e6eaf0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: #42506a !important;
+  font-weight: 600 !important;
+}
+.readingExamWrap .readingQuestionNavigator button:hover {
+  border-color: #b9c6da !important;
+  box-shadow: none !important;
+}
+.readingExamWrap .readingQuestionNavigator button.is-answered {
+  background: #eaf1fd !important;
+  border-color: #0754b8 !important;
+  color: #0754b8 !important;
+}
+.readingExamWrap .readingQuestionNavigator button.is-active {
+  background: #ffcc00 !important;
+  border-color: #ffcc00 !important;
+  color: #5c4a00 !important;
+}
+
+/* Question count pill */
+.readingExamWrap .readingQuestionsHeader .bandPill {
+  background: #eaf1fd !important;
+  color: #0754b8 !important;
+  border: 1px solid #cfe0fb !important;
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+}
+
+/* Flat summary + report cards */
+.readingExamWrap .readingSummaryCard,
+.readingReportWrap .readingSummaryCard {
+  background: #f7f9fd !important;
+  border: 1px solid #eef2f8 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.readingExamWrap .readingSummaryCard strong,
+.readingReportWrap .readingSummaryCard strong {
+  font-family: Inter, system-ui, sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: #10182d !important;
+}
+.readingReportWrap .readingReportCard {
+  background: #ffffff !important;
+  border: 1px solid #e6eaf0 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.readingReportWrap .readingReportCard-correct {
+  border-left: 4px solid #1c8a4e !important;
+}
+.readingReportWrap .readingReportCard-wrong {
+  border-left: 4px solid #df2020 !important;
+}
+.readingReportWrap .readingAnswerStatus-correct {
+  background: #e4f6ec !important;
+  color: #1c8a4e !important;
+}
+.readingReportWrap .readingAnswerStatus-wrong {
+  background: #fdeaea !important;
+  color: #c62828 !important;
+}
+
+/* Brand accent on fill-blank number (sizing left untouched) */
+.readingExamWrap .readingFillBlankNumber {
+  color: #0754b8 !important;
+}
+/* ===================== end ETS reading reskin ===================== */

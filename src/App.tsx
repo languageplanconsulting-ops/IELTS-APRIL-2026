@@ -26,6 +26,7 @@ import {
   resolveGeneralTrainingExamMeta
 } from './generalTrainingReadingUtils'
 import { ListeningSectionExamView, type ListeningNotebookSavePayload } from './ListeningSectionExamView'
+import { NotebookEntriesView } from './NotebookEntriesView'
 import {
   buildListeningSectionExamGroups,
   builderTaskToExamQuestion,
@@ -347,6 +348,14 @@ type AdminAssessmentReportSummary = {
   totalCalls: number
   createdAt: string | null
   objectPath: string
+}
+
+type AdminActivityEvent = {
+  id: string
+  page: string
+  label: string
+  metadata: Record<string, unknown>
+  createdAt: string | null
 }
 
 type AdminReadingPdoyProgressSummary = {
@@ -2556,6 +2565,11 @@ type NotebookApiResponse = {
 
 type ReadingAttemptsApiResponse = {
   attempts: Record<string, ReadingAttemptSummary>
+  updatedAt: string | null
+}
+
+type ListeningAttemptsApiResponse = {
+  attempts: Record<string, ListeningAttemptSummary>
   updatedAt: string | null
 }
 
@@ -6512,6 +6526,28 @@ const getReadingAttemptCompletedTime = (attempt: ReadingAttemptSummary | undefin
   return Number.isFinite(timestamp) ? timestamp : 0
 }
 
+const getListeningAttemptCompletedTime = (attempt: ListeningAttemptSummary | undefined) => {
+  const timestamp = attempt?.completedAt ? new Date(attempt.completedAt).getTime() : 0
+  return Number.isFinite(timestamp) ? timestamp : 0
+}
+
+const mergeListeningAttemptHistories = (
+  remoteAttempts: Record<string, ListeningAttemptSummary>,
+  localAttempts: Record<string, ListeningAttemptSummary>
+) => {
+  const merged = { ...remoteAttempts }
+  Object.entries(localAttempts).forEach(([exerciseId, localAttempt]) => {
+    const remoteAttempt = merged[exerciseId]
+    if (
+      !remoteAttempt ||
+      getListeningAttemptCompletedTime(localAttempt) > getListeningAttemptCompletedTime(remoteAttempt)
+    ) {
+      merged[exerciseId] = localAttempt
+    }
+  })
+  return merged
+}
+
 const mergeReadingAttemptHistories = (
   remoteAttempts: Record<string, ReadingAttemptSummary>,
   localAttempts: Record<string, ReadingAttemptSummary>
@@ -6773,6 +6809,16 @@ function App() {
   const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('reading')
   const [adminLearnerSearchInput, setAdminLearnerSearchInput] = useState('')
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
+  const [adminAnalyticsLearnerSearchInput, setAdminAnalyticsLearnerSearchInput] = useState('')
+  const [adminUserDetailView, setAdminUserDetailView] = useState<{ userId: string; name: string; email: string } | null>(null)
+  const [adminUserDetailTab, setAdminUserDetailTab] = useState<'activity' | 'scores' | 'notebook'>('activity')
+  const [adminUserActivity, setAdminUserActivity] = useState<AdminActivityEvent[]>([])
+  const [adminUserReadingAttempts, setAdminUserReadingAttempts] = useState<Record<string, ReadingAttemptSummary>>({})
+  const [adminUserListeningAttempts, setAdminUserListeningAttempts] = useState<Record<string, ListeningAttemptSummary>>({})
+  const [adminUserNotebook, setAdminUserNotebook] = useState<NotebookApiResponse | null>(null)
+  const [adminUserDetailLoading, setAdminUserDetailLoading] = useState(false)
+  const [adminUserDetailError, setAdminUserDetailError] = useState('')
+  const [adminUserDetailSelectedSection, setAdminUserDetailSelectedSection] = useState('speaking')
   const [readingExams, setReadingExams] = useState<ReadingExamRecord[]>([])
   const [readingWorkspaceMode, setReadingWorkspaceMode] = useState<ReadingWorkspaceMode>('bank')
   const [readingEntryView, setReadingEntryView] = useState<ReadingEntryView>('levels')
@@ -7129,6 +7175,8 @@ function App() {
   const notebookSyncedSignatureRef = useRef('')
   const readingAttemptsSyncTimeoutRef = useRef<number | null>(null)
   const readingAttemptsSyncedSignatureRef = useRef('')
+  const listeningAttemptsSyncTimeoutRef = useRef<number | null>(null)
+  const listeningAttemptsSyncedSignatureRef = useRef('')
   const readingJourneyProgressSyncedSignatureRef = useRef('')
   const readingJourneyProgressSyncTimeoutRef = useRef<number | null>(null)
   const readingPdoyProgressSyncTimeoutRef = useRef<number | null>(null)
@@ -7183,6 +7231,9 @@ function App() {
   const buildReadingAttemptsSyncSignature = (attempts: Record<string, ReadingAttemptSummary>) =>
     JSON.stringify(attempts)
 
+  const buildListeningAttemptsSyncSignature = (attempts: Record<string, ListeningAttemptSummary>) =>
+    JSON.stringify(attempts)
+
   const syncReadingJourneyProgressToSupabase = async (progress: ReadingJourneyProgress) => {
     if (
       !authSession?.accessToken ||
@@ -7229,6 +7280,29 @@ function App() {
       return true
     } catch {
       setNotebookSyncError('Saved on this device, but Reading report account sync failed just now.')
+      return false
+    }
+  }
+
+  const syncListeningAttemptsToSupabase = async (attempts: Record<string, ListeningAttemptSummary>) => {
+    if (!authSession?.accessToken || authSession.role === 'admin' || !authSession.email || isNotebookHydrating || !notebookLoadedRef.current) {
+      return false
+    }
+
+    const signature = buildListeningAttemptsSyncSignature(attempts)
+    try {
+      await fetchJson<ListeningAttemptsApiResponse>('/api/me/listening-attempts', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authSession.accessToken}`
+        },
+        body: JSON.stringify({ attempts })
+      })
+      listeningAttemptsSyncedSignatureRef.current = signature
+      setNotebookSyncError('')
+      return true
+    } catch {
+      setNotebookSyncError('Saved on this device, but Listening report account sync failed just now.')
       return false
     }
   }
@@ -8033,6 +8107,26 @@ function App() {
       }
     }
 
+    const hydrateListeningAttemptsFromRemote = async () => {
+      try {
+        const payload = await fetchJson<ListeningAttemptsApiResponse>('/api/me/listening-attempts', {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`
+          }
+        })
+        const remoteAttempts = parseStoredListeningAttempts(JSON.stringify(payload.attempts || {}))
+        const mergedAttempts = mergeListeningAttemptHistories(remoteAttempts, localListeningAttempts)
+        const remoteSignature = buildListeningAttemptsSyncSignature(remoteAttempts)
+        const mergedSignature = buildListeningAttemptsSyncSignature(mergedAttempts)
+        setListeningAttemptHistory(mergedAttempts)
+        listeningAttemptsSyncedSignatureRef.current = mergedSignature === remoteSignature ? mergedSignature : ''
+      } catch {
+        listeningAttemptsSyncedSignatureRef.current = Object.keys(localListeningAttempts).length
+          ? ''
+          : buildListeningAttemptsSyncSignature(localListeningAttempts)
+      }
+    }
+
     const hydrateReadingJourneyProgressFromRemote = async () => {
       try {
         const payload = await fetchJson<{ progress: ReadingJourneyProgress; updatedAt: string | null }>(
@@ -8109,6 +8203,7 @@ function App() {
     } finally {
       await Promise.all([
         hydrateReadingAttemptsFromRemote(),
+        hydrateListeningAttemptsFromRemote(),
         hydrateReadingJourneyProgressFromRemote()
       ])
       setSelectedNotebookSection('speaking')
@@ -8196,6 +8291,7 @@ function App() {
     notebookLoadedRef.current = false
     notebookSyncedSignatureRef.current = ''
     readingAttemptsSyncedSignatureRef.current = ''
+    listeningAttemptsSyncedSignatureRef.current = ''
     readingPdoyProgressSyncedSignatureRef.current = ''
     if (notebookSyncTimeoutRef.current) {
       window.clearTimeout(notebookSyncTimeoutRef.current)
@@ -8204,6 +8300,10 @@ function App() {
     if (readingAttemptsSyncTimeoutRef.current) {
       window.clearTimeout(readingAttemptsSyncTimeoutRef.current)
       readingAttemptsSyncTimeoutRef.current = null
+    }
+    if (listeningAttemptsSyncTimeoutRef.current) {
+      window.clearTimeout(listeningAttemptsSyncTimeoutRef.current)
+      listeningAttemptsSyncTimeoutRef.current = null
     }
     if (readingPdoyProgressSyncTimeoutRef.current) {
       window.clearTimeout(readingPdoyProgressSyncTimeoutRef.current)
@@ -8756,6 +8856,15 @@ function App() {
       )
     )
   }, [adminLearnerSearchInput, managedLearners])
+  const filteredAnalyticsLearners = useMemo(() => {
+    const query = adminAnalyticsLearnerSearchInput.trim().toLowerCase()
+    if (!query) return managedLearners
+    return managedLearners.filter((learner) =>
+      [learner.name, learner.email, learner.role, learner.status].some((value) =>
+        String(value || '').toLowerCase().includes(query)
+      )
+    )
+  }, [adminAnalyticsLearnerSearchInput, managedLearners])
   const openSupportReportCount = useMemo(
     () => adminSupportReports.filter((report) => report.status === 'open').length,
     [adminSupportReports]
@@ -10795,6 +10904,23 @@ function App() {
   }, [authSession?.role, authSession?.accessToken])
 
   useEffect(() => {
+    if (!authSession?.accessToken || authSession.role === 'admin') return
+    const label =
+      activePage === 'reading' && activeReadingExam
+        ? activeReadingExam.title
+        : activePage.startsWith('listening') && activeListeningExercise
+          ? activeListeningExercise.title
+          : activePage === 'workspace'
+            ? `Speaking ${selectedTestMode}`
+            : ''
+    void fetch('/api/activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authSession.accessToken}` },
+      body: JSON.stringify({ page: activePage, label })
+    }).catch(() => {})
+  }, [activePage, activeReadingExam?.id, activeListeningExercise?.id, selectedTestMode, authSession?.accessToken, authSession?.role])
+
+  useEffect(() => {
     if (!authSession?.accessToken || authSession.role !== 'admin') return
     const intervalId = window.setInterval(() => {
       void loadAdminSupportReports(authSession.accessToken)
@@ -11430,6 +11556,26 @@ function App() {
       }
     }
   }, [authSession?.accessToken, authSession?.email, authSession?.role, readingAttemptHistory, isNotebookHydrating])
+
+  useEffect(() => {
+    if (!authSession?.accessToken || !authSession.email || authSession.role === 'admin' || isNotebookHydrating || !notebookLoadedRef.current) return
+    const nextSignature = buildListeningAttemptsSyncSignature(listeningAttemptHistory)
+    if (nextSignature === listeningAttemptsSyncedSignatureRef.current) return
+    if (listeningAttemptsSyncTimeoutRef.current) {
+      window.clearTimeout(listeningAttemptsSyncTimeoutRef.current)
+    }
+
+    listeningAttemptsSyncTimeoutRef.current = window.setTimeout(() => {
+      void syncListeningAttemptsToSupabase(listeningAttemptHistory)
+    }, 500)
+
+    return () => {
+      if (listeningAttemptsSyncTimeoutRef.current) {
+        window.clearTimeout(listeningAttemptsSyncTimeoutRef.current)
+        listeningAttemptsSyncTimeoutRef.current = null
+      }
+    }
+  }, [authSession?.accessToken, authSession?.email, authSession?.role, listeningAttemptHistory, isNotebookHydrating])
 
   useEffect(() => {
     if (!authSession?.email) return
@@ -20057,6 +20203,74 @@ function App() {
     }
   }
 
+  const openAdminUserDetail = async (learner: ManagedLearnerRecord) => {
+    if (!authSession?.accessToken || authSession.role !== 'admin') return
+    setAdminUserDetailView({ userId: learner.id, name: learner.name, email: learner.email })
+    setAdminUserDetailTab('activity')
+    setAdminUserDetailSelectedSection('speaking')
+    setAdminUserActivity([])
+    setAdminUserReadingAttempts({})
+    setAdminUserListeningAttempts({})
+    setAdminUserNotebook(null)
+    setAdminUserDetailError('')
+    setAdminUserDetailLoading(true)
+    try {
+      const authHeaders = { Authorization: `Bearer ${authSession.accessToken}` }
+      const [activityPayload, readingPayload, listeningPayload, notebookPayload] = await Promise.all([
+        fetchJson<{ events: AdminActivityEvent[] }>(`/api/admin/users/${learner.id}/activity`, {
+          headers: authHeaders
+        }),
+        fetchJson<ReadingAttemptsApiResponse>(`/api/admin/users/${learner.id}/reading-attempts`, {
+          headers: authHeaders
+        }),
+        fetchJson<ListeningAttemptsApiResponse>(`/api/admin/users/${learner.id}/listening-attempts`, {
+          headers: authHeaders
+        }),
+        fetchJson<NotebookApiResponse>(`/api/admin/users/${learner.id}/notebook`, {
+          headers: authHeaders
+        })
+      ])
+      setAdminUserActivity(Array.isArray(activityPayload.events) ? activityPayload.events : [])
+      setAdminUserReadingAttempts(readingPayload.attempts || {})
+      setAdminUserListeningAttempts(listeningPayload.attempts || {})
+      setAdminUserNotebook(notebookPayload)
+    } catch (error) {
+      setAdminUserDetailError(error instanceof Error ? error.message : 'Could not load this learner.')
+    } finally {
+      setAdminUserDetailLoading(false)
+    }
+  }
+
+  const closeAdminUserDetail = () => {
+    setAdminUserDetailView(null)
+    setAdminUserActivity([])
+    setAdminUserReadingAttempts({})
+    setAdminUserListeningAttempts({})
+    setAdminUserNotebook(null)
+    setAdminUserDetailError('')
+  }
+
+  const adminUserNotebookSectionTabs = useMemo(
+    () => [
+      'speaking',
+      'writing',
+      'listening',
+      'reading',
+      ...(adminUserNotebook?.customSections || [])
+    ],
+    [adminUserNotebook]
+  )
+
+  const adminUserFilteredNotebookEntries = useMemo(() => {
+    const entries = adminUserNotebook?.entries || []
+    return entries.filter((entry) =>
+      adminUserDetailSelectedSection === 'custom'
+        ? entry.section === 'custom'
+        : entry.section === adminUserDetailSelectedSection ||
+          (entry.section === 'custom' && entry.customSectionName === adminUserDetailSelectedSection)
+    )
+  }, [adminUserNotebook, adminUserDetailSelectedSection])
+
   return (
     <main className="workspace">
       {activePage !== 'home' && <header className="topbar">
@@ -24014,6 +24228,13 @@ function App() {
                               >
                                 Change Expiry
                               </button>
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() => void openAdminUserDetail(learner)}
+                              >
+                                View
+                              </button>
                             </div>
                           </article>
                         ))
@@ -24216,6 +24437,59 @@ function App() {
                           ))}
                       </div>
                     </article>
+                  </div>
+                </div>
+
+                <div className="panel adminSectionCard adminOnly-analytics">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Learner Activity</p>
+                      <h3>Search a Learner</h3>
+                    </div>
+                    <label className="adminSearchField">
+                      <span>Search learners</span>
+                      <input
+                        type="search"
+                        value={adminAnalyticsLearnerSearchInput}
+                        onChange={(event) => setAdminAnalyticsLearnerSearchInput(event.target.value)}
+                        placeholder="Search by name, email, role, or status"
+                      />
+                    </label>
+                  </div>
+                  <p className="meta">
+                    Search any learner to see the pages they've used, their Speaking / Reading / Listening scores, and their notebook.
+                  </p>
+                  <div className="subscriptionList adminLearnerList">
+                    {filteredAnalyticsLearners.length === 0 ? (
+                      <p className="meta">No learners match this search yet.</p>
+                    ) : (
+                      filteredAnalyticsLearners
+                        .slice()
+                        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                        .map((learner) => (
+                          <article key={learner.id} className="subscriptionCard adminLearnerCard">
+                            <div className="subscriptionTopRow">
+                              <div>
+                                <h3>{learner.name}</h3>
+                                <p className="subscriptionEmail">{learner.email}</p>
+                              </div>
+                              <div className="adminLearnerBadges">
+                                <span className="bandPill">{learner.role}</span>
+                                <span className={`adminStatusPill adminStatusPill-${learner.status}`}>{learner.status}</span>
+                              </div>
+                            </div>
+                            <div className="controls adminCardActions">
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() => void openAdminUserDetail(learner)}
+                              >
+                                View
+                              </button>
+                            </div>
+                          </article>
+                        ))
+                    )}
                   </div>
                 </div>
 
@@ -29156,91 +29430,21 @@ function App() {
               <p className="meta">Notebook sync is connected to your Supabase account.</p>
             ) : null}
           </div>
-          <div className="notebookTabs">
-            {notebookSectionTabs.map((sectionName) => (
-              <button
-                key={sectionName}
-                type="button"
-                className={selectedNotebookSection === sectionName ? 'active' : ''}
-                onClick={() => setSelectedNotebookSection(sectionName)}
-              >
-                {sectionName}
-              </button>
-            ))}
-          </div>
-          <div className="customSectionRow">
-            <input
-              type="text"
-              placeholder="Create custom section (e.g. Business English)"
-              value={newCustomSectionName}
-              onChange={(event) => setNewCustomSectionName(event.target.value)}
-            />
-            <button type="button" onClick={addCustomSection}>
-              Create
-            </button>
-          </div>
-          {filteredNotebookEntries.length === 0 ? (
-            <div className="emptyNotebook">
-              <p>No saved items in this section yet.</p>
-              <p>Use "Add to Notebook" in any "+1 band" recommendation.</p>
-            </div>
-          ) : (
-            <div className="notebookGrid">
-              {filteredNotebookEntries.map((entry) => (
-                <article key={entry.id} className="notebookEntry">
-                  <div className="notebookEntryMeta">
-                    <span>{entry.section === 'custom' ? entry.customSectionName : entry.section}</span>
-                    <span>{new Date(entry.createdAt).toLocaleString()}</span>
-                  </div>
-                  <h3>{entry.criterion}</h3>
-                  <p className="meta">Topic: {entry.topicTitle}</p>
-                  {entry.savedReportSnapshot ? (
-                    <>
-                      <p className="entryOriginal">"{entry.quote}"</p>
-                      <p className="entryBetter">{entry.fix}</p>
-                      <div className="controls">
-                        <button
-                          type="button"
-                          className="primaryNextBtn"
-                          onClick={() => openSavedReportSnapshot(entry.savedReportSnapshot!)}
-                        >
-                          Open Full Saved Report
-                        </button>
-                        <button
-                          type="button"
-                          className="removeNotebookBtn"
-                          onClick={() => removeNotebookEntry(entry.id)}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p className="entryOriginal">"{entry.quote}"</p>
-                      <p className="entryBetter">{entry.fix}</p>
-                      {entry.thaiMeaning && <p className="meta">TH: {entry.thaiMeaning}</p>}
-                      <label className="noteFieldLabel">
-                        Personal note
-                        <textarea
-                          value={entry.personalNote || ''}
-                          onChange={(event) => updateNotebookPersonalNote(entry.id, event.target.value)}
-                          placeholder="Write your own reminder, vocabulary note, or speaking strategy..."
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        className="removeNotebookBtn"
-                        onClick={() => removeNotebookEntry(entry.id)}
-                      >
-                        Remove
-                      </button>
-                    </>
-                  )}
-                </article>
-              ))}
-            </div>
-          )}
+          <NotebookEntriesView
+            notebookSectionTabs={notebookSectionTabs}
+            selectedSection={selectedNotebookSection}
+            onSelectSection={setSelectedNotebookSection}
+            filteredNotebookEntries={filteredNotebookEntries}
+            readOnly={false}
+            onRemoveEntry={removeNotebookEntry}
+            onUpdateNote={updateNotebookPersonalNote}
+            onOpenSavedReport={(snapshot) => openSavedReportSnapshot(snapshot)}
+            onCreateCustomSection={{
+              value: newCustomSectionName,
+              onChange: setNewCustomSectionName,
+              onSubmit: addCustomSection
+            }}
+          />
         </section>
       )}
 
@@ -29602,6 +29806,137 @@ function App() {
                 เข้าใจแล้ว
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {adminUserDetailView && (
+        <div className="adminUserDetailOverlay">
+          <div className="adminUserDetailCard">
+            <div className="adminUserDetailHeader">
+              <div>
+                <p className="sectionLabel">Learner Detail</p>
+                <h3>{adminUserDetailView.name}</h3>
+                <p className="meta">{adminUserDetailView.email}</p>
+              </div>
+              <button type="button" className="secondary" onClick={closeAdminUserDetail}>
+                Close
+              </button>
+            </div>
+            <div className="adminUserDetailTabs">
+              {(['activity', 'scores', 'notebook'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  className={adminUserDetailTab === tab ? 'active' : ''}
+                  onClick={() => setAdminUserDetailTab(tab)}
+                >
+                  {tab === 'activity' ? 'Activity' : tab === 'scores' ? 'Scores' : 'Notebook'}
+                </button>
+              ))}
+            </div>
+            {adminUserDetailLoading ? (
+              <p className="meta">Loading learner data...</p>
+            ) : adminUserDetailError ? (
+              <p className="authError">{adminUserDetailError}</p>
+            ) : (
+              <div className="adminUserDetailBody">
+                {adminUserDetailTab === 'activity' && (
+                  <div className="adminUserActivityList">
+                    {adminUserActivity.length === 0 ? (
+                      <p className="meta">No activity recorded yet.</p>
+                    ) : (
+                      adminUserActivity.map((event) => (
+                        <article key={event.id} className="adminUserActivityRow">
+                          <span className="bandPill">{event.page}</span>
+                          <span>{event.label}</span>
+                          <span className="meta">
+                            {event.createdAt ? new Date(event.createdAt).toLocaleString() : ''}
+                          </span>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                )}
+                {adminUserDetailTab === 'scores' && (
+                  <div className="adminUserScoresSections">
+                    <div className="adminUserScoresSection">
+                      <h4>Speaking</h4>
+                      {adminAssessmentReports.filter((report) => report.userId === adminUserDetailView.userId)
+                        .length === 0 ? (
+                        <p className="meta">No saved speaking reports yet.</p>
+                      ) : (
+                        adminAssessmentReports
+                          .filter((report) => report.userId === adminUserDetailView.userId)
+                          .map((report) => (
+                            <article key={report.id} className="adminUserScoreRow">
+                              <span>{report.topicTitle}</span>
+                              <span className="bandPill">Band {report.overallBand}</span>
+                              <span className="meta">
+                                {report.createdAt ? new Date(report.createdAt).toLocaleString() : ''}
+                              </span>
+                              <button
+                                type="button"
+                                className="secondary"
+                                onClick={() => void openAdminAssessmentReport(report.id)}
+                              >
+                                Open
+                              </button>
+                            </article>
+                          ))
+                      )}
+                    </div>
+                    <div className="adminUserScoresSection">
+                      <h4>Reading</h4>
+                      {Object.values(adminUserReadingAttempts).length === 0 ? (
+                        <p className="meta">No reading attempts yet.</p>
+                      ) : (
+                        Object.values(adminUserReadingAttempts).map((attempt) => (
+                          <article key={attempt.examId} className="adminUserScoreRow">
+                            <span>{attempt.examTitle}</span>
+                            <span className="bandPill">
+                              {attempt.correctCount}/{attempt.totalQuestions} ({attempt.accuracy}%)
+                            </span>
+                            <span className="meta">
+                              {attempt.completedAt ? new Date(attempt.completedAt).toLocaleString() : ''}
+                            </span>
+                          </article>
+                        ))
+                      )}
+                    </div>
+                    <div className="adminUserScoresSection">
+                      <h4>Listening</h4>
+                      {Object.values(adminUserListeningAttempts).length === 0 ? (
+                        <p className="meta">No listening attempts yet.</p>
+                      ) : (
+                        Object.values(adminUserListeningAttempts).map((attempt) => (
+                          <article key={attempt.exerciseId} className="adminUserScoreRow">
+                            <span>{attempt.exerciseTitle}</span>
+                            <span className="bandPill">
+                              {attempt.correctCount}/{attempt.totalQuestions} ({attempt.accuracy}%)
+                            </span>
+                            <span className="meta">
+                              {attempt.completedAt ? new Date(attempt.completedAt).toLocaleString() : ''}
+                            </span>
+                          </article>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+                {adminUserDetailTab === 'notebook' && (
+                  <section className="panel full notebookPage notebookPageReadOnly">
+                    <NotebookEntriesView
+                      notebookSectionTabs={adminUserNotebookSectionTabs}
+                      selectedSection={adminUserDetailSelectedSection}
+                      onSelectSection={setAdminUserDetailSelectedSection}
+                      filteredNotebookEntries={adminUserFilteredNotebookEntries}
+                      readOnly
+                      onOpenSavedReport={(snapshot) => openSavedReportSnapshot(snapshot)}
+                    />
+                  </section>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

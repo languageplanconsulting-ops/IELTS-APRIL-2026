@@ -99,6 +99,18 @@ alter table if exists public.speaking_sample_videos
   add column if not exists subtitles jsonb not null default '[]'::jsonb,
   add column if not exists subtitle_style jsonb not null default '{}'::jsonb;
 
+create table if not exists public.user_activity_events (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references public.profiles(id) on delete cascade,
+  page text not null,
+  label text not null default '',
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default timezone('utc', now())
+);
+
+create index if not exists user_activity_events_user_id_created_at_idx
+  on public.user_activity_events (user_id, created_at desc);
+
 drop trigger if exists set_profiles_updated_at on public.profiles;
 create trigger set_profiles_updated_at
 before update on public.profiles
@@ -183,6 +195,7 @@ alter table public.user_notebooks enable row level security;
 alter table public.reading_exams enable row level security;
 alter table public.support_reports enable row level security;
 alter table public.speaking_sample_videos enable row level security;
+alter table public.user_activity_events enable row level security;
 
 drop policy if exists "Users can read own profile" on public.profiles;
 create policy "Users can read own profile"
@@ -256,9 +269,17 @@ for select
 to authenticated
 using (is_active = true and deleted_at is null);
 
+drop policy if exists "Users can insert own activity events" on public.user_activity_events;
+create policy "Users can insert own activity events"
+on public.user_activity_events
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
 comment on table public.profiles is 'Application-level profile and role for each Supabase auth user.';
 comment on table public.learner_access is 'Course access, expiry, and credit counters for each learner.';
 comment on table public.user_notebooks is 'Per-user synced notebook entries and custom notebook sections.';
 comment on table public.reading_exams is 'Admin-uploaded reading passages, answer keys, and parsed payloads for reading exam banks.';
 comment on table public.support_reports is 'Client-submitted bug reports and support issues for the admin team to handle.';
 comment on table public.speaking_sample_videos is 'Admin-recorded IELTS Speaking Part 2 sample video catalog. Storage objects remain private and are served through signed URLs.';
+comment on table public.user_activity_events is 'Lightweight per-user page/feature visit log for admin activity tracking. Append-only; admin reads via service role.';
