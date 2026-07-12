@@ -224,9 +224,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 2,
-          "title": "Stadiums: past, present and future A Stadiums are",
+          "title": "Stadiums: past, present and future",
           "bodyParagraphs": [
-            "Stadiums: past, present and future",
             "A. Stadiums are among the oldest forms of urban architecture: vast stadiums where the public could watch sporting events were at the centre of western city life as far back as the ancient Greek and Roman Empires, well before the construction of the great medieval cathedrals and the grand 19th-and 20th-century railway stations which dominated urban skylines in later eras. Today, however, stadiums are regarded with growing scepticism. Construction costs can soar above £1 billion, and stadiums finished for major events such as the Olympic Games or the FIFA World Cup have notably fallen into disuse and disrepair. History shows that stadiums can drive urban development and adapt to the culture of every age. Even today, architects and planners are finding new ways to adapt the mono-functional sports arenas which became emblematic of modernisation during the 20th century.",
             "B. The amphitheatre* of Arles in southwest France, with a capacity of 25,000 spectators, is perhaps the best example of just how versatile stadiums can be. Built by the Romans in 90 AD, it became a fortress with four towers after the fifth century, and was then transformed into a village containing more than 200 houses. With the growing interest in conservation during the 19th century, it was converted back into an arena for the staging of bullfights, thereby returning the structure to its original use as a venue for public spectacles. Another example is the imposing arena of Verona in northern Italy, with space for 30,000 spectators, which was built 60 years before the Arles amphitheatre and 40 years before Rome's famous Colosseum. It has endured the centuries and is currently considered one of the world's prime sites for opera, thanks to its outstanding acoustics.",
             "C. The area in the centre of the Italian town of Lucca, known as the Piazza dell'Anfiteatro, is yet another impressive example of an amphitheatre becoming absorbed into the fabric of the city. The site evolved in a similar way to Arles and was progressively filled with buildings from the Middle Ages until the 19th century, variously used as houses, a salt depot and a prison. But rather than reverting to an arena, it became a market square, designed by Romanticist architect Lorenzo Nottolini. Today, the ruins of the amphitheatre remain embedded in the various shops and residences surrounding the public square.",
@@ -448,9 +447,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 3,
-          "title": "To catch a king Anna Keay reviews Charles",
+          "title": "To catch a king",
           "bodyParagraphs": [
-            "To catch a king Anna Keay reviews Charles Spencer's book about the hunt for King Charles II during the English Civil War of the seventeenth century Charles Spencer's latest book, To Catch a King, tells us the story of the hunt for King Charles II in the six weeks after his resounding defeat at the Battle of Worcester in September 1651.",
+            "Charles Spencer's latest book, To Catch a King, tells us the story of the hunt for King Charles II in the six weeks after his resounding defeat at the Battle of Worcester in September 1651.",
             "After his father was executed by the Parliamentarians in 1649, the young Charles II sacrificed one of the very principles his father had died for and did a deal with the Scots, thereby accepting Presbyterianism* as the national religion in return for being crowned King of Scots. His arrival in Edinburgh prompted the English Parliamentary army to invade Scotland in a pre-emptive strike. This was followed by a Scottish invasion of England. The two sides finally faced one another at Worcester in the west of England in 1651.",
             "After being comprehensively defeated on the meadows outside the city by the Parliamentarian army, the 21-year-old king found himself the subject of a national manhunt, with a huge sum offered for his capture. Over the following six weeks he managed, through a series of heart-poundingly close escapes, to evade the Parliamentarians before seeking refuge in France. For the next nine years, the penniless and defeated Charles wandered around Europe with only a small group of loyal supporters. Years later, after his restoration as king, the 50-year-old Charles II requested a meeting with the writer and diarist Samuel Pepys. His intention when asking Pepys to commit his story to paper was to ensure that this most extraordinary episode was never forgotten. Over two three-hour sittings, the king related to him in great detail his personal recollections of the six weeks he had spent as a fugitive.",
             "As the king and secretary settled down (a scene that is surely a gift for a future scriptwriter), Charles commenced his story: 'After the battle was so absolutely lost as to be beyond hope of recovery, I began to think of the best way of saving myself.' One of the joys of Spencer's book, a result not least of its use of Charles II's own narrative as well as those of his supporters, is just how close the reader gets to the action.",
@@ -680,9 +679,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 1,
-          "title": "The Dead Sea Scrolls In late 1946 or",
+          "title": "The Dead Sea Scrolls",
           "bodyParagraphs": [
-            "The Dead Sea Scrolls In late 1946 or early 1947, three Bedouin teenagers were tending their goats and sheep near the ancient settlement of Qumran, located on the northwest shore of the Dead Sea in what is now known as the West Bank. One of these young shepherds tossed a rock into an opening on the side of a cliff and was surprised to hear a shattering sound. He and his companions later entered the cave and stumbled across a collection of large clay jars, seven of which contained scrolls with writing on them. The teenagers took the seven scrolls to a nearby town where they were sold for a small sum to a local antiquities dealer.",
+            "In late 1946 or early 1947, three Bedouin teenagers were tending their goats and sheep near the ancient settlement of Qumran, located on the northwest shore of the Dead Sea in what is now known as the West Bank. One of these young shepherds tossed a rock into an opening on the side of a cliff and was surprised to hear a shattering sound. He and his companions later entered the cave and stumbled across a collection of large clay jars, seven of which contained scrolls with writing on them. The teenagers took the seven scrolls to a nearby town where they were sold for a small sum to a local antiquities dealer.",
             "Word of the find spread, and Bedouins and archaeologists eventually unearthed tens of thousands of additional scroll fragments from 10 nearby caves; together they make up between 800 and 900 manuscripts. It soon became clear that this was one of the greatest archaeological discoveries ever made. The origin of the Dead Sea Scrolls, which were written around 2,000 years ago between 150 BCE and 70 CE, is still the subject of scholarly debate even today. According to the prevailing theory, they are the work of a population that inhabited the area until Roman troops destroyed the settlement around 70 CE. The area was known as Judea at that time, and the people are thought to have belonged to a group called the Essenes, a devout Jewish sect.",
             "The majority of the texts on the Dead Sea Scrolls are in Hebrew, with some fragments written in an ancient version of its alphabet thought to have fallen out of use in the fifth century BCE. Some scrolls are in Aramaic, the language spoken by many inhabitants of the region from the sixth century BCE to the siege of Jerusalem in 70 CE. In addition, several texts feature translations of the Hebrew Bible into Greek. The Dead Sea Scrolls include fragments from every book of the Old Testament of the Bible except for the Book of Esther.",
             "The only entire book of the Hebrew Bible preserved among the manuscripts from Qumran is Isaiah; this copy, dated to the first century BCE, is considered the earliest biblical manuscript still in existence. Along with biblical texts, the scrolls include documents about sectarian regulations and religious writings that do not appear in the Old Testament.",
@@ -892,11 +891,11 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 2,
-          "title": "A second attempt at domesticating the tomato A",
+          "title": "A second attempt at domesticating the tomato",
           "bodyParagraphs": [
-            "A. second attempt at domesticating the tomato",
             "A. It took at least 3,000 years for humans to learn how to domesticate the wild tomato and cultivate it for food. Now two separate teams in Brazil and China have done it all over again in less than three years. And they have done it better in some ways, as the re-domesticated tomatoes are more nutritious than the ones we eat at present. This approach relies on the revolutionary CRISPR genome editing technique, in which changes are deliberately made to the DNA of a living cell, allowing genetic material to be added, removed or altered. The technique could not only improve existing crops, but could also be used to turn thousands of wild plants into useful and appealing foods. In fact, a third team in the US has already begun to do this with a relative of the tomato called the groundcherry. This fast-track domestication could help make the world's food supply healthier and far more resistant to diseases, such as the rust fungus devastating wheat crops. 'This could transform what we eat,' says Jorg Kudla at the University of Munster in Germany, a member of the Brazilian team. 'There are 50,000 edible plants in the world, but 90 percent of our energy comes from just 15 crops.' 'We can now mimic the known domestication course of major crops like rice, maize, sorghum or others,' says Caixia Gao of the Chinese Academy of Sciences in Beijing. Then we might try to domesticate plants that have never been domesticated.'",
-            "B. Wild tomatoes, which are native to the Andes region in South America, produce pea-sized fruits. Over many generations, peoples such as the Aztecs and Incas transformed the plant by selecting and breeding plants with mutations* in their genetic structure, which resulted in desirable traits such as larger fruit. But every time a single plant with a mutation is taken from a larger population for breeding, much genetic diversity is lost. And sometimes the desirable mutations come with less desirable traits. For instance, the tomato strains grown for supermarkets have lost much of their flavour. By comparing the genomes of modern plants to those of their wild relatives, biologists have been working out what genetic changes occurred as plants were domesticated. The teams in Brazil and China have now used this knowledge to reintroduce these changes from scratch while maintaining or even enhancing the desirable traits of wild strains. For instance, they tripled the size of fruit by editing a gene called FRUIT WEIGHT, and increased the number of tomatoes per truss by editing another called MULTIFLORA. While the historical domestication of tomatoes reduced levels of the red pigment lycopene - thought to have potential health benefits - the team in Brazil managed to boost it instead. The wild tomato has twice as much lycopene as cultivated ones; the newly domesticated one has five times as much. The team in China re-domesticated several strains of wild tomatoes with desirable traits lost in domesticated tomatoes. In this way they managed to create a strain resistant to a common disease called bacterial spot race, which can devastate yields. They also created another strain that is more salt tolerant - and has higher levels of vitamin C.",
+            "B. Wild tomatoes, which are native to the Andes region in South America, produce pea-sized fruits. Over many generations, peoples such as the Aztecs and Incas transformed the plant by selecting and breeding plants with mutations* in their genetic structure, which resulted in desirable traits such as larger fruit. But every time a single plant with a mutation is taken from a larger population for breeding, much genetic diversity is lost. And sometimes the desirable mutations come with less desirable traits. For instance, the tomato strains grown for supermarkets have lost much of their flavour. By comparing the genomes of modern plants to those of their wild relatives, biologists have been working out what genetic changes occurred as plants were domesticated. The teams in Brazil and China have now used this knowledge to reintroduce these changes from scratch while maintaining or even enhancing the desirable traits of wild strains.",
+            "C. Kudla's team made six changes altogether. For instance, they tripled the size of fruit by editing a gene called FRUIT WEIGHT, and increased the number of tomatoes per truss by editing another called MULTIFLORA. While the historical domestication of tomatoes reduced levels of the red pigment lycopene - thought to have potential health benefits - the team in Brazil managed to boost it instead. The wild tomato has twice as much lycopene as cultivated ones; the newly domesticated one has five times as much. The team in China re-domesticated several strains of wild tomatoes with desirable traits lost in domesticated tomatoes. In this way they managed to create a strain resistant to a common disease called bacterial spot race, which can devastate yields. They also created another strain that is more salt tolerant - and has higher levels of vitamin C.",
             "D. Meanwhile, Joyce Van Eck at the Boyce Thompson Institute in New York state decided to use the same approach to domesticate the groundcherry or goldenberry (Physalis pruinosa) for the first time. This fruit looks similar to the closely related Cape gooseberry (Physalis peruviana). Groundcherries are already sold to a limited extent in the US but they are hard to produce because the plant has a sprawling growth habit and the small fruits fall off the branches when ripe. Van Eck's team has edited the plants to increase fruit size, make their growth more compact and to stop fruits dropping. 'There's potential for this to be a commercial crop,' says Van Eck. But she adds that taking the work further would be expensive because of the need to pay for a licence for the CRISPR technology and get regulatory approval.",
             "E. This approach could boost the use of many obscure plants, says Jonathan Jones of the Sainsbury Lab in the UK. But it will be hard for new foods to grow so popular with farmers and consumers that they become new staple crops, he thinks. The three teams already have their eye on other plants that could be 'catapulted into the mainstream', including foxtail, oat-grass and cowpea. By choosing wild plants that are drought or heat tolerant, says Gao, we could create crops that will thrive even as the planet warms. But Kudla didn't want to reveal which species were in his team's sights, because CRISPR has made the process so easy. 'Any one with the right skills could go to their lab and do this.' *mutations: changes in an organism's genetic structure that can be passed down to later generations"
           ],
@@ -1106,9 +1105,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 3,
-          "title": "Insight or evolution? Two scientists consider the origins",
+          "title": "Insight or evolution? Two scientists consider the origins of discoveries and other innovative behavior",
           "bodyParagraphs": [
-            "Two scientists consider the origins of discoveries and other innovative behavior Scientific discovery is popularly believed to result from the sheer genius of such intellectual stars as naturalist Charles Darwin and theoretical physicist Albert Einstein. Our view of such unique contributions to science often disregards the person's prior experience and the efforts of their lesser-known predecessors.",
+            "Scientific discovery is popularly believed to result from the sheer genius of such intellectual stars as naturalist Charles Darwin and theoretical physicist Albert Einstein. Our view of such unique contributions to science often disregards the person's prior experience and the efforts of their lesser-known predecessors.",
             "Conventional wisdom also places great weight on insight in promoting breakthrough scientific achievements, as if ideas spontaneously pop into someone's head - fully formed and functional. There may be some limited truth to this view. However, we believe that it largely misrepresents the real nature of scientific discovery, as well as that of creativity and innovation in many other realms of human endeavor.",
             "Setting aside such greats as Darwin and Einstein - whose monumental contributions are duly celebrated - we suggest that innovation is more a process of trial and error, where two steps forward may sometimes come with one step back, as well as one or more steps to the right or left. This evolutionary view of human innovation undermines the notion of creative genius and recognizes the cumulative nature of scientific progress. Consider one unheralded scientist: John Nicholson, a mathematical physicist working in the 1910s who postulated the existence of'proto-elements' in outer space. By combining different numbers of weights of these proto-elements' atoms, Nicholson could recover the weights of all the elements in the then-known periodic table. These successes are all the more noteworthy given the fact that Nicholson was wrong about the presence of proto-elements: they do not actually exist.",
             "Yet, amid his often fanciful theories and wild speculations, Nicholson also proposed a novel theory about the structure of atoms. Niels Bohr, the Nobel prize-winning father of modern atomic theory, jumped off from this interesting idea to conceive his now-famous model of the atom. One might simply conclude that science is a collective and cumulative enterprise. That may be true, but there may be a deeper insight to be gleaned. We propose that science is constantly evolving, much as species of animals do. In biological systems, organisms may display new characteristics that result from random genetic mutations. In the same way, random, arbitrary or accidental mutations of ideas may help pave the way for advances in science. If mutations prove beneficial, then the animal or the scientific theory will continue to thrive and perhaps reproduce. Support for this evolutionary view of behavioral innovation comes from many domains.",
@@ -1144,7 +1143,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Two scientists consider the origins of discoveries and other innovative behavior Scientific discovery is popularly believed to result from the sheer genius of such intellectual stars as naturalist Charles Darwin and theoretical physicist Al",
+              "exactPortion": "Scientific discovery is popularly believed to result from the sheer genius of such intellectual stars as naturalist Charles Darwin and theoretical physicist Albert Einstein.",
               "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (The purpose of the first paragraph is to) โดยเฉพาะประโยค \"Two scientists consider the origins of discoveries and other innovative behavior Scientific dis…\" จึงเลือก D",
               "paraphrasedVocabulary": "purpose = scientists consider origins discoveries = D"
             },
@@ -1157,7 +1156,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 2 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Two scientists consider the origins of discoveries and other innovative behavior Scientific discovery is popularly believed to result from the sheer genius of such intellectual stars as naturalist Charles Darwin and theoretical physicist Al",
+              "exactPortion": "Scientific discovery is popularly believed to result from the sheer genius of such intellectual stars as naturalist Charles Darwin and theoretical physicist Albert Einstein.",
               "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What are the writers doing in the second paragraph?) โดยเฉพาะประโยค \"Two scientists consider the origins of discoveries and other innovative behavior Scientific dis…\" จึงเลือก A",
               "paraphrasedVocabulary": "writers doing second = scientists consider origins discoveries = A"
             },
@@ -1337,9 +1336,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 1,
-          "title": "The thylacine The extinct thylacine, also known as",
+          "title": "The thylacine",
           "bodyParagraphs": [
-            "The thylacine The extinct thylacine, also known as the Tasmanian tiger, was a marsupial* that bore a superficial resemblance to a dog. Its most distinguishing feature was the 13-19 dark brown stripes over its back, beginning at the rear of the body and extending onto the tail. 7 cm for females. The thylacine appeared to occupy most types of terrain except dense rainforest, with open eucalyptus forest thought to be its prime habitat.",
+            "The extinct thylacine, also known as the Tasmanian tiger, was a marsupial* that bore a superficial resemblance to a dog. Its most distinguishing feature was the 13-19 dark brown stripes over its back, beginning at the rear of the body and extending onto the tail. The thylacine's average nose-to-tail length for adult males was 162.6 cm, compared to 153.7 cm for females. The thylacine appeared to occupy most types of terrain except dense rainforest, with open eucalyptus forest thought to be its prime habitat.",
             "In terms of feeding, it was exclusively carnivorous, and its stomach was muscular with an ability to distend so that it could eat large amounts of food at one time, probably an adaptation to compensate for long periods when hunting was unsuccessful and food scarce. The thylacine was not a fast runner and probably caught its prey by exhausting it during a long pursuit. During long-distance chases, thylacines were likely to have relied more on scent than any other sense. They emerged to hunt during the evening, night and early morning and tended to retreat to the hills and forest for shelter during the day. Despite the common name 'tiger', the thylacine had a shy, nervous temperament. Although mainly nocturnal, it was sighted moving during the day and some individuals were even recorded basking in the sun.",
             "The thylacine had an extended breeding season from winter to spring, with indications that some breeding took place throughout the year. The thylacine, like all marsupials, was tiny and hairless when born. Newborns crawled into the pouch on the belly of their mother, and attached themselves to one of the four teats, remaining there for up to three months. When old enough to leave the pouch, the young stayed in a lair such as a deep rocky cave, well-hidden nest or hollow log, whilst the mother hunted. Approximately 4,000 years ago, the thylacine was widespread throughout New Guinea and most of mainland Australia, as well as the island of Tasmania. The most recent, well-dated occurrence of a thylacine on the mainland is a carbon-dated fossil from Murray Cave in Western Australia, which is around 3,100 years old. Its extinction coincided closely with the arrival of wild dogs called dingoes in Australia and a similar predator in New Guinea.",
             "Dingoes never reached Tasmania, and most scientists see this as the main reason for the thylacine's survival there. The dramatic decline of the thylacine in Tasmania, which began in the 1830s and continued for a century, is generally attributed to the relentless efforts of sheep farmers and bounty hunters** with shotguns. While this determined campaign undoubtedly played a large part, it is likely that various other factors also contributed to the decline and eventual extinction of the species.",
@@ -1435,9 +1434,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "During long-distance chases, thylacines were likely to have relied more on scent than any other sense.",
-              "explanationThai": "ข้อความในข้อว่า \"Significant numbers of thylacines were killed by humans from the 1830s onwards.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"During long-distance chases, thylacines were likely to have relied more on scent than any other…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
-              "paraphrasedVocabulary": "significant numbers thylacines = long-distance chases thylacines likely = TRUE"
+              "exactPortion": "The dramatic decline of the thylacine in Tasmania, which began in the 1830s and continued for a century, is generally attributed to the relentless efforts of sheep farmers and bounty hunters** with shotguns.",
+              "explanationThai": "ข้อความในข้อว่า \"Significant numbers of thylacines were killed by humans from the 1830s onwards.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"The dramatic decline of the thylacine in Tasmania, which began in the 1830s and continued for a ce…\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE",
+              "paraphrasedVocabulary": "significant numbers thylacines = dramatic decline sheep farmers bounty hunters = TRUE"
             },
             {
               "number": 7,
@@ -1487,9 +1486,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "During long-distance chases, thylacines were likely to have relied more on scent than any other sense.",
-              "explanationThai": "ข้อความในข้อว่า \"T.T. Flynn's proposal to rehome captive thylacines on an island proved to be impractical.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"During long-distance chases, thylacines were likely to have relied more on scent than any other…\") จึงตอบ NOT GIVEN",
-              "paraphrasedVocabulary": "island proved impractical = long-distance chases thylacines likely = NOT GIVEN"
+              "exactPortion": "In 1914, he was sufficiently concerned about the scarcity of the thylacine to suggest that some should be captured and placed on a small island.",
+              "explanationThai": "ข้อความในข้อว่า \"T.T. Flynn's proposal to rehome captive thylacines on an island proved to be impractical.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"In 1914, he was sufficiently concerned about the scarcity of the thylacine to suggest that some …\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "island proved impractical = sufficiently concerned suggest captured placed = NOT GIVEN"
             },
             {
               "number": 11,
@@ -1526,9 +1525,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 1",
               "answerType": "true-false-not-given",
-              "exactPortion": "During long-distance chases, thylacines were likely to have relied more on scent than any other sense.",
-              "explanationThai": "ข้อความในข้อว่า \"Attempts to find living thylacines are now rarely made.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"During long-distance chases, thylacines were likely to have relied more on scent than any other…\") จึงตอบ NOT GIVEN",
-              "paraphrasedVocabulary": "attempts living thylacines = long-distance chases thylacines likely = NOT GIVEN"
+              "exactPortion": "There have been numerous expeditions and searches for the thylacine over the years, none of which has produced definitive evidence that thylacines still exist.",
+              "explanationThai": "ข้อความในข้อว่า \"Attempts to find living thylacines are now rarely made.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"There have been numerous expeditions and searches for the thylacine over the years, none of whi…\") จึงตอบ NOT GIVEN",
+              "paraphrasedVocabulary": "attempts living thylacines = numerous expeditions searches produced = NOT GIVEN"
             }
           ]
         }
@@ -1550,9 +1549,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 2,
-          "title": "Palm oil A Palm oil is an edible",
+          "title": "Palm oil",
           "bodyParagraphs": [
-            "Palm oil",
             "A. Palm oil is an edible oil derived from the fruit of the African oil palm tree, and is currently the most consumed vegetable oil in the world. It's almost certainly in the soap we wash with in the morning, the sandwich we have for lunch, and the biscuits we snack on during the day. Why is palm oil so attractive for manufacturers? Primarily because its unique properties - such as remaining solid at room temperature - make it an ideal ingredient for long-term preservation, allowing many packaged foods on supermarket shelves to have 'best before' dates of months, even years, into the future.",
             "B. Many farmers have seized the opportunity to maximise the planting of oil palm trees. Between 1990 and 2012, the global land area devoted to growing oil palm trees grew from 6 to 17 million hectares, now accounting for around ten percent of total cropland in the entire world. From a mere two million tonnes of palm oil being produced annually globally 50 years ago, there are now around 60 million tonnes produced every single year, a figure looking likely to double or even triple by the middle of the century.",
             "C. However, there are multiple reasons why conservationists cite the rapid spread of oil palm plantations as a major concern. There are countless news stories of deforestation, habitat destruction and dwindling species populations, all as a direct result of land clearing to establish oil palm tree monoculture on an industrial scale, particularly in Malaysia and Indonesia. Endangered species - most famously the Sumatran orangutan, but also rhinos, elephants, tigers, and numerous other fauna - have suffered from the unstoppable spread of oil palm plantations.",
@@ -1560,7 +1558,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
             "E. One response to the boycott movement has been the argument for the vital role palm oil plays in lifting many millions of people in the developing world out of poverty. Is it desirable to have palm oil boycotted, replaced, eliminated from the global supply chain, given how many low-income people in developing countries depend on it for their livelihoods? How best to strike a utilitarian balance between these competing factors has become a serious bone of contention.",
             "F. Even the deforestation argument isn't as straightforward as it seems. Oil palm plantations produce at least four and potentially up to ten times more oil per hectare than soybean, rapeseed, sunflower or other competing oils. That immensely high yield - which is predominantly what makes it so profitable - is potentially also an ecological benefit. If ten times more palm oil can be produced from a patch of land than any competing oil, then ten times more land would need to be cleared in order to produce the same volume of oil from that competitor. As for the question of carbon emissions, the issue really depends on what oil palm trees are replacing. Crops vary in the degree to which they sequester carbon - in other words, the amount of carbon they capture from the atmosphere and store within the plant. The more carbon a plant sequesters, the more it reduces the effect of climate change. As Shankar explains: '[Palm oil production] actually sequesters more carbon in some ways than other alternatives. [...] Of course, if you're cutting down virgin forest it's terrible - that's what's happening in Indonesia and Malaysia, it's been allowed to get out of hand. But if it's replacing rice, for example, it might actually sequester more carbon.'",
             "G. The industry is now regulated by a group called the Roundtable on Sustainable Palm Oil (RSPO), consisting of palm growers, retailers, product manufacturers, and other interested parties. Over the past decade or so, an agreement has gradually been reached regarding standards that producers of palm oil have to meet in order for their product to be regarded as officially 'sustainable'. The RSPO insists upon no virgin forest clearing, transparency and regular assessment of carbon stocks, among other criteria. Only once these requirements are fully satisfied is the oil allowed to be sold as certified sustainable palm oil (CSPO). Recent figures show that the RSPO now certifies around 12 million tonnes of palm oil annually, equivalent to roughly 21 percent of the world's total palm oil production.",
-            "H There is even hope that oil palm plantations might not need to be such sterile monocultures, or 'green deserts', as Ellwood describes them. New research at Ellwood's lab hints at one plant which might make all the difference. The bird's nest fern (Asplenium nidus) grows on trees in an epiphytic fashion (meaning it's dependent on the tree only for support, not for nutrients), and is native to many tropical regions, where as a keystone species it performs a vital ecological role. Ellwood believes that reintroducing the bird's nest fern into oil palm plantations could potentially allow these areas to recover their biodiversity, providing a home for all manner of species, from fungi and bacteria, to invertebrates such as insects, amphibians, reptiles and even mammals."
+            "H. There is even hope that oil palm plantations might not need to be such sterile monocultures, or 'green deserts', as Ellwood describes them. New research at Ellwood's lab hints at one plant which might make all the difference. The bird's nest fern (Asplenium nidus) grows on trees in an epiphytic fashion (meaning it's dependent on the tree only for support, not for nutrients), and is native to many tropical regions, where as a keystone species it performs a vital ecological role. Ellwood believes that reintroducing the bird's nest fern into oil palm plantations could potentially allow these areas to recover their biodiversity, providing a home for all manner of species, from fungi and bacteria, to invertebrates such as insects, amphibians, reptiles and even mammals."
           ],
           "questionSectionText": "Questions 21-22\nQuestions 14-20\nReading Passage 2 has eight sections, A-H.\nWhich section contains the following information?\nWrite the correct letter, A-H, in boxes 14-20 on your answer sheet.\n\nexamples of a range of potential environmental advantages of oil palm tree\ncultivation\n… … of an … … which controls the … … impact of palm oil\nproduction\nexamples of the widespread global use of palm oil\nreference to a particular species which could benefit the ecosystem of oil palm\nplantations\nfigures illustrating the rapid expansion of the palm oil industry\nan economic justification for not opposing the palm oil industry\nexamples of creatures badly affected by the establishment of oil palm plantations\nQuestions 21 and 22\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 21 and 22 on your answer sheet.\nWhich TWO statements are made about the Roundtable on Sustainable Palm\nOil (RSPO)?\nA Its membership has grown steadily over the course of the last decade.\nB  It demands that certified producers be open and honest about their practices.\nC  It took several years to establish its set of criteria for sustainable palm oil\ncertification.\nD Its regulations regarding sustainability are stricter than those governing other\nindustries.\nE It was formed at the request of environmentalists concerned about the loss of\nvirgin forests.\n\nQuestions 23-26\nComplete the sentences below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.\nWrite your answers in boxes 23-26 on your answer sheet.\n\nOne advantage of palm oil for manufacturers is that it stays … even\nwhen not refrigerated.\n …  is the best known of the animals suffering habitat loss as a\nresult of the spread of oil palm plantations.\nAs one of its criteria for the certification of sustainable palm oil, the RSPO insists\nthat growers check . .. on a routine basis.\nEllwood and his researchers are looking into whether the bird's nest fern could\nrestore oes IN areas where oil palm trees are grown.\n>| p. 124",
           "questionRanges": [
@@ -1769,9 +1767,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 3,
-          "title": "Building the Skyline: The Birth and Growth of",
+          "title": "Building the Skyline: The Birth and Growth of Manhattan's Skyscrapers",
           "bodyParagraphs": [
-            "Building the Skyline: The Birth and Growth of Manhattan's Skyscrapers Katharine L.Shester reviews a book by Jason Barr about the development of New York City In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City. The book combines geology, history, economics, and a lot of data to explain why business clusters developed where they did and how the early decisions of workers and firms shaped the skyline we see today. Building the Skyline is organized into two distinct parts. The first is primarily historical and addresses New York's settlement and growth from 1609 to 1900; the second deals primarily with the 20th century and is a compilation of chapters commenting on different aspects of New York's urban development.",
+            "In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City. The book combines geology, history, economics, and a lot of data to explain why business clusters developed where they did and how the early decisions of workers and firms shaped the skyline we see today. Building the Skyline is organized into two distinct parts. The first is primarily historical and addresses New York's settlement and growth from 1609 to 1900; the second deals primarily with the 20th century and is a compilation of chapters commenting on different aspects of New York's urban development.",
             "The tone and organization of the book changes somewhat between the first and second parts, as the latter chapters incorporate aspects of Barr's related research papers. Barr begins chapter one by taking the reader on a 'helicopter time-machine' ride - giving a fascinating account of how the New York landscape in 1609 might have looked from the sky. He then moves on to a subterranean walking tour of the city, indicating the location of rock and water below the subsoil, before taking the reader back to the surface. His love of the city comes through as he describes various fun facts about the location of the New York residence of early 19th-century vice-president Aaron Burr as well as a number of legends about the city.",
             "Chapters two and three take the reader up to the Civil War (1861-1865), with chapter two focusing on the early development of land and the implementation of a grid system in 1811.Chapter three focuses on land use before the Civil War. Both chapters are informative and well researched and set the stage for the economic analysis that comes later in the book.I would have liked Barr to expand upon his claim that existing tenements* prevented skyscrapers in certain neighborhoods because 'likely no skyscraper developer was interested in performing the necessary \"slum clearance'\".Later in the book, Barr makes the claim that the depth of bedrock** was not a limiting factor for developers, as foundation costs were a small fraction of the cost of development. At first glance, it is not obvious why slum clearance would be limiting, while more expensive foundations would not.",
             "Chapter four focuses on immigration and the location of neighborhoods and tenements in the late 19th century. Barr identifies four primary immigrant enclaves and analyzes their locations in terms of the amenities available in the area. Most of these enclaves were located on the least valuable land, between the industries located on the waterfront and the wealthy neighborhoods bordering Central Park. Part two of the book begins with a discussion of the economics of skyscraper height. In chapter five, Barr distinguishes between engineering height, economic height, and developer height — where engineering height is the tallest building that can be safely made at a given time, economic height is the height that is most efficient from society's point of view, and developer height is the actual height chosen by the developer, who is attempting to maximize return on investment.",
@@ -1805,9 +1803,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Shester reviews a book by Jason Barr about the development of New York City In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City.",
-              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What point does Shester make about Barr's book in the first paragraph?) โดยเฉพาะประโยค \"Shester reviews a book by Jason Barr about the development of New York City In Building the Sky…\" จึงเลือก D",
-              "paraphrasedVocabulary": "point shester barr's = shester reviews development building = D"
+              "exactPortion": "The book combines geology, history, economics, and a lot of data to explain why business clusters developed where they did and how the early decisions of workers and firms shaped the skyline we see today.",
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What point does Shester make about Barr's book in the first paragraph?) โดยเฉพาะประโยค \"The book combines geology, history, economics, and a lot of data to explain why business cluste…\" จึงเลือก D",
+              "paraphrasedVocabulary": "point shester barr's = book combines geology history economics = D"
             },
             {
               "number": 28,
@@ -1818,9 +1816,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Shester reviews a book by Jason Barr about the development of New York City In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City.",
-              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (How does Shester respond to the information in the book about tenements?) โดยเฉพาะประโยค \"Shester reviews a book by Jason Barr about the development of New York City In Building the Sky…\" จึงเลือก B",
-              "paraphrasedVocabulary": "shester respond tenements = shester reviews development building = B"
+              "exactPortion": "At first glance, it is not obvious why slum clearance would be limiting, while more expensive foundations would not.",
+              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (How does Shester respond to the information in the book about tenements?) โดยเฉพาะประโยค \"At first glance, it is not obvious why slum clearance would be limiting, while more expensive fo…\" จึงเลือก B",
+              "paraphrasedVocabulary": "shester respond tenements = first glance obvious slum clearance = B"
             },
             {
               "number": 29,
@@ -1831,9 +1829,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Shester reviews a book by Jason Barr about the development of New York City In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City.",
-              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What does Shester say about chapter six of the book?) โดยเฉพาะประโยค \"Shester reviews a book by Jason Barr about the development of New York City In Building the Sky…\" จึงเลือก C",
-              "paraphrasedVocabulary": "shester chapter = shester reviews development building = C"
+              "exactPortion": "While less technical than the research paper on which the chapter is based, it is probably more technical than would be preferred by a general audience.",
+              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What does Shester say about chapter six of the book?) โดยเฉพาะประโยค \"While less technical than the research paper on which the chapter is based, it is probably mor…\" จึงเลือก C",
+              "paraphrasedVocabulary": "shester chapter = less technical research paper = C"
             },
             {
               "number": 30,
@@ -1844,9 +1842,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Shester reviews a book by Jason Barr about the development of New York City In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City.",
-              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What does Shester suggest about the chapters focusing on the 1920s building boom?) โดยเฉพาะประโยค \"Shester reviews a book by Jason Barr about the development of New York City In Building the Sky…\" จึงเลือก D",
-              "paraphrasedVocabulary": "shester suggest chapters = shester reviews development building = D"
+              "exactPortion": "Chapter eight contains lengthy discussions of urban economic theory that may serve as a distraction to readers primarily interested in New York.",
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What does Shester suggest about the chapters focusing on the 1920s building boom?) โดยเฉพาะประโยค \"Chapter eight contains lengthy discussions of urban economic theory that may serve as a distrac…\" จึงเลือก D",
+              "paraphrasedVocabulary": "shester suggest chapters = lengthy discussions urban economic theory = D"
             },
             {
               "number": 31,
@@ -1857,9 +1855,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Shester reviews a book by Jason Barr about the development of New York City In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City.",
-              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What impresses Shester the most about the chapter on land values?) โดยเฉพาะประโยค \"Shester reviews a book by Jason Barr about the development of New York City In Building the Sky…\" จึงเลือก C",
-              "paraphrasedVocabulary": "impresses shester chapter = shester reviews development building = C"
+              "exactPortion": "The data work that went into these estimations is particularly impressive.",
+              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (What impresses Shester the most about the chapter on land values?) โดยเฉพาะประโยค \"The data work that went into these estimations is particularly impressive.\" จึงเลือก C",
+              "paraphrasedVocabulary": "impresses shester chapter = data work estimations particularly impressive = C"
             },
             {
               "number": 32,
@@ -1902,7 +1900,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "In the nineteenth century, New York's immigrant neighbourhoods tended to concentrate around the harbour.\n\nQuestions 36-40\nComplete the summary using the list of phrases, A-J, below.\nWrite the correct letter, A-J, in boxes 36-40 on your answer sheet.\n\nThe bedrock myth\nIn chapter seven, Barr indicates how the lack of bedrock close to the surface does not explain why skyscrapers are absent from 36 …………………… He points out that although the cost of foundations increases when bedrock is deep below the surface, this cannot be regarded as 37 ……………………, especially when compared to the cost of foundations in Chicago. A particularly enjoyable part of the chapter was Barr's account of how foundations are built. He describes not only how 38 …………………… are made possible by the use of caissons, but he also discusses their 39 …………………… The chapter is well researched but relatively easy to understand.\n\nA development plans\nB deep excavations\nC great distance\nD excessive expense\nE impossible tasks\nF associated risks\nG water level\nH specific areas\nI total expenditure\nJ construction guidelines",
+              "prompt": "In the nineteenth century, New York's immigrant neighbourhoods tended to concentrate around the harbour.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -1935,35 +1933,35 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 3",
               "answerType": "multiple-choice",
-              "exactPortion": "Shester reviews a book by Jason Barr about the development of New York City In Building the Skyline, Jason Barr takes the reader through a detailed history of New York City.",
-              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Complete the summary: this cannot be regarded as ___) โดยเฉพาะประโยค \"Shester reviews a book by Jason Barr about the development of New York City In Building the Sky…\" จึงเลือก D",
-              "paraphrasedVocabulary": "complete summary cannot = shester reviews development building = D"
+              "exactPortion": "Rather, Barr argues that while deeper bedrock does increase foundation costs, these costs were neither prohibitively high nor were they large compared to the overall cost of building a skyscraper.",
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Complete the summary: this cannot be regarded as ___) โดยเฉพาะประโยค \"Rather, Barr argues that while deeper bedrock does increase foundation costs, these costs were …\" จึงเลือก D",
+              "paraphrasedVocabulary": "complete summary cannot = deeper bedrock increase foundation costs = D"
             },
             {
               "number": 38,
               "prompt": "able part of the chapter was Barr's account of how foundations are built. He describes not only how 38 …………………… are made possible by the use of caissons, but he also discusses their 39 …………………… The chapter is we",
-              "correctAnswer": "I",
-              "acceptedAnswers": [
-                "I"
-              ],
-              "answerGroup": "Cambridge 17 Test 3 Passage 3",
-              "answerType": "multiple-choice",
-              "exactPortion": "He describes the use of caissons, which enable workers to dig down for considerable distances, often below the water table, until they reach bedrock.",
-              "explanationThai": "จากสรุปในข้อ \"Complete the summary: how ___ are made possible by the use of caissons\" ความหมายในบทความตรงกับวลี I ที่สื่อว่า \"He describes the use of caissons, which enable workers to dig down for considerable distances, …\" จึงเติม I",
-              "paraphrasedVocabulary": "complete summary possible = describes caissons enable workers = I"
-            },
-            {
-              "number": 39,
-              "prompt": "ibes not only how 38 …………………… are made possible by the use of caissons, but he also discusses their 39 …………………… The chapter is well researched but relatively easy to understand.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
               ],
               "answerGroup": "Cambridge 17 Test 3 Passage 3",
               "answerType": "multiple-choice",
+              "exactPortion": "He describes the use of caissons, which enable workers to dig down for considerable distances, often below the water table, until they reach bedrock.",
+              "explanationThai": "จากสรุปในข้อ \"Complete the summary: how ___ are made possible by the use of caissons\" ความหมายในบทความตรงกับวลี B ที่สื่อว่า \"He describes the use of caissons, which enable workers to dig down for considerable distances, …\" จึงเติม B",
+              "paraphrasedVocabulary": "complete summary possible = describes caissons enable workers = B"
+            },
+            {
+              "number": 39,
+              "prompt": "ibes not only how 38 …………………… are made possible by the use of caissons, but he also discusses their 39 …………………… The chapter is well researched but relatively easy to understand.",
+              "correctAnswer": "F",
+              "acceptedAnswers": [
+                "F"
+              ],
+              "answerGroup": "Cambridge 17 Test 3 Passage 3",
+              "answerType": "multiple-choice",
               "exactPortion": "Barr’s thorough technological history discusses not only how caissons work, but also the dangers involved.",
-              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Complete the summary: he also discusses their ___) โดยเฉพาะประโยค \"Barr’s thorough technological history discusses not only how caissons work, but also the danger…\" จึงเลือก B",
-              "paraphrasedVocabulary": "complete summary discusses = thorough technological history discusses = B"
+              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (Complete the summary: he also discusses their ___) โดยเฉพาะประโยค \"Barr’s thorough technological history discusses not only how caissons work, but also the danger…\" จึงเลือก F",
+              "paraphrasedVocabulary": "complete summary discusses = thorough technological history discusses = F"
             },
             {
               "number": 40,
@@ -1998,9 +1996,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
       "passages": [
         {
           "number": 1,
-          "title": "Bats to the rescue How Madagascar's bats are",
+          "title": "Bats to the rescue How Madagascar's bats are helping to save the rainforest",
           "bodyParagraphs": [
-            "Bats to the rescue How Madagascar's bats are helping to save the rainforest There are few places in the world where relations between agriculture and conservation are more strained. Madagascar's forests are being converted to agricultural land at a rate of one percent every year. Much of this destruction is fuelled by the cultivation of the country's main staple crop: rice.",
+            "There are few places in the world where relations between agriculture and conservation are more strained. Madagascar's forests are being converted to agricultural land at a rate of one percent every year. Much of this destruction is fuelled by the cultivation of the country's main staple crop: rice.",
             "And a key reason for this destruction is that insect pests are destroying vast quantities of what is grown by local subsistence farmers, leading them to clear forest to create new paddy fields. The result is devastating habitat and biodiversity loss on the island, but not all species are suffering. In fact, some of the island's insectivorous bats are currently thriving and this has important implications for farmers and conservationists alike. Enter University of Cambridge zoologist Ricardo Rocha. More specifically, he's interested in how bats are responding to human activity and deforestation in particular. Rocha's new study shows that several species of bats are giving Madagascar's rice farmers a vital pest control service by feasting on plagues of insects. And this, he believes, can ease the financial pressure on farmers to turn forest into fields.",
             "Bats comprise roughly one-fifth of all mammal species in Madagascar and thirty-six recorded bat species are native to the island, making it one of the most important regions for conservation of this animal group anywhere in the world.",
             "Co-leading an international team of scientists, Rocha found that several species of indigenous bats are taking advantage of habitat modification to hunt insects swarming above the country's rice fields. They include the Malagasy mouse-eared bat, Major's long-fingered bat, the Malagasy white-bellied free-tailed bat and Peters' wrinkle-lipped bat. 'These winner species are providing a valuable free service to Madagascar as biological pest suppressors,' says Rocha. 'We found that six species of bat are preying on rice pests, including the paddy swarming caterpillar and grass webworm. The damage which these insects cause puts the island's farmers under huge financial pressure and that encourages deforestation.'",
@@ -2175,9 +2173,9 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_17_EXAMS = [
               ],
               "answerGroup": "Cambridge 17 Test 4 Passage 1",
               "answerType": "text",
-              "exactPortion": "How Madagascar's bats are helping to save the rainforest There are few places in the world where relations between agriculture and conservation are more strained.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"they play an important role in local …\" บทความมีถ้อยคำที่ตรงกันคือ \"How Madagascar's bats are helping to save the rainforest There are few places in the world wher…\" จึงคำตอบคือ \"culture\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "associated sacred caves = madagascar's helping rainforest places = culture"
+              "exactPortion": "At the same time, however, they are associated with sacred caves and the ancestors, so they can be viewed as beings between worlds, which makes them very significant in the culture of the people.",
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"they play an important role in local …\" บทความมีถ้อยคำที่ตรงกันคือ \"At the same time, however, they are associated with sacred caves and the ancestors, so they ca…\" จึงคำตอบคือ \"culture\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "important role local = associated sacred caves ancestors = culture"
             },
             {
               "number": 13,

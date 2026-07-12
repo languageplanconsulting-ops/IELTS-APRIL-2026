@@ -135,36 +135,36 @@ export const INTENSIVE_PAIRS_STAGE_1_5: Record<number, Record<1 | 2, Record<numb
     1: {
       1: [
         { q: "time and place of Industrial Revolution", p: "happen in Britain", th: "สถานที่ของการปฏิวัติอุตสาหกรรม (อังกฤษ)" },
-        { q: "end of 18th century", p: "end of the 18th century", th: "ช่วงเวลา: ปลายศตวรรษที่ 18", note: "ย่อหน้า B ถามว่าทำไมเกิดที่อังกฤษและปลายศตวรรษที่ 18 ตรงกับหัวข้อ iv (เวลาและสถานที่)" },
+        { q: "end of 18th century", p: "end of the 18th century", th: "ช่วงเวลา: ปลายศตวรรษที่ 18", note: "ย่อหน้า A ถามว่าทำไมเกิดที่อังกฤษและปลายศตวรรษที่ 18 ตรงกับหัวข้อ iv (เวลาและสถานที่)" },
         { q: "why Britain", p: "world-changing birth of industry", th: "การกำเนิดของอุตสาหกรรม" },
       ],
       2: [
         { q: "conditions required for industrialisation", p: "factors and all of them need to be present", th: "เงื่อนไขที่จำเป็นต่อการเกิดอุตสาหกรรม" },
-        { q: "20 factors needed", p: "20 different factors", th: "ปัจจัย 20 อย่าง", note: "ย่อหน้า C เน้นปัจจัยหลายอย่างที่ต้องมีครบก่อนเกิดการปฏิวัติ ตรงหัวข้อ viii" },
+        { q: "20 factors needed", p: "20 different factors", th: "ปัจจัย 20 อย่าง", note: "ย่อหน้า B เน้นปัจจัยหลายอย่างที่ต้องมีครบก่อนเกิดการปฏิวัติ ตรงหัวข้อ viii" },
         { q: "before revolution", p: "before the revolution can happen", th: "ก่อนการปฏิวัติจะเกิดขึ้น" },
       ],
       3: [
         { q: "two keys to industrial revolution", p: "Tea and beer", th: "สองสิ่งสำคัญ: ชาและเบียร์" },
-        { q: "tea and beer fuelled the revolution", p: "fuelled the revolution", th: "ขับเคลื่อน/จุดชนวนการปฏิวัติ", note: "ย่อหน้า D ชี้ว่าชาและเบียร์คือกุญแจสองดอกของการปฏิวัติ ตรงหัวข้อ vii" },
+        { q: "tea and beer fuelled the revolution", p: "fuelled the revolution", th: "ขับเคลื่อน/จุดชนวนการปฏิวัติ", note: "ย่อหน้า C ชี้ว่าชาและเบียร์คือกุญแจสองดอกของการปฏิวัติ ตรงหัวข้อ vii" },
       ],
       4: [
         { q: "reasons for population increase", p: "burst in population growth", th: "การเพิ่มขึ้นของประชากร" },
-        { q: "reduction in child deaths", p: "reduction in child deaths", th: "การลดลงของการตายในเด็ก", note: "ย่อหน้า E พยายามอธิบายสาเหตุการเพิ่มประชากร/ลดการตายเด็ก ตรงหัวข้อ i" },
+        { q: "reduction in child deaths", p: "reduction in child deaths", th: "การลดลงของการตายในเด็ก", note: "ย่อหน้า D พยายามอธิบายสาเหตุการเพิ่มประชากร/ลดการตายเด็ก ตรงหัวข้อ i" },
         { q: "explain", p: "Efforts to explain", th: "ความพยายามอธิบาย" },
       ],
       5: [
         { q: "changes in drinking habits", p: "The poor turned to water and gin", th: "การเปลี่ยนพฤติกรรมการดื่ม" },
-        { q: "tax on malt", p: "tax was introduced on malt", th: "ภาษีมอลต์", note: "ย่อหน้า F พูดถึงการเปลี่ยนเครื่องดื่มจากเบียร์ไปน้ำ/จิน ตรงหัวข้อ vi" },
+        { q: "tax on malt", p: "tax was introduced on malt", th: "ภาษีมอลต์", note: "ย่อหน้า E พูดถึงการเปลี่ยนเครื่องดื่มจากเบียร์ไปน้ำ/จิน ตรงหัวข้อ vi" },
         { q: "poor turned to water and gin", p: "turned to water and gin", th: "คนจนหันไปดื่มน้ำและจิน" },
       ],
       6: [
-        { q: "comparisons with Japan", p: "Macfarlane looked to Japan", th: "การเปรียบเทียบกับญี่ปุ่น", note: "ย่อหน้า G เปรียบเทียบอังกฤษกับญี่ปุ่น ตรงหัวข้อ ix" },
+        { q: "comparisons with Japan", p: "Macfarlane looked to Japan", th: "การเปรียบเทียบกับญี่ปุ่น", note: "ย่อหน้า F เปรียบเทียบอังกฤษกับญี่ปุ่น ตรงหัวข้อ ix" },
         { q: "Macfarlane looked to Japan", p: "developing large cities about the same time", th: "ญี่ปุ่นพัฒนาเมืองใหญ่ในเวลาเดียวกัน" },
       ],
       7: [
         { q: "industrialisation and fear of unemployment", p: "put people out of work", th: "ความกลัวการตกงาน" },
         { q: "gave up labour-saving devices", p: "giving up labour-saving devices", th: "เลิกใช้อุปกรณ์ทุ่นแรง" },
-        { q: "abandoned the wheel", p: "abandoned the wheel", th: "ละทิ้งล้อ/เทคโนโลยี", note: "ย่อหน้า H อธิบายว่าญี่ปุ่นเลิกใช้อุปกรณ์ทุ่นแรงเพราะกลัวคนตกงาน ตรงหัวข้อ ii" },
+        { q: "abandoned the wheel", p: "abandoned the wheel", th: "ละทิ้งล้อ/เทคโนโลยี", note: "ย่อหน้า G อธิบายว่าญี่ปุ่นเลิกใช้อุปกรณ์ทุ่นแรงเพราะกลัวคนตกงาน ตรงหัวข้อ ii" },
       ],
       8: [
         { q: "China's transport system", p: "direct clipper trade with China", th: "การค้า/การขนส่งกับจีน", note: "บทความกล่าวถึงการค้ากับจีนแต่ไม่ระบุว่าระบบขนส่งของจีนไม่เหมาะกับอุตสาหกรรม จึงตอบ NOT GIVEN" },
