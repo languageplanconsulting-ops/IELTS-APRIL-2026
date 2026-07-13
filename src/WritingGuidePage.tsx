@@ -16,10 +16,6 @@ import {
   WRITING_TASK2_TYPES,
   WRITING_TIMELINE_PRACTICE_PROMPTS,
   WRITING_TASK1_TYPE_INFO,
-  WRITING_TASK2_TYPE_INFO,
-  WRITING_FEATURED_TASK1,
-  WRITING_FEATURED_TASK2,
-  WRITING_MONTHLY_SETS_2026,
   WRITING_BAND7_TASK1_SAMPLE,
   WRITING_BAND7_TASK2_SAMPLE,
   IELTS_TASK1_SUMMARY_INSTRUCTION,
@@ -42,21 +38,17 @@ import {
   type WritingTask1PracticePrompt,
   type WritingLineSeries,
   type WritingBand7Highlight,
-  type WritingBand7Sample,
-  type Task1LineGraphData,
-  type Task1BarChartData,
-  type Task1PieChartData,
-  type Task1MapData,
-  type Task1TableData,
-  type Task1ChartData
+  type WritingBand7Sample
 } from './writingGuideData'
+import { WRITING_RECALL, WRITING_PREDICT, type ExamItem } from './writingExamRecalls'
 
 type WritingGuidePageProps = {
   onBackHome: () => void
 }
 
 type WritingFlow =
-  | { step: 'task-pick' }
+  | { step: 'hub' }
+  | { step: 'latest'; filter: 'all' | 'task1' | 'task2' }
   | { step: 'task1-categories' }
   | { step: 'task1-questions'; categoryId: string }
   | { step: 'task1-exam'; categoryId: string; promptId: string }
@@ -300,6 +292,18 @@ function WritingTableChart({ prompt }: { prompt: WritingTimelinePracticePrompt }
       <p className="writingIeltsTableNote">Units: {prompt.unit}</p>
     </figure>
   )
+}
+
+function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
+  const rad = (angleDeg - 90) * (Math.PI / 180)
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
+}
+
+function pieSlicePath(cx: number, cy: number, r: number, start: number, end: number) {
+  const s = polarToXY(cx, cy, r, start)
+  const e = polarToXY(cx, cy, r, end)
+  const large = end - start > 180 ? 1 : 0
+  return `M ${cx} ${cy} L ${s.x.toFixed(2)} ${s.y.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${e.x.toFixed(2)} ${e.y.toFixed(2)} Z`
 }
 
 function WritingPieChartSvg({ prompt }: { prompt: WritingSnapshotPracticePrompt }) {
@@ -1170,16 +1174,92 @@ function WritingFlowHead({
   )
 }
 
-// ── Band 7 sample helper components ──────────────────────────────────────
+// ── Latest exam recall / prediction cards ────────────────────────────────
 
-const CHART_TYPE_ICON: Record<string, string> = {
-  'line-graph': '📈',
-  'bar-chart': '📊',
-  'pie-chart': '🥧',
-  'table': '📋',
-  'map': '🗺',
-  'process': '⚙'
+const matchesTaskFilter = (item: ExamItem, filter: 'all' | 'task1' | 'task2') => {
+  if (filter === 'all') return true
+  return item.tag.includes(filter === 'task1' ? 'Task 1' : 'Task 2')
 }
+
+function WritingLatestItem({ item }: { item: ExamItem }) {
+  return (
+    <div className="wgLatestItem">
+      <span className="wgLatestItemTag">{item.tag}</span>
+      <p className="wgLatestItemTitle">
+        {item.title}
+        {item.isNew ? <span className="wgLatestNew">ใหม่</span> : null}
+      </p>
+      {item.bullets ? (
+        <ul className="wgLatestBullets">
+          {item.bullets.map((bullet, i) => (
+            <li key={i}>{bullet}</li>
+          ))}
+        </ul>
+      ) : null}
+      <p className="wgLatestItemMeta">{item.meta}</p>
+    </div>
+  )
+}
+
+function WritingLatestSection({
+  filter,
+  onPracticeTask1,
+  onPracticeTask2
+}: {
+  filter: 'all' | 'task1' | 'task2'
+  onPracticeTask1: () => void
+  onPracticeTask2: () => void
+}) {
+  const recall = WRITING_RECALL.filter((item) => matchesTaskFilter(item, filter))
+  const predict = WRITING_PREDICT.filter((item) => matchesTaskFilter(item, filter))
+
+  return (
+    <div className="wgLatestShell">
+      <section className="wgLatestBlock">
+        <h3 className="wgLatestBlockTitle">หัวข้อที่เพิ่งออกสอบ</h3>
+        <p className="wgLatestBlockLead">รายงานจากผู้สอบจริง · ไม่ใช่ข้อสอบทางการ</p>
+        {recall.length ? (
+          <div className="wgLatestGrid">
+            {recall.map((item, i) => (
+              <WritingLatestItem key={i} item={item} />
+            ))}
+          </div>
+        ) : (
+          <p className="wgLatestEmpty">ยังไม่มีข้อมูลในหมวดนี้</p>
+        )}
+      </section>
+
+      <section className="wgLatestBlock wgLatestBlock-predict">
+        <h3 className="wgLatestBlockTitle">เก็งข้อสอบเดือนนี้</h3>
+        <p className="wgLatestBlockLead">แนวโน้มจากสถิติย้อนหลัง · เป็นการคาดการณ์ ไม่ใช่ข้อสอบจริง</p>
+        {predict.length ? (
+          <div className="wgLatestGrid">
+            {predict.map((item, i) => (
+              <WritingLatestItem key={i} item={item} />
+            ))}
+          </div>
+        ) : (
+          <p className="wgLatestEmpty">ยังไม่มีข้อมูลในหมวดนี้</p>
+        )}
+      </section>
+
+      <div className="wgLatestCta">
+        {filter !== 'task2' ? (
+          <button type="button" className="wgLatestCtaBtn" onClick={onPracticeTask1}>
+            ฝึกเขียน Task 1 ตอนนี้ →
+          </button>
+        ) : null}
+        {filter !== 'task1' ? (
+          <button type="button" className="wgLatestCtaBtn wgLatestCtaBtn-t2" onClick={onPracticeTask2}>
+            ฝึกเขียน Task 2 ตอนนี้ →
+          </button>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
+// ── Band 7 sample helper components ──────────────────────────────────────
 
 function WlpHighlightInline({ text, highlights }: { text: string; highlights: WritingBand7Highlight[] }) {
   const [openPhrase, setOpenPhrase] = useState<string | null>(null)
@@ -1272,279 +1352,15 @@ function Band7SampleView({ sample }: { sample: WritingBand7Sample }) {
   )
 }
 
-function WlpBand7Tabs() {
-  const [activeTask, setActiveTask] = useState<1 | 2>(1)
-  return (
-    <div className="wlpBand7TabsWrap">
-      <div className="wlpBand7TabRow">
-        <button
-          type="button"
-          className={`wlpBand7Tab ${activeTask === 1 ? 'is-active' : ''}`}
-          onClick={() => setActiveTask(1)}
-        >
-          Task 1 — Line Graph
-        </button>
-        <button
-          type="button"
-          className={`wlpBand7Tab ${activeTask === 2 ? 'is-active' : ''}`}
-          onClick={() => setActiveTask(2)}
-        >
-          Task 2 — Discuss Both Views
-        </button>
-      </div>
-      <Band7SampleView sample={activeTask === 1 ? WRITING_BAND7_TASK1_SAMPLE : WRITING_BAND7_TASK2_SAMPLE} />
-    </div>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────
-// Mini SVG chart components for Task 1 monthly questions
-// ─────────────────────────────────────────────────────────────
-
-function MiniLineGraph({ data }: { data: Task1LineGraphData }) {
-  const W = 280, H = 158
-  const pL = 30, pR = 8, pT = 6, pB = 44
-  const cW = W - pL - pR
-  const cH = H - pT - pB
-  const { xLabels, series, yMin, yMax, yStep } = data
-  const n = xLabels.length
-  const xPos = (i: number) => pL + (i / (n - 1)) * cW
-  const yPos = (v: number) => pT + ((yMax - v) / (yMax - yMin)) * cH
-  const yTicks = []
-  for (let v = yMin; v <= yMax; v += yStep) yTicks.push(v)
-  const legendCols = Math.ceil(series.length / 2)
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
-      {/* grid + y labels */}
-      {yTicks.map(v => (
-        <g key={v}>
-          <line x1={pL} y1={yPos(v)} x2={W - pR} y2={yPos(v)} stroke="#e2e8f0" strokeWidth={0.6} />
-          <text x={pL - 3} y={yPos(v) + 3} textAnchor="end" fontSize={7} fill="#94a3b8">{v}</text>
-        </g>
-      ))}
-      {/* x labels */}
-      {xLabels.map((lbl, i) => (
-        <text key={i} x={xPos(i)} y={pT + cH + 11} textAnchor="middle" fontSize={7} fill="#94a3b8">{lbl}</text>
-      ))}
-      {/* axes */}
-      <line x1={pL} y1={pT} x2={pL} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
-      <line x1={pL} y1={pT + cH} x2={W - pR} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
-      {/* series */}
-      {series.map(s => (
-        <g key={s.label}>
-          <polyline
-            points={s.values.map((v, i) => `${xPos(i)},${yPos(v)}`).join(' ')}
-            fill="none" stroke={s.color} strokeWidth={1.8} strokeLinejoin="round" strokeLinecap="round"
-          />
-          {s.values.map((v, i) => <circle key={i} cx={xPos(i)} cy={yPos(v)} r={2.2} fill={s.color} />)}
-        </g>
-      ))}
-      {/* legend — 2 rows max */}
-      {series.map((s, i) => {
-        const col = i % legendCols
-        const row = Math.floor(i / legendCols)
-        return (
-          <g key={s.label} transform={`translate(${pL + col * (cW / legendCols)},${pT + cH + 20 + row * 12})`}>
-            <rect x={0} y={-4} width={14} height={3} fill={s.color} rx={1} />
-            <text x={17} y={0} fontSize={6.5} fill="#475569">{s.label}</text>
-          </g>
-        )
-      })}
-    </svg>
-  )
-}
-
-function MiniBarChart({ data }: { data: Task1BarChartData }) {
-  const W = 280, H = 158
-  const pL = 28, pR = 8, pT = 6, pB = 46
-  const cW = W - pL - pR
-  const cH = H - pT - pB
-  const { categories, series, yMax } = data
-  const nCat = categories.length
-  const nSer = series.length
-  const groupW = cW / nCat
-  const barW = Math.min((groupW * 0.7) / nSer, 18)
-  const gapBetween = 2
-  const totalBarW = nSer * barW + (nSer - 1) * gapBetween
-  const yPos = (v: number) => pT + ((yMax - v) / yMax) * cH
-  const yTicks = [0, yMax * 0.25, yMax * 0.5, yMax * 0.75, yMax].map(v => Math.round(v))
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
-      {yTicks.map(v => (
-        <g key={v}>
-          <line x1={pL} y1={yPos(v)} x2={W - pR} y2={yPos(v)} stroke="#e2e8f0" strokeWidth={0.6} />
-          <text x={pL - 3} y={yPos(v) + 3} textAnchor="end" fontSize={6.5} fill="#94a3b8">{v}</text>
-        </g>
-      ))}
-      <line x1={pL} y1={pT} x2={pL} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
-      <line x1={pL} y1={pT + cH} x2={W - pR} y2={pT + cH} stroke="#cbd5e1" strokeWidth={0.8} />
-      {categories.map((cat, ci) => {
-        const groupX = pL + ci * groupW + (groupW - totalBarW) / 2
-        return (
-          <g key={cat}>
-            {series.map((s, si) => {
-              const bx = groupX + si * (barW + gapBetween)
-              const by = yPos(s.values[ci])
-              const bh = pT + cH - by
-              return <rect key={si} x={bx} y={by} width={barW} height={bh} fill={s.color} rx={1.5} opacity={0.88} />
-            })}
-            <text x={pL + (ci + 0.5) * groupW} y={pT + cH + 10} textAnchor="middle" fontSize={6.5} fill="#94a3b8">{cat}</text>
-          </g>
-        )
-      })}
-      {series.map((s, i) => (
-        <g key={s.label} transform={`translate(${pL + i * 80},${pT + cH + 22})`}>
-          <rect x={0} y={-5} width={12} height={8} fill={s.color} rx={1.5} opacity={0.88} />
-          <text x={15} y={0} fontSize={7} fill="#475569">{s.label}</text>
-        </g>
-      ))}
-    </svg>
-  )
-}
-
-function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
-  const rad = (angleDeg - 90) * (Math.PI / 180)
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
-}
-
-function pieSlicePath(cx: number, cy: number, r: number, start: number, end: number) {
-  const s = polarToXY(cx, cy, r, start)
-  const e = polarToXY(cx, cy, r, end)
-  const large = end - start > 180 ? 1 : 0
-  return `M ${cx} ${cy} L ${s.x.toFixed(2)} ${s.y.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${e.x.toFixed(2)} ${e.y.toFixed(2)} Z`
-}
-
-function MiniPieChart({ data }: { data: Task1PieChartData }) {
-  const W = 280, H = 175
-  const cx1 = 68, cx2 = 212, cy = 72, R = 58
-  const allSliceLabels = Array.from(new Set(data.charts.flatMap(c => c.slices.map(s => s.label))))
-  const colorMap: Record<string, string> = {}
-  data.charts.forEach(c => c.slices.forEach(s => { colorMap[s.label] = s.color }))
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
-      {data.charts.map((chart, ci) => {
-        const cx = ci === 0 ? cx1 : cx2
-        let cursor = 0
-        return (
-          <g key={chart.title}>
-            <text x={cx} y={cy - R - 8} textAnchor="middle" fontSize={8} fontWeight="700" fill="#1e3a6e">{chart.title}</text>
-            {chart.slices.map(slice => {
-              const sweep = (slice.value / 100) * 360
-              const path = pieSlicePath(cx, cy, R, cursor, cursor + sweep)
-              const mid = cursor + sweep / 2
-              const lp = polarToXY(cx, cy, R * 0.62, mid)
-              cursor += sweep
-              return (
-                <g key={slice.label}>
-                  <path d={path} fill={slice.color} stroke="#fff" strokeWidth={1} />
-                  {slice.value >= 9 && (
-                    <text x={lp.x} y={lp.y + 3} textAnchor="middle" fontSize={7} fontWeight="600" fill="#fff">
-                      {slice.value}%
-                    </text>
-                  )}
-                </g>
-              )
-            })}
-          </g>
-        )
-      })}
-      {/* shared legend at bottom */}
-      {allSliceLabels.map((lbl, i) => {
-        const col = i % 3
-        const row = Math.floor(i / 3)
-        return (
-          <g key={lbl} transform={`translate(${16 + col * 88},${cy + R + 12 + row * 13})`}>
-            <rect x={0} y={-5} width={9} height={9} fill={colorMap[lbl] || '#ccc'} rx={2} />
-            <text x={12} y={0} fontSize={6.5} fill="#475569">{lbl}</text>
-          </g>
-        )
-      })}
-    </svg>
-  )
-}
-
-function MiniMapDiagram({ data }: { data: Task1MapData }) {
-  const W = 280, H = 148
-  const mapW = 118, mapH = 86
-  const x1 = 8, x2 = 152, y0 = 18
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
-      {[data.before, data.after].map((panel, pi) => {
-        const ox = pi === 0 ? x1 : x2
-        return (
-          <g key={pi}>
-            <text x={ox + mapW / 2} y={y0 - 6} textAnchor="middle" fontSize={8.5} fontWeight="700" fill="#1e3a6e">
-              {panel.year}
-            </text>
-            <rect x={ox} y={y0} width={mapW} height={mapH} fill="#f8fafc" stroke="#cbd5e1" strokeWidth={1} rx={3} />
-            {panel.zones.map((z, zi) => (
-              <g key={zi}>
-                <rect x={ox + z.x} y={y0 + z.y} width={z.w} height={z.h}
-                  fill={z.color} stroke="#fff" strokeWidth={0.8} rx={2} />
-                {z.label.split('\n').map((line, li) => (
-                  <text
-                    key={li}
-                    x={ox + z.x + z.w / 2}
-                    y={y0 + z.y + z.h / 2 + (li - (z.label.split('\n').length - 1) / 2) * 9}
-                    textAnchor="middle"
-                    fontSize={6.5}
-                    fontWeight="600"
-                    fill="#1e3a6e"
-                  >
-                    {line}
-                  </text>
-                ))}
-              </g>
-            ))}
-          </g>
-        )
-      })}
-      <line x1={140} y1={y0} x2={140} y2={y0 + mapH} stroke="#e2e8f0" strokeWidth={1} strokeDasharray="3,2" />
-      <text x={140} y={y0 + mapH + 14} textAnchor="middle" fontSize={7} fill="#94a3b8">Changes in Town Centre Layout</text>
-    </svg>
-  )
-}
-
-function MiniDataTable({ data }: { data: Task1TableData }) {
-  return (
-    <div className="wlpMiniTable">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            {data.headers.map(h => <th key={h}>{h}</th>)}
-          </tr>
-        </thead>
-        <tbody>
-          {data.rows.map(row => (
-            <tr key={row.entity}>
-              <td className="wlpMiniTableEntity">{row.entity}</td>
-              {row.values.map((v, i) => <td key={i}>{v}</td>)}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function Task1ChartVisual({ chartData }: { chartData: Task1ChartData }) {
-  if (chartData.type === 'line-graph') return <MiniLineGraph data={chartData} />
-  if (chartData.type === 'bar-chart')  return <MiniBarChart data={chartData} />
-  if (chartData.type === 'pie-chart')  return <MiniPieChart data={chartData} />
-  if (chartData.type === 'map')        return <MiniMapDiagram data={chartData} />
-  if (chartData.type === 'table')      return <MiniDataTable data={chartData} />
-  return null
-}
-
 export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
-  const [flow, setFlow] = useState<WritingFlow>({ step: 'task-pick' })
+  const [flow, setFlow] = useState<WritingFlow>({ step: 'hub' })
   const [timelineAnswers, setTimelineAnswers] = useState<Record<string, string>>({})
   const [showHelper, setShowHelper] = useState(false)
 
   const activeCategory = useMemo(() => {
     if (
-      flow.step === 'task-pick' ||
+      flow.step === 'hub' ||
+      flow.step === 'latest' ||
       flow.step === 'task2-types' ||
       flow.step === 'task1-categories'
     ) {
@@ -1561,12 +1377,16 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
 
   const goBack = () => {
     setShowHelper(false)
-    if (flow.step === 'task-pick') {
+    if (flow.step === 'hub') {
       onBackHome()
       return
     }
+    if (flow.step === 'latest') {
+      setFlow({ step: 'hub' })
+      return
+    }
     if (flow.step === 'task1-categories' || flow.step === 'task2-types') {
-      setFlow({ step: 'task-pick' })
+      setFlow({ step: 'hub' })
       return
     }
     if (flow.step === 'task1-questions' || flow.step === 'task1-guide') {
@@ -1599,7 +1419,7 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
         <span className="writingGuideGridGlow" />
       </div>
 
-      {flow.step !== 'task-pick' ? (
+      {flow.step !== 'hub' ? (
         <header className="writingGuideHeader">
           <div>
             <p className="sectionLabel">English Plan Writing</p>
@@ -1610,261 +1430,90 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
       ) : null}
 
       <div className="writingGuideFlowStage">
-        {flow.step === 'task-pick' ? (
-          <div className="wlpShell">
-
-            {/* ── Hero ─────────────────────────────────────── */}
-            <section className="wlpHero">
+        {flow.step === 'hub' ? (
+          <div className="writingGuideHubShell">
+            <div className="writingGuideHubIntro">
               <p className="wlpKicker">IELTS Academic Writing · English Plan Institute</p>
-              <h1 className="wlpHeroH1">ฝึก IELTS Academic Writing<br />อย่างเป็นระบบ ตรงกับข้อสอบจริง</h1>
-              <p className="wlpHeroLead">
-                รวมโจทย์ Task 1 และ Task 2 จากการสอบจริง พร้อมคำอธิบายประเภทคำถาม
-                และโครงสร้างการเขียนที่ช่วยให้ได้คะแนน Band 7+
+              <h1 className="writingGuideHubH1">เลือกสิ่งที่อยากฝึกวันนี้</h1>
+              <p className="writingGuideHubLead">
+                ดูข้อสอบจริงล่าสุดจากผู้สอบ หรือฝึกเขียนทีละขั้นตอน — เลือกได้เลย
               </p>
-              <div className="wlpHeroActions">
-                <button
-                  type="button"
-                  className="wlpBtn wlpBtn-primary"
-                  onClick={() => setFlow({ step: 'task1-categories' })}
-                >
-                  เริ่มฝึก Task 1
-                </button>
-                <button
-                  type="button"
-                  className="wlpBtn wlpBtn-secondary"
-                  onClick={() => setFlow({ step: 'task2-types' })}
-                >
-                  เริ่มฝึก Task 2
-                </button>
-              </div>
-              <div className="wlpHeroMeta">
-                <span>Task 1 · 150 คำ · ~20 นาที</span>
-                <span className="wlpHeroMetaDot" />
-                <span>Task 2 · 250 คำ · ~40 นาที</span>
-                <span className="wlpHeroMetaDot" />
-                <span>Academic Track</span>
-              </div>
-            </section>
-
-            {/* ── Task 1 — Question Types ──────────────────── */}
-            <section className="wlpSection">
-              <div className="wlpSectionHead">
-                <p className="wlpSectionKicker">Task 1 · Academic Writing</p>
-                <h2 className="wlpSectionH2">ประเภทคำถาม Task 1 ที่ออกสอบจริง</h2>
-                <p className="wlpSectionLead">
-                  Task 1 ให้เวลา 20 นาที เขียนอย่างน้อย 150 คำ บรรยายข้อมูลจากกราฟหรือแผนภาพที่กำหนดให้
-                </p>
-              </div>
-              <div className="wlpTypeGrid">
-                {WRITING_TASK1_TYPE_INFO.map((type) => (
-                  <article key={type.id} className="wlpTypeCard">
-                    <span className="wlpTypeTag">{type.badge}</span>
-                    <h3 className="wlpTypeTitle">{type.titleTh}</h3>
-                    <p className="wlpTypeDesc">{type.descTh}</p>
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            {/* ── Task 2 — Question Types ──────────────────── */}
-            <section className="wlpSection">
-              <div className="wlpSectionHead">
-                <p className="wlpSectionKicker">Task 2 · Academic Writing</p>
-                <h2 className="wlpSectionH2">ประเภทคำถาม Task 2 ที่ออกสอบจริง</h2>
-                <p className="wlpSectionLead">
-                  Task 2 ให้เวลา 40 นาที เขียนอย่างน้อย 250 คำ คิดเป็น 2 ใน 3 ของคะแนน Writing ทั้งหมด
-                </p>
-              </div>
-              <div className="wlpTypeGrid wlpTypeGrid-task2">
-                {WRITING_TASK2_TYPE_INFO.map((type) => (
-                  <article key={type.id} className="wlpTypeCard wlpTypeCard-task2">
-                    <span className="wlpTypeTag wlpTypeTag-task2">Task 2</span>
-                    <h3 className="wlpTypeTitle">{type.titleTh}</h3>
-                    <p className="wlpTypeDesc">{type.descTh}</p>
-                    <ul className="wlpTypeFocus">
-                      {type.focusTh.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            {/* ── Recent Practice Questions ─────────────────── */}
-            <section className="wlpSection wlpSection-recent">
-              <div className="wlpSectionHead">
-                <p className="wlpSectionKicker">โจทย์ประจำเดือน · January – June 2026</p>
-                <h2 className="wlpSectionH2">โจทย์จากการสอบจริง มกราคม – มิถุนายน 2566</h2>
-                <p className="wlpSectionLead">
-                  ตัวอย่างโจทย์ IELTS Academic Writing ที่รวบรวมจากการสอบในประเทศไทยและภูมิภาค APAC
-                </p>
-              </div>
-
-              <div className="wlpRecentGrid">
-
-                {/* Task 1 card */}
-                <article className="wlpRecentCard">
-                  <div className="wlpRecentCardHead">
-                    <span className="wlpRecentBadge wlpRecentBadge-task1">Task 1</span>
-                    <span className="wlpRecentChartBadge">{WRITING_FEATURED_TASK1.chartTypeLabel}</span>
-                    <span className="wlpRecentMonth">{WRITING_FEATURED_TASK1.month}</span>
-                  </div>
-                  <h3 className="wlpRecentTitle">{WRITING_FEATURED_TASK1.prompt.title}</h3>
-                  <p className="wlpRecentPrompt">{WRITING_FEATURED_TASK1.promptLine}</p>
-                  <p className="wlpRecentInstruction">{WRITING_FEATURED_TASK1.instruction}</p>
-                  <p className="wlpRecentWordLimit">{WRITING_FEATURED_TASK1.wordLimit}</p>
-
-                  {/* Inline line graph preview */}
-                  <div className="wlpChartWrap" aria-hidden="true">
-                    <WritingLineGraphSvg prompt={WRITING_FEATURED_TASK1.prompt} />
-                  </div>
-
-                  <button
-                    type="button"
-                    className="wlpRecentAction"
-                    onClick={() => {
-                      setFlow({ step: 'task1-categories' })
-                    }}
-                  >
-                    ฝึกทำ Task 1 →
-                  </button>
-                </article>
-
-                {/* Task 2 card */}
-                <article className="wlpRecentCard wlpRecentCard-task2">
-                  <div className="wlpRecentCardHead">
-                    <span className="wlpRecentBadge wlpRecentBadge-task2">Task 2</span>
-                    <span className="wlpRecentChartBadge">{WRITING_FEATURED_TASK2.questionTypeTh}</span>
-                    <span className="wlpRecentMonth">{WRITING_FEATURED_TASK2.month}</span>
-                  </div>
-                  <h3 className="wlpRecentTitle">Essay — Opinion &amp; Discussion</h3>
-                  <blockquote className="wlpRecentEssayPrompt">
-                    "{WRITING_FEATURED_TASK2.promptText}"
-                  </blockquote>
-                  <p className="wlpRecentInstruction">{WRITING_FEATURED_TASK2.instruction}</p>
-                  <p className="wlpRecentWordLimit">{WRITING_FEATURED_TASK2.wordLimit}</p>
-
-                  <div className="wlpTask2Hint">
-                    <p className="wlpTask2HintLabel">แนวทางการเขียน</p>
-                    <ul>
-                      <li>Introduction: แสดงจุดยืนชัดเจน + paraphrase โจทย์</li>
-                      <li>Body 1: View A พร้อม evidence</li>
-                      <li>Body 2: View B พร้อม evidence</li>
-                      <li>Conclusion: ยืนยัน opinion + สรุป</li>
-                    </ul>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="wlpRecentAction wlpRecentAction-task2"
-                    onClick={() => setFlow({ step: 'task2-types' })}
-                  >
-                    ดูประเภทคำถาม Task 2 →
-                  </button>
-                </article>
-
-              </div>
-            </section>
-
-            {/* ── Monthly question sets Jan–Dec 2026 ───────── */}
-            <section className="wlpSection">
-              <div className="wlpSectionHead">
-                <p className="wlpSectionKicker">โจทย์จากการสอบจริง · มกราคม – ธันวาคม 2569</p>
-                <h2 className="wlpSectionH2">IELTS Writing 2026<br />Task 1 + Task 2 รายเดือน</h2>
-                <p className="wlpSectionLead">
-                  รวบรวมโจทย์ IELTS Academic Writing จากการสอบในประเทศไทยและภูมิภาค APAC
-                  มกราคม–มิถุนายน 2569 (ข้อมูลจริง) และโจทย์คาดการณ์ กรกฎาคม–ธันวาคม 2569
-                </p>
-              </div>
-              <div className="wlpMonthGrid">
-                {WRITING_MONTHLY_SETS_2026.map((set) => (
-                  <article
-                    key={set.id}
-                    className={`wlpMonthCard ${set.isScheduled ? 'wlpMonthCard-scheduled' : ''}`}
-                  >
-                    <div className="wlpMonthCardHead">
-                      <span className="wlpMonthBadge">
-                        {set.isScheduled ? '🗓 กำลังจะมา' : '✅ ข้อสอบจริง'}
-                      </span>
-                      <span className="wlpMonthPeriod">{set.period}</span>
-                    </div>
-                    <h3 className="wlpMonthTitle">{set.monthTh}</h3>
-
-                    {set.isScheduled ? (
-                      <p className="wlpMonthScheduled">{set.scheduledDateTh}</p>
-                    ) : (
-                      <>
-                        <div className="wlpMonthTask">
-                          <div className="wlpMonthTaskHead">
-                            <span className="wlpMonthTaskLabel">Task 1</span>
-                            <span className="wlpMonthChartBadge">
-                              {CHART_TYPE_ICON[set.task1.chartType] || '📊'} {set.task1.chartTypeTh}
-                            </span>
-                          </div>
-                          <p className="wlpMonthTaskPrompt">{set.task1.promptText}</p>
-                          {set.task1ChartData && (
-                            <div className="wlpTask1ChartWrap">
-                              <Task1ChartVisual chartData={set.task1ChartData} />
-                            </div>
-                          )}
-                        </div>
-                        <div className="wlpMonthTask wlpMonthTask-t2">
-                          <div className="wlpMonthTaskHead">
-                            <span className="wlpMonthTaskLabel wlpMonthTaskLabel-t2">Task 2</span>
-                            <span className="wlpMonthChartBadge wlpMonthChartBadge-t2">{set.task2.questionTypeTh}</span>
-                          </div>
-                          <p className="wlpMonthTaskPrompt">{set.task2.promptText}</p>
-                        </div>
-                      </>
-                    )}
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            {/* ── Band 7 Sample Answers ─────────────────────── */}
-            <section className="wlpSection wlpSection-band7">
-              <div className="wlpSectionHead">
-                <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
-                <h2 className="wlpSectionH2">ดูว่า Band 7 เขียนยังไง<br />พร้อมคำอธิบายภาษาไทย</h2>
-                <p className="wlpSectionLead">
-                  กด <strong>คำที่ขีดเส้นใต้</strong> เพื่อดูคำอธิบายคำศัพท์และโครงสร้างไวยากรณ์เป็นภาษาไทย
-                </p>
-              </div>
-
-              <div className="wlpBand7Tabs">
-                <WlpBand7Tabs />
-              </div>
-            </section>
-
-            {/* ── CTA row ──────────────────────────────────── */}
-            <section className="wlpCtaRow">
-              <div className="wlpCtaInner">
-                <p className="wlpCtaKicker">English Plan IELTS Institute</p>
-                <h2 className="wlpCtaH2">พร้อมฝึกจริงแล้วหรือยัง?</h2>
-                <p className="wlpCtaLead">เลือก Task ที่ต้องการฝึกด้านล่าง แล้วเริ่มทำโจทย์ได้เลย</p>
-                <div className="wlpCtaActions">
-                  <button
-                    type="button"
-                    className="wlpBtn wlpBtn-primary"
-                    onClick={() => setFlow({ step: 'task1-categories' })}
-                  >
-                    Task 1 — กราฟและแผนภาพ
-                  </button>
-                  <button
-                    type="button"
-                    className="wlpBtn wlpBtn-secondary"
-                    onClick={() => setFlow({ step: 'task2-types' })}
-                  >
-                    Task 2 — เรียงความ
-                  </button>
-                </div>
-              </div>
-            </section>
-
+            </div>
+            <div className="writingGuideMegaGrid writingGuideMegaGrid-hub">
+              <button
+                type="button"
+                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-a"
+                onClick={() => setFlow({ step: 'latest', filter: 'all' })}
+              >
+                <span className="writingGuideMegaBadge">ใหม่</span>
+                <strong>ข้อสอบล่าสุด</strong>
+                <span className="writingGuideMegaSub">โจทย์จริง Task 1 และ Task 2 จากผู้สอบเดือนนี้</span>
+              </button>
+              <button
+                type="button"
+                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-b"
+                onClick={() => setFlow({ step: 'latest', filter: 'task1' })}
+              >
+                <span className="writingGuideMegaBadge">Task 1</span>
+                <strong>Task 1 ล่าสุด</strong>
+                <span className="writingGuideMegaSub">โจทย์ Task 1 ที่เพิ่งออกสอบจริง</span>
+              </button>
+              <button
+                type="button"
+                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-c"
+                onClick={() => setFlow({ step: 'latest', filter: 'task2' })}
+              >
+                <span className="writingGuideMegaBadge">Task 2</span>
+                <strong>Task 2 ล่าสุด</strong>
+                <span className="writingGuideMegaSub">โจทย์ Task 2 ที่เพิ่งออกสอบจริง</span>
+              </button>
+              <button
+                type="button"
+                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-d"
+                onClick={() => setFlow({ step: 'task1-categories' })}
+              >
+                <span className="writingGuideMegaBadge">แบบฝึกหัด</span>
+                <strong>แบบฝึกหัด Task 1</strong>
+                <span className="writingGuideMegaSub">ฝึกเขียนทีละขั้นตอน 5 ประเภทกราฟ · 14 ข้อ</span>
+              </button>
+              <button
+                type="button"
+                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-e"
+                onClick={() => setFlow({ step: 'task2-types' })}
+              >
+                <span className="writingGuideMegaBadge">แบบฝึกหัด</span>
+                <strong>แบบฝึกหัด Task 2</strong>
+                <span className="writingGuideMegaSub">ดูประเภทคำถามและแนวทางการเขียนแต่ละแบบ</span>
+              </button>
+            </div>
           </div>
         ) : null}
+
+        {flow.step === 'latest' ? (
+          <div className="writingGuideMegaShell">
+            <WritingFlowHead
+              eyebrow={
+                flow.filter === 'all' ? 'ข้อสอบล่าสุด' : flow.filter === 'task1' ? 'Task 1 · ล่าสุด' : 'Task 2 · ล่าสุด'
+              }
+              title={
+                flow.filter === 'all'
+                  ? 'ข้อสอบ Writing ล่าสุด'
+                  : flow.filter === 'task1'
+                  ? 'โจทย์ Task 1 ล่าสุด'
+                  : 'โจทย์ Task 2 ล่าสุด'
+              }
+              subtitle="รวบรวมจากผู้สอบจริง อัปเดตทุกสัปดาห์ · ไม่ใช่ข้อสอบทางการ"
+              onBack={goBack}
+              backLabel="Home"
+            />
+            <WritingLatestSection
+              filter={flow.filter}
+              onPracticeTask1={() => setFlow({ step: 'task1-categories' })}
+              onPracticeTask2={() => setFlow({ step: 'task2-types' })}
+            />
+          </div>
+        ) : null}
+
 
         {flow.step === 'task1-categories' ? (
           <div className="writingGuideMegaShell">
@@ -1875,6 +1524,15 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
               onBack={goBack}
               backLabel="Tasks"
             />
+            <div className="wlpTypeGrid">
+              {WRITING_TASK1_TYPE_INFO.map((type) => (
+                <article key={type.id} className="wlpTypeCard">
+                  <span className="wlpTypeTag">{type.badge}</span>
+                  <h3 className="wlpTypeTitle">{type.titleTh}</h3>
+                  <p className="wlpTypeDesc">{type.descTh}</p>
+                </article>
+              ))}
+            </div>
             <div className="writingGuideMegaGrid writingGuideMegaGrid-categories">
               {WRITING_TASK1_SECTIONS.map((section, index) => (
                 <button
@@ -1891,6 +1549,10 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
                   <span className="writingGuideMegaSub">{section.subtitle}</span>
                 </button>
               ))}
+            </div>
+            <div className="wlpBand7Tabs wlpBand7Tabs-single">
+              <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
+              <Band7SampleView sample={WRITING_BAND7_TASK1_SAMPLE} />
             </div>
           </div>
         ) : null}
@@ -2053,6 +1715,10 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
                   </ul>
                 </article>
               ))}
+            </div>
+            <div className="wlpBand7Tabs wlpBand7Tabs-single">
+              <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
+              <Band7SampleView sample={WRITING_BAND7_TASK2_SAMPLE} />
             </div>
           </div>
         ) : null}

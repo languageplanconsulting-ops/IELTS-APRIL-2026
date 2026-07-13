@@ -228,6 +228,211 @@
   transform: none;
 }
 
+/* ── Writing hub (post-login landing) ─────────────────────────── */
+
+.writingGuideHubShell {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vw, 40px);
+  padding-bottom: clamp(32px, 4vw, 48px);
+}
+
+.writingGuideHubIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: clamp(32px, 6vw, 56px) clamp(16px, 4vw, 48px) clamp(8px, 2vw, 16px);
+}
+
+.writingGuideHubH1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  color: #0b1f44;
+  letter-spacing: -0.02em;
+}
+
+.writingGuideHubLead {
+  margin: 0;
+  max-width: 44ch;
+  color: #475569;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.writingGuideMegaGrid-hub {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.writingGuideMegaCard-hub-a::before {
+  background:
+    linear-gradient(135deg, rgba(255, 204, 0, 0.22), transparent 45%),
+    linear-gradient(160deg, rgba(0, 74, 173, 0.14), transparent 60%);
+}
+
+.writingGuideMegaCard-hub-a:hover,
+.writingGuideMegaCard-hub-b:hover,
+.writingGuideMegaCard-hub-c:hover {
+  border-color: rgba(191, 139, 48, 0.34);
+}
+
+.writingGuideMegaCard-hub-d:hover,
+.writingGuideMegaCard-hub-e:hover {
+  border-color: rgba(0, 74, 173, 0.34);
+}
+
+.writingGuideMegaCard-hub-b .writingGuideMegaBadge,
+.writingGuideMegaCard-hub-d .writingGuideMegaBadge {
+  background: rgba(0, 74, 173, 0.1);
+  color: var(--bc-blue);
+}
+
+.writingGuideMegaCard-hub-c .writingGuideMegaBadge,
+.writingGuideMegaCard-hub-e .writingGuideMegaBadge {
+  background: rgba(245, 158, 11, 0.14);
+  color: #92660f;
+}
+
+/* ── Latest exam recall / prediction screen ───────────────────── */
+
+.wgLatestShell {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.wgLatestBlockTitle {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0b1f44;
+}
+
+.wgLatestBlockLead {
+  margin: 0 0 16px;
+  color: #64748b;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.wgLatestGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.wgLatestItem {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.wgLatestBlock-predict .wgLatestItem {
+  border-style: dashed;
+  border-color: rgba(191, 139, 48, 0.3);
+  background: rgba(255, 250, 235, 0.7);
+}
+
+.wgLatestItemTag {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 74, 173, 0.1);
+  color: var(--bc-blue);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.wgLatestItemTitle {
+  margin: 0;
+  color: #0f172a;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.wgLatestNew {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ffcc00;
+  color: #3a2a00;
+  font-size: 0.62rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+.wgLatestBullets {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.wgLatestItemMeta {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.wgLatestEmpty {
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px dashed rgba(0, 74, 173, 0.22);
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.wgLatestCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.wgLatestCtaBtn {
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  background: var(--bc-blue);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.wgLatestCtaBtn-t2 {
+  background: #f5a623;
+  color: #3a2a00;
+}
+
+.wgLatestCtaBtn:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .wgLatestGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .writingGuideMegaList {
   position: relative;
   z-index: 1;
@@ -1597,28 +1802,6 @@
    Tokens follow the same brand system as LandingPageDraft
 ══════════════════════════════════════════════════════════════ */
 
-.wlpShell {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(48px, 7vw, 80px);
-  padding-bottom: clamp(40px, 5vw, 64px);
-}
-
-/* ── Hero ──────────────────────────────────────────────────── */
-
-.wlpHero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 20px;
-  padding: clamp(40px, 7vw, 80px) clamp(16px, 4vw, 48px) clamp(32px, 4vw, 48px);
-  background: linear-gradient(160deg, #f0f5ff 0%, #fff 60%, #fffbea 100%);
-  border: 1px solid rgba(15, 46, 133, 0.08);
-  border-radius: 20px;
-  box-shadow: 0 4px 24px rgba(15, 46, 133, 0.07);
-}
-
 .wlpKicker {
   margin: 0;
   font-size: 0.72rem;
@@ -1627,32 +1810,6 @@
   text-transform: uppercase;
   color: #0f2e85;
   opacity: 0.7;
-}
-
-.wlpHeroH1 {
-  margin: 0;
-  font-size: clamp(1.75rem, 4.5vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-  color: #0b1f44;
-}
-
-.wlpHeroLead {
-  margin: 0;
-  max-width: 56ch;
-  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
-  color: #334155;
-  line-height: 1.7;
-  font-weight: 450;
-}
-
-.wlpHeroActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 4px;
 }
 
 .wlpBtn {
@@ -1695,45 +1852,7 @@
   box-shadow: 0 4px 14px rgba(15, 46, 133, 0.14);
 }
 
-.wlpHeroMeta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #64748b;
-  letter-spacing: 0.02em;
-  margin-top: 4px;
-}
-
-.wlpHeroMetaDot {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #94a3b8;
-  flex-shrink: 0;
-}
-
 /* ── Section scaffolding ───────────────────────────────────── */
-
-.wlpSection {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.wlpSection-recent {
-  gap: 32px;
-}
-
-.wlpSectionHead {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 56ch;
-}
 
 .wlpSectionKicker {
   margin: 0;
@@ -1744,33 +1863,12 @@
   color: #bf8b30;
 }
 
-.wlpSectionH2 {
-  margin: 0;
-  font-size: clamp(1.35rem, 3vw, 1.9rem);
-  font-weight: 800;
-  letter-spacing: -0.022em;
-  color: #0b1f44;
-  line-height: 1.2;
-}
-
-.wlpSectionLead {
-  margin: 0;
-  font-size: 0.92rem;
-  color: #475569;
-  line-height: 1.65;
-  font-weight: 450;
-}
-
 /* ── Task 1 type grid ─────────────────────────────────────── */
 
 .wlpTypeGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
-}
-
-.wlpTypeGrid-task2 {
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
 .wlpTypeCard {
@@ -1803,11 +1901,6 @@
   text-transform: uppercase;
 }
 
-.wlpTypeTag-task2 {
-  background: rgba(191, 139, 48, 0.12);
-  color: #7a5a20;
-}
-
 .wlpTypeTitle {
   margin: 0;
   font-size: 0.97rem;
@@ -1823,529 +1916,28 @@
   line-height: 1.6;
 }
 
-.wlpTypeFocus {
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.wlpTypeFocus li {
-  font-size: 0.8rem;
-  color: #64748b;
-  line-height: 1.5;
-  padding-left: 14px;
-  position: relative;
-}
-
-.wlpTypeFocus li::before {
-  content: '·';
-  position: absolute;
-  left: 3px;
-  color: #bf8b30;
-  font-weight: 700;
-}
-
-/* ── Recent practice questions ────────────────────────────── */
-
-.wlpRecentGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-  align-items: start;
-}
-
-.wlpRecentCard {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 28px 24px;
-  background: #fff;
-  border: 1px solid rgba(15, 46, 133, 0.1);
-  border-radius: 18px;
-  box-shadow: 0 4px 18px rgba(15, 46, 133, 0.07);
-}
-
-.wlpRecentCard-task2 {
-  border-color: rgba(191, 139, 48, 0.2);
-  background: linear-gradient(160deg, #fffcf0 0%, #fff 80%);
-}
-
-.wlpRecentCardHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.wlpRecentBadge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.67rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.wlpRecentBadge-task1 {
-  background: #0f2e85;
-  color: #fff;
-}
-
-.wlpRecentBadge-task2 {
-  background: #bf8b30;
-  color: #fff;
-}
-
-.wlpRecentChartBadge {
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(15, 46, 133, 0.07);
-  color: #0f2e85;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-}
-
-.wlpRecentCard-task2 .wlpRecentChartBadge {
-  background: rgba(191, 139, 48, 0.1);
-  color: #7a5a20;
-}
-
-.wlpRecentMonth {
-  margin-left: auto;
-  font-size: 0.73rem;
-  font-weight: 600;
-  color: #94a3b8;
-  letter-spacing: 0.04em;
-}
-
-.wlpRecentTitle {
-  margin: 0;
-  font-size: 1.02rem;
-  font-weight: 700;
-  color: #0b1f44;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-.wlpRecentPrompt {
-  margin: 0;
-  font-size: 0.87rem;
-  color: #334155;
-  line-height: 1.6;
-}
-
-.wlpRecentEssayPrompt {
-  margin: 0;
-  padding: 14px 18px;
-  border-left: 3px solid #bf8b30;
-  background: rgba(191, 139, 48, 0.05);
-  border-radius: 0 8px 8px 0;
-  font-size: 0.88rem;
-  color: #1e293b;
-  line-height: 1.65;
-  font-style: italic;
-}
-
-.wlpRecentInstruction {
-  margin: 0;
-  font-size: 0.82rem;
-  color: #64748b;
-  font-style: italic;
-  line-height: 1.55;
-}
-
-.wlpRecentWordLimit {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #0f2e85;
-  letter-spacing: 0.02em;
-}
-
-.wlpChartWrap {
-  border: 1px solid rgba(15, 46, 133, 0.09);
-  border-radius: 12px;
-  overflow: hidden;
-  background: #f8faff;
-  padding: 8px 4px 4px;
-}
-
-.wlpTask2Hint {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 14px 16px;
-  background: rgba(15, 46, 133, 0.04);
-  border-radius: 10px;
-  border: 1px solid rgba(15, 46, 133, 0.08);
-}
-
-.wlpTask2HintLabel {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #0f2e85;
-}
-
-.wlpTask2Hint ul {
-  margin: 0;
-  padding: 0 0 0 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.wlpTask2Hint li {
-  font-size: 0.81rem;
-  color: #334155;
-  line-height: 1.5;
-}
-
-.wlpRecentAction {
-  align-self: flex-start;
-  margin-top: 4px;
-  padding: 9px 18px;
-  border: 1.5px solid rgba(15, 46, 133, 0.3);
-  border-radius: 8px;
-  background: transparent;
-  color: #0f2e85;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-  transition: background 120ms ease, transform 120ms ease;
-}
-
-.wlpRecentAction:hover {
-  background: rgba(15, 46, 133, 0.06);
-  transform: translateY(-1px);
-}
-
-.wlpRecentAction-task2 {
-  border-color: rgba(191, 139, 48, 0.4);
-  color: #7a5a20;
-}
-
-.wlpRecentAction-task2:hover {
-  background: rgba(191, 139, 48, 0.06);
-}
-
-/* ── CTA row ──────────────────────────────────────────────── */
-
-.wlpCtaRow {
-  background: linear-gradient(130deg, #0f2e85 0%, #1a4cb5 100%);
-  border-radius: 20px;
-  padding: clamp(32px, 5vw, 60px) clamp(20px, 4vw, 56px);
-  box-shadow: 0 8px 32px rgba(15, 46, 133, 0.28);
-}
-
-.wlpCtaInner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 16px;
-}
-
-.wlpCtaKicker {
-  margin: 0;
-  font-size: 0.69rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 204, 0, 0.85);
-}
-
-.wlpCtaH2 {
-  margin: 0;
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.02em;
-}
-
-.wlpCtaLead {
-  margin: 0;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.78);
-  max-width: 44ch;
-  line-height: 1.6;
-}
-
-.wlpCtaActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 8px;
-}
-
-.wlpCtaActions .wlpBtn-primary {
-  background: #ffcc00;
-  color: #0b1f44;
-  box-shadow: 0 4px 14px rgba(255, 204, 0, 0.4);
-}
-
-.wlpCtaActions .wlpBtn-primary:hover {
-  box-shadow: 0 6px 20px rgba(255, 204, 0, 0.5);
-}
-
-.wlpCtaActions .wlpBtn-secondary {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.wlpCtaActions .wlpBtn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* ── Responsive ───────────────────────────────────────────── */
 
 @media (max-width: 600px) {
-  .wlpHeroH1 br { display: none; }
-  .wlpTypeGrid,
-  .wlpTypeGrid-task2 {
+  .wlpTypeGrid {
     grid-template-columns: 1fr;
   }
-  .wlpRecentGrid {
-    grid-template-columns: 1fr;
-  }
-  .wlpRecentMonth { display: none; }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   Monthly question grid (wlpMonth*)
-══════════════════════════════════════════════════════════════ */
-
-.wlpMonthGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.wlpMonthCard {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 22px 20px;
-  background: #fff;
-  border: 1px solid rgba(15, 46, 133, 0.1);
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(15, 46, 133, 0.06);
-  transition: transform 140ms ease, box-shadow 140ms ease;
-}
-
-.wlpMonthCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 46, 133, 0.1);
-}
-
-.wlpMonthCard-scheduled {
-  background: #f8faff;
-  border-style: dashed;
-  opacity: 0.85;
-}
-
-.wlpMonthCardHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.wlpMonthBadge {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: #64748b;
-}
-
-.wlpMonthPeriod {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: #94a3b8;
-}
-
-.wlpMonthTitle {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #0b1f44;
-  letter-spacing: -0.015em;
-}
-
-.wlpMonthScheduled {
-  margin: 0;
-  font-size: 0.82rem;
-  color: #94a3b8;
-  font-style: italic;
-}
-
-.wlpMonthTask {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px;
-  background: rgba(15, 46, 133, 0.04);
-  border-radius: 10px;
-  border-left: 3px solid #0f2e85;
-}
-
-.wlpMonthTask-t2 {
-  background: rgba(191, 139, 48, 0.05);
-  border-left-color: #bf8b30;
-}
-
-/* ── Task 1 inline chart ── */
-.wlpTask1ChartWrap {
-  margin-top: 8px;
-  background: #ffffff;
-  border: 1px solid rgba(15, 46, 133, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-  padding: 10px 8px 6px;
-}
-
-/* ── Mini data table (Jun) ── */
-.wlpMiniTable {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.wlpMiniTable table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.7rem;
-}
-
-.wlpMiniTable th {
-  background: rgba(15, 46, 133, 0.07);
-  color: #0f2e85;
-  font-weight: 700;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 5px 7px;
-  text-align: center;
-  border-bottom: 1px solid rgba(15, 46, 133, 0.15);
-}
-
-.wlpMiniTable td {
-  padding: 4px 7px;
-  text-align: center;
-  color: #334155;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.7rem;
-}
-
-.wlpMiniTableEntity {
-  text-align: left !important;
-  font-weight: 600;
-  color: #1e3a6e !important;
-  white-space: nowrap;
-}
-
-.wlpMiniTable tr:last-child td {
-  border-bottom: none;
-}
-
-.wlpMiniTable tr:nth-child(even) td {
-  background: rgba(15, 46, 133, 0.025);
-}
-
-.wlpMonthTaskHead {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.wlpMonthTaskLabel {
-  font-size: 0.66rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #0f2e85;
-}
-
-.wlpMonthTaskLabel-t2 {
-  color: #bf8b30;
-}
-
-.wlpMonthChartBadge {
-  font-size: 0.69rem;
-  font-weight: 600;
-  color: #475569;
-  background: rgba(15, 46, 133, 0.07);
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.wlpMonthChartBadge-t2 {
-  background: rgba(191, 139, 48, 0.1);
-  color: #7a5a20;
-}
-
-.wlpMonthTaskPrompt {
-  margin: 0;
-  font-size: 0.81rem;
-  color: #334155;
-  line-height: 1.55;
 }
 
 /* ══════════════════════════════════════════════════════════════
    Band 7 sample answer (wlpBand7*)
 ══════════════════════════════════════════════════════════════ */
 
-.wlpSection-band7 {
-  background: linear-gradient(160deg, #f8faff 0%, #fff 100%);
-  padding: clamp(24px, 3vw, 40px);
-  border-radius: 18px;
-  border: 1px solid rgba(15, 46, 133, 0.07);
-}
-
-.wlpBand7TabsWrap {
+.wlpBand7Tabs {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.wlpBand7TabRow {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.wlpBand7Tab {
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(15, 46, 133, 0.18);
-  background: #fff;
-  color: #475569;
-  font-size: 0.86rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 120ms ease;
-}
-
-.wlpBand7Tab.is-active {
-  background: #0f2e85;
-  color: #fff;
-  border-color: #0f2e85;
-  box-shadow: 0 3px 10px rgba(15, 46, 133, 0.25);
-}
-
-.wlpBand7Tab:hover:not(.is-active) {
-  background: #f0f5ff;
-  border-color: rgba(15, 46, 133, 0.3);
+.wlpBand7Tabs-single {
+  margin-top: 8px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(15, 46, 133, 0.08);
 }
 
 .wlpBand7Sample {
@@ -2571,12 +2163,7 @@
   line-height: 1.55;
 }
 
-/* Responsive for monthly grid */
 @media (max-width: 640px) {
-  .wlpMonthGrid {
-    grid-template-columns: 1fr;
-  }
-
   .wlpBand7Header {
     flex-direction: column;
   }
