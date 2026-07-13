@@ -2586,264 +2586,432 @@
   }
 }
 
-/* Line graph grammar drag-and-drop drill */
 
-.writingDragDropExercise {
+/* ── Guided step-by-step Task 1 essay builder ─────────────────────── */
+
+.wgbShell {
   display: grid;
-  gap: 16px;
+  grid-template-columns: minmax(300px, 1fr) minmax(340px, 1.05fr);
+  gap: 20px;
+  align-items: start;
   margin-top: 18px;
 }
 
-.writingDragDropInstructions {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: rgba(239, 246, 255, 0.7);
-  border: 1px dashed rgba(0, 74, 173, 0.22);
-  color: #334155;
-  font-size: 0.86rem;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.writingDragDropPassage {
-  display: grid;
-  gap: 14px;
-  padding: 18px 20px;
+.wgbChart {
+  position: sticky;
+  top: 16px;
+  padding: 16px;
   border-radius: 16px;
   border: 1px solid rgba(15, 23, 42, 0.1);
   background: #fff;
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  overflow-x: auto;
 }
 
-.writingDragDropParagraph {
+.wgbPanel {
   display: grid;
-  gap: 6px;
+  gap: 16px;
+  min-width: 0;
 }
 
-.writingDragDropParagraph p {
-  margin: 0;
-  color: #111827;
-  font-size: 0.95rem;
-  line-height: 2.1;
-}
-
-.writingDragDropRoleTag {
-  display: inline-flex;
-  width: fit-content;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(255, 204, 0, 0.22);
-  color: #92400e;
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.writingDragDropBlank {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 96px;
-  margin: 0 3px;
-  padding: 2px 10px;
-  border-radius: 8px;
-  border: 1.5px dashed rgba(0, 74, 173, 0.4);
-  background: rgba(239, 246, 255, 0.6);
-  color: #0f2e85;
-  font-weight: 700;
-  font-size: 0.92rem;
-  line-height: 1.8;
-  cursor: pointer;
-  vertical-align: middle;
-  transition:
-    border-color 120ms ease,
-    background 120ms ease,
-    transform 120ms ease;
-}
-
-.writingDragDropBlank:empty::before {
-  content: '\00a0\00a0\00a0\00a0\00a0\00a0';
-}
-
-.writingDragDropBlank.is-filled {
-  border-style: solid;
-  background: rgba(255, 255, 255, 0.98);
-}
-
-.writingDragDropBlank.is-armed-target {
-  border-color: var(--bc-blue);
-  background: rgba(96, 165, 250, 0.16);
-  transform: translateY(-1px);
-}
-
-.writingDragDropBlank.is-correct {
-  border-style: solid;
-  border-color: #16a34a;
-  background: rgba(22, 163, 74, 0.12);
-  color: #15803d;
-}
-
-.writingDragDropBlank.is-incorrect {
-  border-style: solid;
-  border-color: #dc2626;
-  background: rgba(220, 38, 38, 0.1);
-  color: #b91c1c;
-}
-
-.writingDragDropAnswerReveal {
-  display: block;
-  margin-top: 2px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  font-style: normal;
-  color: #92400e;
-  white-space: nowrap;
-}
-
-.writingDragDropBank {
+/* progress rail */
+.wgbRail {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(248, 250, 252, 0.9);
-  min-height: 48px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.writingDragDropChip {
+.wgbRailStep {
   display: inline-flex;
   align-items: center;
-  padding: 7px 12px;
+  gap: 8px;
+  padding: 7px 12px 7px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(0, 74, 173, 0.16);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.92));
-  color: #0f172a;
-  font-size: 0.84rem;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.82rem;
   font-weight: 700;
-  line-height: 1.3;
-  box-shadow: 0 6px 16px rgba(0, 74, 173, 0.06);
-  cursor: grab;
-  user-select: none;
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    border-color 120ms ease;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
-.writingDragDropChip:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(0, 74, 173, 0.12);
+.wgbRailStep .wgbRailDot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
-.writingDragDropChip.is-armed {
-  border-color: var(--bc-blue);
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.24), rgba(239, 246, 255, 0.92));
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.35);
+.wgbRailStep.is-current {
+  border-color: #004aad;
+  background: rgba(0, 74, 173, 0.08);
+  color: #004aad;
 }
 
-.writingDragDropToolbar {
+.wgbRailStep.is-current .wgbRailDot {
+  background: #004aad;
+  color: #fff;
+}
+
+.wgbRailStep.is-done .wgbRailDot {
+  background: #16a34a;
+  color: #fff;
+}
+
+.wgbRailStep.is-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* current step card */
+.wgbStepCard {
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  animation: wgbStepIn 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes wgbStepIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.wgbStepEyebrow {
+  margin: 0 0 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #004aad;
+}
+
+.wgbStepHint {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(239, 246, 255, 0.7);
+  border: 1px dashed rgba(0, 74, 173, 0.22);
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.wgbSentence {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 2.1;
+  color: #1e293b;
+}
+
+.wgbBlankWrap {
+  display: inline;
+  white-space: nowrap;
+}
+
+.wgbSelect,
+.wgbInput {
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  padding: 2px 8px;
+  margin: 0 1px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(0, 74, 173, 0.4);
+  background: #f1f6ff;
+  vertical-align: baseline;
+  transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+}
+
+.wgbSelect {
+  cursor: pointer;
+  max-width: 15rem;
+}
+
+.wgbInput {
+  text-align: center;
+  min-width: 5rem;
+}
+
+.wgbInput::placeholder {
+  color: #94a3b8;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.wgbSelect:focus,
+.wgbInput:focus {
+  outline: none;
+  border-color: #004aad;
+  box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.16);
+}
+
+.wgbSelect.is-filled,
+.wgbInput.is-filled {
+  background: #fff;
+}
+
+.wgbSelect.is-correct,
+.wgbInput.is-correct {
+  border-color: #16a34a;
+  background: rgba(22, 163, 74, 0.1);
+  color: #15803d;
+}
+
+.wgbSelect.is-incorrect,
+.wgbInput.is-incorrect {
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  color: #b91c1c;
+}
+
+.wgbReveal {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 6px;
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.wgbStepToolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
-.writingDragDropScore {
-  margin-left: auto;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(15, 46, 133, 0.08);
-  color: #0f2e85;
-  font-size: 0.82rem;
+.wgbStepScore {
+  font-size: 0.85rem;
   font-weight: 800;
-  transition: transform 120ms ease;
+  color: #64748b;
 }
 
-.writingDragDropScore.is-revealed {
-  animation: writingDragDropScorePulse 420ms ease;
+.wgbStepScore.is-revealed {
+  animation: wgbPulse 420ms ease;
 }
 
-@keyframes writingDragDropScorePulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(15, 46, 133, 0.35);
-  }
-  40% {
-    transform: scale(1.12);
-    box-shadow: 0 0 0 6px rgba(15, 46, 133, 0.14);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(15, 46, 133, 0);
-  }
+@keyframes wgbPulse {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.16); }
+  100% { transform: scale(1); }
 }
 
-@keyframes writingDragDropChipPop {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.12);
-  }
-  100% {
-    transform: scale(1);
-  }
+.wgbNextBtn {
+  margin-left: auto;
+  animation: wgbPulse 420ms ease;
 }
 
-.writingDragDropBlank.is-filled,
-.writingDragDropBlank.is-correct,
-.writingDragDropBlank.is-incorrect {
-  animation: writingDragDropChipPop 220ms ease;
-}
-
-@keyframes writingDragDropCelebrationIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.writingDragDropCelebration {
-  margin-top: 10px;
-  padding: 10px 16px;
+.wgbFeedback {
+  margin-top: 14px;
+  padding: 12px 14px;
   border-radius: 12px;
   font-size: 0.9rem;
-  font-weight: 800;
-  text-align: center;
-  animation: writingDragDropCelebrationIn 260ms ease;
+  font-weight: 700;
+  line-height: 1.5;
+  animation: wgbStepIn 260ms ease;
 }
 
-.writingDragDropCelebration-perfect {
+.wgbFeedback.is-good {
   background: rgba(22, 163, 74, 0.12);
   border: 1px solid rgba(22, 163, 74, 0.35);
   color: #15803d;
 }
 
-.writingDragDropCelebration-good {
-  background: rgba(217, 119, 6, 0.12);
-  border: 1px solid rgba(217, 119, 6, 0.35);
-  color: #b45309;
-}
-
-.writingDragDropCelebration-retry {
+.wgbFeedback.is-retry {
   background: rgba(220, 38, 38, 0.1);
   border: 1px solid rgba(220, 38, 38, 0.3);
   color: #b91c1c;
 }
 
-@media (max-width: 640px) {
-  .writingDragDropPassage {
-    padding: 14px 16px;
+/* finish + full essay */
+.wgbFinish {
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  background: linear-gradient(180deg, rgba(22, 163, 74, 0.08), rgba(255, 255, 255, 0.6));
+  animation: wgbStepIn 320ms ease;
+}
+
+.wgbFinishHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wgbFinishTitle {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #15803d;
+}
+
+.wgbFinishBtns {
+  display: flex;
+  gap: 10px;
+}
+
+.wgbEssay {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+}
+
+.wgbEssayPara {
+  display: grid;
+  gap: 6px;
+}
+
+.wgbEssayLabel {
+  justify-self: start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(0, 74, 173, 0.1);
+  color: #004aad;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.wgbEssayPara p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: #1e293b;
+}
+
+.wgbCoach {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 74, 173, 0.18);
+  background: linear-gradient(135deg, rgba(224, 238, 255, 0.85), rgba(255, 255, 255, 0.92));
+  box-shadow: 0 10px 24px rgba(0, 74, 173, 0.08);
+  animation:
+    wgbCoachIn 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    wgbCoachFloat 3.2s ease-in-out 360ms infinite;
+}
+
+.wgbCoach.is-blank-focus {
+  border-color: rgba(191, 139, 48, 0.35);
+  background: linear-gradient(135deg, rgba(255, 246, 224, 0.85), rgba(255, 255, 255, 0.92));
+}
+
+.wgbCoachAvatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #004aad, #2f7bff);
+  box-shadow: 0 6px 14px rgba(0, 74, 173, 0.28);
+}
+
+.wgbCoach.is-blank-focus .wgbCoachAvatar {
+  background: linear-gradient(135deg, #bf8b30, #e3ac4d);
+  box-shadow: 0 6px 14px rgba(191, 139, 48, 0.3);
+}
+
+.wgbCoachBody {
+  min-width: 0;
+}
+
+.wgbCoachLabel {
+  margin: 0 0 3px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #004aad;
+}
+
+.wgbCoach.is-blank-focus .wgbCoachLabel {
+  color: #92660f;
+}
+
+.wgbCoachMessage {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #1e293b;
+}
+
+@keyframes wgbCoachIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes wgbCoachFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wgbCoach {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .wgbShell {
+    grid-template-columns: 1fr;
   }
 
-  .writingDragDropScore {
+  .wgbChart {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .wgbStepCard,
+  .wgbFinish {
+    padding: 16px;
+  }
+
+  .wgbSentence {
+    font-size: 0.98rem;
+    line-height: 2;
+  }
+
+  .wgbNextBtn {
     margin-left: 0;
+  }
+
+  .wgbCoach {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .wgbCoachMessage {
+    font-size: 0.82rem;
   }
 }

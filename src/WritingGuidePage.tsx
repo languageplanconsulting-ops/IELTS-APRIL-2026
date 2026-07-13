@@ -1,10 +1,16 @@
-import { useMemo, useState, type CSSProperties, type DragEvent } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import './WritingGuidePage.css'
 import {
-  getWritingDragDropExercise,
-  type WritingDragDropExercise,
-  type WritingDragDropLine
-} from './writingLineGraphDragDrop'
+  getWritingGuidedBuilder,
+  assembleGuidedEssay,
+  ROLE_LABEL_TH,
+  STEP_COACH_TH,
+  BLANK_COACH_TH,
+  type WgbExercise,
+  type WgbStep,
+  type WgbBlank,
+  type WgbSegment
+} from './writingGuidedBuilder'
 import {
   WRITING_TASK1_SECTIONS,
   WRITING_TASK2_TYPES,
@@ -837,195 +843,255 @@ function WritingIeltsTask1Paper({
   )
 }
 
-function shuffleArray<T>(items: T[]): T[] {
-  const result = [...items]
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[result[i], result[j]] = [result[j], result[i]]
-  }
-  return result
-}
-
-const DRAG_DROP_ROLE_LABEL: Record<WritingDragDropLine['role'], string> = {
-  intro: 'Introduction',
+const WGB_STEP_SHORT: Record<WgbStep['role'], string> = {
+  intro: 'Intro',
   overview: 'Overview',
-  body1: 'Body Paragraph 1',
-  body2: 'Body Paragraph 2'
+  body1: 'Body 1',
+  body2: 'Body 2'
 }
 
-function WritingDragDropExerciseView({ exercise }: { exercise: WritingDragDropExercise }) {
-  const [state, setState] = useState<{ bank: string[]; placements: Record<string, string | null> }>(() => ({
-    bank: shuffleArray(exercise.wordBank),
-    placements: {}
-  }))
-  const [armedChip, setArmedChip] = useState<string | null>(null)
-  const [checked, setChecked] = useState(false)
-  const [showAnswers, setShowAnswers] = useState(false)
+const wgbNormalize = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase()
 
-  const allBlanks = useMemo(
+function WgbCoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string; message: string; isBlankFocus: boolean }) {
+  return (
+    <div key={coachKey} className={`wgbCoach ${isBlankFocus ? 'is-blank-focus' : ''}`}>
+      <span className="wgbCoachAvatar" aria-hidden="true">
+        {isBlankFocus ? '💭' : '🧑‍🏫'}
+      </span>
+      <div className="wgbCoachBody">
+        <p className="wgbCoachLabel">โค้ชแนะนำ</p>
+        <p className="wgbCoachMessage">{message}</p>
+      </div>
+    </div>
+  )
+}
+
+function WritingGuidedBuilder({
+  prompt,
+  exercise
+}: {
+  prompt: WritingTask1PracticePrompt
+  exercise: WgbExercise
+}) {
+  const steps = exercise.steps
+  const [stepIndex, setStepIndex] = useState(0)
+  const [values, setValues] = useState<Record<string, string>>({})
+  const [checkedSteps, setCheckedSteps] = useState<Set<string>>(() => new Set())
+  const [checkedNow, setCheckedNow] = useState(false)
+  const [showEssay, setShowEssay] = useState(false)
+  const [activeBlankId, setActiveBlankId] = useState<string | null>(null)
+
+  const step = steps[stepIndex]
+  const isLastStep = stepIndex === steps.length - 1
+
+  const isBlankCorrect = (blank: WgbBlank): boolean => {
+    const value = values[blank.id]
+    if (value == null || value.trim() === '') return false
+    if (blank.kind === 'select') return value === blank.answer
+    return blank.answers.some((answer) => wgbNormalize(answer) === wgbNormalize(value))
+  }
+
+  const stepBlanks = useMemo(
     () =>
-      exercise.lines.flatMap((line) =>
-        line.segments.filter((segment) => segment.kind === 'blank').map((segment) => segment.blank)
-      ),
-    [exercise]
+      step.segments
+        .filter((segment): segment is Extract<WgbSegment, { kind: 'blank' }> => segment.kind === 'blank')
+        .map((segment) => segment.blank),
+    [step]
+  )
+  const stepScore = stepBlanks.filter(isBlankCorrect).length
+  const stepDone = checkedSteps.has(step.id)
+  const allDone = steps.every((item) => checkedSteps.has(item.id))
+
+  const totalBlanks = useMemo(
+    () => steps.reduce((sum, item) => sum + item.segments.filter((s) => s.kind === 'blank').length, 0),
+    [steps]
   )
 
-  const placeChip = (chipText: string, blankId: string) => {
-    setChecked(false)
-    setShowAnswers(false)
-    setState((current) => {
-      const existing = current.placements[blankId]
-      let bank = current.bank.filter((chip) => chip !== chipText)
-      if (existing) bank = [...bank, existing]
-      return { bank, placements: { ...current.placements, [blankId]: chipText } }
-    })
-    setArmedChip(null)
+  const setValue = (id: string, value: string) => {
+    setCheckedNow(false)
+    setValues((current) => ({ ...current, [id]: value }))
   }
 
-  const clearBlank = (blankId: string) => {
-    setChecked(false)
-    setShowAnswers(false)
-    setState((current) => {
-      const chip = current.placements[blankId]
-      if (!chip) return current
-      return { bank: [...current.bank, chip], placements: { ...current.placements, [blankId]: null } }
-    })
-  }
-
-  const handleChipClick = (chipText: string) => {
-    setArmedChip((current) => (current === chipText ? null : chipText))
-  }
-
-  const handleBlankClick = (blankId: string) => {
-    if (state.placements[blankId]) {
-      clearBlank(blankId)
-      return
+  const checkStep = () => {
+    setCheckedNow(true)
+    if (stepBlanks.every(isBlankCorrect)) {
+      setCheckedSteps((current) => {
+        const next = new Set(current)
+        next.add(step.id)
+        return next
+      })
     }
-    if (armedChip) placeChip(armedChip, blankId)
   }
 
-  const handleDragStart = (event: DragEvent<HTMLSpanElement>, chipText: string) => {
-    event.dataTransfer.setData('text/plain', chipText)
+  const goToStep = (index: number) => {
+    const reachable = index === 0 || checkedSteps.has(steps[index - 1].id) || checkedSteps.has(steps[index].id)
+    if (!reachable) return
+    setStepIndex(index)
+    setCheckedNow(false)
+    setActiveBlankId(null)
   }
 
-  const handleDrop = (event: DragEvent<HTMLSpanElement>, blankId: string) => {
-    event.preventDefault()
-    const chipText = event.dataTransfer.getData('text/plain')
-    if (chipText) placeChip(chipText, blankId)
+  const goNext = () => {
+    if (!isLastStep) goToStep(stepIndex + 1)
   }
 
-  const reset = () => {
-    setState({ bank: shuffleArray(exercise.wordBank), placements: {} })
-    setArmedChip(null)
-    setChecked(false)
-    setShowAnswers(false)
+  const resetAll = () => {
+    setStepIndex(0)
+    setValues({})
+    setCheckedSteps(new Set())
+    setCheckedNow(false)
+    setShowEssay(false)
+    setActiveBlankId(null)
   }
 
-  const score = allBlanks.filter((blank) => {
-    const placed = state.placements[blank.id]
-    return placed != null && blank.answers.includes(placed)
-  }).length
+  const model = useMemo(() => assembleGuidedEssay(exercise), [exercise])
 
-  const scoreTier: 'perfect' | 'good' | 'retry' | null = !checked
-    ? null
-    : score === allBlanks.length
-      ? 'perfect'
-      : score / allBlanks.length >= 0.6
-        ? 'good'
-        : 'retry'
-
-  const encouragementMessage: Record<'perfect' | 'good' | 'retry', string> = {
-    perfect: 'เยี่ยมมาก! ถูกทุกช่องเลย 🎉',
-    good: 'ทำได้ดีมาก! ใกล้เต็มแล้ว ลองดูช่องที่ผิดอีกครั้ง 💪',
-    retry: 'ยังไม่ครบนะ ลองทบทวนโครงสร้างประโยคแล้วลองใหม่อีกครั้ง 🙂'
-  }
+  const activeBlank = activeBlankId ? stepBlanks.find((blank) => blank.id === activeBlankId) ?? null : null
+  const coachMessage = activeBlank ? BLANK_COACH_TH[activeBlank.focus] : STEP_COACH_TH[step.role]
+  const coachKey = activeBlank ? activeBlank.id : `step-${step.id}`
 
   return (
-    <div className="writingDragDropExercise">
-      <p className="writingDragDropInstructions">{exercise.instructionsTh}</p>
+    <div className="wgbShell">
+      <div className="wgbChart">{renderPromptChart(prompt)}</div>
 
-      <div className="writingDragDropPassage">
-        {exercise.lines.map((line) => (
-          <div key={line.id} className="writingDragDropParagraph">
-            <span className="writingDragDropRoleTag">{DRAG_DROP_ROLE_LABEL[line.role]}</span>
-            <p>
-              {line.segments.map((segment, index) => {
-                if (segment.kind === 'text') {
-                  return <span key={index}>{segment.text}</span>
-                }
-                const blank = segment.blank
-                const placed = state.placements[blank.id] || null
-                const isCorrect = placed ? blank.answers.includes(placed) : false
-                let stateClass = ''
-                if (checked) {
-                  stateClass = isCorrect ? 'is-correct' : 'is-incorrect'
-                } else if (placed) {
-                  stateClass = 'is-filled'
-                } else if (armedChip) {
-                  stateClass = 'is-armed-target'
-                }
+      <div className="wgbPanel">
+        <ol className="wgbRail">
+          {steps.map((item, index) => {
+            const done = checkedSteps.has(item.id)
+            const reachable = index === 0 || checkedSteps.has(steps[index - 1].id) || done
+            const current = index === stepIndex
+            return (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  className={`wgbRailStep ${current ? 'is-current' : ''} ${done ? 'is-done' : ''} ${
+                    reachable ? '' : 'is-locked'
+                  }`}
+                  onClick={() => goToStep(index)}
+                  disabled={!reachable}
+                >
+                  <span className="wgbRailDot">{done ? '✓' : index + 1}</span>
+                  <span className="wgbRailLabel">{WGB_STEP_SHORT[item.role]}</span>
+                </button>
+              </li>
+            )
+          })}
+        </ol>
+
+        <WgbCoachBubble coachKey={coachKey} message={coachMessage} isBlankFocus={!!activeBlank} />
+
+        <div key={step.id} className="wgbStepCard">
+          <p className="wgbStepEyebrow">{ROLE_LABEL_TH[step.role]}</p>
+          {step.hintTh ? <p className="wgbStepHint">{step.hintTh}</p> : null}
+
+          <p className="wgbSentence">
+            {step.segments.map((segment, index) => {
+              if (segment.kind === 'text') return <span key={index}>{segment.text}</span>
+              const blank = segment.blank
+              const value = values[blank.id] ?? ''
+              const correct = isBlankCorrect(blank)
+              const stateClass = !checkedNow ? '' : correct ? 'is-correct' : 'is-incorrect'
+              if (blank.kind === 'select') {
                 return (
-                  <span
-                    key={blank.id}
-                    role="button"
-                    tabIndex={0}
-                    className={`writingDragDropBlank ${stateClass}`}
-                    onClick={() => handleBlankClick(blank.id)}
-                    onKeyDown={(event) => event.key === 'Enter' && handleBlankClick(blank.id)}
-                    onDragOver={(event) => event.preventDefault()}
-                    onDrop={(event) => handleDrop(event, blank.id)}
-                  >
-                    {placed}
-                    {checked && showAnswers && !isCorrect ? (
-                      <em className="writingDragDropAnswerReveal">({blank.answers.join(' / ')})</em>
+                  <span key={blank.id} className="wgbBlankWrap">
+                    <select
+                      className={`wgbSelect ${stateClass} ${value ? 'is-filled' : ''}`}
+                      value={value}
+                      onChange={(event) => setValue(blank.id, event.target.value)}
+                      onFocus={() => setActiveBlankId(blank.id)}
+                      onBlur={() => setActiveBlankId((current) => (current === blank.id ? null : current))}
+                    >
+                      <option value="">— เลือก —</option>
+                      {blank.options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    {checkedNow && !correct ? (
+                      <em className="wgbReveal">{blank.answer}</em>
                     ) : null}
                   </span>
                 )
-              })}
-            </p>
+              }
+              const widthCh = Math.max(blank.base.length + 3, ...blank.answers.map((a) => a.length + 1), 7)
+              return (
+                <span key={blank.id} className="wgbBlankWrap">
+                  <input
+                    type="text"
+                    className={`wgbInput ${stateClass} ${value ? 'is-filled' : ''}`}
+                    value={value}
+                    placeholder={`(${blank.base})`}
+                    style={{ width: `${widthCh}ch` }}
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    onChange={(event) => setValue(blank.id, event.target.value)}
+                    onFocus={() => setActiveBlankId(blank.id)}
+                    onBlur={() => setActiveBlankId((current) => (current === blank.id ? null : current))}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') checkStep()
+                    }}
+                  />
+                  {checkedNow && !correct ? <em className="wgbReveal">{blank.answers[0]}</em> : null}
+                </span>
+              )
+            })}
+          </p>
+
+          <div className="wgbStepToolbar">
+            <button type="button" className="wlpBtn wlpBtn-primary" onClick={checkStep}>
+              ตรวจคำตอบ
+            </button>
+            <span className={`wgbStepScore ${checkedNow ? 'is-revealed' : ''}`}>
+              {stepScore} / {stepBlanks.length}
+            </span>
+            {stepDone && !isLastStep ? (
+              <button type="button" className="wlpBtn wlpBtn-primary wgbNextBtn" onClick={goNext}>
+                ถัดไป →
+              </button>
+            ) : null}
           </div>
-        ))}
-      </div>
 
-      <div className="writingDragDropBank">
-        {state.bank.map((chip, index) => (
-          <span
-            key={`${chip}-${index}`}
-            draggable
-            role="button"
-            tabIndex={0}
-            className={`writingDragDropChip ${armedChip === chip ? 'is-armed' : ''}`}
-            onClick={() => handleChipClick(chip)}
-            onDragStart={(event) => handleDragStart(event, chip)}
-            onKeyDown={(event) => event.key === 'Enter' && handleChipClick(chip)}
-          >
-            {chip}
-          </span>
-        ))}
-      </div>
-
-      <div className="writingDragDropToolbar">
-        <button type="button" className="wlpBtn wlpBtn-primary" onClick={() => setChecked(true)}>
-          ตรวจคำตอบ
-        </button>
-        <button type="button" className="wlpBtn wlpBtn-secondary" onClick={reset}>
-          ลองใหม่
-        </button>
-        {checked ? (
-          <button type="button" className="wlpBtn wlpBtn-secondary" onClick={() => setShowAnswers((v) => !v)}>
-            {showAnswers ? 'ซ่อนเฉลย' : 'ดูเฉลย'}
-          </button>
-        ) : null}
-        <span className={`writingDragDropScore ${checked ? 'is-revealed' : ''}`}>
-          {score} / {allBlanks.length} ถูกต้อง
-        </span>
-      </div>
-
-      {checked && scoreTier ? (
-        <div className={`writingDragDropCelebration writingDragDropCelebration-${scoreTier}`} role="status">
-          {encouragementMessage[scoreTier]}
+          {checkedNow ? (
+            stepBlanks.every(isBlankCorrect) ? (
+              <div className="wgbFeedback is-good" role="status">
+                {isLastStep ? 'เยี่ยมมาก! เขียนครบทุกย่อหน้าแล้ว 🎉' : 'ถูกทุกช่อง! กด “ถัดไป” เพื่อเขียนย่อหน้าถัดไป ✅'}
+              </div>
+            ) : (
+              <div className="wgbFeedback is-retry" role="status">
+                ยังมีช่องที่ต้องแก้ ลองดูคำใบ้แล้วปรับใหม่อีกครั้ง 🙂
+              </div>
+            )
+          ) : null}
         </div>
-      ) : null}
+
+        {allDone ? (
+          <div className="wgbFinish">
+            <div className="wgbFinishHead">
+              <p className="wgbFinishTitle">จบแล้ว! คุณประกอบเรียงความครบ {totalBlanks} ช่อง 🎉</p>
+              <div className="wgbFinishBtns">
+                <button type="button" className="wlpBtn wlpBtn-primary" onClick={() => setShowEssay((v) => !v)}>
+                  {showEssay ? 'ซ่อนเรียงความเต็ม' : 'ดูเรียงความเต็ม'}
+                </button>
+                <button type="button" className="wlpBtn wlpBtn-secondary" onClick={resetAll}>
+                  เริ่มใหม่
+                </button>
+              </div>
+            </div>
+            {showEssay ? (
+              <article className="wgbEssay">
+                {model.map((para) => (
+                  <div key={para.role} className="wgbEssayPara">
+                    <span className="wgbEssayLabel">{para.labelTh}</span>
+                    <p>{para.text}</p>
+                  </div>
+                ))}
+              </article>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
     </div>
   )
 }
@@ -1878,7 +1944,7 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
               >
                 ตัวช่วย
               </button>
-              {getWritingDragDropExercise(activePrompt.id) ? (
+              {getWritingGuidedBuilder(activePrompt.id) ? (
                 <button
                   type="button"
                   className="writingGuideHelperBtn"
@@ -1886,7 +1952,7 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
                     setFlow({ step: 'task1-drill', categoryId: activeCategory.id, promptId: activePrompt.id })
                   }
                 >
-                  ฝึกไวยากรณ์ (Drag & Drop)
+                  ฝึกเขียนทีละย่อหน้า
                 </button>
               ) : null}
             </div>
@@ -1908,7 +1974,7 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
 
         {flow.step === 'task1-drill' && activePrompt ? (
           (() => {
-            const exercise = getWritingDragDropExercise(activePrompt.id)
+            const exercise = getWritingGuidedBuilder(activePrompt.id)
             return (
               <div className="writingGuideExamShell">
                 <div className="writingGuideExamToolbar">
@@ -1916,12 +1982,11 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
                     ← Back to exam
                   </button>
                 </div>
-                {renderPromptChart(activePrompt)}
                 {exercise ? (
-                  <WritingDragDropExerciseView key={exercise.id} exercise={exercise} />
+                  <WritingGuidedBuilder key={exercise.id} prompt={activePrompt} exercise={exercise} />
                 ) : (
                   <div className="writingGuideComingSoon">
-                    <p>Grammar drill for this question is not ready yet.</p>
+                    <p>Guided writing practice for this question is not ready yet.</p>
                   </div>
                 )}
               </div>
