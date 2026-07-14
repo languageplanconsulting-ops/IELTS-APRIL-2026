@@ -1435,6 +1435,7 @@ export function WritingGuidePage({ onBackHome }: WritingGuidePageProps) {
             <div className="writingGuideHubIntro">
               <p className="wlpKicker">IELTS Academic Writing · English Plan Institute</p>
               <h1 className="writingGuideHubH1">เลือกสิ่งที่อยากฝึกวันนี้</h1>
+              <span className="wlpAccentRule" aria-hidden="true" />
               <p className="writingGuideHubLead">
                 ดูข้อสอบจริงล่าสุดจากผู้สอบ หรือฝึกเขียนทีละขั้นตอน — เลือกได้เลย
               </p>

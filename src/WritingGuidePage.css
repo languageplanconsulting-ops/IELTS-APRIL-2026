@@ -180,9 +180,11 @@
 }
 
 .writingGuideMegaCard strong {
-  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
-  color: #0f172a;
-  line-height: 1.15;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  color: #0b2a5b;
+  line-height: 1.18;
 }
 
 .writingGuideMegaSub {
@@ -235,6 +237,7 @@
   flex-direction: column;
   gap: clamp(28px, 4vw, 40px);
   padding-bottom: clamp(32px, 4vw, 48px);
+  font-family: 'IBM Plex Sans Thai', Inter, system-ui, sans-serif;
 }
 
 .writingGuideHubIntro {
@@ -246,20 +249,37 @@
   padding: clamp(32px, 6vw, 56px) clamp(16px, 4vw, 48px) clamp(8px, 2vw, 16px);
 }
 
+.writingGuideHubIntro .wlpKicker {
+  font-family: 'Kanit', sans-serif;
+  color: #004aad;
+  opacity: 1;
+  letter-spacing: 0.2em;
+}
+
 .writingGuideHubH1 {
   margin: 0;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 800;
-  color: #0b1f44;
-  letter-spacing: -0.02em;
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(1.9rem, 4.4vw, 2.7rem);
+  font-weight: 700;
+  color: #0b2a5b;
+  letter-spacing: 0;
+  line-height: 1.12;
+}
+
+.writingGuideHubIntro .writingGuideHubH1 + .wlpAccentRule {
+  width: 56px;
+  height: 4px;
+  border-radius: 3px;
+  background: #ffcc00;
+  margin: 4px 0 4px;
 }
 
 .writingGuideHubLead {
   margin: 0;
-  max-width: 44ch;
-  color: #475569;
+  max-width: 46ch;
+  color: #4a5a76;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.6;
 }
 
@@ -267,33 +287,72 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.writingGuideMegaCard-hub-a::before {
-  background:
-    linear-gradient(135deg, rgba(255, 204, 0, 0.22), transparent 45%),
-    linear-gradient(160deg, rgba(0, 74, 173, 0.14), transparent 60%);
+/* Cards a/b/c: clean white surfaces with brand accents */
+.writingGuideMegaCard-hub-a,
+.writingGuideMegaCard-hub-b,
+.writingGuideMegaCard-hub-c {
+  background: #fff;
+  border-color: #dce6f5;
+}
+
+.writingGuideMegaCard-hub-a::before,
+.writingGuideMegaCard-hub-b::before,
+.writingGuideMegaCard-hub-c::before {
+  background: none;
 }
 
 .writingGuideMegaCard-hub-a:hover,
 .writingGuideMegaCard-hub-b:hover,
 .writingGuideMegaCard-hub-c:hover {
-  border-color: rgba(191, 139, 48, 0.34);
+  border-color: #004aad;
+  box-shadow: 0 14px 30px rgba(0, 74, 173, 0.14);
+}
+
+/* Card a badge: brand yellow */
+.writingGuideMegaCard-hub-a .writingGuideMegaBadge {
+  background: #ffcc00;
+  color: #0b2a5b;
+}
+
+/* Cards b/c badge: brand blue */
+.writingGuideMegaCard-hub-b .writingGuideMegaBadge,
+.writingGuideMegaCard-hub-c .writingGuideMegaBadge {
+  background: #e6f0ff;
+  color: var(--bc-blue);
+}
+
+/* Cards d/e: solid brand-blue feature blocks */
+.writingGuideMegaCard-hub-d,
+.writingGuideMegaCard-hub-e {
+  background: #004aad;
+  border-color: #004aad;
+}
+
+.writingGuideMegaCard-hub-d::before,
+.writingGuideMegaCard-hub-e::before {
+  background: none;
 }
 
 .writingGuideMegaCard-hub-d:hover,
 .writingGuideMegaCard-hub-e:hover {
-  border-color: rgba(0, 74, 173, 0.34);
+  border-color: #003a86;
+  box-shadow: 0 16px 34px rgba(0, 74, 173, 0.32);
 }
 
-.writingGuideMegaCard-hub-b .writingGuideMegaBadge,
-.writingGuideMegaCard-hub-d .writingGuideMegaBadge {
-  background: rgba(0, 74, 173, 0.1);
-  color: var(--bc-blue);
+.writingGuideMegaCard-hub-d strong,
+.writingGuideMegaCard-hub-e strong {
+  color: #fff;
 }
 
-.writingGuideMegaCard-hub-c .writingGuideMegaBadge,
+.writingGuideMegaCard-hub-d .writingGuideMegaSub,
+.writingGuideMegaCard-hub-e .writingGuideMegaSub {
+  color: #b8ccec;
+}
+
+.writingGuideMegaCard-hub-d .writingGuideMegaBadge,
 .writingGuideMegaCard-hub-e .writingGuideMegaBadge {
-  background: rgba(245, 158, 11, 0.14);
-  color: #92660f;
+  background: #ffcc00;
+  color: #0b2a5b;
 }
 
 /* ── Latest exam recall / prediction screen ───────────────────── */
