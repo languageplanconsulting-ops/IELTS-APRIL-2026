@@ -3,6 +3,7 @@
   isolation: isolate;
   display: grid;
   gap: 18px;
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
   padding: clamp(16px, 2vw, 28px);
   min-height: calc(100vh - 88px);
   border-radius: 28px;
@@ -641,9 +642,11 @@
 
 .writingGuideHeader h2 {
   margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
-  color: #0b1f44;
-  letter-spacing: -0.02em;
+  color: #0b2a5b;
+  letter-spacing: 0;
 }
 
 .writingGuideLead {
@@ -890,9 +893,10 @@
 
 .writingGuideChipGroupHead h4 {
   margin: 0;
-  font-size: 0.92rem;
-  font-weight: 800;
-  color: #0f172a;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0b2a5b;
 }
 
 .writingGuideChipGroupHead p {
@@ -932,10 +936,11 @@
 
 .writingGuideStructureEyebrow {
   margin: 0;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--bc-blue);
 }
 
@@ -959,10 +964,10 @@
   width: fit-content;
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(255, 204, 0, 0.22);
-  color: #92400e;
+  background: rgba(255, 204, 0, 0.28);
+  color: #0b2a5b;
   font-size: 0.64rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1025,11 +1030,20 @@
   gap: 10px;
   padding: 18px;
   border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid #dce6f5;
+  background: #fff;
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  transition: transform var(--duration-luxury-fast) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
   animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
   animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+}
+
+.writingGuideTask2Card:hover {
+  transform: translateY(-3px);
+  border-color: var(--bc-blue);
+  box-shadow: 0 14px 30px rgba(0, 74, 173, 0.14);
 }
 
 .writingGuideTask2Badge {
@@ -1047,8 +1061,10 @@
 
 .writingGuideTask2Card h3 {
   margin: 0;
-  font-size: 1.12rem;
-  color: #0f172a;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: #0b2a5b;
 }
 
 .writingGuideTask2Sub {
@@ -1109,9 +1125,10 @@
   border-radius: 999px;
   border: 1px solid rgba(0, 74, 173, 0.28);
   background: linear-gradient(135deg, var(--bc-yellow) 0%, #ffd84d 100%);
-  color: #111827;
+  color: #0b2a5b;
+  font-family: 'Kanit', sans-serif;
   font-size: 0.92rem;
-  font-weight: 900;
+  font-weight: 600;
   cursor: pointer;
   box-shadow: 0 10px 24px rgba(255, 204, 0, 0.24);
   transition:
@@ -1931,22 +1948,27 @@
   border: none;
 }
 
+.wlpBtn {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+}
+
 .wlpBtn-primary {
-  background: #0f2e85;
+  background: #004aad;
   color: #fff;
-  box-shadow: 0 2px 10px rgba(15, 46, 133, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 74, 173, 0.25);
 }
 
 .wlpBtn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 46, 133, 0.32);
+  box-shadow: 0 6px 20px rgba(0, 74, 173, 0.32);
 }
 
 .wlpBtn-secondary {
   background: #fff;
-  color: #0f2e85;
-  border: 1.5px solid rgba(15, 46, 133, 0.25);
-  box-shadow: 0 2px 8px rgba(15, 46, 133, 0.08);
+  color: #004aad;
+  border: 1.5px solid rgba(0, 74, 173, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 74, 173, 0.08);
 }
 
 .wlpBtn-secondary:hover {
@@ -2068,13 +2090,14 @@
 
 .wlpBand7Badge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 5px 13px;
   border-radius: 999px;
-  background: #0f2e85;
+  background: #004aad;
   color: #fff;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   width: fit-content;
 }
 
@@ -2148,11 +2171,12 @@
 
 .wlpBand7SegLabel {
   margin: 0;
-  font-size: 0.69rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: #0f2e85;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #004aad;
 }
 
 .wlpBand7SegText {
@@ -2248,11 +2272,12 @@
 
 .wlpBand7TipsLabel {
   margin: 0 0 10px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #0f2e85;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #004aad;
 }
 
 .wlpBand7TipsList {
