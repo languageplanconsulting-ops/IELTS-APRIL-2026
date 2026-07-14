@@ -136,6 +136,10 @@ export function WritingTask2Practice({
       <div className="wgb2QuestionCard">
         <p className="wgb2QuestionEyebrow">โจทย์ข้อ {prompt.number}</p>
         <p className="wgb2QuestionText">{prompt.questionText}</p>
+        <p className="wgb2QuestionInstruction">
+          <b>วิธีทำ:</b> เขียนทีละย่อหน้าตามขั้นด้านล่าง เติมคำในช่องว่างให้ครบ แล้วกด{' '}
+          <b>“ตรวจคำตอบ”</b> — ช่องจะเปลี่ยนเป็น<b>สีเขียว</b>เมื่อถูก และ<b>สีชมพู</b>เมื่อต้องแก้
+        </p>
       </div>
 
       <div className="wgbPanel wgb2Panel">

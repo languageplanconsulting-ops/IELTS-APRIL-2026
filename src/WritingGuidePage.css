@@ -2828,28 +2828,57 @@
 }
 
 .wgb2QuestionCard {
-  padding: 16px 20px;
+  padding: 18px 20px 18px 18px;
   border-radius: 16px;
-  border: 1px solid rgba(0, 74, 173, 0.16);
-  background: linear-gradient(135deg, rgba(224, 238, 255, 0.7), #fff);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  border: 1.5px solid #cddcf5;
+  border-left: 6px solid #004aad;
+  background: #eef4ff;
 }
 
 .wgb2QuestionEyebrow {
-  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 8px;
   font-family: 'Kanit', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   color: #004aad;
+}
+
+.wgb2QuestionEyebrow::before {
+  content: '';
+  width: 5px;
+  height: 18px;
+  border-radius: 3px;
+  background: #ffcc00;
 }
 
 .wgb2QuestionText {
   margin: 0;
-  font-size: 0.98rem;
+  font-size: 1.04rem;
+  font-weight: 500;
   line-height: 1.7;
-  color: #1e293b;
+  color: #0b2a5b;
+}
+
+.wgb2QuestionInstruction {
+  margin: 12px 0 0;
+  padding: 9px 13px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #dce6f5;
+  color: #3a4a66;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.wgb2QuestionInstruction b {
+  color: #004aad;
+  font-weight: 600;
 }
 
 .wgb2Panel {
@@ -2901,13 +2930,15 @@
 }
 
 .wgb2CommaGroup.is-correct .wgb2CommaGap.is-selected {
-  border-color: #16a34a;
-  background: #16a34a;
+  border-color: #7fd2a4;
+  background: #cdf3df;
+  color: #0f7a4a;
 }
 
 .wgb2CommaGroup.is-incorrect .wgb2CommaGap.is-selected {
-  border-color: #dc2626;
-  background: #dc2626;
+  border-color: #f2a3b1;
+  background: #ffd8e0;
+  color: #c1304a;
 }
 
 /* per-word vocab save list on finish screen */
@@ -2921,9 +2952,10 @@
 
 .wgb2VocabListHead {
   margin: 0;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #334155;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #0b2a5b;
 }
 
 .wgb2VocabItem {
@@ -2932,10 +2964,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 10px 14px;
+  padding: 11px 15px;
   border-radius: 12px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid #dce6f5;
   background: #fff;
+  transition: border-color 140ms ease;
+}
+
+.wgb2VocabItem:hover {
+  border-color: var(--bc-blue);
 }
 
 .wgb2VocabText {
@@ -2945,14 +2982,15 @@
 }
 
 .wgb2VocabWord {
-  font-weight: 800;
-  color: #0f172a;
-  font-size: 0.95rem;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  color: #0b2a5b;
+  font-size: 1rem;
 }
 
 .wgb2VocabMeaning {
-  font-size: 0.82rem;
-  color: #64748b;
+  font-size: 0.85rem;
+  color: #5a6a86;
 }
 
 @media (max-width: 640px) {

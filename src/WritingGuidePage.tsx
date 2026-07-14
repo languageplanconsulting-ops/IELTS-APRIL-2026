@@ -821,11 +821,11 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
         {flow.step === 'task1-categories' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 1"
-              title="Choose a question type"
-              subtitle="Pick the chart or diagram category you want to practise"
+              eyebrow="Task 1 · กราฟ"
+              title="เลือกประเภทกราฟที่อยากฝึก"
+              subtitle="เลือกหมวดกราฟหรือไดอะแกรม แล้วเลือกข้อที่อยากฝึกเขียนทีละย่อหน้า"
               onBack={goBack}
-              backLabel="Tasks"
+              backLabel="กลับ"
             />
             <div className="wlpTypeGrid">
               {WRITING_TASK1_TYPE_INFO.map((type) => (
@@ -867,7 +867,7 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
               title={activeCategory.title}
               subtitle="เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้าแบบเติมคำได้เลย"
               onBack={goBack}
-              backLabel="Categories"
+              backLabel="ประเภทกราฟ"
             />
             <div className="writingGuideExamList">
               {(activeCategory.practicePrompts || []).map((prompt, index) => (
@@ -904,7 +904,7 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
               <div className="writingGuideExamShell">
                 <div className="writingGuideExamToolbar">
                   <button type="button" className="writingGuideFlowBack" onClick={goBack}>
-                    ← Question list
+                    ← กลับไปเลือกข้อ
                   </button>
                   <button
                     type="button"
@@ -951,11 +951,11 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
         {flow.step === 'task1-guide' && activeCategory ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 1 · Vocabulary"
+              eyebrow="Task 1 · คำศัพท์"
               title={activeCategory.title}
-              subtitle="Practice exams coming soon — use ตัวช่วย vocabulary for now"
+              subtitle="แบบฝึกกำลังจะมาเพิ่ม — ระหว่างนี้กด “ตัวช่วย” เพื่อดูคำศัพท์และโครงสร้างได้เลย"
               onBack={goBack}
-              backLabel="Categories"
+              backLabel="ประเภทกราฟ"
             />
             <div className="writingGuideExamToolbar writingGuideExamToolbar-inline">
               <button
@@ -984,11 +984,11 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
         {flow.step === 'task2-types' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 2"
-              title="Choose an essay type"
-              subtitle="Review the focus points for each Task 2 question format"
+              eyebrow="Task 2 · เรียงความ"
+              title="เลือกประเภทเรียงความที่อยากฝึก"
+              subtitle="ดูจุดเน้นของคำถามแต่ละแบบ แล้วเลือกเข้าฝึกเขียนทีละย่อหน้าแบบเติมคำ"
               onBack={goBack}
-              backLabel="Tasks"
+              backLabel="กลับ"
             />
             <div className="writingGuideMegaGrid writingGuideMegaGrid-categories">
               {WRITING_TASK2_TYPES.map((item, index) => (
@@ -1024,11 +1024,11 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
         {flow.step === 'task2-questions' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 2 · Practice"
+              eyebrow="Task 2 · ฝึกเขียน"
               title={WRITING_TASK2_TYPES.find((item) => item.id === flow.typeId)?.title || 'Task 2'}
               subtitle="เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้าแบบเติมคำได้เลย"
               onBack={goBack}
-              backLabel="Essay types"
+              backLabel="ประเภทเรียงความ"
             />
             <div className="writingGuideExamList">
               {activeTask2Prompts.map((prompt, index) => (
@@ -1060,7 +1060,7 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
               <div className="writingGuideExamShell">
                 <div className="writingGuideExamToolbar">
                   <button type="button" className="writingGuideFlowBack" onClick={goBack}>
-                    ← Question list
+                    ← กลับไปเลือกข้อ
                   </button>
                 </div>
                 {exercise ? (
