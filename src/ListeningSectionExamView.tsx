@@ -668,8 +668,8 @@ export function ListeningSectionExamView({
     setExamStage('correcting')
     setExamFeedback(
       answerOnlyMode
-        ? `${roundCorrect}/${config.questions.length} ข้อถูกแล้ว แก้ข้อที่ยังผิด แล้วกด Submit corrections อีกครั้งครับ`
-        : `${roundCorrect}/${config.questions.length} ข้อถูกครบทั้งคำตอบและหลักฐานแล้ว แก้ข้อที่ยังผิด แล้วกด Submit corrections อีกครั้งครับ`
+        ? `${roundCorrect}/${config.questions.length} ข้อถูกแล้ว แก้ข้อที่ยังผิด แล้วกด “ส่งคำตอบที่แก้แล้ว” อีกครั้งครับ`
+        : `${roundCorrect}/${config.questions.length} ข้อถูกครบทั้งคำตอบและหลักฐานแล้ว แก้ข้อที่ยังผิด แล้วกด “ส่งคำตอบที่แก้แล้ว” อีกครั้งครับ`
     )
   }
 
@@ -742,7 +742,7 @@ export function ListeningSectionExamView({
           disabled={!isExamReadyToSubmit}
           onClick={handleSubmitExamRound}
         >
-          {examStage === 'correcting' ? 'Submit corrections' : 'Submit all answers'}
+          {examStage === 'correcting' ? 'ส่งคำตอบที่แก้แล้ว' : 'ส่งคำตอบทั้งหมด'}
         </button>
       </div>
     </article>

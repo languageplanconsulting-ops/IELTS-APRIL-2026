@@ -43,12 +43,12 @@
   --lse-border: #e5e7eb;
   --lse-surface: #ffffff;
   --lse-panel: #f8fafc;
-  --lse-accent: #2563eb;
-  --lse-good: #059669;
-  --lse-good-bg: #d1fae5;
-  --lse-bad: #dc2626;
-  --lse-bad-bg: #fee2e2;
-  --lse-warn-bg: #fef3c7;
+  --lse-accent: #004aad;
+  --lse-good: #7fd2a4;
+  --lse-good-bg: #cdf3df;
+  --lse-bad: #f2a3b1;
+  --lse-bad-bg: #ffd8e0;
+  --lse-warn-bg: #fff4d6;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -56,6 +56,7 @@
   min-height: 0;
   overflow: visible;
   color: var(--lse-ink);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
 }
 
 .listeningSectionExamHeader {
@@ -90,17 +91,21 @@
 
 .listeningSectionExamEyebrow {
   margin: 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--lse-muted);
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--lse-accent);
 }
 
 .listeningSectionExamHeader h1 {
   margin: 0.15rem 0 0;
-  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
   line-height: 1.2;
+  color: #0b2a5b;
 }
 
 .listeningSectionExamSubtitle {
@@ -551,12 +556,14 @@
 .listeningSectionExamSubmitAll {
   border: none;
   border-radius: 999px;
-  padding: 0.62rem 1rem;
-  background: linear-gradient(135deg, #0f172a, #2563eb);
+  padding: 0.62rem 1.15rem;
+  background: #004aad;
   color: #fff;
-  font-weight: 850;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
   cursor: pointer;
-  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+  box-shadow: 0 12px 24px rgba(0, 74, 173, 0.22);
 }
 
 .listeningSectionExamSubmitAll:disabled {
@@ -581,7 +588,10 @@
 }
 
 .listeningSectionExamReportHero h3 {
-  font-size: 1.15rem;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #0b2a5b;
 }
 
 .listeningSectionExamReportScore {
@@ -589,15 +599,17 @@
   place-items: center;
   min-width: 6rem;
   min-height: 5rem;
-  border: 1px solid rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(0, 74, 173, 0.16);
   border-radius: 14px;
   background: #ffffff;
-  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 10px 22px rgba(0, 74, 173, 0.08);
 }
 
 .listeningSectionExamReportScore strong {
-  color: var(--lse-ink);
-  font-size: 1.35rem;
+  color: #0b2a5b;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
   line-height: 1;
 }
 
@@ -834,7 +846,10 @@
 
 .listeningSectionExamGroup h3 {
   margin: 0 0 0.35rem;
-  font-size: 1.05rem;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+  font-size: 1.12rem;
+  color: #0b2a5b;
 }
 
 .listeningSectionExamInstruction,
@@ -1144,14 +1159,14 @@
 
 .listeningSectionExamGapItem input.is-wrong {
   border-color: var(--lse-bad);
-  background: var(--lse-bad-bg);
-  color: #7f1d1d;
+  background: var(--lse-bad-bg) !important;
+  color: #c1304a;
 }
 
 .listeningSectionExamGapItem input.is-correct {
   border-color: var(--lse-good);
-  background: var(--lse-good-bg);
-  color: #065f46;
+  background: var(--lse-good-bg) !important;
+  color: #0f7a4a;
 }
 
 .listeningSectionExamPart1Form {
