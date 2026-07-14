@@ -1,4 +1,5 @@
 import './ExamFeedPage.css'
+import type { ReactElement } from 'react'
 import {
   WRITING_RECALL as writingRecall,
   WRITING_PREDICT as predictWriting,
@@ -92,13 +93,63 @@ const predictSpeaking: ExamItem[] = [
   }
 ]
 
+const BRAZIL_FISHING_POINTS: [number, number][] = [
+  [10, 48.5],
+  [40, 40.25],
+  [70, 30.6],
+  [100, 18.25]
+]
+
+function BrazilPieFishingExample() {
+  return (
+    <div className="efChartExample">
+      <span className="efChartExampleTag">ตัวอย่างข้อมูล — ไม่ใช่ตัวเลขจากข้อสอบจริง (ผู้สอบจำได้แค่หัวข้อ ไม่ใช่ตัวเลขในกราฟ)</span>
+      <div className="efChartExampleRow">
+        <svg viewBox="0 0 110 110" className="efChartSvg" role="img" aria-label="ตัวอย่างพายชาร์ตรายได้บราซิลตามภาคเศรษฐกิจ ปี 2005">
+          <path d="M55,55 L55,5 A50,50 0 0,1 79.09,11.19 Z" fill="var(--ef-yellow)" />
+          <path d="M55,55 L79.09,11.19 A50,50 0 0,1 81.79,97.22 Z" fill="var(--ef-blue-bright)" />
+          <path d="M55,55 L81.79,97.22 A50,50 0 1,1 55,5 Z" fill="var(--ef-blue)" />
+        </svg>
+        <div className="efChartLegend">
+          <span><i style={{ background: 'var(--ef-blue)' }} />Services 59%</span>
+          <span><i style={{ background: 'var(--ef-blue-bright)' }} />Industry 33%</span>
+          <span><i style={{ background: 'var(--ef-yellow)' }} />Agriculture 8%</span>
+        </div>
+        <svg viewBox="0 0 110 75" className="efChartSvg efChartLine" role="img" aria-label="ตัวอย่างแนวโน้มรายได้ภาคประมงของบราซิล 1990 ถึง 2005">
+          <polyline
+            points={BRAZIL_FISHING_POINTS.map(([x, y]) => `${x},${y}`).join(' ')}
+            fill="none"
+            stroke="var(--ef-blue)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {BRAZIL_FISHING_POINTS.map(([x, y], i) => (
+            <circle key={i} cx={x} cy={y} r="2.6" fill="var(--ef-blue)" />
+          ))}
+          <text x="6" y="72" fontSize="7" fill="var(--ef-muted)">1990</text>
+          <text x="82" y="72" fontSize="7" fill="var(--ef-muted)">2005</text>
+        </svg>
+      </div>
+      <span className="efChartCaption">รายได้ตามภาคเศรษฐกิจ ปี 2005 (ซ้าย) + แนวโน้มรายได้ภาคประมง 1990–2005 (ขวา)</span>
+    </div>
+  )
+}
+
+const EXAM_ITEM_CHARTS: Record<string, () => ReactElement> = {
+  'brazil-pie-fishing': BrazilPieFishingExample
+}
+
 const renderItems = (items: ExamItem[], skill: 'sp' | 'wr') =>
-  items.map((item, index) => (
+  items.map((item, index) => {
+    const ChartExample = item.chart ? EXAM_ITEM_CHARTS[item.chart] : undefined
+    return (
     <div className="efItem" key={`${skill}-${index}`}>
       <span className="efItemTitle">
         {item.title}
         {item.isNew && <span className="efNewTag">ใหม่</span>}
       </span>
+      {ChartExample && <ChartExample />}
       {item.bullets && (
         <ul className="efBullets">
           {item.bullets.map((bullet, bulletIndex) => (
@@ -111,7 +162,8 @@ const renderItems = (items: ExamItem[], skill: 'sp' | 'wr') =>
         {item.meta}
       </span>
     </div>
-  ))
+    )
+  })
 
 export default function ExamFeedPage({ onOpenCourse }: { onOpenCourse: () => void }) {
   return (

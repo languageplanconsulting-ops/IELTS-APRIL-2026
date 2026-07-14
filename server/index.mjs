@@ -35,6 +35,12 @@ const assessmentJobs = new Map()
 const ASSESSMENT_JOB_TTL_MS = 1000 * 60 * 30
 const DEFAULT_FEEDBACK_CREDITS = 20
 const DEFAULT_FULL_MOCK_CREDITS = 10
+const SKILL_MODULES = ['speaking', 'listening', 'reading', 'writing']
+const DEFAULT_ENABLED_MODULES = ['speaking', 'reading', 'listening']
+const normalizeEnabledModules = (value) => {
+  if (!Array.isArray(value)) return [...DEFAULT_ENABLED_MODULES]
+  return Array.from(new Set(value.filter((entry) => SKILL_MODULES.includes(String(entry)))))
+}
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024 } })
 const MAX_SPEAKING_SAMPLE_VIDEO_BYTES = Number(process.env.SPEAKING_SAMPLE_VIDEO_MAX_BYTES || 220 * 1024 * 1024)
 const videoUpload = multer({
@@ -2810,7 +2816,8 @@ const activateLearnerAccess = async ({ userId }) => {
         startsAt: activatedWindow.startsAt,
         expiresAt: before?.learner_access?.expires_at || activatedWindow.expiresAt,
         feedbackCredits: initialCredits.feedbackCredits,
-        fullMockCredits: initialCredits.fullMockCredits
+        fullMockCredits: initialCredits.fullMockCredits,
+        enabledModules: before?.learner_access?.enabled_modules
       })
     )
   })
@@ -2831,14 +2838,16 @@ const buildLearnerAccessPayload = ({
   startsAt,
   expiresAt,
   feedbackCredits,
-  fullMockCredits
+  fullMockCredits,
+  enabledModules
 }) => ({
   user_id: userId,
   status: status === 'inactive' ? 'inactive' : 'active',
   starts_at: startsAt || new Date().toISOString(),
   expires_at: expiresAt || null,
   feedback_credits: Math.max(0, Number(feedbackCredits ?? 0)),
-  full_mock_credits: Math.max(0, Number(fullMockCredits ?? 0))
+  full_mock_credits: Math.max(0, Number(fullMockCredits ?? 0)),
+  enabled_modules: normalizeEnabledModules(enabledModules)
 })
 
 const addMonthsUtc = (value, months) => {
@@ -6687,6 +6696,7 @@ const mapLearnerRecord = (row) => ({
   expiresAt: row?.learner_access?.expires_at || null,
   feedbackRemaining: Math.max(0, Number(row?.learner_access?.feedback_credits ?? 0)),
   fullMockRemaining: Math.max(0, Number(row?.learner_access?.full_mock_credits ?? 0)),
+  enabledModules: normalizeEnabledModules(row?.learner_access?.enabled_modules),
   createdAt: row?.created_at || null
 })
 
@@ -6708,7 +6718,8 @@ const createAdminCodeSessionPayload = () => ({
     userId: 'admin-code',
     role: 'admin',
     name: 'Admin',
-    email: 'admin@englishplan.local'
+    email: 'admin@englishplan.local',
+    enabledModules: [...SKILL_MODULES]
   },
   creditProfile: {
     name: 'Admin',
@@ -6741,14 +6752,15 @@ const verifyAdminCodeToken = (token) => {
         starts_at: null,
         expires_at: null,
         feedback_credits: 9999,
-        full_mock_credits: 9999
+        full_mock_credits: 9999,
+        enabled_modules: [...SKILL_MODULES]
       }
     }
   }
 }
 
 const loadUserProfileWithAccess = async (userId) => {
-  const query = `/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(status,starts_at,expires_at,feedback_credits,full_mock_credits)&id=eq.${encodeURIComponent(
+  const query = `/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(status,starts_at,expires_at,feedback_credits,full_mock_credits,enabled_modules)&id=eq.${encodeURIComponent(
     userId
   )}&limit=1`
   const rows = await fetchSupabaseJson(query, {
@@ -6758,7 +6770,7 @@ const loadUserProfileWithAccess = async (userId) => {
 }
 
 const loadUserProfileByEmail = async (email) => {
-  const query = `/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(status,starts_at,expires_at,feedback_credits,full_mock_credits)&email=eq.${encodeURIComponent(
+  const query = `/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(status,starts_at,expires_at,feedback_credits,full_mock_credits,enabled_modules)&email=eq.${encodeURIComponent(
     normalizeEmail(email)
   )}&limit=1`
   const rows = await fetchSupabaseJson(query, {
@@ -7019,7 +7031,8 @@ const provisionThinkificEnrollmentAccess = async ({ req, enrollment }) => {
         fullMockCredits: Math.max(
           THINKIFIC_FULL_MOCK_CREDITS,
           Number(existingProfile?.learner_access?.full_mock_credits ?? 0)
-        )
+        ),
+        enabledModules: existingProfile?.learner_access?.enabled_modules
       })
     )
   })
@@ -10990,7 +11003,8 @@ app.post('/api/auth/login', async (req, res) => {
         userId: String(authPayload?.user?.id || ''),
         role: resolveSessionRole(profile, authPayload?.user),
         name: String(profile.full_name || profile.email || 'Student'),
-        email: normalizeEmail(profile.email || authPayload?.user?.email || '')
+        email: normalizeEmail(profile.email || authPayload?.user?.email || ''),
+        enabledModules: normalizeEnabledModules(profile?.learner_access?.enabled_modules)
       },
       creditProfile: mapCreditProfile(profile)
     })
@@ -11045,7 +11059,8 @@ app.post('/api/auth/signup', async (req, res) => {
               startsAt: existingProfile?.learner_access?.starts_at || new Date().toISOString(),
               expiresAt: null,
               feedbackCredits: Math.max(1, Number(existingProfile?.learner_access?.feedback_credits ?? 0)),
-              fullMockCredits: Math.max(1, Number(existingProfile?.learner_access?.full_mock_credits ?? 0))
+              fullMockCredits: Math.max(1, Number(existingProfile?.learner_access?.full_mock_credits ?? 0)),
+              enabledModules: existingProfile?.learner_access?.enabled_modules
             })
           )
         })
@@ -11262,7 +11277,8 @@ app.post('/api/auth/refresh', async (req, res) => {
         userId: String(authPayload?.user?.id || ''),
         role: resolveSessionRole(profile, authPayload?.user),
         name: String(profile.full_name || profile.email || 'Student'),
-        email: normalizeEmail(profile.email || authPayload?.user?.email || '')
+        email: normalizeEmail(profile.email || authPayload?.user?.email || ''),
+        enabledModules: normalizeEnabledModules(profile?.learner_access?.enabled_modules)
       },
       creditProfile: mapCreditProfile(profile)
     })
@@ -11289,7 +11305,8 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
         userId: String(req.auth.user.id || ''),
         role: resolveSessionRole(profile, req.auth.user),
         name: String(profile.full_name || profile.email || 'Student'),
-        email: normalizeEmail(profile.email || req.auth.user.email || '')
+        email: normalizeEmail(profile.email || req.auth.user.email || ''),
+        enabledModules: normalizeEnabledModules(profile?.learner_access?.enabled_modules)
       },
       creditProfile: mapCreditProfile(profile)
     })
@@ -11327,7 +11344,8 @@ app.patch('/api/me/profile', requireAuth, async (req, res) => {
         userId: String(req.auth.user.id || ''),
         role: String(profile?.role || 'student'),
         name: String(profile?.full_name || profile?.email || 'Student'),
-        email: normalizeEmail(profile?.email || req.auth.user.email || '')
+        email: normalizeEmail(profile?.email || req.auth.user.email || ''),
+        enabledModules: normalizeEnabledModules(profile?.learner_access?.enabled_modules)
       },
       creditProfile: mapCreditProfile(profile)
     })
@@ -11345,7 +11363,7 @@ app.patch('/api/me/profile', requireAuth, async (req, res) => {
 app.get('/api/admin/learners', requireAdmin, async (_req, res) => {
   try {
     const rows = await fetchSupabaseJson(
-      '/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(status,starts_at,expires_at,feedback_credits,full_mock_credits)&order=created_at.desc',
+      '/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(status,starts_at,expires_at,feedback_credits,full_mock_credits,enabled_modules)&order=created_at.desc',
       {
         headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
       }
@@ -11435,7 +11453,8 @@ app.post('/api/admin/learners', requireAdmin, async (req, res) => {
         startsAt: defaultAccessWindow?.startsAt || requestedStartsAt,
         expiresAt: req.body?.expiresAt || defaultAccessWindow?.expiresAt || null,
         feedbackCredits: req.body?.feedbackCredits,
-        fullMockCredits: req.body?.fullMockCredits
+        fullMockCredits: req.body?.fullMockCredits,
+        enabledModules: req.body?.enabledModules ?? existingProfile?.learner_access?.enabled_modules
       }))
     })
 
@@ -11521,7 +11540,8 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
         startsAt: activationWindow?.startsAt || req.body?.startsAt,
         expiresAt: req.body?.expiresAt || activationWindow?.expiresAt || null,
         feedbackCredits: requestedCredits.feedbackCredits,
-        fullMockCredits: requestedCredits.fullMockCredits
+        fullMockCredits: requestedCredits.fullMockCredits,
+        enabledModules: req.body?.enabledModules ?? beforeProfile?.learner_access?.enabled_modules
       }))
     })
 

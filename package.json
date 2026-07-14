@@ -36,7 +36,8 @@
     "extract:cambridge-16-reading-pdf": "python3 scripts/extract-cambridge-16-from-pdf.py",
     "rebuild:cambridge-16-reading-pdf": "node scripts/build-cambridge-16-reading-from-pdf.mjs",
     "verify:listening-part1-audio": "node scripts/verify-part1-audio-urls.mjs",
-    "audit:listening-part1": "node scripts/audit-part1-foundation.mjs"
+    "audit:listening-part1": "node scripts/audit-part1-foundation.mjs",
+    "warm:listening-audio": "npx --yes vite-node scripts/warm-listening-audio-cache.mjs --"
   },
   "dependencies": {
     "@xenova/transformers": "^2.17.2",

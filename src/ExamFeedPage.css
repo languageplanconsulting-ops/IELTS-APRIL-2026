@@ -72,6 +72,16 @@
 .efItemTitle{font-size:.98rem;font-weight:800;line-height:1.45;display:block;margin-bottom:6px;color:var(--ef-ink)}
 .efBullets{margin:0 0 8px;padding-left:18px;color:var(--ef-muted);font-size:.86rem;line-height:1.5}
 .efBullets li{margin-bottom:2px}
+.efChartExample{margin:2px 0 10px;padding:12px 14px;border-radius:12px;background:#f7f9fd;border:1px dashed var(--ef-line)}
+.efChartExampleTag{display:block;font-size:.68rem;font-weight:800;color:var(--ef-gold);margin-bottom:8px;letter-spacing:.01em}
+.efChartExampleRow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.efChartSvg{width:96px;height:96px;flex:0 0 auto}
+.efChartSvg.efChartLine{width:120px;height:82px}
+.efChartLegend{display:flex;flex-direction:column;gap:4px;font-size:.76rem;color:var(--ef-ink);font-weight:700}
+.efChartLegend span{display:flex;align-items:center;gap:6px}
+.efChartLegend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.efChartCaption{display:block;margin-top:8px;font-size:.72rem;color:var(--ef-muted)}
+
 .efItemMeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--ef-muted);font-size:.82rem}
 .efTag{padding:2px 9px;border-radius:999px;font-size:.7rem;font-weight:800}
 .efTag-sp{background:var(--ef-gold-bg);color:#8a6420}

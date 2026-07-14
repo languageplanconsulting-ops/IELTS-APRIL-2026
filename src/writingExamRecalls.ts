@@ -10,6 +10,7 @@ export type ExamItem = {
   bullets?: string[]
   meta: string
   isNew?: boolean
+  chart?: 'brazil-pie-fishing'
 }
 
 export const WRITING_RECALL: ExamItem[] = [
@@ -25,7 +26,8 @@ export const WRITING_RECALL: ExamItem[] = [
     title:
       "The pie chart illustrates Brazil's income from different sectors of the economy in 2005, and its income from the fishing sector from 1990 to 2005.",
     meta: 'มิ.ย. 2026 · ไทย 🇹🇭',
-    isNew: true
+    isNew: true,
+    chart: 'brazil-pie-fishing'
   },
   {
     tag: 'Academic Task 2',

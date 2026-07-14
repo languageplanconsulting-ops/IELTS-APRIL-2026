@@ -244,6 +244,14 @@ type AdminWorkspaceSection =
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
+type SkillModule = 'speaking' | 'listening' | 'reading' | 'writing'
+const SKILL_MODULES: { key: SkillModule; label: string }[] = [
+  { key: 'speaking', label: 'Speaking' },
+  { key: 'listening', label: 'Listening' },
+  { key: 'reading', label: 'Reading' },
+  { key: 'writing', label: 'Writing' }
+]
+const DEFAULT_ENABLED_MODULES: SkillModule[] = ['speaking', 'reading', 'listening']
 type ReadingBankCategory = 'normal' | 'passage3' | 'general-training'
 type ReadingEntryView = 'levels' | 'monthly' | 'journey' | 'full-test' | 'general-training'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
@@ -592,6 +600,7 @@ type ManagedLearnerRecord = {
   expiresAt: string | null
   feedbackRemaining: number
   fullMockRemaining: number
+  enabledModules: SkillModule[]
   createdAt: string
 }
 
@@ -603,6 +612,7 @@ type AuthSession = {
   accessToken: string
   refreshToken: string
   expiresAt: number
+  enabledModules: SkillModule[]
 }
 
 type NotebookEntry = {
@@ -6807,6 +6817,7 @@ function App() {
   const [adminLearnerFeedbackCreditsInput, setAdminLearnerFeedbackCreditsInput] = useState(DEFAULT_FEEDBACK_CREDITS)
   const [adminLearnerFullMockCreditsInput, setAdminLearnerFullMockCreditsInput] = useState(DEFAULT_FULL_MOCK_CREDITS)
   const [adminLearnerRoleInput, setAdminLearnerRoleInput] = useState<Role>('student')
+  const [adminLearnerEnabledModulesInput, setAdminLearnerEnabledModulesInput] = useState<SkillModule[]>(DEFAULT_ENABLED_MODULES)
   const [adminPanelMessage, setAdminPanelMessage] = useState('')
   const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('reading')
   const [adminLearnerSearchInput, setAdminLearnerSearchInput] = useState('')
@@ -7113,8 +7124,15 @@ function App() {
     return trialParam === '1' || trialParam === 'speaking' || path.endsWith('/trial')
   }, [])
   const isTrialUser = authSession?.role === 'trial'
-  const canAccessListening = authSession?.role === 'admin' || authSession?.role === 'student'
-  const canAccessWriting = authSession?.role === 'admin'
+  const hasModuleAccess = (moduleKey: SkillModule) => {
+    if (authSession?.role === 'admin') return true
+    if (authSession?.role === 'trial') return moduleKey === 'speaking' || moduleKey === 'reading'
+    return Boolean(authSession?.enabledModules?.includes(moduleKey))
+  }
+  const canAccessSpeaking = hasModuleAccess('speaking')
+  const canAccessListening = hasModuleAccess('listening')
+  const canAccessReading = hasModuleAccess('reading')
+  const canAccessWriting = hasModuleAccess('writing')
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -11322,6 +11340,20 @@ function App() {
       setActivePage('home')
     }
   }, [activePage, canAccessWriting])
+
+  useEffect(() => {
+    if (canAccessReading) return
+    if (activePage === 'reading') {
+      setActivePage('home')
+    }
+  }, [activePage, canAccessReading])
+
+  useEffect(() => {
+    if (canAccessSpeaking) return
+    if (activePage === 'workspace') {
+      setActivePage('home')
+    }
+  }, [activePage, canAccessSpeaking])
 
   useEffect(() => {
     if (!authSession?.accessToken) {
@@ -17195,7 +17227,8 @@ function App() {
           startsAt: new Date().toISOString(),
           expiresAt: adminLearnerExpiresAtInput ? new Date(adminLearnerExpiresAtInput).toISOString() : null,
           feedbackCredits: adminLearnerFeedbackCreditsInput,
-          fullMockCredits: adminLearnerFullMockCreditsInput
+          fullMockCredits: adminLearnerFullMockCreditsInput,
+          enabledModules: adminLearnerEnabledModulesInput
         })
       })
       setManagedLearners((current) => [payload.learner, ...current.filter((item) => item.id !== payload.learner.id)])
@@ -17207,6 +17240,7 @@ function App() {
       setAdminLearnerFullMockCreditsInput(DEFAULT_FULL_MOCK_CREDITS)
       setAdminLearnerRoleInput('student')
       setAdminLearnerStatusInput('active')
+      setAdminLearnerEnabledModulesInput(DEFAULT_ENABLED_MODULES)
       setAdminPanelMessage(`Saved access for ${payload.learner.name}.`)
       setAuthError('')
     } catch (error) {
@@ -17230,6 +17264,7 @@ function App() {
           expiresAt: updates.expiresAt ?? learner.expiresAt,
           feedbackCredits: updates.feedbackRemaining ?? learner.feedbackRemaining,
           fullMockCredits: updates.fullMockRemaining ?? learner.fullMockRemaining,
+          enabledModules: updates.enabledModules ?? learner.enabledModules,
           ...(updates.password ? { password: updates.password } : {})
         })
       })
@@ -20338,19 +20373,21 @@ function App() {
                 >
                   Home
                 </button>
-                <button
-                  className={activePage === 'workspace' ? 'active' : ''}
-                  onClick={() => {
-                    resetSession()
-                    setSelectedTestMode('part1')
-                    setSpeakingEntryMode(null)
-                    setTopicBankSearch('')
-                    setActivePage('workspace')
-                  }}
-                  type="button"
-                >
-                  Speaking
-                </button>
+                {canAccessSpeaking && (
+                  <button
+                    className={activePage === 'workspace' ? 'active' : ''}
+                    onClick={() => {
+                      resetSession()
+                      setSelectedTestMode('part1')
+                      setSpeakingEntryMode(null)
+                      setTopicBankSearch('')
+                      setActivePage('workspace')
+                    }}
+                    type="button"
+                  >
+                    Speaking
+                  </button>
+                )}
                 {canAccessListening && (
                   <button
                     className={
@@ -20369,15 +20406,17 @@ function App() {
                     Listening
                   </button>
                 )}
-                <button
-                  className={activePage === 'reading' ? 'active' : ''}
-                  onClick={() => {
-                    openReadingLanding()
-                  }}
-                  type="button"
-                >
-                  Reading
-                </button>
+                {canAccessReading && (
+                  <button
+                    className={activePage === 'reading' ? 'active' : ''}
+                    onClick={() => {
+                      openReadingLanding()
+                    }}
+                    type="button"
+                  >
+                    Reading
+                  </button>
+                )}
                 {canAccessWriting && (
                   <button
                     className={activePage === 'writing' ? 'active' : ''}
@@ -20475,16 +20514,18 @@ function App() {
                 </div>
               ) : (
                 <div className="homeGrid">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      resetSession()
-                      setSelectedTestMode('part1')
-                      setActivePage('workspace')
-                    }}
-                  >
-                    Speaking
-                  </button>
+                  {canAccessSpeaking && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        resetSession()
+                        setSelectedTestMode('part1')
+                        setActivePage('workspace')
+                      }}
+                    >
+                      Speaking
+                    </button>
+                  )}
                   {canAccessListening && (
                     <button
                       type="button"
@@ -20495,14 +20536,16 @@ function App() {
                       Listening
                     </button>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      openReadingLanding()
-                    }}
-                  >
-                    Reading
-                  </button>
+                  {canAccessReading && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        openReadingLanding()
+                      }}
+                    >
+                      Reading
+                    </button>
+                  )}
                   {canAccessWriting ? (
                     <button type="button" onClick={() => openWritingLanding()}>
                       Writing
@@ -21635,6 +21678,7 @@ function App() {
           </section>
         )
       ) : activePage === 'reading' ? (
+        canAccessReading ? (
         <section
           className={`panel full readingPage${
             readingWorkspaceMode === 'bank' && readingAttemptStage === 'exam' ? ' readingPage-examActive' : ''
@@ -21670,7 +21714,7 @@ function App() {
               </h2>
               <p>
                 {readingEntryView === 'journey'
-                  ? 'สมุดภารกิจ Reading — เคลียร์แต่ละด่านที่ 80%+ เพื่อเปิดด่านถัดไป'
+                  ? 'สมุดฝึกข้อสอบ Reading — เคลียร์แต่ละด่านที่ 80%+ เพื่อเปิดด่านถัดไป'
                   : readingEntryView === 'full-test'
                     ? READING_FULL_TEST_LEAD
                     : readingEntryView === 'general-training'
@@ -22076,8 +22120,8 @@ function App() {
 
                 <section className="readingJourneyJournal">
                   <div className="readingJourneyJournalMain">
-                    <span className="readingJourneyJournalTag">Normal · Mission Mode</span>
-                    <h3 className="readingJourneyJournalTitle">สมุดภารกิจ Reading</h3>
+                    <span className="readingJourneyJournalTag">Normal · โหมดฝึกข้อสอบ</span>
+                    <h3 className="readingJourneyJournalTitle">สมุดฝึกข้อสอบ Reading</h3>
                     <p className="readingJourneyJournalLead">
                       แต่ละด่าน = 2 passages (ด่าน 1–17 ชุดฝึก intensive · ด่าน 18+ สุ่มจากชุดที่อัปโหลด) · Fill · TFNG/YNNG · Matching — เคลียร์ที่{' '}
                       <strong>{READING_JOURNEY_UNLOCK_PERCENT}%+</strong> ถึงจะเปิดด่านถัดไป
@@ -22096,7 +22140,7 @@ function App() {
                       </strong>
                     </div>
                     <div className="readingJourneyStatBox">
-                      <span>Active mission</span>
+                      <span>ด่านปัจจุบัน</span>
                       <strong>#{String(readingJourneyGameStats.activeMission).padStart(2, '0')}</strong>
                     </div>
                     <div className="readingJourneyStatBox">
@@ -22117,7 +22161,7 @@ function App() {
 
                 {readingJourneyStageDefinitions.length === 0 ? (
                   <div className="readingJourneyEmpty">
-                    <p>ยังไม่มีภารกิจในเล่มนี้</p>
+                    <p>ยังไม่มีข้อสอบให้ฝึกในเล่มนี้</p>
                     <p className="meta">
                       ต้องมีข้อสอบ Normal ที่อัปโหลดแล้ว ครบ Fill · TFNG/YNNG · Matching (headings หรือ information) ก่อนครับ
                     </p>
@@ -22164,7 +22208,7 @@ function App() {
                           >
                             <header className="readingJourneyMissionHeader">
                               <span className="readingJourneyMissionNo">
-                                MISSION {String(stage.stageNumber).padStart(2, '0')}
+                                ด่าน {String(stage.stageNumber).padStart(2, '0')}
                               </span>
                               <span className={`readingJourneyMissionStatus ${passed ? 'is-cleared' : ''} ${!unlocked ? 'is-locked' : ''}`}>
                                 {statusLabel}
@@ -22189,7 +22233,7 @@ function App() {
                                     className="readingJourneyBtn readingJourneyBtn-play"
                                     onClick={() => startReadingExam(stage.id)}
                                   >
-                                    {attempt ? '↻ เล่นใหม่' : '▶ เริ่มภารกิจ'}
+                                    {attempt ? '↻ เล่นใหม่' : '▶ เริ่มทำข้อสอบ'}
                                   </button>
                                   {attempt ? (
                                     <button
@@ -23911,6 +23955,17 @@ function App() {
           )}
           </div>
         </section>
+        ) : (
+          <section className="panel full">
+            <div className="emptyState">
+              <h3>Reading isn't enabled on your account</h3>
+              <p>Ask your admin to enable Reading access for you.</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
       ) : activePage === 'writing' ? (
         canAccessWriting ? (
           <>
@@ -23942,8 +23997,8 @@ function App() {
         ) : (
           <section className="panel full">
             <div className="emptyState">
-              <h3>Writing is admin-only for now</h3>
-              <p>This section is not available on your account yet.</p>
+              <h3>Writing isn't enabled on your account</h3>
+              <p>Ask your admin to enable Writing access for you.</p>
               <button type="button" onClick={() => setActivePage('home')}>
                 Back Home
               </button>
@@ -24171,6 +24226,28 @@ function App() {
                       />
                     </label>
                   </div>
+                  <div className="adminModuleToggleGroup">
+                    <p className="adminModuleToggleLabel">Skills access</p>
+                    <div className="adminModuleToggleOptions">
+                      {SKILL_MODULES.map((module) => {
+                        const isChecked = adminLearnerEnabledModulesInput.includes(module.key)
+                        return (
+                          <label key={module.key} className="adminModuleToggleOption">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() =>
+                                setAdminLearnerEnabledModulesInput((current) =>
+                                  isChecked ? current.filter((key) => key !== module.key) : [...current, module.key]
+                                )
+                              }
+                            />
+                            {module.label}
+                          </label>
+                        )
+                      })}
+                    </div>
+                  </div>
                   <div className="adminActionRow">
                     <button type="button" onClick={() => void handleAdminCreateLearner()}>
                       Save Learner Access
@@ -24219,6 +24296,27 @@ function App() {
                               <p className="meta">Access: {formatAccessDate(learner.startsAt)} to {formatAccessDate(learner.expiresAt)}</p>
                               <p className="meta">Feedback: {learner.feedbackRemaining}</p>
                               <p className="meta">Full Mock: {learner.fullMockRemaining}</p>
+                            </div>
+                            <div className="adminLearnerSkillPills">
+                              {SKILL_MODULES.map((module) => {
+                                const isEnabled = learner.enabledModules.includes(module.key)
+                                return (
+                                  <button
+                                    key={module.key}
+                                    type="button"
+                                    className={`adminSkillPill ${isEnabled ? 'adminSkillPill-on' : 'adminSkillPill-off'}`}
+                                    onClick={() =>
+                                      void handleAdminQuickUpdate(learner, {
+                                        enabledModules: isEnabled
+                                          ? learner.enabledModules.filter((key) => key !== module.key)
+                                          : [...learner.enabledModules, module.key]
+                                      })
+                                    }
+                                  >
+                                    {module.label}
+                                  </button>
+                                )
+                              })}
                             </div>
                             <div className="controls adminCardActions">
                               <button
@@ -27611,6 +27709,7 @@ function App() {
             </div>
           </section>
         ) : activePage === 'workspace' ? (
+          canAccessSpeaking ? (
           <section className="panel full speakingFlowTheme">
           <h2>{isTrialUser ? 'IELTS Speaking Trial' : 'Speaking Test'}</h2>
           {attemptStage === 'idle' && (
@@ -29467,6 +29566,17 @@ function App() {
             </div>
           )}
           </section>
+          ) : (
+            <section className="panel full">
+              <div className="emptyState">
+                <h3>Speaking isn't enabled on your account</h3>
+                <p>Ask your admin to enable Speaking access for you.</p>
+                <button type="button" onClick={() => setActivePage('home')}>
+                  Back Home
+                </button>
+              </div>
+            </section>
+          )
         ) : (
         <section className="panel full notebookPage">
           {writingReportSnapshot ? (

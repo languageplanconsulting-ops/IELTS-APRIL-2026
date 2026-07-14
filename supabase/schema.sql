@@ -26,9 +26,13 @@ create table if not exists public.learner_access (
   expires_at timestamptz,
   feedback_credits integer not null default 50 check (feedback_credits >= 0),
   full_mock_credits integer not null default 15 check (full_mock_credits >= 0),
+  enabled_modules text[] not null default '{speaking,reading,listening}',
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())
 );
+
+alter table if exists public.learner_access
+  add column if not exists enabled_modules text[] not null default '{speaking,reading,listening}';
 
 create table if not exists public.user_notebooks (
   user_id uuid primary key references public.profiles(id) on delete cascade,
