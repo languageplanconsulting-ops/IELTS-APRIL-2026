@@ -75,6 +75,7 @@
 
 .writingGuideFlowStage {
   min-height: 0;
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
 }
 
 .writingGuideMegaShell,
@@ -108,9 +109,12 @@
 
 .writingGuideFlowTitle {
   margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
   font-size: clamp(1.45rem, 3vw, 2rem);
-  color: #0b1f44;
-  letter-spacing: -0.02em;
+  color: #0b2a5b;
+  letter-spacing: 0;
+  line-height: 1.15;
 }
 
 .writingGuideFlowSub {
@@ -237,7 +241,7 @@
   flex-direction: column;
   gap: clamp(28px, 4vw, 40px);
   padding-bottom: clamp(32px, 4vw, 48px);
-  font-family: 'IBM Plex Sans Thai', Inter, system-ui, sans-serif;
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
 }
 
 .writingGuideHubIntro {
@@ -364,17 +368,34 @@
 }
 
 .wgLatestBlockTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 4px;
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #0b1f44;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0b2a5b;
+}
+
+.wgLatestBlockTitle::before {
+  content: '';
+  width: 5px;
+  height: 22px;
+  border-radius: 3px;
+  background: var(--bc-blue);
+}
+
+.wgLatestBlock-predict .wgLatestBlockTitle::before {
+  background: #ffcc00;
 }
 
 .wgLatestBlockLead {
   margin: 0 0 16px;
+  padding-left: 15px;
   color: #64748b;
   font-size: 0.86rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .wgLatestGrid {
@@ -388,45 +409,65 @@
   gap: 8px;
   padding: 16px 18px;
   border-radius: 16px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #dce6f5;
+  background: #fff;
+  transition:
+    transform var(--duration-luxury-fast) var(--ease-luxury),
+    border-color var(--duration-luxury-fast) var(--ease-luxury),
+    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+}
+
+.wgLatestItem:hover {
+  transform: translateY(-3px);
+  border-color: var(--bc-blue);
+  box-shadow: 0 12px 26px rgba(0, 74, 173, 0.12);
 }
 
 .wgLatestBlock-predict .wgLatestItem {
-  border-style: dashed;
-  border-color: rgba(191, 139, 48, 0.3);
-  background: rgba(255, 250, 235, 0.7);
+  border-color: #ffe4a3;
+  background: #fffdf5;
+}
+
+.wgLatestBlock-predict .wgLatestItem:hover {
+  border-color: #ffcc00;
+  box-shadow: 0 12px 26px rgba(255, 204, 0, 0.22);
 }
 
 .wgLatestItemTag {
   display: inline-flex;
   width: fit-content;
-  padding: 4px 10px;
+  padding: 4px 11px;
   border-radius: 999px;
-  background: rgba(0, 74, 173, 0.1);
+  background: #e6f0ff;
   color: var(--bc-blue);
   font-size: 0.66rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
+.wgLatestBlock-predict .wgLatestItemTag {
+  background: #ffcc00;
+  color: #0b2a5b;
+}
+
 .wgLatestItemTitle {
   margin: 0;
-  color: #0f172a;
-  font-size: 0.92rem;
-  font-weight: 700;
-  line-height: 1.5;
+  font-family: 'Kanit', sans-serif;
+  color: #0b2a5b;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 .wgLatestNew {
   margin-left: 8px;
-  padding: 2px 8px;
+  padding: 2px 9px;
   border-radius: 999px;
   background: #ffcc00;
-  color: #3a2a00;
+  color: #0b2a5b;
   font-size: 0.62rem;
-  font-weight: 800;
+  font-weight: 700;
   vertical-align: middle;
 }
 
@@ -466,20 +507,21 @@
 }
 
 .wgLatestCtaBtn {
-  padding: 12px 20px;
+  padding: 12px 22px;
   border-radius: 999px;
   border: none;
   background: var(--bc-blue);
   color: #fff;
-  font-size: 0.88rem;
-  font-weight: 800;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: transform var(--duration-luxury-fast) var(--ease-luxury);
 }
 
 .wgLatestCtaBtn-t2 {
-  background: #f5a623;
-  color: #3a2a00;
+  background: #ffcc00;
+  color: #0b2a5b;
 }
 
 .wgLatestCtaBtn:hover {

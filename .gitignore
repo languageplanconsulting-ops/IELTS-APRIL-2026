@@ -11,6 +11,11 @@ lerna-debug.log*
 .env
 .env.*
 
+# Customer / personal data exports — never commit (contains PII)
+customer_data_export.csv
+*customer*.csv
+*_export.csv
+
 node_modules
 dist
 dist-ssr

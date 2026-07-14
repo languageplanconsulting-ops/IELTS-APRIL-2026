@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type Keyboard
 import './App.css'
 import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
+import { WritingReportView } from './WritingReportView'
+import type { WritingEssaySavePayload, WritingReportSnapshot } from './writingReportTypes'
 import { LandingPageDraft } from './admin/LandingPageDraft'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import ExamFeedPage from './ExamFeedPage'
@@ -613,7 +615,7 @@ type NotebookEntry = {
   fix: string
   thaiMeaning?: string
   personalNote?: string
-  savedReportSnapshot?: SavedReportSnapshot
+  savedReportSnapshot?: SavedReportSnapshot | WritingReportSnapshot
   createdAt: string
 }
 
@@ -6968,6 +6970,7 @@ function App() {
   const [remainingQuestionSeconds, setRemainingQuestionSeconds] = useState(75)
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null)
   const [reportViewSnapshot, setReportViewSnapshot] = useState<SavedReportSnapshot | null>(null)
+  const [writingReportSnapshot, setWritingReportSnapshot] = useState<WritingReportSnapshot | null>(null)
   const [assessmentError, setAssessmentError] = useState('')
   const [assessmentProgress, setAssessmentProgress] = useState(0)
   const [assessmentProgressTarget, setAssessmentProgressTarget] = useState(0)
@@ -11951,6 +11954,40 @@ function App() {
     } catch {
       setNotebookSaveNotice('Could not download the recording right now.')
     }
+  }
+
+  const saveWritingEssayToNotebook = (payload: WritingEssaySavePayload) => {
+    const snapshot: WritingReportSnapshot = {
+      ...payload,
+      kind: 'writing',
+      savedAt: new Date().toISOString()
+    }
+    const nextEntry: NotebookEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      section: 'writing',
+      topicTitle: `${payload.categoryTitle} · Q${payload.questionNumber}`,
+      criterion: 'Writing Task 1 · เรียงความเต็ม',
+      quote: payload.questionTitle,
+      fix: `เปิดดูรายงานฉบับเต็ม (กราฟ + เรียงความไฮไลต์) — ทำถูก ${payload.score.correct}/${payload.score.total} ช่อง`,
+      thaiMeaning: '',
+      personalNote: '',
+      savedReportSnapshot: snapshot,
+      createdAt: new Date().toISOString()
+    }
+    const nextEntries = [nextEntry, ...notebookEntriesRef.current]
+    setNotebookEntries(nextEntries)
+    setSelectedNotebookSection('writing')
+    setNotebookSaveNotice('บันทึกเรียงความลง Notebook แล้ว')
+    void syncNotebookSnapshotToSupabase({
+      entries: nextEntries,
+      sections: customSectionsRef.current,
+      successNotice: 'บันทึกเรียงความลง Notebook และซิงก์กับบัญชีแล้ว'
+    })
+  }
+
+  const openWritingReportSnapshot = (snapshot: WritingReportSnapshot) => {
+    setWritingReportSnapshot(snapshot)
+    setActivePage('notebook')
   }
 
   const removeNotebookEntry = (entryId: string) => {
@@ -23887,7 +23924,10 @@ function App() {
                 </button>
               </div>
             </section>
-            <WritingGuidePage onBackHome={() => setActivePage('home')} />
+            <WritingGuidePage
+              onBackHome={() => setActivePage('home')}
+              onSaveEssayToNotebook={saveWritingEssayToNotebook}
+            />
           </>
         ) : (
           <section className="panel full">
@@ -29419,6 +29459,21 @@ function App() {
           </section>
         ) : (
         <section className="panel full notebookPage">
+          {writingReportSnapshot ? (
+            <div
+              className="wgReportOverlay"
+              role="dialog"
+              aria-modal="true"
+              onClick={() => setWritingReportSnapshot(null)}
+            >
+              <div className="wgReportOverlayInner" onClick={(event) => event.stopPropagation()}>
+                <WritingReportView
+                  snapshot={writingReportSnapshot}
+                  onClose={() => setWritingReportSnapshot(null)}
+                />
+              </div>
+            </div>
+          ) : null}
           <div className="notebookHeader">
             <h2>Notebook</h2>
             <p>Save and organize improvement actions across Speaking, Writing, Listening, Reading, and custom sections.</p>
@@ -29438,7 +29493,11 @@ function App() {
             readOnly={false}
             onRemoveEntry={removeNotebookEntry}
             onUpdateNote={updateNotebookPersonalNote}
-            onOpenSavedReport={(snapshot) => openSavedReportSnapshot(snapshot)}
+            onOpenSavedReport={(snapshot) =>
+              snapshot?.kind === 'writing'
+                ? openWritingReportSnapshot(snapshot as WritingReportSnapshot)
+                : openSavedReportSnapshot(snapshot as SavedReportSnapshot)
+            }
             onCreateCustomSection={{
               value: newCustomSectionName,
               onChange: setNewCustomSectionName,
@@ -29931,7 +29990,11 @@ function App() {
                       onSelectSection={setAdminUserDetailSelectedSection}
                       filteredNotebookEntries={adminUserFilteredNotebookEntries}
                       readOnly
-                      onOpenSavedReport={(snapshot) => openSavedReportSnapshot(snapshot)}
+                      onOpenSavedReport={(snapshot) =>
+                        snapshot?.kind === 'writing'
+                          ? openWritingReportSnapshot(snapshot as WritingReportSnapshot)
+                          : openSavedReportSnapshot(snapshot as SavedReportSnapshot)
+                      }
                     />
                   </section>
                 )}

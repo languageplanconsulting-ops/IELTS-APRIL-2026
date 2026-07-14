@@ -1,0 +1,190 @@
+.wgReportOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
+}
+.wgReportOverlayInner {
+  width: 100%;
+  max-width: 880px;
+  margin: auto;
+}
+
+.wgReport {
+  max-width: 860px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 24px 60px -32px rgba(15, 23, 42, 0.45);
+  overflow: hidden;
+}
+
+.wgReportHead {
+  padding: 22px 26px 18px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #f8fafc;
+}
+
+.wgReportHeadRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wgReportKicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  font-weight: 700;
+}
+
+.wgReportClose {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.wgReportClose:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.wgReportTitle {
+  margin: 10px 0 12px;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.wgReportMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.wgReportBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.wgReportBadge-score {
+  background: #22c55e;
+  color: #052e16;
+  font-weight: 800;
+}
+.wgReportDate {
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+.wgReportChartWrap {
+  padding: 22px 26px 8px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.wgReportEssayWrap {
+  padding: 18px 26px 26px;
+}
+
+.wgReportLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  color: #475569;
+}
+.wgReportLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.wgReportSwatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.wgReportSwatch.is-correct {
+  background: #bbf7d0;
+  border: 1px solid #22c55e;
+}
+.wgReportSwatch.is-missed {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+}
+
+.wgReportEssay {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wgReportPara {
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+.wgReportParaLabel {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+.wgReportParaText {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.9;
+  color: #0f172a;
+}
+
+.wgReportBlank {
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-weight: 700;
+  background: #bbf7d0;
+  color: #052e16;
+  cursor: help;
+}
+.wgReportBlank.is-missed {
+  background: #fef3c7;
+  color: #78350f;
+}
+
+@media (max-width: 640px) {
+  .wgReportTitle {
+    font-size: 20px;
+  }
+  .wgReportParaText {
+    font-size: 15px;
+    line-height: 1.85;
+  }
+  .wgReportChartWrap,
+  .wgReportEssayWrap,
+  .wgReportHead {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
