@@ -32,10 +32,14 @@ import type {
   WritingReportParagraph,
   WritingReportSegment
 } from './writingReportTypes'
+import { WRITING_TASK2_PROMPTS, getWritingTask2Prompts, type WritingTask2TypeId } from './writingTask2Data'
+import { getWritingTask2Builder } from './writingTask2Builder'
+import { WritingTask2Practice } from './WritingTask2Practice'
 
 type WritingGuidePageProps = {
   onBackHome: () => void
   onSaveEssayToNotebook?: (payload: WritingEssaySavePayload) => void
+  onSaveVocabToNotebook?: (payload: { word: string; thaiMeaning: string; questionTitle: string; questionNumber: number }) => void
 }
 
 type WritingFlow =
@@ -46,6 +50,8 @@ type WritingFlow =
   | { step: 'task1-drill'; categoryId: string; promptId: string }
   | { step: 'task1-guide'; categoryId: string }
   | { step: 'task2-types' }
+  | { step: 'task2-questions'; typeId: WritingTask2TypeId }
+  | { step: 'task2-drill'; typeId: WritingTask2TypeId; promptId: string }
 
 const accentClass = (accent: WritingTask1Section['accent']) => `writingGuideAccent-${accent}`
 
@@ -633,7 +639,7 @@ function Band7SampleView({ sample }: { sample: WritingBand7Sample }) {
   )
 }
 
-export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook }: WritingGuidePageProps) {
+export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVocabToNotebook }: WritingGuidePageProps) {
   const [flow, setFlow] = useState<WritingFlow>({ step: 'hub' })
   const [showHelper, setShowHelper] = useState(false)
 
@@ -642,6 +648,8 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook }: WritingG
       flow.step === 'hub' ||
       flow.step === 'latest' ||
       flow.step === 'task2-types' ||
+      flow.step === 'task2-questions' ||
+      flow.step === 'task2-drill' ||
       flow.step === 'task1-categories'
     ) {
       return null
@@ -654,6 +662,16 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook }: WritingG
     const prompts = activeCategory?.practicePrompts || WRITING_TIMELINE_PRACTICE_PROMPTS
     return prompts.find((prompt) => prompt.id === flow.promptId) || null
   }, [flow, activeCategory])
+
+  const activeTask2Prompts = useMemo(() => {
+    if (flow.step !== 'task2-questions' && flow.step !== 'task2-drill') return []
+    return getWritingTask2Prompts(flow.typeId)
+  }, [flow])
+
+  const activeTask2Prompt = useMemo(() => {
+    if (flow.step !== 'task2-drill') return null
+    return WRITING_TASK2_PROMPTS.find((prompt) => prompt.id === flow.promptId) || null
+  }, [flow])
 
   const goBack = () => {
     setShowHelper(false)
@@ -675,6 +693,14 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook }: WritingG
     }
     if (flow.step === 'task1-drill') {
       setFlow({ step: 'task1-questions', categoryId: flow.categoryId })
+      return
+    }
+    if (flow.step === 'task2-questions') {
+      setFlow({ step: 'task2-types' })
+      return
+    }
+    if (flow.step === 'task2-drill') {
+      setFlow({ step: 'task2-questions', typeId: flow.typeId })
     }
   }
 
@@ -966,10 +992,15 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook }: WritingG
             />
             <div className="writingGuideMegaGrid writingGuideMegaGrid-categories">
               {WRITING_TASK2_TYPES.map((item, index) => (
-                <article
+                <button
                   key={item.id}
-                  className="writingGuideMegaCard writingGuideMegaCard-static writingGuideMegaCard-task2type"
+                  type="button"
+                  className="writingGuideMegaCard writingGuideMegaCard-task2type"
                   style={{ '--motion-stagger': index } as CSSProperties}
+                  onClick={() => {
+                    setShowHelper(false)
+                    setFlow({ step: 'task2-questions', typeId: item.id as WritingTask2TypeId })
+                  }}
                 >
                   <span className="writingGuideMegaBadge">Task 2</span>
                   <strong>{item.title}</strong>
@@ -979,7 +1010,8 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook }: WritingG
                       <li key={point}>{point}</li>
                     ))}
                   </ul>
-                </article>
+                  <span className="writingGuideExamListAction">ฝึกเขียน →</span>
+                </button>
               ))}
             </div>
             <div className="wlpBand7Tabs wlpBand7Tabs-single">
@@ -987,6 +1019,75 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook }: WritingG
               <Band7SampleView sample={WRITING_BAND7_TASK2_SAMPLE} />
             </div>
           </div>
+        ) : null}
+
+        {flow.step === 'task2-questions' ? (
+          <div className="writingGuideMegaShell">
+            <WritingFlowHead
+              eyebrow="Task 2 · Practice"
+              title={WRITING_TASK2_TYPES.find((item) => item.id === flow.typeId)?.title || 'Task 2'}
+              subtitle="เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้าแบบเติมคำได้เลย"
+              onBack={goBack}
+              backLabel="Essay types"
+            />
+            <div className="writingGuideExamList">
+              {activeTask2Prompts.map((prompt, index) => (
+                <button
+                  key={prompt.id}
+                  type="button"
+                  className="writingGuideExamListItem"
+                  style={{ '--motion-stagger': index } as CSSProperties}
+                  onClick={() => {
+                    setShowHelper(false)
+                    setFlow({ step: 'task2-drill', typeId: flow.typeId, promptId: prompt.id })
+                  }}
+                >
+                  <span className="writingGuideExamListNum">Question {prompt.number}</span>
+                  <strong>{prompt.title}</strong>
+                  <span className="writingGuideExamListMeta">{prompt.meta}</span>
+                  <span className="writingGuideExamListAction">ฝึกเขียน →</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {flow.step === 'task2-drill' && activeTask2Prompt ? (
+          (() => {
+            const exercise = getWritingTask2Builder(activeTask2Prompt.id)
+            const prompt = activeTask2Prompt
+            return (
+              <div className="writingGuideExamShell">
+                <div className="writingGuideExamToolbar">
+                  <button type="button" className="writingGuideFlowBack" onClick={goBack}>
+                    ← Question list
+                  </button>
+                </div>
+                {exercise ? (
+                  <WritingTask2Practice
+                    key={exercise.id}
+                    prompt={prompt}
+                    exercise={exercise}
+                    onSaveVocab={
+                      onSaveVocabToNotebook
+                        ? (vocab) =>
+                            onSaveVocabToNotebook({
+                              word: vocab.word,
+                              thaiMeaning: vocab.thaiMeaning,
+                              questionTitle: prompt.title,
+                              questionNumber: prompt.number
+                            })
+                        : undefined
+                    }
+                  />
+                ) : (
+                  <div className="writingGuideComingSoon">
+                    <p>Guided writing practice for this question is not ready yet.</p>
+                  </div>
+                )}
+              </div>
+            )
+          })()
         ) : null}
       </div>
     </section>

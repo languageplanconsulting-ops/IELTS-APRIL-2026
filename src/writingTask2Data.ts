@@ -566,7 +566,7 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
     paragraphs: [
       {
         role: 'intro',
-        text: "It has been widely argued that increasing life expectancy, combined with falling birth rates, is placing considerable pressure on governments around the world. This essay will discuss both the challenges this trend brings and the measures that could be taken to address them."
+        text: "It has been widely argued that increasing life expectancy, combined with falling birth rates, is placing considerable pressure on governments around the world. This essay will elaborate on the problems this trend causes before suggesting some measures to solve them."
       },
       {
         role: 'body1',
@@ -599,7 +599,7 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
     paragraphs: [
       {
         role: 'intro',
-        text: "It has been widely argued that while advanced technology has brought many beneficial changes to the world, many older people today struggle to make use of devices such as smartphones and the Internet. This essay will discuss both the benefits older people could gain from modern technology and the measures that could encourage them to use it more often."
+        text: "It has been widely argued that while advanced technology has brought many beneficial changes to the world, many older people today struggle to make use of devices such as smartphones and the Internet. This essay will elaborate on the benefits older people could gain from using technology more before suggesting some measures to encourage them to do so."
       },
       {
         role: 'body1',
@@ -632,7 +632,7 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
     paragraphs: [
       {
         role: 'intro',
-        text: "It has been widely argued that access to fresh water has become a growing global problem in recent years. This essay will discuss both the reasons behind this issue and the measures that governments and individuals could take to address it."
+        text: "It has been widely argued that access to fresh water has become a growing global problem in recent years. This essay will elaborate on the reasons for this before suggesting some solutions to tackle this issue."
       },
       {
         role: 'body1',
@@ -665,7 +665,7 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
     paragraphs: [
       {
         role: 'intro',
-        text: "It has been widely argued that although driving laws exist in every country to ensure road safety, many drivers continue to break them by speeding or using mobile phones while driving. This essay will discuss both the reasons behind this behaviour and the measures that could help solve the problem."
+        text: "It has been widely argued that although driving laws exist in every country to ensure road safety, many drivers continue to break them by speeding or using mobile phones while driving. This essay will elaborate on the reasons behind this behaviour before suggesting some measures to tackle this issue."
       },
       {
         role: 'body1',
@@ -698,7 +698,7 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
     paragraphs: [
       {
         role: 'intro',
-        text: "It has been widely argued that some parents give their children everything they ask for or allow them complete freedom to do as they wish. This essay will discuss both whether this parenting style benefits children and the consequences it could have once these children grow up."
+        text: "It has been widely argued that some parents give their children everything they ask for or allow them complete freedom to do as they wish. This essay will elaborate on why this parenting style is not beneficial for children before discussing the consequences they may face once they grow up."
       },
       {
         role: 'body1',

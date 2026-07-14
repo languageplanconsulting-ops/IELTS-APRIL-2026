@@ -23927,6 +23927,16 @@ function App() {
             <WritingGuidePage
               onBackHome={() => setActivePage('home')}
               onSaveEssayToNotebook={saveWritingEssayToNotebook}
+              onSaveVocabToNotebook={({ word, thaiMeaning, questionTitle, questionNumber }) =>
+                savePlanToNotebook({
+                  criterion: 'Writing Task 2 Vocab',
+                  quote: `Q${questionNumber}: ${questionTitle}`,
+                  fix: word,
+                  thaiMeaning,
+                  preferredSection: 'writing',
+                  successNotice: 'Added to notebook'
+                })
+              }
             />
           </>
         ) : (
