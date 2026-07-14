@@ -22429,7 +22429,7 @@ function App() {
                     <article className="readingSummaryCard">
                       <p className="sectionLabel">ตอนนี้รองรับ</p>
                       <strong>{readingPdoySupportedQuestionCount}</strong>
-                      <span>คำถามแบบโค้ชทีละขั้น</span>
+                      <span>คำถามแบบ P'Doy ทีละขั้น</span>
                     </article>
                     <article className="readingSummaryCard">
                       <p className="sectionLabel">วิธีเรียน</p>
@@ -22439,7 +22439,7 @@ function App() {
                     <article className="readingSummaryCard">
                       <p className="sectionLabel">ลำดับถัดไป</p>
                       <strong>Fill / Matching</strong>
-                      <span>เดี๋ยวจะต่อด้วย flow โค้ชแบบเดียวกัน</span>
+                      <span>เดี๋ยวจะต่อด้วย flow P'Doy แบบเดียวกัน</span>
                     </article>
                   </div>
 
@@ -22795,7 +22795,7 @@ function App() {
                                   </div>
                                 ) : (
                                   <div className="readingPdoySoftPopup">
-                                    ระบบยังดึง option block ของข้อนี้ออกมาได้ไม่สมบูรณ์ เลยยังโค้ชแบบทีละขั้นสำหรับข้อนี้ไม่ได้ครับ
+                                    ระบบยังดึง option block ของข้อนี้ออกมาได้ไม่สมบูรณ์ เลยยังทำ flow P'Doy แบบทีละขั้นสำหรับข้อนี้ไม่ได้ครับ
                                   </div>
                                 )}
                                 {activeReadingPdoySelectedOptionRecord && !activeReadingPdoyIsMatchingQuestion && (
@@ -22904,7 +22904,7 @@ function App() {
                             <div className="readingReportEvidence">
                               <h4>จบบทเรียนแล้ว</h4>
                               <p>{readingPdoyFeedback}</p>
-                              <blockquote>คุณทำ flow โค้ชสำหรับคำถามประเภทนี้ครบแล้วครับ</blockquote>
+                              <blockquote>คุณทำ flow P'Doy สำหรับคำถามประเภทนี้ครบแล้วครับ</blockquote>
                             </div>
                             <div className="controls">
                               <button type="button" className="readingActionBtn readingActionBtn-primary" onClick={() => startReadingPdoyLesson(activeReadingPdoyLesson.id)}>

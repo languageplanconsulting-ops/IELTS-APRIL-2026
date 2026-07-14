@@ -19162,11 +19162,12 @@ select:focus,
   display: grid;
   gap: 0;
   max-width: 920px;
-  border: 1px solid #d6e0ef;
+  border: 1px solid var(--ep-line);
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--ep-card);
   overflow: hidden;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.1);
+  box-shadow: var(--ep-shadow);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
 }
 
 .readingPage .readingHubRow {
@@ -19177,10 +19178,10 @@ select:focus,
   text-align: left;
   padding: 18px 22px !important;
   border: none !important;
-  border-bottom: 1px solid #eef2f8 !important;
+  border-bottom: 1px solid var(--ep-line) !important;
   border-radius: 0 !important;
-  background: #ffffff !important;
-  color: #0f172a !important;
+  background: var(--ep-card) !important;
+  color: var(--ep-ink) !important;
   box-shadow: none !important;
   cursor: pointer;
   transition:
@@ -19210,7 +19211,7 @@ select:focus,
 
 .readingPage .readingHubRow.is-locked .readingHubText strong,
 .readingPage .readingHubRow.is-locked .readingHubSub {
-  color: #94a3b8 !important;
+  color: var(--ep-muted) !important;
 }
 
 .readingPage .readingHubIcon {
@@ -19260,27 +19261,28 @@ select:focus,
 }
 
 .readingPage .readingHubTitleRow strong {
-  color: #0f172a;
-  font-size: 1.18rem;
-  font-weight: 950;
-  letter-spacing: -0.02em;
+  color: var(--ep-ink);
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.16rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   line-height: 1.1;
 }
 
 .readingPage .readingHubTone {
   padding: 2px 10px;
   border-radius: 999px;
-  background: #eef2fb;
-  color: #475569;
+  background: #eaf2fd;
+  color: var(--ep-blue);
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .readingPage .readingHubSub {
-  color: #64748b;
+  color: var(--ep-muted);
   font-size: 0.92rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.4;
 }
 
@@ -19288,28 +19290,28 @@ select:focus,
   flex-shrink: 0;
   padding: 6px 14px;
   border-radius: 999px;
-  background: #fff4cc;
-  color: #5c4a00;
+  background: #fff3c4;
+  color: #7a5900;
   font-size: 0.86rem;
-  font-weight: 900;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .readingPage .readingHubCount-lock {
-  background: #eef2f6;
-  color: #64748b;
+  background: #eef1f6;
+  color: var(--ep-muted);
 }
 
 .readingPage .readingHubChevron {
   flex-shrink: 0;
-  color: #b6c2d6;
+  color: var(--ep-line-strong);
   font-size: 1.5rem;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
 }
 
 .readingPage .readingHubRow:hover .readingHubChevron {
-  color: #004aad;
+  color: var(--ep-blue);
 }
 
 @media (max-width: 640px) {
@@ -19668,17 +19670,18 @@ select:focus,
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
   font-size: 0.88rem;
-  font-weight: 700;
-  color: #64748b;
+  font-weight: 600;
+  color: var(--ep-muted);
 }
 
 .readingPage .readingJourneyBreadcrumbLink {
   padding: 0;
   border: none;
   background: transparent;
-  color: #004aad;
-  font-weight: 850;
+  color: var(--ep-blue);
+  font-weight: 700;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -19687,10 +19690,10 @@ select:focus,
   display: grid;
   gap: 20px;
   padding: 22px 22px 20px;
-  border: 3px solid #0f172a;
-  border-radius: 16px;
-  background: #ffcc00;
-  box-shadow: 5px 5px 0 #0f172a;
+  border: 1px solid var(--ep-line);
+  border-radius: 20px;
+  background: var(--ep-card);
+  box-shadow: var(--ep-shadow);
 }
 
 @media (min-width: 700px) {
@@ -19705,32 +19708,35 @@ select:focus,
   margin-bottom: 8px;
   padding: 5px 12px;
   border-radius: 999px;
-  background: #0f172a;
+  background: var(--ep-blue);
   color: #fff;
+  font-family: 'Kanit', sans-serif;
   font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .readingPage .readingJourneyJournalTitle {
   margin: 0;
-  color: #0f172a;
+  color: var(--ep-ink);
+  font-family: 'Kanit', sans-serif !important;
   font-size: clamp(1.5rem, 3.2vw, 2rem);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .readingPage .readingJourneyJournalLead {
   margin: 8px 0 12px;
-  color: #334155;
-  font-weight: 650;
-  line-height: 1.45;
+  color: var(--ep-muted);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 .readingPage .readingJourneyJournalLead strong {
-  color: #004aad;
+  color: var(--ep-blue);
 }
 
 .readingPage .readingJourneyJournalChips {
@@ -19740,13 +19746,15 @@ select:focus,
 }
 
 .readingPage .readingJourneyJournalChips span {
-  padding: 6px 10px;
-  border: 2px solid #0f172a;
-  border-radius: 8px;
-  background: #fffdfa;
+  padding: 6px 12px;
+  border: 1px solid var(--ep-line);
+  border-radius: 999px;
+  background: var(--ep-page);
+  color: var(--ep-ink);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
   font-size: 0.82rem;
-  font-weight: 800;
-  box-shadow: 2px 2px 0 #0f172a;
+  font-weight: 600;
+  box-shadow: none;
 }
 
 .readingPage .readingJourneyJournalStats {
@@ -19757,28 +19765,30 @@ select:focus,
 
 .readingPage .readingJourneyStatBox {
   min-width: 88px;
-  padding: 10px 12px;
-  border: 2px solid #0f172a;
-  border-radius: 10px;
-  background: #fffdfa;
-  box-shadow: 3px 3px 0 #0f172a;
+  padding: 10px 14px;
+  border: 1px solid var(--ep-line);
+  border-radius: 14px;
+  background: var(--ep-page);
+  box-shadow: none;
   text-align: center;
 }
 
 .readingPage .readingJourneyStatBox span {
   display: block;
   margin-bottom: 2px;
-  color: #64748b;
+  color: var(--ep-muted);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
   font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .readingPage .readingJourneyStatBox strong {
-  color: #004aad;
+  color: var(--ep-blue);
+  font-family: 'Kanit', sans-serif;
   font-size: 1.35rem;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1.1;
 }
 
@@ -19791,12 +19801,13 @@ select:focus,
 .readingPage .readingJourneyBtn {
   min-height: 42px;
   padding: 0 16px;
-  border: 2px solid #0f172a;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #0f172a;
-  box-shadow: 3px 3px 0 #0f172a;
-  font-weight: 850;
+  border: 1px solid var(--ep-line);
+  border-radius: 12px;
+  background: var(--ep-card);
+  color: var(--ep-ink);
+  box-shadow: var(--ep-shadow);
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
   cursor: pointer;
   transition:
     transform var(--duration-luxury) var(--ease-luxury),
@@ -19806,13 +19817,13 @@ select:focus,
 }
 
 .readingPage .readingJourneyBtn:hover:not(:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 #0f172a;
+  transform: translateY(-1px);
+  box-shadow: var(--ep-shadow-strong);
 }
 
 .readingPage .readingJourneyBtn:active:not(:disabled) {
-  transform: translate(3px, 3px) scale(0.985);
-  box-shadow: none;
+  transform: translateY(0) scale(0.99);
+  box-shadow: var(--ep-shadow);
   transition-duration: var(--duration-luxury-fast);
 }
 
@@ -19823,27 +19834,30 @@ select:focus,
 }
 
 .readingPage .readingJourneyBtn-ghost {
-  background: #fffdfa;
-  color: #004aad;
+  background: var(--ep-page);
+  color: var(--ep-blue);
+  border-color: var(--ep-line);
 }
 
 .readingPage .readingJourneyBtn-play {
-  background: #ffcc00;
-  color: #0f172a;
+  background: var(--ep-yellow);
+  color: var(--ep-ink);
+  border-color: var(--ep-yellow);
 }
 
 .readingPage .readingJourneyEmpty {
   padding: 28px 20px;
-  border: 3px dashed #94a3b8;
-  border-radius: 14px;
-  background: #fffdfa;
+  border: 1px dashed var(--ep-line-strong);
+  border-radius: 16px;
+  background: var(--ep-page);
   text-align: center;
 }
 
 .readingPage .readingJourneyEmpty p {
   margin: 0 0 6px;
-  color: #0f172a;
-  font-weight: 800;
+  color: var(--ep-ink);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-weight: 600;
 }
 
 .readingPage .readingJourneyTrail {
@@ -19862,7 +19876,7 @@ select:focus,
 }
 
 .readingPage .readingJourneyTrailRow.is-alt .readingJourneyMissionCard {
-  transform: rotate(-0.4deg);
+  transform: none;
 }
 
 .readingPage .readingJourneyTrailSpine {
@@ -19874,18 +19888,18 @@ select:focus,
 
 .readingPage .readingJourneyTrailLine {
   flex: 1;
-  width: 4px;
+  width: 3px;
   min-height: 12px;
   margin-bottom: 4px;
   border-radius: 4px;
   background: repeating-linear-gradient(
     180deg,
-    #0f172a 0,
-    #0f172a 6px,
+    var(--ep-line-strong) 0,
+    var(--ep-line-strong) 6px,
     transparent 6px,
     transparent 12px
   );
-  opacity: 0.35;
+  opacity: 0.7;
 }
 
 .readingPage .readingJourneyTrailDot {
@@ -19893,48 +19907,53 @@ select:focus,
   place-items: center;
   width: 40px;
   height: 40px;
-  border: 3px solid #0f172a;
+  border: 2px solid var(--ep-line);
   border-radius: 50%;
-  background: #fffdfa;
+  background: var(--ep-card);
+  color: var(--ep-ink);
+  font-family: 'Kanit', sans-serif;
   font-size: 1rem;
-  font-weight: 900;
-  box-shadow: 3px 3px 0 #0f172a;
+  font-weight: 700;
+  box-shadow: var(--ep-shadow);
   flex-shrink: 0;
 }
 
 .readingPage .readingJourneyTrailDot.is-cleared {
-  background: #86efac;
-  color: #14532d;
+  background: #cdf3df;
+  border-color: #7fd2a4;
+  color: #0f7a4a;
 }
 
 .readingPage .readingJourneyTrailDot.is-active {
-  background: #ffcc00;
+  background: var(--ep-yellow);
+  border-color: var(--ep-yellow);
   animation: readingJourneyPulse 2.4s var(--ease-luxury-soft) infinite;
 }
 
 .readingPage .readingJourneyTrailDot.is-locked {
-  background: #e2e8f0;
+  background: #eef1f6;
+  color: var(--ep-muted);
   opacity: 0.85;
 }
 
 @keyframes readingJourneyPulse {
   0%,
   100% {
-    box-shadow: 3px 3px 0 #0f172a;
+    box-shadow: var(--ep-shadow);
   }
   50% {
-    box-shadow: 4px 4px 0 #0f172a, 0 0 0 4px rgba(255, 204, 0, 0.45);
+    box-shadow: var(--ep-shadow-strong), 0 0 0 4px rgba(255, 204, 8, 0.35);
   }
 }
 
 .readingPage .readingJourneyMissionCard {
   margin-bottom: 16px;
-  padding: 16px 16px 14px;
-  border: 3px solid #0f172a;
-  border-radius: 14px;
-  background: #fffdfa;
-  box-shadow: 4px 4px 0 #0f172a;
-  transform: rotate(0.25deg);
+  padding: 18px 18px 16px;
+  border: 1px solid var(--ep-line);
+  border-radius: 16px;
+  background: var(--ep-card);
+  box-shadow: var(--ep-shadow);
+  transform: none;
   transition:
     transform var(--duration-luxury) var(--ease-luxury),
     box-shadow var(--duration-luxury) var(--ease-luxury),
@@ -19944,26 +19963,26 @@ select:focus,
 }
 
 .readingPage .readingJourneyMissionCard:hover {
-  transform: rotate(0.25deg) translateY(-3px);
-  box-shadow: 6px 6px 0 #0f172a;
+  transform: translateY(-3px);
+  box-shadow: var(--ep-shadow-strong);
 }
 
 .readingPage .readingJourneyMissionCard.is-locked {
   opacity: 0.72;
-  background: #f1f5f9;
-  box-shadow: 2px 2px 0 #94a3b8;
-  border-color: #94a3b8;
+  background: #f4f6fa;
+  box-shadow: none;
+  border-color: var(--ep-line);
 }
 
 .readingPage .readingJourneyMissionCard.is-cleared {
-  border-color: #166534;
-  background: #f0fdf4;
-  box-shadow: 4px 4px 0 #166534;
+  border-color: #7fd2a4;
+  background: #f3fbf6;
+  box-shadow: var(--ep-shadow);
 }
 
 .readingPage .readingJourneyMissionCard.is-active {
-  border-color: #004aad;
-  box-shadow: 5px 5px 0 #004aad;
+  border-color: var(--ep-blue);
+  box-shadow: 0 10px 28px rgba(7, 84, 184, 0.16);
 }
 
 .readingPage .readingJourneyMissionHeader {
@@ -19975,46 +19994,51 @@ select:focus,
 }
 
 .readingPage .readingJourneyMissionNo {
+  font-family: 'Kanit', sans-serif;
   font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ep-muted);
 }
 
 .readingPage .readingJourneyMissionStatus {
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 999px;
-  border: 2px solid #0f172a;
-  background: #ffcc00;
+  border: 1px solid var(--ep-line);
+  background: var(--ep-page);
+  color: var(--ep-ink);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
   font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .readingPage .readingJourneyMissionStatus.is-cleared {
-  background: #86efac;
-  border-color: #166534;
-  color: #14532d;
+  background: #cdf3df;
+  border-color: #7fd2a4;
+  color: #0f7a4a;
 }
 
 .readingPage .readingJourneyMissionStatus.is-locked {
-  background: #e2e8f0;
-  border-color: #64748b;
-  color: #475569;
+  background: #eef1f6;
+  border-color: var(--ep-line);
+  color: var(--ep-muted);
 }
 
 .readingPage .readingJourneyMissionName {
   margin: 0 0 4px;
+  font-family: 'Kanit', sans-serif;
   font-size: 1.25rem;
-  font-weight: 900;
-  color: #0f172a;
+  font-weight: 700;
+  color: var(--ep-ink);
 }
 
 .readingPage .readingJourneyMissionObjective {
   margin: 0 0 10px;
-  color: #475569;
-  font-weight: 700;
+  color: var(--ep-muted);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-weight: 500;
   font-size: 0.9rem;
 }
 
@@ -20025,9 +20049,10 @@ select:focus,
   display: flex;
   flex-wrap: wrap;
   gap: 6px 12px;
-  color: #334155;
+  color: var(--ep-ink);
+  font-family: 'Anuphan', Inter, system-ui, sans-serif;
   font-size: 0.82rem;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .readingPage .readingJourneyMissionLoot li {
@@ -26314,3 +26339,177 @@ textarea {
   color: #0754b8 !important;
 }
 /* ===================== end ETS reading reskin ===================== */
+
+/* ===================== Admin panel revamp: Kanit + brand accents ===================== */
+
+.workspace .adminPanelPage {
+  font-family: 'Anuphan', Inter, system-ui, sans-serif !important;
+}
+
+.adminPanelPage .adminHero h2,
+.adminPanelPage .adminSectionHeader h3,
+.adminPanelPage .adminWorkflowCard h4,
+.adminPanelPage .adminTtsLibraryHeader h4,
+.adminPanelPage .adminAudioCard h4,
+.adminPanelPage .adminQaCard h4,
+.adminPanelPage .adminWorkspaceWindowHeader h3,
+.adminPanelPage .adminEmptyState strong,
+.adminPanelPage .adminNavBrand strong {
+  font-family: 'Kanit', sans-serif !important;
+  font-weight: 700 !important;
+  color: #0b2a5b !important;
+  letter-spacing: 0 !important;
+}
+
+.adminPanelPage .adminHero h2 {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 14px !important;
+}
+
+.adminPanelPage .adminHero h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 56px;
+  height: 4px;
+  border-radius: 3px;
+  background: #ffcc00;
+}
+
+.adminPanelPage .sectionLabel {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 0 !important;
+  height: auto !important;
+  width: fit-content !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #004aad !important;
+}
+
+.adminPanelPage .bandPill {
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 999px !important;
+  background: #ffcc00 !important;
+  color: #0b2a5b !important;
+  font-family: 'Kanit', sans-serif !important;
+  font-weight: 700 !important;
+}
+
+.adminPanelPage .adminNavGroupLabel,
+.adminPanelPage .adminStatLabel,
+.adminPanelPage .adminFormSectionTitle,
+.adminPanelPage .adminBreadcrumb {
+  font-family: 'Kanit', sans-serif !important;
+  color: #004aad !important;
+}
+
+.adminPanelPage .adminStatCard strong {
+  font-family: 'Kanit', sans-serif !important;
+}
+
+.adminPanelPage .adminNavBadge,
+.adminPanelPage .adminSubTabBadge {
+  background: #ffcc00 !important;
+  color: #0b2a5b !important;
+}
+
+.adminModuleToggleGroup {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid #e3ebfa;
+  border-radius: 14px;
+  background: #fbfdff;
+}
+
+.adminModuleToggleLabel {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #004aad;
+}
+
+.adminModuleToggleOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.adminModuleToggleOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #172033;
+}
+
+.adminLearnerSkillPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.adminSkillPill {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #dce6f5;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.adminSkillPill-on {
+  border-color: #004aad;
+  background: #eaf1ff;
+  color: #004aad;
+}
+
+.adminSkillPill-off {
+  opacity: 0.65;
+}
+
+.adminPanelPage .adminSectionCard,
+.adminPanelPage .adminLearnerCard,
+.adminPanelPage .adminWorkflowCard,
+.adminPanelPage .adminQaCard {
+  border-color: #dce6f5 !important;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.adminPanelPage .adminLearnerCard:hover {
+  border-color: #004aad !important;
+  box-shadow: 0 10px 24px rgba(0, 74, 173, 0.1) !important;
+}
+
+.adminPanelPage .adminActionRow > button {
+  padding: 10px 20px;
+  border: 1px solid #004aad;
+  border-radius: 10px;
+  background: #004aad;
+  color: #fff;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.adminPanelPage .adminActionRow > button:hover {
+  background: #063e8c;
+}
+/* ===================== end admin panel revamp ===================== */
