@@ -146,6 +146,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb1-i3', ['used', 'use', 'using'], 'used', 'word-choice', 'อนุประโยค who ต้องมีกริยาแท้ และเป็นอดีต (past simple) เพราะเล่าข้อมูลปี 2014–2024 ที่ผ่านมาแล้ว จึงใช้ used'),
           t(' online learning platforms '),
           sel('gb1-i10', ['compared', 'comparing', 'compare'], 'compared', 'word-choice', 'compared with = เมื่อเทียบกับ ใช้ V3 (compared) ในโครงสร้างลดรูป passive ส่วน comparing/compare ทำให้โครงสร้างผิด'),
+          t(' '),
           sel('gb1-i4', ['with', 'to which', 'of'], 'with', 'word-choice', 'compared with = เปรียบเทียบระหว่างสองกลุ่ม เป็นสำนวนคู่ compared + with ส่วนตัวเลือกอื่นไม่เข้าโครงสร้าง'),
           t(' those who '),
           sel('gb1-i5', ['attended', 'attend', 'attending'], 'attended', 'word-choice', 'อนุประโยค who ต้องมีกริยาแท้เป็นอดีตให้ขนานกับ used จึงใช้ attended'),
@@ -194,6 +195,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           typ('gb1-o6', 'be', ['was'], 'verb-tense', 'ประธานเอกพจน์ (online learning) + เล่าอดีต จึงใช้ was'),
           t(' the '),
           sel('gb1-o7', ['more', 'most', 'much'], 'more', 'word-choice', 'เปรียบเทียบสองสิ่ง (online กับ in-person) ใช้ขั้นกว่า more popular ไม่ใช่ขั้นสุด most'),
+          t(' '),
           sel('gb1-o13', ['popular', 'popularity', 'popularly'], 'popular', 'word-choice', 'more popular = ได้รับความนิยมมากกว่า ต้องใช้คุณศัพท์ popular ส่วน popularity (คำนาม) และ popularly (adverb) ไม่เข้าโครงสร้าง the more … option'),
           t(' '),
           sel('gb1-o8', ['option', 'opinion', 'occasion'], 'option', 'word-choice', 'option = ทางเลือก เข้ากับบริบทเทียบสองรูปแบบการเรียน ส่วน opinion (ความเห็น) และ occasion (โอกาส/เหตุการณ์) ความหมายไม่ตรง'),
@@ -204,7 +206,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' '),
           typ('gb1-o11', 'see', ['seen'], 'v3-clause', 'the situation seen at the start = สถานการณ์ที่เห็นตอนต้น ใช้ V3 (seen) ลดรูป passive มาขยายคำนาม situation'),
           t(' at the '),
-          sel('gb1-o14', ['start', 'started', 'starting'], 'start', 'word-choice', 'at the start = ตอนเริ่มต้น ต้องการคำนาม start ส่วน started (V2/V3) และ starting (V-ing) ไม่เข้ากับ the … ')
+          sel('gb1-o14', ['start', 'started', 'starting'], 'start', 'word-choice', 'at the start = ตอนเริ่มต้น ต้องการคำนาม start ส่วน started (V2/V3) และ starting (V-ing) ไม่เข้ากับ the … '),
+          t('.')
         ]
       },
       {

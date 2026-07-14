@@ -557,9 +557,9 @@
   gap: 6px;
   padding: 18px 20px;
   text-align: left;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid #dce6f5;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #fff;
   cursor: pointer;
   transition:
     transform var(--duration-luxury-fast) var(--ease-luxury),
@@ -570,9 +570,9 @@
 }
 
 .writingGuideExamListItem:hover {
-  transform: translateY(-2px);
-  border-color: rgba(0, 74, 173, 0.28);
-  box-shadow: 0 14px 32px rgba(0, 74, 173, 0.1);
+  transform: translateY(-3px);
+  border-color: var(--bc-blue);
+  box-shadow: 0 14px 30px rgba(0, 74, 173, 0.14);
 }
 
 .writingGuideExamListNum {
@@ -584,8 +584,10 @@
 }
 
 .writingGuideExamListItem strong {
-  font-size: 1.02rem;
-  color: #0f172a;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  font-size: 1.08rem;
+  color: #0b2a5b;
   line-height: 1.35;
 }
 
@@ -1957,11 +1959,12 @@
 
 .wlpSectionKicker {
   margin: 0;
+  font-family: 'Kanit', sans-serif;
   font-size: 0.69rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #bf8b30;
+  color: #004aad;
 }
 
 /* ── Task 1 type grid ─────────────────────────────────────── */
@@ -1978,15 +1981,16 @@
   gap: 10px;
   padding: 22px 20px;
   background: #fff;
-  border: 1px solid rgba(15, 46, 133, 0.09);
+  border: 1px solid #dce6f5;
   border-radius: 14px;
   box-shadow: 0 2px 10px rgba(15, 46, 133, 0.06);
-  transition: transform 140ms ease, box-shadow 140ms ease;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
 
 .wlpTypeCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 46, 133, 0.11);
+  transform: translateY(-3px);
+  border-color: var(--bc-blue);
+  box-shadow: 0 12px 26px rgba(0, 74, 173, 0.12);
 }
 
 .wlpTypeTag {
@@ -2004,10 +2008,11 @@
 
 .wlpTypeTitle {
   margin: 0;
-  font-size: 0.97rem;
-  font-weight: 700;
-  color: #0b1f44;
-  letter-spacing: -0.01em;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #0b2a5b;
+  letter-spacing: 0;
 }
 
 .wlpTypeDesc {
@@ -2377,12 +2382,24 @@
 }
 
 .wgbStepEyebrow {
-  margin: 0 0 4px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #004aad;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 6px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #0b2a5b;
+}
+
+.wgbStepEyebrow::before {
+  content: '';
+  width: 5px;
+  height: 18px;
+  border-radius: 3px;
+  background: #ffcc00;
 }
 
 .wgbStepHint {
@@ -2529,6 +2546,71 @@
   color: #b91c1c;
 }
 
+/* per-blank explanation shown when a checked answer is wrong */
+.wgbExplainList {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(254, 243, 199, 0.55);
+  display: grid;
+  gap: 8px;
+  animation: wgbStepIn 260ms ease;
+}
+
+.wgbExplainHead {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #92400e;
+  text-transform: uppercase;
+}
+
+.wgbExplainRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.wgbExplainAnswer {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 6px;
+  background: #16a34a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.wgbExplainWhy {
+  flex: 1 1 240px;
+  color: #78350f;
+}
+
+.wlpBtn-save {
+  background: #0f766e;
+  color: #fff;
+  border-color: #0f766e;
+}
+.wlpBtn-save:hover:not(:disabled) {
+  background: #0d5f59;
+}
+.wlpBtn-save:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.wgbSavedHint {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #0f766e;
+}
+
 /* finish + full essay */
 .wgbFinish {
   padding: 18px 20px;
@@ -2548,8 +2630,9 @@
 
 .wgbFinishTitle {
   margin: 0;
-  font-size: 0.98rem;
-  font-weight: 800;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.08rem;
+  font-weight: 600;
   color: #15803d;
 }
 
@@ -2607,8 +2690,8 @@
 }
 
 .wgbCoach.is-blank-focus {
-  border-color: rgba(191, 139, 48, 0.35);
-  background: linear-gradient(135deg, rgba(255, 246, 224, 0.85), rgba(255, 255, 255, 0.92));
+  border-color: rgba(255, 204, 0, 0.55);
+  background: linear-gradient(135deg, rgba(255, 249, 224, 0.9), rgba(255, 255, 255, 0.92));
 }
 
 .wgbCoachAvatar {
@@ -2624,8 +2707,8 @@
 }
 
 .wgbCoach.is-blank-focus .wgbCoachAvatar {
-  background: linear-gradient(135deg, #bf8b30, #e3ac4d);
-  box-shadow: 0 6px 14px rgba(191, 139, 48, 0.3);
+  background: linear-gradient(135deg, #ffcc00, #ffd84d);
+  box-shadow: 0 6px 14px rgba(255, 204, 0, 0.4);
 }
 
 .wgbCoachBody {
@@ -2634,15 +2717,16 @@
 
 .wgbCoachLabel {
   margin: 0 0 3px;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   color: #004aad;
 }
 
 .wgbCoach.is-blank-focus .wgbCoachLabel {
-  color: #92660f;
+  color: #9a7400;
 }
 
 .wgbCoachMessage {
