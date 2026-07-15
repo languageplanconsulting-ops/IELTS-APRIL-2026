@@ -1,12 +1,30 @@
 # English Plan IELTS
 
-English Plan IELTS is an IELTS preparation app and learning space for Thai learners.
+English Plan IELTS is an IELTS preparation app and learning space for Thai learners, built by ENGLISH PLAN / Doy (@DoyLanguagePlan). It covers IELTS Speaking, Writing, Reading and Listening practice with Thai-language explanations, mock tests, a personal notebook and weekly-updated recent exam recalls.
 
-Core pages:
-- https://www.englishplan-ielts.com/th/ - Thai IELTS prep hub
-- https://www.englishplan-ielts.com/th/ielts-speaking-practice/ - IELTS Speaking practice
-- https://www.englishplan-ielts.com/th/ielts-reading-practice/ - IELTS Reading practice
-- https://www.englishplan-ielts.com/th/ielts-writing-checker/ - IELTS Writing checker and guide
-- https://www.englishplan-ielts.com/th/ielts-mock-test/ - IELTS mock test workflow
+Pages:
+- https://www.englishplan-ielts.com/th/ - ฝึก IELTS Speaking, Writing, Reading และ Listening พร้อม mock test, feedback ภาษาไทย, notebook และบทเรียนจากครูพี่ดอย ENGLISH PLAN
+- https://www.englishplan-ielts.com/th/ielts-speaking-practice/ - ฝึก IELTS Speaking Part 1, Part 2, Part 3 ด้วยระบบอัดเสียง mock test, sample answer, notebook และบทเรียนวิดีโอจาก ENGLISH PLAN
+- https://www.englishplan-ielts.com/th/ielts-speaking-band-7/ - แผนฝึก IELTS Speaking Band 7 สำหรับคนไทย ครอบคลุม fluency, vocabulary, grammar, pronunciation และตัวอย่างวิดีโอจากครูพี่ดอย
+- https://www.englishplan-ielts.com/th/ielts-speaking-part-1/ - ฝึก IELTS Speaking Part 1 สำหรับคนไทย พร้อมแนวตอบสั้น กระชับ เป็นธรรมชาติ และระบบบันทึกคำตอบในแอป
+- https://www.englishplan-ielts.com/th/ielts-speaking-part-2/ - ฝึก IELTS Speaking Part 2 cue card พร้อมวิธีวางคำตอบ 1 นาทีแรก, เล่าเรื่อง 2 นาที และเก็บ feedback ใน notebook
+- https://www.englishplan-ielts.com/th/ielts-speaking-part-3/ - ฝึก IELTS Speaking Part 3 สำหรับคำถาม abstract, opinion, compare และ cause-effect พร้อมแนวคิดตอบให้เป็น Band 7
+- https://www.englishplan-ielts.com/th/ielts-writing-checker/ - ฝึก IELTS Writing ด้วย checklist, grammar focus, punctuation lesson และแนวทางแก้ Task 1 / Task 2 เพื่อไป Band 7
+- https://www.englishplan-ielts.com/th/ielts-writing-task-2/ - เรียน IELTS Writing Task 2 สำหรับคนไทย ตั้งแต่โครงสร้าง essay, idea development, paragraph และ grammar ที่ปลอดภัยสำหรับ Band 7
+- https://www.englishplan-ielts.com/th/ielts-reading-practice/ - ฝึก IELTS Reading สำหรับคนไทยด้วยข้อสอบ, evidence, keyword trap, paraphrase และบทเรียน Reading 9.0 จาก ENGLISH PLAN
+- https://www.englishplan-ielts.com/th/ielts-listening-practice/ - ฝึก IELTS Listening ด้วย section practice, spelling drill, dictation, transcript และระบบเก็บคะแนนสำหรับคนไทย
+- https://www.englishplan-ielts.com/th/ielts-mock-test/ - ซ้อม IELTS mock test ออนไลน์สำหรับ Speaking, Reading, Listening และ Writing พร้อม report, notebook และแผนฝึกต่อ
+- https://www.englishplan-ielts.com/th/pricing/ - ดูทางเลือกการเริ่มฝึก IELTS กับ English Plan ทั้งทดลองใช้ IELTS app และคอร์ส Speaking Band 7+ สำหรับผู้เรียนไทย
+- https://www.englishplan-ielts.com/th/about-pdoy/ - รู้จักครูพี่ดอยและ ENGLISH PLAN ผ่าน YouTube @DoyLanguagePlan, บทเรียน IELTS และระบบฝึก IELTS ออนไลน์สำหรับคนไทย
+- https://www.englishplan-ielts.com/th/duolingo-english-test-vs-ielts/ - เปรียบเทียบ Duolingo English Test กับ IELTS Academic/General แบบเข้าใจง่าย รูปแบบข้อสอบ ค่าใช้จ่าย การยอมรับผล และควรเตรียมตัวสอบตัวไหน
+- https://www.englishplan-ielts.com/th/ielts-app-daily-practice/ - แอปฝึก IELTS ที่ให้ feedback ทันทีทุกครั้งที่ฝึก คล้ายแอปเรียนภาษาที่คนไทยคุ้นเคย แต่เจาะข้อสอบ IELTS Speaking, Writing, Reading, Listening โดยเฉพาะ
+- https://www.englishplan-ielts.com/th/ielts-exam-recall/ - รวมหัวข้อ IELTS Speaking และ Writing ที่ผู้สอบจริงเจอในเดือน มิถุนายน 2026 พร้อมเก็งข้อสอบเดือนถัดไป อัปเดตทุกสัปดาห์โดยทีม English Plan
+- https://www.englishplan-ielts.com/en/ - IELTS Speaking, Writing, Reading and Listening practice for Thai learners with mock tests, Thai explanations, notebooks and lessons by Doy from ENGLISH PLAN.
+- https://www.englishplan-ielts.com/en/ielts-speaking-practice/ - Practice IELTS Speaking Part 1, Part 2 and Part 3 online with recordings, sample videos, a personal notebook and Thai learner-focused feedback.
+- https://www.englishplan-ielts.com/en/ielts-reading-practice/ - IELTS Reading practice for Thai learners with evidence, paraphrase, keyword traps and ENGLISH PLAN video lessons.
+- https://www.englishplan-ielts.com/en/ielts-writing-checker/ - IELTS Writing improvement path for Thai learners with punctuation, grammar control, essay structure and Band 7 writing lessons.
+- https://www.englishplan-ielts.com/en/ielts-mock-test/ - Take IELTS mock tests online and turn Speaking, Reading, Listening and Writing results into a focused study plan.
+- https://www.englishplan-ielts.com/en/about-pdoy/ - Learn about Doy from ENGLISH PLAN, the @DoyLanguagePlan YouTube channel, and the IELTS preparation system for Thai learners.
 
 Official video channel: https://www.youtube.com/@DoyLanguagePlan
+Course: https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts

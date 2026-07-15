@@ -1,97 +1,22 @@
 import './ExamFeedPage.css'
 import type { ReactElement } from 'react'
+import { WRITING_RECALL as writingRecall, WRITING_PREDICT as predictWriting, type ExamItem } from './writingExamRecalls'
 import {
-  WRITING_RECALL as writingRecall,
-  WRITING_PREDICT as predictWriting,
-  type ExamItem
-} from './writingExamRecalls'
+  LAST_UPDATED,
+  CURRENT_MONTH,
+  MONTHS,
+  SPEAKING_RECALL as speakingRecall,
+  SPEAKING_PREDICT as predictSpeaking
+} from './examRecallData'
 
 /**
- * Admin-only SEO landing page: "ข้อสอบ IELTS ล่าสุด".
+ * Public SEO landing page: "ข้อสอบ IELTS ล่าสุด".
  * Shows recent forum-reported Speaking/Writing recalls + monthly predictions.
  * Data is curated from real test-taker reports (recalls), NOT official exams.
- * Not yet visible to learners — gated behind activePage === 'examfeed' + admin role.
- * Writing recall/prediction data lives in writingExamRecalls.ts (shared with WritingGuidePage's "latest" hub screens).
+ * Speaking data lives in examRecallData.ts, Writing in writingExamRecalls.ts —
+ * both are also consumed by scripts/build-seo-pages.mjs to keep the static
+ * /th/ielts-exam-recall/ SEO page in sync with this in-app view.
  */
-
-const LAST_UPDATED = '21 มิถุนายน 2026'
-const CURRENT_MONTH = 'มิถุนายน 2026'
-
-const MONTHS = ['มิถุนายน 2026', 'พฤษภาคม 2026', 'เมษายน 2026', 'มีนาคม 2026', 'กุมภาพันธ์ 2026']
-
-const speakingRecall: ExamItem[] = [
-  {
-    tag: 'Part 2',
-    title: 'Describe something you did in your study or work that made you feel confident.',
-    bullets: ['When and where it happened', 'What you did', 'Why it made you feel confident'],
-    meta: 'มิ.ย. 2026 · เยอรมนี',
-    isNew: true
-  },
-  {
-    tag: 'Part 2',
-    title: 'Describe something you taught to a friend or relative.',
-    bullets: ['What you taught', 'When it was', 'How long it was for', 'How you felt about it'],
-    meta: 'มิ.ย. 2026 · นิวซีแลนด์',
-    isNew: true
-  },
-  {
-    tag: 'Part 2',
-    title: 'Describe an indoor or outdoor place where it is easy for you to study.',
-    bullets: ['Where it is', 'What it is like', 'When you go there', 'Why you like studying there'],
-    meta: 'มิ.ย. 2026 · เวียดนาม'
-  },
-  {
-    tag: 'Part 2',
-    title: 'Describe a crowded place you have visited.',
-    bullets: ['When you went there', 'Who you went with', 'How you felt about being there'],
-    meta: 'มิ.ย. 2026 · สเปน'
-  },
-  {
-    tag: 'Part 1',
-    title: 'Weather & climate',
-    bullets: [
-      'What is the weather like where you live?',
-      'Do you prefer cold or hot weather?',
-      'Do you check the weather forecast? How often?',
-      'What do you think are the effects of climate change recently?'
-    ],
-    meta: 'มิ.ย. 2026 · สวีเดน / เวียดนาม'
-  },
-  {
-    tag: 'Part 3',
-    title: 'Confidence (follow-up discussion)',
-    bullets: [
-      'Why do so many people lack confidence these days?',
-      'Are children of confident parents also confident?',
-      'What can teachers do to make studying more interesting?',
-      'How can a person become more confident?'
-    ],
-    meta: 'มิ.ย. 2026 · เยอรมนี'
-  }
-]
-
-const predictSpeaking: ExamItem[] = [
-  {
-    tag: 'Part 2',
-    title: 'Describe an important old thing your family has kept for a long time.',
-    meta: 'แนวโน้มสูง'
-  },
-  {
-    tag: 'Part 2',
-    title: 'Describe a book you read that you found useful.',
-    meta: 'แนวโน้มสูง'
-  },
-  {
-    tag: 'Part 2',
-    title: 'Describe a person you know who enjoys working for a family business.',
-    meta: 'ควรเตรียม'
-  },
-  {
-    tag: 'Part 2',
-    title: 'Describe something you can’t live without (not a phone or computer).',
-    meta: 'พบบ่อย'
-  }
-]
 
 const BRAZIL_FISHING_POINTS: [number, number][] = [
   [10, 48.5],
@@ -168,10 +93,6 @@ const renderItems = (items: ExamItem[], skill: 'sp' | 'wr') =>
 export default function ExamFeedPage({ onOpenCourse }: { onOpenCourse: () => void }) {
   return (
     <section className="examFeed">
-      <div className="efAdminFlag">
-        🔒 หน้านี้เห็นเฉพาะแอดมิน — ผู้เรียนยังไม่เห็น (กำลังจัดทำเนื้อหา)
-      </div>
-
       {/* HERO */}
       <div className="efHero">
         <span className="efFreshness">

@@ -6,6 +6,8 @@ import {
   WGB2_STEP_COACH_TH,
   WGB2_STEP_SHORT,
   WGB2_BLANK_COACH_TH,
+  WGB2_PUNCT_SYMBOL,
+  WGB2_PUNCT_LABEL_TH,
   type Wgb2Blank,
   type Wgb2CommaBlank,
   type Wgb2Exercise,
@@ -22,7 +24,7 @@ function Wgb2CoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string
         {isBlankFocus ? '💭' : '🧑‍🏫'}
       </span>
       <div className="wgbCoachBody">
-        <p className="wgbCoachLabel">โค้ชแนะนำ</p>
+        <p className="wgbCoachLabel">P'Doy แนะนำ</p>
         <p className="wgbCoachMessage">{message}</p>
       </div>
     </div>
@@ -46,6 +48,9 @@ export function WritingTask2Practice({
   const [showEssay, setShowEssay] = useState(false)
   const [activeBlankId, setActiveBlankId] = useState<string | null>(null)
   const [savedWords, setSavedWords] = useState<Set<string>>(() => new Set())
+  const [pickedChip, setPickedChip] = useState<string | null>(null)
+  const [dragOverId, setDragOverId] = useState<string | null>(null)
+  const [droppedId, setDroppedId] = useState<string | null>(null)
 
   const step = steps[stepIndex]
   const isLastStep = stepIndex === steps.length - 1
@@ -55,6 +60,8 @@ export function WritingTask2Practice({
     const value = values[blank.id]
     if (value == null || value.trim() === '') return false
     if (blank.kind === 'select') return value === blank.answer
+    if (blank.kind === 'drag') return value === blank.answer
+    if (blank.kind === 'punct') return value === blank.answer
     return blank.answers.some((answer) => wgb2Normalize(answer) === wgb2Normalize(value))
   }
 
@@ -84,6 +91,8 @@ export function WritingTask2Practice({
   const blankCorrectAnswer = (blank: Wgb2Blank): string => {
     if (blank.kind === 'select') return blank.answer === WGB2_NO_ARTICLE ? 'ไม่ต้องใส่คำนำหน้า' : blank.answer
     if (blank.kind === 'type') return blank.answers[0]
+    if (blank.kind === 'drag') return blank.answer
+    if (blank.kind === 'punct') return WGB2_PUNCT_LABEL_TH[blank.answer]
     return `${blank.chunks[blank.correctGap]}, ${blank.chunks[blank.correctGap + 1]}`
   }
 
@@ -226,6 +235,86 @@ export function WritingTask2Practice({
                       }}
                     />
                     {checkedNow && !correct ? <em className="wgbReveal">{blank.answers[0]}</em> : null}
+                  </span>
+                )
+              }
+
+              if (blank.kind === 'punct') {
+                const selected = values[blank.id]
+                return (
+                  <span
+                    key={blank.id}
+                    className={`wgb2PunctGroup ${stateClass}`}
+                    onFocus={() => setActiveBlankId(blank.id)}
+                    onBlur={() => setActiveBlankId((current) => (current === blank.id ? null : current))}
+                  >
+                    {blank.options.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        className={`wgb2PunctBtn ${selected === option ? 'is-selected' : ''}`}
+                        onClick={() => setValue(blank.id, option)}
+                      >
+                        {WGB2_PUNCT_SYMBOL[option]}
+                      </button>
+                    ))}
+                    {checkedNow && !correct ? <em className="wgbReveal">{blankCorrectAnswer(blank)}</em> : null}
+                  </span>
+                )
+              }
+
+              if (blank.kind === 'drag') {
+                const value = values[blank.id] ?? ''
+                return (
+                  <span key={blank.id} className="wgbBlankWrap wgbDragWrap">
+                    <span
+                      className={`wgbDropSlot ${stateClass} ${value ? 'is-filled' : ''} ${
+                        dragOverId === blank.id ? 'is-dragover' : ''
+                      } ${droppedId === blank.id ? 'is-dropped' : ''}`}
+                      onDragOver={(event) => {
+                        event.preventDefault()
+                        setDragOverId(blank.id)
+                      }}
+                      onDragLeave={() => setDragOverId((current) => (current === blank.id ? null : current))}
+                      onDrop={(event) => {
+                        event.preventDefault()
+                        const phrase = event.dataTransfer.getData('text/plain')
+                        if (phrase) {
+                          setValue(blank.id, phrase)
+                          setDroppedId(blank.id)
+                          window.setTimeout(() => setDroppedId((current) => (current === blank.id ? null : current)), 420)
+                        }
+                        setDragOverId(null)
+                      }}
+                      onClick={() => {
+                        if (pickedChip) {
+                          setValue(blank.id, pickedChip)
+                          setDroppedId(blank.id)
+                          window.setTimeout(() => setDroppedId((current) => (current === blank.id ? null : current)), 420)
+                          setPickedChip(null)
+                        }
+                      }}
+                    >
+                      {value || '⬚ ลากคำเชื่อมมาวางตรงนี้'}
+                    </span>
+                    {checkedNow && !correct ? <em className="wgbReveal">{blank.answer}</em> : null}
+                    <span className="wgbChipBank">
+                      {blank.options.map((option) => (
+                        <span
+                          key={option}
+                          draggable
+                          role="button"
+                          tabIndex={0}
+                          className={`wgbChip ${pickedChip === option ? 'is-picked' : ''} ${
+                            value === option ? 'is-used' : ''
+                          }`}
+                          onDragStart={(event) => event.dataTransfer.setData('text/plain', option)}
+                          onClick={() => setPickedChip((current) => (current === option ? null : option))}
+                        >
+                          {option}
+                        </span>
+                      ))}
+                    </span>
                   </span>
                 )
               }

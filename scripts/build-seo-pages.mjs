@@ -1,6 +1,13 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { WRITING_RECALL, WRITING_PREDICT } from '../src/writingExamRecalls.ts'
+import {
+  LAST_UPDATED as EXAM_FEED_LAST_UPDATED,
+  CURRENT_MONTH as EXAM_FEED_CURRENT_MONTH,
+  SPEAKING_RECALL,
+  SPEAKING_PREDICT
+} from '../src/examRecallData.ts'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -12,6 +19,11 @@ const appUrl = `${siteUrl}/?trial=1`
 const courseUrl = 'https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts'
 const youtubeChannelUrl = 'https://www.youtube.com/@DoyLanguagePlan'
 const organizationName = 'English Plan Learning Space'
+
+// Pages unchanged since the original SEO page generation keep this lastmod.
+// Pages added or rewritten in a later run should set an explicit `lastmod` below.
+const legacyLastmod = '2026-05-26T00:00:00.000Z'
+const buildLastmod = new Date().toISOString()
 
 const videos = {
   speakingApp: {
@@ -388,6 +400,146 @@ const thaiPages = [
     videos: [videos.vocabulary, videos.speakingBand, videos.readingNine, videos.punctuation],
     faq: sharedFaq,
     focusKeywords: ['ครูพี่ดอย IELTS', 'Doy Language Plan', 'ENGLISH PLAN IELTS']
+  },
+  {
+    slug: '/th/duolingo-english-test-vs-ielts/',
+    title: 'Duolingo English Test ต่างจาก IELTS ยังไง | เทียบให้เข้าใจใน 2 นาที',
+    description:
+      'เปรียบเทียบ Duolingo English Test กับ IELTS Academic/General แบบเข้าใจง่าย รูปแบบข้อสอบ ค่าใช้จ่าย การยอมรับผล และควรเตรียมตัวสอบตัวไหน',
+    h1: 'Duolingo English Test กับ IELTS ต่างกันตรงไหน',
+    kicker: 'DET vs IELTS',
+    lead:
+      'คนไทยจำนวนมากสับสนว่า Duolingo English Test คือข้อสอบเดียวกับ IELTS หรือเปล่า หน้านี้สรุปความต่างที่สำคัญก่อนตัดสินใจสมัครสอบ',
+    cta: 'ดูวิธีเตรียมสอบ IELTS',
+    secondaryCta: 'ดูคอร์ส Speaking Band 7+',
+    heroVideo: videos.speakingApp,
+    lastmod: buildLastmod,
+    clusters: [
+      [
+        'รูปแบบข้อสอบ',
+        'Duolingo English Test สอบออนไลน์คนเดียวที่บ้าน ใช้เวลาสั้นกว่า ส่วน IELTS มีทั้ง paper-based และ computer-based พร้อม Speaking กับคนจริงหรือ AI ตามระบบของ IDP/British Council'
+      ],
+      [
+        'การยอมรับผลสอบ',
+        'มหาวิทยาลัยและหน่วยงานหลายแห่งในไทยและต่างประเทศยังกำหนด IELTS หรือ TOEFL เป็นหลัก ควรเช็กประกาศรับสมัครของสถาบันปลายทางก่อนเสมอว่ารับ Duolingo English Test หรือไม่'
+      ],
+      [
+        'ค่าใช้จ่ายและเวลา',
+        'Duolingo English Test มักราคาถูกกว่าและรู้ผลเร็วกว่า เหมาะกับการเช็กระดับเบื้องต้น ส่วน IELTS ใช้เวลาต่อ session นานกว่าแต่ผลได้รับการยอมรับกว้างกว่า'
+      ],
+      [
+        'ควรเตรียมตัวยังไง',
+        'ถ้าปลายทางต้องใช้ IELTS ควรฝึกแบบเจาะข้อสอบจริง เช่น cue card, Task 1-2 และ evidence-based reading ไม่ใช่ฝึกทักษะภาษาทั่วไปแบบแอปเรียนภาษา'
+      ]
+    ],
+    videos: [videos.speakingApp, videos.vocabulary],
+    faq: [
+      {
+        question: 'Duolingo English Test ใช้แทน IELTS ได้ไหม?',
+        answer:
+          'ขึ้นอยู่กับหน่วยงานปลายทาง บางมหาวิทยาลัยหรือวีซ่าบางประเภทรับ Duolingo English Test แต่หลายแห่งในไทยยังกำหนด IELTS เป็นหลัก ควรตรวจสอบประกาศของสถาบันนั้นๆ ก่อนสมัครสอบ'
+      },
+      {
+        question: 'ฝึกกับแอปเรียนภาษาแบบเกมแล้วสอบ IELTS ได้ Band 7 ไหม?',
+        answer:
+          'แอปเรียนภาษาทั่วไปช่วยปูพื้นฐานคำศัพท์และไวยากรณ์ได้ แต่ IELTS วัดทักษะเฉพาะทาง เช่น การเขียน essay, การพูดตามโครงสร้าง Part 1-3 และการอ่านหา evidence ซึ่งต้องฝึกแบบเจาะข้อสอบเพิ่มเติม'
+      },
+      {
+        question: 'ควรสอบ Duolingo English Test หรือ IELTS ก่อน?',
+        answer:
+          'ถ้ายังไม่แน่ใจระดับภาษาตัวเอง ทดลองสอบ Duolingo English Test เพื่อเช็กคร่าวๆ ได้ แต่ถ้าปลายทางระบุ IELTS ชัดเจน ควรเตรียมสอบ IELTS โดยตรงเพื่อไม่เสียเวลาซ้ำ'
+      }
+    ],
+    focusKeywords: ['Duolingo English Test คือ', 'Duolingo English Test กับ IELTS', 'สอบ IELTS หรือ Duolingo']
+  },
+  {
+    slug: '/th/ielts-app-daily-practice/',
+    title: 'แอปฝึก IELTS ทุกวัน ฟีดแบ็กทันที เจาะข้อสอบโดยเฉพาะ',
+    description:
+      'แอปฝึก IELTS ที่ให้ feedback ทันทีทุกครั้งที่ฝึก คล้ายแอปเรียนภาษาที่คนไทยคุ้นเคย แต่เจาะข้อสอบ IELTS Speaking, Writing, Reading, Listening โดยเฉพาะ',
+    h1: 'ฝึก IELTS ทุกวันแบบเห็นผลทันที ไม่ใช่แค่เรียนภาษาทั่วไป',
+    kicker: 'Daily practice',
+    lead:
+      'หลายคนคุ้นเคยกับการฝึกภาษาแบบแอปที่ให้ฟีดแบ็กทันทีและมี streak ทุกวัน แต่ IELTS ต้องการการฝึกที่เจาะจงข้อสอบจริงมากกว่านั้น หน้านี้อธิบายว่า English Plan ออกแบบการฝึกแบบไหนให้เหมาะกับเป้าหมาย IELTS',
+    cta: 'เริ่มฝึกวันนี้',
+    secondaryCta: 'ดูคอร์ส Speaking Band 7+',
+    heroVideo: videos.speakingApp,
+    lastmod: buildLastmod,
+    clusters: [
+      ['ฟีดแบ็กทันที', 'อัดคำตอบ Speaking หรือส่งคำตอบ Reading/Listening แล้วเห็นจุดที่ต้องแก้ทันที ไม่ต้องรอครูตรวจนาน'],
+      ['เจาะข้อสอบจริง', 'โจทย์อิงรูปแบบ IELTS จริงทั้ง Part 1-3, cue card, Task 1-2 ไม่ใช่บทเรียนภาษาทั่วไปที่ไม่ตรงข้อสอบ'],
+      ['เก็บสถิติจุดอ่อน', 'Notebook บันทึกคำผิดและ pattern ที่ควรฝึกซ้ำ โฟกัสที่เกณฑ์ IELTS โดยเฉพาะ'],
+      ['ฝึกสั้นได้ทุกวัน', 'แบ่งฝึกเป็นช่วงสั้น 15-30 นาทีต่อวันได้ เหมาะกับคนที่อยากสร้างนิสัยฝึกสม่ำเสมอ']
+    ],
+    videos: [videos.speakingApp, videos.vocabulary, videos.readingNine],
+    faq: [
+      {
+        question: 'แอปนี้ต่างจากแอปเรียนภาษาทั่วไปยังไง?',
+        answer:
+          'แอปเรียนภาษาทั่วไปเน้นสร้างพื้นฐานคำศัพท์และไวยากรณ์ในชีวิตประจำวัน ส่วน English Plan เจาะเฉพาะรูปแบบข้อสอบ IELTS ทั้ง 4 ทักษะ พร้อมเกณฑ์ให้คะแนนแบบเดียวกับข้อสอบจริง'
+      },
+      {
+        question: 'ฝึกวันละกี่นาทีถึงเห็นผล?',
+        answer:
+          'เริ่มจากวันละ 20-30 นาทีสม่ำเสมอ ดีกว่าฝึกยาวนานครั้งเดียวแล้วหยุด เพราะ IELTS ต้องการความคุ้นเคยกับรูปแบบข้อสอบสะสมไปเรื่อยๆ'
+      },
+      {
+        question: 'ต้องมีพื้นฐานภาษาอังกฤษระดับไหนก่อนเริ่ม?',
+        answer: 'เริ่มฝึกได้ตั้งแต่ระดับที่สื่อสารพื้นฐานได้ ระบบจะช่วยชี้จุดที่ต้องพัฒนาให้ทีละขั้นตามเกณฑ์ IELTS'
+      }
+    ],
+    focusKeywords: ['แอปฝึก IELTS ทุกวัน', 'แอปฝึก IELTS ฟีดแบ็กทันที', 'ฝึก IELTS แบบมี streak']
+  },
+  {
+    slug: '/th/ielts-exam-recall/',
+    title: `ข้อสอบ IELTS ล่าสุด Speaking & Writing ${EXAM_FEED_CURRENT_MONTH} | English Plan`,
+    description: `รวมหัวข้อ IELTS Speaking และ Writing ที่ผู้สอบจริงเจอในเดือน ${EXAM_FEED_CURRENT_MONTH} พร้อมเก็งข้อสอบเดือนถัดไป อัปเดตทุกสัปดาห์โดยทีม English Plan`,
+    h1: `ข้อสอบ IELTS ล่าสุด Speaking & Writing ${EXAM_FEED_CURRENT_MONTH}`,
+    kicker: `อัปเดตล่าสุด ${EXAM_FEED_LAST_UPDATED}`,
+    lead:
+      'รวมหัวข้อที่ผู้สอบจริงเจอในเดือนนี้ พร้อม "เก็งข้อสอบ" เดือนหน้า คัดกรองและอัปเดตทุกสัปดาห์โดยทีม English Plan เพื่อคนไทยทุกคน',
+    cta: 'ลองใช้ IELTS app',
+    secondaryCta: 'ดูคอร์ส Speaking Band 7+',
+    heroVideo: videos.speakingApp,
+    lastmod: buildLastmod,
+    clusters: [
+      ['หัวข้อ Speaking ล่าสุด', `รวม Part 1, 2, 3 ที่ผู้สอบจริงเจอในเดือน ${EXAM_FEED_CURRENT_MONTH} จากหลายประเทศ`],
+      ['โจทย์ Writing ล่าสุด', 'Task 1 และ Task 2 ที่ออกสอบจริง พร้อมประเทศและช่วงเวลาที่พบ'],
+      ['เก็งข้อสอบเดือนหน้า', 'วิเคราะห์แนวโน้มจากสถิติย้อนหลังเพื่อเตรียมตัวล่วงหน้า'],
+      ['อัปเดตทุกสัปดาห์', 'ทีม English Plan คัดกรองจากฟอรั่มและกลุ่มติวจริง ไม่ใช่ข้อมูลก็อปต่อกันมา']
+    ],
+    videos: [videos.speakingApp, videos.readingNine, videos.punctuation],
+    faq: [
+      {
+        question: 'ข้อสอบ IELTS เดือนนี้ออกอะไรบ้าง?',
+        answer: `หัวข้อ Speaking และ Writing ที่ผู้สอบรายงานในเดือน ${EXAM_FEED_CURRENT_MONTH} ดูได้ในหัวข้อ "หัวข้อที่เพิ่งออกสอบ" ด้านบน อัปเดตทุกสัปดาห์`
+      },
+      {
+        question: 'หัวข้อเหล่านี้มาจากไหน เชื่อถือได้ไหม?',
+        answer:
+          'มาจากผู้สอบจริงที่แชร์ประสบการณ์ในฟอรั่มและกลุ่มติว IELTS ทีมเราคัดกรองและรวบรวมให้ — ไม่ใช่ข้อสอบทางการจาก British Council หรือ IDP'
+      },
+      {
+        question: '"เก็งข้อสอบ" แม่นแค่ไหน?',
+        answer: 'เป็นการคาดการณ์จากสถิติและแนวโน้มย้อนหลัง ใช้เพื่อเตรียมตัวให้ครอบคลุม ไม่ได้รับประกันว่าจะออกตรงทุกข้อ'
+      },
+      {
+        question: 'อัปเดตบ่อยแค่ไหน?',
+        answer: 'เราอัปเดตหัวข้อใหม่ทุกสัปดาห์ และสรุปภาพรวมรายเดือน'
+      }
+    ],
+    focusKeywords: [
+      'ข้อสอบ IELTS ล่าสุด',
+      'เก็งข้อสอบ IELTS',
+      'หัวข้อ speaking IELTS ล่าสุด',
+      `ข้อสอบ IELTS ${EXAM_FEED_CURRENT_MONTH}`
+    ],
+    recallData: {
+      speaking: SPEAKING_RECALL,
+      predictSpeaking: SPEAKING_PREDICT,
+      writing: WRITING_RECALL,
+      predictWriting: WRITING_PREDICT
+    }
   }
 ]
 
@@ -651,10 +803,83 @@ const buildJsonLd = (page) => {
     }
   }))
 
-  return [organization, website, course, breadcrumb, faq, ...videoObjects]
+  const article = page.recallData
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: page.h1,
+        description: page.description,
+        dateModified: page.lastmod || buildLastmod,
+        author: {
+          '@type': 'Organization',
+          name: organizationName
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: organizationName,
+          sameAs: youtubeChannelUrl
+        },
+        mainEntityOfPage: pageUrl(page.slug)
+      }
+    : null
+
+  return [organization, website, course, breadcrumb, faq, article, ...videoObjects]
+    .filter(Boolean)
     .map((entity) => `<script type="application/ld+json">${JSON.stringify(entity)}</script>`)
     .join('\n')
 }
+
+const renderRecallItems = (items) =>
+  items
+    .map(
+      (item) => `
+          <article class="recall-item">
+            <span class="recall-tag">${escapeHtml(item.tag)}</span>
+            <strong>${escapeHtml(item.title)}${item.isNew ? ' <span class="recall-new">ใหม่</span>' : ''}</strong>
+            ${
+              item.bullets
+                ? `<ul>${item.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join('')}</ul>`
+                : ''
+            }
+            <span class="recall-meta">${escapeHtml(item.meta)}</span>
+          </article>`
+    )
+    .join('')
+
+const renderRecallSection = (recallData, isThai) => `
+      <section aria-labelledby="recall-title">
+        <h2 id="recall-title">${isThai ? 'หัวข้อที่เพิ่งออกสอบ' : 'Recently reported exam topics'}</h2>
+        <p class="section-lead">${isThai ? 'รายงานจากผู้สอบจริงในฟอรั่มและกลุ่มติว ไม่ใช่ข้อสอบทางการ' : 'Reported by real test-takers in forums and study groups, not official exam content.'}</p>
+        <div class="recall-grid">
+          <div class="recall-card">
+            <h3>🗣️ Speaking</h3>
+            ${renderRecallItems(recallData.speaking)}
+          </div>
+          <div class="recall-card">
+            <h3>✍️ Writing</h3>
+            ${renderRecallItems(recallData.writing)}
+          </div>
+        </div>
+      </section>
+      <section aria-labelledby="predict-title">
+        <h2 id="predict-title">${isThai ? 'เก็งข้อสอบเดือนถัดไป' : 'Predicted topics for next month'}</h2>
+        <p class="section-lead">${isThai ? 'วิเคราะห์จากสถิติย้อนหลัง เป็นการคาดการณ์ ไม่ใช่ข้อสอบจริง' : 'Based on historical trends — a forecast, not a confirmed exam.'}</p>
+        <div class="recall-grid">
+          <div class="recall-card">
+            <h3>🗣️ Speaking</h3>
+            ${renderRecallItems(recallData.predictSpeaking)}
+          </div>
+          <div class="recall-card">
+            <h3>✍️ Writing</h3>
+            ${renderRecallItems(recallData.predictWriting)}
+          </div>
+        </div>
+      </section>
+      <p class="recall-disclaimer">${
+        isThai
+          ? '📌 หมายเหตุ: หัวข้อทั้งหมดมาจากการรายงานของผู้สอบจริงในฟอรั่มและโซเชียล ไม่ใช่ข้อสอบทางการจาก British Council หรือ IDP — ใช้เพื่อการเตรียมตัวฝึกฝนเท่านั้น'
+          : '📌 Note: All topics come from real test-takers reporting in forums and social media, not official exam content from British Council or IDP — for practice preparation only.'
+      }</p>`
 
 const renderPage = (page) => {
   const isThai = page.slug.startsWith('/th/')
@@ -867,6 +1092,17 @@ const renderPage = (page) => {
         border-radius: 8px;
       }
       .proof ul { margin: 0; padding-left: 20px; color: var(--muted); }
+      .recall-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .recall-card { padding: 20px; background: var(--white); border: 1px solid var(--line); border-radius: 8px; }
+      .recall-card h3 { margin: 0 0 12px; font-size: 1.1rem; }
+      .recall-item { padding: 12px 0; border-top: 1px solid var(--line); }
+      .recall-item:first-of-type { border-top: none; padding-top: 0; }
+      .recall-item strong { display: block; margin-bottom: 6px; }
+      .recall-item ul { margin: 0 0 6px; padding-left: 18px; color: var(--muted); }
+      .recall-tag { display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 999px; background: var(--paper); color: var(--blue); font-size: .78rem; font-weight: 800; }
+      .recall-new { padding: 1px 7px; border-radius: 999px; background: var(--amber); color: #172033; font-size: .72rem; font-weight: 800; }
+      .recall-meta { color: var(--muted); font-size: .86rem; }
+      .recall-disclaimer { font-size: .82rem; color: var(--muted); background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--amber); border-radius: 8px; padding: 13px 16px; margin: 18px 0 0; line-height: 1.6; }
       .faq { display: grid; gap: 12px; }
       details {
         background: var(--white);
@@ -903,7 +1139,7 @@ const renderPage = (page) => {
         .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
         .navlinks { justify-content: flex-start; }
         .hero { min-height: 680px; }
-        .grid, .video-list, .proof, .feature-inner { grid-template-columns: 1fr; }
+        .grid, .video-list, .proof, .feature-inner, .recall-grid { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -947,6 +1183,7 @@ const renderPage = (page) => {
             .join('')}
         </div>
       </section>
+      ${page.recallData ? renderRecallSection(page.recallData, isThai) : ''}
       <section class="feature-band" aria-labelledby="video-title">
         <div class="feature-inner">
           <div>
@@ -1036,10 +1273,13 @@ for (const page of pages) {
   writeFile(path.join(stripTrailingSlash(page.slug), 'index.html'), renderPage(page))
 }
 
-const now = new Date().toISOString()
 const sitemapUrls = [
-  { loc: siteUrl, priority: '1.0' },
-  ...pages.map((page) => ({ loc: pageUrl(page.slug), priority: page.slug === '/th/' ? '1.0' : '0.8' }))
+  { loc: siteUrl, priority: '1.0', lastmod: legacyLastmod },
+  ...pages.map((page) => ({
+    loc: pageUrl(page.slug),
+    priority: page.slug === '/th/' ? '1.0' : '0.8',
+    lastmod: page.lastmod || legacyLastmod
+  }))
 ]
 
 writeFile(
@@ -1050,7 +1290,7 @@ ${sitemapUrls
   .map(
     (item) => `  <url>
     <loc>${item.loc}</loc>
-    <lastmod>${now}</lastmod>
+    <lastmod>${item.lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${item.priority}</priority>
   </url>`
@@ -1073,16 +1313,15 @@ writeFile(
   'llms.txt',
   `# English Plan IELTS
 
-English Plan IELTS is an IELTS preparation app and learning space for Thai learners.
+English Plan IELTS is an IELTS preparation app and learning space for Thai learners, built by ENGLISH PLAN / Doy (@DoyLanguagePlan). It covers IELTS Speaking, Writing, Reading and Listening practice with Thai-language explanations, mock tests, a personal notebook and weekly-updated recent exam recalls.
 
-Core pages:
-- ${siteUrl}/th/ - Thai IELTS prep hub
-- ${siteUrl}/th/ielts-speaking-practice/ - IELTS Speaking practice
-- ${siteUrl}/th/ielts-reading-practice/ - IELTS Reading practice
-- ${siteUrl}/th/ielts-writing-checker/ - IELTS Writing checker and guide
-- ${siteUrl}/th/ielts-mock-test/ - IELTS mock test workflow
+Pages:
+${pages
+  .map((page) => `- ${pageUrl(page.slug)} - ${page.description}`)
+  .join('\n')}
 
 Official video channel: ${youtubeChannelUrl}
+Course: ${courseUrl}
 `
 )
 

@@ -2454,6 +2454,7 @@
 .wgbSelect,
 .wgbInput {
   font: inherit;
+  font-family: 'Anuphan', Inter, system-ui, sans-serif !important;
   font-size: 0.95rem;
   font-weight: 700;
   color: #0f172a;
@@ -2469,6 +2470,10 @@
 .wgbSelect {
   cursor: pointer;
   max-width: 15rem;
+}
+
+.wgbSelect option {
+  font-family: 'Anuphan', Inter, system-ui, sans-serif !important;
 }
 
 .wgbInput {
@@ -2939,6 +2944,152 @@
   border-color: #f2a3b1;
   background: #ffd8e0;
   color: #c1304a;
+}
+
+/* tri-state punctuation blank */
+.wgb2PunctGroup {
+  display: inline-flex;
+  gap: 4px;
+  vertical-align: middle;
+  margin: 0 3px;
+}
+
+.wgb2PunctBtn {
+  min-width: 30px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(0, 74, 173, 0.35);
+  background: #f1f6ff;
+  color: #004aad;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.wgb2PunctBtn:hover {
+  transform: translateY(-1px);
+  border-color: #004aad;
+}
+
+.wgb2PunctBtn.is-selected {
+  background: #004aad;
+  border-color: #004aad;
+  color: #fff;
+}
+
+.wgb2PunctGroup.is-correct .wgb2PunctBtn.is-selected {
+  background: #cdf3df;
+  border-color: #7fd2a4;
+  color: #0f7a4a;
+}
+
+.wgb2PunctGroup.is-incorrect .wgb2PunctBtn.is-selected {
+  background: #ffd8e0;
+  border-color: #f2a3b1;
+  color: #c1304a;
+}
+
+/* drag-and-drop transition blank */
+.wgbDragWrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  vertical-align: middle;
+  margin: 4px 6px;
+}
+
+.wgbDropSlot {
+  display: inline-grid;
+  place-items: center;
+  min-width: 96px;
+  padding: 5px 12px;
+  border-radius: 10px;
+  border: 2px dashed rgba(0, 74, 173, 0.45);
+  background: #f1f6ff;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.wgbDropSlot.is-dragover {
+  border-color: #ffcc00;
+  background: #fff7d6;
+  transform: scale(1.05);
+}
+
+.wgbDropSlot.is-filled {
+  border-style: solid;
+  border-color: #004aad;
+  background: #eaf1ff;
+  color: #004aad;
+}
+
+.wgbDropSlot.is-correct {
+  border-color: #7fd2a4;
+  background: #cdf3df;
+  color: #0f7a4a;
+}
+
+.wgbDropSlot.is-incorrect {
+  border-color: #f2a3b1;
+  background: #ffd8e0;
+  color: #c1304a;
+}
+
+.wgbDropSlot.is-dropped {
+  animation: wgbDropPop 420ms ease;
+}
+
+@keyframes wgbDropPop {
+  0% {
+    transform: scale(0.7) rotate(-4deg);
+  }
+  55% {
+    transform: scale(1.16) rotate(2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.wgbChipBank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wgbChip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(0, 74, 173, 0.35);
+  background: #fff;
+  color: #004aad;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: grab;
+  user-select: none;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease, opacity 140ms ease;
+}
+
+.wgbChip:hover {
+  transform: translateY(-2px);
+  border-color: #004aad;
+}
+
+.wgbChip.is-picked {
+  background: #ffcc00;
+  border-color: #ffcc00;
+  color: #7a5c00;
+}
+
+.wgbChip.is-used {
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* per-word vocab save list on finish screen */

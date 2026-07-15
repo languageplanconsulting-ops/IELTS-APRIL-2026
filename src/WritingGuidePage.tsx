@@ -75,7 +75,7 @@ function WgbCoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string;
         {isBlankFocus ? '💭' : '🧑‍🏫'}
       </span>
       <div className="wgbCoachBody">
-        <p className="wgbCoachLabel">โค้ชแนะนำ</p>
+        <p className="wgbCoachLabel">P'Doy แนะนำ</p>
         <p className="wgbCoachMessage">{message}</p>
       </div>
     </div>

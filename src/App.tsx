@@ -20441,15 +20441,13 @@ function App() {
                 </button>
               </>
             )}
-            {authSession?.role === 'admin' && (
-              <button
-                className={activePage === 'examfeed' ? 'active' : ''}
-                onClick={() => setActivePage('examfeed')}
-                type="button"
-              >
-                ข้อสอบล่าสุด
-              </button>
-            )}
+            <button
+              className={activePage === 'examfeed' ? 'active' : ''}
+              onClick={() => setActivePage('examfeed')}
+              type="button"
+            >
+              ข้อสอบล่าสุด
+            </button>
             {authSession?.role === 'admin' && (
               <button
                 className={activePage === 'admin' ? 'active' : ''}
@@ -24006,18 +24004,7 @@ function App() {
           </section>
         )
       ) : activePage === 'examfeed' ? (
-        isAdminUser ? (
-          <ExamFeedPage onOpenCourse={() => setActivePage('home')} />
-        ) : (
-          <section className="panel full">
-            <div className="emptyState">
-              <h3>หน้านี้สำหรับแอดมินเท่านั้น</h3>
-              <button type="button" onClick={() => setActivePage('home')}>
-                กลับหน้าแรก
-              </button>
-            </div>
-          </section>
-        )
+        <ExamFeedPage onOpenCourse={() => setActivePage('home')} />
       ) : activePage === 'admin' ? (
           <section className="adminPanelPage" data-admin-section={adminWorkspaceSection}>
             <div className="adminHero">
