@@ -134,7 +134,7 @@
   place-items: center;
   border: 1px solid rgba(34, 211, 238, 0.55);
   border-radius: 999px;
-  background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%);
+  background: #16193c;
   color: #67e8f9;
   font-size: 0.82rem;
   font-weight: 900;
@@ -224,7 +224,7 @@
   border: none;
   border-radius: 999px;
   padding: 0.48rem 0.8rem;
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  background: #2563eb;
   color: #fff;
   font-size: 0.82rem;
   font-weight: 850;
@@ -253,7 +253,7 @@
   position: absolute;
   inset: 0 auto 0 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, #2563eb, #38bdf8);
+  background: #2563eb;
   pointer-events: none;
 }
 
@@ -321,7 +321,7 @@
 }
 
 .listeningSectionExamScriptBodyWrap.is-evidence-wrong {
-  background: linear-gradient(180deg, #fff7f7 0%, #ffffff 120px);
+  background: #fff7f7;
 }
 
 .listeningSectionExamScriptTurns.is-dialogue {
@@ -490,7 +490,7 @@
 .listeningSectionExamFinalReport {
   border: 1px solid var(--lse-border);
   border-radius: 14px;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  background: #f8fafc;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
   animation: luxuryContentSwap var(--lse-duration) var(--lse-ease-soft) both;
 }
@@ -584,7 +584,7 @@
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid var(--lse-border);
-  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  background: #eff6ff;
 }
 
 .listeningSectionExamReportHero h3 {
@@ -1411,7 +1411,7 @@
   border: 1px solid #cdd9eb;
   border-left: 4px solid #0f2e85;
   border-radius: 12px;
-  background: linear-gradient(135deg, #eef3ff 0%, #fff9ed 100%);
+  background: #eef3ff;
 }
 
 .listeningSectionExamUnderstandingIcon {
@@ -1533,10 +1533,7 @@
   position: absolute;
   inset: 0;
   border: none;
-  background:
-    radial-gradient(circle at 20% 18%, rgba(34, 211, 238, 0.14) 0%, rgba(34, 211, 238, 0) 34%),
-    radial-gradient(circle at 82% 78%, rgba(99, 102, 241, 0.16) 0%, rgba(99, 102, 241, 0) 38%),
-    rgba(2, 6, 23, 0.72);
+  background: rgba(2, 6, 23, 0.72);
   backdrop-filter: blur(10px);
   cursor: pointer;
 }
@@ -1549,8 +1546,7 @@
   padding: 1.15rem 1.2rem 1.05rem;
   border: 1px solid rgba(34, 211, 238, 0.45);
   border-radius: 20px;
-  background:
-    linear-gradient(145deg, rgba(15, 23, 42, 0.94) 0%, rgba(15, 23, 42, 0.82) 48%, rgba(30, 27, 75, 0.88) 100%);
+  background: rgba(15, 23, 42, 0.94);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.04) inset,
     0 24px 60px rgba(2, 6, 23, 0.55),
@@ -1572,13 +1568,7 @@
 .listeningEvidenceTutorialGlow {
   position: absolute;
   inset: -40% -20%;
-  background: conic-gradient(
-    from 210deg,
-    rgba(34, 211, 238, 0) 0deg,
-    rgba(34, 211, 238, 0.22) 80deg,
-    rgba(99, 102, 241, 0.18) 160deg,
-    rgba(34, 211, 238, 0) 280deg
-  );
+  background: rgba(34, 211, 238, 0.14);
   animation: listeningEvidenceTutorialSpin 8s linear infinite;
   pointer-events: none;
 }
@@ -1586,12 +1576,7 @@
 .listeningEvidenceTutorialScanline {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0) 3px,
-    rgba(255, 255, 255, 0.018) 4px
-  );
+  background: rgba(255, 255, 255, 0.018);
   pointer-events: none;
   opacity: 0.35;
 }
@@ -1722,7 +1707,7 @@
   border: 1px solid rgba(34, 211, 238, 0.65);
   border-radius: 999px;
   padding: 0.55rem 1rem;
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.22) 0%, rgba(99, 102, 241, 0.28) 100%);
+  background: rgba(99, 102, 241, 0.28);
   color: #ecfeff;
   font-size: 0.84rem;
   font-weight: 800;

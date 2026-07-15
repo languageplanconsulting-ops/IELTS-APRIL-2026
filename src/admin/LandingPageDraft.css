@@ -44,7 +44,7 @@
 
 .epLandingZoneHero {
   padding: clamp(64px, 9vw, 104px) 0;
-  background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+  background: #f8faff;
 }
 
 .epLandingZonePicker {
@@ -60,15 +60,15 @@
 }
 
 .epLandingZoneTrack--academic {
-  background: linear-gradient(180deg, #f4f7fd 0%, var(--ep-bg-warm) 100%);
+  background: #f4f7fd;
 }
 
 .epLandingZoneTrack--general {
-  background: linear-gradient(180deg, #faf6ee 0%, #f3f0ea 100%);
+  background: #f3f0ea;
 }
 
 .epLandingZoneLogin {
-  background: linear-gradient(135deg, var(--ep-blue) 0%, var(--ep-blue-deep) 100%);
+  background: var(--ep-blue);
   color: #fff;
 }
 
@@ -78,7 +78,7 @@
 
 .epLandingZoneDivider {
   height: 6px;
-  background: linear-gradient(90deg, var(--ep-blue) 0%, var(--ep-blue-bright) 45%, var(--ep-yellow) 100%);
+  background: var(--ep-blue);
 }
 
 .epLandingZoneLabel {
@@ -327,7 +327,7 @@
   border: 1px solid var(--ep-line);
   border-left: 4px solid var(--ep-yellow);
   border-radius: var(--ep-radius);
-  background: linear-gradient(180deg, #f5f8ff 0%, #edf3ff 100%);
+  background: #f5f8ff;
   box-shadow: var(--ep-shadow);
 }
 
@@ -842,7 +842,7 @@
 
 .epLandingBlogMedia {
   aspect-ratio: 4 / 3;
-  background: linear-gradient(145deg, var(--ep-blue-soft), var(--ep-yellow-soft));
+  background: var(--ep-blue-soft);
 }
 
 .epLandingBlogBody {

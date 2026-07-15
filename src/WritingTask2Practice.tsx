@@ -14,6 +14,7 @@ import {
   type Wgb2Segment
 } from './writingTask2Builder'
 import type { WritingTask2Prompt, WritingTask2VocabItem } from './writingTask2Data'
+import { VocabHighlightText } from './VocabHighlightText'
 
 const wgb2Normalize = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase()
 
@@ -71,6 +72,10 @@ export function WritingTask2Practice({
         .filter((segment): segment is Extract<Wgb2Segment, { kind: 'blank' }> => segment.kind === 'blank')
         .map((segment) => segment.blank),
     [step]
+  )
+  const dragBlanks = useMemo(
+    () => stepBlanks.filter((blank): blank is Extract<Wgb2Blank, { kind: 'drag' }> => blank.kind === 'drag'),
+    [stepBlanks]
   )
   const stepScore = stepBlanks.filter(isBlankCorrect).length
   const stepDone = checkedSteps.has(step.id)
@@ -151,6 +156,7 @@ export function WritingTask2Practice({
         </p>
       </div>
 
+      <div className={`wgb2Layout ${dragBlanks.length ? 'has-sidebar' : ''}`}>
       <div className="wgbPanel wgb2Panel">
         <ol className="wgbRail">
           {steps.map((item, index) => {
@@ -265,6 +271,7 @@ export function WritingTask2Practice({
 
               if (blank.kind === 'drag') {
                 const value = values[blank.id] ?? ''
+                const dragSlotNumber = dragBlanks.findIndex((item) => item.id === blank.id) + 1
                 return (
                   <span key={blank.id} className="wgbBlankWrap wgbDragWrap">
                     <span
@@ -295,26 +302,13 @@ export function WritingTask2Practice({
                         }
                       }}
                     >
-                      {value || '⬚ ลากคำเชื่อมมาวางตรงนี้'}
+                      {value || (
+                        <>
+                          <span className="wgbDropSlotNum">{dragSlotNumber}</span> ลากคำเชื่อมมาวางตรงนี้
+                        </>
+                      )}
                     </span>
                     {checkedNow && !correct ? <em className="wgbReveal">{blank.answer}</em> : null}
-                    <span className="wgbChipBank">
-                      {blank.options.map((option) => (
-                        <span
-                          key={option}
-                          draggable
-                          role="button"
-                          tabIndex={0}
-                          className={`wgbChip ${pickedChip === option ? 'is-picked' : ''} ${
-                            value === option ? 'is-used' : ''
-                          }`}
-                          onDragStart={(event) => event.dataTransfer.setData('text/plain', option)}
-                          onClick={() => setPickedChip((current) => (current === option ? null : option))}
-                        >
-                          {option}
-                        </span>
-                      ))}
-                    </span>
                   </span>
                 )
               }
@@ -405,17 +399,27 @@ export function WritingTask2Practice({
             </div>
             {showEssay ? (
               <article className="wgbEssay">
+                <p className="wgb2VocabHint">
+                  คำที่<b>ขีดเส้นใต้</b>คือคำศัพท์/collocation สำคัญ — แตะเพื่อดูความหมายและตัวอย่างประโยค
+                </p>
                 {model.map((para) => (
                   <div key={para.role} className="wgbEssayPara">
                     <span className="wgbEssayLabel">{para.labelTh}</span>
-                    <p>{para.text}</p>
+                    <p>
+                      <VocabHighlightText
+                        text={para.text}
+                        vocab={prompt.vocab}
+                        savedWords={savedWords}
+                        onSave={onSaveVocab ? handleSaveVocab : undefined}
+                      />
+                    </p>
                   </div>
                 ))}
               </article>
             ) : null}
 
             <div className="wgb2VocabList">
-              <p className="wgb2VocabListHead">คำศัพท์น่าเก็บจากเรียงความนี้ — กดบันทึกลง Notebook ทีละคำ</p>
+              <p className="wgb2VocabListHead">คำศัพท์น่าเก็บจากเรียงความนี้ ({prompt.vocab.length} คำ) — กดบันทึกลง Notebook ทีละคำ</p>
               {prompt.vocab.map((item) => {
                 const saved = savedWords.has(item.word)
                 return (
@@ -423,6 +427,7 @@ export function WritingTask2Practice({
                     <div className="wgb2VocabText">
                       <span className="wgb2VocabWord">{item.word}</span>
                       <span className="wgb2VocabMeaning">{item.thaiMeaning}</span>
+                      {item.example ? <span className="wgb2VocabExample">{item.example}</span> : null}
                     </div>
                     <button
                       type="button"
@@ -438,6 +443,38 @@ export function WritingTask2Practice({
             </div>
           </div>
         ) : null}
+      </div>
+
+      {dragBlanks.length ? (
+        <aside className="wgb2DragSidebar">
+          <p className="wgb2DragSidebarHead">คำเชื่อมให้เลือก</p>
+          {dragBlanks.map((blank, index) => {
+            const value = values[blank.id] ?? ''
+            return (
+              <div key={blank.id} className="wgb2DragGroup">
+                <p className="wgb2DragGroupLabel">ช่องที่ {index + 1}</p>
+                <span className="wgbChipBank">
+                  {blank.options.map((option) => (
+                    <span
+                      key={option}
+                      draggable
+                      role="button"
+                      tabIndex={0}
+                      className={`wgbChip ${pickedChip === option ? 'is-picked' : ''} ${
+                        value === option ? 'is-used' : ''
+                      }`}
+                      onDragStart={(event) => event.dataTransfer.setData('text/plain', option)}
+                      onClick={() => setPickedChip((current) => (current === option ? null : option))}
+                    >
+                      {option}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            )
+          })}
+        </aside>
+      ) : null}
       </div>
     </div>
   )

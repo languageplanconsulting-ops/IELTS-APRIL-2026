@@ -6,7 +6,7 @@
   padding: 7px 10px;
   border-radius: 999px;
   border: 2px solid rgba(15, 23, 42, 0.88);
-  background: linear-gradient(135deg, #fff8d5 0%, #dbeafe 100%);
+  background: #fff8d5;
   box-shadow: 3px 3px 0 rgba(15, 23, 42, 0.88);
   color: #0f172a;
   font-size: 0.72rem;
@@ -43,10 +43,7 @@
   padding: 16px 16px 14px;
   border: 3px solid var(--bc-black, #0f172a);
   border-radius: 24px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 204, 0, 0.28), transparent 36%),
-    radial-gradient(circle at bottom left, rgba(0, 74, 173, 0.14), transparent 40%),
-    linear-gradient(145deg, #fffdf3 0%, #f4f8ff 58%, #ffffff 100%);
+  background: #f4f8ff;
   box-shadow: 8px 8px 0 var(--bc-black, #0f172a);
   user-select: none;
 }
@@ -176,9 +173,7 @@
 .speakingP2SampleThumbFallback {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 204, 0, 0.35), transparent 42%),
-    linear-gradient(145deg, #0f2e85 0%, #1e3a8a 45%, #0f172a 100%);
+  background: #1e3a8a;
 }
 
 .speakingP2SampleLaunchOverlay {
@@ -302,7 +297,7 @@
 
 .speakingP2SampleSubtitleMark {
   border-radius: 6px !important;
-  background: linear-gradient(180deg, #ffdc4d 0%, #ffcc00 100%) !important;
+  background: #ffcc00 !important;
   color: #111827 !important;
   padding: 0 0.18em !important;
   text-shadow: none;
@@ -319,7 +314,7 @@
   }
 
   100% {
-    background: linear-gradient(180deg, #ffdc4d 0%, #ffcc00 100%) !important;
+    background: #ffcc00 !important;
     transform: scale(1);
   }
 }
@@ -364,8 +359,7 @@
   padding: 5px 6px 5px 7px;
   border-radius: 11px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background:
-    linear-gradient(145deg, rgba(0, 74, 173, 0.16) 0%, rgba(15, 23, 42, 0.48) 100%);
+  background: rgba(15, 23, 42, 0.48);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow:
@@ -382,7 +376,7 @@
   left: 0;
   width: 2px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ffcc00 0%, #004aad 100%);
+  background: #004aad;
   opacity: 0.9;
 }
 
@@ -395,8 +389,7 @@
   padding: 5px 7px 5px 8px !important;
   border: 1px solid rgba(15, 23, 42, 0.12) !important;
   border-radius: 9px !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 252, 240, 0.96) 100%) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
   color: #0f172a !important;
   box-shadow:
     0 4px 12px rgba(15, 23, 42, 0.12),
@@ -439,7 +432,7 @@
   margin-bottom: 3px;
   padding: 1px 6px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #004aad 0%, #1d4ed8 100%);
+  background: #004aad;
   color: #fff;
   font-size: 0.5rem;
   font-weight: 900;
@@ -449,7 +442,7 @@
 }
 
 .speakingP2SampleKnowledgeCard--grammar .speakingP2SampleKnowledgeCardKind {
-  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+  background: #0f172a;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
 }
 
@@ -551,7 +544,7 @@
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: linear-gradient(145deg, rgba(255, 204, 0, 0.12), rgba(0, 74, 173, 0.08));
+  background: rgba(0, 74, 173, 0.08);
 }
 
 .speakingTopicBank .thumbnailCard.thumbnailCard--has-pdoy-sample {

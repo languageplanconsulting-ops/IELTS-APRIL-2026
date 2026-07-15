@@ -18,12 +18,12 @@
 }
 
 .practiceActionToast--celebrate {
-  background: linear-gradient(135deg, #fff7cc 0%, #ffe066 45%, #ffcc00 100%);
+  background: #ffe066;
   color: #0f172a;
 }
 
 .practiceActionToast--notebook {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: #eff6ff;
   color: #0f172a;
 }
 
@@ -103,7 +103,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #fff4bf 0%, #ffcc00 100%);
+  background: #ffcc00;
   color: #0f172a;
 }
 

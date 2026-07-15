@@ -39,7 +39,7 @@
   flex-direction: column;
   gap: 16px;
   padding: clamp(36px, 6vw, 72px) clamp(20px, 4vw, 56px);
-  background: linear-gradient(155deg, #0f2e85 0%, #1a4cb5 55%, #2060d0 100%);
+  background: #1a4cb5;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(15, 46, 133, 0.3);
 }
@@ -219,7 +219,7 @@
 /* ── Scoring criteria ──────────────────────────────────────── */
 
 .lspSection-criteria {
-  background: linear-gradient(160deg, #f8faff 0%, #fff 100%);
+  background: #f8faff;
   padding: clamp(24px, 3vw, 40px);
   border-radius: 18px;
   border: 1px solid rgba(15, 46, 133, 0.07);
@@ -428,7 +428,7 @@
 /* ── Sample answer section ─────────────────────────────────── */
 
 .lspSection-sample {
-  background: linear-gradient(165deg, #fffcf0 0%, #fff 70%);
+  background: #fffcf0;
   padding: clamp(24px, 3vw, 40px);
   border-radius: 18px;
   border: 1px solid rgba(191, 139, 48, 0.15);
@@ -819,7 +819,7 @@
   gap: 32px;
   align-items: center;
   padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 48px);
-  background: linear-gradient(130deg, #0f2e85 0%, #1a4cb5 100%);
+  background: #1a4cb5;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(15, 46, 133, 0.28);
 }

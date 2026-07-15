@@ -19,6 +19,7 @@ export type WritingTask2Paragraph = {
 export type WritingTask2VocabItem = {
   word: string
   thaiMeaning: string
+  example?: string
 }
 
 export type WritingTask2Prompt = {

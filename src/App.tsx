@@ -195,6 +195,7 @@ import {
   sanitizeReadingQuestionSectionTextForDisplay as sanitizeReadingQuestionSectionTextShared
 } from './readingOcrCleanup'
 import { lookupReadingVocabBridge, type ReadingVocabBridgePair } from './readingPassage3VocabBridge'
+import { getReadingPassageVocab, type ReadingPassageVocabItem } from './readingPassageVocab'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -6889,6 +6890,8 @@ function App() {
   const [readingActivePassageNumber, setReadingActivePassageNumber] = useState(1)
   const [readingSelectionText, setReadingSelectionText] = useState('')
   const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string; color?: string }>>([])
+  const [readingVocabSavedWords, setReadingVocabSavedWords] = useState<Set<string>>(new Set())
+  const [readingVocabOpenKey, setReadingVocabOpenKey] = useState<string | null>(null)
   const [readingHighlightMenu, setReadingHighlightMenu] = useState<{ x: number; y: number; text: string } | null>(null)
   const [readingSmartPencilMode, setReadingSmartPencilMode] = useState(false)
   const [readingPencilStrokes, setReadingPencilStrokes] = useState<Record<number, ReadingPencilStroke[]>>({})
@@ -8456,9 +8459,7 @@ function App() {
               padding: 28px;
               font-family: "Georgia", "Times New Roman", serif;
               color: var(--ink);
-              background:
-                radial-gradient(circle at top right, rgba(251, 191, 36, 0.10), transparent 28%),
-                linear-gradient(180deg, #fffefb 0%, #fffaf3 100%);
+              background: #fffaf3;
               line-height: 1.6;
             }
             .report-shell {
@@ -8471,8 +8472,7 @@ function App() {
               border: 1px solid var(--line);
               padding: 28px 30px 24px;
               margin-bottom: 24px;
-              background:
-                linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(255, 255, 255, 0.96) 34%, rgba(219, 234, 254, 0.70) 100%);
+              background: rgba(255, 255, 255, 0.96);
               box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
             }
             .hero::before {
@@ -8480,7 +8480,7 @@ function App() {
               position: absolute;
               inset: 0 auto 0 0;
               width: 10px;
-              background: linear-gradient(180deg, #f59e0b 0%, #fb7185 50%, #60a5fa 100%);
+              background: #fb7185;
             }
             .hero h1 {
               margin: 0 0 10px;
@@ -8595,12 +8595,10 @@ function App() {
               page-break-inside: avoid;
             }
             .question-card.correct {
-              background:
-                linear-gradient(180deg, rgba(240, 253, 244, 0.94) 0%, rgba(255,255,255,0.98) 100%);
+              background: rgba(240, 253, 244, 0.94);
             }
             .question-card.wrong {
-              background:
-                linear-gradient(180deg, rgba(255, 247, 237, 0.96) 0%, rgba(255,255,255,0.98) 100%);
+              background: rgba(255, 247, 237, 0.96);
             }
             .question-top {
               display: flex;
@@ -17965,6 +17963,23 @@ function App() {
     })
   }
 
+  const saveReadingPassageVocabWord = (item: ReadingPassageVocabItem, passageTitle: string) => {
+    if (!customSectionsRef.current.includes(PDOY_VOCAB_SECTION)) {
+      setCustomSections((current) =>
+        current.includes(PDOY_VOCAB_SECTION) ? current : [...current, PDOY_VOCAB_SECTION]
+      )
+    }
+    handlePracticeSaveToNotebook({
+      criterion: passageTitle,
+      quote: item.word,
+      fix: item.example || item.word,
+      thaiMeaning: item.thaiMeaning,
+      preferredSection: PDOY_VOCAB_SECTION,
+      successNotice: 'บันทึกลง พี่ดอยสอน Vocab แล้ว'
+    })
+    setReadingVocabSavedWords((current) => new Set(current).add(item.word))
+  }
+
   const openWritingLanding = () => {
     setActivePage('writing')
   }
@@ -18771,13 +18786,16 @@ function App() {
   const renderPassageParagraphWithHighlights = (
     rawText: string,
     passageNumber: number,
-    hintExcerpt?: string | string[]
+    hintExcerpt?: string | string[],
+    vocabItems?: ReadingPassageVocabItem[],
+    vocabKeyPrefix?: string
   ) => {
     const text = String(rawText || '')
       .replace(/([.!?;:,])([A-Z])/g, '$1 $2')
       .replace(/\s{2,}/g, ' ')
       .trim()
     const hintNeedles = Array.isArray(hintExcerpt) ? hintExcerpt : buildReadingHintNeedles(hintExcerpt)
+    const vocabByWord = new Map((vocabItems || []).map((item) => [item.word.toLowerCase(), item]))
     const highlights = [
       ...readingUserHighlights
         .filter((item) => item.passageNumber === passageNumber)
@@ -18787,7 +18805,10 @@ function App() {
           id: item.id,
           color: item.color || READING_DEFAULT_HIGHLIGHT_COLOR
         })),
-      ...hintNeedles.map((item) => ({ text: item, tone: 'hint' as const, id: '', color: '' }))
+      ...hintNeedles.map((item) => ({ text: item, tone: 'hint' as const, id: '', color: '' })),
+      ...(vocabItems || [])
+        .filter((item) => item.word && text.toLowerCase().includes(item.word.toLowerCase()))
+        .map((item) => ({ text: item.word, tone: 'vocab' as const, id: '', color: '' }))
     ].filter((item) => item.text.trim().length > 0)
 
     if (!highlights.length) return text
@@ -18808,6 +18829,40 @@ function App() {
           >
             {part}
           </mark>
+        )
+      }
+      if (found.tone === 'vocab') {
+        const vocabItem = vocabByWord.get(part.toLowerCase())
+        if (!vocabItem) return <span key={`reading-text-${index}`}>{part}</span>
+        const key = `${vocabKeyPrefix || ''}-${index}-${vocabItem.word}`
+        const isOpen = readingVocabOpenKey === key
+        const saved = readingVocabSavedWords.has(vocabItem.word)
+        return (
+          <span key={`reading-text-${index}`} className="vocabHiWrap">
+            <mark
+              className={`vocabHiMark ${isOpen ? 'is-open' : ''}`}
+              role="button"
+              tabIndex={0}
+              onClick={() => setReadingVocabOpenKey((current) => (current === key ? null : key))}
+            >
+              {part}
+            </mark>
+            {isOpen ? (
+              <span className="vocabHiPopover" role="dialog">
+                <span className="vocabHiPopoverWord">{vocabItem.word}</span>
+                <span className="vocabHiPopoverTh">{vocabItem.thaiMeaning}</span>
+                {vocabItem.example ? <span className="vocabHiPopoverEx">{vocabItem.example}</span> : null}
+                <button
+                  type="button"
+                  className="vocabHiPopoverSave"
+                  disabled={saved}
+                  onClick={() => saveReadingPassageVocabWord(vocabItem, activeReadingPassage.title)}
+                >
+                  {saved ? '✓ บันทึกแล้ว' : '＋ เพิ่มลง Notebook'}
+                </button>
+              </span>
+            ) : null}
+          </span>
         )
       }
       return (
@@ -23120,12 +23175,15 @@ function App() {
                             </p>
                           )
                         }
+                        const passageVocab = getReadingPassageVocab(activeReadingPassage.title)
                         return activeReadingPassage.bodyParagraphs.map((paragraph, index) => (
                           <p key={`reading-paragraph-${index}`}>
                             {renderPassageParagraphWithHighlights(
                               paragraph,
                               activeReadingPassage.number,
-                              highlightNeedles
+                              highlightNeedles,
+                              passageVocab,
+                              `p${activeReadingPassage.number}-${index}`
                             )}
                           </p>
                         ))

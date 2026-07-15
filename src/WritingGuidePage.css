@@ -8,8 +8,7 @@
   min-height: calc(100vh - 88px);
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(246, 250, 255, 0.94) 45%, rgba(255, 252, 235, 0.9) 100%);
+  background: rgba(246, 250, 255, 0.94);
   box-shadow:
     0 0 0 1px rgba(0, 74, 173, 0.06),
     0 24px 64px rgba(15, 23, 42, 0.1);
@@ -38,7 +37,7 @@
   right: -20px;
   width: 240px;
   height: 240px;
-  background: radial-gradient(circle, rgba(255, 204, 0, 0.45), transparent 68%);
+  background: rgba(255, 204, 0, 0.45);
 }
 
 .writingGuideOrb-b {
@@ -46,18 +45,15 @@
   left: -40px;
   width: 280px;
   height: 280px;
-  background: radial-gradient(circle, rgba(0, 74, 173, 0.35), transparent 70%);
+  background: rgba(0, 74, 173, 0.35);
   animation-delay: -4s;
 }
 
 .writingGuideGridGlow {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(0, 74, 173, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 74, 173, 0.04) 1px, transparent 1px);
+  background-color: rgba(0, 74, 173, 0.04);
   background-size: 32px 32px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 90%);
 }
 
 @keyframes writingGuideOrbFloat {
@@ -164,9 +160,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(135deg, rgba(255, 204, 0, 0.16), transparent 42%),
-    linear-gradient(160deg, rgba(0, 74, 173, 0.1), transparent 60%);
+  background: rgba(0, 74, 173, 0.1);
   pointer-events: none;
 }
 
@@ -702,7 +696,7 @@
 
 .writingGuideTaskBtn.is-active {
   border-color: rgba(0, 74, 173, 0.38);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96));
+  background: rgba(239, 246, 255, 0.96);
   box-shadow:
     0 0 0 1px rgba(0, 74, 173, 0.1),
     0 14px 32px rgba(0, 74, 173, 0.12);
@@ -780,7 +774,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 204, 0, 0.2), transparent 70%);
+  background: rgba(255, 204, 0, 0.2);
   opacity: 0;
   transition: opacity var(--duration-luxury-fast) var(--ease-luxury);
 }
@@ -805,27 +799,27 @@
 
 .writingGuideAccent-timeline.is-active::before,
 .writingGuidePanel.writingGuideAccent-timeline::before {
-  background: linear-gradient(180deg, var(--bc-yellow), #f59e0b);
+  background: var(--bc-yellow);
 }
 
 .writingGuideAccent-chart.is-active::before,
 .writingGuidePanel.writingGuideAccent-chart::before {
-  background: linear-gradient(180deg, #60a5fa, var(--bc-blue));
+  background: var(--bc-blue);
 }
 
 .writingGuideAccent-map.is-active::before,
 .writingGuidePanel.writingGuideAccent-map::before {
-  background: linear-gradient(180deg, #34d399, #059669);
+  background: #059669;
 }
 
 .writingGuideAccent-process.is-active::before,
 .writingGuidePanel.writingGuideAccent-process::before {
-  background: linear-gradient(180deg, #a78bfa, #6366f1);
+  background: #6366f1;
 }
 
 .writingGuideAccent-all.is-active::before,
 .writingGuidePanel.writingGuideAccent-all::before {
-  background: linear-gradient(180deg, var(--bc-yellow), var(--bc-blue));
+  background: var(--bc-blue);
 }
 
 .writingGuidePanel {
@@ -847,7 +841,7 @@
   right: 20px;
   height: 3px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--bc-blue), var(--bc-yellow));
+  background: var(--bc-blue);
   opacity: 0.85;
 }
 
@@ -920,7 +914,7 @@
   padding: 7px 12px;
   border-radius: 999px;
   border: 1px solid rgba(0, 74, 173, 0.16);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.92));
+  background: rgba(239, 246, 255, 0.92);
   color: #0f172a;
   font-size: 0.84rem;
   font-weight: 700;
@@ -1051,7 +1045,7 @@
   width: fit-content;
   padding: 4px 10px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--bc-blue), #1a5fd4);
+  background: var(--bc-blue);
   color: #fff;
   font-size: 0.64rem;
   font-weight: 800;
@@ -1124,7 +1118,7 @@
   padding: 0 18px;
   border-radius: 999px;
   border: 1px solid rgba(0, 74, 173, 0.28);
-  background: linear-gradient(135deg, var(--bc-yellow) 0%, #ffd84d 100%);
+  background: var(--bc-yellow);
   color: #0b2a5b;
   font-family: 'Kanit', sans-serif;
   font-size: 0.92rem;
@@ -1141,7 +1135,7 @@
 }
 
 .writingGuideHelperBtn.is-open {
-  background: linear-gradient(135deg, var(--bc-blue), #1a5fd4);
+  background: var(--bc-blue);
   color: #fff;
   border-color: rgba(0, 74, 173, 0.4);
   box-shadow: 0 10px 24px rgba(0, 74, 173, 0.22);
@@ -1151,7 +1145,7 @@
   padding: 14px 16px;
   border-radius: 16px;
   border: 1px solid rgba(255, 204, 0, 0.28);
-  background: linear-gradient(135deg, rgba(255, 251, 235, 0.96), rgba(255, 255, 255, 0.94));
+  background: rgba(255, 251, 235, 0.96);
   animation: writingGuideHelperIn 0.35s var(--ease-luxury) both;
 }
 
@@ -1201,7 +1195,7 @@
 
 .writingGuideQuestionChip.is-active {
   border-color: rgba(0, 74, 173, 0.38);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96));
+  background: rgba(239, 246, 255, 0.96);
   box-shadow: 0 10px 24px rgba(0, 74, 173, 0.12);
 }
 
@@ -1546,7 +1540,7 @@
   padding: 12px 10px 8px;
   border-radius: 16px;
   border: 1px solid rgba(0, 74, 173, 0.12);
-  background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.94));
+  background: rgba(248, 250, 252, 0.98);
 }
 
 .writingGuideChartSvg {
@@ -1606,7 +1600,7 @@
   padding: 16px;
   border-radius: 16px;
   border: 1px solid rgba(16, 185, 129, 0.24);
-  background: linear-gradient(180deg, rgba(236, 253, 245, 0.72), rgba(255, 255, 255, 0.94));
+  background: rgba(236, 253, 245, 0.72);
 }
 
 .writingGuideTableChartHead {
@@ -1646,7 +1640,7 @@
 }
 
 .writingGuideTableChartGrid thead th {
-  background: linear-gradient(180deg, rgba(0, 74, 173, 0.12), rgba(0, 74, 173, 0.06));
+  background: rgba(0, 74, 173, 0.1);
   color: var(--bc-blue);
   font-weight: 900;
 }
@@ -2647,7 +2641,7 @@
   padding: 18px 20px;
   border-radius: 16px;
   border: 1px solid rgba(22, 163, 74, 0.3);
-  background: linear-gradient(180deg, rgba(22, 163, 74, 0.08), rgba(255, 255, 255, 0.6));
+  background: rgba(22, 163, 74, 0.08);
   animation: wgbStepIn 320ms ease;
 }
 
@@ -2888,6 +2882,80 @@
 
 .wgb2Panel {
   max-width: 760px;
+}
+
+.wgb2Layout {
+  display: block;
+}
+
+.wgb2Layout.has-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 760px) minmax(220px, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.wgb2DragSidebar {
+  position: sticky;
+  top: 16px;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.wgb2DragSidebarHead {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #0b2a5b;
+}
+
+.wgb2DragGroup {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(15, 23, 42, 0.14);
+}
+
+.wgb2DragGroup:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.wgb2DragGroupLabel {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.wgbDropSlotNum {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: rgba(0, 74, 173, 0.14);
+  color: #004aad;
+  font-size: 0.7rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+  .wgb2Layout.has-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .wgb2DragSidebar {
+    position: static;
+  }
 }
 
 /* tap-to-place comma blank */
@@ -3142,6 +3210,19 @@
 .wgb2VocabMeaning {
   font-size: 0.85rem;
   color: #5a6a86;
+}
+
+.wgb2VocabHint {
+  margin: 0 0 12px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.85rem;
+  color: #5a6a86;
+}
+
+.wgb2VocabExample {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-style: italic;
 }
 
 @media (max-width: 640px) {
