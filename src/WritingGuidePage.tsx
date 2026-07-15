@@ -30,7 +30,8 @@ import { renderPromptChart } from './writingTask1Charts'
 import type {
   WritingEssaySavePayload,
   WritingReportParagraph,
-  WritingReportSegment
+  WritingReportSegment,
+  WritingTask2EssaySavePayload
 } from './writingReportTypes'
 import { WRITING_TASK2_PROMPTS, getWritingTask2Prompts, type WritingTask2TypeId } from './writingTask2Data'
 import { getWritingTask2Builder } from './writingTask2Builder'
@@ -39,6 +40,7 @@ import { WritingTask2Practice } from './WritingTask2Practice'
 type WritingGuidePageProps = {
   onBackHome: () => void
   onSaveEssayToNotebook?: (payload: WritingEssaySavePayload) => void
+  onSaveTask2EssayToNotebook?: (payload: WritingTask2EssaySavePayload) => void
   onSaveVocabToNotebook?: (payload: { word: string; thaiMeaning: string; questionTitle: string; questionNumber: number }) => void
 }
 
@@ -639,7 +641,12 @@ function Band7SampleView({ sample }: { sample: WritingBand7Sample }) {
   )
 }
 
-export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVocabToNotebook }: WritingGuidePageProps) {
+export function WritingGuidePage({
+  onBackHome,
+  onSaveEssayToNotebook,
+  onSaveTask2EssayToNotebook,
+  onSaveVocabToNotebook
+}: WritingGuidePageProps) {
   const [flow, setFlow] = useState<WritingFlow>({ step: 'hub' })
   const [showHelper, setShowHelper] = useState(false)
 
@@ -1056,6 +1063,7 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
           (() => {
             const exercise = getWritingTask2Builder(activeTask2Prompt.id)
             const prompt = activeTask2Prompt
+            const typeTitle = WRITING_TASK2_TYPES.find((item) => item.id === prompt.typeId)?.title || 'Task 2'
             return (
               <div className="writingGuideExamShell">
                 <div className="writingGuideExamToolbar">
@@ -1076,6 +1084,21 @@ export function WritingGuidePage({ onBackHome, onSaveEssayToNotebook, onSaveVoca
                               thaiMeaning: vocab.thaiMeaning,
                               questionTitle: prompt.title,
                               questionNumber: prompt.number
+                            })
+                        : undefined
+                    }
+                    onSaveEssay={
+                      onSaveTask2EssayToNotebook
+                        ? ({ paragraphs, score }) =>
+                            onSaveTask2EssayToNotebook({
+                              promptId: prompt.id,
+                              typeTitle,
+                              questionTitle: prompt.questionText,
+                              questionNumber: prompt.number,
+                              meta: prompt.meta,
+                              paragraphs,
+                              vocab: prompt.vocab,
+                              score
                             })
                         : undefined
                     }

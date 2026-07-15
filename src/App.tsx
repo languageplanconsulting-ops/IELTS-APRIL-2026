@@ -3,7 +3,13 @@ import './App.css'
 import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
 import { WritingReportView } from './WritingReportView'
-import type { WritingEssaySavePayload, WritingReportSnapshot } from './writingReportTypes'
+import { WritingTask2ReportView } from './WritingTask2ReportView'
+import type {
+  WritingEssaySavePayload,
+  WritingReportSnapshot,
+  WritingTask2EssaySavePayload,
+  WritingTask2ReportSnapshot
+} from './writingReportTypes'
 import { LandingPageDraft } from './admin/LandingPageDraft'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import ExamFeedPage from './ExamFeedPage'
@@ -243,7 +249,7 @@ type AdminWorkspaceSection =
   | 'videos'
   | 'video-studio'
   | 'settings'
-type NotebookSection = 'speaking' | 'writing' | 'listening' | 'reading' | 'custom'
+type NotebookSection = 'speaking' | 'writing' | 'writing essay' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
 type SkillModule = 'speaking' | 'listening' | 'reading' | 'writing'
 const SKILL_MODULES: { key: SkillModule; label: string }[] = [
@@ -626,7 +632,7 @@ type NotebookEntry = {
   fix: string
   thaiMeaning?: string
   personalNote?: string
-  savedReportSnapshot?: SavedReportSnapshot | WritingReportSnapshot
+  savedReportSnapshot?: SavedReportSnapshot | WritingReportSnapshot | WritingTask2ReportSnapshot
   createdAt: string
 }
 
@@ -6984,7 +6990,9 @@ function App() {
   const [remainingQuestionSeconds, setRemainingQuestionSeconds] = useState(75)
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null)
   const [reportViewSnapshot, setReportViewSnapshot] = useState<SavedReportSnapshot | null>(null)
-  const [writingReportSnapshot, setWritingReportSnapshot] = useState<WritingReportSnapshot | null>(null)
+  const [writingReportSnapshot, setWritingReportSnapshot] = useState<
+    WritingReportSnapshot | WritingTask2ReportSnapshot | null
+  >(null)
   const [assessmentError, setAssessmentError] = useState('')
   const [assessmentProgress, setAssessmentProgress] = useState(0)
   const [assessmentProgressTarget, setAssessmentProgressTarget] = useState(0)
@@ -10726,7 +10734,7 @@ function App() {
   }, [isFullExamMode, fullExamPhaseSeconds, remainingTalkSeconds])
 
   const notebookSectionTabs = useMemo(
-    () => ['speaking', 'writing', 'listening', 'reading', ...customSections],
+    () => ['speaking', 'writing', 'writing essay', 'listening', 'reading', ...customSections],
     [customSections]
   )
   const filteredNotebookEntries = useMemo(
@@ -12015,7 +12023,36 @@ function App() {
     })
   }
 
-  const openWritingReportSnapshot = (snapshot: WritingReportSnapshot) => {
+  const saveWritingTask2EssayToNotebook = (payload: WritingTask2EssaySavePayload) => {
+    const snapshot: WritingTask2ReportSnapshot = {
+      ...payload,
+      kind: 'writing-task2',
+      savedAt: new Date().toISOString()
+    }
+    const nextEntry: NotebookEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      section: 'writing essay',
+      topicTitle: `${payload.typeTitle} · Q${payload.questionNumber}`,
+      criterion: 'Writing Task 2 · เรียงความเต็ม',
+      quote: payload.questionTitle,
+      fix: `เปิดดูเรียงความฉบับเต็มพร้อมคำศัพท์ — ทำถูก ${payload.score.correct}/${payload.score.total} ช่อง`,
+      thaiMeaning: '',
+      personalNote: '',
+      savedReportSnapshot: snapshot,
+      createdAt: new Date().toISOString()
+    }
+    const nextEntries = [nextEntry, ...notebookEntriesRef.current]
+    setNotebookEntries(nextEntries)
+    setSelectedNotebookSection('writing essay')
+    setNotebookSaveNotice('บันทึกเรียงความลง Notebook แล้ว')
+    void syncNotebookSnapshotToSupabase({
+      entries: nextEntries,
+      sections: customSectionsRef.current,
+      successNotice: 'บันทึกเรียงความลง Notebook และซิงก์กับบัญชีแล้ว'
+    })
+  }
+
+  const openWritingReportSnapshot = (snapshot: WritingReportSnapshot | WritingTask2ReportSnapshot) => {
     setWritingReportSnapshot(snapshot)
     setActivePage('notebook')
   }
@@ -18783,6 +18820,28 @@ function App() {
     }
   }, [readingHighlightMenu])
 
+  useEffect(() => {
+    if (!readingVocabOpenKey) return undefined
+    const closeIfOutside = (event: MouseEvent) => {
+      const target = event.target
+      if (target instanceof Element && target.closest('.vocabHiWrap')) return
+      setReadingVocabOpenKey(null)
+    }
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') setReadingVocabOpenKey(null)
+    }
+    window.addEventListener('mousedown', closeIfOutside)
+    window.addEventListener('scroll', closeIfOutside, true)
+    window.addEventListener('resize', closeIfOutside)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('mousedown', closeIfOutside)
+      window.removeEventListener('scroll', closeIfOutside, true)
+      window.removeEventListener('resize', closeIfOutside)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [readingVocabOpenKey])
+
   const renderPassageParagraphWithHighlights = (
     rawText: string,
     passageNumber: number,
@@ -20381,6 +20440,7 @@ function App() {
     () => [
       'speaking',
       'writing',
+      'writing essay',
       'listening',
       'reading',
       ...(adminUserNotebook?.customSections || [])
@@ -24045,6 +24105,7 @@ function App() {
             <WritingGuidePage
               onBackHome={() => setActivePage('home')}
               onSaveEssayToNotebook={saveWritingEssayToNotebook}
+              onSaveTask2EssayToNotebook={saveWritingTask2EssayToNotebook}
               onSaveVocabToNotebook={({ word, thaiMeaning, questionTitle, questionNumber }) =>
                 savePlanToNotebook({
                   criterion: 'Writing Task 2 Vocab',
@@ -29639,16 +29700,23 @@ function App() {
               onClick={() => setWritingReportSnapshot(null)}
             >
               <div className="wgReportOverlayInner" onClick={(event) => event.stopPropagation()}>
-                <WritingReportView
-                  snapshot={writingReportSnapshot}
-                  onClose={() => setWritingReportSnapshot(null)}
-                />
+                {writingReportSnapshot.kind === 'writing' ? (
+                  <WritingReportView
+                    snapshot={writingReportSnapshot}
+                    onClose={() => setWritingReportSnapshot(null)}
+                  />
+                ) : (
+                  <WritingTask2ReportView
+                    snapshot={writingReportSnapshot}
+                    onClose={() => setWritingReportSnapshot(null)}
+                  />
+                )}
               </div>
             </div>
           ) : null}
           <div className="notebookHeader">
             <h2>Notebook</h2>
-            <p>Save and organize improvement actions across Speaking, Writing, Listening, Reading, and custom sections.</p>
+            <p>Save and organize improvement actions across Speaking, Writing, Writing Essay, Listening, Reading, and custom sections.</p>
             {isNotebookHydrating ? (
               <p className="meta">Loading your synced notebook...</p>
             ) : notebookSyncError ? (
@@ -29666,8 +29734,8 @@ function App() {
             onRemoveEntry={removeNotebookEntry}
             onUpdateNote={updateNotebookPersonalNote}
             onOpenSavedReport={(snapshot) =>
-              snapshot?.kind === 'writing'
-                ? openWritingReportSnapshot(snapshot as WritingReportSnapshot)
+              snapshot?.kind === 'writing' || snapshot?.kind === 'writing-task2'
+                ? openWritingReportSnapshot(snapshot as WritingReportSnapshot | WritingTask2ReportSnapshot)
                 : openSavedReportSnapshot(snapshot as SavedReportSnapshot)
             }
             onCreateCustomSection={{
@@ -30163,8 +30231,8 @@ function App() {
                       filteredNotebookEntries={adminUserFilteredNotebookEntries}
                       readOnly
                       onOpenSavedReport={(snapshot) =>
-                        snapshot?.kind === 'writing'
-                          ? openWritingReportSnapshot(snapshot as WritingReportSnapshot)
+                        snapshot?.kind === 'writing' || snapshot?.kind === 'writing-task2'
+                          ? openWritingReportSnapshot(snapshot as WritingReportSnapshot | WritingTask2ReportSnapshot)
                           : openSavedReportSnapshot(snapshot as SavedReportSnapshot)
                       }
                     />

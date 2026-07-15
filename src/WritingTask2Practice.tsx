@@ -14,6 +14,7 @@ import {
   type Wgb2Segment
 } from './writingTask2Builder'
 import type { WritingTask2Prompt, WritingTask2VocabItem } from './writingTask2Data'
+import type { WritingTask2ReportParagraph } from './writingReportTypes'
 import { VocabHighlightText } from './VocabHighlightText'
 
 const wgb2Normalize = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase()
@@ -35,11 +36,13 @@ function Wgb2CoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string
 export function WritingTask2Practice({
   prompt,
   exercise,
-  onSaveVocab
+  onSaveVocab,
+  onSaveEssay
 }: {
   prompt: WritingTask2Prompt
   exercise: Wgb2Exercise
   onSaveVocab?: (vocab: WritingTask2VocabItem, prompt: WritingTask2Prompt) => void
+  onSaveEssay?: (data: { paragraphs: WritingTask2ReportParagraph[]; score: { correct: number; total: number } }) => void
 }) {
   const steps = exercise.steps
   const [stepIndex, setStepIndex] = useState(0)
@@ -52,6 +55,7 @@ export function WritingTask2Practice({
   const [pickedChip, setPickedChip] = useState<string | null>(null)
   const [dragOverId, setDragOverId] = useState<string | null>(null)
   const [droppedId, setDroppedId] = useState<string | null>(null)
+  const [savedEssayNotice, setSavedEssayNotice] = useState(false)
 
   const step = steps[stepIndex]
   const isLastStep = stepIndex === steps.length - 1
@@ -83,6 +87,15 @@ export function WritingTask2Practice({
 
   const totalBlanks = useMemo(
     () => steps.reduce((sum, item) => sum + item.segments.filter((s) => s.kind === 'blank').length, 0),
+    [steps]
+  )
+  const allBlanks = useMemo(
+    () =>
+      steps.flatMap((item) =>
+        item.segments
+          .filter((segment): segment is Extract<Wgb2Segment, { kind: 'blank' }> => segment.kind === 'blank')
+          .map((segment) => segment.blank)
+      ),
     [steps]
   )
 
@@ -131,6 +144,7 @@ export function WritingTask2Practice({
     setCheckedNow(false)
     setShowEssay(false)
     setActiveBlankId(null)
+    setSavedEssayNotice(false)
   }
 
   const model = useMemo(() => assembleTask2Essay(exercise), [exercise])
@@ -145,14 +159,23 @@ export function WritingTask2Practice({
     setSavedWords((current) => new Set(current).add(item.word))
   }
 
+  const handleSaveEssay = () => {
+    if (!onSaveEssay) return
+    const total = allBlanks.length
+    const correct = allBlanks.filter(isBlankCorrect).length
+    onSaveEssay({ paragraphs: model, score: { correct, total } })
+    setSavedEssayNotice(true)
+  }
+
   return (
     <div className="wgb2Shell">
       <div className="wgb2QuestionCard">
         <p className="wgb2QuestionEyebrow">โจทย์ข้อ {prompt.number}</p>
         <p className="wgb2QuestionText">{prompt.questionText}</p>
         <p className="wgb2QuestionInstruction">
-          <b>วิธีทำ:</b> เขียนทีละย่อหน้าตามขั้นด้านล่าง เติมคำในช่องว่างให้ครบ แล้วกด{' '}
-          <b>“ตรวจคำตอบ”</b> — ช่องจะเปลี่ยนเป็น<b>สีเขียว</b>เมื่อถูก และ<b>สีชมพู</b>เมื่อต้องแก้
+          <b>วิธีทำ:</b> เรียงความนี้มีช่องฝึกหนาแน่น (~50 ช่องพิมพ์ผันคำ + ~70 dropdown เลือกคำ) ประมาณทุก 3–4 คำ
+          — ทดสอบกริยา · คำนำหน้า · คำนาม/คุณศัพท์/กริยาวิเศษณ์ · คำเชื่อม · วรรคตอน เขียนทีละย่อหน้า แล้วกด{' '}
+          <b>“ตรวจคำตอบ”</b> เพื่อดูเฉลยและคำอธิบายภาษาไทยใต้ช่องที่ผิด (เขียว = ถูก, ชมพู = ต้องแก้)
         </p>
       </div>
 
@@ -392,10 +415,25 @@ export function WritingTask2Practice({
                 <button type="button" className="wlpBtn wlpBtn-primary" onClick={() => setShowEssay((v) => !v)}>
                   {showEssay ? 'ซ่อนเรียงความเต็ม' : 'ดูเรียงความเต็ม'}
                 </button>
+                {onSaveEssay ? (
+                  <button
+                    type="button"
+                    className="wlpBtn wlpBtn-save"
+                    onClick={handleSaveEssay}
+                    disabled={savedEssayNotice}
+                  >
+                    {savedEssayNotice ? '✓ บันทึกลง Notebook แล้ว' : '＋ บันทึกเรียงความลง Notebook'}
+                  </button>
+                ) : null}
                 <button type="button" className="wlpBtn wlpBtn-secondary" onClick={resetAll}>
                   เริ่มใหม่
                 </button>
               </div>
+              {savedEssayNotice ? (
+                <p className="wgbSavedHint">
+                  บันทึกไว้ในหมวด <strong>WRITING ESSAY</strong> ของ Notebook แล้ว — เปิดดูเรียงความเต็มพร้อมคำศัพท์ได้ทุกเมื่อ 📓
+                </p>
+              ) : null}
             </div>
             {showEssay ? (
               <article className="wgbEssay">

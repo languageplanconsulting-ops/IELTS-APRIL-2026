@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export type VocabHighlightItem = {
   word: string
@@ -38,6 +38,28 @@ export function VocabHighlightText({
 }) {
   const [openKey, setOpenKey] = useState<string | null>(null)
   const segments = useMemo(() => buildVocabHighlightSegments(text, vocab), [text, vocab])
+
+  useEffect(() => {
+    if (!openKey) return undefined
+    const closeIfOutside = (event: MouseEvent) => {
+      const target = event.target
+      if (target instanceof Element && target.closest('.vocabHiWrap')) return
+      setOpenKey(null)
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpenKey(null)
+    }
+    window.addEventListener('mousedown', closeIfOutside)
+    window.addEventListener('scroll', closeIfOutside, true)
+    window.addEventListener('resize', closeIfOutside)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('mousedown', closeIfOutside)
+      window.removeEventListener('scroll', closeIfOutside, true)
+      window.removeEventListener('resize', closeIfOutside)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [openKey])
 
   return (
     <span className="vocabHiText">

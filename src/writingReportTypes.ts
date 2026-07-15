@@ -6,6 +6,7 @@
 
 import type { WritingTask1PracticePrompt } from './writingGuideData'
 import type { WgbStep } from './writingGuidedBuilder'
+import type { WritingTask2Role, WritingTask2VocabItem } from './writingTask2Data'
 
 export type WritingReportSegment =
   | { kind: 'text'; text: string }
@@ -39,5 +40,29 @@ export type WritingEssaySavePayload = {
 
 export type WritingReportSnapshot = WritingEssaySavePayload & {
   kind: 'writing'
+  savedAt: string
+}
+
+// A completed guided Task 2 essay: the full assembled model essay text (no chart, since
+// Task 2 has none) plus the vocab the student can bookmark from it.
+export type WritingTask2ReportParagraph = {
+  role: WritingTask2Role
+  labelTh: string
+  text: string
+}
+
+export type WritingTask2EssaySavePayload = {
+  promptId: string
+  typeTitle: string
+  questionTitle: string
+  questionNumber: number
+  meta: string
+  paragraphs: WritingTask2ReportParagraph[]
+  vocab: WritingTask2VocabItem[]
+  score: { correct: number; total: number }
+}
+
+export type WritingTask2ReportSnapshot = WritingTask2EssaySavePayload & {
+  kind: 'writing-task2'
   savedAt: string
 }
