@@ -18854,54 +18854,92 @@ function App() {
       .replace(/\s{2,}/g, ' ')
       .trim()
     const hintNeedles = Array.isArray(hintExcerpt) ? hintExcerpt : buildReadingHintNeedles(hintExcerpt)
-    const vocabByWord = new Map((vocabItems || []).map((item) => [item.word.toLowerCase(), item]))
-    const highlights = [
-      ...readingUserHighlights
-        .filter((item) => item.passageNumber === passageNumber)
-        .map((item) => ({
-          text: item.text,
-          tone: 'user' as const,
-          id: item.id,
-          color: item.color || READING_DEFAULT_HIGHLIGHT_COLOR
-        })),
-      ...hintNeedles.map((item) => ({ text: item, tone: 'hint' as const, id: '', color: '' })),
-      ...(vocabItems || [])
-        .filter((item) => item.word && text.toLowerCase().includes(item.word.toLowerCase()))
-        .map((item) => ({ text: item.word, tone: 'vocab' as const, id: '', color: '' }))
-    ].filter((item) => item.text.trim().length > 0)
+    const lowerText = text.toLowerCase()
 
-    if (!highlights.length) return text
+    type PassageMarkRange = {
+      start: number
+      end: number
+      tone: 'user' | 'hint' | 'vocab'
+      id: string
+      color: string
+      vocabItem?: ReadingPassageVocabItem
+    }
 
-    const pattern = new RegExp(`(${highlights.map((item) => escapeRegExp(item.text)).join('|')})`, 'gi')
-    const parts = text.split(pattern)
-    return parts.map((part, index) => {
-      const found = highlights.find((item) => item.text.toLowerCase() === part.toLowerCase())
-      if (!found) return <span key={`reading-text-${index}`}>{part}</span>
-      if (found.tone === 'user') {
-        return (
-          <mark
-            key={`reading-text-${index}`}
-            className="readingUserMark"
-            style={{ backgroundColor: found.color }}
-            title="คลิกเพื่อลบไฮไลต์"
-            onClick={() => removeReadingHighlight(found.id)}
-          >
-            {part}
-          </mark>
-        )
+    const ranges: PassageMarkRange[] = []
+    const pushNeedleRanges = (
+      needle: string,
+      meta: Omit<PassageMarkRange, 'start' | 'end'>
+    ) => {
+      const trimmed = String(needle || '').trim()
+      if (!trimmed) return
+      const needleLower = trimmed.toLowerCase()
+      let from = 0
+      while (from <= lowerText.length - needleLower.length) {
+        const index = lowerText.indexOf(needleLower, from)
+        if (index === -1) break
+        ranges.push({ start: index, end: index + trimmed.length, ...meta })
+        from = index + trimmed.length
       }
-      if (found.tone === 'vocab') {
-        const vocabItem = vocabByWord.get(part.toLowerCase())
-        if (!vocabItem) return <span key={`reading-text-${index}`}>{part}</span>
+    }
+
+    for (const item of readingUserHighlights) {
+      if (item.passageNumber !== passageNumber || !item.text.trim()) continue
+      pushNeedleRanges(item.text, {
+        tone: 'user',
+        id: item.id,
+        color: item.color || READING_DEFAULT_HIGHLIGHT_COLOR
+      })
+    }
+    for (const needle of hintNeedles) {
+      pushNeedleRanges(needle, { tone: 'hint', id: '', color: '' })
+    }
+    for (const item of vocabItems || []) {
+      if (!item.word || !lowerText.includes(item.word.toLowerCase())) continue
+      pushNeedleRanges(item.word, { tone: 'vocab', id: '', color: '', vocabItem: item })
+    }
+
+    if (!ranges.length) return text
+
+    const bounds = new Set<number>([0, text.length])
+    for (const range of ranges) {
+      bounds.add(range.start)
+      bounds.add(range.end)
+    }
+    const points = [...bounds].sort((a, b) => a - b)
+
+    return points.slice(0, -1).map((start, index) => {
+      const end = points[index + 1]
+      if (end <= start) return null
+      const part = text.slice(start, end)
+      const covering = ranges.filter((range) => range.start <= start && range.end >= end)
+      if (!covering.length) return <span key={`reading-text-${index}`}>{part}</span>
+
+      const userMark = covering.find((range) => range.tone === 'user')
+      const hintMark = covering.find((range) => range.tone === 'hint')
+      const vocabMark = covering.find((range) => range.tone === 'vocab')
+      const vocabItem = vocabMark?.vocabItem
+
+      let content: ReactNode = part
+
+      if (vocabItem) {
         const key = `${vocabKeyPrefix || ''}-${index}-${vocabItem.word}`
         const isOpen = readingVocabOpenKey === key
         const saved = readingVocabSavedWords.has(vocabItem.word)
-        return (
-          <span key={`reading-text-${index}`} className="vocabHiWrap">
+        content = (
+          <span className="vocabHiWrap">
             <mark
-              className={`vocabHiMark ${isOpen ? 'is-open' : ''}`}
+              className={`vocabHiMark ${hintMark ? 'readingHintMark' : ''} ${isOpen ? 'is-open' : ''}`.trim()}
               role="button"
               tabIndex={0}
+              ref={
+                hintMark
+                  ? (node) => {
+                      if (node && !readingHintMarkRef.current) {
+                        readingHintMarkRef.current = node
+                      }
+                    }
+                  : undefined
+              }
               onClick={() => setReadingVocabOpenKey((current) => (current === key ? null : key))}
             >
               {part}
@@ -18923,20 +18961,35 @@ function App() {
             ) : null}
           </span>
         )
+      } else if (hintMark) {
+        content = (
+          <mark
+            className="readingHintMark"
+            ref={(node) => {
+              if (node && !readingHintMarkRef.current) {
+                readingHintMarkRef.current = node
+              }
+            }}
+          >
+            {part}
+          </mark>
+        )
       }
-      return (
-        <mark
-          key={`reading-text-${index}`}
-          className="readingHintMark"
-          ref={(node) => {
-            if (node && !readingHintMarkRef.current) {
-              readingHintMarkRef.current = node
-            }
-          }}
-        >
-          {part}
-        </mark>
-      )
+
+      if (userMark) {
+        content = (
+          <mark
+            className="readingUserMark"
+            style={{ backgroundColor: userMark.color }}
+            title="คลิกเพื่อลบไฮไลต์"
+            onClick={() => removeReadingHighlight(userMark.id)}
+          >
+            {content}
+          </mark>
+        )
+      }
+
+      return <span key={`reading-text-${index}`}>{content}</span>
     })
   }
 
@@ -21823,7 +21876,7 @@ function App() {
                     ? selectedReadingEntryChoice.title
                     : readingEntryView === 'monthly'
                       ? 'Monthly Exams'
-                      : 'Choose Reading Practice'}
+                      : 'เส้นทางฝึก Reading'}
               </h2>
               <p>
                 {readingEntryView === 'journey'
@@ -21836,7 +21889,7 @@ function App() {
                     ? `${selectedReadingEntryChoice.subtitle} | ${selectedReadingEntryChoice.detail}`
                     : readingEntryView === 'monthly'
                       ? READING_MONTHLY_EXAM_LEAD
-                      : 'Normal Reading, Advanced Reading, General Training, and Monthly Exams are separate banks.'}
+                      : 'เริ่มจากพื้นฐาน แล้วไต่ขึ้นไปจนสอบเต็มชุด — คลิกด่านที่ปลดล็อกแล้ว'}
               </p>
             </div>
           </div>
@@ -21844,113 +21897,122 @@ function App() {
 
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && readingEntryView === 'levels' && (
             <div className="readingEntryShell">
-              <div className="readingHubList">
-                <button
-                  type="button"
-                  className="readingHubRow"
-                  style={{ '--motion-stagger': 0 } as CSSProperties}
-                  onClick={() => openReadingCategoryBank('normal')}
-                >
-                  <span className="readingHubIcon readingHubIcon-normal" aria-hidden="true">📖</span>
-                  <span className="readingHubText">
-                    <span className="readingHubTitleRow">
-                      <strong>การอ่านพื้นฐาน</strong>
-                      <span className="readingHubTone">พื้นฐาน</span>
-                    </span>
-                    <span className="readingHubSub">
-                      ระดับ Band 4–6.5 · เล่นเป็นด่าน ปลดล็อกด่านถัดไปที่ {READING_JOURNEY_UNLOCK_PERCENT}%+
-                    </span>
-                  </span>
-                  <span className="readingHubCount">
-                    {readingExamCountsByCategory.find((group) => group.category === 'normal')?.count || 0} ชุด
-                  </span>
-                  <span className="readingHubChevron" aria-hidden="true">›</span>
-                </button>
+              <div className="readingPathBoard">
+                <div className="readingPath" role="list">
+                  <div className="readingPathStep is-done" role="listitem" style={{ '--motion-stagger': 0 } as CSSProperties}>
+                    <span className="readingPathNode" aria-hidden="true">✓</span>
+                    <button
+                      type="button"
+                      className="readingHubRow readingTicket"
+                      onClick={() => openReadingCategoryBank('normal')}
+                    >
+                      <span className="readingHubIcon readingHubIcon-normal" aria-hidden="true">📖</span>
+                      <span className="readingHubText">
+                        <span className="readingHubTitleRow">
+                          <strong>การอ่านพื้นฐาน</strong>
+                          <span className="readingHubTone">Basic</span>
+                        </span>
+                        <span className="readingHubSub">
+                          Band 4–6.5 · ปลดล็อกแล้ว · เล่นเป็นด่านที่ {READING_JOURNEY_UNLOCK_PERCENT}%+
+                        </span>
+                      </span>
+                      <span className="readingHubGo">
+                        {readingExamCountsByCategory.find((group) => group.category === 'normal')?.count || 0} ชุด →
+                      </span>
+                    </button>
+                  </div>
 
-                <button
-                  type="button"
-                  className="readingHubRow"
-                  style={{ '--motion-stagger': 1 } as CSSProperties}
-                  onClick={() => openReadingCategoryBank('passage3')}
-                >
-                  <span className="readingHubIcon readingHubIcon-passage3" aria-hidden="true">🔥</span>
-                  <span className="readingHubText">
-                    <span className="readingHubTitleRow">
-                      <strong>Passage 3 · Band 7</strong>
-                      <span className="readingHubTone">ระดับยาก</span>
-                    </span>
-                    <span className="readingHubSub">ระดับ Band 7+ · บทความวิชาการที่ยากที่สุด</span>
-                  </span>
-                  <span className="readingHubCount">
-                    {readingExamCountsByCategory.find((group) => group.category === 'passage3')?.count || 0} ชุด
-                  </span>
-                  <span className="readingHubChevron" aria-hidden="true">›</span>
-                </button>
+                  <div className="readingPathStep" role="listitem" style={{ '--motion-stagger': 1 } as CSSProperties}>
+                    <span className="readingPathNode" aria-hidden="true">2</span>
+                    <button
+                      type="button"
+                      className="readingHubRow readingTicket"
+                      onClick={() => openReadingCategoryBank('passage3')}
+                    >
+                      <span className="readingHubIcon readingHubIcon-passage3" aria-hidden="true">🔥</span>
+                      <span className="readingHubText">
+                        <span className="readingHubTitleRow">
+                          <strong>Passage 3 · Band 7</strong>
+                          <span className="readingHubTone">Hard</span>
+                        </span>
+                        <span className="readingHubSub">ระดับยาก · บทความวิชาการที่ยากที่สุด</span>
+                      </span>
+                      <span className="readingHubGo">
+                        {readingExamCountsByCategory.find((group) => group.category === 'passage3')?.count || 0} ชุด →
+                      </span>
+                    </button>
+                  </div>
 
-                <button
-                  type="button"
-                  className="readingHubRow"
-                  style={{ '--motion-stagger': 2 } as CSSProperties}
-                  onClick={openReadingFullTestBank}
-                >
-                  <span className="readingHubIcon readingHubIcon-fullTest" aria-hidden="true">📝</span>
-                  <span className="readingHubText">
-                    <span className="readingHubTitleRow">
-                      <strong>ข้อสอบเต็มชุด</strong>
-                      <span className="readingHubTone">สอบเต็ม</span>
-                    </span>
-                    <span className="readingHubSub">Cambridge · 3 passages · 40 ข้อ · จับเวลาเหมือนสอบจริง</span>
-                  </span>
-                  <span className="readingHubCount">{readingFullTestExams.length} ชุด</span>
-                  <span className="readingHubChevron" aria-hidden="true">›</span>
-                </button>
+                  <div className="readingPathStep" role="listitem" style={{ '--motion-stagger': 2 } as CSSProperties}>
+                    <span className="readingPathNode" aria-hidden="true">3</span>
+                    <button
+                      type="button"
+                      className="readingHubRow readingTicket"
+                      onClick={openReadingFullTestBank}
+                    >
+                      <span className="readingHubIcon readingHubIcon-fullTest" aria-hidden="true">📝</span>
+                      <span className="readingHubText">
+                        <span className="readingHubTitleRow">
+                          <strong>ข้อสอบเต็มชุด</strong>
+                          <span className="readingHubTone">Full</span>
+                        </span>
+                        <span className="readingHubSub">Cambridge · 3 passages · 40 ข้อ · จับเวลาเหมือนสอบจริง</span>
+                      </span>
+                      <span className="readingHubGo">{readingFullTestExams.length} ชุด →</span>
+                    </button>
+                  </div>
 
-                <button
-                  type="button"
-                  className="readingHubRow"
-                  style={{ '--motion-stagger': 3 } as CSSProperties}
-                  onClick={openGeneralTrainingReadingHub}
-                >
-                  <span className="readingHubIcon readingHubIcon-gt" aria-hidden="true">🎓</span>
-                  <span className="readingHubText">
-                    <span className="readingHubTitleRow">
-                      <strong>General Training</strong>
-                      <span className="readingHubTone">GT</span>
-                    </span>
-                    <span className="readingHubSub">GT Reading · Section 1–3 · ข้อสอบเต็มชุด</span>
-                  </span>
-                  <span className="readingHubCount">{generalTrainingFullTestExams.length} ชุด</span>
-                  <span className="readingHubChevron" aria-hidden="true">›</span>
-                </button>
+                  <div className="readingPathStep" role="listitem" style={{ '--motion-stagger': 3 } as CSSProperties}>
+                    <span className="readingPathNode" aria-hidden="true">4</span>
+                    <button
+                      type="button"
+                      className="readingHubRow readingTicket"
+                      onClick={openGeneralTrainingReadingHub}
+                    >
+                      <span className="readingHubIcon readingHubIcon-gt" aria-hidden="true">🎓</span>
+                      <span className="readingHubText">
+                        <span className="readingHubTitleRow">
+                          <strong>General Training</strong>
+                          <span className="readingHubTone">GT</span>
+                        </span>
+                        <span className="readingHubSub">GT Reading · Section 1–3 · ข้อสอบเต็มชุด</span>
+                      </span>
+                      <span className="readingHubGo">เปิดคลัง →</span>
+                    </button>
+                  </div>
 
-                <button
-                  type="button"
-                  className={`readingHubRow readingHubRow-monthly ${!isAdminUser ? 'is-locked' : ''}`.trim()}
-                  style={{ '--motion-stagger': 4 } as CSSProperties}
-                  onClick={openReadingMonthlyBank}
-                  disabled={!isAdminUser}
-                  aria-disabled={!isAdminUser}
-                  title={!isAdminUser ? 'ยังไม่เปิดให้ใช้งาน' : undefined}
-                >
-                  <span className="readingHubIcon readingHubIcon-monthly" aria-hidden="true">📅</span>
-                  <span className="readingHubText">
-                    <span className="readingHubTitleRow">
-                      <strong>ข้อสอบรายเดือน</strong>
-                      <span className="readingHubTone">รายเดือน</span>
-                    </span>
-                    <span className="readingHubSub">
-                      {!isAdminUser
-                        ? 'ยังไม่เปิดให้ใช้งาน — เร็ว ๆ นี้'
-                        : 'ชุดใหม่ 4 ชุดทุกเดือน · แนวข้อสอบล่าสุด'}
-                    </span>
-                  </span>
-                  {!isAdminUser ? (
-                    <span className="readingHubCount readingHubCount-lock">🔒 ล็อก</span>
-                  ) : (
-                    <span className="readingHubCount">{monthlyReadingExams.length} ชุด</span>
-                  )}
-                  <span className="readingHubChevron" aria-hidden="true">›</span>
-                </button>
+                  <div
+                    className={`readingPathStep ${!isAdminUser ? 'is-locked' : ''}`.trim()}
+                    role="listitem"
+                    style={{ '--motion-stagger': 4 } as CSSProperties}
+                  >
+                    <span className="readingPathNode" aria-hidden="true">5</span>
+                    <button
+                      type="button"
+                      className={`readingHubRow readingTicket readingHubRow-monthly ${!isAdminUser ? 'is-locked' : ''}`.trim()}
+                      onClick={openReadingMonthlyBank}
+                      disabled={!isAdminUser}
+                      aria-disabled={!isAdminUser}
+                      title={!isAdminUser ? 'ยังไม่เปิดให้ใช้งาน' : undefined}
+                    >
+                      <span className="readingHubIcon readingHubIcon-monthly" aria-hidden="true">📅</span>
+                      <span className="readingHubText">
+                        <span className="readingHubTitleRow">
+                          <strong>Monthly Exams</strong>
+                          <span className="readingHubTone">Archive</span>
+                        </span>
+                        <span className="readingHubSub">
+                          {!isAdminUser
+                            ? 'แนะนำหลังจบ Full Exam อย่างน้อย 1 ชุด · ยังไม่เปิดให้ใช้งาน'
+                            : `ชุดใหม่ 4 ชุดทุกเดือน · ${monthlyReadingExams.length} ชุด · แนวข้อสอบล่าสุด`}
+                        </span>
+                      </span>
+                      <span className={`readingHubGo ${!isAdminUser ? 'readingHubGo-lock' : ''}`.trim()}>
+                        {!isAdminUser ? 'ล็อกอยู่' : `${monthlyReadingExams.length} ชุด →`}
+                      </span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -29709,6 +29771,16 @@ function App() {
                   <WritingTask2ReportView
                     snapshot={writingReportSnapshot}
                     onClose={() => setWritingReportSnapshot(null)}
+                    onSaveVocab={(item) =>
+                      savePlanToNotebook({
+                        criterion: 'Writing Task 2 Vocab',
+                        quote: `Q${writingReportSnapshot.questionNumber}: ${writingReportSnapshot.questionTitle}`,
+                        fix: item.word,
+                        thaiMeaning: item.thaiMeaning,
+                        preferredSection: 'writing',
+                        successNotice: 'Added to notebook'
+                      })
+                    }
                   />
                 )}
               </div>
@@ -29716,7 +29788,7 @@ function App() {
           ) : null}
           <div className="notebookHeader">
             <h2>Notebook</h2>
-            <p>Save and organize improvement actions across Speaking, Writing, Writing Essay, Listening, Reading, and custom sections.</p>
+            <p>เก็บคำแนะนำ +1 band และเรียงความที่บันทึกจาก Writing — จัดตาม Speaking, Writing, Writing Essay, Listening, Reading</p>
             {isNotebookHydrating ? (
               <p className="meta">Loading your synced notebook...</p>
             ) : notebookSyncError ? (

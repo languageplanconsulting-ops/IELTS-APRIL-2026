@@ -222,6 +222,9 @@ function WritingBarChartSvg({ prompt }: { prompt: WritingTimelinePracticePrompt 
 }
 
 function WritingTableChart({ prompt }: { prompt: WritingTimelinePracticePrompt }) {
+  const rows = prompt.series?.length
+    ? prompt.series
+    : [{ label: prompt.valueLabel, color: '#0f53c9', values: prompt.values }]
   return (
     <figure className="writingIeltsFigure writingIeltsFigure-table">
       <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
@@ -237,12 +240,14 @@ function WritingTableChart({ prompt }: { prompt: WritingTimelinePracticePrompt }
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">{prompt.valueLabel}</th>
-            {prompt.values.map((value, index) => (
-              <td key={`${prompt.id}-${prompt.years[index]}`}>{value}</td>
-            ))}
-          </tr>
+          {rows.map((row) => (
+            <tr key={row.label}>
+              <th scope="row">{row.label}</th>
+              {row.values.map((value, index) => (
+                <td key={`${prompt.id}-${row.label}-${prompt.years[index]}`}>{value}</td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
       <p className="writingIeltsTableNote">Units: {prompt.unit}</p>

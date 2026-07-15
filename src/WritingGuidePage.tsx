@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties } from 'react'
+import { Children, useMemo, useState, type CSSProperties, type ReactNode } from 'react'
 import './WritingGuidePage.css'
 import {
   getWritingGuidedBuilder,
@@ -15,9 +15,11 @@ import {
   WRITING_TASK1_SECTIONS,
   WRITING_TASK2_TYPES,
   WRITING_TIMELINE_PRACTICE_PROMPTS,
-  WRITING_TASK1_TYPE_INFO,
   WRITING_BAND7_TASK1_SAMPLE,
   WRITING_BAND7_TASK2_SAMPLE,
+  getWritingTask1ExamStem,
+  IELTS_TASK1_SUMMARY_INSTRUCTION,
+  IELTS_TASK1_WORD_LIMIT,
   type WritingGuideChipGroup,
   type WritingGuideStructure,
   type WritingTask1Section,
@@ -34,7 +36,7 @@ import type {
   WritingTask2EssaySavePayload
 } from './writingReportTypes'
 import { WRITING_TASK2_PROMPTS, getWritingTask2Prompts, type WritingTask2TypeId } from './writingTask2Data'
-import { getWritingTask2Builder } from './writingTask2Builder'
+import { getDenseWritingTask2Builder } from './writingTask2Dense'
 import { WritingTask2Practice } from './WritingTask2Practice'
 
 type WritingGuidePageProps = {
@@ -54,8 +56,6 @@ type WritingFlow =
   | { step: 'task2-types' }
   | { step: 'task2-questions'; typeId: WritingTask2TypeId }
   | { step: 'task2-drill'; typeId: WritingTask2TypeId; promptId: string }
-
-const accentClass = (accent: WritingTask1Section['accent']) => `writingGuideAccent-${accent}`
 
 // Chart / diagram renderers now live in ./writingTask1Charts (renderPromptChart).
 // The old free-text "answer sheet" exam paper has been removed — clicking a question now
@@ -216,7 +216,14 @@ function WritingGuidedBuilder({
 
   return (
     <div className="wgbShell">
-      <div className="wgbChart">{renderPromptChart(prompt)}</div>
+      <aside className="wgbVisualPane">
+        <div className="wgbExamStem">
+          <p className="writingIeltsPromptLine">{getWritingTask1ExamStem(prompt)}</p>
+          <p className="writingIeltsPromptLine writingIeltsPromptLine-instruction">{IELTS_TASK1_SUMMARY_INSTRUCTION}</p>
+          <p className="writingIeltsPromptLine writingIeltsPromptLine-limit">{IELTS_TASK1_WORD_LIMIT}</p>
+        </div>
+        <div className="wgbChart">{renderPromptChart(prompt)}</div>
+      </aside>
 
       <div className="wgbPanel">
         <ol className="wgbRail">
@@ -470,23 +477,67 @@ const matchesTaskFilter = (item: ExamItem, filter: 'all' | 'task1' | 'task2') =>
   return item.tag.includes(filter === 'task1' ? 'Task 1' : 'Task 2')
 }
 
-function WritingLatestItem({ item }: { item: ExamItem }) {
+/** Ticket rows on a numbered level path — used across the whole Writing journey */
+function WgTicketPathList({
+  children,
+  ariaLabel,
+  firstDone = true
+}: {
+  children: ReactNode
+  ariaLabel?: string
+  firstDone?: boolean
+}) {
+  const items = Children.toArray(children).filter(Boolean)
   return (
-    <div className="wgLatestItem">
-      <span className="wgLatestItemTag">{item.tag}</span>
-      <p className="wgLatestItemTitle">
-        {item.title}
-        {item.isNew ? <span className="wgLatestNew">ใหม่</span> : null}
-      </p>
-      {item.bullets ? (
-        <ul className="wgLatestBullets">
-          {item.bullets.map((bullet, i) => (
-            <li key={i}>{bullet}</li>
-          ))}
-        </ul>
-      ) : null}
-      <p className="wgLatestItemMeta">{item.meta}</p>
+    <div className="wgTicketPathBoard" aria-label={ariaLabel}>
+      <div className="wgTicketPath">
+        {items.map((child, index) => (
+          <div
+            key={index}
+            className={`wgTicketPathStep ${firstDone && index === 0 ? 'is-done' : ''}`.trim()}
+            style={{ '--motion-stagger': index } as CSSProperties}
+          >
+            <span className="wgTicketPathNode" aria-hidden="true">
+              {firstDone && index === 0 ? '✓' : index + 1}
+            </span>
+            {child}
+          </div>
+        ))}
+      </div>
     </div>
+  )
+}
+
+function WritingLatestItem({ item }: { item: ExamItem }) {
+  const stampTone = item.tag.includes('Task 2')
+    ? 'lilac'
+    : item.tag.includes('Task 1')
+      ? 'peach'
+      : 'yellow'
+  const stampEmoji = item.tag.includes('Task 2') ? '✍️' : item.tag.includes('Task 1') ? '📈' : '📰'
+  return (
+    <article className={`wgTicket wgTicket-static`}>
+      <span className={`wgTicketStamp wgTicketStamp-${stampTone}`} aria-hidden="true">
+        {stampEmoji}
+      </span>
+      <span className="wgTicketBody">
+        <span className="wgTicketTitleRow">
+          <strong>
+            {item.title}
+            {item.isNew ? <span className="wgLatestNew">ใหม่</span> : null}
+          </strong>
+          <span className="wgTicketBadge">{item.tag}</span>
+        </span>
+        {item.bullets ? (
+          <ul className="wgLatestBullets">
+            {item.bullets.map((bullet, i) => (
+              <li key={i}>{bullet}</li>
+            ))}
+          </ul>
+        ) : null}
+        <span className="wgTicketSub">{item.meta}</span>
+      </span>
+    </article>
   )
 }
 
@@ -508,11 +559,11 @@ function WritingLatestSection({
         <h3 className="wgLatestBlockTitle">หัวข้อที่เพิ่งออกสอบ</h3>
         <p className="wgLatestBlockLead">รายงานจากผู้สอบจริง · ไม่ใช่ข้อสอบทางการ</p>
         {recall.length ? (
-          <div className="wgLatestGrid">
+          <WgTicketPathList ariaLabel="หัวข้อที่เพิ่งออกสอบ">
             {recall.map((item, i) => (
               <WritingLatestItem key={i} item={item} />
             ))}
-          </div>
+          </WgTicketPathList>
         ) : (
           <p className="wgLatestEmpty">ยังไม่มีข้อมูลในหมวดนี้</p>
         )}
@@ -522,11 +573,11 @@ function WritingLatestSection({
         <h3 className="wgLatestBlockTitle">เก็งข้อสอบเดือนนี้</h3>
         <p className="wgLatestBlockLead">แนวโน้มจากสถิติย้อนหลัง · เป็นการคาดการณ์ ไม่ใช่ข้อสอบจริง</p>
         {predict.length ? (
-          <div className="wgLatestGrid">
+          <WgTicketPathList ariaLabel="เก็งข้อสอบเดือนนี้" firstDone={false}>
             {predict.map((item, i) => (
-              <WritingLatestItem key={i} item={item} />
+              <WritingLatestItem key={`p-${i}`} item={item} />
             ))}
-          </div>
+          </WgTicketPathList>
         ) : (
           <p className="wgLatestEmpty">ยังไม่มีข้อมูลในหมวดนี้</p>
         )}
@@ -534,12 +585,12 @@ function WritingLatestSection({
 
       <div className="wgLatestCta">
         {filter !== 'task2' ? (
-          <button type="button" className="wgLatestCtaBtn" onClick={onPracticeTask1}>
+          <button type="button" className="wgTicketCta" onClick={onPracticeTask1}>
             ฝึกเขียน Task 1 ตอนนี้ →
           </button>
         ) : null}
         {filter !== 'task1' ? (
-          <button type="button" className="wgLatestCtaBtn wgLatestCtaBtn-t2" onClick={onPracticeTask2}>
+          <button type="button" className="wgTicketCta" onClick={onPracticeTask2}>
             ฝึกเขียน Task 2 ตอนนี้ →
           </button>
         ) : null}
@@ -743,58 +794,105 @@ export function WritingGuidePage({
           <div className="writingGuideHubShell">
             <div className="writingGuideHubIntro">
               <p className="wlpKicker">IELTS Academic Writing · English Plan Institute</p>
-              <h1 className="writingGuideHubH1">เลือกสิ่งที่อยากฝึกวันนี้</h1>
-              <span className="wlpAccentRule" aria-hidden="true" />
+              <h1 className="writingGuideHubH1">เส้นทางฝึก Writing</h1>
               <p className="writingGuideHubLead">
-                ดูข้อสอบจริงล่าสุดจากผู้สอบ หรือฝึกเขียนทีละขั้นตอน — เลือกได้เลย
+                เริ่มจากข้อสอบล่าสุด หรือไต่ไปฝึก Task 1 / Task 2 ทีละขั้น — คลิกด่านที่อยากเข้า
               </p>
+              <span className="wlpAccentRule" aria-hidden="true" />
             </div>
-            <div className="writingGuideMegaGrid writingGuideMegaGrid-hub">
-              <button
-                type="button"
-                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-a"
-                onClick={() => setFlow({ step: 'latest', filter: 'all' })}
-              >
-                <span className="writingGuideMegaBadge">ใหม่</span>
-                <strong>ข้อสอบล่าสุด</strong>
-                <span className="writingGuideMegaSub">โจทย์จริง Task 1 และ Task 2 จากผู้สอบเดือนนี้</span>
-              </button>
-              <button
-                type="button"
-                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-b"
-                onClick={() => setFlow({ step: 'latest', filter: 'task1' })}
-              >
-                <span className="writingGuideMegaBadge">Task 1</span>
-                <strong>Task 1 ล่าสุด</strong>
-                <span className="writingGuideMegaSub">โจทย์ Task 1 ที่เพิ่งออกสอบจริง</span>
-              </button>
-              <button
-                type="button"
-                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-c"
-                onClick={() => setFlow({ step: 'latest', filter: 'task2' })}
-              >
-                <span className="writingGuideMegaBadge">Task 2</span>
-                <strong>Task 2 ล่าสุด</strong>
-                <span className="writingGuideMegaSub">โจทย์ Task 2 ที่เพิ่งออกสอบจริง</span>
-              </button>
-              <button
-                type="button"
-                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-d"
-                onClick={() => setFlow({ step: 'task1-categories' })}
-              >
-                <span className="writingGuideMegaBadge">แบบฝึกหัด</span>
-                <strong>แบบฝึกหัด Task 1</strong>
-                <span className="writingGuideMegaSub">ฝึกเขียนทีละขั้นตอน 5 ประเภทกราฟ · 14 ข้อ</span>
-              </button>
-              <button
-                type="button"
-                className="writingGuideMegaCard writingGuideMegaCard-hub writingGuideMegaCard-hub-e"
-                onClick={() => setFlow({ step: 'task2-types' })}
-              >
-                <span className="writingGuideMegaBadge">แบบฝึกหัด</span>
-                <strong>แบบฝึกหัด Task 2</strong>
-                <span className="writingGuideMegaSub">ดูประเภทคำถามและแนวทางการเขียนแต่ละแบบ</span>
-              </button>
+            <div className="wgTicketPathBoard" aria-label="ทางลัด Writing">
+              <div className="wgTicketPath">
+                <div className="wgTicketPathStep is-done" style={{ '--motion-stagger': 0 } as CSSProperties}>
+                  <span className="wgTicketPathNode" aria-hidden="true">✓</span>
+                  <button
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => setFlow({ step: 'latest', filter: 'all' })}
+                  >
+                    <span className="wgTicketStamp wgTicketStamp-yellow" aria-hidden="true">📰</span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>ข้อสอบล่าสุด</strong>
+                        <span className="wgTicketBadge">ใหม่</span>
+                      </span>
+                      <span className="wgTicketSub">โจทย์จริง Task 1 และ Task 2 จากผู้สอบ · อัปเดตทุกสัปดาห์</span>
+                    </span>
+                    <span className="wgTicketGo">เปิดคลัง →</span>
+                  </button>
+                </div>
+                <div className="wgTicketPathStep" style={{ '--motion-stagger': 1 } as CSSProperties}>
+                  <span className="wgTicketPathNode" aria-hidden="true">2</span>
+                  <button
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => setFlow({ step: 'latest', filter: 'task1' })}
+                  >
+                    <span className="wgTicketStamp wgTicketStamp-peach" aria-hidden="true">📈</span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>Task 1 ล่าสุด</strong>
+                        <span className="wgTicketBadge">Task 1</span>
+                      </span>
+                      <span className="wgTicketSub">โจทย์ Task 1 ที่เพิ่งออกสอบจริง</span>
+                    </span>
+                    <span className="wgTicketGo">เปิดคลัง →</span>
+                  </button>
+                </div>
+                <div className="wgTicketPathStep" style={{ '--motion-stagger': 2 } as CSSProperties}>
+                  <span className="wgTicketPathNode" aria-hidden="true">3</span>
+                  <button
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => setFlow({ step: 'latest', filter: 'task2' })}
+                  >
+                    <span className="wgTicketStamp wgTicketStamp-lilac" aria-hidden="true">✍️</span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>Task 2 ล่าสุด</strong>
+                        <span className="wgTicketBadge">Task 2</span>
+                      </span>
+                      <span className="wgTicketSub">โจทย์ Task 2 ที่เพิ่งออกสอบจริง</span>
+                    </span>
+                    <span className="wgTicketGo">เปิดคลัง →</span>
+                  </button>
+                </div>
+                <div className="wgTicketPathStep" style={{ '--motion-stagger': 3 } as CSSProperties}>
+                  <span className="wgTicketPathNode" aria-hidden="true">4</span>
+                  <button
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => setFlow({ step: 'task1-categories' })}
+                  >
+                    <span className="wgTicketStamp wgTicketStamp-blue" aria-hidden="true">📊</span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>แบบฝึกหัด Task 1</strong>
+                        <span className="wgTicketBadge">Practice</span>
+                      </span>
+                      <span className="wgTicketSub">ฝึกเขียนทีละขั้นตอน ตามประเภทกราฟ</span>
+                    </span>
+                    <span className="wgTicketGo">เข้าฝึก →</span>
+                  </button>
+                </div>
+                <div className="wgTicketPathStep" style={{ '--motion-stagger': 4 } as CSSProperties}>
+                  <span className="wgTicketPathNode" aria-hidden="true">5</span>
+                  <button
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => setFlow({ step: 'task2-types' })}
+                  >
+                    <span className="wgTicketStamp wgTicketStamp-ink" aria-hidden="true">🧠</span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>แบบฝึกหัด Task 2</strong>
+                        <span className="wgTicketBadge">Practice</span>
+                      </span>
+                      <span className="wgTicketSub">ประเภทเรียงความ + แนวทางแต่ละแบบ</span>
+                    </span>
+                    <span className="wgTicketGo">เข้าฝึก →</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         ) : null}
@@ -803,7 +901,7 @@ export function WritingGuidePage({
           <div className="writingGuideMegaShell">
             <WritingFlowHead
               eyebrow={
-                flow.filter === 'all' ? 'ข้อสอบล่าสุด' : flow.filter === 'task1' ? 'Task 1 · ล่าสุด' : 'Task 2 · ล่าสุด'
+                flow.filter === 'all' ? 'เส้นทาง · ล่าสุด' : flow.filter === 'task1' ? 'Task 1 · ล่าสุด' : 'Task 2 · ล่าสุด'
               }
               title={
                 flow.filter === 'all'
@@ -812,7 +910,7 @@ export function WritingGuidePage({
                   ? 'โจทย์ Task 1 ล่าสุด'
                   : 'โจทย์ Task 2 ล่าสุด'
               }
-              subtitle="รวบรวมจากผู้สอบจริง อัปเดตทุกสัปดาห์ · ไม่ใช่ข้อสอบทางการ"
+              subtitle="เดินตาม path · รวบรวมจากผู้สอบจริง · ไม่ใช่ข้อสอบทางการ"
               onBack={goBack}
               backLabel="Home"
             />
@@ -828,38 +926,72 @@ export function WritingGuidePage({
         {flow.step === 'task1-categories' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 1 · กราฟ"
+              eyebrow="Task 1 · เส้นทางฝึก"
               title="เลือกประเภทกราฟที่อยากฝึก"
-              subtitle="เลือกหมวดกราฟหรือไดอะแกรม แล้วเลือกข้อที่อยากฝึกเขียนทีละย่อหน้า"
+              subtitle="เดินตาม path · เลือกหมวด แล้วฝึกเขียนทีละย่อหน้า"
               onBack={goBack}
               backLabel="กลับ"
             />
-            <div className="wlpTypeGrid">
-              {WRITING_TASK1_TYPE_INFO.map((type) => (
-                <article key={type.id} className="wlpTypeCard">
-                  <span className="wlpTypeTag">{type.badge}</span>
-                  <h3 className="wlpTypeTitle">{type.titleTh}</h3>
-                  <p className="wlpTypeDesc">{type.descTh}</p>
-                </article>
-              ))}
+            <div className="wgBentoHead">
+              <button
+                type="button"
+                className="wgBentoCta"
+                onClick={() => setFlow({ step: 'latest', filter: 'task1' })}
+              >
+                ดูข้อสอบล่าสุด →
+              </button>
             </div>
-            <div className="writingGuideMegaGrid writingGuideMegaGrid-categories">
-              {WRITING_TASK1_SECTIONS.map((section, index) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  className={`writingGuideMegaCard writingGuideMegaCard-category ${accentClass(section.accent)}`}
-                  style={{ '--motion-stagger': index } as CSSProperties}
-                  onClick={() => openCategory(section)}
-                >
-                  <span className="writingGuideMegaBadge">
-                    {section.practicePrompts?.length ? `${section.practicePrompts.length} exams` : 'Vocabulary'}
-                  </span>
-                  <strong>{section.title}</strong>
-                  <span className="writingGuideMegaSub">{section.subtitle}</span>
-                </button>
-              ))}
-            </div>
+            <WgTicketPathList ariaLabel="ประเภทกราฟ Task 1">
+              {(() => {
+                const byId = Object.fromEntries(WRITING_TASK1_SECTIONS.map((s) => [s.id, s]))
+                const stamps: Record<string, { emoji: string; tone: string }> = {
+                  timeline: { emoji: '📈', tone: 'yellow' },
+                  'no-timeline': { emoji: '🧩', tone: 'peach' },
+                  map: { emoji: '🗺️', tone: 'blue' },
+                  process: { emoji: '⚙️', tone: 'lilac' },
+                  mixed: { emoji: '🔀', tone: 'ink' },
+                  'all-types': { emoji: '📚', tone: 'yellow' }
+                }
+                const order = ['timeline', 'no-timeline', 'map', 'process', 'mixed', 'all-types'] as const
+                return order.map((id) => {
+                  const section = byId[id]
+                  if (!section) return null
+                  const stamp = stamps[id] || { emoji: '✍️', tone: 'yellow' }
+                  const badge =
+                    id === 'timeline'
+                      ? 'Start'
+                      : id === 'all-types'
+                        ? 'Vocab'
+                        : id === 'no-timeline'
+                          ? 'No year'
+                          : section.title.split('·')[0]?.trim() || 'Task 1'
+                  return (
+                    <button
+                      key={section.id}
+                      type="button"
+                      className="wgTicket"
+                      onClick={() => openCategory(section)}
+                    >
+                      <span className={`wgTicketStamp wgTicketStamp-${stamp.tone}`} aria-hidden="true">
+                        {stamp.emoji}
+                      </span>
+                      <span className="wgTicketBody">
+                        <span className="wgTicketTitleRow">
+                          <strong>{section.title}</strong>
+                          <span className="wgTicketBadge">{badge}</span>
+                        </span>
+                        <span className="wgTicketSub">
+                          {id === 'timeline'
+                            ? `${section.subtitle} — โจทย์ที่เจอบ่อยที่สุด`
+                            : section.subtitle}
+                        </span>
+                      </span>
+                      <span className="wgTicketGo">เข้าคลัง →</span>
+                    </button>
+                  )
+                })
+              })()}
+            </WgTicketPathList>
             <div className="wlpBand7Tabs wlpBand7Tabs-single">
               <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
               <Band7SampleView sample={WRITING_BAND7_TASK1_SAMPLE} />
@@ -870,35 +1002,51 @@ export function WritingGuidePage({
         {flow.step === 'task1-questions' && activeCategory ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 1 · Practice"
+              eyebrow="Task 1 · เลือกข้อ"
               title={activeCategory.title}
-              subtitle="เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้าแบบเติมคำได้เลย"
+              subtitle="เดินตาม path · เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้า"
               onBack={goBack}
               backLabel="ประเภทกราฟ"
             />
-            <div className="writingGuideExamList">
-              {(activeCategory.practicePrompts || []).map((prompt, index) => (
-                <button
-                  key={prompt.id}
-                  type="button"
-                  className="writingGuideExamListItem"
-                  style={{ '--motion-stagger': index } as CSSProperties}
-                  onClick={() => {
-                    setShowHelper(false)
-                    setFlow({ step: 'task1-drill', categoryId: activeCategory.id, promptId: prompt.id })
-                  }}
-                >
-                  <span className="writingGuideExamListNum">Question {prompt.number}</span>
-                  <strong>{prompt.title}</strong>
-                  <span className="writingGuideExamListMeta">
-                    {prompt.kind === 'timeline'
-                      ? `${prompt.chartTypeLabel} · ${prompt.years[0]}–${prompt.years[prompt.years.length - 1]}`
-                      : prompt.chartTypeLabel}
-                  </span>
-                  <span className="writingGuideExamListAction">ฝึกเขียน →</span>
-                </button>
-              ))}
-            </div>
+            <WgTicketPathList ariaLabel="รายการข้อสอบ Task 1">
+              {(activeCategory.practicePrompts || []).map((prompt, index) => {
+                const stamps = [
+                  { emoji: '📝', tone: 'yellow' },
+                  { emoji: '📊', tone: 'peach' },
+                  { emoji: '📉', tone: 'blue' },
+                  { emoji: '🗺', tone: 'lilac' },
+                  { emoji: '⚙️', tone: 'ink' }
+                ] as const
+                const stamp = stamps[index % stamps.length]
+                const meta =
+                  prompt.kind === 'timeline'
+                    ? `${prompt.chartTypeLabel} · ${prompt.years[0]}–${prompt.years[prompt.years.length - 1]}`
+                    : prompt.chartTypeLabel
+                return (
+                  <button
+                    key={prompt.id}
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => {
+                      setShowHelper(false)
+                      setFlow({ step: 'task1-drill', categoryId: activeCategory.id, promptId: prompt.id })
+                    }}
+                  >
+                    <span className={`wgTicketStamp wgTicketStamp-${stamp.tone}`} aria-hidden="true">
+                      {stamp.emoji}
+                    </span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>{getWritingTask1ExamStem(prompt)}</strong>
+                        <span className="wgTicketBadge">Q{prompt.number}</span>
+                      </span>
+                      <span className="wgTicketSub">{meta}</span>
+                    </span>
+                    <span className="wgTicketGo">ฝึกเขียน →</span>
+                  </button>
+                )
+              })}
+            </WgTicketPathList>
           </div>
         ) : null}
 
@@ -991,36 +1139,47 @@ export function WritingGuidePage({
         {flow.step === 'task2-types' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 2 · เรียงความ"
+              eyebrow="Task 2 · เส้นทางฝึก"
               title="เลือกประเภทเรียงความที่อยากฝึก"
-              subtitle="ดูจุดเน้นของคำถามแต่ละแบบ แล้วเลือกเข้าฝึกเขียนทีละย่อหน้าแบบเติมคำ"
+              subtitle="เดินตาม path · ดูจุดเน้นของแต่ละแบบ แล้วเข้าฝึกเติมคำทีละย่อหน้า"
               onBack={goBack}
               backLabel="กลับ"
             />
-            <div className="writingGuideMegaGrid writingGuideMegaGrid-categories">
-              {WRITING_TASK2_TYPES.map((item, index) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  className="writingGuideMegaCard writingGuideMegaCard-task2type"
-                  style={{ '--motion-stagger': index } as CSSProperties}
-                  onClick={() => {
-                    setShowHelper(false)
-                    setFlow({ step: 'task2-questions', typeId: item.id as WritingTask2TypeId })
-                  }}
-                >
-                  <span className="writingGuideMegaBadge">Task 2</span>
-                  <strong>{item.title}</strong>
-                  <span className="writingGuideMegaSub">{item.subtitle}</span>
-                  <ul className="writingGuideMegaList">
-                    {item.focus.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                  <span className="writingGuideExamListAction">ฝึกเขียน →</span>
-                </button>
-              ))}
-            </div>
+            <WgTicketPathList ariaLabel="ประเภท Task 2">
+              {WRITING_TASK2_TYPES.map((item, index) => {
+                const stamps = [
+                  { emoji: '💬', tone: 'yellow' },
+                  { emoji: '⚖️', tone: 'peach' },
+                  { emoji: '🔍', tone: 'blue' },
+                  { emoji: '💡', tone: 'lilac' },
+                  { emoji: '🧩', tone: 'ink' }
+                ] as const
+                const stamp = stamps[index % stamps.length]
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => {
+                      setShowHelper(false)
+                      setFlow({ step: 'task2-questions', typeId: item.id as WritingTask2TypeId })
+                    }}
+                  >
+                    <span className={`wgTicketStamp wgTicketStamp-${stamp.tone}`} aria-hidden="true">
+                      {stamp.emoji}
+                    </span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>{item.title}</strong>
+                        <span className="wgTicketBadge">{index === 0 ? 'Start' : 'Task 2'}</span>
+                      </span>
+                      <span className="wgTicketSub">{item.subtitle}</span>
+                    </span>
+                    <span className="wgTicketGo">เข้าคลัง →</span>
+                  </button>
+                )
+              })}
+            </WgTicketPathList>
             <div className="wlpBand7Tabs wlpBand7Tabs-single">
               <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
               <Band7SampleView sample={WRITING_BAND7_TASK2_SAMPLE} />
@@ -1031,37 +1190,53 @@ export function WritingGuidePage({
         {flow.step === 'task2-questions' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 2 · ฝึกเขียน"
+              eyebrow="Task 2 · เลือกข้อ"
               title={WRITING_TASK2_TYPES.find((item) => item.id === flow.typeId)?.title || 'Task 2'}
-              subtitle="เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้าแบบเติมคำได้เลย"
+              subtitle="เดินตาม path · เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้า"
               onBack={goBack}
               backLabel="ประเภทเรียงความ"
             />
-            <div className="writingGuideExamList">
-              {activeTask2Prompts.map((prompt, index) => (
-                <button
-                  key={prompt.id}
-                  type="button"
-                  className="writingGuideExamListItem"
-                  style={{ '--motion-stagger': index } as CSSProperties}
-                  onClick={() => {
-                    setShowHelper(false)
-                    setFlow({ step: 'task2-drill', typeId: flow.typeId, promptId: prompt.id })
-                  }}
-                >
-                  <span className="writingGuideExamListNum">Question {prompt.number}</span>
-                  <strong>{prompt.title}</strong>
-                  <span className="writingGuideExamListMeta">{prompt.meta}</span>
-                  <span className="writingGuideExamListAction">ฝึกเขียน →</span>
-                </button>
-              ))}
-            </div>
+            <WgTicketPathList ariaLabel="รายการข้อสอบ Task 2">
+              {activeTask2Prompts.map((prompt, index) => {
+                const stamps = [
+                  { emoji: '💬', tone: 'yellow' },
+                  { emoji: '⚖️', tone: 'peach' },
+                  { emoji: '🔍', tone: 'blue' },
+                  { emoji: '💡', tone: 'lilac' },
+                  { emoji: '🧩', tone: 'ink' }
+                ] as const
+                const stamp = stamps[index % stamps.length]
+                return (
+                  <button
+                    key={prompt.id}
+                    type="button"
+                    className="wgTicket"
+                    onClick={() => {
+                      setShowHelper(false)
+                      setFlow({ step: 'task2-drill', typeId: flow.typeId, promptId: prompt.id })
+                    }}
+                  >
+                    <span className={`wgTicketStamp wgTicketStamp-${stamp.tone}`} aria-hidden="true">
+                      {stamp.emoji}
+                    </span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>{prompt.title}</strong>
+                        <span className="wgTicketBadge">Q{prompt.number}</span>
+                      </span>
+                      <span className="wgTicketSub">{prompt.meta}</span>
+                    </span>
+                    <span className="wgTicketGo">ฝึกเขียน →</span>
+                  </button>
+                )
+              })}
+            </WgTicketPathList>
           </div>
         ) : null}
 
         {flow.step === 'task2-drill' && activeTask2Prompt ? (
           (() => {
-            const exercise = getWritingTask2Builder(activeTask2Prompt.id)
+            const exercise = getDenseWritingTask2Builder(activeTask2Prompt.id)
             const prompt = activeTask2Prompt
             const typeTitle = WRITING_TASK2_TYPES.find((item) => item.id === prompt.typeId)?.title || 'Task 2'
             return (

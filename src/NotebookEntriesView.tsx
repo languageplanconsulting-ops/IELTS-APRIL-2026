@@ -24,6 +24,16 @@ export type NotebookEntriesViewProps = {
   onCreateCustomSection?: { value: string; onChange: (value: string) => void; onSubmit: () => void }
 }
 
+const sectionTone = (section: string) => {
+  const key = section.toLowerCase()
+  if (key.includes('essay')) return 'yellow'
+  if (key.includes('writing')) return 'blue'
+  if (key.includes('speaking')) return 'ink'
+  if (key.includes('reading')) return 'soft'
+  if (key.includes('listening')) return 'white'
+  return 'soft'
+}
+
 export function NotebookEntriesView({
   notebookSectionTabs,
   selectedSection,
@@ -37,11 +47,13 @@ export function NotebookEntriesView({
 }: NotebookEntriesViewProps) {
   return (
     <>
-      <div className="notebookTabs">
+      <div className="notebookTabs" role="tablist" aria-label="Notebook sections">
         {notebookSectionTabs.map((sectionName) => (
           <button
             key={sectionName}
             type="button"
+            role="tab"
+            aria-selected={selectedSection === sectionName}
             className={selectedSection === sectionName ? 'active' : ''}
             onClick={() => onSelectSection(sectionName)}
           >
@@ -49,6 +61,7 @@ export function NotebookEntriesView({
           </button>
         ))}
       </div>
+
       {!readOnly && onCreateCustomSection ? (
         <div className="customSectionRow">
           <input
@@ -62,74 +75,85 @@ export function NotebookEntriesView({
           </button>
         </div>
       ) : null}
+
       {filteredNotebookEntries.length === 0 ? (
         <div className="emptyNotebook">
-          <p>No saved items in this section yet.</p>
-          <p>Use "Add to Notebook" in any "+1 band" recommendation.</p>
+          <p className="emptyNotebookTitle">ยังไม่มีรายการในหมวดนี้</p>
+          <p>กด “Add to Notebook” จากคำแนะนำ +1 band หรือบันทึกเรียงความจาก Writing Practice</p>
         </div>
       ) : (
         <div className="notebookGrid">
-          {filteredNotebookEntries.map((entry) => (
-            <article key={entry.id} className="notebookEntry">
-              <div className="notebookEntryMeta">
-                <span>{entry.section === 'custom' ? entry.customSectionName : entry.section}</span>
-                <span>{new Date(entry.createdAt).toLocaleString()}</span>
-              </div>
-              <h3>{entry.criterion}</h3>
-              <p className="meta">Topic: {entry.topicTitle}</p>
-              {entry.savedReportSnapshot ? (
-                <>
-                  <p className="entryOriginal">"{entry.quote}"</p>
-                  <p className="entryBetter">{entry.fix}</p>
-                  <div className="controls">
-                    <button
-                      type="button"
-                      className="primaryNextBtn"
-                      onClick={() => onOpenSavedReport?.(entry.savedReportSnapshot)}
-                    >
-                      Open Full Saved Report
-                    </button>
+          {filteredNotebookEntries.map((entry, index) => {
+            const label = entry.section === 'custom' ? entry.customSectionName || 'Custom' : entry.section
+            const tone = sectionTone(String(label))
+            const hasReport = Boolean(entry.savedReportSnapshot)
+            return (
+              <article
+                key={entry.id}
+                className={`notebookEntry notebookEntry-${tone}${index === 0 && hasReport ? ' notebookEntry-featured' : ''}`}
+              >
+                <div className="notebookEntryMeta">
+                  <span className="notebookEntryBadge">{label}</span>
+                  <span className="notebookEntryDate">{new Date(entry.createdAt).toLocaleString()}</span>
+                </div>
+
+                <p className="notebookEntryCriterion">{entry.criterion}</p>
+                <h3 className="notebookEntryTopic">Topic: {entry.topicTitle}</h3>
+
+                {hasReport ? (
+                  <>
+                    {entry.quote ? <p className="entryOriginal">"{entry.quote}"</p> : null}
+                    {entry.fix ? <p className="entryBetter">{entry.fix}</p> : null}
+                    <div className="notebookEntryControls">
+                      <button
+                        type="button"
+                        className="notebookPrimaryBtn"
+                        onClick={() => onOpenSavedReport?.(entry.savedReportSnapshot)}
+                      >
+                        Open Full Saved Report
+                      </button>
+                      {!readOnly ? (
+                        <button
+                          type="button"
+                          className="removeNotebookBtn"
+                          onClick={() => onRemoveEntry?.(entry.id)}
+                        >
+                          Remove
+                        </button>
+                      ) : null}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {entry.quote ? <p className="entryOriginal">"{entry.quote}"</p> : null}
+                    {entry.fix ? <p className="entryBetter">{entry.fix}</p> : null}
+                    {entry.thaiMeaning ? <p className="notebookEntryThai">TH: {entry.thaiMeaning}</p> : null}
                     {!readOnly ? (
-                      <button
-                        type="button"
-                        className="removeNotebookBtn"
-                        onClick={() => onRemoveEntry?.(entry.id)}
-                      >
-                        Remove
-                      </button>
+                      <>
+                        <label className="noteFieldLabel">
+                          Personal note
+                          <textarea
+                            value={entry.personalNote || ''}
+                            onChange={(event) => onUpdateNote?.(entry.id, event.target.value)}
+                            placeholder="Write your own reminder, vocabulary note, or speaking strategy..."
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          className="removeNotebookBtn"
+                          onClick={() => onRemoveEntry?.(entry.id)}
+                        >
+                          Remove
+                        </button>
+                      </>
+                    ) : entry.personalNote ? (
+                      <p className="notebookEntryThai">Note: {entry.personalNote}</p>
                     ) : null}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="entryOriginal">"{entry.quote}"</p>
-                  <p className="entryBetter">{entry.fix}</p>
-                  {entry.thaiMeaning && <p className="meta">TH: {entry.thaiMeaning}</p>}
-                  {!readOnly ? (
-                    <>
-                      <label className="noteFieldLabel">
-                        Personal note
-                        <textarea
-                          value={entry.personalNote || ''}
-                          onChange={(event) => onUpdateNote?.(entry.id, event.target.value)}
-                          placeholder="Write your own reminder, vocabulary note, or speaking strategy..."
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        className="removeNotebookBtn"
-                        onClick={() => onRemoveEntry?.(entry.id)}
-                      >
-                        Remove
-                      </button>
-                    </>
-                  ) : (
-                    entry.personalNote ? <p className="meta">Note: {entry.personalNote}</p> : null
-                  )}
-                </>
-              )}
-            </article>
-          ))}
+                  </>
+                )}
+              </article>
+            )
+          })}
         </div>
       )}
     </>

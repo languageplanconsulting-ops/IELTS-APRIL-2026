@@ -14164,12 +14164,14 @@ body,
   background: #e8f0fb;
   border-left: 3px solid var(--bc-blue);
   border-radius: 0 6px 6px 0;
+  font-family: Anuphan, Inter, system-ui, sans-serif;
 }
 
 /* ── Passage 3 · Band 7 vocab bridge (V2 synonym table) ── */
 .vbWrap {
   display: grid;
   gap: 14px;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
 }
 
 .vbBrandTitle {
@@ -14182,9 +14184,10 @@ body,
   background: #eef2ff;
   border: 1px solid #c7d2fe;
   color: #4338ca;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .vbBrandMark {
@@ -14199,10 +14202,11 @@ body,
 }
 
 .vbLabel {
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   font-size: 0.66rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   color: var(--bc-blue);
   margin: 0 0 -2px;
 }
@@ -14286,6 +14290,7 @@ body,
   border: 1px solid #c7d2fe;
   background: #eef2ff;
   color: #4338ca;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-size: 0.68rem;
   font-weight: 700;
   border-radius: 999px;
@@ -14304,6 +14309,7 @@ body,
   margin-top: 4px;
   font-size: 0.82rem;
   color: #475569;
+  font-family: Anuphan, Inter, system-ui, sans-serif;
 }
 
 .vbPairNote {
@@ -14313,6 +14319,7 @@ body,
   border-left: 3px solid #fcd34d;
   padding: 4px 0 4px 9px;
   background: #fffdf5;
+  font-family: Anuphan, Inter, system-ui, sans-serif;
 }
 
 @media (max-width: 560px) {
@@ -14612,6 +14619,7 @@ body,
   padding: 8px 12px;
   border-left: 2px solid #cbd5e1;
   color: #64748b;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-style: italic;
   font-size: 0.82rem;
   line-height: 1.6;
@@ -19022,91 +19030,142 @@ select:focus,
   max-width: 1180px;
 }
 
-/* ── Reading category hub · Icon Rows ── */
-.readingPage .readingHubList {
-  display: grid;
-  gap: 0;
+/* ── Reading hub · Ticket path (brutal tickets on a level roadmap) ── */
+.readingPage .readingPathBoard {
   max-width: 920px;
-  border: 1px solid var(--ep-line);
-  border-radius: 20px;
-  background: var(--ep-card);
-  overflow: hidden;
-  box-shadow: var(--ep-shadow);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  padding: 22px 20px 20px;
+  border: 3px solid #0f172a;
+  border-radius: 8px;
+  background: #fffef6;
+  box-shadow: 8px 8px 0 #0f172a;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
 }
 
-.readingPage .readingHubRow {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  text-align: left;
-  padding: 18px 22px !important;
-  border: none !important;
-  border-bottom: 1px solid var(--ep-line) !important;
-  border-radius: 0 !important;
-  background: var(--ep-card) !important;
-  color: var(--ep-ink) !important;
-  box-shadow: none !important;
-  cursor: pointer;
-  transition:
-    background-color var(--duration-luxury-fast) var(--ease-luxury-soft),
-    transform var(--duration-luxury-fast) var(--ease-luxury-soft);
+.readingPage .readingPath {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding-left: 36px;
+}
+
+.readingPage .readingPath::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 18px;
+  bottom: 18px;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #0f9f6e 0%, #004aad 45%, #ffcc00 100%);
+}
+
+.readingPage .readingPathStep {
+  position: relative;
+  display: grid;
+  gap: 0;
   animation: luxuryCardEnter calc(var(--duration-view) + 60ms) var(--ease-luxury) both;
   animation-delay: calc(var(--motion-stagger, 0) * 70ms);
 }
 
-.readingPage .readingHubRow:last-child {
-  border-bottom: none !important;
-}
-
-.readingPage .readingHubRow:hover {
-  background: #f6f9ff !important;
-}
-
-.readingPage .readingHubRow:active {
-  transform: scale(0.997);
-}
-
-.readingPage .readingHubRow:disabled,
-.readingPage .readingHubRow.is-locked {
-  cursor: not-allowed;
-  background: #f8fafc !important;
-}
-
-.readingPage .readingHubRow.is-locked .readingHubText strong,
-.readingPage .readingHubRow.is-locked .readingHubSub {
-  color: var(--ep-muted) !important;
-}
-
-.readingPage .readingHubIcon {
-  flex-shrink: 0;
-  width: 52px;
-  height: 52px;
+.readingPage .readingPathNode {
+  position: absolute;
+  left: -36px;
+  top: 22px;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
-  border-radius: 15px;
-  font-size: 1.55rem;
+  border: 3px solid #0f172a;
+  border-radius: 50%;
+  background: #004aad;
+  color: #fff;
+  font-family: Kanit, Inter, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 0 0 0 4px #fffef6;
+}
+
+.readingPage .readingPathStep.is-done .readingPathNode {
+  background: #0f9f6e;
+  content: '✓';
+}
+
+.readingPage .readingPathStep.is-locked .readingPathNode {
+  background: #94a3b8;
+}
+
+.readingPage .readingPathStep .readingHubRow.readingTicket {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px !important;
+  border: 3px solid #0f172a !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.readingPage .readingPathStep .readingHubRow.readingTicket:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #0f172a !important;
+  background: #ffffff !important;
+}
+
+.readingPage .readingPathStep .readingHubRow.readingTicket:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #0f172a !important;
+}
+
+.readingPage .readingPathStep .readingHubRow.readingTicket:disabled,
+.readingPage .readingPathStep .readingHubRow.readingTicket.is-locked {
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+
+.readingPage .readingPathStep.is-locked .readingHubText strong,
+.readingPage .readingPathStep.is-locked .readingHubSub {
+  color: #64748b !important;
+}
+
+.readingPage .readingPathBoard .readingHubIcon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #0f172a;
+  border-radius: 4px;
+  font-size: 1.6rem;
   line-height: 1;
+  font-weight: 900;
 }
 
 .readingPage .readingHubIcon-normal {
-  background: #e7f6ee;
+  background: #ffcc00;
 }
 .readingPage .readingHubIcon-passage3 {
-  background: #fdeee8;
+  background: #ffd7a8;
 }
 .readingPage .readingHubIcon-fullTest {
-  background: #efebfb;
+  background: #c7d2fe;
 }
 .readingPage .readingHubIcon-gt {
-  background: #e6f1fb;
+  background: #bfdbfe;
 }
 .readingPage .readingHubIcon-monthly {
-  background: #fdf3e0;
+  background: #e2e8f0;
 }
 
-.readingPage .readingHubRow.is-locked .readingHubIcon {
+.readingPage .readingPathStep.is-locked .readingHubIcon {
   filter: grayscale(0.7);
   opacity: 0.7;
 }
@@ -19115,88 +19174,105 @@ select:focus,
   flex: 1;
   min-width: 0;
   display: grid;
-  gap: 3px;
+  gap: 4px;
 }
 
 .readingPage .readingHubTitleRow {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .readingPage .readingHubTitleRow strong {
-  color: var(--ep-ink);
-  font-family: 'Kanit', sans-serif;
-  font-size: 1.16rem;
+  color: #0f172a;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
+  letter-spacing: 0;
+  line-height: 1.15;
 }
 
 .readingPage .readingHubTone {
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: #eaf2fd;
-  color: var(--ep-blue);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  display: inline-block;
+  padding: 2px 8px;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #0f172a;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .readingPage .readingHubSub {
-  color: var(--ep-muted);
-  font-size: 0.92rem;
+  color: #475569;
+  font-size: 0.86rem;
   font-weight: 500;
   line-height: 1.4;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
 }
 
-.readingPage .readingHubCount {
+.readingPage .readingHubGo {
   flex-shrink: 0;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: #fff3c4;
-  color: #7a5900;
-  font-size: 0.86rem;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 3px solid #0f172a;
+  border-radius: 4px;
+  background: #ffcc00;
+  color: #0f172a;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 800;
   white-space: nowrap;
-}
-
-.readingPage .readingHubCount-lock {
-  background: #eef1f6;
-  color: var(--ep-muted);
-}
-
-.readingPage .readingHubChevron {
-  flex-shrink: 0;
-  color: var(--ep-line-strong);
-  font-size: 1.5rem;
-  font-weight: 700;
   line-height: 1;
 }
 
-.readingPage .readingHubRow:hover .readingHubChevron {
-  color: var(--ep-blue);
+.readingPage .readingHubGo-lock {
+  background: #e2e8f0;
+  color: #64748b;
 }
 
 @media (max-width: 640px) {
-  .readingPage .readingHubRow {
-    gap: 13px;
-    padding: 15px 16px !important;
+  .readingPage .readingPathBoard {
+    padding: 14px 12px;
+    box-shadow: 5px 5px 0 #0f172a;
   }
-  .readingPage .readingHubIcon {
-    width: 44px;
-    height: 44px;
+  .readingPage .readingPath {
+    padding-left: 30px;
+    gap: 10px;
+  }
+  .readingPage .readingPathNode {
+    left: -30px;
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+    top: 18px;
+  }
+  .readingPage .readingPathStep .readingHubRow.readingTicket {
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    padding: 12px !important;
+  }
+  .readingPage .readingPathBoard .readingHubIcon {
+    width: 48px;
+    height: 48px;
     font-size: 1.3rem;
   }
   .readingPage .readingHubTitleRow strong {
-    font-size: 1.04rem;
+    font-size: 1.02rem;
   }
   .readingPage .readingHubSub {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
-  .readingPage .readingHubChevron {
-    display: none;
+  .readingPage .readingHubGo {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -19525,7 +19601,7 @@ select:focus,
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--ep-muted);
@@ -19585,7 +19661,7 @@ select:focus,
 .readingPage .readingJourneyJournalLead {
   margin: 8px 0 12px;
   color: var(--ep-muted);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-weight: 500;
   line-height: 1.5;
 }
@@ -19606,7 +19682,7 @@ select:focus,
   border-radius: 999px;
   background: var(--ep-page);
   color: var(--ep-ink);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
   box-shadow: none;
@@ -19632,7 +19708,7 @@ select:focus,
   display: block;
   margin-bottom: 2px;
   color: var(--ep-muted);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -19711,7 +19787,7 @@ select:focus,
 .readingPage .readingJourneyEmpty p {
   margin: 0 0 6px;
   color: var(--ep-ink);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-weight: 600;
 }
 
@@ -19856,7 +19932,7 @@ select:focus,
   border: 1px solid var(--ep-line);
   background: var(--ep-page);
   color: var(--ep-ink);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -19886,7 +19962,7 @@ select:focus,
 .readingPage .readingJourneyMissionObjective {
   margin: 0 0 10px;
   color: var(--ep-muted);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-weight: 500;
   font-size: 0.9rem;
 }
@@ -19899,7 +19975,7 @@ select:focus,
   flex-wrap: wrap;
   gap: 6px 12px;
   color: var(--ep-ink);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   font-size: 0.82rem;
   font-weight: 500;
 }
@@ -23763,12 +23839,12 @@ section.panel.full.speakingFlowTheme > h2 {
   box-shadow: 3px 3px 0 #0f172a !important;
 }
 
-/* Inter everywhere + readable reading questions (override EP heading scale) */
+/* Inter everywhere + readable reading questions (override EP heading scale).
+   Reading also includes Anuphan so Thai explanations match the Writing page. */
 html,
 body,
 #root,
 .workspace,
-.readingPage,
 .speakingFlowTheme,
 .speakingTopicBank,
 .notebookPage,
@@ -23782,6 +23858,14 @@ textarea {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
+.readingPage,
+.readingPage button,
+.readingPage input,
+.readingPage select,
+.readingPage textarea {
+  font-family: Inter, Anuphan, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
 .readingPage .readingQuestionPrompt,
 .readingQuestionCard .readingQuestionPrompt {
   font-size: 1.02rem !important;
@@ -23793,14 +23877,16 @@ textarea {
 .readingPage .readingPageHeader h2,
 .readingPage .readingAttemptToolbar h3 {
   font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
 }
 
 .readingPage .readingQuestionsHeader h3,
 .readingPage .readingPassageHeader h3 {
   font-size: 1rem !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
 }
 
 .readingQuestionReference pre,
@@ -25393,44 +25479,55 @@ textarea {
 }
 
 /* ═══════════════════════════════════════════════
-   NOTEBOOK — Option 4: Highlighter Notes
-   Scoped to .notebookPage to avoid touching other pages.
-   Uses !important to override the global neo-brutalist rules.
+   NOTEBOOK — Writing bento D2 language
+   Kanit / Anuphan · #004aad · #ffcc00 · rounded tiles
+   Scoped to .notebookPage (!important vs neo-brutalist globals)
    ═══════════════════════════════════════════════ */
 
 .notebookPage {
-  background: #ffffff !important;
-  background-size: 22px 22px !important;
-  border: 1px solid #dce6f7 !important;
-  box-shadow: 0 2px 16px rgba(0, 74, 173, 0.07) !important;
-  border-radius: 16px;
-  padding: 28px 32px;
+  font-family: 'Anuphan', Inter, system-ui, sans-serif !important;
+  background: #f7f9fc !important;
+  background-size: auto !important;
+  border: 1px solid rgba(0, 74, 173, 0.1) !important;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06) !important;
+  border-radius: 28px !important;
+  padding: clamp(20px, 3vw, 32px) !important;
   animation: none !important;
+  color: #0b2a5b;
 }
 
-/* ── Header ── */
 .notebookPage .notebookHeader h2 {
-  font-size: 1.65rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  color: var(--bc-black);
-  margin: 0 0 4px;
+  margin: 0 0 6px;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: clamp(1.55rem, 3vw, 2rem) !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: #0b2a5b !important;
 }
 
 .notebookPage .notebookHeader p {
-  font-size: 0.84rem;
-  color: #64748b;
-  margin: 0 0 4px;
+  margin: 0;
+  max-width: 54ch;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #64748b !important;
+  line-height: 1.5;
 }
 
-/* ── Section tabs (speaking / writing / listening / reading) ── */
+.notebookPage .notebookHeader .meta {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+/* Tabs — Writing-style underline */
 .notebookPage .notebookTabs {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
-  margin: 20px 0 0;
-  border-bottom: 2px solid #e2e8f0;
+  margin: 22px 0 0;
+  border-bottom: 2px solid rgba(0, 74, 173, 0.1);
   padding-bottom: 0;
 }
 
@@ -25439,11 +25536,12 @@ textarea {
   background: transparent !important;
   box-shadow: none !important;
   color: #94a3b8 !important;
+  font-family: 'Kanit', sans-serif !important;
   font-size: 0.8rem !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.08em !important;
-  padding: 10px 18px !important;
+  letter-spacing: 0.06em !important;
+  padding: 12px 16px !important;
   border-radius: 0 !important;
   cursor: pointer;
   position: relative;
@@ -25451,24 +25549,24 @@ textarea {
 }
 
 .notebookPage .notebookTabs button:hover {
-  color: var(--bc-black) !important;
+  color: #004aad !important;
   transform: none !important;
   box-shadow: none !important;
 }
 
 .notebookPage .notebookTabs button.active {
-  color: var(--bc-black) !important;
+  color: #0b2a5b !important;
   background: transparent !important;
 }
 
 .notebookPage .notebookTabs button::after {
   content: '';
   position: absolute;
-  left: 10%;
-  right: 10%;
+  left: 12px;
+  right: 12px;
   bottom: -2px;
   height: 0;
-  background: var(--bc-yellow);
+  background: #ffcc00;
   border-radius: 2px 2px 0 0;
   transition: height 160ms ease;
 }
@@ -25477,52 +25575,54 @@ textarea {
   height: 4px;
 }
 
-/* ── Custom section row ── */
+/* Custom section */
 .notebookPage .customSectionRow {
   display: flex;
-  gap: 8px;
-  margin: 14px 0 18px;
+  gap: 10px;
+  margin: 16px 0 20px;
 }
 
 .notebookPage .customSectionRow input {
   flex: 1;
-  border: 1.5px solid #cbd5e1 !important;
-  border-radius: 8px !important;
-  padding: 8px 12px;
-  font: inherit;
-  font-size: 0.85rem;
-  background: #fff;
+  border: 1.5px solid rgba(0, 74, 173, 0.16) !important;
+  border-radius: 12px !important;
+  padding: 11px 14px !important;
+  font-family: 'Anuphan', sans-serif !important;
+  font-size: 0.9rem !important;
+  background: #fff !important;
   box-shadow: none !important;
-  transition: border-color 150ms ease !important;
+  color: #0b2a5b;
 }
 
 .notebookPage .customSectionRow input:focus {
   outline: none;
-  border-color: var(--bc-blue) !important;
+  border-color: #004aad !important;
+  box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.12) !important;
 }
 
 .notebookPage .customSectionRow button {
-  border: 2px solid var(--bc-blue) !important;
-  background: var(--bc-blue) !important;
+  border: none !important;
+  background: #004aad !important;
   color: #fff !important;
-  border-radius: 8px !important;
-  padding: 8px 18px !important;
-  font-size: 0.78rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.07em !important;
-  text-transform: uppercase !important;
+  border-radius: 12px !important;
+  padding: 0 20px !important;
+  min-height: 44px;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
   box-shadow: none !important;
   cursor: pointer;
-  transition: background 150ms ease !important;
 }
 
 .notebookPage .customSectionRow button:hover {
-  background: #003d91 !important;
-  transform: none !important;
+  background: #003a86 !important;
+  transform: translateY(-1px) !important;
   box-shadow: none !important;
 }
 
-/* ── Entry cards ── */
+/* Bento entry grid */
 .notebookPage .notebookGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -25530,132 +25630,243 @@ textarea {
 }
 
 .notebookPage .notebookEntry {
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  border: 1px solid rgba(0, 74, 173, 0.1) !important;
+  border-radius: 22px !important;
   background: #ffffff !important;
-  box-shadow: 0 2px 10px rgba(0, 74, 173, 0.06) !important;
-  padding: 16px !important;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06) !important;
+  padding: 18px !important;
   animation: none !important;
-  transition: box-shadow 200ms ease, transform 200ms ease !important;
+  transition: transform 140ms ease, box-shadow 140ms ease !important;
 }
 
 .notebookPage .notebookEntry:hover {
-  box-shadow: 0 6px 20px rgba(0, 74, 173, 0.12) !important;
   transform: translateY(-2px) !important;
+  box-shadow: 0 12px 28px rgba(0, 74, 173, 0.12) !important;
 }
 
-/* Entry meta row: section badge + date */
+.notebookPage .notebookEntry-featured {
+  grid-column: 1 / -1;
+  background: #004aad !important;
+  border-color: #004aad !important;
+  color: #fff !important;
+}
+
+.notebookPage .notebookEntry-featured .notebookEntryCriterion,
+.notebookPage .notebookEntry-featured .notebookEntryTopic,
+.notebookPage .notebookEntry-featured .notebookEntryDate,
+.notebookPage .notebookEntry-featured .notebookEntryThai {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.notebookPage .notebookEntry-featured .notebookEntryTopic {
+  color: #fff !important;
+}
+
+.notebookPage .notebookEntry-featured .entryOriginal {
+  color: rgba(255, 255, 255, 0.55) !important;
+  border-left-color: rgba(255, 204, 0, 0.55) !important;
+  text-decoration-color: rgba(255, 204, 0, 0.55) !important;
+}
+
 .notebookPage .notebookEntryMeta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: #94a3b8;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin: 0;
 }
 
-.notebookPage .notebookEntryMeta span:first-child {
-  background: var(--bc-blue);
+.notebookPage .notebookEntryBadge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #004aad;
   color: #fff;
-  padding: 2px 8px;
-  border-radius: 4px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
   letter-spacing: 0.06em;
-}
-
-/* Criterion title — demoted to small category label */
-.notebookPage .notebookEntry h3 {
-  display: block;
-  font-size: 0.72rem !important;
-  font-weight: 700;
-  color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 0 0 10px;
-  background: none;
-  padding: 0;
-  border-radius: 0;
-  line-height: 1.3;
 }
 
-/* Topic / TH meaning */
-.notebookPage .notebookEntry .meta {
+.notebookPage .notebookEntry-yellow .notebookEntryBadge {
+  background: #ffcc00;
+  color: #0b1f44;
+}
+
+.notebookPage .notebookEntry-ink .notebookEntryBadge {
+  background: #12233f;
+  color: #ffcc00;
+}
+
+.notebookPage .notebookEntry-soft .notebookEntryBadge {
+  background: #e8f0fb;
+  color: #004aad;
+}
+
+.notebookPage .notebookEntry-featured .notebookEntryBadge {
+  background: rgba(255, 204, 0, 0.22);
+  color: #ffcc00;
+}
+
+.notebookPage .notebookEntryDate {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.notebookPage .notebookEntryCriterion {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
   font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: #64748b;
-  margin: 4px 0 8px;
 }
 
-/* Original quote — small reference, above the hero */
+.notebookPage .notebookEntryTopic,
+.notebookPage .notebookEntry h3 {
+  margin: 0 !important;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: 1.12rem !important;
+  font-weight: 700 !important;
+  color: #0b2a5b !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  line-height: 1.3 !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
 .notebookPage .entryOriginal {
-  margin: 0 0 8px !important;
+  margin: 0 !important;
   background: transparent !important;
   border: none !important;
   border-left: 3px solid #fca5a5 !important;
   border-radius: 0 !important;
-  padding: 3px 10px !important;
-  font-size: 0.78rem !important;
+  padding: 4px 0 4px 12px !important;
+  font-size: 0.84rem !important;
+  font-weight: 500 !important;
   color: #94a3b8 !important;
+  line-height: 1.45 !important;
   text-decoration: line-through !important;
   text-decoration-color: #fca5a5 !important;
 }
 
-/* Vocabulary / fix — HERO: biggest, yellow highlight */
 .notebookPage .entryBetter {
   display: block;
-  margin: 0 0 12px !important;
-  background: var(--bc-yellow) !important;
+  margin: 0 !important;
+  background: #ffcc00 !important;
   border: none !important;
-  border-radius: 6px !important;
-  padding: 10px 14px !important;
-  font-size: 1.05rem !important;
-  font-weight: 900 !important;
-  color: var(--bc-black) !important;
-  line-height: 1.4 !important;
-  letter-spacing: -0.01em !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  color: #0b1f44 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
 }
 
-/* Personal note textarea */
+.notebookPage .notebookEntryThai,
+.notebookPage .notebookEntry .meta {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.notebookPage .notebookEntryControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.notebookPage .notebookPrimaryBtn,
+.notebookPage .primaryNextBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  background: #ffcc00 !important;
+  color: #0b1f44 !important;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  box-shadow: 0 4px 0 #004aad !important;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease !important;
+}
+
+.notebookPage .notebookPrimaryBtn:hover,
+.notebookPage .primaryNextBtn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 0 #004aad !important;
+}
+
+.notebookPage .notebookEntry-featured .notebookPrimaryBtn {
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35) !important;
+}
+
 .notebookPage .noteFieldLabel {
+  display: grid;
+  gap: 6px;
+  font-family: 'Kanit', sans-serif;
   font-size: 0.74rem;
   font-weight: 700;
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  gap: 4px;
 }
 
 .notebookPage .noteFieldLabel textarea {
-  border: 1.5px solid #e2e8f0 !important;
-  border-radius: 8px !important;
+  border: 1.5px solid rgba(0, 74, 173, 0.14) !important;
+  border-radius: 12px !important;
   background: #f8faff !important;
   box-shadow: none !important;
-  font-size: 0.84rem !important;
-  transition: border-color 150ms ease !important;
+  font-family: 'Anuphan', sans-serif !important;
+  font-size: 0.88rem !important;
+  color: #0b2a5b;
+  min-height: 84px;
+  padding: 10px 12px !important;
 }
 
 .notebookPage .noteFieldLabel textarea:focus {
-  border-color: var(--bc-blue) !important;
+  border-color: #004aad !important;
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.1) !important;
 }
 
-/* Remove button */
 .notebookPage .removeNotebookBtn {
-  border: 1.5px solid #e2e8f0 !important;
+  border: 1.5px solid rgba(0, 74, 173, 0.14) !important;
   background: #fff !important;
-  color: #94a3b8 !important;
-  border-radius: 6px !important;
-  padding: 5px 12px !important;
-  font-size: 0.7rem !important;
+  color: #64748b !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: 0.72rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.06em !important;
+  letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
   box-shadow: none !important;
   cursor: pointer;
-  transition: border-color 150ms ease, color 150ms ease !important;
+}
+
+.notebookPage .notebookEntry-featured .removeNotebookBtn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .notebookPage .removeNotebookBtn:hover {
@@ -25666,7 +25877,43 @@ textarea {
   box-shadow: none !important;
 }
 
-/* Empty state */
+.notebookPage .emptyNotebook {
+  margin-top: 18px;
+  padding: 28px 22px;
+  border-radius: 22px;
+  border: 1px dashed rgba(0, 74, 173, 0.25);
+  background: #fff;
+  text-align: center;
+}
+
+.notebookPage .emptyNotebookTitle {
+  margin: 0 0 8px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0b2a5b;
+}
+
+.notebookPage .emptyNotebook p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .notebookPage .notebookEntry-featured {
+    grid-column: auto;
+  }
+
+  .notebookPage .customSectionRow {
+    flex-direction: column;
+  }
+
+  .notebookPage .customSectionRow button {
+    width: 100%;
+  }
+}
 .notebookPage .emptyNotebook {
   border: 2px dashed #cbd5e1 !important;
   border-radius: 12px;
@@ -25997,16 +26244,16 @@ textarea {
    state, or logic touched. Remove this whole block to revert.
    ===================================================================== */
 
-/* Headings — ETS bold neo-grotesque look (Inter 800, tight tracking) */
+/* Headings — Writing-page Kanit (Thai + EN), heavy weight */
 .readingExamWrap h3,
 .readingExamWrap h4,
 .readingReportWrap h3,
 .readingReportWrap h4,
 .readingExamWrap .readingPassageHeader h3,
 .readingExamWrap .readingQuestionsHeader h3 {
-  font-family: Inter, system-ui, -apple-system, sans-serif !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
   color: #10182d !important;
 }
 .readingExamWrap .readingPassageHeader h3 {
@@ -26136,9 +26383,9 @@ textarea {
 }
 .readingExamWrap .readingSummaryCard strong,
 .readingReportWrap .readingSummaryCard strong {
-  font-family: Inter, system-ui, sans-serif !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
   color: #10182d !important;
 }
 .readingReportWrap .readingReportCard {
@@ -26167,6 +26414,143 @@ textarea {
   color: #0754b8 !important;
 }
 /* ===================== end ETS reading reskin ===================== */
+
+/* =====================================================================
+   Reading type system — Inter (EN) + Writing Thai stack everywhere
+   Body/UI: Inter → Anuphan (Thai glyphs)
+   Titles:  Kanit (same as WritingGuidePage)
+   Covers exam, report, hub, P'Doy, GT hub chrome inside .readingPage
+   ===================================================================== */
+
+.readingPage,
+.readingExamWrap,
+.readingReportWrap,
+.readingPdoyBank,
+.readingPdoyLessonWrap,
+.readingPage .readingHubList,
+.readingExamWrap button,
+.readingExamWrap input,
+.readingExamWrap select,
+.readingExamWrap textarea,
+.readingReportWrap button,
+.readingReportWrap input,
+.readingReportWrap select,
+.readingReportWrap textarea,
+.readingPdoyBank button,
+.readingPdoyLessonWrap button {
+  font-family: Inter, Anuphan, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+.readingPage h1,
+.readingPage h2,
+.readingPage h3,
+.readingPage h4,
+.readingExamWrap h1,
+.readingExamWrap h2,
+.readingExamWrap h3,
+.readingExamWrap h4,
+.readingReportWrap h1,
+.readingReportWrap h2,
+.readingReportWrap h3,
+.readingReportWrap h4,
+.readingPage .readingPageHeader h2,
+.readingPage .readingAttemptToolbar h3,
+.readingPage .readingQuestionsHeader h3,
+.readingPage .readingPassageHeader h3,
+.readingPage .readingReportHeader h2,
+.readingPage .readingHubRowTitle,
+.readingPage .readingBankCard h3,
+.readingPage .readingBankCard strong,
+.readingPdoyBank h2,
+.readingPdoyBank h3,
+.readingPdoyLessonWrap h2,
+.readingPdoyLessonWrap h3 {
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+}
+
+/* ---- Report + vocab bridge (พี่ดอยสอน Vocab) — force full stack ---- */
+.readingReportWrap,
+.readingReportWrap .readingReportCard,
+.readingReportWrap .readingReportEvidence,
+.readingReportWrap .readingParaphraseCard,
+.readingReportWrap .readingParaphraseCard-report,
+.readingReportWrap .vbWrap,
+.readingReportWrap .vbWrap *,
+.readingReportWrap .vbPairList,
+.readingReportWrap .vbPairRow,
+.readingReportWrap .vbPairQ,
+.readingReportWrap .vbPairP,
+.readingReportWrap .vbPairTh,
+.readingReportWrap .vbPairNote,
+.readingReportWrap .vbPairSave,
+.readingReportWrap .vbEn,
+.readingReportWrap .vbTh,
+.readingReportWrap .vbVocabWord,
+.readingReportWrap .vbVocabTh,
+.readingReportWrap .vbVocabExplain,
+.readingReportWrap .readingReportKw,
+.readingReportWrap .readingReportAnswerLabel,
+.readingReportWrap .readingReportAnswerValue,
+.readingReportWrap .readingReportRuleBanner,
+.readingReportWrap .readingReportRuleText,
+.readingReportWrap .readingReportBridgeLabel,
+.readingReportWrap .paraphraseBridgeActions,
+.readingReportWrap .paraphraseBridgeActions button,
+.readingPage .vbWrap,
+.readingPage .vbWrap *,
+.readingPage .paraphraseBridgeActions button {
+  font-family: Inter, Anuphan, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+.readingReportWrap .vbBrandTitle,
+.readingReportWrap .vbLabel,
+.readingReportWrap .vbPairHd,
+.readingReportWrap .vbHd,
+.readingReportWrap .vbVocabLabel,
+.readingPage .vbBrandTitle,
+.readingPage .vbLabel,
+.readingPage .vbPairHd,
+.readingPage .vbHd,
+.readingPage .vbVocabLabel {
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+/* Thai rows / notes — Writing body first (loopless Anuphan) */
+.readingReportThaiExplanation,
+.readingPage .readingExplanationThai,
+.readingExamWrap .readingExplanationThai,
+.readingReportWrap .readingExplanationThai,
+.readingPage .readingHintBox,
+.readingExamWrap .readingHintBox,
+.readingReportWrap .readingHintBox,
+.readingReportWrap .vbPairTh,
+.readingReportWrap .vbPairNote,
+.readingReportWrap .vbTh,
+.readingReportWrap .vbVocabTh,
+.readingReportWrap .vbVocabExplain,
+.readingReportWrap .readingReportRuleText,
+.readingPage .vbPairTh,
+.readingPage .vbPairNote,
+.readingPage .vbTh,
+.readingPage .vbVocabExplain {
+  font-family: Anuphan, Inter, system-ui, sans-serif !important;
+}
+
+/* Passage evidence quote — Inter italic, not system serif italic */
+.readingReportEvidence blockquote,
+.readingReportWrap .readingReportEvidence blockquote,
+.readingPage .readingReportEvidence blockquote {
+  font-family: Inter, Anuphan, system-ui, sans-serif !important;
+  font-style: italic;
+  font-synthesis: style;
+}
+
+/* Keep evidence <pre> monospace */
+.readingQuestionReference pre,
+.readingReportEvidence pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
 
 /* ===================== Admin panel revamp: Kanit + brand accents ===================== */
 
@@ -26366,6 +26750,21 @@ textarea {
 .vocabHiMark.is-open {
   background: rgba(255, 204, 0, 0.35);
 }
+/* Hint + vocab overlap: keep yellow hint fill and dotted underline together */
+.vocabHiMark.readingHintMark {
+  background: rgba(255, 204, 8, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(255, 204, 8, 0.28) !important;
+  border-radius: 8px !important;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #004aad;
+  text-underline-offset: 3px;
+}
+.vocabHiMark.readingHintMark:hover,
+.vocabHiMark.readingHintMark.is-open {
+  background: rgba(255, 204, 8, 0.92) !important;
+}
 .vocabHiPopover {
   position: absolute;
   z-index: 40;
@@ -26384,6 +26783,10 @@ textarea {
   white-space: normal;
   transform-origin: top left;
   animation: vocabHiGenie 320ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.vocabHiPopover.is-leaving {
+  animation: vocabHiGenieOut 220ms cubic-bezier(0.4, 0, 1, 1) both;
+  pointer-events: none;
 }
 
 @keyframes vocabHiGenie {
@@ -26404,8 +26807,20 @@ textarea {
   }
 }
 
+@keyframes vocabHiGenieOut {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3, 0.12) translateY(-8px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .vocabHiPopover {
+  .vocabHiPopover,
+  .vocabHiPopover.is-leaving {
     animation: none;
   }
 }

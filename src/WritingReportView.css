@@ -6,7 +6,7 @@
   align-items: flex-start;
   justify-content: center;
   padding: 32px 16px;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(3px);
   overflow-y: auto;
 }
@@ -19,17 +19,19 @@
 .wgReport {
   max-width: 860px;
   margin: 0 auto;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px;
-  box-shadow: 0 24px 60px -32px rgba(15, 23, 42, 0.45);
+  background: #fffef6;
+  border: 3px solid #0f172a;
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 #0f172a;
   overflow: hidden;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
 }
 
 .wgReportHead {
   padding: 22px 26px 18px;
-  background: #14245c;
+  background: #0f172a;
   color: #f8fafc;
+  border-bottom: 3px solid #0f172a;
 }
 
 .wgReportHeadRow {
@@ -44,21 +46,26 @@
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #93c5fd;
-  font-weight: 700;
+  color: #ffcc00;
+  font-weight: 800;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 
 .wgReportClose {
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.08);
-  color: #f8fafc;
-  border-radius: 999px;
+  border: 2px solid #ffcc00;
+  background: #ffcc00;
+  color: #0f172a;
+  border-radius: 4px;
   padding: 6px 14px;
   font-size: 13px;
+  font-weight: 800;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   cursor: pointer;
+  box-shadow: 2px 2px 0 #64748b;
 }
 .wgReportClose:hover {
-  background: rgba(255, 255, 255, 0.18);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #64748b;
 }
 
 .wgReportTitle {
@@ -66,6 +73,7 @@
   font-size: 24px;
   line-height: 1.25;
   font-weight: 800;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 
 .wgReportMeta {
@@ -78,15 +86,18 @@
 .wgReportBadge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
   font-size: 12.5px;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 .wgReportBadge-score {
-  background: #22c55e;
-  color: #052e16;
+  background: #ffcc00;
+  border-color: #ffcc00;
+  color: #0f172a;
   font-weight: 800;
 }
 .wgReportDate {
@@ -96,8 +107,8 @@
 
 .wgReportChartWrap {
   padding: 22px 26px 8px;
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  background: #fff;
+  border-bottom: 3px solid #0f172a;
 }
 
 .wgReportEssayWrap {
@@ -120,16 +131,15 @@
 .wgReportSwatch {
   width: 14px;
   height: 14px;
-  border-radius: 4px;
+  border-radius: 3px;
   display: inline-block;
+  border: 2px solid #0f172a;
 }
 .wgReportSwatch.is-correct {
   background: #bbf7d0;
-  border: 1px solid #22c55e;
 }
 .wgReportSwatch.is-missed {
   background: #fef3c7;
-  border: 1px solid #f59e0b;
 }
 
 .wgReportEssay {
@@ -140,32 +150,36 @@
 
 .wgReportPara {
   padding: 14px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background: #ffffff;
+  border: 3px solid #0f172a;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 3px 3px 0 #0f172a;
 }
 .wgReportParaLabel {
   display: inline-block;
   margin-bottom: 6px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #2563eb;
+  color: #004aad;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 .wgReportParaText {
   margin: 0;
   font-size: 16px;
   line-height: 1.9;
   color: #0f172a;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
 }
 
 .wgReportBlank {
   padding: 1px 5px;
-  border-radius: 5px;
+  border-radius: 3px;
   font-weight: 700;
   background: #bbf7d0;
   color: #052e16;
+  border-bottom: 2px solid #0f172a;
   cursor: help;
 }
 .wgReportBlank.is-missed {

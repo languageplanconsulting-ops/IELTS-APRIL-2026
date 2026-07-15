@@ -155,6 +155,15 @@ export const getIeltsTask1MapOpeningLine = (prompt: WritingMapPracticePrompt) =>
 export const getIeltsTask1ProcessOpeningLine = (prompt: WritingProcessPracticePrompt) =>
   `The diagram below shows ${prompt.subjectPhrase}.`
 
+/** Exam-style opening stem shown in the question list and drill. */
+export const getWritingTask1ExamStem = (prompt: WritingTask1PracticePrompt): string => {
+  if (prompt.kind === 'timeline') return getIeltsTask1OpeningLine(prompt)
+  if (prompt.kind === 'snapshot') return getIeltsTask1SnapshotOpeningLine(prompt)
+  if (prompt.kind === 'mixed') return getIeltsTask1MixedOpeningLine(prompt)
+  if (prompt.kind === 'map') return getIeltsTask1MapOpeningLine(prompt)
+  return getIeltsTask1ProcessOpeningLine(prompt)
+}
+
 export const IELTS_TASK1_TIME_NOTE = 'You should spend about 20 minutes on this task.'
 export const IELTS_TASK1_SUMMARY_INSTRUCTION =
   'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
@@ -193,7 +202,7 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'line-graph',
     chartTypeLabel: 'Line Graph',
-    title: 'Online learning platforms vs. in-person classes',
+    title: 'The graph below shows the percentage of students using online learning platforms and attending in-person classes between 2014 and 2024.',
     chartCaption: 'Percentage of students using online learning platforms vs. attending in-person classes',
     subjectPhrase:
       'the percentage of students who used online learning platforms compared with those who attended traditional in-person classes',
@@ -215,15 +224,20 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'line-graph',
     chartTypeLabel: 'Line Graph',
-    title: 'Average monthly spending on food delivery',
-    chartCaption: 'Average monthly food delivery spending per person',
-    subjectPhrase: 'the average amount of money spent per person on food delivery each month',
-    unit: 'US dollars per person',
-    yAxisLabel: 'Average spending (US dollars)',
-    valueLabel: 'Spending',
+    title: 'The graph below shows the number of petrol-powered and electric cars sold in a European country between 2014 and 2024.',
+    chartCaption: 'Number of petrol-powered vs. electric cars sold',
+    subjectPhrase: 'the number of petrol-powered and electric cars sold',
+    unit: 'thousand units',
+    yAxisLabel: 'Number of cars sold (thousands)',
+    valueLabel: 'Sales',
     years: [...WRITING_TIMELINE_YEARS],
-    values: [22, 30, 45, 78, 96, 110],
-    mainTrend: 'Food delivery spending rose steadily and more than quadrupled.'
+    values: [85, 80, 72, 58, 42, 30],
+    mainTrend:
+      'Petrol car sales declined continuously while electric vehicle sales increased dramatically, with the two lines crossing paths around 2020.',
+    series: [
+      { label: 'Petrol vehicles', color: '#d97706', values: [85, 80, 72, 58, 42, 30] },
+      { label: 'Electric vehicles', color: '#0d9488', values: [8, 15, 28, 48, 70, 88] }
+    ]
   },
   {
     id: 'timeline-work-from-home',
@@ -231,7 +245,7 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
-    title: 'Number of people working from home',
+    title: 'The chart below shows the number of people working from home in one country between 2014 and 2024.',
     chartCaption: 'Number of people working from home',
     subjectPhrase: 'the number of people working from home',
     unit: 'millions',
@@ -247,15 +261,15 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
-    title: 'Sales of electric bicycles',
-    chartCaption: 'Electric bicycle sales',
-    subjectPhrase: 'the number of electric bicycles sold',
-    unit: 'thousand units',
-    yAxisLabel: 'Sales (thousand units)',
-    valueLabel: 'Sales',
+    title: 'The chart below shows the amount of money spent on public libraries in one country between 2014 and 2024.',
+    chartCaption: 'Amount of money spent on public libraries',
+    subjectPhrase: 'the amount of money spent on public libraries',
+    unit: '$ million',
+    yAxisLabel: 'Spending ($ million)',
+    valueLabel: 'Spending',
     years: [...WRITING_TIMELINE_YEARS],
-    values: [35, 48, 72, 130, 190, 240],
-    mainTrend: 'Sales increased continuously over the period.'
+    values: [95, 88, 72, 40, 35, 28],
+    mainTrend: 'Spending on public libraries decreased continuously over the period, falling to less than a third of its original level.'
   },
   {
     id: 'timeline-smart-tvs',
@@ -263,15 +277,21 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'table',
     chartTypeLabel: 'Table',
-    title: 'Percentage of households with smart TVs',
-    chartCaption: 'Households with smart TVs',
-    subjectPhrase: 'the percentage of households that owned a smart TV',
+    title: 'The table below shows the percentage of households owning smart TVs, laptops and desktop computers between 2014 and 2024.',
+    chartCaption: 'Percentage of households owning smart TVs, laptops, and desktop computers',
+    subjectPhrase: 'the percentage of households that owned a smart TV, a laptop, or a desktop computer',
     unit: '% of households',
     yAxisLabel: 'Percentage of households (%)',
     valueLabel: 'Percentage',
     years: [...WRITING_TIMELINE_YEARS],
     values: [12, 24, 39, 55, 68, 76],
-    mainTrend: 'Smart TV ownership rose rapidly and became common by 2024.'
+    mainTrend:
+      'Smart TV ownership increased continuously and overtook desktop ownership, which declined, shortly after 2018, while laptop ownership grew steadily throughout.',
+    series: [
+      { label: 'Smart TVs', color: '#0f53c9', values: [12, 24, 39, 55, 68, 76] },
+      { label: 'Laptops', color: '#7c3aed', values: [42, 48, 54, 58, 61, 64] },
+      { label: 'Desktops', color: '#64748b', values: [58, 52, 44, 35, 28, 22] }
+    ]
   },
   {
     id: 'timeline-online-shopping-3country',
@@ -279,19 +299,19 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'line-graph',
     chartTypeLabel: 'Line Graph',
-    title: 'Adults making at least one online purchase per month in three countries',
-    chartCaption: 'Percentage of adults making at least one online purchase per month (UK, USA, Australia)',
-    subjectPhrase: 'the percentage of adults who made at least one online purchase per month in three countries: the UK, the USA, and Australia',
-    unit: '% of adults',
-    yAxisLabel: 'Percentage of adults (%)',
-    valueLabel: 'Percentage',
+    title: 'The graph below shows the average monthly amount spent on online shopping by adults in three countries between 2014 and 2024.',
+    chartCaption: 'Average monthly online shopping spend (UK, USA, Australia)',
+    subjectPhrase: 'the average monthly amount spent on online shopping by adults in three countries: the UK, the USA, and Australia',
+    unit: 'US dollars',
+    yAxisLabel: 'Average monthly spend (US$)',
+    valueLabel: 'Spend',
     years: [...WRITING_TIMELINE_YEARS],
-    values: [28, 38, 51, 72, 79, 86],
-    mainTrend: 'Online shopping rose in all three countries, with the USA consistently the highest and Australia the lowest.',
+    values: [45, 48, 52, 55, 54, 53],
+    mainTrend: 'Australia overtook both the UK and the USA, while the USA fell back after an early peak.',
     series: [
-      { label: 'UK',        color: '#0f53c9', values: [28, 38, 51, 72, 79, 86] },
-      { label: 'USA',       color: '#d97706', values: [35, 45, 58, 75, 83, 89] },
-      { label: 'Australia', color: '#0d9488', values: [22, 31, 44, 65, 76, 84] }
+      { label: 'UK',        color: '#0f53c9', values: [45, 48, 52, 55, 54, 53] },
+      { label: 'USA',       color: '#d97706', values: [55, 58, 60, 58, 55, 52] },
+      { label: 'Australia', color: '#0d9488', values: [22, 35, 50, 62, 74, 82] }
     ]
   },
   {
@@ -300,20 +320,21 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'line-graph',
     chartTypeLabel: 'Line Graph',
-    title: 'People using social media platforms in four regions',
-    chartCaption: 'Percentage of people using social media platforms (North America, Europe, Asia-Pacific, Latin America)',
-    subjectPhrase: 'the percentage of people who used social media platforms in four regions: North America, Europe, Asia-Pacific, and Latin America',
-    unit: '% of population',
-    yAxisLabel: 'Percentage of population (%)',
-    valueLabel: 'Percentage',
+    title: 'The graph below shows the number of people using social media platforms in four regions between 2010 and 2024.',
+    chartCaption: 'Number of people using social media platforms (North America, Europe, Asia-Pacific, Latin America)',
+    subjectPhrase: 'the number of people who used social media platforms in four regions: North America, Europe, Asia-Pacific, and Latin America',
+    unit: 'millions of users',
+    yAxisLabel: 'Number of users (millions)',
+    valueLabel: 'Users',
     years: [2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024],
-    values: [48, 56, 65, 71, 75, 80, 83, 85],
-    mainTrend: 'Social media use rose across all four regions, with Asia-Pacific growing fastest and closing much of the gap on North America.',
+    values: [55, 62, 68, 72, 74, 75, 76, 77],
+    mainTrend:
+      'Asia-Pacific overtook both Latin America and Europe to become the highest of the four regions, while Europe declined after peaking around the midpoint of the period.',
     series: [
-      { label: 'N. America',    color: '#0f53c9', values: [48, 56, 65, 71, 75, 80, 83, 85] },
-      { label: 'Europe',        color: '#d97706', values: [38, 44, 52, 59, 65, 70, 74, 77] },
-      { label: 'Asia-Pacific',  color: '#0d9488', values: [15, 22, 31, 42, 52, 61, 68, 73] },
-      { label: 'Latin America', color: '#7c3aed', values: [28, 35, 44, 54, 62, 68, 72, 75] }
+      { label: 'N. America',    color: '#0f53c9', values: [55, 62, 68, 72, 74, 75, 76, 77] },
+      { label: 'Europe',        color: '#d97706', values: [42, 50, 58, 65, 70, 68, 65, 63] },
+      { label: 'Asia-Pacific',  color: '#0d9488', values: [12, 20, 30, 42, 55, 68, 78, 85] },
+      { label: 'Latin America', color: '#7c3aed', values: [25, 32, 40, 50, 58, 64, 68, 70] }
     ]
   }
 ]
@@ -325,7 +346,7 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'pie-chart',
     chartTypeLabel: 'Pie Chart',
-    title: 'Exports between the US and Vietnam',
+    title: 'The charts below show the value of exports between the US and Vietnam by product category in 2023.',
     chartCaption: 'Value of exports between the US and Vietnam, by product category (2023)',
     subjectPhrase: 'the value of exports between the US and Vietnam, broken down by product category, in 2023',
     unit: 'US$ million',
@@ -363,7 +384,7 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
-    title: 'Average household spending on five categories in the UK and Thailand',
+    title: 'The chart below shows average household spending on five categories in the UK and Thailand in 2023.',
     chartCaption: 'Average household spending by category, UK vs Thailand (2023)',
     subjectPhrase:
       'the average household spending on five categories — food, transport, housing, healthcare, and leisure — in the UK and Thailand in 2023',
@@ -383,7 +404,7 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'pie-chart',
     chartTypeLabel: 'Pie Chart',
-    title: 'Electricity generation by energy source in Germany and Australia',
+    title: 'The charts below show electricity generation by energy source in Germany and Australia in 2020.',
     chartCaption: 'Distribution of energy sources used to generate electricity, Germany vs Australia (2020)',
     subjectPhrase:
       'the distribution of energy sources used to generate electricity in two countries — Germany and Australia — in 2020',
@@ -419,7 +440,7 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'table',
     chartTypeLabel: 'Table',
-    title: 'Data on five universities across four indicators',
+    title: 'The table below shows data on five universities across four indicators in 2024.',
     chartCaption: 'Research output, satisfaction, employment, and international students across five universities (2024)',
     subjectPhrase:
       'data on five universities — Oxford, MIT, the University of Sydney, Chulalongkorn University, and Seoul National University — across four indicators: research output, student satisfaction, graduate employment, and the percentage of international students, in 2024',
@@ -435,6 +456,53 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
       { entity: 'Chulalongkorn', values: ['4,300', '79%', '82%', '12%'] },
       { entity: "Seoul Nat'l", values: ['22,100', '85%', '91%', '28%'] }
     ]
+  },
+  {
+    id: 'snapshot-household-waste',
+    number: 5,
+    kind: 'snapshot',
+    chartType: 'pie-chart',
+    chartTypeLabel: 'Pie Chart',
+    title: 'The charts below show the proportion of household waste recycled in a European city in 2008 and 2018.',
+    chartCaption: 'Proportion of household waste that was recycled vs. not recycled (2008 and 2018)',
+    subjectPhrase: 'the proportion of household waste that was recycled compared with waste that was not recycled, in 2008 and 2018',
+    unit: '% of household waste',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'The proportion of household waste that was recycled rose substantially between 2008 and 2018, overtaking non-recycled waste to become the majority by the later year.',
+    pies: [
+      {
+        title: 'Household Waste 2008',
+        slices: [
+          { label: 'Not recycled', value: 72, color: '#64748b' },
+          { label: 'Recycled', value: 28, color: '#0d9488' }
+        ]
+      },
+      {
+        title: 'Household Waste 2018',
+        slices: [
+          { label: 'Recycled', value: 58, color: '#0d9488' },
+          { label: 'Not recycled', value: 42, color: '#64748b' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'snapshot-museum-visitors',
+    number: 6,
+    kind: 'snapshot',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title: 'The chart below shows the number of visitors to three museums in London in 2023.',
+    chartCaption: 'Average number of visitors to three London museums per month',
+    subjectPhrase:
+      'the average number of visitors per month to three London museums — the British Museum, the Science Museum, and the Natural History Museum',
+    unit: 'thousand visitors per month',
+    valueLabel: 'Number of visitors',
+    mainFeature:
+      'The British Museum attracted considerably more visitors than the other two museums, while the Science Museum received the fewest.',
+    categories: ['British Museum', 'Science Museum', 'Natural History Museum'],
+    series: [{ label: 'Visitors', color: '#0f53c9', values: [180, 95, 145] }]
   }
 ]
 
@@ -444,7 +512,7 @@ export const WRITING_MIXED_PRACTICE_PROMPTS: WritingMixedPracticePrompt[] = [
     number: 1,
     kind: 'mixed',
     chartTypeLabel: 'Pie Chart + Table + Bar Chart',
-    title: 'Riverside Language School: student profile and enrolment trends',
+    title: 'The charts below show the nationality of students and course enrolments at a language school in 2023, and total enrolments between 2014 and 2023.',
     subjectPhrase:
       'the nationality of students at Riverside Language School in 2023, enrolments by course type in the same year, and total student enrolments at the school between 2014 and 2023',
     mainFeature:
@@ -496,6 +564,48 @@ export const WRITING_MIXED_PRACTICE_PROMPTS: WritingMixedPracticePrompt[] = [
         values: [640, 710, 760, 830, 890, 950, 310, 480, 820, 1100]
       }
     ]
+  },
+  {
+    id: 'mixed-city-farmers-market',
+    number: 2,
+    kind: 'mixed',
+    chartTypeLabel: 'Pie Chart + Line Graph',
+    title: 'The charts below show how visitors travelled to a farmers’ market in 2023 and the total number of visitors between 2015 and 2023.',
+    subjectPhrase:
+      'the method of transport used by visitors to a city farmers market and the number of visitors to the market between 2015 and 2023',
+    mainFeature:
+      'The private car was the most common way for visitors to reach the market, and the number of visitors fluctuated over the period, with a notable dip in 2021.',
+    panels: [
+      {
+        kind: 'snapshot',
+        chartType: 'pie-chart',
+        chartCaption: 'Method of transport used by visitors to the city farmers market',
+        unit: '% of visitors',
+        valueLabel: 'Percentage',
+        pies: [
+          {
+            title: 'Transport to the Market',
+            slices: [
+              { label: 'Car', value: 42, color: '#0f53c9' },
+              { label: 'Bus', value: 22, color: '#d97706' },
+              { label: 'Bicycle', value: 18, color: '#0d9488' },
+              { label: 'Walk', value: 12, color: '#7c3aed' },
+              { label: 'Other', value: 6, color: '#e2e8f0' }
+            ]
+          }
+        ]
+      },
+      {
+        kind: 'timeline',
+        chartType: 'line-graph',
+        chartCaption: 'Number of visitors to the city farmers market (2015–2023)',
+        unit: 'thousand visitors',
+        yAxisLabel: 'Number of visitors (thousands)',
+        valueLabel: 'Visitors',
+        years: [2015, 2017, 2019, 2021, 2023],
+        values: [28, 35, 42, 25, 48]
+      }
+    ]
   }
 ]
 
@@ -505,7 +615,7 @@ export const WRITING_MAP_PRACTICE_PROMPTS: WritingMapPracticePrompt[] = [
     number: 1,
     kind: 'map',
     chartTypeLabel: 'Map',
-    title: 'Town centre redevelopment, 2005–2025',
+    title: 'The maps below show the layout of a town centre in 2005 and in 2025.',
     chartCaption: 'Changes in the layout of a town centre between 2005 and 2025',
     subjectPhrase: 'the layout of a town centre in 2005 and 2025',
     mainFeature:
@@ -530,6 +640,35 @@ export const WRITING_MAP_PRACTICE_PROMPTS: WritingMapPracticePrompt[] = [
         { x: 70, y: 44, w: 26, h: 36, label: 'Park', color: '#d1fae5' }
       ]
     }
+  },
+  {
+    id: 'map-island-resort',
+    number: 2,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show an island before and after the construction of a tourist resort.',
+    chartCaption: 'Changes to a small island before and after the construction of a tourist resort',
+    subjectPhrase: 'a small island before and after the construction of a tourist resort',
+    mainFeature:
+      'The open land that once covered most of the island was developed into a reception building, a restaurant, guest huts, and a pier, transforming it into a tourist resort.',
+    before: {
+      year: 'Before',
+      zones: [
+        { x: 4, y: 4, w: 88, h: 56, label: 'Open Land', color: '#d1fae5' },
+        { x: 4, y: 64, w: 88, h: 16, label: 'Beach', color: '#fef3c7' }
+      ]
+    },
+    after: {
+      year: 'After',
+      zones: [
+        { x: 4, y: 4, w: 26, h: 26, label: 'Reception', color: '#bfdbfe' },
+        { x: 34, y: 4, w: 26, h: 26, label: 'Restaurant', color: '#fecaca' },
+        { x: 64, y: 4, w: 28, h: 26, label: 'Guest\nHuts', color: '#fde68a' },
+        { x: 4, y: 34, w: 56, h: 26, label: 'Open Land', color: '#d1fae5' },
+        { x: 64, y: 34, w: 28, h: 26, label: 'Pier', color: '#c7d2fe' },
+        { x: 4, y: 64, w: 88, h: 16, label: 'Beach', color: '#fef3c7' }
+      ]
+    }
   }
 ]
 
@@ -539,7 +678,7 @@ export const WRITING_PROCESS_PRACTICE_PROMPTS: WritingProcessPracticePrompt[] = 
     number: 1,
     kind: 'process',
     chartTypeLabel: 'Process Diagram',
-    title: 'How instant coffee is produced',
+    title: 'The diagram below shows how instant coffee is produced.',
     chartCaption: 'The instant coffee production process',
     subjectPhrase: 'the process by which instant coffee is produced',
     mainFeature:
@@ -554,6 +693,26 @@ export const WRITING_PROCESS_PRACTICE_PROMPTS: WritingProcessPracticePrompt[] = 
       { id: 'spray-dry', label: 'Spray-Drying', detail: 'The liquid concentrate is spray-dried into fine granules.' },
       { id: 'package', label: 'Packaging', detail: 'The granules are packaged into jars, ready for sale.' }
     ]
+  },
+  {
+    id: 'process-plastic-recycling',
+    number: 2,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how plastic bottles are recycled.',
+    chartCaption: 'The plastic recycling process',
+    subjectPhrase: 'the process by which plastic is recycled',
+    mainFeature:
+      'The process begins with the collection of used plastic and ends with the manufacturing of new plastic products, and it involves seven main stages.',
+    stages: [
+      { id: 'collect', label: 'Collection', detail: 'Used plastic items are collected from households and businesses.' },
+      { id: 'sort', label: 'Sorting', detail: 'The collected plastic is sorted by type and colour.' },
+      { id: 'crush', label: 'Crushing', detail: 'The sorted plastic is crushed into small pieces.' },
+      { id: 'wash', label: 'Washing', detail: 'The crushed plastic pieces are washed to remove dirt and labels.' },
+      { id: 'melt', label: 'Melting', detail: 'The clean plastic pieces are melted down at a high temperature.' },
+      { id: 'pelletise', label: 'Pelletising', detail: 'The molten plastic is cooled and cut into small pellets.' },
+      { id: 'manufacture', label: 'Manufacturing', detail: 'The pellets are used to manufacture new plastic products.' }
+    ]
   }
 ]
 
@@ -567,8 +726,8 @@ export type WritingTask2Type = {
 export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   {
     id: 'timeline',
-    title: 'Timeline / Line Graph',
-    subtitle: 'Trend language · 7 practice prompts (4 line graphs, 2 bar charts, 1 table)',
+    title: 'Timeline',
+    subtitle: 'มีปี เช่น 2000–2002',
     accent: 'timeline',
     practicePrompts: WRITING_TIMELINE_PRACTICE_PROMPTS,
     chipGroups: [
@@ -601,8 +760,8 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   },
   {
     id: 'no-timeline',
-    title: 'Bar / Pie / Table (No Timeline)',
-    subtitle: 'Proportion and ranking language · 4 practice prompts (2 pie charts, 1 bar chart, 1 table)',
+    title: 'No Timeline',
+    subtitle: 'ไม่มีปีระบุ',
     accent: 'chart',
     practicePrompts: WRITING_SNAPSHOT_PRACTICE_PROMPTS,
     chipGroups: [
@@ -632,8 +791,8 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   },
   {
     id: 'mixed',
-    title: 'Mixed Chart',
-    subtitle: 'Combined proportion and trend language · 1 practice prompt (pie + table + bar chart)',
+    title: 'Mixed',
+    subtitle: 'มีทั้งมีปีและไม่มีปี',
     accent: 'chart',
     practicePrompts: WRITING_MIXED_PRACTICE_PROMPTS,
     chipGroups: [
@@ -660,7 +819,7 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   {
     id: 'map',
     title: 'Map',
-    subtitle: 'Location and development changes · 1 practice prompt (before/after map)',
+    subtitle: 'Past Simple / Present Perfect',
     accent: 'map',
     practicePrompts: WRITING_MAP_PRACTICE_PROMPTS,
     chipGroups: [
@@ -693,8 +852,8 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   },
   {
     id: 'process',
-    title: 'Process Diagram',
-    subtitle: 'Stage-by-stage sequencing language · 1 practice prompt (8-stage process)',
+    title: 'Process',
+    subtitle: 'Present Simple + Passive',
     accent: 'process',
     practicePrompts: WRITING_PROCESS_PRACTICE_PROMPTS,
     chipGroups: [
@@ -740,7 +899,7 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
   {
     id: 'all-types',
     title: 'All Question Types',
-    subtitle: 'Complex structures for higher band range',
+    subtitle: 'โครงสร้างซับซ้อนสำหรับ Band สูงขึ้น',
     accent: 'all',
     structures: [
       {

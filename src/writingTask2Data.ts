@@ -62,10 +62,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'cultural identity', thaiMeaning: 'อัตลักษณ์ทางวัฒนธรรม' },
-      { word: 'cultural heritage', thaiMeaning: 'มรดกทางวัฒนธรรม' },
-      { word: 'safety requirements', thaiMeaning: 'ข้อกำหนดด้านความปลอดภัย' },
-      { word: 'economic value', thaiMeaning: 'คุณค่าทางเศรษฐกิจ' }
+      { word: "cultural identity", thaiMeaning: "อัตลักษณ์ทางวัฒนธรรม" },
+      { word: "cultural heritage", thaiMeaning: "มรดกทางวัฒนธรรม" },
+      { word: "economic value", thaiMeaning: "คุณค่าทางเศรษฐกิจ" },
+      { word: "well-preserved historic buildings", thaiMeaning: "อาคารประวัติศาสตร์ที่อนุรักษ์ไว้ดี" },
+      { word: "safety and space requirements", thaiMeaning: "ข้อกำหนดด้านความปลอดภัยและพื้นที่" },
+      { word: "rapidly developing cities", thaiMeaning: "เมืองที่กำลังพัฒนาอย่างรวดเร็ว" },
+      { word: "modern infrastructure", thaiMeaning: "โครงสร้างพื้นฐานสมัยใหม่" },
+      { word: "high-rise apartments", thaiMeaning: "อาคารอพาร์ตเมนต์สูง" },
+      { word: "growing population", thaiMeaning: "ประชากรที่เพิ่มขึ้น" },
+      { word: "future generations", thaiMeaning: "คนรุ่นหลัง" },
+      { word: "old constructions", thaiMeaning: "สิ่งก่อสร้างเก่า" },
+      { word: "carefully preserved", thaiMeaning: "ได้รับการอนุรักษ์อย่างระมัดระวัง" },
+      { word: "practical needs", thaiMeaning: "ความต้องการในเชิงปฏิบัติ" },
+      { word: "modern buildings", thaiMeaning: "อาคารสมัยใหม่" },
+      { word: "nation's history", thaiMeaning: "ประวัติศาสตร์ของชาติ" },
+      { word: "millions of tourists", thaiMeaning: "นักท่องเที่ยวหลายล้านคน" },
+      { word: "pulling down", thaiMeaning: "การรื้อถอน" },
+      { word: "make way for", thaiMeaning: "เปิดทางให้" },
+      { word: "outdated", thaiMeaning: "ล้าสมัย" },
+      { word: "preserving a country's history", thaiMeaning: "การอนุรักษ์ประวัติศาสตร์ของประเทศ" }
     ]
   },
   {
@@ -95,10 +111,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'financial crisis', thaiMeaning: 'วิกฤตการเงิน' },
-      { word: 'economic collapse', thaiMeaning: 'การล่มสลายทางเศรษฐกิจ' },
-      { word: 'career benefits', thaiMeaning: 'ผลประโยชน์ด้านอาชีพ' },
-      { word: 'historical events', thaiMeaning: 'เหตุการณ์ทางประวัติศาสตร์' }
+      { word: "financial crisis", thaiMeaning: "วิกฤตการเงิน" },
+      { word: "economic collapse", thaiMeaning: "การล่มสลายทางเศรษฐกิจ" },
+      { word: "career benefits", thaiMeaning: "ผลประโยชน์ด้านอาชีพ" },
+      { word: "historical events", thaiMeaning: "เหตุการณ์ทางประวัติศาสตร์" },
+      { word: "improving present-day society", thaiMeaning: "การพัฒนาสังคมปัจจุบัน" },
+      { word: "causes of present problems", thaiMeaning: "สาเหตุของปัญหาในปัจจุบัน" },
+      { word: "learning about the past", thaiMeaning: "การเรียนรู้เกี่ยวกับอดีต" },
+      { word: "practical relevance", thaiMeaning: "ความเกี่ยวข้องในเชิงปฏิบัติ" },
+      { word: "practical purpose", thaiMeaning: "จุดประสงค์เชิงปฏิบัติ" },
+      { word: "practical skills", thaiMeaning: "ทักษะเชิงปฏิบัติ" },
+      { word: "valuable lessons", thaiMeaning: "บทเรียนที่มีค่า" },
+      { word: "studying history", thaiMeaning: "การศึกษาประวัติศาสตร์" },
+      { word: "direct bearing", thaiMeaning: "ผลกระทบโดยตรง" },
+      { word: "past mistakes", thaiMeaning: "ความผิดพลาดในอดีต" },
+      { word: "highly valuable", thaiMeaning: "มีคุณค่าสูง" },
+      { word: "extremely costly", thaiMeaning: "มีต้นทุนสูงมาก" },
+      { word: "modern life", thaiMeaning: "ชีวิตสมัยใหม่" },
+      { word: "cannot be altered", thaiMeaning: "ไม่สามารถเปลี่ยนแปลงได้" },
+      { word: "directly benefit", thaiMeaning: "เป็นประโยชน์โดยตรง" },
+      { word: "focusing on the present", thaiMeaning: "การมุ่งเน้นปัจจุบัน" }
     ]
   },
   {
@@ -128,10 +160,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'commercial incentives', thaiMeaning: 'แรงจูงใจเชิงพาณิชย์' },
-      { word: 'public benefit', thaiMeaning: 'ประโยชน์สาธารณะ' },
-      { word: 'scientific breakthroughs', thaiMeaning: 'ความก้าวหน้าทางวิทยาศาสตร์ครั้งสำคัญ' },
-      { word: 'public interest', thaiMeaning: 'ผลประโยชน์สาธารณะ' }
+      { word: "commercial incentives", thaiMeaning: "แรงจูงใจเชิงพาณิชย์" },
+      { word: "public benefit", thaiMeaning: "ประโยชน์สาธารณะ" },
+      { word: "scientific breakthroughs", thaiMeaning: "ความก้าวหน้าทางวิทยาศาสตร์ครั้งสำคัญ" },
+      { word: "public interest", thaiMeaning: "ผลประโยชน์สาธารณะ" },
+      { word: "government-controlled research", thaiMeaning: "งานวิจัยที่รัฐบาลควบคุม" },
+      { word: "rapid technological innovation", thaiMeaning: "นวัตกรรมเทคโนโลยีอย่างรวดเร็ว" },
+      { word: "publicly funded institutions", thaiMeaning: "สถาบันที่ได้รับทุนสาธารณะ" },
+      { word: "pharmaceutical companies", thaiMeaning: "บริษัทเภสัชกรรม" },
+      { word: "government-led projects", thaiMeaning: "โครงการที่รัฐบาลนำ" },
+      { word: "scientific discoveries", thaiMeaning: "การค้นพบทางวิทยาศาสตร์" },
+      { word: "scientific research", thaiMeaning: "งานวิจัยทางวิทยาศาสตร์" },
+      { word: "scientific progress", thaiMeaning: "ความก้าวหน้าทางวิทยาศาสตร์" },
+      { word: "government funding", thaiMeaning: "เงินทุนจากรัฐบาล" },
+      { word: "government control", thaiMeaning: "การควบคุมโดยรัฐบาล" },
+      { word: "private companies", thaiMeaning: "บริษัทเอกชน" },
+      { word: "interests of society", thaiMeaning: "ผลประโยชน์ของสังคม" },
+      { word: "primary control", thaiMeaning: "การควบคุมหลัก" },
+      { word: "sold for profit", thaiMeaning: "ขายเพื่อหากำไร" },
+      { word: "innovate quickly", thaiMeaning: "สร้างนวัตกรรมอย่างรวดเร็ว" },
+      { word: "shared freely", thaiMeaning: "แบ่งปันอย่างเสรี" }
     ]
   },
   {
@@ -161,10 +209,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'critical thinking', thaiMeaning: 'การคิดวิเคราะห์' },
-      { word: 'starting salaries', thaiMeaning: 'เงินเดือนเริ่มต้น' },
-      { word: 'humanities education', thaiMeaning: 'การศึกษาด้านมนุษยศาสตร์' },
-      { word: 'job prospects', thaiMeaning: 'โอกาสในการทำงาน' }
+      { word: "critical thinking", thaiMeaning: "การคิดวิเคราะห์" },
+      { word: "starting salaries", thaiMeaning: "เงินเดือนเริ่มต้น" },
+      { word: "humanities education", thaiMeaning: "การศึกษาด้านมนุษยศาสตร์" },
+      { word: "job prospects", thaiMeaning: "โอกาสในการทำงาน" },
+      { word: "employment-focused courses", thaiMeaning: "หลักสูตรที่มุ่งเน้นการจ้างงาน" },
+      { word: "computer science graduates", thaiMeaning: "บัณฑิตวิทยาการคอมพิวเตอร์" },
+      { word: "purely practical courses", thaiMeaning: "หลักสูตรเชิงปฏิบัติล้วน" },
+      { word: "throughout their careers", thaiMeaning: "ตลอดอาชีพการงาน" },
+      { word: "graduate unemployment", thaiMeaning: "การว่างงานของบัณฑิต" },
+      { word: "communication skills", thaiMeaning: "ทักษะการสื่อสาร" },
+      { word: "analytical abilities", thaiMeaning: "ความสามารถเชิงวิเคราะห์" },
+      { word: "technology founders", thaiMeaning: "ผู้ก่อตั้งบริษัทเทคโนโลยี" },
+      { word: "practical training", thaiMeaning: "การฝึกอบรมเชิงปฏิบัติ" },
+      { word: "technical skills", thaiMeaning: "ทักษะทางเทคนิค" },
+      { word: "business leaders", thaiMeaning: "ผู้นำทางธุรกิจ" },
+      { word: "tuition fees", thaiMeaning: "ค่าเล่าเรียน" },
+      { word: "job market", thaiMeaning: "ตลาดแรงงาน" },
+      { word: "arts subjects", thaiMeaning: "วิชาสายศิลป์" },
+      { word: "find employment", thaiMeaning: "หางานทำ" },
+      { word: "chosen career", thaiMeaning: "อาชีพที่เลือก" }
     ]
   },
   {
@@ -194,10 +258,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'carbon emissions', thaiMeaning: 'การปล่อยก๊าซคาร์บอน' },
-      { word: 'local customs', thaiMeaning: 'ขนบธรรมเนียมท้องถิ่น' },
-      { word: 'government guidelines', thaiMeaning: 'แนวทางของรัฐบาล' },
-      { word: 'environmental impact', thaiMeaning: 'ผลกระทบต่อสิ่งแวดล้อม' }
+      { word: "carbon emissions", thaiMeaning: "การปล่อยก๊าซคาร์บอน" },
+      { word: "local customs", thaiMeaning: "ขนบธรรมเนียมท้องถิ่น" },
+      { word: "government guidelines", thaiMeaning: "แนวทางของรัฐบาล" },
+      { word: "responsible tourism", thaiMeaning: "การท่องเที่ยวอย่างรับผิดชอบ" },
+      { word: "eco-friendly travel", thaiMeaning: "การเดินทางที่เป็นมิตรต่อสิ่งแวดล้อม" },
+      { word: "popular island destinations", thaiMeaning: "จุดหมายปลายทางเกาะยอดนิยม" },
+      { word: "environmental cost", thaiMeaning: "ต้นทุนด้านสิ่งแวดล้อม" },
+      { word: "traditional culture", thaiMeaning: "วัฒนธรรมดั้งเดิม" },
+      { word: "responsible tourist", thaiMeaning: "นักท่องเที่ยวที่รับผิดชอบ" },
+      { word: "deliberate choices", thaiMeaning: "ทางเลือกโดยตั้งใจ" },
+      { word: "thoughtful choices", thaiMeaning: "การเลือกอย่างรอบคอบ" },
+      { word: "local businesses", thaiMeaning: "ธุรกิจท้องถิ่น" },
+      { word: "careful planning", thaiMeaning: "การวางแผนอย่างรอบคอบ" },
+      { word: "negative impact", thaiMeaning: "ผลกระทบด้านลบ" },
+      { word: "overall impact", thaiMeaning: "ผลกระทบโดยรวม" },
+      { word: "achievable goal", thaiMeaning: "เป้าหมายที่บรรลุได้" },
+      { word: "entirely responsible", thaiMeaning: "รับผิดชอบอย่างสมบูรณ์" },
+      { word: "genuinely reduce", thaiMeaning: "ลดลงอย่างแท้จริง" },
+      { word: "damages the environment", thaiMeaning: "ทำลายสิ่งแวดล้อม" },
+      { word: "realistic and achievable", thaiMeaning: "สมจริงและบรรลุได้" }
     ]
   },
   {
@@ -227,10 +307,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'endangered species', thaiMeaning: 'สัตว์ใกล้สูญพันธุ์' },
-      { word: 'natural cycle', thaiMeaning: 'วัฏจักรตามธรรมชาติ' },
-      { word: 'habitat destruction', thaiMeaning: 'การทำลายถิ่นที่อยู่อาศัย' },
-      { word: 'human activity', thaiMeaning: 'กิจกรรมของมนุษย์' }
+      { word: "endangered species", thaiMeaning: "สัตว์ใกล้สูญพันธุ์" },
+      { word: "natural cycle", thaiMeaning: "วัฏจักรตามธรรมชาติ" },
+      { word: "habitat destruction", thaiMeaning: "การทำลายถิ่นที่อยู่อาศัย" },
+      { word: "human activity", thaiMeaning: "กิจกรรมของมนุษย์" },
+      { word: "human-driven extinction", thaiMeaning: "การสูญพันธุ์ที่มนุษย์ก่อให้เกิด" },
+      { word: "United Nations report", thaiMeaning: "รายงานของสหประชาชาติ" },
+      { word: "land mammal species", thaiMeaning: "ชนิดพันธุ์สัตว์เลี้ยงลูกด้วยนมบนบก" },
+      { word: "disappearing completely", thaiMeaning: "หายไปอย่างสมบูรณ์" },
+      { word: "natural extinctions", thaiMeaning: "การสูญพันธุ์ตามธรรมชาติ" },
+      { word: "human intervention", thaiMeaning: "การแทรกแซงของมนุษย์" },
+      { word: "prevent extinction", thaiMeaning: "ป้องกันการสูญพันธุ์" },
+      { word: "modern extinctions", thaiMeaning: "การสูญพันธุ์ในยุคปัจจุบัน" },
+      { word: "human involvement", thaiMeaning: "การมีส่วนร่วมของมนุษย์" },
+      { word: "countless species", thaiMeaning: "ชนิดพันธุ์นับไม่ถ้วน" },
+      { word: "natural process", thaiMeaning: "กระบวนการตามธรรมชาติ" },
+      { word: "animal species", thaiMeaning: "ชนิดพันธุ์สัตว์" },
+      { word: "distant past", thaiMeaning: "อดีตอันไกล" },
+      { word: "active steps", thaiMeaning: "มาตรการเชิงรุก" },
+      { word: "no obligation", thaiMeaning: "ไม่มีข้อผูกมัด" },
+      { word: "human actions", thaiMeaning: "การกระทำของมนุษย์" }
     ]
   },
   {
@@ -260,10 +356,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'healthy lifestyles', thaiMeaning: 'วิถีชีวิตที่ดีต่อสุขภาพ' },
-      { word: 'medical attention', thaiMeaning: 'การดูแลรักษาทางการแพทย์' },
-      { word: 'healthcare costs', thaiMeaning: 'ค่าใช้จ่ายด้านสุขภาพ' },
-      { word: 'public health systems', thaiMeaning: 'ระบบสาธารณสุข' }
+      { word: "healthy lifestyles", thaiMeaning: "วิถีชีวิตที่ดีต่อสุขภาพ" },
+      { word: "medical attention", thaiMeaning: "การดูแลรักษาทางการแพทย์" },
+      { word: "healthcare costs", thaiMeaning: "ค่าใช้จ่ายด้านสุขภาพ" },
+      { word: "public health systems", thaiMeaning: "ระบบสาธารณสุข" },
+      { word: "obesity-prevention programs", thaiMeaning: "โปรแกรมป้องกันโรคอ้วน" },
+      { word: "immediate medical care", thaiMeaning: "การรักษาพยาบาลทันที" },
+      { word: "prevention campaigns", thaiMeaning: "แคมเปญการป้องกัน" },
+      { word: "long-term benefits", thaiMeaning: "ประโยชน์ระยะยาว" },
+      { word: "healthcare burdens", thaiMeaning: "ภาระด้านสาธารณสุข" },
+      { word: "public investment", thaiMeaning: "การลงทุนภาครัฐ" },
+      { word: "funding priority", thaiMeaning: "ลำดับความสำคัญด้านงบประมาณ" },
+      { word: "existing illness", thaiMeaning: "อาการเจ็บป่วยที่มีอยู่แล้ว" },
+      { word: "accident victims", thaiMeaning: "ผู้ประสบอุบัติเหตุ" },
+      { word: "cancer patients", thaiMeaning: "ผู้ป่วยโรคมะเร็ง" },
+      { word: "vulnerable lives", thaiMeaning: "ชีวิตที่เปราะบาง" },
+      { word: "urgent necessity", thaiMeaning: "ความจำเป็นเร่งด่วน" },
+      { word: "public spending", thaiMeaning: "การใช้จ่ายภาครัฐ" },
+      { word: "treatment costs", thaiMeaning: "ค่าใช้จ่ายในการรักษา" },
+      { word: "take precedence", thaiMeaning: "มีความสำคัญเหนือกว่า" },
+      { word: "entire population", thaiMeaning: "ประชากรทั้งหมด" }
     ]
   },
   {
@@ -293,10 +405,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'road safety', thaiMeaning: 'ความปลอดภัยบนท้องถนน' },
-      { word: 'driver education', thaiMeaning: 'การอบรมผู้ขับขี่' },
-      { word: 'decision-making', thaiMeaning: 'การตัดสินใจ' },
-      { word: 'age restrictions', thaiMeaning: 'ข้อจำกัดด้านอายุ' }
+      { word: "road safety", thaiMeaning: "ความปลอดภัยบนท้องถนน" },
+      { word: "driver education", thaiMeaning: "การอบรมผู้ขับขี่" },
+      { word: "decision-making", thaiMeaning: "การตัดสินใจ" },
+      { word: "age restrictions", thaiMeaning: "ข้อจำกัดด้านอายุ" },
+      { word: "minimum driving age", thaiMeaning: "อายุขั้นต่ำในการขับขี่" },
+      { word: "intensive driving courses", thaiMeaning: "หลักสูตรขับรถเข้มข้น" },
+      { word: "newly licensed drivers", thaiMeaning: "ผู้ขับขี่ที่เพิ่งได้รับใบอนุญาต" },
+      { word: "World Health Organization", thaiMeaning: "องค์การอนามัยโลก" },
+      { word: "operating a vehicle", thaiMeaning: "การขับรถยนต์" },
+      { word: "skill and experience", thaiMeaning: "ทักษะและประสบการณ์" },
+      { word: "delaying independence", thaiMeaning: "การเลื่อนความเป็นอิสระ" },
+      { word: "dangerous driving", thaiMeaning: "การขับขี่อันตราย" },
+      { word: "training programs", thaiMeaning: "โปรแกรมการฝึกอบรม" },
+      { word: "drive unsupervised", thaiMeaning: "ขับรถโดยไม่มีผู้ควบคุม" },
+      { word: "stricter testing", thaiMeaning: "การทดสอบที่เข้มงวดขึ้น" },
+      { word: "effective measure", thaiMeaning: "มาตรการที่มีประสิทธิภาพ" },
+      { word: "younger drivers", thaiMeaning: "ผู้ขับขี่ที่อายุน้อย" },
+      { word: "additional lessons", thaiMeaning: "บทเรียนเพิ่มเติม" },
+      { word: "gain independence", thaiMeaning: "ได้รับอิสรภาพ" },
+      { word: "root cause", thaiMeaning: "สาเหตุรากเหง้า" }
     ]
   },
   {
@@ -326,10 +454,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'academic performance', thaiMeaning: 'ผลการเรียน' },
-      { word: 'practical skills', thaiMeaning: 'ทักษะเชิงปฏิบัติ' },
-      { word: 'communication skills', thaiMeaning: 'ทักษะการสื่อสาร' },
-      { word: 'life skills', thaiMeaning: 'ทักษะชีวิต' }
+      { word: "academic performance", thaiMeaning: "ผลการเรียน" },
+      { word: "practical skills", thaiMeaning: "ทักษะเชิงปฏิบัติ" },
+      { word: "communication skills", thaiMeaning: "ทักษะการสื่อสาร" },
+      { word: "life skills", thaiMeaning: "ทักษะชีวิต" },
+      { word: "unpaid community work", thaiMeaning: "งานชุมชนแบบไม่มีค่าจ้าง" },
+      { word: "National Youth Agency", thaiMeaning: "หน่วยงานเยาวชนแห่งชาติ" },
+      { word: "additional responsibilities", thaiMeaning: "ความรับผิดชอบเพิ่มเติม" },
+      { word: "unpaid responsibilities", thaiMeaning: "ความรับผิดชอบที่ไม่มีค่าจ้าง" },
+      { word: "important examinations", thaiMeaning: "การสอบที่สำคัญ" },
+      { word: "volunteered regularly", thaiMeaning: "อาสาสมัครอย่างสม่ำเสมอ" },
+      { word: "classroom learning", thaiMeaning: "การเรียนรู้ในห้องเรียน" },
+      { word: "classroom study", thaiMeaning: "การเรียนในชั้นเรียน" },
+      { word: "enormous pressure", thaiMeaning: "แรงกดดันมหาศาล" },
+      { word: "local community", thaiMeaning: "ชุมชนท้องถิ่น" },
+      { word: "valuable benefits", thaiMeaning: "ประโยชน์อันมีค่า" },
+      { word: "unfair burden", thaiMeaning: "ภาระที่ไม่เป็นธรรม" },
+      { word: "exam results", thaiMeaning: "ผลการสอบ" },
+      { word: "higher confidence", thaiMeaning: "ความมั่นใจที่สูงขึ้น" },
+      { word: "wider society", thaiMeaning: "สังคมโดยรวม" },
+      { word: "considerable time", thaiMeaning: "เวลาค่อนข้างมาก" }
     ]
   },
   {
@@ -359,10 +503,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'transportation and trade', thaiMeaning: 'การคมนาคมขนส่งและการค้า' },
-      { word: 'human progress', thaiMeaning: 'ความก้าวหน้าของมนุษยชาติ' },
-      { word: 'global scale', thaiMeaning: 'ระดับโลก' },
-      { word: 'daily life', thaiMeaning: 'ชีวิตประจำวัน' }
+      { word: "transportation and trade", thaiMeaning: "การคมนาคมขนส่งและการค้า" },
+      { word: "human progress", thaiMeaning: "ความก้าวหน้าของมนุษยชาติ" },
+      { word: "global scale", thaiMeaning: "ระดับโลก" },
+      { word: "daily life", thaiMeaning: "ชีวิตประจำวัน" },
+      { word: "International Telecommunication Union", thaiMeaning: "สหภาพโทรคมนาคมระหว่างประเทศ" },
+      { word: "transformative inventions", thaiMeaning: "สิ่งประดิษฐ์ที่เปลี่ยนโฉม" },
+      { word: "most important invention", thaiMeaning: "สิ่งประดิษฐ์ที่สำคัญที่สุด" },
+      { word: "foundational inventions", thaiMeaning: "สิ่งประดิษฐ์ที่เป็นรากฐาน" },
+      { word: "unmatched global impact", thaiMeaning: "ผลกระทบระดับโลกที่ไม่มีใครเทียบ" },
+      { word: "ancient civilizations", thaiMeaning: "อารยธรรมโบราณ" },
+      { word: "essential foundation", thaiMeaning: "รากฐานที่สำคัญ" },
+      { word: "significant invention", thaiMeaning: "สิ่งประดิษฐ์ที่สำคัญ" },
+      { word: "greater recognition", thaiMeaning: "การยอมรับที่มากขึ้น" },
+      { word: "human civilization", thaiMeaning: "อารยธรรมของมนุษย์" },
+      { word: "earlier inventions", thaiMeaning: "สิ่งประดิษฐ์ก่อนหน้า" },
+      { word: "modern technology", thaiMeaning: "เทคโนโลยีสมัยใหม่" },
+      { word: "expand agriculture", thaiMeaning: "ขยายการเกษตร" },
+      { word: "billions of people", thaiMeaning: "ผู้คนนับพันล้าน" },
+      { word: "wheeled carts", thaiMeaning: "เกวียนล้อ" },
+      { word: "vast distances", thaiMeaning: "ระยะทางอันไกลโพ้น" }
     ]
   },
   {
@@ -392,10 +552,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'financial assistance', thaiMeaning: 'ความช่วยเหลือทางการเงิน' },
-      { word: 'emergency cash transfers', thaiMeaning: 'การโอนเงินช่วยเหลือฉุกเฉิน' },
-      { word: 'infrastructure support', thaiMeaning: 'การสนับสนุนด้านโครงสร้างพื้นฐาน' },
-      { word: 'economic growth', thaiMeaning: 'การเติบโตทางเศรษฐกิจ' }
+      { word: "financial assistance", thaiMeaning: "ความช่วยเหลือทางการเงิน" },
+      { word: "emergency cash transfers", thaiMeaning: "การโอนเงินช่วยเหลือฉุกเฉิน" },
+      { word: "infrastructure support", thaiMeaning: "การสนับสนุนด้านโครงสร้างพื้นฐาน" },
+      { word: "economic growth", thaiMeaning: "การเติบโตทางเศรษฐกิจ" },
+      { word: "immediate relief", thaiMeaning: "การบรรเทาทุกข์ทันที" },
+      { word: "underlying problem of poverty", thaiMeaning: "ปัญหาความยากจนที่แท้จริง" },
+      { word: "basic needs", thaiMeaning: "ความต้องการพื้นฐาน" },
+      { word: "developed countries", thaiMeaning: "ประเทศพัฒนาแล้ว" },
+      { word: "poorer countries", thaiMeaning: "ประเทศที่ยากจนกว่า" },
+      { word: "urgent necessities", thaiMeaning: "สิ่งจำเป็นเร่งด่วน" },
+      { word: "natural disasters", thaiMeaning: "ภัยธรรมชาติ" },
+      { word: "lasting infrastructure", thaiMeaning: "โครงสร้างพื้นฐานที่ยั่งยืน" },
+      { word: "genuine long-term development", thaiMeaning: "การพัฒนาในระยะยาวอย่างแท้จริง" },
+      { word: "technical training", thaiMeaning: "การฝึกอบรมด้านเทคนิค" },
+      { word: "sustainable results", thaiMeaning: "ผลลัพธ์ที่ยั่งยืน" },
+      { word: "short-term relief", thaiMeaning: "การบรรเทาทุกข์ระยะสั้น" },
+      { word: "lasting solutions to poverty", thaiMeaning: "วิธีแก้ความยากจนที่ยั่งยืน" },
+      { word: "developing countries", thaiMeaning: "ประเทศกำลังพัฒนา" },
+      { word: "practical assistance", thaiMeaning: "ความช่วยเหลือเชิงปฏิบัติ" },
+      { word: "struggling nations", thaiMeaning: "ประเทศที่กำลังเดือดร้อน" }
     ]
   },
   {
@@ -425,10 +601,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'digital communication', thaiMeaning: 'การสื่อสารดิจิทัล' },
-      { word: 'written language', thaiMeaning: 'ภาษาเขียน' },
-      { word: 'writing structure', thaiMeaning: 'โครงสร้างการเขียน' },
-      { word: 'literacy development', thaiMeaning: 'พัฒนาการด้านการอ่านออกเขียนได้' }
+      { word: "digital communication", thaiMeaning: "การสื่อสารดิจิทัล" },
+      { word: "written language", thaiMeaning: "ภาษาเขียน" },
+      { word: "writing structure", thaiMeaning: "โครงสร้างการเขียน" },
+      { word: "literacy development", thaiMeaning: "พัฒนาการด้านการอ่านออกเขียนได้" },
+      { word: "reading and writing skills", thaiMeaning: "ทักษะการอ่านและการเขียน" },
+      { word: "digital devices", thaiMeaning: "อุปกรณ์ดิจิทัล" },
+      { word: "heavy reliance", thaiMeaning: "การพึ่งพามากเกินไป" },
+      { word: "text messages", thaiMeaning: "ข้อความตัวอักษร" },
+      { word: "previous generations", thaiMeaning: "คนรุ่นก่อน" },
+      { word: "informal messaging", thaiMeaning: "การส่งข้อความแบบไม่เป็นทางการ" },
+      { word: "simplified grammar", thaiMeaning: "ไวยากรณ์แบบง่าย" },
+      { word: "formal writing abilities", thaiMeaning: "ความสามารถในการเขียนแบบเป็นทางการ" },
+      { word: "printed books", thaiMeaning: "หนังสือสิ่งพิมพ์" },
+      { word: "National Literacy Trust", thaiMeaning: "องค์กรส่งเสริมการรู้หนังสือแห่งชาติ" },
+      { word: "frequent practice", thaiMeaning: "การฝึกฝนอย่างสม่ำเสมอ" },
+      { word: "core literacy skills", thaiMeaning: "ทักษะการรู้หนังสือพื้นฐาน" },
+      { word: "texting and social media", thaiMeaning: "การส่งข้อความและโซเชียลมีเดีย" },
+      { word: "digital habits", thaiMeaning: "นิสัยการใช้ดิจิทัล" },
+      { word: "abbreviations", thaiMeaning: "คำย่อ" },
+      { word: "constant reading and typing", thaiMeaning: "การอ่านและการพิมพ์อย่างต่อเนื่อง" }
     ]
   },
   {
@@ -458,10 +650,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'leadership ability', thaiMeaning: 'ความสามารถในการเป็นผู้นำ' },
-      { word: 'management style', thaiMeaning: 'รูปแบบการบริหารจัดการ' },
-      { word: 'individual traits', thaiMeaning: 'คุณลักษณะเฉพาะบุคคล' },
-      { word: 'leadership effectiveness', thaiMeaning: 'ประสิทธิผลของการเป็นผู้นำ' }
+      { word: "leadership ability", thaiMeaning: "ความสามารถในการเป็นผู้นำ" },
+      { word: "management style", thaiMeaning: "รูปแบบการบริหารจัดการ" },
+      { word: "individual traits", thaiMeaning: "คุณลักษณะเฉพาะบุคคล" },
+      { word: "leadership effectiveness", thaiMeaning: "ประสิทธิผลของการเป็นผู้นำ" },
+      { word: "professional settings", thaiMeaning: "บริบทการทำงาน" },
+      { word: "personal qualities", thaiMeaning: "คุณสมบัติส่วนบุคคล" },
+      { word: "collaborative and empathetic communicators", thaiMeaning: "ผู้สื่อสารที่ร่วมมือและเข้าใจผู้อื่น" },
+      { word: "stronger morale and cooperation", thaiMeaning: "ขวัญกำลังใจและความร่วมมือที่แข็งแกร่งขึ้น" },
+      { word: "female chief executives", thaiMeaning: "ผู้บริหารหญิงระดับสูง" },
+      { word: "leadership roles", thaiMeaning: "บทบาทผู้นำ" },
+      { word: "effective leadership", thaiMeaning: "ภาวะผู้นำที่มีประสิทธิภาพ" },
+      { word: "decisiveness and vision", thaiMeaning: "ความเด็ดขาดและวิสัยทัศน์" },
+      { word: "experience and training", thaiMeaning: "ประสบการณ์และการฝึกฝน" },
+      { word: "Harvard Business Review", thaiMeaning: "วารสาร Harvard Business Review" },
+      { word: "successful leader", thaiMeaning: "ผู้นำที่ประสบความสำเร็จ" },
+      { word: "leadership styles", thaiMeaning: "รูปแบบภาวะผู้นำ" },
+      { word: "leadership success", thaiMeaning: "ความสำเร็จในการเป็นผู้นำ" },
+      { word: "leadership quality", thaiMeaning: "คุณภาพของภาวะผู้นำ" },
+      { word: "leadership skill", thaiMeaning: "ทักษะภาวะผู้นำ" },
+      { word: "inherently superior", thaiMeaning: "เหนือกว่าโดยธรรมชาติ" }
     ]
   },
   {
@@ -491,10 +699,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'unhealthy eating habits', thaiMeaning: 'พฤติกรรมการกินที่ไม่ดีต่อสุขภาพ' },
-      { word: 'low-income families', thaiMeaning: 'ครอบครัวรายได้น้อย' },
-      { word: 'consumer behavior', thaiMeaning: 'พฤติกรรมผู้บริโภค' },
-      { word: 'pricing policies', thaiMeaning: 'นโยบายด้านราคา' }
+      { word: "unhealthy eating habits", thaiMeaning: "พฤติกรรมการกินที่ไม่ดีต่อสุขภาพ" },
+      { word: "low-income families", thaiMeaning: "ครอบครัวรายได้น้อย" },
+      { word: "consumer behavior", thaiMeaning: "พฤติกรรมผู้บริโภค" },
+      { word: "pricing policies", thaiMeaning: "นโยบายด้านราคา" },
+      { word: "sugary products", thaiMeaning: "ผลิตภัณฑ์ที่มีน้ำตาล" },
+      { word: "consumer choices", thaiMeaning: "ตัวเลือกของผู้บริโภค" },
+      { word: "root causes", thaiMeaning: "สาเหตุรากเหง้า" },
+      { word: "effective health measure", thaiMeaning: "มาตรการสุขภาพที่มีประสิทธิผล" },
+      { word: "higher prices", thaiMeaning: "ราคาที่สูงขึ้น" },
+      { word: "tight budgets", thaiMeaning: "งบประมาณที่ตึงตัว" },
+      { word: "soft drinks", thaiMeaning: "เครื่องดื่มน้ำอัดลม" },
+      { word: "price increases", thaiMeaning: "การขึ้นราคา" },
+      { word: "sugar tax", thaiMeaning: "ภาษีน้ำตาล" },
+      { word: "British Medical Journal", thaiMeaning: "วารสารการแพทย์อังกฤษ" },
+      { word: "sugary drinks", thaiMeaning: "เครื่องดื่มที่มีน้ำตาล" },
+      { word: "excessive sugar consumption", thaiMeaning: "การบริโภคน้ำตาลมากเกินไป" },
+      { word: "financial pressure", thaiMeaning: "แรงกดดันทางการเงิน" },
+      { word: "public health", thaiMeaning: "สาธารณสุข" },
+      { word: "everyday snacks", thaiMeaning: "ของว่างในชีวิตประจำวัน" },
+      { word: "sugary food and drinks", thaiMeaning: "อาหารและเครื่องดื่มที่มีน้ำตาล" }
     ]
   },
   {
@@ -524,10 +748,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'space exploration', thaiMeaning: 'การสำรวจอวกาศ' },
-      { word: 'satellite navigation', thaiMeaning: 'ระบบนำทางด้วยดาวเทียม' },
-      { word: 'medical imaging technology', thaiMeaning: 'เทคโนโลยีการถ่ายภาพทางการแพทย์' },
-      { word: 'practical benefits', thaiMeaning: 'ประโยชน์เชิงปฏิบัติ' }
+      { word: "space exploration", thaiMeaning: "การสำรวจอวกาศ" },
+      { word: "satellite navigation", thaiMeaning: "ระบบนำทางด้วยดาวเทียม" },
+      { word: "medical imaging technology", thaiMeaning: "เทคโนโลยีการถ่ายภาพทางการแพทย์" },
+      { word: "practical benefits", thaiMeaning: "ประโยชน์เชิงปฏิบัติ" },
+      { word: "space research funding", thaiMeaning: "เงินทุนวิจัยอวกาศ" },
+      { word: "public imagination", thaiMeaning: "จินตนาการของสาธารณชน" },
+      { word: "practical projects", thaiMeaning: "โครงการเชิงปฏิบัติ" },
+      { word: "enormous cost", thaiMeaning: "ต้นทุนมหาศาล" },
+      { word: "urgent problems", thaiMeaning: "ปัญหาเร่งด่วน" },
+      { word: "developing countries", thaiMeaning: "ประเทศกำลังพัฒนา" },
+      { word: "space mission", thaiMeaning: "ภารกิจอวกาศ" },
+      { word: "weather forecasting", thaiMeaning: "การพยากรณ์อากาศ" },
+      { word: "everyday technologies", thaiMeaning: "เทคโนโลยีในชีวิตประจำวัน" },
+      { word: "commercial products", thaiMeaning: "ผลิตภัณฑ์เชิงพาณิชย์" },
+      { word: "pressing problems", thaiMeaning: "ปัญหาเร่งด่วนที่กดดัน" },
+      { word: "significant funding", thaiMeaning: "เงินทุนจำนวนมาก" },
+      { word: "space spending", thaiMeaning: "รายจ่ายด้านอวกาศ" },
+      { word: "earthly needs", thaiMeaning: "ความต้องการบนโลก" },
+      { word: "worthwhile investment", thaiMeaning: "การลงทุนที่คุ้มค่า" },
+      { word: "benefited society enormously", thaiMeaning: "เป็นประโยชน์ต่อสังคมอย่างมาก" }
     ]
   },
 
@@ -563,10 +803,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'traffic congestion', thaiMeaning: 'ปัญหาการจราจรติดขัด' },
-      { word: 'commute times', thaiMeaning: 'เวลาเดินทางไป-กลับ' },
-      { word: 'population growth', thaiMeaning: 'การเติบโตของประชากร' },
-      { word: 'road capacity', thaiMeaning: 'ความจุของถนน' }
+      { word: "traffic congestion", thaiMeaning: "ปัญหาการจราจรติดขัด" },
+      { word: "commute times", thaiMeaning: "เวลาเดินทางไป-กลับ" },
+      { word: "population growth", thaiMeaning: "การเติบโตของประชากร" },
+      { word: "road capacity", thaiMeaning: "ความจุของถนน" },
+      { word: "subway and train networks", thaiMeaning: "เครือข่ายรถไฟใต้ดินและรถไฟ" },
+      { word: "public transport", thaiMeaning: "ขนส่งสาธารณะ" },
+      { word: "rail system", thaiMeaning: "ระบบราง" },
+      { word: "private vehicles", thaiMeaning: "ยานพาหนะส่วนบุคคล" },
+      { word: "Mass Rapid Transit", thaiMeaning: "ระบบขนส่งมวลชนรวดเร็ว" },
+      { word: "road network", thaiMeaning: "เครือข่ายถนน" },
+      { word: "wider roads", thaiMeaning: "ถนนที่กว้างขึ้น" },
+      { word: "road expansion", thaiMeaning: "การขยายถนน" },
+      { word: "peak hours", thaiMeaning: "ชั่วโมงเร่งด่วน" },
+      { word: "Texas Transportation Institute", thaiMeaning: "สถาบันการขนส่งเท็กซัส" },
+      { word: "long-term benefits", thaiMeaning: "ประโยชน์ระยะยาว" },
+      { word: "private car use", thaiMeaning: "การใช้งานรถยนต์ส่วนบุคคล" },
+      { word: "subway and train lines", thaiMeaning: "สายรถไฟใต้ดินและรถไฟ" },
+      { word: "short-term reduction", thaiMeaning: "การลดลงในระยะสั้น" },
+      { word: "lasting shift", thaiMeaning: "การเปลี่ยนแปลงที่ยั่งยืน" },
+      { word: "bottlenecks", thaiMeaning: "จุดคอขวดการจราจร" }
     ]
   },
   {
@@ -600,10 +856,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'plastic waste', thaiMeaning: 'ขยะพลาสติก' },
-      { word: 'consumer demand', thaiMeaning: 'ความต้องการของผู้บริโภค' },
-      { word: 'household staples', thaiMeaning: 'ของใช้จำเป็นในครัวเรือน' },
-      { word: 'product design', thaiMeaning: 'การออกแบบผลิตภัณฑ์' }
+      { word: "plastic waste", thaiMeaning: "ขยะพลาสติก" },
+      { word: "consumer demand", thaiMeaning: "ความต้องการของผู้บริโภค" },
+      { word: "household staples", thaiMeaning: "ของใช้จำเป็นในครัวเรือน" },
+      { word: "product design", thaiMeaning: "การออกแบบผลิตภัณฑ์" },
+      { word: "heavily packaged products", thaiMeaning: "สินค้าที่บรรจุหีบห่อหนาแน่น" },
+      { word: "sustainable materials", thaiMeaning: "วัสดุที่ยั่งยืน" },
+      { word: "supermarket chains", thaiMeaning: "เครือข่ายซูเปอร์มาร์เก็ต" },
+      { word: "fresh produce", thaiMeaning: "ผักผลไม้สด" },
+      { word: "plastic packaging", thaiMeaning: "บรรจุภัณฑ์พลาสติก" },
+      { word: "pre-packaged alternatives", thaiMeaning: "ทางเลือกที่บรรจุหีบห่อไว้ล่วงหน้า" },
+      { word: "unpackaged options", thaiMeaning: "ตัวเลือกที่ไม่มีบรรจุภัณฑ์" },
+      { word: "fixed packaging", thaiMeaning: "บรรจุภัณฑ์ตายตัว" },
+      { word: "environmentally conscious", thaiMeaning: "ใส่ใจสิ่งแวดล้อม" },
+      { word: "packaging habits", thaiMeaning: "พฤติกรรมการบรรจุหีบห่อ" },
+      { word: "greater responsibility", thaiMeaning: "ความรับผิดชอบที่มากกว่า" },
+      { word: "loose fruit and vegetables", thaiMeaning: "ผลไม้และผักแบบไม่มีหีบห่อ" },
+      { word: "primary responsibility", thaiMeaning: "ความรับผิดชอบหลัก" },
+      { word: "ordinary consumers", thaiMeaning: "ผู้บริโภคทั่วไป" },
+      { word: "individual preference", thaiMeaning: "ความชอบส่วนบุคคล" },
+      { word: "reducing packaging", thaiMeaning: "การลดบรรจุภัณฑ์" }
     ]
   },
   {
@@ -637,10 +909,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'inherited diseases', thaiMeaning: 'โรคทางพันธุกรรม' },
-      { word: 'gene therapy', thaiMeaning: 'การบำบัดด้วยยีน' },
-      { word: 'ethical approval', thaiMeaning: 'การอนุมัติด้านจริยธรรม' },
-      { word: 'biodiversity', thaiMeaning: 'ความหลากหลายทางชีวภาพ' }
+      { word: "inherited diseases", thaiMeaning: "โรคทางพันธุกรรม" },
+      { word: "gene therapy", thaiMeaning: "การบำบัดด้วยยีน" },
+      { word: "ethical approval", thaiMeaning: "การอนุมัติด้านจริยธรรม" },
+      { word: "biodiversity", thaiMeaning: "ความหลากหลายทางชีวภาพ" },
+      { word: "genetic engineering", thaiMeaning: "วิศวกรรมพันธุกรรม" },
+      { word: "serious threat", thaiMeaning: "ภัยคุกคามร้ายแรง" },
+      { word: "modify genes", thaiMeaning: "ดัดแปลงยีน" },
+      { word: "sickle cell disease", thaiMeaning: "โรคโลหิตจางเม็ดเลือดรูปเคียว" },
+      { word: "clinical trials", thaiMeaning: "การทดลองทางคลินิก" },
+      { word: "unpredictable and irreversible effects", thaiMeaning: "ผลกระทบที่คาดเดาไม่ได้และย้อนกลับไม่ได้" },
+      { word: "future generations", thaiMeaning: "คนรุ่นหลัง" },
+      { word: "genetically modified crops", thaiMeaning: "พืชดัดแปลงพันธุกรรม" },
+      { word: "farming regions", thaiMeaning: "พื้นที่เกษตรกรรม" },
+      { word: "international regulation", thaiMeaning: "กฎระเบียบระหว่างประเทศ" },
+      { word: "life-saving potential", thaiMeaning: "ศักยภาพในการช่วยชีวิต" },
+      { word: "gene-editing research", thaiMeaning: "งานวิจัยตัดต่อยีน" },
+      { word: "harmful outcomes", thaiMeaning: "ผลลัพธ์ที่เป็นอันตราย" },
+      { word: "human health", thaiMeaning: "สุขภาพของมนุษย์" },
+      { word: "worthwhile technology", thaiMeaning: "เทคโนโลยีที่คุ้มค่า" },
+      { word: "serious dangers", thaiMeaning: "อันตรายร้ายแรง" }
     ]
   },
   {
@@ -674,10 +962,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'financial literacy', thaiMeaning: 'ความรู้ทางการเงิน' },
-      { word: 'household budgets', thaiMeaning: 'งบประมาณครัวเรือน' },
-      { word: 'national curriculum', thaiMeaning: 'หลักสูตรแห่งชาติ' },
-      { word: 'financial habits', thaiMeaning: 'นิสัยทางการเงิน' }
+      { word: "financial literacy", thaiMeaning: "ความรู้ทางการเงิน" },
+      { word: "household budgets", thaiMeaning: "งบประมาณครัวเรือน" },
+      { word: "national curriculum", thaiMeaning: "หลักสูตรแห่งชาติ" },
+      { word: "financial habits", thaiMeaning: "นิสัยทางการเงิน" },
+      { word: "money management", thaiMeaning: "การจัดการเงิน" },
+      { word: "mandatory school subject", thaiMeaning: "วิชาบังคับในโรงเรียน" },
+      { word: "regardless of family background", thaiMeaning: "โดยไม่คำนึงถึงพื้นฐานครอบครัว" },
+      { word: "parental responsibility", thaiMeaning: "ความรับผิดชอบของพ่อแม่" },
+      { word: "budgeting and saving", thaiMeaning: "การจัดงบและการออม" },
+      { word: "daily family life", thaiMeaning: "ชีวิตครอบครัวประจำวัน" },
+      { word: "financially successful adults", thaiMeaning: "ผู้ใหญ่ที่ประสบความสำเร็จทางการเงิน" },
+      { word: "financial knowledge", thaiMeaning: "ความรู้ด้านการเงิน" },
+      { word: "financial charity", thaiMeaning: "องค์กรการกุศลด้านการเงิน" },
+      { word: "essential education", thaiMeaning: "การศึกษาที่จำเป็น" },
+      { word: "primary responsibility", thaiMeaning: "ความรับผิดชอบหลัก" },
+      { word: "felt unqualified", thaiMeaning: "รู้สึกว่าไม่มีความรู้พอ" },
+      { word: "consistent, structured financial education", thaiMeaning: "การศึกษาด้านการเงินที่สม่ำเสมอและมีโครงสร้าง" },
+      { word: "solely the responsibility of parents", thaiMeaning: "เป็นความรับผิดชอบของพ่อแม่เพียงอย่างเดียว" },
+      { word: "take on this responsibility", thaiMeaning: "รับผิดชอบเรื่องนี้" },
+      { word: "watching their parents", thaiMeaning: "การสังเกตพ่อแม่" }
     ]
   },
   {
@@ -711,10 +1015,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'student councils', thaiMeaning: 'สภานักเรียน' },
-      { word: 'classroom discipline', thaiMeaning: 'ระเบียบวินัยในห้องเรียน' },
-      { word: 'academic performance', thaiMeaning: 'ผลการเรียน' },
-      { word: 'long-term perspective', thaiMeaning: 'มุมมองระยะยาว' }
+      { word: "student councils", thaiMeaning: "สภานักเรียน" },
+      { word: "classroom discipline", thaiMeaning: "ระเบียบวินัยในห้องเรียน" },
+      { word: "academic performance", thaiMeaning: "ผลการเรียน" },
+      { word: "long-term perspective", thaiMeaning: "มุมมองระยะยาว" },
+      { word: "school rules", thaiMeaning: "กฎของโรงเรียน" },
+      { word: "school uniforms", thaiMeaning: "เครื่องแบบนักเรียน" },
+      { word: "child development", thaiMeaning: "พัฒนาการเด็ก" },
+      { word: "unlimited phone use", thaiMeaning: "การใช้โทรศัพท์อย่างไม่จำกัด" },
+      { word: "sense of ownership", thaiMeaning: "ความรู้สึกเป็นเจ้าของ" },
+      { word: "students' long-term interests", thaiMeaning: "ผลประโยชน์ระยะยาวของนักเรียน" },
+      { word: "learning and safety", thaiMeaning: "การเรียนรู้และความปลอดภัย" },
+      { word: "primary responsibility", thaiMeaning: "ความรับผิดชอบหลัก" },
+      { word: "school life", thaiMeaning: "ชีวิตในโรงเรียน" },
+      { word: "experience and training", thaiMeaning: "ประสบการณ์และการอบรม" },
+      { word: "genuinely support learning", thaiMeaning: "สนับสนุนการเรียนรู้อย่างแท้จริง" },
+      { word: "setting these rules", thaiMeaning: "การกำหนดกฎเหล่านี้" },
+      { word: "help design the rules", thaiMeaning: "ช่วยออกแบบกฎ" },
+      { word: "remain solely responsible", thaiMeaning: "รับผิดชอบเพียงฝ่ายเดียว" },
+      { word: "retain this responsibility", thaiMeaning: "คงความรับผิดชอบนี้ไว้" },
+      { word: "involving students", thaiMeaning: "การให้นักเรียนมีส่วนร่วม" }
     ]
   },
   {
@@ -733,10 +1053,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that new developments can address urgent housing and safety needs, I am of the opinion that preserving old buildings should remain the priority, given their irreplaceable cultural value." }
     ],
     vocab: [
-      { word: 'cultural value', thaiMeaning: 'คุณค่าทางวัฒนธรรม' },
-      { word: 'housing demand', thaiMeaning: 'ความต้องการที่อยู่อาศัย' },
-      { word: 'reconstruction efforts', thaiMeaning: 'ความพยายามในการบูรณะ' },
-      { word: 'original features', thaiMeaning: 'ลักษณะดั้งเดิม' }
+      { word: "cultural value", thaiMeaning: "คุณค่าทางวัฒนธรรม" },
+      { word: "housing demand", thaiMeaning: "ความต้องการที่อยู่อาศัย" },
+      { word: "reconstruction efforts", thaiMeaning: "ความพยายามในการบูรณะ" },
+      { word: "original features", thaiMeaning: "ลักษณะดั้งเดิม" },
+      { word: "carefully preserved traditional buildings", thaiMeaning: "อาคารดั้งเดิมที่อนุรักษ์อย่างดี" },
+      { word: "current safety standards", thaiMeaning: "มาตรฐานความปลอดภัยในปัจจุบัน" },
+      { word: "usable housing space", thaiMeaning: "พื้นที่อยู่อาศัยที่ใช้ได้" },
+      { word: "redeveloped districts", thaiMeaning: "ย่านที่ได้รับการพัฒนาใหม่" },
+      { word: "historic buildings", thaiMeaning: "อาคารประวัติศาสตร์" },
+      { word: "practical needs", thaiMeaning: "ความต้องการในทางปฏิบัติ" },
+      { word: "urgent housing and safety needs", thaiMeaning: "ความต้องการด้านที่อยู่อาศัยและความปลอดภัยเร่งด่วน" },
+      { word: "take priority", thaiMeaning: "ให้ความสำคัญก่อน" },
+      { word: "original form", thaiMeaning: "รูปแบบดั้งเดิม" },
+      { word: "modern buildings", thaiMeaning: "อาคารสมัยใหม่" },
+      { word: "once demolished", thaiMeaning: "เมื่อถูกรื้อถอนแล้ว" },
+      { word: "millions of visitors", thaiMeaning: "ผู้เยี่ยมชมหลายล้านคน" },
+      { word: "authenticity", thaiMeaning: "ความแท้จริง" },
+      { word: "redevelopment", thaiMeaning: "การพัฒนาใหม่" },
+      { word: "old buildings", thaiMeaning: "อาคารเก่า" },
+      { word: "cannot be recreated", thaiMeaning: "ไม่สามารถสร้างขึ้นใหม่ได้" }
     ]
   },
   {
@@ -755,10 +1091,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some erosion of local culture may occur, I am of the opinion that the economic and social benefits of international contact make it a positive development overall." }
     ],
     vocab: [
-      { word: 'national identity', thaiMeaning: 'อัตลักษณ์ของชาติ' },
-      { word: 'traditional customs', thaiMeaning: 'ขนบธรรมเนียมดั้งเดิม' },
-      { word: 'cultural policy', thaiMeaning: 'นโยบายด้านวัฒนธรรม' },
-      { word: 'global exchange', thaiMeaning: 'การแลกเปลี่ยนระดับโลก' }
+      { word: "national identity", thaiMeaning: "อัตลักษณ์ของชาติ" },
+      { word: "traditional customs", thaiMeaning: "ขนบธรรมเนียมดั้งเดิม" },
+      { word: "cultural policy", thaiMeaning: "นโยบายด้านวัฒนธรรม" },
+      { word: "global exchange", thaiMeaning: "การแลกเปลี่ยนระดับโลก" },
+      { word: "international contact", thaiMeaning: "การติดต่อระหว่างประเทศ" },
+      { word: "economic opportunities", thaiMeaning: "โอกาสทางเศรษฐกิจ" },
+      { word: "border restrictions", thaiMeaning: "ข้อจำกัดด้านพรมแดน" },
+      { word: "minority languages", thaiMeaning: "ภาษาชนกลุ่มน้อย" },
+      { word: "globally spoken languages", thaiMeaning: "ภาษาที่ใช้พูดทั่วโลก" },
+      { word: "business expansion", thaiMeaning: "การขยายธุรกิจ" },
+      { word: "traditional arts", thaiMeaning: "ศิลปะดั้งเดิม" },
+      { word: "local culture", thaiMeaning: "วัฒนธรรมท้องถิ่น" },
+      { word: "cultural contact", thaiMeaning: "การติดต่อทางวัฒนธรรม" },
+      { word: "foreign culture", thaiMeaning: "วัฒนธรรมต่างชาติ" },
+      { word: "share knowledge", thaiMeaning: "แบ่งปันความรู้" },
+      { word: "positive development", thaiMeaning: "การพัฒนาในทางบวก" },
+      { word: "economic and social benefits", thaiMeaning: "ประโยชน์ทางเศรษฐกิจและสังคม" },
+      { word: "government support", thaiMeaning: "การสนับสนุนจากรัฐบาล" },
+      { word: "face extinction", thaiMeaning: "เผชิญภาวะใกล้สูญพันธุ์" },
+      { word: "constant exposure", thaiMeaning: "การสัมผัสอย่างต่อเนื่อง" }
     ]
   },
   {
@@ -777,10 +1129,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that hotels offer valuable convenience and professional service, I am of the opinion that holiday homes provide better overall value for most travellers." }
     ],
     vocab: [
-      { word: 'guest services', thaiMeaning: 'บริการสำหรับผู้เข้าพัก' },
-      { word: 'local resident', thaiMeaning: 'ผู้อยู่อาศัยในท้องถิ่น' },
-      { word: 'holiday rentals', thaiMeaning: 'ที่พักให้เช่าสำหรับวันหยุด' },
-      { word: 'living area', thaiMeaning: 'พื้นที่นั่งเล่น' }
+      { word: "guest services", thaiMeaning: "บริการสำหรับผู้เข้าพัก" },
+      { word: "local resident", thaiMeaning: "ผู้อยู่อาศัยในท้องถิ่น" },
+      { word: "holiday rentals", thaiMeaning: "ที่พักให้เช่าสำหรับวันหยุด" },
+      { word: "living area", thaiMeaning: "พื้นที่นั่งเล่น" },
+      { word: "holiday homes", thaiMeaning: "บ้านพักตากอากาศ" },
+      { word: "professional staff", thaiMeaning: "พนักงานมืออาชีพ" },
+      { word: "daily cleaning", thaiMeaning: "บริการทำความสะอาดรายวัน" },
+      { word: "on-site facilities", thaiMeaning: "สิ่งอำนวยความสะดวกในสถานที่" },
+      { word: "round-the-clock", thaiMeaning: "ตลอด 24 ชั่วโมง" },
+      { word: "travel experience", thaiMeaning: "ประสบการณ์การเดินทาง" },
+      { word: "accommodation choice", thaiMeaning: "ตัวเลือกที่พัก" },
+      { word: "save money on meals", thaiMeaning: "ประหยัดค่าอาหาร" },
+      { word: "full kitchen", thaiMeaning: "ครัวครบครัน" },
+      { word: "overall value", thaiMeaning: "คุ้มค่าโดยรวม" },
+      { word: "professional service", thaiMeaning: "บริการระดับมืออาชีพ" },
+      { word: "hotel chains", thaiMeaning: "เครือโรงแรม" },
+      { word: "living space", thaiMeaning: "พื้นที่ใช้สอย" },
+      { word: "hotel rooms", thaiMeaning: "ห้องโรงแรม" },
+      { word: "wiser choice", thaiMeaning: "ทางเลือกที่ฉลาดกว่า" },
+      { word: "convenient option", thaiMeaning: "ทางเลือกที่สะดวก" }
     ]
   },
   {
@@ -799,10 +1167,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that parental support can ease short-term academic pressure, I am of the opinion that allowing children to complete homework independently builds more valuable lifelong skills." }
     ],
     vocab: [
-      { word: 'parental involvement', thaiMeaning: 'การมีส่วนร่วมของผู้ปกครอง' },
-      { word: 'problem-solving skills', thaiMeaning: 'ทักษะการแก้ปัญหา' },
-      { word: 'self-discipline', thaiMeaning: 'วินัยในตนเอง' },
-      { word: 'independent study', thaiMeaning: 'การเรียนรู้ด้วยตนเอง' }
+      { word: "parental involvement", thaiMeaning: "การมีส่วนร่วมของผู้ปกครอง" },
+      { word: "problem-solving skills", thaiMeaning: "ทักษะการแก้ปัญหา" },
+      { word: "self-discipline", thaiMeaning: "วินัยในตนเอง" },
+      { word: "independent study", thaiMeaning: "การเรียนรู้ด้วยตนเอง" },
+      { word: "complete homework independently", thaiMeaning: "ทำการบ้านด้วยตนเอง" },
+      { word: "long-term benefits", thaiMeaning: "ประโยชน์ระยะยาว" },
+      { word: "difficult subjects", thaiMeaning: "วิชาที่ยาก" },
+      { word: "reinforce concepts", thaiMeaning: "ทบทวนแนวคิด" },
+      { word: "working independently", thaiMeaning: "การทำงานอย่างอิสระ" },
+      { word: "constant assistance", thaiMeaning: "ความช่วยเหลืออย่างต่อเนื่อง" },
+      { word: "long-term retention", thaiMeaning: "การจดจำระยะยาว" },
+      { word: "manage setbacks", thaiMeaning: "รับมือกับอุปสรรค" },
+      { word: "without supervision", thaiMeaning: "โดยไม่มีผู้ควบคุม" },
+      { word: "academic pressure", thaiMeaning: "ความกดดันด้านการเรียน" },
+      { word: "lifelong skills", thaiMeaning: "ทักษะตลอดชีวิต" },
+      { word: "parental support", thaiMeaning: "การสนับสนุนจากผู้ปกครอง" },
+      { word: "parental help", thaiMeaning: "ความช่วยเหลือจากผู้ปกครอง" },
+      { word: "independent homework", thaiMeaning: "การบ้านที่ทำด้วยตนเอง" },
+      { word: "clear up confusion", thaiMeaning: "คลายความสับสน" },
+      { word: "developing frustration", thaiMeaning: "เกิดความหงุดหงิด" }
     ]
   },
   {
@@ -821,10 +1205,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that a high salary provides essential financial security, I am of the opinion that a positive working environment matters more for long-term job satisfaction." }
     ],
     vocab: [
-      { word: 'standard of living', thaiMeaning: 'มาตรฐานการครองชีพ' },
-      { word: 'workplace culture', thaiMeaning: 'วัฒนธรรมองค์กร' },
-      { word: 'long-term motivation', thaiMeaning: 'แรงจูงใจระยะยาว' },
-      { word: 'job satisfaction', thaiMeaning: 'ความพึงพอใจในงาน' }
+      { word: "standard of living", thaiMeaning: "มาตรฐานการครองชีพ" },
+      { word: "workplace culture", thaiMeaning: "วัฒนธรรมองค์กร" },
+      { word: "long-term motivation", thaiMeaning: "แรงจูงใจระยะยาว" },
+      { word: "job satisfaction", thaiMeaning: "ความพึงพอใจในงาน" },
+      { word: "high salary", thaiMeaning: "เงินเดือนสูง" },
+      { word: "working environment", thaiMeaning: "สภาพแวดล้อมการทำงาน" },
+      { word: "deciding factor", thaiMeaning: "ปัจจัยชี้ขาด" },
+      { word: "financial needs", thaiMeaning: "ความต้องการทางการเงิน" },
+      { word: "starting salaries", thaiMeaning: "เงินเดือนเริ่มต้น" },
+      { word: "supportive colleagues", thaiMeaning: "เพื่อนร่วมงานที่ให้การสนับสนุน" },
+      { word: "manageable workloads", thaiMeaning: "ปริมาณงานที่รับไหว" },
+      { word: "financial security", thaiMeaning: "ความมั่นคงทางการเงิน" },
+      { word: "unclear expectations", thaiMeaning: "ความคาดหวังที่ไม่ชัดเจน" },
+      { word: "poor management", thaiMeaning: "การบริหารจัดการที่ย่ำแย่" },
+      { word: "top talent", thaiMeaning: "บุคคลที่มีความสามารถสูง" },
+      { word: "constant stress", thaiMeaning: "ความเครียดอย่างต่อเนื่อง" },
+      { word: "investment banks", thaiMeaning: "ธนาคารเพื่อการลงทุน" },
+      { word: "positive workplace", thaiMeaning: "สถานที่ทำงานที่ดี" },
+      { word: "generous salary", thaiMeaning: "เงินเดือนที่สูงมาก" },
+      { word: "demanding roles", thaiMeaning: "ตำแหน่งงานที่ท้าทาย" }
     ]
   },
   {
@@ -843,10 +1243,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that today's children face new pressures such as academic competition and social media, I am of the opinion that children today ultimately have an easier life thanks to modern healthcare and education." }
     ],
     vocab: [
-      { word: 'academic pressures', thaiMeaning: 'ความกดดันด้านการเรียน' },
-      { word: 'child mortality rates', thaiMeaning: 'อัตราการเสียชีวิตของเด็ก' },
-      { word: 'educational resources', thaiMeaning: 'ทรัพยากรทางการศึกษา' },
-      { word: 'academic competition', thaiMeaning: 'การแข่งขันด้านการเรียน' }
+      { word: "academic pressures", thaiMeaning: "ความกดดันด้านการเรียน" },
+      { word: "child mortality rates", thaiMeaning: "อัตราการเสียชีวิตของเด็ก" },
+      { word: "educational resources", thaiMeaning: "ทรัพยากรทางการศึกษา" },
+      { word: "academic competition", thaiMeaning: "การแข่งขันด้านการเรียน" },
+      { word: "unstructured outdoor play", thaiMeaning: "การเล่นกลางแจ้งอย่างอิสระ" },
+      { word: "neighbourhood friends", thaiMeaning: "เพื่อนในละแวกบ้าน" },
+      { word: "scheduled activities", thaiMeaning: "กิจกรรมที่มีตารางกำหนด" },
+      { word: "previous generations", thaiMeaning: "คนรุ่นก่อน" },
+      { word: "access to healthcare", thaiMeaning: "การเข้าถึงบริการสุขภาพ" },
+      { word: "free university lectures", thaiMeaning: "การบรรยายมหาวิทยาลัยฟรี" },
+      { word: "rural village", thaiMeaning: "หมู่บ้านชนบท" },
+      { word: "social media", thaiMeaning: "สื่อสังคมออนไลน์" },
+      { word: "modern healthcare", thaiMeaning: "การดูแลสุขภาพสมัยใหม่" },
+      { word: "greater advantages", thaiMeaning: "ข้อได้เปรียบที่มากขึ้น" },
+      { word: "easier life", thaiMeaning: "ชีวิตที่ง่ายกว่า" },
+      { word: "modern children", thaiMeaning: "เด็กในยุคปัจจุบัน" },
+      { word: "entire afternoons", thaiMeaning: "ช่วงบ่ายทั้งวัน" },
+      { word: "UNICEF data", thaiMeaning: "ข้อมูลของยูนิเซฟ" },
+      { word: "new pressures", thaiMeaning: "ความกดดันใหม่" },
+      { word: "playing outside", thaiMeaning: "การเล่นนอกบ้าน" }
     ]
   },
   {
@@ -865,10 +1281,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that online information has reduced some demand for physical libraries, I am of the opinion that governments should continue funding them to support disadvantaged communities." }
     ],
     vocab: [
-      { word: 'public funds', thaiMeaning: 'เงินทุนสาธารณะ' },
-      { word: 'study spaces', thaiMeaning: 'พื้นที่สำหรับอ่านหนังสือ' },
-      { word: 'digital literacy', thaiMeaning: 'ความรู้ด้านดิจิทัล' },
-      { word: 'disadvantaged communities', thaiMeaning: 'ชุมชนผู้ด้อยโอกาส' }
+      { word: "public funds", thaiMeaning: "เงินทุนสาธารณะ" },
+      { word: "study spaces", thaiMeaning: "พื้นที่สำหรับอ่านหนังสือ" },
+      { word: "digital literacy", thaiMeaning: "ความรู้ด้านดิจิทัล" },
+      { word: "disadvantaged communities", thaiMeaning: "ชุมชนผู้ด้อยโอกาส" },
+      { word: "free public libraries", thaiMeaning: "ห้องสมุดประชาชนฟรี" },
+      { word: "worthwhile investment", thaiMeaning: "การลงทุนที่คุ้มค่า" },
+      { word: "equal access", thaiMeaning: "การเข้าถึงอย่างเท่าเทียม" },
+      { word: "free internet access", thaiMeaning: "การเข้าถึงอินเทอร์เน็ตฟรี" },
+      { word: "job seekers", thaiMeaning: "ผู้หางาน" },
+      { word: "library visits", thaiMeaning: "การเข้าใช้ห้องสมุด" },
+      { word: "elderly residents", thaiMeaning: "ผู้อยู่อาศัยสูงอายุ" },
+      { word: "low-income families", thaiMeaning: "ครอบครัวรายได้น้อย" },
+      { word: "personal devices", thaiMeaning: "อุปกรณ์ส่วนบุคคล" },
+      { word: "community libraries", thaiMeaning: "ห้องสมุดชุมชน" },
+      { word: "online information", thaiMeaning: "ข้อมูลออนไลน์" },
+      { word: "physical libraries", thaiMeaning: "ห้องสมุดทางกายภาพ" },
+      { word: "regardless of income", thaiMeaning: "ไม่ว่าจะมีรายได้เท่าใด" },
+      { word: "rural areas", thaiMeaning: "พื้นที่ชนบท" },
+      { word: "wasteful use", thaiMeaning: "การใช้ที่สิ้นเปลือง" },
+      { word: "government investment", thaiMeaning: "การลงทุนของรัฐบาล" }
     ]
   },
   {
@@ -887,10 +1319,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that television and friends increasingly shape children's attitudes, I am of the opinion that parents remain the single most important influence on a child's development." }
     ],
     vocab: [
-      { word: 'parental supervision', thaiMeaning: 'การดูแลของผู้ปกครอง' },
-      { word: 'emotional security', thaiMeaning: 'ความมั่นคงทางอารมณ์' },
-      { word: 'developmental research', thaiMeaning: 'งานวิจัยด้านพัฒนาการ' },
-      { word: 'formative years', thaiMeaning: 'ช่วงวัยที่หล่อหลอมบุคลิกภาพ' }
+      { word: "parental supervision", thaiMeaning: "การดูแลของผู้ปกครอง" },
+      { word: "emotional security", thaiMeaning: "ความมั่นคงทางอารมณ์" },
+      { word: "developmental research", thaiMeaning: "งานวิจัยด้านพัฒนาการ" },
+      { word: "formative years", thaiMeaning: "ช่วงวัยที่หล่อหลอมบุคลิกภาพ" },
+      { word: "outside influences", thaiMeaning: "อิทธิพลจากภายนอก" },
+      { word: "child's development", thaiMeaning: "พัฒนาการของเด็ก" },
+      { word: "consuming media", thaiMeaning: "การบริโภคสื่อ" },
+      { word: "interacting with peers", thaiMeaning: "การปฏิสัมพันธ์กับเพื่อน" },
+      { word: "online video content", thaiMeaning: "เนื้อหาวิดีโอออนไลน์" },
+      { word: "earliest values", thaiMeaning: "ค่านิยมตั้งแต่แรกเริ่ม" },
+      { word: "supportive households", thaiMeaning: "ครัวเรือนที่ให้การสนับสนุน" },
+      { word: "social outcomes", thaiMeaning: "ผลลัพธ์ทางสังคม" },
+      { word: "screen time", thaiMeaning: "เวลาหน้าจอ" },
+      { word: "language skills", thaiMeaning: "ทักษะทางภาษา" },
+      { word: "primary school age", thaiMeaning: "วัยประถมศึกษา" },
+      { word: "influential factor", thaiMeaning: "ปัจจัยที่มีอิทธิพล" },
+      { word: "encourage reading", thaiMeaning: "ส่งเสริมการอ่าน" },
+      { word: "children's attitudes", thaiMeaning: "ทัศนคติของเด็ก" },
+      { word: "considerable amount of time", thaiMeaning: "เวลาเป็นจำนวนมาก" },
+      { word: "most significant influence", thaiMeaning: "อิทธิพลที่สำคัญที่สุด" }
     ]
   },
   {
@@ -909,10 +1357,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that dangerous sports carry serious risks, I am of the opinion that individuals should retain the freedom to choose which sports they participate in." }
     ],
     vocab: [
-      { word: 'high-risk activities', thaiMeaning: 'กิจกรรมที่มีความเสี่ยงสูง' },
-      { word: 'personal risk', thaiMeaning: 'ความเสี่ยงส่วนบุคคล' },
-      { word: 'individual choice', thaiMeaning: 'ทางเลือกส่วนบุคคล' },
-      { word: 'safety equipment', thaiMeaning: 'อุปกรณ์ความปลอดภัย' }
+      { word: "high-risk activities", thaiMeaning: "กิจกรรมที่มีความเสี่ยงสูง" },
+      { word: "personal risk", thaiMeaning: "ความเสี่ยงส่วนบุคคล" },
+      { word: "individual choice", thaiMeaning: "ทางเลือกส่วนบุคคล" },
+      { word: "safety equipment", thaiMeaning: "อุปกรณ์ความปลอดภัย" },
+      { word: "dangerous sports", thaiMeaning: "กีฬาอันตราย" },
+      { word: "personal freedom", thaiMeaning: "เสรีภาพส่วนบุคคล" },
+      { word: "severe injury", thaiMeaning: "การบาดเจ็บสาหัส" },
+      { word: "extreme sports", thaiMeaning: "กีฬาสุดขั้ว" },
+      { word: "mountain rescue teams", thaiMeaning: "ทีมกู้ภัยบนภูเขา" },
+      { word: "health risks", thaiMeaning: "ความเสี่ยงต่อสุขภาพ" },
+      { word: "less safe alternatives", thaiMeaning: "ทางเลือกที่ปลอดภัยน้อยกว่า" },
+      { word: "serious risks", thaiMeaning: "ความเสี่ยงร้ายแรง" },
+      { word: "base jumping", thaiMeaning: "เบสจัมพ์ปิ้ง" },
+      { word: "free solo climbing", thaiMeaning: "การปีนเขาแบบไม่มีเชือก" },
+      { word: "professional boxing", thaiMeaning: "มวยอาชีพ" },
+      { word: "well-documented", thaiMeaning: "มีเอกสารหลักฐานชัดเจน" },
+      { word: "practice informally", thaiMeaning: "ฝึกแบบไม่เป็นทางการ" },
+      { word: "retain the freedom", thaiMeaning: "รักษาเสรีภาพไว้" },
+      { word: "banned altogether", thaiMeaning: "ถูกห้ามโดยสิ้นเชิง" },
+      { word: "genuine risk", thaiMeaning: "ความเสี่ยงที่แท้จริง" }
     ]
   },
   {
@@ -931,10 +1395,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that stable routines offer valuable comfort and security, I am of the opinion that embracing change ultimately leads to greater personal and professional growth." }
     ],
     vocab: [
-      { word: 'familiar routines', thaiMeaning: 'กิจวัตรที่คุ้นเคย' },
-      { word: 'skill development', thaiMeaning: 'การพัฒนาทักษะ' },
-      { word: 'career opportunities', thaiMeaning: 'โอกาสในหน้าที่การงาน' },
-      { word: 'professional growth', thaiMeaning: 'ความก้าวหน้าในสายอาชีพ' }
+      { word: "familiar routines", thaiMeaning: "กิจวัตรที่คุ้นเคย" },
+      { word: "skill development", thaiMeaning: "การพัฒนาทักษะ" },
+      { word: "career opportunities", thaiMeaning: "โอกาสในหน้าที่การงาน" },
+      { word: "professional growth", thaiMeaning: "ความก้าวหน้าในสายอาชีพ" },
+      { word: "embracing change", thaiMeaning: "การเปิดรับการเปลี่ยนแปลง" },
+      { word: "stable routines", thaiMeaning: "กิจวัตรที่มั่นคง" },
+      { word: "daily responsibilities", thaiMeaning: "หน้าที่ประจำวัน" },
+      { word: "long-serving employees", thaiMeaning: "พนักงานที่ทำงานมานาน" },
+      { word: "new experiences", thaiMeaning: "ประสบการณ์ใหม่" },
+      { word: "professionally outdated", thaiMeaning: "ล้าสมัยในสายอาชีพ" },
+      { word: "digital skills", thaiMeaning: "ทักษะดิจิทัล" },
+      { word: "rise of automation", thaiMeaning: "การเพิ่มขึ้นของระบบอัตโนมัติ" },
+      { word: "better outcomes", thaiMeaning: "ผลลัพธ์ที่ดีกว่า" },
+      { word: "reduce uncertainty", thaiMeaning: "ลดความไม่แน่นอน" },
+      { word: "resist change", thaiMeaning: "ต่อต้านการเปลี่ยนแปลง" },
+      { word: "valuable comfort", thaiMeaning: "ความสะดวกสบายที่มีค่า" },
+      { word: "avoiding change", thaiMeaning: "การหลีกเลี่ยงการเปลี่ยนแปลง" },
+      { word: "wiser approach", thaiMeaning: "แนวทางที่ฉลาดกว่า" },
+      { word: "long-term outcomes", thaiMeaning: "ผลลัพธ์ระยะยาว" },
+      { word: "evolve constantly", thaiMeaning: "พัฒนาอย่างต่อเนื่อง" }
     ]
   },
 
@@ -966,10 +1446,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'tourism revenue', thaiMeaning: 'รายได้จากการท่องเที่ยว' },
-      { word: 'infrastructure investment', thaiMeaning: 'การลงทุนโครงสร้างพื้นฐาน' },
-      { word: 'global recognition', thaiMeaning: 'การยอมรับระดับโลก' },
-      { word: 'public spending', thaiMeaning: 'การใช้จ่ายภาครัฐ' }
+      { word: "host country's international profile", thaiMeaning: "ภาพลักษณ์นานาชาติของประเทศเจ้าภาพ" },
+      { word: "major international sporting event", thaiMeaning: "การแข่งขันกีฬานานาชาติครั้งใหญ่" },
+      { word: "creating thousands of new jobs", thaiMeaning: "การสร้างงานใหม่นับพันตำแหน่ง" },
+      { word: "additional overseas visitors", thaiMeaning: "นักท่องเที่ยวต่างชาติเพิ่มเติม" },
+      { word: "new stadiums and facilities", thaiMeaning: "สนามกีฬาและสิ่งอำนวยความสะดวกใหม่" },
+      { word: "significant economic growth", thaiMeaning: "การเติบโตทางเศรษฐกิจอย่างมีนัยสำคัญ" },
+      { word: "infrastructure investment", thaiMeaning: "การลงทุนโครงสร้างพื้นฐาน" },
+      { word: "international recognition", thaiMeaning: "การยอมรับในระดับนานาชาติ" },
+      { word: "improved infrastructure", thaiMeaning: "โครงสร้างพื้นฐานที่ดีขึ้น" },
+      { word: "high cost of hosting", thaiMeaning: "ต้นทุนสูงของการเป็นเจ้าภาพ" },
+      { word: "tourist destinations", thaiMeaning: "แหล่งท่องเที่ยว" },
+      { word: "billions of pounds", thaiMeaning: "เงินหลายพันล้านปอนด์" },
+      { word: "global recognition", thaiMeaning: "การยอมรับระดับโลก" },
+      { word: "Olympic investment", thaiMeaning: "การลงทุนในโอลิมปิก" },
+      { word: "long-term tourism", thaiMeaning: "การท่องเที่ยวในระยะยาว" },
+      { word: "financial burden", thaiMeaning: "ภาระทางการเงิน" },
+      { word: "public spending", thaiMeaning: "การใช้จ่ายภาครัฐ" },
+      { word: "tourism revenue", thaiMeaning: "รายได้จากการท่องเที่ยว" },
+      { word: "national pride", thaiMeaning: "ความภาคภูมิใจของชาติ" },
+      { word: "public funds", thaiMeaning: "เงินทุนภาครัฐ" }
     ]
   },
   {
@@ -999,10 +1495,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'retirement age', thaiMeaning: 'อายุเกษียณ' },
-      { word: 'social security', thaiMeaning: 'ประกันสังคม' },
-      { word: 'workforce', thaiMeaning: 'กำลังแรงงาน' },
-      { word: 'free childcare', thaiMeaning: 'การเลี้ยงดูเด็กฟรี' }
+      { word: "valuable knowledge and experience", thaiMeaning: "ความรู้และประสบการณ์อันมีค่า" },
+      { word: "significant government spending", thaiMeaning: "การใช้จ่ายภาครัฐจำนวนมาก" },
+      { word: "next generation of workers", thaiMeaning: "คนรุ่นถัดไปในกำลังแรงงาน" },
+      { word: "mentor younger employees", thaiMeaning: "การให้คำปรึกษาพนักงานรุ่นใหม่" },
+      { word: "continued employment", thaiMeaning: "การทำงานต่อเนื่อง" },
+      { word: "full-time employment", thaiMeaning: "การจ้างงานเต็มเวลา" },
+      { word: "ageing population", thaiMeaning: "ประชากรสูงวัย" },
+      { word: "older generations", thaiMeaning: "คนรุ่นเก่า" },
+      { word: "passing on skills", thaiMeaning: "การถ่ายทอดทักษะ" },
+      { word: "elderly citizens", thaiMeaning: "ผู้สูงอายุ" },
+      { word: "financial burden", thaiMeaning: "ภาระทางการเงิน" },
+      { word: "national budget", thaiMeaning: "งบประมาณแห่งชาติ" },
+      { word: "public services", thaiMeaning: "บริการสาธารณะ" },
+      { word: "social security", thaiMeaning: "ประกันสังคม" },
+      { word: "community life", thaiMeaning: "ชีวิตในชุมชน" },
+      { word: "family support", thaiMeaning: "การสนับสนุนจากครอบครัว" },
+      { word: "free childcare", thaiMeaning: "การเลี้ยงดูเด็กฟรี" },
+      { word: "retirement age", thaiMeaning: "อายุเกษียณ" },
+      { word: "pension costs", thaiMeaning: "ค่าใช้จ่ายด้านบำนาญ" },
+      { word: "workforce", thaiMeaning: "กำลังแรงงาน" }
     ]
   },
   {
@@ -1032,10 +1544,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'standard of living', thaiMeaning: 'มาตรฐานการครองชีพ' },
-      { word: 'pastoral support', thaiMeaning: 'การดูแลด้านความเป็นอยู่ของนักเรียน' },
-      { word: 'international schools', thaiMeaning: 'โรงเรียนนานาชาติ' },
-      { word: 'overseas salaries', thaiMeaning: 'เงินเดือนต่างประเทศ' }
+      { word: "International Baccalaureate programme", thaiMeaning: "หลักสูตร International Baccalaureate" },
+      { word: "fluent in two or more languages", thaiMeaning: "พูดได้สองภาษาขึ้นไปอย่างคล่องแคล่ว" },
+      { word: "globally recognised curricula", thaiMeaning: "หลักสูตรที่ได้รับการยอมรับทั่วโลก" },
+      { word: "new languages and cultures", thaiMeaning: "ภาษาและวัฒนธรรมใหม่" },
+      { word: "relocating abroad for work", thaiMeaning: "การย้ายไปทำงานต่างประเทศ" },
+      { word: "parents working abroad", thaiMeaning: "ผู้ปกครองที่ไปทำงานต่างประเทศ" },
+      { word: "financial improvement", thaiMeaning: "การพัฒนาทางการเงิน" },
+      { word: "international schools", thaiMeaning: "โรงเรียนนานาชาติ" },
+      { word: "children's education", thaiMeaning: "การศึกษาของเด็ก" },
+      { word: "secondary education", thaiMeaning: "การศึกษาระดับมัธยม" },
+      { word: "expatriate workers", thaiMeaning: "แรงงานชาวต่างชาติ" },
+      { word: "standard of living", thaiMeaning: "มาตรฐานการครองชีพ" },
+      { word: "cultural exposure", thaiMeaning: "การสัมผัสวัฒนธรรม" },
+      { word: "from an early age", thaiMeaning: "ตั้งแต่อายุยังน้อย" },
+      { word: "overseas salaries", thaiMeaning: "เงินเดือนต่างประเทศ" },
+      { word: "pastoral support", thaiMeaning: "การดูแลด้านความเป็นอยู่ของนักเรียน" },
+      { word: "same curriculum", thaiMeaning: "หลักสูตรเดียวกัน" },
+      { word: "home countries", thaiMeaning: "ประเทศต้นทาง" },
+      { word: "social lives", thaiMeaning: "ชีวิตทางสังคม" },
+      { word: "Gulf region", thaiMeaning: "ภูมิภาคอ่าวอาหรับ" }
     ]
   },
   {
@@ -1065,10 +1593,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'local communities', thaiMeaning: 'ชุมชนท้องถิ่น' },
-      { word: 'overcrowding', thaiMeaning: 'ความแออัด' },
-      { word: 'visitor limits', thaiMeaning: 'การจำกัดจำนวนนักท่องเที่ยว' },
-      { word: 'historic sites', thaiMeaning: 'สถานที่ทางประวัติศาสตร์' }
+      { word: "environmental conservation projects", thaiMeaning: "โครงการอนุรักษ์สิ่งแวดล้อม" },
+      { word: "substantial income and employment", thaiMeaning: "รายได้และการจ้างงานจำนวนมาก" },
+      { word: "responsible tourism management", thaiMeaning: "การจัดการท่องเที่ยวอย่างรับผิดชอบ" },
+      { word: "eco-certification schemes", thaiMeaning: "โครงการรับรองมาตรฐานเชิงนิเวศ" },
+      { word: "cultural preservation", thaiMeaning: "การอนุรักษ์วัฒนธรรม" },
+      { word: "international tourism", thaiMeaning: "การท่องเที่ยวนานาชาติ" },
+      { word: "environmental damage", thaiMeaning: "ความเสียหายต่อสิ่งแวดล้อม" },
+      { word: "environmental impact", thaiMeaning: "ผลกระทบต่อสิ่งแวดล้อม" },
+      { word: "local infrastructure", thaiMeaning: "โครงสร้างพื้นฐานในท้องถิ่น" },
+      { word: "peak holiday seasons", thaiMeaning: "ช่วงฤดูท่องเที่ยวสูงสุด" },
+      { word: "restoration projects", thaiMeaning: "โครงการบูรณะ" },
+      { word: "cultural investment", thaiMeaning: "การลงทุนทางวัฒนธรรม" },
+      { word: "tourist entry fees", thaiMeaning: "ค่าเข้าชมสถานที่ท่องเที่ยว" },
+      { word: "coral reef damage", thaiMeaning: "ความเสียหายต่อแนวปะการัง" },
+      { word: "local communities", thaiMeaning: "ชุมชนท้องถิ่น" },
+      { word: "total employment", thaiMeaning: "การจ้างงานทั้งหมด" },
+      { word: "historic sites", thaiMeaning: "สถานที่ทางประวัติศาสตร์" },
+      { word: "visitor limits", thaiMeaning: "การจำกัดจำนวนนักท่องเที่ยว" },
+      { word: "local culture", thaiMeaning: "วัฒนธรรมท้องถิ่น" },
+      { word: "overcrowding", thaiMeaning: "ความแออัด" }
     ]
   },
   {
@@ -1098,10 +1642,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'reading experience', thaiMeaning: 'ประสบการณ์การอ่าน' },
-      { word: 'eye strain', thaiMeaning: 'อาการปวดล้าตา' },
-      { word: 'printing costs', thaiMeaning: 'ต้นทุนการพิมพ์' },
-      { word: 'digital distractions', thaiMeaning: 'สิ่งรบกวนทางดิจิทัล' }
+      { word: "printing and distribution costs", thaiMeaning: "ต้นทุนการพิมพ์และจัดจำหน่าย" },
+      { word: "convenience and affordability", thaiMeaning: "ความสะดวกและราคาที่เอื้อมถึง" },
+      { word: "paper-like display technology", thaiMeaning: "เทคโนโลยีหน้าจอคล้ายกระดาษ" },
+      { word: "focus solely on their book", thaiMeaning: "โฟกัสเฉพาะหนังสือของตน" },
+      { word: "single lightweight device", thaiMeaning: "อุปกรณ์น้ำหนักเบาเครื่องเดียว" },
+      { word: "hardcover equivalents", thaiMeaning: "หนังสือปกแข็งที่เทียบเท่า" },
+      { word: "digital distractions", thaiMeaning: "สิ่งรบกวนทางดิจิทัล" },
+      { word: "thousands of titles", thaiMeaning: "หนังสือหลายพันเล่ม" },
+      { word: "reading experience", thaiMeaning: "ประสบการณ์การอ่าน" },
+      { word: "retain information", thaiMeaning: "จดจำข้อมูล" },
+      { word: "internet browsers", thaiMeaning: "เบราว์เซอร์อินเทอร์เน็ต" },
+      { word: "digital editions", thaiMeaning: "ฉบับดิจิทัล" },
+      { word: "personal library", thaiMeaning: "คลังหนังสือส่วนตัว" },
+      { word: "younger readers", thaiMeaning: "นักอ่านวัยเยาว์" },
+      { word: "physical books", thaiMeaning: "หนังสือเล่มจริง" },
+      { word: "cheaper hobby", thaiMeaning: "งานอดิเรกที่ถูกกว่า" },
+      { word: "better focus", thaiMeaning: "สมาธิที่ดีกว่า" },
+      { word: "new releases", thaiMeaning: "หนังสือออกใหม่" },
+      { word: "paper books", thaiMeaning: "หนังสือกระดาษ" },
+      { word: "eye strain", thaiMeaning: "อาการปวดล้าตา" }
     ]
   },
   {
@@ -1119,10 +1679,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the risk of misuse of force, I am of the opinion that the benefits of police officers carrying weapons, including rapid emergency response and deterrence against attacks, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'armed response units', thaiMeaning: 'หน่วยตอบโต้เหตุด่วนที่มีอาวุธ' },
-      { word: 'deterrent', thaiMeaning: 'สิ่งยับยั้ง/ป้องปราม' },
-      { word: 'accountability procedures', thaiMeaning: 'กระบวนการตรวจสอบความรับผิดชอบ' },
-      { word: 'de-escalation training', thaiMeaning: 'การฝึกลดระดับความรุนแรงของสถานการณ์' }
+      { word: "life-threatening situations", thaiMeaning: "สถานการณ์ที่คุกคามชีวิต" },
+      { word: "accountability procedures", thaiMeaning: "กระบวนการตรวจสอบความรับผิดชอบ" },
+      { word: "law enforcement personnel", thaiMeaning: "บุคลากรด้านบังคับใช้กฎหมาย" },
+      { word: "rapid emergency response", thaiMeaning: "การตอบสนองเหตุฉุกเฉินอย่างรวดเร็ว" },
+      { word: "de-escalation training", thaiMeaning: "การฝึกลดระดับความรุนแรงของสถานการณ์" },
+      { word: "excessive use of force", thaiMeaning: "การใช้กำลังเกินกว่าเหตุ" },
+      { word: "accidental shootings", thaiMeaning: "การยิงโดยอุบัติเหตุ" },
+      { word: "armed response units", thaiMeaning: "หน่วยตอบโต้เหตุด่วนที่มีอาวุธ" },
+      { word: "split-second errors", thaiMeaning: "ความผิดพลาดในเสี้ยววินาที" },
+      { word: "hostage situations", thaiMeaning: "สถานการณ์ตัวประกัน" },
+      { word: "rigorous training", thaiMeaning: "การฝึกอบรมอย่างเข้มงวด" },
+      { word: "standard practice", thaiMeaning: "แนวปฏิบัติมาตรฐาน" },
+      { word: "unarmed civilians", thaiMeaning: "พลเรือนที่ไม่มีอาวุธ" },
+      { word: "tragic outcomes", thaiMeaning: "ผลลัพธ์ที่น่าเศร้า" },
+      { word: "armed officers", thaiMeaning: "เจ้าหน้าที่ติดอาวุธ" },
+      { word: "fatal outcomes", thaiMeaning: "ผลลัพธ์ถึงแก่ชีวิต" },
+      { word: "shooting rates", thaiMeaning: "อัตราการใช้อาวุธยิง" },
+      { word: "armed patrols", thaiMeaning: "การลาดตระเวนติดอาวุธ" },
+      { word: "public safety", thaiMeaning: "ความปลอดภัยสาธารณะ" },
+      { word: "deterrent", thaiMeaning: "สิ่งยับยั้ง/ป้องปราม" }
     ]
   },
   {
@@ -1140,10 +1716,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the loss of traditional social values, I am of the opinion that the benefits of economic development, including poverty reduction and improved public services, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'extreme poverty', thaiMeaning: 'ความยากจนขั้นรุนแรง' },
-      { word: 'national income', thaiMeaning: 'รายได้ประชาชาติ' },
-      { word: 'urbanisation', thaiMeaning: 'การกลายเป็นเมือง' },
-      { word: 'cultural heritage', thaiMeaning: 'มรดกทางวัฒนธรรม' }
+      { word: "healthcare and education systems", thaiMeaning: "ระบบสาธารณสุขและการศึกษา" },
+      { word: "rapid economic development", thaiMeaning: "การพัฒนาทางเศรษฐกิจอย่างรวดเร็ว" },
+      { word: "traditional social values", thaiMeaning: "ค่านิยมทางสังคมแบบดั้งเดิม" },
+      { word: "employment opportunities", thaiMeaning: "โอกาสในการจ้างงาน" },
+      { word: "rapid industrialisation", thaiMeaning: "การพัฒนาอุตสาหกรรมอย่างรวดเร็ว" },
+      { word: "shrinking populations", thaiMeaning: "ประชากรที่ลดลง" },
+      { word: "traditional customs", thaiMeaning: "ประเพณีดั้งเดิม" },
+      { word: "cultural heritage", thaiMeaning: "มรดกทางวัฒนธรรม" },
+      { word: "family structures", thaiMeaning: "โครงสร้างครอบครัว" },
+      { word: "ordinary citizens", thaiMeaning: "ประชาชนทั่วไป" },
+      { word: "poverty reduction", thaiMeaning: "การลดความยากจน" },
+      { word: "rural communities", thaiMeaning: "ชุมชนในชนบท" },
+      { word: "economic growth", thaiMeaning: "การเติบโตทางเศรษฐกิจ" },
+      { word: "extreme poverty", thaiMeaning: "ความยากจนขั้นรุนแรง" },
+      { word: "national income", thaiMeaning: "รายได้ประชาชาติ" },
+      { word: "rural hospitals", thaiMeaning: "โรงพยาบาลในชนบท" },
+      { word: "heritage sites", thaiMeaning: "แหล่งมรดก" },
+      { word: "public schools", thaiMeaning: "โรงเรียนของรัฐ" },
+      { word: "higher wages", thaiMeaning: "ค่าจ้างที่สูงกว่า" },
+      { word: "urbanisation", thaiMeaning: "การกลายเป็นเมือง" }
     ]
   },
   {
@@ -1161,10 +1753,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the long-term health effects of modified foods, I am of the opinion that the benefits of genetically modified crops, including higher yields and pest resistance, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'crop yields', thaiMeaning: 'ผลผลิตทางการเกษตร' },
-      { word: 'chemical pesticides', thaiMeaning: 'ยาฆ่าแมลงเคมี' },
-      { word: 'consumer groups', thaiMeaning: 'กลุ่มผู้บริโภค' },
-      { word: 'scientific bodies', thaiMeaning: 'องค์กรทางวิทยาศาสตร์' }
+      { word: "approved genetically modified foods", thaiMeaning: "อาหารดัดแปลงพันธุกรรมที่ได้รับอนุมัติ" },
+      { word: "genetically modified food crops", thaiMeaning: "พืชอาหารดัดแปลงพันธุกรรม" },
+      { word: "genetically modified maize", thaiMeaning: "ข้าวโพดดัดแปลงพันธุกรรม" },
+      { word: "unresolved health concerns", thaiMeaning: "ความกังวลด้านสุขภาพที่ยังไม่คลี่คลาย" },
+      { word: "long-term health effects", thaiMeaning: "ผลกระทบต่อสุขภาพระยะยาว" },
+      { word: "resist pests and drought", thaiMeaning: "ต้านทานศัตรูพืชและภัยแล้ง" },
+      { word: "verified case of harm", thaiMeaning: "กรณีอันตรายที่ยืนยันได้" },
+      { word: "Bt cotton varieties", thaiMeaning: "สายพันธุ์ฝ้าย Bt" },
+      { word: "chemical pesticides", thaiMeaning: "ยาฆ่าแมลงเคมี" },
+      { word: "decades of evidence", thaiMeaning: "หลักฐานหลายทศวรรษ" },
+      { word: "growing populations", thaiMeaning: "ประชากรที่เพิ่มขึ้น" },
+      { word: "stricter labelling", thaiMeaning: "การติดฉลากที่เข้มงวดขึ้น" },
+      { word: "scientific bodies", thaiMeaning: "องค์กรทางวิทยาศาสตร์" },
+      { word: "widely cultivated", thaiMeaning: "เพาะปลูกอย่างแพร่หลาย" },
+      { word: "consumer groups", thaiMeaning: "กลุ่มผู้บริโภค" },
+      { word: "pest resistance", thaiMeaning: "ความต้านทานต่อศัตรูพืช" },
+      { word: "higher yields", thaiMeaning: "ผลผลิตที่สูงขึ้น" },
+      { word: "pesticide use", thaiMeaning: "การใช้ยาฆ่าแมลง" },
+      { word: "public health", thaiMeaning: "สาธารณสุข" },
+      { word: "crop yields", thaiMeaning: "ผลผลิตทางการเกษตร" }
     ]
   },
   {
@@ -1182,10 +1790,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the reliability of online information, I am of the opinion that the benefits of storing information on the internet, including instant access and constant updates, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'instant access', thaiMeaning: 'การเข้าถึงได้ทันที' },
-      { word: 'online libraries', thaiMeaning: 'ห้องสมุดออนไลน์' },
-      { word: 'fact-checking', thaiMeaning: 'การตรวจสอบความถูกต้องของข้อมูล' },
-      { word: 'peer-reviewed material', thaiMeaning: 'เอกสารที่ผ่านการตรวจสอบโดยผู้เชี่ยวชาญ' }
+      { word: "storing information on the internet", thaiMeaning: "การเก็บข้อมูลบนอินเทอร์เน็ต" },
+      { word: "reputable digital platforms", thaiMeaning: "แพลตฟอร์มดิจิทัลที่น่าเชื่อถือ" },
+      { word: "printed reference books", thaiMeaning: "หนังสืออ้างอิงฉบับพิมพ์" },
+      { word: "peer-reviewed material", thaiMeaning: "เอกสารที่ผ่านการตรวจสอบโดยผู้เชี่ยวชาญ" },
+      { word: "verification standards", thaiMeaning: "มาตรฐานการตรวจสอบ" },
+      { word: "digital encyclopedias", thaiMeaning: "สารานุกรมดิจิทัล" },
+      { word: "reliable news sources", thaiMeaning: "แหล่งข่าวที่เชื่อถือได้" },
+      { word: "academic databases", thaiMeaning: "ฐานข้อมูลทางวิชาการ" },
+      { word: "major world events", thaiMeaning: "เหตุการณ์สำคัญของโลก" },
+      { word: "online information", thaiMeaning: "ข้อมูลออนไลน์" },
+      { word: "constant updates", thaiMeaning: "การอัปเดตอย่างต่อเนื่อง" },
+      { word: "online libraries", thaiMeaning: "ห้องสมุดออนไลน์" },
+      { word: "printed journals", thaiMeaning: "วารสารฉบับพิมพ์" },
+      { word: "printed material", thaiMeaning: "สื่อสิ่งพิมพ์" },
+      { word: "misleading ones", thaiMeaning: "แหล่งข้อมูลที่ทำให้เข้าใจผิด" },
+      { word: "instant access", thaiMeaning: "การเข้าถึงได้ทันที" },
+      { word: "online content", thaiMeaning: "เนื้อหาออนไลน์" },
+      { word: "expert review", thaiMeaning: "การตรวจสอบโดยผู้เชี่ยวชาญ" },
+      { word: "fact-checking", thaiMeaning: "การตรวจสอบความถูกต้องของข้อมูล" },
+      { word: "remote areas", thaiMeaning: "พื้นที่ห่างไกล" }
     ]
   },
   {
@@ -1203,10 +1827,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the lack of face-to-face interaction, I am of the opinion that the benefits of distance-learning programs, including flexibility and lower cost, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'campus costs', thaiMeaning: 'ค่าใช้จ่ายในมหาวิทยาลัย' },
-      { word: 'networking opportunities', thaiMeaning: 'โอกาสในการสร้างเครือข่าย' },
-      { word: 'online learners', thaiMeaning: 'ผู้เรียนออนไลน์' },
-      { word: 'video tutorials', thaiMeaning: 'วิดีโอสอนบทเรียน' }
+      { word: "accredited online bachelor's degrees", thaiMeaning: "ปริญญาตรีออนไลน์ที่ได้รับการรับรอง" },
+      { word: "collaborative group projects", thaiMeaning: "โครงการกลุ่มแบบร่วมมือ" },
+      { word: "distance-learning programs", thaiMeaning: "หลักสูตรการเรียนทางไกล" },
+      { word: "relocating for university", thaiMeaning: "การย้ายที่อยู่เพื่อเข้ามหาวิทยาลัย" },
+      { word: "face-to-face interaction", thaiMeaning: "การปฏิสัมพันธ์แบบพบหน้า" },
+      { word: "networking opportunities", thaiMeaning: "โอกาสในการสร้างเครือข่าย" },
+      { word: "spontaneous discussions", thaiMeaning: "การอภิปรายแบบเกิดขึ้นเอง" },
+      { word: "study entirely online", thaiMeaning: "เรียนออนไลน์ทั้งหมด" },
+      { word: "traditional degrees", thaiMeaning: "ปริญญาแบบดั้งเดิม" },
+      { word: "on-campus programs", thaiMeaning: "หลักสูตรในมหาวิทยาลัย" },
+      { word: "feeling isolated", thaiMeaning: "รู้สึกโดดเดี่ยว" },
+      { word: "modern platforms", thaiMeaning: "แพลตฟอร์มสมัยใหม่" },
+      { word: "in-person study", thaiMeaning: "การเรียนแบบพบหน้า" },
+      { word: "online learners", thaiMeaning: "ผู้เรียนออนไลน์" },
+      { word: "video tutorials", thaiMeaning: "วิดีโอสอนบทเรียน" },
+      { word: "full-time jobs", thaiMeaning: "งานเต็มเวลา" },
+      { word: "online courses", thaiMeaning: "หลักสูตรออนไลน์" },
+      { word: "live seminars", thaiMeaning: "สัมมนาสด" },
+      { word: "campus costs", thaiMeaning: "ค่าใช้จ่ายในมหาวิทยาลัย" },
+      { word: "lower cost", thaiMeaning: "ต้นทุนที่ต่ำกว่า" }
     ]
   },
   {
@@ -1224,10 +1864,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the financial cost of studying abroad, I am of the opinion that the benefits of university students studying abroad, including academic exposure and improved job prospects, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'critical thinking skills', thaiMeaning: 'ทักษะการคิดวิเคราะห์' },
-      { word: 'job prospects', thaiMeaning: 'โอกาสความก้าวหน้าในอาชีพ' },
-      { word: 'tuition fees', thaiMeaning: 'ค่าเล่าเรียน' },
-      { word: 'scholarships', thaiMeaning: 'ทุนการศึกษา' }
+      { word: "critical thinking skills", thaiMeaning: "ทักษะการคิดวิเคราะห์" },
+      { word: "job prospects", thaiMeaning: "โอกาสความก้าวหน้าในอาชีพ" },
+      { word: "tuition fees", thaiMeaning: "ค่าเล่าเรียน" },
+      { word: "scholarships", thaiMeaning: "ทุนการศึกษา" },
+      { word: "Erasmus exchange programme", thaiMeaning: "โครงการแลกเปลี่ยนเอราสมุส" },
+      { word: "academic perspectives", thaiMeaning: "มุมมองทางวิชาการ" },
+      { word: "teaching methods", thaiMeaning: "วิธีการสอน" },
+      { word: "overseas study experience", thaiMeaning: "ประสบการณ์เรียนต่างประเทศ" },
+      { word: "living expenses", thaiMeaning: "ค่าครองชีพ" },
+      { word: "Chevening Scholarship programme", thaiMeaning: "โครงการทุน Chevening" },
+      { word: "academic exposure", thaiMeaning: "การเปิดรับความรู้ทางวิชาการ" },
+      { word: "studying overseas", thaiMeaning: "การไปเรียนต่างประเทศ" },
+      { word: "financial cost", thaiMeaning: "ต้นทุนทางการเงิน" },
+      { word: "home universities", thaiMeaning: "มหาวิทยาลัยต้นสังกัด" },
+      { word: "British Council", thaiMeaning: "บริติชเคานซิล" },
+      { word: "Australian universities", thaiMeaning: "มหาวิทยาลัยในออสเตรเลีย" },
+      { word: "domestic study", thaiMeaning: "การเรียนในประเทศ" },
+      { word: "international students", thaiMeaning: "นักศึกษาต่างชาติ" },
+      { word: "academic careers", thaiMeaning: "เส้นทางอาชีพทางวิชาการ" },
+      { word: "significantly stronger", thaiMeaning: "แข็งแกร่งขึ้นอย่างมาก" }
     ]
   },
   {
@@ -1245,10 +1901,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the risk of accumulating debt, I am of the opinion that the benefits of credit cards for young people, including building credit history and providing financial security, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'credit history', thaiMeaning: 'ประวัติเครดิต' },
-      { word: 'financial buffer', thaiMeaning: 'เงินสำรองทางการเงิน' },
-      { word: 'budgeting', thaiMeaning: 'การทำงบประมาณ' },
-      { word: 'spending alerts', thaiMeaning: 'การแจ้งเตือนการใช้จ่าย' }
+      { word: "credit history", thaiMeaning: "ประวัติเครดิต" },
+      { word: "financial buffer", thaiMeaning: "เงินสำรองทางการเงิน" },
+      { word: "budgeting", thaiMeaning: "การทำงบประมาณ" },
+      { word: "spending alerts", thaiMeaning: "การแจ้งเตือนการใช้จ่าย" },
+      { word: "mortgage rates", thaiMeaning: "อัตราดอกเบี้ยสินเชื่อบ้าน" },
+      { word: "genuine emergencies", thaiMeaning: "เหตุฉุกเฉินจริงๆ" },
+      { word: "unmanageable debt", thaiMeaning: "หนี้ที่จัดการไม่ได้" },
+      { word: "non-essential items", thaiMeaning: "สิ่งของที่ไม่จำเป็น" },
+      { word: "financial literacy modules", thaiMeaning: "หลักสูตรความรู้ทางการเงิน" },
+      { word: "credit card debt", thaiMeaning: "หนี้บัตรเครดิต" },
+      { word: "medical bills", thaiMeaning: "ค่าแพทย์" },
+      { word: "urgent travel costs", thaiMeaning: "ค่าเดินทางเร่งด่วน" },
+      { word: "financial wellbeing", thaiMeaning: "สุขภาวะทางการเงิน" },
+      { word: "young applicants", thaiMeaning: "ผู้สมัครหนุ่มสาว" },
+      { word: "Federal Reserve", thaiMeaning: "ธนาคารกลางสหรัฐ" },
+      { word: "financial security", thaiMeaning: "ความมั่นคงทางการเงิน" },
+      { word: "studying overseas", thaiMeaning: "การไปเรียนต่างประเทศ" },
+      { word: "track and control", thaiMeaning: "ติดตามและควบคุมการใช้จ่าย" },
+      { word: "open a credit card", thaiMeaning: "เปิดบัตรเครดิต" },
+      { word: "young cardholders", thaiMeaning: "ผู้ถือบัตรหนุ่มสาว" }
     ]
   },
   {
@@ -1266,10 +1938,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of the inconsistent supply of renewable energy, I am of the opinion that the benefits of shifting to alternative energy, including reduced emissions and falling costs, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'carbon emissions', thaiMeaning: 'การปล่อยก๊าซคาร์บอน' },
-      { word: 'renewable energy', thaiMeaning: 'พลังงานหมุนเวียน' },
-      { word: 'wind farm output', thaiMeaning: 'ผลผลิตพลังงานจากฟาร์มกังหันลม' },
-      { word: 'battery storage', thaiMeaning: 'ระบบกักเก็บพลังงานด้วยแบตเตอรี่' }
+      { word: "carbon emissions", thaiMeaning: "การปล่อยก๊าซคาร์บอน" },
+      { word: "renewable energy", thaiMeaning: "พลังงานหมุนเวียน" },
+      { word: "wind farm output", thaiMeaning: "ผลผลิตจากฟาร์มกังหันลม" },
+      { word: "battery storage", thaiMeaning: "ระบบกักเก็บพลังงานแบตเตอรี่" },
+      { word: "fossil fuels", thaiMeaning: "เชื้อเพลิงฟอสซิล" },
+      { word: "alternative energy sources", thaiMeaning: "แหล่งพลังงานทางเลือก" },
+      { word: "climate change", thaiMeaning: "การเปลี่ยนแปลงสภาพภูมิอากาศ" },
+      { word: "wind power", thaiMeaning: "พลังงานลม" },
+      { word: "solar power costs", thaiMeaning: "ต้นทุนพลังงานแสงอาทิตย์" },
+      { word: "weather conditions", thaiMeaning: "สภาพอากาศ" },
+      { word: "electricity shortages", thaiMeaning: "การขาดแคลนไฟฟ้า" },
+      { word: "national economies", thaiMeaning: "เศรษฐกิจของชาติ" },
+      { word: "constant availability", thaiMeaning: "ความพร้อมใช้อย่างต่อเนื่อง" },
+      { word: "large-scale battery installation", thaiMeaning: "การติดตั้งแบตเตอรี่ขนาดใหญ่" },
+      { word: "falling costs", thaiMeaning: "ต้นทุนที่ลดลง" },
+      { word: "low wind generation", thaiMeaning: "การผลิตไฟจากลมต่ำ" },
+      { word: "reduced emissions", thaiMeaning: "การปล่อยมลพิษที่ลดลง" },
+      { word: "previous decade", thaiMeaning: "ทศวรรษก่อนหน้า" },
+      { word: "store surplus", thaiMeaning: "เก็บส่วนเกินไว้" },
+      { word: "depend heavily", thaiMeaning: "พึ่งพาอย่างมาก" }
     ]
   },
   {
@@ -1287,10 +1975,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of job losses caused by automation, I am of the opinion that the benefits of artificial intelligence in the workplace, including efficiency and new job creation, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'repetitive tasks', thaiMeaning: 'งานที่ทำซ้ำๆ' },
-      { word: 'data analysis', thaiMeaning: 'การวิเคราะห์ข้อมูล' },
-      { word: 'job losses', thaiMeaning: 'การสูญเสียตำแหน่งงาน' },
-      { word: 'machine-learning engineering', thaiMeaning: 'วิศวกรรมการเรียนรู้ของเครื่อง' }
+      { word: "repetitive tasks", thaiMeaning: "งานที่ทำซ้ำๆ" },
+      { word: "data analysis", thaiMeaning: "การวิเคราะห์ข้อมูล" },
+      { word: "job losses", thaiMeaning: "การสูญเสียตำแหน่งงาน" },
+      { word: "machine-learning engineering", thaiMeaning: "วิศวกรรมการเรียนรู้ของเครื่อง" },
+      { word: "artificial intelligence", thaiMeaning: "ปัญญาประดิษฐ์" },
+      { word: "tedious duties", thaiMeaning: "หน้าที่งานที่น่าเบื่อ" },
+      { word: "campaign design", thaiMeaning: "การออกแบบแคมเปญ" },
+      { word: "customer service", thaiMeaning: "บริการลูกค้า" },
+      { word: "basic administration", thaiMeaning: "งานธุรการพื้นฐาน" },
+      { word: "emerging industries", thaiMeaning: "อุตสาหกรรมเกิดใหม่" },
+      { word: "data labelling", thaiMeaning: "การติดป้ายข้อมูล" },
+      { word: "manual sorting teams", thaiMeaning: "ทีมคัดแยกด้วยมือ" },
+      { word: "warehouse robots", thaiMeaning: "หุ่นยนต์คลังสินค้า" },
+      { word: "customer orders", thaiMeaning: "คำสั่งซื้อของลูกค้า" },
+      { word: "new job creation", thaiMeaning: "การสร้างงานใหม่" },
+      { word: "creative and strategic work", thaiMeaning: "งานสร้างสรรค์และเชิงกลยุทธ์" },
+      { word: "fresh employment opportunities", thaiMeaning: "โอกาสจ้างงานใหม่" },
+      { word: "current jobs", thaiMeaning: "งานในปัจจุบัน" },
+      { word: "frees employees", thaiMeaning: "ช่วยให้พนักงานมีอิสระจาก" },
+      { word: "barely existed", thaiMeaning: "แทบไม่มีมาก่อน" }
     ]
   },
   {
@@ -1308,10 +2012,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       { role: 'conclusion', text: "In conclusion, although it is undeniable that some might be concerned in terms of job losses caused by robots, I am of the opinion that the benefits of using robots in society, including safety and improved precision, are far greater than the drawbacks." }
     ],
     vocab: [
-      { word: 'nuclear reactors', thaiMeaning: 'เตาปฏิกรณ์นิวเคลียร์' },
-      { word: 'robotic-assisted systems', thaiMeaning: 'ระบบที่ใช้หุ่นยนต์ช่วยปฏิบัติงาน' },
-      { word: 'assembly lines', thaiMeaning: 'สายการประกอบชิ้นงาน' },
-      { word: 'retraining schemes', thaiMeaning: 'โครงการฝึกอบรมทักษะใหม่' }
+      { word: "nuclear reactors", thaiMeaning: "เตาปฏิกรณ์นิวเคลียร์" },
+      { word: "robotic-assisted systems", thaiMeaning: "ระบบหุ่นยนต์ช่วยปฏิบัติงาน" },
+      { word: "assembly lines", thaiMeaning: "สายการประกอบ" },
+      { word: "retraining schemes", thaiMeaning: "โครงการฝึกอบรมทักษะใหม่" },
+      { word: "dangerous tasks", thaiMeaning: "งานอันตราย" },
+      { word: "human workers", thaiMeaning: "แรงงานมนุษย์" },
+      { word: "defuse explosives", thaiMeaning: "กู้ระเบิด" },
+      { word: "social interaction", thaiMeaning: "ปฏิสัมพันธ์ทางสังคม" },
+      { word: "low-skilled workers", thaiMeaning: "แรงงานทักษะต่ำ" },
+      { word: "displaced workers", thaiMeaning: "แรงงานที่ถูกแทนที่" },
+      { word: "supervisory roles", thaiMeaning: "ตำแหน่งงานกำกับดูแล" },
+      { word: "robot maintenance", thaiMeaning: "การบำรุงรักษาหุ่นยนต์" },
+      { word: "programming careers", thaiMeaning: "อาชีพด้านการเขียนโปรแกรม" },
+      { word: "improved precision", thaiMeaning: "ความแม่นยำที่ดีขึ้น" },
+      { word: "complex operations", thaiMeaning: "การผ่าตัดที่ซับซ้อน" },
+      { word: "permanently unemployed", thaiMeaning: "ว่างงานอย่างถาวร" },
+      { word: "human development", thaiMeaning: "การพัฒนาของมนุษย์" },
+      { word: "fewer complications", thaiMeaning: "ภาวะแทรกซ้อนน้อยลง" },
+      { word: "sharp job losses", thaiMeaning: "การสูญเสียงานอย่างรวดเร็ว" },
+      { word: "serious risk", thaiMeaning: "ความเสี่ยงร้ายแรง" }
     ]
   },
 
@@ -1343,10 +2063,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'healthcare spending', thaiMeaning: 'ค่าใช้จ่ายด้านสุขภาพ' },
-      { word: 'working-age taxpayers', thaiMeaning: 'ผู้เสียภาษีวัยทำงาน' },
-      { word: 'childcare subsidies', thaiMeaning: 'เงินอุดหนุนค่าเลี้ยงดูเด็ก' },
-      { word: 'birth rates', thaiMeaning: 'อัตราการเกิด' }
+      { word: "healthcare spending", thaiMeaning: "ค่าใช้จ่ายด้านสุขภาพ" },
+      { word: "working-age taxpayers", thaiMeaning: "ผู้เสียภาษีวัยทำงาน" },
+      { word: "childcare subsidies", thaiMeaning: "เงินอุดหนุนค่าเลี้ยงดูเด็ก" },
+      { word: "birth rates", thaiMeaning: "อัตราการเกิด" },
+      { word: "life expectancy", thaiMeaning: "อายุขัยเฉลี่ย" },
+      { word: "ageing population", thaiMeaning: "สังคมสูงวัย" },
+      { word: "healthcare systems", thaiMeaning: "ระบบสาธารณสุข" },
+      { word: "elderly citizens", thaiMeaning: "ผู้สูงอายุ" },
+      { word: "medical treatment", thaiMeaning: "การรักษาพยาบาล" },
+      { word: "shrinking workforce", thaiMeaning: "กำลังแรงงานที่หดตัว" },
+      { word: "retirement age", thaiMeaning: "อายุเกษียณ" },
+      { word: "economically active", thaiMeaning: "มีกิจกรรมทางเศรษฐกิจ" },
+      { word: "pension system", thaiMeaning: "ระบบบำนาญ" },
+      { word: "financial incentives", thaiMeaning: "สิ่งจูงใจทางการเงิน" },
+      { word: "family support policies", thaiMeaning: "นโยบายสนับสนุนครอบครัว" },
+      { word: "workforce reform", thaiMeaning: "การปฏิรูปกำลังแรงงาน" },
+      { word: "considerable pressure", thaiMeaning: "แรงกดดันอย่างมาก" },
+      { word: "growing number of retirees", thaiMeaning: "จำนวนผู้เกษียณที่เพิ่มขึ้น" },
+      { word: "ease pressure", thaiMeaning: "บรรเทาแรงกดดัน" },
+      { word: "rebalance the population", thaiMeaning: "ปรับสมดุลประชากร" }
     ]
   },
   {
@@ -1376,10 +2112,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'digital skills', thaiMeaning: 'ทักษะดิจิทัล' },
-      { word: 'wearable devices', thaiMeaning: 'อุปกรณ์สวมใส่' },
-      { word: 'simpler interfaces', thaiMeaning: 'หน้าจอใช้งานง่ายขึ้น' },
-      { word: 'video-calling applications', thaiMeaning: 'แอปพลิเคชันวิดีโอคอล' }
+      { word: "digital skills", thaiMeaning: "ทักษะดิจิทัล" },
+      { word: "wearable devices", thaiMeaning: "อุปกรณ์สวมใส่" },
+      { word: "simpler interfaces", thaiMeaning: "หน้าจอใช้งานง่ายขึ้น" },
+      { word: "video-calling applications", thaiMeaning: "แอปพลิเคชันวิดีโอคอล" },
+      { word: "health-monitoring devices", thaiMeaning: "อุปกรณ์ติดตามสุขภาพ" },
+      { word: "irregular patterns", thaiMeaning: "รูปแบบที่ผิดปกติ" },
+      { word: "consumer electronics", thaiMeaning: "อุปกรณ์อิเล็กทรอนิกส์ผู้บริโภค" },
+      { word: "community centres", thaiMeaning: "ศูนย์ชุมชน" },
+      { word: "beginner-friendly technology classes", thaiMeaning: "คลาสเทคโนโลยีสำหรับผู้เริ่มต้น" },
+      { word: "larger text", thaiMeaning: "ตัวอักษรขนาดใหญ่" },
+      { word: "easy mode", thaiMeaning: "โหมดใช้งานง่าย" },
+      { word: "menu options", thaiMeaning: "ตัวเลือกเมนู" },
+      { word: "advanced technology", thaiMeaning: "เทคโนโลยีขั้นสูง" },
+      { word: "regular contact", thaiMeaning: "การติดต่อเป็นประจำ" },
+      { word: "medical problems", thaiMeaning: "ปัญหาสุขภาพ" },
+      { word: "heart rate", thaiMeaning: "อัตราการเต้นของหัวใจ" },
+      { word: "device design", thaiMeaning: "การออกแบบอุปกรณ์" },
+      { word: "accessible training", thaiMeaning: "การฝึกอบรมที่เข้าถึงได้" },
+      { word: "modern technology", thaiMeaning: "เทคโนโลยีสมัยใหม่" },
+      { word: "serious health issue", thaiMeaning: "ปัญหาสุขภาพร้ายแรง" }
     ]
   },
   {
@@ -1409,10 +2161,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'drip irrigation', thaiMeaning: 'การให้น้ำแบบหยด' },
-      { word: 'groundwater', thaiMeaning: 'น้ำใต้ดิน' },
-      { word: 'agricultural water use', thaiMeaning: 'การใช้น้ำเพื่อการเกษตร' },
-      { word: 'prolonged drought', thaiMeaning: 'ภัยแล้งที่ยืดเยื้อ' }
+      { word: "drip irrigation", thaiMeaning: "การให้น้ำแบบหยด" },
+      { word: "groundwater", thaiMeaning: "น้ำใต้ดิน" },
+      { word: "agricultural water use", thaiMeaning: "การใช้น้ำเพื่อการเกษตร" },
+      { word: "prolonged drought", thaiMeaning: "ภัยแล้งที่ยืดเยื้อ" },
+      { word: "fresh water scarcity", thaiMeaning: "ภาวะขาดแคลนน้ำจืด" },
+      { word: "global temperatures", thaiMeaning: "อุณหภูมิโลก" },
+      { word: "unprecedented rates", thaiMeaning: "อัตราที่ไม่เคยเกิดขึ้นมาก่อน" },
+      { word: "population growth", thaiMeaning: "การเติบโตของประชากร" },
+      { word: "water demand", thaiMeaning: "ความต้องการใช้น้ำ" },
+      { word: "urbanising regions", thaiMeaning: "ภูมิภาคที่กำลังกลายเป็นเมือง" },
+      { word: "irrigation systems", thaiMeaning: "ระบบชลประทาน" },
+      { word: "water waste", thaiMeaning: "การใช้น้ำอย่างสิ้นเปลือง" },
+      { word: "leaking taps", thaiMeaning: "ก๊อกน้ำที่รั่ว" },
+      { word: "individual responsibility", thaiMeaning: "ความรับผิดชอบส่วนบุคคล" },
+      { word: "government investment", thaiMeaning: "การลงทุนของรัฐ" },
+      { word: "natural rainfall", thaiMeaning: "น้ำฝนตามธรรมชาติ" },
+      { word: "traditional methods", thaiMeaning: "วิธีดั้งเดิม" },
+      { word: "shorter showers", thaiMeaning: "การอาบน้ำที่สั้นลง" },
+      { word: "runs dry", thaiMeaning: "แห้งเหือด" },
+      { word: "replenish it", thaiMeaning: "เติมกลับคืนได้" }
     ]
   },
   {
@@ -1442,10 +2210,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'licence suspensions', thaiMeaning: 'การพักใช้ใบขับขี่' },
-      { word: 'repeat offenders', thaiMeaning: 'ผู้กระทำผิดซ้ำ' },
-      { word: 'points-based system', thaiMeaning: 'ระบบสะสมแต้ม' },
-      { word: 'road safety', thaiMeaning: 'ความปลอดภัยบนท้องถนน' }
+      { word: "licence suspensions", thaiMeaning: "การพักใช้ใบขับขี่" },
+      { word: "repeat offenders", thaiMeaning: "ผู้กระทำผิดซ้ำ" },
+      { word: "points-based licence systems", thaiMeaning: "ระบบใบขับขี่แบบสะสมแต้ม" },
+      { word: "road safety", thaiMeaning: "ความปลอดภัยบนท้องถนน" },
+      { word: "mobile phones", thaiMeaning: "โทรศัพท์มือถือ" },
+      { word: "effective deterrent", thaiMeaning: "มาตรการป้องปรามที่มีผล" },
+      { word: "stricter penalties", thaiMeaning: "บทลงโทษที่เข้มงวดขึ้น" },
+      { word: "higher fines", thaiMeaning: "ค่าปรับที่สูงขึ้น" },
+      { word: "phone-related accidents", thaiMeaning: "อุบัติเหตุจากโทรศัพท์" },
+      { word: "driving mode", thaiMeaning: "โหมดขับรถ" },
+      { word: "driver behaviour", thaiMeaning: "พฤติกรรมของผู้ขับขี่" },
+      { word: "smarter technology", thaiMeaning: "เทคโนโลยีที่ฉลาดขึ้น" },
+      { word: "at the wheel", thaiMeaning: "ขณะขับรถ" },
+      { word: "potential harm", thaiMeaning: "อันตรายที่อาจเกิด" },
+      { word: "silences notifications", thaiMeaning: "ปิดการแจ้งเตือน" },
+      { word: "restrict phone use", thaiMeaning: "จำกัดการใช้โทรศัพท์" },
+      { word: "driving laws", thaiMeaning: "กฎหมายการขับรถ" },
+      { word: "minor rules", thaiMeaning: "กฎเล็กน้อย" },
+      { word: "certain speed", thaiMeaning: "ความเร็วระดับหนึ่ง" },
+      { word: "while driving", thaiMeaning: "ขณะขับรถ" }
     ]
   },
   {
@@ -1475,10 +2259,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'firm rules', thaiMeaning: 'กฎเกณฑ์ที่เข้มงวด' },
-      { word: 'unrealistic expectations', thaiMeaning: 'ความคาดหวังที่ไม่สมจริง' },
-      { word: 'workplace responsibility', thaiMeaning: 'ความรับผิดชอบในที่ทำงาน' },
-      { word: 'rejection or failure', thaiMeaning: 'การถูกปฏิเสธหรือความล้มเหลว' }
+      { word: "firm rules", thaiMeaning: "กฎเกณฑ์ที่เข้มงวด" },
+      { word: "unrealistic expectations", thaiMeaning: "ความคาดหวังที่ไม่สมจริง" },
+      { word: "rejection or failure", thaiMeaning: "การถูกปฏิเสธหรือความล้มเหลว" },
+      { word: "parenting style", thaiMeaning: "รูปแบบการเลี้ยงดู" },
+      { word: "complete freedom", thaiMeaning: "เสรีภาพอย่างสมบูรณ์" },
+      { word: "hard work", thaiMeaning: "การทำงานหนัก" },
+      { word: "expensive gifts", thaiMeaning: "ของขวัญราคาแพง" },
+      { word: "meet deadlines", thaiMeaning: "ส่งงานให้ทันกำหนด" },
+      { word: "follow instructions", thaiMeaning: "ปฏิบัติตามคำสั่ง" },
+      { word: "wider world", thaiMeaning: "โลกภายนอก" },
+      { word: "discipline and responsibility", thaiMeaning: "วินัยและความรับผิดชอบ" },
+      { word: "respect boundaries", thaiMeaning: "เคารพขอบเขต" },
+      { word: "little appreciation", thaiMeaning: "ความซาบซึ้งเพียงน้อยนิด" },
+      { word: "young employees", thaiMeaning: "พนักงานรุ่นใหม่" },
+      { word: "lacked structure", thaiMeaning: "ขาดโครงสร้าง" },
+      { word: "enter the workplace", thaiMeaning: "เข้าสู่โลกการทำงาน" },
+      { word: "value of patience", thaiMeaning: "คุณค่าของความอดทน" },
+      { word: "classroom guidelines", thaiMeaning: "แนวปฏิบัติในห้องเรียน" },
+      { word: "more harm than good", thaiMeaning: "โทษมากกว่าประโยชน์" },
+      { word: "effort attached", thaiMeaning: "ที่ต้องลงแรง" }
     ]
   },
   {
@@ -1508,10 +2308,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'personal training', thaiMeaning: 'การฝึกส่วนตัว' },
-      { word: 'flexible schedule', thaiMeaning: 'ตารางเวลาที่ยืดหยุ่น' },
-      { word: 'personalised programme', thaiMeaning: 'โปรแกรมที่ออกแบบเฉพาะบุคคล' },
-      { word: 'gym-related injuries', thaiMeaning: 'การบาดเจ็บที่เกี่ยวกับการออกกำลังกาย' }
+      { word: "personal training", thaiMeaning: "การฝึกส่วนตัว" },
+      { word: "flexible schedule", thaiMeaning: "ตารางเวลาที่ยืดหยุ่น" },
+      { word: "personalised programme", thaiMeaning: "โปรแกรมที่ออกแบบเฉพาะบุคคล" },
+      { word: "gym-related injuries", thaiMeaning: "การบาดเจ็บที่เกี่ยวกับการออกกำลังกาย" },
+      { word: "personal fitness trainer", thaiMeaning: "เทรนเนอร์ออกกำลังกายส่วนตัว" },
+      { word: "demanding work commitments", thaiMeaning: "ภาระงานที่หนัก" },
+      { word: "growing popularity", thaiMeaning: "ความนิยมที่เพิ่มขึ้น" },
+      { word: "busy professionals", thaiMeaning: "มืออาชีพที่งานยุ่ง" },
+      { word: "qualified trainer", thaiMeaning: "เทรนเนอร์ที่มีคุณสมบัติ" },
+      { word: "unsupervised exercise", thaiMeaning: "การออกกำลังกายโดยไม่มีผู้ดูแล" },
+      { word: "professional supervision", thaiMeaning: "การดูแลโดยมืออาชีพ" },
+      { word: "genuine health benefits", thaiMeaning: "ประโยชน์ด้านสุขภาพอย่างแท้จริง" },
+      { word: "physiotherapy clinics", thaiMeaning: "คลินิกกายภาพบำบัด" },
+      { word: "beneficial trend", thaiMeaning: "แนวโน้มที่เป็นประโยชน์" },
+      { word: "risk of injury", thaiMeaning: "ความเสี่ยงต่อการบาดเจ็บ" },
+      { word: "exercise classes", thaiMeaning: "คลาสออกกำลังกาย" },
+      { word: "feeling intimidated", thaiMeaning: "รู้สึกขาดความมั่นใจ" },
+      { word: "experienced participants", thaiMeaning: "ผู้เข้าร่วมที่มีประสบการณ์" },
+      { word: "first-time gym users", thaiMeaning: "ผู้ใช้ยิมครั้งแรก" },
+      { word: "positive development", thaiMeaning: "พัฒนาการในทางบวก" }
     ]
   },
   {
@@ -1541,10 +2357,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'monetary gifts', thaiMeaning: 'ของขวัญที่เป็นเงิน' },
-      { word: 'holiday season', thaiMeaning: 'ช่วงเทศกาลวันหยุด' },
-      { word: 'unnecessary waste', thaiMeaning: 'ความสิ้นเปลืองที่ไม่จำเป็น' },
-      { word: 'cash donations', thaiMeaning: 'การบริจาคเป็นเงินสด' }
+      { word: "monetary gifts", thaiMeaning: "ของขวัญที่เป็นเงิน" },
+      { word: "holiday season", thaiMeaning: "ช่วงเทศกาลวันหยุด" },
+      { word: "unnecessary waste", thaiMeaning: "ความสิ้นเปลืองที่ไม่จำเป็น" },
+      { word: "cash donations", thaiMeaning: "การบริจาคเป็นเงินสด" },
+      { word: "busy modern lifestyles", thaiMeaning: "วิถีชีวิตสมัยใหม่ที่เร่งรีบ" },
+      { word: "suitable present", thaiMeaning: "ของขวัญที่เหมาะสม" },
+      { word: "considerably less effort", thaiMeaning: "ความพยายามน้อยกว่ามาก" },
+      { word: "unwanted gifts", thaiMeaning: "ของขวัญที่ไม่ต้องการ" },
+      { word: "physical gifts", thaiMeaning: "ของขวัญที่เป็นวัตถุ" },
+      { word: "personally chosen gift", thaiMeaning: "ของขวัญที่เลือกเองอย่างตั้งใจ" },
+      { word: "practical and considerate choice", thaiMeaning: "ทางเลือกที่ปฏิบัติได้และใส่ใจ" },
+      { word: "sensible and welcome trend", thaiMeaning: "แนวโน้มที่สมเหตุสมผลและน่ายินดี" },
+      { word: "special occasions", thaiMeaning: "โอกาสพิเศษ" },
+      { word: "thoughtful and meaningful", thaiMeaning: "ใส่ใจและมีความหมาย" },
+      { word: "returned to shops", thaiMeaning: "ถูกคืนไปที่ร้าน" },
+      { word: "free time", thaiMeaning: "เวลาว่าง" },
+      { word: "positive development", thaiMeaning: "พัฒนาการในทางบวก" },
+      { word: "rarely wasted", thaiMeaning: "ไม่ค่อยถูกเปลืองเปล่า" },
+      { word: "preferred giving cash", thaiMeaning: "ชอบให้เป็นเงินสด" },
+      { word: "left unused", thaiMeaning: "ถูกทิ้งไว้โดยไม่ได้ใช้" }
     ]
   },
   {
@@ -1574,10 +2406,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'gallery attendance', thaiMeaning: 'จำนวนผู้เข้าชมหอศิลป์' },
-      { word: 'digital images', thaiMeaning: 'ภาพดิจิทัล' },
-      { word: 'interactive exhibits', thaiMeaning: 'นิทรรศการเชิงโต้ตอบ' },
-      { word: 'entry fees', thaiMeaning: 'ค่าธรรมเนียมเข้าชม' }
+      { word: "gallery attendance", thaiMeaning: "จำนวนผู้เข้าชมหอศิลป์" },
+      { word: "digital images", thaiMeaning: "ภาพดิจิทัล" },
+      { word: "interactive exhibits", thaiMeaning: "นิทรรศการเชิงโต้ตอบ" },
+      { word: "entry fees", thaiMeaning: "ค่าธรรมเนียมเข้าชม" },
+      { word: "high-resolution paintings", thaiMeaning: "ภาพวาดความละเอียดสูง" },
+      { word: "traditional galleries", thaiMeaning: "หอศิลป์แบบดั้งเดิม" },
+      { word: "augmented reality displays", thaiMeaning: "จอแสดงผลความเป็นจริงเสริม" },
+      { word: "virtual reality tour", thaiMeaning: "ทัวร์เสมือนจริง" },
+      { word: "free admission", thaiMeaning: "เข้าชมฟรี" },
+      { word: "innovative exhibits", thaiMeaning: "นิทรรศการที่แปลกใหม่" },
+      { word: "affordable pricing", thaiMeaning: "ราคาที่เอื้อมถึง" },
+      { word: "reverse this decline", thaiMeaning: "พลิกกลับแนวโน้มที่ลดลงนี้" },
+      { word: "changing habits", thaiMeaning: "พฤติกรรมที่เปลี่ยนไป" },
+      { word: "famous artworks", thaiMeaning: "ผลงานศิลปะที่มีชื่อเสียง" },
+      { word: "younger visitors", thaiMeaning: "ผู้เข้าชมที่อายุน้อยกว่า" },
+      { word: "interactive forms of entertainment", thaiMeaning: "รูปแบบความบันเทิงเชิงโต้ตอบ" },
+      { word: "public interest", thaiMeaning: "ความสนใจของสาธารณชน" },
+      { word: "major museums", thaiMeaning: "พิพิธภัณฑ์ชั้นนำ" },
+      { word: "art galleries", thaiMeaning: "หอศิลป์" },
+      { word: "affordable and accessible", thaiMeaning: "ราคาเอื้อมถึงและเข้าถึงได้" }
     ]
   },
   {
@@ -1607,10 +2455,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'public recognition', thaiMeaning: 'การยอมรับจากสังคม' },
-      { word: 'mass media', thaiMeaning: 'สื่อมวลชน' },
-      { word: 'social status', thaiMeaning: 'สถานะทางสังคม' },
-      { word: 'public services', thaiMeaning: 'บริการสาธารณะ' }
+      { word: "public recognition", thaiMeaning: "การยอมรับจากสังคม" },
+      { word: "mass media", thaiMeaning: "สื่อมวลชน" },
+      { word: "social status", thaiMeaning: "สถานะทางสังคม" },
+      { word: "public services", thaiMeaning: "บริการสาธารณะ" },
+      { word: "constant exposure", thaiMeaning: "การปรากฏตัวต่อเนื่อง" },
+      { word: "public eye", thaiMeaning: "สายตาของสาธารณชน" },
+      { word: "emotional excitement", thaiMeaning: "ความตื่นเต้นทางอารมณ์" },
+      { word: "global television audience", thaiMeaning: "ผู้ชมโทรทัศน์ทั่วโลก" },
+      { word: "essential professionals", thaiMeaning: "มืออาชีพที่จำเป็น" },
+      { word: "vital careers", thaiMeaning: "อาชีพสำคัญ" },
+      { word: "teacher training places", thaiMeaning: "ที่นั่งเรียนฝึกอาชีพครู" },
+      { word: "comparatively low salaries", thaiMeaning: "เงินเดือนที่ค่อนข้างต่ำ" },
+      { word: "welcome inspiration", thaiMeaning: "แรงบันดาลใจที่เป็นประโยชน์" },
+      { word: "social platforms", thaiMeaning: "แพลตฟอร์มโซเชียล" },
+      { word: "entertainment figures", thaiMeaning: "บุคคลในวงการบันเทิง" },
+      { word: "championship match", thaiMeaning: "การแข่งขันชิงแชมป์" },
+      { word: "talented young people", thaiMeaning: "เยาวชนที่มีพรสวรรค์" },
+      { word: "genuine enjoyment", thaiMeaning: "ความเพลิดเพลินอย่างแท้จริง" },
+      { word: "imbalance in recognition", thaiMeaning: "ความไม่สมดุลในการยอมรับ" },
+      { word: "negative development", thaiMeaning: "พัฒนาการในทางลบ" }
     ]
   },
   {
@@ -1640,10 +2504,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'biodiversity loss', thaiMeaning: 'การสูญเสียความหลากหลายทางชีวภาพ' },
-      { word: 'natural habitats', thaiMeaning: 'ถิ่นที่อยู่อาศัยตามธรรมชาติ' },
-      { word: 'protected nature reserves', thaiMeaning: 'เขตอนุรักษ์ธรรมชาติ' },
-      { word: 'endangered species', thaiMeaning: 'สัตว์ใกล้สูญพันธุ์' }
+      { word: "biodiversity loss", thaiMeaning: "การสูญเสียความหลากหลายทางชีวภาพ" },
+      { word: "natural habitats", thaiMeaning: "ถิ่นที่อยู่อาศัยตามธรรมชาติ" },
+      { word: "protected nature reserves", thaiMeaning: "เขตอนุรักษ์ธรรมชาติ" },
+      { word: "endangered species", thaiMeaning: "สัตว์ใกล้สูญพันธุ์" },
+      { word: "expanding agriculture", thaiMeaning: "การขยายพื้นที่เกษตรกรรม" },
+      { word: "urban development", thaiMeaning: "การพัฒนาเมือง" },
+      { word: "habitat loss", thaiMeaning: "การสูญเสียถิ่นที่อยู่อาศัย" },
+      { word: "rising global temperatures", thaiMeaning: "อุณหภูมิโลกที่สูงขึ้น" },
+      { word: "mass bleaching events", thaiMeaning: "เหตุการณ์ปะการังฟอกขาวครั้งใหญ่" },
+      { word: "warming ocean waters", thaiMeaning: "น้ำทะเลที่อุ่นขึ้น" },
+      { word: "threatened species", thaiMeaning: "ชนิดพันธุ์ที่ถูกคุกคาม" },
+      { word: "forest cover", thaiMeaning: "พื้นที่ป่าไม้" },
+      { word: "illegal ivory trafficking", thaiMeaning: "การค้างาช้างผิดกฎหมาย" },
+      { word: "conservation policies", thaiMeaning: "นโยบายอนุรักษ์" },
+      { word: "complex global pressures", thaiMeaning: "แรงกดดันระดับโลกที่ซับซ้อน" },
+      { word: "wildlife populations", thaiMeaning: "ประชากรสัตว์ป่า" },
+      { word: "coral reefs", thaiMeaning: "แนวปะการัง" },
+      { word: "safer environment", thaiMeaning: "สภาพแวดล้อมที่ปลอดภัยกว่า" },
+      { word: "international agreements", thaiMeaning: "ข้อตกลงระหว่างประเทศ" },
+      { word: "plant and animal species", thaiMeaning: "ชนิดพันธุ์พืชและสัตว์" }
     ]
   },
   {
@@ -1673,10 +2553,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'youthful appearance', thaiMeaning: 'รูปลักษณ์ที่ดูอ่อนเยาว์' },
-      { word: 'body image', thaiMeaning: 'ภาพลักษณ์ของร่างกาย' },
-      { word: 'cosmetic treatments', thaiMeaning: 'การรักษาด้านความงาม' },
-      { word: 'natural ageing', thaiMeaning: 'การแก่ตัวตามธรรมชาติ' }
+      { word: "youthful appearance", thaiMeaning: "รูปลักษณ์ที่ดูอ่อนเยาว์" },
+      { word: "body image", thaiMeaning: "ภาพลักษณ์ของร่างกาย" },
+      { word: "cosmetic treatments", thaiMeaning: "การรักษาด้านความงาม" },
+      { word: "natural ageing", thaiMeaning: "การแก่ตัวตามธรรมชาติ" },
+      { word: "unrealistic beauty standards", thaiMeaning: "มาตรฐานความงามที่ไม่สมจริง" },
+      { word: "professional competence", thaiMeaning: "ความสามารถอย่างมืออาชีพ" },
+      { word: "hiring managers", thaiMeaning: "ผู้จัดการฝ่ายสรรหา" },
+      { word: "younger-looking candidates", thaiMeaning: "ผู้สมัครที่ดูอ่อนเยาว์กว่า" },
+      { word: "job interviews", thaiMeaning: "การสัมภาษณ์งาน" },
+      { word: "financial pressure", thaiMeaning: "แรงกดดันทางการเงิน" },
+      { word: "anti-ageing industry", thaiMeaning: "อุตสาหกรรมต่อต้านริ้วรอย" },
+      { word: "social media platforms", thaiMeaning: "แพลตฟอร์มโซเชียลมีเดีย" },
+      { word: "boost confidence", thaiMeaning: "เพิ่มความมั่นใจ" },
+      { word: "widespread preoccupation", thaiMeaning: "ความหมกมุ่นที่แพร่หลาย" },
+      { word: "excessive spending", thaiMeaning: "การใช้จ่ายมากเกินไป" },
+      { word: "considerable anxiety", thaiMeaning: "ความวิตกกังวลอย่างมาก" },
+      { word: "flawless images", thaiMeaning: "ภาพที่ไร้ที่ติ" },
+      { word: "sources of self-worth", thaiMeaning: "แหล่งของคุณค่าในตัวเอง" },
+      { word: "looking younger", thaiMeaning: "การดูอ่อนเยาว์กว่า" },
+      { word: "negative development", thaiMeaning: "พัฒนาการในทางลบ" }
     ]
   },
   {
@@ -1706,10 +2602,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'leisure activity', thaiMeaning: 'กิจกรรมยามว่าง' },
-      { word: 'online retailers', thaiMeaning: 'ผู้ค้าปลีกออนไลน์' },
-      { word: 'unnecessary consumption', thaiMeaning: 'การบริโภคที่ไม่จำเป็น' },
-      { word: 'textile waste', thaiMeaning: 'ขยะสิ่งทอ' }
+      { word: "leisure activity", thaiMeaning: "กิจกรรมยามว่าง" },
+      { word: "online retailers", thaiMeaning: "ผู้ค้าปลีกออนไลน์" },
+      { word: "unnecessary consumption", thaiMeaning: "การบริโภคที่ไม่จำเป็น" },
+      { word: "textile waste", thaiMeaning: "ขยะสิ่งทอ" },
+      { word: "entertainment destinations", thaiMeaning: "แหล่งความบันเทิง" },
+      { word: "necessary purchases", thaiMeaning: "การซื้อที่จำเป็น" },
+      { word: "personal finances", thaiMeaning: "การเงินส่วนตัว" },
+      { word: "fast fashion purchases", thaiMeaning: "การซื้อแฟชั่นราคาถูก" },
+      { word: "casual browsing", thaiMeaning: "การเลือกดูสินค้าแบบสบาย ๆ" },
+      { word: "constant browsing", thaiMeaning: "การเลือกดูสินค้าอย่างต่อเนื่อง" },
+      { word: "genuine relaxation", thaiMeaning: "การผ่อนคลายอย่างแท้จริง" },
+      { word: "social enjoyment", thaiMeaning: "ความสนุกทางสังคม" },
+      { word: "primary hobby", thaiMeaning: "งานอดิเรกหลัก" },
+      { word: "shopping malls", thaiMeaning: "ห้างสรรพสินค้า" },
+      { word: "mobile app usage", thaiMeaning: "การใช้แอปมือถือ" },
+      { word: "growing strain", thaiMeaning: "ภาระที่เพิ่มขึ้น" },
+      { word: "free time", thaiMeaning: "เวลาว่าง" },
+      { word: "unhealthy trend", thaiMeaning: "แนวโน้มที่ไม่ดีต่อสุขภาพ" },
+      { word: "personal enjoyment", thaiMeaning: "ความเพลิดเพลินส่วนตัว" },
+      { word: "browsing and buying", thaiMeaning: "การเลือกดูและซื้อสินค้า" }
     ]
   },
   {
@@ -1739,10 +2651,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'youth unemployment', thaiMeaning: 'การว่างงานของเยาวชน' },
-      { word: 'mental health', thaiMeaning: 'สุขภาพจิต' },
-      { word: 'vocational training', thaiMeaning: 'การฝึกอบรมสายอาชีพ' },
-      { word: 'hiring subsidies', thaiMeaning: 'เงินอุดหนุนการจ้างงาน' }
+      { word: "youth unemployment", thaiMeaning: "การว่างงานของเยาวชน" },
+      { word: "mental health", thaiMeaning: "สุขภาพจิต" },
+      { word: "vocational training", thaiMeaning: "การฝึกอบรมสายอาชีพ" },
+      { word: "hiring subsidies", thaiMeaning: "เงินอุดหนุนการจ้างงาน" },
+      { word: "prolonged joblessness", thaiMeaning: "การว่างงานที่ยืดเยื้อ" },
+      { word: "productive potential", thaiMeaning: "ศักยภาพในการผลิต" },
+      { word: "economic output", thaiMeaning: "ผลผลิตทางเศรษฐกิจ" },
+      { word: "employable skills", thaiMeaning: "ทักษะที่พร้อมทำงาน" },
+      { word: "school leavers", thaiMeaning: "ผู้ที่จบหรือออกจากโรงเรียน" },
+      { word: "paid apprenticeships", thaiMeaning: "การฝึกงานที่มีค่าจ้าง" },
+      { word: "dual education system", thaiMeaning: "ระบบการศึกษาแบบทวิภาคี" },
+      { word: "tax incentives", thaiMeaning: "สิ่งจูงใจทางภาษี" },
+      { word: "inexperienced young workers", thaiMeaning: "แรงงานหนุ่มสาวที่ยังขาดประสบการณ์" },
+      { word: "hiring incentives", thaiMeaning: "สิ่งจูงใจในการจ้างงาน" },
+      { word: "complex economic pressures", thaiMeaning: "แรงกดดันทางเศรษฐกิจที่ซับซ้อน" },
+      { word: "dropping out of school", thaiMeaning: "การออกจากโรงเรียนกลางคัน" },
+      { word: "self-esteem", thaiMeaning: "ความนับถือตนเอง" },
+      { word: "future motivation", thaiMeaning: "แรงจูงใจในอนาคต" },
+      { word: "employed peers", thaiMeaning: "เพื่อนวัยเดียวกันที่มีงานทำ" },
+      { word: "extended periods", thaiMeaning: "ช่วงเวลายาวนาน" }
     ]
   },
   {
@@ -1772,10 +2700,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'traffic congestion', thaiMeaning: 'การจราจรติดขัด' },
-      { word: 'population growth', thaiMeaning: 'การเติบโตของประชากร' },
-      { word: 'public transport networks', thaiMeaning: 'เครือข่ายขนส่งสาธารณะ' },
-      { word: 'congestion charges', thaiMeaning: 'ค่าธรรมเนียมความแออัด' }
+      { word: "traffic congestion", thaiMeaning: "การจราจรติดขัด" },
+      { word: "population growth", thaiMeaning: "การเติบโตของประชากร" },
+      { word: "public transport networks", thaiMeaning: "เครือข่ายขนส่งสาธารณะ" },
+      { word: "congestion charges", thaiMeaning: "ค่าธรรมเนียมความแออัด" },
+      { word: "private car registrations", thaiMeaning: "การจดทะเบียนรถยนต์ส่วนบุคคล" },
+      { word: "public transport systems", thaiMeaning: "ระบบขนส่งสาธารณะ" },
+      { word: "private vehicles", thaiMeaning: "ยานพาหนะส่วนบุคคล" },
+      { word: "extensive metro network", thaiMeaning: "เครือข่ายรถไฟใต้ดินที่ครอบคลุม" },
+      { word: "outer suburbs", thaiMeaning: "ชานเมืองชั้นนอก" },
+      { word: "congestion pricing", thaiMeaning: "การกำหนดราคาตามความแออัด" },
+      { word: "central traffic volumes", thaiMeaning: "ปริมาณรถในใจกลางเมือง" },
+      { word: "peak hours", thaiMeaning: "ชั่วโมงเร่งด่วน" },
+      { word: "busy city centres", thaiMeaning: "ใจกลางเมืองที่แออัด" },
+      { word: "private car ownership", thaiMeaning: "การเป็นเจ้าของรถยนต์ส่วนบุคคล" },
+      { word: "neighbouring cities", thaiMeaning: "เมืองข้างเคียง" },
+      { word: "Mass Rapid Transit", thaiMeaning: "ระบบรถไฟฟ้าขนส่งมวลชน" },
+      { word: "complex urban pressures", thaiMeaning: "แรงกดดันเมืองที่ซับซ้อน" },
+      { word: "major cities", thaiMeaning: "เมืองใหญ่" },
+      { word: "sharp rise", thaiMeaning: "การเพิ่มขึ้นอย่างรวดเร็ว" },
+      { word: "rapidly growing cities", thaiMeaning: "เมืองที่เติบโตอย่างรวดเร็ว" }
     ]
   },
   {
@@ -1805,10 +2749,26 @@ export const WRITING_TASK2_PROMPTS: WritingTask2Prompt[] = [
       }
     ],
     vocab: [
-      { word: 'academic workloads', thaiMeaning: 'ภาระงานด้านการเรียน' },
-      { word: 'sleep cycles', thaiMeaning: 'วงจรการนอนหลับ' },
-      { word: 'screen use', thaiMeaning: 'การใช้หน้าจอ' },
-      { word: 'sleep deprivation', thaiMeaning: 'การอดนอน' }
+      { word: "academic workloads", thaiMeaning: "ภาระงานด้านการเรียน" },
+      { word: "sleep cycles", thaiMeaning: "วงจรการนอนหลับ" },
+      { word: "screen use", thaiMeaning: "การใช้หน้าจอ" },
+      { word: "sleep deprivation", thaiMeaning: "การอดนอน" },
+      { word: "natural bedtime", thaiMeaning: "เวลานอนตามธรรมชาติ" },
+      { word: "extracurricular commitments", thaiMeaning: "ภารกิจกิจกรรมนอกหลักสูตร" },
+      { word: "school assignments", thaiMeaning: "งานที่ได้รับมอบหมายจากโรงเรียน" },
+      { word: "household rules", thaiMeaning: "กฎในบ้าน" },
+      { word: "screen limits", thaiMeaning: "การจำกัดการใช้หน้าจอ" },
+      { word: "school start times", thaiMeaning: "เวลาเริ่มเรียน" },
+      { word: "sufficient sleep", thaiMeaning: "การนอนหลับที่เพียงพอ" },
+      { word: "automatic app timers", thaiMeaning: "ตัวจับเวลาแอปอัตโนมัติ" },
+      { word: "previous generations", thaiMeaning: "คนรุ่นก่อน" },
+      { word: "modern lifestyles", thaiMeaning: "วิถีชีวิตสมัยใหม่" },
+      { word: "declining sleep", thaiMeaning: "การนอนที่ลดลง" },
+      { word: "social media access", thaiMeaning: "การเข้าถึงโซเชียลมีเดีย" },
+      { word: "past midnight", thaiMeaning: "หลังเที่ยงคืน" },
+      { word: "smartphones and social media", thaiMeaning: "สมาร์ทโฟนและโซเชียลมีเดีย" },
+      { word: "completing homework", thaiMeaning: "การทำการบ้าน" },
+      { word: "East Asian countries", thaiMeaning: "ประเทศในเอเชียตะวันออก" }
     ]
   }
 ]

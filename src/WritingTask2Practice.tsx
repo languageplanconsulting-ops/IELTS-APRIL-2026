@@ -6,6 +6,8 @@ import {
   WGB2_STEP_COACH_TH,
   WGB2_STEP_SHORT,
   WGB2_BLANK_COACH_TH,
+  WGB2_ARTICLE_GUIDE,
+  getWgb2BlankExplain,
   WGB2_PUNCT_SYMBOL,
   WGB2_PUNCT_LABEL_TH,
   type Wgb2Blank,
@@ -19,15 +21,47 @@ import { VocabHighlightText } from './VocabHighlightText'
 
 const wgb2Normalize = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase()
 
-function Wgb2CoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string; message: string; isBlankFocus: boolean }) {
+function Wgb2CoachBubble({
+  coachKey,
+  message,
+  isBlankFocus,
+  showArticleGuide
+}: {
+  coachKey: string
+  message: string
+  isBlankFocus: boolean
+  showArticleGuide?: boolean
+}) {
   return (
-    <div key={coachKey} className={`wgbCoach ${isBlankFocus ? 'is-blank-focus' : ''}`}>
+    <div
+      key={coachKey}
+      className={`wgbCoach ${isBlankFocus ? 'is-blank-focus' : ''} ${showArticleGuide ? 'is-article-guide' : ''}`.trim()}
+    >
       <span className="wgbCoachAvatar" aria-hidden="true">
-        {isBlankFocus ? '💭' : '🧑‍🏫'}
+        {showArticleGuide ? '📖' : isBlankFocus ? '💭' : '🧑‍🏫'}
       </span>
       <div className="wgbCoachBody">
-        <p className="wgbCoachLabel">P'Doy แนะนำ</p>
-        <p className="wgbCoachMessage">{message}</p>
+        <p className="wgbCoachLabel">{showArticleGuide ? WGB2_ARTICLE_GUIDE.titleTh : "P'Doy แนะนำ"}</p>
+        {showArticleGuide ? (
+          <div className="wgbArticleGuide">
+            <p className="wgbArticleGuideSubtitle">{WGB2_ARTICLE_GUIDE.subtitleTh}</p>
+            <div className="wgbArticleGuideRows">
+              {WGB2_ARTICLE_GUIDE.rows.map((row) => (
+                <div key={row.whenTh} className="wgbArticleGuideRow">
+                  <div className="wgbArticleGuideWhen">{row.whenTh}</div>
+                  <div className="wgbArticleGuideRule">{row.ruleTh}</div>
+                  <div className="wgbArticleGuideExample">
+                    <span className="wgbArticleGuideEn">{row.exampleEn}</span>
+                    <span className="wgbArticleGuideTh">{row.exampleTh}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="wgbArticleGuideTip">{WGB2_ARTICLE_GUIDE.tipTh}</p>
+          </div>
+        ) : (
+          <p className="wgbCoachMessage">{message}</p>
+        )}
       </div>
     </div>
   )
@@ -204,15 +238,35 @@ export function WritingTask2Practice({
           })}
         </ol>
 
-        <Wgb2CoachBubble coachKey={coachKey} message={coachMessage} isBlankFocus={!!activeBlank} />
+        <Wgb2CoachBubble
+          coachKey={coachKey}
+          message={coachMessage}
+          isBlankFocus={!!activeBlank}
+          showArticleGuide={activeBlank?.focus === 'article'}
+        />
 
         <div key={step.id} className="wgbStepCard">
           <p className="wgbStepEyebrow">{WGB2_ROLE_LABEL_TH[step.role]}</p>
           {step.hintTh ? <p className="wgbStepHint">{step.hintTh}</p> : null}
+          {prompt.vocab.length ? (
+            <p className="wgb2VocabHint wgb2VocabHint-inline">
+              คำที่<b>ขีดเส้นใต้</b>ในประโยค (~{prompt.vocab.length} คำ) — แตะเพื่อดูความหมายภาษาไทยและบันทึกลง Notebook
+            </p>
+          ) : null}
 
           <p className="wgbSentence">
             {step.segments.map((segment, index) => {
-              if (segment.kind === 'text') return <span key={index}>{segment.text}</span>
+              if (segment.kind === 'text') {
+                return (
+                  <VocabHighlightText
+                    key={index}
+                    text={segment.text}
+                    vocab={prompt.vocab}
+                    savedWords={savedWords}
+                    onSave={onSaveVocab ? handleSaveVocab : undefined}
+                  />
+                )
+              }
               const blank = segment.blank
               const correct = isBlankCorrect(blank)
               const stateClass = !checkedNow ? '' : correct ? 'is-correct' : 'is-incorrect'
@@ -399,7 +453,7 @@ export function WritingTask2Practice({
                 <div key={blank.id} className="wgbExplainRow">
                   <span className="wgbExplainAnswer">{blankCorrectAnswer(blank)}</span>
                   <span className="wgbExplainWhy">
-                    {blank.explain || 'ตรวจดูความหมายและไวยากรณ์ของช่องนี้อีกครั้ง'}
+                    {getWgb2BlankExplain(blank, values[blank.id] || '')}
                   </span>
                 </div>
               ))}

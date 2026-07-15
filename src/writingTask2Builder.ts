@@ -175,7 +175,7 @@ export const WGB2_STEP_COACH_TH: Record<WritingTask2Role, string> = {
 
 export const WGB2_BLANK_COACH_TH: Record<Wgb2Focus, string> = {
   'verb-tense':
-    'ดูประธาน + โครงสร้างรอบช่องว่างก่อนผันกริยา: ① active ต้องตรงจำนวนประธาน (he walks / they walk) ② หลัง modal (can/should/may/would) ใช้ base form เสมอ ③ passive คือ be + V3 (is preserved / has been argued) ④ gerund (-ing) ใช้เป็นประธานหรือหลัง preposition (for preserving / by reducing)',
+    'แยกเคสก่อนผัน: ① passive = be + V3 (has been argued) ② gerund ประธาน/หลัง for,on,by = V-ing ③ หลัง modal/to = base form ④ ประธานพหูพจน์ไม่เติม -s · เอกพจน์เติม -s — ผิดแล้วดูคำอธิบาย “ทำไม V-ing / V-ed”',
   plural:
     'ดูตัวชี้นำจำนวน: many/these/several/their → พหูพจน์; a/an/each/every → เอกพจน์; นามนับไม่ได้ (information, evidence, research) ไม่เติม -s; นามพหูพจน์ไม่ปกติ (people, children) ไม่เติม -s ซ้ำ',
   noun:
@@ -187,13 +187,439 @@ export const WGB2_BLANK_COACH_TH: Record<Wgb2Focus, string> = {
   transition:
     'อ่านประโยคก่อน–หลัง: ① ขัดแย้ง → However / while / whereas ② ยกตัวอย่าง → For example / For instance ③ ผลลัพธ์ → Therefore / As a result ④ เสริม → Moreover / Furthermore / and — เลือกคำที่ตรงความสัมพันธ์เชิงความหมาย ไม่ใช่แค่คำที่ดูเป็นวิชาการ',
   article:
-    'กฎเร็ว: ① พูดครั้งแรกแบบทั่วไป เอกพจน์นับได้ → a/an ② เจาะจงสิ่งที่รู้กันแล้ว / ซ้ำครั้งสอง / the + เฉพาะ (the following, the past, the best way) → the ③ พหูพจน์ทั่วไปหรือนามนามธรรมกว้าง ๆ → มักไม่ใส่ (เลือก "(ไม่ต้องใส่)")',
+    'กฎนามทั่วไป (ไม่มี the): ① นับได้ + พหูพจน์ → ไม่ใส่ the เช่น cities, students ② นับไม่ได้ → ไม่ใส่ the เช่น education, research — ใส่ the เมื่อเจาะจงสิ่งที่รู้กันแล้วเท่านั้น',
   comma:
     'แตะช่องว่างที่ควรมีจุลภาค: ① หลังวลีขึ้นต้นประโยค (However, … / In conclusion, …) ② หน้า which-clause แบบไม่จำกัดความ (… buildings, which …) ③ คั่นรายการหรือเชื่อมอนุประโยคยาว — ห้ามใส่ comma คั่นประธานกับกริยาตรง ๆ',
   participle:
-    'แยก -ing กับ V3 ให้ถูกหน้าที่: ① V-ing หน้าคำนาม = active/กำลังเกิด (growing population) ② V3 หน้าคำนาม = ถูกกระทำ/เสร็จแล้ว (preserved buildings) ③ หลัง be ใน passive ต้องเป็น V3 เสมอ',
+    'V-ing vs V-ed หน้าคำนาม: V-ing = กำลังเกิด/active (growing population) · V-ed/V3 = ถูกกระทำ/เสร็จแล้ว (preserved buildings) — หลัง be ใน passive ต้องเป็น V3 เสมอ',
   punct:
     'เลือกเครื่องหมายให้ตรงจังหวะประโยค: , คั่นวลี/อนุประโยคในประโยคเดียว · . จบความคิดสมบูรณ์ · ; เชื่อมสองประโยคสมบูรณ์ที่เกี่ยวกันแน่น (มักก่อน however/therefore) · ถ้าไม่ต้องใส่ ให้เลือกตัวเลือกว่าง/∅'
+}
+
+/** Beautiful article mini-guide — shown when focusing an article blank. */
+export const WGB2_ARTICLE_GUIDE = {
+  titleTh: 'กฎ The แบบง่าย',
+  subtitleTh: 'นามทั่วไป — เมื่อไหร่ไม่ใส่ the',
+  rows: [
+    {
+      whenTh: 'นับได้ + พหูพจน์',
+      ruleTh: 'ไม่ใส่ the',
+      exampleEn: 'cities · students · buildings',
+      exampleTh: 'พูดถึงของพวกนี้แบบทั่วไป'
+    },
+    {
+      whenTh: 'นับไม่ได้',
+      ruleTh: 'ไม่ใส่ the',
+      exampleEn: 'education · research · society',
+      exampleTh: 'นามเอกพจน์แบบนามธรรม/ทั่วไป'
+    }
+  ],
+  tipTh: 'ใส่ the เฉพาะเมื่อเจาะจงสิ่งที่รู้กันแล้ว เช่น the past, the best way, the following paragraphs'
+} as const
+
+const looksUncountableExplain = (explain: string) =>
+  /นับไม่ได้|uncountable|นามนามธรรม|นามธรรม|นามนามธรรม|นับไม่/i.test(explain)
+
+const looksPluralGeneralExplain = (explain: string) =>
+  /พหูพจน์|plural|หลายแห่ง|หลายคน|หลายชิ้น|หลายรูปแบบ|หลายประเทศ|หลายย่อหน้า|หลายรุ่น|ทั่วไปหลาย/i.test(
+    explain
+  )
+
+/**
+ * Wrong-answer Thai for article blanks — teaches the general-noun rule
+ * (plural general / uncountable → no "the").
+ */
+export const getWgb2ArticleWrongExplain = (
+  blank: Extract<Wgb2Blank, { kind: 'select' }>,
+  userAnswer: string
+): string => {
+  const correct = blank.answer
+  const chosen = (userAnswer || '').trim()
+  const explain = blank.explain || ''
+  const choseThe = chosen === 'the'
+  const choseA = chosen === 'a' || chosen === 'an'
+  const choseNone = chosen === WGB2_NO_ARTICLE || chosen === ''
+  const correctNone = correct === WGB2_NO_ARTICLE || correct === ''
+  const correctA = correct === 'a' || correct === 'an'
+  const correctThe = correct === 'the'
+  const uncountable = looksUncountableExplain(explain)
+  const pluralGeneral = looksPluralGeneralExplain(explain)
+
+  if (correctNone && choseThe) {
+    if (uncountable) {
+      return `คำนี้ไม่ต้องใส่ "the" เพราะเป็นนามนับไม่ได้ (uncountable) ที่พูดแบบทั่วไป — กฎ: นามนับไม่ได้ + ความหมายทั่วไป → ไม่ใส่ the${explain ? ` · ${explain}` : ''}`
+    }
+    if (pluralGeneral) {
+      return `คำนี้ไม่ต้องใส่ "the" เพราะเป็นนามนับได้พหูพจน์ที่พูดแบบทั่วไป — กฎ: นามทั่วไปพหูพจน์ → ไม่ใส่ the${explain ? ` · ${explain}` : ''}`
+    }
+    return `คำนี้ไม่ต้องใส่ "the" เพราะเป็นนามทั่วไป — กฎ: นับได้พหูพจน์ทั่วไป หรือนับไม่ได้ทั่วไป → ไม่ใส่ the (เลือก "${WGB2_NO_ARTICLE}")${explain ? ` · ${explain}` : ''}`
+  }
+
+  if (correctNone && choseA) {
+    if (pluralGeneral) {
+      return `ไม่ใช้ "a/an" กับคำนามพหูพจน์ — และถ้าพูดแบบทั่วไปก็ไม่ใส่ the เช่นกัน เลือก "${WGB2_NO_ARTICLE}"${explain ? ` · ${explain}` : ''}`
+    }
+    if (uncountable) {
+      return `ไม่ใช้ "a/an" กับนามนับไม่ได้ — ถ้าพูดแบบทั่วไปให้เลือก "${WGB2_NO_ARTICLE}" ไม่ใส่ the${explain ? ` · ${explain}` : ''}`
+    }
+    return `ช่องนี้ไม่ต้องใส่คำนำหน้า เลือก "${WGB2_NO_ARTICLE}"${explain ? ` · ${explain}` : ''}`
+  }
+
+  if (correctA && choseThe) {
+    return `ไม่ใช้ "the" เพราะยังพูดแบบทั่วไป (กล่าวครั้งแรก/ไม่เจาะจง) จึงใช้ "${correct}" — ใส่ the เมื่อชี้ถึงสิ่งที่รู้กันแล้วเท่านั้น${explain ? ` · ${explain}` : ''}`
+  }
+
+  if (correctA && choseNone) {
+    return `ต้องใส่ "${correct}" เพราะเป็นนามนับได้เอกพจน์แบบทั่วไป (กล่าวถึงแบบไม่เจาะจง) — ใช้ a/an ไม่ใช่เว้นว่าง${explain ? ` · ${explain}` : ''}`
+  }
+
+  if (correctThe && (choseNone || choseA)) {
+    return `ต้องใส่ "the" เพราะเจาะจงสิ่งที่รู้กันแล้ว/มีเพียงหนึ่งในบริบท — ไม่ใช่นามทั่วไปที่เว้น the${explain ? ` · ${explain}` : ''}`
+  }
+
+  if (correct === 'society' || /ไม่ต้องมี the|ไม่ต้องใส่ the|zero article|ไม่ใส่ the/i.test(explain)) {
+    if (choseThe || chosen === 'the society' || /the\s+/i.test(chosen)) {
+      return `คำนามเช่น "society / education / research" เมื่อหมายทั่วไป (นับไม่ได้/นามนามธรรมทั่วไป) ไม่ใส่ "the"${explain ? ` · ${explain}` : ''}`
+    }
+  }
+
+  return explain || 'ดูว่าคำนามนี้ทั่วไปหรือเจาะจง: พหูพจน์ทั่วไป/นับไม่ได้ทั่วไป → ไม่ใส่ the · เจาะจง → ใช้ the · เอกพจน์นับได้ทั่วไป → a/an'
+}
+
+export const getWgb2BlankExplain = (blank: Wgb2Blank, userAnswer?: string): string => {
+  if (blank.focus === 'article' && blank.kind === 'select') {
+    return getWgb2ArticleWrongExplain(blank, userAnswer || '')
+  }
+  if (
+    (blank.focus === 'verb-tense' || blank.focus === 'participle') &&
+    (blank.kind === 'type' || blank.kind === 'select')
+  ) {
+    return getWgb2VerbFormWrongExplain(blank, userAnswer || '')
+  }
+  return blank.explain || 'ตรวจดูความหมายและไวยากรณ์ของช่องนี้อีกครั้ง'
+}
+
+type VerbFormCase =
+  | 'passive-v3'
+  | 'gerund-subject'
+  | 'gerund-prep'
+  | 'parallel-ing'
+  | 'adj-ing'
+  | 'adj-v3'
+  | 'modal-base'
+  | 'sva-plural'
+  | 'sva-singular'
+  | 'be-form'
+  | 'unknown'
+
+const wgb2AnswersEqual = (a: string, b: string) =>
+  a.trim().replace(/\s+/g, ' ').toLowerCase() === b.trim().replace(/\s+/g, ' ').toLowerCase()
+
+const endsWithIng = (word: string) => /ing\b/i.test(word.trim())
+const looksPastOrV3 = (word: string) => {
+  const w = word.trim().toLowerCase()
+  if (!w || endsWithIng(w)) return false
+  return (
+    /ed$/i.test(w) ||
+    /(?:en|ne|wn|pt|lt|ught|ought|ound|elt)$/i.test(w) ||
+    [
+      'been',
+      'done',
+      'gone',
+      'seen',
+      'made',
+      'taken',
+      'given',
+      'written',
+      'spoken',
+      'broken',
+      'chosen',
+      'driven',
+      'eaten',
+      'fallen',
+      'forgotten',
+      'gotten',
+      'grown',
+      'known',
+      'lain',
+      'ridden',
+      'risen',
+      'shown',
+      'sung',
+      'swum',
+      'thrown',
+      'worn',
+      'built',
+      'felt',
+      'kept',
+      'left',
+      'lost',
+      'met',
+      'paid',
+      'said',
+      'sent',
+      'slept',
+      'spent',
+      'taught',
+      'told',
+      'thought',
+      'understood',
+      'argued',
+      'preserved',
+      'elaborated',
+      'changed',
+      'delayed'
+    ].includes(w)
+  )
+}
+
+const classifyVerbCase = (correct: string, explain: string, base?: string): VerbFormCase => {
+  const ex = explain || ''
+  if (/passive|been \+|be \+ V3|will be \+|should be \+|cannot be \+|has been|V3/i.test(ex)) return 'passive-v3'
+  if (/ขนาน|parallel/i.test(ex)) return 'parallel-ing'
+  if (
+    /หลัง (for|on|by|of|after|before|without|about)|preposition|หลัง preposition/i.test(ex) &&
+    endsWithIng(correct)
+  ) {
+    return 'gerund-prep'
+  }
+  if (/(ประธาน|gerund phrase|ทำหน้าที่ประธาน)/i.test(ex) && endsWithIng(correct)) return 'gerund-subject'
+  if (/(คุณศัพท์|adjective|ขยายคำนาม|วางหน้าคำนาม)/i.test(ex) && endsWithIng(correct)) return 'adj-ing'
+  if (/(คุณศัพท์|adjective|ขยายคำนาม|วางหน้าคำนาม)/i.test(ex) && looksPastOrV3(correct)) return 'adj-v3'
+  if (/modal|base form|หลัง (can|should|may|would|must|will)\b/i.test(ex)) return 'modal-base'
+  if (/พหูพจน์.*ไม่เติม|กริยาปัจจุบันจึงไม่เติม/i.test(ex) && !endsWithIng(correct) && !looksPastOrV3(correct)) {
+    return 'sva-plural'
+  }
+  if (/เอกพจน์|กริยาปัจจุบันจึง(ใช้|เติม)/i.test(ex) && /s$/i.test(correct) && base && correct !== base) {
+    return 'sva-singular'
+  }
+  if (base === 'be' || /^(am|is|are|was|were|be|been|being)$/i.test(correct)) return 'be-form'
+  if (endsWithIng(correct)) {
+    if (/(คุณศัพท์|adjective|ขยาย)/i.test(ex)) return 'adj-ing'
+    return 'gerund-subject'
+  }
+  if (looksPastOrV3(correct)) {
+    if (/(คุณศัพท์|adjective)/i.test(ex)) return 'adj-v3'
+    return 'passive-v3'
+  }
+  return 'unknown'
+}
+
+const appendBlankHint = (explain: string) => (explain ? `\n\n📌 ในช่องนี้: ${explain}` : '')
+
+const verbCaseExplainTh: Record<VerbFormCase, (correct: string, chosen: string, explain: string) => string> = {
+  'passive-v3': (correct, chosen, explain) => {
+    const wrongBit = endsWithIng(chosen)
+      ? `คุณเลือก “${chosen}” (V-ing) ซึ่งใช้กับ gerund หรือคุณศัพท์แบบกำลังเกิด — ไม่ใช่หลัง be ในความหมาย “ถูกกระทำ”`
+      : `คุณเลือก “${chosen}” ซึ่งไม่ใช่ V3 ที่ต้องการหลัง be/been`
+    return (
+      `คำตอบที่ถูกคือ "${correct}" (V3 / past participle)\n\n` +
+      `กฎ: Passive voice = be / been / being + V3\n` +
+      `แปลว่า “ถูก… / ได้รับการ…” — ผู้กระทำไม่สำคัญหรือรู้จากบริบทแล้ว\n\n` +
+      `${wrongBit}\n\n` +
+      `ตัวอย่าง:\n` +
+      `✓ It has been argued that… (= มีการถกเถียงว่า)\n` +
+      `✗ It has been arguing that…\n` +
+      `✓ Old buildings should be preserved.\n` +
+      `✗ Old buildings should be preserving.\n` +
+      `✓ The idea will be elaborated in the next paragraph.\n` +
+      `✗ The idea will be elaborating…` +
+      appendBlankHint(explain)
+    )
+  },
+  'gerund-subject': (correct, chosen, explain) => {
+    const wrongBit = looksPastOrV3(chosen)
+      ? `คุณเลือก “${chosen}” (V-ed/V3) ซึ่งมักเป็นกริยาถูกกระทำหรือคุณศัพท์แบบเสร็จแล้ว — ไม่ทำหน้าที่เป็นประธานแบบ gerund`
+      : `คุณเลือก “${chosen}” ซึ่งไม่ใช่รูป V-ing ที่ใช้เป็นนามประธาน`
+    return (
+      `คำตอบที่ถูกคือ "${correct}" (V-ing = gerund)\n\n` +
+      `กฎ: เมื่อกริยาทำหน้าที่เหมือนคำนาม (การ…) ใช้ V-ing เรียกว่า gerund\n` +
+      `มักอยู่ต้นประโยคเป็นประธาน → ตามด้วยกริยาเอกพจน์ (is/allows/brings)\n\n` +
+      `${wrongBit}\n\n` +
+      `ตัวอย่าง:\n` +
+      `✓ Maintaining them is expensive. (= การดูแลรักษาพวกมัน…)\n` +
+      `✗ Maintained them is expensive.\n` +
+      `✓ Replacing old buildings allows cities to grow.\n` +
+      `✗ Replaced old buildings allows…\n` +
+      `✓ Studying history remains essential.\n` +
+      `✗ Studied history remains essential.` +
+      appendBlankHint(explain)
+    )
+  },
+  'gerund-prep': (correct, chosen, explain) => {
+    const wrongBit = looksPastOrV3(chosen)
+      ? `คุณเลือก “${chosen}” (V-ed) — หลัง for/on/by/of ฯลฯ ห้ามใช้ V-ed ต้องเป็น gerund`
+      : `คุณเลือก “${chosen}” — หลังบุพบทต้องเป็น V-ing ไม่ใช่ base form หรือรูปอื่น`
+    return (
+      `คำตอบที่ถูกคือ "${correct}" (gerund หลังบุพบท)\n\n` +
+      `กฎ: หลัง preposition (for, on, by, of, without, about, after, before…) ถ้าตามด้วยกริยา ต้องเป็น V-ing เสมอ\n` +
+      `แปลว่า “เพื่อการ… / โดยการ… / เกี่ยวกับการ…”\n\n` +
+      `${wrongBit}\n\n` +
+      `ตัวอย่าง:\n` +
+      `✓ … for preserving cultural identity.\n` +
+      `✗ … for preserved cultural identity. (ผิดรูปกริยา)\n` +
+      `✓ … by understanding the past.\n` +
+      `✗ … by understand / understood the past.\n` +
+      `✓ … without destroying historic sites.` +
+      appendBlankHint(explain)
+    )
+  },
+  'parallel-ing': (correct, chosen, explain) =>
+    `คำตอบที่ถูกคือ "${correct}" (ขนานกับ V-ing อื่น)\n\n` +
+    `กฎ: Parallel structure — คำที่เชื่อมด้วย and / or / not only…but also ต้องรูปเดียวกัน\n` +
+    `ถ้าตัวหนึ่งเป็น V-ing อีกตัวก็ต้องเป็น V-ing\n\n` +
+    `คุณเลือก “${chosen}” ซึ่งไม่ขนานกับรูป -ing ในประโยค\n\n` +
+    `ตัวอย่าง:\n` +
+    `✓ pulling down old buildings and replacing them\n` +
+    `✗ pulling down old buildings and replaced them\n` +
+    `✓ for understanding the past and improving society\n` +
+    `✗ for understanding the past and improve society` +
+    appendBlankHint(explain),
+  'adj-ing': (correct, chosen, explain) => {
+    const wrongBit = looksPastOrV3(chosen)
+      ? `คุณเลือก “${chosen}” (V-ed) ซึ่งแปลแนว “ถูก… / เสร็จแล้ว” — แต่ตรงนี้ต้องการความหมายแบบกำลังเกิด/active`
+      : `คุณเลือก “${chosen}” ซึ่งไม่ใช่คุณศัพท์แบบ V-ing`
+    return (
+      `คำตอบที่ถูกคือ "${correct}" (V-ing ทำหน้าที่คุณศัพท์)\n\n` +
+      `กฎ: V-ing + คำนาม = คุณศัพท์แบบ active / กำลังเกิด / มีลักษณะนั้น\n` +
+      `ถามใจสั้น ๆ: “สิ่งนั้นกำลังทำเอง / กำลังเกิดขึ้นอยู่ไหม?” → ถ้าใช่ ใช้ V-ing\n\n` +
+      `${wrongBit}\n\n` +
+      `ตัวอย่าง:\n` +
+      `✓ a growing population (= ประชากรที่กำลังเพิ่มขึ้น)\n` +
+      `✗ a grown population (ในความหมายนี้)\n` +
+      `✓ rapidly developing cities\n` +
+      `✗ rapidly developed cities (ถ้าหมายถึง “กำลังพัฒนา”)\n` +
+      `✓ people living in the present` +
+      appendBlankHint(explain)
+    )
+  },
+  'adj-v3': (correct, chosen, explain) => {
+    const wrongBit = endsWithIng(chosen)
+      ? `คุณเลือก “${chosen}” (V-ing) ซึ่งแปลแนว “กำลังทำเอง” — แต่ตรงนี้ต้องการ “ถูกกระทำ / อยู่ในสภาพเสร็จแล้ว”`
+      : `คุณเลือก “${chosen}” ซึ่งไม่ใช่คุณศัพท์แบบ V-ed/V3`
+    return (
+      `คำตอบที่ถูกคือ "${correct}" (V-ed/V3 ทำหน้าที่คุณศัพท์)\n\n` +
+      `กฎ: V-ed/V3 + คำนาม = คุณศัพท์แบบ passive / ถูกกระทำ / เสร็จแล้ว\n` +
+      `ถามใจสั้น ๆ: “สิ่งนั้นถูกทำให้เป็นแบบนั้นหรือยัง?” → ถ้าใช่ ใช้ V-ed\n\n` +
+      `${wrongBit}\n\n` +
+      `ตัวอย่าง:\n` +
+      `✓ well-preserved historic buildings (= อาคารที่ได้รับการอนุรักษ์ดี)\n` +
+      `✗ well-preserving historic buildings\n` +
+      `✓ once destroyed, these sites cannot be recreated\n` +
+      `✗ once destroying, these sites…\n` +
+      `เปรียบเทียบสั้น ๆ: bored students (นักเรียนที่รู้สึกเบื่อ) vs boring lessons (บทเรียนที่น่าเบื่อ)` +
+      appendBlankHint(explain)
+    )
+  },
+  'modal-base': (correct, chosen, explain) =>
+    `คำตอบที่ถูกคือ "${correct}" (base form / รูปเดิม)\n\n` +
+    `กฎ: หลัง modal (can, could, should, may, might, would, must, will) หรือหลัง to-infinitive → ใช้ V1 ไม่ผัน\n` +
+    `ห้ามเติม -s / -ing / -ed\n\n` +
+    `คุณเลือก “${chosen}” ซึ่งผันรูปแล้ว — หลัง modal/to ไม่ผัน\n\n` +
+    `ตัวอย่าง:\n` +
+    `✓ may appear outdated\n` +
+    `✗ may appears / may appearing / may appeared\n` +
+    `✓ should be preserved  (หลัง be แล้วค่อยเป็น V3 — แต่หลัง should เองยังเป็น base “be”)\n` +
+    `✓ to claim that… / to meet the needs…\n` +
+    `✗ to claiming / to claimed` +
+    appendBlankHint(explain),
+  'sva-plural': (correct, chosen, explain) =>
+    `คำตอบที่ถูกคือ "${correct}"\n\n` +
+    `กฎ: Subject–Verb Agreement — ประธานพหูพจน์ (they, others, people, cities, these structures) → กริยาปัจจุบันไม่เติม -s\n\n` +
+    `คุณเลือก “${chosen}” ซึ่งมักเป็นรูปเอกพจน์\n\n` +
+    `ตัวอย่าง:\n` +
+    `✓ Others argue that…\n` +
+    `✗ Others argues that…\n` +
+    `✓ These structures represent local identity.\n` +
+    `✗ These structures represents…\n` +
+    `✓ Cities attract tourists.` +
+    appendBlankHint(explain),
+  'sva-singular': (correct, chosen, explain) =>
+    `คำตอบที่ถูกคือ "${correct}"\n\n` +
+    `กฎ: ประธานเอกพจน์ (it, this, society…) หรือ gerund phrase ทั้งก้อน (= เอกพจน์) → กริยาปัจจุบันเติม -s / ใช้ is/has\n\n` +
+    `คุณเลือก “${chosen}” ซึ่งไม่ตรงจำนวนกับประธาน\n\n` +
+    `ตัวอย่าง:\n` +
+    `✓ Maintaining them is expensive.  (ประธาน = Maintaining them → เอกพจน์)\n` +
+    `✗ Maintaining them are expensive.\n` +
+    `✓ Replacing them allows cities to grow.\n` +
+    `✗ Replacing them allow…\n` +
+    `✓ It has been widely argued that…` +
+    appendBlankHint(explain),
+  'be-form': (correct, chosen, explain) =>
+    `คำตอบที่ถูกคือ "${correct}"\n\n` +
+    `กฎ: เลือก am / is / are ให้ตรงประธาน\n` +
+    `• I → am\n` +
+    `• he / she / it / this / gerund phrase → is\n` +
+    `• they / we / you / พหูพจน์ → are\n\n` +
+    `คุณเลือก “${chosen}” ซึ่งไม่ตรงประธานในประโยคนี้\n\n` +
+    `ตัวอย่าง:\n` +
+    `✓ I am convinced that…\n` +
+    `✗ I is / I are convinced…\n` +
+    `✓ Preserving old buildings is important.\n` +
+    `✗ Preserving old buildings are important.` +
+    appendBlankHint(explain),
+  unknown: (correct, chosen, explain) => {
+    if (endsWithIng(correct) && looksPastOrV3(chosen)) {
+      return (
+        `คำตอบที่ถูกคือ "${correct}" (V-ing) ไม่ใช่ “${chosen}” (V-ed)\n\n` +
+        `แยกสั้น ๆ:\n` +
+        `• V-ing = gerund (การ…) / คุณศัพท์แบบกำลังเกิด\n` +
+        `• V-ed/V3 = passive / คุณศัพท์แบบถูกกระทำ\n\n` +
+        `ตัวอย่าง:\n` +
+        `✓ Maintaining old buildings is costly.\n` +
+        `✗ Maintained old buildings is costly.\n` +
+        `✓ a growing population\n` +
+        `✗ a grown population (ในความหมาย “กำลังเพิ่ม”)` +
+        appendBlankHint(explain)
+      )
+    }
+    if (looksPastOrV3(correct) && endsWithIng(chosen)) {
+      return (
+        `คำตอบที่ถูกคือ "${correct}" (V-ed/V3) ไม่ใช่ “${chosen}” (V-ing)\n\n` +
+        `แยกสั้น ๆ:\n` +
+        `• หลัง be ในความหมายถูกกระทำ → V3 (should be preserved)\n` +
+        `• คุณศัพท์แบบเสร็จแล้ว/ถูกทำ → V-ed (preserved buildings)\n` +
+        `• V-ing ใช้เมื่อเป็น gerund หรือ “กำลังเกิด”\n\n` +
+        `ตัวอย่าง:\n` +
+        `✓ Old buildings should be preserved.\n` +
+        `✗ Old buildings should be preserving.\n` +
+        `✓ well-preserved sites\n` +
+        `✗ well-preserving sites` +
+        appendBlankHint(explain)
+      )
+    }
+    return (
+      (explain
+        ? `${explain}\n\n`
+        : '') +
+      `รูปที่ถูกคือ "${correct}" (คุณเลือก “${chosen}”)\n\n` +
+      `ทวนหลัก:\n` +
+      `• be/been + ? → มักเป็น V3 (passive)\n` +
+      `• for/on/by/of + ? → V-ing (gerund)\n` +
+      `• ประธานตำแหน่งกริยา (การ…) → V-ing\n` +
+      `• modal/to + ? → base form\n\n` +
+      `ตัวอย่างเปรียบเทียบ:\n` +
+      `✓ should be preserved  vs  ✗ should be preserving\n` +
+      `✓ for preserving identity  vs  ✗ for preserved identity\n` +
+      `✓ Maintaining them is hard  vs  ✗ Maintained them is hard`
+    )
+  }
+}
+
+/** Wrong-answer Thai for verb-tense / participle — why V-ing vs V-ed/V3 etc. */
+export const getWgb2VerbFormWrongExplain = (
+  blank: Extract<Wgb2Blank, { kind: 'type' | 'select' }>,
+  userAnswer: string
+): string => {
+  const explain = blank.explain || ''
+  const chosen = (userAnswer || '').trim()
+  const correct = blank.kind === 'type' ? blank.answers[0] : blank.answer
+  const base = blank.kind === 'type' ? blank.base : undefined
+  if (!chosen || wgb2AnswersEqual(chosen, correct)) {
+    return explain || `รูปที่ถูกคือ "${correct}"`
+  }
+  const verbCase = classifyVerbCase(correct, explain, base)
+  return verbCaseExplainTh[verbCase](correct, chosen, explain)
 }
 
 // ── exercises ──────────────────────────────────────────────────────────
@@ -5876,6 +6302,13 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
 
 export const getWritingTask2Builder = (promptId: string): Wgb2Exercise | null =>
   WGB2_EXERCISES.find((exercise) => exercise.promptId === promptId) || null
+
+/** Prefer dense 50+70 overrides when present (avoids circular import with writingTask2Dense). */
+export const resolveWritingTask2Builder = (
+  promptId: string,
+  denseOverrides: Wgb2Exercise[] = []
+): Wgb2Exercise | null =>
+  denseOverrides.find((exercise) => exercise.promptId === promptId) || getWritingTask2Builder(promptId)
 
 const wgb2AssembleBlank = (blank: Wgb2Blank): string => {
   if (blank.kind === 'select') return blank.answer === WGB2_NO_ARTICLE ? '' : blank.answer

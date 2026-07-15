@@ -1,18 +1,29 @@
 .writingGuidePage {
+  --wg-ticket-ink: #0f172a;
+  --wg-ticket-paper: #fffef6;
+  --wg-ticket-cta: #ffcc00;
+  --wg-ticket-border: 3px solid #0f172a;
+  --wg-ticket-shadow: 4px 4px 0 #0f172a;
+  --wg-ticket-shadow-lg: 8px 8px 0 #0f172a;
+
   position: relative;
   isolation: isolate;
   display: grid;
   gap: 18px;
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
   padding: clamp(16px, 2vw, 28px);
   min-height: calc(100vh - 88px);
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(246, 250, 255, 0.94);
-  box-shadow:
-    0 0 0 1px rgba(0, 74, 173, 0.06),
-    0 24px 64px rgba(15, 23, 42, 0.1);
-  overflow: hidden;
+  border-radius: 8px;
+  border: var(--wg-ticket-border);
+  background: var(--wg-ticket-paper);
+  color: var(--wg-ticket-ink);
+  box-shadow: var(--wg-ticket-shadow-lg);
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.writingGuidePage .sectionLabel {
+  color: #004aad;
 }
 
 .writingGuideAmbient {
@@ -22,13 +33,14 @@
   overflow: hidden;
   border-radius: inherit;
   z-index: 0;
+  clip-path: inset(0 round 8px);
 }
 
 .writingGuideOrb {
   position: absolute;
   border-radius: 50%;
   filter: blur(48px);
-  opacity: 0.5;
+  opacity: 0.18;
   animation: writingGuideOrbFloat 10s var(--ease-luxury-soft) infinite alternate;
 }
 
@@ -37,7 +49,7 @@
   right: -20px;
   width: 240px;
   height: 240px;
-  background: rgba(255, 204, 0, 0.45);
+  background: rgba(255, 204, 0, 0.28);
 }
 
 .writingGuideOrb-b {
@@ -45,15 +57,16 @@
   left: -40px;
   width: 280px;
   height: 280px;
-  background: rgba(0, 74, 173, 0.35);
+  background: rgba(0, 74, 173, 0.14);
   animation-delay: -4s;
 }
 
 .writingGuideGridGlow {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 74, 173, 0.04);
+  background-color: rgba(0, 74, 173, 0.02);
   background-size: 32px 32px;
+  opacity: 0.8;
 }
 
 @keyframes writingGuideOrbFloat {
@@ -90,18 +103,23 @@
   justify-self: start;
   min-height: 38px;
   padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  background: rgba(255, 255, 255, 0.88);
-  color: #0f172a;
+  border-radius: 4px;
+  border: var(--wg-ticket-border);
+  background: #fff;
+  color: var(--wg-ticket-ink);
   font-size: 0.86rem;
   font-weight: 800;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   cursor: pointer;
-  transition: transform var(--duration-luxury-fast) var(--ease-luxury);
+  box-shadow: 2px 2px 0 #0f172a;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .writingGuideFlowBack:hover {
-  transform: translateY(-1px);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #0f172a;
+  border-color: #0f172a;
+  color: #0f172a;
 }
 
 .writingGuideFlowTitle {
@@ -109,7 +127,7 @@
   font-family: 'Kanit', sans-serif;
   font-weight: 700;
   font-size: clamp(1.45rem, 3vw, 2rem);
-  color: #0b2a5b;
+  color: #0f172a;
   letter-spacing: 0;
   line-height: 1.15;
 }
@@ -142,6 +160,7 @@
   min-height: 180px;
   padding: 24px 22px;
   text-align: left;
+  font-family: 'Kanit', 'Anuphan', sans-serif;
   border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.88);
@@ -187,16 +206,18 @@
 }
 
 .writingGuideMegaSub {
+  font-family: 'Kanit', 'Anuphan', sans-serif;
   color: #475569;
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.45;
 }
 
 .writingGuideMegaCard small {
+  font-family: 'Kanit', 'Anuphan', sans-serif;
   color: #64748b;
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .writingGuideMegaBadge {
@@ -206,8 +227,9 @@
   border-radius: 999px;
   background: rgba(0, 74, 173, 0.1);
   color: var(--bc-blue);
+  font-family: 'Kanit', 'Anuphan', sans-serif;
   font-size: 0.64rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -234,35 +256,664 @@
 .writingGuideHubShell {
   display: flex;
   flex-direction: column;
-  gap: clamp(28px, 4vw, 40px);
-  padding-bottom: clamp(32px, 4vw, 48px);
+  gap: clamp(28px, 4vw, 44px);
+  padding: clamp(8px, 1.5vw, 16px) 0 clamp(32px, 4vw, 48px);
   font-family: 'Anuphan', Inter, system-ui, sans-serif;
 }
 
+.wgHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.95fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: center;
+}
+
+.wgHeroCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.writingGuideHubIntro .wlpKicker,
+.wgHeroCopy .wlpKicker {
+  font-family: 'Kanit', sans-serif;
+  color: #004aad;
+  opacity: 0.75;
+  letter-spacing: 0.18em;
+}
+
+.writingGuideHubH1 {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(1.85rem, 4.2vw, 3rem);
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 0;
+  line-height: 1.18;
+  max-width: 18ch;
+}
+
+.wgHeroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 20px;
+  margin-top: 8px;
+}
+
+.wgHeroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 12px;
+  background: #ffcc00;
+  color: #0b1f44;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 0 rgba(0, 74, 173, 0.12);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.wgHeroCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(255, 204, 0, 0.35);
+}
+
+.wgHeroLinks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.wgHeroLink {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #004aad;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 74, 173, 0.25);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 140ms ease, color 140ms ease;
+}
+
+.wgHeroLink:hover {
+  color: #003a86;
+  text-decoration-color: #004aad;
+}
+
+.wgHeroLinkDot {
+  color: rgba(0, 74, 173, 0.35);
+  font-weight: 700;
+  user-select: none;
+}
+
+.wgHeroGraphic {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 280px;
+}
+
+.wgHeroGraphicTab {
+  justify-self: end;
+  width: 38%;
+  height: 28px;
+  margin-right: 10%;
+  border-radius: 18px 18px 0 0;
+  background: #004aad;
+}
+
+.wgHeroGraphicBody {
+  background: #004aad;
+  border-radius: 28px 0 28px 28px;
+  padding: clamp(18px, 3vw, 28px);
+  min-height: 240px;
+  box-shadow: 0 16px 32px rgba(0, 74, 173, 0.18);
+}
+
+.wgHeroGraphicGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  height: 100%;
+}
+
+.wgHeroGraphicCell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  animation: wgHeroCellIn 520ms var(--ease-luxury) both;
+}
+
+.wgHeroGraphicCell:nth-child(2) { animation-delay: 80ms; }
+.wgHeroGraphicCell:nth-child(3) { animation-delay: 160ms; }
+.wgHeroGraphicCell:nth-child(4) { animation-delay: 240ms; }
+
+@keyframes wgHeroCellIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wgHeroGraphicCell .wgTypeIconSvg {
+  width: 100%;
+  max-width: 72px;
+  height: auto;
+  color: #ffcc00;
+}
+
+.wgFolderGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.wgFolderGrid-strip {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.wgFolderGrid-categories {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.wgHubActionRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.wgFolderCard {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+  transition: transform 160ms var(--ease-luxury);
+}
+
+.wgFolderCard:hover {
+  transform: translateY(-3px);
+}
+
+.wgFolderTab {
+  justify-self: end;
+  width: 42%;
+  height: 22px;
+  margin-right: 10%;
+  border-radius: 14px 14px 0 0;
+  background: var(--folder-bg, #004aad);
+  color: var(--folder-ink, #fff);
+}
+
+.wgFolderTabArrow {
+  display: none;
+}
+
+.wgFolderBody {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-height: 190px;
+  padding: 18px 16px;
+  border-radius: 20px 0 20px 20px;
+  background: var(--folder-bg, #004aad);
+  color: var(--folder-ink, #fff);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.wgFolderCard-wide .wgFolderBody {
+  min-height: 150px;
+}
+
+.wgFolderCard-blue {
+  --folder-bg: #004aad;
+  --folder-ink: #ffffff;
+}
+
+.wgFolderCard-yellow {
+  --folder-bg: #ffcc00;
+  --folder-ink: #0b1f44;
+}
+
+.wgFolderCard-mist {
+  --folder-bg: #eef3fb;
+  --folder-ink: #0b2a5b;
+}
+
+.wgFolderCard-soft {
+  --folder-bg: #eef3fb;
+  --folder-ink: #0b2a5b;
+}
+
+.wgFolderCard-white,
+.wgFolderCard-mist.wgFolderCard-bordered {
+  --folder-bg: #ffffff;
+  --folder-ink: #0b2a5b;
+}
+
+.wgFolderCard-white .wgFolderTab,
+.wgFolderCard-white .wgFolderBody {
+  border: 1px solid rgba(0, 74, 173, 0.12);
+}
+
+.wgFolderCard-white .wgFolderTab {
+  border-bottom: none;
+}
+
+.wgFolderCard-ink {
+  --folder-bg: #eef3fb;
+  --folder-ink: #0b2a5b;
+}
+
+.wgFolderBadge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.1);
+  font-family: 'Kanit', 'Anuphan', sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wgFolderCard-yellow .wgFolderBadge,
+.wgFolderCard-mist .wgFolderBadge,
+.wgFolderCard-soft .wgFolderBadge,
+.wgFolderCard-white .wgFolderBadge,
+.wgFolderCard-ink .wgFolderBadge {
+  background: rgba(0, 74, 173, 0.1);
+  color: #004aad;
+}
+
+.wgFolderCard-blue .wgFolderBadge {
+  background: rgba(255, 204, 0, 0.22);
+  color: #ffcc00;
+}
+
+.wgFolderTitle {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(1.02rem, 1.6vw, 1.15rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.wgFolderIcon {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  color: inherit;
+}
+
+.wgFolderIcon .wgTypeIconSvg {
+  width: 64px;
+  height: auto;
+}
+
+.wgFolderCard-blue .wgFolderIcon {
+  color: #ffcc00;
+}
+
+.wgFolderCard-yellow .wgFolderIcon,
+.wgFolderCard-mist .wgFolderIcon,
+.wgFolderCard-soft .wgFolderIcon,
+.wgFolderCard-white .wgFolderIcon,
+.wgFolderCard-ink .wgFolderIcon {
+  color: #004aad;
+}
+
+.wgFolderDesc {
+  margin: 0;
+  font-family: 'Kanit', 'Anuphan', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+.wgBentoHead {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.wgBentoCta {
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 10px;
+  background: #ffcc00;
+  color: #0b1f44;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.wgBentoCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(255, 204, 0, 0.35);
+}
+
+.wgBentoD2 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: auto auto auto;
+  gap: 12px;
+}
+
+.wgBentoD2-thirds {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.wgBentoTile {
+  display: grid;
+  gap: 10px;
+  align-content: space-between;
+  min-height: 150px;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  transition: transform 140ms ease;
+  animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
+}
+
+.wgBentoTile:hover {
+  transform: translateY(-2px);
+}
+
+.wgBentoTile-hero {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1.2fr) minmax(140px, 0.9fr);
+  align-items: center;
+  gap: 18px;
+  min-height: 180px;
+  padding: 24px 26px;
+}
+
+.wgBentoTile-span2 {
+  grid-column: span 2;
+  min-height: 120px;
+  align-content: center;
+}
+
+.wgBentoTile-blue {
+  background: #004aad;
+  color: #fff;
+}
+
+.wgBentoTile-yellow {
+  background: #ffcc00;
+  color: #0b1f44;
+}
+
+.wgBentoTile-white {
+  background: #fff;
+  color: #0b2a5b;
+  border: 1px solid rgba(0, 74, 173, 0.12);
+}
+
+.wgBentoTile-soft {
+  background: #e8f0fb;
+  color: #0b2a5b;
+}
+
+.wgBentoTile-ink {
+  background: #12233f;
+  color: #fff;
+}
+
+.wgBentoPill {
+  display: inline-flex;
+  width: fit-content;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.wgBentoTile-blue .wgBentoPill,
+.wgBentoTile-ink .wgBentoPill {
+  background: rgba(255, 204, 0, 0.2);
+  color: #ffcc00;
+}
+
+.wgBentoTile-yellow .wgBentoPill,
+.wgBentoTile-white .wgBentoPill,
+.wgBentoTile-soft .wgBentoPill {
+  background: rgba(0, 74, 173, 0.12);
+  color: #004aad;
+}
+
+.wgBentoTitle {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.wgBentoTitle-lg {
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  margin-top: 4px;
+}
+
+.wgBentoDesc {
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0.88;
+}
+
+.wgBentoGo {
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.wgBentoTile-blue .wgBentoGo,
+.wgBentoTile-ink .wgBentoGo {
+  color: #ffcc00;
+}
+
+.wgBentoTile-yellow .wgBentoGo,
+.wgBentoTile-white .wgBentoGo,
+.wgBentoTile-soft .wgBentoGo {
+  color: #004aad;
+}
+
+.wgBentoFocus {
+  margin: 4px 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+
+.wgBentoList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.wgBentoList-latest {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.wgBentoTile-list {
+  min-height: 160px;
+}
+
+.wgBentoTile-static {
+  cursor: default;
+}
+
+.wgBentoTile-static:hover {
+  transform: none;
+}
+
+.wgBentoTile-list .wgBentoTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.wgBentoHeroCopy {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.wgBentoHeroArt {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  color: #ffcc00;
+}
+
+.wgBentoHeroArt .wgTypeIconSvg {
+  width: min(220px, 100%);
+  height: auto;
+}
+
+.wgBentoSpanRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.wgBentoSpanRow > div {
+  display: grid;
+  gap: 6px;
+}
+
+@media (max-width: 900px) {
+  .wgBentoD2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .wgBentoTile-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .wgBentoHeroArt {
+    justify-content: flex-start;
+  }
+
+  .wgBentoTile-span2 {
+    grid-column: 1 / -1;
+  }
+
+  .wgBentoList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .wgBentoD2 {
+    grid-template-columns: 1fr;
+  }
+
+  .wgBentoHead {
+    justify-content: stretch;
+  }
+
+  .wgBentoCta {
+    width: 100%;
+  }
+}
+
+@media (max-width: 980px) {
+  .wgHero {
+    grid-template-columns: 1fr;
+  }
+
+  .writingGuideHubH1 {
+    max-width: none;
+  }
+
+  .wgFolderGrid,
+  .wgFolderGrid-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .wgFolderGrid,
+  .wgFolderGrid-strip,
+  .wgHubActionRow {
+    grid-template-columns: 1fr;
+  }
+
+  .wgHeroGraphic {
+    min-height: 220px;
+  }
+}
+
+/* Legacy hub intro (kept for nested shells) */
 .writingGuideHubIntro {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 12px;
-  padding: clamp(32px, 6vw, 56px) clamp(16px, 4vw, 48px) clamp(8px, 2vw, 16px);
+  padding: clamp(24px, 4vw, 40px) clamp(12px, 3vw, 24px) 8px;
 }
 
-.writingGuideHubIntro .wlpKicker {
-  font-family: 'Kanit', sans-serif;
-  color: #004aad;
-  opacity: 1;
-  letter-spacing: 0.2em;
+.writingGuideHubIntro .wgHeroActions {
+  justify-content: center;
 }
 
-.writingGuideHubH1 {
-  margin: 0;
-  font-family: 'Kanit', sans-serif;
-  font-size: clamp(1.9rem, 4.4vw, 2.7rem);
-  font-weight: 700;
-  color: #0b2a5b;
-  letter-spacing: 0;
-  line-height: 1.12;
+.writingGuideHubIntro .writingGuideHubH1 {
+  max-width: 18ch;
 }
 
 .writingGuideHubIntro .writingGuideHubH1 + .wlpAccentRule {
@@ -270,7 +921,7 @@
   height: 4px;
   border-radius: 3px;
   background: #ffcc00;
-  margin: 4px 0 4px;
+  margin: 4px 0;
 }
 
 .writingGuideHubLead {
@@ -280,6 +931,242 @@
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.6;
+}
+
+/* ── Shared ticket board (matches Reading hub) ── */
+.wgTicketBoard {
+  display: grid;
+  gap: 12px;
+  max-width: 920px;
+  padding: 18px;
+  border: 3px solid #0f172a;
+  border-radius: 8px;
+  background: #fffef6;
+  box-shadow: 8px 8px 0 #0f172a;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+}
+
+/* Ticket + level path hybrid (Reading hub twin) */
+.wgTicketPathBoard {
+  max-width: 920px;
+  padding: 22px 20px 20px;
+  border: 3px solid #0f172a;
+  border-radius: 8px;
+  background: #fffef6;
+  box-shadow: 8px 8px 0 #0f172a;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+}
+
+.wgTicketPath {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding-left: 36px;
+}
+
+.wgTicketPath::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 18px;
+  bottom: 18px;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #0f9f6e 0%, #004aad 45%, #ffcc00 100%);
+}
+
+.wgTicketPathStep {
+  position: relative;
+  animation: luxuryCardEnter calc(var(--duration-view) + 60ms) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+}
+
+.wgTicketPathNode {
+  position: absolute;
+  left: -36px;
+  top: 22px;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #0f172a;
+  border-radius: 50%;
+  background: #004aad;
+  color: #fff;
+  font-family: Kanit, Inter, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 0 0 0 4px #fffef6;
+}
+
+.wgTicketPathStep.is-done .wgTicketPathNode {
+  background: #0f9f6e;
+}
+
+.wgTicketPathStep.is-locked .wgTicketPathNode {
+  background: #94a3b8;
+}
+
+.wgTicketPathStep > .wgTicket {
+  animation: none;
+}
+
+.wgTicket {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin: 0;
+  padding: 14px 16px !important;
+  text-align: left;
+  border: 3px solid #0f172a !important;
+  border-radius: 6px !important;
+  background: #fff !important;
+  color: #0f172a !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+  cursor: pointer;
+  font: inherit;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  animation: luxuryCardEnter calc(var(--duration-view) + 60ms) var(--ease-luxury) both;
+  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+}
+
+.wgTicket:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #0f172a !important;
+  background: #fff !important;
+}
+
+.wgTicket:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #0f172a !important;
+}
+
+.wgTicketStamp {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #0f172a;
+  border-radius: 4px;
+  font-size: 1.6rem;
+  line-height: 1;
+  background: #ffcc00;
+}
+
+.wgTicketStamp-yellow { background: #ffcc00; }
+.wgTicketStamp-peach { background: #ffd7a8; }
+.wgTicketStamp-lilac { background: #c7d2fe; }
+.wgTicketStamp-blue { background: #bfdbfe; }
+.wgTicketStamp-ink { background: #e2e8f0; }
+
+.wgTicketBody {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.wgTicketTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wgTicketTitleRow strong {
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.15;
+}
+
+.wgTicketBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #0f172a;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.wgTicketSub {
+  color: #475569;
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.4;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+}
+
+.wgTicketGo {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 3px solid #0f172a;
+  border-radius: 4px;
+  background: #ffcc00;
+  color: #0f172a;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 800;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .wgTicketBoard {
+    padding: 12px;
+    gap: 10px;
+    box-shadow: 5px 5px 0 #0f172a;
+  }
+  .wgTicketPathBoard {
+    padding: 14px 12px;
+    box-shadow: 5px 5px 0 #0f172a;
+  }
+  .wgTicketPath {
+    padding-left: 30px;
+    gap: 10px;
+  }
+  .wgTicketPathNode {
+    left: -30px;
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+    top: 18px;
+  }
+  .wgTicket {
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+  .wgTicketStamp {
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+  }
+  .wgTicketTitleRow strong {
+    font-size: 1.02rem;
+  }
+  .wgTicketSub {
+    font-size: 0.8rem;
+  }
+  .wgTicketGo {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .writingGuideMegaGrid-hub {
@@ -378,7 +1265,7 @@
   width: 5px;
   height: 22px;
   border-radius: 3px;
-  background: var(--bc-blue);
+  background: #004aad;
 }
 
 .wgLatestBlock-predict .wgLatestBlockTitle::before {
@@ -501,6 +1388,31 @@
   padding-top: 8px;
 }
 
+.wgLatestCta .wgBentoCta {
+  width: auto;
+}
+
+.wgLatestNew {
+  display: inline-flex;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ffcc00;
+  color: #0b1f44;
+  font-size: 0.68rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+.wgLatestBullets {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: inherit;
+  opacity: 0.88;
+}
+
 .wgLatestCtaBtn {
   padding: 12px 22px;
   border-radius: 999px;
@@ -578,12 +1490,69 @@
   color: var(--bc-blue);
 }
 
-.writingGuideExamListItem strong {
+.writingGuideExamListItem strong,
+.writingGuideExamListStem {
   font-family: 'Kanit', sans-serif;
   font-weight: 500;
-  font-size: 1.08rem;
+  font-size: 0.98rem;
   color: #0b2a5b;
-  line-height: 1.35;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.wgbExamStem {
+  margin: 0;
+  padding: 14px 16px;
+  border: 3px solid #0f172a;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 3px 3px 0 #0f172a;
+}
+
+/* ── Guided step-by-step Task 1 essay builder ─────────────────────── */
+
+.wgbShell {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.1fr);
+  gap: 20px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+/* Left: prompt + sticky infographic — always in view while solving */
+.wgbVisualPane {
+  position: sticky;
+  top: 12px;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  min-width: 0;
+  max-height: calc(100dvh - 100px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  z-index: 2;
+}
+
+.wgbChart {
+  position: relative;
+  top: auto;
+  padding: 16px;
+  border-radius: 6px;
+  border: 3px solid #0f172a;
+  background: #fff;
+  box-shadow: 3px 3px 0 #0f172a;
+  overflow-x: auto;
+}
+
+.wgbPanel {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.writingIeltsPromptLine-instruction {
+  margin-top: 8px;
+  color: #374151;
 }
 
 .writingGuideExamListMeta {
@@ -935,7 +1904,7 @@
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--bc-blue);
+  color: #004aad;
 }
 
 .writingGuideStructureGrid {
@@ -1116,34 +2085,33 @@
 .writingGuideHelperBtn {
   min-height: 42px;
   padding: 0 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 74, 173, 0.28);
-  background: var(--bc-yellow);
-  color: #0b2a5b;
-  font-family: 'Kanit', sans-serif;
+  border-radius: 4px;
+  border: var(--wg-ticket-border);
+  background: var(--wg-ticket-cta);
+  color: var(--wg-ticket-ink);
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 10px 24px rgba(255, 204, 0, 0.24);
-  transition:
-    transform var(--duration-luxury-fast) var(--ease-luxury),
-    box-shadow var(--duration-luxury-fast) var(--ease-luxury);
+  box-shadow: var(--wg-ticket-shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .writingGuideHelperBtn:hover {
-  transform: translateY(-1px);
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #0f172a;
 }
 
 .writingGuideHelperBtn.is-open {
-  background: var(--bc-blue);
+  background: #004aad;
   color: #fff;
-  border-color: rgba(0, 74, 173, 0.4);
-  box-shadow: 0 10px 24px rgba(0, 74, 173, 0.22);
+  border-color: #0f172a;
+  box-shadow: var(--wg-ticket-shadow);
 }
 
 .writingGuideHelperPanel {
   padding: 14px 16px;
-  border-radius: 16px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 204, 0, 0.28);
   background: rgba(255, 251, 235, 0.96);
   animation: writingGuideHelperIn 0.35s var(--ease-luxury) both;
@@ -2299,32 +3267,7 @@
 }
 
 
-/* ── Guided step-by-step Task 1 essay builder ─────────────────────── */
-
-.wgbShell {
-  display: grid;
-  grid-template-columns: minmax(300px, 1fr) minmax(340px, 1.05fr);
-  gap: 20px;
-  align-items: start;
-  margin-top: 18px;
-}
-
-.wgbChart {
-  position: sticky;
-  top: 16px;
-  padding: 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  background: #fff;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
-  overflow-x: auto;
-}
-
-.wgbPanel {
-  display: grid;
-  gap: 16px;
-  min-width: 0;
-}
+/* ── Guided step-by-step Task 1 essay builder (shared components) ── */
 
 /* progress rail */
 .wgbRail {
@@ -2614,6 +3557,7 @@
 .wgbExplainWhy {
   flex: 1 1 240px;
   color: #78350f;
+  white-space: pre-line;
 }
 
 .wlpBtn-save {
@@ -2767,6 +3711,96 @@
   color: #1c2740;
 }
 
+/* Article mini-guide — general nouns: when NOT to use "the" */
+.wgbCoach.is-article-guide {
+  border-color: #b8d4c8;
+  border-left-color: #1f7a5c;
+  background: linear-gradient(160deg, #f3faf7 0%, #e8f5ef 100%);
+}
+
+.wgbCoach.is-article-guide .wgbCoachAvatar {
+  background: #1f7a5c;
+}
+
+.wgbCoach.is-article-guide .wgbCoachLabel {
+  background: rgba(31, 122, 92, 0.14);
+  color: #1f7a5c;
+}
+
+.wgbArticleGuide {
+  display: grid;
+  gap: 12px;
+}
+
+.wgbArticleGuideSubtitle {
+  margin: 0;
+  color: #355a4a;
+  font-size: 0.92rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.wgbArticleGuideRows {
+  display: grid;
+  gap: 8px;
+}
+
+.wgbArticleGuideRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) auto minmax(0, 1.35fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(31, 122, 92, 0.18);
+}
+
+.wgbArticleGuideWhen {
+  color: #16382c;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.wgbArticleGuideRule {
+  justify-self: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1f7a5c;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.wgbArticleGuideExample {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.wgbArticleGuideEn {
+  color: #1b2a44;
+  font-size: 0.88rem;
+  font-weight: 650;
+  font-style: italic;
+}
+
+.wgbArticleGuideTh {
+  color: #5a6b7a;
+  font-size: 0.78rem;
+}
+
+.wgbArticleGuideTip {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  color: #3d5248;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 @keyframes wgbCoachIn {
   from { opacity: 0; transform: translateY(10px) scale(0.98); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -2786,6 +3820,13 @@
 @media (max-width: 900px) {
   .wgbShell {
     grid-template-columns: 1fr;
+  }
+
+  .wgbVisualPane {
+    position: relative;
+    top: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .wgbChart {
@@ -2815,6 +3856,15 @@
 
   .wgbCoachMessage {
     font-size: 0.82rem;
+  }
+
+  .wgbArticleGuideRow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .wgbArticleGuideRule {
+    justify-self: start;
   }
 }
 
@@ -3219,6 +4269,14 @@
   color: #5a6a86;
 }
 
+.wgb2VocabHint-inline {
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(0, 74, 173, 0.06);
+  border: 1px dashed rgba(0, 74, 173, 0.22);
+}
+
 .wgb2VocabExample {
   font-size: 0.82rem;
   color: #64748b;
@@ -3234,4 +4292,213 @@
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+/* =====================================================================
+   Writing · ticket theme everywhere (journeys, exercises, Band7, helpers)
+   Keep blank/DnD state colors; harden shells, CTAs, and cards.
+   ===================================================================== */
+
+.wgTicket-static {
+  cursor: default;
+  grid-template-columns: auto 1fr;
+}
+
+.wgTicket-static:hover,
+.wgTicket-static:active {
+  transform: none;
+  box-shadow: 4px 4px 0 #0f172a !important;
+}
+
+.wgTicketCta,
+.wgLatestCtaBtn,
+.wgBentoCta,
+.wlpBtn-primary,
+.wlpBtn-save,
+.wgbNextBtn.wlpBtn-primary,
+.writingGuidePage .wlpBtn-primary {
+  border: 3px solid #0f172a !important;
+  border-radius: 4px !important;
+  background: #ffcc00 !important;
+  color: #0f172a !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+.wgTicketCta:hover,
+.wgLatestCtaBtn:hover,
+.wgBentoCta:hover,
+.wlpBtn-primary:hover,
+.wlpBtn-save:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #0f172a !important;
+  background: #ffcc00 !important;
+}
+
+.wlpBtn-secondary,
+.writingGuidePage .wlpBtn-secondary {
+  border: 3px solid #0f172a !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  color: #0f172a !important;
+  box-shadow: 3px 3px 0 #0f172a !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-weight: 700 !important;
+}
+
+.wgLatestNew {
+  display: inline-flex;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #ffcc00;
+  color: #0f172a;
+  font-family: Kanit, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+.wgLatestBlockTitle::before {
+  border-radius: 0;
+  width: 6px;
+  background: #0f172a;
+}
+
+.wgLatestBlock-predict .wgLatestBlockTitle::before {
+  background: #ffcc00;
+}
+
+.wgLatestCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.writingGuideComingSoon,
+.writingGuideHelperPanel,
+.writingGuideVocabularyPanel,
+.writingGuideStructureCard {
+  border: 3px solid #0f172a !important;
+  border-radius: 6px !important;
+  background: #fff !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+}
+
+.wlpBand7Tabs-single {
+  margin-top: 8px;
+  padding: 18px;
+  border: 3px solid #0f172a;
+  border-radius: 8px;
+  background: #fffef6;
+  box-shadow: 8px 8px 0 #0f172a;
+}
+
+.wlpBand7Sample {
+  margin-top: 12px;
+  padding: 16px;
+  border: 3px solid #0f172a;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 4px 4px 0 #0f172a;
+}
+
+.wlpBand7Badge {
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #ffcc00;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.wlpBand7Prompt,
+.wlpBand7Segment,
+.wlpBand7Tips {
+  border: 2px solid #0f172a !important;
+  border-radius: 4px !important;
+  box-shadow: 2px 2px 0 #0f172a;
+  background: #fffef6 !important;
+}
+
+.wlpBand7Legend {
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.wgbChart,
+.wgbStepCard,
+.wgbFinish,
+.wgbEssay,
+.wgbCoach,
+.wgb2QuestionCard,
+.wgb2DragSidebar,
+.wgbFeedback,
+.wgbExplainList {
+  border: 3px solid #0f172a !important;
+  border-radius: 6px !important;
+  box-shadow: 3px 3px 0 #0f172a !important;
+}
+
+.wgbExamStem,
+.wgbStepCard,
+.wgbFinish,
+.wgbEssay,
+.wgb2DragSidebar {
+  background: #fff !important;
+}
+
+.wgbChart {
+  background: #fff !important;
+}
+
+.wgb2QuestionCard {
+  background: #eef4ff !important;
+  border-left: 6px solid #004aad !important;
+}
+
+.wgbRailStep {
+  border: 2px solid #0f172a !important;
+  border-radius: 4px !important;
+  box-shadow: 2px 2px 0 #0f172a;
+  background: #fff !important;
+}
+
+.wgbRailStep.is-current {
+  background: #ffcc00 !important;
+  color: #0f172a !important;
+  border-color: #0f172a !important;
+}
+
+.wgbRailStep.is-current .wgbRailDot {
+  background: #0f172a !important;
+  color: #ffcc00 !important;
+}
+
+.wgbSelect,
+.wgbInput,
+.wgbDropSlot,
+.wgbChip {
+  border: 2px solid #0f172a !important;
+  border-radius: 4px !important;
+}
+
+.wgbSelect:focus,
+.wgbInput:focus {
+  outline: 2px solid #ffcc00;
+  outline-offset: 1px;
+}
+
+.writingGuidePage .writingGuideFlowTitle,
+.writingGuidePage .writingGuideHubH1 {
+  color: #0f172a;
+}
+
+.writingGuidePage .writingGuideStructureEyebrow,
+.writingGuidePage .wlpKicker,
+.writingGuidePage .wlpSectionKicker {
+  color: #004aad;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }

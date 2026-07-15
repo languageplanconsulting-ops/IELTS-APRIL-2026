@@ -17,7 +17,7 @@
   border-radius: 12px;
   background: var(--ep-bg);
   color: var(--ep-ink);
-  font-family: 'Anuphan', Inter, system-ui, sans-serif;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
 }
 
 .epReadingPage h1,

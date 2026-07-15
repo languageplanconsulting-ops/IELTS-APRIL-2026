@@ -4,15 +4,20 @@
 // answer, so there is nothing to highlight as "your answer vs. correct answer").
 
 import type { WritingTask2ReportSnapshot } from './writingReportTypes'
+import { VocabHighlightText } from './VocabHighlightText'
 import './WritingReportView.css'
 import './WritingTask2ReportView.css'
 
 export function WritingTask2ReportView({
   snapshot,
-  onClose
+  onClose,
+  onSaveVocab,
+  savedWords
 }: {
   snapshot: WritingTask2ReportSnapshot
   onClose?: () => void
+  onSaveVocab?: (item: { word: string; thaiMeaning: string; example?: string }) => void
+  savedWords?: Set<string>
 }) {
   const { correct, total } = snapshot.score
   const pct = total ? Math.round((correct / total) * 100) : 0
@@ -48,10 +53,20 @@ export function WritingTask2ReportView({
 
       <section className="wgReportEssayWrap">
         <article className="wgReportEssay">
+          <p className="wgt2ReportVocabHint">
+            คำที่<b>ขีดเส้นใต้</b>คือคำศัพท์/collocation สำคัญ — แตะเพื่อดูความหมายภาษาไทย
+          </p>
           {snapshot.paragraphs.map((para) => (
             <div key={para.role} className="wgReportPara">
               <span className="wgReportParaLabel">{para.labelTh}</span>
-              <p className="wgReportParaText">{para.text}</p>
+              <p className="wgReportParaText">
+                <VocabHighlightText
+                  text={para.text}
+                  vocab={snapshot.vocab}
+                  savedWords={savedWords}
+                  onSave={onSaveVocab}
+                />
+              </p>
             </div>
           ))}
         </article>
