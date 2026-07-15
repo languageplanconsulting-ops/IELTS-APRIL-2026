@@ -2063,32 +2063,41 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'intro',
         labelTh: ROLE_LABEL_TH.intro,
         hintTh: HINT_PARAPHRASE,
+        // 1 sentence · 1 complex (comma + V-ing)
         segments: [
-          t('The two maps '),
-          sel('gb13-i1', ['illustrate', 'argue', 'promise'], 'illustrate', 'paraphrase', 'illustrate = แสดง/บรรยายข้อมูลในแผนที่ ส่วน argue (โต้แย้ง) และ promise (สัญญา) เป็นการกระทำของคน ใช้บรรยายแผนที่ไม่ได้'),
+          t('The maps '),
+          sel(
+            'gb13-i1',
+            ['compare', 'argue', 'promise'],
+            'compare',
+            'paraphrase',
+            'compare the transformation = เปรียบเทียบการเปลี่ยนแปลงตามแบบแผนแผนที่ ส่วน argue/promise ใช้บรรยายแผนที่ไม่ได้'
+          ),
           t(' the '),
-          sel('gb13-i2', ['changes', 'chances', 'choices'], 'changes', 'paraphrase', 'changes = การเปลี่ยนแปลง ตรงกับโจทย์ ส่วน chances (โอกาส) และ choices (ตัวเลือก) ความหมายคนละเรื่อง'),
-          t(' that '),
-          typ('gb13-i3', 'take', ['took'], 'verb-tense', 'บรรยายสิ่งที่เกิดขึ้นในอดีต (2005–2025) จึงใช้ took (took place = เกิดขึ้น)'),
-          t(' place in the '),
-          sel('gb13-i4', ['layout', 'weather', 'opinion'], 'layout', 'word-choice', 'layout = ผังการจัดวางพื้นที่ ตรงกับแผนที่ ส่วน weather/opinion ไม่เกี่ยวกับผังเมือง'),
+          sel(
+            'gb13-i2',
+            ['transformation', 'celebration', 'temperature'],
+            'transformation',
+            'paraphrase',
+            'transformation = การเปลี่ยนแปลงของผังเมือง ตรงแบบแผนแผนที่ ส่วน celebration/temperature คนละความหมาย'
+          ),
           t(' of a town '),
-          sel('gb13-i5', ['centre', 'century', 'ceremony'], 'centre', 'word-choice', 'town centre = ใจกลางเมือง ตรงกับโจทย์ ส่วน century (ศตวรรษ) และ ceremony (พิธี) เป็นคนละความหมาย'),
-          t(' '),
-          sel('gb13-i6', ['between', 'along', 'toward'], 'between', 'word-choice', 'between 2005 and 2025 = ระหว่างสองปีนี้ ส่วน along/toward ใช้กับสถานที่หรือทิศทาง ไม่ใช่ช่วงเวลา'),
-          t(' 2005 '),
-          sel('gb13-i7', ['and', 'but', 'nor'], 'and', 'word-choice', 'โครงสร้าง between X and Y ต้องใช้ and เสมอ ส่วน but/nor ใช้กับ between ไม่ได้'),
-          t(' 2025. Over these two '),
-          sel('gb13-i8', ['decades', 'seconds', 'buildings'], 'decades', 'word-choice', 'สองทศวรรษ (2005–2025 ราว 20 ปี) ใช้ decades ส่วน seconds/buildings ไม่ใช่หน่วยเวลาแบบนี้'),
-          t(', the area '),
-          typ('gb13-i9', 'undergo', ['underwent'], 'verb-tense', 'เล่าอดีต จึงผัน undergo เป็นช่อง 2 คือ underwent (= ผ่านการเปลี่ยนแปลง)'),
-          t(' a '),
-          sel('gb13-i10', ['major', 'polite', 'edible'], 'major', 'word-choice', 'major redevelopment = การพัฒนาใหม่ครั้งใหญ่ ส่วน polite (สุภาพ) และ edible (กินได้) ไม่เข้ากับ redevelopment'),
-          t(' redevelopment, and its character '),
-          typ('gb13-i11', 'change', ['changed'], 'verb-tense', 'ประธานเอกพจน์ (its character) + เล่าอดีต จึงใช้ changed'),
-          t(' '),
-          sel('gb13-i12', ['completely', 'barely', 'rarely'], 'completely', 'word-choice', 'completely = อย่างสิ้นเชิง เข้ากับการเปลี่ยนแปลงครั้งใหญ่ ส่วน barely/rarely (แทบไม่/ไม่ค่อย) ขัดกับ major redevelopment'),
-          t('.')
+          sel(
+            'gb13-i3',
+            ['centre', 'century', 'ceremony'],
+            'centre',
+            'word-choice',
+            'town centre = ใจกลางเมือง ตรงกับโจทย์ ส่วน century/ceremony คนละความหมาย'
+          ),
+          t(' from 2005 to 2025, '),
+          typ(
+            'gb13-i4',
+            'focus',
+            ['focusing'],
+            'ving-clause',
+            'หลังคอมมาใช้ V-ing (focusing) เป็น complex structure เดียวของบทนำ'
+          ),
+          t(' on key changes to the built environment.')
         ]
       },
       {
@@ -2096,30 +2105,49 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'overview',
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
+        // 1 sentence · 1 complex (passive: can be observed)
         segments: [
-          t('Overall, the town centre '),
-          typ('gb13-o1', 'become', ['became'], 'verb-tense', 'ประธานเอกพจน์ (the town centre) + เล่าอดีต จึงใช้ became'),
-          t(' far more '),
-          sel('gb13-o2', ['residential', 'temporary', 'natural'], 'residential', 'word-choice', 'residential = เน้นที่อยู่อาศัย เข้ากับการเพิ่มบ้านและ civic centre ส่วน temporary/natural ไม่ตรงภาพรวม'),
-          t(' and '),
-          sel('gb13-o3', ['modern', 'ancient', 'crowded'], 'modern', 'word-choice', 'modern = ทันสมัย เข้ากับ tech park และอาคารใหม่ ส่วน ancient (โบราณ) ตรงข้าม และ crowded ไม่ใช่ภาพรวมหลัก'),
-          t(' over the period, '),
-          sel('gb13-o4', ['as', 'so', 'or'], 'as', 'word-choice', 'as = เพราะว่า/ในขณะที่ ใช้เชื่อมเหตุผล ส่วน so (ดังนั้น) และ or (หรือ) ความหมายไม่เข้ากับประโยคนี้'),
-          t(' the commercial and industrial sites '),
-          typ('gb13-o5', 'replace', ['were replaced'], 'v3-clause', 'passive: สถานที่ถูกกระทำ (ถูกแทนที่) + ประธานพหูพจน์ + อดีต จึงใช้ were replaced'),
-          t(' by housing, a civic centre '),
-          sel('gb13-o6', ['and', 'nor', 'than'], 'and', 'word-choice', 'ลิสต์ของสิ่งที่มาแทนที่ ต้องเชื่อมด้วย and ส่วน nor/than ใช้ในบริบทนี้ไม่ได้'),
-          t(' green space, and public facilities '),
-          typ('gb13-o6b', 'introduce', ['were introduced'], 'v3-clause', 'passive: สิ่งอำนวยความสะดวกถูกเพิ่มเข้ามา + ประธานพหูพจน์ + อดีต จึงใช้ were introduced'),
-          t(', transforming the district from a busy commercial '),
-          sel('gb13-o9', ['hub', 'hobby', 'habit'], 'hub', 'word-choice', 'commercial hub = ศูนย์กลางการค้า ส่วน hobby (งานอดิเรก) และ habit (นิสัย) ความหมายไม่เกี่ยวกับพื้นที่'),
-          t(' into a '),
-          sel('gb13-o10', ['quieter', 'noisier', 'wider'], 'quieter', 'word-choice', 'quieter = เงียบสงบกว่า เข้ากับการกลายเป็นย่านที่อยู่อาศัย ส่วน noisier (ตรงข้าม) และ wider ไม่ใช่ภาพรวม'),
-          t(' living space '),
-          sel('gb13-o11', ['as', 'so that', 'in case'], 'as', 'transition', 'as = พร้อมกับ/ในขณะที่ เชื่อมสองเหตุการณ์ที่เกิดพร้อมกัน ส่วน so that (เพื่อให้) และ in case (เผื่อ) ผิดความหมาย'),
-          t(' the green areas '),
-          typ('gb13-o12', 'expand', ['expanded'], 'verb-tense', 'ประธานพหูพจน์ (the green areas) + เล่าอดีต จึงใช้ expanded'),
-          t('.')
+          t('Overall, a number of '),
+          sel(
+            'gb13-o1',
+            ['transformations', 'temperatures', 'celebrations'],
+            'transformations',
+            'word-choice',
+            'transformations = การเปลี่ยนแปลงหลายจุด ตรงแบบแผน overview ของแผนที่'
+          ),
+          t(' '),
+          typ(
+            'gb13-o2',
+            'observe',
+            ['can be observed'],
+            'v3-clause',
+            'passive เดียวของ overview: transformations can be observed (= สามารถสังเกตได้)'
+          ),
+          t(', including the '),
+          sel(
+            'gb13-o3',
+            ['addition', 'additioning', 'add'],
+            'addition',
+            'word-choice',
+            'the addition of = การเพิ่มสิ่งก่อสร้างใหม่ ใช้คำนามจากกลุ่ม construction'
+          ),
+          t(' of residential housing and a civic centre, the '),
+          sel(
+            'gb13-o4',
+            ['demolition', 'decoration', 'declaration'],
+            'demolition',
+            'word-choice',
+            'demolition = การรื้อถอน ตรงกลุ่ม destroy/demolish'
+          ),
+          t(' of the shopping mall and car park, and the '),
+          sel(
+            'gb13-o5',
+            ['transformation', 'transportation', 'translation'],
+            'transformation',
+            'word-choice',
+            'transformation of X into Y = การเปลี่ยนรูปพื้นที่'
+          ),
+          t(' of the industrial zone into a tech park.')
         ]
       },
       {
@@ -2127,43 +2155,40 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'body1',
         labelTh: ROLE_LABEL_TH.body1,
         hintTh: HINT_CONJUGATE,
+        // 2 sentences · 2 complexes only: 1) passive  2) while
         segments: [
-          sel('gb13-b1', ['In 2005', 'By 2025', 'Since 2005'], 'In 2005', 'transition', 'In 2005 = ณ ปีเริ่มต้น เหมาะเปิดการเล่าสภาพเดิม ส่วน By 2025 (พอถึง 2025) และ Since 2005 (ตั้งแต่ 2005) ไม่เข้ากับการบรรยายจุดเริ่ม'),
-          t(', the north of the town '),
-          typ('gb13-b2', 'occupy', ['was occupied'], 'v3-clause', 'passive: พื้นที่ถูกใช้ครอบครองโดยห้าง + ประธานเอกพจน์ + อดีต จึงใช้ was occupied'),
-          t(' by a '),
-          sel('gb13-b3', ['large', 'lonely', 'legal'], 'large', 'word-choice', 'large shopping mall = ห้างขนาดใหญ่ ตรงกับโจทย์ ส่วน lonely (เหงา) และ legal (ถูกกฎหมาย) ไม่เข้ากับห้าง'),
-          t(' shopping mall, '),
-          sel('gb13-b4', ['beside', 'unlike', 'despite'], 'beside', 'word-choice', 'beside = อยู่ข้างๆ เข้ากับการมีลานจอดรถอยู่ติดกัน ส่วน unlike/despite เป็นคำแสดงความขัดแย้ง'),
-          t(' which a '),
-          sel('gb13-b5', ['spacious', 'edible', 'hourly'], 'spacious', 'word-choice', 'spacious car park = ลานจอดรถกว้างขวาง ส่วน edible (กินได้) และ hourly (รายชั่วโมง) ไม่ขยายพื้นที่'),
-          t(' car park '),
-          typ('gb13-b6', 'situate', ['was situated'], 'v3-clause', 'passive: ลานจอดรถถูกตั้งอยู่ + ประธานเอกพจน์ + อดีต จึงใช้ was situated'),
-          t(' and '),
-          typ('gb13-b6b', 'use', ['was used'], 'v3-clause', 'passive: ลานจอดถูกใช้โดยผู้มาซื้อของ + ประธานเอกพจน์ + อดีต จึงใช้ was used'),
-          t(' by shoppers. '),
-          sel('gb13-b7', ['Meanwhile', 'Therefore', 'For example'], 'Meanwhile', 'transition', 'Meanwhile = ในเวลาเดียวกัน เชื่อมไปพื้นที่อื่นในปีเดียวกัน ส่วน Therefore (ดังนั้น) และ For example (ยกตัวอย่าง) ไม่เข้ากับความหมาย'),
-          t(', the southwest '),
-          typ('gb13-b8', 'contain', ['contained'], 'verb-tense', 'ประธานเอกพจน์ (the southwest) + เล่าอดีต จึงใช้ contained'),
-          t(' an industrial zone that '),
-          typ('gb13-b9', 'fill', ['was filled'], 'v3-clause', 'passive: พื้นที่ถูกเติมเต็มด้วยโรงงาน + ประธานเอกพจน์ + อดีต จึงใช้ was filled'),
-          t(' with '),
-          sel('gb13-b10', ['factories', 'forests', 'festivals'], 'factories', 'word-choice', 'industrial zone มักเต็มไปด้วย factories (โรงงาน) ส่วน forests (ป่า) และ festivals (เทศกาล) ไม่เข้ากับเขตอุตสาหกรรม'),
-          t(' and warehouses, '),
-          sel('gb13-b11', ['while', 'because', 'unless'], 'while', 'transition', 'while = ในขณะที่ ใช้เปรียบเทียบพื้นที่ต่างส่วนพร้อมกัน ส่วน because (เพราะ) และ unless (เว้นแต่) ผิดความหมาย'),
-          t(' a '),
-          sel('gb13-b11b', ['busy', 'silent', 'empty'], 'busy', 'word-choice', 'busy market = ตลาดที่คึกคัก เข้ากับภาพเมืองการค้าเดิม ส่วน silent/empty (เงียบ/ว่าง) ขัดกับคำว่า market ที่พลุกพล่าน'),
-          t(' market and an open green space '),
-          typ('gb13-b12', 'lie', ['lay'], 'verb-tense', 'lie (ตั้งอยู่) ผันอดีตเป็น lay เล่าอดีต'),
-          t(' to the south. These commercial and industrial areas '),
-          typ('gb13-b13', 'dominate', ['dominated'], 'verb-tense', 'ประธานพหูพจน์ (these areas) + เล่าอดีต จึงใช้ dominated (= ครองพื้นที่ส่วนใหญ่)'),
-          t(' the '),
-          sel('gb13-b14', ['original', 'imaginary', 'digital'], 'original', 'word-choice', 'original town centre = ใจกลางเมืองแบบเดิม ส่วน imaginary (จินตนาการ) และ digital (ดิจิทัล) ไม่ตรงบริบท'),
-          t(' town centre, '),
-          typ('gb13-b15', 'leave', ['leaving'], 'ving-clause', 'V-ing clause บอกผลที่ตามมา ต่อจากประโยคหลัก จึงใช้ leaving (= ทำให้เหลือ...)'),
-          t(' '),
-          sel('gb13-b16', ['little', 'plenty', 'many'], 'little', 'word-choice', 'little green space (นับไม่ได้) = พื้นที่สีเขียวเหลือน้อย เข้ากับภาพเมืองการค้า ส่วน plenty/many ขัดกับบริบท'),
-          t(' green space for residents.')
+          sel(
+            'gb13-b1',
+            ['Interestingly', 'Therefore', 'For example'],
+            'Interestingly',
+            'transition',
+            'เปิดประโยคด้วย transition ที่อนุญาต: Interestingly / However / Likewise ฯลฯ'
+          ),
+          t(', the north of the town centre '),
+          typ(
+            'gb13-b2',
+            'occupy',
+            ['was occupied'],
+            'v3-clause',
+            'complex #1: past passive — the north was occupied by …'
+          ),
+          t(' by a large shopping mall and a car park. '),
+          sel(
+            'gb13-b3',
+            ['Likewise', 'Therefore', 'For example'],
+            'Likewise',
+            'transition',
+            'Likewise = ในทำนองเดียวกัน เปิดประโยคที่สองด้วย transition ที่อนุญาต'
+          ),
+          t(', an industrial zone filled the southwest, '),
+          sel(
+            'gb13-b4',
+            ['while', 'because', 'unless'],
+            'while',
+            'transition',
+            'complex #2: while เท่านั้น (ไม่ใช้ because/unless) สำหรับเปรียบเทียบพื้นที่'
+          ),
+          t(' a market and an open space lay to the south.')
         ]
       },
       {
@@ -2171,53 +2196,48 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'body2',
         labelTh: ROLE_LABEL_TH.body2,
         hintTh: HINT_CONJUGATE,
+        // 2 sentences · 2 complexes only: 1) passive + comma V3  2) whereas
         segments: [
-          sel('gb13-c1', ['By 2025', 'In 2005', 'Until 2025'], 'By 2025', 'transition', 'By 2025 = พอถึงปี 2025 เหมาะเปิดการเล่าสภาพใหม่ ส่วน In 2005 (ปีเก่า) และ Until 2025 (จนถึง 2025) ไม่ตรงความหมาย'),
-          t(', the shopping mall and car park '),
-          typ('gb13-c2', 'demolish', ['were demolished'], 'v3-clause', 'passive: ห้างและลานจอดถูกรื้อถอน + ประธานพหูพจน์ + อดีต จึงใช้ were demolished'),
-          t(' and '),
-          typ('gb13-c3', 'replace', ['replaced'], 'v3-clause', 'ต่อจาก were demolished and ... ใช้ V3 (replaced) ในโครงสร้าง passive เดียวกัน (were ... replaced by)'),
-          t(' by neat rows of '),
-          sel('gb13-c4', ['residential', 'temporary', 'financial'], 'residential', 'word-choice', 'residential housing = ที่อยู่อาศัย ตรงกับแผนที่ปี 2025 ส่วน temporary/financial ไม่ใช่ประเภทบ้าน'),
-          t(' housing, which '),
-          typ('gb13-c4b', 'design', ['was designed'], 'v3-clause', 'passive: บ้านถูกออกแบบ + ประธานเอกพจน์ (housing) + อดีต จึงใช้ was designed'),
-          t(' for families, and a new '),
-          sel('gb13-c5', ['civic centre', 'car factory', 'coal mine'], 'civic centre', 'word-choice', 'civic centre = ศูนย์ราชการ/ศูนย์ชุมชน ตรงกับโจทย์ ส่วน car factory และ coal mine ไม่ใช่สิ่งที่มาแทนที่'),
-          t('. '),
-          sel('gb13-c6', ['In addition', 'In contrast', 'As a result'], 'In addition', 'transition', 'In addition = นอกจากนี้ ใช้เพิ่มข้อมูลการเปลี่ยนแปลงอีกจุด ส่วน In contrast (ตรงข้าม) และ As a result (ผลลัพธ์) ไม่ตรงบริบท'),
-          t(', the old industrial zone in the southwest '),
-          typ('gb13-c7', 'convert', ['was converted'], 'v3-clause', 'passive: เขตอุตสาหกรรมถูกดัดแปลง + ประธานเอกพจน์ + อดีต จึงใช้ was converted (into)'),
-          t(' into a modern tech '),
-          sel('gb13-c8', ['park', 'past', 'pack'], 'park', 'word-choice', 'tech park = อุทยานเทคโนโลยี ตรงกับโจทย์ ส่วน past (อดีต) และ pack (ห่อ) เป็นคนละคำ'),
-          t(', where new offices '),
-          typ('gb13-c8b', 'build', ['were built'], 'v3-clause', 'passive: สำนักงานถูกสร้าง + ประธานพหูพจน์ + อดีต จึงใช้ were built'),
+          sel(
+            'gb13-c1',
+            ['However', 'Therefore', 'For example'],
+            'However',
+            'transition',
+            'However = เปลี่ยนไปสู่สภาพหลังพัฒนา เปิดด้วย transition ที่อนุญาต'
+          ),
+          t(', the shopping mall and the car park '),
+          typ(
+            'gb13-c2',
+            'demolish',
+            ['were demolished'],
+            'v3-clause',
+            'complex #1: past passive — were demolished'
+          ),
           t(', '),
-          sel('gb13-c9', ['whereas', 'therefore', 'moreover'], 'whereas', 'transition', 'whereas = ในขณะที่ (แสดงความต่าง) เชื่อมสองการเปลี่ยนแปลงคู่กัน ส่วน therefore/moreover ไม่ใช่คำเปรียบต่าง'),
-          t(' the busy market '),
-          typ('gb13-c10', 'turn', ['was turned'], 'v3-clause', 'passive: ตลาดถูกเปลี่ยนเป็น + ประธานเอกพจน์ + อดีต จึงใช้ was turned (into)'),
-          t(' into a public '),
-          sel('gb13-c11', ['library', 'laundry', 'lottery'], 'library', 'word-choice', 'public library = ห้องสมุดสาธารณะ ตรงกับโจทย์ ส่วน laundry (ร้านซักผ้า) และ lottery (ลอตเตอรี) ไม่ตรง'),
-          t(' that '),
-          typ('gb13-c11b', 'open', ['was opened'], 'v3-clause', 'passive: ห้องสมุดถูกเปิดให้บริการ + ประธานเอกพจน์ + อดีต จึงใช้ was opened'),
-          t(' to the community. '),
-          sel('gb13-c12', ['Finally', 'First', 'Instead'], 'Finally', 'transition', 'Finally = สุดท้าย เหมาะปิดการเล่าจุดเปลี่ยนสุดท้าย ส่วน First (แรกสุด) และ Instead (แทนที่จะ) ไม่เข้ากับตำแหน่งนี้'),
-          t(', the open green space '),
-          typ('gb13-c13', 'landscape', ['was landscaped'], 'v3-clause', 'passive: พื้นที่ถูกจัดภูมิทัศน์ + ประธานเอกพจน์ + อดีต จึงใช้ was landscaped'),
-          t(' and '),
-          typ('gb13-c14', 'become', ['became'], 'verb-tense', 'ประธานเอกพจน์ (the open space) + เล่าอดีต จึงใช้ became'),
-          t(' a '),
-          sel('gb13-c15', ['pleasant', 'painful', 'private'], 'pleasant', 'word-choice', 'pleasant public park = สวนสาธารณะที่น่ารื่นรมย์ ส่วน painful (เจ็บปวด) และ private (ส่วนตัว) ไม่เข้ากับ public park'),
-          t(' public park, '),
-          typ('gb13-c16', 'give', ['giving'], 'ving-clause', 'V-ing clause บอกผลที่ตามมา ต่อจากประโยคหลัก จึงใช้ giving (= ทำให้เกิด...)'),
-          t(' residents a place to relax. '),
-          sel('gb13-c17', ['As a result', 'Nevertheless', 'For instance'], 'As a result', 'transition', 'As a result = ผลจากการเปลี่ยนแปลงทั้งหมด เหมาะปิดย่อหน้า ส่วน Nevertheless (อย่างไรก็ตาม) และ For instance (ยกตัวอย่าง) ไม่ตรงบริบท'),
-          t(', the town centre '),
-          typ('gb13-c18', 'become', ['became'], 'verb-tense', 'ประธานเอกพจน์ (the town centre) + เล่าอดีต จึงใช้ became'),
-          t(' a '),
-          sel('gb13-c19', ['greener', 'darker', 'busier'], 'greener', 'word-choice', 'greener = เขียวขึ้น เข้ากับการเพิ่มสวนและพื้นที่สีเขียว ส่วน darker/busier ขัดกับภาพย่านที่อยู่อาศัยเงียบสงบ'),
-          t(' and more '),
-          sel('gb13-c20', ['liveable', 'crowded', 'industrial'], 'liveable', 'word-choice', 'liveable = น่าอยู่ เข้ากับภาพรวมย่านที่อยู่อาศัย ส่วน crowded/industrial ขัดกับการลดพื้นที่อุตสาหกรรม'),
-          t(' place by the end of the period.')
+          typ(
+            'gb13-c3',
+            'replace',
+            ['replaced'],
+            'v3-clause',
+            'ต่อด้วย comma + V3 (replaced by …) ตามแบบ subject + verb, past participle'
+          ),
+          t(' by residential housing and a civic centre. '),
+          sel(
+            'gb13-c4',
+            ['In contrast', 'Therefore', 'For example'],
+            'In contrast',
+            'transition',
+            'In contrast = เทียบการเปลี่ยนแปลงพื้นที่อื่น เปิดด้วย transition ที่อนุญาต'
+          ),
+          t(', the industrial zone became a tech park, '),
+          sel(
+            'gb13-c5',
+            ['whereas', 'because', 'so'],
+            'whereas',
+            'transition',
+            'complex #2: whereas เปรียบต่าง — ไม่ใช้ because/so'
+          ),
+          t(' the market and the open space became a library and a park.')
         ]
       }
     ]
@@ -2747,26 +2767,41 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'intro',
         labelTh: ROLE_LABEL_TH.intro,
         hintTh: HINT_PARAPHRASE,
+        // 1 sentence · 1 complex (comma + V-ing)
         segments: [
-          t('The two maps '),
-          sel('gb18-i1', ['illustrate', 'argue', 'promise'], 'illustrate', 'paraphrase', 'illustrate = แสดง/บรรยายข้อมูลในแผนที่ ส่วน argue (โต้แย้ง) และ promise (สัญญา) เป็นการกระทำของคน ใช้บรรยายแผนที่ไม่ได้'),
+          t('The maps '),
+          sel(
+            'gb18-i1',
+            ['compare', 'argue', 'promise'],
+            'compare',
+            'paraphrase',
+            'compare the transformation = เปรียบเทียบการเปลี่ยนแปลงตามแบบแผนแผนที่ ส่วน argue/promise ใช้บรรยายแผนที่ไม่ได้'
+          ),
           t(' the '),
-          sel('gb18-i2', ['changes', 'chances', 'choices'], 'changes', 'paraphrase', 'changes = การเปลี่ยนแปลง ตรงกับโจทย์ ส่วน chances (โอกาส) และ choices (ตัวเลือก) ความหมายคนละเรื่อง'),
-          t(' that '),
-          typ('gb18-i3', 'take', ['took'], 'verb-tense', 'บรรยายสิ่งที่เกิดขึ้นในอดีต จึงใช้ took (took place = เกิดขึ้น)'),
-          t(' place on a small island '),
-          sel('gb18-i4', ['before', 'after', 'during'], 'before', 'word-choice', 'ก่อนและหลังการสร้างรีสอร์ท จึงใช้ before...after เป็นคู่ ส่วน during (ระหว่าง) ไม่เข้ากับความหมายนี้'),
-          t(' and after the '),
-          sel('gb18-i5', ['construction', 'destruction', 'instruction'], 'construction', 'word-choice', 'construction = การก่อสร้าง ตรงกับโจทย์ ส่วน destruction (การทำลาย) และ instruction (คำสั่ง) คนละความหมาย'),
-          t(' of a tourist '),
-          sel('gb18-i6', ['resort', 'result', 'record'], 'resort', 'word-choice', 'tourist resort = รีสอร์ทท่องเที่ยว ส่วน result (ผลลัพธ์) และ record (บันทึก) สะกดใกล้แต่คนละความหมาย'),
-          t('. Before development, the island '),
-          typ('gb18-i7', 'be', ['was'], 'verb-tense', 'ประธานเอกพจน์ (the island) + เล่าอดีต จึงใช้ was'),
-          t(' almost entirely undeveloped, '),
-          sel('gb18-i8', ['whereas', 'because', 'so'], 'whereas', 'transition', 'whereas เปรียบเทียบสถานะเดิมกับสถานะหลังพัฒนา ส่วน because/so บอกเหตุ-ผล ไม่ใช่การเปรียบเทียบ'),
-          t(' afterwards it '),
-          typ('gb18-i9', 'become', ['became'], 'verb-tense', 'ประธานเอกพจน์ (it) + เล่าอดีต จึงใช้ became'),
-          t(' a fully-functioning resort.')
+          sel(
+            'gb18-i2',
+            ['transformation', 'celebration', 'temperature'],
+            'transformation',
+            'paraphrase',
+            'transformation = การเปลี่ยนแปลงของพื้นที่ ตรงแบบแผนแผนที่'
+          ),
+          t(' of a small island from before to after the '),
+          sel(
+            'gb18-i3',
+            ['construction', 'destruction', 'instruction'],
+            'construction',
+            'word-choice',
+            'construction = การก่อสร้างรีสอร์ท ตรงกับโจทย์ ส่วน destruction/instruction คนละความหมาย'
+          ),
+          t(' of a tourist resort, '),
+          typ(
+            'gb18-i4',
+            'focus',
+            ['focusing'],
+            'ving-clause',
+            'หลังคอมมาใช้ V-ing (focusing) เป็น complex structure เดียวของบทนำ'
+          ),
+          t(' on new facilities added to the land.')
         ]
       },
       {
@@ -2774,20 +2809,49 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'overview',
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
+        // 1 sentence · 1 complex (passive: can be observed)
         segments: [
-          t('Overall, the island '),
-          typ('gb18-o1', 'transform', ['was transformed'], 'v3-clause', 'passive: เกาะถูกเปลี่ยนแปลง + ประธานเอกพจน์ + อดีต จึงใช้ was transformed'),
-          t(' from an entirely undeveloped area into a '),
-          sel('gb18-o2', ['purpose-built', 'purposeless', 'purposeful'], 'purpose-built', 'word-choice', 'purpose-built resort = รีสอร์ทที่สร้างขึ้นเพื่อวัตถุประสงค์เฉพาะ ส่วน purposeless (ไร้จุดหมาย) และ purposeful (มีจุดหมาย) ผิดความหมาย'),
-          t(' resort, '),
-          sel('gb18-o3', ['as', 'so', 'or'], 'as', 'word-choice', 'as = เพราะว่า/ในขณะที่ ใช้เชื่อมเหตุผล ส่วน so (ดังนั้น) และ or (หรือ) ความหมายไม่เข้ากับประโยคนี้'),
-          t(' most of the open land '),
-          typ('gb18-o4', 'replace', ['was replaced'], 'v3-clause', 'passive: พื้นที่โล่งถูกแทนที่ + ประธานเอกพจน์ + อดีต จึงใช้ was replaced'),
-          t(' by new buildings and facilities, '),
-          sel('gb18-o5', ['although', 'because', 'so'], 'although', 'transition', 'although ใช้เชื่อมความขัดแย้ง (ส่วนใหญ่เปลี่ยนไป แต่บางส่วนยังเดิม) ส่วน because/so บอกเหตุ-ผล'),
-          t(' a strip of beach '),
-          typ('gb18-o6', 'remain', ['remained'], 'verb-tense', 'ประธานเอกพจน์ (a strip of beach) + เล่าอดีต จึงใช้ remained'),
-          t(' unchanged along the coastline.')
+          t('Overall, a number of '),
+          sel(
+            'gb18-o1',
+            ['transformations', 'temperatures', 'celebrations'],
+            'transformations',
+            'word-choice',
+            'transformations = การเปลี่ยนแปลงหลายจุด ตรงแบบแผน overview ของแผนที่'
+          ),
+          t(' '),
+          typ(
+            'gb18-o2',
+            'observe',
+            ['can be observed'],
+            'v3-clause',
+            'passive เดียวของ overview: transformations can be observed'
+          ),
+          t(', including the '),
+          sel(
+            'gb18-o3',
+            ['addition', 'additioning', 'add'],
+            'addition',
+            'word-choice',
+            'the addition of = การเพิ่มสิ่งก่อสร้างใหม่'
+          ),
+          t(' of a reception building, a restaurant and guest huts, the '),
+          sel(
+            'gb18-o4',
+            ['construction', 'destruction', 'instruction'],
+            'construction',
+            'word-choice',
+            'construction of a pier = การสร้างท่าเรือ'
+          ),
+          t(' of a pier, and the '),
+          sel(
+            'gb18-o5',
+            ['transformation', 'transportation', 'translation'],
+            'transformation',
+            'word-choice',
+            'transformation of open land into resort facilities'
+          ),
+          t(' of open land into resort facilities.')
         ]
       },
       {
@@ -2795,25 +2859,40 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'body1',
         labelTh: ROLE_LABEL_TH.body1,
         hintTh: HINT_CONJUGATE,
+        // 2 sentences · 2 complexes only: 1) passive  2) while
         segments: [
-          sel('gb18-b1', ['Before development', 'After development', 'During development'], 'Before development', 'transition', 'Before development = ก่อนการพัฒนา เหมาะเปิดการเล่าสภาพเดิม ส่วน After/During development ไม่ตรงกับแผนที่ก่อนพัฒนา'),
+          sel(
+            'gb18-b1',
+            ['Interestingly', 'Therefore', 'For example'],
+            'Interestingly',
+            'transition',
+            'เปิดประโยคด้วย transition ที่อนุญาต'
+          ),
           t(', the island '),
-          typ('gb18-b2', 'consist', ['consisted'], 'verb-tense', 'ประธานเอกพจน์ (the island) + เล่าอดีต จึงใช้ consisted (of)'),
-          t(' of little more than open land and a beach. The '),
-          sel('gb18-b3', ['interior', 'exterior', 'interior design'], 'interior', 'word-choice', 'interior of the island = พื้นที่ด้านในของเกาะ ส่วน exterior (ด้านนอก) และ interior design (การออกแบบตกแต่งภายใน) ผิดความหมาย'),
-          t(' of the island '),
-          typ('gb18-b4', 'cover', ['was covered'], 'v3-clause', 'passive: พื้นที่ถูกปกคลุมด้วยพื้นที่โล่ง + ประธานเอกพจน์ + อดีต จึงใช้ was covered'),
-          t(' entirely by open land, '),
-          sel('gb18-b5', ['while', 'because', 'unless'], 'while', 'transition', 'while = ในขณะที่ ใช้เปรียบเทียบพื้นที่ต่างส่วนพร้อมกัน ส่วน because (เพราะ) และ unless (เว้นแต่) ผิดความหมาย'),
-          t(' a narrow beach '),
-          typ('gb18-b6', 'run', ['ran'], 'verb-tense', 'run เป็นกริยาผันไม่ปกติ อดีตคือ ran + ประธานเอกพจน์ (a narrow beach) เล่าอดีต'),
-          t(' along its southern edge. '),
-          sel('gb18-b7', ['No other structures', 'Some other structures', 'Many other structures'], 'No other structures', 'word-choice', 'ก่อนพัฒนาไม่มีสิ่งปลูกสร้างอื่นเลย จึงใช้ No other structures ส่วน Some/Many ขัดกับความว่างเปล่าของเกาะเดิม'),
-          t(' '),
-          typ('gb18-b8', 'exist', ['existed'], 'verb-tense', 'ประธานพหูพจน์ (No other structures) + เล่าอดีต จึงใช้ existed'),
-          t(' on the island at this stage, '),
-          typ('gb18-b9', 'give', ['giving'], 'ving-clause', 'ใช้ V-ing clause (giving) ขยายผลของประโยคหลัก'),
-          t(' it a completely natural appearance.')
+          typ(
+            'gb18-b2',
+            'cover',
+            ['was covered'],
+            'v3-clause',
+            'complex #1: past passive — the island was covered by open land'
+          ),
+          t(' almost entirely by open land. '),
+          sel(
+            'gb18-b3',
+            ['Likewise', 'Therefore', 'For example'],
+            'Likewise',
+            'transition',
+            'Likewise = ในทำนองเดียวกัน เปิดประโยคที่สองด้วย transition ที่อนุญาต'
+          ),
+          t(', a narrow beach ran along the southern edge, '),
+          sel(
+            'gb18-b4',
+            ['while', 'because', 'unless'],
+            'while',
+            'transition',
+            'complex #2: while เท่านั้น สำหรับเปรียบเทียบ'
+          ),
+          t(' no other buildings yet existed on the island.')
         ]
       },
       {
@@ -2821,31 +2900,42 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         role: 'body2',
         labelTh: ROLE_LABEL_TH.body2,
         hintTh: HINT_CONJUGATE,
+        // 2 sentences · 2 complexes only: 1) passive  2) whereas + passive kept inside whereas clause as one contrast unit
+        // Count: were constructed (1), whereas (2). Remaining clause uses simple past "remained".
         segments: [
-          sel('gb18-c1', ['After the resort was built', 'Before the resort was built', 'Without the resort being built'], 'After the resort was built', 'transition', 'After the resort was built = หลังจากรีสอร์ทถูกสร้าง เหมาะเปิดการเล่าสภาพใหม่ ส่วน Before/Without ไม่ตรงกับแผนที่หลังพัฒนา'),
-          t(", the island's layout "),
-          typ('gb18-c2', 'change', ['changed'], 'verb-tense', "ประธานเอกพจน์ (the island's layout) + เล่าอดีต จึงใช้ changed"),
-          t(' considerably. A reception building, a restaurant, '),
-          sel('gb18-c3', ['and', 'nor', 'than'], 'and', 'word-choice', 'ลิสต์ของสิ่งที่สร้างใหม่ ต้องเชื่อมด้วย and ส่วน nor/than ใช้ในบริบทนี้ไม่ได้'),
-          t(' a row of guest huts '),
-          typ('gb18-c4', 'construct', ['were constructed'], 'v3-clause', 'passive: อาคารถูกสร้าง + ประธานพหูพจน์ + อดีต จึงใช้ were constructed'),
-          t(' in the northern part of the island, '),
-          sel('gb18-c5', ['while', 'because', 'unless'], 'while', 'transition', 'while = ในขณะที่ ใช้เปรียบเทียบพื้นที่ต่างส่วนพร้อมกัน ส่วน because (เพราะ) และ unless (เว้นแต่) ผิดความหมาย'),
-          t(' a pier '),
-          typ('gb18-c6', 'build', ['was built'], 'v3-clause', 'passive: ท่าเทียบเรือถูกสร้าง + ประธานเอกพจน์ + อดีต จึงใช้ was built'),
-          t(' out into the sea to the east. '),
-          sel('gb18-c7', ['In the centre of the island', 'On top of the island', 'Underneath the island'], 'In the centre of the island', 'word-choice', 'In the centre of the island = ที่ตรงกลางเกาะ ตรงกับตำแหน่งพื้นที่โล่งที่เหลือในแผนที่หลัง ส่วน On top of/Underneath ผิดตำแหน่ง'),
-          t(', a smaller area of open land '),
-          typ('gb18-c8', 'remain', ['remained'], 'verb-tense', 'ประธานเอกพจน์ (a smaller area) + เล่าอดีต จึงใช้ remained'),
-          t(', '),
-          typ('gb18-c9', 'provide', ['providing'], 'ving-clause', 'ใช้ V-ing clause (providing) ขยายผลของประโยคหลัก'),
-          t(' space for future expansion. '),
-          sel('gb18-c10', ['Meanwhile', 'Therefore', 'For example'], 'Meanwhile', 'transition', 'Meanwhile = ในเวลาเดียวกัน เชื่อมไปพื้นที่อื่นที่ไม่เปลี่ยนแปลง ส่วน Therefore (ดังนั้น) และ For example (ยกตัวอย่าง) ไม่เข้ากับความหมาย'),
-          t(', the beach along the southern edge '),
-          typ('gb18-c11', 'leave', ['was left'], 'v3-clause', 'passive: ชายหาดถูกทิ้งไว้ไม่เปลี่ยนแปลง + ประธานเอกพจน์ + อดีต จึงใช้ was left'),
-          t(' untouched, '),
-          typ('gb18-c12', 'preserve', ['preserving'], 'ving-clause', 'ใช้ V-ing clause (preserving) ขยายผลของประโยคหลัก'),
-          t(' the island’s natural coastline for visitors to enjoy.')
+          sel(
+            'gb18-c1',
+            ['However', 'Therefore', 'For example'],
+            'However',
+            'transition',
+            'However = เปลี่ยนไปสู่สภาพหลังสร้างรีสอร์ท'
+          ),
+          t(', a reception building, a restaurant, guest huts and a pier '),
+          typ(
+            'gb18-c2',
+            'construct',
+            ['were constructed'],
+            'v3-clause',
+            'complex #1: past passive — were constructed (build/construction vocab)'
+          ),
+          t(' on the island. '),
+          sel(
+            'gb18-c3',
+            ['In contrast', 'Therefore', 'For example'],
+            'In contrast',
+            'transition',
+            'In contrast = เทียบส่วนที่ไม่ถูกทำลาย'
+          ),
+          t(', the beach remained unchanged along the southern edge, '),
+          sel(
+            'gb18-c4',
+            ['whereas', 'because', 'so'],
+            'whereas',
+            'transition',
+            'complex #2: whereas เท่านั้น — เปรียบกับพื้นที่โล่งตรงกลาง'
+          ),
+          t(' open land still occupied the centre.')
+
         ]
       }
     ]

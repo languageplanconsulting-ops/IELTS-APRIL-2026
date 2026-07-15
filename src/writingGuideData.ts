@@ -826,27 +826,68 @@ export const WRITING_TASK1_SECTIONS: WritingTask1Section[] = [
       {
         id: 'build',
         label: 'Construction',
-        chips: ['add', 'build', 'construct']
+        chips: ['build', 'construction', 'added', 'construct']
       },
       {
         id: 'remove',
-        label: 'Removal',
-        chips: ['destroy', 'demolish', 'dismantle', 'remove']
+        label: 'Destruction',
+        chips: ['demolition', 'destroy', 'demolish', 'replaced', 'substituted']
       },
       {
         id: 'change',
         label: 'Transformation',
-        chips: ['transform', 'change', 'repurpose']
+        chips: ['transform', 'change', 'repurpose', 'relocation', 'moved']
       },
       {
-        id: 'move',
-        label: 'Relocation',
-        chips: ['move', 'relocate']
+        id: 'transition',
+        label: 'Transitions',
+        chips: [
+          'However',
+          'In contrast',
+          'On the other hand',
+          'Likewise',
+          'Similarly',
+          'Surprisingly',
+          'Interestingly',
+          'It is interesting to note that'
+        ]
       },
       {
-        id: 'replace',
-        label: 'Replacement',
-        chips: ['replace', 'substitute']
+        id: 'subordinator',
+        label: 'Linkers',
+        chips: ['while', 'whereas', 'although', 'despite the fact that']
+      }
+    ],
+    structures: [
+      {
+        id: 'map-passive',
+        label: 'Passive voice',
+        template: 'The shopping mall was demolished and replaced by housing.',
+        note: 'แผนที่ใช้ past passive เป็นหลัก — สิ่งปลูกสร้าง “ถูก” รื้อ / สร้าง / เปลี่ยน'
+      },
+      {
+        id: 'map-ving',
+        label: 'Subject + verb, V-ing',
+        template: 'The open space was landscaped, creating a public park.',
+        note: 'หลังคอมมาใช้ V-ing เพื่อบอกผลที่ตามมา'
+      },
+      {
+        id: 'map-v3',
+        label: 'Subject + verb, V3',
+        template: 'The mall was demolished, replaced by residential housing.',
+        note: 'หลังคอมมาใช้ past participle แบบย่อจาก passive'
+      },
+      {
+        id: 'map-which',
+        label: 'Subject + verb, which + verb',
+        template: 'A civic centre was added, which was designed for families.',
+        note: 'which ขยายคำนามที่เพิ่งกล่าวถึง'
+      },
+      {
+        id: 'map-sub',
+        label: 'while / whereas / although / despite the fact that',
+        template: 'Housing was added in the north, whereas a tech park was built in the southwest.',
+        note: 'ใช้ได้เฉพาะ while, whereas, although, despite the fact that'
       }
     ]
   },
@@ -966,7 +1007,7 @@ export const WRITING_TASK1_TYPE_INFO: WritingTask1TypeInfo[] = [
     title: 'Map',
     titleTh: 'แผนที่ (Map)',
     descTh:
-      'อธิบายการเปลี่ยนแปลงของสถานที่ระหว่างสองช่วงเวลา ใช้คำแสดงตำแหน่งและการเปลี่ยนแปลง เช่น "was replaced by", "was constructed to the north of"',
+      'เทียบแผนที่สองช่วงเวลาตามแบบแผนเดียว: Intro เปรียบ transformation จากปี…ถึงปี… · Overview ใช้ “a number of transformations can be observed, including the addition / demolition / transformation of …” · Body เปิดด้วย transition และจำกัด complex เหลือ 2 ต่อย่อหน้า',
     badge: 'Task 1'
   },
   {
