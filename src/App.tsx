@@ -18822,7 +18822,7 @@ function App() {
 
   useEffect(() => {
     if (!readingVocabOpenKey) return undefined
-    const closeIfOutside = (event: MouseEvent) => {
+    const closeIfOutside = (event: Event) => {
       const target = event.target
       if (target instanceof Element && target.closest('.vocabHiWrap')) return
       setReadingVocabOpenKey(null)

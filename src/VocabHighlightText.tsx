@@ -41,7 +41,7 @@ export function VocabHighlightText({
 
   useEffect(() => {
     if (!openKey) return undefined
-    const closeIfOutside = (event: MouseEvent) => {
+    const closeIfOutside = (event: Event) => {
       const target = event.target
       if (target instanceof Element && target.closest('.vocabHiWrap')) return
       setOpenKey(null)

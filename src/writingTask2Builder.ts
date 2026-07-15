@@ -123,12 +123,13 @@ const typ2 = (
   focus: Wgb2Focus,
   explain?: string
 ): Wgb2Segment => ({ kind: 'blank', blank: { kind: 'type', id, base, answers, focus, explain } })
-const comma2 = (
+const _comma2 = (
   id: string,
   chunks: string[],
   correctGap: number,
   explain?: string
 ): Wgb2Segment => ({ kind: 'blank', blank: { kind: 'comma', id, chunks, correctGap, focus: 'comma', explain } })
+void _comma2
 const drag2 = (
   id: string,
   options: string[],
