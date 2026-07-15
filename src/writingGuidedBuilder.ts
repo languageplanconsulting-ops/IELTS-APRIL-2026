@@ -19,6 +19,8 @@
 // whereas / on the other hand · peaking at · reaching the lowest point · by the end of the
 // given period · followed by · decreased dramatically.
 
+import { EXTRA_MAP_GUIDED_BUILDERS } from './writingTask1MapExercises'
+
 // A blank's `focus` only drives which coach message is shown; either blank kind may carry any
 // focus, so both share this union.
 export type WgbFocus =
@@ -3082,7 +3084,9 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
 ]
 
 export const getWritingGuidedBuilder = (promptId: string): WgbExercise | null =>
-  WRITING_GUIDED_BUILDERS.find((exercise) => exercise.promptId === promptId) || null
+  WRITING_GUIDED_BUILDERS.find((exercise) => exercise.promptId === promptId) ||
+  EXTRA_MAP_GUIDED_BUILDERS.find((exercise) => exercise.promptId === promptId) ||
+  null
 
 // Assemble a clean, blank-free model essay from an exercise (used for the
 // "show the finished essay" reveal after the student completes all steps).

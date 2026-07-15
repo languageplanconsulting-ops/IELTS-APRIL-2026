@@ -79,7 +79,33 @@ export type WritingMixedPracticePrompt = {
 }
 
 export type Task1MapZone = {
-  x: number; y: number; w: number; h: number; label: string; color: string
+  x: number
+  y: number
+  w: number
+  h: number
+  label: string
+  color: string
+  /** Visual treatment — defaults to building block */
+  style?: 'building' | 'farm' | 'park' | 'parking' | 'water' | 'sport' | 'forest'
+}
+
+export type Task1MapPoint = [number, number]
+
+/** Extra IELTS-map decorations (roads, water, trees) beyond rectangular zones. */
+export type Task1MapDecor =
+  | { kind: 'water'; points: Task1MapPoint[]; label?: string; labelAt?: Task1MapPoint }
+  | { kind: 'road'; points: Task1MapPoint[]; label?: string; width?: number }
+  | { kind: 'path'; points: Task1MapPoint[] }
+  | { kind: 'trees'; positions: Task1MapPoint[] }
+  | { kind: 'bridge'; x: number; y: number; w: number; h: number; label?: string }
+  | { kind: 'label'; x: number; y: number; text: string }
+
+export type Task1MapPanel = {
+  year: string
+  zones: Task1MapZone[]
+  decor?: Task1MapDecor[]
+  /** When false, skips the faint street grid (prefer custom roads). Default true for older maps. */
+  showGrid?: boolean
 }
 
 export type WritingMapPracticePrompt = {
@@ -91,8 +117,8 @@ export type WritingMapPracticePrompt = {
   chartCaption: string
   subjectPhrase: string
   mainFeature: string
-  before: { year: string; zones: Task1MapZone[] }
-  after: { year: string; zones: Task1MapZone[] }
+  before: Task1MapPanel
+  after: Task1MapPanel
 }
 
 export type WritingProcessStage = {
@@ -653,20 +679,263 @@ export const WRITING_MAP_PRACTICE_PROMPTS: WritingMapPracticePrompt[] = [
       'The open land that once covered most of the island was developed into a reception building, a restaurant, guest huts, and a pier, transforming it into a tourist resort.',
     before: {
       year: 'Before',
+      showGrid: false,
       zones: [
-        { x: 4, y: 4, w: 88, h: 56, label: 'Open Land', color: '#d1fae5' },
-        { x: 4, y: 64, w: 88, h: 16, label: 'Beach', color: '#fef3c7' }
+        { x: 4, y: 4, w: 88, h: 56, label: 'Open Land', color: '#d1fae5', style: 'park' },
+        { x: 4, y: 64, w: 88, h: 16, label: 'Beach', color: '#fef3c7', style: 'park' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 55], [100, 55], [100, 80], [0, 80]], label: 'Sea', labelAt: [88, 72] },
+        { kind: 'trees', positions: [[18, 20], [36, 28], [54, 18], [72, 30], [28, 44]] }
       ]
     },
     after: {
       year: 'After',
       zones: [
-        { x: 4, y: 4, w: 26, h: 26, label: 'Reception', color: '#bfdbfe' },
-        { x: 34, y: 4, w: 26, h: 26, label: 'Restaurant', color: '#fecaca' },
-        { x: 64, y: 4, w: 28, h: 26, label: 'Guest\nHuts', color: '#fde68a' },
-        { x: 4, y: 34, w: 56, h: 26, label: 'Open Land', color: '#d1fae5' },
-        { x: 64, y: 34, w: 28, h: 26, label: 'Pier', color: '#c7d2fe' },
-        { x: 4, y: 64, w: 88, h: 16, label: 'Beach', color: '#fef3c7' }
+        { x: 4, y: 4, w: 26, h: 26, label: 'Reception', color: '#bfdbfe', style: 'building' },
+        { x: 34, y: 4, w: 26, h: 26, label: 'Restaurant', color: '#fecaca', style: 'building' },
+        { x: 64, y: 4, w: 28, h: 26, label: 'Guest\nHuts', color: '#fde68a', style: 'building' },
+        { x: 4, y: 34, w: 56, h: 26, label: 'Open Land', color: '#d1fae5', style: 'park' },
+        { x: 64, y: 34, w: 28, h: 26, label: 'Pier', color: '#c7d2fe', style: 'building' },
+        { x: 4, y: 64, w: 88, h: 16, label: 'Beach', color: '#fef3c7', style: 'park' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 55], [100, 55], [100, 80], [0, 80]], label: 'Sea', labelAt: [88, 72] },
+        { kind: 'trees', positions: [[12, 48], [22, 52], [48, 48]] }
+      ],
+      showGrid: false
+    }
+  },
+  {
+    id: 'map-grange-park',
+    number: 3,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show Grange Park in 1920 and today.',
+    chartCaption: 'Grange Park: 1920 and today',
+    subjectPhrase: 'Grange Park in 1920 and today',
+    mainFeature:
+      'The rose garden and stage seating were replaced by a children’s play area and an amphitheatre, while a café and a new west entrance were added.',
+    before: {
+      year: '1920',
+      showGrid: false,
+      zones: [
+        { x: 38, y: 28, w: 24, h: 20, label: 'Fountain', color: '#bfdbfe', style: 'water' },
+        { x: 8, y: 22, w: 22, h: 32, label: 'Stage\n& seats', color: '#e2e8f0', style: 'building' },
+        { x: 70, y: 22, w: 22, h: 32, label: 'Stage\n& seats', color: '#e2e8f0', style: 'building' },
+        { x: 58, y: 56, w: 34, h: 18, label: 'Rose\ngarden', color: '#fecaca', style: 'park' },
+        { x: 8, y: 56, w: 34, h: 18, label: 'Glasshouse', color: '#bbf7d0', style: 'building' },
+        { x: 36, y: 72, w: 28, h: 6, label: 'Entrance', color: '#fde68a', style: 'building' }
+      ],
+      decor: [
+        { kind: 'road', points: [[50, 78], [50, 100]], label: 'Arnold\nAvenue' },
+        { kind: 'path', points: [[20, 38], [50, 38], [80, 38]] },
+        { kind: 'path', points: [[50, 38], [50, 72]] },
+        { kind: 'trees', positions: [[14, 14], [26, 12], [74, 12], [86, 14], [18, 68], [82, 68]] },
+        { kind: 'label', x: 50, y: 8, text: 'Grange Park' }
+      ]
+    },
+    after: {
+      year: 'Today',
+      showGrid: false,
+      zones: [
+        { x: 38, y: 28, w: 24, h: 20, label: 'Water\nfeature', color: '#bfdbfe', style: 'water' },
+        { x: 8, y: 20, w: 24, h: 28, label: 'Café', color: '#fde68a', style: 'building' },
+        { x: 66, y: 18, w: 26, h: 36, label: 'Amphi-\ntheatre', color: '#ddd6fe', style: 'sport' },
+        { x: 58, y: 56, w: 34, h: 18, label: "Children's\nplay area", color: '#bbf7d0', style: 'sport' },
+        { x: 8, y: 56, w: 34, h: 18, label: 'Glasshouse', color: '#bbf7d0', style: 'building' },
+        { x: 2, y: 34, w: 6, h: 16, label: 'Ent.', color: '#fde68a', style: 'building' }
+      ],
+      decor: [
+        { kind: 'road', points: [[0, 42], [8, 42]], label: 'Eldon St' },
+        { kind: 'road', points: [[50, 78], [50, 100]], label: 'Arnold\nAvenue' },
+        { kind: 'path', points: [[14, 42], [50, 42], [78, 36]] },
+        { kind: 'path', points: [[50, 42], [50, 72]] },
+        { kind: 'trees', positions: [[14, 14], [26, 12], [74, 12], [86, 14], [30, 68], [48, 70]] },
+        { kind: 'label', x: 50, y: 8, text: 'Grange Park' }
+      ]
+    }
+  },
+  {
+    id: 'map-riverside-village',
+    number: 4,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show the village of Elmford in 1990 and in 2015.',
+    chartCaption: 'Elmford village: 1990 and 2015',
+    subjectPhrase: 'the village of Elmford in 1990 and 2015',
+    mainFeature:
+      'Farmland north of the river was replaced by housing, while a supermarket and a leisure centre were added beside the old shop.',
+    before: {
+      year: '1990',
+      showGrid: false,
+      zones: [
+        { x: 6, y: 6, w: 52, h: 28, label: 'Farmland', color: '#d9f99d', style: 'farm' },
+        { x: 8, y: 48, w: 28, h: 22, label: 'Houses', color: '#c7d2fe', style: 'building' },
+        { x: 40, y: 52, w: 18, h: 14, label: 'Shop', color: '#fde68a', style: 'building' },
+        { x: 62, y: 48, w: 12, h: 10, label: 'Bridge', color: '#e2e8f0', style: 'building' }
+      ],
+      decor: [
+        { kind: 'water', points: [[58, 0], [100, 0], [100, 80], [72, 80], [60, 42], [58, 18]], label: 'River Lea', labelAt: [84, 40] },
+        { kind: 'road', points: [[0, 58], [62, 58], [72, 54]], width: 3.2 },
+        { kind: 'bridge', x: 60, y: 50, w: 14, h: 8, label: 'Bridge' },
+        { kind: 'trees', positions: [[12, 40], [24, 38], [48, 36], [20, 74]] },
+        { kind: 'label', x: 30, y: 44, text: 'Elmford' }
+      ]
+    },
+    after: {
+      year: '2015',
+      showGrid: false,
+      zones: [
+        { x: 6, y: 6, w: 28, h: 26, label: 'Housing\nestate', color: '#c7d2fe', style: 'building' },
+        { x: 36, y: 6, w: 22, h: 26, label: 'Housing\nestate', color: '#a5b4fc', style: 'building' },
+        { x: 8, y: 48, w: 22, h: 20, label: 'Houses', color: '#c7d2fe', style: 'building' },
+        { x: 34, y: 48, w: 20, h: 14, label: 'Super-\nmarket', color: '#fde68a', style: 'building' },
+        { x: 34, y: 64, w: 20, h: 12, label: 'Leisure\ncentre', color: '#ddd6fe', style: 'sport' },
+        { x: 62, y: 48, w: 12, h: 10, label: 'Bridge', color: '#e2e8f0', style: 'building' }
+      ],
+      decor: [
+        { kind: 'water', points: [[58, 0], [100, 0], [100, 80], [72, 80], [60, 42], [58, 18]], label: 'River Lea', labelAt: [84, 40] },
+        { kind: 'road', points: [[0, 58], [62, 58], [72, 54]], width: 3.2 },
+        { kind: 'road', points: [[20, 32], [20, 58]], width: 2.4, label: 'New Rd' },
+        { kind: 'bridge', x: 60, y: 50, w: 14, h: 8, label: 'Bridge' },
+        { kind: 'trees', positions: [[14, 40], [48, 40], [20, 74]] },
+        { kind: 'label', x: 30, y: 42, text: 'Elmford' }
+      ]
+    }
+  },
+  {
+    id: 'map-school-campus',
+    number: 5,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a school campus in 2000 and in 2020.',
+    chartCaption: 'School campus: 2000 and 2020',
+    subjectPhrase: 'a school campus in 2000 and 2020',
+    mainFeature:
+      'The playground was replaced by a sports hall, the garden was transformed into a science block, and the car park was relocated to the west.',
+    before: {
+      year: '2000',
+      showGrid: false,
+      zones: [
+        { x: 30, y: 28, w: 40, h: 26, label: 'Main\nbuilding', color: '#bfdbfe', style: 'building' },
+        { x: 30, y: 6, w: 40, h: 18, label: 'Playground', color: '#bbf7d0', style: 'sport' },
+        { x: 74, y: 28, w: 20, h: 26, label: 'Garden', color: '#d9f99d', style: 'park' },
+        { x: 30, y: 58, w: 40, h: 16, label: 'Car park', color: '#e2e8f0', style: 'parking' }
+      ],
+      decor: [
+        { kind: 'road', points: [[0, 66], [100, 66]], width: 3, label: 'School Rd' },
+        { kind: 'path', points: [[50, 24], [50, 58]] },
+        { kind: 'trees', positions: [[78, 20], [88, 24], [80, 48], [90, 52], [12, 20], [18, 40]] },
+        { kind: 'label', x: 50, y: 78, text: 'School campus' }
+      ]
+    },
+    after: {
+      year: '2020',
+      showGrid: false,
+      zones: [
+        { x: 30, y: 28, w: 40, h: 26, label: 'Main\nbuilding', color: '#bfdbfe', style: 'building' },
+        { x: 30, y: 4, w: 40, h: 20, label: 'Sports\nhall', color: '#ddd6fe', style: 'sport' },
+        { x: 74, y: 28, w: 20, h: 26, label: 'Science\nblock', color: '#fde68a', style: 'building' },
+        { x: 4, y: 28, w: 20, h: 26, label: 'Car park', color: '#e2e8f0', style: 'parking' },
+        { x: 30, y: 58, w: 24, h: 14, label: 'Library', color: '#c7d2fe', style: 'building' }
+      ],
+      decor: [
+        { kind: 'road', points: [[0, 66], [100, 66]], width: 3, label: 'School Rd' },
+        { kind: 'path', points: [[50, 24], [50, 58]] },
+        { kind: 'path', points: [[24, 41], [30, 41]] },
+        { kind: 'trees', positions: [[84, 18], [12, 18], [18, 58], [58, 74]] },
+        { kind: 'label', x: 50, y: 78, text: 'School campus' }
+      ]
+    }
+  },
+  {
+    id: 'map-hospital-site',
+    number: 6,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show St Mary’s Hospital in 1985 and today.',
+    chartCaption: "St Mary's Hospital: 1985 and today",
+    subjectPhrase: "St Mary's Hospital in 1985 and today",
+    mainFeature:
+      'The staff car park was relocated to the west, an outpatient wing was added on the old car-park site, and gardens were expanded to the north.',
+    before: {
+      year: '1985',
+      showGrid: false,
+      zones: [
+        { x: 28, y: 26, w: 36, h: 32, label: 'Main\nhospital', color: '#bfdbfe', style: 'building' },
+        { x: 70, y: 28, w: 24, h: 28, label: 'Staff\ncar park', color: '#e2e8f0', style: 'parking' },
+        { x: 28, y: 6, w: 36, h: 16, label: 'Gardens', color: '#bbf7d0', style: 'park' }
+      ],
+      decor: [
+        { kind: 'road', points: [[0, 70], [100, 70]], width: 3.2, label: 'Hospital Rd' },
+        { kind: 'path', points: [[46, 22], [46, 58], [46, 70]] },
+        { kind: 'trees', positions: [[32, 12], [48, 10], [60, 12], [14, 40], [86, 58]] },
+        { kind: 'label', x: 50, y: 78, text: "St Mary's Hospital" }
+      ]
+    },
+    after: {
+      year: 'Today',
+      showGrid: false,
+      zones: [
+        { x: 28, y: 26, w: 36, h: 32, label: 'Main\nhospital', color: '#bfdbfe', style: 'building' },
+        { x: 70, y: 26, w: 24, h: 32, label: 'Outpatient\nwing', color: '#fde68a', style: 'building' },
+        { x: 4, y: 26, w: 20, h: 32, label: 'Staff\ncar park', color: '#e2e8f0', style: 'parking' },
+        { x: 28, y: 4, w: 36, h: 18, label: 'Gardens', color: '#bbf7d0', style: 'park' },
+        { x: 70, y: 4, w: 24, h: 18, label: 'Café&\ngarden', color: '#d9f99d', style: 'park' }
+      ],
+      decor: [
+        { kind: 'road', points: [[0, 70], [100, 70]], width: 3.2, label: 'Hospital Rd' },
+        { kind: 'path', points: [[46, 22], [46, 58], [46, 70]] },
+        { kind: 'path', points: [[24, 42], [28, 42]] },
+        { kind: 'path', points: [[64, 42], [70, 42]] },
+        { kind: 'trees', positions: [[32, 10], [48, 8], [60, 10], [78, 10], [14, 20], [86, 58]] },
+        { kind: 'label', x: 50, y: 78, text: "St Mary's Hospital" }
+      ]
+    }
+  },
+  {
+    id: 'map-harbour-town',
+    number: 7,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show the harbour of Porthaven in 1995 and in 2010.',
+    chartCaption: 'Porthaven harbour: 1995 and 2010',
+    subjectPhrase: 'the harbour of Porthaven in 1995 and 2010',
+    mainFeature:
+      'The fishing docks and fish market were demolished and replaced by a marina, hotel and shops, while a car park was added inland.',
+    before: {
+      year: '1995',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 40, w: 40, h: 22, label: 'Fishing\ndocks', color: '#94a3b8', style: 'building' },
+        { x: 52, y: 42, w: 28, h: 18, label: 'Fish\nmarket', color: '#fde68a', style: 'building' },
+        { x: 8, y: 8, w: 48, h: 24, label: 'Open land', color: '#d9f99d', style: 'farm' },
+        { x: 60, y: 8, w: 28, h: 24, label: 'Ware-\nhouses', color: '#e2e8f0', style: 'building' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 58], [100, 58], [100, 80], [0, 80]], label: 'Harbour', labelAt: [78, 70] },
+        { kind: 'road', points: [[0, 36], [100, 36]], width: 3, label: 'Quay Rd' },
+        { kind: 'trees', positions: [[14, 14], [28, 18], [42, 12]] },
+        { kind: 'label', x: 50, y: 30, text: 'Porthaven' }
+      ]
+    },
+    after: {
+      year: '2010',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 40, w: 40, h: 22, label: 'Marina', color: '#93c5fd', style: 'water' },
+        { x: 52, y: 40, w: 20, h: 20, label: 'Hotel', color: '#ddd6fe', style: 'building' },
+        { x: 74, y: 40, w: 18, h: 20, label: 'Shops', color: '#fde68a', style: 'building' },
+        { x: 8, y: 8, w: 36, h: 24, label: 'Car park', color: '#e2e8f0', style: 'parking' },
+        { x: 48, y: 8, w: 40, h: 24, label: 'Public\ngardens', color: '#bbf7d0', style: 'park' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 58], [100, 58], [100, 80], [0, 80]], label: 'Harbour', labelAt: [78, 70] },
+        { kind: 'road', points: [[0, 36], [100, 36]], width: 3, label: 'Quay Rd' },
+        { kind: 'path', points: [[26, 32], [26, 40]] },
+        { kind: 'trees', positions: [[54, 14], [66, 18], [80, 12], [90, 20]] },
+        { kind: 'label', x: 50, y: 30, text: 'Porthaven' }
       ]
     }
   }

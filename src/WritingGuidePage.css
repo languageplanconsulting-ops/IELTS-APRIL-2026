@@ -2413,15 +2413,15 @@
 }
 
 .writingIeltsMapGround {
-  fill: #eef2f6;
-  stroke: #94a3b8;
-  stroke-width: 1.5;
+  fill: #e8eef5;
+  stroke: #0f172a;
+  stroke-width: 1.8;
 }
 
 .writingIeltsMapBorder {
   fill: none;
-  stroke: #94a3b8;
-  stroke-width: 1.5;
+  stroke: #0f172a;
+  stroke-width: 1.8;
 }
 
 .writingIeltsMapRoad {
@@ -2433,13 +2433,31 @@
 .writingIeltsMapYear {
   font-size: 13px;
   font-weight: 800;
-  fill: #1e3a6e;
+  fill: #0f172a;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 
 .writingIeltsMapZoneLabel {
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
-  fill: #1e3a6e;
+  fill: #0f172a;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+}
+
+.writingIeltsMapSoftLabel {
+  font-size: 8px;
+  font-weight: 600;
+  fill: #475569;
+  font-style: italic;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+}
+
+.writingIeltsMapTitleLabel {
+  font-size: 9px;
+  font-weight: 800;
+  fill: #0f172a;
+  letter-spacing: 0.02em;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 
 .writingIeltsProcessDiagram {

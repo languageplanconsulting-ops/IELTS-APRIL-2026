@@ -11,7 +11,10 @@ import type {
   WritingMapPracticePrompt,
   WritingProcessPracticePrompt,
   WritingTask1PracticePrompt,
-  WritingLineSeries
+  WritingLineSeries,
+  Task1MapDecor,
+  Task1MapPanel,
+  Task1MapZone
 } from './writingGuideData'
 
 const CHART_SIZE = { width: 680, height: 280 }
@@ -494,33 +497,194 @@ function renderMixedPanel(prompt: WritingMixedPracticePrompt, panel: WritingMixe
 const MAP_BASE_W = 100
 const MAP_BASE_H = 80
 
-function zoneIcon(label: string) {
-  const key = label.toLowerCase()
-  if (key.includes('resident') || key.includes('hous')) return '\u{1F3E0}'
-  if (key.includes('mall') || key.includes('shop')) return '\u{1F6CD}\u{FE0F}'
-  if (key.includes('market')) return '\u{1F9FA}'
-  if (key.includes('industrial') || key.includes('factory')) return '\u{1F3ED}'
-  if (key.includes('tech')) return '\u{1F4BB}'
-  if (key.includes('car park') || key.includes('parking')) return 'P'
-  if (key.includes('library')) return '\u{1F4DA}'
-  if (key.includes('park') || key.includes('open space') || key.includes('garden')) return '\u{1F333}'
-  if (key.includes('civic') || key.includes('hall') || key.includes('centre') || key.includes('center')) return '\u{1F3DB}\u{FE0F}'
-  if (key.includes('school')) return '\u{1F3EB}'
-  if (key.includes('hospital')) return '\u{1F3E5}'
-  return '\u{1F4CD}'
+function pointsToPath(points: [number, number][], ox: number, y0: number, scaleX: number, scaleY: number) {
+  return points
+    .map(([px, py], i) => `${i === 0 ? 'M' : 'L'}${ox + px * scaleX},${y0 + py * scaleY}`)
+    .join(' ')
+}
+
+function MapTreeIcon({ x, y }: { x: number; y: number }) {
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <circle r={4.2} fill="#86efac" stroke="#15803d" strokeWidth={0.7} />
+      <circle cx={-2.2} cy={-1.5} r={2.8} fill="#4ade80" stroke="#15803d" strokeWidth={0.5} />
+      <circle cx={2.4} cy={-1.2} r={2.6} fill="#22c55e" stroke="#15803d" strokeWidth={0.5} />
+      <rect x={-0.7} y={3} width={1.4} height={4} fill="#854d0e" rx={0.4} />
+    </g>
+  )
+}
+
+function zoneHatchPattern(style: Task1MapZone['style'], id: string) {
+  if (style === 'farm') {
+    return (
+      <pattern id={id} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#65a30d" strokeWidth="1" opacity="0.35" />
+      </pattern>
+    )
+  }
+  if (style === 'parking') {
+    return (
+      <pattern id={id} width="8" height="8" patternUnits="userSpaceOnUse">
+        <path d="M1,7 L7,1" stroke="#64748b" strokeWidth="1" opacity="0.45" />
+      </pattern>
+    )
+  }
+  if (style === 'forest') {
+    return (
+      <pattern id={id} width="10" height="10" patternUnits="userSpaceOnUse">
+        <circle cx="3" cy="4" r="2" fill="#16a34a" opacity="0.35" />
+        <circle cx="7" cy="7" r="1.6" fill="#15803d" opacity="0.3" />
+      </pattern>
+    )
+  }
+  return null
+}
+
+function renderMapDecor(
+  decor: Task1MapDecor[],
+  ox: number,
+  y0: number,
+  scaleX: number,
+  scaleY: number,
+  panelKey: string
+) {
+  return decor.map((item, i) => {
+    const key = `${panelKey}-d-${i}`
+    if (item.kind === 'water') {
+      const d = `${pointsToPath(item.points, ox, y0, scaleX, scaleY)} Z`
+      const labelAt = item.labelAt
+      return (
+        <g key={key}>
+          <path d={d} fill="#bae6fd" stroke="#0284c7" strokeWidth={1.2} opacity={0.95} />
+          {item.label && labelAt ? (
+            <text
+              x={ox + labelAt[0] * scaleX}
+              y={y0 + labelAt[1] * scaleY}
+              textAnchor="middle"
+              className="writingIeltsMapSoftLabel"
+            >
+              {item.label}
+            </text>
+          ) : null}
+        </g>
+      )
+    }
+    if (item.kind === 'road') {
+      const d = pointsToPath(item.points, ox, y0, scaleX, scaleY)
+      const mid = item.points[Math.floor(item.points.length / 2)]
+      return (
+        <g key={key}>
+          <path
+            d={d}
+            fill="none"
+            stroke="#cbd5e1"
+            strokeWidth={(item.width || 2.8) + 2.2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={d}
+            fill="none"
+            stroke="#64748b"
+            strokeWidth={item.width || 2.8}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={d}
+            fill="none"
+            stroke="#f8fafc"
+            strokeWidth={0.7}
+            strokeDasharray="3 4"
+            strokeLinecap="round"
+          />
+          {item.label && mid ? (
+            <text
+              x={ox + mid[0] * scaleX}
+              y={y0 + mid[1] * scaleY - 6}
+              textAnchor="middle"
+              className="writingIeltsMapSoftLabel"
+            >
+              {item.label.replace('\\n', ' ')}
+            </text>
+          ) : null}
+        </g>
+      )
+    }
+    if (item.kind === 'path') {
+      return (
+        <path
+          key={key}
+          d={pointsToPath(item.points, ox, y0, scaleX, scaleY)}
+          fill="none"
+          stroke="#a8a29e"
+          strokeWidth={1.4}
+          strokeDasharray="3 2"
+          strokeLinecap="round"
+        />
+      )
+    }
+    if (item.kind === 'trees') {
+      return (
+        <g key={key}>
+          {item.positions.map(([tx, ty], ti) => (
+            <MapTreeIcon key={ti} x={ox + tx * scaleX} y={y0 + ty * scaleY} />
+          ))}
+        </g>
+      )
+    }
+    if (item.kind === 'bridge') {
+      return (
+        <g key={key}>
+          <rect
+            x={ox + item.x * scaleX}
+            y={y0 + item.y * scaleY}
+            width={item.w * scaleX}
+            height={item.h * scaleY}
+            fill="#e7e5e4"
+            stroke="#57534e"
+            strokeWidth={1.2}
+            rx={1.5}
+          />
+          {item.label ? (
+            <text
+              x={ox + (item.x + item.w / 2) * scaleX}
+              y={y0 + (item.y + item.h / 2) * scaleY + 3}
+              textAnchor="middle"
+              className="writingIeltsMapZoneLabel"
+            >
+              {item.label}
+            </text>
+          ) : null}
+        </g>
+      )
+    }
+    return (
+      <text
+        key={key}
+        x={ox + item.x * scaleX}
+        y={y0 + item.y * scaleY}
+        textAnchor="middle"
+        className="writingIeltsMapTitleLabel"
+      >
+        {item.text}
+      </text>
+    )
+  })
 }
 
 function WritingMapDiagramSvg({ prompt }: { prompt: WritingMapPracticePrompt }) {
   const W = CHART_SIZE.width
-  const mapW = 270
-  const mapH = 188
-  const gap = 46
+  const mapW = 286
+  const mapH = 210
+  const gap = 40
   const x1 = (W - (mapW * 2 + gap)) / 2
   const x2 = x1 + mapW + gap
-  const y0 = 30
+  const y0 = 34
   const scaleX = mapW / MAP_BASE_W
   const scaleY = mapH / MAP_BASE_H
   const roadStep = 34
+  const legendY = y0 + mapH + 18
 
   const legendEntries: { label: string; color: string }[] = []
   const seenLabels = new Set<string>()
@@ -532,92 +696,136 @@ function WritingMapDiagramSvg({ prompt }: { prompt: WritingMapPracticePrompt }) 
     }
   })
 
-  const verticals: number[] = []
-  for (let rx = roadStep; rx < MAP_BASE_W; rx += roadStep) verticals.push(rx)
-  const horizontals: number[] = []
-  for (let ry = roadStep; ry < MAP_BASE_H; ry += roadStep) horizontals.push(ry)
+  const renderPanel = (panel: Task1MapPanel, pi: number) => {
+    const ox = pi === 0 ? x1 : x2
+    const showGrid = panel.showGrid !== false && !(panel.decor && panel.decor.length)
+    const verticals: number[] = []
+    const horizontals: number[] = []
+    if (showGrid) {
+      for (let rx = roadStep; rx < MAP_BASE_W; rx += roadStep) verticals.push(rx)
+      for (let ry = roadStep; ry < MAP_BASE_H; ry += roadStep) horizontals.push(ry)
+    }
+
+    return (
+      <g key={pi}>
+        <text x={ox + mapW / 2} y={y0 - 12} textAnchor="middle" className="writingIeltsMapYear">
+          {panel.year}
+        </text>
+        <rect x={ox} y={y0} width={mapW} height={mapH} className="writingIeltsMapGround" rx={4} />
+
+        {/* Base ground wash */}
+        <rect x={ox + 1} y={y0 + 1} width={mapW - 2} height={mapH - 2} fill="#f1f5f9" rx={3} />
+
+        {verticals.map((rx) => (
+          <line
+            key={`v-${rx}`}
+            x1={ox + rx * scaleX}
+            y1={y0}
+            x2={ox + rx * scaleX}
+            y2={y0 + mapH}
+            className="writingIeltsMapRoad"
+          />
+        ))}
+        {horizontals.map((ry) => (
+          <line
+            key={`h-${ry}`}
+            x1={ox}
+            y1={y0 + ry * scaleY}
+            x2={ox + mapW}
+            y2={y0 + ry * scaleY}
+            className="writingIeltsMapRoad"
+          />
+        ))}
+
+        {panel.decor ? renderMapDecor(panel.decor, ox, y0, scaleX, scaleY, `p${pi}`) : null}
+
+        <defs>
+          {panel.zones.map((zone, zi) => zoneHatchPattern(zone.style, `hatch-${pi}-${zi}`))}
+        </defs>
+
+        {panel.zones.map((zone, zi) => {
+          const zx = ox + zone.x * scaleX
+          const zy = y0 + zone.y * scaleY
+          const zw = zone.w * scaleX
+          const zh = zone.h * scaleY
+          const lines = zone.label.split('\n')
+          const labelStartY = zy + zh / 2 - ((lines.length - 1) * 5.5) + 3
+          const isWater = zone.style === 'water'
+          const hatchId = `hatch-${pi}-${zi}`
+          const hasHatch = zone.style === 'farm' || zone.style === 'parking' || zone.style === 'forest'
+          return (
+            <g key={zi}>
+              <rect
+                x={zx}
+                y={zy}
+                width={zw}
+                height={zh}
+                fill={zone.color}
+                stroke={isWater ? '#0284c7' : '#334155'}
+                strokeWidth={isWater ? 1.2 : 1.4}
+                rx={zone.style === 'building' || !zone.style ? 2 : 3}
+                opacity={0.96}
+              />
+              {hasHatch ? (
+                <rect x={zx} y={zy} width={zw} height={zh} fill={`url(#${hatchId})`} rx={3} />
+              ) : null}
+              {zone.style === 'parking' ? (
+                <text
+                  x={zx + zw / 2}
+                  y={zy + 12}
+                  textAnchor="middle"
+                  fontSize={10}
+                  fontWeight={800}
+                  fill="#475569"
+                >
+                  P
+                </text>
+              ) : null}
+              {lines.map((line, li) => (
+                <text
+                  key={li}
+                  x={zx + zw / 2}
+                  y={labelStartY + li * 10}
+                  textAnchor="middle"
+                  className="writingIeltsMapZoneLabel"
+                >
+                  {line}
+                </text>
+              ))}
+            </g>
+          )
+        })}
+
+        <rect x={ox} y={y0} width={mapW} height={mapH} className="writingIeltsMapBorder" rx={4} />
+      </g>
+    )
+  }
 
   return (
     <figure className="writingIeltsFigure">
       <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
       <svg
-        viewBox={`0 0 ${W} ${y0 + mapH + 40}`}
+        viewBox={`0 0 ${W} ${legendY + 8}`}
         className="writingIeltsChartSvg writingIeltsMapDiagram"
         role="img"
         aria-label={`Map diagram showing ${prompt.chartCaption}`}
       >
         <g transform={`translate(${W - 34}, 26)`}>
-          <circle r={16} fill="#fff" stroke="#94a3b8" strokeWidth={1.2} />
-          <path d="M0,-12 L3.5,0 L0,12 L-3.5,0 Z" fill="#334155" />
-          <text y={-19} textAnchor="middle" fontSize={9} fontWeight={700} fill="#334155">
+          <circle r={15} fill="#fff" stroke="#0f172a" strokeWidth={1.6} />
+          <path d="M0,-10 L3,1 L0,11 L-3,1 Z" fill="#0f172a" />
+          <text y={-17} textAnchor="middle" fontSize={9} fontWeight={800} fill="#0f172a">
             N
           </text>
         </g>
 
-        <text x={(x1 + mapW + x2) / 2} y={y0 + mapH / 2 + 6} textAnchor="middle" fontSize={22} fill="#94a3b8">
-          →
-        </text>
+        <g transform={`translate(${(x1 + mapW + x2) / 2}, ${y0 + mapH / 2})`}>
+          <circle r={12} fill="#fff" stroke="#0f172a" strokeWidth={1.5} />
+          <path d="M-5,0 L4,0" stroke="#0f172a" strokeWidth={2} strokeLinecap="round" />
+          <path d="M1,-4 L6,0 L1,4" fill="none" stroke="#0f172a" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+        </g>
 
-        {[prompt.before, prompt.after].map((panel, pi) => {
-          const ox = pi === 0 ? x1 : x2
-          return (
-            <g key={pi}>
-              <text x={ox + mapW / 2} y={y0 - 10} textAnchor="middle" className="writingIeltsMapYear">
-                {panel.year}
-              </text>
-              <rect x={ox} y={y0} width={mapW} height={mapH} className="writingIeltsMapGround" rx={5} />
-              {verticals.map((rx) => (
-                <line
-                  key={`v-${rx}`}
-                  x1={ox + rx * scaleX}
-                  y1={y0}
-                  x2={ox + rx * scaleX}
-                  y2={y0 + mapH}
-                  className="writingIeltsMapRoad"
-                />
-              ))}
-              {horizontals.map((ry) => (
-                <line
-                  key={`h-${ry}`}
-                  x1={ox}
-                  y1={y0 + ry * scaleY}
-                  x2={ox + mapW}
-                  y2={y0 + ry * scaleY}
-                  className="writingIeltsMapRoad"
-                />
-              ))}
-              {panel.zones.map((zone, zi) => {
-                const zx = ox + zone.x * scaleX
-                const zy = y0 + zone.y * scaleY
-                const zw = zone.w * scaleX
-                const zh = zone.h * scaleY
-                const lines = zone.label.split('\n')
-                const icon = zoneIcon(zone.label)
-                const labelStartY = zy + zh / 2 - ((lines.length - 1) * 6) + 12
-                return (
-                  <g key={zi}>
-                    <rect x={zx} y={zy} width={zw} height={zh} fill={zone.color} stroke="#fff" strokeWidth={2} rx={4} />
-                    <text x={zx + zw / 2} y={zy + zh / 2 - 8} textAnchor="middle" fontSize={15}>
-                      {icon}
-                    </text>
-                    {lines.map((line, li) => (
-                      <text
-                        key={li}
-                        x={zx + zw / 2}
-                        y={labelStartY + li * 11}
-                        textAnchor="middle"
-                        className="writingIeltsMapZoneLabel"
-                      >
-                        {line}
-                      </text>
-                    ))}
-                  </g>
-                )
-              })}
-              <rect x={ox} y={y0} width={mapW} height={mapH} className="writingIeltsMapBorder" rx={5} />
-            </g>
-          )
-        })}
+        {renderPanel(prompt.before, 0)}
+        {renderPanel(prompt.after, 1)}
       </svg>
       <div className="writingIeltsChartLegend">
         {legendEntries.map((entry) => (
