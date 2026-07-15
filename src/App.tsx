@@ -24153,17 +24153,6 @@ function App() {
         )
       ) : activePage === 'writing' ? (
         canAccessWriting ? (
-          <>
-            <section className="panel full gtWritingBridgePanel">
-              <div className="gtWritingBridgeCard">
-                <p className="sectionLabel">General Training</p>
-                <h3>{GENERAL_TRAINING_READING_LABEL}</h3>
-                <p>{GENERAL_TRAINING_READING_LEAD}</p>
-                <button type="button" onClick={openGeneralTrainingReadingHub}>
-                  Open GT Reading (Section 1–3 &amp; Full Test)
-                </button>
-              </div>
-            </section>
             <WritingGuidePage
               onBackHome={() => setActivePage('home')}
               onSaveEssayToNotebook={saveWritingEssayToNotebook}
@@ -24179,7 +24168,6 @@ function App() {
                 })
               }
             />
-          </>
         ) : (
           <section className="panel full">
             <div className="emptyState">

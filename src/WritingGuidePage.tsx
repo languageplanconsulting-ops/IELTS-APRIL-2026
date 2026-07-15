@@ -779,16 +779,6 @@ export function WritingGuidePage({
         <span className="writingGuideGridGlow" />
       </div>
 
-      {flow.step !== 'hub' ? (
-        <header className="writingGuideHeader">
-          <div>
-            <p className="sectionLabel">English Plan Writing</p>
-            <h2>IELTS Writing Practice</h2>
-            <p className="writingGuideLead">เลือก Task → หมวด → ข้อสอบ ทีละขั้น</p>
-          </div>
-        </header>
-      ) : null}
-
       <div className="writingGuideFlowStage">
         {flow.step === 'hub' ? (
           <div className="writingGuideHubShell">

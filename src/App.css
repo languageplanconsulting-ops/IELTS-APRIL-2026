@@ -21739,38 +21739,6 @@ select:focus,
   text-align: left;
 }
 
-.gtWritingBridgePanel {
-  padding: 0 0 12px;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-}
-
-.gtWritingBridgeCard {
-  display: grid;
-  gap: 10px;
-  padding: 18px 22px;
-  border-radius: 18px;
-  border: 1px solid rgba(0, 74, 173, 0.16);
-  background: rgba(0, 74, 173, 0.06);
-}
-
-.gtWritingBridgeCard h3 {
-  margin: 0;
-  color: #004aad;
-  font-family: Georgia, 'Times New Roman', serif;
-}
-
-.gtWritingBridgeCard p {
-  margin: 0;
-  color: #334155;
-  line-height: 1.6;
-}
-
-.gtWritingBridgeCard button {
-  width: fit-content;
-}
-
 .listeningSkillCard-fullTest,
 .listeningFullTestLanding .listeningSkillCard {
   width: 100%;
