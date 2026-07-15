@@ -23176,17 +23176,24 @@ function App() {
                           )
                         }
                         const passageVocab = getReadingPassageVocab(activeReadingPassage.title)
-                        return activeReadingPassage.bodyParagraphs.map((paragraph, index) => (
-                          <p key={`reading-paragraph-${index}`}>
-                            {renderPassageParagraphWithHighlights(
-                              paragraph,
-                              activeReadingPassage.number,
-                              highlightNeedles,
-                              passageVocab,
-                              `p${activeReadingPassage.number}-${index}`
-                            )}
-                          </p>
-                        ))
+                        return activeReadingPassage.bodyParagraphs.map((paragraph, index) => {
+                          const vocabKeyPrefix = `p${activeReadingPassage.number}-${index}`
+                          const hasOpenVocab = Boolean(readingVocabOpenKey?.startsWith(`${vocabKeyPrefix}-`))
+                          return (
+                            <p
+                              key={`reading-paragraph-${index}`}
+                              className={hasOpenVocab ? 'readingPassageParagraph-vocabOpen' : undefined}
+                            >
+                              {renderPassageParagraphWithHighlights(
+                                paragraph,
+                                activeReadingPassage.number,
+                                highlightNeedles,
+                                passageVocab,
+                                vocabKeyPrefix
+                              )}
+                            </p>
+                          )
+                        })
                       })()}
                       <canvas
                         ref={readingPencilCanvasRef}
