@@ -1435,6 +1435,134 @@
   transform: translateY(-2px);
 }
 
+/* Recommended exercise cards on the Writing landing page */
+.wgRecommend {
+  padding-top: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.wgRecommendTitle {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--wg-ticket-ink);
+}
+
+.wgRecommendLead {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.wgRecommendGrid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.wgRecommendCard {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 20px 18px 16px;
+  border: var(--wg-ticket-border);
+  border-radius: 6px;
+  background: var(--wg-ticket-paper);
+  box-shadow: var(--wg-ticket-shadow-lg);
+  cursor: pointer;
+  font-family: 'Kanit', sans-serif;
+  transition:
+    transform var(--duration-luxury-fast, 0.15s) var(--ease-luxury, ease),
+    box-shadow var(--duration-luxury-fast, 0.15s) var(--ease-luxury, ease);
+}
+
+.wgRecommendCard-t1 {
+  background: linear-gradient(180deg, #fff4e6 0%, var(--wg-ticket-paper) 62%);
+}
+
+.wgRecommendCard-t2 {
+  background: linear-gradient(180deg, #eceeff 0%, var(--wg-ticket-paper) 62%);
+}
+
+.wgRecommendCard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0 #0f172a;
+}
+
+.wgRecommendCard:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--wg-ticket-shadow);
+}
+
+.wgRecommendBadge {
+  position: absolute;
+  top: -13px;
+  left: 16px;
+  padding: 4px 12px;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #ffcc00;
+  color: #0b1f44;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.wgRecommendStamp {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: var(--wg-ticket-border);
+  border-radius: 6px;
+  font-size: 1.5rem;
+  box-shadow: var(--wg-ticket-shadow);
+}
+
+.wgRecommendBody {
+  display: grid;
+  gap: 5px;
+}
+
+.wgRecommendKicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.wgRecommendHeading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--wg-ticket-ink);
+}
+
+.wgRecommendSub {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.wgRecommendCta {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--bc-blue, #123b7a);
+}
+
+.wgRecommendCard:hover .wgRecommendCta {
+  text-decoration: underline;
+}
+
 @media (max-width: 640px) {
   .wgLatestGrid {
     grid-template-columns: 1fr;
@@ -3576,6 +3704,284 @@
   flex: 1 1 240px;
   color: #78350f;
   white-space: pre-line;
+}
+
+/* Genie recall gate — appears only after every guided blank is correct. */
+.wgbRecallCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+  padding: 18px;
+  overflow: hidden;
+  border: 1.5px solid #b9cef2;
+  border-left: 6px solid #004aad;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 95% 5%, rgba(255, 204, 0, 0.2), transparent 34%),
+    linear-gradient(145deg, #f7faff 0%, #edf4ff 100%);
+  box-shadow: 0 16px 34px rgba(0, 74, 173, 0.1);
+  animation: wgbRecallReveal 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    border-color 260ms ease,
+    background 260ms ease,
+    box-shadow 260ms ease,
+    transform 260ms ease;
+}
+
+.wgbRecallCard::after {
+  content: '✦';
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  color: rgba(0, 74, 173, 0.22);
+  font-size: 1.25rem;
+  pointer-events: none;
+}
+
+.wgbRecallCard.is-retry {
+  border-color: #f1b5c1;
+  border-left-color: #e4546e;
+  background:
+    radial-gradient(circle at 95% 5%, rgba(255, 204, 0, 0.2), transparent 34%),
+    linear-gradient(145deg, #fff9fa 0%, #fff0f3 100%);
+}
+
+.wgbRecallCard.is-passed {
+  border-color: #91d9b4;
+  border-left-color: #16a34a;
+  background:
+    radial-gradient(circle at 95% 5%, rgba(255, 204, 0, 0.24), transparent 34%),
+    linear-gradient(145deg, #f6fffa 0%, #e9f9f0 100%);
+  box-shadow: 0 18px 38px rgba(22, 163, 74, 0.12);
+}
+
+@keyframes wgbRecallReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.wgbRecallGenie {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border: 2px solid rgba(0, 74, 173, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #004aad, #256bd1);
+  box-shadow:
+    0 9px 20px rgba(0, 74, 173, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  font-size: 1.65rem;
+  animation: wgbGeniePop 520ms cubic-bezier(0.2, 1.45, 0.4, 1);
+}
+
+@keyframes wgbGeniePop {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) rotate(-7deg) scale(0.78);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+  }
+}
+
+.wgbRecallBody {
+  min-width: 0;
+}
+
+.wgbRecallHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-right: 18px;
+}
+
+.wgbRecallKicker {
+  margin: 0 0 2px;
+  color: #004aad;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wgbRecallHeading h3 {
+  margin: 0;
+  color: #10264d;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.03rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.wgbRecallRule {
+  flex: none;
+  padding: 4px 9px;
+  border: 1px solid rgba(0, 74, 173, 0.18);
+  border-radius: 999px;
+  background: #fff;
+  color: #004aad;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.wgbRecallInstruction {
+  margin: 9px 0 12px;
+  color: #40516d;
+  font-size: 0.88rem;
+  font-weight: 550;
+  line-height: 1.65;
+}
+
+.wgbRecallInstruction strong {
+  color: #14396f;
+}
+
+.wgbRecallTextarea {
+  display: block;
+  width: 100%;
+  min-height: 116px;
+  resize: vertical;
+  padding: 13px 14px;
+  border: 1.5px solid #b8c9e5;
+  border-radius: 13px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #172033;
+  font: 500 0.95rem/1.7 'Anuphan', Inter, system-ui, sans-serif;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.wgbRecallTextarea:focus {
+  border-color: #004aad;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.12);
+}
+
+.wgbRecallTextarea:disabled {
+  border-color: #8ed7b0;
+  background: rgba(236, 253, 245, 0.88);
+  color: #166534;
+  cursor: default;
+}
+
+.wgbRecallToolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.wgbRecallShortcut {
+  color: #718096;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.wgbRecallFeedback,
+.wgbRecallSuccess {
+  margin-top: 13px;
+  border-radius: 13px;
+  animation: wgbStepIn 280ms ease;
+}
+
+.wgbRecallFeedback {
+  padding: 12px 14px;
+  border: 1px solid #f2a3b1;
+  background: rgba(255, 255, 255, 0.78);
+  color: #8e2940;
+}
+
+.wgbRecallFeedbackTitle {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.wgbRecallFeedback ul {
+  display: grid;
+  gap: 7px;
+  margin: 8px 0 0;
+  padding-left: 1.25rem;
+}
+
+.wgbRecallFeedback li {
+  padding-left: 2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.wgbRecallSuccess {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #8ed7b0;
+  background: rgba(255, 255, 255, 0.8);
+  color: #12613b;
+}
+
+.wgbRecallSuccess > span {
+  font-size: 1.2rem;
+}
+
+.wgbRecallSuccess strong {
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.wgbRecallSuccess p {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+@media (max-width: 620px) {
+  .wgbRecallCard {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 10px;
+    padding: 14px 12px;
+    border-radius: 15px;
+  }
+
+  .wgbRecallGenie {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    font-size: 1.25rem;
+  }
+
+  .wgbRecallHeading {
+    display: grid;
+    padding-right: 12px;
+  }
+
+  .wgbRecallRule {
+    justify-self: start;
+  }
+
+  .wgbRecallToolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 .wlpBtn-save {
