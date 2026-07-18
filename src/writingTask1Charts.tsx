@@ -839,12 +839,59 @@ function WritingMapDiagramSvg({ prompt }: { prompt: WritingMapPracticePrompt }) 
   )
 }
 
+// Pick a pictogram for a process stage from keywords — makes the diagram read
+// like a real illustrated Cambridge IELTS process, not plain labelled boxes.
+const PROCESS_STAGE_ICONS: Array<[RegExp, string]> = [
+  [/harvest|pick|cherr|crop|reap/, '🌾'],
+  [/plant|seed|sow|grow|germinat/, '🌱'],
+  [/collect|gather/, '🚛'],
+  [/sort|separat/, '🔀'],
+  [/wash|rinse|clean/, '🧼'],
+  [/pulp/, '🫧'],
+  [/crush|grind|mill|pulveris/, '⚙️'],
+  [/spray/, '💨'],
+  [/dry|drying|sun-?dr/, '☀️'],
+  [/roast|bake|fire|kiln|heat|burn|smelt/, '🔥'],
+  [/melt|molten/, '🌡️'],
+  [/cool|cooling|chill|freez|refrigerat/, '❄️'],
+  [/dissolve|soak|liquid|water|steep/, '💧'],
+  [/mix|blend|stir|combin|knead/, '🥣'],
+  [/extract|filter|refin|distil|strain/, '🧪'],
+  [/ferment|matur|age\b/, '🫙'],
+  [/press|squeeze|compress/, '🗜️'],
+  [/cut|slice|chop|trim|shred/, '✂️'],
+  [/pellet|mould|mold|shape|form|cast|pelletis|shap/, '🧱'],
+  [/store|storage|warehouse|silo/, '🏬'],
+  [/transport|deliver|distribut|ship|export/, '🚚'],
+  [/sell|sale|market|shop|retail|shelf|consum/, '🛒'],
+  [/package|packag|bottle|jar|\bpack\b|wrap|\bcan\b|\btin\b|fill/, '📦'],
+  [/milk|cow|dairy|cheese|curd/, '🥛'],
+  [/glass/, '🍾'],
+  [/paper|cardboard/, '📄'],
+  [/chocolate|cocoa/, '🍫'],
+  [/\btea\b/, '🍵'],
+  [/oil|olive/, '🫒'],
+  [/sugar|cane/, '🧂'],
+  [/solar|panel|silicon|cell\b/, '🔆'],
+  [/coffee|bean/, '☕'],
+  [/brick|clay/, '🧱'],
+  [/inspect|check|quality|test|grade/, '🔍'],
+  [/manufactur|produc|assembl|\bmake\b|factory|mould new/, '🏭']
+]
+
+function processStageIcon(stage: { id: string; label: string; detail: string }) {
+  const hay = `${stage.label} ${stage.detail} ${stage.id}`.toLowerCase()
+  for (const [re, icon] of PROCESS_STAGE_ICONS) if (re.test(hay)) return icon
+  return '⚙️'
+}
+
 function WritingProcessDiagramSvg({ prompt }: { prompt: WritingProcessPracticePrompt }) {
   const columns = 4
-  const boxW = 148
-  const boxH = 74
-  const gapX = 26
-  const gapY = 44
+  const boxW = 150
+  const boxH = 108
+  const gapX = 24
+  const gapY = 54
+  const topPad = 16
   const rows = Math.ceil(prompt.stages.length / columns)
   const totalW = columns * boxW + (columns - 1) * gapX
   const totalH = rows * boxH + (rows - 1) * gapY
@@ -856,7 +903,7 @@ function WritingProcessDiagramSvg({ prompt }: { prompt: WritingProcessPracticePr
     const colInRow = index % columns
     const col = isReverseRow ? columns - 1 - colInRow : colInRow
     const x = startX + col * (boxW + gapX)
-    const y = row * (boxH + gapY)
+    const y = topPad + row * (boxH + gapY)
     return { stage, x, y, row, col, isReverseRow }
   })
 
@@ -864,11 +911,27 @@ function WritingProcessDiagramSvg({ prompt }: { prompt: WritingProcessPracticePr
     <figure className="writingIeltsFigure">
       <figcaption className="writingIeltsFigureCaption">{prompt.chartCaption}</figcaption>
       <svg
-        viewBox={`0 0 ${CHART_SIZE.width} ${totalH + 20}`}
+        viewBox={`0 0 ${CHART_SIZE.width} ${totalH + topPad + 14}`}
         className="writingIeltsChartSvg writingIeltsProcessDiagram"
         role="img"
         aria-label={`Process diagram showing ${prompt.chartCaption}`}
       >
+        <defs>
+          <marker
+            id="writingIeltsProcessArrowHead"
+            markerWidth="9"
+            markerHeight="9"
+            refX="6.5"
+            refY="4.5"
+            orient="auto"
+          >
+            <path d="M0.5,0.5 L8.5,4.5 L0.5,8.5 L2.8,4.5 Z" fill="#0f53c9" />
+          </marker>
+          <filter id="writingIeltsProcessShadow" x="-10%" y="-10%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2.4" floodColor="#0f2f6e" floodOpacity="0.16" />
+          </filter>
+        </defs>
+
         {positions.map((pos, index) => {
           if (index === positions.length - 1) return null
           const next = positions[index + 1]
@@ -880,7 +943,7 @@ function WritingProcessDiagramSvg({ prompt }: { prompt: WritingProcessPracticePr
             return (
               <path
                 key={`arrow-${index}`}
-                d={`M${fromX},${midY} L${toX - 8},${midY}`}
+                d={`M${fromX},${midY} L${toX - 9},${midY}`}
                 className="writingIeltsProcessArrow"
                 markerEnd="url(#writingIeltsProcessArrowHead)"
               />
@@ -890,10 +953,26 @@ function WritingProcessDiagramSvg({ prompt }: { prompt: WritingProcessPracticePr
           const fromY = pos.y + boxH
           const toX = next.x + boxW / 2
           const toY = next.y
+          // In the snake layout the row-to-row link is in the same column, so
+          // this is a clean vertical drop; keep a rounded elbow only if they differ.
+          if (Math.abs(toX - fromX) < 1) {
+            return (
+              <path
+                key={`arrow-${index}`}
+                d={`M${fromX},${fromY} L${fromX},${toY - 9}`}
+                fill="none"
+                className="writingIeltsProcessArrow"
+                markerEnd="url(#writingIeltsProcessArrowHead)"
+              />
+            )
+          }
+          const midY = fromY + gapY / 2
+          const r = 10
+          const dir = toX >= fromX ? 1 : -1
           return (
             <path
               key={`arrow-${index}`}
-              d={`M${fromX},${fromY} L${fromX},${fromY + gapY / 2} L${toX},${fromY + gapY / 2} L${toX},${toY - 8}`}
+              d={`M${fromX},${fromY} L${fromX},${midY - r} Q${fromX},${midY} ${fromX + dir * r},${midY} L${toX - dir * r},${midY} Q${toX},${midY} ${toX},${midY + r} L${toX},${toY - 9}`}
               fill="none"
               className="writingIeltsProcessArrow"
               markerEnd="url(#writingIeltsProcessArrowHead)"
@@ -901,23 +980,46 @@ function WritingProcessDiagramSvg({ prompt }: { prompt: WritingProcessPracticePr
           )
         })}
 
-        <defs>
-          <marker id="writingIeltsProcessArrowHead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-            <path d="M0,0 L8,4 L0,8 Z" fill="#0f53c9" />
-          </marker>
-        </defs>
-
         {positions.map((pos, index) => (
           <g key={pos.stage.id}>
-            <rect x={pos.x} y={pos.y} width={boxW} height={boxH} className="writingIeltsProcessBox" rx={8} />
-            <text x={pos.x + boxW / 2} y={pos.y + 20} textAnchor="middle" className="writingIeltsProcessStageNumber">
-              {index + 1}. {pos.stage.label}
+            <rect
+              x={pos.x}
+              y={pos.y}
+              width={boxW}
+              height={boxH}
+              className="writingIeltsProcessBox"
+              rx={12}
+              filter="url(#writingIeltsProcessShadow)"
+            />
+            <rect
+              x={pos.x}
+              y={pos.y}
+              width={boxW}
+              height={26}
+              className="writingIeltsProcessBoxHeader"
+              rx={12}
+            />
+            <rect x={pos.x} y={pos.y + 14} width={boxW} height={12} className="writingIeltsProcessBoxHeaderFill" />
+            <circle cx={pos.x + 15} cy={pos.y + 13} r={9.5} className="writingIeltsProcessBadge" />
+            <text
+              x={pos.x + 15}
+              y={pos.y + 16.5}
+              textAnchor="middle"
+              className="writingIeltsProcessBadgeText"
+            >
+              {index + 1}
             </text>
-            {wrapProcessDetail(pos.stage.detail).map((line, li) => (
+            <text x={pos.x + 30} y={pos.y + 17} className="writingIeltsProcessStageNumber">
+              {pos.stage.label}
+            </text>
+            <text x={pos.x + boxW / 2} y={pos.y + 52} textAnchor="middle" className="writingIeltsProcessIcon">
+              {processStageIcon(pos.stage)}
+            </text>
+            {wrapProcessDetail(pos.stage.detail).slice(0, 3).map((line, li) => (
               <text
                 key={li}
                 x={pos.x + boxW / 2}
-                y={pos.y + 38 + li * 13}
+                y={pos.y + 70 + li * 12}
                 textAnchor="middle"
                 className="writingIeltsProcessStageDetail"
               >

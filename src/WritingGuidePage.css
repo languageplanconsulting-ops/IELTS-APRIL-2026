@@ -2593,27 +2593,54 @@
 }
 
 .writingIeltsProcessBox {
-  fill: #eef4ff;
-  stroke: #0f53c9;
-  stroke-width: 1.5;
+  fill: #ffffff;
+  stroke: #c7d7f5;
+  stroke-width: 1.25;
+}
+
+.writingIeltsProcessBoxHeader {
+  fill: #e8f0ff;
+}
+
+.writingIeltsProcessBoxHeaderFill {
+  fill: #e8f0ff;
+}
+
+.writingIeltsProcessBadge {
+  fill: #0f53c9;
+}
+
+.writingIeltsProcessBadgeText {
+  font-size: 11px;
+  font-weight: 800;
+  fill: #ffffff;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 
 .writingIeltsProcessArrow {
   fill: none;
   stroke: #0f53c9;
-  stroke-width: 2;
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.writingIeltsProcessIcon {
+  font-size: 22px;
 }
 
 .writingIeltsProcessStageNumber {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
   fill: #0f2f6e;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
 }
 
 .writingIeltsProcessStageDetail {
   font-size: 9.5px;
   font-weight: 600;
-  fill: #374151;
+  fill: #475569;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
 }
 
 .writingIeltsAnswerSheet {
@@ -4364,14 +4391,21 @@
 
 .wgb2Layout.has-sidebar {
   display: grid;
-  grid-template-columns: minmax(0, 760px) minmax(220px, 1fr);
+  grid-template-columns: minmax(0, 760px) minmax(300px, 1fr);
   gap: 20px;
   align-items: start;
 }
 
-.wgb2DragSidebar {
+.wgb2RightRail {
   position: sticky;
   top: 16px;
+  display: grid;
+  gap: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+.wgb2DragSidebar {
   display: grid;
   gap: 16px;
   padding: 16px;
@@ -4379,6 +4413,176 @@
   border: 1px solid rgba(15, 23, 42, 0.1);
   background: #fff;
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.wgb2RecallPrompt {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 15px 16px;
+  border: 1.5px solid #c8b5ff;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f7f2ff, #eef7ff);
+  animation: wgbStepIn 0.28s ease both;
+}
+
+.wgb2RecallPrompt strong {
+  color: #3e247a;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.98rem;
+}
+
+.wgb2RecallPrompt p {
+  margin: 5px 0 0;
+  color: #53627b;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.wgb2RecallPromptActions,
+.wgb2RecallToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wgb2RecallReopen {
+  margin-top: 14px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #5b36a8;
+  font: 600 0.86rem 'Kanit', sans-serif;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wgb2RecallCard {
+  display: grid;
+  gap: 12px;
+  padding: 17px;
+  border: 1.5px solid #c8b5ff;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fbf8ff, #f1f7ff);
+  box-shadow: 0 16px 34px rgba(71, 45, 125, 0.12);
+  animation: wgbRecallReveal 0.35s ease both;
+  transition: border-color 0.22s ease, background 0.22s ease;
+}
+
+.wgb2RecallCard.is-retry {
+  border-color: #f0a8ba;
+  background: linear-gradient(145deg, #fff8fa, #f7f2ff);
+}
+
+.wgb2RecallCard.is-passed {
+  border-color: #7bcda3;
+  background: linear-gradient(145deg, #f1fff7, #eef8ff);
+}
+
+.wgb2RecallHead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.wgb2RecallGenie {
+  display: grid;
+  flex: 0 0 44px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #ede4ff;
+  font-size: 1.65rem;
+  animation: wgbGeniePop 0.42s ease both;
+}
+
+.wgb2RecallKicker {
+  margin: 0;
+  color: #7251b5;
+  font: 700 0.7rem 'Kanit', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wgb2RecallHead h3 {
+  margin: 2px 0 0;
+  color: #27184f;
+  font: 600 0.98rem/1.35 'Kanit', sans-serif;
+}
+
+.wgb2RecallRule,
+.wgb2RecallVocab {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.wgb2RecallRule {
+  color: #3e247a;
+  font-weight: 650;
+}
+
+.wgb2RecallVocab {
+  color: #53627b;
+}
+
+.wgb2RecallTextarea {
+  width: 100%;
+  min-height: 190px;
+  resize: vertical;
+  padding: 12px;
+  border: 1.5px solid #c8b5ff;
+  border-radius: 12px;
+  outline: none;
+  background: #fff;
+  color: #14213d;
+  font: 500 0.9rem/1.65 'Kanit', sans-serif;
+  box-sizing: border-box;
+}
+
+.wgb2RecallTextarea:focus {
+  border-color: #7251b5;
+  box-shadow: 0 0 0 3px rgba(114, 81, 181, 0.14);
+}
+
+.wgb2RecallTextarea:disabled {
+  background: #edfff5;
+  color: #22633f;
+}
+
+.wgb2RecallSuccess,
+.wgb2RecallFeedback {
+  padding: 11px 12px;
+  border-radius: 11px;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  animation: wgbStepIn 0.25s ease both;
+}
+
+.wgb2RecallSuccess {
+  background: #dff8e9;
+  color: #17633a;
+  font-weight: 650;
+}
+
+.wgb2RecallFeedback {
+  max-height: 260px;
+  overflow-y: auto;
+  background: #fff0f4;
+  color: #7a2940;
+}
+
+.wgb2RecallFeedback p {
+  margin: 0 0 7px;
+  font-weight: 700;
+}
+
+.wgb2RecallFeedback ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
 }
 
 .wgb2DragSidebarHead {
@@ -4427,8 +4631,20 @@
     grid-template-columns: 1fr;
   }
 
-  .wgb2DragSidebar {
+  .wgb2RightRail {
     position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wgb2RecallPrompt,
+  .wgb2RecallCard,
+  .wgb2RecallGenie,
+  .wgb2RecallSuccess,
+  .wgb2RecallFeedback {
+    animation: none;
   }
 }
 
@@ -4925,4 +5141,78 @@
 .writingGuidePage .wlpSectionKicker {
   color: #004aad;
   font-family: Kanit, Inter, Anuphan, sans-serif;
+}
+
+.writingGuidePage .wgTicket-generalTraining {
+  border-color: #0f766e;
+  background: linear-gradient(105deg, #f0fdfa 0%, #ffffff 52%);
+  box-shadow: 8px 8px 0 #99f6e4;
+}
+
+.writingGuidePage .wgTicket-generalTraining:hover {
+  box-shadow: 5px 5px 0 #5eead4;
+}
+
+.wgGtStructureNote {
+  display: grid;
+  gap: 5px;
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 3px solid #0f172a;
+  border-radius: 14px;
+  background: #f0fdfa;
+  box-shadow: 6px 6px 0 #99f6e4;
+}
+
+.wgGtStructureNote strong {
+  color: #0f766e;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 1rem;
+}
+
+.wgGtStructureNote span {
+  color: #334155;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.wgGtIntroTemplate {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 17px 19px;
+  border: 3px solid #0f172a;
+  border-radius: 14px;
+  background: #fffbea;
+  box-shadow: 6px 6px 0 #fde68a;
+}
+
+.wgGtIntroTemplateLabel {
+  width: fit-content;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #fff;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.wgGtIntroTemplate p {
+  margin: 0;
+  color: #172033;
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.wgGtIntroTemplate p strong {
+  color: #0f766e;
+}
+
+.wgGtIntroTemplate small {
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
