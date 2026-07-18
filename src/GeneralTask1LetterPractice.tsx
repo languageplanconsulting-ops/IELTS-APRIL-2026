@@ -19,14 +19,16 @@ type PracticeProps = {
   onSaveVocab?: (payload: { word: string; thaiMeaning: string }) => void
 }
 
+type OptionPracticeBlank = {
+  id: string
+  kind: 'transition' | 'contraction' | 'conjunction'
+  answer: string
+  options: string[]
+  sentenceIndex: number
+}
+
 type PracticeBlank =
-  | {
-      id: string
-      kind: 'transition' | 'contraction' | 'conjunction'
-      answer: string
-      options: string[]
-      sentenceIndex: number
-    }
+  | OptionPracticeBlank
   | {
       id: string
       kind: 'letter-hint'
@@ -381,7 +383,7 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
   const blanks = sentenceSegments.flatMap((segments) =>
     segments.flatMap((segment) => (segment.kind === 'blank' ? [segment.blank] : []))
   )
-  const transitionBlanks = blanks.filter((blank) => blank.kind === 'transition')
+  const transitionBlanks = blanks.filter((blank): blank is OptionPracticeBlank => blank.kind === 'transition')
   const isBlankCorrect = (blank: PracticeBlank) => {
     const given = (values[blank.id] || '').trim()
     if (blank.kind === 'letter-hint') {

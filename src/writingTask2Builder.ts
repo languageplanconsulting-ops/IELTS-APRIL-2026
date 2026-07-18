@@ -303,8 +303,7 @@ export const getWgb2BlankExplain = (blank: Wgb2Blank, userAnswer?: string): stri
   }
   if (
     (blank.focus === 'verb-tense' || blank.focus === 'participle') &&
-    (blank.kind === 'type' || blank.kind === 'select') &&
-    blank.focus !== 'letter-hint'
+    (blank.kind === 'type' || blank.kind === 'select')
   ) {
     const verbExplain = getWgb2VerbFormWrongExplain(blank, userAnswer || '')
     if (verbExplain && !/ตรวจดูความหมาย/.test(verbExplain)) return verbExplain

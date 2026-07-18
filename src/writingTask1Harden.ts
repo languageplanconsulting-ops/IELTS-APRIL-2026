@@ -6,7 +6,7 @@
  * - attach detailed Thai explanations
  */
 
-import type { WgbBlank, WgbExercise, WgbFocus, WgbSegment } from './writingGuidedBuilder'
+import type { WgbBlank, WgbExercise, WgbSegment } from './writingGuidedBuilder'
 import {
   buildDetailedThaiExplain,
   buildLetterHintMask,
@@ -49,7 +49,6 @@ const contentWordTargets = (essayText: string): string[] => {
 const toLetterHintType = (
   id: string,
   answer: string,
-  focus: WgbFocus,
   explain?: string,
   thaiMeaning?: string
 ): WgbBlank => {
@@ -75,7 +74,7 @@ const mapBlank = (blank: WgbBlank): WgbBlank => {
   if (blank.kind === 'type') {
     const answer = blank.answers[0] || ''
     if (answer && answer.toLowerCase() === blank.base.toLowerCase() && answer.length >= 5) {
-      return toLetterHintType(blank.id, answer, blank.focus, blank.explain)
+      return toLetterHintType(blank.id, answer, blank.explain)
     }
     // Keep conjugation drills, but enrich explain
     return {
@@ -96,7 +95,7 @@ const mapBlank = (blank: WgbBlank): WgbBlank => {
     /^[A-Za-z][A-Za-z'-]*$/.test(blank.answer) &&
     !/\s/.test(blank.answer)
   ) {
-    return toLetterHintType(blank.id, blank.answer, blank.focus, blank.explain)
+    return toLetterHintType(blank.id, blank.answer, blank.explain)
   }
 
   return {
@@ -138,7 +137,7 @@ const injectIntoText = (
     if (hit.start > cursor) segments.push({ kind: 'text', text: text.slice(cursor, hit.start) })
     segments.push({
       kind: 'blank',
-      blank: toLetterHintType(`${idPrefix}-lh-${index}-${hit.word.toLowerCase()}`, hit.word, LETTER_HINT_FOCUS)
+      blank: toLetterHintType(`${idPrefix}-lh-${index}-${hit.word.toLowerCase()}`, hit.word)
     })
     cursor = hit.end
   })
