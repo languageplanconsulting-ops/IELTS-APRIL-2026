@@ -2969,7 +2969,7 @@ const buildApprovalEmailUrls = ({ req, userId }) => {
 
 const sanitizeNotebookSection = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
-  return ['speaking', 'writing', 'listening', 'reading', 'custom'].includes(normalized)
+  return ['speaking', 'writing', 'writing essay', 'listening', 'reading', 'custom'].includes(normalized)
     ? normalized
     : 'speaking'
 }
@@ -2986,6 +2986,15 @@ const sanitizeCustomSections = (value) =>
 
 const sanitizeSavedReportSnapshot = (value) => {
   if (!value || typeof value !== 'object') return undefined
+  if (value.kind === 'writing' || value.kind === 'writing-task2') {
+    try {
+      const serialized = JSON.stringify(value)
+      if (serialized.length > 500_000) return undefined
+      return JSON.parse(serialized)
+    } catch {
+      return undefined
+    }
+  }
   return {
     testMode: ['part1', 'part2', 'part3', 'full'].includes(String(value.testMode || ''))
       ? String(value.testMode)
@@ -11362,12 +11371,27 @@ app.patch('/api/me/profile', requireAuth, async (req, res) => {
 
 app.get('/api/admin/learners', requireAdmin, async (_req, res) => {
   try {
-    const rows = await fetchSupabaseJson(
-      '/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(status,starts_at,expires_at,feedback_credits,full_mock_credits,enabled_modules)&order=created_at.desc',
-      {
+    const buildLearnerQuery = (accessColumns) =>
+      `/rest/v1/profiles?select=id,email,full_name,role,created_at,learner_access(${accessColumns})&order=created_at.desc`
+    const fullColumns =
+      'status,starts_at,expires_at,feedback_credits,full_mock_credits,enabled_modules'
+    // Fallback column set omits enabled_modules so the Learners panel still loads
+    // even if the enabled_modules migration hasn't been applied to the database yet.
+    const fallbackColumns = 'status,starts_at,expires_at,feedback_credits,full_mock_credits'
+    let rows
+    try {
+      rows = await fetchSupabaseJson(buildLearnerQuery(fullColumns), {
         headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
-      }
-    )
+      })
+    } catch (columnError) {
+      console.warn(
+        'admin/learners: enabled_modules query failed, retrying without it. Apply the enabled_modules migration to the database.',
+        columnError instanceof Error ? columnError.message : columnError
+      )
+      rows = await fetchSupabaseJson(buildLearnerQuery(fallbackColumns), {
+        headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+      })
+    }
     return res.json({
       learners: (Array.isArray(rows) ? rows : []).map(mapLearnerRecord)
     })
@@ -11621,6 +11645,467 @@ app.put('/api/me/notebook', requireAuth, async (req, res) => {
         status: error?.status || 500,
         type: 'notebook_save_error',
         message: error instanceof Error ? error.message : 'Could not save notebook.'
+      }
+    })
+  }
+})
+
+const ENGAGEMENT_SYNTHETIC_ADMIN_ACTOR_KEY = 'synthetic:admin-code'
+const ENGAGEMENT_MAX_STRING_LENGTHS = {
+  sessionId: 160,
+  page: 200,
+  feature: 120,
+  activityType: 120,
+  activityId: 200,
+  label: 300
+}
+
+const capEngagementString = (value, field, { required = false } = {}) => {
+  const normalized = String(value ?? '').trim().slice(0, ENGAGEMENT_MAX_STRING_LENGTHS[field])
+  if (required && !normalized) {
+    const error = new Error(`${field} is required.`)
+    error.status = 400
+    throw error
+  }
+  return normalized
+}
+
+const parseEngagementTimestamp = (value, field, { required = false } = {}) => {
+  if (value == null || value === '') {
+    if (!required) return null
+    const error = new Error(`${field} is required.`)
+    error.status = 400
+    throw error
+  }
+  const timestamp = new Date(value).getTime()
+  if (!Number.isFinite(timestamp)) {
+    const error = new Error(`${field} must be a valid timestamp.`)
+    error.status = 400
+    throw error
+  }
+  return timestamp
+}
+
+const mapEngagementSegment = (row = {}) => ({
+  segmentId: String(row.segment_id || ''),
+  userId: row.user_id || null,
+  actorKey: String(row.actor_key || ''),
+  sessionId: String(row.session_id || ''),
+  page: String(row.page || ''),
+  feature: String(row.feature || ''),
+  activityType: String(row.activity_type || ''),
+  activityId: String(row.activity_id || ''),
+  label: String(row.label || ''),
+  startedAt: row.started_at || null,
+  endedAt: row.ended_at || null,
+  lastSeenAt: row.last_seen_at || null,
+  activeSeconds: Math.max(0, Number(row.active_seconds || 0)),
+  metadata: row.metadata && typeof row.metadata === 'object' ? row.metadata : {},
+  createdAt: row.created_at || null,
+  updatedAt: row.updated_at || null
+})
+
+const mapEngagementAggregate = (row = {}) => ({
+  activeSeconds: Math.max(0, Number(row.active_seconds || 0)),
+  segmentCount: Math.max(0, Number(row.segment_count || 0)),
+  sessionCount: Math.max(0, Number(row.session_count || 0)),
+  actorCount: Math.max(0, Number(row.actor_count || 0))
+})
+
+const mapEngagementRanking = (row = {}) => ({
+  actorKey: String(row.actor_key || ''),
+  userId: row.user_id || null,
+  email: String(row.email || ''),
+  name: String(row.display_name || ''),
+  role: String(row.account_role || ''),
+  dominantFeature: String(row.dominant_feature || ''),
+  ...mapEngagementAggregate(row),
+  firstStartedAt: row.first_started_at || null,
+  lastSeenAt: row.last_seen_at || null
+})
+
+const mapEngagementFeatureTotal = (row = {}) => ({
+  feature: String(row.feature || ''),
+  activityType: String(row.activity_type || ''),
+  activityId: String(row.activity_id || ''),
+  label: String(row.label || ''),
+  ...mapEngagementAggregate(row)
+})
+
+const mapEngagementTrend = (row = {}) => ({
+  bucketAt: row.bucket_at || null,
+  ...mapEngagementAggregate(row)
+})
+
+const aggregateEngagementSegments = (segments, keyGetter, labelGetter) => {
+  const grouped = new Map()
+  for (const segment of segments) {
+    const key = String(keyGetter(segment) || '')
+    if (!key) continue
+    const existing = grouped.get(key) || {
+      key,
+      label: String(labelGetter(segment) || key),
+      seconds: 0,
+      segmentCount: 0
+    }
+    existing.seconds += Math.max(0, Number(segment.activeSeconds || 0))
+    existing.segmentCount += 1
+    grouped.set(key, existing)
+  }
+  return [...grouped.values()].sort((left, right) => right.seconds - left.seconds)
+}
+
+const getZonedDateParts = (date, timeZone) => {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(date)
+  return Object.fromEntries(parts.filter((part) => part.type !== 'literal').map((part) => [part.type, Number(part.value)]))
+}
+
+const zonedDateTimeToUtc = ({ year, month, day, hour = 0, minute = 0, second = 0 }, timeZone) => {
+  const targetAsUtc = Date.UTC(year, month - 1, day, hour, minute, second)
+  let candidate = targetAsUtc
+  for (let index = 0; index < 4; index += 1) {
+    const actual = getZonedDateParts(new Date(candidate), timeZone)
+    const actualAsUtc = Date.UTC(
+      actual.year,
+      actual.month - 1,
+      actual.day,
+      actual.hour,
+      actual.minute,
+      actual.second
+    )
+    const correction = targetAsUtc - actualAsUtc
+    candidate += correction
+    if (correction === 0) break
+  }
+  return new Date(candidate)
+}
+
+const addUtcCalendarDays = ({ year, month, day }, days) => {
+  const date = new Date(Date.UTC(year, month - 1, day + days))
+  return { year: date.getUTCFullYear(), month: date.getUTCMonth() + 1, day: date.getUTCDate() }
+}
+
+const parseEngagementPeriod = (query = {}) => {
+  const period = ['day', 'month', 'total'].includes(String(query.period || 'day'))
+    ? String(query.period || 'day')
+    : null
+  if (!period) {
+    const error = new Error('period must be day, month, or total.')
+    error.status = 400
+    throw error
+  }
+
+  const timezone = String(query.timezone || 'UTC').trim().slice(0, 100) || 'UTC'
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: timezone }).format()
+  } catch {
+    const error = new Error('timezone must be a valid IANA time zone.')
+    error.status = 400
+    throw error
+  }
+
+  if (period === 'total') {
+    return { period, timezone, startAt: null, endAt: null, bucket: 'month' }
+  }
+
+  const nowParts = getZonedDateParts(new Date(), timezone)
+  if (period === 'day') {
+    const requestedDate = String(query.date || '').trim()
+    if (requestedDate && !/^\d{4}-\d{2}-\d{2}$/.test(requestedDate)) {
+      const error = new Error('date must use YYYY-MM-DD.')
+      error.status = 400
+      throw error
+    }
+    const [year, month, day] = requestedDate
+      ? requestedDate.split('-').map(Number)
+      : [nowParts.year, nowParts.month, nowParts.day]
+    const checked = new Date(Date.UTC(year, month - 1, day))
+    if (
+      checked.getUTCFullYear() !== year ||
+      checked.getUTCMonth() + 1 !== month ||
+      checked.getUTCDate() !== day
+    ) {
+      const error = new Error('date is not a valid calendar date.')
+      error.status = 400
+      throw error
+    }
+    const next = addUtcCalendarDays({ year, month, day }, 1)
+    return {
+      period,
+      timezone,
+      startAt: zonedDateTimeToUtc({ year, month, day }, timezone).toISOString(),
+      endAt: zonedDateTimeToUtc(next, timezone).toISOString(),
+      bucket: 'hour'
+    }
+  }
+
+  const requestedMonth = String(query.month || '').trim()
+  if (requestedMonth && !/^\d{4}-\d{2}$/.test(requestedMonth)) {
+    const error = new Error('month must use YYYY-MM.')
+    error.status = 400
+    throw error
+  }
+  const [year, month] = requestedMonth
+    ? requestedMonth.split('-').map(Number)
+    : [nowParts.year, nowParts.month]
+  if (month < 1 || month > 12) {
+    const error = new Error('month is not a valid calendar month.')
+    error.status = 400
+    throw error
+  }
+  const nextMonthDate = new Date(Date.UTC(year, month, 1))
+  return {
+    period,
+    timezone,
+    startAt: zonedDateTimeToUtc({ year, month, day: 1 }, timezone).toISOString(),
+    endAt: zonedDateTimeToUtc(
+      { year: nextMonthDate.getUTCFullYear(), month: nextMonthDate.getUTCMonth() + 1, day: 1 },
+      timezone
+    ).toISOString(),
+    bucket: 'day'
+  }
+}
+
+const callEngagementRpc = (functionName, body) =>
+  fetchSupabaseJson(`/rest/v1/rpc/${functionName}`, {
+    method: 'POST',
+    headers: buildSupabaseHeaders({ serviceRole: true }),
+    body: JSON.stringify(body)
+  })
+
+app.post('/api/engagement/segment', requireAuth, async (req, res) => {
+  try {
+    const segmentId = normalizeOptionalUuid(req.body?.segmentId)
+    if (!segmentId) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'segmentId must be a UUID.' }
+      })
+    }
+
+    const userId = normalizeOptionalUuid(req.auth?.user?.id)
+    const actorKey = userId ? `user:${userId}` : ENGAGEMENT_SYNTHETIC_ADMIN_ACTOR_KEY
+    const now = Date.now()
+    const oldestAllowed = now - 7 * 24 * 60 * 60 * 1000
+    const futureLimit = now + 5 * 60 * 1000
+    const rawStartedAt = parseEngagementTimestamp(req.body?.startedAt, 'startedAt', { required: true })
+    const startedAt = Math.min(futureLimit, Math.max(oldestAllowed, rawStartedAt))
+    const rawLastSeenAt = parseEngagementTimestamp(req.body?.lastSeenAt, 'lastSeenAt', { required: true })
+    const lastSeenAt = Math.min(futureLimit, Math.max(startedAt, rawLastSeenAt))
+    const rawEndedAt = parseEngagementTimestamp(req.body?.endedAt, 'endedAt')
+    const endedAt = rawEndedAt == null ? null : Math.min(futureLimit, Math.max(startedAt, rawEndedAt))
+    const requestedActiveSeconds = Number(req.body?.activeSeconds)
+    const activeSeconds = Math.floor(
+      Math.min(
+        86400,
+        Math.max(0, Number.isFinite(requestedActiveSeconds) ? requestedActiveSeconds : 0),
+        Math.max(0, Math.ceil((lastSeenAt - startedAt) / 1000) + 60)
+      )
+    )
+    const metadata =
+      req.body?.metadata &&
+      typeof req.body.metadata === 'object' &&
+      !Array.isArray(req.body.metadata) &&
+      JSON.stringify(req.body.metadata).length <= 8192
+        ? req.body.metadata
+        : {}
+
+    const payload = {
+      segment_id: segmentId,
+      user_id: userId,
+      actor_key: actorKey,
+      session_id: capEngagementString(req.body?.sessionId, 'sessionId', { required: true }),
+      page: capEngagementString(req.body?.page, 'page', { required: true }),
+      feature: capEngagementString(req.body?.feature, 'feature'),
+      activity_type: capEngagementString(req.body?.activityType, 'activityType'),
+      activity_id: capEngagementString(req.body?.activityId, 'activityId'),
+      label: capEngagementString(req.body?.label, 'label'),
+      started_at: new Date(startedAt).toISOString(),
+      ended_at: endedAt == null ? null : new Date(endedAt).toISOString(),
+      last_seen_at: new Date(lastSeenAt).toISOString(),
+      active_seconds: activeSeconds,
+      metadata
+    }
+    const rows = await fetchSupabaseJson(
+      '/rest/v1/user_engagement_segments?on_conflict=actor_key,segment_id',
+      {
+        method: 'POST',
+        headers: buildSupabaseHeaders({
+          serviceRole: true,
+          prefer: 'resolution=merge-duplicates,return=representation'
+        }),
+        body: JSON.stringify(payload)
+      }
+    )
+    const saved = Array.isArray(rows) ? rows[0] || payload : rows || payload
+    return res.json({ ok: true, segment: mapEngagementSegment(saved) })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: error?.status === 400 ? 'validation_error' : 'engagement_segment_error',
+        message: error instanceof Error ? error.message : 'Could not save engagement segment.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/engagement/summary', requireAdmin, async (req, res) => {
+  try {
+    const range = parseEngagementPeriod(req.query)
+    const shared = { p_start_at: range.startAt, p_end_at: range.endAt }
+    const [rankingRows, featureRows, trendRows] = await Promise.all([
+      callEngagementRpc('admin_engagement_ranking', shared),
+      callEngagementRpc('admin_engagement_feature_totals', shared),
+      callEngagementRpc('admin_engagement_trend', {
+        ...shared,
+        p_bucket: range.bucket,
+        p_timezone: range.timezone
+      })
+    ])
+    const ranking = (Array.isArray(rankingRows) ? rankingRows : []).map(mapEngagementRanking)
+    const features = (Array.isArray(featureRows) ? featureRows : []).map(mapEngagementFeatureTotal)
+    const trend = (Array.isArray(trendRows) ? trendRows : []).map(mapEngagementTrend)
+    const totals = ranking.reduce(
+      (result, actor) => ({
+        activeSeconds: result.activeSeconds + actor.activeSeconds,
+        segmentCount: result.segmentCount + actor.segmentCount,
+        sessionCount: result.sessionCount + actor.sessionCount,
+        actorCount: result.actorCount + 1
+      }),
+      { activeSeconds: 0, segmentCount: 0, sessionCount: 0, actorCount: 0 }
+    )
+    const featureGroups = aggregateEngagementSegments(
+      features,
+      (item) => item.feature,
+      (item) => item.feature
+    )
+    const activities = aggregateEngagementSegments(
+      features.filter((item) => item.activityId),
+      (item) => item.activityId,
+      (item) => item.label || item.activityId
+    )
+    const trackingSince = ranking
+      .map((actor) => actor.firstStartedAt)
+      .filter(Boolean)
+      .sort()[0] || null
+    return res.json({
+      period: range.period,
+      range: { startAt: range.startAt, endAt: range.endAt, timezone: range.timezone },
+      trackingSince,
+      totals: {
+        ...totals,
+        totalSeconds: totals.activeSeconds,
+        activeAccounts: totals.actorCount,
+        averageSeconds: totals.actorCount ? Math.round(totals.activeSeconds / totals.actorCount) : 0,
+        topFeature: featureGroups[0]?.key || ''
+      },
+      ranking,
+      rankings: ranking,
+      features,
+      featureGroups,
+      activities,
+      trend
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: error?.status === 400 ? 'validation_error' : 'admin_engagement_summary_error',
+        message: error instanceof Error ? error.message : 'Could not load engagement summary.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/engagement/actors/:actorKey', requireAdmin, async (req, res) => {
+  try {
+    const actorKey = String(req.params.actorKey || '').trim().slice(0, 160)
+    if (!actorKey) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'actorKey is required.' }
+      })
+    }
+    const range = parseEngagementPeriod(req.query)
+    const rows = await callEngagementRpc('admin_engagement_actor_journey', {
+      p_actor_key: actorKey,
+      p_start_at: range.startAt,
+      p_end_at: range.endAt
+    })
+    const records = Array.isArray(rows) ? rows : []
+    const first = records[0] || null
+    const journey = records.map(mapEngagementSegment)
+    const sessionIds = new Set(journey.map((segment) => segment.sessionId))
+    const features = aggregateEngagementSegments(
+      journey,
+      (segment) => segment.feature,
+      (segment) => segment.feature
+    )
+    const activities = aggregateEngagementSegments(
+      journey.filter((segment) => segment.activityId),
+      (segment) => segment.activityId,
+      (segment) => segment.label || segment.activityId
+    )
+    const trend = aggregateEngagementSegments(
+      journey,
+      (segment) => {
+        const date = new Date(segment.startedAt)
+        if (!Number.isFinite(date.getTime())) return ''
+        const parts = getZonedDateParts(date, range.timezone)
+        if (range.bucket === 'hour') {
+          return `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')}T${String(
+            parts.hour
+          ).padStart(2, '0')}:00`
+        }
+        if (range.bucket === 'month') return `${parts.year}-${String(parts.month).padStart(2, '0')}`
+        return `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')}`
+      },
+      (segment) => segment.startedAt
+    ).sort((left, right) => left.key.localeCompare(right.key))
+    const totalSeconds = journey.reduce((sum, segment) => sum + segment.activeSeconds, 0)
+    const chronological = [...journey].sort(
+      (left, right) => new Date(left.startedAt).getTime() - new Date(right.startedAt).getTime()
+    )
+    return res.json({
+      period: range.period,
+      range: { startAt: range.startAt, endAt: range.endAt, timezone: range.timezone },
+      actor: first
+        ? {
+            actorKey: String(first.actor_key || actorKey),
+            userId: first.user_id || null,
+            email: String(first.email || ''),
+            name: String(first.display_name || ''),
+            role: String(first.account_role || '')
+          }
+        : null,
+      totals: {
+        activeSeconds: totalSeconds,
+        totalSeconds,
+        segmentCount: journey.length,
+        sessionCount: sessionIds.size
+      },
+      totalSeconds,
+      firstActiveAt: chronological[0]?.startedAt || null,
+      lastActiveAt: chronological.at(-1)?.lastSeenAt || null,
+      features,
+      activities,
+      trend: trend.map((item) => ({ ...item, label: item.key })),
+      journey: chronological
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: error?.status === 400 ? 'validation_error' : 'admin_engagement_actor_error',
+        message: error instanceof Error ? error.message : 'Could not load actor engagement.'
       }
     })
   }

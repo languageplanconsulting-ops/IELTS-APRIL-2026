@@ -1,0 +1,938 @@
+[
+  {
+    "id": "gt-t2-dbv-1",
+    "vocab": [
+      {
+        "word": "older relative",
+        "thaiMeaning": "ญาติผู้สูงอายุ"
+      },
+      {
+        "word": "professional care home",
+        "thaiMeaning": "สถานดูแลผู้สูงอายุแบบมืออาชีพ"
+      },
+      {
+        "word": "familiar surroundings",
+        "thaiMeaning": "สภาพแวดล้อมที่คุ้นเคย"
+      },
+      {
+        "word": "limited mobility",
+        "thaiMeaning": "ข้อจำกัดในการเคลื่อนไหว"
+      },
+      {
+        "word": "visiting nurse",
+        "thaiMeaning": "พยาบาลเยี่ยมบ้าน"
+      },
+      {
+        "word": "trained staff",
+        "thaiMeaning": "เจ้าหน้าที่ที่ผ่านการฝึกอบรม"
+      },
+      {
+        "word": "constant attention",
+        "thaiMeaning": "การดูแลอย่างต่อเนื่อง"
+      },
+      {
+        "word": "cause distress",
+        "thaiMeaning": "ก่อให้เกิดความทุกข์ใจ"
+      },
+      {
+        "word": "specialist support",
+        "thaiMeaning": "การช่วยเหลือเฉพาะทาง"
+      },
+      {
+        "word": "complex medical needs",
+        "thaiMeaning": "ความต้องการทางการแพทย์ที่ซับซ้อน"
+      },
+      {
+        "word": "suitable home care",
+        "thaiMeaning": "การดูแลที่บ้านที่เหมาะสม"
+      },
+      {
+        "word": "daily company",
+        "thaiMeaning": "การมีคนอยู่ด้วยทุกวัน"
+      },
+      {
+        "word": "personal support",
+        "thaiMeaning": "การช่วยเหลือส่วนบุคคล"
+      },
+      {
+        "word": "shared routines",
+        "thaiMeaning": "กิจวัตรร่วมกัน"
+      },
+      {
+        "word": "prevent loneliness",
+        "thaiMeaning": "ป้องกันความเหงา"
+      },
+      {
+        "word": "health changes",
+        "thaiMeaning": "การเปลี่ยนแปลงด้านสุขภาพ"
+      },
+      {
+        "word": "enjoying family life",
+        "thaiMeaning": "เพลิดเพลินกับชีวิตครอบครัว"
+      },
+      {
+        "word": "making her own decisions",
+        "thaiMeaning": "ตัดสินใจด้วยตนเอง"
+      },
+      {
+        "word": "safe equipment",
+        "thaiMeaning": "อุปกรณ์ที่ปลอดภัย"
+      },
+      {
+        "word": "ordinary households",
+        "thaiMeaning": "ครัวเรือนทั่วไป"
+      },
+      {
+        "word": "serious medical conditions",
+        "thaiMeaning": "ภาวะทางการแพทย์ที่ร้ายแรง"
+      },
+      {
+        "word": "specialist knowledge",
+        "thaiMeaning": "ความรู้เฉพาะทาง"
+      },
+      {
+        "word": "supervised treatment",
+        "thaiMeaning": "การรักษาภายใต้การดูแล"
+      },
+      {
+        "word": "professional advice",
+        "thaiMeaning": "คำแนะนำจากผู้เชี่ยวชาญ"
+      },
+      {
+        "word": "loved ones",
+        "thaiMeaning": "คนที่รัก"
+      },
+      {
+        "word": "unfamiliar home",
+        "thaiMeaning": "บ้านที่ไม่คุ้นเคย"
+      },
+      {
+        "word": "constant medical attention",
+        "thaiMeaning": "การดูแลทางการแพทย์อย่างต่อเนื่อง"
+      },
+      {
+        "word": "older parent",
+        "thaiMeaning": "พ่อแม่ผู้สูงอายุ"
+      }
+    ]
+  },
+  {
+    "id": "gt-t2-dbv-2",
+    "vocab": [
+      {
+        "word": "educational trip",
+        "thaiMeaning": "ทัศนศึกษาเพื่อการเรียนรู้"
+      },
+      {
+        "word": "classroom resource",
+        "thaiMeaning": "ทรัพยากรในห้องเรียน"
+      },
+      {
+        "word": "practical equipment",
+        "thaiMeaning": "อุปกรณ์ภาคปฏิบัติ"
+      },
+      {
+        "word": "receive priority",
+        "thaiMeaning": "ได้รับความสำคัญก่อน"
+      },
+      {
+        "word": "school funding",
+        "thaiMeaning": "งบประมาณของโรงเรียน"
+      },
+      {
+        "word": "educational quality",
+        "thaiMeaning": "คุณภาพการศึกษา"
+      },
+      {
+        "word": "make lessons memorable",
+        "thaiMeaning": "ทำให้บทเรียนน่าจดจำ"
+      },
+      {
+        "word": "outside the classroom",
+        "thaiMeaning": "นอกห้องเรียน"
+      },
+      {
+        "word": "bring history and science into focus",
+        "thaiMeaning": "ทำให้ประวัติศาสตร์และวิทยาศาสตร์ชัดเจนขึ้น"
+      },
+      {
+        "word": "responsible public behaviour",
+        "thaiMeaning": "พฤติกรรมในที่สาธารณะอย่างรับผิดชอบ"
+      },
+      {
+        "word": "nature centre",
+        "thaiMeaning": "ศูนย์ธรรมชาติศึกษา"
+      },
+      {
+        "word": "observe animals",
+        "thaiMeaning": "สังเกตสัตว์"
+      },
+      {
+        "word": "previously seen only in books",
+        "thaiMeaning": "เคยเห็นแต่ในหนังสือเท่านั้น"
+      },
+      {
+        "word": "missing materials",
+        "thaiMeaning": "สื่อการเรียนที่ขาดหาย"
+      },
+      {
+        "word": "daily learning",
+        "thaiMeaning": "การเรียนรู้ในแต่ละวัน"
+      },
+      {
+        "word": "expensive trip",
+        "thaiMeaning": "ทริปที่มีค่าใช้จ่ายสูง"
+      },
+      {
+        "word": "language skills",
+        "thaiMeaning": "ทักษะภาษา"
+      },
+      {
+        "word": "reliable computers",
+        "thaiMeaning": "คอมพิวเตอร์ที่ใช้งานได้ดี"
+      },
+      {
+        "word": "research topics",
+        "thaiMeaning": "ค้นคว้าหัวข้อ"
+      },
+      {
+        "word": "practise digital tasks",
+        "thaiMeaning": "ฝึกงานดิจิทัล"
+      },
+      {
+        "word": "organising affordable trips",
+        "thaiMeaning": "จัดทริปในราคาที่เอื้อมถึง"
+      },
+      {
+        "word": "linked to the curriculum",
+        "thaiMeaning": "เชื่อมโยงกับหลักสูตร"
+      },
+      {
+        "word": "daily materials",
+        "thaiMeaning": "สื่อการเรียนประจำวัน"
+      },
+      {
+        "word": "create a foundation",
+        "thaiMeaning": "สร้างพื้นฐาน"
+      },
+      {
+        "word": "deepen knowledge",
+        "thaiMeaning": "เพิ่มพูนความรู้"
+      },
+      {
+        "word": "basic needs",
+        "thaiMeaning": "ความต้องการพื้นฐาน"
+      },
+      {
+        "word": "science equipment",
+        "thaiMeaning": "อุปกรณ์วิทยาศาสตร์"
+      },
+      {
+        "word": "reduced-price farm visit",
+        "thaiMeaning": "การเยี่ยมชมฟาร์มในราคาลด"
+      }
+    ]
+  },
+  {
+    "id": "gt-t2-dbv-3",
+    "vocab": [
+      {
+        "word": "town-centre planning",
+        "thaiMeaning": "การวางผังใจกลางเมือง"
+      },
+      {
+        "word": "pedestrian area",
+        "thaiMeaning": "เขตสำหรับคนเดินเท้า"
+      },
+      {
+        "word": "disabled visitor",
+        "thaiMeaning": "ผู้มาเยือนที่มีความพิการ"
+      },
+      {
+        "word": "transport alternative",
+        "thaiMeaning": "ทางเลือกด้านการเดินทาง"
+      },
+      {
+        "word": "community life",
+        "thaiMeaning": "ชีวิตชุมชน"
+      },
+      {
+        "word": "greener public areas",
+        "thaiMeaning": "พื้นที่สาธารณะสีเขียวมากขึ้น"
+      },
+      {
+        "word": "parks and pedestrian spaces",
+        "thaiMeaning": "สวนสาธารณะและพื้นที่เดินเท้า"
+      },
+      {
+        "word": "depend on cars",
+        "thaiMeaning": "พึ่งพารถยนต์"
+      },
+      {
+        "word": "older residents",
+        "thaiMeaning": "ผู้อยู่อาศัยสูงอายุ"
+      },
+      {
+        "word": "public transport",
+        "thaiMeaning": "ระบบขนส่งสาธารณะ"
+      },
+      {
+        "word": "heavy shopping",
+        "thaiMeaning": "การซื้อของจำนวนมาก"
+      },
+      {
+        "word": "short-stay spaces",
+        "thaiMeaning": "ที่จอดรถระยะสั้น"
+      },
+      {
+        "word": "collect groceries",
+        "thaiMeaning": "ไปรับของชำ"
+      },
+      {
+        "word": "accessible parking",
+        "thaiMeaning": "ที่จอดรถที่เข้าถึงได้"
+      },
+      {
+        "word": "visit services independently",
+        "thaiMeaning": "ใช้บริการได้ด้วยตนเอง"
+      },
+      {
+        "word": "pedestrian streets",
+        "thaiMeaning": "ถนนสำหรับคนเดินเท้า"
+      },
+      {
+        "word": "parked vehicles",
+        "thaiMeaning": "ยานพาหนะที่จอดอยู่"
+      },
+      {
+        "word": "fewer cars",
+        "thaiMeaning": "รถยนต์น้อยลง"
+      },
+      {
+        "word": "traffic-free street",
+        "thaiMeaning": "ถนนที่ไม่มีรถวิ่ง"
+      },
+      {
+        "word": "encourage visitors",
+        "thaiMeaning": "ดึงดูดผู้มาเยือน"
+      },
+      {
+        "word": "nearby cafés and shops",
+        "thaiMeaning": "คาเฟ่และร้านค้าใกล้เคียง"
+      },
+      {
+        "word": "central streets",
+        "thaiMeaning": "ถนนใจกลางเมือง"
+      },
+      {
+        "word": "green spaces",
+        "thaiMeaning": "พื้นที่สีเขียว"
+      },
+      {
+        "word": "town’s edge",
+        "thaiMeaning": "ชานเมือง / ขอบเมือง"
+      },
+      {
+        "word": "keeps services accessible",
+        "thaiMeaning": "ทำให้บริการเข้าถึงได้"
+      },
+      {
+        "word": "healthy shared place",
+        "thaiMeaning": "พื้นที่ร่วมที่ใช้เพื่อสุขภาพ"
+      },
+      {
+        "word": "edge car park",
+        "thaiMeaning": "ที่จอดรถชานเมือง"
+      },
+      {
+        "word": "shuttle bus",
+        "thaiMeaning": "รถรับส่ง"
+      }
+    ]
+  },
+  {
+    "id": "gt-t2-dbv-4",
+    "vocab": [
+      {
+        "word": "paid hours",
+        "thaiMeaning": "ชั่วโมงทำงานที่ได้รับค่าจ้าง"
+      },
+      {
+        "word": "present employer",
+        "thaiMeaning": "นายจ้างปัจจุบัน"
+      },
+      {
+        "word": "accurate instructions",
+        "thaiMeaning": "คำแนะนำที่ถูกต้อง"
+      },
+      {
+        "word": "workplace training",
+        "thaiMeaning": "การฝึกอบรมในที่ทำงาน"
+      },
+      {
+        "word": "employee development",
+        "thaiMeaning": "การพัฒนาพนักงาน"
+      },
+      {
+        "word": "required job training",
+        "thaiMeaning": "การฝึกอบรมที่จำเป็นต่องาน"
+      },
+      {
+        "word": "study privately",
+        "thaiMeaning": "เรียนด้วยตนเองนอกเวลา"
+      },
+      {
+        "word": "personal career plans",
+        "thaiMeaning": "แผนอาชีพส่วนตัว"
+      },
+      {
+        "word": "evening courses",
+        "thaiMeaning": "คอร์สเรียนตอนเย็น"
+      },
+      {
+        "word": "changing companies",
+        "thaiMeaning": "ย้ายบริษัท"
+      },
+      {
+        "word": "entering another field",
+        "thaiMeaning": "เข้าสู่สายงานอื่น"
+      },
+      {
+        "word": "weekend language course",
+        "thaiMeaning": "คอร์สภาษาวันหยุดสุดสัปดาห์"
+      },
+      {
+        "word": "future job abroad",
+        "thaiMeaning": "งานในต่างประเทศในอนาคต"
+      },
+      {
+        "word": "paid training",
+        "thaiMeaning": "การฝึกอบรมที่ได้รับค่าจ้าง"
+      },
+      {
+        "word": "perform existing work",
+        "thaiMeaning": "ปฏิบัติงานปัจจุบัน"
+      },
+      {
+        "word": "safely and accurately",
+        "thaiMeaning": "อย่างปลอดภัยและถูกต้อง"
+      },
+      {
+        "word": "required systems",
+        "thaiMeaning": "ระบบที่จำเป็นต่องาน"
+      },
+      {
+        "word": "introducing machinery",
+        "thaiMeaning": "การนำเครื่องจักรมาใช้"
+      },
+      {
+        "word": "supervised practice",
+        "thaiMeaning": "การฝึกภายใต้การดูแล"
+      },
+      {
+        "word": "avoids accidents",
+        "thaiMeaning": "หลีกเลี่ยงอุบัติเหตุ"
+      },
+      {
+        "word": "broader development",
+        "thaiMeaning": "การพัฒนาในวงกว้างขึ้น"
+      },
+      {
+        "word": "workplace knowledge",
+        "thaiMeaning": "ความรู้ที่ใช้ในการทำงาน"
+      },
+      {
+        "word": "personal time",
+        "thaiMeaning": "เวลาส่วนตัว"
+      },
+      {
+        "word": "company software training",
+        "thaiMeaning": "การฝึกใช้ซอฟต์แวร์ของบริษัท"
+      },
+      {
+        "word": "optional photography qualification",
+        "thaiMeaning": "คุณวุฒิทางเลือกด้านการถ่ายภาพ"
+      },
+      {
+        "word": "optional qualifications",
+        "thaiMeaning": "คุณวุฒิทางเลือก"
+      },
+      {
+        "word": "office worker",
+        "thaiMeaning": "พนักงานออฟฟิศ"
+      },
+      {
+        "word": "existing work safely",
+        "thaiMeaning": "ทำงานปัจจุบันอย่างปลอดภัย"
+      }
+    ]
+  },
+  {
+    "id": "gt-t2-ad-1",
+    "vocab": [
+      {
+        "word": "retirement age",
+        "thaiMeaning": "อายุเกษียณ"
+      },
+      {
+        "word": "social contact",
+        "thaiMeaning": "การติดต่อทางสังคม"
+      },
+      {
+        "word": "practical knowledge",
+        "thaiMeaning": "ความรู้เชิงปฏิบัติ"
+      },
+      {
+        "word": "adequate pension",
+        "thaiMeaning": "เงินบำนาญที่เพียงพอ"
+      },
+      {
+        "word": "genuine choice",
+        "thaiMeaning": "ทางเลือกอย่างแท้จริง"
+      },
+      {
+        "word": "suitable duties",
+        "thaiMeaning": "หน้าที่ที่เหมาะสม"
+      },
+      {
+        "word": "extra income",
+        "thaiMeaning": "รายได้เสริม"
+      },
+      {
+        "word": "living costs rise",
+        "thaiMeaning": "ค่าครองชีพที่สูงขึ้น"
+      },
+      {
+        "word": "older receptionist",
+        "thaiMeaning": "พนักงานต้อนรับสูงอายุ"
+      },
+      {
+        "word": "remaining active",
+        "thaiMeaning": "คงความกระตือรือร้น"
+      },
+      {
+        "word": "speaking with customers",
+        "thaiMeaning": "พูดคุยกับลูกค้า"
+      },
+      {
+        "word": "experienced staff",
+        "thaiMeaning": "พนักงานที่มีประสบการณ์"
+      },
+      {
+        "word": "younger colleagues",
+        "thaiMeaning": "เพื่อนร่วมงานที่อายุน้อยกว่า"
+      },
+      {
+        "word": "senior mechanic",
+        "thaiMeaning": "ช่างเครื่องอาวุโส"
+      },
+      {
+        "word": "full working week",
+        "thaiMeaning": "สัปดาห์การทำงานเต็มเวลา"
+      },
+      {
+        "word": "declining health",
+        "thaiMeaning": "สุขภาพที่ถดถอย"
+      },
+      {
+        "word": "physical duties",
+        "thaiMeaning": "งานที่ใช้แรงกาย"
+      },
+      {
+        "word": "construction worker",
+        "thaiMeaning": "คนงานก่อสร้าง"
+      },
+      {
+        "word": "back problems",
+        "thaiMeaning": "ปัญหาหลัง"
+      },
+      {
+        "word": "tiring position",
+        "thaiMeaning": "งานที่เหนื่อยล้า"
+      },
+      {
+        "word": "cover food and rent",
+        "thaiMeaning": "จ่ายค่าอาหารและค่าเช่า"
+      },
+      {
+        "word": "reduced hours",
+        "thaiMeaning": "ชั่วโมงทำงานที่ลดลง"
+      },
+      {
+        "word": "lighter duties",
+        "thaiMeaning": "หน้าที่ที่เบากว่า"
+      },
+      {
+        "word": "older workers",
+        "thaiMeaning": "แรงงานสูงอายุ"
+      },
+      {
+        "word": "two-day training role",
+        "thaiMeaning": "งานฝึกอบรมสองวันต่อสัปดาห์"
+      },
+      {
+        "word": "financial pressure",
+        "thaiMeaning": "แรงกดดันด้านการเงิน"
+      },
+      {
+        "word": "shared experience",
+        "thaiMeaning": "ประสบการณ์ที่แบ่งปัน"
+      },
+      {
+        "word": "keep useful experience",
+        "thaiMeaning": "รักษาประสบการณ์ที่มีประโยชน์"
+      }
+    ]
+  },
+  {
+    "id": "gt-t2-ad-2",
+    "vocab": [
+      {
+        "word": "local home",
+        "thaiMeaning": "บ้านของคนท้องถิ่น"
+      },
+      {
+        "word": "holiday destination",
+        "thaiMeaning": "จุดหมายปลายทางสำหรับวันหยุด"
+      },
+      {
+        "word": "short-term accommodation",
+        "thaiMeaning": "ที่พักระยะสั้น"
+      },
+      {
+        "word": "housing cost",
+        "thaiMeaning": "ค่าที่อยู่อาศัย"
+      },
+      {
+        "word": "local people’s homes",
+        "thaiMeaning": "บ้านของคนท้องถิ่น"
+      },
+      {
+        "word": "local authorities",
+        "thaiMeaning": "หน่วยงานท้องถิ่น"
+      },
+      {
+        "word": "clear rules",
+        "thaiMeaning": "กฎที่ชัดเจน"
+      },
+      {
+        "word": "nearby cafés and shops",
+        "thaiMeaning": "คาเฟ่และร้านค้าใกล้เคียง"
+      },
+      {
+        "word": "weekend visitors",
+        "thaiMeaning": "ผู้มาเยือนช่วงสุดสัปดาห์"
+      },
+      {
+        "word": "neighbourhood restaurant",
+        "thaiMeaning": "ร้านอาหารในละแวกบ้าน"
+      },
+      {
+        "word": "local budgets",
+        "thaiMeaning": "งบประมาณของคนท้องถิ่น"
+      },
+      {
+        "word": "personal view of daily life",
+        "thaiMeaning": "มุมมองส่วนตัวต่อชีวิตประจำวัน"
+      },
+      {
+        "word": "busy streets",
+        "thaiMeaning": "ถนนที่แออัด"
+      },
+      {
+        "word": "traditional food",
+        "thaiMeaning": "อาหารพื้นบ้าน"
+      },
+      {
+        "word": "quiet market",
+        "thaiMeaning": "ตลาดเงียบสงบ"
+      },
+      {
+        "word": "late arrivals",
+        "thaiMeaning": "การมาถึงดึก"
+      },
+      {
+        "word": "long-term rental",
+        "thaiMeaning": "การเช่าระยะยาว"
+      },
+      {
+        "word": "holiday accommodation",
+        "thaiMeaning": "ที่พักสำหรับนักท่องเที่ยว"
+      },
+      {
+        "word": "lose sleep",
+        "thaiMeaning": "นอนไม่หลับ"
+      },
+      {
+        "word": "limit rental days",
+        "thaiMeaning": "จำกัดจำนวนวันที่ให้เช่า"
+      },
+      {
+        "word": "require fire checks",
+        "thaiMeaning": "กำหนดให้ตรวจระบบดับเพลิง"
+      },
+      {
+        "word": "register hosts",
+        "thaiMeaning": "ขึ้นทะเบียนผู้ให้เช่า"
+      },
+      {
+        "word": "licensed host",
+        "thaiMeaning": "เจ้าของบ้านที่ได้รับอนุญาต"
+      },
+      {
+        "word": "firm rules",
+        "thaiMeaning": "กฎที่ชัดเจนเข้มงวด"
+      },
+      {
+        "word": "neighbourhood noise",
+        "thaiMeaning": "เสียงรบกวนในละแวกบ้าน"
+      },
+      {
+        "word": "local income",
+        "thaiMeaning": "รายได้ของคนท้องถิ่น"
+      },
+      {
+        "word": "richer travel experiences",
+        "thaiMeaning": "ประสบการณ์ท่องเที่ยวที่สมบูรณ์ขึ้น"
+      },
+      {
+        "word": "unchecked rooms",
+        "thaiMeaning": "ห้องที่ไม่ได้ตรวจสอบ"
+      }
+    ]
+  },
+  {
+    "id": "gt-t2-ad-3",
+    "vocab": [
+      {
+        "word": "self-service technology",
+        "thaiMeaning": "เทคโนโลยีบริการตนเอง"
+      },
+      {
+        "word": "automatic checkout",
+        "thaiMeaning": "จุดชำระเงินอัตโนมัติ"
+      },
+      {
+        "word": "reliable internet",
+        "thaiMeaning": "อินเทอร์เน็ตที่เชื่อถือได้"
+      },
+      {
+        "word": "trained staff",
+        "thaiMeaning": "เจ้าหน้าที่ที่ผ่านการฝึกอบรม"
+      },
+      {
+        "word": "public services",
+        "thaiMeaning": "บริการสาธารณะ"
+      },
+      {
+        "word": "human help",
+        "thaiMeaning": "ความช่วยเหลือจากคน"
+      },
+      {
+        "word": "self-service machines",
+        "thaiMeaning": "เครื่องบริการตนเอง"
+      },
+      {
+        "word": "simple tasks",
+        "thaiMeaning": "งานง่าย ๆ"
+      },
+      {
+        "word": "limited office hours",
+        "thaiMeaning": "เวลาทำการที่จำกัด"
+      },
+      {
+        "word": "buy a ticket by phone",
+        "thaiMeaning": "ซื้อตั๋วผ่านโทรศัพท์"
+      },
+      {
+        "word": "repetitive transactions",
+        "thaiMeaning": "ธุรกรรมที่ซ้ำซาก"
+      },
+      {
+        "word": "patience and judgement",
+        "thaiMeaning": "ความอดทนและการตัดสินใจ"
+      },
+      {
+        "word": "borrow books",
+        "thaiMeaning": "ยืมหนังสือ"
+      },
+      {
+        "word": "personal support",
+        "thaiMeaning": "การช่วยเหลือส่วนบุคคล"
+      },
+      {
+        "word": "disabled users",
+        "thaiMeaning": "ผู้ใช้ที่มีความพิการ"
+      },
+      {
+        "word": "reject payment",
+        "thaiMeaning": "ปฏิเสธการชำระเงิน"
+      },
+      {
+        "word": "unusual situations",
+        "thaiMeaning": "สถานการณ์ผิดปกติ"
+      },
+      {
+        "word": "patient explanation",
+        "thaiMeaning": "คำอธิบายอย่างอดทน"
+      },
+      {
+        "word": "online form",
+        "thaiMeaning": "แบบฟอร์มออนไลน์"
+      },
+      {
+        "word": "digital systems",
+        "thaiMeaning": "ระบบดิจิทัล"
+      },
+      {
+        "word": "telephone support",
+        "thaiMeaning": "การสนับสนุนทางโทรศัพท์"
+      },
+      {
+        "word": "self-checkouts",
+        "thaiMeaning": "จุดชำระเงินด้วยตนเอง"
+      },
+      {
+        "word": "staffed desk",
+        "thaiMeaning": "เคาน์เตอร์ที่มีเจ้าหน้าที่"
+      },
+      {
+        "word": "technical problems",
+        "thaiMeaning": "ปัญหาทางเทคนิค"
+      },
+      {
+        "word": "personal help",
+        "thaiMeaning": "ความช่วยเหลือแบบพบคน"
+      },
+      {
+        "word": "digital exclusion",
+        "thaiMeaning": "การถูกตัดออกจากโลกดิจิทัล"
+      },
+      {
+        "word": "technical failures",
+        "thaiMeaning": "ความล้มเหลวทางเทคนิค"
+      },
+      {
+        "word": "faster service",
+        "thaiMeaning": "บริการที่รวดเร็วขึ้น"
+      }
+    ]
+  },
+  {
+    "id": "gt-t2-ad-4",
+    "vocab": [
+      {
+        "word": "unused urban land",
+        "thaiMeaning": "ที่ดินในเมืองที่ไม่ได้ใช้"
+      },
+      {
+        "word": "community garden",
+        "thaiMeaning": "สวนชุมชน"
+      },
+      {
+        "word": "fresh food",
+        "thaiMeaning": "อาหารสด"
+      },
+      {
+        "word": "gentle exercise",
+        "thaiMeaning": "การออกกำลังกายเบา ๆ"
+      },
+      {
+        "word": "share tools",
+        "thaiMeaning": "ใช้เครื่องมือร่วมกัน"
+      },
+      {
+        "word": "neighbourly contact",
+        "thaiMeaning": "ความสัมพันธ์ฉันเพื่อนบ้าน"
+      },
+      {
+        "word": "local residents",
+        "thaiMeaning": "ผู้อยู่อาศัยในท้องถิ่น"
+      },
+      {
+        "word": "clear and fair rules",
+        "thaiMeaning": "กฎที่ชัดเจนและเป็นธรรม"
+      },
+      {
+        "word": "empty land",
+        "thaiMeaning": "ที่ดินว่างเปล่า"
+      },
+      {
+        "word": "neglected plot",
+        "thaiMeaning": "แปลงที่ดินที่ถูกปล่อยร้าง"
+      },
+      {
+        "word": "rubbish and weeds",
+        "thaiMeaning": "ขยะและวัชพืช"
+      },
+      {
+        "word": "exchange advice",
+        "thaiMeaning": "แลกเปลี่ยนคำแนะนำ"
+      },
+      {
+        "word": "build friendships",
+        "thaiMeaning": "สร้างมิตรภาพ"
+      },
+      {
+        "word": "common project",
+        "thaiMeaning": "โครงการร่วมกัน"
+      },
+      {
+        "word": "experienced gardener",
+        "thaiMeaning": "นักจัดสวนที่มีประสบการณ์"
+      },
+      {
+        "word": "plant seeds",
+        "thaiMeaning": "หว่านเมล็ด"
+      },
+      {
+        "word": "new resident",
+        "thaiMeaning": "ผู้อยู่อาศัยใหม่"
+      },
+      {
+        "word": "water costs",
+        "thaiMeaning": "ค่าน้ำ"
+      },
+      {
+        "word": "untidy storage",
+        "thaiMeaning": "การเก็บของรกไม่เป็นระเบียบ"
+      },
+      {
+        "word": "regular care",
+        "thaiMeaning": "การดูแลอย่างสม่ำเสมอ"
+      },
+      {
+        "word": "unpleasant tasks",
+        "thaiMeaning": "งานที่ไม่น่าพึงพอใจ"
+      },
+      {
+        "word": "written rules",
+        "thaiMeaning": "กฎที่เป็นลายลักษณ์อักษร"
+      },
+      {
+        "word": "assign duties",
+        "thaiMeaning": "มอบหมายหน้าที่"
+      },
+      {
+        "word": "schedule for watering",
+        "thaiMeaning": "ตารางการรดน้ำ"
+      },
+      {
+        "word": "maintenance costs",
+        "thaiMeaning": "ค่าบำรุงรักษา"
+      },
+      {
+        "word": "local disagreements",
+        "thaiMeaning": "ความขัดแย้งในท้องถิ่น"
+      },
+      {
+        "word": "greener land",
+        "thaiMeaning": "พื้นที่สีเขียวมากขึ้น"
+      },
+      {
+        "word": "divide costs",
+        "thaiMeaning": "แบ่งค่าใช้จ่าย"
+      }
+    ]
+  }
+]

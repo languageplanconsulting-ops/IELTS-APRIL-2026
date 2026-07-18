@@ -1,0 +1,1288 @@
+export type GeneralTask1Register = 'formal' | 'semi-formal' | 'informal'
+
+export type GeneralTask1SentencePattern =
+  | 'sv-gerund'
+  | 'sv-which'
+  | 'coordinating'
+  | 'subordinator-middle'
+  | 'subordinator-front'
+
+export type GeneralTask1Sentence = {
+  text: string
+  transition: string
+  pattern: GeneralTask1SentencePattern
+}
+
+export type GeneralTask1Paragraph = {
+  bulletIndex: 0 | 1 | 2
+  label: string
+  sentences: readonly GeneralTask1Sentence[]
+}
+
+export type GeneralTask1PracticalVocab = {
+  phrase: string
+  thaiMeaning: string
+}
+
+export type GeneralTask1Prompt = {
+  id: string
+  number: number
+  register: GeneralTask1Register
+  title: string
+  taskInstruction: 'You should spend about 20 minutes on this task.'
+  situation: string
+  recipient: string
+  letterInstruction: string
+  greeting: `Dear ${string},`
+  bullets: readonly [string, string, string]
+  paragraphs: readonly [GeneralTask1Paragraph, GeneralTask1Paragraph, GeneralTask1Paragraph]
+  minimumWordsInstruction: 'Write at least 150 words.'
+  addressInstruction: 'You do NOT need to write any addresses.'
+  beginInstruction: `Begin your letter as follows: Dear ${string},`
+  signoff: string
+  senderName: string
+  practicalVocab: readonly GeneralTask1PracticalVocab[]
+}
+
+/** @deprecated use GeneralTask1Prompt */
+export type GeneralTask1InformalPrompt = GeneralTask1Prompt & { register: 'informal' }
+
+export type RegisterGuidance = {
+  rulesLabel: string
+  wordTarget: string
+  rules: readonly string[]
+  classificationCorrect: string
+  classificationWrong: string
+}
+
+const REGISTER_GUIDANCE: Record<GeneralTask1Register, RegisterGuidance> = {
+  informal: {
+    rulesLabel: 'INFORMAL LETTER RULES',
+    wordTarget: '160–180 words · 3 body paragraphs · 1 bullet per paragraph',
+    rules: [
+      'ใช้ contractions เช่น I’m, I’ve, I’d, can’t, don’t และ won’t',
+      'เน้น and / but / so / so that แทนคำเชื่อมทางการอย่าง therefore หรือ moreover',
+      'ทุกประโยคเริ่มด้วย transition ซึ่งต้องลากจากด้านขวา',
+      'S + V, V-ing · S + V, which + V · S + V, and/but/so + S + V',
+      'ปิดท้ายด้วยคำเป็นกันเอง เช่น Take care, / Lots of love,'
+    ],
+    classificationCorrect:
+      'ถูกต้อง — ผู้รับเป็นเพื่อนหรือคนในครอบครัว จึงต้องใช้ Informal tone, contractions และภาษาที่เป็นกันเอง',
+    classificationWrong:
+      'ยังไม่ถูก — สังเกตคำว่า “friend” และการขึ้นต้นด้วยชื่อจริง จดหมายฉบับนี้ต้องเป็น Informal แล้วลองอีกครั้ง'
+  },
+  'semi-formal': {
+    rulesLabel: 'SEMI-FORMAL LETTER RULES',
+    wordTarget: '160–180 words · 3 body paragraphs · 1 bullet per paragraph',
+    rules: [
+      'รู้จักผู้รับแต่ยังต้องสุภาพ จึงหลีกเลี่ยง contractions เกือบทั้งหมด',
+      'ใช้คำเชื่อมกึ่งทางการ เช่น In addition, Moreover, However, Furthermore',
+      'ขอร้องอย่างสุภาพด้วย If possible, Of course, I would be grateful',
+      'ทุกประโยคเริ่มด้วย transition ซึ่งต้องลากจากด้านขวา',
+      'ปิดท้ายด้วย Kind regards, / Best wishes, / Best regards,'
+    ],
+    classificationCorrect:
+      'ถูกต้อง — คุณรู้จักผู้รับ (ครู เจ้าของบ้าน เพื่อนร่วมงาน) แต่ความสัมพันธ์ยังเป็นทางการ จึงใช้ Semi-formal: สุภาพ ไม่ใช้ contractions พร่ำเพรื่อ',
+    classificationWrong:
+      'ยังไม่ถูก — ผู้รับเป็นคนที่คุณรู้จักโดยระบุชื่อ/ตำแหน่ง แต่ต้องรักษามารยาท จดหมายนี้จึงเป็น Semi-formal'
+  },
+  formal: {
+    rulesLabel: 'FORMAL LETTER RULES',
+    wordTarget: '160–180 words · 3 body paragraphs · 1 bullet per paragraph',
+    rules: [
+      'ห้ามใช้ contractions — เขียนเต็มเสมอ (I am, do not, cannot)',
+      'ใช้คำเชื่อมทางการ เช่น Therefore, However, Furthermore, Consequently',
+      'ใช้สำนวนสุภาพทางการ เช่น I am writing to, I would be grateful, at your earliest convenience',
+      'ทุกประโยคเริ่มด้วย transition ซึ่งต้องลากจากด้านขวา',
+      'ขึ้นต้น Dear Sir or Madam, และปิดท้าย Yours faithfully,'
+    ],
+    classificationCorrect:
+      'ถูกต้อง — คุณไม่รู้จักผู้รับเป็นการส่วนตัว (บริษัท เทศบาล นายจ้าง) จึงต้องใช้ Formal: ภาษาทางการ ไม่มี contractions และปิดท้าย Yours faithfully',
+    classificationWrong:
+      'ยังไม่ถูก — จดหมายขึ้นต้น Dear Sir or Madam และเขียนถึงองค์กรที่ไม่รู้จักเป็นการส่วนตัว จึงต้องเป็น Formal'
+  }
+}
+
+export const getRegisterGuidance = (register: GeneralTask1Register): RegisterGuidance =>
+  REGISTER_GUIDANCE[register]
+
+const COMMON_INSTRUCTIONS = {
+  taskInstruction: 'You should spend about 20 minutes on this task.',
+  minimumWordsInstruction: 'Write at least 150 words.',
+  addressInstruction: 'You do NOT need to write any addresses.'
+} as const
+
+export const GENERAL_TASK1_INFORMAL_PROMPTS = [
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-informal-moving-home',
+    number: 1,
+    register: 'informal',
+    title: 'A New Home in Another City',
+    situation:
+      'You have recently moved to a new city and are settling into your new home. You would like a friend to come and stay with you.',
+    recipient: 'friend',
+    letterInstruction: 'Write a letter to your friend. In your letter:',
+    greeting: 'Dear Alex,',
+    bullets: [
+      'explain why you moved to the new city',
+      'describe your new home and the area around it',
+      'invite your friend to visit and suggest what you could do together'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Reason for moving',
+        sentences: [
+          {
+            text: 'First of all, I moved to Bristol because I got the design job I told you about.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Honestly, I couldn’t turn the offer down, and I’m already enjoying the friendly team.',
+            transition: 'Honestly,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Also, I’ve wanted a fresh start for ages, making this move feel just right.',
+            transition: 'Also,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'The home and neighbourhood',
+        sentences: [
+          {
+            text: 'By the way, I’m renting a bright little flat, which has a spare room for guests.',
+            transition: 'By the way,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Luckily, it’s beside a quiet park, so I can walk there after work.',
+            transition: 'Luckily,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'However, I can’t see the city centre from my window, although the bus only takes ten minutes.',
+            transition: 'However,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'For example, there’s a friendly café across the road, so I’ve already found a good place for breakfast.',
+            transition: 'For example,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Invitation and plans',
+        sentences: [
+          {
+            text: 'Anyway, I’d love you to stay next month because I’ll have finished unpacking by then.',
+            transition: 'Anyway,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Most importantly, we’ll try the street market, and we’ll take a boat trip around the harbour.',
+            transition: 'Most importantly,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Finally, I won’t plan every minute, giving us plenty of time to relax and catch up.',
+            transition: 'Finally,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Alex,',
+    signoff: 'Take care,',
+    senderName: 'Sam',
+    practicalVocab: [
+      { phrase: 'settle into a new home', thaiMeaning: 'ปรับตัวเข้ากับบ้านใหม่' },
+      { phrase: 'turn an offer down', thaiMeaning: 'ปฏิเสธข้อเสนอ' },
+      { phrase: 'fresh start', thaiMeaning: 'การเริ่มต้นใหม่' },
+      { phrase: 'spare room', thaiMeaning: 'ห้องว่างสำหรับแขก' },
+      { phrase: 'finish unpacking', thaiMeaning: 'จัดของออกจากกล่องเสร็จ' },
+      { phrase: 'catch up', thaiMeaning: 'พูดคุยอัปเดตชีวิตกัน' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-informal-missed-celebration',
+    number: 2,
+    register: 'informal',
+    title: 'Missing a Friend’s Celebration',
+    situation:
+      'Your friend recently had a special celebration, but you were unable to attend. You would like to arrange another time to meet.',
+    recipient: 'friend',
+    letterInstruction: 'Write a letter to your friend. In your letter:',
+    greeting: 'Dear Mia,',
+    bullets: [
+      'explain why you could not attend the celebration',
+      'say how you felt about missing it',
+      'suggest another time to meet and what you could do'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Reason for missing the event',
+        sentences: [
+          {
+            text: 'First of all, I couldn’t come to your birthday dinner because I came down with a nasty cold.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Honestly, I’d put on my new jacket, but I suddenly started feeling awful that afternoon.',
+            transition: 'Honestly,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Luckily, I stayed at home, avoiding the risk of passing it to everyone.',
+            transition: 'Luckily,',
+            pattern: 'sv-gerund'
+          },
+          {
+            text: 'By the way, my doctor told me to rest, so I couldn’t even leave the house to buy medicine.',
+            transition: 'By the way,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Feelings about missing it',
+        sentences: [
+          {
+            text: 'However, I’m really sorry I missed your big evening, which sounded like great fun.',
+            transition: 'However,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Also, I felt terrible when I saw the photos because everyone looked so happy together.',
+            transition: 'Also,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Most importantly, I hope you don’t think I forgot, and I’ve still got your present here.',
+            transition: 'Most importantly,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'A new meeting',
+        sentences: [
+          {
+            text: 'Anyway, I’d like to see you this Saturday, so we can have our own small celebration.',
+            transition: 'Anyway,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'For example, we could meet at that Italian café, which serves the chocolate cake you love.',
+            transition: 'For example,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Finally, I’ll book us a table when you tell me what time suits you.',
+            transition: 'Finally,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Mia,',
+    signoff: 'Lots of love,',
+    senderName: 'Jamie',
+    practicalVocab: [
+      { phrase: 'come down with a cold', thaiMeaning: 'เริ่มป่วยเป็นหวัด' },
+      { phrase: 'feel awful', thaiMeaning: 'รู้สึกแย่มากหรือไม่สบายมาก' },
+      { phrase: 'pass it to someone', thaiMeaning: 'แพร่เชื้อให้ใครบางคน' },
+      { phrase: 'big evening', thaiMeaning: 'ค่ำคืนสำคัญ' },
+      { phrase: 'small celebration', thaiMeaning: 'งานฉลองเล็ก ๆ' },
+      { phrase: 'book a table', thaiMeaning: 'จองโต๊ะ' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-informal-workplace-advice',
+    number: 3,
+    register: 'informal',
+    title: 'Advice About a Workplace Problem',
+    situation:
+      'A friend has told you about a problem with a colleague at work. You had a similar experience in the past.',
+    recipient: 'friend',
+    letterInstruction: 'Write a letter to your friend. In your letter:',
+    greeting: 'Dear Ben,',
+    bullets: [
+      'describe the similar workplace problem you experienced',
+      'explain what you did to improve the situation',
+      'give your friend advice about dealing with the problem'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'A similar experience',
+        sentences: [
+          {
+            text: 'First of all, I understand your problem because I worked with someone who kept taking credit for my ideas.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Honestly, I couldn’t say anything during meetings, and I’d leave work feeling angry and ignored.',
+            transition: 'Honestly,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Also, he’d interrupt me every time, making it hard for our manager to hear my full plan.',
+            transition: 'Also,',
+            pattern: 'sv-gerund'
+          },
+          {
+            text: 'For example, he’d repeat my suggestions later, which made them sound like his own.',
+            transition: 'For example,',
+            pattern: 'sv-which'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'What helped',
+        sentences: [
+          {
+            text: 'Luckily, I started writing down each example, which gave me clear facts instead of guesses.',
+            transition: 'Luckily,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Then, I spoke to him privately because I didn’t want to embarrass him in front of the team.',
+            transition: 'Then,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Afterwards, he apologised, and we agreed to share our ideas more fairly in meetings.',
+            transition: 'Afterwards,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Advice',
+        sentences: [
+          {
+            text: 'Anyway, I’d keep a short record of each problem, so you’ll have specific examples to discuss.',
+            transition: 'Anyway,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Most importantly, talk calmly to your colleague when you’re both free.',
+            transition: 'Most importantly,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Finally, you can ask your manager for help, which won’t seem unreasonable if nothing changes.',
+            transition: 'Finally,',
+            pattern: 'sv-which'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Ben,',
+    signoff: 'All the best,',
+    senderName: 'Chris',
+    practicalVocab: [
+      { phrase: 'take credit for an idea', thaiMeaning: 'รับความดีความชอบจากความคิดของผู้อื่น' },
+      { phrase: 'interrupt someone', thaiMeaning: 'พูดแทรกใครบางคน' },
+      { phrase: 'write down an example', thaiMeaning: 'จดตัวอย่างไว้' },
+      { phrase: 'speak privately', thaiMeaning: 'พูดคุยเป็นการส่วนตัว' },
+      { phrase: 'keep a record', thaiMeaning: 'เก็บบันทึก' },
+      { phrase: 'ask a manager for help', thaiMeaning: 'ขอความช่วยเหลือจากผู้จัดการ' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-informal-left-watch',
+    number: 4,
+    register: 'informal',
+    title: 'A Watch Left at a Friend’s Home',
+    situation:
+      'You recently stayed at a friend’s home and think you left your watch there after your visit.',
+    recipient: 'friend',
+    letterInstruction: 'Write a letter to your friend. In your letter:',
+    greeting: 'Dear Lily,',
+    bullets: [
+      'describe the watch and say where you think you left it',
+      'explain why the watch is important to you',
+      'ask your friend to look for it and suggest how it can be returned'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Description and location',
+        sentences: [
+          {
+            text: 'First of all, I think I left my watch at your place when I stayed last weekend.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'By the way, it’s a small silver watch, which has a dark blue leather strap.',
+            transition: 'By the way,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Honestly, I’d taken it off beside the bathroom sink, and I probably forgot to put it back on.',
+            transition: 'Honestly,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Why it matters',
+        sentences: [
+          {
+            text: 'Most importantly, I can’t replace it because my grandparents gave it to me for my eighteenth birthday.',
+            transition: 'Most importantly,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Also, I’ve worn it on every family holiday, making it full of lovely memories.',
+            transition: 'Also,',
+            pattern: 'sv-gerund'
+          },
+          {
+            text: 'However, it isn’t expensive, but I’d be really upset if it disappeared.',
+            transition: 'However,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'For example, it reminds me of them, so I’d hate to lose it.',
+            transition: 'For example,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Search and return',
+        sentences: [
+          {
+            text: 'Anyway, could you check near the sink and under the towels when you have a moment?',
+            transition: 'Anyway,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Luckily, I’ll be near your office on Tuesday, so I can collect it at lunchtime.',
+            transition: 'Luckily,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Finally, you could post it in a padded envelope, which won’t cost much if Tuesday doesn’t work.',
+            transition: 'Finally,',
+            pattern: 'sv-which'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Lily,',
+    signoff: 'See you soon,',
+    senderName: 'Taylor',
+    practicalVocab: [
+      { phrase: 'leave something at your place', thaiMeaning: 'ลืมของไว้ที่บ้านของคุณ' },
+      { phrase: 'leather strap', thaiMeaning: 'สายนาฬิกาหนัง' },
+      { phrase: 'put it back on', thaiMeaning: 'ใส่มันกลับคืน' },
+      { phrase: 'lovely memories', thaiMeaning: 'ความทรงจำที่ดี' },
+      { phrase: 'have a moment', thaiMeaning: 'มีเวลาสักครู่' },
+      { phrase: 'padded envelope', thaiMeaning: 'ซองกันกระแทก' }
+    ]
+  }
+] as const satisfies readonly GeneralTask1Prompt[]
+
+export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-semiformal-reference-request',
+    number: 1,
+    register: 'semi-formal',
+    title: 'Requesting a Reference from a Teacher',
+    situation:
+      'You are applying for a university course and would like a former teacher, whom you know well, to write a reference for you.',
+    recipient: 'a former teacher',
+    letterInstruction: 'Write a letter to your former teacher. In your letter:',
+    greeting: 'Dear Mr Hughes,',
+    bullets: [
+      'remind the teacher who you are and which course you are applying for',
+      'explain why you are asking this particular teacher',
+      'say what you need from them and by when'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Who you are and the course',
+        sentences: [
+          {
+            text: 'First of all, I hope you are keeping well since I finished my studies at Greenfield College.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'As you may remember, I was in your economics class, and I am now applying for a business degree.',
+            transition: 'As you may remember,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In fact, the course begins in September, making a strong reference very valuable to me.',
+            transition: 'In fact,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Why I am asking you',
+        sentences: [
+          {
+            text: 'Firstly, you taught me for two years, so you understand my strengths better than anyone.',
+            transition: 'Firstly,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Moreover, you supervised my final project, which received the top mark in our year.',
+            transition: 'Moreover,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Honestly, I trust your judgement because you always gave me fair and useful feedback.',
+            transition: 'Honestly,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'What I need and when',
+        sentences: [
+          {
+            text: 'If possible, could you send the reference to the university before the tenth of May?',
+            transition: 'If possible,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Of course, I am happy to share my transcript and personal statement to help you write it.',
+            transition: 'Of course,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Finally, please let me know if you need any more details, and I will send them straightaway.',
+            transition: 'Finally,',
+            pattern: 'coordinating'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Mr Hughes,',
+    signoff: 'Kind regards,',
+    senderName: 'Daniel Carter',
+    practicalVocab: [
+      { phrase: 'keep well', thaiMeaning: 'สบายดี' },
+      { phrase: 'apply for a degree', thaiMeaning: 'สมัครเรียนระดับปริญญา' },
+      { phrase: 'top mark', thaiMeaning: 'คะแนนสูงสุด' },
+      { phrase: 'fair feedback', thaiMeaning: 'คำติชมที่ยุติธรรม' },
+      { phrase: 'personal statement', thaiMeaning: 'เรียงความแนะนำตัว' },
+      { phrase: 'kind regards', thaiMeaning: 'คำลงท้ายกึ่งทางการ' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-semiformal-landlord-repair',
+    number: 2,
+    register: 'semi-formal',
+    title: 'Reporting a Repair to Your Landlord',
+    situation:
+      'You have been renting a flat for a year and a problem has developed that your landlord needs to fix.',
+    recipient: 'your landlord',
+    letterInstruction: 'Write a letter to your landlord. In your letter:',
+    greeting: 'Dear Mrs Aldridge,',
+    bullets: [
+      'describe the problem with the flat',
+      'explain how it is affecting you',
+      'say what you would like the landlord to do'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'The problem',
+        sentences: [
+          {
+            text: 'First of all, I am writing about the heating in the flat, which stopped working last Tuesday.',
+            transition: 'First of all,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Actually, the boiler makes a loud noise, and then it switches itself off completely.',
+            transition: 'Actually,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In addition, the radiators stay cold although I have tried resetting the system twice.',
+            transition: 'In addition,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'How it affects me',
+        sentences: [
+          {
+            text: 'Unfortunately, the flat is very cold in the evenings, making it difficult to work from home.',
+            transition: 'Unfortunately,',
+            pattern: 'sv-gerund'
+          },
+          {
+            text: 'Moreover, my energy bills have risen because the electric heater runs all day.',
+            transition: 'Moreover,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Honestly, I am worried about the colder weather, so a quick repair would help enormously.',
+            transition: 'Honestly,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'What I would like',
+        sentences: [
+          {
+            text: 'If possible, could you arrange for an engineer to visit the flat this week?',
+            transition: 'If possible,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Of course, I am at home most afternoons, so any time after two would suit me.',
+            transition: 'Of course,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Finally, please confirm the appointment by email, and I will make sure someone is here.',
+            transition: 'Finally,',
+            pattern: 'coordinating'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Mrs Aldridge,',
+    signoff: 'Kind regards,',
+    senderName: 'Rachel Owens',
+    practicalVocab: [
+      { phrase: 'report a repair', thaiMeaning: 'แจ้งซ่อม' },
+      { phrase: 'switch off', thaiMeaning: 'ดับ/ปิดเครื่อง' },
+      { phrase: 'reset the system', thaiMeaning: 'รีเซ็ตระบบ' },
+      { phrase: 'energy bill', thaiMeaning: 'ค่าไฟฟ้า/ค่าพลังงาน' },
+      { phrase: 'arrange a visit', thaiMeaning: 'นัดหมายให้มาดู' },
+      { phrase: 'confirm an appointment', thaiMeaning: 'ยืนยันการนัดหมาย' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-semiformal-work-handover',
+    number: 3,
+    register: 'semi-formal',
+    title: 'Arranging a Handover Before Leave',
+    situation:
+      'You will be away from work for two weeks and need a colleague you know to cover your tasks.',
+    recipient: 'a colleague',
+    letterInstruction: 'Write a letter to your colleague. In your letter:',
+    greeting: 'Dear Ms Patel,',
+    bullets: [
+      'explain why you will be away',
+      'describe the main tasks that need covering',
+      'suggest how you can help the handover go smoothly'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Reason for the leave',
+        sentences: [
+          {
+            text: 'First of all, I will be on annual leave from the fifth to the nineteenth of June.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'As you know, I had already booked this holiday, so I cannot change the dates now.',
+            transition: 'As you know,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In fact, my family is travelling abroad, making it impossible for me to work remotely.',
+            transition: 'In fact,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Tasks to cover',
+        sentences: [
+          {
+            text: 'Firstly, the client reports are due on the tenth, so they will need your attention first.',
+            transition: 'Firstly,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In addition, the weekly team meeting still runs on Monday, which you could easily chair.',
+            transition: 'In addition,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'However, the budget file is nearly finished, so it should not take much of your time.',
+            transition: 'However,',
+            pattern: 'coordinating'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Making it smooth',
+        sentences: [
+          {
+            text: 'Of course, I will write clear notes for every task before I leave the office.',
+            transition: 'Of course,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'If possible, we could meet on Friday, so I can explain anything that is unclear.',
+            transition: 'If possible,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Finally, I will be reachable by email in an emergency, although I would prefer to rest.',
+            transition: 'Finally,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Ms Patel,',
+    signoff: 'Best wishes,',
+    senderName: 'Marcus Bell',
+    practicalVocab: [
+      { phrase: 'annual leave', thaiMeaning: 'วันลาพักร้อนประจำปี' },
+      { phrase: 'cover tasks', thaiMeaning: 'ทำงานแทน' },
+      { phrase: 'client report', thaiMeaning: 'รายงานลูกค้า' },
+      { phrase: 'chair a meeting', thaiMeaning: 'เป็นประธานการประชุม' },
+      { phrase: 'handover notes', thaiMeaning: 'บันทึกส่งมอบงาน' },
+      { phrase: 'reachable by email', thaiMeaning: 'ติดต่อได้ทางอีเมล' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-semiformal-tutor-absence',
+    number: 4,
+    register: 'semi-formal',
+    title: 'Explaining an Absence to Your Tutor',
+    situation:
+      'You missed an important class on your evening course and want to explain to your tutor and catch up.',
+    recipient: 'your tutor',
+    letterInstruction: 'Write a letter to your tutor. In your letter:',
+    greeting: 'Dear Dr Nolan,',
+    bullets: [
+      'explain why you missed the class',
+      'say how you plan to catch up on the work',
+      'ask the tutor for any help or materials'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Reason for missing',
+        sentences: [
+          {
+            text: 'First of all, I am very sorry that I missed Tuesday’s seminar on marketing.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Unfortunately, my train was cancelled, and the next one arrived far too late.',
+            transition: 'Unfortunately,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In fact, I waited at the station for an hour, hoping the service would restart.',
+            transition: 'In fact,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Catching up',
+        sentences: [
+          {
+            text: 'Firstly, I have already borrowed the notes from a classmate, which covered most of the lecture.',
+            transition: 'Firstly,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Moreover, I will complete the reading this weekend, so I am not left behind.',
+            transition: 'Moreover,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'However, I am unsure about the group task because I missed how the teams were chosen.',
+            transition: 'However,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Asking for help',
+        sentences: [
+          {
+            text: 'If possible, could you send me the slides and the handout from the session?',
+            transition: 'If possible,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Of course, I am happy to attend a later class to make up the missed work.',
+            transition: 'Of course,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Finally, please tell me which group I should join, and I will contact them at once.',
+            transition: 'Finally,',
+            pattern: 'coordinating'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Dr Nolan,',
+    signoff: 'Best regards,',
+    senderName: 'Sophie Lin',
+    practicalVocab: [
+      { phrase: 'miss a seminar', thaiMeaning: 'ขาดสัมมนา/คาบเรียน' },
+      { phrase: 'be cancelled', thaiMeaning: 'ถูกยกเลิก' },
+      { phrase: 'catch up', thaiMeaning: 'ตามงานให้ทัน' },
+      { phrase: 'fall behind', thaiMeaning: 'เรียนตามไม่ทัน' },
+      { phrase: 'group task', thaiMeaning: 'งานกลุ่ม' },
+      { phrase: 'make up the work', thaiMeaning: 'ทำงานที่ค้างให้ครบ' }
+    ]
+  }
+] as const satisfies readonly GeneralTask1Prompt[]
+
+export const GENERAL_TASK1_FORMAL_PROMPTS = [
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-formal-product-complaint',
+    number: 1,
+    register: 'formal',
+    title: 'Complaint About a Faulty Product',
+    situation:
+      'You bought an electronic device from an online store and it developed a fault. You are writing to complain.',
+    recipient: 'the customer service manager',
+    letterInstruction: 'Write a letter to the company. In your letter:',
+    greeting: 'Dear Sir or Madam,',
+    bullets: [
+      'give details of the product and your purchase',
+      'explain the problem and how it has affected you',
+      'say what action you expect the company to take'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Purchase details',
+        sentences: [
+          {
+            text: 'First of all, I am writing to complain about a wireless printer, which I purchased from your website last month.',
+            transition: 'First of all,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'To begin with, the order number is BX4471, and the delivery arrived on the third of April.',
+            transition: 'To begin with,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In addition, I paid the full price of ninety pounds, expecting a reliable product.',
+            transition: 'In addition,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'The problem',
+        sentences: [
+          {
+            text: 'Unfortunately, the printer stopped working after only a week, although I followed the instructions carefully.',
+            transition: 'Unfortunately,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Furthermore, it now fails to switch on, so I cannot print any documents at all.',
+            transition: 'Furthermore,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Consequently, I have been unable to finish important work, which has caused me considerable inconvenience.',
+            transition: 'Consequently,',
+            pattern: 'sv-which'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Action expected',
+        sentences: [
+          {
+            text: 'Therefore, I would like a full refund or a replacement as soon as possible.',
+            transition: 'Therefore,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Moreover, I expect the company to cover the cost of returning the faulty item.',
+            transition: 'Moreover,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Finally, I look forward to your reply within fourteen days, and I trust this matter will be resolved quickly.',
+            transition: 'Finally,',
+            pattern: 'coordinating'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Sir or Madam,',
+    signoff: 'Yours faithfully,',
+    senderName: 'A. Morgan',
+    practicalVocab: [
+      { phrase: 'faulty product', thaiMeaning: 'สินค้าชำรุด' },
+      { phrase: 'order number', thaiMeaning: 'หมายเลขคำสั่งซื้อ' },
+      { phrase: 'full refund', thaiMeaning: 'คืนเงินเต็มจำนวน' },
+      { phrase: 'replacement', thaiMeaning: 'สินค้าทดแทน' },
+      { phrase: 'considerable inconvenience', thaiMeaning: 'ความไม่สะดวกอย่างมาก' },
+      { phrase: 'look forward to', thaiMeaning: 'รอคอย/หวังว่าจะได้รับ' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-formal-course-enquiry',
+    number: 2,
+    register: 'formal',
+    title: 'Enquiry About a Training Course',
+    situation:
+      'You have seen an advertisement for a professional course and want more information before applying.',
+    recipient: 'the course administrator',
+    letterInstruction: 'Write a letter to the course provider. In your letter:',
+    greeting: 'Dear Sir or Madam,',
+    bullets: [
+      'explain why you are interested in the course',
+      'ask for the specific information you need',
+      'explain what you would like to happen next'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'Interest in the course',
+        sentences: [
+          {
+            text: 'First of all, I am writing to enquire about the digital marketing course advertised in this month’s magazine.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'To begin with, I have worked in sales for five years, so I wish to develop new skills.',
+            transition: 'To begin with,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In addition, I hope to change career soon, making this qualification particularly useful.',
+            transition: 'In addition,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Information required',
+        sentences: [
+          {
+            text: 'Firstly, I would be grateful if you could tell me how long the course lasts.',
+            transition: 'Firstly,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Furthermore, I need to know whether the classes are held online or in person.',
+            transition: 'Furthermore,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Moreover, I would like details of the total fees, which are not stated in the advertisement.',
+            transition: 'Moreover,',
+            pattern: 'sv-which'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Next steps',
+        sentences: [
+          {
+            text: 'In particular, I should like to receive a prospectus and an application form by post.',
+            transition: 'In particular,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Therefore, I would appreciate a reply at your earliest convenience.',
+            transition: 'Therefore,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Finally, I look forward to hearing from you, and I thank you for your assistance.',
+            transition: 'Finally,',
+            pattern: 'coordinating'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Sir or Madam,',
+    signoff: 'Yours faithfully,',
+    senderName: 'J. Ferreira',
+    practicalVocab: [
+      { phrase: 'enquire about', thaiMeaning: 'สอบถามข้อมูลเกี่ยวกับ' },
+      { phrase: 'develop skills', thaiMeaning: 'พัฒนาทักษะ' },
+      { phrase: 'held in person', thaiMeaning: 'จัดแบบพบหน้า' },
+      { phrase: 'total fees', thaiMeaning: 'ค่าใช้จ่ายทั้งหมด' },
+      { phrase: 'prospectus', thaiMeaning: 'สูจิบัตร/เอกสารแนะนำหลักสูตร' },
+      { phrase: 'at your earliest convenience', thaiMeaning: 'โดยเร็วที่สุดเท่าที่สะดวก' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-formal-council-request',
+    number: 3,
+    register: 'formal',
+    title: 'Requesting Action on a Local Problem',
+    situation:
+      'A public area in your town has a problem and you are writing to the local council to ask them to deal with it.',
+    recipient: 'the local council',
+    letterInstruction: 'Write a letter to the local council. In your letter:',
+    greeting: 'Dear Sir or Madam,',
+    bullets: [
+      'describe the problem and say where it is',
+      'explain how it affects local residents',
+      'suggest what the council should do'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'The problem',
+        sentences: [
+          {
+            text: 'First of all, I am writing to draw your attention to the broken street lighting on Mill Road.',
+            transition: 'First of all,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'To begin with, several lamps have not worked for a month, leaving the street very dark at night.',
+            transition: 'To begin with,',
+            pattern: 'sv-gerund'
+          },
+          {
+            text: 'In addition, the pavement is uneven, which makes walking dangerous after sunset.',
+            transition: 'In addition,',
+            pattern: 'sv-which'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Effect on residents',
+        sentences: [
+          {
+            text: 'Unfortunately, many residents feel unsafe, so they now avoid the area in the evening.',
+            transition: 'Unfortunately,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Furthermore, an elderly neighbour recently fell there because she could not see the kerb.',
+            transition: 'Furthermore,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Consequently, local people are increasingly worried about accidents and crime.',
+            transition: 'Consequently,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Requested action',
+        sentences: [
+          {
+            text: 'Therefore, I would urge the council to repair the lighting as a matter of urgency.',
+            transition: 'Therefore,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Moreover, the pavement should be resurfaced, which would prevent further injuries.',
+            transition: 'Moreover,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Finally, I would be grateful if you could inform me of your decision in due course.',
+            transition: 'Finally,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Sir or Madam,',
+    signoff: 'Yours faithfully,',
+    senderName: 'H. Blackwood',
+    practicalVocab: [
+      { phrase: 'draw attention to', thaiMeaning: 'ทำให้สนใจ/ชี้ให้เห็นถึง' },
+      { phrase: 'street lighting', thaiMeaning: 'ไฟส่องถนน' },
+      { phrase: 'uneven pavement', thaiMeaning: 'ทางเท้าขรุขระ' },
+      { phrase: 'feel unsafe', thaiMeaning: 'รู้สึกไม่ปลอดภัย' },
+      { phrase: 'a matter of urgency', thaiMeaning: 'เรื่องเร่งด่วน' },
+      { phrase: 'in due course', thaiMeaning: 'ในเวลาอันสมควร' }
+    ]
+  },
+  {
+    ...COMMON_INSTRUCTIONS,
+    id: 'gt-t1-formal-job-application',
+    number: 4,
+    register: 'formal',
+    title: 'Applying for an Advertised Position',
+    situation:
+      'You have seen a job advertisement and are writing to apply and explain why you are suitable.',
+    recipient: 'the hiring manager',
+    letterInstruction: 'Write a letter to the employer. In your letter:',
+    greeting: 'Dear Sir or Madam,',
+    bullets: [
+      'say which job you are applying for and where you saw it',
+      'describe your relevant experience and skills',
+      'explain when you are available and what you would like next'
+    ],
+    paragraphs: [
+      {
+        bulletIndex: 0,
+        label: 'The application',
+        sentences: [
+          {
+            text: 'First of all, I am writing to apply for the position of office assistant, which was advertised on your website.',
+            transition: 'First of all,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'To begin with, I have three years of experience in administration, so I am confident I could do the job well.',
+            transition: 'To begin with,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'In addition, I hold a diploma in business studies, making me well prepared for the role.',
+            transition: 'In addition,',
+            pattern: 'sv-gerund'
+          }
+        ]
+      },
+      {
+        bulletIndex: 1,
+        label: 'Experience and skills',
+        sentences: [
+          {
+            text: 'Firstly, I am highly organised, and I am comfortable managing several tasks at once.',
+            transition: 'Firstly,',
+            pattern: 'coordinating'
+          },
+          {
+            text: 'Furthermore, I have strong computer skills, which I developed in my current job.',
+            transition: 'Furthermore,',
+            pattern: 'sv-which'
+          },
+          {
+            text: 'Moreover, I communicate clearly because I regularly deal with customers and suppliers.',
+            transition: 'Moreover,',
+            pattern: 'subordinator-middle'
+          }
+        ]
+      },
+      {
+        bulletIndex: 2,
+        label: 'Availability and next steps',
+        sentences: [
+          {
+            text: 'In particular, I could begin work at the start of next month if that is convenient.',
+            transition: 'In particular,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Therefore, I have attached my curriculum vitae for your consideration.',
+            transition: 'Therefore,',
+            pattern: 'subordinator-middle'
+          },
+          {
+            text: 'Finally, I would welcome the opportunity of an interview, and I look forward to your reply.',
+            transition: 'Finally,',
+            pattern: 'coordinating'
+          }
+        ]
+      }
+    ],
+    beginInstruction: 'Begin your letter as follows: Dear Sir or Madam,',
+    signoff: 'Yours faithfully,',
+    senderName: 'P. Ndlovu',
+    practicalVocab: [
+      { phrase: 'apply for a position', thaiMeaning: 'สมัครตำแหน่งงาน' },
+      { phrase: 'relevant experience', thaiMeaning: 'ประสบการณ์ที่เกี่ยวข้อง' },
+      { phrase: 'highly organised', thaiMeaning: 'มีระเบียบ/จัดการงานได้ดี' },
+      { phrase: 'curriculum vitae', thaiMeaning: 'ประวัติย่อ (CV)' },
+      { phrase: 'for your consideration', thaiMeaning: 'เพื่อพิจารณา' },
+      { phrase: 'welcome the opportunity', thaiMeaning: 'ยินดีรับโอกาส' }
+    ]
+  }
+] as const satisfies readonly GeneralTask1Prompt[]
+
+export const GENERAL_TASK1_PROMPTS_BY_REGISTER: Record<
+  GeneralTask1Register,
+  readonly GeneralTask1Prompt[]
+> = {
+  informal: GENERAL_TASK1_INFORMAL_PROMPTS,
+  'semi-formal': GENERAL_TASK1_SEMIFORMAL_PROMPTS,
+  formal: GENERAL_TASK1_FORMAL_PROMPTS
+}
+
+export const ALL_GENERAL_TASK1_PROMPTS: readonly GeneralTask1Prompt[] = [
+  ...GENERAL_TASK1_INFORMAL_PROMPTS,
+  ...GENERAL_TASK1_SEMIFORMAL_PROMPTS,
+  ...GENERAL_TASK1_FORMAL_PROMPTS
+]
+
+export const findGeneralTask1Prompt = (id: string): GeneralTask1Prompt | null =>
+  ALL_GENERAL_TASK1_PROMPTS.find((prompt) => prompt.id === id) ?? null
+
+export const assembleGeneralTask1ModelLetter = (prompt: GeneralTask1Prompt): string =>
+  [
+    prompt.greeting,
+    '',
+    ...prompt.paragraphs.flatMap((paragraph) => [
+      paragraph.sentences.map((sentence) => sentence.text).join(' '),
+      ''
+    ]),
+    prompt.signoff,
+    prompt.senderName
+  ].join('\n')

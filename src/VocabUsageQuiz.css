@@ -1,0 +1,434 @@
+.vqShell {
+  display: grid;
+  gap: 16px;
+  color: #172033;
+  font-family: Inter, Anuphan, sans-serif;
+}
+
+.vqHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 3px solid #172033;
+  border-radius: 16px;
+  background: #eef3ff;
+  box-shadow: 6px 6px 0 #172033;
+}
+
+.vqHeaderText h3 {
+  margin: 4px 0;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+}
+
+.vqEyebrow {
+  margin: 0;
+  font-size: .72rem;
+  font-weight: 950;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #3a5bd0;
+}
+
+.vqSub {
+  margin: 4px 0 0;
+  max-width: 640px;
+  color: #4f5b70;
+  font-size: .86rem;
+  line-height: 1.55;
+}
+
+.vqScore {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  min-width: 88px;
+  padding: 10px 16px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.vqScoreNum {
+  font-size: 1.8rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.vqScoreDen {
+  font-size: .82rem;
+  font-weight: 800;
+  color: #4f5b70;
+}
+
+.vqScoreLabel {
+  margin-top: 2px;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #3a5bd0;
+}
+
+.vqProgressTrack {
+  height: 10px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.vqProgressFill {
+  height: 100%;
+  background: #ffe676;
+  transition: width .4s cubic-bezier(.22, .61, .36, 1);
+}
+
+.vqCard {
+  display: grid;
+  gap: 14px;
+  padding: clamp(18px, 3vw, 26px);
+  border: 3px solid #172033;
+  border-radius: 18px;
+  background: #fffdf4;
+  box-shadow: 7px 7px 0 #172033;
+  animation: vqCardIn .4s cubic-bezier(.22, .61, .36, 1) both;
+}
+
+@keyframes vqCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vqCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vqKind {
+  padding: 5px 11px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 950;
+  letter-spacing: .06em;
+}
+
+.vqKind-collocation {
+  background: #b9dcff;
+}
+
+.vqKind-word-form {
+  background: #ffe676;
+}
+
+.vqKind-spot-usage {
+  background: #d8c7ff;
+}
+
+.vqCounter {
+  font-size: .82rem;
+  font-weight: 850;
+  color: #4f5b70;
+}
+
+.vqWordRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 2px dashed #d7ddea;
+}
+
+.vqWord {
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.vqWordTh {
+  color: #4f5b70;
+  font-size: .9rem;
+  font-weight: 650;
+}
+
+.vqSaveWord {
+  margin-left: auto;
+  padding: 7px 12px;
+  border: 2px solid #172033;
+  border-radius: 10px;
+  background: #c9f6d4;
+  color: #172033;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.vqSaveWord:disabled {
+  cursor: default;
+  opacity: .6;
+}
+
+.vqKindHint {
+  margin: 0;
+  color: #3a5bd0;
+  font-size: .8rem;
+  font-weight: 750;
+}
+
+.vqInstruction {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.vqSentence {
+  margin: 0;
+  padding: 14px 16px;
+  border: 2px solid #172033;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 1.02rem;
+  line-height: 2;
+}
+
+.vqGap {
+  display: inline-block;
+  min-width: 84px;
+  margin: 0 4px;
+  padding: 2px 10px;
+  border-bottom: 3px solid #3a5bd0;
+  font-weight: 900;
+  text-align: center;
+  color: #b0b8c9;
+}
+
+.vqGap.is-filled {
+  color: #172033;
+  border-bottom-color: #172033;
+  background: #fff6cf;
+  border-radius: 6px 6px 0 0;
+}
+
+.vqChoices {
+  display: grid;
+  gap: 10px;
+}
+
+.vqChoices.is-inline {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.vqChoices.is-block {
+  grid-template-columns: 1fr;
+}
+
+.vqChoice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 2px solid #172033;
+  border-radius: 12px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  box-shadow: 3px 3px 0 #172033;
+  cursor: pointer;
+  transition: translate .12s ease, box-shadow .12s ease, background .2s ease;
+}
+
+.vqChoice:not(:disabled):hover {
+  translate: 2px 2px;
+  box-shadow: 1px 1px 0 #172033;
+}
+
+.vqChoice:disabled {
+  cursor: default;
+}
+
+.vqChoice.is-correct {
+  background: #c9f6d4;
+  box-shadow: 3px 3px 0 #1f7a44;
+  border-color: #1f7a44;
+}
+
+.vqChoice.is-wrong {
+  background: #ffd1dc;
+  box-shadow: 3px 3px 0 #a23a55;
+  border-color: #a23a55;
+}
+
+.vqChoice.is-dim {
+  opacity: .55;
+  box-shadow: none;
+}
+
+.vqChoices.is-block .vqChoice {
+  line-height: 1.6;
+}
+
+.vqChoiceMark {
+  flex: none;
+  width: 20px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.vqChoiceText {
+  flex: 1;
+}
+
+.vqExplain {
+  display: grid;
+  gap: 3px;
+  padding: 12px 15px;
+  border: 2px solid #172033;
+  border-radius: 12px;
+  line-height: 1.55;
+  animation: vqCardIn .3s ease both;
+}
+
+.vqExplain.is-correct {
+  background: #e3f9e9;
+}
+
+.vqExplain.is-wrong {
+  background: #fff0f4;
+}
+
+.vqExplain strong {
+  font-size: .95rem;
+}
+
+.vqExplain span {
+  font-size: .88rem;
+  color: #34404f;
+}
+
+.vqNav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vqNavBtn {
+  padding: 11px 18px;
+  border: 3px solid #172033;
+  border-radius: 12px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 4px 4px 0 #172033;
+  cursor: pointer;
+}
+
+.vqNavBtn-primary {
+  background: #ffe676;
+}
+
+.vqNavBtn:disabled {
+  cursor: not-allowed;
+  opacity: .4;
+}
+
+.vqFinish {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 3px solid #172033;
+  border-radius: 16px;
+  background: #c9f6d4;
+  box-shadow: 6px 6px 0 #172033;
+}
+
+.vqFinishTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.vqWrongReview {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 2px solid #172033;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.vqWrongHead {
+  margin: 0;
+  font-weight: 850;
+  color: #8a1f3d;
+}
+
+.vqWrongReview ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vqWrongJump {
+  width: 100%;
+  padding: 9px 11px;
+  border: 2px solid #172033;
+  border-radius: 10px;
+  background: #fff6cf;
+  color: inherit;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 650;
+  text-align: left;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.vqPerfect {
+  margin: 0;
+  font-weight: 850;
+}
+
+.vqEmpty {
+  padding: 24px;
+  text-align: center;
+  color: #4f5b70;
+  font-weight: 700;
+}
+
+.vqFinish .vqNavBtn-primary {
+  width: fit-content;
+}
+
+@media (max-width: 620px) {
+  .vqNav {
+    flex-direction: column;
+  }
+
+  .vqNavBtn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vqCard,
+  .vqExplain {
+    animation: none;
+  }
+}

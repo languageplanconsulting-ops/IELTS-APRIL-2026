@@ -4,6 +4,7 @@
 
 import { renderPromptChart } from './writingTask1Charts'
 import type { WritingReportSnapshot } from './writingReportTypes'
+import { countTask1Paragraphs } from './writingTask1WordCount'
 import './WritingReportView.css'
 
 const focusLabelTh: Record<string, string> = {
@@ -26,6 +27,7 @@ export function WritingReportView({
   onClose?: () => void
 }) {
   const { correct, total } = snapshot.score
+  const essayWordCount = countTask1Paragraphs(snapshot.paragraphs)
   const pct = total ? Math.round((correct / total) * 100) : 0
   const savedLabel = (() => {
     try {
@@ -53,6 +55,7 @@ export function WritingReportView({
           <span className="wgReportBadge wgReportBadge-score">
             {correct}/{total} · {pct}%
           </span>
+          <span className="wgReportBadge">{essayWordCount} words</span>
           <span className="wgReportDate">บันทึกเมื่อ {savedLabel}</span>
         </div>
       </header>

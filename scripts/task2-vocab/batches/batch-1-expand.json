@@ -1,0 +1,872 @@
+[
+  {
+    "id": "t2-twe-1",
+    "title": "Preserving Old Buildings",
+    "essay": "It has been widely argued that while some old constructions may appear outdated, maintaining them is essential for preserving a country's history and cultural identity. Others argue that pulling down these structures and replacing them with modern buildings would better meet the practical needs of a growing population. I personally believe that historic buildings should be preserved, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that old buildings should be pulled down to make way for modern infrastructure. To explain it simply, this is possibly because older structures often fail to meet current safety and space requirements; therefore, replacing them allows cities to meet the needs of a growing population more efficiently. For example, many rapidly developing cities have pulled down old buildings to construct high-rise apartments and offices. From this perspective, it is understandable why some would believe that modern buildings serve society's needs more effectively than old ones.\n\nHowever, I would personally argue in favor of the idea that old buildings should be carefully preserved. To put it simply, this is due to the fact that these structures represent a nation's history and cultural heritage, which cannot be recreated once destroyed. For instance, cities such as Rome and Kyoto attract millions of tourists every year largely because of their well-preserved historic buildings. In this respect, it is evident that maintaining old buildings brings both cultural and economic value to a country.\n\nIn conclusion, although it is undeniable that building modern structures can help cities meet growing practical needs, I am of the opinion that preserving old buildings is more important, as they protect a nation's history for future generations.",
+    "existingVocab": [
+      {
+        "word": "cultural identity",
+        "thaiMeaning": "อัตลักษณ์ทางวัฒนธรรม"
+      },
+      {
+        "word": "cultural heritage",
+        "thaiMeaning": "มรดกทางวัฒนธรรม"
+      },
+      {
+        "word": "economic value",
+        "thaiMeaning": "คุณค่าทางเศรษฐกิจ"
+      },
+      {
+        "word": "well-preserved historic buildings",
+        "thaiMeaning": "อาคารประวัติศาสตร์ที่อนุรักษ์ไว้ดี"
+      },
+      {
+        "word": "safety and space requirements",
+        "thaiMeaning": "ข้อกำหนดด้านความปลอดภัยและพื้นที่"
+      },
+      {
+        "word": "rapidly developing cities",
+        "thaiMeaning": "เมืองที่กำลังพัฒนาอย่างรวดเร็ว"
+      },
+      {
+        "word": "modern infrastructure",
+        "thaiMeaning": "โครงสร้างพื้นฐานสมัยใหม่"
+      },
+      {
+        "word": "high-rise apartments",
+        "thaiMeaning": "อาคารอพาร์ตเมนต์สูง"
+      },
+      {
+        "word": "growing population",
+        "thaiMeaning": "ประชากรที่เพิ่มขึ้น"
+      },
+      {
+        "word": "future generations",
+        "thaiMeaning": "คนรุ่นหลัง"
+      },
+      {
+        "word": "old constructions",
+        "thaiMeaning": "สิ่งก่อสร้างเก่า"
+      },
+      {
+        "word": "carefully preserved",
+        "thaiMeaning": "ได้รับการอนุรักษ์อย่างระมัดระวัง"
+      },
+      {
+        "word": "practical needs",
+        "thaiMeaning": "ความต้องการในเชิงปฏิบัติ"
+      },
+      {
+        "word": "modern buildings",
+        "thaiMeaning": "อาคารสมัยใหม่"
+      },
+      {
+        "word": "nation's history",
+        "thaiMeaning": "ประวัติศาสตร์ของชาติ"
+      },
+      {
+        "word": "millions of tourists",
+        "thaiMeaning": "นักท่องเที่ยวหลายล้านคน"
+      },
+      {
+        "word": "pulling down",
+        "thaiMeaning": "การรื้อถอน"
+      },
+      {
+        "word": "make way for",
+        "thaiMeaning": "เปิดทางให้"
+      },
+      {
+        "word": "outdated",
+        "thaiMeaning": "ล้าสมัย"
+      },
+      {
+        "word": "preserving a country's history",
+        "thaiMeaning": "การอนุรักษ์ประวัติศาสตร์ของประเทศ"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-2",
+    "title": "The Value of Studying History",
+    "essay": "It has been widely argued that while the past cannot be changed, understanding it has little practical relevance to people living in the present. Others argue that studying history remains essential for understanding and improving present-day society. I personally believe that learning about the past is highly valuable, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that studying history serves little practical purpose in modern life. To explain it simply, this is possibly because historical events cannot be altered and have no direct bearing on today's technology or economy; therefore, some believe time would be better spent learning practical skills instead. For example, many students today choose to study coding or business rather than history, believing these subjects offer more immediate career benefits. From this perspective, it is understandable why some would believe that focusing on the present is more useful than studying the past.\n\nHowever, I would personally argue in favor of the idea that learning about the past is essential. To put it simply, this is due to the fact that history allows societies to understand the causes of present problems and avoid repeating past mistakes, which can be extremely costly. For instance, many countries continue to study the causes of the 2008 financial crisis in order to prevent similar economic collapses in the future. In this respect, it is evident that studying history provides valuable lessons that directly benefit the present.\n\nIn conclusion, although it is undeniable that historical events themselves cannot be changed, I am of the opinion that learning about the past is highly valuable, as it helps societies avoid repeating the same mistakes.",
+    "existingVocab": [
+      {
+        "word": "financial crisis",
+        "thaiMeaning": "วิกฤตการเงิน"
+      },
+      {
+        "word": "economic collapse",
+        "thaiMeaning": "การล่มสลายทางเศรษฐกิจ"
+      },
+      {
+        "word": "career benefits",
+        "thaiMeaning": "ผลประโยชน์ด้านอาชีพ"
+      },
+      {
+        "word": "historical events",
+        "thaiMeaning": "เหตุการณ์ทางประวัติศาสตร์"
+      },
+      {
+        "word": "improving present-day society",
+        "thaiMeaning": "การพัฒนาสังคมปัจจุบัน"
+      },
+      {
+        "word": "causes of present problems",
+        "thaiMeaning": "สาเหตุของปัญหาในปัจจุบัน"
+      },
+      {
+        "word": "learning about the past",
+        "thaiMeaning": "การเรียนรู้เกี่ยวกับอดีต"
+      },
+      {
+        "word": "practical relevance",
+        "thaiMeaning": "ความเกี่ยวข้องในเชิงปฏิบัติ"
+      },
+      {
+        "word": "practical purpose",
+        "thaiMeaning": "จุดประสงค์เชิงปฏิบัติ"
+      },
+      {
+        "word": "practical skills",
+        "thaiMeaning": "ทักษะเชิงปฏิบัติ"
+      },
+      {
+        "word": "valuable lessons",
+        "thaiMeaning": "บทเรียนที่มีค่า"
+      },
+      {
+        "word": "studying history",
+        "thaiMeaning": "การศึกษาประวัติศาสตร์"
+      },
+      {
+        "word": "direct bearing",
+        "thaiMeaning": "ผลกระทบโดยตรง"
+      },
+      {
+        "word": "past mistakes",
+        "thaiMeaning": "ความผิดพลาดในอดีต"
+      },
+      {
+        "word": "highly valuable",
+        "thaiMeaning": "มีคุณค่าสูง"
+      },
+      {
+        "word": "extremely costly",
+        "thaiMeaning": "มีต้นทุนสูงมาก"
+      },
+      {
+        "word": "modern life",
+        "thaiMeaning": "ชีวิตสมัยใหม่"
+      },
+      {
+        "word": "cannot be altered",
+        "thaiMeaning": "ไม่สามารถเปลี่ยนแปลงได้"
+      },
+      {
+        "word": "directly benefit",
+        "thaiMeaning": "เป็นประโยชน์โดยตรง"
+      },
+      {
+        "word": "focusing on the present",
+        "thaiMeaning": "การมุ่งเน้นปัจจุบัน"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-3",
+    "title": "Government vs. Private Science Funding",
+    "essay": "It has been widely argued that while private companies can drive rapid technological innovation, scientific research should ultimately remain under government control. Others argue that private companies are better positioned to fund and accelerate scientific progress. I personally believe that governments should retain primary control over scientific research, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that private companies are better suited to lead scientific research. To explain it simply, this is possibly because private firms often have greater funding and stronger commercial incentives to innovate quickly; therefore, breakthroughs can reach the public faster than through government-led projects. For example, private pharmaceutical companies developed COVID-19 vaccines within less than a year of the pandemic beginning. From this perspective, it is understandable why some would believe that private companies drive scientific progress more effectively than governments.\n\nHowever, I would personally argue in favor of the idea that governments should retain control over scientific research. To put it simply, this is due to the fact that government funding ensures research prioritizes public benefit rather than profit, which private companies cannot always guarantee. For instance, publicly funded institutions such as NASA have made major scientific discoveries that were shared freely with the world instead of being sold for profit. In this respect, it is evident that government-controlled research better serves the interests of society as a whole.\n\nIn conclusion, although it is undeniable that private companies can accelerate certain scientific breakthroughs, I am of the opinion that governments should remain in control of scientific research, as this best protects the public interest.",
+    "existingVocab": [
+      {
+        "word": "commercial incentives",
+        "thaiMeaning": "แรงจูงใจเชิงพาณิชย์"
+      },
+      {
+        "word": "public benefit",
+        "thaiMeaning": "ประโยชน์สาธารณะ"
+      },
+      {
+        "word": "scientific breakthroughs",
+        "thaiMeaning": "ความก้าวหน้าทางวิทยาศาสตร์ครั้งสำคัญ"
+      },
+      {
+        "word": "public interest",
+        "thaiMeaning": "ผลประโยชน์สาธารณะ"
+      },
+      {
+        "word": "government-controlled research",
+        "thaiMeaning": "งานวิจัยที่รัฐบาลควบคุม"
+      },
+      {
+        "word": "rapid technological innovation",
+        "thaiMeaning": "นวัตกรรมเทคโนโลยีอย่างรวดเร็ว"
+      },
+      {
+        "word": "publicly funded institutions",
+        "thaiMeaning": "สถาบันที่ได้รับทุนสาธารณะ"
+      },
+      {
+        "word": "pharmaceutical companies",
+        "thaiMeaning": "บริษัทเภสัชกรรม"
+      },
+      {
+        "word": "government-led projects",
+        "thaiMeaning": "โครงการที่รัฐบาลนำ"
+      },
+      {
+        "word": "scientific discoveries",
+        "thaiMeaning": "การค้นพบทางวิทยาศาสตร์"
+      },
+      {
+        "word": "scientific research",
+        "thaiMeaning": "งานวิจัยทางวิทยาศาสตร์"
+      },
+      {
+        "word": "scientific progress",
+        "thaiMeaning": "ความก้าวหน้าทางวิทยาศาสตร์"
+      },
+      {
+        "word": "government funding",
+        "thaiMeaning": "เงินทุนจากรัฐบาล"
+      },
+      {
+        "word": "government control",
+        "thaiMeaning": "การควบคุมโดยรัฐบาล"
+      },
+      {
+        "word": "private companies",
+        "thaiMeaning": "บริษัทเอกชน"
+      },
+      {
+        "word": "interests of society",
+        "thaiMeaning": "ผลประโยชน์ของสังคม"
+      },
+      {
+        "word": "primary control",
+        "thaiMeaning": "การควบคุมหลัก"
+      },
+      {
+        "word": "sold for profit",
+        "thaiMeaning": "ขายเพื่อหากำไร"
+      },
+      {
+        "word": "innovate quickly",
+        "thaiMeaning": "สร้างนวัตกรรมอย่างรวดเร็ว"
+      },
+      {
+        "word": "shared freely",
+        "thaiMeaning": "แบ่งปันอย่างเสรี"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-4",
+    "title": "Should Universities Teach Arts Subjects?",
+    "essay": "It has been widely argued that while rising tuition fees make practical courses more appealing, universities should stop teaching arts subjects such as philosophy and history in favor of purely practical courses. Others argue that focusing solely on employment-focused courses would better prepare graduates for the job market. I personally believe that universities should continue offering arts subjects, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that universities should focus only on practical courses. To explain it simply, this is possibly because graduates with technical skills often find employment more quickly after graduation; therefore, replacing arts subjects with practical training could reduce graduate unemployment. For example, engineering and computer science graduates in many countries report considerably higher starting salaries than graduates of arts programs. From this perspective, it is understandable why some would believe that practical courses better prepare students for the job market.\n\nHowever, I would personally argue in favor of the idea that universities should continue teaching arts subjects. To put it simply, this is due to the fact that subjects such as philosophy and history develop critical thinking and communication skills, which employers in every industry continue to value. For instance, many successful business leaders, including several well-known technology founders, credit their humanities education with shaping their creative and analytical abilities. In this respect, it is evident that arts subjects provide skills that remain valuable regardless of a graduate's chosen career.\n\nIn conclusion, although it is undeniable that practical courses can improve graduates' short-term job prospects, I am of the opinion that universities should continue offering arts subjects, as they build skills that benefit graduates throughout their careers.",
+    "existingVocab": [
+      {
+        "word": "critical thinking",
+        "thaiMeaning": "การคิดวิเคราะห์"
+      },
+      {
+        "word": "starting salaries",
+        "thaiMeaning": "เงินเดือนเริ่มต้น"
+      },
+      {
+        "word": "humanities education",
+        "thaiMeaning": "การศึกษาด้านมนุษยศาสตร์"
+      },
+      {
+        "word": "job prospects",
+        "thaiMeaning": "โอกาสในการทำงาน"
+      },
+      {
+        "word": "employment-focused courses",
+        "thaiMeaning": "หลักสูตรที่มุ่งเน้นการจ้างงาน"
+      },
+      {
+        "word": "computer science graduates",
+        "thaiMeaning": "บัณฑิตวิทยาการคอมพิวเตอร์"
+      },
+      {
+        "word": "purely practical courses",
+        "thaiMeaning": "หลักสูตรเชิงปฏิบัติล้วน"
+      },
+      {
+        "word": "throughout their careers",
+        "thaiMeaning": "ตลอดอาชีพการงาน"
+      },
+      {
+        "word": "graduate unemployment",
+        "thaiMeaning": "การว่างงานของบัณฑิต"
+      },
+      {
+        "word": "communication skills",
+        "thaiMeaning": "ทักษะการสื่อสาร"
+      },
+      {
+        "word": "analytical abilities",
+        "thaiMeaning": "ความสามารถเชิงวิเคราะห์"
+      },
+      {
+        "word": "technology founders",
+        "thaiMeaning": "ผู้ก่อตั้งบริษัทเทคโนโลยี"
+      },
+      {
+        "word": "practical training",
+        "thaiMeaning": "การฝึกอบรมเชิงปฏิบัติ"
+      },
+      {
+        "word": "technical skills",
+        "thaiMeaning": "ทักษะทางเทคนิค"
+      },
+      {
+        "word": "business leaders",
+        "thaiMeaning": "ผู้นำทางธุรกิจ"
+      },
+      {
+        "word": "tuition fees",
+        "thaiMeaning": "ค่าเล่าเรียน"
+      },
+      {
+        "word": "job market",
+        "thaiMeaning": "ตลาดแรงงาน"
+      },
+      {
+        "word": "arts subjects",
+        "thaiMeaning": "วิชาสายศิลป์"
+      },
+      {
+        "word": "find employment",
+        "thaiMeaning": "หางานทำ"
+      },
+      {
+        "word": "chosen career",
+        "thaiMeaning": "อาชีพที่เลือก"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-5",
+    "title": "Is Responsible Tourism Possible?",
+    "essay": "It has been widely argued that while tourism inevitably affects the places visited, it is impossible for any tourist to be truly responsible toward both culture and environment. Others argue that with careful planning, tourists can genuinely reduce their negative impact. I personally believe that being a responsible tourist is possible, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that responsible tourism is impossible to achieve. To explain it simply, this is possibly because even eco-friendly travel requires transportation that produces carbon emissions; therefore, every visit inevitably damages the environment to some degree. For example, flights to popular island destinations such as the Maldives contribute significantly to global carbon emissions regardless of a tourist's intentions. From this perspective, it is understandable why some would believe that no tourist can be entirely responsible.\n\nHowever, I would personally argue in favor of the idea that responsible tourism is achievable. To put it simply, this is due to the fact that tourists can make deliberate choices, such as supporting local businesses and respecting local customs, which significantly reduce their overall impact. For instance, many visitors to Bhutan follow strict government guidelines designed to protect both the environment and traditional culture. In this respect, it is evident that responsible tourism, while not perfect, is a realistic and achievable goal.\n\nIn conclusion, although it is undeniable that all tourism carries some environmental cost, I am of the opinion that being a responsible tourist is possible, as thoughtful choices can greatly reduce this impact.",
+    "existingVocab": [
+      {
+        "word": "carbon emissions",
+        "thaiMeaning": "การปล่อยก๊าซคาร์บอน"
+      },
+      {
+        "word": "local customs",
+        "thaiMeaning": "ขนบธรรมเนียมท้องถิ่น"
+      },
+      {
+        "word": "government guidelines",
+        "thaiMeaning": "แนวทางของรัฐบาล"
+      },
+      {
+        "word": "responsible tourism",
+        "thaiMeaning": "การท่องเที่ยวอย่างรับผิดชอบ"
+      },
+      {
+        "word": "eco-friendly travel",
+        "thaiMeaning": "การเดินทางที่เป็นมิตรต่อสิ่งแวดล้อม"
+      },
+      {
+        "word": "popular island destinations",
+        "thaiMeaning": "จุดหมายปลายทางเกาะยอดนิยม"
+      },
+      {
+        "word": "environmental cost",
+        "thaiMeaning": "ต้นทุนด้านสิ่งแวดล้อม"
+      },
+      {
+        "word": "traditional culture",
+        "thaiMeaning": "วัฒนธรรมดั้งเดิม"
+      },
+      {
+        "word": "responsible tourist",
+        "thaiMeaning": "นักท่องเที่ยวที่รับผิดชอบ"
+      },
+      {
+        "word": "deliberate choices",
+        "thaiMeaning": "ทางเลือกโดยตั้งใจ"
+      },
+      {
+        "word": "thoughtful choices",
+        "thaiMeaning": "การเลือกอย่างรอบคอบ"
+      },
+      {
+        "word": "local businesses",
+        "thaiMeaning": "ธุรกิจท้องถิ่น"
+      },
+      {
+        "word": "careful planning",
+        "thaiMeaning": "การวางแผนอย่างรอบคอบ"
+      },
+      {
+        "word": "negative impact",
+        "thaiMeaning": "ผลกระทบด้านลบ"
+      },
+      {
+        "word": "overall impact",
+        "thaiMeaning": "ผลกระทบโดยรวม"
+      },
+      {
+        "word": "achievable goal",
+        "thaiMeaning": "เป้าหมายที่บรรลุได้"
+      },
+      {
+        "word": "entirely responsible",
+        "thaiMeaning": "รับผิดชอบอย่างสมบูรณ์"
+      },
+      {
+        "word": "genuinely reduce",
+        "thaiMeaning": "ลดลงอย่างแท้จริง"
+      },
+      {
+        "word": "damages the environment",
+        "thaiMeaning": "ทำลายสิ่งแวดล้อม"
+      },
+      {
+        "word": "realistic and achievable",
+        "thaiMeaning": "สมจริงและบรรลุได้"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-6",
+    "title": "Should Extinction Be Prevented?",
+    "essay": "It has been widely argued that while extinction has occurred naturally throughout Earth's history, humans have no obligation to prevent animal species from dying out today. Others argue that people have a responsibility to protect endangered species from disappearing completely. I personally believe that humans should actively work to prevent extinction, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that extinction is simply a natural process that should not be interfered with. To explain it simply, this is possibly because countless species, including dinosaurs, vanished long before humans existed; therefore, some believe modern extinctions are merely part of the same natural cycle. For example, several land mammal species disappeared during past ice ages without any human involvement whatsoever. From this perspective, it is understandable why some would believe that current extinctions require no special human intervention.\n\nHowever, I would personally argue in favor of the idea that humans should take active steps to prevent extinction. To put it simply, this is due to the fact that most extinctions today are caused directly by human activity rather than natural processes, which makes them our responsibility to address. For instance, a 2019 United Nations report found that around one million species now face extinction largely because of habitat destruction and pollution. In this respect, it is evident that human-driven extinction differs fundamentally from the natural extinctions of the distant past.\n\nIn conclusion, although it is undeniable that extinction has always occurred naturally, I am of the opinion that humans should work to prevent it, as most modern cases result directly from human actions.",
+    "existingVocab": [
+      {
+        "word": "endangered species",
+        "thaiMeaning": "สัตว์ใกล้สูญพันธุ์"
+      },
+      {
+        "word": "natural cycle",
+        "thaiMeaning": "วัฏจักรตามธรรมชาติ"
+      },
+      {
+        "word": "habitat destruction",
+        "thaiMeaning": "การทำลายถิ่นที่อยู่อาศัย"
+      },
+      {
+        "word": "human activity",
+        "thaiMeaning": "กิจกรรมของมนุษย์"
+      },
+      {
+        "word": "human-driven extinction",
+        "thaiMeaning": "การสูญพันธุ์ที่มนุษย์ก่อให้เกิด"
+      },
+      {
+        "word": "United Nations report",
+        "thaiMeaning": "รายงานของสหประชาชาติ"
+      },
+      {
+        "word": "land mammal species",
+        "thaiMeaning": "ชนิดพันธุ์สัตว์เลี้ยงลูกด้วยนมบนบก"
+      },
+      {
+        "word": "disappearing completely",
+        "thaiMeaning": "หายไปอย่างสมบูรณ์"
+      },
+      {
+        "word": "natural extinctions",
+        "thaiMeaning": "การสูญพันธุ์ตามธรรมชาติ"
+      },
+      {
+        "word": "human intervention",
+        "thaiMeaning": "การแทรกแซงของมนุษย์"
+      },
+      {
+        "word": "prevent extinction",
+        "thaiMeaning": "ป้องกันการสูญพันธุ์"
+      },
+      {
+        "word": "modern extinctions",
+        "thaiMeaning": "การสูญพันธุ์ในยุคปัจจุบัน"
+      },
+      {
+        "word": "human involvement",
+        "thaiMeaning": "การมีส่วนร่วมของมนุษย์"
+      },
+      {
+        "word": "countless species",
+        "thaiMeaning": "ชนิดพันธุ์นับไม่ถ้วน"
+      },
+      {
+        "word": "natural process",
+        "thaiMeaning": "กระบวนการตามธรรมชาติ"
+      },
+      {
+        "word": "animal species",
+        "thaiMeaning": "ชนิดพันธุ์สัตว์"
+      },
+      {
+        "word": "distant past",
+        "thaiMeaning": "อดีตอันไกล"
+      },
+      {
+        "word": "active steps",
+        "thaiMeaning": "มาตรการเชิงรุก"
+      },
+      {
+        "word": "no obligation",
+        "thaiMeaning": "ไม่มีข้อผูกมัด"
+      },
+      {
+        "word": "human actions",
+        "thaiMeaning": "การกระทำของมนุษย์"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-7",
+    "title": "Preventing Illness vs. Treating the Sick",
+    "essay": "It has been widely argued that while treating illness remains necessary, governments should prioritize public spending on promoting healthy lifestyles over treating people who are already sick. Others argue that treatment should remain the top funding priority, since sick people need immediate medical care. I personally believe that prevention deserves greater public investment, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that treating existing illness should remain the government's main priority. To explain it simply, this is possibly because sick patients require urgent medical attention that cannot be delayed; therefore, reducing treatment funding could put vulnerable lives at serious risk. For example, cancer patients and accident victims often need immediate hospital care regardless of how much money is spent on prevention. From this perspective, it is understandable why some would believe that treating the sick should take precedence over prevention campaigns.\n\nHowever, I would personally argue in favor of the idea that promoting healthy lifestyles deserves greater public investment. To put it simply, this is due to the fact that preventing illness before it develops reduces long-term healthcare costs, which ultimately benefits the entire population. For instance, a 2020 World Health Organization study found that every dollar spent on obesity-prevention programs saved several dollars in future treatment costs. In this respect, it is evident that prevention spending produces greater long-term benefits for public health systems.\n\nIn conclusion, although it is undeniable that treating sick patients remains an urgent necessity, I am of the opinion that promoting healthy lifestyles should receive greater public funding, as prevention reduces future healthcare burdens significantly.",
+    "existingVocab": [
+      {
+        "word": "healthy lifestyles",
+        "thaiMeaning": "วิถีชีวิตที่ดีต่อสุขภาพ"
+      },
+      {
+        "word": "medical attention",
+        "thaiMeaning": "การดูแลรักษาทางการแพทย์"
+      },
+      {
+        "word": "healthcare costs",
+        "thaiMeaning": "ค่าใช้จ่ายด้านสุขภาพ"
+      },
+      {
+        "word": "public health systems",
+        "thaiMeaning": "ระบบสาธารณสุข"
+      },
+      {
+        "word": "obesity-prevention programs",
+        "thaiMeaning": "โปรแกรมป้องกันโรคอ้วน"
+      },
+      {
+        "word": "immediate medical care",
+        "thaiMeaning": "การรักษาพยาบาลทันที"
+      },
+      {
+        "word": "prevention campaigns",
+        "thaiMeaning": "แคมเปญการป้องกัน"
+      },
+      {
+        "word": "long-term benefits",
+        "thaiMeaning": "ประโยชน์ระยะยาว"
+      },
+      {
+        "word": "healthcare burdens",
+        "thaiMeaning": "ภาระด้านสาธารณสุข"
+      },
+      {
+        "word": "public investment",
+        "thaiMeaning": "การลงทุนภาครัฐ"
+      },
+      {
+        "word": "funding priority",
+        "thaiMeaning": "ลำดับความสำคัญด้านงบประมาณ"
+      },
+      {
+        "word": "existing illness",
+        "thaiMeaning": "อาการเจ็บป่วยที่มีอยู่แล้ว"
+      },
+      {
+        "word": "accident victims",
+        "thaiMeaning": "ผู้ประสบอุบัติเหตุ"
+      },
+      {
+        "word": "cancer patients",
+        "thaiMeaning": "ผู้ป่วยโรคมะเร็ง"
+      },
+      {
+        "word": "vulnerable lives",
+        "thaiMeaning": "ชีวิตที่เปราะบาง"
+      },
+      {
+        "word": "urgent necessity",
+        "thaiMeaning": "ความจำเป็นเร่งด่วน"
+      },
+      {
+        "word": "public spending",
+        "thaiMeaning": "การใช้จ่ายภาครัฐ"
+      },
+      {
+        "word": "treatment costs",
+        "thaiMeaning": "ค่าใช้จ่ายในการรักษา"
+      },
+      {
+        "word": "take precedence",
+        "thaiMeaning": "มีความสำคัญเหนือกว่า"
+      },
+      {
+        "word": "entire population",
+        "thaiMeaning": "ประชากรทั้งหมด"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-8",
+    "title": "Raising the Minimum Driving Age",
+    "essay": "It has been widely argued that while young drivers gain independence early, raising the minimum age for driving cars and motorcycles is the best way to improve road safety. Others argue that stricter testing and driver education would be more effective than simply raising the age limit. I personally believe that raising the minimum driving age is the most effective solution, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that better training programs would improve road safety more effectively than age restrictions. To explain it simply, this is possibly because skill and experience matter more than age when operating a vehicle safely; therefore, some believe intensive driving courses could reduce accidents without delaying independence. For example, several countries already require additional lessons for newly licensed drivers before allowing them to drive unsupervised. From this perspective, it is understandable why some would believe that improved training addresses the root cause of dangerous driving.\n\nHowever, I would personally argue in favor of the idea that raising the minimum driving age is the most effective measure. To put it simply, this is due to the fact that younger drivers' brains are still developing the judgment needed for quick decision-making, which extra training cannot fully replace. For instance, a 2021 study by the World Health Organization found that drivers aged sixteen to nineteen are nearly three times more likely to crash than drivers over twenty-five. In this respect, it is evident that raising the minimum age directly targets the drivers most at risk of causing accidents.\n\nIn conclusion, although it is undeniable that better training could reduce some accidents, I am of the opinion that raising the minimum driving age remains the most effective way to improve road safety.",
+    "existingVocab": [
+      {
+        "word": "road safety",
+        "thaiMeaning": "ความปลอดภัยบนท้องถนน"
+      },
+      {
+        "word": "driver education",
+        "thaiMeaning": "การอบรมผู้ขับขี่"
+      },
+      {
+        "word": "decision-making",
+        "thaiMeaning": "การตัดสินใจ"
+      },
+      {
+        "word": "age restrictions",
+        "thaiMeaning": "ข้อจำกัดด้านอายุ"
+      },
+      {
+        "word": "minimum driving age",
+        "thaiMeaning": "อายุขั้นต่ำในการขับขี่"
+      },
+      {
+        "word": "intensive driving courses",
+        "thaiMeaning": "หลักสูตรขับรถเข้มข้น"
+      },
+      {
+        "word": "newly licensed drivers",
+        "thaiMeaning": "ผู้ขับขี่ที่เพิ่งได้รับใบอนุญาต"
+      },
+      {
+        "word": "World Health Organization",
+        "thaiMeaning": "องค์การอนามัยโลก"
+      },
+      {
+        "word": "operating a vehicle",
+        "thaiMeaning": "การขับรถยนต์"
+      },
+      {
+        "word": "skill and experience",
+        "thaiMeaning": "ทักษะและประสบการณ์"
+      },
+      {
+        "word": "delaying independence",
+        "thaiMeaning": "การเลื่อนความเป็นอิสระ"
+      },
+      {
+        "word": "dangerous driving",
+        "thaiMeaning": "การขับขี่อันตราย"
+      },
+      {
+        "word": "training programs",
+        "thaiMeaning": "โปรแกรมการฝึกอบรม"
+      },
+      {
+        "word": "drive unsupervised",
+        "thaiMeaning": "ขับรถโดยไม่มีผู้ควบคุม"
+      },
+      {
+        "word": "stricter testing",
+        "thaiMeaning": "การทดสอบที่เข้มงวดขึ้น"
+      },
+      {
+        "word": "effective measure",
+        "thaiMeaning": "มาตรการที่มีประสิทธิภาพ"
+      },
+      {
+        "word": "younger drivers",
+        "thaiMeaning": "ผู้ขับขี่ที่อายุน้อย"
+      },
+      {
+        "word": "additional lessons",
+        "thaiMeaning": "บทเรียนเพิ่มเติม"
+      },
+      {
+        "word": "gain independence",
+        "thaiMeaning": "ได้รับอิสรภาพ"
+      },
+      {
+        "word": "root cause",
+        "thaiMeaning": "สาเหตุรากเหง้า"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-9",
+    "title": "Unpaid Community Work for Teenagers",
+    "essay": "It has been widely argued that while schoolwork already demands considerable time, teenagers should be required to do unpaid work in their local community, since this benefits both young people and society as a whole. Others argue that teenagers should focus entirely on their studies instead of taking on additional unpaid responsibilities. I personally believe that community work brings valuable benefits to teenagers, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that teenagers should not be required to do unpaid community work. To explain it simply, this is possibly because academic performance already places enormous pressure on students; therefore, some believe additional responsibilities could harm their exam results. For example, many students already spend several hours each evening completing homework and preparing for important examinations. From this perspective, it is understandable why some would believe that community work would place an unfair burden on busy teenagers.\n\nHowever, I would personally argue in favor of the idea that unpaid community work benefits both teenagers and wider society. To put it simply, this is due to the fact that volunteering teaches practical skills and responsibility, which cannot easily be learned through classroom study alone. For instance, a 2022 survey by the National Youth Agency in the UK found that teenagers who volunteered regularly reported significantly higher confidence and stronger communication skills. In this respect, it is evident that community work develops abilities that benefit young people well beyond school.\n\nIn conclusion, although it is undeniable that academic study remains a priority for teenagers, I am of the opinion that unpaid community work should be encouraged, as it builds valuable life skills alongside classroom learning.",
+    "existingVocab": [
+      {
+        "word": "academic performance",
+        "thaiMeaning": "ผลการเรียน"
+      },
+      {
+        "word": "practical skills",
+        "thaiMeaning": "ทักษะเชิงปฏิบัติ"
+      },
+      {
+        "word": "communication skills",
+        "thaiMeaning": "ทักษะการสื่อสาร"
+      },
+      {
+        "word": "life skills",
+        "thaiMeaning": "ทักษะชีวิต"
+      },
+      {
+        "word": "unpaid community work",
+        "thaiMeaning": "งานชุมชนแบบไม่มีค่าจ้าง"
+      },
+      {
+        "word": "National Youth Agency",
+        "thaiMeaning": "หน่วยงานเยาวชนแห่งชาติ"
+      },
+      {
+        "word": "additional responsibilities",
+        "thaiMeaning": "ความรับผิดชอบเพิ่มเติม"
+      },
+      {
+        "word": "unpaid responsibilities",
+        "thaiMeaning": "ความรับผิดชอบที่ไม่มีค่าจ้าง"
+      },
+      {
+        "word": "important examinations",
+        "thaiMeaning": "การสอบที่สำคัญ"
+      },
+      {
+        "word": "volunteered regularly",
+        "thaiMeaning": "อาสาสมัครอย่างสม่ำเสมอ"
+      },
+      {
+        "word": "classroom learning",
+        "thaiMeaning": "การเรียนรู้ในห้องเรียน"
+      },
+      {
+        "word": "classroom study",
+        "thaiMeaning": "การเรียนในชั้นเรียน"
+      },
+      {
+        "word": "enormous pressure",
+        "thaiMeaning": "แรงกดดันมหาศาล"
+      },
+      {
+        "word": "local community",
+        "thaiMeaning": "ชุมชนท้องถิ่น"
+      },
+      {
+        "word": "valuable benefits",
+        "thaiMeaning": "ประโยชน์อันมีค่า"
+      },
+      {
+        "word": "unfair burden",
+        "thaiMeaning": "ภาระที่ไม่เป็นธรรม"
+      },
+      {
+        "word": "exam results",
+        "thaiMeaning": "ผลการสอบ"
+      },
+      {
+        "word": "higher confidence",
+        "thaiMeaning": "ความมั่นใจที่สูงขึ้น"
+      },
+      {
+        "word": "wider society",
+        "thaiMeaning": "สังคมโดยรวม"
+      },
+      {
+        "word": "considerable time",
+        "thaiMeaning": "เวลาค่อนข้างมาก"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-10",
+    "title": "The Internet: Humanity's Greatest Invention?",
+    "essay": "It has been widely argued that while human history includes many transformative inventions such as the wheel, the internet is the single most important invention ever created. Others argue that older inventions laid the essential foundation on which modern technology, including the internet, could later be built. I personally believe that the internet is indeed the most important invention, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that earlier inventions such as the wheel deserve greater recognition than the internet. To explain it simply, this is possibly because the wheel enabled transportation and trade thousands of years before modern technology existed; therefore, some believe it created the foundation for all later human progress. For example, ancient civilizations used wheeled carts to build cities, transport goods, and expand agriculture across vast distances. From this perspective, it is understandable why some would believe that foundational inventions like the wheel matter more than the internet.\n\nHowever, I would personally argue in favor of the idea that the internet is the most significant invention in human history. To put it simply, this is due to the fact that it connects billions of people instantly, which has transformed communication, education, and business on an unprecedented global scale. For instance, the International Telecommunication Union reported in 2023 that over five billion people worldwide now use the internet regularly. In this respect, it is evident that no other invention has reshaped daily life as rapidly or as widely as the internet.\n\nIn conclusion, although it is undeniable that earlier inventions such as the wheel shaped human civilization, I am of the opinion that the internet remains the most important invention, given its unmatched global impact.",
+    "existingVocab": [
+      {
+        "word": "transportation and trade",
+        "thaiMeaning": "การคมนาคมขนส่งและการค้า"
+      },
+      {
+        "word": "human progress",
+        "thaiMeaning": "ความก้าวหน้าของมนุษยชาติ"
+      },
+      {
+        "word": "global scale",
+        "thaiMeaning": "ระดับโลก"
+      },
+      {
+        "word": "daily life",
+        "thaiMeaning": "ชีวิตประจำวัน"
+      },
+      {
+        "word": "International Telecommunication Union",
+        "thaiMeaning": "สหภาพโทรคมนาคมระหว่างประเทศ"
+      },
+      {
+        "word": "transformative inventions",
+        "thaiMeaning": "สิ่งประดิษฐ์ที่เปลี่ยนโฉม"
+      },
+      {
+        "word": "most important invention",
+        "thaiMeaning": "สิ่งประดิษฐ์ที่สำคัญที่สุด"
+      },
+      {
+        "word": "foundational inventions",
+        "thaiMeaning": "สิ่งประดิษฐ์ที่เป็นรากฐาน"
+      },
+      {
+        "word": "unmatched global impact",
+        "thaiMeaning": "ผลกระทบระดับโลกที่ไม่มีใครเทียบ"
+      },
+      {
+        "word": "ancient civilizations",
+        "thaiMeaning": "อารยธรรมโบราณ"
+      },
+      {
+        "word": "essential foundation",
+        "thaiMeaning": "รากฐานที่สำคัญ"
+      },
+      {
+        "word": "significant invention",
+        "thaiMeaning": "สิ่งประดิษฐ์ที่สำคัญ"
+      },
+      {
+        "word": "greater recognition",
+        "thaiMeaning": "การยอมรับที่มากขึ้น"
+      },
+      {
+        "word": "human civilization",
+        "thaiMeaning": "อารยธรรมของมนุษย์"
+      },
+      {
+        "word": "earlier inventions",
+        "thaiMeaning": "สิ่งประดิษฐ์ก่อนหน้า"
+      },
+      {
+        "word": "modern technology",
+        "thaiMeaning": "เทคโนโลยีสมัยใหม่"
+      },
+      {
+        "word": "expand agriculture",
+        "thaiMeaning": "ขยายการเกษตร"
+      },
+      {
+        "word": "billions of people",
+        "thaiMeaning": "ผู้คนนับพันล้าน"
+      },
+      {
+        "word": "wheeled carts",
+        "thaiMeaning": "เกวียนล้อ"
+      },
+      {
+        "word": "vast distances",
+        "thaiMeaning": "ระยะทางอันไกลโพ้น"
+      }
+    ]
+  }
+]

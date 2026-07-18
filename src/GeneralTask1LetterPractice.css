@@ -1,0 +1,762 @@
+.gt1PracticeShell {
+  display: grid;
+  gap: 22px;
+  color: #172033;
+  font-family: Inter, Anuphan, sans-serif;
+}
+
+.gt1PromptCard,
+.gt1PatternRules,
+.gt1ClassificationCard,
+.gt1BuilderMain,
+.gt1TransitionSidebar {
+  border: 3px solid #172033;
+  border-radius: 18px;
+  background: #fffdf4;
+  box-shadow: 7px 7px 0 #172033;
+}
+
+.gt1PromptCard {
+  padding: clamp(20px, 4vw, 34px);
+  line-height: 1.65;
+}
+
+.gt1PromptCard p,
+.gt1PromptCard h2 {
+  margin: 8px 0;
+}
+
+.gt1PromptCard h2 {
+  max-width: 900px;
+  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+}
+
+.gt1PromptCard ul {
+  margin: 10px 0 16px;
+}
+
+.gt1Kicker,
+.gt1GateBadge {
+  width: fit-content;
+  padding: 5px 10px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  background: #b9dcff;
+  font-size: .76rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.gt1PatternRules {
+  display: grid;
+  grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr);
+  gap: 18px;
+  padding: 20px;
+  background: #ffe676;
+}
+
+.gt1PatternRules > div {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.gt1PatternRules > div span {
+  font-size: .74rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.gt1PatternRules ul {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.65;
+}
+
+.gt1ClassificationCard {
+  display: grid;
+  gap: 16px;
+  padding: clamp(20px, 4vw, 32px);
+}
+
+.gt1ClassificationCard h3,
+.gt1ClassificationCard p {
+  margin: 0;
+}
+
+.gt1RegisterOptions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gt1RegisterOptions button {
+  display: grid;
+  gap: 5px;
+  min-height: 100px;
+  padding: 16px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: white;
+  color: inherit;
+  text-align: left;
+  box-shadow: 4px 4px 0 #172033;
+  cursor: pointer;
+}
+
+.gt1RegisterOptions button.is-selected {
+  translate: 3px 3px;
+  background: #ffe676;
+  box-shadow: 1px 1px 0 #172033;
+}
+
+.gt1RegisterOptions button strong {
+  font-size: 1.05rem;
+}
+
+.gt1RegisterOptions button span {
+  color: #526078;
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+.gt1ClassificationFeedback,
+.gt1StepFeedback {
+  padding: 12px 14px;
+  border: 2px solid #172033;
+  border-radius: 12px;
+  font-weight: 750;
+}
+
+.gt1ClassificationFeedback.is-correct,
+.gt1StepFeedback.is-correct {
+  background: #c9f6d4;
+}
+
+.gt1ClassificationFeedback.is-wrong,
+.gt1StepFeedback.is-wrong {
+  background: #ffd1dc;
+}
+
+.gt1PrimaryButton,
+.gt1CheckButton {
+  width: fit-content;
+  padding: 12px 18px;
+  border: 3px solid #172033;
+  border-radius: 12px;
+  color: #172033;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 4px 4px 0 #172033;
+  cursor: pointer;
+}
+
+.gt1PrimaryButton {
+  background: #ffe676;
+}
+
+.gt1CheckButton {
+  background: #b9dcff;
+}
+
+.gt1PrimaryButton:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.gt1BuilderLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 330px);
+  gap: 20px;
+  align-items: start;
+}
+
+.gt1BuilderMain {
+  display: grid;
+  gap: 18px;
+  padding: clamp(16px, 3vw, 28px);
+}
+
+.gt1Progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gt1Progress button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px;
+  border: 2px solid #172033;
+  border-radius: 11px;
+  background: white;
+  font-weight: 850;
+}
+
+.gt1Progress button.is-current {
+  background: #b9dcff;
+}
+
+.gt1Progress button.is-done {
+  background: #c9f6d4;
+}
+
+.gt1BulletCard {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 13px 15px;
+  border: 2px solid #172033;
+  border-radius: 12px;
+  background: #ffe9cb;
+  animation: gt1BulletIn .5s cubic-bezier(.22, .61, .36, 1) both;
+}
+
+@keyframes gt1BulletIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gt1Progress button {
+  transition: background .35s ease, transform .35s cubic-bezier(.22, .61, .36, 1), box-shadow .35s ease;
+}
+
+/* Pop-up tutorial anchored above the bullet card */
+.gt1Tutorial {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 12px);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #efe6ff;
+  box-shadow: 6px 6px 0 #172033;
+  animation: gt1TutorialIn .45s cubic-bezier(.22, .61, .36, 1) both;
+}
+
+.gt1Tutorial::after {
+  content: '';
+  position: absolute;
+  left: 34px;
+  top: 100%;
+  width: 16px;
+  height: 16px;
+  background: #efe6ff;
+  border-right: 3px solid #172033;
+  border-bottom: 3px solid #172033;
+  transform: translateY(-9px) rotate(45deg);
+}
+
+.gt1TutorialBody {
+  display: grid;
+  gap: 6px;
+  min-width: 220px;
+  flex: 1 1 240px;
+}
+
+.gt1TutorialBadge {
+  width: fit-content;
+  padding: 3px 9px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  background: #d8c7ff;
+  font-size: .64rem;
+  font-weight: 950;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.gt1TutorialBody p {
+  margin: 0;
+  color: #35235f;
+  font-size: .85rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.gt1TutorialClose {
+  padding: 8px 14px;
+  border: 2px solid #172033;
+  border-radius: 10px;
+  background: #ffe676;
+  color: #172033;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 3px 3px 0 #172033;
+  cursor: pointer;
+}
+
+@keyframes gt1TutorialIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Per-blank mistake explanations */
+.gt1MistakeList {
+  display: grid;
+  gap: 10px;
+  padding: 15px 16px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #fff1f4;
+  box-shadow: 4px 4px 0 #172033;
+}
+
+.gt1MistakeList > strong {
+  color: #8a1f3d;
+  font-size: .9rem;
+}
+
+.gt1MistakeList ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gt1MistakeList li {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 2px solid #172033;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.gt1MistakeWhere {
+  font-size: .68rem;
+  font-weight: 950;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #8a1f3d;
+}
+
+.gt1MistakeAnswer {
+  font-size: .88rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.gt1MistakeAnswer em {
+  font-style: normal;
+  text-decoration: line-through;
+  color: #a23a55;
+}
+
+.gt1MistakeReason {
+  color: #4f5b70;
+  font-size: .82rem;
+  line-height: 1.55;
+}
+
+.gt1BulletCard span {
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.gt1LetterPaper {
+  padding: clamp(20px, 4vw, 36px);
+  border: 2px solid #172033;
+  border-radius: 12px;
+  background: white;
+  line-height: 2.35;
+  animation: gt1PaperIn .55s cubic-bezier(.22, .61, .36, 1) both;
+}
+
+.gt1Greeting {
+  margin: 0 0 18px;
+  font-weight: 800;
+}
+
+/* One flowing paragraph: sentences run on after each other, not on separate lines. */
+.gt1LetterBody {
+  margin: 0;
+  text-indent: 1.6em;
+}
+
+@keyframes gt1PaperIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(.985);
+    filter: blur(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.gt1LetterPaper select,
+.gt1DropSlot {
+  min-width: 92px;
+  margin: 0 3px;
+  padding: 4px 7px;
+  border: 2px solid #172033;
+  border-radius: 7px;
+  background: #f6f8ff;
+  color: #172033;
+  font: inherit;
+  font-weight: 750;
+}
+
+.gt1DropSlot {
+  display: inline-block;
+  min-width: 120px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.gt1LetterPaper .is-correct {
+  background: #c9f6d4;
+}
+
+.gt1LetterPaper .is-wrong {
+  background: #ffd1dc;
+}
+
+.gt1Closing {
+  margin-top: 22px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.gt1Closing p {
+  margin: 2px 0;
+}
+
+.gt1BuilderActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gt1RecallPrompt {
+  display: grid;
+  gap: 12px;
+  padding: 15px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #efe6ff;
+  box-shadow: 4px 4px 0 #172033;
+}
+
+.gt1RecallPrompt strong {
+  color: #3f2475;
+}
+
+.gt1RecallPrompt p {
+  margin: 5px 0 0;
+  color: #4f5b70;
+  font-size: .86rem;
+  line-height: 1.55;
+}
+
+.gt1RecallPrompt > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.gt1RecallSkip,
+.gt1RecallReopen {
+  border: 0;
+  background: transparent;
+  color: #4d2f83;
+  font: inherit;
+  font-weight: 850;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.gt1RecallReopen {
+  width: fit-content;
+  padding: 0;
+}
+
+.gt1TransitionSidebar {
+  position: sticky;
+  top: 16px;
+  display: grid;
+  gap: 14px;
+  max-height: calc(100vh - 32px);
+  padding: 18px;
+  overflow: auto;
+  background: #dcecff;
+}
+
+.gt1RecallCard {
+  display: grid;
+  gap: 11px;
+  padding: 14px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #f4edff;
+  box-shadow: 4px 4px 0 #172033;
+  animation: gt1RecallIn .28s ease both;
+}
+
+.gt1RecallCard.is-retry {
+  background: #fff0f4;
+}
+
+.gt1RecallCard.is-passed {
+  background: #e3f9e9;
+}
+
+.gt1RecallHead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.gt1RecallHead > span {
+  font-size: 1.7rem;
+}
+
+.gt1RecallHead small {
+  color: #67439a;
+  font-size: .65rem;
+  font-weight: 950;
+  letter-spacing: .07em;
+}
+
+.gt1RecallHead h3 {
+  margin-top: 2px;
+  font-size: .92rem;
+}
+
+.gt1RecallCard > p {
+  color: #4b3d63;
+  font-size: .79rem;
+  line-height: 1.5;
+}
+
+.gt1RecallCard textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 10px;
+  resize: vertical;
+  border: 2px solid #172033;
+  border-radius: 9px;
+  outline: none;
+  background: #fff;
+  color: #172033;
+  font: 500 .84rem/1.6 Inter, Anuphan, sans-serif;
+  box-sizing: border-box;
+}
+
+.gt1RecallCard textarea:focus {
+  box-shadow: 0 0 0 3px rgba(103, 67, 154, .2);
+}
+
+.gt1RecallCard textarea:disabled {
+  background: #edfff2;
+}
+
+.gt1RecallActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.gt1RecallActions button {
+  padding: 7px 9px;
+  border: 2px solid #172033;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: .74rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.gt1RecallActions button:first-child {
+  background: #ffe676;
+}
+
+.gt1RecallActions button:disabled {
+  cursor: default;
+  opacity: .65;
+}
+
+.gt1RecallSuccess,
+.gt1RecallFeedback {
+  padding: 9px;
+  border: 2px solid #172033;
+  border-radius: 9px;
+  font-size: .76rem;
+  line-height: 1.5;
+}
+
+.gt1RecallSuccess {
+  background: #c9f6d4;
+  font-weight: 800;
+}
+
+.gt1RecallFeedback {
+  max-height: 230px;
+  overflow: auto;
+  background: #ffdce5;
+}
+
+.gt1RecallFeedback ul {
+  display: grid;
+  gap: 6px;
+  margin: 7px 0 0;
+  padding-left: 18px;
+}
+
+@keyframes gt1RecallIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gt1TransitionSidebar h3,
+.gt1TransitionSidebar p {
+  margin: 0;
+}
+
+.gt1TransitionSidebar > p {
+  color: #4f5b70;
+  font-size: .83rem;
+}
+
+.gt1TransitionGroup {
+  display: grid;
+  gap: 7px;
+  padding-top: 12px;
+  border-top: 2px dashed #172033;
+}
+
+.gt1TransitionGroup > span {
+  font-size: .72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.gt1TransitionGroup > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gt1TransitionGroup button {
+  padding: 7px 9px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  background: white;
+  color: inherit;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 800;
+  cursor: grab;
+}
+
+.gt1ModelReveal {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 3px solid #172033;
+  border-radius: 13px;
+  background: #c9f6d4;
+}
+
+.gt1ModelReveal > span {
+  font-size: .75rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+
+.gt1ModelReveal pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font: inherit;
+  line-height: 1.65;
+}
+
+@media (max-width: 880px) {
+  .gt1BuilderLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .gt1TransitionSidebar {
+    position: static;
+    max-height: none;
+    grid-row: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gt1RecallCard,
+  .gt1LetterPaper,
+  .gt1BulletCard,
+  .gt1Tutorial {
+    animation: none;
+  }
+
+  .gt1Progress button {
+    transition: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .gt1PatternRules {
+    grid-template-columns: 1fr;
+  }
+
+  .gt1RegisterOptions {
+    grid-template-columns: 1fr;
+  }
+
+  .gt1RegisterOptions button {
+    min-height: auto;
+  }
+
+  .gt1BuilderActions {
+    flex-direction: column;
+  }
+
+  .gt1BuilderActions button {
+    width: 100%;
+  }
+}
+
+
+/* Letter-hint host wrap — styles live in LetterHintBlank.css */
+.gt1LetterHintWrap {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 4px;
+}

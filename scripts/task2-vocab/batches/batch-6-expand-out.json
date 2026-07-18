@@ -1,0 +1,1332 @@
+[
+  {
+    "id": "t2-dq-6",
+    "vocab": [
+      {
+        "word": "personal training",
+        "thaiMeaning": "การฝึกส่วนตัว"
+      },
+      {
+        "word": "flexible schedule",
+        "thaiMeaning": "ตารางเวลาที่ยืดหยุ่น"
+      },
+      {
+        "word": "personalised programme",
+        "thaiMeaning": "โปรแกรมที่ออกแบบเฉพาะบุคคล"
+      },
+      {
+        "word": "gym-related injuries",
+        "thaiMeaning": "การบาดเจ็บที่เกี่ยวกับการออกกำลังกาย"
+      },
+      {
+        "word": "personal fitness trainer",
+        "thaiMeaning": "เทรนเนอร์ออกกำลังกายส่วนตัว"
+      },
+      {
+        "word": "demanding work commitments",
+        "thaiMeaning": "ภาระงานที่หนัก"
+      },
+      {
+        "word": "growing popularity",
+        "thaiMeaning": "ความนิยมที่เพิ่มขึ้น"
+      },
+      {
+        "word": "busy professionals",
+        "thaiMeaning": "มืออาชีพที่งานยุ่ง"
+      },
+      {
+        "word": "qualified trainer",
+        "thaiMeaning": "เทรนเนอร์ที่มีคุณสมบัติ"
+      },
+      {
+        "word": "unsupervised exercise",
+        "thaiMeaning": "การออกกำลังกายโดยไม่มีผู้ดูแล"
+      },
+      {
+        "word": "professional supervision",
+        "thaiMeaning": "การดูแลโดยมืออาชีพ"
+      },
+      {
+        "word": "genuine health benefits",
+        "thaiMeaning": "ประโยชน์ด้านสุขภาพอย่างแท้จริง"
+      },
+      {
+        "word": "physiotherapy clinics",
+        "thaiMeaning": "คลินิกกายภาพบำบัด"
+      },
+      {
+        "word": "beneficial trend",
+        "thaiMeaning": "แนวโน้มที่เป็นประโยชน์"
+      },
+      {
+        "word": "risk of injury",
+        "thaiMeaning": "ความเสี่ยงต่อการบาดเจ็บ"
+      },
+      {
+        "word": "exercise classes",
+        "thaiMeaning": "คลาสออกกำลังกาย"
+      },
+      {
+        "word": "feeling intimidated",
+        "thaiMeaning": "รู้สึกขาดความมั่นใจ"
+      },
+      {
+        "word": "experienced participants",
+        "thaiMeaning": "ผู้เข้าร่วมที่มีประสบการณ์"
+      },
+      {
+        "word": "first-time gym users",
+        "thaiMeaning": "ผู้ใช้ยิมครั้งแรก"
+      },
+      {
+        "word": "positive development",
+        "thaiMeaning": "พัฒนาการในทางบวก"
+      },
+      {
+        "word": "lack the confidence",
+        "thaiMeaning": "ขาดความมั่นใจ"
+      },
+      {
+        "word": "exercise correctly",
+        "thaiMeaning": "ออกกำลังกายอย่างถูกต้อง"
+      },
+      {
+        "word": "group classes",
+        "thaiMeaning": "คลาสแบบกลุ่ม"
+      },
+      {
+        "word": "new gym members",
+        "thaiMeaning": "สมาชิกยิมใหม่"
+      },
+      {
+        "word": "simple convenience",
+        "thaiMeaning": "ความสะดวกทั่วไป"
+      },
+      {
+        "word": "many households",
+        "thaiMeaning": "หลายครัวเรือน"
+      },
+      {
+        "word": "safety and motivation",
+        "thaiMeaning": "ความปลอดภัยและแรงจูงใจ"
+      },
+      {
+        "word": "increasing numbers of people",
+        "thaiMeaning": "จำนวนคนที่เพิ่มขึ้น"
+      },
+      {
+        "word": "playing sport",
+        "thaiMeaning": "การเล่นกีฬา"
+      },
+      {
+        "word": "booked sessions",
+        "thaiMeaning": "จองเซสชัน"
+      },
+      {
+        "word": "extend well beyond",
+        "thaiMeaning": "ขยายไปไกลกว่า"
+      },
+      {
+        "word": "hiring a personal trainer",
+        "thaiMeaning": "การจ้างเทรนเนอร์ส่วนตัว"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-7",
+    "vocab": [
+      {
+        "word": "monetary gifts",
+        "thaiMeaning": "ของขวัญที่เป็นเงิน"
+      },
+      {
+        "word": "holiday season",
+        "thaiMeaning": "ช่วงเทศกาลวันหยุด"
+      },
+      {
+        "word": "unnecessary waste",
+        "thaiMeaning": "ความสิ้นเปลืองที่ไม่จำเป็น"
+      },
+      {
+        "word": "cash donations",
+        "thaiMeaning": "การบริจาคเป็นเงินสด"
+      },
+      {
+        "word": "busy modern lifestyles",
+        "thaiMeaning": "วิถีชีวิตสมัยใหม่ที่เร่งรีบ"
+      },
+      {
+        "word": "suitable present",
+        "thaiMeaning": "ของขวัญที่เหมาะสม"
+      },
+      {
+        "word": "considerably less effort",
+        "thaiMeaning": "ความพยายามน้อยกว่ามาก"
+      },
+      {
+        "word": "unwanted gifts",
+        "thaiMeaning": "ของขวัญที่ไม่ต้องการ"
+      },
+      {
+        "word": "physical gifts",
+        "thaiMeaning": "ของขวัญที่เป็นวัตถุ"
+      },
+      {
+        "word": "personally chosen gift",
+        "thaiMeaning": "ของขวัญที่เลือกเองอย่างตั้งใจ"
+      },
+      {
+        "word": "practical and considerate choice",
+        "thaiMeaning": "ทางเลือกที่ปฏิบัติได้และใส่ใจ"
+      },
+      {
+        "word": "sensible and welcome trend",
+        "thaiMeaning": "แนวโน้มที่สมเหตุสมผลและน่ายินดี"
+      },
+      {
+        "word": "special occasions",
+        "thaiMeaning": "โอกาสพิเศษ"
+      },
+      {
+        "word": "thoughtful and meaningful",
+        "thaiMeaning": "ใส่ใจและมีความหมาย"
+      },
+      {
+        "word": "returned to shops",
+        "thaiMeaning": "ถูกคืนไปที่ร้าน"
+      },
+      {
+        "word": "free time",
+        "thaiMeaning": "เวลาว่าง"
+      },
+      {
+        "word": "positive development",
+        "thaiMeaning": "พัฒนาการในทางบวก"
+      },
+      {
+        "word": "rarely wasted",
+        "thaiMeaning": "ไม่ค่อยถูกเปลืองเปล่า"
+      },
+      {
+        "word": "preferred giving cash",
+        "thaiMeaning": "ชอบให้เป็นเงินสด"
+      },
+      {
+        "word": "left unused",
+        "thaiMeaning": "ถูกทิ้งไว้โดยไม่ได้ใช้"
+      },
+      {
+        "word": "gifts chosen personally",
+        "thaiMeaning": "ของขวัญที่เลือกเอง"
+      },
+      {
+        "word": "nearly half of consumers",
+        "thaiMeaning": "ผู้บริโภคเกือบครึ่ง"
+      },
+      {
+        "word": "end up discarded",
+        "thaiMeaning": "ถูกทิ้งในที่สุด"
+      },
+      {
+        "word": "choose exactly what they need",
+        "thaiMeaning": "เลือกสิ่งที่ต้องการได้อย่างตรงจุด"
+      },
+      {
+        "word": "giving money instead",
+        "thaiMeaning": "ให้เงินแทน"
+      },
+      {
+        "word": "shift towards",
+        "thaiMeaning": "การเปลี่ยนไปสู่"
+      },
+      {
+        "word": "several years afterwards",
+        "thaiMeaning": "หลายปีหลังจากนั้น"
+      },
+      {
+        "word": "more and more people",
+        "thaiMeaning": "ผู้คนมากขึ้นเรื่อย ๆ"
+      },
+      {
+        "word": "negative development",
+        "thaiMeaning": "พัฒนาการในทางลบ"
+      },
+      {
+        "word": "cupboards for several years",
+        "thaiMeaning": "ถูกทิ้งในตู้หลายปี"
+      },
+      {
+        "word": "actually like or use",
+        "thaiMeaning": "ชอบหรือใช้งานจริง"
+      },
+      {
+        "word": "many people assume",
+        "thaiMeaning": "หลายคนสันนิษฐาน"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-8",
+    "vocab": [
+      {
+        "word": "gallery attendance",
+        "thaiMeaning": "จำนวนผู้เข้าชมหอศิลป์"
+      },
+      {
+        "word": "digital images",
+        "thaiMeaning": "ภาพดิจิทัล"
+      },
+      {
+        "word": "interactive exhibits",
+        "thaiMeaning": "นิทรรศการเชิงโต้ตอบ"
+      },
+      {
+        "word": "entry fees",
+        "thaiMeaning": "ค่าธรรมเนียมเข้าชม"
+      },
+      {
+        "word": "high-resolution paintings",
+        "thaiMeaning": "ภาพวาดความละเอียดสูง"
+      },
+      {
+        "word": "traditional galleries",
+        "thaiMeaning": "หอศิลป์แบบดั้งเดิม"
+      },
+      {
+        "word": "augmented reality displays",
+        "thaiMeaning": "จอแสดงผลความเป็นจริงเสริม"
+      },
+      {
+        "word": "virtual reality tour",
+        "thaiMeaning": "ทัวร์เสมือนจริง"
+      },
+      {
+        "word": "free admission",
+        "thaiMeaning": "เข้าชมฟรี"
+      },
+      {
+        "word": "innovative exhibits",
+        "thaiMeaning": "นิทรรศการที่แปลกใหม่"
+      },
+      {
+        "word": "affordable pricing",
+        "thaiMeaning": "ราคาที่เอื้อมถึง"
+      },
+      {
+        "word": "reverse this decline",
+        "thaiMeaning": "พลิกกลับแนวโน้มที่ลดลงนี้"
+      },
+      {
+        "word": "changing habits",
+        "thaiMeaning": "พฤติกรรมที่เปลี่ยนไป"
+      },
+      {
+        "word": "famous artworks",
+        "thaiMeaning": "ผลงานศิลปะที่มีชื่อเสียง"
+      },
+      {
+        "word": "younger visitors",
+        "thaiMeaning": "ผู้เข้าชมที่อายุน้อยกว่า"
+      },
+      {
+        "word": "interactive forms of entertainment",
+        "thaiMeaning": "รูปแบบความบันเทิงเชิงโต้ตอบ"
+      },
+      {
+        "word": "public interest",
+        "thaiMeaning": "ความสนใจของสาธารณชน"
+      },
+      {
+        "word": "major museums",
+        "thaiMeaning": "พิพิธภัณฑ์ชั้นนำ"
+      },
+      {
+        "word": "art galleries",
+        "thaiMeaning": "หอศิลป์"
+      },
+      {
+        "word": "affordable and accessible",
+        "thaiMeaning": "ราคาเอื้อมถึงและเข้าถึงได้"
+      },
+      {
+        "word": "widely available online",
+        "thaiMeaning": "หาได้ทั่วไปทางออนไลน์"
+      },
+      {
+        "word": "visit a gallery in person",
+        "thaiMeaning": "ไปหอศิลป์ด้วยตนเอง"
+      },
+      {
+        "word": "without leaving home",
+        "thaiMeaning": "โดยไม่ต้องออกจากบ้าน"
+      },
+      {
+        "word": "smallest share",
+        "thaiMeaning": "สัดส่วนที่น้อยที่สุด"
+      },
+      {
+        "word": "touchscreens",
+        "thaiMeaning": "หน้าจอสัมผัส"
+      },
+      {
+        "word": "selected evenings",
+        "thaiMeaning": "เย็นบางวันที่กำหนด"
+      },
+      {
+        "word": "drawn people away",
+        "thaiMeaning": "ดึงผู้คนออกไป"
+      },
+      {
+        "word": "tackle this issue",
+        "thaiMeaning": "จัดการปัญหานี้"
+      },
+      {
+        "word": "visitors under 25",
+        "thaiMeaning": "ผู้เข้าชมที่อายุต่ำกว่า 25"
+      },
+      {
+        "word": "address this problem",
+        "thaiMeaning": "แก้ไขปัญหานี้"
+      },
+      {
+        "word": "make visits more affordable",
+        "thaiMeaning": "ทำให้การเข้าชมเอื้อมถึงมากขึ้น"
+      },
+      {
+        "word": "Google Arts and Culture",
+        "thaiMeaning": "แพลตฟอร์ม Google Arts and Culture"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-9",
+    "vocab": [
+      {
+        "word": "public recognition",
+        "thaiMeaning": "การยอมรับจากสังคม"
+      },
+      {
+        "word": "mass media",
+        "thaiMeaning": "สื่อมวลชน"
+      },
+      {
+        "word": "social status",
+        "thaiMeaning": "สถานะทางสังคม"
+      },
+      {
+        "word": "public services",
+        "thaiMeaning": "บริการสาธารณะ"
+      },
+      {
+        "word": "constant exposure",
+        "thaiMeaning": "การปรากฏตัวต่อเนื่อง"
+      },
+      {
+        "word": "public eye",
+        "thaiMeaning": "สายตาของสาธารณชน"
+      },
+      {
+        "word": "emotional excitement",
+        "thaiMeaning": "ความตื่นเต้นทางอารมณ์"
+      },
+      {
+        "word": "global television audience",
+        "thaiMeaning": "ผู้ชมโทรทัศน์ทั่วโลก"
+      },
+      {
+        "word": "essential professionals",
+        "thaiMeaning": "มืออาชีพที่จำเป็น"
+      },
+      {
+        "word": "vital careers",
+        "thaiMeaning": "อาชีพสำคัญ"
+      },
+      {
+        "word": "teacher training places",
+        "thaiMeaning": "ที่นั่งเรียนฝึกอาชีพครู"
+      },
+      {
+        "word": "comparatively low salaries",
+        "thaiMeaning": "เงินเดือนที่ค่อนข้างต่ำ"
+      },
+      {
+        "word": "welcome inspiration",
+        "thaiMeaning": "แรงบันดาลใจที่เป็นประโยชน์"
+      },
+      {
+        "word": "social platforms",
+        "thaiMeaning": "แพลตฟอร์มโซเชียล"
+      },
+      {
+        "word": "entertainment figures",
+        "thaiMeaning": "บุคคลในวงการบันเทิง"
+      },
+      {
+        "word": "championship match",
+        "thaiMeaning": "การแข่งขันชิงแชมป์"
+      },
+      {
+        "word": "talented young people",
+        "thaiMeaning": "เยาวชนที่มีพรสวรรค์"
+      },
+      {
+        "word": "genuine enjoyment",
+        "thaiMeaning": "ความเพลิดเพลินอย่างแท้จริง"
+      },
+      {
+        "word": "imbalance in recognition",
+        "thaiMeaning": "ความไม่สมดุลในการยอมรับ"
+      },
+      {
+        "word": "negative development",
+        "thaiMeaning": "พัฒนาการในทางลบ"
+      },
+      {
+        "word": "valued far more highly",
+        "thaiMeaning": "ได้รับการให้คุณค่าสูงกว่ามาก"
+      },
+      {
+        "word": "hundreds of millions of followers",
+        "thaiMeaning": "ผู้ติดตามหลายร้อยล้าน"
+      },
+      {
+        "word": "realistically reach",
+        "thaiMeaning": "เข้าถึงได้อย่างสมจริง"
+      },
+      {
+        "word": "everyday professional work",
+        "thaiMeaning": "งานวิชาชีพในชีวิตประจำวัน"
+      },
+      {
+        "word": "billion viewers",
+        "thaiMeaning": "ผู้ชมพันล้านคน"
+      },
+      {
+        "word": "medicine or teaching",
+        "thaiMeaning": "แพทย์หรือการสอน"
+      },
+      {
+        "word": "member countries",
+        "thaiMeaning": "ประเทศสมาชิก"
+      },
+      {
+        "word": "struggling to fill",
+        "thaiMeaning": "ประสบปัญหาการหาคนมาเติม"
+      },
+      {
+        "word": "society as a whole",
+        "thaiMeaning": "สังคมโดยรวม"
+      },
+      {
+        "word": "current priorities",
+        "thaiMeaning": "ลำดับความสำคัญในปัจจุบัน"
+      },
+      {
+        "word": "ultimately harmful",
+        "thaiMeaning": "เป็นอันตรายในท้ายที่สุด"
+      },
+      {
+        "word": "doctors and teachers",
+        "thaiMeaning": "แพทย์และครู"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-10",
+    "vocab": [
+      {
+        "word": "biodiversity loss",
+        "thaiMeaning": "การสูญเสียความหลากหลายทางชีวภาพ"
+      },
+      {
+        "word": "natural habitats",
+        "thaiMeaning": "ถิ่นที่อยู่อาศัยตามธรรมชาติ"
+      },
+      {
+        "word": "protected nature reserves",
+        "thaiMeaning": "เขตอนุรักษ์ธรรมชาติ"
+      },
+      {
+        "word": "endangered species",
+        "thaiMeaning": "สัตว์ใกล้สูญพันธุ์"
+      },
+      {
+        "word": "expanding agriculture",
+        "thaiMeaning": "การขยายพื้นที่เกษตรกรรม"
+      },
+      {
+        "word": "urban development",
+        "thaiMeaning": "การพัฒนาเมือง"
+      },
+      {
+        "word": "habitat loss",
+        "thaiMeaning": "การสูญเสียถิ่นที่อยู่อาศัย"
+      },
+      {
+        "word": "rising global temperatures",
+        "thaiMeaning": "อุณหภูมิโลกที่สูงขึ้น"
+      },
+      {
+        "word": "mass bleaching events",
+        "thaiMeaning": "เหตุการณ์ปะการังฟอกขาวครั้งใหญ่"
+      },
+      {
+        "word": "warming ocean waters",
+        "thaiMeaning": "น้ำทะเลที่อุ่นขึ้น"
+      },
+      {
+        "word": "threatened species",
+        "thaiMeaning": "ชนิดพันธุ์ที่ถูกคุกคาม"
+      },
+      {
+        "word": "forest cover",
+        "thaiMeaning": "พื้นที่ป่าไม้"
+      },
+      {
+        "word": "illegal ivory trafficking",
+        "thaiMeaning": "การค้างาช้างผิดกฎหมาย"
+      },
+      {
+        "word": "conservation policies",
+        "thaiMeaning": "นโยบายอนุรักษ์"
+      },
+      {
+        "word": "complex global pressures",
+        "thaiMeaning": "แรงกดดันระดับโลกที่ซับซ้อน"
+      },
+      {
+        "word": "wildlife populations",
+        "thaiMeaning": "ประชากรสัตว์ป่า"
+      },
+      {
+        "word": "coral reefs",
+        "thaiMeaning": "แนวปะการัง"
+      },
+      {
+        "word": "safer environment",
+        "thaiMeaning": "สภาพแวดล้อมที่ปลอดภัยกว่า"
+      },
+      {
+        "word": "international agreements",
+        "thaiMeaning": "ข้อตกลงระหว่างประเทศ"
+      },
+      {
+        "word": "plant and animal species",
+        "thaiMeaning": "ชนิดพันธุ์พืชและสัตว์"
+      },
+      {
+        "word": "significant decline",
+        "thaiMeaning": "การลดลงอย่างมาก"
+      },
+      {
+        "word": "loss of biodiversity worldwide",
+        "thaiMeaning": "การสูญเสียความหลากหลายทางชีวภาพทั่วโลก"
+      },
+      {
+        "word": "steadily destroying",
+        "thaiMeaning": "ทำลายอย่างต่อเนื่อง"
+      },
+      {
+        "word": "countless species depend on",
+        "thaiMeaning": "ชนิดพันธุ์นับไม่ถ้วนพึ่งพา"
+      },
+      {
+        "word": "altering ecosystems",
+        "thaiMeaning": "การเปลี่ยนแปลงระบบนิเวศ"
+      },
+      {
+        "word": "many species can adapt",
+        "thaiMeaning": "หลายชนิดพันธุ์สามารถปรับตัวได้"
+      },
+      {
+        "word": "Great Barrier Reef",
+        "thaiMeaning": "แนวปะการังเกรตแบร์ริเออร์รีฟ"
+      },
+      {
+        "word": "linked directly to",
+        "thaiMeaning": "เชื่อมโยงโดยตรงกับ"
+      },
+      {
+        "word": "national programme of protected reserves",
+        "thaiMeaning": "โครงการระดับชาติของเขตอนุรักษ์"
+      },
+      {
+        "word": "products made from them",
+        "thaiMeaning": "ผลิตภัณฑ์ที่ทำจากพวกมัน"
+      },
+      {
+        "word": "meaningfully slow this decline",
+        "thaiMeaning": "ชะลอการลดลงนี้อย่างมีความหมาย"
+      },
+      {
+        "word": "World Wildlife Fund",
+        "thaiMeaning": "กองทุนสัตว์ป่าโลก"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-11",
+    "vocab": [
+      {
+        "word": "youthful appearance",
+        "thaiMeaning": "รูปลักษณ์ที่ดูอ่อนเยาว์"
+      },
+      {
+        "word": "body image",
+        "thaiMeaning": "ภาพลักษณ์ของร่างกาย"
+      },
+      {
+        "word": "cosmetic treatments",
+        "thaiMeaning": "การรักษาด้านความงาม"
+      },
+      {
+        "word": "natural ageing",
+        "thaiMeaning": "การแก่ตัวตามธรรมชาติ"
+      },
+      {
+        "word": "unrealistic beauty standards",
+        "thaiMeaning": "มาตรฐานความงามที่ไม่สมจริง"
+      },
+      {
+        "word": "professional competence",
+        "thaiMeaning": "ความสามารถอย่างมืออาชีพ"
+      },
+      {
+        "word": "hiring managers",
+        "thaiMeaning": "ผู้จัดการฝ่ายสรรหา"
+      },
+      {
+        "word": "younger-looking candidates",
+        "thaiMeaning": "ผู้สมัครที่ดูอ่อนเยาว์กว่า"
+      },
+      {
+        "word": "job interviews",
+        "thaiMeaning": "การสัมภาษณ์งาน"
+      },
+      {
+        "word": "financial pressure",
+        "thaiMeaning": "แรงกดดันทางการเงิน"
+      },
+      {
+        "word": "anti-ageing industry",
+        "thaiMeaning": "อุตสาหกรรมต่อต้านริ้วรอย"
+      },
+      {
+        "word": "social media platforms",
+        "thaiMeaning": "แพลตฟอร์มโซเชียลมีเดีย"
+      },
+      {
+        "word": "boost confidence",
+        "thaiMeaning": "เพิ่มความมั่นใจ"
+      },
+      {
+        "word": "widespread preoccupation",
+        "thaiMeaning": "ความหมกมุ่นที่แพร่หลาย"
+      },
+      {
+        "word": "excessive spending",
+        "thaiMeaning": "การใช้จ่ายมากเกินไป"
+      },
+      {
+        "word": "considerable anxiety",
+        "thaiMeaning": "ความวิตกกังวลอย่างมาก"
+      },
+      {
+        "word": "flawless images",
+        "thaiMeaning": "ภาพที่ไร้ที่ติ"
+      },
+      {
+        "word": "sources of self-worth",
+        "thaiMeaning": "แหล่งของคุณค่าในตัวเอง"
+      },
+      {
+        "word": "looking younger",
+        "thaiMeaning": "การดูอ่อนเยาว์กว่า"
+      },
+      {
+        "word": "negative development",
+        "thaiMeaning": "พัฒนาการในทางลบ"
+      },
+      {
+        "word": "considerable amount of money",
+        "thaiMeaning": "เงินจำนวนมาก"
+      },
+      {
+        "word": "strong pressure",
+        "thaiMeaning": "แรงกดดันอย่างมาก"
+      },
+      {
+        "word": "young adults",
+        "thaiMeaning": "ผู้ใหญ่หนุ่มสาว"
+      },
+      {
+        "word": "subtle bias",
+        "thaiMeaning": "อคติอย่างแยบยล"
+      },
+      {
+        "word": "in favour of",
+        "thaiMeaning": "ในทางที่เอื้อต่อ"
+      },
+      {
+        "word": "spread worldwide",
+        "thaiMeaning": "แพร่ไปทั่วโลก"
+      },
+      {
+        "word": "obsession with appearance",
+        "thaiMeaning": "ความหมกมุ่นกับรูปลักษณ์"
+      },
+      {
+        "word": "distract people from",
+        "thaiMeaning": "เบี่ยงเบนความสนใจของผู้คนจาก"
+      },
+      {
+        "word": "Royal Society for Public Health",
+        "thaiMeaning": "ราชสมาคมด้านสาธารณสุข"
+      },
+      {
+        "word": "valued at over 60 billion dollars",
+        "thaiMeaning": "มีมูลค่ากว่า 6 หมื่นล้านดอลลาร์"
+      },
+      {
+        "word": "taking care of one's appearance",
+        "thaiMeaning": "การดูแลรูปลักษณ์ของตน"
+      },
+      {
+        "word": "constantly expose users",
+        "thaiMeaning": "เปิดเผยผู้ใช้อย่างต่อเนื่อง"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-12",
+    "vocab": [
+      {
+        "word": "leisure activity",
+        "thaiMeaning": "กิจกรรมยามว่าง"
+      },
+      {
+        "word": "online retailers",
+        "thaiMeaning": "ผู้ค้าปลีกออนไลน์"
+      },
+      {
+        "word": "unnecessary consumption",
+        "thaiMeaning": "การบริโภคที่ไม่จำเป็น"
+      },
+      {
+        "word": "textile waste",
+        "thaiMeaning": "ขยะสิ่งทอ"
+      },
+      {
+        "word": "entertainment destinations",
+        "thaiMeaning": "แหล่งความบันเทิง"
+      },
+      {
+        "word": "necessary purchases",
+        "thaiMeaning": "การซื้อที่จำเป็น"
+      },
+      {
+        "word": "personal finances",
+        "thaiMeaning": "การเงินส่วนตัว"
+      },
+      {
+        "word": "fast fashion purchases",
+        "thaiMeaning": "การซื้อแฟชั่นราคาถูก"
+      },
+      {
+        "word": "casual browsing",
+        "thaiMeaning": "การเลือกดูสินค้าแบบสบาย ๆ"
+      },
+      {
+        "word": "constant browsing",
+        "thaiMeaning": "การเลือกดูสินค้าอย่างต่อเนื่อง"
+      },
+      {
+        "word": "genuine relaxation",
+        "thaiMeaning": "การผ่อนคลายอย่างแท้จริง"
+      },
+      {
+        "word": "social enjoyment",
+        "thaiMeaning": "ความสนุกทางสังคม"
+      },
+      {
+        "word": "primary hobby",
+        "thaiMeaning": "งานอดิเรกหลัก"
+      },
+      {
+        "word": "shopping malls",
+        "thaiMeaning": "ห้างสรรพสินค้า"
+      },
+      {
+        "word": "mobile app usage",
+        "thaiMeaning": "การใช้แอปมือถือ"
+      },
+      {
+        "word": "growing strain",
+        "thaiMeaning": "ภาระที่เพิ่มขึ้น"
+      },
+      {
+        "word": "free time",
+        "thaiMeaning": "เวลาว่าง"
+      },
+      {
+        "word": "unhealthy trend",
+        "thaiMeaning": "แนวโน้มที่ไม่ดีต่อสุขภาพ"
+      },
+      {
+        "word": "personal enjoyment",
+        "thaiMeaning": "ความเพลิดเพลินส่วนตัว"
+      },
+      {
+        "word": "browsing and buying",
+        "thaiMeaning": "การเลือกดูและซื้อสินค้า"
+      },
+      {
+        "word": "replaced many other activities",
+        "thaiMeaning": "แทนที่กิจกรรมอื่น ๆ หลายอย่าง"
+      },
+      {
+        "word": "come primarily for entertainment",
+        "thaiMeaning": "มาเพื่อความบันเทิงเป็นหลัก"
+      },
+      {
+        "word": "treating shopping as a hobby",
+        "thaiMeaning": "การซื้อของให้เป็นงานอดิเรก"
+      },
+      {
+        "word": "carries consequences well beyond",
+        "thaiMeaning": "ส่งผลไปไกลกว่า"
+      },
+      {
+        "word": "millions of visitors each year",
+        "thaiMeaning": "ผู้เข้าชมหลายล้านคนต่อปี"
+      },
+      {
+        "word": "Ellen MacArthur Foundation",
+        "thaiMeaning": "มูลนิธิ Ellen MacArthur"
+      },
+      {
+        "word": "once chose as hobbies",
+        "thaiMeaning": "เคยเลือกเป็นงานอดิเรก"
+      },
+      {
+        "word": "alongside stores",
+        "thaiMeaning": "ควบคู่ไปกับร้านค้า"
+      },
+      {
+        "word": "any hour of the day",
+        "thaiMeaning": "ทุกชั่วโมงของวัน"
+      },
+      {
+        "word": "increased by more than 30%",
+        "thaiMeaning": "เพิ่มขึ้นมากกว่า 30%"
+      },
+      {
+        "word": "reflecting this shift",
+        "thaiMeaning": "สะท้อนการเปลี่ยนแปลงนี้"
+      },
+      {
+        "word": "cinemas, restaurants, and events",
+        "thaiMeaning": "โรงภาพยนตร์ ร้านอาหาร และงานอีเวนต์"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-13",
+    "vocab": [
+      {
+        "word": "youth unemployment",
+        "thaiMeaning": "การว่างงานของเยาวชน"
+      },
+      {
+        "word": "mental health",
+        "thaiMeaning": "สุขภาพจิต"
+      },
+      {
+        "word": "vocational training",
+        "thaiMeaning": "การฝึกอบรมสายอาชีพ"
+      },
+      {
+        "word": "hiring subsidies",
+        "thaiMeaning": "เงินอุดหนุนการจ้างงาน"
+      },
+      {
+        "word": "prolonged joblessness",
+        "thaiMeaning": "การว่างงานที่ยืดเยื้อ"
+      },
+      {
+        "word": "productive potential",
+        "thaiMeaning": "ศักยภาพในการผลิต"
+      },
+      {
+        "word": "economic output",
+        "thaiMeaning": "ผลผลิตทางเศรษฐกิจ"
+      },
+      {
+        "word": "employable skills",
+        "thaiMeaning": "ทักษะที่พร้อมทำงาน"
+      },
+      {
+        "word": "school leavers",
+        "thaiMeaning": "ผู้ที่จบหรือออกจากโรงเรียน"
+      },
+      {
+        "word": "paid apprenticeships",
+        "thaiMeaning": "การฝึกงานที่มีค่าจ้าง"
+      },
+      {
+        "word": "dual education system",
+        "thaiMeaning": "ระบบการศึกษาแบบทวิภาคี"
+      },
+      {
+        "word": "tax incentives",
+        "thaiMeaning": "สิ่งจูงใจทางภาษี"
+      },
+      {
+        "word": "inexperienced young workers",
+        "thaiMeaning": "แรงงานหนุ่มสาวที่ยังขาดประสบการณ์"
+      },
+      {
+        "word": "hiring incentives",
+        "thaiMeaning": "สิ่งจูงใจในการจ้างงาน"
+      },
+      {
+        "word": "complex economic pressures",
+        "thaiMeaning": "แรงกดดันทางเศรษฐกิจที่ซับซ้อน"
+      },
+      {
+        "word": "dropping out of school",
+        "thaiMeaning": "การออกจากโรงเรียนกลางคัน"
+      },
+      {
+        "word": "self-esteem",
+        "thaiMeaning": "ความนับถือตนเอง"
+      },
+      {
+        "word": "future motivation",
+        "thaiMeaning": "แรงจูงใจในอนาคต"
+      },
+      {
+        "word": "employed peers",
+        "thaiMeaning": "เพื่อนวัยเดียวกันที่มีงานทำ"
+      },
+      {
+        "word": "extended periods",
+        "thaiMeaning": "ช่วงเวลายาวนาน"
+      },
+      {
+        "word": "unable to find work",
+        "thaiMeaning": "ไม่สามารถหางานได้"
+      },
+      {
+        "word": "unemployed young people",
+        "thaiMeaning": "เยาวชนที่ว่างงาน"
+      },
+      {
+        "word": "significantly higher rates of anxiety",
+        "thaiMeaning": "อัตราความวิตกกังวลที่สูงกว่ามาก"
+      },
+      {
+        "word": "young workers remain idle",
+        "thaiMeaning": "แรงงานหนุ่มสาวยังคงว่างงาน"
+      },
+      {
+        "word": "classroom study",
+        "thaiMeaning": "การเรียนในชั้นเรียน"
+      },
+      {
+        "word": "encouraging businesses to employ",
+        "thaiMeaning": "จูงใจธุรกิจให้จ้างงาน"
+      },
+      {
+        "word": "workers under the age of 26",
+        "thaiMeaning": "แรงงานอายุต่ำกว่า 26 ปี"
+      },
+      {
+        "word": "significantly reduce this problem",
+        "thaiMeaning": "ลดปัญหานี้ได้อย่างมาก"
+      },
+      {
+        "word": "International Labour Organization",
+        "thaiMeaning": "องค์การแรงงานระหว่างประเทศ"
+      },
+      {
+        "word": "growing numbers of young people",
+        "thaiMeaning": "จำนวนเยาวชนที่เพิ่มขึ้น"
+      },
+      {
+        "word": "substantial loss",
+        "thaiMeaning": "ความสูญเสียอย่างมาก"
+      },
+      {
+        "word": "large numbers of young workers",
+        "thaiMeaning": "แรงงานหนุ่มสาวจำนวนมาก"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-14",
+    "vocab": [
+      {
+        "word": "traffic congestion",
+        "thaiMeaning": "การจราจรติดขัด"
+      },
+      {
+        "word": "population growth",
+        "thaiMeaning": "การเติบโตของประชากร"
+      },
+      {
+        "word": "public transport networks",
+        "thaiMeaning": "เครือข่ายขนส่งสาธารณะ"
+      },
+      {
+        "word": "congestion charges",
+        "thaiMeaning": "ค่าธรรมเนียมความแออัด"
+      },
+      {
+        "word": "private car registrations",
+        "thaiMeaning": "การจดทะเบียนรถยนต์ส่วนบุคคล"
+      },
+      {
+        "word": "public transport systems",
+        "thaiMeaning": "ระบบขนส่งสาธารณะ"
+      },
+      {
+        "word": "private vehicles",
+        "thaiMeaning": "ยานพาหนะส่วนบุคคล"
+      },
+      {
+        "word": "extensive metro network",
+        "thaiMeaning": "เครือข่ายรถไฟใต้ดินที่ครอบคลุม"
+      },
+      {
+        "word": "outer suburbs",
+        "thaiMeaning": "ชานเมืองชั้นนอก"
+      },
+      {
+        "word": "congestion pricing",
+        "thaiMeaning": "การกำหนดราคาตามความแออัด"
+      },
+      {
+        "word": "central traffic volumes",
+        "thaiMeaning": "ปริมาณรถในใจกลางเมือง"
+      },
+      {
+        "word": "peak hours",
+        "thaiMeaning": "ชั่วโมงเร่งด่วน"
+      },
+      {
+        "word": "busy city centres",
+        "thaiMeaning": "ใจกลางเมืองที่แออัด"
+      },
+      {
+        "word": "private car ownership",
+        "thaiMeaning": "การเป็นเจ้าของรถยนต์ส่วนบุคคล"
+      },
+      {
+        "word": "neighbouring cities",
+        "thaiMeaning": "เมืองข้างเคียง"
+      },
+      {
+        "word": "Mass Rapid Transit",
+        "thaiMeaning": "ระบบรถไฟฟ้าขนส่งมวลชน"
+      },
+      {
+        "word": "complex urban pressures",
+        "thaiMeaning": "แรงกดดันเมืองที่ซับซ้อน"
+      },
+      {
+        "word": "major cities",
+        "thaiMeaning": "เมืองใหญ่"
+      },
+      {
+        "word": "sharp rise",
+        "thaiMeaning": "การเพิ่มขึ้นอย่างรวดเร็ว"
+      },
+      {
+        "word": "rapidly growing cities",
+        "thaiMeaning": "เมืองที่เติบโตอย่างรวดเร็ว"
+      },
+      {
+        "word": "considerably worse",
+        "thaiMeaning": "แย่ลงอย่างมาก"
+      },
+      {
+        "word": "total number of vehicles on the road",
+        "thaiMeaning": "จำนวนยานพาหนะบนท้องถนนทั้งหมด"
+      },
+      {
+        "word": "risen by nearly 15%",
+        "thaiMeaning": "เพิ่มขึ้นเกือบ 15%"
+      },
+      {
+        "word": "previous five years",
+        "thaiMeaning": "ห้าปีที่ผ่านมา"
+      },
+      {
+        "word": "limited or unreliable",
+        "thaiMeaning": "จำกัดหรือไม่น่าเชื่อถือ"
+      },
+      {
+        "word": "pushing many commuters",
+        "thaiMeaning": "ผลักดันผู้โดยสารจำนวนมาก"
+      },
+      {
+        "word": "invest heavily",
+        "thaiMeaning": "ลงทุนอย่างหนัก"
+      },
+      {
+        "word": "continued investment",
+        "thaiMeaning": "การลงทุนอย่างต่อเนื่อง"
+      },
+      {
+        "word": "relatively low compared with",
+        "thaiMeaning": "ค่อนข้างต่ำเมื่อเทียบกับ"
+      },
+      {
+        "word": "substantially ease this problem",
+        "thaiMeaning": "บรรเทาปัญหานี้ได้อย่างมาก"
+      },
+      {
+        "word": "Southeast Asia",
+        "thaiMeaning": "เอเชียตะวันออกเฉียงใต้"
+      },
+      {
+        "word": "Office of Transport and Traffic Policy",
+        "thaiMeaning": "สำนักงานนโยบายขนส่งและการจราจร"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-15",
+    "vocab": [
+      {
+        "word": "academic workloads",
+        "thaiMeaning": "ภาระงานด้านการเรียน"
+      },
+      {
+        "word": "sleep cycles",
+        "thaiMeaning": "วงจรการนอนหลับ"
+      },
+      {
+        "word": "screen use",
+        "thaiMeaning": "การใช้หน้าจอ"
+      },
+      {
+        "word": "sleep deprivation",
+        "thaiMeaning": "การอดนอน"
+      },
+      {
+        "word": "natural bedtime",
+        "thaiMeaning": "เวลานอนตามธรรมชาติ"
+      },
+      {
+        "word": "extracurricular commitments",
+        "thaiMeaning": "ภารกิจกิจกรรมนอกหลักสูตร"
+      },
+      {
+        "word": "school assignments",
+        "thaiMeaning": "งานที่ได้รับมอบหมายจากโรงเรียน"
+      },
+      {
+        "word": "household rules",
+        "thaiMeaning": "กฎในบ้าน"
+      },
+      {
+        "word": "screen limits",
+        "thaiMeaning": "การจำกัดการใช้หน้าจอ"
+      },
+      {
+        "word": "school start times",
+        "thaiMeaning": "เวลาเริ่มเรียน"
+      },
+      {
+        "word": "sufficient sleep",
+        "thaiMeaning": "การนอนหลับที่เพียงพอ"
+      },
+      {
+        "word": "automatic app timers",
+        "thaiMeaning": "ตัวจับเวลาแอปอัตโนมัติ"
+      },
+      {
+        "word": "previous generations",
+        "thaiMeaning": "คนรุ่นก่อน"
+      },
+      {
+        "word": "modern lifestyles",
+        "thaiMeaning": "วิถีชีวิตสมัยใหม่"
+      },
+      {
+        "word": "declining sleep",
+        "thaiMeaning": "การนอนที่ลดลง"
+      },
+      {
+        "word": "social media access",
+        "thaiMeaning": "การเข้าถึงโซเชียลมีเดีย"
+      },
+      {
+        "word": "past midnight",
+        "thaiMeaning": "หลังเที่ยงคืน"
+      },
+      {
+        "word": "smartphones and social media",
+        "thaiMeaning": "สมาร์ทโฟนและโซเชียลมีเดีย"
+      },
+      {
+        "word": "completing homework",
+        "thaiMeaning": "การทำการบ้าน"
+      },
+      {
+        "word": "East Asian countries",
+        "thaiMeaning": "ประเทศในเอเชียตะวันออก"
+      },
+      {
+        "word": "considerably less sleep",
+        "thaiMeaning": "นอนน้อยลงอย่างมาก"
+      },
+      {
+        "word": "keep teenagers engaged",
+        "thaiMeaning": "ดึงดูดวัยรุ่นให้อยู่กับ"
+      },
+      {
+        "word": "late into the night",
+        "thaiMeaning": "จนดึก"
+      },
+      {
+        "word": "used their phones after 10pm",
+        "thaiMeaning": "ใช้โทรศัพท์หลังห้าทุ่ม"
+      },
+      {
+        "word": "little time to rest",
+        "thaiMeaning": "มีเวลาน้อยที่จะพักผ่อน"
+      },
+      {
+        "word": "start lessons later",
+        "thaiMeaning": "เริ่มเรียนทีหลัง"
+      },
+      {
+        "word": "delayed their start times",
+        "thaiMeaning": "เลื่อนเวลาเริ่มเรียน"
+      },
+      {
+        "word": "hour before bedtime",
+        "thaiMeaning": "หนึ่งชั่วโมงก่อนนอน"
+      },
+      {
+        "word": "meaningfully improve this problem",
+        "thaiMeaning": "ปรับปรุงปัญหานี้อย่างมีความหมาย"
+      },
+      {
+        "word": "Sleep Foundation",
+        "thaiMeaning": "มูลนิธิการนอนหลับ"
+      },
+      {
+        "word": "American Academy of Pediatrics",
+        "thaiMeaning": "สถาบันกุมารเวชศาสตร์อเมริกัน"
+      },
+      {
+        "word": "school districts",
+        "thaiMeaning": "เขตการศึกษา"
+      }
+    ]
+  }
+]

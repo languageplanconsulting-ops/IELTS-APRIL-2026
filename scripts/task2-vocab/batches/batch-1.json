@@ -1,0 +1,242 @@
+[
+  {
+    "id": "t2-twe-1",
+    "number": 1,
+    "title": "Preserving Old Buildings",
+    "essay": "It has been widely argued that while some old constructions may appear outdated, maintaining them is essential for preserving a country's history and cultural identity. Others argue that pulling down these structures and replacing them with modern buildings would better meet the practical needs of a growing population. I personally believe that historic buildings should be preserved, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that old buildings should be pulled down to make way for modern infrastructure. To explain it simply, this is possibly because older structures often fail to meet current safety and space requirements; therefore, replacing them allows cities to meet the needs of a growing population more efficiently. For example, many rapidly developing cities have pulled down old buildings to construct high-rise apartments and offices. From this perspective, it is understandable why some would believe that modern buildings serve society's needs more effectively than old ones.\n\nHowever, I would personally argue in favor of the idea that old buildings should be carefully preserved. To put it simply, this is due to the fact that these structures represent a nation's history and cultural heritage, which cannot be recreated once destroyed. For instance, cities such as Rome and Kyoto attract millions of tourists every year largely because of their well-preserved historic buildings. In this respect, it is evident that maintaining old buildings brings both cultural and economic value to a country.\n\nIn conclusion, although it is undeniable that building modern structures can help cities meet growing practical needs, I am of the opinion that preserving old buildings is more important, as they protect a nation's history for future generations.",
+    "existingVocab": [
+      {
+        "word": "cultural identity",
+        "thaiMeaning": "อัตลักษณ์ทางวัฒนธรรม"
+      },
+      {
+        "word": "cultural heritage",
+        "thaiMeaning": "มรดกทางวัฒนธรรม"
+      },
+      {
+        "word": "safety requirements",
+        "thaiMeaning": "ข้อกำหนดด้านความปลอดภัย"
+      },
+      {
+        "word": "economic value",
+        "thaiMeaning": "คุณค่าทางเศรษฐกิจ"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-2",
+    "number": 2,
+    "title": "The Value of Studying History",
+    "essay": "It has been widely argued that while the past cannot be changed, understanding it has little practical relevance to people living in the present. Others argue that studying history remains essential for understanding and improving present-day society. I personally believe that learning about the past is highly valuable, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that studying history serves little practical purpose in modern life. To explain it simply, this is possibly because historical events cannot be altered and have no direct bearing on today's technology or economy; therefore, some believe time would be better spent learning practical skills instead. For example, many students today choose to study coding or business rather than history, believing these subjects offer more immediate career benefits. From this perspective, it is understandable why some would believe that focusing on the present is more useful than studying the past.\n\nHowever, I would personally argue in favor of the idea that learning about the past is essential. To put it simply, this is due to the fact that history allows societies to understand the causes of present problems and avoid repeating past mistakes, which can be extremely costly. For instance, many countries continue to study the causes of the 2008 financial crisis in order to prevent similar economic collapses in the future. In this respect, it is evident that studying history provides valuable lessons that directly benefit the present.\n\nIn conclusion, although it is undeniable that historical events themselves cannot be changed, I am of the opinion that learning about the past is highly valuable, as it helps societies avoid repeating the same mistakes.",
+    "existingVocab": [
+      {
+        "word": "financial crisis",
+        "thaiMeaning": "วิกฤตการเงิน"
+      },
+      {
+        "word": "economic collapse",
+        "thaiMeaning": "การล่มสลายทางเศรษฐกิจ"
+      },
+      {
+        "word": "career benefits",
+        "thaiMeaning": "ผลประโยชน์ด้านอาชีพ"
+      },
+      {
+        "word": "historical events",
+        "thaiMeaning": "เหตุการณ์ทางประวัติศาสตร์"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-3",
+    "number": 3,
+    "title": "Government vs. Private Science Funding",
+    "essay": "It has been widely argued that while private companies can drive rapid technological innovation, scientific research should ultimately remain under government control. Others argue that private companies are better positioned to fund and accelerate scientific progress. I personally believe that governments should retain primary control over scientific research, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that private companies are better suited to lead scientific research. To explain it simply, this is possibly because private firms often have greater funding and stronger commercial incentives to innovate quickly; therefore, breakthroughs can reach the public faster than through government-led projects. For example, private pharmaceutical companies developed COVID-19 vaccines within less than a year of the pandemic beginning. From this perspective, it is understandable why some would believe that private companies drive scientific progress more effectively than governments.\n\nHowever, I would personally argue in favor of the idea that governments should retain control over scientific research. To put it simply, this is due to the fact that government funding ensures research prioritizes public benefit rather than profit, which private companies cannot always guarantee. For instance, publicly funded institutions such as NASA have made major scientific discoveries that were shared freely with the world instead of being sold for profit. In this respect, it is evident that government-controlled research better serves the interests of society as a whole.\n\nIn conclusion, although it is undeniable that private companies can accelerate certain scientific breakthroughs, I am of the opinion that governments should remain in control of scientific research, as this best protects the public interest.",
+    "existingVocab": [
+      {
+        "word": "commercial incentives",
+        "thaiMeaning": "แรงจูงใจเชิงพาณิชย์"
+      },
+      {
+        "word": "public benefit",
+        "thaiMeaning": "ประโยชน์สาธารณะ"
+      },
+      {
+        "word": "scientific breakthroughs",
+        "thaiMeaning": "ความก้าวหน้าทางวิทยาศาสตร์ครั้งสำคัญ"
+      },
+      {
+        "word": "public interest",
+        "thaiMeaning": "ผลประโยชน์สาธารณะ"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-4",
+    "number": 4,
+    "title": "Should Universities Teach Arts Subjects?",
+    "essay": "It has been widely argued that while rising tuition fees make practical courses more appealing, universities should stop teaching arts subjects such as philosophy and history in favor of purely practical courses. Others argue that focusing solely on employment-focused courses would better prepare graduates for the job market. I personally believe that universities should continue offering arts subjects, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that universities should focus only on practical courses. To explain it simply, this is possibly because graduates with technical skills often find employment more quickly after graduation; therefore, replacing arts subjects with practical training could reduce graduate unemployment. For example, engineering and computer science graduates in many countries report considerably higher starting salaries than graduates of arts programs. From this perspective, it is understandable why some would believe that practical courses better prepare students for the job market.\n\nHowever, I would personally argue in favor of the idea that universities should continue teaching arts subjects. To put it simply, this is due to the fact that subjects such as philosophy and history develop critical thinking and communication skills, which employers in every industry continue to value. For instance, many successful business leaders, including several well-known technology founders, credit their humanities education with shaping their creative and analytical abilities. In this respect, it is evident that arts subjects provide skills that remain valuable regardless of a graduate's chosen career.\n\nIn conclusion, although it is undeniable that practical courses can improve graduates' short-term job prospects, I am of the opinion that universities should continue offering arts subjects, as they build skills that benefit graduates throughout their careers.",
+    "existingVocab": [
+      {
+        "word": "critical thinking",
+        "thaiMeaning": "การคิดวิเคราะห์"
+      },
+      {
+        "word": "starting salaries",
+        "thaiMeaning": "เงินเดือนเริ่มต้น"
+      },
+      {
+        "word": "humanities education",
+        "thaiMeaning": "การศึกษาด้านมนุษยศาสตร์"
+      },
+      {
+        "word": "job prospects",
+        "thaiMeaning": "โอกาสในการทำงาน"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-5",
+    "number": 5,
+    "title": "Is Responsible Tourism Possible?",
+    "essay": "It has been widely argued that while tourism inevitably affects the places visited, it is impossible for any tourist to be truly responsible toward both culture and environment. Others argue that with careful planning, tourists can genuinely reduce their negative impact. I personally believe that being a responsible tourist is possible, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that responsible tourism is impossible to achieve. To explain it simply, this is possibly because even eco-friendly travel requires transportation that produces carbon emissions; therefore, every visit inevitably damages the environment to some degree. For example, flights to popular island destinations such as the Maldives contribute significantly to global carbon emissions regardless of a tourist's intentions. From this perspective, it is understandable why some would believe that no tourist can be entirely responsible.\n\nHowever, I would personally argue in favor of the idea that responsible tourism is achievable. To put it simply, this is due to the fact that tourists can make deliberate choices, such as supporting local businesses and respecting local customs, which significantly reduce their overall impact. For instance, many visitors to Bhutan follow strict government guidelines designed to protect both the environment and traditional culture. In this respect, it is evident that responsible tourism, while not perfect, is a realistic and achievable goal.\n\nIn conclusion, although it is undeniable that all tourism carries some environmental cost, I am of the opinion that being a responsible tourist is possible, as thoughtful choices can greatly reduce this impact.",
+    "existingVocab": [
+      {
+        "word": "carbon emissions",
+        "thaiMeaning": "การปล่อยก๊าซคาร์บอน"
+      },
+      {
+        "word": "local customs",
+        "thaiMeaning": "ขนบธรรมเนียมท้องถิ่น"
+      },
+      {
+        "word": "government guidelines",
+        "thaiMeaning": "แนวทางของรัฐบาล"
+      },
+      {
+        "word": "environmental impact",
+        "thaiMeaning": "ผลกระทบต่อสิ่งแวดล้อม"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-6",
+    "number": 6,
+    "title": "Should Extinction Be Prevented?",
+    "essay": "It has been widely argued that while extinction has occurred naturally throughout Earth's history, humans have no obligation to prevent animal species from dying out today. Others argue that people have a responsibility to protect endangered species from disappearing completely. I personally believe that humans should actively work to prevent extinction, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that extinction is simply a natural process that should not be interfered with. To explain it simply, this is possibly because countless species, including dinosaurs, vanished long before humans existed; therefore, some believe modern extinctions are merely part of the same natural cycle. For example, several land mammal species disappeared during past ice ages without any human involvement whatsoever. From this perspective, it is understandable why some would believe that current extinctions require no special human intervention.\n\nHowever, I would personally argue in favor of the idea that humans should take active steps to prevent extinction. To put it simply, this is due to the fact that most extinctions today are caused directly by human activity rather than natural processes, which makes them our responsibility to address. For instance, a 2019 United Nations report found that around one million species now face extinction largely because of habitat destruction and pollution. In this respect, it is evident that human-driven extinction differs fundamentally from the natural extinctions of the distant past.\n\nIn conclusion, although it is undeniable that extinction has always occurred naturally, I am of the opinion that humans should work to prevent it, as most modern cases result directly from human actions.",
+    "existingVocab": [
+      {
+        "word": "endangered species",
+        "thaiMeaning": "สัตว์ใกล้สูญพันธุ์"
+      },
+      {
+        "word": "natural cycle",
+        "thaiMeaning": "วัฏจักรตามธรรมชาติ"
+      },
+      {
+        "word": "habitat destruction",
+        "thaiMeaning": "การทำลายถิ่นที่อยู่อาศัย"
+      },
+      {
+        "word": "human activity",
+        "thaiMeaning": "กิจกรรมของมนุษย์"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-7",
+    "number": 7,
+    "title": "Preventing Illness vs. Treating the Sick",
+    "essay": "It has been widely argued that while treating illness remains necessary, governments should prioritize public spending on promoting healthy lifestyles over treating people who are already sick. Others argue that treatment should remain the top funding priority, since sick people need immediate medical care. I personally believe that prevention deserves greater public investment, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that treating existing illness should remain the government's main priority. To explain it simply, this is possibly because sick patients require urgent medical attention that cannot be delayed; therefore, reducing treatment funding could put vulnerable lives at serious risk. For example, cancer patients and accident victims often need immediate hospital care regardless of how much money is spent on prevention. From this perspective, it is understandable why some would believe that treating the sick should take precedence over prevention campaigns.\n\nHowever, I would personally argue in favor of the idea that promoting healthy lifestyles deserves greater public investment. To put it simply, this is due to the fact that preventing illness before it develops reduces long-term healthcare costs, which ultimately benefits the entire population. For instance, a 2020 World Health Organization study found that every dollar spent on obesity-prevention programs saved several dollars in future treatment costs. In this respect, it is evident that prevention spending produces greater long-term benefits for public health systems.\n\nIn conclusion, although it is undeniable that treating sick patients remains an urgent necessity, I am of the opinion that promoting healthy lifestyles should receive greater public funding, as prevention reduces future healthcare burdens significantly.",
+    "existingVocab": [
+      {
+        "word": "healthy lifestyles",
+        "thaiMeaning": "วิถีชีวิตที่ดีต่อสุขภาพ"
+      },
+      {
+        "word": "medical attention",
+        "thaiMeaning": "การดูแลรักษาทางการแพทย์"
+      },
+      {
+        "word": "healthcare costs",
+        "thaiMeaning": "ค่าใช้จ่ายด้านสุขภาพ"
+      },
+      {
+        "word": "public health systems",
+        "thaiMeaning": "ระบบสาธารณสุข"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-8",
+    "number": 8,
+    "title": "Raising the Minimum Driving Age",
+    "essay": "It has been widely argued that while young drivers gain independence early, raising the minimum age for driving cars and motorcycles is the best way to improve road safety. Others argue that stricter testing and driver education would be more effective than simply raising the age limit. I personally believe that raising the minimum driving age is the most effective solution, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that better training programs would improve road safety more effectively than age restrictions. To explain it simply, this is possibly because skill and experience matter more than age when operating a vehicle safely; therefore, some believe intensive driving courses could reduce accidents without delaying independence. For example, several countries already require additional lessons for newly licensed drivers before allowing them to drive unsupervised. From this perspective, it is understandable why some would believe that improved training addresses the root cause of dangerous driving.\n\nHowever, I would personally argue in favor of the idea that raising the minimum driving age is the most effective measure. To put it simply, this is due to the fact that younger drivers' brains are still developing the judgment needed for quick decision-making, which extra training cannot fully replace. For instance, a 2021 study by the World Health Organization found that drivers aged sixteen to nineteen are nearly three times more likely to crash than drivers over twenty-five. In this respect, it is evident that raising the minimum age directly targets the drivers most at risk of causing accidents.\n\nIn conclusion, although it is undeniable that better training could reduce some accidents, I am of the opinion that raising the minimum driving age remains the most effective way to improve road safety.",
+    "existingVocab": [
+      {
+        "word": "road safety",
+        "thaiMeaning": "ความปลอดภัยบนท้องถนน"
+      },
+      {
+        "word": "driver education",
+        "thaiMeaning": "การอบรมผู้ขับขี่"
+      },
+      {
+        "word": "decision-making",
+        "thaiMeaning": "การตัดสินใจ"
+      },
+      {
+        "word": "age restrictions",
+        "thaiMeaning": "ข้อจำกัดด้านอายุ"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-9",
+    "number": 9,
+    "title": "Unpaid Community Work for Teenagers",
+    "essay": "It has been widely argued that while schoolwork already demands considerable time, teenagers should be required to do unpaid work in their local community, since this benefits both young people and society as a whole. Others argue that teenagers should focus entirely on their studies instead of taking on additional unpaid responsibilities. I personally believe that community work brings valuable benefits to teenagers, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that teenagers should not be required to do unpaid community work. To explain it simply, this is possibly because academic performance already places enormous pressure on students; therefore, some believe additional responsibilities could harm their exam results. For example, many students already spend several hours each evening completing homework and preparing for important examinations. From this perspective, it is understandable why some would believe that community work would place an unfair burden on busy teenagers.\n\nHowever, I would personally argue in favor of the idea that unpaid community work benefits both teenagers and wider society. To put it simply, this is due to the fact that volunteering teaches practical skills and responsibility, which cannot easily be learned through classroom study alone. For instance, a 2022 survey by the National Youth Agency in the UK found that teenagers who volunteered regularly reported significantly higher confidence and stronger communication skills. In this respect, it is evident that community work develops abilities that benefit young people well beyond school.\n\nIn conclusion, although it is undeniable that academic study remains a priority for teenagers, I am of the opinion that unpaid community work should be encouraged, as it builds valuable life skills alongside classroom learning.",
+    "existingVocab": [
+      {
+        "word": "academic performance",
+        "thaiMeaning": "ผลการเรียน"
+      },
+      {
+        "word": "practical skills",
+        "thaiMeaning": "ทักษะเชิงปฏิบัติ"
+      },
+      {
+        "word": "communication skills",
+        "thaiMeaning": "ทักษะการสื่อสาร"
+      },
+      {
+        "word": "life skills",
+        "thaiMeaning": "ทักษะชีวิต"
+      }
+    ]
+  },
+  {
+    "id": "t2-twe-10",
+    "number": 10,
+    "title": "The Internet: Humanity's Greatest Invention?",
+    "essay": "It has been widely argued that while human history includes many transformative inventions such as the wheel, the internet is the single most important invention ever created. Others argue that older inventions laid the essential foundation on which modern technology, including the internet, could later be built. I personally believe that the internet is indeed the most important invention, and my reasons will be elaborated on in the following paragraphs.\n\nTo begin with, it might seem sensible for some to claim that earlier inventions such as the wheel deserve greater recognition than the internet. To explain it simply, this is possibly because the wheel enabled transportation and trade thousands of years before modern technology existed; therefore, some believe it created the foundation for all later human progress. For example, ancient civilizations used wheeled carts to build cities, transport goods, and expand agriculture across vast distances. From this perspective, it is understandable why some would believe that foundational inventions like the wheel matter more than the internet.\n\nHowever, I would personally argue in favor of the idea that the internet is the most significant invention in human history. To put it simply, this is due to the fact that it connects billions of people instantly, which has transformed communication, education, and business on an unprecedented global scale. For instance, the International Telecommunication Union reported in 2023 that over five billion people worldwide now use the internet regularly. In this respect, it is evident that no other invention has reshaped daily life as rapidly or as widely as the internet.\n\nIn conclusion, although it is undeniable that earlier inventions such as the wheel shaped human civilization, I am of the opinion that the internet remains the most important invention, given its unmatched global impact.",
+    "existingVocab": [
+      {
+        "word": "transportation and trade",
+        "thaiMeaning": "การคมนาคมขนส่งและการค้า"
+      },
+      {
+        "word": "human progress",
+        "thaiMeaning": "ความก้าวหน้าของมนุษยชาติ"
+      },
+      {
+        "word": "global scale",
+        "thaiMeaning": "ระดับโลก"
+      },
+      {
+        "word": "daily life",
+        "thaiMeaning": "ชีวิตประจำวัน"
+      }
+    ]
+  }
+]

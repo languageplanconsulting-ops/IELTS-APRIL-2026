@@ -1708,6 +1708,24 @@
   justify-content: flex-end;
 }
 
+.writingGuideVocabTestBtn {
+  padding: 10px 16px;
+  border: 3px solid #172033;
+  border-radius: 12px;
+  background: #d8c7ff;
+  color: #172033;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 4px 4px 0 #172033;
+  cursor: pointer;
+  transition: translate .12s ease, box-shadow .12s ease;
+}
+
+.writingGuideVocabTestBtn:hover {
+  translate: 2px 2px;
+  box-shadow: 2px 2px 0 #172033;
+}
+
 .writingGuideComingSoon {
   padding: 28px 24px;
   border-radius: 18px;

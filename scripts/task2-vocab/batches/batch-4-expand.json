@@ -1,0 +1,872 @@
+[
+  {
+    "id": "t2-ad-1",
+    "title": "Hosting a Major Sporting Event",
+    "essay": "It has been widely argued that while hosting a major international sporting event is both beneficial and detrimental for the host country, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with hosting a major sporting event. The first benefit is that it brings significant economic growth through tourism and infrastructure investment, creating thousands of new jobs in the process. For example, the 2012 London Olympics attracted more than 320,000 additional overseas visitors and generated billions of pounds in tourism revenue. Another advantage is that it raises the host country's international profile and national pride. For instance, South Korea's hosting of the 2018 Winter Olympics in Pyeongchang significantly boosted the nation's global recognition as a modern, capable host.\n\nHowever, some might be concerned regarding the high cost of hosting such events. This is because building new stadiums and facilities often requires enormous public spending. To illustrate, Brazil spent an estimated 13 billion dollars preparing for the 2016 Rio Olympics, much of which came from public funds. However, this argument is simply invalid given that many host cities recover these costs through long-term tourism and improved infrastructure. For example, Barcelona's 1992 Olympic investment transformed the city into one of Europe's most visited tourist destinations for decades afterward.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the financial burden of hosting a major sporting event, I am of the opinion that the benefits, including economic growth and international recognition, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "host country's international profile",
+        "thaiMeaning": "ภาพลักษณ์นานาชาติของประเทศเจ้าภาพ"
+      },
+      {
+        "word": "major international sporting event",
+        "thaiMeaning": "การแข่งขันกีฬานานาชาติครั้งใหญ่"
+      },
+      {
+        "word": "creating thousands of new jobs",
+        "thaiMeaning": "การสร้างงานใหม่นับพันตำแหน่ง"
+      },
+      {
+        "word": "additional overseas visitors",
+        "thaiMeaning": "นักท่องเที่ยวต่างชาติเพิ่มเติม"
+      },
+      {
+        "word": "new stadiums and facilities",
+        "thaiMeaning": "สนามกีฬาและสิ่งอำนวยความสะดวกใหม่"
+      },
+      {
+        "word": "significant economic growth",
+        "thaiMeaning": "การเติบโตทางเศรษฐกิจอย่างมีนัยสำคัญ"
+      },
+      {
+        "word": "infrastructure investment",
+        "thaiMeaning": "การลงทุนโครงสร้างพื้นฐาน"
+      },
+      {
+        "word": "international recognition",
+        "thaiMeaning": "การยอมรับในระดับนานาชาติ"
+      },
+      {
+        "word": "improved infrastructure",
+        "thaiMeaning": "โครงสร้างพื้นฐานที่ดีขึ้น"
+      },
+      {
+        "word": "high cost of hosting",
+        "thaiMeaning": "ต้นทุนสูงของการเป็นเจ้าภาพ"
+      },
+      {
+        "word": "tourist destinations",
+        "thaiMeaning": "แหล่งท่องเที่ยว"
+      },
+      {
+        "word": "billions of pounds",
+        "thaiMeaning": "เงินหลายพันล้านปอนด์"
+      },
+      {
+        "word": "global recognition",
+        "thaiMeaning": "การยอมรับระดับโลก"
+      },
+      {
+        "word": "Olympic investment",
+        "thaiMeaning": "การลงทุนในโอลิมปิก"
+      },
+      {
+        "word": "long-term tourism",
+        "thaiMeaning": "การท่องเที่ยวในระยะยาว"
+      },
+      {
+        "word": "financial burden",
+        "thaiMeaning": "ภาระทางการเงิน"
+      },
+      {
+        "word": "public spending",
+        "thaiMeaning": "การใช้จ่ายภาครัฐ"
+      },
+      {
+        "word": "tourism revenue",
+        "thaiMeaning": "รายได้จากการท่องเที่ยว"
+      },
+      {
+        "word": "national pride",
+        "thaiMeaning": "ความภาคภูมิใจของชาติ"
+      },
+      {
+        "word": "public funds",
+        "thaiMeaning": "เงินทุนภาครัฐ"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-2",
+    "title": "An Ageing Population",
+    "essay": "It has been widely argued that while an ageing population is both beneficial and detrimental for society, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with an ageing population. The first benefit is that older citizens bring decades of valuable knowledge and experience to the workforce and community life, helping to train the next generation of workers. For example, many countries now rely on retirees to mentor younger employees, passing on skills that would otherwise be lost. Another advantage is that older generations often provide free childcare, allowing younger family members to remain in full-time employment. For instance, in countries such as Italy, grandparents frequently care for grandchildren while both parents work.\n\nHowever, some might be concerned regarding the financial burden that an ageing population places on public services. This is because pensions and healthcare for elderly citizens require significant government spending. To illustrate, Japan now spends more than a fifth of its national budget on social security for elderly citizens. However, this argument is simply invalid given that many governments can offset these costs by raising retirement ages and encouraging continued employment among older citizens. For example, several European countries have successfully reduced pension costs by gradually raising the retirement age to 67.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the financial cost of an ageing population, I am of the opinion that the benefits of an ageing population, including experience and family support, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "valuable knowledge and experience",
+        "thaiMeaning": "ความรู้และประสบการณ์อันมีค่า"
+      },
+      {
+        "word": "significant government spending",
+        "thaiMeaning": "การใช้จ่ายภาครัฐจำนวนมาก"
+      },
+      {
+        "word": "next generation of workers",
+        "thaiMeaning": "คนรุ่นถัดไปในกำลังแรงงาน"
+      },
+      {
+        "word": "mentor younger employees",
+        "thaiMeaning": "การให้คำปรึกษาพนักงานรุ่นใหม่"
+      },
+      {
+        "word": "continued employment",
+        "thaiMeaning": "การทำงานต่อเนื่อง"
+      },
+      {
+        "word": "full-time employment",
+        "thaiMeaning": "การจ้างงานเต็มเวลา"
+      },
+      {
+        "word": "ageing population",
+        "thaiMeaning": "ประชากรสูงวัย"
+      },
+      {
+        "word": "older generations",
+        "thaiMeaning": "คนรุ่นเก่า"
+      },
+      {
+        "word": "passing on skills",
+        "thaiMeaning": "การถ่ายทอดทักษะ"
+      },
+      {
+        "word": "elderly citizens",
+        "thaiMeaning": "ผู้สูงอายุ"
+      },
+      {
+        "word": "financial burden",
+        "thaiMeaning": "ภาระทางการเงิน"
+      },
+      {
+        "word": "national budget",
+        "thaiMeaning": "งบประมาณแห่งชาติ"
+      },
+      {
+        "word": "public services",
+        "thaiMeaning": "บริการสาธารณะ"
+      },
+      {
+        "word": "social security",
+        "thaiMeaning": "ประกันสังคม"
+      },
+      {
+        "word": "community life",
+        "thaiMeaning": "ชีวิตในชุมชน"
+      },
+      {
+        "word": "family support",
+        "thaiMeaning": "การสนับสนุนจากครอบครัว"
+      },
+      {
+        "word": "free childcare",
+        "thaiMeaning": "การเลี้ยงดูเด็กฟรี"
+      },
+      {
+        "word": "retirement age",
+        "thaiMeaning": "อายุเกษียณ"
+      },
+      {
+        "word": "pension costs",
+        "thaiMeaning": "ค่าใช้จ่ายด้านบำนาญ"
+      },
+      {
+        "word": "workforce",
+        "thaiMeaning": "กำลังแรงงาน"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-3",
+    "title": "Parents Working Abroad",
+    "essay": "It has been widely argued that while parents relocating abroad for work is both beneficial and detrimental for their families, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with parents working abroad and bringing their families with them. The first benefit is that children gain exposure to new languages and cultures from an early age. For example, children raised in international schools in cities such as Singapore often become fluent in two or more languages by adulthood. Another advantage is that higher overseas salaries can significantly improve a family's overall standard of living. For instance, many expatriate workers in the Gulf region earn several times what they would earn in their home countries.\n\nHowever, some might be concerned regarding the disruption this move causes to children's education and social lives. This is because children must adapt to new schools and make new friends, often more than once during their childhood. To illustrate, families who relocate frequently for work may see their children change schools three or four times before finishing secondary education. However, this argument is simply invalid given that international schools are specifically designed to help children adapt quickly, offering strong pastoral support and globally recognised curricula. For example, the International Baccalaureate programme, taught in more than 150 countries, allows students to continue the same curriculum wherever their family relocates.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the disruption caused to children's education, I am of the opinion that the benefits of relocating abroad for work, including cultural exposure and financial improvement, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "International Baccalaureate programme",
+        "thaiMeaning": "หลักสูตร International Baccalaureate"
+      },
+      {
+        "word": "fluent in two or more languages",
+        "thaiMeaning": "พูดได้สองภาษาขึ้นไปอย่างคล่องแคล่ว"
+      },
+      {
+        "word": "globally recognised curricula",
+        "thaiMeaning": "หลักสูตรที่ได้รับการยอมรับทั่วโลก"
+      },
+      {
+        "word": "new languages and cultures",
+        "thaiMeaning": "ภาษาและวัฒนธรรมใหม่"
+      },
+      {
+        "word": "relocating abroad for work",
+        "thaiMeaning": "การย้ายไปทำงานต่างประเทศ"
+      },
+      {
+        "word": "parents working abroad",
+        "thaiMeaning": "ผู้ปกครองที่ไปทำงานต่างประเทศ"
+      },
+      {
+        "word": "financial improvement",
+        "thaiMeaning": "การพัฒนาทางการเงิน"
+      },
+      {
+        "word": "international schools",
+        "thaiMeaning": "โรงเรียนนานาชาติ"
+      },
+      {
+        "word": "children's education",
+        "thaiMeaning": "การศึกษาของเด็ก"
+      },
+      {
+        "word": "secondary education",
+        "thaiMeaning": "การศึกษาระดับมัธยม"
+      },
+      {
+        "word": "expatriate workers",
+        "thaiMeaning": "แรงงานชาวต่างชาติ"
+      },
+      {
+        "word": "standard of living",
+        "thaiMeaning": "มาตรฐานการครองชีพ"
+      },
+      {
+        "word": "cultural exposure",
+        "thaiMeaning": "การสัมผัสวัฒนธรรม"
+      },
+      {
+        "word": "from an early age",
+        "thaiMeaning": "ตั้งแต่อายุยังน้อย"
+      },
+      {
+        "word": "overseas salaries",
+        "thaiMeaning": "เงินเดือนต่างประเทศ"
+      },
+      {
+        "word": "pastoral support",
+        "thaiMeaning": "การดูแลด้านความเป็นอยู่ของนักเรียน"
+      },
+      {
+        "word": "same curriculum",
+        "thaiMeaning": "หลักสูตรเดียวกัน"
+      },
+      {
+        "word": "home countries",
+        "thaiMeaning": "ประเทศต้นทาง"
+      },
+      {
+        "word": "social lives",
+        "thaiMeaning": "ชีวิตทางสังคม"
+      },
+      {
+        "word": "Gulf region",
+        "thaiMeaning": "ภูมิภาคอ่าวอาหรับ"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-4",
+    "title": "International Tourism",
+    "essay": "It has been widely argued that while international tourism is both beneficial and detrimental to the places it affects, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with international tourism. The first benefit is that tourism generates substantial income and employment for local communities. For example, tourism accounts for more than 20% of Thailand's total employment, supporting millions of local jobs. Another advantage is that tourism encourages the preservation of local culture and historic sites, as governments invest in maintaining the attractions that draw visitors, creating a cycle of sustained cultural investment. For instance, revenue from tourist entry fees has funded major restoration projects at Cambodia's Angkor Wat temple complex.\n\nHowever, some might be concerned regarding the environmental damage caused by large numbers of tourists. This is because popular destinations often experience pollution, overcrowding, and strain on local infrastructure, particularly during peak holiday seasons. To illustrate, some beaches in Thailand have been forced to close temporarily due to coral reef damage from excessive tourist activity. However, this argument is simply invalid given that responsible tourism management, such as visitor limits and eco-certification schemes, can significantly reduce this damage. For example, Bhutan strictly limits tourist numbers and charges a daily fee that directly funds environmental conservation projects.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the environmental impact of tourism, I am of the opinion that the benefits of international tourism, including income and cultural preservation, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "environmental conservation projects",
+        "thaiMeaning": "โครงการอนุรักษ์สิ่งแวดล้อม"
+      },
+      {
+        "word": "substantial income and employment",
+        "thaiMeaning": "รายได้และการจ้างงานจำนวนมาก"
+      },
+      {
+        "word": "responsible tourism management",
+        "thaiMeaning": "การจัดการท่องเที่ยวอย่างรับผิดชอบ"
+      },
+      {
+        "word": "eco-certification schemes",
+        "thaiMeaning": "โครงการรับรองมาตรฐานเชิงนิเวศ"
+      },
+      {
+        "word": "cultural preservation",
+        "thaiMeaning": "การอนุรักษ์วัฒนธรรม"
+      },
+      {
+        "word": "international tourism",
+        "thaiMeaning": "การท่องเที่ยวนานาชาติ"
+      },
+      {
+        "word": "environmental damage",
+        "thaiMeaning": "ความเสียหายต่อสิ่งแวดล้อม"
+      },
+      {
+        "word": "environmental impact",
+        "thaiMeaning": "ผลกระทบต่อสิ่งแวดล้อม"
+      },
+      {
+        "word": "local infrastructure",
+        "thaiMeaning": "โครงสร้างพื้นฐานในท้องถิ่น"
+      },
+      {
+        "word": "peak holiday seasons",
+        "thaiMeaning": "ช่วงฤดูท่องเที่ยวสูงสุด"
+      },
+      {
+        "word": "restoration projects",
+        "thaiMeaning": "โครงการบูรณะ"
+      },
+      {
+        "word": "cultural investment",
+        "thaiMeaning": "การลงทุนทางวัฒนธรรม"
+      },
+      {
+        "word": "tourist entry fees",
+        "thaiMeaning": "ค่าเข้าชมสถานที่ท่องเที่ยว"
+      },
+      {
+        "word": "coral reef damage",
+        "thaiMeaning": "ความเสียหายต่อแนวปะการัง"
+      },
+      {
+        "word": "local communities",
+        "thaiMeaning": "ชุมชนท้องถิ่น"
+      },
+      {
+        "word": "total employment",
+        "thaiMeaning": "การจ้างงานทั้งหมด"
+      },
+      {
+        "word": "historic sites",
+        "thaiMeaning": "สถานที่ทางประวัติศาสตร์"
+      },
+      {
+        "word": "visitor limits",
+        "thaiMeaning": "การจำกัดจำนวนนักท่องเที่ยว"
+      },
+      {
+        "word": "local culture",
+        "thaiMeaning": "วัฒนธรรมท้องถิ่น"
+      },
+      {
+        "word": "overcrowding",
+        "thaiMeaning": "ความแออัด"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-5",
+    "title": "E-books vs. Paper Books",
+    "essay": "It has been widely argued that while reading e-books instead of paper books is both beneficial and detrimental, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with reading e-books. The first benefit is that e-readers can store thousands of titles in a single lightweight device, making them extremely convenient for travel. For example, a single e-reader weighing under 200 grams can hold an entire personal library of several thousand books. Another advantage is that e-books are typically cheaper than paper books, as they avoid printing and distribution costs. For instance, digital editions of new releases are often priced around 30% lower than their hardcover equivalents, making reading a much cheaper hobby overall.\n\nHowever, some might be concerned regarding the loss of the traditional reading experience that paper books provide. This is because many readers associate physical books with better focus and fewer digital distractions, particularly among younger readers. To illustrate, some studies suggest that readers retain information less effectively when reading from a screen. However, this argument is simply invalid given that modern e-readers now use paper-like display technology specifically designed to reduce eye strain and distraction. For example, devices such as the Kindle Paperwhite lack internet browsers entirely, allowing readers to focus solely on their book.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the reading experience offered by paper books, I am of the opinion that the benefits of e-books, including convenience and affordability, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "printing and distribution costs",
+        "thaiMeaning": "ต้นทุนการพิมพ์และจัดจำหน่าย"
+      },
+      {
+        "word": "convenience and affordability",
+        "thaiMeaning": "ความสะดวกและราคาที่เอื้อมถึง"
+      },
+      {
+        "word": "paper-like display technology",
+        "thaiMeaning": "เทคโนโลยีหน้าจอคล้ายกระดาษ"
+      },
+      {
+        "word": "focus solely on their book",
+        "thaiMeaning": "โฟกัสเฉพาะหนังสือของตน"
+      },
+      {
+        "word": "single lightweight device",
+        "thaiMeaning": "อุปกรณ์น้ำหนักเบาเครื่องเดียว"
+      },
+      {
+        "word": "hardcover equivalents",
+        "thaiMeaning": "หนังสือปกแข็งที่เทียบเท่า"
+      },
+      {
+        "word": "digital distractions",
+        "thaiMeaning": "สิ่งรบกวนทางดิจิทัล"
+      },
+      {
+        "word": "thousands of titles",
+        "thaiMeaning": "หนังสือหลายพันเล่ม"
+      },
+      {
+        "word": "reading experience",
+        "thaiMeaning": "ประสบการณ์การอ่าน"
+      },
+      {
+        "word": "retain information",
+        "thaiMeaning": "จดจำข้อมูล"
+      },
+      {
+        "word": "internet browsers",
+        "thaiMeaning": "เบราว์เซอร์อินเทอร์เน็ต"
+      },
+      {
+        "word": "digital editions",
+        "thaiMeaning": "ฉบับดิจิทัล"
+      },
+      {
+        "word": "personal library",
+        "thaiMeaning": "คลังหนังสือส่วนตัว"
+      },
+      {
+        "word": "younger readers",
+        "thaiMeaning": "นักอ่านวัยเยาว์"
+      },
+      {
+        "word": "physical books",
+        "thaiMeaning": "หนังสือเล่มจริง"
+      },
+      {
+        "word": "cheaper hobby",
+        "thaiMeaning": "งานอดิเรกที่ถูกกว่า"
+      },
+      {
+        "word": "better focus",
+        "thaiMeaning": "สมาธิที่ดีกว่า"
+      },
+      {
+        "word": "new releases",
+        "thaiMeaning": "หนังสือออกใหม่"
+      },
+      {
+        "word": "paper books",
+        "thaiMeaning": "หนังสือกระดาษ"
+      },
+      {
+        "word": "eye strain",
+        "thaiMeaning": "อาการปวดล้าตา"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-6",
+    "title": "Police Officers Carrying Weapons",
+    "essay": "It has been widely argued that while police officers carrying weapons is both beneficial and detrimental to public safety, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with police officers carrying weapons. The first benefit is that armed officers can respond immediately to violent or life-threatening situations. For example, a 2023 UK Home Office report found that armed response units reduced fatal outcomes in hostage situations by acting within minutes of arrival. Another advantage is that visible weapons act as a strong deterrent against attacks on law enforcement personnel. For instance, countries such as the United States report far fewer assaults on officers in districts where armed patrols are standard practice.\n\nHowever, some might be concerned regarding the risk of accidental shootings or excessive use of force. This is because officers under pressure may make split-second errors that lead to tragic outcomes. To illustrate, several widely reported cases in American cities have involved unarmed civilians being mistakenly shot during routine stops. However, this argument is simply invalid given that rigorous training and strict accountability procedures can dramatically reduce such errors. For example, Norway's police force carries weapons only in specific circumstances, combining this restraint with extensive de-escalation training that keeps shooting rates among the lowest in Europe.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the risk of misuse of force, I am of the opinion that the benefits of police officers carrying weapons, including rapid emergency response and deterrence against attacks, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "life-threatening situations",
+        "thaiMeaning": "สถานการณ์ที่คุกคามชีวิต"
+      },
+      {
+        "word": "accountability procedures",
+        "thaiMeaning": "กระบวนการตรวจสอบความรับผิดชอบ"
+      },
+      {
+        "word": "law enforcement personnel",
+        "thaiMeaning": "บุคลากรด้านบังคับใช้กฎหมาย"
+      },
+      {
+        "word": "rapid emergency response",
+        "thaiMeaning": "การตอบสนองเหตุฉุกเฉินอย่างรวดเร็ว"
+      },
+      {
+        "word": "de-escalation training",
+        "thaiMeaning": "การฝึกลดระดับความรุนแรงของสถานการณ์"
+      },
+      {
+        "word": "excessive use of force",
+        "thaiMeaning": "การใช้กำลังเกินกว่าเหตุ"
+      },
+      {
+        "word": "accidental shootings",
+        "thaiMeaning": "การยิงโดยอุบัติเหตุ"
+      },
+      {
+        "word": "armed response units",
+        "thaiMeaning": "หน่วยตอบโต้เหตุด่วนที่มีอาวุธ"
+      },
+      {
+        "word": "split-second errors",
+        "thaiMeaning": "ความผิดพลาดในเสี้ยววินาที"
+      },
+      {
+        "word": "hostage situations",
+        "thaiMeaning": "สถานการณ์ตัวประกัน"
+      },
+      {
+        "word": "rigorous training",
+        "thaiMeaning": "การฝึกอบรมอย่างเข้มงวด"
+      },
+      {
+        "word": "standard practice",
+        "thaiMeaning": "แนวปฏิบัติมาตรฐาน"
+      },
+      {
+        "word": "unarmed civilians",
+        "thaiMeaning": "พลเรือนที่ไม่มีอาวุธ"
+      },
+      {
+        "word": "tragic outcomes",
+        "thaiMeaning": "ผลลัพธ์ที่น่าเศร้า"
+      },
+      {
+        "word": "armed officers",
+        "thaiMeaning": "เจ้าหน้าที่ติดอาวุธ"
+      },
+      {
+        "word": "fatal outcomes",
+        "thaiMeaning": "ผลลัพธ์ถึงแก่ชีวิต"
+      },
+      {
+        "word": "shooting rates",
+        "thaiMeaning": "อัตราการใช้อาวุธยิง"
+      },
+      {
+        "word": "armed patrols",
+        "thaiMeaning": "การลาดตระเวนติดอาวุธ"
+      },
+      {
+        "word": "public safety",
+        "thaiMeaning": "ความปลอดภัยสาธารณะ"
+      },
+      {
+        "word": "deterrent",
+        "thaiMeaning": "สิ่งยับยั้ง/ป้องปราม"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-7",
+    "title": "Economic Development and the Loss of Social Values",
+    "essay": "It has been widely argued that while rapid economic development is both beneficial and detrimental to traditional social values, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with rapid economic development. The first benefit is that it lifts millions of people out of poverty by creating new employment opportunities. For example, a 2022 World Bank study found that China's economic growth since 1990 helped lift more than 800 million citizens out of extreme poverty. Another advantage is that development brings improved healthcare and education systems to ordinary citizens. For instance, Vietnam's rising national income has funded a nationwide expansion of rural hospitals and public schools over the past two decades.\n\nHowever, some might be concerned regarding the erosion of traditional customs and family structures. This is because rapid urbanisation often draws young people away from rural communities toward busy city jobs. To illustrate, many villages across Thailand now report shrinking populations, as younger generations move to Bangkok in search of higher wages. However, this argument is simply invalid given that governments can actively preserve cultural heritage while pursuing economic growth. For example, South Korea has combined rapid industrialisation with generous state funding for traditional festivals and heritage sites, ensuring old customs remain visible to younger citizens.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the loss of traditional social values, I am of the opinion that the benefits of economic development, including poverty reduction and improved public services, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "healthcare and education systems",
+        "thaiMeaning": "ระบบสาธารณสุขและการศึกษา"
+      },
+      {
+        "word": "rapid economic development",
+        "thaiMeaning": "การพัฒนาทางเศรษฐกิจอย่างรวดเร็ว"
+      },
+      {
+        "word": "traditional social values",
+        "thaiMeaning": "ค่านิยมทางสังคมแบบดั้งเดิม"
+      },
+      {
+        "word": "employment opportunities",
+        "thaiMeaning": "โอกาสในการจ้างงาน"
+      },
+      {
+        "word": "rapid industrialisation",
+        "thaiMeaning": "การพัฒนาอุตสาหกรรมอย่างรวดเร็ว"
+      },
+      {
+        "word": "shrinking populations",
+        "thaiMeaning": "ประชากรที่ลดลง"
+      },
+      {
+        "word": "traditional customs",
+        "thaiMeaning": "ประเพณีดั้งเดิม"
+      },
+      {
+        "word": "cultural heritage",
+        "thaiMeaning": "มรดกทางวัฒนธรรม"
+      },
+      {
+        "word": "family structures",
+        "thaiMeaning": "โครงสร้างครอบครัว"
+      },
+      {
+        "word": "ordinary citizens",
+        "thaiMeaning": "ประชาชนทั่วไป"
+      },
+      {
+        "word": "poverty reduction",
+        "thaiMeaning": "การลดความยากจน"
+      },
+      {
+        "word": "rural communities",
+        "thaiMeaning": "ชุมชนในชนบท"
+      },
+      {
+        "word": "economic growth",
+        "thaiMeaning": "การเติบโตทางเศรษฐกิจ"
+      },
+      {
+        "word": "extreme poverty",
+        "thaiMeaning": "ความยากจนขั้นรุนแรง"
+      },
+      {
+        "word": "national income",
+        "thaiMeaning": "รายได้ประชาชาติ"
+      },
+      {
+        "word": "rural hospitals",
+        "thaiMeaning": "โรงพยาบาลในชนบท"
+      },
+      {
+        "word": "heritage sites",
+        "thaiMeaning": "แหล่งมรดก"
+      },
+      {
+        "word": "public schools",
+        "thaiMeaning": "โรงเรียนของรัฐ"
+      },
+      {
+        "word": "higher wages",
+        "thaiMeaning": "ค่าจ้างที่สูงกว่า"
+      },
+      {
+        "word": "urbanisation",
+        "thaiMeaning": "การกลายเป็นเมือง"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-8",
+    "title": "Genetically Modified Food Crops",
+    "essay": "It has been widely argued that while growing genetically modified food crops is both beneficial and detrimental to public health, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with genetically modified food crops. The first benefit is that they can dramatically increase crop yields, helping to feed growing populations. For example, a 2021 study by the International Food Policy Research Institute found that genetically modified maize increased yields by up to 25% in several African nations. Another advantage is that these crops can be engineered to resist pests and drought, reducing reliance on chemical pesticides. For instance, Bt cotton varieties grown widely in India have cut pesticide use by nearly half since their introduction.\n\nHowever, some might be concerned regarding the unknown long-term health effects of consuming modified foods. This is because these crops have only been widely cultivated for a few decades. To illustrate, several consumer groups in the European Union have campaigned for stricter labelling, citing these unresolved health concerns. However, this argument is simply invalid given that major scientific bodies have repeatedly confirmed the safety of approved genetically modified foods. For example, the World Health Organization has reviewed decades of evidence and found no verified case of harm from genetically modified crops currently on the market.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the long-term health effects of modified foods, I am of the opinion that the benefits of genetically modified crops, including higher yields and pest resistance, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "approved genetically modified foods",
+        "thaiMeaning": "อาหารดัดแปลงพันธุกรรมที่ได้รับอนุมัติ"
+      },
+      {
+        "word": "genetically modified food crops",
+        "thaiMeaning": "พืชอาหารดัดแปลงพันธุกรรม"
+      },
+      {
+        "word": "genetically modified maize",
+        "thaiMeaning": "ข้าวโพดดัดแปลงพันธุกรรม"
+      },
+      {
+        "word": "unresolved health concerns",
+        "thaiMeaning": "ความกังวลด้านสุขภาพที่ยังไม่คลี่คลาย"
+      },
+      {
+        "word": "long-term health effects",
+        "thaiMeaning": "ผลกระทบต่อสุขภาพระยะยาว"
+      },
+      {
+        "word": "resist pests and drought",
+        "thaiMeaning": "ต้านทานศัตรูพืชและภัยแล้ง"
+      },
+      {
+        "word": "verified case of harm",
+        "thaiMeaning": "กรณีอันตรายที่ยืนยันได้"
+      },
+      {
+        "word": "Bt cotton varieties",
+        "thaiMeaning": "สายพันธุ์ฝ้าย Bt"
+      },
+      {
+        "word": "chemical pesticides",
+        "thaiMeaning": "ยาฆ่าแมลงเคมี"
+      },
+      {
+        "word": "decades of evidence",
+        "thaiMeaning": "หลักฐานหลายทศวรรษ"
+      },
+      {
+        "word": "growing populations",
+        "thaiMeaning": "ประชากรที่เพิ่มขึ้น"
+      },
+      {
+        "word": "stricter labelling",
+        "thaiMeaning": "การติดฉลากที่เข้มงวดขึ้น"
+      },
+      {
+        "word": "scientific bodies",
+        "thaiMeaning": "องค์กรทางวิทยาศาสตร์"
+      },
+      {
+        "word": "widely cultivated",
+        "thaiMeaning": "เพาะปลูกอย่างแพร่หลาย"
+      },
+      {
+        "word": "consumer groups",
+        "thaiMeaning": "กลุ่มผู้บริโภค"
+      },
+      {
+        "word": "pest resistance",
+        "thaiMeaning": "ความต้านทานต่อศัตรูพืช"
+      },
+      {
+        "word": "higher yields",
+        "thaiMeaning": "ผลผลิตที่สูงขึ้น"
+      },
+      {
+        "word": "pesticide use",
+        "thaiMeaning": "การใช้ยาฆ่าแมลง"
+      },
+      {
+        "word": "public health",
+        "thaiMeaning": "สาธารณสุข"
+      },
+      {
+        "word": "crop yields",
+        "thaiMeaning": "ผลผลิตทางการเกษตร"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-9",
+    "title": "Storing Information Online Instead of in Books",
+    "essay": "It has been widely argued that while storing information on the internet rather than in books is both beneficial and detrimental to learning, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with storing information on the internet. The first benefit is that it allows instant access to knowledge from anywhere in the world. For example, students in remote areas of Kenya now use smartphones to access free online libraries that would otherwise be hours away by road. Another advantage is that online information can be updated constantly, keeping facts far more current than printed material. For instance, digital encyclopedias such as Wikipedia are revised within minutes of major world events, unlike printed reference books.\n\nHowever, some might be concerned regarding the unreliable and unverified nature of much online content. This is because anyone can publish information on the internet without any form of expert review. To illustrate, a 2020 Stanford University study found that most teenagers struggled to distinguish reliable news sources from misleading ones online. However, this argument is simply invalid given that reputable digital platforms now apply strict fact-checking and verification standards. For example, academic databases such as JSTOR only publish peer-reviewed material, offering the same reliability as traditional printed journals.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the reliability of online information, I am of the opinion that the benefits of storing information on the internet, including instant access and constant updates, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "storing information on the internet",
+        "thaiMeaning": "การเก็บข้อมูลบนอินเทอร์เน็ต"
+      },
+      {
+        "word": "reputable digital platforms",
+        "thaiMeaning": "แพลตฟอร์มดิจิทัลที่น่าเชื่อถือ"
+      },
+      {
+        "word": "printed reference books",
+        "thaiMeaning": "หนังสืออ้างอิงฉบับพิมพ์"
+      },
+      {
+        "word": "peer-reviewed material",
+        "thaiMeaning": "เอกสารที่ผ่านการตรวจสอบโดยผู้เชี่ยวชาญ"
+      },
+      {
+        "word": "verification standards",
+        "thaiMeaning": "มาตรฐานการตรวจสอบ"
+      },
+      {
+        "word": "digital encyclopedias",
+        "thaiMeaning": "สารานุกรมดิจิทัล"
+      },
+      {
+        "word": "reliable news sources",
+        "thaiMeaning": "แหล่งข่าวที่เชื่อถือได้"
+      },
+      {
+        "word": "academic databases",
+        "thaiMeaning": "ฐานข้อมูลทางวิชาการ"
+      },
+      {
+        "word": "major world events",
+        "thaiMeaning": "เหตุการณ์สำคัญของโลก"
+      },
+      {
+        "word": "online information",
+        "thaiMeaning": "ข้อมูลออนไลน์"
+      },
+      {
+        "word": "constant updates",
+        "thaiMeaning": "การอัปเดตอย่างต่อเนื่อง"
+      },
+      {
+        "word": "online libraries",
+        "thaiMeaning": "ห้องสมุดออนไลน์"
+      },
+      {
+        "word": "printed journals",
+        "thaiMeaning": "วารสารฉบับพิมพ์"
+      },
+      {
+        "word": "printed material",
+        "thaiMeaning": "สื่อสิ่งพิมพ์"
+      },
+      {
+        "word": "misleading ones",
+        "thaiMeaning": "แหล่งข้อมูลที่ทำให้เข้าใจผิด"
+      },
+      {
+        "word": "instant access",
+        "thaiMeaning": "การเข้าถึงได้ทันที"
+      },
+      {
+        "word": "online content",
+        "thaiMeaning": "เนื้อหาออนไลน์"
+      },
+      {
+        "word": "expert review",
+        "thaiMeaning": "การตรวจสอบโดยผู้เชี่ยวชาญ"
+      },
+      {
+        "word": "fact-checking",
+        "thaiMeaning": "การตรวจสอบความถูกต้องของข้อมูล"
+      },
+      {
+        "word": "remote areas",
+        "thaiMeaning": "พื้นที่ห่างไกล"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-10",
+    "title": "Distance-Learning Programs",
+    "essay": "It has been widely argued that while distance-learning programs are both beneficial and detrimental to students compared with in-person study, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with distance-learning programs. The first benefit is that they allow students to study from any location without relocating for university. For example, the Open University in the United Kingdom enrols more than 130,000 students annually who study entirely online alongside full-time jobs. Another advantage is that online courses are typically far cheaper than traditional degrees, eliminating accommodation and campus costs altogether. For instance, several accredited online bachelor's degrees in the United States cost less than half the price of comparable on-campus programs, saving students thousands of dollars overall.\n\nHowever, some might be concerned regarding the lack of face-to-face interaction with instructors and classmates. This is because online students often miss out on spontaneous discussions and networking opportunities found on campus. To illustrate, a 2021 survey by Coursera found that nearly 40% of online learners reported feeling isolated during their studies. However, this argument is simply invalid given that modern platforms now offer live seminars and collaborative group projects. For example, universities such as Arizona State University run weekly video tutorials, allowing online students to interact directly with professors and peers.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the lack of face-to-face interaction, I am of the opinion that the benefits of distance-learning programs, including flexibility and lower cost, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "accredited online bachelor's degrees",
+        "thaiMeaning": "ปริญญาตรีออนไลน์ที่ได้รับการรับรอง"
+      },
+      {
+        "word": "collaborative group projects",
+        "thaiMeaning": "โครงการกลุ่มแบบร่วมมือ"
+      },
+      {
+        "word": "distance-learning programs",
+        "thaiMeaning": "หลักสูตรการเรียนทางไกล"
+      },
+      {
+        "word": "relocating for university",
+        "thaiMeaning": "การย้ายที่อยู่เพื่อเข้ามหาวิทยาลัย"
+      },
+      {
+        "word": "face-to-face interaction",
+        "thaiMeaning": "การปฏิสัมพันธ์แบบพบหน้า"
+      },
+      {
+        "word": "networking opportunities",
+        "thaiMeaning": "โอกาสในการสร้างเครือข่าย"
+      },
+      {
+        "word": "spontaneous discussions",
+        "thaiMeaning": "การอภิปรายแบบเกิดขึ้นเอง"
+      },
+      {
+        "word": "study entirely online",
+        "thaiMeaning": "เรียนออนไลน์ทั้งหมด"
+      },
+      {
+        "word": "traditional degrees",
+        "thaiMeaning": "ปริญญาแบบดั้งเดิม"
+      },
+      {
+        "word": "on-campus programs",
+        "thaiMeaning": "หลักสูตรในมหาวิทยาลัย"
+      },
+      {
+        "word": "feeling isolated",
+        "thaiMeaning": "รู้สึกโดดเดี่ยว"
+      },
+      {
+        "word": "modern platforms",
+        "thaiMeaning": "แพลตฟอร์มสมัยใหม่"
+      },
+      {
+        "word": "in-person study",
+        "thaiMeaning": "การเรียนแบบพบหน้า"
+      },
+      {
+        "word": "online learners",
+        "thaiMeaning": "ผู้เรียนออนไลน์"
+      },
+      {
+        "word": "video tutorials",
+        "thaiMeaning": "วิดีโอสอนบทเรียน"
+      },
+      {
+        "word": "full-time jobs",
+        "thaiMeaning": "งานเต็มเวลา"
+      },
+      {
+        "word": "online courses",
+        "thaiMeaning": "หลักสูตรออนไลน์"
+      },
+      {
+        "word": "live seminars",
+        "thaiMeaning": "สัมมนาสด"
+      },
+      {
+        "word": "campus costs",
+        "thaiMeaning": "ค่าใช้จ่ายในมหาวิทยาลัย"
+      },
+      {
+        "word": "lower cost",
+        "thaiMeaning": "ต้นทุนที่ต่ำกว่า"
+      }
+    ]
+  }
+]

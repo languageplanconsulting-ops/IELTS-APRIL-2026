@@ -12,6 +12,7 @@
 // writingTask2Data.ts EXACTLY (see assembleTask2Essay).
 
 import type { WritingTask2Role } from './writingTask2Data'
+import { buildDetailedThaiExplain } from './writingLetterHint'
 
 export type Wgb2Focus =
   | 'verb-tense'
@@ -24,6 +25,8 @@ export type Wgb2Focus =
   | 'comma'
   | 'participle'
   | 'punct'
+  | 'word-choice'
+  | 'letter-hint'
 
 // Sentinel option for article blanks where no article should be inserted at all.
 export const WGB2_NO_ARTICLE = '(ไม่ต้องใส่)'
@@ -33,6 +36,7 @@ export type Wgb2SelectBlank = {
   id: string
   options: string[]
   answer: string
+  acceptedAnswers?: string[]
   focus: Wgb2Focus
   explain?: string
 }
@@ -44,6 +48,8 @@ export type Wgb2TypeBlank = {
   answers: string[]
   focus: Wgb2Focus
   explain?: string
+  /** Thai gloss for letter-hint TH button / notebook save */
+  thaiMeaning?: string
 }
 
 export type Wgb2CommaBlank = {
@@ -60,6 +66,7 @@ export type Wgb2DragBlank = {
   id: string
   options: string[]
   answer: string
+  acceptedAnswers?: string[]
   focus: 'transition'
   explain?: string
 }
@@ -193,7 +200,11 @@ export const WGB2_BLANK_COACH_TH: Record<Wgb2Focus, string> = {
   participle:
     'V-ing vs V-ed หน้าคำนาม: V-ing = กำลังเกิด/active (growing population) · V-ed/V3 = ถูกกระทำ/เสร็จแล้ว (preserved buildings) — หลัง be ใน passive ต้องเป็น V3 เสมอ',
   punct:
-    'เลือกเครื่องหมายให้ตรงจังหวะประโยค: , คั่นวลี/อนุประโยคในประโยคเดียว · . จบความคิดสมบูรณ์ · ; เชื่อมสองประโยคสมบูรณ์ที่เกี่ยวกันแน่น (มักก่อน however/therefore) · ถ้าไม่ต้องใส่ ให้เลือกตัวเลือกว่าง/∅'
+    'เลือกเครื่องหมายให้ตรงจังหวะประโยค: , คั่นวลี/อนุประโยคในประโยคเดียว · . จบความคิดสมบูรณ์ · ; เชื่อมสองประโยคสมบูรณ์ที่เกี่ยวกันแน่น (มักก่อน however/therefore) · ถ้าไม่ต้องใส่ ให้เลือกตัวเลือกว่าง/∅',
+  'word-choice':
+    'อ่านทั้งประโยคแล้วเลือกคำที่ทำให้ทั้งความหมายและชนิดคำถูกต้อง จากนั้นตรวจว่าคำนั้นเชื่อมกับคำก่อนและหลังอย่างเป็นธรรมชาติ',
+  'letter-hint':
+    'ช่องคำศัพท์แบบใบ้ตัวอักษร: เห็น 2–3 ตัวแรกแล้วเติมตัวที่เหลือให้ครบ (เช่น mot_ _ _ _ _ _ _ → motivation) — สะกดให้ครบทั้งคำและตรงบริบท'
 }
 
 /** Beautiful article mini-guide — shown when focusing an article blank. */
@@ -292,11 +303,30 @@ export const getWgb2BlankExplain = (blank: Wgb2Blank, userAnswer?: string): stri
   }
   if (
     (blank.focus === 'verb-tense' || blank.focus === 'participle') &&
-    (blank.kind === 'type' || blank.kind === 'select')
+    (blank.kind === 'type' || blank.kind === 'select') &&
+    blank.focus !== 'letter-hint'
   ) {
-    return getWgb2VerbFormWrongExplain(blank, userAnswer || '')
+    const verbExplain = getWgb2VerbFormWrongExplain(blank, userAnswer || '')
+    if (verbExplain && !/ตรวจดูความหมาย/.test(verbExplain)) return verbExplain
   }
-  return blank.explain || 'ตรวจดูความหมายและไวยากรณ์ของช่องนี้อีกครั้ง'
+  const answer =
+    blank.kind === 'select'
+      ? blank.answer === WGB2_NO_ARTICLE
+        ? '(ไม่ใส่)'
+        : blank.answer
+      : blank.kind === 'type'
+        ? blank.answers[0]
+        : blank.kind === 'drag'
+          ? blank.answer
+          : blank.kind === 'punct'
+            ? String(blank.answer)
+            : ''
+  return buildDetailedThaiExplain({
+    answer: String(answer),
+    focus: blank.focus,
+    userAnswer,
+    authoredExplain: blank.explain
+  })
 }
 
 type VerbFormCase =
@@ -4847,7 +4877,7 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
     promptId: 't2-ad-10',
     steps: [
       {
-        id: 'gb2-dl-intro',
+        id: 'gb2-distance-learning-intro',
         role: 'intro',
         labelTh: WGB2_ROLE_LABEL_TH.intro,
         segments: [
@@ -4857,7 +4887,7 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
         ]
       },
       {
-        id: 'gb2-dl-body1',
+        id: 'gb2-distance-learning-body1',
         role: 'body1',
         labelTh: WGB2_ROLE_LABEL_TH.body1,
         segments: [
@@ -4882,7 +4912,7 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
         ]
       },
       {
-        id: 'gb2-dl-body2',
+        id: 'gb2-distance-learning-body2',
         role: 'body2',
         labelTh: WGB2_ROLE_LABEL_TH.body2,
         segments: [
@@ -4908,7 +4938,7 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
         ]
       },
       {
-        id: 'gb2-dl-conclusion',
+        id: 'gb2-distance-learning-conclusion',
         role: 'conclusion',
         labelTh: WGB2_ROLE_LABEL_TH.conclusion,
         segments: [
@@ -5349,9 +5379,48 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
         role: 'intro',
         labelTh: WGB2_ROLE_LABEL_TH.intro,
         segments: [
-          t2('It has been widely argued that while advanced technology has '),
+          t2('It has been '),
+          sel2(
+            't2-dq-2-i1',
+            ['widely', 'wide', 'widen'],
+            'widely',
+            'adverb',
+            'widely เป็น adverb ขยาย argued; wide เป็น adjective และ widen เป็น verb'
+          ),
+          t2(' argued that '),
+          drag2(
+            't2-dq-2-i2',
+            ['while', 'because', 'therefore'],
+            'while',
+            'while เชื่อมแนวคิดที่ขัดกัน: เทคโนโลยีมีประโยชน์ แต่ผู้สูงอายุยังใช้งานยาก'
+          ),
+          t2(' '),
+          sel2(
+            't2-dq-2-i3',
+            ['advanced', 'advance', 'advancement'],
+            'advanced',
+            'adjective',
+            'advanced เป็น adjective ขยายคำนาม technology'
+          ),
+          t2(' technology has '),
           typ2('t2-dq-2-i0', 'bring', ['brought'], 'verb-tense', 'present perfect "has brought"'),
-          t2(' many beneficial changes to the world, many older people today struggle to make use of devices such as smartphones and the Internet. This essay will elaborate on the benefits older people could gain from using technology more before suggesting some measures to encourage them to do so.')
+          t2(' many '),
+          sel2(
+            't2-dq-2-i4',
+            ['beneficial', 'benefit', 'beneficially'],
+            'beneficial',
+            'adjective',
+            'beneficial เป็น adjective ขยาย changes; benefit เป็น noun/verb และ beneficially เป็น adverb'
+          ),
+          t2(' changes to the world, many older people today '),
+          typ2(
+            't2-dq-2-i5',
+            'struggle',
+            ['struggle'],
+            'verb-tense',
+            'present simple ประธาน many older people เป็นพหูพจน์ จึงใช้ struggle ไม่เติม -s'
+          ),
+          t2(' to make use of devices such as smartphones and the Internet. This essay will elaborate on the benefits older people could gain from using technology more before suggesting some measures to encourage them to do so.')
         ]
       },
       {
@@ -5360,15 +5429,54 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
         labelTh: WGB2_ROLE_LABEL_TH.body1,
         segments: [
           drag2('t2-ot-b1start', ['To begin with', 'Another benefit', 'For example'], 'To begin with', '"To begin with" เปิดย่อหน้าแรกเสมอ'),
-          t2(', there are a number of benefits older people could gain from advanced technology. The first benefit is that video-calling applications '),
+          t2(', there are a number of '),
+          sel2(
+            't2-dq-2-b1-benefits',
+            ['benefits', 'benefit', 'beneficial'],
+            'benefits',
+            'plural',
+            'a number of + plural noun จึงต้องใช้ benefits'
+          ),
+          t2(' older people could '),
+          typ2(
+            't2-dq-2-b1-gain',
+            'gain',
+            ['gain'],
+            'verb-tense',
+            'หลัง modal could ใช้กริยารูปพื้นฐาน gain'
+          ),
+          t2(' from '),
+          sel2(
+            't2-dq-2-b1-advanced',
+            ['advanced', 'advance', 'advancing'],
+            'advanced',
+            'adjective',
+            'advanced technology ใช้ adjective ขยายคำนาม'
+          ),
+          t2(' technology. The first benefit is that video-calling applications '),
           typ2('t2-dq-2-b1a', 'allow', ['allow'], 'verb-tense', 'present simple ประธาน "applications" พหูพจน์'),
-          t2(' elderly people to stay in regular contact with family members who '),
+          t2(' elderly people to stay in '),
+          sel2(
+            't2-dq-2-b1-regular',
+            ['regular', 'regularly', 'regularity'],
+            'regular',
+            'adjective',
+            'regular เป็น adjective ขยายคำนาม contact'
+          ),
+          t2(' contact with family members who '),
           typ2('t2-dq-2-b1b', 'live', ['live'], 'verb-tense', 'present simple ประธาน "who" (family members) พหูพจน์'),
           t2(' far away. '),
           drag2('t2-ot-b1c', ['For example', 'Another benefit', 'To begin with'], 'For example', '"For example" ยกตัวอย่างปู่ย่าตายาย'),
           t2(', many grandparents now use video calls to see their grandchildren grow up despite '),
           typ2('t2-dq-2-b1d', 'live', ['living'], 'verb-tense', '"despite living in different countries" เป็น gerund หลัง preposition despite'),
-          t2(' in different countries. '),
+          t2(' in different countries'),
+          punc2(
+            't2-dq-2-b1-punct',
+            ['period', 'comma', 'none'],
+            'period',
+            'จบประโยคตัวอย่างสมบูรณ์ก่อนเริ่ม Another benefit จึงใช้ full stop'
+          ),
+          t2(' '),
           drag2('t2-ot-b1e', ['Another benefit', 'To begin with', 'For example'], 'Another benefit', '"Another benefit" เพิ่มประโยชน์ข้อที่สอง'),
           t2(' is that health-monitoring devices can alert both elderly users and their doctors to medical problems at an early stage. '),
           drag2('t2-ot-b1f', ['For instance', 'To begin with', 'Another benefit'], 'For instance', '"For instance" ยกตัวอย่างอุปกรณ์สวมใส่'),
@@ -5382,9 +5490,48 @@ export const WGB2_EXERCISES: Wgb2Exercise[] = [
         role: 'body2',
         labelTh: WGB2_ROLE_LABEL_TH.body2,
         segments: [
-          t2('Turning to possible measures, there are several ways older people could be encouraged to use consumer electronics more often. The first is that community centres could offer free, beginner-friendly technology classes '),
+          t2('Turning to possible measures, there are '),
+          sel2(
+            't2-dq-2-b2-several',
+            ['several', 'severely', 'severity'],
+            'several',
+            'adjective',
+            'several เป็น quantifier ขยายคำนามพหูพจน์ ways'
+          ),
+          t2(' ways older people could be '),
+          typ2(
+            't2-dq-2-b2-encouraged',
+            'encourage',
+            ['encouraged'],
+            'participle',
+            'could be + V3 เป็น passive voice จึงใช้ encouraged'
+          ),
+          t2(' to use '),
+          sel2(
+            't2-dq-2-b2-electronics',
+            ['consumer electronics', 'electronic consumers', 'consuming electronics'],
+            'consumer electronics',
+            'noun',
+            'consumer electronics เป็น noun phrase หมายถึงอุปกรณ์อิเล็กทรอนิกส์สำหรับผู้บริโภค'
+          ),
+          t2(' more often. The first is that community centres could offer free, '),
+          sel2(
+            't2-dq-2-b2-beginner',
+            ['beginner-friendly', 'beginner-friend', 'friendly-begin'],
+            'beginner-friendly',
+            'adjective',
+            'beginner-friendly เป็น compound adjective ขยาย technology classes'
+          ),
+          t2(' technology classes '),
           typ2('t2-dq-2-b2a', 'design', ['designed'], 'participle', '"designed specifically for older residents" เป็น participle phrase ขยาย classes'),
-          t2(' specifically for older residents. '),
+          t2(' specifically for older residents'),
+          punc2(
+            't2-dq-2-b2-punct',
+            ['period', 'comma', 'none'],
+            'period',
+            'ประโยคมาตรการแรกจบสมบูรณ์ก่อน For example จึงต้องใช้ full stop'
+          ),
+          t2(' '),
           drag2('t2-ot-b2start', ['For example', 'Another measure', 'For instance'], 'For example', '"For example" ยกตัวอย่างห้องสมุดในสหราชอาณาจักร'),
           t2(', local libraries in several UK cities now '),
           typ2('t2-dq-2-b2b', 'run', ['run'], 'verb-tense', 'present simple ประธาน "libraries" พหูพจน์'),

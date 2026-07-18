@@ -11,9 +11,19 @@ import type {
   WritingTask2ReportSnapshot
 } from './writingReportTypes'
 import { LandingPageDraft } from './admin/LandingPageDraft'
+import {
+  normalizeEngagementActorDetail,
+  UserEngagementAnalytics,
+  type EngagementActorDetail
+} from './admin/UserEngagementAnalytics'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import ExamFeedPage from './ExamFeedPage'
 import { AdminVideoStudio } from './AdminVideoStudio'
+import {
+  formatEngagementDuration,
+  useEngagementTracker,
+  type EngagementContext
+} from './engagementTracking'
 import {
   findNewFillBlankQuestion,
   MANUAL_FILL_BLANK_SETS,
@@ -2729,18 +2739,18 @@ const ADMIN_WORKSPACE_SECTIONS: Array<{
   label: string
   shortLabel: string
   description: string
-  group: 'Core' | 'Content' | 'Operations'
+  group: 'People & Insights' | 'Content Studio' | 'System'
 }> = [
-  { id: 'learners', label: 'Learners', shortLabel: 'LR', description: 'Access, credits, expiry', group: 'Core' },
-  { id: 'support', label: 'Support Inbox', shortLabel: 'SP', description: 'Student issue reports', group: 'Core' },
-  { id: 'analytics', label: 'Analytics', shortLabel: 'AN', description: 'Usage and cost', group: 'Core' },
-  { id: 'reading', label: 'Reading Generator', shortLabel: 'RD', description: 'Create, check, and upload exams', group: 'Content' },
-  { id: 'audio', label: 'Question Audio', shortLabel: 'AU', description: 'TTS library', group: 'Content' },
-  { id: 'videos', label: 'Speaking Videos', shortLabel: 'VD', description: 'Record Part 2 samples', group: 'Content' },
-  { id: 'video-studio', label: 'Video Studio', shortLabel: 'VS', description: 'Edit deck → JSON for AI render', group: 'Content' },
-  { id: 'reports', label: 'Speaking Reports', shortLabel: 'RP', description: 'Saved attempts', group: 'Operations' },
-  { id: 'landing', label: 'Landing Preview', shortLabel: 'LP', description: 'Admin-only SEO draft', group: 'Operations' },
-  { id: 'settings', label: 'Settings', shortLabel: 'QA', description: 'Topics and QA tools', group: 'Operations' }
+  { id: 'learners', label: 'Learners', shortLabel: 'LR', description: 'Access, credits, and expiry', group: 'People & Insights' },
+  { id: 'analytics', label: 'Analytics', shortLabel: 'AN', description: 'Engagement, journeys, and costs', group: 'People & Insights' },
+  { id: 'support', label: 'Support Inbox', shortLabel: 'SP', description: 'Student questions and issues', group: 'People & Insights' },
+  { id: 'reports', label: 'Speaking Reports', shortLabel: 'RP', description: 'Review saved attempts', group: 'People & Insights' },
+  { id: 'reading', label: 'Reading Generator', shortLabel: 'RD', description: 'Create and publish exams', group: 'Content Studio' },
+  { id: 'audio', label: 'Question Audio', shortLabel: 'AU', description: 'Manage the TTS library', group: 'Content Studio' },
+  { id: 'videos', label: 'Speaking Videos', shortLabel: 'VD', description: 'Record Part 2 samples', group: 'Content Studio' },
+  { id: 'video-studio', label: 'Video Studio', shortLabel: 'VS', description: 'Prepare AI-render video decks', group: 'Content Studio' },
+  { id: 'landing', label: 'Landing Preview', shortLabel: 'LP', description: 'Preview the public landing page', group: 'System' },
+  { id: 'settings', label: 'Settings', shortLabel: 'ST', description: 'Topics and quality tools', group: 'System' }
 ]
 
 const READING_MONTHLY_EXAM_LEAD =
@@ -6786,6 +6796,7 @@ function App() {
   const [activePage, setActivePage] = useState<AppPage>('home')
   const [managedLearners, setManagedLearners] = useState<ManagedLearnerRecord[]>([])
   const [authSession, setAuthSession] = useState<AuthSession | null>(null)
+  const [writingAnalyticsContext, setWritingAnalyticsContext] = useState<EngagementContext | null>(null)
   const [isAuthLoading, setIsAuthLoading] = useState(true)
   const [userEmailInput, setUserEmailInput] = useState('')
   const [userPasswordInput, setUserPasswordInput] = useState('')
@@ -6826,12 +6837,14 @@ function App() {
   const [adminLearnerRoleInput, setAdminLearnerRoleInput] = useState<Role>('student')
   const [adminLearnerEnabledModulesInput, setAdminLearnerEnabledModulesInput] = useState<SkillModule[]>(DEFAULT_ENABLED_MODULES)
   const [adminPanelMessage, setAdminPanelMessage] = useState('')
-  const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('reading')
+  const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('learners')
   const [adminLearnerSearchInput, setAdminLearnerSearchInput] = useState('')
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
   const [adminAnalyticsLearnerSearchInput, setAdminAnalyticsLearnerSearchInput] = useState('')
   const [adminUserDetailView, setAdminUserDetailView] = useState<{ userId: string; name: string; email: string } | null>(null)
-  const [adminUserDetailTab, setAdminUserDetailTab] = useState<'activity' | 'scores' | 'notebook'>('activity')
+  const [adminUserDetailTab, setAdminUserDetailTab] =
+    useState<'engagement' | 'activity' | 'scores' | 'notebook'>('engagement')
+  const [adminUserEngagement, setAdminUserEngagement] = useState<EngagementActorDetail | null>(null)
   const [adminUserActivity, setAdminUserActivity] = useState<AdminActivityEvent[]>([])
   const [adminUserReadingAttempts, setAdminUserReadingAttempts] = useState<Record<string, ReadingAttemptSummary>>({})
   const [adminUserListeningAttempts, setAdminUserListeningAttempts] = useState<Record<string, ListeningAttemptSummary>>({})
@@ -10930,22 +10943,133 @@ function App() {
     void loadAdminReadingPdoyProgress(authSession.accessToken)
   }, [authSession?.role, authSession?.accessToken])
 
-  useEffect(() => {
-    if (!authSession?.accessToken || authSession.role === 'admin') return
-    const label =
-      activePage === 'reading' && activeReadingExam
-        ? activeReadingExam.title
-        : activePage.startsWith('listening') && activeListeningExercise
-          ? activeListeningExercise.title
-          : activePage === 'workspace'
-            ? `Speaking ${selectedTestMode}`
-            : ''
-    void fetch('/api/activity', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authSession.accessToken}` },
-      body: JSON.stringify({ page: activePage, label })
-    }).catch(() => {})
-  }, [activePage, activeReadingExam?.id, activeListeningExercise?.id, selectedTestMode, authSession?.accessToken, authSession?.role])
+  const engagementContext = useMemo<EngagementContext | null>(() => {
+    if (!authSession?.accessToken) return null
+    if (activePage === 'writing') {
+      return (
+        writingAnalyticsContext || {
+          page: 'writing',
+          feature: 'writing.hub',
+          activityType: 'view',
+          activityId: 'hub',
+          label: 'Writing journey'
+        }
+      )
+    }
+    if (activePage === 'workspace') {
+      return {
+        page: 'speaking',
+        feature: selectedTestMode === 'full' ? 'speaking.full-mock' : 'speaking.practice',
+        activityType: attemptStage === 'idle' ? 'topic-bank' : 'test',
+        activityId: activeTopic?.id ? `${selectedTestMode}:${activeTopic.id}` : selectedTestMode,
+        label: activeTopic?.title || `Speaking ${selectedTestMode}`,
+        metadata: { mode: selectedTestMode, stage: attemptStage }
+      }
+    }
+    if (activePage === 'reading') {
+      const readingFeature =
+        readingWorkspaceMode === 'pdoy'
+          ? 'reading.pdoy'
+          : readingEntryView === 'full-test'
+            ? 'reading.full-test'
+            : readingEntryView === 'general-training'
+              ? 'reading.general-training'
+              : readingEntryView === 'journey'
+                ? 'reading.journey'
+                : 'reading.bank'
+      const hasActiveExam = readingAttemptStage !== 'bank' && Boolean(activeReadingExam)
+      return {
+        page: 'reading',
+        feature: readingFeature,
+        activityType: hasActiveExam ? 'test' : 'view',
+        activityId: hasActiveExam ? activeReadingExam?.id || '' : readingEntryView,
+        label: hasActiveExam ? activeReadingExam?.title || 'Reading test' : `Reading ${readingEntryView}`,
+        metadata: {
+          stage: readingAttemptStage,
+          passage: readingActivePassageNumber,
+          workspace: readingWorkspaceMode
+        }
+      }
+    }
+    if (activePage.startsWith('listening')) {
+      const listeningFeature =
+        activePage === 'listening_full_test_exam' || listeningLabMode === 'full-test'
+          ? 'listening.full-test'
+          : activePage === 'listening_foundation_exam' || listeningLabMode === 'foundation'
+            ? 'listening.foundation'
+            : activePage === 'listening_builder_exam' || listeningLabMode === 'builder'
+              ? 'listening.builder'
+              : 'listening.practice'
+      const activityId =
+        selectedListeningFullTestId ||
+        selectedListeningFoundationSetId ||
+        selectedListeningBuilderExamTestId ||
+        activeListeningExercise?.id ||
+        listeningLabMode
+      return {
+        page: 'listening',
+        feature: listeningFeature,
+        activityType: activePage === 'listening' && listeningAttemptStage === 'bank' ? 'view' : 'test',
+        activityId,
+        label: activeListeningExercise?.title || activityId || 'Listening',
+        metadata: {
+          stage: listeningAttemptStage,
+          labMode: listeningLabMode,
+          fullTestStage: listeningFullTestStage,
+          section: listeningFullTestSectionIndex + 1
+        }
+      }
+    }
+    if (activePage === 'admin') {
+      return {
+        page: 'admin',
+        feature: `admin.${adminWorkspaceSection}`,
+        activityType: 'view',
+        activityId: adminWorkspaceSection,
+        label: `Admin ${adminWorkspaceSection}`
+      }
+    }
+    return {
+      page: activePage,
+      feature: activePage,
+      activityType: 'view',
+      activityId: activePage,
+      label: activePage === 'home' ? 'Home' : activePage
+    }
+  }, [
+    activeListeningExercise?.id,
+    activeListeningExercise?.title,
+    activePage,
+    activeReadingExam,
+    activeTopic,
+    adminWorkspaceSection,
+    attemptStage,
+    authSession?.accessToken,
+    listeningAttemptStage,
+    listeningFullTestSectionIndex,
+    listeningFullTestStage,
+    listeningLabMode,
+    readingActivePassageNumber,
+    readingAttemptStage,
+    readingEntryView,
+    readingWorkspaceMode,
+    selectedListeningBuilderExamTestId,
+    selectedListeningFoundationSetId,
+    selectedListeningFullTestId,
+    selectedTestMode,
+    writingAnalyticsContext
+  ])
+
+  useEngagementTracker({
+    auth: authSession
+      ? {
+          accessToken: authSession.accessToken,
+          userId: authSession.userId,
+          role: authSession.role
+        }
+      : null,
+    context: engagementContext
+  })
 
   useEffect(() => {
     if (!authSession?.accessToken || authSession.role !== 'admin') return
@@ -11401,6 +11525,16 @@ function App() {
     if (!readingExams.length) return
     if (filteredReadingExams.length > 0) return
     if (!adminFirstReadingCategoryWithContent) return
+    // GT / full-test / monthly / journey banks are not in leveledReadingExams — do not hijack them.
+    if (
+      readingEntryView === 'general-training' ||
+      readingEntryView === 'full-test' ||
+      readingEntryView === 'monthly' ||
+      readingEntryView === 'journey' ||
+      readingEntryCategory === 'general-training'
+    ) {
+      return
+    }
     if (readingEntryCategory) {
       setReadingEntryCategory(adminFirstReadingCategoryWithContent)
     }
@@ -11410,6 +11544,7 @@ function App() {
     readingExams.length,
     filteredReadingExams.length,
     readingEntryCategory,
+    readingEntryView,
     adminFirstReadingCategoryWithContent
   ])
 
@@ -12033,7 +12168,10 @@ function App() {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       section: 'writing essay',
       topicTitle: `${payload.typeTitle} · Q${payload.questionNumber}`,
-      criterion: 'Writing Task 2 · เรียงความเต็ม',
+      criterion:
+        payload.track === 'general-training'
+          ? 'General Training Writing Task 2 · เรียงความเต็ม'
+          : 'Academic Writing Task 2 · เรียงความเต็ม',
       quote: payload.questionTitle,
       fix: `เปิดดูเรียงความฉบับเต็มพร้อมคำศัพท์ — ทำถูก ${payload.score.correct}/${payload.score.total} ช่อง`,
       thaiMeaning: '',
@@ -18847,7 +18985,8 @@ function App() {
     passageNumber: number,
     hintExcerpt?: string | string[],
     vocabItems?: ReadingPassageVocabItem[],
-    vocabKeyPrefix?: string
+    vocabKeyPrefix?: string,
+    passageTitle?: string
   ) => {
     const text = String(rawText || '')
       .replace(/([.!?;:,])([A-Z])/g, '$1 $2')
@@ -18953,7 +19092,12 @@ function App() {
                   type="button"
                   className="vocabHiPopoverSave"
                   disabled={saved}
-                  onClick={() => saveReadingPassageVocabWord(vocabItem, activeReadingPassage.title)}
+                  onClick={() =>
+                    saveReadingPassageVocabWord(
+                      vocabItem,
+                      passageTitle || activeReadingPassage?.title || 'Reading'
+                    )
+                  }
                 >
                   {saved ? '✓ บันทึกแล้ว' : '＋ เพิ่มลง Notebook'}
                 </button>
@@ -20445,8 +20589,9 @@ function App() {
   const openAdminUserDetail = async (learner: ManagedLearnerRecord) => {
     if (!authSession?.accessToken || authSession.role !== 'admin') return
     setAdminUserDetailView({ userId: learner.id, name: learner.name, email: learner.email })
-    setAdminUserDetailTab('activity')
+    setAdminUserDetailTab('engagement')
     setAdminUserDetailSelectedSection('speaking')
+    setAdminUserEngagement(null)
     setAdminUserActivity([])
     setAdminUserReadingAttempts({})
     setAdminUserListeningAttempts({})
@@ -20455,7 +20600,13 @@ function App() {
     setAdminUserDetailLoading(true)
     try {
       const authHeaders = { Authorization: `Bearer ${authSession.accessToken}` }
-      const [activityPayload, readingPayload, listeningPayload, notebookPayload] = await Promise.all([
+      const [engagementPayload, activityPayload, readingPayload, listeningPayload, notebookPayload] = await Promise.all([
+        fetchJson<Record<string, unknown>>(
+          `/api/admin/engagement/actors/${encodeURIComponent(`user:${learner.id}`)}?period=total&timezone=Asia%2FBangkok`,
+          { headers: authHeaders }
+        )
+          .then(normalizeEngagementActorDetail)
+          .catch(() => null),
         fetchJson<{ events: AdminActivityEvent[] }>(`/api/admin/users/${learner.id}/activity`, {
           headers: authHeaders
         }),
@@ -20469,6 +20620,7 @@ function App() {
           headers: authHeaders
         })
       ])
+      setAdminUserEngagement(engagementPayload)
       setAdminUserActivity(Array.isArray(activityPayload.events) ? activityPayload.events : [])
       setAdminUserReadingAttempts(readingPayload.attempts || {})
       setAdminUserListeningAttempts(listeningPayload.attempts || {})
@@ -20482,6 +20634,7 @@ function App() {
 
   const closeAdminUserDetail = () => {
     setAdminUserDetailView(null)
+    setAdminUserEngagement(null)
     setAdminUserActivity([])
     setAdminUserReadingAttempts({})
     setAdminUserListeningAttempts({})
@@ -22719,7 +22872,16 @@ function App() {
                       </div>
 
                       <div className="readingPassageBody" ref={readingPassageBodyRef}>
-                        {activeReadingPdoyPassage.bodyParagraphs.map((paragraph, index) => (
+                        {(() => {
+                          const pdoyPassageText = activeReadingPdoyPassage.bodyParagraphs.join('\n')
+                          const pdoyPassageVocab = getReadingPassageVocab(activeReadingPdoyPassage.title, {
+                            fallbackTitles: [
+                              activeReadingPdoyLesson?.examTitle,
+                              `Passage ${activeReadingPdoyPassage.number}`
+                            ],
+                            passageText: pdoyPassageText
+                          })
+                          return activeReadingPdoyPassage.bodyParagraphs.map((paragraph, index) => (
                           <div
                             key={`pdoy-paragraph-${index}`}
                             className={`readingCoachParagraphWrap ${
@@ -22759,10 +22921,18 @@ function App() {
                                 }
                               }}
                             >
-                              {renderPassageParagraphWithHighlights(paragraph, activeReadingPdoyPassage.number, activeReadingPdoyQuestion.exactPortion)}
+                              {renderPassageParagraphWithHighlights(
+                                paragraph,
+                                activeReadingPdoyPassage.number,
+                                activeReadingPdoyQuestion.exactPortion,
+                                pdoyPassageVocab,
+                                `pdoy-p${activeReadingPdoyPassage.number}-${index}`,
+                                activeReadingPdoyPassage.title
+                              )}
                             </p>
                           </div>
-                        ))}
+                        ))
+                        })()}
                       </div>
 
                     </section>
@@ -23297,7 +23467,15 @@ function App() {
                             </p>
                           )
                         }
-                        const passageVocab = getReadingPassageVocab(activeReadingPassage.title)
+                        const passageText = activeReadingPassage.bodyParagraphs.join('\n')
+                        const passageVocab = getReadingPassageVocab(activeReadingPassage.title, {
+                          fallbackTitles: [
+                            activeReadingExam?.title,
+                            activeReadingExam?.collectionTitle,
+                            `Passage ${activeReadingPassage.number}`
+                          ],
+                          passageText
+                        })
                         return activeReadingPassage.bodyParagraphs.map((paragraph, index) => {
                           const vocabKeyPrefix = `p${activeReadingPassage.number}-${index}`
                           const hasOpenVocab = Boolean(readingVocabOpenKey?.startsWith(`${vocabKeyPrefix}-`))
@@ -23311,7 +23489,8 @@ function App() {
                                 activeReadingPassage.number,
                                 highlightNeedles,
                                 passageVocab,
-                                vocabKeyPrefix
+                                vocabKeyPrefix,
+                                activeReadingPassage.title
                               )}
                             </p>
                           )
@@ -24155,6 +24334,7 @@ function App() {
         canAccessWriting ? (
             <WritingGuidePage
               onBackHome={() => setActivePage('home')}
+              onAnalyticsContextChange={setWritingAnalyticsContext}
               onSaveEssayToNotebook={saveWritingEssayToNotebook}
               onSaveTask2EssayToNotebook={saveWritingTask2EssayToNotebook}
               onSaveVocabToNotebook={({ word, thaiMeaning, questionTitle, questionNumber }) =>
@@ -24183,13 +24363,12 @@ function App() {
         <ExamFeedPage onOpenCourse={() => setActivePage('home')} />
       ) : activePage === 'admin' ? (
           <section className="adminPanelPage" data-admin-section={adminWorkspaceSection}>
-            <div className="adminHero">
+            <div className="adminHero adminControlHeader">
               <div>
-                <p className="sectionLabel">Admin Workspace</p>
-                <h2>Manage learner access, exam flow, and question audio</h2>
+                <p className="sectionLabel">Administration</p>
+                <h2>Admin control center</h2>
                 <p className="meta">
-                  Create access fast, spot expiring learners, and generate reusable Deepgram question audio without
-                  digging through one long page.
+                  Everything is grouped by purpose. Choose a section from the menu to manage people, content, or system tools.
                 </p>
               </div>
               <div className="adminStatGrid">
@@ -24230,11 +24409,11 @@ function App() {
                 <div className="adminNavBrand">
                   <span className="adminNavBrandIcon">EP</span>
                   <div>
-                    <strong>Admin Menu</strong>
-                    <small>{activeAdminWorkspaceSection.label}</small>
+                    <strong>Workspace</strong>
+                    <small>English Plan Admin</small>
                   </div>
                 </div>
-                {(['Core', 'Content', 'Operations'] as const).map((group) => (
+                {(['People & Insights', 'Content Studio', 'System'] as const).map((group) => (
                   <div key={`admin-nav-${group}`} className="adminNavGroup">
                     <p className="adminNavGroupLabel">{group}</p>
                     <div className="adminNavList">
@@ -24245,6 +24424,7 @@ function App() {
                           className={adminWorkspaceSection === section.id ? 'active' : ''}
                           aria-current={adminWorkspaceSection === section.id ? 'page' : undefined}
                           onClick={() => switchAdminWorkspaceSection(section.id)}
+                          title={`${section.label} — ${section.description}`}
                         >
                           <span className="adminNavIcon">{section.shortLabel}</span>
                           <span className="adminNavCopy">
@@ -24259,12 +24439,30 @@ function App() {
               </aside>
               <div className="adminMainColumn">
                 <div className="adminWorkspaceWindowHeader">
-                  <div>
-                    <p className="sectionLabel">Selected Admin Function</p>
-                    <h3>{activeAdminWorkspaceSection.label}</h3>
-                    <p className="meta">{activeAdminWorkspaceSection.description}</p>
+                  <div className="adminWorkspaceTitle">
+                    <span className="adminWorkspaceSectionMark" aria-hidden="true">
+                      {activeAdminWorkspaceSection.shortLabel}
+                    </span>
+                    <div>
+                      <p className="sectionLabel">{activeAdminWorkspaceSection.group}</p>
+                      <h3>{activeAdminWorkspaceSection.label}</h3>
+                      <p className="meta">{activeAdminWorkspaceSection.description}</p>
+                    </div>
                   </div>
-                  <span className="adminWindowStatus">Active Window</span>
+                  <label className="adminSectionSelectLabel">
+                    <span>Go to section</span>
+                    <select
+                      value={adminWorkspaceSection}
+                      onChange={(event) => switchAdminWorkspaceSection(event.target.value as AdminWorkspaceSection)}
+                    >
+                      {ADMIN_WORKSPACE_SECTIONS.map((section) => (
+                        <option key={`admin-mobile-${section.id}`} value={section.id}>
+                          {section.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <span className="adminWindowStatus">Current section</span>
                 </div>
                 <div className="panel adminSectionCard adminOnly-landing">
                   <div className="adminSectionHeader">
@@ -24644,6 +24842,10 @@ function App() {
                       ))
                     )}
                   </div>
+                </div>
+
+                <div className="panel adminSectionCard adminOnly-analytics adminEngagementSection">
+                  <UserEngagementAnalytics accessToken={authSession?.accessToken || ''} />
                 </div>
 
                 <div className="panel adminSectionCard adminOnly-analytics">
@@ -27874,17 +28076,25 @@ function App() {
         ) : activePage === 'workspace' ? (
           canAccessSpeaking ? (
           <section className="panel full speakingFlowTheme">
-          <h2>{isTrialUser ? 'IELTS Speaking Trial' : 'Speaking Test'}</h2>
+          <div className="writingGuideAmbient speakingAmbient" aria-hidden="true">
+            <span className="writingGuideOrb writingGuideOrb-a" />
+            <span className="writingGuideOrb writingGuideOrb-b" />
+            <span className="writingGuideGridGlow" />
+          </div>
+          <div className="speakingFlowStage">
           {attemptStage === 'idle' && (
             isTrialUser ? (
               <div className="trialStageShell">
-                <div className="trialStageHero">
-                  <p className="sectionLabel">One-time Trial Only</p>
-                  <h3>ทดลองใช้ฟรีเพื่อประเมิน IELTS Speaking ของตัวเองแบบมีระบบ</h3>
-                  <p>
-                    Trial นี้ใช้เวลาประมาณ 5-7 นาทีครับ และใช้ได้เพียง 1 ครั้งต่อ 1 อีเมลเท่านั้น
-                    ระบบจะพาคุณทำ long turn 1 ข้อ แล้วต่อด้วย follow-up 3 ข้อแบบใกล้เคียงข้อสอบจริง
+                <div className="writingGuideHubIntro trialHubIntro">
+                  <p className="wlpKicker">IELTS Speaking Trial · English Plan Institute</p>
+                  <h1 className="writingGuideHubH1">ทดลอง Speaking ฟรี</h1>
+                  <p className="writingGuideHubLead">
+                    Trial นี้ใช้เวลาประมาณ 5-7 นาที และใช้ได้เพียง 1 ครั้งต่อ 1 อีเมล —
+                    long turn 1 ข้อ แล้วต่อด้วย follow-up 3 ข้อแบบใกล้เคียงข้อสอบจริง
                   </p>
+                  <span className="wlpAccentRule" aria-hidden="true" />
+                </div>
+                <div className="trialStageHero">
                   <div className="trialHeroChips">
                     <span>2-minute long turn</span>
                     <span>3 follow-up questions</span>
@@ -30182,14 +30392,20 @@ function App() {
               </button>
             </div>
             <div className="adminUserDetailTabs">
-              {(['activity', 'scores', 'notebook'] as const).map((tab) => (
+              {(['engagement', 'activity', 'scores', 'notebook'] as const).map((tab) => (
                 <button
                   key={tab}
                   type="button"
                   className={adminUserDetailTab === tab ? 'active' : ''}
                   onClick={() => setAdminUserDetailTab(tab)}
                 >
-                  {tab === 'activity' ? 'Activity' : tab === 'scores' ? 'Scores' : 'Notebook'}
+                  {tab === 'engagement'
+                    ? 'Time & Journey'
+                    : tab === 'activity'
+                      ? 'Activity'
+                      : tab === 'scores'
+                        ? 'Scores'
+                        : 'Notebook'}
                 </button>
               ))}
             </div>
@@ -30199,6 +30415,90 @@ function App() {
               <p className="authError">{adminUserDetailError}</p>
             ) : (
               <div className="adminUserDetailBody">
+                {adminUserDetailTab === 'engagement' && (
+                  <div className="adminUserEngagementDetail">
+                    {adminUserEngagement ? (
+                      <>
+                        <div className="adminEngagementMiniStats">
+                          <article>
+                            <span>Total active time</span>
+                            <strong>{formatEngagementDuration(adminUserEngagement.totalSeconds)}</strong>
+                          </article>
+                          <article>
+                            <span>First tracked</span>
+                            <strong>
+                              {adminUserEngagement.firstActiveAt
+                                ? new Date(adminUserEngagement.firstActiveAt).toLocaleDateString()
+                                : '—'}
+                            </strong>
+                          </article>
+                          <article>
+                            <span>Last active</span>
+                            <strong>
+                              {adminUserEngagement.lastActiveAt
+                                ? new Date(adminUserEngagement.lastActiveAt).toLocaleString()
+                                : '—'}
+                            </strong>
+                          </article>
+                        </div>
+                        <div className="adminEngagementSplit">
+                          <article className="adminEngagementPanel">
+                            <div className="adminEngagementPanelHead">
+                              <h4>Time by feature</h4>
+                            </div>
+                            <div className="adminEngagementBars">
+                              {adminUserEngagement.features.map((item, index) => {
+                                const max = Math.max(
+                                  ...adminUserEngagement.features.map((feature) => feature.seconds),
+                                  1
+                                )
+                                return (
+                                  <div key={item.key} className="adminEngagementBarRow">
+                                    <span className="adminEngagementBarRank">
+                                      {String(index + 1).padStart(2, '0')}
+                                    </span>
+                                    <div className="adminEngagementBarBody">
+                                      <div className="adminEngagementBarMeta">
+                                        <strong>{item.label}</strong>
+                                        <span>{formatEngagementDuration(item.seconds)}</span>
+                                      </div>
+                                      <div className="adminEngagementBarTrack">
+                                        <span style={{ width: `${Math.max(3, (item.seconds / max) * 100)}%` }} />
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </article>
+                          <article className="adminEngagementPanel">
+                            <div className="adminEngagementPanelHead">
+                              <h4>Recent journey</h4>
+                            </div>
+                            <div className="adminEngagementJourney">
+                              {adminUserEngagement.journey.slice(0, 25).map((item) => (
+                                <div key={item.id} className="adminEngagementJourneyItem">
+                                  <i />
+                                  <div>
+                                    <strong>{item.label || item.feature}</strong>
+                                    <span>
+                                      {item.feature} · {formatEngagementDuration(item.activeSeconds)}
+                                    </span>
+                                  </div>
+                                  <time>{new Date(item.startedAt).toLocaleString()}</time>
+                                </div>
+                              ))}
+                            </div>
+                          </article>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="meta">
+                        No active-time data yet. Tracking begins after the engagement analytics release.
+                      </p>
+                    )}
+                  </div>
+                )}
                 {adminUserDetailTab === 'activity' && (
                   <div className="adminUserActivityList">
                     {adminUserActivity.length === 0 ? (

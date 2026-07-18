@@ -1,0 +1,242 @@
+[
+  {
+    "id": "t2-ad-11",
+    "number": 11,
+    "title": "University Students Studying Abroad",
+    "essay": "It has been widely argued that while university students studying abroad is both beneficial and detrimental to their academic careers, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with university students studying abroad. The first benefit is that it exposes students to different teaching methods and academic perspectives. For example, students who complete an Erasmus exchange programme in Europe report significantly stronger critical thinking skills upon returning to their home universities. Another advantage is that international study experience greatly improves future job prospects. For instance, a 2022 survey by the British Council found that 87% of employers preferred graduates with overseas study experience over those without any at all.\n\nHowever, some might be concerned regarding the high financial cost of studying overseas. This is because tuition fees, flights, and accommodation abroad often far exceed the cost of domestic study. To illustrate, international tuition fees at Australian universities can reach 45,000 dollars per year, excluding living expenses entirely. However, this argument is simply invalid given that numerous scholarships and grants are specifically designed to cover these costs. For example, the Chevening Scholarship programme fully funds tuition and living costs for hundreds of international students in the United Kingdom every single year.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the financial cost of studying abroad, I am of the opinion that the benefits of university students studying abroad, including academic exposure and improved job prospects, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "critical thinking skills",
+        "thaiMeaning": "ทักษะการคิดวิเคราะห์"
+      },
+      {
+        "word": "job prospects",
+        "thaiMeaning": "โอกาสความก้าวหน้าในอาชีพ"
+      },
+      {
+        "word": "tuition fees",
+        "thaiMeaning": "ค่าเล่าเรียน"
+      },
+      {
+        "word": "scholarships",
+        "thaiMeaning": "ทุนการศึกษา"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-12",
+    "number": 12,
+    "title": "Credit Cards for Young People",
+    "essay": "It has been widely argued that while young people having easier access to credit cards is both beneficial and detrimental to their financial wellbeing, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with young people having access to credit cards. The first benefit is that credit cards allow young people to build a strong credit history early in life. For example, banks in the United States report that customers who open a credit card by age 21 typically qualify for lower mortgage rates a decade later. Another advantage is that credit cards provide a convenient financial buffer during genuine emergencies. For instance, many students use credit cards to cover unexpected medical bills or urgent travel costs while studying overseas.\n\nHowever, some might be concerned regarding the risk of young people accumulating unmanageable debt. This is because many young cardholders lack experience in budgeting and may overspend on non-essential items. To illustrate, a 2022 report by the Federal Reserve found that credit card debt among under-25s in America had risen by nearly 15% in a single year. However, this argument is simply invalid given that most banks now require compulsory financial literacy modules before issuing cards to young applicants. For example, several major UK banks now offer built-in spending alerts, helping young customers track and control their spending closely.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the risk of accumulating debt, I am of the opinion that the benefits of credit cards for young people, including building credit history and providing financial security, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "credit history",
+        "thaiMeaning": "ประวัติเครดิต"
+      },
+      {
+        "word": "financial buffer",
+        "thaiMeaning": "เงินสำรองทางการเงิน"
+      },
+      {
+        "word": "budgeting",
+        "thaiMeaning": "การทำงบประมาณ"
+      },
+      {
+        "word": "spending alerts",
+        "thaiMeaning": "การแจ้งเตือนการใช้จ่าย"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-13",
+    "number": 13,
+    "title": "Shifting from Fossil Fuels to Alternative Energy",
+    "essay": "It has been widely argued that while shifting from fossil fuels to alternative energy sources is both beneficial and detrimental to national economies, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with shifting to alternative energy sources. The first benefit is that renewable energy significantly reduces harmful carbon emissions that contribute to climate change. For example, Denmark now generates more than 50% of its electricity from wind power, cutting national carbon emissions dramatically since 2010. Another advantage is that renewable energy sources are increasingly cheaper to produce than fossil fuels. For instance, a 2021 report by the International Renewable Energy Agency found that solar power costs had fallen by 85% over the previous decade.\n\nHowever, some might be concerned regarding the unreliable and inconsistent supply of renewable energy. This is because solar and wind power depend heavily on weather conditions rather than constant availability. To illustrate, several European countries experienced electricity shortages in 2021 when unusually low winds reduced wind farm output. However, this argument is simply invalid given that modern battery storage technology can now store surplus renewable energy for later use. For example, Tesla's large-scale battery installation in South Australia has stored enough energy to power thousands of homes during periods of low wind generation.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of the inconsistent supply of renewable energy, I am of the opinion that the benefits of shifting to alternative energy, including reduced emissions and falling costs, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "carbon emissions",
+        "thaiMeaning": "การปล่อยก๊าซคาร์บอน"
+      },
+      {
+        "word": "renewable energy",
+        "thaiMeaning": "พลังงานหมุนเวียน"
+      },
+      {
+        "word": "wind farm output",
+        "thaiMeaning": "ผลผลิตพลังงานจากฟาร์มกังหันลม"
+      },
+      {
+        "word": "battery storage",
+        "thaiMeaning": "ระบบกักเก็บพลังงานด้วยแบตเตอรี่"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-14",
+    "number": 14,
+    "title": "Artificial Intelligence Performing Human Tasks",
+    "essay": "It has been widely argued that while using artificial intelligence to perform tasks once done by humans is both beneficial and detrimental to the workforce, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with using artificial intelligence in the workplace. The first benefit is that AI can complete repetitive tasks far more quickly and accurately than humans. For example, Amazon's warehouse robots now process customer orders roughly four times faster than manual sorting teams did previously. Another advantage is that AI frees employees from tedious duties, allowing them to focus on more creative and strategic work. For instance, marketing teams at companies such as Coca-Cola now use AI tools to handle data analysis, leaving staff more time for campaign design.\n\nHowever, some might be concerned regarding the widespread job losses that automation may cause. This is because machines can increasingly replace roles in manufacturing, customer service, and even basic administration. To illustrate, a 2023 McKinsey report estimated that automation could displace up to 30% of current jobs worldwide by 2030. However, this argument is simply invalid given that new technologies typically create fresh employment opportunities in emerging industries. For example, the rise of AI has generated entirely new careers in data labelling and machine-learning engineering, roles that barely existed a decade ago.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of job losses caused by automation, I am of the opinion that the benefits of artificial intelligence in the workplace, including efficiency and new job creation, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "repetitive tasks",
+        "thaiMeaning": "งานที่ทำซ้ำๆ"
+      },
+      {
+        "word": "data analysis",
+        "thaiMeaning": "การวิเคราะห์ข้อมูล"
+      },
+      {
+        "word": "job losses",
+        "thaiMeaning": "การสูญเสียตำแหน่งงาน"
+      },
+      {
+        "word": "machine-learning engineering",
+        "thaiMeaning": "วิศวกรรมการเรียนรู้ของเครื่อง"
+      }
+    ]
+  },
+  {
+    "id": "t2-ad-15",
+    "number": 15,
+    "title": "Robots in Society",
+    "essay": "It has been widely argued that while the growing use of robots in society is both beneficial and detrimental to human development, this essay argues that the benefits are far greater than the drawbacks.\n\nTo begin with, there are a number of benefits associated with the growing use of robots in society. The first benefit is that robots can perform dangerous tasks that would otherwise put human workers at serious risk. For example, robots are now routinely used to defuse explosives and inspect damaged nuclear reactors, including at the Fukushima plant in Japan. Another advantage is that robots dramatically improve precision and efficiency in fields such as medicine. For instance, surgeons using robotic-assisted systems at Johns Hopkins Hospital have reported significantly fewer complications during complex operations in recent years.\n\nHowever, some might be concerned regarding the potential for robots to replace human workers and reduce social interaction. This is because increasing automation may leave many low-skilled workers permanently unemployed. To illustrate, several manufacturing towns in the American Midwest have experienced sharp job losses since factories introduced robotic assembly lines. However, this argument is simply invalid given that displaced workers can be retrained for newly created technical and supervisory roles. For example, Germany's government-funded retraining schemes have successfully transitioned thousands of former factory workers into robot maintenance and programming careers nationwide.\n\nIn conclusion, although it is undeniable that some might be concerned in terms of job losses caused by robots, I am of the opinion that the benefits of using robots in society, including safety and improved precision, are far greater than the drawbacks.",
+    "existingVocab": [
+      {
+        "word": "nuclear reactors",
+        "thaiMeaning": "เตาปฏิกรณ์นิวเคลียร์"
+      },
+      {
+        "word": "robotic-assisted systems",
+        "thaiMeaning": "ระบบที่ใช้หุ่นยนต์ช่วยปฏิบัติงาน"
+      },
+      {
+        "word": "assembly lines",
+        "thaiMeaning": "สายการประกอบชิ้นงาน"
+      },
+      {
+        "word": "retraining schemes",
+        "thaiMeaning": "โครงการฝึกอบรมทักษะใหม่"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-1",
+    "number": 1,
+    "title": "Living Longer, Fewer Babies",
+    "essay": "It has been widely argued that increasing life expectancy, combined with falling birth rates, is placing considerable pressure on governments around the world. This essay will elaborate on the problems this trend causes before suggesting some measures to solve them.\n\nTo begin with, there are a number of challenges associated with an ageing population. The first challenge is that healthcare systems face growing pressure as elderly citizens require more frequent medical treatment. For example, Japan, where more than 29% of the population is now over 65, has seen its national healthcare spending rise sharply over the past decade. Another challenge is that a shrinking workforce must support a growing number of retirees. For instance, countries such as Italy now have far fewer working-age taxpayers for every pensioner than they did in 1990.\n\nTurning to possible solutions, there are several measures that governments could adopt. The first is that raising the retirement age would allow older citizens to remain economically active for longer. For example, Germany has gradually raised its retirement age to 67 in order to ease pressure on its pension system. Another measure is that encouraging higher birth rates through financial incentives could help rebalance the population over time. For instance, France offers generous childcare subsidies, which have helped it maintain one of the highest birth rates in Europe.\n\nIn conclusion, although it is undeniable that an ageing population creates serious challenges for governments, I am of the opinion that a combination of workforce reform and family support policies can help societies adapt successfully over the coming decades.",
+    "existingVocab": [
+      {
+        "word": "healthcare spending",
+        "thaiMeaning": "ค่าใช้จ่ายด้านสุขภาพ"
+      },
+      {
+        "word": "working-age taxpayers",
+        "thaiMeaning": "ผู้เสียภาษีวัยทำงาน"
+      },
+      {
+        "word": "childcare subsidies",
+        "thaiMeaning": "เงินอุดหนุนค่าเลี้ยงดูเด็ก"
+      },
+      {
+        "word": "birth rates",
+        "thaiMeaning": "อัตราการเกิด"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-2",
+    "number": 2,
+    "title": "Older People and Technology",
+    "essay": "It has been widely argued that while advanced technology has brought many beneficial changes to the world, many older people today struggle to make use of devices such as smartphones and the Internet. This essay will elaborate on the benefits older people could gain from using technology more before suggesting some measures to encourage them to do so.\n\nTo begin with, there are a number of benefits older people could gain from advanced technology. The first benefit is that video-calling applications allow elderly people to stay in regular contact with family members who live far away. For example, many grandparents now use video calls to see their grandchildren grow up despite living in different countries. Another benefit is that health-monitoring devices can alert both elderly users and their doctors to medical problems at an early stage. For instance, wearable devices that track heart rate can warn users of irregular patterns before a serious health issue develops.\n\nTurning to possible measures, there are several ways older people could be encouraged to use consumer electronics more often. The first is that community centres could offer free, beginner-friendly technology classes designed specifically for older residents. For example, local libraries in several UK cities now run weekly digital skills workshops for elderly visitors. Another measure is that manufacturers could design devices with simpler interfaces and larger text specifically for older users. For instance, some smartphone models now include an \"easy mode\" that displays larger icons and fewer menu options.\n\nIn conclusion, although it is undeniable that many older people currently struggle with modern technology, I am of the opinion that accessible training and better device design can help them enjoy its full benefits.",
+    "existingVocab": [
+      {
+        "word": "digital skills",
+        "thaiMeaning": "ทักษะดิจิทัล"
+      },
+      {
+        "word": "wearable devices",
+        "thaiMeaning": "อุปกรณ์สวมใส่"
+      },
+      {
+        "word": "simpler interfaces",
+        "thaiMeaning": "หน้าจอใช้งานง่ายขึ้น"
+      },
+      {
+        "word": "video-calling applications",
+        "thaiMeaning": "แอปพลิเคชันวิดีโอคอล"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-3",
+    "number": 3,
+    "title": "The Fresh Water Shortage",
+    "essay": "It has been widely argued that access to fresh water has become a growing global problem in recent years. This essay will elaborate on the reasons for this before suggesting some solutions to tackle this issue.\n\nTo begin with, there are a number of reasons why fresh water has become scarce in many regions. The first reason is that rising global temperatures are causing rivers, lakes, and glaciers to shrink at unprecedented rates. For example, the Colorado River in the United States now regularly runs dry before reaching the sea due to prolonged drought. Another reason is that rapid population growth has significantly increased overall water demand for agriculture and industry, particularly in rapidly urbanising regions. For instance, countries such as India now use groundwater faster than natural rainfall can replenish it.\n\nTurning to possible solutions, there are several measures that could help address this problem. The first is that governments could invest in modern irrigation systems that use significantly less water than traditional methods. For example, Israel has become a world leader in drip irrigation technology, cutting agricultural water use dramatically. Another measure is that individuals could reduce personal water waste through simple daily habits, such as taking shorter showers and fixing leaking taps. For instance, a single dripping tap can waste more than 20 litres of water every single day.\n\nIn conclusion, although it is undeniable that fresh water scarcity is a complex global issue, I am of the opinion that a combination of government investment and individual responsibility can significantly ease this problem.",
+    "existingVocab": [
+      {
+        "word": "drip irrigation",
+        "thaiMeaning": "การให้น้ำแบบหยด"
+      },
+      {
+        "word": "groundwater",
+        "thaiMeaning": "น้ำใต้ดิน"
+      },
+      {
+        "word": "agricultural water use",
+        "thaiMeaning": "การใช้น้ำเพื่อการเกษตร"
+      },
+      {
+        "word": "prolonged drought",
+        "thaiMeaning": "ภัยแล้งที่ยืดเยื้อ"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-4",
+    "number": 4,
+    "title": "Why Drivers Break Road Safety Laws",
+    "essay": "It has been widely argued that although driving laws exist in every country to ensure road safety, many drivers continue to break them by speeding or using mobile phones while driving. This essay will elaborate on the reasons behind this behaviour before suggesting some measures to tackle this issue.\n\nTo begin with, there are a number of reasons why drivers continue to break road safety laws. The first reason is that many drivers underestimate the risks involved, believing that breaking minor rules will not lead to an accident. For example, surveys of drivers who use their phones at the wheel often reveal that most believe they can do so safely just this once. Another reason is that penalties for these offences are often too weak to act as an effective deterrent. For instance, fines for using a mobile phone while driving remain relatively low in several countries compared to the potential harm caused.\n\nTurning to possible solutions, there are several measures that could help solve this problem. The first is that governments could introduce stricter penalties, such as higher fines and automatic licence suspensions for repeat offenders. For example, some countries have successfully reduced phone-related accidents after introducing points-based licence systems. Another measure is that technology companies could design devices that automatically restrict phone use whenever a vehicle is moving. For instance, several smartphone models now include a driving mode that silences notifications once the car reaches a certain speed.\n\nIn conclusion, although it is undeniable that changing driver behaviour takes time, I am of the opinion that stricter penalties combined with smarter technology can significantly improve road safety.",
+    "existingVocab": [
+      {
+        "word": "licence suspensions",
+        "thaiMeaning": "การพักใช้ใบขับขี่"
+      },
+      {
+        "word": "repeat offenders",
+        "thaiMeaning": "ผู้กระทำผิดซ้ำ"
+      },
+      {
+        "word": "points-based system",
+        "thaiMeaning": "ระบบสะสมแต้ม"
+      },
+      {
+        "word": "road safety",
+        "thaiMeaning": "ความปลอดภัยบนท้องถนน"
+      }
+    ]
+  },
+  {
+    "id": "t2-dq-5",
+    "number": 5,
+    "title": "Giving Children Everything They Want",
+    "essay": "It has been widely argued that some parents give their children everything they ask for or allow them complete freedom to do as they wish. This essay will elaborate on why this parenting style is not beneficial for children before discussing the consequences they may face once they grow up.\n\nTo begin with, there are a number of reasons why this parenting style is not beneficial for children. The first reason is that children who receive everything they want rarely learn the value of patience or hard work. For example, children given expensive gifts without any effort attached often show little appreciation for what they receive. Another reason is that children allowed complete freedom rarely learn to respect boundaries or authority. For instance, teachers frequently report that children raised without firm rules at home struggle to follow classroom guidelines.\n\nTurning to the possible consequences, there are several ways this upbringing could affect these children later in life. The first is that they may struggle with discipline and responsibility once they enter the workplace. For example, employers often note that young employees who lacked structure as children find it harder to meet deadlines and follow instructions. Another consequence is that they may develop unrealistic expectations about how the wider world treats them. For instance, adults who were rarely told \"no\" as children often struggle to cope with rejection or failure later in life.\n\nIn conclusion, although it is undeniable that parents want their children to be happy, I am of the opinion that giving children everything they want ultimately causes more harm than good.",
+    "existingVocab": [
+      {
+        "word": "firm rules",
+        "thaiMeaning": "กฎเกณฑ์ที่เข้มงวด"
+      },
+      {
+        "word": "unrealistic expectations",
+        "thaiMeaning": "ความคาดหวังที่ไม่สมจริง"
+      },
+      {
+        "word": "workplace responsibility",
+        "thaiMeaning": "ความรับผิดชอบในที่ทำงาน"
+      },
+      {
+        "word": "rejection or failure",
+        "thaiMeaning": "การถูกปฏิเสธหรือความล้มเหลว"
+      }
+    ]
+  }
+]

@@ -15,17 +15,13 @@ import {
   WRITING_TASK1_SECTIONS,
   WRITING_TASK2_TYPES,
   WRITING_TIMELINE_PRACTICE_PROMPTS,
-  WRITING_BAND7_TASK1_SAMPLE,
-  WRITING_BAND7_TASK2_SAMPLE,
   getWritingTask1ExamStem,
   IELTS_TASK1_SUMMARY_INSTRUCTION,
   IELTS_TASK1_WORD_LIMIT,
   type WritingGuideChipGroup,
   type WritingGuideStructure,
   type WritingTask1Section,
-  type WritingTask1PracticePrompt,
-  type WritingBand7Highlight,
-  type WritingBand7Sample
+  type WritingTask1PracticePrompt
 } from './writingGuideData'
 import { WRITING_RECALL, WRITING_PREDICT, type ExamItem } from './writingExamRecalls'
 import { renderPromptChart } from './writingTask1Charts'
@@ -35,11 +31,32 @@ import type {
   WritingReportSegment,
   WritingTask2EssaySavePayload
 } from './writingReportTypes'
-import { WRITING_TASK2_PROMPTS, getWritingTask2Prompts, type WritingTask2TypeId } from './writingTask2Data'
+import {
+  WRITING_TASK2_PROMPTS,
+  getWritingTask2Prompts,
+  type WritingTask2Track,
+  type WritingTask2TypeId
+} from './writingTask2Data'
 import { getDenseWritingTask2Builder } from './writingTask2Dense'
 import { WritingTask2Practice } from './WritingTask2Practice'
-import { countIeltsWords, countTask1Paragraphs } from './writingTask1WordCount'
+import { WritingTask2VocabQuiz } from './WritingTask2VocabQuiz'
+import { hardenAcademicTask2Exercise } from './writingTask2Harden'
+import { hardenTask1Exercise, getTask1BlankExplain } from './writingTask1Harden'
+import { LetterHintBlankInput, isLetterHintBlank } from './LetterHintBlankInput'
+import { resolveThaiMeaning } from './writingLetterHint'
+import { countTask1Paragraphs } from './writingTask1WordCount'
 import type { EngagementContext } from './engagementTracking'
+import {
+  GENERAL_TASK1_PROMPTS_BY_REGISTER,
+  findGeneralTask1Prompt,
+  type GeneralTask1Register
+} from './writingGeneralTask1Data'
+import { GeneralTask1LetterPractice } from './GeneralTask1LetterPractice'
+import {
+  buildWritingRecallFeedback,
+  isWritingRecallExact,
+  type WritingRecallCheck
+} from './writingParagraphRecall'
 
 type WritingGuidePageProps = {
   onBackHome: () => void
@@ -56,9 +73,14 @@ type WritingFlow =
   | { step: 'task1-questions'; categoryId: string }
   | { step: 'task1-drill'; categoryId: string; promptId: string }
   | { step: 'task1-guide'; categoryId: string }
-  | { step: 'task2-types' }
-  | { step: 'task2-questions'; typeId: WritingTask2TypeId }
-  | { step: 'task2-drill'; typeId: WritingTask2TypeId; promptId: string }
+  | { step: 'gt-home' }
+  | { step: 'gt-task1-types' }
+  | { step: 'gt-task1-questions'; register: GeneralTask1Register }
+  | { step: 'gt-task1-drill'; register: GeneralTask1Register; promptId: string }
+  | { step: 'task2-types'; track?: WritingTask2Track }
+  | { step: 'task2-questions'; typeId: WritingTask2TypeId; track?: WritingTask2Track }
+  | { step: 'task2-drill'; typeId: WritingTask2TypeId; promptId: string; track?: WritingTask2Track }
+  | { step: 'gt-task2-vocab'; typeId: WritingTask2TypeId; promptId: string; track?: WritingTask2Track }
 
 // Chart / diagram renderers now live in ./writingTask1Charts (renderPromptChart).
 // The old free-text "answer sheet" exam paper has been removed — clicking a question now
@@ -73,6 +95,7 @@ const WGB_STEP_SHORT: Record<WgbStep['role'], string> = {
 
 const wgbNormalize = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase()
 
+/* Legacy in-file recall implementation retained only as migration reference.
 type WgbRecallCheck = {
   attempted: boolean
   passed: boolean
@@ -445,6 +468,7 @@ function buildWgbRecallFeedback(expected: string, given: string): string[] {
 
   return feedback
 }
+*/
 
 function WgbCoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string; message: string; isBlankFocus: boolean }) {
   return (
@@ -463,11 +487,13 @@ function WgbCoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string;
 function WritingGuidedBuilder({
   prompt,
   exercise,
-  onSaveEssay
+  onSaveEssay,
+  onSaveVocab
 }: {
   prompt: WritingTask1PracticePrompt
   exercise: WgbExercise
   onSaveEssay?: (data: { paragraphs: WritingReportParagraph[]; score: { correct: number; total: number } }) => void
+  onSaveVocab?: (payload: { word: string; thaiMeaning: string }) => void
 }) {
   const steps = exercise.steps
   const [stepIndex, setStepIndex] = useState(0)
@@ -475,11 +501,12 @@ function WritingGuidedBuilder({
   const [checkedSteps, setCheckedSteps] = useState<Set<string>>(() => new Set())
   const [masteredSteps, setMasteredSteps] = useState<Set<string>>(() => new Set())
   const [recallDrafts, setRecallDrafts] = useState<Record<string, string>>({})
-  const [recallChecks, setRecallChecks] = useState<Record<string, WgbRecallCheck>>({})
+  const [recallChecks, setRecallChecks] = useState<Record<string, WritingRecallCheck>>({})
   const [checkedNow, setCheckedNow] = useState(false)
   const [showEssay, setShowEssay] = useState(false)
   const [activeBlankId, setActiveBlankId] = useState<string | null>(null)
   const [savedNotice, setSavedNotice] = useState(false)
+  const [savedWords, setSavedWords] = useState<Set<string>>(() => new Set())
 
   const step = steps[stepIndex]
   const isLastStep = stepIndex === steps.length - 1
@@ -606,11 +633,11 @@ function WritingGuidedBuilder({
   }
 
   const checkRecallParagraph = () => {
-    const passed = wgbWithoutSpaces(recallDraft) === wgbWithoutSpaces(expectedParagraph)
-    const nextCheck: WgbRecallCheck = {
+    const passed = isWritingRecallExact(expectedParagraph, recallDraft)
+    const nextCheck: WritingRecallCheck = {
       attempted: true,
       passed,
-      feedback: passed ? [] : buildWgbRecallFeedback(expectedParagraph, recallDraft)
+      feedback: passed ? [] : buildWritingRecallFeedback(expectedParagraph, recallDraft, 'task1')
     }
     setRecallChecks((current) => ({ ...current, [step.id]: nextCheck }))
     if (passed) {
@@ -697,6 +724,38 @@ function WritingGuidedBuilder({
                   </span>
                 )
               }
+              if (isLetterHintBlank(blank)) {
+                const gloss = resolveThaiMeaning(
+                  blank.answers[0],
+                  blank.kind === 'type' ? blank.thaiMeaning : undefined,
+                  blank.explain
+                )
+                return (
+                  <span key={blank.id} className="wgbBlankWrap">
+                    <LetterHintBlankInput
+                      answer={blank.answers[0]}
+                      base={blank.base}
+                      value={value}
+                      stateClass={stateClass}
+                      thaiMeaning={gloss}
+                      saved={savedWords.has(blank.answers[0])}
+                      onSaveToNotebook={
+                        onSaveVocab && gloss
+                          ? ({ word, thaiMeaning }) => {
+                              onSaveVocab({ word, thaiMeaning })
+                              setSavedWords((current) => new Set(current).add(word))
+                            }
+                          : undefined
+                      }
+                      onChange={(next) => setValue(blank.id, next)}
+                      onFocus={() => setActiveBlankId(blank.id)}
+                      onBlur={() => setActiveBlankId((current) => (current === blank.id ? null : current))}
+                      onEnter={checkStep}
+                    />
+                    {checkedNow && !correct ? <em className="wgbReveal">{blank.answers[0]}</em> : null}
+                  </span>
+                )
+              }
               const widthCh = Math.max(blank.base.length + 3, ...blank.answers.map((a) => a.length + 1), 7)
               return (
                 <span key={blank.id} className="wgbBlankWrap">
@@ -755,7 +814,7 @@ function WritingGuidedBuilder({
                 <div key={blank.id} className="wgbExplainRow">
                   <span className="wgbExplainAnswer">{blankCorrectAnswer(blank)}</span>
                   <span className="wgbExplainWhy">
-                    {blank.explain || 'ตรวจดูความหมายและไวยากรณ์ของช่องนี้อีกครั้ง'}
+                    {getTask1BlankExplain(blank, values[blank.id] || '')}
                   </span>
                 </div>
               ))}
@@ -1115,101 +1174,6 @@ function WritingLatestSection({
   )
 }
 
-// ── Band 7 sample helper components ──────────────────────────────────────
-
-function WlpHighlightInline({ text, highlights }: { text: string; highlights: WritingBand7Highlight[] }) {
-  const [openPhrase, setOpenPhrase] = useState<string | null>(null)
-  const parts: Array<{ type: 'text' | 'mark'; content: string; h?: WritingBand7Highlight }> = []
-  let remaining = text
-  const sorted = [...highlights].sort(
-    (a, b) => text.indexOf(a.phrase) - text.indexOf(b.phrase)
-  )
-  for (const h of sorted) {
-    const idx = remaining.indexOf(h.phrase)
-    if (idx < 0) continue
-    if (idx > 0) parts.push({ type: 'text', content: remaining.slice(0, idx) })
-    parts.push({ type: 'mark', content: h.phrase, h })
-    remaining = remaining.slice(idx + h.phrase.length)
-  }
-  if (remaining) parts.push({ type: 'text', content: remaining })
-
-  return (
-    <span className="wlpSegmentText">
-      {parts.map((part, i) => {
-        if (part.type === 'mark' && part.h) {
-          const isOpen = openPhrase === part.content
-          return (
-            <span key={i} className="wlpInlineWrap">
-              <mark
-                className={`wlpMark wlpMark-${part.h.kind} ${isOpen ? 'is-open' : ''}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => setOpenPhrase(isOpen ? null : part.content)}
-                onKeyDown={(e) => e.key === 'Enter' && setOpenPhrase(isOpen ? null : part.content)}
-              >
-                {part.content}
-              </mark>
-              {isOpen && (
-                <span className="wlpMarkPopover">
-                  <strong>{part.h.labelTh}</strong>
-                  <span>{part.h.descTh}</span>
-                  {part.h.exampleTh && <em>ตัวอย่าง: {part.h.exampleTh}</em>}
-                </span>
-              )}
-            </span>
-          )
-        }
-        return <span key={i}>{part.content}</span>
-      })}
-    </span>
-  )
-}
-
-function Band7SampleView({ sample }: { sample: WritingBand7Sample }) {
-  return (
-    <div className="wlpBand7Sample">
-      <div className="wlpBand7Header">
-        <div className="wlpBand7HeaderLeft">
-          <span className="wlpBand7Badge">Band {sample.band} · {sample.questionTypeTh}</span>
-          <p className="wlpBand7Meta">
-            {countIeltsWords(sample.segments.map((segment) => segment.text).join(' '))} คำ · {sample.timeNote}
-          </p>
-        </div>
-        <div className="wlpBand7LegendRow">
-          <span className="wlpBand7Legend wlpBand7Legend-vocab">คำศัพท์</span>
-          <span className="wlpBand7Legend wlpBand7Legend-grammar">ไวยากรณ์</span>
-          <span className="wlpBand7Legend wlpBand7Legend-structure">โครงสร้าง</span>
-        </div>
-      </div>
-
-      <div className="wlpBand7Prompt">
-        <p className="wlpBand7PromptLabel">โจทย์</p>
-        <p className="wlpBand7PromptText">{sample.promptText}</p>
-      </div>
-
-      <div className="wlpBand7Segments">
-        {sample.segments.map((seg) => (
-          <div key={seg.id} className="wlpBand7Segment">
-            <p className="wlpBand7SegLabel">{seg.labelTh}</p>
-            <div className="wlpBand7SegText">
-              <WlpHighlightInline text={seg.text} highlights={seg.highlights} />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="wlpBand7Tips">
-        <p className="wlpBand7TipsLabel">สรุปเทคนิคที่ใช้</p>
-        <ul className="wlpBand7TipsList">
-          {sample.summaryPoints.map((tip) => (
-            <li key={tip}>{tip}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
-
 export function WritingGuidePage({
   onBackHome,
   onSaveEssayToNotebook,
@@ -1227,7 +1191,11 @@ export function WritingGuidePage({
       flow.step === 'task2-types' ||
       flow.step === 'task2-questions' ||
       flow.step === 'task2-drill' ||
-      flow.step === 'task1-categories'
+      flow.step === 'task1-categories' ||
+      flow.step === 'gt-home' ||
+      flow.step === 'gt-task1-types' ||
+      flow.step === 'gt-task1-questions' ||
+      flow.step === 'gt-task1-drill'
     ) {
       return null
     }
@@ -1242,30 +1210,45 @@ export function WritingGuidePage({
 
   const activeTask2Prompts = useMemo(() => {
     if (flow.step !== 'task2-questions' && flow.step !== 'task2-drill') return []
-    return getWritingTask2Prompts(flow.typeId)
+    return getWritingTask2Prompts(flow.typeId, flow.track || 'academic')
   }, [flow])
 
   const activeTask2Prompt = useMemo(() => {
-    if (flow.step !== 'task2-drill') return null
+    if (flow.step !== 'task2-drill' && flow.step !== 'gt-task2-vocab') return null
     return WRITING_TASK2_PROMPTS.find((prompt) => prompt.id === flow.promptId) || null
+  }, [flow])
+
+  const activeGeneralTask1Prompt = useMemo(() => {
+    if (flow.step !== 'gt-task1-drill') return null
+    return findGeneralTask1Prompt(flow.promptId)
   }, [flow])
 
   useEffect(() => {
     if (!onAnalyticsContextChange) return
-    const isTask1 = flow.step.startsWith('task1')
+    const isTask1 = flow.step.startsWith('task1') || flow.step.startsWith('gt-task1')
     const isTask2 = flow.step.startsWith('task2')
-    const prompt = activePrompt || activeTask2Prompt
+    const isGeneralTraining =
+      flow.step.startsWith('gt-') || ('track' in flow && flow.track === 'general-training')
+    const prompt = activePrompt || activeTask2Prompt || activeGeneralTask1Prompt
     onAnalyticsContextChange({
       page: 'writing',
-      feature: isTask1 ? 'writing.task1' : isTask2 ? 'writing.task2' : 'writing.hub',
+      feature: isTask1
+        ? isGeneralTraining
+          ? 'writing.general-training.task1'
+          : 'writing.task1'
+        : isTask2
+          ? isGeneralTraining
+            ? 'writing.general-training.task2'
+            : 'writing.academic.task2'
+          : 'writing.hub',
       activityType: prompt ? 'test' : flow.step.includes('questions') ? 'question-list' : 'view',
       activityId:
         prompt?.id ||
         ('categoryId' in flow ? flow.categoryId : 'typeId' in flow ? flow.typeId : flow.step),
       label: prompt?.title || flow.step,
-      metadata: { step: flow.step }
+      metadata: { step: flow.step, track: isGeneralTraining ? 'general-training' : 'academic' }
     })
-  }, [activePrompt, activeTask2Prompt, flow, onAnalyticsContextChange])
+  }, [activeGeneralTask1Prompt, activePrompt, activeTask2Prompt, flow, onAnalyticsContextChange])
 
   const goBack = () => {
     setShowHelper(false)
@@ -1277,8 +1260,28 @@ export function WritingGuidePage({
       setFlow({ step: 'hub' })
       return
     }
-    if (flow.step === 'task1-categories' || flow.step === 'task2-types') {
+    if (flow.step === 'task1-categories') {
       setFlow({ step: 'hub' })
+      return
+    }
+    if (flow.step === 'gt-home') {
+      setFlow({ step: 'hub' })
+      return
+    }
+    if (flow.step === 'gt-task1-types' || (flow.step === 'task2-types' && flow.track === 'general-training')) {
+      setFlow({ step: 'gt-home' })
+      return
+    }
+    if (flow.step === 'task2-types') {
+      setFlow({ step: 'hub' })
+      return
+    }
+    if (flow.step === 'gt-task1-questions') {
+      setFlow({ step: 'gt-task1-types' })
+      return
+    }
+    if (flow.step === 'gt-task1-drill') {
+      setFlow({ step: 'gt-task1-questions', register: flow.register })
       return
     }
     if (flow.step === 'task1-questions' || flow.step === 'task1-guide') {
@@ -1290,11 +1293,15 @@ export function WritingGuidePage({
       return
     }
     if (flow.step === 'task2-questions') {
-      setFlow({ step: 'task2-types' })
+      setFlow({ step: 'task2-types', track: flow.track })
       return
     }
     if (flow.step === 'task2-drill') {
-      setFlow({ step: 'task2-questions', typeId: flow.typeId })
+      setFlow({ step: 'task2-questions', typeId: flow.typeId, track: flow.track })
+      return
+    }
+    if (flow.step === 'gt-task2-vocab') {
+      setFlow({ step: 'task2-drill', typeId: flow.typeId, promptId: flow.promptId, track: flow.track })
     }
   }
 
@@ -1418,6 +1425,26 @@ export function WritingGuidePage({
                     <span className="wgTicketGo">เข้าฝึก →</span>
                   </button>
                 </div>
+                <div className="wgTicketPathStep" style={{ '--motion-stagger': 5 } as CSSProperties}>
+                  <span className="wgTicketPathNode" aria-hidden="true">6</span>
+                  <button
+                    type="button"
+                    className="wgTicket wgTicket-generalTraining"
+                    onClick={() => setFlow({ step: 'gt-home' })}
+                  >
+                    <span className="wgTicketStamp wgTicketStamp-blue" aria-hidden="true">🌍</span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>GENERAL TRAINING WRITING</strong>
+                        <span className="wgTicketBadge">Task 1 + 2</span>
+                      </span>
+                      <span className="wgTicketSub">
+                        Task 1 letters + Task 2 essays · everyday English
+                      </span>
+                    </span>
+                    <span className="wgTicketGo">เข้าฝึก →</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1444,6 +1471,181 @@ export function WritingGuidePage({
               filter={flow.filter}
               onPracticeTask1={() => setFlow({ step: 'task1-categories' })}
               onPracticeTask2={() => setFlow({ step: 'task2-types' })}
+            />
+          </div>
+        ) : null}
+
+        {flow.step === 'gt-home' ? (
+          <div className="writingGuideMegaShell">
+            <WritingFlowHead
+              eyebrow="IELTS General Training Writing"
+              title="เลือก Task ที่อยากฝึก"
+              subtitle="Task 1 ฝึกจดหมายตามระดับความเป็นทางการ · Task 2 ฝึกเรียงความหัวข้อใกล้ตัว"
+              onBack={goBack}
+              backLabel="Writing Home"
+            />
+            <WgTicketPathList ariaLabel="General Training Writing tasks">
+              <button type="button" className="wgTicket" onClick={() => setFlow({ step: 'gt-task1-types' })}>
+                <span className="wgTicketStamp wgTicketStamp-peach" aria-hidden="true">💌</span>
+                <span className="wgTicketBody">
+                  <span className="wgTicketTitleRow">
+                    <strong>GENERAL WRITING TASK 1</strong>
+                    <span className="wgTicketBadge">Letters</span>
+                  </span>
+                  <span className="wgTicketSub">Formal · Semi-formal · Informal · 3 bullet points</span>
+                </span>
+                <span className="wgTicketGo">เลือกประเภท →</span>
+              </button>
+              <button
+                type="button"
+                className="wgTicket"
+                onClick={() => setFlow({ step: 'task2-types', track: 'general-training' })}
+              >
+                <span className="wgTicketStamp wgTicketStamp-blue" aria-hidden="true">📝</span>
+                <span className="wgTicketBody">
+                  <span className="wgTicketTitleRow">
+                    <strong>GENERAL WRITING TASK 2</strong>
+                    <span className="wgTicketBadge">Essays</span>
+                  </span>
+                  <span className="wgTicketSub">4 essay types · 16 guided questions</span>
+                </span>
+                <span className="wgTicketGo">เลือกประเภท →</span>
+              </button>
+            </WgTicketPathList>
+          </div>
+        ) : null}
+
+        {flow.step === 'gt-task1-types' ? (
+          <div className="writingGuideMegaShell">
+            <WritingFlowHead
+              eyebrow="General Training · Task 1"
+              title="จดหมายนี้ควรใช้ register แบบไหน?"
+              subtitle="ดูความสัมพันธ์กับผู้รับก่อนเสมอ · ในทุกข้อจะต้องตอบ Formal / Semi-formal / Informal ให้ถูกก่อนเริ่มเขียน"
+              onBack={goBack}
+              backLabel="General Writing"
+            />
+            <WgTicketPathList ariaLabel="General Training Task 1 letter registers">
+              <button
+                type="button"
+                className="wgTicket wgTicket-generalTraining"
+                onClick={() => setFlow({ step: 'gt-task1-questions', register: 'informal' })}
+              >
+                <span className="wgTicketStamp wgTicketStamp-yellow" aria-hidden="true">👋</span>
+                <span className="wgTicketBody">
+                  <span className="wgTicketTitleRow">
+                    <strong>Informal Letter</strong>
+                    <span className="wgTicketBadge">พร้อมฝึก</span>
+                  </span>
+                  <span className="wgTicketSub">เขียนถึงเพื่อนหรือครอบครัว · ใช้ contractions + everyday conjunctions</span>
+                </span>
+                <span className="wgTicketGo">เปิด 4 ข้อ →</span>
+              </button>
+              <button
+                type="button"
+                className="wgTicket wgTicket-generalTraining"
+                onClick={() => setFlow({ step: 'gt-task1-questions', register: 'semi-formal' })}
+              >
+                <span className="wgTicketStamp wgTicketStamp-lilac" aria-hidden="true">🤝</span>
+                <span className="wgTicketBody">
+                  <span className="wgTicketTitleRow">
+                    <strong>Semi-formal Letter</strong>
+                    <span className="wgTicketBadge">พร้อมฝึก</span>
+                  </span>
+                  <span className="wgTicketSub">รู้จักผู้รับ แต่ยังต้องรักษาระดับความสุภาพ · เลี่ยง contractions</span>
+                </span>
+                <span className="wgTicketGo">เปิด 4 ข้อ →</span>
+              </button>
+              <button
+                type="button"
+                className="wgTicket wgTicket-generalTraining"
+                onClick={() => setFlow({ step: 'gt-task1-questions', register: 'formal' })}
+              >
+                <span className="wgTicketStamp wgTicketStamp-ink" aria-hidden="true">🏢</span>
+                <span className="wgTicketBody">
+                  <span className="wgTicketTitleRow">
+                    <strong>Formal Letter</strong>
+                    <span className="wgTicketBadge">พร้อมฝึก</span>
+                  </span>
+                  <span className="wgTicketSub">ไม่รู้จักผู้รับเป็นการส่วนตัว · ภาษาทางการ ปิดท้าย Yours faithfully</span>
+                </span>
+                <span className="wgTicketGo">เปิด 4 ข้อ →</span>
+              </button>
+            </WgTicketPathList>
+          </div>
+        ) : null}
+
+        {flow.step === 'gt-task1-questions' ? (
+          <div className="writingGuideMegaShell">
+            <WritingFlowHead
+              eyebrow={`General Training · Task 1 · ${
+                flow.register === 'informal'
+                  ? 'Informal'
+                  : flow.register === 'semi-formal'
+                    ? 'Semi-formal'
+                    : 'Formal'
+              }`}
+              title="เลือกโจทย์จดหมาย"
+              subtitle="รูปแบบข้อสอบจริง · 3 bullet points · 160–180 คำ · ทุกประโยคเริ่มด้วย transition"
+              onBack={goBack}
+              backLabel="ประเภทจดหมาย"
+            />
+            <WgTicketPathList ariaLabel="General Training Task 1 letter questions">
+              {GENERAL_TASK1_PROMPTS_BY_REGISTER[flow.register].map((prompt, index) => {
+                const stamps = [
+                  { emoji: '🏠', tone: 'yellow' },
+                  { emoji: '🎂', tone: 'peach' },
+                  { emoji: '💼', tone: 'blue' },
+                  { emoji: '⌚', tone: 'lilac' }
+                ] as const
+                const stamp = stamps[index % stamps.length]
+                return (
+                  <button
+                    key={prompt.id}
+                    type="button"
+                    className="wgTicket"
+                    onClick={() =>
+                      setFlow({ step: 'gt-task1-drill', register: flow.register, promptId: prompt.id })
+                    }
+                  >
+                    <span className={`wgTicketStamp wgTicketStamp-${stamp.tone}`} aria-hidden="true">
+                      {stamp.emoji}
+                    </span>
+                    <span className="wgTicketBody">
+                      <span className="wgTicketTitleRow">
+                        <strong>{prompt.title}</strong>
+                        <span className="wgTicketBadge">Q{prompt.number}</span>
+                      </span>
+                      <span className="wgTicketSub">{prompt.situation}</span>
+                    </span>
+                    <span className="wgTicketGo">วิเคราะห์ register →</span>
+                  </button>
+                )
+              })}
+            </WgTicketPathList>
+          </div>
+        ) : null}
+
+        {flow.step === 'gt-task1-drill' && activeGeneralTask1Prompt ? (
+          <div className="writingGuideExamShell">
+            <div className="writingGuideExamToolbar">
+              <button type="button" className="writingGuideFlowBack" onClick={goBack}>
+                ← กลับไปเลือกข้อ
+              </button>
+            </div>
+            <GeneralTask1LetterPractice
+              key={activeGeneralTask1Prompt.id}
+              prompt={activeGeneralTask1Prompt}
+              onSaveVocab={
+                onSaveVocabToNotebook
+                  ? ({ word, thaiMeaning }) =>
+                      onSaveVocabToNotebook({
+                        word,
+                        thaiMeaning,
+                        questionTitle: activeGeneralTask1Prompt.title,
+                        questionNumber: activeGeneralTask1Prompt.number
+                      })
+                  : undefined
+              }
             />
           </div>
         ) : null}
@@ -1518,10 +1720,6 @@ export function WritingGuidePage({
                 })
               })()}
             </WgTicketPathList>
-            <div className="wlpBand7Tabs wlpBand7Tabs-single">
-              <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
-              <Band7SampleView sample={WRITING_BAND7_TASK1_SAMPLE} />
-            </div>
           </div>
         ) : null}
 
@@ -1578,7 +1776,8 @@ export function WritingGuidePage({
 
         {flow.step === 'task1-drill' && activeCategory && activePrompt ? (
           (() => {
-            const exercise = getWritingGuidedBuilder(activePrompt.id)
+            const rawExercise = getWritingGuidedBuilder(activePrompt.id)
+            const exercise = rawExercise ? hardenTask1Exercise(rawExercise, { maxLetterHints: 14 }) : null
             const prompt = activePrompt
             const category = activeCategory
             return (
@@ -1604,6 +1803,17 @@ export function WritingGuidePage({
                     key={exercise.id}
                     prompt={prompt}
                     exercise={exercise}
+                    onSaveVocab={
+                      onSaveVocabToNotebook
+                        ? ({ word, thaiMeaning }) =>
+                            onSaveVocabToNotebook({
+                              word,
+                              thaiMeaning,
+                              questionTitle: prompt.title,
+                              questionNumber: prompt.number
+                            })
+                        : undefined
+                    }
                     onSaveEssay={
                       onSaveEssayToNotebook
                         ? ({ paragraphs, score }) =>
@@ -1665,12 +1875,38 @@ export function WritingGuidePage({
         {flow.step === 'task2-types' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 2 · เส้นทางฝึก"
-              title="เลือกประเภทเรียงความที่อยากฝึก"
-              subtitle="เดินตาม path · ดูจุดเน้นของแต่ละแบบ แล้วเข้าฝึกเติมคำทีละย่อหน้า"
+              eyebrow={
+                flow.track === 'general-training'
+                  ? 'General Training Writing · Task 2'
+                  : 'Academic Writing · Task 2'
+              }
+              title={
+                flow.track === 'general-training'
+                  ? 'GENERAL TRAINING WRITING'
+                  : 'เลือกประเภทเรียงความที่อยากฝึก'
+              }
+              subtitle={
+                flow.track === 'general-training'
+                  ? '4 ประเภท · ประเภทละ 4 ข้อ · โครงสร้างเดียวกับ Academic แต่ใช้ภาษาที่ง่ายและเป็นธรรมชาติกว่า'
+                  : 'เดินตาม path · ดูจุดเน้นของแต่ละแบบ แล้วเข้าฝึกเติมคำทีละย่อหน้า'
+              }
               onBack={goBack}
               backLabel="กลับ"
             />
+            {flow.track === 'general-training' ? (
+              <div className="wgGtIntroTemplate">
+                <span className="wgGtIntroTemplateLabel">Fixed introduction pattern</span>
+                <p>
+                  It is widely acknowledged that <strong>_____</strong> plays an important role in{' '}
+                  <strong>_____</strong>. However, <strong>_____</strong>. I believe that{' '}
+                  <strong>_____</strong>, and the reasons will be elaborated in this essay.
+                </p>
+                <small>
+                  ใช้ pattern นี้กับ Agree or Disagree และ Discuss Both Views เท่านั้น · Double Question และ
+                  Advantages &amp; Disadvantages ใช้ introduction pattern เดียวกับ Academic
+                </small>
+              </div>
+            ) : null}
             <WgTicketPathList ariaLabel="ประเภท Task 2">
               {WRITING_TASK2_TYPES.map((item, index) => {
                 const stamps = [
@@ -1688,7 +1924,11 @@ export function WritingGuidePage({
                     className="wgTicket"
                     onClick={() => {
                       setShowHelper(false)
-                      setFlow({ step: 'task2-questions', typeId: item.id as WritingTask2TypeId })
+                      setFlow({
+                        step: 'task2-questions',
+                        typeId: item.id as WritingTask2TypeId,
+                        track: flow.track
+                      })
                     }}
                   >
                     <span className={`wgTicketStamp wgTicketStamp-${stamp.tone}`} aria-hidden="true">
@@ -1696,8 +1936,14 @@ export function WritingGuidePage({
                     </span>
                     <span className="wgTicketBody">
                       <span className="wgTicketTitleRow">
-                        <strong>{item.title}</strong>
-                        <span className="wgTicketBadge">{index === 0 ? 'Start' : 'Task 2'}</span>
+                        <strong>
+                          {flow.track === 'general-training' && item.id === 'to-what-extent'
+                            ? 'Agree or Disagree'
+                            : item.title}
+                        </strong>
+                        <span className="wgTicketBadge">
+                          {flow.track === 'general-training' ? 'GT' : index === 0 ? 'Start' : 'Task 2'}
+                        </span>
                       </span>
                       <span className="wgTicketSub">{item.subtitle}</span>
                     </span>
@@ -1706,18 +1952,32 @@ export function WritingGuidePage({
                 )
               })}
             </WgTicketPathList>
-            <div className="wlpBand7Tabs wlpBand7Tabs-single">
-              <p className="wlpSectionKicker">ตัวอย่างคำตอบ · Band 7 Model Answer</p>
-              <Band7SampleView sample={WRITING_BAND7_TASK2_SAMPLE} />
-            </div>
+            {flow.track === 'general-training' ? (
+              <div className="wgGtStructureNote">
+                <strong>General Training model</strong>
+                <span>
+                  ใช้หัวข้อใกล้ตัวและภาษา B1+/B2 ที่ตรงไปตรงมา แต่ยังตอบครบทุกส่วนและมีอย่างน้อย 250 คำ
+                </span>
+              </div>
+            ) : null}
           </div>
         ) : null}
 
         {flow.step === 'task2-questions' ? (
           <div className="writingGuideMegaShell">
             <WritingFlowHead
-              eyebrow="Task 2 · เลือกข้อ"
-              title={WRITING_TASK2_TYPES.find((item) => item.id === flow.typeId)?.title || 'Task 2'}
+              eyebrow={
+                flow.track === 'general-training'
+                  ? 'General Training · Task 2 · เลือกข้อ'
+                  : 'Academic · Task 2 · เลือกข้อ'
+              }
+              title={`${
+                flow.track === 'general-training' && flow.typeId === 'to-what-extent'
+                  ? 'Agree or Disagree'
+                  : WRITING_TASK2_TYPES.find((item) => item.id === flow.typeId)?.title || 'Task 2'
+              }${
+                flow.track === 'general-training' ? ' · General Training' : ''
+              }`}
               subtitle="เดินตาม path · เลือก 1 ข้อ แล้วเข้าฝึกเขียนทีละย่อหน้า"
               onBack={goBack}
               backLabel="ประเภทเรียงความ"
@@ -1739,7 +1999,12 @@ export function WritingGuidePage({
                     className="wgTicket"
                     onClick={() => {
                       setShowHelper(false)
-                      setFlow({ step: 'task2-drill', typeId: flow.typeId, promptId: prompt.id })
+                      setFlow({
+                        step: 'task2-drill',
+                        typeId: flow.typeId,
+                        promptId: prompt.id,
+                        track: flow.track
+                      })
                     }}
                   >
                     <span className={`wgTicketStamp wgTicketStamp-${stamp.tone}`} aria-hidden="true">
@@ -1762,15 +2027,45 @@ export function WritingGuidePage({
 
         {flow.step === 'task2-drill' && activeTask2Prompt ? (
           (() => {
-            const exercise = getDenseWritingTask2Builder(activeTask2Prompt.id)
+            const rawExercise = getDenseWritingTask2Builder(activeTask2Prompt.id)
             const prompt = activeTask2Prompt
-            const typeTitle = WRITING_TASK2_TYPES.find((item) => item.id === prompt.typeId)?.title || 'Task 2'
+              const exercise = rawExercise
+                ? hardenAcademicTask2Exercise(rawExercise, prompt.vocab, {
+                    maxVocabMcq: 20,
+                    vocabFillMode: 'letter-hint',
+                    preferLetterHint: true
+                  })
+                : rawExercise
+            const baseTypeTitle =
+              prompt.track === 'general-training' && prompt.typeId === 'to-what-extent'
+                ? 'Agree or Disagree'
+                : WRITING_TASK2_TYPES.find((item) => item.id === prompt.typeId)?.title || 'Task 2'
+            const typeTitle =
+              prompt.track === 'general-training'
+                ? `General Training Writing · ${baseTypeTitle}`
+                : baseTypeTitle
             return (
               <div className="writingGuideExamShell">
                 <div className="writingGuideExamToolbar">
                   <button type="button" className="writingGuideFlowBack" onClick={goBack}>
                     ← กลับไปเลือกข้อ
                   </button>
+                  {prompt.track === 'general-training' ? (
+                    <button
+                      type="button"
+                      className="writingGuideVocabTestBtn"
+                      onClick={() =>
+                        setFlow({
+                          step: 'gt-task2-vocab',
+                          typeId: prompt.typeId,
+                          promptId: prompt.id,
+                          track: prompt.track
+                        })
+                      }
+                    >
+                      🧠 ทดสอบการใช้คำศัพท์ (40 ข้อ) →
+                    </button>
+                  ) : null}
                 </div>
                 {exercise ? (
                   <WritingTask2Practice
@@ -1793,6 +2088,7 @@ export function WritingGuidePage({
                         ? ({ paragraphs, score }) =>
                             onSaveTask2EssayToNotebook({
                               promptId: prompt.id,
+                              track: prompt.track || 'academic',
                               typeTitle,
                               questionTitle: prompt.questionText,
                               questionNumber: prompt.number,
@@ -1812,6 +2108,31 @@ export function WritingGuidePage({
               </div>
             )
           })()
+        ) : null}
+
+        {flow.step === 'gt-task2-vocab' && activeTask2Prompt ? (
+          <div className="writingGuideExamShell">
+            <div className="writingGuideExamToolbar">
+              <button type="button" className="writingGuideFlowBack" onClick={goBack}>
+                ← กลับไปฝึกเขียน
+              </button>
+            </div>
+            <WritingTask2VocabQuiz
+              key={activeTask2Prompt.id}
+              prompt={activeTask2Prompt}
+              onSaveVocab={
+                onSaveVocabToNotebook
+                  ? (vocab, quizPrompt) =>
+                      onSaveVocabToNotebook({
+                        word: vocab.word,
+                        thaiMeaning: vocab.thaiMeaning,
+                        questionTitle: quizPrompt.title,
+                        questionNumber: quizPrompt.number
+                      })
+                  : undefined
+              }
+            />
+          </div>
         ) : null}
       </div>
     </section>

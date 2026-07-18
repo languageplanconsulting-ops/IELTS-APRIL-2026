@@ -1,0 +1,1332 @@
+[
+  {
+    "id": "t2-dbv-6",
+    "vocab": [
+      {
+        "word": "cultural value",
+        "thaiMeaning": "คุณค่าทางวัฒนธรรม"
+      },
+      {
+        "word": "housing demand",
+        "thaiMeaning": "ความต้องการที่อยู่อาศัย"
+      },
+      {
+        "word": "reconstruction efforts",
+        "thaiMeaning": "ความพยายามในการบูรณะ"
+      },
+      {
+        "word": "original features",
+        "thaiMeaning": "ลักษณะดั้งเดิม"
+      },
+      {
+        "word": "carefully preserved traditional buildings",
+        "thaiMeaning": "อาคารดั้งเดิมที่อนุรักษ์อย่างดี"
+      },
+      {
+        "word": "current safety standards",
+        "thaiMeaning": "มาตรฐานความปลอดภัยในปัจจุบัน"
+      },
+      {
+        "word": "usable housing space",
+        "thaiMeaning": "พื้นที่อยู่อาศัยที่ใช้ได้"
+      },
+      {
+        "word": "redeveloped districts",
+        "thaiMeaning": "ย่านที่ได้รับการพัฒนาใหม่"
+      },
+      {
+        "word": "historic buildings",
+        "thaiMeaning": "อาคารประวัติศาสตร์"
+      },
+      {
+        "word": "practical needs",
+        "thaiMeaning": "ความต้องการในทางปฏิบัติ"
+      },
+      {
+        "word": "urgent housing and safety needs",
+        "thaiMeaning": "ความต้องการด้านที่อยู่อาศัยและความปลอดภัยเร่งด่วน"
+      },
+      {
+        "word": "take priority",
+        "thaiMeaning": "ให้ความสำคัญก่อน"
+      },
+      {
+        "word": "original form",
+        "thaiMeaning": "รูปแบบดั้งเดิม"
+      },
+      {
+        "word": "modern buildings",
+        "thaiMeaning": "อาคารสมัยใหม่"
+      },
+      {
+        "word": "once demolished",
+        "thaiMeaning": "เมื่อถูกรื้อถอนแล้ว"
+      },
+      {
+        "word": "millions of visitors",
+        "thaiMeaning": "ผู้เยี่ยมชมหลายล้านคน"
+      },
+      {
+        "word": "authenticity",
+        "thaiMeaning": "ความแท้จริง"
+      },
+      {
+        "word": "redevelopment",
+        "thaiMeaning": "การพัฒนาใหม่"
+      },
+      {
+        "word": "old buildings",
+        "thaiMeaning": "อาคารเก่า"
+      },
+      {
+        "word": "cannot be recreated",
+        "thaiMeaning": "ไม่สามารถสร้างขึ้นใหม่ได้"
+      },
+      {
+        "word": "preserved rather than replaced",
+        "thaiMeaning": "อนุรักษ์ไว้แทนการรื้อสร้างใหม่"
+      },
+      {
+        "word": "generally be prioritized",
+        "thaiMeaning": "ควรให้ความสำคัญก่อนโดยทั่วไป"
+      },
+      {
+        "word": "more sensible option",
+        "thaiMeaning": "ทางเลือกที่สมเหตุสมผลกว่า"
+      },
+      {
+        "word": "far more efficiently",
+        "thaiMeaning": "อย่างมีประสิทธิภาพมากกว่ามาก"
+      },
+      {
+        "word": "can never be restored",
+        "thaiMeaning": "ไม่สามารถบูรณะคืนได้"
+      },
+      {
+        "word": "hundreds of millions of euros",
+        "thaiMeaning": "หลายร้อยล้านยูโร"
+      },
+      {
+        "word": "fully replicate",
+        "thaiMeaning": "จำลองได้อย่างครบถ้วน"
+      },
+      {
+        "word": "new developments",
+        "thaiMeaning": "การพัฒนาใหม่"
+      },
+      {
+        "word": "remain the priority",
+        "thaiMeaning": "ยังคงเป็นสิ่งสำคัญอันดับแรก"
+      },
+      {
+        "word": "Notre-Dame fire",
+        "thaiMeaning": "ไฟไหม้โนเทรอดาม"
+      },
+      {
+        "word": "once lost",
+        "thaiMeaning": "เมื่อสูญเสียไปแล้ว"
+      },
+      {
+        "word": "Mori Memorial Foundation",
+        "thaiMeaning": "มูลนิธิโมริเมโมเรียล"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-7",
+    "vocab": [
+      {
+        "word": "national identity",
+        "thaiMeaning": "อัตลักษณ์ของชาติ"
+      },
+      {
+        "word": "traditional customs",
+        "thaiMeaning": "ขนบธรรมเนียมดั้งเดิม"
+      },
+      {
+        "word": "cultural policy",
+        "thaiMeaning": "นโยบายด้านวัฒนธรรม"
+      },
+      {
+        "word": "global exchange",
+        "thaiMeaning": "การแลกเปลี่ยนระดับโลก"
+      },
+      {
+        "word": "international contact",
+        "thaiMeaning": "การติดต่อระหว่างประเทศ"
+      },
+      {
+        "word": "economic opportunities",
+        "thaiMeaning": "โอกาสทางเศรษฐกิจ"
+      },
+      {
+        "word": "border restrictions",
+        "thaiMeaning": "ข้อจำกัดด้านพรมแดน"
+      },
+      {
+        "word": "minority languages",
+        "thaiMeaning": "ภาษาชนกลุ่มน้อย"
+      },
+      {
+        "word": "globally spoken languages",
+        "thaiMeaning": "ภาษาที่ใช้พูดทั่วโลก"
+      },
+      {
+        "word": "business expansion",
+        "thaiMeaning": "การขยายธุรกิจ"
+      },
+      {
+        "word": "traditional arts",
+        "thaiMeaning": "ศิลปะดั้งเดิม"
+      },
+      {
+        "word": "local culture",
+        "thaiMeaning": "วัฒนธรรมท้องถิ่น"
+      },
+      {
+        "word": "cultural contact",
+        "thaiMeaning": "การติดต่อทางวัฒนธรรม"
+      },
+      {
+        "word": "foreign culture",
+        "thaiMeaning": "วัฒนธรรมต่างชาติ"
+      },
+      {
+        "word": "share knowledge",
+        "thaiMeaning": "แบ่งปันความรู้"
+      },
+      {
+        "word": "positive development",
+        "thaiMeaning": "การพัฒนาในทางบวก"
+      },
+      {
+        "word": "economic and social benefits",
+        "thaiMeaning": "ประโยชน์ทางเศรษฐกิจและสังคม"
+      },
+      {
+        "word": "government support",
+        "thaiMeaning": "การสนับสนุนจากรัฐบาล"
+      },
+      {
+        "word": "face extinction",
+        "thaiMeaning": "เผชิญภาวะใกล้สูญพันธุ์"
+      },
+      {
+        "word": "constant exposure",
+        "thaiMeaning": "การสัมผัสอย่างต่อเนื่อง"
+      },
+      {
+        "word": "the benefits of this trend outweigh the risks",
+        "thaiMeaning": "ประโยชน์ของแนวโน้มนี้มีมากกว่าความเสี่ยง"
+      },
+      {
+        "word": "closer business and cultural ties allow countries",
+        "thaiMeaning": "ความสัมพันธ์ทางธุรกิจและวัฒนธรรมที่ใกล้ชิดขึ้นเอื้อให้ประเทศต่าง ๆ"
+      },
+      {
+        "word": "trade between European Union member states has grown substantially",
+        "thaiMeaning": "การค้าระหว่างรัฐสมาชิกสหภาพยุโรปเติบโตอย่างมาก"
+      },
+      {
+        "word": "threatens the survival",
+        "thaiMeaning": "คุกคามการดำรงอยู่"
+      },
+      {
+        "word": "gradually weaken",
+        "thaiMeaning": "ค่อย ๆ อ่อนแอลง"
+      },
+      {
+        "word": "continue to actively protect their traditions through education",
+        "thaiMeaning": "ยังคงปกป้องประเพณีอย่างจริงจังผ่านการศึกษา"
+      },
+      {
+        "word": "remain widely practiced today",
+        "thaiMeaning": "ยังคงมีการปฏิบัติอย่างแพร่หลายในปัจจุบัน"
+      },
+      {
+        "word": "2017 UNESCO report",
+        "thaiMeaning": "รายงานของยูเนสโกปี 2017"
+      },
+      {
+        "word": "many nations risk losing",
+        "thaiMeaning": "หลายชาติเสี่ยงต่อการสูญเสีย"
+      },
+      {
+        "word": "South Korea has combined",
+        "thaiMeaning": "เกาหลีใต้ได้ผสมผสาน"
+      },
+      {
+        "word": "allow countries to share",
+        "thaiMeaning": "เปิดโอกาสให้ประเทศต่าง ๆ แบ่งปัน"
+      },
+      {
+        "word": "the dominance of",
+        "thaiMeaning": "การครอบงำของ"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-8",
+    "vocab": [
+      {
+        "word": "guest services",
+        "thaiMeaning": "บริการสำหรับผู้เข้าพัก"
+      },
+      {
+        "word": "local resident",
+        "thaiMeaning": "ผู้อยู่อาศัยในท้องถิ่น"
+      },
+      {
+        "word": "holiday rentals",
+        "thaiMeaning": "ที่พักให้เช่าสำหรับวันหยุด"
+      },
+      {
+        "word": "living area",
+        "thaiMeaning": "พื้นที่นั่งเล่น"
+      },
+      {
+        "word": "holiday homes",
+        "thaiMeaning": "บ้านพักตากอากาศ"
+      },
+      {
+        "word": "professional staff",
+        "thaiMeaning": "พนักงานมืออาชีพ"
+      },
+      {
+        "word": "daily cleaning",
+        "thaiMeaning": "บริการทำความสะอาดรายวัน"
+      },
+      {
+        "word": "on-site facilities",
+        "thaiMeaning": "สิ่งอำนวยความสะดวกในสถานที่"
+      },
+      {
+        "word": "round-the-clock",
+        "thaiMeaning": "ตลอด 24 ชั่วโมง"
+      },
+      {
+        "word": "travel experience",
+        "thaiMeaning": "ประสบการณ์การเดินทาง"
+      },
+      {
+        "word": "accommodation choice",
+        "thaiMeaning": "ตัวเลือกที่พัก"
+      },
+      {
+        "word": "save money on meals",
+        "thaiMeaning": "ประหยัดค่าอาหาร"
+      },
+      {
+        "word": "full kitchen",
+        "thaiMeaning": "ครัวครบครัน"
+      },
+      {
+        "word": "overall value",
+        "thaiMeaning": "คุ้มค่าโดยรวม"
+      },
+      {
+        "word": "professional service",
+        "thaiMeaning": "บริการระดับมืออาชีพ"
+      },
+      {
+        "word": "hotel chains",
+        "thaiMeaning": "เครือโรงแรม"
+      },
+      {
+        "word": "living space",
+        "thaiMeaning": "พื้นที่ใช้สอย"
+      },
+      {
+        "word": "hotel rooms",
+        "thaiMeaning": "ห้องโรงแรม"
+      },
+      {
+        "word": "wiser choice",
+        "thaiMeaning": "ทางเลือกที่ฉลาดกว่า"
+      },
+      {
+        "word": "convenient option",
+        "thaiMeaning": "ทางเลือกที่สะดวก"
+      },
+      {
+        "word": "staying in hotels",
+        "thaiMeaning": "การพักในโรงแรม"
+      },
+      {
+        "word": "best option when travelling",
+        "thaiMeaning": "ทางเลือกที่ดีที่สุดเมื่อเดินทาง"
+      },
+      {
+        "word": "restaurants and gyms",
+        "thaiMeaning": "ร้านอาหารและฟิตเนส"
+      },
+      {
+        "word": "simply cannot match",
+        "thaiMeaning": "เทียบไม่ได้อย่างชัดเจน"
+      },
+      {
+        "word": "renting a holiday home",
+        "thaiMeaning": "การเช่าบ้านพักตากอากาศ"
+      },
+      {
+        "word": "more space, privacy",
+        "thaiMeaning": "พื้นที่และความเป็นส่วนตัวมากขึ้น"
+      },
+      {
+        "word": "neighbourhoods that typical hotels do not reach",
+        "thaiMeaning": "ย่านที่โรงแรมทั่วไปเข้าไม่ถึง"
+      },
+      {
+        "word": "particularly families",
+        "thaiMeaning": "โดยเฉพาะครอบครัว"
+      },
+      {
+        "word": "using a kitchen",
+        "thaiMeaning": "การใช้ครัว"
+      },
+      {
+        "word": "family of four",
+        "thaiMeaning": "ครอบครัวสี่คน"
+      },
+      {
+        "word": "renting an apartment in Barcelona",
+        "thaiMeaning": "การเช่าอพาร์ตเมนต์ในบาร์เซโลนา"
+      },
+      {
+        "word": "valuable convenience",
+        "thaiMeaning": "ความสะดวกที่มีค่า"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-9",
+    "vocab": [
+      {
+        "word": "parental involvement",
+        "thaiMeaning": "การมีส่วนร่วมของผู้ปกครอง"
+      },
+      {
+        "word": "problem-solving skills",
+        "thaiMeaning": "ทักษะการแก้ปัญหา"
+      },
+      {
+        "word": "self-discipline",
+        "thaiMeaning": "วินัยในตนเอง"
+      },
+      {
+        "word": "independent study",
+        "thaiMeaning": "การเรียนรู้ด้วยตนเอง"
+      },
+      {
+        "word": "complete homework independently",
+        "thaiMeaning": "ทำการบ้านด้วยตนเอง"
+      },
+      {
+        "word": "long-term benefits",
+        "thaiMeaning": "ประโยชน์ระยะยาว"
+      },
+      {
+        "word": "difficult subjects",
+        "thaiMeaning": "วิชาที่ยาก"
+      },
+      {
+        "word": "reinforce concepts",
+        "thaiMeaning": "ทบทวนแนวคิด"
+      },
+      {
+        "word": "working independently",
+        "thaiMeaning": "การทำงานอย่างอิสระ"
+      },
+      {
+        "word": "constant assistance",
+        "thaiMeaning": "ความช่วยเหลืออย่างต่อเนื่อง"
+      },
+      {
+        "word": "long-term retention",
+        "thaiMeaning": "การจดจำระยะยาว"
+      },
+      {
+        "word": "manage setbacks",
+        "thaiMeaning": "รับมือกับอุปสรรค"
+      },
+      {
+        "word": "without supervision",
+        "thaiMeaning": "โดยไม่มีผู้ควบคุม"
+      },
+      {
+        "word": "academic pressure",
+        "thaiMeaning": "ความกดดันด้านการเรียน"
+      },
+      {
+        "word": "lifelong skills",
+        "thaiMeaning": "ทักษะตลอดชีวิต"
+      },
+      {
+        "word": "parental support",
+        "thaiMeaning": "การสนับสนุนจากผู้ปกครอง"
+      },
+      {
+        "word": "parental help",
+        "thaiMeaning": "ความช่วยเหลือจากผู้ปกครอง"
+      },
+      {
+        "word": "independent homework",
+        "thaiMeaning": "การบ้านที่ทำด้วยตนเอง"
+      },
+      {
+        "word": "clear up confusion",
+        "thaiMeaning": "คลายความสับสน"
+      },
+      {
+        "word": "developing frustration",
+        "thaiMeaning": "เกิดความหงุดหงิด"
+      },
+      {
+        "word": "actively help their children",
+        "thaiMeaning": "ช่วยเหลือลูกอย่างจริงจัง"
+      },
+      {
+        "word": "entirely on their own",
+        "thaiMeaning": "ด้วยตนเองทั้งหมด"
+      },
+      {
+        "word": "completed homework unaided",
+        "thaiMeaning": "ทำการบ้านโดยไม่ได้รับความช่วยเหลือ"
+      },
+      {
+        "word": "struggle through problems alone",
+        "thaiMeaning": "ฝ่าฟันปัญหาด้วยตนเอง"
+      },
+      {
+        "word": "skill essential for success",
+        "thaiMeaning": "ทักษะสำคัญต่อความสำเร็จ"
+      },
+      {
+        "word": "success far beyond the classroom",
+        "thaiMeaning": "ความสำเร็จที่ไกลเกินห้องเรียน"
+      },
+      {
+        "word": "adapting more easily",
+        "thaiMeaning": "ปรับตัวได้ง่ายขึ้น"
+      },
+      {
+        "word": "greater long-term benefit",
+        "thaiMeaning": "ประโยชน์ระยะยาวที่มากกว่า"
+      },
+      {
+        "word": "many parents in Singapore regularly guide their children",
+        "thaiMeaning": "ผู้ปกครองจำนวนมากในสิงคโปร์แนะแนวทางให้ลูกเป็นประจำ"
+      },
+      {
+        "word": "mathematics homework",
+        "thaiMeaning": "การบ้านคณิตศาสตร์"
+      },
+      {
+        "word": "Journal of Educational Psychology",
+        "thaiMeaning": "วารสารจิตวิทยาการศึกษา"
+      },
+      {
+        "word": "taught earlier that day",
+        "thaiMeaning": "ที่สอนไปก่อนหน้าในวันนั้น"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-10",
+    "vocab": [
+      {
+        "word": "standard of living",
+        "thaiMeaning": "มาตรฐานการครองชีพ"
+      },
+      {
+        "word": "workplace culture",
+        "thaiMeaning": "วัฒนธรรมองค์กร"
+      },
+      {
+        "word": "long-term motivation",
+        "thaiMeaning": "แรงจูงใจระยะยาว"
+      },
+      {
+        "word": "job satisfaction",
+        "thaiMeaning": "ความพึงพอใจในงาน"
+      },
+      {
+        "word": "high salary",
+        "thaiMeaning": "เงินเดือนสูง"
+      },
+      {
+        "word": "working environment",
+        "thaiMeaning": "สภาพแวดล้อมการทำงาน"
+      },
+      {
+        "word": "deciding factor",
+        "thaiMeaning": "ปัจจัยชี้ขาด"
+      },
+      {
+        "word": "financial needs",
+        "thaiMeaning": "ความต้องการทางการเงิน"
+      },
+      {
+        "word": "starting salaries",
+        "thaiMeaning": "เงินเดือนเริ่มต้น"
+      },
+      {
+        "word": "supportive colleagues",
+        "thaiMeaning": "เพื่อนร่วมงานที่ให้การสนับสนุน"
+      },
+      {
+        "word": "manageable workloads",
+        "thaiMeaning": "ปริมาณงานที่รับไหว"
+      },
+      {
+        "word": "financial security",
+        "thaiMeaning": "ความมั่นคงทางการเงิน"
+      },
+      {
+        "word": "unclear expectations",
+        "thaiMeaning": "ความคาดหวังที่ไม่ชัดเจน"
+      },
+      {
+        "word": "poor management",
+        "thaiMeaning": "การบริหารจัดการที่ย่ำแย่"
+      },
+      {
+        "word": "top talent",
+        "thaiMeaning": "บุคคลที่มีความสามารถสูง"
+      },
+      {
+        "word": "constant stress",
+        "thaiMeaning": "ความเครียดอย่างต่อเนื่อง"
+      },
+      {
+        "word": "investment banks",
+        "thaiMeaning": "ธนาคารเพื่อการลงทุน"
+      },
+      {
+        "word": "positive workplace",
+        "thaiMeaning": "สถานที่ทำงานที่ดี"
+      },
+      {
+        "word": "generous salary",
+        "thaiMeaning": "เงินเดือนที่สูงมาก"
+      },
+      {
+        "word": "demanding roles",
+        "thaiMeaning": "ตำแหน่งงานที่ท้าทาย"
+      },
+      {
+        "word": "choosing an employer",
+        "thaiMeaning": "การเลือกนายจ้าง"
+      },
+      {
+        "word": "more important than pay",
+        "thaiMeaning": "สำคัญกว่าค่าจ้าง"
+      },
+      {
+        "word": "greater income allows employees",
+        "thaiMeaning": "รายได้ที่มากกว่าช่วยให้พนักงาน"
+      },
+      {
+        "word": "many graduates in finance",
+        "thaiMeaning": "บัณฑิตจำนวนมากในสายการเงิน"
+      },
+      {
+        "word": "exceptionally high",
+        "thaiMeaning": "สูงเป็นพิเศษ"
+      },
+      {
+        "word": "far less likely to leave",
+        "thaiMeaning": "มีแนวโน้มลาออกน้อยกว่ามาก"
+      },
+      {
+        "word": "leave their jobs within a year",
+        "thaiMeaning": "ลาออกภายในหนึ่งปี"
+      },
+      {
+        "word": "cannot compensate for",
+        "thaiMeaning": "ไม่สามารถชดเชยได้"
+      },
+      {
+        "word": "technology companies such as Google",
+        "thaiMeaning": "บริษัทเทคโนโลยีอย่างกูเกิล"
+      },
+      {
+        "word": "rather than salary alone",
+        "thaiMeaning": "มากกว่าเงินเดือนเพียงอย่างเดียว"
+      },
+      {
+        "word": "most important factor",
+        "thaiMeaning": "ปัจจัยที่สำคัญที่สุด"
+      },
+      {
+        "word": "Gallup workplace study",
+        "thaiMeaning": "การศึกษาสถานที่ทำงานของ Gallup"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-11",
+    "vocab": [
+      {
+        "word": "academic pressures",
+        "thaiMeaning": "ความกดดันด้านการเรียน"
+      },
+      {
+        "word": "child mortality rates",
+        "thaiMeaning": "อัตราการเสียชีวิตของเด็ก"
+      },
+      {
+        "word": "educational resources",
+        "thaiMeaning": "ทรัพยากรทางการศึกษา"
+      },
+      {
+        "word": "academic competition",
+        "thaiMeaning": "การแข่งขันด้านการเรียน"
+      },
+      {
+        "word": "unstructured outdoor play",
+        "thaiMeaning": "การเล่นกลางแจ้งอย่างอิสระ"
+      },
+      {
+        "word": "neighbourhood friends",
+        "thaiMeaning": "เพื่อนในละแวกบ้าน"
+      },
+      {
+        "word": "scheduled activities",
+        "thaiMeaning": "กิจกรรมที่มีตารางกำหนด"
+      },
+      {
+        "word": "previous generations",
+        "thaiMeaning": "คนรุ่นก่อน"
+      },
+      {
+        "word": "access to healthcare",
+        "thaiMeaning": "การเข้าถึงบริการสุขภาพ"
+      },
+      {
+        "word": "free university lectures",
+        "thaiMeaning": "การบรรยายมหาวิทยาลัยฟรี"
+      },
+      {
+        "word": "rural village",
+        "thaiMeaning": "หมู่บ้านชนบท"
+      },
+      {
+        "word": "social media",
+        "thaiMeaning": "สื่อสังคมออนไลน์"
+      },
+      {
+        "word": "modern healthcare",
+        "thaiMeaning": "การดูแลสุขภาพสมัยใหม่"
+      },
+      {
+        "word": "greater advantages",
+        "thaiMeaning": "ข้อได้เปรียบที่มากขึ้น"
+      },
+      {
+        "word": "easier life",
+        "thaiMeaning": "ชีวิตที่ง่ายกว่า"
+      },
+      {
+        "word": "modern children",
+        "thaiMeaning": "เด็กในยุคปัจจุบัน"
+      },
+      {
+        "word": "entire afternoons",
+        "thaiMeaning": "ช่วงบ่ายทั้งวัน"
+      },
+      {
+        "word": "UNICEF data",
+        "thaiMeaning": "ข้อมูลของยูนิเซฟ"
+      },
+      {
+        "word": "new pressures",
+        "thaiMeaning": "ความกดดันใหม่"
+      },
+      {
+        "word": "playing outside",
+        "thaiMeaning": "การเล่นนอกบ้าน"
+      },
+      {
+        "word": "children in the past",
+        "thaiMeaning": "เด็กในอดีต"
+      },
+      {
+        "word": "children today generally have it easier",
+        "thaiMeaning": "เด็กในปัจจุบันโดยรวมแล้วมีชีวิตที่ง่ายกว่า"
+      },
+      {
+        "word": "past generations faced fewer",
+        "thaiMeaning": "คนรุ่นก่อนเผชิญน้อยกว่า"
+      },
+      {
+        "word": "many adults who grew up in the 1970s",
+        "thaiMeaning": "ผู้ใหญ่จำนวนมากที่เติบโตในทศวรรษ 1970"
+      },
+      {
+        "word": "healthcare, education, and technology than their parents or grandparents did",
+        "thaiMeaning": "ด้านสุขภาพ การศึกษา และเทคโนโลยี มากกว่าที่พ่อแม่หรือปู่ย่าตายายเคยได้"
+      },
+      {
+        "word": "fallen by more than half since 1990",
+        "thaiMeaning": "ลดลงมากกว่าครึ่งตั้งแต่ปี 1990"
+      },
+      {
+        "word": "could only dream of",
+        "thaiMeaning": "เพียงแค่ฝันถึงได้"
+      },
+      {
+        "word": "can now use a smartphone",
+        "thaiMeaning": "สามารถใช้สมาร์ตโฟนได้แล้ว"
+      },
+      {
+        "word": "institutions such as MIT",
+        "thaiMeaning": "สถาบันอย่างเอ็มไอที"
+      },
+      {
+        "word": "today's children",
+        "thaiMeaning": "เด็กในปัจจุบัน"
+      },
+      {
+        "word": "benefit from far greater access",
+        "thaiMeaning": "ได้รับประโยชน์จากการเข้าถึงที่มากกว่ามาก"
+      },
+      {
+        "word": "can access vast",
+        "thaiMeaning": "สามารถเข้าถึงได้อย่างมหาศาล"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-12",
+    "vocab": [
+      {
+        "word": "public funds",
+        "thaiMeaning": "เงินทุนสาธารณะ"
+      },
+      {
+        "word": "study spaces",
+        "thaiMeaning": "พื้นที่สำหรับอ่านหนังสือ"
+      },
+      {
+        "word": "digital literacy",
+        "thaiMeaning": "ความรู้ด้านดิจิทัล"
+      },
+      {
+        "word": "disadvantaged communities",
+        "thaiMeaning": "ชุมชนผู้ด้อยโอกาส"
+      },
+      {
+        "word": "free public libraries",
+        "thaiMeaning": "ห้องสมุดประชาชนฟรี"
+      },
+      {
+        "word": "worthwhile investment",
+        "thaiMeaning": "การลงทุนที่คุ้มค่า"
+      },
+      {
+        "word": "equal access",
+        "thaiMeaning": "การเข้าถึงอย่างเท่าเทียม"
+      },
+      {
+        "word": "free internet access",
+        "thaiMeaning": "การเข้าถึงอินเทอร์เน็ตฟรี"
+      },
+      {
+        "word": "job seekers",
+        "thaiMeaning": "ผู้หางาน"
+      },
+      {
+        "word": "library visits",
+        "thaiMeaning": "การเข้าใช้ห้องสมุด"
+      },
+      {
+        "word": "elderly residents",
+        "thaiMeaning": "ผู้อยู่อาศัยสูงอายุ"
+      },
+      {
+        "word": "low-income families",
+        "thaiMeaning": "ครอบครัวรายได้น้อย"
+      },
+      {
+        "word": "personal devices",
+        "thaiMeaning": "อุปกรณ์ส่วนบุคคล"
+      },
+      {
+        "word": "community libraries",
+        "thaiMeaning": "ห้องสมุดชุมชน"
+      },
+      {
+        "word": "online information",
+        "thaiMeaning": "ข้อมูลออนไลน์"
+      },
+      {
+        "word": "physical libraries",
+        "thaiMeaning": "ห้องสมุดทางกายภาพ"
+      },
+      {
+        "word": "regardless of income",
+        "thaiMeaning": "ไม่ว่าจะมีรายได้เท่าใด"
+      },
+      {
+        "word": "rural areas",
+        "thaiMeaning": "พื้นที่ชนบท"
+      },
+      {
+        "word": "wasteful use",
+        "thaiMeaning": "การใช้ที่สิ้นเปลือง"
+      },
+      {
+        "word": "government investment",
+        "thaiMeaning": "การลงทุนของรัฐบาล"
+      },
+      {
+        "word": "public libraries across Finland",
+        "thaiMeaning": "ห้องสมุดประชาชนทั่วฟินแลนด์"
+      },
+      {
+        "word": "wastes government money",
+        "thaiMeaning": "สิ้นเปลืองเงินของรัฐ"
+      },
+      {
+        "word": "freely available online",
+        "thaiMeaning": "หาได้ฟรีทางออนไลน์"
+      },
+      {
+        "word": "costly physical library buildings",
+        "thaiMeaning": "อาคารห้องสมุดที่มีค่าใช้จ่ายสูง"
+      },
+      {
+        "word": "increasingly unnecessary",
+        "thaiMeaning": "ยิ่งไม่จำเป็นมากขึ้น"
+      },
+      {
+        "word": "declined by nearly 20%",
+        "thaiMeaning": "ลดลงเกือบ 20%"
+      },
+      {
+        "word": "over the previous decade",
+        "thaiMeaning": "ตลอดทศวรรษที่ผ่านมา"
+      },
+      {
+        "word": "lack reliable internet access",
+        "thaiMeaning": "ขาดการเข้าถึงอินเทอร์เน็ตที่เสถียร"
+      },
+      {
+        "word": "cannot otherwise get online",
+        "thaiMeaning": "ไม่สามารถเชื่อมต่อออนไลน์ได้ด้วยวิธีอื่น"
+      },
+      {
+        "word": "funding free libraries",
+        "thaiMeaning": "การสนับสนุนเงินทุนห้องสมุดฟรี"
+      },
+      {
+        "word": "building free libraries in every city",
+        "thaiMeaning": "การสร้างห้องสมุดฟรีในทุกเมือง"
+      },
+      {
+        "word": "study rooms that are heavily used",
+        "thaiMeaning": "ห้องอ่านหนังสือที่มีผู้ใช้อย่างหนาแน่น"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-13",
+    "vocab": [
+      {
+        "word": "parental supervision",
+        "thaiMeaning": "การดูแลของผู้ปกครอง"
+      },
+      {
+        "word": "emotional security",
+        "thaiMeaning": "ความมั่นคงทางอารมณ์"
+      },
+      {
+        "word": "developmental research",
+        "thaiMeaning": "งานวิจัยด้านพัฒนาการ"
+      },
+      {
+        "word": "formative years",
+        "thaiMeaning": "ช่วงวัยที่หล่อหลอมบุคลิกภาพ"
+      },
+      {
+        "word": "outside influences",
+        "thaiMeaning": "อิทธิพลจากภายนอก"
+      },
+      {
+        "word": "child's development",
+        "thaiMeaning": "พัฒนาการของเด็ก"
+      },
+      {
+        "word": "consuming media",
+        "thaiMeaning": "การบริโภคสื่อ"
+      },
+      {
+        "word": "interacting with peers",
+        "thaiMeaning": "การปฏิสัมพันธ์กับเพื่อน"
+      },
+      {
+        "word": "online video content",
+        "thaiMeaning": "เนื้อหาวิดีโอออนไลน์"
+      },
+      {
+        "word": "earliest values",
+        "thaiMeaning": "ค่านิยมตั้งแต่แรกเริ่ม"
+      },
+      {
+        "word": "supportive households",
+        "thaiMeaning": "ครัวเรือนที่ให้การสนับสนุน"
+      },
+      {
+        "word": "social outcomes",
+        "thaiMeaning": "ผลลัพธ์ทางสังคม"
+      },
+      {
+        "word": "screen time",
+        "thaiMeaning": "เวลาหน้าจอ"
+      },
+      {
+        "word": "language skills",
+        "thaiMeaning": "ทักษะทางภาษา"
+      },
+      {
+        "word": "primary school age",
+        "thaiMeaning": "วัยประถมศึกษา"
+      },
+      {
+        "word": "influential factor",
+        "thaiMeaning": "ปัจจัยที่มีอิทธิพล"
+      },
+      {
+        "word": "encourage reading",
+        "thaiMeaning": "ส่งเสริมการอ่าน"
+      },
+      {
+        "word": "children's attitudes",
+        "thaiMeaning": "ทัศนคติของเด็ก"
+      },
+      {
+        "word": "considerable amount of time",
+        "thaiMeaning": "เวลาเป็นจำนวนมาก"
+      },
+      {
+        "word": "most significant influence",
+        "thaiMeaning": "อิทธิพลที่สำคัญที่สุด"
+      },
+      {
+        "word": "most important role",
+        "thaiMeaning": "บทบาทที่สำคัญที่สุด"
+      },
+      {
+        "word": "television and friends",
+        "thaiMeaning": "โทรทัศน์และเพื่อน"
+      },
+      {
+        "word": "children in the UK aged eight to eleven",
+        "thaiMeaning": "เด็กในสหราชอาณาจักรอายุแปดถึงสิบเอ็ดปี"
+      },
+      {
+        "word": "over 13 hours per week",
+        "thaiMeaning": "กว่า 13 ชั่วโมงต่อสัปดาห์"
+      },
+      {
+        "word": "take hold",
+        "thaiMeaning": "เริ่มฝังราก"
+      },
+      {
+        "word": "largely control which friends",
+        "thaiMeaning": "ควบคุมเป็นส่วนใหญ่ว่าเพื่อนคนใด"
+      },
+      {
+        "word": "friends, schools, and media their children are exposed to",
+        "thaiMeaning": "เพื่อน โรงเรียน และสื่อที่ลูกได้สัมผัส"
+      },
+      {
+        "word": "single most important influence",
+        "thaiMeaning": "อิทธิพลที่สำคัญที่สุดเพียงหนึ่งเดียว"
+      },
+      {
+        "word": "2020 Ofcom report",
+        "thaiMeaning": "รายงานของออฟคอมปี 2020"
+      },
+      {
+        "word": "remain the most important influence",
+        "thaiMeaning": "ยังคงเป็นอิทธิพลที่สำคัญที่สุด"
+      },
+      {
+        "word": "noticeably stronger",
+        "thaiMeaning": "แข็งแรงขึ้นอย่างเห็นได้ชัด"
+      },
+      {
+        "word": "shape children more than parents",
+        "thaiMeaning": "หล่อหลอมเด็กมากกว่าพ่อแม่"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-14",
+    "vocab": [
+      {
+        "word": "high-risk activities",
+        "thaiMeaning": "กิจกรรมที่มีความเสี่ยงสูง"
+      },
+      {
+        "word": "personal risk",
+        "thaiMeaning": "ความเสี่ยงส่วนบุคคล"
+      },
+      {
+        "word": "individual choice",
+        "thaiMeaning": "ทางเลือกส่วนบุคคล"
+      },
+      {
+        "word": "safety equipment",
+        "thaiMeaning": "อุปกรณ์ความปลอดภัย"
+      },
+      {
+        "word": "dangerous sports",
+        "thaiMeaning": "กีฬาอันตราย"
+      },
+      {
+        "word": "personal freedom",
+        "thaiMeaning": "เสรีภาพส่วนบุคคล"
+      },
+      {
+        "word": "severe injury",
+        "thaiMeaning": "การบาดเจ็บสาหัส"
+      },
+      {
+        "word": "extreme sports",
+        "thaiMeaning": "กีฬาสุดขั้ว"
+      },
+      {
+        "word": "mountain rescue teams",
+        "thaiMeaning": "ทีมกู้ภัยบนภูเขา"
+      },
+      {
+        "word": "health risks",
+        "thaiMeaning": "ความเสี่ยงต่อสุขภาพ"
+      },
+      {
+        "word": "less safe alternatives",
+        "thaiMeaning": "ทางเลือกที่ปลอดภัยน้อยกว่า"
+      },
+      {
+        "word": "serious risks",
+        "thaiMeaning": "ความเสี่ยงร้ายแรง"
+      },
+      {
+        "word": "base jumping",
+        "thaiMeaning": "เบสจัมพ์ปิ้ง"
+      },
+      {
+        "word": "free solo climbing",
+        "thaiMeaning": "การปีนเขาแบบไม่มีเชือก"
+      },
+      {
+        "word": "professional boxing",
+        "thaiMeaning": "มวยอาชีพ"
+      },
+      {
+        "word": "well-documented",
+        "thaiMeaning": "มีเอกสารหลักฐานชัดเจน"
+      },
+      {
+        "word": "practice informally",
+        "thaiMeaning": "ฝึกแบบไม่เป็นทางการ"
+      },
+      {
+        "word": "retain the freedom",
+        "thaiMeaning": "รักษาเสรีภาพไว้"
+      },
+      {
+        "word": "banned altogether",
+        "thaiMeaning": "ถูกห้ามโดยสิ้นเชิง"
+      },
+      {
+        "word": "genuine risk",
+        "thaiMeaning": "ความเสี่ยงที่แท้จริง"
+      },
+      {
+        "word": "people should remain free to choose which sports they play",
+        "thaiMeaning": "ผู้คนควรมีเสรีภาพในการเลือกกีฬาที่จะเล่น"
+      },
+      {
+        "word": "ultimately be protected",
+        "thaiMeaning": "ควรได้รับการคุ้มครองในท้ายที่สุด"
+      },
+      {
+        "word": "injury or death",
+        "thaiMeaning": "การบาดเจ็บหรือความตาย"
+      },
+      {
+        "word": "in the Swiss Alps",
+        "thaiMeaning": "ในเทือกเขาแอลป์สวิตเซอร์แลนด์"
+      },
+      {
+        "word": "sports accidents every year",
+        "thaiMeaning": "อุบัติเหตุจากกีฬาทุกปี"
+      },
+      {
+        "word": "free to choose whichever sports they wish to play",
+        "thaiMeaning": "มีเสรีภาพเลือกกีฬาใดก็ได้ที่ต้องการเล่น"
+      },
+      {
+        "word": "choice removed by the state",
+        "thaiMeaning": "ทางเลือกที่ถูกรัฐตัดไป"
+      },
+      {
+        "word": "rarely eliminates the activity",
+        "thaiMeaning": "แทบไม่สามารถกำจัดกิจกรรมนั้นได้"
+      },
+      {
+        "word": "pushes participants toward unregulated",
+        "thaiMeaning": "ผลักผู้เข้าร่วมไปสู่กิจกรรมที่ไม่มีกฎกำกับ"
+      },
+      {
+        "word": "enthusiasts travel abroad",
+        "thaiMeaning": "ผู้ชื่นชอบเดินทางไปต่างประเทศ"
+      },
+      {
+        "word": "which sports they participate in",
+        "thaiMeaning": "กีฬาใดที่พวกเขาเข้าร่วม"
+      },
+      {
+        "word": "remains legal in most countries",
+        "thaiMeaning": "ยังถูกกฎหมายในประเทศส่วนใหญ่"
+      }
+    ]
+  },
+  {
+    "id": "t2-dbv-15",
+    "vocab": [
+      {
+        "word": "familiar routines",
+        "thaiMeaning": "กิจวัตรที่คุ้นเคย"
+      },
+      {
+        "word": "skill development",
+        "thaiMeaning": "การพัฒนาทักษะ"
+      },
+      {
+        "word": "career opportunities",
+        "thaiMeaning": "โอกาสในหน้าที่การงาน"
+      },
+      {
+        "word": "professional growth",
+        "thaiMeaning": "ความก้าวหน้าในสายอาชีพ"
+      },
+      {
+        "word": "embracing change",
+        "thaiMeaning": "การเปิดรับการเปลี่ยนแปลง"
+      },
+      {
+        "word": "stable routines",
+        "thaiMeaning": "กิจวัตรที่มั่นคง"
+      },
+      {
+        "word": "daily responsibilities",
+        "thaiMeaning": "หน้าที่ประจำวัน"
+      },
+      {
+        "word": "long-serving employees",
+        "thaiMeaning": "พนักงานที่ทำงานมานาน"
+      },
+      {
+        "word": "new experiences",
+        "thaiMeaning": "ประสบการณ์ใหม่"
+      },
+      {
+        "word": "professionally outdated",
+        "thaiMeaning": "ล้าสมัยในสายอาชีพ"
+      },
+      {
+        "word": "digital skills",
+        "thaiMeaning": "ทักษะดิจิทัล"
+      },
+      {
+        "word": "rise of automation",
+        "thaiMeaning": "การเพิ่มขึ้นของระบบอัตโนมัติ"
+      },
+      {
+        "word": "better outcomes",
+        "thaiMeaning": "ผลลัพธ์ที่ดีกว่า"
+      },
+      {
+        "word": "reduce uncertainty",
+        "thaiMeaning": "ลดความไม่แน่นอน"
+      },
+      {
+        "word": "resist change",
+        "thaiMeaning": "ต่อต้านการเปลี่ยนแปลง"
+      },
+      {
+        "word": "valuable comfort",
+        "thaiMeaning": "ความสะดวกสบายที่มีค่า"
+      },
+      {
+        "word": "avoiding change",
+        "thaiMeaning": "การหลีกเลี่ยงการเปลี่ยนแปลง"
+      },
+      {
+        "word": "wiser approach",
+        "thaiMeaning": "แนวทางที่ฉลาดกว่า"
+      },
+      {
+        "word": "long-term outcomes",
+        "thaiMeaning": "ผลลัพธ์ระยะยาว"
+      },
+      {
+        "word": "evolve constantly",
+        "thaiMeaning": "พัฒนาอย่างต่อเนื่อง"
+      },
+      {
+        "word": "change is always beneficial",
+        "thaiMeaning": "การเปลี่ยนแปลงเป็นประโยชน์เสมอ"
+      },
+      {
+        "word": "companies such as Toyota",
+        "thaiMeaning": "บริษัทอย่างโตโยต้า"
+      },
+      {
+        "word": "allow people to feel secure",
+        "thaiMeaning": "ช่วยให้ผู้คนรู้สึกมั่นคง"
+      },
+      {
+        "word": "remain in the same role for decades",
+        "thaiMeaning": "อยู่ในตำแหน่งเดิมเป็นเวลาหลายทศวรรษ"
+      },
+      {
+        "word": "valuing the stability this provides",
+        "thaiMeaning": "ให้คุณค่ากับความมั่นคงที่ได้รับ"
+      },
+      {
+        "word": "change is always a good thing",
+        "thaiMeaning": "การเปลี่ยนแปลงเป็นสิ่งที่ดีเสมอ"
+      },
+      {
+        "word": "push individuals to develop skills",
+        "thaiMeaning": "ผลักดันให้บุคคลพัฒนาทักษะ"
+      },
+      {
+        "word": "would never otherwise acquire",
+        "thaiMeaning": "มิฉะนั้นจะไม่มีโอกาสได้มา"
+      },
+      {
+        "word": "regularly changed roles within a company",
+        "thaiMeaning": "เปลี่ยนบทบาทภายในบริษัทอย่างสม่ำเสมอ"
+      },
+      {
+        "word": "Harvard Business Review study",
+        "thaiMeaning": "การศึกษาของฮาร์วาร์ดบิซิเนสรีวิว"
+      },
+      {
+        "word": "industries and technologies",
+        "thaiMeaning": "อุตสาหกรรมและเทคโนโลยี"
+      },
+      {
+        "word": "colleagues resistant to change often missed",
+        "thaiMeaning": "เพื่อนร่วมงานที่ต่อต้านการเปลี่ยนแปลงมักพลาดไป"
+      }
+    ]
+  }
+]

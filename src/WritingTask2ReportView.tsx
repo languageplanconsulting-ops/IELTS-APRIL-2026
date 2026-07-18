@@ -33,7 +33,9 @@ export function WritingTask2ReportView({
     <div className="wgReport">
       <header className="wgReportHead">
         <div className="wgReportHeadRow">
-          <p className="wgReportKicker">IELTS Academic Writing · Task 2 · English Plan</p>
+          <p className="wgReportKicker">
+            IELTS {snapshot.track === 'general-training' ? 'General Training' : 'Academic'} Writing · Task 2 · English Plan
+          </p>
           {onClose ? (
             <button type="button" className="wgReportClose" onClick={onClose}>
               ✕ ปิด

@@ -271,15 +271,21 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
-    title: 'The chart below shows the number of people working from home in one country between 2014 and 2024.',
-    chartCaption: 'Number of people working from home',
-    subjectPhrase: 'the number of people working from home',
+    title:
+      'The chart below shows the number of people working from home and commuting to an office in one country between 2014 and 2024.',
+    chartCaption: 'Remote workers vs office commuters',
+    subjectPhrase: 'the number of people working from home compared with those commuting to an office',
     unit: 'millions',
     yAxisLabel: 'Number of workers (millions)',
     valueLabel: 'Workers',
     years: [...WRITING_TIMELINE_YEARS],
     values: [4, 5, 7, 21, 18, 16],
-    mainTrend: 'The figure peaked in 2020, then fell slightly but remained much higher than before.'
+    mainTrend:
+      'Remote work rose sharply and peaked in 2020, while office commuting declined overall and never returned to its earlier level.',
+    series: [
+      { label: 'Remote work', color: '#0f53c9', values: [4, 5, 7, 21, 18, 16] },
+      { label: 'Office commuting', color: '#d97706', values: [48, 46, 42, 22, 28, 30] }
+    ]
   },
   {
     id: 'timeline-electric-bicycles',
@@ -287,15 +293,21 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     kind: 'timeline',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
-    title: 'The chart below shows the amount of money spent on public libraries in one country between 2014 and 2024.',
-    chartCaption: 'Amount of money spent on public libraries',
-    subjectPhrase: 'the amount of money spent on public libraries',
+    title:
+      'The chart below shows spending on public libraries and digital reading services in one country between 2014 and 2024.',
+    chartCaption: 'Public-library vs digital-reading spending',
+    subjectPhrase: 'spending on public libraries compared with digital reading services',
     unit: '$ million',
     yAxisLabel: 'Spending ($ million)',
     valueLabel: 'Spending',
     years: [...WRITING_TIMELINE_YEARS],
     values: [95, 88, 72, 40, 35, 28],
-    mainTrend: 'Spending on public libraries decreased continuously over the period, falling to less than a third of its original level.'
+    mainTrend:
+      'Digital reading spending rose steadily while public-library funding fell continuously to less than a third of its original level.',
+    series: [
+      { label: 'Public libraries', color: '#d97706', values: [95, 88, 72, 40, 35, 28] },
+      { label: 'Digital reading', color: '#0f53c9', values: [12, 18, 28, 45, 58, 72] }
+    ]
   },
   {
     id: 'timeline-smart-tvs',
@@ -333,10 +345,10 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     valueLabel: 'Spend',
     years: [...WRITING_TIMELINE_YEARS],
     values: [45, 48, 52, 55, 54, 53],
-    mainTrend: 'Australia overtook both the UK and the USA, while the USA fell back after an early peak.',
+    mainTrend: 'Australia overtook both the UK and the USA, while US spend declined steadily from the highest starting point.',
     series: [
       { label: 'UK',        color: '#0f53c9', values: [45, 48, 52, 55, 54, 53] },
-      { label: 'USA',       color: '#d97706', values: [55, 58, 60, 58, 55, 52] },
+      { label: 'USA',       color: '#d97706', values: [60, 58, 54, 50, 48, 45] },
       { label: 'Australia', color: '#0d9488', values: [22, 35, 50, 62, 74, 82] }
     ]
   },
@@ -355,12 +367,236 @@ export const WRITING_TIMELINE_PRACTICE_PROMPTS: WritingTimelinePracticePrompt[] 
     years: [2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024],
     values: [55, 62, 68, 72, 74, 75, 76, 77],
     mainTrend:
-      'Asia-Pacific overtook both Latin America and Europe to become the highest of the four regions, while Europe declined after peaking around the midpoint of the period.',
+      'Asia-Pacific overtook both Latin America and Europe to become the highest of the four regions, while Europe declined continuously across the period.',
     series: [
       { label: 'N. America',    color: '#0f53c9', values: [55, 62, 68, 72, 74, 75, 76, 77] },
-      { label: 'Europe',        color: '#d97706', values: [42, 50, 58, 65, 70, 68, 65, 63] },
+      { label: 'Europe',        color: '#d97706', values: [70, 68, 65, 60, 55, 50, 45, 40] },
       { label: 'Asia-Pacific',  color: '#0d9488', values: [12, 20, 30, 42, 55, 68, 78, 85] },
       { label: 'Latin America', color: '#7c3aed', values: [25, 32, 40, 50, 58, 64, 68, 70] }
+    ]
+  },
+  {
+    id: 'timeline-renewable-energy',
+    number: 8,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title:
+      'The graph below shows the percentage of electricity generated from renewable and fossil-fuel sources in one country between 2014 and 2024.',
+    chartCaption: 'Electricity generation from renewable vs fossil-fuel sources',
+    subjectPhrase:
+      'the percentage of electricity generated from renewable energy compared with fossil-fuel sources',
+    unit: '% of electricity',
+    yAxisLabel: 'Percentage of electricity (%)',
+    valueLabel: 'Percentage',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [22, 28, 35, 44, 52, 61],
+    mainTrend:
+      'Renewable generation rose steadily and overtook fossil fuels around 2021, while fossil-fuel generation declined continuously.',
+    series: [
+      { label: 'Renewables', color: '#0d9488', values: [22, 28, 35, 44, 52, 61] },
+      { label: 'Fossil fuels', color: '#64748b', values: [78, 72, 65, 56, 48, 39] }
+    ]
+  },
+  {
+    id: 'timeline-cinema-streaming',
+    number: 9,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title:
+      'The graph below shows cinema ticket sales and streaming-service subscriptions in one country between 2014 and 2024.',
+    chartCaption: 'Cinema ticket sales vs streaming subscriptions',
+    subjectPhrase: 'cinema ticket sales and streaming-service subscriptions',
+    unit: 'millions',
+    yAxisLabel: 'Number (millions)',
+    valueLabel: 'Number',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [62, 58, 55, 28, 32, 36],
+    mainTrend:
+      'Cinema ticket sales fell sharply in 2020 and recovered only partially, whereas streaming subscriptions increased dramatically throughout the period.',
+    series: [
+      { label: 'Cinema tickets', color: '#d97706', values: [62, 58, 55, 28, 32, 36] },
+      { label: 'Streaming subscriptions', color: '#0f53c9', values: [18, 30, 45, 72, 88, 102] }
+    ]
+  },
+  {
+    id: 'timeline-public-transport',
+    number: 10,
+    kind: 'timeline',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title:
+      'The chart below shows average daily public-transport and private-car trips in one city between 2014 and 2024.',
+    chartCaption: 'Daily public-transport vs private-car trips',
+    subjectPhrase:
+      'the average number of daily public-transport trips compared with private-car trips in one city',
+    unit: 'million trips',
+    yAxisLabel: 'Daily trips (millions)',
+    valueLabel: 'Trips',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [3.2, 3.5, 3.8, 1.4, 2.6, 3.9],
+    mainTrend:
+      'Public-transport trips rose overall after a sharp 2020 dip, while private-car trips declined continuously.',
+    series: [
+      { label: 'Public transport', color: '#0f53c9', values: [3.2, 3.5, 3.8, 1.4, 2.6, 3.9] },
+      { label: 'Private cars', color: '#d97706', values: [6.8, 6.4, 5.9, 4.2, 3.8, 3.1] }
+    ]
+  },
+  {
+    id: 'timeline-coffee-tea-spend',
+    number: 11,
+    kind: 'timeline',
+    chartType: 'table',
+    chartTypeLabel: 'Table',
+    title:
+      'The table below shows the average weekly amount spent on coffee and tea by adults in one country between 2014 and 2024.',
+    chartCaption: 'Average weekly spend on coffee and tea',
+    subjectPhrase: 'the average weekly amount spent on coffee and tea by adults',
+    unit: 'US dollars',
+    yAxisLabel: 'Weekly spend (US$)',
+    valueLabel: 'Spend',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [8, 11, 15, 18, 22, 26],
+    mainTrend:
+      'Spending on coffee increased dramatically throughout the period, while spending on tea declined steadily.',
+    series: [
+      { label: 'Coffee', color: '#92400e', values: [8, 11, 15, 18, 22, 26] },
+      { label: 'Tea', color: '#0d9488', values: [14, 12, 10, 8, 7, 6] }
+    ]
+  },
+  {
+    id: 'timeline-tourism-arrivals',
+    number: 12,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title:
+      'The graph below shows international tourist arrivals in Thailand, Japan and Vietnam between 2014 and 2024.',
+    chartCaption: 'International tourist arrivals (Thailand, Japan, Vietnam)',
+    subjectPhrase:
+      'international tourist arrivals in three countries: Thailand, Japan and Vietnam',
+    unit: 'million visitors',
+    yAxisLabel: 'Arrivals (millions)',
+    valueLabel: 'Arrivals',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [25, 28, 32, 6, 18, 34],
+    mainTrend:
+      'Vietnam arrivals rose strongly overall, while Japan declined across the period; Thailand dipped in 2020 then recovered.',
+    series: [
+      { label: 'Thailand', color: '#0f53c9', values: [25, 28, 32, 6, 18, 34] },
+      { label: 'Japan', color: '#d97706', values: [32, 30, 27, 8, 15, 18] },
+      { label: 'Vietnam', color: '#0d9488', values: [8, 12, 16, 3, 14, 30] }
+    ]
+  },
+  {
+    id: 'timeline-remote-work-office',
+    number: 13,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title:
+      'The graph below shows the percentage of employees working in an office and working remotely in one country between 2014 and 2024.',
+    chartCaption: 'Office-based vs remote employees',
+    subjectPhrase: 'the percentage of employees working in an office compared with those working remotely',
+    unit: '% of employees',
+    yAxisLabel: 'Percentage of employees (%)',
+    valueLabel: 'Percentage',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [88, 85, 80, 42, 48, 55],
+    mainTrend:
+      'Office work declined sharply in 2020 while remote work rose, and hybrid patterns left remote work permanently higher than before.',
+    series: [
+      { label: 'Office-based', color: '#d97706', values: [88, 85, 80, 42, 48, 55] },
+      { label: 'Remote', color: '#0f53c9', values: [12, 15, 20, 58, 52, 45] }
+    ]
+  },
+  {
+    id: 'timeline-book-ebook-sales',
+    number: 14,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title:
+      'The graph below shows sales of printed books and e-books in one country between 2014 and 2024.',
+    chartCaption: 'Printed book vs e-book sales',
+    subjectPhrase: 'sales of printed books and e-books',
+    unit: 'million units',
+    yAxisLabel: 'Sales (million units)',
+    valueLabel: 'Sales',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [54, 50, 46, 40, 36, 34],
+    mainTrend:
+      'Printed book sales fell steadily, whereas e-book sales rose and overtook printed books around 2020.',
+    series: [
+      { label: 'Printed books', color: '#92400e', values: [54, 50, 46, 40, 36, 34] },
+      { label: 'E-books', color: '#0d9488', values: [18, 26, 35, 44, 52, 58] }
+    ]
+  },
+  {
+    id: 'timeline-city-bike-share',
+    number: 15,
+    kind: 'timeline',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title:
+      'The chart below shows bike-share trips and short private-car trips in one city between 2014 and 2024.',
+    chartCaption: 'Bike-share vs short private-car trips',
+    subjectPhrase: 'bike-share trips compared with short private-car trips in one city',
+    unit: 'million trips',
+    yAxisLabel: 'Trips (millions)',
+    valueLabel: 'Trips',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [2.1, 3.4, 5.2, 4.0, 6.8, 9.5],
+    mainTrend:
+      'Bike-share trips rose dramatically overall, while short private-car trips declined steadily.',
+    series: [
+      { label: 'Bike-share', color: '#0f53c9', values: [2.1, 3.4, 5.2, 4.0, 6.8, 9.5] },
+      { label: 'Private-car short trips', color: '#d97706', values: [12.0, 11.2, 10.0, 8.5, 7.2, 5.8] }
+    ]
+  },
+  {
+    id: 'timeline-meat-plant-protein',
+    number: 16,
+    kind: 'timeline',
+    chartType: 'table',
+    chartTypeLabel: 'Table',
+    title:
+      'The table below shows average weekly spending on meat and plant-based protein in one country between 2014 and 2024.',
+    chartCaption: 'Average weekly spend on meat vs plant-based protein',
+    subjectPhrase: 'average weekly spending on meat and plant-based protein',
+    unit: 'US dollars',
+    yAxisLabel: 'Weekly spend (US$)',
+    valueLabel: 'Spend',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [28, 27, 26, 25, 24, 23],
+    mainTrend:
+      'Meat spending declined slightly while plant-based protein spending increased rapidly from a low base.',
+    series: [
+      { label: 'Meat', color: '#b91c1c', values: [28, 27, 26, 25, 24, 23] },
+      { label: 'Plant-based protein', color: '#0d9488', values: [2, 4, 7, 11, 16, 21] }
+    ]
+  },
+  {
+    id: 'timeline-rail-air-passengers',
+    number: 17,
+    kind: 'timeline',
+    chartType: 'line-graph',
+    chartTypeLabel: 'Line Graph',
+    title:
+      'The graph below shows the number of rail and air passengers in one country between 2014 and 2024.',
+    chartCaption: 'Rail vs air passengers',
+    subjectPhrase: 'the number of rail and air passengers',
+    unit: 'million passengers',
+    yAxisLabel: 'Passengers (millions)',
+    valueLabel: 'Passengers',
+    years: [...WRITING_TIMELINE_YEARS],
+    values: [210, 225, 240, 95, 180, 255],
+    mainTrend:
+      'Rail passenger numbers rose overall despite a 2020 dip, while air travel declined across the period.',
+    series: [
+      { label: 'Rail', color: '#0f53c9', values: [210, 225, 240, 95, 180, 255] },
+      { label: 'Air', color: '#d97706', values: [230, 210, 185, 60, 120, 150] }
     ]
   }
 ]
@@ -495,7 +731,7 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     unit: '% of household waste',
     valueLabel: 'Percentage',
     mainFeature:
-      'The proportion of household waste that was recycled rose substantially between 2008 and 2018, overtaking non-recycled waste to become the majority by the later year.',
+      'The proportion of household waste that was recycled rose substantially between 2008 and 2018, overtaking non-recycled waste to become the majority in 2018.',
     pies: [
       {
         title: 'Household Waste 2008',
@@ -529,6 +765,261 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
       'The British Museum attracted considerably more visitors than the other two museums, while the Science Museum received the fewest.',
     categories: ['British Museum', 'Science Museum', 'Natural History Museum'],
     series: [{ label: 'Visitors', color: '#0f53c9', values: [180, 95, 145] }]
+  },
+  {
+    id: 'snapshot-phone-brands',
+    number: 7,
+    kind: 'snapshot',
+    chartType: 'pie-chart',
+    chartTypeLabel: 'Pie Chart',
+    title: 'The chart below shows smartphone market share by brand in one country in 2024.',
+    chartCaption: 'Smartphone market share by brand (2024)',
+    subjectPhrase: 'smartphone market share by brand in one country in 2024',
+    unit: '% of sales',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'Apple accounted for the largest share of sales, while smaller brands together made up less than a quarter of the market.',
+    pies: [
+      {
+        title: 'Smartphone Market Share 2024',
+        slices: [
+          { label: 'Apple', value: 34, color: '#0f53c9' },
+          { label: 'Samsung', value: 28, color: '#0d9488' },
+          { label: 'Xiaomi', value: 14, color: '#d97706' },
+          { label: 'Oppo', value: 9, color: '#7c3aed' },
+          { label: 'Other', value: 15, color: '#e2e8f0' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'snapshot-student-majors',
+    number: 8,
+    kind: 'snapshot',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title:
+      'The chart below shows the percentage of university students enrolled in five majors in Japan and South Korea in 2023.',
+    chartCaption: 'University enrolments by major, Japan vs South Korea (2023)',
+    subjectPhrase:
+      'the percentage of university students enrolled in five majors — engineering, business, medicine, arts, and education — in Japan and South Korea in 2023',
+    unit: '% of students',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'Engineering made up the largest share of enrolments in South Korea, whereas business was the most popular major in Japan.',
+    categories: ['Engineering', 'Business', 'Medicine', 'Arts', 'Education'],
+    series: [
+      { label: 'Japan', color: '#0f53c9', values: [18, 26, 12, 22, 14] },
+      { label: 'South Korea', color: '#d97706', values: [30, 20, 16, 12, 10] }
+    ]
+  },
+  {
+    id: 'snapshot-commute-modes',
+    number: 9,
+    kind: 'snapshot',
+    chartType: 'pie-chart',
+    chartTypeLabel: 'Pie Chart',
+    title:
+      'The charts below show how workers in Singapore and Bangkok travelled to work in 2023.',
+    chartCaption: 'Method of commuting to work, Singapore vs Bangkok (2023)',
+    subjectPhrase:
+      'the method of transport used by workers travelling to work in Singapore and Bangkok in 2023',
+    unit: '% of workers',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'Public transport made up the majority of trips in Singapore, whereas private cars remained the main mode of commuting in Bangkok.',
+    pies: [
+      {
+        title: 'Singapore 2023',
+        slices: [
+          { label: 'Public transport', value: 58, color: '#0f53c9' },
+          { label: 'Private car', value: 22, color: '#d97706' },
+          { label: 'Walk / cycle', value: 12, color: '#0d9488' },
+          { label: 'Other', value: 8, color: '#e2e8f0' }
+        ]
+      },
+      {
+        title: 'Bangkok 2023',
+        slices: [
+          { label: 'Private car', value: 46, color: '#d97706' },
+          { label: 'Public transport', value: 28, color: '#0f53c9' },
+          { label: 'Motorbike', value: 18, color: '#7c3aed' },
+          { label: 'Other', value: 8, color: '#e2e8f0' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'snapshot-hotel-ratings',
+    number: 10,
+    kind: 'snapshot',
+    chartType: 'table',
+    chartTypeLabel: 'Table',
+    title:
+      'The table below shows guest ratings for five hotels across four categories in 2024.',
+    chartCaption: 'Guest ratings for five hotels (2024)',
+    subjectPhrase:
+      'guest ratings for five hotels across four categories: cleanliness, location, value for money, and staff service in 2024',
+    unit: 'score out of 10',
+    valueLabel: 'Score',
+    mainFeature:
+      'Hotel Orchid recorded the highest location score, while Budget Inn had the lowest ratings across almost every category.',
+    tableHeaders: ['Cleanliness', 'Location', 'Value', 'Staff'],
+    tableRows: [
+      { entity: 'Grand Plaza', values: ['8.6', '8.2', '7.4', '8.8'] },
+      { entity: 'Hotel Orchid', values: ['8.1', '9.2', '7.9', '8.4'] },
+      { entity: 'City Lodge', values: ['7.5', '7.8', '8.3', '7.6'] },
+      { entity: 'Sea Breeze', values: ['8.9', '8.5', '8.0', '8.7'] },
+      { entity: 'Budget Inn', values: ['6.4', '6.8', '8.6', '6.9'] }
+    ]
+  },
+  {
+    id: 'snapshot-water-use',
+    number: 11,
+    kind: 'snapshot',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title:
+      'The chart below shows water use by sector in Australia and Canada in 2022.',
+    chartCaption: 'Water use by sector, Australia vs Canada (2022)',
+    subjectPhrase:
+      'water use by four sectors — agriculture, industry, households, and energy — in Australia and Canada in 2022',
+    unit: '% of total water use',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'Agriculture accounted for the vast majority of water use in Australia, whereas industry made up the largest share in Canada.',
+    categories: ['Agriculture', 'Industry', 'Households', 'Energy'],
+    series: [
+      { label: 'Australia', color: '#0d9488', values: [65, 18, 12, 5] },
+      { label: 'Canada', color: '#0f53c9', values: [28, 42, 18, 12] }
+    ]
+  },
+  {
+    id: 'snapshot-food-delivery-apps',
+    number: 12,
+    kind: 'snapshot',
+    chartType: 'pie-chart',
+    chartTypeLabel: 'Pie Chart',
+    title: 'The chart below shows food-delivery app market share in one city in 2024.',
+    chartCaption: 'Food-delivery app market share (2024)',
+    subjectPhrase: 'food-delivery app market share in one city in 2024',
+    unit: '% of orders',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'GrabFood accounted for the largest share of orders, while smaller apps together made up under a fifth of the market.',
+    pies: [
+      {
+        title: 'Food-delivery Market Share 2024',
+        slices: [
+          { label: 'GrabFood', value: 38, color: '#0d9488' },
+          { label: 'Foodpanda', value: 27, color: '#d97706' },
+          { label: 'Line Man', value: 18, color: '#0f53c9' },
+          { label: 'Other', value: 17, color: '#e2e8f0' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'snapshot-device-ownership',
+    number: 13,
+    kind: 'snapshot',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title:
+      'The chart below shows device ownership among adults in Sweden and Italy in 2023.',
+    chartCaption: 'Device ownership, Sweden vs Italy (2023)',
+    subjectPhrase:
+      'the percentage of adults owning smartphones, laptops, tablets and smartwatches in Sweden and Italy in 2023',
+    unit: '% of adults',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'Smartphone ownership was high in both countries, whereas smartwatch ownership remained the lowest category.',
+    categories: ['Smartphone', 'Laptop', 'Tablet', 'Smartwatch'],
+    series: [
+      { label: 'Sweden', color: '#0f53c9', values: [92, 78, 54, 28] },
+      { label: 'Italy', color: '#d97706', values: [88, 62, 41, 18] }
+    ]
+  },
+  {
+    id: 'snapshot-energy-bills',
+    number: 14,
+    kind: 'snapshot',
+    chartType: 'pie-chart',
+    chartTypeLabel: 'Pie Chart',
+    title:
+      'The charts below show how households in France and Poland spent their energy bills in 2022.',
+    chartCaption: 'Household energy bill breakdown, France vs Poland (2022)',
+    subjectPhrase:
+      'how households in France and Poland allocated spending across heating, electricity, cooking and other energy costs in 2022',
+    unit: '% of energy bill',
+    valueLabel: 'Percentage',
+    mainFeature:
+      'Heating made up the largest share of energy bills in Poland, whereas electricity accounted for the largest share in France.',
+    pies: [
+      {
+        title: 'France 2022',
+        slices: [
+          { label: 'Electricity', value: 42, color: '#0f53c9' },
+          { label: 'Heating', value: 34, color: '#d97706' },
+          { label: 'Cooking', value: 14, color: '#0d9488' },
+          { label: 'Other', value: 10, color: '#e2e8f0' }
+        ]
+      },
+      {
+        title: 'Poland 2022',
+        slices: [
+          { label: 'Heating', value: 48, color: '#d97706' },
+          { label: 'Electricity', value: 30, color: '#0f53c9' },
+          { label: 'Cooking', value: 12, color: '#0d9488' },
+          { label: 'Other', value: 10, color: '#e2e8f0' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'snapshot-airport-scores',
+    number: 15,
+    kind: 'snapshot',
+    chartType: 'table',
+    chartTypeLabel: 'Table',
+    title:
+      'The table below shows passenger ratings for five airports across four categories in 2024.',
+    chartCaption: 'Passenger ratings for five airports (2024)',
+    subjectPhrase:
+      'passenger ratings for five airports across four categories: cleanliness, shopping, security wait time and staff service in 2024',
+    unit: 'score out of 10',
+    valueLabel: 'Score',
+    mainFeature:
+      'Changi recorded the highest scores overall, while City West Airport had the weakest security and staff ratings.',
+    tableHeaders: ['Cleanliness', 'Shopping', 'Security', 'Staff'],
+    tableRows: [
+      { entity: 'Changi', values: ['9.4', '9.1', '8.8', '9.2'] },
+      { entity: 'Incheon', values: ['9.0', '8.6', '8.5', '8.9'] },
+      { entity: 'Heathrow', values: ['8.2', '8.8', '7.4', '8.0'] },
+      { entity: 'Suvarnabhumi', values: ['8.0', '7.9', '7.6', '8.1'] },
+      { entity: 'City West', values: ['7.1', '6.8', '6.2', '6.9'] }
+    ]
+  },
+  {
+    id: 'snapshot-study-hours',
+    number: 16,
+    kind: 'snapshot',
+    chartType: 'bar-chart',
+    chartTypeLabel: 'Bar Chart',
+    title:
+      'The chart below shows average weekly study hours by subject among secondary students in Finland and Mexico in 2023.',
+    chartCaption: 'Average weekly study hours by subject (2023)',
+    subjectPhrase:
+      'average weekly study hours for mathematics, science, languages and arts among secondary students in Finland and Mexico in 2023',
+    unit: 'hours per week',
+    valueLabel: 'Hours',
+    mainFeature:
+      'Mathematics took the most study time in Mexico, whereas languages accounted for a higher share of study hours in Finland.',
+    categories: ['Mathematics', 'Science', 'Languages', 'Arts'],
+    series: [
+      { label: 'Finland', color: '#0f53c9', values: [4.5, 4.0, 5.5, 3.0] },
+      { label: 'Mexico', color: '#d97706', values: [6.5, 5.0, 3.5, 2.0] }
+    ]
   }
 ]
 
@@ -938,6 +1429,345 @@ export const WRITING_MAP_PRACTICE_PROMPTS: WritingMapPracticePrompt[] = [
         { kind: 'label', x: 50, y: 30, text: 'Porthaven' }
       ]
     }
+  },
+  {
+    id: 'map-city-library',
+    number: 8,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a city library in 2010 and in 2024.',
+    chartCaption: 'City library layout: 2010 and 2024',
+    subjectPhrase: 'a city library in 2010 and 2024',
+    mainFeature:
+      'The newspaper room and old storage area were removed, while a café, a children’s section and computer stations were added.',
+    before: {
+      year: '2010',
+      zones: [
+        { x: 6, y: 8, w: 42, h: 34, label: 'Reading\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 52, y: 8, w: 40, h: 34, label: 'Book\nshelves', color: '#bbf7d0', style: 'building' },
+        { x: 6, y: 48, w: 28, h: 28, label: 'Newspaper\nroom', color: '#fde68a', style: 'building' },
+        { x: 38, y: 48, w: 28, h: 28, label: 'Storage', color: '#e2e8f0', style: 'building' },
+        { x: 70, y: 48, w: 22, h: 28, label: 'Office', color: '#ddd6fe', style: 'building' }
+      ]
+    },
+    after: {
+      year: '2024',
+      zones: [
+        { x: 6, y: 8, w: 34, h: 34, label: 'Reading\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 44, y: 8, w: 24, h: 34, label: 'Book\nshelves', color: '#bbf7d0', style: 'building' },
+        { x: 72, y: 8, w: 20, h: 34, label: 'Computer\narea', color: '#a5b4fc', style: 'building' },
+        { x: 6, y: 48, w: 28, h: 28, label: 'Café', color: '#fde68a', style: 'building' },
+        { x: 38, y: 48, w: 28, h: 28, label: "Children's\nsection", color: '#fecaca', style: 'building' },
+        { x: 70, y: 48, w: 22, h: 28, label: 'Office', color: '#ddd6fe', style: 'building' }
+      ]
+    }
+  },
+  {
+    id: 'map-farm-site',
+    number: 9,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a farmland site in 1995 and after redevelopment in 2020.',
+    chartCaption: 'Farmland redevelopment: 1995 and 2020',
+    subjectPhrase: 'a farmland site in 1995 and after redevelopment in 2020',
+    mainFeature:
+      'Most of the fields were converted into housing and a shopping centre, while a park with a lake was created in the east.',
+    before: {
+      year: '1995',
+      showGrid: false,
+      zones: [
+        { x: 6, y: 8, w: 40, h: 32, label: 'Crop\nfields', color: '#d9f99d', style: 'farm' },
+        { x: 50, y: 8, w: 42, h: 32, label: 'Crop\nfields', color: '#bbf7d0', style: 'farm' },
+        { x: 6, y: 46, w: 28, h: 28, label: 'Barn', color: '#fde68a', style: 'building' },
+        { x: 38, y: 46, w: 28, h: 28, label: 'Farmhouse', color: '#bfdbfe', style: 'building' },
+        { x: 70, y: 46, w: 22, h: 28, label: 'Track', color: '#e2e8f0', style: 'parking' }
+      ],
+      decor: [
+        { kind: 'road', points: [[0, 42], [100, 42]], width: 2.5, label: 'Farm Rd' },
+        { kind: 'trees', positions: [[12, 14], [80, 18], [88, 54]] }
+      ]
+    },
+    after: {
+      year: '2020',
+      showGrid: false,
+      zones: [
+        { x: 6, y: 8, w: 34, h: 32, label: 'Housing', color: '#c7d2fe', style: 'building' },
+        { x: 44, y: 8, w: 24, h: 32, label: 'Shopping\ncentre', color: '#fde68a', style: 'building' },
+        { x: 72, y: 8, w: 20, h: 32, label: 'Park', color: '#bbf7d0', style: 'park' },
+        { x: 6, y: 46, w: 40, h: 28, label: 'Housing', color: '#a5b4fc', style: 'building' },
+        { x: 50, y: 46, w: 20, h: 28, label: 'Car park', color: '#e2e8f0', style: 'parking' },
+        { x: 74, y: 46, w: 18, h: 28, label: 'Lake', color: '#93c5fd', style: 'water' }
+      ],
+      decor: [
+        { kind: 'road', points: [[0, 42], [100, 42]], width: 3, label: 'Main Rd' },
+        { kind: 'trees', positions: [[78, 14], [86, 22], [80, 58]] }
+      ]
+    }
+  },
+  {
+    id: 'map-sports-centre',
+    number: 10,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a sports centre in 2005 and in 2025.',
+    chartCaption: 'Sports centre: 2005 and 2025',
+    subjectPhrase: 'a sports centre in 2005 and 2025',
+    mainFeature:
+      'The outdoor tennis courts were replaced by an indoor pool, and a gym with a café was added on the south side.',
+    before: {
+      year: '2005',
+      zones: [
+        { x: 8, y: 8, w: 50, h: 36, label: 'Main\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 62, y: 8, w: 30, h: 36, label: 'Tennis\ncourts', color: '#bbf7d0', style: 'sport' },
+        { x: 8, y: 50, w: 40, h: 26, label: 'Changing\nrooms', color: '#e2e8f0', style: 'building' },
+        { x: 52, y: 50, w: 40, h: 26, label: 'Car park', color: '#f1f5f9', style: 'parking' }
+      ]
+    },
+    after: {
+      year: '2025',
+      zones: [
+        { x: 8, y: 8, w: 40, h: 36, label: 'Main\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 52, y: 8, w: 40, h: 36, label: 'Indoor\npool', color: '#93c5fd', style: 'water' },
+        { x: 8, y: 50, w: 28, h: 26, label: 'Changing\nrooms', color: '#e2e8f0', style: 'building' },
+        { x: 40, y: 50, w: 26, h: 26, label: 'Gym', color: '#ddd6fe', style: 'sport' },
+        { x: 70, y: 50, w: 22, h: 26, label: 'Café', color: '#fde68a', style: 'building' }
+      ]
+    }
+  },
+  {
+    id: 'map-university-campus',
+    number: 11,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show part of a university campus in 2000 and in 2020.',
+    chartCaption: 'University campus: 2000 and 2020',
+    subjectPhrase: 'part of a university campus in 2000 and 2020',
+    mainFeature:
+      'Student flats and a research lab were built on former open space, while the old canteen was expanded into a student hub.',
+    before: {
+      year: '2000',
+      zones: [
+        { x: 8, y: 8, w: 36, h: 30, label: 'Lecture\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 48, y: 8, w: 44, h: 30, label: 'Open\nspace', color: '#d1fae5', style: 'park' },
+        { x: 8, y: 44, w: 28, h: 30, label: 'Canteen', color: '#fde68a', style: 'building' },
+        { x: 40, y: 44, w: 28, h: 30, label: 'Library', color: '#c7d2fe', style: 'building' },
+        { x: 72, y: 44, w: 20, h: 30, label: 'Car park', color: '#e2e8f0', style: 'parking' }
+      ]
+    },
+    after: {
+      year: '2020',
+      zones: [
+        { x: 8, y: 8, w: 28, h: 30, label: 'Lecture\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 40, y: 8, w: 26, h: 30, label: 'Student\nflats', color: '#a5b4fc', style: 'building' },
+        { x: 70, y: 8, w: 22, h: 30, label: 'Research\nlab', color: '#fde68a', style: 'building' },
+        { x: 8, y: 44, w: 34, h: 30, label: 'Student\nhub', color: '#fbcfe8', style: 'building' },
+        { x: 46, y: 44, w: 26, h: 30, label: 'Library', color: '#c7d2fe', style: 'building' },
+        { x: 76, y: 44, w: 16, h: 30, label: 'Bike\nshelter', color: '#bbf7d0', style: 'parking' }
+      ]
+    }
+  },
+  {
+    id: 'map-seaside-village',
+    number: 12,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a seaside village in 1980 and today.',
+    chartCaption: 'Seaside village: 1980 and today',
+    subjectPhrase: 'a seaside village in 1980 and today',
+    mainFeature:
+      'Fishing docks were replaced by restaurants and a promenade, and holiday apartments replaced many of the original houses.',
+    before: {
+      year: '1980',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 8, w: 36, h: 28, label: 'Houses', color: '#c7d2fe', style: 'building' },
+        { x: 48, y: 8, w: 28, h: 28, label: 'Shop', color: '#fde68a', style: 'building' },
+        { x: 8, y: 42, w: 50, h: 18, label: 'Fishing\ndocks', color: '#94a3b8', style: 'building' },
+        { x: 62, y: 42, w: 30, h: 18, label: 'Beach', color: '#fef3c7', style: 'park' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 62], [100, 62], [100, 80], [0, 80]], label: 'Sea', labelAt: [78, 72] },
+        { kind: 'trees', positions: [[18, 16], [70, 14]] }
+      ]
+    },
+    after: {
+      year: 'Today',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 8, w: 28, h: 28, label: 'Holiday\napartments', color: '#a5b4fc', style: 'building' },
+        { x: 40, y: 8, w: 24, h: 28, label: 'Hotel', color: '#ddd6fe', style: 'building' },
+        { x: 68, y: 8, w: 24, h: 28, label: 'Shop', color: '#fde68a', style: 'building' },
+        { x: 8, y: 42, w: 34, h: 18, label: 'Restaurants', color: '#fecaca', style: 'building' },
+        { x: 46, y: 42, w: 20, h: 18, label: 'Promenade', color: '#e2e8f0', style: 'parking' },
+        { x: 70, y: 42, w: 22, h: 18, label: 'Beach', color: '#fef3c7', style: 'park' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 62], [100, 62], [100, 80], [0, 80]], label: 'Sea', labelAt: [78, 72] },
+        { kind: 'trees', positions: [[20, 18], [74, 16], [52, 50]] }
+      ]
+    }
+  },
+  {
+    id: 'map-shopping-mall',
+    number: 13,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a shopping mall in 2012 and in 2024.',
+    chartCaption: 'Shopping mall layout: 2012 and 2024',
+    subjectPhrase: 'a shopping mall in 2012 and 2024',
+    mainFeature:
+      'A cinema and food court were added, while the outdoor car park was partly replaced by a multi-storey car park and a green roof garden.',
+    before: {
+      year: '2012',
+      zones: [
+        { x: 8, y: 8, w: 50, h: 36, label: 'Retail\nstores', color: '#bfdbfe', style: 'building' },
+        { x: 62, y: 8, w: 30, h: 36, label: 'Department\nstore', color: '#c7d2fe', style: 'building' },
+        { x: 8, y: 50, w: 84, h: 26, label: 'Outdoor\ncar park', color: '#e2e8f0', style: 'parking' }
+      ]
+    },
+    after: {
+      year: '2024',
+      zones: [
+        { x: 8, y: 8, w: 34, h: 28, label: 'Retail\nstores', color: '#bfdbfe', style: 'building' },
+        { x: 46, y: 8, w: 22, h: 28, label: 'Cinema', color: '#ddd6fe', style: 'building' },
+        { x: 72, y: 8, w: 20, h: 28, label: 'Department\nstore', color: '#c7d2fe', style: 'building' },
+        { x: 8, y: 42, w: 34, h: 18, label: 'Food court', color: '#fde68a', style: 'building' },
+        { x: 46, y: 42, w: 22, h: 18, label: 'Roof\ngarden', color: '#bbf7d0', style: 'park' },
+        { x: 72, y: 42, w: 20, h: 34, label: 'Multi-storey\ncar park', color: '#e2e8f0', style: 'parking' },
+        { x: 8, y: 64, w: 60, h: 12, label: 'Outdoor\nparking', color: '#f1f5f9', style: 'parking' }
+      ]
+    }
+  },
+  {
+    id: 'map-train-station',
+    number: 14,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a train station in 2000 and in 2020.',
+    chartCaption: 'Train station: 2000 and 2020',
+    subjectPhrase: 'a train station in 2000 and 2020',
+    mainFeature:
+      'A new concourse and coffee shops replaced the old ticket hall, and bike parking was added beside the platforms.',
+    before: {
+      year: '2000',
+      zones: [
+        { x: 8, y: 8, w: 40, h: 30, label: 'Ticket\nhall', color: '#fde68a', style: 'building' },
+        { x: 52, y: 8, w: 40, h: 30, label: 'Waiting\nroom', color: '#bfdbfe', style: 'building' },
+        { x: 8, y: 46, w: 84, h: 28, label: 'Platforms', color: '#e2e8f0', style: 'building' }
+      ]
+    },
+    after: {
+      year: '2020',
+      zones: [
+        { x: 8, y: 8, w: 34, h: 30, label: 'Main\nconcourse', color: '#c7d2fe', style: 'building' },
+        { x: 46, y: 8, w: 22, h: 30, label: 'Coffee\nshops', color: '#fde68a', style: 'building' },
+        { x: 72, y: 8, w: 20, h: 30, label: 'Waiting\nroom', color: '#bfdbfe', style: 'building' },
+        { x: 8, y: 46, w: 68, h: 28, label: 'Platforms', color: '#e2e8f0', style: 'building' },
+        { x: 80, y: 46, w: 12, h: 28, label: 'Bike\nparking', color: '#bbf7d0', style: 'parking' }
+      ]
+    }
+  },
+  {
+    id: 'map-zoo-site',
+    number: 15,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a zoo in 1990 and in 2015.',
+    chartCaption: 'Zoo layout: 1990 and 2015',
+    subjectPhrase: 'a zoo in 1990 and in 2015',
+    mainFeature:
+      'Small cages were replaced by larger wildlife habitats, and a visitor centre with a café was built near the entrance.',
+    before: {
+      year: '1990',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 8, w: 24, h: 28, label: 'Entrance', color: '#fde68a', style: 'building' },
+        { x: 36, y: 8, w: 28, h: 28, label: 'Small\ncages', color: '#fecaca', style: 'building' },
+        { x: 68, y: 8, w: 24, h: 28, label: 'Bird\nhouse', color: '#bfdbfe', style: 'building' },
+        { x: 8, y: 44, w: 84, h: 30, label: 'Open\nyards', color: '#d9f99d', style: 'farm' }
+      ],
+      decor: [{ kind: 'trees', positions: [[18, 50], [50, 58], [80, 48]] }]
+    },
+    after: {
+      year: '2015',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 8, w: 24, h: 22, label: 'Visitor\ncentre', color: '#c7d2fe', style: 'building' },
+        { x: 36, y: 8, w: 20, h: 22, label: 'Café', color: '#fde68a', style: 'building' },
+        { x: 60, y: 8, w: 32, h: 22, label: 'Bird\naviary', color: '#bfdbfe', style: 'building' },
+        { x: 8, y: 36, w: 40, h: 38, label: 'Safari\nhabitat', color: '#bbf7d0', style: 'park' },
+        { x: 52, y: 36, w: 40, h: 38, label: 'Wetland\nhabitat', color: '#93c5fd', style: 'water' }
+      ],
+      decor: [{ kind: 'trees', positions: [[16, 48], [30, 60], [70, 50], [84, 58]] }]
+    }
+  },
+  {
+    id: 'map-factory-site',
+    number: 16,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a factory site in 2005 and after conversion in 2022.',
+    chartCaption: 'Factory conversion: 2005 and 2022',
+    subjectPhrase: 'a factory site in 2005 and after conversion in 2022',
+    mainFeature:
+      'Warehouse buildings were converted into loft apartments and studios, while a riverside walkway replaced the loading bay.',
+    before: {
+      year: '2005',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 8, w: 40, h: 36, label: 'Factory\nbuilding', color: '#94a3b8', style: 'building' },
+        { x: 52, y: 8, w: 40, h: 36, label: 'Warehouse', color: '#64748b', style: 'building' },
+        { x: 8, y: 50, w: 84, h: 24, label: 'Loading\nbay', color: '#e2e8f0', style: 'parking' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 68], [100, 68], [100, 80], [0, 80]], label: 'River', labelAt: [80, 74] }
+      ]
+    },
+    after: {
+      year: '2022',
+      showGrid: false,
+      zones: [
+        { x: 8, y: 8, w: 34, h: 36, label: 'Loft\napartments', color: '#c7d2fe', style: 'building' },
+        { x: 46, y: 8, w: 24, h: 36, label: 'Art\nstudios', color: '#fde68a', style: 'building' },
+        { x: 74, y: 8, w: 18, h: 36, label: 'Cafe &\nshop', color: '#fecaca', style: 'building' },
+        { x: 8, y: 50, w: 84, h: 16, label: 'Riverside\nwalkway', color: '#bbf7d0', style: 'park' }
+      ],
+      decor: [
+        { kind: 'water', points: [[0, 66], [100, 66], [100, 80], [0, 80]], label: 'River', labelAt: [80, 74] },
+        { kind: 'trees', positions: [[20, 54], [50, 56], [80, 54]] }
+      ]
+    }
+  },
+  {
+    id: 'map-community-centre',
+    number: 17,
+    kind: 'map',
+    chartTypeLabel: 'Map',
+    title: 'The maps below show a community centre in 1998 and today.',
+    chartCaption: 'Community centre: 1998 and today',
+    subjectPhrase: 'a community centre in 1998 and today',
+    mainFeature:
+      'A youth club and outdoor playground were added, and the old storage room became a multipurpose hall.',
+    before: {
+      year: '1998',
+      zones: [
+        { x: 10, y: 10, w: 40, h: 34, label: 'Main\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 54, y: 10, w: 36, h: 34, label: 'Office', color: '#e2e8f0', style: 'building' },
+        { x: 10, y: 50, w: 40, h: 26, label: 'Storage', color: '#fde68a', style: 'building' },
+        { x: 54, y: 50, w: 36, h: 26, label: 'Car park', color: '#f1f5f9', style: 'parking' }
+      ]
+    },
+    after: {
+      year: 'Today',
+      zones: [
+        { x: 10, y: 10, w: 34, h: 34, label: 'Main\nhall', color: '#bfdbfe', style: 'building' },
+        { x: 48, y: 10, w: 20, h: 34, label: 'Youth\nclub', color: '#ddd6fe', style: 'building' },
+        { x: 72, y: 10, w: 18, h: 34, label: 'Office', color: '#e2e8f0', style: 'building' },
+        { x: 10, y: 50, w: 34, h: 26, label: 'Multipurpose\nhall', color: '#fde68a', style: 'building' },
+        { x: 48, y: 50, w: 24, h: 26, label: 'Playground', color: '#bbf7d0', style: 'sport' },
+        { x: 76, y: 50, w: 14, h: 26, label: 'Car park', color: '#f1f5f9', style: 'parking' }
+      ]
+    }
   }
 ]
 
@@ -951,7 +1781,7 @@ export const WRITING_PROCESS_PRACTICE_PROMPTS: WritingProcessPracticePrompt[] = 
     chartCaption: 'The instant coffee production process',
     subjectPhrase: 'the process by which instant coffee is produced',
     mainFeature:
-      'The process begins with the harvesting of coffee cherries and ends with the packaging of instant coffee granules, and it involves eight main stages.',
+      'Overall, it can be clearly observed that the process entails eight steps, starting from harvesting and culminating in packaging.',
     stages: [
       { id: 'harvest', label: 'Harvesting', detail: 'Ripe coffee cherries are picked by hand or machine.' },
       { id: 'pulp', label: 'Pulping', detail: 'The cherries are pulped to remove the outer skin and flesh.' },
@@ -981,6 +1811,205 @@ export const WRITING_PROCESS_PRACTICE_PROMPTS: WritingProcessPracticePrompt[] = 
       { id: 'melt', label: 'Melting', detail: 'The clean plastic pieces are melted down at a high temperature.' },
       { id: 'pelletise', label: 'Pelletising', detail: 'The molten plastic is cooled and cut into small pellets.' },
       { id: 'manufacture', label: 'Manufacturing', detail: 'The pellets are used to manufacture new plastic products.' }
+    ]
+  },
+  {
+    id: 'process-cheese-making',
+    number: 3,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how cheese is made from milk.',
+    chartCaption: 'The cheese-making process',
+    subjectPhrase: 'the process by which cheese is made from milk',
+    mainFeature:
+      'The process begins with the pasteurisation of milk and ends with the packaging of finished cheese, and it involves seven main stages.',
+    stages: [
+      { id: 'pasteurise', label: 'Pasteurisation', detail: 'Fresh milk is pasteurised to kill harmful bacteria.' },
+      { id: 'culture', label: 'Adding culture', detail: 'Starter cultures and rennet are added to the warm milk.' },
+      { id: 'curdle', label: 'Curdling', detail: 'The milk thickens and separates into curds and whey.' },
+      { id: 'cut', label: 'Cutting', detail: 'The curds are cut into small pieces to release more whey.' },
+      { id: 'press', label: 'Pressing', detail: 'The curds are pressed into moulds to form blocks of cheese.' },
+      { id: 'age', label: 'Ageing', detail: 'The cheese is aged in controlled conditions for weeks or months.' },
+      { id: 'pack', label: 'Packaging', detail: 'The matured cheese is packaged and sent to shops.' }
+    ]
+  },
+  {
+    id: 'process-brick-production',
+    number: 4,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how bricks are produced.',
+    chartCaption: 'The brick production process',
+    subjectPhrase: 'the process by which bricks are produced',
+    mainFeature:
+      'The process begins with the digging of clay and ends with the delivery of finished bricks, and it involves several main stages.',
+    stages: [
+      { id: 'dig', label: 'Digging', detail: 'Clay is dug from the ground and transported to a factory.' },
+      { id: 'crush', label: 'Crushing', detail: 'The clay is crushed and mixed with sand and water.' },
+      { id: 'mould', label: 'Moulding', detail: 'The mixture is pressed into brick-shaped moulds.' },
+      { id: 'dry', label: 'Drying', detail: 'The soft bricks are dried for 24–48 hours.' },
+      { id: 'fire', label: 'Firing', detail: 'The dried bricks are fired in a kiln at a high temperature.' },
+      { id: 'cool', label: 'Cooling', detail: 'The bricks are cooled before being packaged.' },
+      { id: 'deliver', label: 'Delivery', detail: 'Finished bricks are loaded onto trucks for delivery.' }
+    ]
+  },
+  {
+    id: 'process-bottled-water',
+    number: 5,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how bottled drinking water is produced.',
+    chartCaption: 'The bottled water production process',
+    subjectPhrase: 'the process by which bottled drinking water is produced',
+    mainFeature:
+      'The process begins with water collection and ends with sealing and labelling bottles for sale, across six main stages.',
+    stages: [
+      { id: 'collect', label: 'Collection', detail: 'Fresh water is collected from a spring or underground source.' },
+      { id: 'filter', label: 'Filtration', detail: 'The water is filtered to remove impurities.' },
+      { id: 'mineral', label: 'Mineral balance', detail: 'Minerals are adjusted to meet quality standards.' },
+      { id: 'bottle', label: 'Bottling', detail: 'Clean bottles are filled with the treated water.' },
+      { id: 'seal', label: 'Sealing', detail: 'Bottles are sealed and labelled.' },
+      { id: 'store', label: 'Storage', detail: 'Finished bottles are stored before distribution.' }
+    ]
+  },
+  {
+    id: 'process-paper-recycling',
+    number: 6,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how waste paper is recycled.',
+    chartCaption: 'The paper recycling process',
+    subjectPhrase: 'the process by which waste paper is recycled',
+    mainFeature:
+      'The process begins with the collection of used paper and ends with the production of new paper products, and it involves seven main stages.',
+    stages: [
+      { id: 'collect', label: 'Collection', detail: 'Used paper is collected from homes and offices.' },
+      { id: 'sort', label: 'Sorting', detail: 'The paper is sorted by type and quality.' },
+      { id: 'pulp', label: 'Pulping', detail: 'Sorted paper is mixed with water to make pulp.' },
+      { id: 'screen', label: 'Screening', detail: 'The pulp is screened to remove staples and glue.' },
+      { id: 'deink', label: 'De-inking', detail: 'Ink is removed from the pulp.' },
+      { id: 'bleach', label: 'Bleaching', detail: 'The pulp is cleaned and bleached if needed.' },
+      { id: 'roll', label: 'Rolling', detail: 'New paper sheets are rolled, dried and cut.' }
+    ]
+  },
+  {
+    id: 'process-chocolate',
+    number: 7,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how chocolate is produced from cocoa beans.',
+    chartCaption: 'The chocolate production process',
+    subjectPhrase: 'the process by which chocolate is produced from cocoa beans',
+    mainFeature:
+      'The process begins with harvesting cocoa pods and ends with moulding finished chocolate bars, involving eight main stages.',
+    stages: [
+      { id: 'harvest', label: 'Harvesting', detail: 'Ripe cocoa pods are harvested from the trees.' },
+      { id: 'ferment', label: 'Fermenting', detail: 'The beans are fermented for several days.' },
+      { id: 'dry', label: 'Drying', detail: 'The beans are dried in the sun.' },
+      { id: 'roast', label: 'Roasting', detail: 'The dried beans are roasted.' },
+      { id: 'crack', label: 'Cracking', detail: 'The roasted beans are cracked to remove shells.' },
+      { id: 'grind', label: 'Grinding', detail: 'Cocoa nibs are ground into a liquid mass.' },
+      { id: 'mix', label: 'Mixing', detail: 'Sugar, milk and cocoa butter are mixed in.' },
+      { id: 'mould', label: 'Moulding', detail: 'The mixture is moulded into bars and cooled.' }
+    ]
+  },
+  {
+    id: 'process-olive-oil',
+    number: 8,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how olive oil is produced.',
+    chartCaption: 'The olive oil production process',
+    subjectPhrase: 'the process by which olive oil is produced',
+    mainFeature:
+      'The process begins with harvesting olives and ends with bottling the finished oil, across six main stages.',
+    stages: [
+      { id: 'harvest', label: 'Harvesting', detail: 'Ripe olives are harvested from the trees.' },
+      { id: 'wash', label: 'Washing', detail: 'The olives are washed to remove leaves and dirt.' },
+      { id: 'crush', label: 'Crushing', detail: 'The olives are crushed into a paste.' },
+      { id: 'press', label: 'Pressing', detail: 'The paste is pressed to extract olive oil.' },
+      { id: 'separate', label: 'Separating', detail: 'Oil is separated from water and solids.' },
+      { id: 'bottle', label: 'Bottling', detail: 'The olive oil is bottled and labelled.' }
+    ]
+  },
+  {
+    id: 'process-tea-production',
+    number: 9,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how black tea is produced.',
+    chartCaption: 'The black tea production process',
+    subjectPhrase: 'the process by which black tea is produced',
+    mainFeature:
+      'The process begins with plucking tea leaves and ends with packing dried tea, involving seven main stages.',
+    stages: [
+      { id: 'pluck', label: 'Plucking', detail: 'Young tea leaves are plucked by hand.' },
+      { id: 'wither', label: 'Withering', detail: 'The leaves are withered to reduce moisture.' },
+      { id: 'roll', label: 'Rolling', detail: 'The leaves are rolled to break cell walls.' },
+      { id: 'oxidise', label: 'Oxidation', detail: 'The rolled leaves are left to oxidise.' },
+      { id: 'dry', label: 'Drying', detail: 'The leaves are dried with hot air.' },
+      { id: 'sort', label: 'Sorting', detail: 'Dried tea is sorted by grade.' },
+      { id: 'pack', label: 'Packing', detail: 'The tea is packed into bags or boxes.' }
+    ]
+  },
+  {
+    id: 'process-glass-recycling',
+    number: 10,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how glass bottles are recycled.',
+    chartCaption: 'The glass recycling process',
+    subjectPhrase: 'the process by which glass bottles are recycled',
+    mainFeature:
+      'The process begins with collection of used bottles and ends with forming new glass products, across seven stages.',
+    stages: [
+      { id: 'collect', label: 'Collection', detail: 'Used glass bottles are collected from recycling points.' },
+      { id: 'sort', label: 'Sorting', detail: 'Glass is sorted by colour.' },
+      { id: 'wash', label: 'Washing', detail: 'The glass is washed and cleaned.' },
+      { id: 'crush', label: 'Crushing', detail: 'Clean glass is crushed into cullet.' },
+      { id: 'melt', label: 'Melting', detail: 'The cullet is melted in a furnace.' },
+      { id: 'shape', label: 'Shaping', detail: 'Molten glass is shaped into new bottles.' },
+      { id: 'cool', label: 'Cooling', detail: 'New bottles are cooled and checked.' }
+    ]
+  },
+  {
+    id: 'process-sugar-cane',
+    number: 11,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how sugar is produced from sugar cane.',
+    chartCaption: 'The sugar cane production process',
+    subjectPhrase: 'the process by which sugar is produced from sugar cane',
+    mainFeature:
+      'The process begins with harvesting sugar cane and ends with packaging refined sugar crystal, involving eight stages.',
+    stages: [
+      { id: 'harvest', label: 'Harvesting', detail: 'Sugar cane is harvested from the fields.' },
+      { id: 'crush', label: 'Crushing', detail: 'The cane is crushed to extract juice.' },
+      { id: 'filter', label: 'Filtering', detail: 'The juice is filtered to remove impurities.' },
+      { id: 'boil', label: 'Boiling', detail: 'The juice is boiled to thicken it.' },
+      { id: 'crystal', label: 'Crystallising', detail: 'Sugar crystals form as the syrup cools.' },
+      { id: 'spin', label: 'Centrifuging', detail: 'Crystals are spun to remove molasses.' },
+      { id: 'dry', label: 'Drying', detail: 'The sugar is dried.' },
+      { id: 'pack', label: 'Packaging', detail: 'Refined sugar is packaged for sale.' }
+    ]
+  },
+  {
+    id: 'process-solar-panel',
+    number: 12,
+    kind: 'process',
+    chartTypeLabel: 'Process Diagram',
+    title: 'The diagram below shows how solar panels are manufactured.',
+    chartCaption: 'The solar panel manufacturing process',
+    subjectPhrase: 'the process by which solar panels are manufactured',
+    mainFeature:
+      'The process begins with purifying silicon and ends with assembling finished solar panels, across six main stages.',
+    stages: [
+      { id: 'purify', label: 'Purifying', detail: 'Silicon is purified for use in solar cells.' },
+      { id: 'wafer', label: 'Wafer cutting', detail: 'Pure silicon is cut into thin wafers.' },
+      { id: 'cell', label: 'Cell treatment', detail: 'Wafers are treated to form solar cells.' },
+      { id: 'wire', label: 'Wiring', detail: 'Metal contacts are added to each cell.' },
+      { id: 'assemble', label: 'Assembling', detail: 'Cells are assembled into a panel.' },
+      { id: 'test', label: 'Testing', detail: 'Finished panels are tested and packaged.' }
     ]
   }
 ]
@@ -1352,7 +2381,6 @@ export type WritingBand7SampleSegment = {
 export type WritingBand7Sample = {
   task: 1 | 2
   band: string
-  wordCount: number
   timeNote: string
   questionType: string
   questionTypeTh: string
@@ -1364,7 +2392,6 @@ export type WritingBand7Sample = {
 export const WRITING_BAND7_TASK1_SAMPLE: WritingBand7Sample = {
   task: 1,
   band: 'Band 7',
-  wordCount: 168,
   timeNote: '~18 นาที',
   questionType: 'Line Graph',
   questionTypeTh: 'Line Graph — แนวโน้มตามเวลา',
@@ -1373,14 +2400,14 @@ export const WRITING_BAND7_TASK1_SAMPLE: WritingBand7Sample = {
     {
       id: 't1-overview',
       labelTh: 'Overview — ภาพรวมหลัก (ต้องมีเสมอ)',
-      text: 'The line graph illustrates the proportion of adults who shopped online at least once per month over a ten-year period from 2014 to 2024. Overall, there was a considerable and sustained rise in online shopping throughout this period, with the most dramatic increase occurring between 2018 and 2020.',
+      text: 'The line graph compares the proportion of adults who shopped online at least once per month over a ten-year period from 2014 to 2024 across six measurements recorded at two-year intervals. While online shopping experienced a considerable and sustained upward trend overall, the most dramatic increase occurred between 2018 and 2020, followed by more moderate growth.',
       highlights: [
         {
-          phrase: 'illustrates the proportion of',
+          phrase: 'compares the proportion of',
           kind: 'vocabulary',
-          labelTh: 'illustrates the proportion of (paraphrase)',
-          descTh: 'paraphrase "shows the percentage of" ด้วยคำที่หลากหลายกว่า — แสดง Lexical Resource สูง',
-          exampleTh: 'The chart illustrates the proportion of students who passed the exam.'
+          labelTh: 'compares the proportion of (paraphrase)',
+          descTh: 'ใช้ compares เป็น reporting verb หลักเพียงคำเดียวใน Introduction และตามด้วยข้อมูลที่กราฟนำมาเปรียบเทียบ',
+          exampleTh: 'The chart compares the proportion of students who passed the exam.'
         },
         {
           phrase: 'considerable and sustained rise',
@@ -1401,7 +2428,7 @@ export const WRITING_BAND7_TASK1_SAMPLE: WritingBand7Sample = {
     {
       id: 't1-body1',
       labelTh: 'Body 1 — ช่วงแรก (2014–2018)',
-      text: 'In 2014, approximately 28% of adults made regular online purchases. This figure rose steadily over the following four years, reaching 51% in 2018 — an increase of around 23 percentage points.',
+      text: 'In 2014, approximately 28% of adults made regular online purchases, representing the starting point shown. Between 2014 and 2018, the figure rose steadily to 51%, reaching 39% in 2016 and producing an overall increase of around 23 percentage points during the first four years.',
       highlights: [
         {
           phrase: 'rose steadily',
@@ -1422,7 +2449,7 @@ export const WRITING_BAND7_TASK1_SAMPLE: WritingBand7Sample = {
     {
       id: 't1-body2',
       labelTh: 'Body 2 — ช่วงที่น่าสนใจ (2018–2024)',
-      text: 'The period between 2018 and 2020 saw the sharpest surge, with the percentage jumping from 51% to 72%. From 2020 onwards, growth continued but at a more moderate pace, climbing from 72% to 79% by 2022 before reaching a peak of 86% in 2024 — more than three times the 2014 figure.',
+      text: 'The period between 2018 and 2020 saw the sharpest surge, pushing the percentage from 51% to 72% and producing a gain of 21 percentage points in only two years. Between 2020 and 2024, growth continued at a more moderate pace, climbing from 72% to 79% in 2022 and reaching a peak of 86% in 2024, which was more than three times the 2014 figure.',
       highlights: [
         {
           phrase: 'saw the sharpest surge',
@@ -1460,7 +2487,6 @@ export const WRITING_BAND7_TASK1_SAMPLE: WritingBand7Sample = {
 export const WRITING_BAND7_TASK2_SAMPLE: WritingBand7Sample = {
   task: 2,
   band: 'Band 7',
-  wordCount: 261,
   timeNote: '~38 นาที',
   questionType: 'Discuss Both Views + Give Opinion',
   questionTypeTh: 'Discuss Both Views + Give Opinion',

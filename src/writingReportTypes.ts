@@ -6,7 +6,11 @@
 
 import type { WritingTask1PracticePrompt } from './writingGuideData'
 import type { WgbStep } from './writingGuidedBuilder'
-import type { WritingTask2Role, WritingTask2VocabItem } from './writingTask2Data'
+import type {
+  WritingTask2Role,
+  WritingTask2Track,
+  WritingTask2VocabItem
+} from './writingTask2Data'
 
 export type WritingReportSegment =
   | { kind: 'text'; text: string }
@@ -53,6 +57,7 @@ export type WritingTask2ReportParagraph = {
 
 export type WritingTask2EssaySavePayload = {
   promptId: string
+  track: WritingTask2Track
   typeTitle: string
   questionTitle: string
   questionNumber: number

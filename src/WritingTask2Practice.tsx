@@ -18,6 +18,14 @@ import {
 import type { WritingTask2Prompt, WritingTask2VocabItem } from './writingTask2Data'
 import type { WritingTask2ReportParagraph } from './writingReportTypes'
 import { VocabHighlightText } from './VocabHighlightText'
+import { typeBlankPlaceholder } from './writingTask2Harden'
+import { LetterHintBlankInput, isLetterHintBlank } from './LetterHintBlankInput'
+import { resolveThaiMeaning } from './writingLetterHint'
+import {
+  buildWritingRecallFeedback,
+  isWritingRecallExact,
+  type WritingRecallCheck
+} from './writingParagraphRecall'
 
 const wgb2Normalize = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase()
 
@@ -90,6 +98,10 @@ export function WritingTask2Practice({
   const [dragOverId, setDragOverId] = useState<string | null>(null)
   const [droppedId, setDroppedId] = useState<string | null>(null)
   const [savedEssayNotice, setSavedEssayNotice] = useState(false)
+  const [recallOpenSteps, setRecallOpenSteps] = useState<Set<string>>(() => new Set())
+  const [recallDismissedSteps, setRecallDismissedSteps] = useState<Set<string>>(() => new Set())
+  const [recallDrafts, setRecallDrafts] = useState<Record<string, string>>({})
+  const [recallChecks, setRecallChecks] = useState<Record<string, WritingRecallCheck>>({})
 
   const step = steps[stepIndex]
   const isLastStep = stepIndex === steps.length - 1
@@ -98,8 +110,9 @@ export function WritingTask2Practice({
     if (blank.kind === 'comma') return values[blank.id] === String(blank.correctGap)
     const value = values[blank.id]
     if (value == null || value.trim() === '') return false
-    if (blank.kind === 'select') return value === blank.answer
-    if (blank.kind === 'drag') return value === blank.answer
+    if (blank.kind === 'select' || blank.kind === 'drag') {
+      return (blank.acceptedAnswers ?? [blank.answer]).includes(value)
+    }
     if (blank.kind === 'punct') return value === blank.answer
     return blank.answers.some((answer) => wgb2Normalize(answer) === wgb2Normalize(value))
   }
@@ -132,6 +145,9 @@ export function WritingTask2Practice({
       ),
     [steps]
   )
+  const typeBlankCount = allBlanks.filter((blank) => blank.kind === 'type').length
+  const selectBlankCount = allBlanks.filter((blank) => blank.kind === 'select').length
+  const dragBlankCount = allBlanks.filter((blank) => blank.kind === 'drag').length
 
   const setValue = (id: string, value: string) => {
     setCheckedNow(false)
@@ -165,6 +181,8 @@ export function WritingTask2Practice({
     setStepIndex(index)
     setCheckedNow(false)
     setActiveBlankId(null)
+    setPickedChip(null)
+    setDragOverId(null)
   }
 
   const goNext = () => {
@@ -179,9 +197,61 @@ export function WritingTask2Practice({
     setShowEssay(false)
     setActiveBlankId(null)
     setSavedEssayNotice(false)
+    setPickedChip(null)
+    setDragOverId(null)
+    setDroppedId(null)
+    setRecallOpenSteps(new Set())
+    setRecallDismissedSteps(new Set())
+    setRecallDrafts({})
+    setRecallChecks({})
   }
 
   const model = useMemo(() => assembleTask2Essay(exercise), [exercise])
+  const expectedRecallParagraph = model[stepIndex]?.text ?? ''
+  const recallDraft = recallDrafts[step.id] ?? ''
+  const recallCheck = recallChecks[step.id]
+  const recallOpen = recallOpenSteps.has(step.id)
+  const recallDismissed = recallDismissedSteps.has(step.id)
+
+  const openRecall = () => {
+    setRecallOpenSteps((current) => new Set(current).add(step.id))
+    setRecallDismissedSteps((current) => {
+      const next = new Set(current)
+      next.delete(step.id)
+      return next
+    })
+  }
+
+  const dismissRecall = () => {
+    setRecallDismissedSteps((current) => new Set(current).add(step.id))
+    setRecallOpenSteps((current) => {
+      const next = new Set(current)
+      next.delete(step.id)
+      return next
+    })
+  }
+
+  const updateRecallDraft = (value: string) => {
+    setRecallDrafts((current) => ({ ...current, [step.id]: value }))
+    setRecallChecks((current) => ({
+      ...current,
+      [step.id]: { attempted: false, passed: false, feedback: [] }
+    }))
+  }
+
+  const checkRecall = () => {
+    const passed = isWritingRecallExact(expectedRecallParagraph, recallDraft)
+    setRecallChecks((current) => ({
+      ...current,
+      [step.id]: {
+        attempted: true,
+        passed,
+        feedback: passed
+          ? []
+          : buildWritingRecallFeedback(expectedRecallParagraph, recallDraft, 'task2')
+      }
+    }))
+  }
 
   const activeBlank = activeBlankId ? stepBlanks.find((blank) => blank.id === activeBlankId) ?? null : null
   const coachMessage = activeBlank ? WGB2_BLANK_COACH_TH[activeBlank.focus] : WGB2_STEP_COACH_TH[step.role]
@@ -207,13 +277,18 @@ export function WritingTask2Practice({
         <p className="wgb2QuestionEyebrow">โจทย์ข้อ {prompt.number}</p>
         <p className="wgb2QuestionText">{prompt.questionText}</p>
         <p className="wgb2QuestionInstruction">
-          <b>วิธีทำ:</b> เรียงความนี้มีช่องฝึกหนาแน่น (~50 ช่องพิมพ์ผันคำ + ~70 dropdown เลือกคำ) ประมาณทุก 3–4 คำ
-          — ทดสอบกริยา · คำนำหน้า · คำนาม/คุณศัพท์/กริยาวิเศษณ์ · คำเชื่อม · วรรคตอน เขียนทีละย่อหน้า แล้วกด{' '}
-          <b>“ตรวจคำตอบ”</b> เพื่อดูเฉลยและคำอธิบายภาษาไทยใต้ช่องที่ผิด (เขียว = ถูก, ชมพู = ต้องแก้)
+          <b>วิธีทำ:</b> เรียงความนี้มีช่องฝึก {totalBlanks} จุด ({typeBlankCount} ช่องพิมพ์ + {selectBlankCount}{' '}
+          dropdown + {dragBlankCount} คำเชื่อมแบบลากวาง และแบบฝึกวรรคตอน)
+          — ทดสอบการผันกริยา · เอกพจน์/พหูพจน์ · คำนำหน้า · คำศัพท์แบบใบ้ตัวอักษร (เช่น mot_ _ _ _ _ _ _) · คำเชื่อม · วรรคตอน
+          เขียนทีละย่อหน้า แล้วกด <b>“ตรวจคำตอบ”</b> (เขียว = ถูก, ชมพู = ต้องแก้)
+          {' '}ช่องพิมพ์: คำในวงเล็บเป็นรูปตั้งต้นให้ผันเอง เช่น (rise) → risen — ช่องใบ้ตัวอักษรให้สะกดคำเต็มจากตัวที่โชว์
+          {prompt.track === 'general-training'
+            ? ' สำหรับ General Training คำเปิดตาม pattern ทุกจุดถูกนำไปฝึกในแถบลากวางด้านขวา'
+            : null}
         </p>
       </div>
 
-      <div className={`wgb2Layout ${dragBlanks.length ? 'has-sidebar' : ''}`}>
+      <div className={`wgb2Layout ${dragBlanks.length || recallOpen ? 'has-sidebar' : ''}`}>
       <div className="wgbPanel wgb2Panel">
         <ol className="wgbRail">
           {steps.map((item, index) => {
@@ -298,6 +373,33 @@ export function WritingTask2Practice({
 
               if (blank.kind === 'type') {
                 const value = values[blank.id] ?? ''
+                if (isLetterHintBlank(blank)) {
+                  const gloss = resolveThaiMeaning(blank.answers[0], blank.thaiMeaning, blank.explain)
+                  return (
+                    <span key={blank.id} className="wgbBlankWrap">
+                      <LetterHintBlankInput
+                        answer={blank.answers[0]}
+                        base={blank.base}
+                        value={value}
+                        stateClass={stateClass}
+                        thaiMeaning={gloss}
+                        saved={savedWords.has(blank.answers[0])}
+                        onSaveToNotebook={
+                          onSaveVocab && gloss
+                            ? ({ word, thaiMeaning }) => {
+                                handleSaveVocab({ word, thaiMeaning })
+                              }
+                            : undefined
+                        }
+                        onChange={(next) => setValue(blank.id, next)}
+                        onFocus={() => setActiveBlankId(blank.id)}
+                        onBlur={() => setActiveBlankId((current) => (current === blank.id ? null : current))}
+                        onEnter={checkStep}
+                      />
+                      {checkedNow && !correct ? <em className="wgbReveal">{blank.answers[0]}</em> : null}
+                    </span>
+                  )
+                }
                 const widthCh = Math.max(blank.base.length + 3, ...blank.answers.map((a) => a.length + 1), 7)
                 return (
                   <span key={blank.id} className="wgbBlankWrap">
@@ -305,7 +407,7 @@ export function WritingTask2Practice({
                       type="text"
                       className={`wgbInput ${stateClass} ${value ? 'is-filled' : ''}`}
                       value={value}
-                      placeholder={`(${blank.base})`}
+                      placeholder={typeBlankPlaceholder(blank)}
                       style={{ width: `${widthCh}ch` }}
                       autoCapitalize="off"
                       autoCorrect="off"
@@ -446,6 +548,31 @@ export function WritingTask2Practice({
             )
           ) : null}
 
+          {stepDone && !recallOpen ? (
+            recallDismissed ? (
+              <button type="button" className="wgb2RecallReopen" onClick={openRecall}>
+                เปิดแบบฝึกเขียนส่วนนี้จากความจำ
+              </button>
+            ) : (
+              <div className="wgb2RecallPrompt" role="status">
+                <div>
+                  <strong>ได้ 100% แล้ว — อยากลองเขียนส่วนนี้เองไหม?</strong>
+                  <p>
+                    แนะนำสำหรับการจำโครงสร้าง และอย่าลืมแตะคำศัพท์ที่ต้องการใช้แล้วบันทึกลง Notebook ก่อนลองเขียน
+                  </p>
+                </div>
+                <div className="wgb2RecallPromptActions">
+                  <button type="button" className="wlpBtn wlpBtn-primary" onClick={openRecall}>
+                    ลองเขียน (แนะนำ)
+                  </button>
+                  <button type="button" className="wlpBtn wlpBtn-secondary" onClick={dismissRecall}>
+                    ไว้ทีหลัง
+                  </button>
+                </div>
+              </div>
+            )
+          ) : null}
+
           {wrongBlanks.length ? (
             <div className="wgbExplainList" role="note">
               <p className="wgbExplainHead">ทำไมถึงเป็นคำนี้</p>
@@ -537,34 +664,105 @@ export function WritingTask2Practice({
         ) : null}
       </div>
 
-      {dragBlanks.length ? (
-        <aside className="wgb2DragSidebar">
-          <p className="wgb2DragSidebarHead">คำเชื่อมให้เลือก</p>
-          {dragBlanks.map((blank, index) => {
-            const value = values[blank.id] ?? ''
-            return (
-              <div key={blank.id} className="wgb2DragGroup">
-                <p className="wgb2DragGroupLabel">ช่องที่ {index + 1}</p>
-                <span className="wgbChipBank">
-                  {blank.options.map((option) => (
-                    <span
-                      key={option}
-                      draggable
-                      role="button"
-                      tabIndex={0}
-                      className={`wgbChip ${pickedChip === option ? 'is-picked' : ''} ${
-                        value === option ? 'is-used' : ''
-                      }`}
-                      onDragStart={(event) => event.dataTransfer.setData('text/plain', option)}
-                      onClick={() => setPickedChip((current) => (current === option ? null : option))}
-                    >
-                      {option}
-                    </span>
-                  ))}
-                </span>
+      {recallOpen || dragBlanks.length ? (
+        <aside className="wgb2RightRail">
+          {recallOpen ? (
+            <section
+              className={`wgb2RecallCard ${recallCheck?.passed ? 'is-passed' : ''} ${
+                recallCheck?.attempted && !recallCheck.passed ? 'is-retry' : ''
+              }`}
+              aria-labelledby={`wgb2-recall-${step.id}`}
+            >
+              <div className="wgb2RecallHead">
+                <span className="wgb2RecallGenie" aria-hidden="true">🧞</span>
+                <div>
+                  <p className="wgb2RecallKicker">Memory writing</p>
+                  <h3 id={`wgb2-recall-${step.id}`}>เขียน {WGB2_ROLE_LABEL_TH[step.role]} จากความจำ</h3>
+                </div>
               </div>
-            )
-          })}
+              <p className="wgb2RecallRule">
+                ไม่นับช่องว่าง แต่ตัวพิมพ์ใหญ่ เครื่องหมายวรรคตอน รูปกริยา และทุกคำต้องตรง 100%
+              </p>
+              <p className="wgb2RecallVocab">
+                ก่อนเขียน ลองแตะคำศัพท์ที่ขีดเส้นใต้และบันทึกคำที่ต้องการใช้ลง Notebook
+              </p>
+              <textarea
+                className="wgb2RecallTextarea"
+                value={recallDraft}
+                disabled={recallCheck?.passed}
+                placeholder="พิมพ์ย่อหน้าที่เพิ่งทำจากความจำตรงนี้…"
+                onChange={(event) => updateRecallDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') checkRecall()
+                }}
+              />
+              <div className="wgb2RecallToolbar">
+                <button
+                  type="button"
+                  className="wlpBtn wlpBtn-primary"
+                  onClick={checkRecall}
+                  disabled={recallCheck?.passed}
+                >
+                  {recallCheck?.passed ? 'ตรง 100% แล้ว' : 'ตรวจงานเขียน'}
+                </button>
+                <button type="button" className="wlpBtn wlpBtn-secondary" onClick={dismissRecall}>
+                  ปิดไว้ก่อน
+                </button>
+              </div>
+              {recallCheck?.passed ? (
+                <div className="wgb2RecallSuccess" role="status">
+                  ถูกต้อง 100% — จำโครงสร้างและเครื่องหมายได้ครบแล้ว
+                </div>
+              ) : null}
+              {recallCheck?.attempted && !recallCheck.passed ? (
+                <div className="wgb2RecallFeedback" role="alert">
+                  <p>จุดที่ต้องแก้ พร้อมเหตุผลทางไวยากรณ์</p>
+                  <ul>
+                    {recallCheck.feedback.map((feedback, index) => (
+                      <li key={`${feedback}-${index}`}>{feedback}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </section>
+          ) : null}
+
+          {dragBlanks.length ? (
+            <div className="wgb2DragSidebar">
+              <p className="wgb2DragSidebarHead">คำเชื่อมให้เลือก</p>
+              {dragBlanks.map((blank, index) => {
+                const value = values[blank.id] ?? ''
+                return (
+                  <div key={blank.id} className="wgb2DragGroup">
+                    <p className="wgb2DragGroupLabel">ช่องที่ {index + 1}</p>
+                    <span className="wgbChipBank">
+                      {blank.options.map((option) => (
+                        <span
+                          key={option}
+                          draggable
+                          role="button"
+                          tabIndex={0}
+                          className={`wgbChip ${pickedChip === option ? 'is-picked' : ''} ${
+                            value === option ? 'is-used' : ''
+                          }`}
+                          onDragStart={(event) => event.dataTransfer.setData('text/plain', option)}
+                          onClick={() => setPickedChip((current) => (current === option ? null : option))}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault()
+                              setPickedChip((current) => (current === option ? null : option))
+                            }
+                          }}
+                        >
+                          {option}
+                        </span>
+                      ))}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          ) : null}
         </aside>
       ) : null}
       </div>
