@@ -140,60 +140,67 @@
   background: #ffc9a3;
 }
 
-/* Fill-in-the-letters: revealed prefix boxes + one empty box per missing letter */
+/* Fill-in-the-letters: one clean line — bold prefix, letters typed onto the _ */
 .vqSpell {
-  position: relative;
   display: inline-flex;
-  gap: 5px;
-  margin: 0 6px;
-  vertical-align: middle;
+  align-items: baseline;
+  gap: .3em;
+  margin: 0 5px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  background: #fff6cf;
+  font-family: 'SF Mono', ui-monospace, 'Cascadia Code', Menlo, monospace;
+  vertical-align: baseline;
   cursor: text;
 }
 
-.vqBox {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 36px;
-  border: 2px solid #172033;
-  border-radius: 7px;
-  background: #fff;
+.vqSpellPrefix {
   font-size: 1.05rem;
   font-weight: 900;
+  letter-spacing: .32em;
+  color: #34404f;
 }
 
-.vqBox.is-locked {
-  background: #e7ecf6;
-  color: #4f5b70;
+.vqSpellField {
+  position: relative;
+  display: inline-block;
 }
 
-.vqBox.is-active {
-  border-color: #d8712a;
-  box-shadow: 0 0 0 3px rgba(216, 113, 42, .18);
+.vqSpellGhost,
+.vqSpellReal {
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: .32em;
+  white-space: pre;
 }
 
-.vqBox.is-correct {
-  background: #c9f6d4;
-  border-color: #1f7a44;
+.vqSpellGhost {
+  color: #b0b8c9;
 }
 
-.vqBox.is-wrong {
-  background: #ffd1dc;
-  border-color: #a23a55;
-}
-
-.vqSpellInput {
+.vqSpellReal {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: transparent;
-  caret-color: transparent;
+  color: #172033;
+  caret-color: #d8712a;
   outline: none;
   cursor: text;
+}
+
+.vqSpellReal.is-correct {
+  color: #1f7a44;
+}
+
+.vqSpellReal.is-wrong {
+  color: #a23a55;
 }
 
 .vqSpellCheck {
@@ -202,6 +209,66 @@
 
 .vqReveal {
   font-weight: 800;
+}
+
+/* Two-step hint (spell questions) */
+.vqWordRow-spell {
+  align-items: flex-start;
+}
+
+.vqHintCluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.vqHintBtn {
+  padding: 6px 12px;
+  border: 2px dashed #3a5bd0;
+  border-radius: 999px;
+  background: #eef3ff;
+  color: #2f47a8;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.vqHintBtn:disabled {
+  border-style: solid;
+  opacity: .55;
+  cursor: default;
+}
+
+.vqHintWord {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+/* Countable / uncountable badge */
+.vqCU {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 950;
+  letter-spacing: .03em;
+}
+
+.vqCU-C {
+  background: #c9f6d4;
+}
+
+.vqCU-U {
+  background: #ffd9b0;
+}
+
+.vqCU-both {
+  background: #e5dbff;
 }
 
 .vqCounter {

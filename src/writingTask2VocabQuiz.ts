@@ -1,4 +1,5 @@
 import type { WritingTask2Prompt } from './writingTask2Data'
+import { getCountability, singularizeWord, type Countability } from './nounCountability'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Vocab-usage quiz engine for General Training Task 2.
@@ -28,6 +29,9 @@ export type VocabQuizQuestion = {
   // Spell kind: the full target word plus the starting letters that are revealed.
   answer?: string
   prefix?: string
+  // Hint reveal: base singular English form + countability of the head noun.
+  baseForm?: string
+  countability?: Countability | null
   explain: string
 }
 
@@ -301,6 +305,8 @@ export const buildVocabQuiz = (prompt: WritingTask2Prompt, targetCount = 40): Vo
         choices: [],
         answer: token.word,
         prefix: token.word.slice(0, prefixLen),
+        baseForm: singularizeWord(token.word),
+        countability: getCountability(token.word),
         explain: `คำเต็มคือ “${token.word}” — วลี “${phrase}” แปลว่า ${item.thaiMeaning}`
       })
     })

@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import type { WritingTask2Prompt, WritingTask2VocabItem } from './writingTask2Data'
 import { buildVocabQuiz, type VocabQuizKind, type VocabQuizQuestion } from './writingTask2VocabQuiz'
+import { COUNTABILITY_LABEL_TH, getCountability, type Countability } from './nounCountability'
 import './VocabUsageQuiz.css'
 
 const KIND_LABEL: Record<VocabQuizKind, string> = {
@@ -35,36 +36,41 @@ function LetterBoxes({
   onSubmit: () => void
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
+  // One clean line: bold prefix + the letters typed directly onto the underscores.
   return (
     <span className="vqSpell" onClick={() => inputRef.current?.focus()}>
-      {prefix.split('').map((char, index) => (
-        <span key={`p-${index}`} className="vqBox is-locked">
-          {char}
-        </span>
-      ))}
-      {Array.from({ length: missing }).map((_, index) => (
-        <span key={`b-${index}`} className={`vqBox ${index === value.length && !disabled ? 'is-active' : ''} ${state}`}>
-          {value[index] ?? ''}
-        </span>
-      ))}
-      <input
-        ref={inputRef}
-        className="vqSpellInput"
-        value={value}
-        disabled={disabled}
-        maxLength={missing}
-        autoCapitalize="off"
-        autoCorrect="off"
-        spellCheck={false}
-        aria-label="เติมตัวอักษรที่หายไป"
-        onChange={(event) => onChange(event.target.value.replace(/[^A-Za-z]/g, ''))}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' && value.length === missing) onSubmit()
-        }}
-      />
+      <span className="vqSpellPrefix">{prefix}</span>
+      <span className="vqSpellField">
+        <span className="vqSpellGhost" aria-hidden="true">{'_'.repeat(Math.max(0, missing))}</span>
+        <input
+          ref={inputRef}
+          className={`vqSpellReal ${state}`}
+          value={value}
+          disabled={disabled}
+          maxLength={missing}
+          autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck={false}
+          aria-label="เติมตัวอักษรที่หายไป"
+          onChange={(event) => onChange(event.target.value.replace(/[^A-Za-z]/g, ''))}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && value.length === missing) onSubmit()
+          }}
+        />
+      </span>
     </span>
   )
 }
+
+const renderCU = (countability: Countability | null) =>
+  countability ? (
+    <span
+      className={`vqCU vqCU-${countability === 'C/U' ? 'both' : countability}`}
+      title={COUNTABILITY_LABEL_TH[countability]}
+    >
+      {countability}
+    </span>
+  ) : null
 
 type Props = {
   prompt: WritingTask2Prompt
@@ -77,6 +83,8 @@ export function WritingTask2VocabQuiz({ prompt, onSaveVocab }: Props) {
   const [answers, setAnswers] = useState<Record<string, number>>({})
   const [typed, setTyped] = useState<Record<string, string>>({})
   const [spellChecked, setSpellChecked] = useState<Set<string>>(() => new Set())
+  const [thaiHints, setThaiHints] = useState<Set<string>>(() => new Set())
+  const [enHints, setEnHints] = useState<Set<string>>(() => new Set())
   const [savedWords, setSavedWords] = useState<Set<string>>(() => new Set())
 
   const isQuestionAnswered = (item: VocabQuizQuestion) =>
@@ -170,15 +178,53 @@ export function WritingTask2VocabQuiz({ prompt, onSaveVocab }: Props) {
           </span>
         </div>
 
-        <div className="vqWordRow">
-          <span className="vqWord">{question.word}</span>
-          <span className="vqWordTh">{question.thaiMeaning}</span>
-          {onSaveVocab ? (
-            <button type="button" className="vqSaveWord" disabled={wordSaved} onClick={saveWord}>
-              {wordSaved ? '✓ บันทึกแล้ว' : '＋ บันทึกคำนี้'}
-            </button>
-          ) : null}
-        </div>
+        {isSpell ? (
+          <div className="vqWordRow vqWordRow-spell">
+            <div className="vqHintCluster">
+              <button
+                type="button"
+                className="vqHintBtn"
+                disabled={thaiHints.has(question.id)}
+                onClick={() => setThaiHints((c) => new Set(c).add(question.id))}
+              >
+                💡 ดูความหมาย (ไทย)
+              </button>
+              {thaiHints.has(question.id) ? (
+                <span className="vqWordTh">{question.thaiMeaning}</span>
+              ) : null}
+              <button
+                type="button"
+                className="vqHintBtn"
+                disabled={enHints.has(question.id)}
+                onClick={() => setEnHints((c) => new Set(c).add(question.id))}
+              >
+                🔤 ดูคำอังกฤษ (รูปเดี่ยว)
+              </button>
+              {enHints.has(question.id) ? (
+                <span className="vqHintWord">
+                  {(question.baseForm ?? '').toUpperCase()}
+                  {renderCU(question.countability ?? null)}
+                </span>
+              ) : null}
+            </div>
+            {onSaveVocab ? (
+              <button type="button" className="vqSaveWord" disabled={wordSaved} onClick={saveWord}>
+                {wordSaved ? '✓ บันทึกแล้ว' : '＋ บันทึกวลีนี้'}
+              </button>
+            ) : null}
+          </div>
+        ) : (
+          <div className="vqWordRow">
+            <span className="vqWord">{question.word}</span>
+            {renderCU(getCountability(question.word))}
+            <span className="vqWordTh">{question.thaiMeaning}</span>
+            {onSaveVocab ? (
+              <button type="button" className="vqSaveWord" disabled={wordSaved} onClick={saveWord}>
+                {wordSaved ? '✓ บันทึกแล้ว' : '＋ บันทึกคำนี้'}
+              </button>
+            ) : null}
+          </div>
+        )}
 
         <p className="vqKindHint">{KIND_HINT[question.kind]}</p>
         <p className="vqInstruction">{question.instruction}</p>
@@ -306,6 +352,8 @@ export function WritingTask2VocabQuiz({ prompt, onSaveVocab }: Props) {
               setAnswers({})
               setTyped({})
               setSpellChecked(new Set())
+              setThaiHints(new Set())
+              setEnHints(new Set())
               setIndex(0)
             }}
           >

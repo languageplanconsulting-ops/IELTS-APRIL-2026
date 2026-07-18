@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   assembleTask2Essay,
   WGB2_NO_ARTICLE,
@@ -18,6 +18,7 @@ import {
 import type { WritingTask2Prompt, WritingTask2VocabItem } from './writingTask2Data'
 import type { WritingTask2ReportParagraph } from './writingReportTypes'
 import { VocabHighlightText } from './VocabHighlightText'
+import { COUNTABILITY_LABEL_TH, getCountability } from './nounCountability'
 import { typeBlankPlaceholder } from './writingTask2Harden'
 import { LetterHintBlankInput, isLetterHintBlank } from './LetterHintBlankInput'
 import { resolveThaiMeaning } from './writingLetterHint'
@@ -75,6 +76,77 @@ function Wgb2CoachBubble({
   )
 }
 
+const WGB2_TUTORIAL_KEY = 'wgb2:lastWritingSeen'
+const WGB2_TUTORIAL_GAP_MS = 5 * 24 * 60 * 60 * 1000
+
+// Show the onboarding tutorial to first-time learners and to anyone who has not
+// opened a Writing drill for more than 5 days.
+const wgb2ShouldShowTutorial = (): boolean => {
+  try {
+    const raw = window.localStorage.getItem(WGB2_TUTORIAL_KEY)
+    if (!raw) return true
+    const last = Number(raw)
+    if (!Number.isFinite(last)) return true
+    return Date.now() - last > WGB2_TUTORIAL_GAP_MS
+  } catch {
+    return false
+  }
+}
+
+const WGB2_TUTORIAL_STEPS = [
+  {
+    icon: '✍️',
+    title: 'ช่องเติมคำ (fill in the blank)',
+    body: 'พิมพ์เติมคำเอง และต้องผัน verb / adverb ให้ถูกตามบริบท เช่น (rise) → risen'
+  },
+  {
+    icon: '☑️',
+    title: 'ตัวเลือก (multiple choice)',
+    body: 'เลือกคำที่ถูกต้องด้าน grammar และ vocabulary จากตัวเลือกที่ให้'
+  },
+  {
+    icon: '🔀',
+    title: 'ลากวาง (drag & drop)',
+    body: 'คือ “คำเชื่อม (transitional words)” ที่เรียนในคอร์ส ช่วยให้จำลำดับการเขียนเป็นสเต็ป 1 → 2 → 3 → 4'
+  },
+  {
+    icon: '💡',
+    title: 'ตัวช่วย (hint)',
+    body: 'ตอนสะกดคำศัพท์ กดดูความหมายภาษาไทยได้ และดูคำอังกฤษรูปพื้นฐาน (base form) เพื่อฝึกผันเอง'
+  },
+  {
+    icon: '📓',
+    title: 'คำที่ขีดเส้นใต้ = คำศัพท์',
+    body: 'แตะเพื่อดูความหมาย แล้วบันทึกลง Notebook ไว้กลับมาฝึกทีหลังได้'
+  }
+]
+
+function Wgb2Tutorial({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="wgb2TutorialOverlay" role="dialog" aria-modal="true" aria-label="วิธีทำแบบฝึก">
+      <div className="wgb2TutorialCard">
+        <p className="wgb2TutorialKicker">เริ่มต้นใช้งาน · แบบฝึกเขียน</p>
+        <h3 className="wgb2TutorialTitle">แบบฝึกนี้ทำงานยังไง</h3>
+        <ol className="wgb2TutorialSteps">
+          {WGB2_TUTORIAL_STEPS.map((step, index) => (
+            <li key={step.title} className="wgb2TutorialStep">
+              <span className="wgb2TutorialNum">{index + 1}</span>
+              <span className="wgb2TutorialIcon" aria-hidden="true">{step.icon}</span>
+              <span className="wgb2TutorialText">
+                <strong>{step.title}</strong>
+                <span>{step.body}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+        <button type="button" className="wgb2TutorialClose" onClick={onClose}>
+          เข้าใจแล้ว เริ่มเขียน →
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function WritingTask2Practice({
   prompt,
   exercise,
@@ -87,6 +159,7 @@ export function WritingTask2Practice({
   onSaveEssay?: (data: { paragraphs: WritingTask2ReportParagraph[]; score: { correct: number; total: number } }) => void
 }) {
   const steps = exercise.steps
+  const [showTutorial, setShowTutorial] = useState(wgb2ShouldShowTutorial)
   const [stepIndex, setStepIndex] = useState(0)
   const [values, setValues] = useState<Record<string, string>>({})
   const [checkedSteps, setCheckedSteps] = useState<Set<string>>(() => new Set())
@@ -132,6 +205,15 @@ export function WritingTask2Practice({
   const stepDone = checkedSteps.has(step.id)
   const allDone = steps.every((item) => checkedSteps.has(item.id))
 
+  // Opening a Writing drill counts as activity — reset the 5-day inactivity timer.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(WGB2_TUTORIAL_KEY, String(Date.now()))
+    } catch {
+      /* ignore storage errors (private mode, etc.) */
+    }
+  }, [])
+
   const totalBlanks = useMemo(
     () => steps.reduce((sum, item) => sum + item.segments.filter((s) => s.kind === 'blank').length, 0),
     [steps]
@@ -145,9 +227,6 @@ export function WritingTask2Practice({
       ),
     [steps]
   )
-  const typeBlankCount = allBlanks.filter((blank) => blank.kind === 'type').length
-  const selectBlankCount = allBlanks.filter((blank) => blank.kind === 'select').length
-  const dragBlankCount = allBlanks.filter((blank) => blank.kind === 'drag').length
 
   const setValue = (id: string, value: string) => {
     setCheckedNow(false)
@@ -273,19 +352,13 @@ export function WritingTask2Practice({
 
   return (
     <div className="wgb2Shell">
+      {showTutorial ? <Wgb2Tutorial onClose={() => setShowTutorial(false)} /> : null}
       <div className="wgb2QuestionCard">
         <p className="wgb2QuestionEyebrow">โจทย์ข้อ {prompt.number}</p>
         <p className="wgb2QuestionText">{prompt.questionText}</p>
-        <p className="wgb2QuestionInstruction">
-          <b>วิธีทำ:</b> เรียงความนี้มีช่องฝึก {totalBlanks} จุด ({typeBlankCount} ช่องพิมพ์ + {selectBlankCount}{' '}
-          dropdown + {dragBlankCount} คำเชื่อมแบบลากวาง และแบบฝึกวรรคตอน)
-          — ทดสอบการผันกริยา · เอกพจน์/พหูพจน์ · คำนำหน้า · คำศัพท์แบบใบ้ตัวอักษร (เช่น mot_ _ _ _ _ _ _) · คำเชื่อม · วรรคตอน
-          เขียนทีละย่อหน้า แล้วกด <b>“ตรวจคำตอบ”</b> (เขียว = ถูก, ชมพู = ต้องแก้)
-          {' '}ช่องพิมพ์: คำในวงเล็บเป็นรูปตั้งต้นให้ผันเอง เช่น (rise) → risen — ช่องใบ้ตัวอักษรให้สะกดคำเต็มจากตัวที่โชว์
-          {prompt.track === 'general-training'
-            ? ' สำหรับ General Training คำเปิดตาม pattern ทุกจุดถูกนำไปฝึกในแถบลากวางด้านขวา'
-            : null}
-        </p>
+        <button type="button" className="wgb2HowToBtn" onClick={() => setShowTutorial(true)}>
+          ❔ วิธีทำแบบฝึก
+        </button>
       </div>
 
       <div className={`wgb2Layout ${dragBlanks.length || recallOpen ? 'has-sidebar' : ''}`}>
@@ -644,7 +717,20 @@ export function WritingTask2Practice({
                 return (
                   <div key={item.word} className="wgb2VocabItem">
                     <div className="wgb2VocabText">
-                      <span className="wgb2VocabWord">{item.word}</span>
+                      <span className="wgb2VocabWord">
+                        {item.word}
+                        {(() => {
+                          const c = getCountability(item.word)
+                          return c ? (
+                            <span
+                              className={`wgb2VocabCU wgb2VocabCU-${c === 'C/U' ? 'both' : c}`}
+                              title={COUNTABILITY_LABEL_TH[c]}
+                            >
+                              {c}
+                            </span>
+                          ) : null
+                        })()}
+                      </span>
                       <span className="wgb2VocabMeaning">{item.thaiMeaning}</span>
                       {item.example ? <span className="wgb2VocabExample">{item.example}</span> : null}
                     </div>
