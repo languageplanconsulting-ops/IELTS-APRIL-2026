@@ -39,7 +39,7 @@ import {
 } from './writingTask2Data'
 import { getDenseWritingTask2Builder } from './writingTask2Dense'
 import { WritingTask2Practice } from './WritingTask2Practice'
-import { WritingTask2VocabQuiz } from './WritingTask2VocabQuiz'
+import { WritingTask2VocabQuiz } from './VocabUsageQuiz'
 import { hardenAcademicTask2Exercise } from './writingTask2Harden'
 import { hardenTask1Exercise, getTask1BlankExplain } from './writingTask1Harden'
 import { LetterHintBlankInput, isLetterHintBlank } from './LetterHintBlankInput'
@@ -1191,6 +1191,7 @@ export function WritingGuidePage({
       flow.step === 'task2-types' ||
       flow.step === 'task2-questions' ||
       flow.step === 'task2-drill' ||
+      flow.step === 'gt-task2-vocab' ||
       flow.step === 'task1-categories' ||
       flow.step === 'gt-home' ||
       flow.step === 'gt-task1-types' ||

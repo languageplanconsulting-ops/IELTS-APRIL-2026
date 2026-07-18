@@ -116,7 +116,7 @@ import {
   type ListeningSkillTrack
 } from './listeningJourney'
 import { resolveListeningFoundationAudioscript } from './listeningFoundationAudioscript'
-import { SpeakingPart2SampleBadge, SpeakingPart2SamplePanel } from './SpeakingPart2SampleVideo'
+import { SpeakingPart2SamplePanel } from './SpeakingPart2SampleVideo'
 import { SpeakingSampleKnowledgeOverlay } from './SpeakingSampleKnowledgeOverlay'
 import {
   enrichSpeakingSampleSubtitlesWithNotes,
@@ -6984,7 +6984,7 @@ function App() {
   const [selectedTestMode, setSelectedTestMode] = useState<SpeakingTestMode>('part1')
   const [speakingEntryMode, setSpeakingEntryMode] = useState<SpeakingEntryMode>(null)
   const [topicBankSearch, setTopicBankSearch] = useState('')
-  const [topicBankView, setTopicBankView] = useState<'grid' | 'list'>('grid')
+  const [topicBankView, setTopicBankView] = useState<'grid' | 'list'>('list')
   const [topicBankFocusIndex, setTopicBankFocusIndex] = useState(0)
   const [isTranscribing, setIsTranscribing] = useState(false)
   const [transcript, setTranscript] = useState('')
@@ -28175,76 +28175,153 @@ function App() {
               </div>
             ) : (
             <>
-              <div className="speakingEntryChooser" aria-label="Choose speaking practice mode">
-                <button
-                  type="button"
-                  className={`speakingEntryCard ${speakingEntryMode === 'practice' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSpeakingEntryMode('practice')
-                    if (selectedTestMode === 'full') setSelectedTestMode('part1')
-                    setTopicBankSearch('')
-                  }}
-                >
-                  <span className="speakingEntryLabel">ฝึกที่ละ part</span>
-                  <strong>Part 1, Part 2, Part 3</strong>
-                  <small>เลือกพาร์ตที่อยากซ้อม แล้วดูคะแนนเฉลี่ยของแต่ละพาร์ต</small>
-                </button>
-                <button
-                  type="button"
-                  className={`speakingEntryCard speakingEntryCard-full ${speakingEntryMode === 'full' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSpeakingEntryMode('full')
-                    setSelectedTestMode('full')
-                    setTopicBankSearch('')
-                  }}
-                >
-                  <span className="speakingEntryLabel">ทำข้อสอบเต็ม</span>
-                  <strong>ควรเตรียมเวลา 13-15 นาที</strong>
-                  <small>หากหยุดกลางทางจะเสีย credit mock test</small>
-                </button>
-              </div>
-
-              {speakingEntryMode === 'practice' && (
-                <div className="providerTabs speakingPartTabs">
-                  {(['part1', 'part2', 'part3'] as const).map((mode) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      className={selectedTestMode === mode ? 'active' : ''}
-                      onClick={() => {
-                        setSelectedTestMode(mode)
-                        setTopicBankSearch('')
-                      }}
-                    >
-                      <span>{SPEAKING_MODE_LABELS[mode]}</span>
-                      <span className="speakingAverageScore">
-                        Avg {speakingAverageScores[mode] === null ? '-' : speakingAverageScores[mode]?.toFixed(1)}
-                      </span>
-                    </button>
-                  ))}
+              <div className="writingGuideHubShell speakingHubShell">
+                <div className="writingGuideHubIntro">
+                  <p className="wlpKicker">IELTS Speaking · English Plan Institute</p>
+                  <h1 className="writingGuideHubH1">เส้นทางฝึก Speaking</h1>
+                  <p className="writingGuideHubLead">
+                    เลือกพาร์ตที่อยากซ้อม หรือทำ Full Mock ทั้งชุด — คลิกด่านด้านล่างแล้วเลือกหัวข้อจากคลังข้อสอบ
+                  </p>
+                  <span className="wlpAccentRule" aria-hidden="true" />
                 </div>
-              )}
 
-              {speakingEntryMode === 'full' && (
-                <div className="fullMockPreviewBanner">
-                  <p className="fullMockPreviewTitle">Full Mock Test Flow · Avg {speakingAverageScores.full === null ? '-' : speakingAverageScores.full?.toFixed(1)}</p>
-                  <p className="meta">ควรเตรียมเวลา 13-15 นาที หากหยุดกลางทางจะเสีย credit mock test</p>
-                  <div className="fullMockPreviewSteps">
-                    <span className="previewStep">Part 1 (4Q)</span>
-                    <span className="previewArrow">→</span>
-                    <span className="previewStep">Part 2 Prep</span>
-                    <span className="previewArrow">→</span>
-                    <span className="previewStep">Part 2 Speak</span>
-                    <span className="previewArrow">→</span>
-                    <span className="previewStep">Rest</span>
-                    <span className="previewArrow">→</span>
-                    <span className="previewStep">Part 3 (4Q)</span>
-                    <span className="previewArrow">→</span>
-                    <span className="previewStep previewStepFinal">Report</span>
+                <div className="wgTicketPathBoard" aria-label="ทางลัด Speaking">
+                  <div className="wgTicketPath">
+                    {([
+                      {
+                        mode: 'part1' as const,
+                        stamp: 'wgTicketStamp-yellow',
+                        icon: '1️⃣',
+                        title: 'ฝึก Part 1',
+                        badge: 'Practice',
+                        sub: 'คำถามสั้น ๆ เรื่องชีวิตประจำวัน',
+                        go: 'เปิดคลัง →'
+                      },
+                      {
+                        mode: 'part2' as const,
+                        stamp: 'wgTicketStamp-peach',
+                        icon: '2️⃣',
+                        title: 'ฝึก Part 2',
+                        badge: 'Long turn',
+                        sub: 'พูดต่อเนื่อง 2 นาทีจาก cue card',
+                        go: 'เปิดคลัง →'
+                      },
+                      {
+                        mode: 'part3' as const,
+                        stamp: 'wgTicketStamp-lilac',
+                        icon: '3️⃣',
+                        title: 'ฝึก Part 3',
+                        badge: 'Discussion',
+                        sub: 'คำถามลึกต่อจาก Part 2',
+                        go: 'เปิดคลัง →'
+                      }
+                    ]).map((item, index) => {
+                      const isActive =
+                        speakingEntryMode === 'practice' && selectedTestMode === item.mode
+                      const avg = speakingAverageScores[item.mode]
+                      return (
+                        <div
+                          key={item.mode}
+                          className={`wgTicketPathStep ${isActive ? 'is-done' : ''}`.trim()}
+                          style={{ '--motion-stagger': index } as CSSProperties}
+                        >
+                          <span className="wgTicketPathNode" aria-hidden="true">
+                            {isActive ? '✓' : String(index + 1)}
+                          </span>
+                          <button
+                            type="button"
+                            className={`wgTicket ${isActive ? 'sgTicketActive' : ''}`.trim()}
+                            onClick={() => {
+                              setSpeakingEntryMode('practice')
+                              setSelectedTestMode(item.mode)
+                              setTopicBankSearch('')
+                            }}
+                          >
+                            <span className={`wgTicketStamp ${item.stamp}`} aria-hidden="true">
+                              {item.icon}
+                            </span>
+                            <span className="wgTicketBody">
+                              <span className="wgTicketTitleRow">
+                                <strong>{item.title}</strong>
+                                <span className="wgTicketBadge">{item.badge}</span>
+                              </span>
+                              <span className="wgTicketSub">
+                                {item.sub} · Avg {avg === null ? '—' : avg.toFixed(1)}
+                              </span>
+                            </span>
+                            <span className="wgTicketGo">{item.go}</span>
+                          </button>
+                        </div>
+                      )
+                    })}
+                    <div
+                      className={`wgTicketPathStep ${speakingEntryMode === 'full' ? 'is-done' : ''}`.trim()}
+                      style={{ '--motion-stagger': 3 } as CSSProperties}
+                    >
+                      <span className="wgTicketPathNode" aria-hidden="true">
+                        {speakingEntryMode === 'full' ? '✓' : '4'}
+                      </span>
+                      <button
+                        type="button"
+                        className={`wgTicket ${speakingEntryMode === 'full' ? 'sgTicketActive' : ''}`.trim()}
+                        onClick={() => {
+                          setSpeakingEntryMode('full')
+                          setSelectedTestMode('full')
+                          setTopicBankSearch('')
+                        }}
+                      >
+                        <span className="wgTicketStamp wgTicketStamp-blue" aria-hidden="true">
+                          🎯
+                        </span>
+                        <span className="wgTicketBody">
+                          <span className="wgTicketTitleRow">
+                            <strong>Full Mock Test</strong>
+                            <span className="wgTicketBadge">13–15 นาที</span>
+                          </span>
+                          <span className="wgTicketSub">
+                            Part 1 → Part 2 → Rest → Part 3 → Report · Avg{' '}
+                            {speakingAverageScores.full === null
+                              ? '—'
+                              : speakingAverageScores.full.toFixed(1)}
+                            {' · '}หากหยุดกลางทางจะเสีย credit mock test
+                          </span>
+                        </span>
+                        <span className="wgTicketGo">เลือกหัวข้อ →</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              )}
+
+                {speakingEntryMode === 'full' && (
+                  <div className="fullMockPreviewBanner sgFullMockPreview">
+                    <p className="fullMockPreviewTitle">Full Mock Test Flow</p>
+                    <div className="fullMockPreviewSteps">
+                      <span className="previewStep">Part 1 (4Q)</span>
+                      <span className="previewArrow">→</span>
+                      <span className="previewStep">Part 2 Prep</span>
+                      <span className="previewArrow">→</span>
+                      <span className="previewStep">Part 2 Speak</span>
+                      <span className="previewArrow">→</span>
+                      <span className="previewStep">Rest</span>
+                      <span className="previewArrow">→</span>
+                      <span className="previewStep">Part 3 (4Q)</span>
+                      <span className="previewArrow">→</span>
+                      <span className="previewStep previewStepFinal">Report</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {speakingEntryMode && <div className="speakingTopicBank" role="region" aria-label="Speaking question bank">
+                <div className="writingGuideFlowHead speakingBankHead">
+                  <p className="wlpKicker">
+                    {speakingEntryMode === 'full'
+                      ? 'Full Mock · คลังหัวข้อ'
+                      : `${SPEAKING_MODE_LABELS[selectedTestMode]} · คลังหัวข้อ`}
+                  </p>
+                  <h2 className="writingGuideFlowTitle">เลือกหัวข้อที่อยากฝึก</h2>
+                  <p className="writingGuideFlowSub">ค้นหาหรือเลือกการ์ดด้านล่าง แล้วกด Start เพื่อเข้าสู่ขั้นเตรียมตัว</p>
+                </div>
                 <div className="topicBankToolbar">
                   <label className="topicBankSearchWrap">
                     <span className="sr-only">Search topics</span>
@@ -28292,7 +28369,7 @@ function App() {
                         <h3 className="topicBankGroupTitle">{category}</h3>
                         <span className="topicBankGroupCount">{groupTopics.length}</span>
                       </header>
-                      <div className={`thumbnailGrid topicBankCardGrid thumbnailGrid--${topicBankView}`}>
+                      <div className={`thumbnailGrid topicBankCardGrid thumbnailGrid--${topicBankView} sgTopicTicketGrid`}>
                         {groupTopics.map((topic) => {
                           const flatIndex = topicBankIdToFlatIndex.get(topic.id) ?? 0
                           const latestScore = latestScoresByTest[`${selectedTestMode}:${topic.id}`]
@@ -28307,9 +28384,9 @@ function App() {
                             <div
                               key={topic.id}
                               data-topic-bank-card-index={flatIndex}
-                              className={`thumbnailCard thumbnailCard--mode-${selectedTestMode} ${
+                              className={`thumbnailCard sgTopicTicket thumbnailCard--mode-${selectedTestMode} ${
                                 hasAttempted ? 'thumbnailCard--attempted' : 'thumbnailCard--fresh'
-                              } ${selectedTestMode === 'full' ? 'fullMockCard' : ''} ${isSelected ? 'thumbnailCard--selected' : ''} ${
+                              } ${selectedTestMode === 'full' ? 'fullMockCard' : ''} ${isSelected ? 'thumbnailCard--selected sgTicketActive' : ''} ${
                                 topicHasSpeakingSample ? 'thumbnailCard--has-pdoy-sample' : ''
                               }`}
                               role="button"
@@ -28336,27 +28413,45 @@ function App() {
                                 }
                               }}
                             >
-                              {topicHasSpeakingSample ? <SpeakingPart2SampleBadge /> : null}
-                              <p className="thumbCategory">{topic.category}</p>
-                              <h3>{topic.title}</h3>
-                              {hasAttempted ? (
-                                <p className="latestScoreBadge">Latest score: {latestScore.toFixed(1)}</p>
-                              ) : (
-                                <p className="topicCardFreshHint">Not attempted yet</p>
-                              )}
-                              {hasAttempted && (
-                                <button
-                                  type="button"
-                                  className="redeemBtn"
-                                  onClick={(event) => {
-                                    event.stopPropagation()
-                                    retryTestFromCard(topic.id)
-                                  }}
-                                >
-                                  TRY AGAIN
-                                </button>
-                              )}
-                              <div className="topicCardActions">
+                              <span
+                                className={`wgTicketStamp ${
+                                  selectedTestMode === 'part1'
+                                    ? 'wgTicketStamp-yellow'
+                                    : selectedTestMode === 'part2'
+                                      ? 'wgTicketStamp-peach'
+                                      : selectedTestMode === 'part3'
+                                        ? 'wgTicketStamp-lilac'
+                                        : 'wgTicketStamp-blue'
+                                }`}
+                                aria-hidden="true"
+                              >
+                                {topicHasSpeakingSample ? '🎬' : hasAttempted ? '✓' : '🗣'}
+                              </span>
+                              <span className="wgTicketBody">
+                                <span className="wgTicketTitleRow">
+                                  <strong>{topic.title}</strong>
+                                  <span className="wgTicketBadge">{topic.category}</span>
+                                </span>
+                                <span className="wgTicketSub">
+                                  {hasAttempted
+                                    ? `Latest score: ${latestScore.toFixed(1)}`
+                                    : 'Not attempted yet'}
+                                  {topicHasSpeakingSample ? ' · มี sample video' : ''}
+                                </span>
+                              </span>
+                              <span className="sgTopicTicketActions">
+                                {hasAttempted && (
+                                  <button
+                                    type="button"
+                                    className="redeemBtn"
+                                    onClick={(event) => {
+                                      event.stopPropagation()
+                                      retryTestFromCard(topic.id)
+                                    }}
+                                  >
+                                    TRY AGAIN
+                                  </button>
+                                )}
                                 <button
                                   type="button"
                                   className="topicCardStartBtn"
@@ -28366,9 +28461,9 @@ function App() {
                                     openStartFlowForTopic(topic.id)
                                   }}
                                 >
-                                  Start
+                                  Start →
                                 </button>
-                              </div>
+                              </span>
                             </div>
                           )
                         })}
@@ -28383,25 +28478,61 @@ function App() {
 
           {attemptStage !== 'idle' && activeTopic && (
             <div className="attemptFlow" data-stage={attemptStage}>
-              {attemptStage !== 'speaking' && <div className="card">
-                <p className="category">{activeTopic.category}</p>
-                <h3>{activeTopic.prompt}</h3>
-                <ul>
-                  {activeTopic.cues.map((cue) => (
-                    <li key={cue}>{cue}</li>
-                  ))}
-                </ul>
-              </div>}
+              <div className="writingGuideFlowHead speakingAttemptHead">
+                <button type="button" className="writingGuideFlowBack" onClick={resetSession}>
+                  ← กลับคลังหัวข้อ
+                </button>
+                <p className="wlpKicker">
+                  {isTrialSpeakingFlow
+                    ? 'Speaking Trial'
+                    : selectedTestMode === 'full'
+                      ? 'Full Mock Test'
+                      : SPEAKING_MODE_LABELS[selectedTestMode]}
+                  {' · '}
+                  {attemptStage === 'prep'
+                    ? 'Preparation'
+                    : attemptStage === 'speaking'
+                      ? 'Live exam'
+                      : attemptStage === 'assessing'
+                        ? 'Scoring'
+                        : 'Report'}
+                </p>
+                <h2 className="writingGuideFlowTitle">
+                  {attemptStage === 'prep'
+                    ? isTrialSpeakingFlow
+                      ? 'ก่อนเริ่ม Trial นี้'
+                      : 'Preparation Time'
+                    : attemptStage === 'speaking'
+                      ? activeTopic.prompt
+                      : attemptStage === 'assessing'
+                        ? 'กำลังจัดทำรายงาน…'
+                        : 'ผลการประเมิน Speaking'}
+                </h2>
+                <p className="writingGuideFlowSub">
+                  {activeTopic.category}
+                  {attemptStage === 'prep' ? ` · เหลือ ${remainingPrepSeconds}s` : ''}
+                </p>
+              </div>
+
+              {attemptStage !== 'speaking' && attemptStage !== 'result' && (
+                <div className="card sgPromptBrief">
+                  <p className="category">{activeTopic.category}</p>
+                  <h3>{activeTopic.prompt}</h3>
+                  <ul>
+                    {activeTopic.cues.map((cue) => (
+                      <li key={cue}>{cue}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {attemptStage === 'prep' && (
                 <div className="stageCard prepStageV2">
-                  <h3>{isTrialSpeakingFlow ? 'ก่อนเริ่ม Trial นี้' : 'Preparation Time'}</h3>
-                  <p className="timer">{remainingPrepSeconds}s</p>
+                  <p className="timer sgPrepTimer">{remainingPrepSeconds}s</p>
 
                   {isTrialSpeakingFlow ? (
                     <>
                       <div className="prepTimeEstimate">
-                        <span className="prepTimeIcon">🕐</span>
                         <span>ใช้เวลาประมาณ <strong>5-7 นาที</strong> สำหรับ trial นี้ครับ</span>
                       </div>
                       <div className="trialFlowSteps">
@@ -28414,31 +28545,31 @@ function App() {
                         <span className="previewStep previewStepFinal">Report</span>
                       </div>
                       <div className="prepHeadsUp">
-                        <p className="prepHeadsUpTitle">⚠️ ก่อนเริ่มจริง</p>
+                        <p className="prepHeadsUpTitle">ก่อนเริ่มจริง</p>
                         <p>สิทธิ์ทดลองใช้ฟรีนี้ใช้ได้ 1 ครั้งเท่านั้น เตรียมปากกาและสมุดให้พร้อมก่อนกดเริ่มนะครับ</p>
                       </div>
                       <div className="prepMicCheck">
-                        <p className="prepMicCheckTitle">🎤 ทดสอบไมค์ก่อนเริ่ม</p>
+                        <p className="prepMicCheckTitle">ทดสอบไมค์ก่อนเริ่ม</p>
                         {micCheckStatus === 'idle' && (
                           <button type="button" className="micCheckBtn" onClick={() => void startMicCheck()}>
                             กดเพื่อบันทึก 3 วินาที
                           </button>
                         )}
                         {micCheckStatus === 'recording' && (
-                          <p className="micCheckRecording">🔴 กำลังบันทึก... พูดอะไรสักอย่าง</p>
+                          <p className="micCheckRecording">กำลังบันทึก... พูดอะไรสักอย่าง</p>
                         )}
                         {micCheckStatus === 'playing' && (
-                          <p className="micCheckPlaying">🔊 กำลังเล่นเสียงของคุณ...</p>
+                          <p className="micCheckPlaying">กำลังเล่นเสียงของคุณ...</p>
                         )}
                         {micCheckStatus === 'success' && (
                           <div className="micCheckSuccess">
-                            <p>✅ ไมค์ใช้งานได้!</p>
+                            <p>ไมค์ใช้งานได้</p>
                             <button type="button" className="micCheckRetry" onClick={resetMicCheck}>ทดสอบอีกครั้ง</button>
                           </div>
                         )}
                         {micCheckStatus === 'error' && (
                           <div className="micCheckError">
-                            <p>❌ ไม่สามารถเข้าถึงไมค์ได้ กรุณาตรวจสอบการอนุญาต</p>
+                            <p>ไม่สามารถเข้าถึงไมค์ได้ กรุณาตรวจสอบการอนุญาต</p>
                             <button type="button" className="micCheckRetry" onClick={resetMicCheck}>ลองอีกครั้ง</button>
                           </div>
                         )}
@@ -28463,7 +28594,6 @@ function App() {
                   ) : isFullExamMode && (
                     <>
                       <div className="prepTimeEstimate">
-                        <span className="prepTimeIcon">🕐</span>
                         <span>ใช้เวลาประมาณ <strong>{fullExamTotalMinutes} นาที</strong> — เตรียมพร้อมก่อนเริ่ม</span>
                       </div>
 
@@ -28505,32 +28635,32 @@ function App() {
                       </div>
 
                       <div className="prepHeadsUp">
-                        <p className="prepHeadsUpTitle">⚠️ Heads Up</p>
+                        <p className="prepHeadsUpTitle">Heads Up</p>
                         <p>หยุดกลางทางยังถูกตัดเครดิต เตรียมเวลาว่างก่อนเริ่มนะ</p>
                       </div>
 
                       <div className="prepMicCheck">
-                        <p className="prepMicCheckTitle">🎤 ทดสอบไมค์ก่อนเริ่ม</p>
+                        <p className="prepMicCheckTitle">ทดสอบไมค์ก่อนเริ่ม</p>
                         {micCheckStatus === 'idle' && (
                           <button type="button" className="micCheckBtn" onClick={() => void startMicCheck()}>
                             กดเพื่อบันทึก 3 วินาที
                           </button>
                         )}
                         {micCheckStatus === 'recording' && (
-                          <p className="micCheckRecording">🔴 กำลังบันทึก... พูดอะไรสักอย่าง</p>
+                          <p className="micCheckRecording">กำลังบันทึก... พูดอะไรสักอย่าง</p>
                         )}
                         {micCheckStatus === 'playing' && (
-                          <p className="micCheckPlaying">🔊 กำลังเล่นเสียงของคุณ...</p>
+                          <p className="micCheckPlaying">กำลังเล่นเสียงของคุณ...</p>
                         )}
                         {micCheckStatus === 'success' && (
                           <div className="micCheckSuccess">
-                            <p>✅ ไมค์ใช้งานได้!</p>
+                            <p>ไมค์ใช้งานได้</p>
                             <button type="button" className="micCheckRetry" onClick={resetMicCheck}>ทดสอบอีกครั้ง</button>
                           </div>
                         )}
                         {micCheckStatus === 'error' && (
                           <div className="micCheckError">
-                            <p>❌ ไม่สามารถเข้าถึงไมค์ได้ กรุณาตรวจสอบการอนุญาต</p>
+                            <p>ไม่สามารถเข้าถึงไมค์ได้ กรุณาตรวจสอบการอนุญาต</p>
                             <button type="button" className="micCheckRetry" onClick={resetMicCheck}>ลองอีกครั้ง</button>
                           </div>
                         )}
@@ -28789,7 +28919,7 @@ function App() {
                     </div>
                   )}
                   <div className="speakingTopToolbar">
-                    <button type="button" className="backPillBtn dangerBtn" onClick={resetSession}>
+                    <button type="button" className="writingGuideFlowBack dangerBtn" onClick={resetSession}>
                       Exit Exam
                     </button>
                     <div className="assessmentInfoPill">
@@ -28798,7 +28928,7 @@ function App() {
                     {isFullExamMode && <div className="assessmentInfoPill">{fullExamPhaseLabel}</div>}
                     {isFullExamMode && (
                       <button type="button" className={`pauseBtn ${isExamPaused ? 'pauseBtnActive' : ''}`} onClick={toggleExamPause}>
-                        {isExamPaused ? `▶ Resume (${pauseTimeRemaining}s)` : '⏸ Pause'}
+                        {isExamPaused ? `Resume (${pauseTimeRemaining}s)` : 'Pause'}
                       </button>
                     )}
                   </div>
@@ -28806,9 +28936,9 @@ function App() {
                   {isExamPaused && (
                     <div className="examPausedOverlay">
                       <div className="examPausedCard">
-                        <h3>⏸ Exam Paused</h3>
+                        <h3>Exam Paused</h3>
                         <p>Auto-resume in {pauseTimeRemaining} seconds</p>
-                        <button type="button" onClick={toggleExamPause}>▶ Resume Now</button>
+                        <button type="button" onClick={toggleExamPause}>Resume Now</button>
                       </div>
                     </div>
                   )}
@@ -29034,7 +29164,7 @@ function App() {
                           .toString()
                           .padStart(2, '0')}
                       </p>
-                      {isLowTime && <p className="lowTimeWarning">⚠️ เหลือเวลาน้อย!</p>}
+                      {isLowTime && <p className="lowTimeWarning">เหลือเวลาน้อย</p>}
                       <div className={`audioBars ${isExamPaused ? 'audioBarsPaused' : ''}`} aria-hidden="true">
                         {Array.from({ length: 10 }).map((_, i) => (
                           <span
@@ -29154,7 +29284,7 @@ function App() {
                       {transcriptionError && <p className="error">{transcriptionError}</p>}
                       {audioError && <p className="error">{audioError}</p>}
                       <p className="meta">
-                        Audio: {isRecordingAudio ? `🔴 Recording (${recordingDuration}s)` : 'Stopped'}
+                        Audio: {isRecordingAudio ? `Recording (${recordingDuration}s)` : 'Stopped'}
                       </p>
                     </section>
                     </div>
@@ -29938,6 +30068,7 @@ function App() {
               )}
             </div>
           )}
+          </div>
           </section>
           ) : (
             <section className="panel full">

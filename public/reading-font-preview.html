@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reading · 7 more font proposals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Arimo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Bitter:ital,opsz,wght@0,14..72,400;0,14..72,600;0,14..72,700;1,14..72,400&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,600;0,8..144,700;1,8..144,400&family=STIX+Two+Text:ital,wght@0,400;0,600;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy: #0f2e85;
+    --navy-deep: #0b1f44;
+    --blue: #0754b8;
+    --yellow: #ffcc00;
+    --ink: #28324a;
+    --ink-strong: #10182d;
+    --muted: #5b6b86;
+    --line: #e6eaf0;
+    --bg: #eef2f7;
+    --soft: #eaf1fd;
+    --paper: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink-strong);
+    font-family: system-ui, sans-serif;
+    line-height: 1.45;
+  }
+
+  .switcher {
+    position: sticky; top: 0; z-index: 80;
+    display: grid;
+    grid-template-columns: minmax(200px, 300px) 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 12px 18px;
+    background: var(--navy-deep);
+    color: #fff;
+  }
+  .switcher-intro b { display: block; font-size: .92rem; margin-bottom: 2px; }
+  .switcher-intro p { margin: 0; font-size: .76rem; color: rgba(255,255,255,.72); line-height: 1.4; }
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; justify-content: flex-end; }
+  .pill {
+    appearance: none; border: 1px solid rgba(255,255,255,.2);
+    background: transparent; color: #cbd6e6;
+    border-radius: 999px; padding: 8px 13px;
+    font: inherit; font-size: .76rem; font-weight: 700;
+    cursor: pointer; text-align: left;
+  }
+  .pill small { display: block; font-weight: 500; opacity: .75; margin-top: 1px; font-size: .66rem; }
+  .pill.on { background: var(--yellow); color: #2a2200; border-color: var(--yellow); }
+  .pill.on small { color: #5a4a00; opacity: 1; }
+
+  .meta {
+    max-width: 1320px; margin: 0 auto;
+    padding: 14px 18px 0;
+    display: grid; grid-template-columns: 1.4fr .9fr; gap: 14px;
+  }
+  .meta-card, .meta-why {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .meta-card h2 { margin: 0 0 6px; font-size: 1.05rem; letter-spacing: -.015em; }
+  .meta-card .pair { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 10px;
+    background: #f8fafc;
+    font-size: .78rem;
+  }
+  .chip strong {
+    display: block; color: var(--blue);
+    font-size: .68rem; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .meta-why h3 {
+    margin: 0 0 6px; font-size: .78rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .meta-why p { margin: 0; font-size: .86rem; color: var(--ink); line-height: 1.55; }
+  .meta-why ul { margin: 8px 0 0; padding-left: 18px; font-size: .82rem; color: var(--muted); }
+  .meta-why li { margin: 3px 0; }
+
+  .exam { max-width: 1320px; margin: 14px auto 40px; padding: 0 18px; }
+  .exambar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 11px 16px;
+    background: var(--navy); color: #fff;
+    border-radius: 12px 12px 0 0;
+  }
+  .exambar .ttl { font-weight: 800; font-size: .95rem; }
+  .exambar .sub { color: rgba(255,255,255,.7); font-size: .78rem; }
+  .exambar .timer {
+    margin-left: auto;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.2);
+    padding: 6px 14px; border-radius: 999px;
+    font-weight: 800; font-variant-numeric: tabular-nums;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1.45fr 10px 1fr;
+    background: #fffef9;
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    height: min(74vh, 820px);
+    min-height: 560px;
+  }
+  .gutter {
+    background: #f1f4f9;
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+  .pane {
+    display: flex; flex-direction: column;
+    min-width: 0; min-height: 0;
+    background: var(--paper);
+  }
+  .p-head, .q-head {
+    flex-shrink: 0;
+    padding: 12px 18px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sectionLabel {
+    color: var(--blue);
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: .68rem;
+  }
+  .p-title {
+    margin: 6px 0 0;
+    font-size: 1.28rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--ink-strong);
+    line-height: 1.2;
+  }
+  .reader-bar {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .reader-bar span {
+    font-size: .72rem; font-weight: 800; color: var(--muted);
+    letter-spacing: .04em; margin-right: 2px;
+  }
+  .reader-bar button {
+    min-height: 30px; padding: 3px 11px;
+    border: 1px solid #cdd9eb; border-radius: 8px;
+    background: #fff; color: var(--navy);
+    font-weight: 800; font-size: .8rem; cursor: pointer;
+    font-family: inherit;
+  }
+
+  .p-body, .q-body {
+    flex: 1; min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 16px 20px 28px;
+  }
+  .p-body {
+    font-size: 1.02rem;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+  .p-body p { margin: 0 0 1em; }
+  .para-letter {
+    display: inline-block;
+    min-width: 1.1em;
+    font-weight: 800;
+    color: var(--navy);
+    margin-right: .2em;
+  }
+  .hl {
+    box-shadow: inset 0 -.5em 0 rgba(255, 204, 0, .9);
+    border-radius: 2px;
+    padding: 0 1px;
+    font-weight: 600;
+  }
+
+  .q-head h3 {
+    margin: 4px 0 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -.015em;
+  }
+  .nav { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .nav button {
+    min-width: 32px; height: 30px; padding: 0 7px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: #42506a;
+    font-weight: 700; font-size: .78rem; cursor: pointer;
+    font-family: inherit;
+  }
+  .nav button.done { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .nav button.cur { outline: 3px solid var(--yellow); }
+
+  .inst {
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    font-size: .88rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .inst strong { color: var(--ink-strong); }
+  .inst .key { margin-top: 8px; font-size: .82rem; color: var(--muted); }
+  .inst .key span { display: inline-block; margin-right: 10px; }
+
+  .qcard {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 15px;
+    margin-bottom: 10px;
+  }
+  .qrow { display: flex; gap: 10px; align-items: flex-start; }
+  .qnum {
+    flex: 0 0 auto;
+    min-width: 30px; height: 30px;
+    display: grid; place-items: center;
+    border-radius: 8px;
+    background: var(--navy); color: #fff;
+    font-weight: 800; font-size: .8rem;
+  }
+  .qprompt {
+    flex: 1;
+    font-weight: 650;
+    font-size: .98rem;
+    color: var(--ink-strong);
+    line-height: 1.45;
+  }
+  .hint {
+    flex: 0 0 auto;
+    border: 1px solid #cfe0fb;
+    background: var(--soft);
+    color: var(--blue);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: .72rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tfng {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    margin: 12px 0 0 40px;
+  }
+  .tfng button {
+    border: 1px solid #d7e3fb;
+    border-radius: 999px;
+    background: var(--soft);
+    color: var(--navy);
+    font-weight: 800;
+    padding: 8px 14px;
+    font-size: .82rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tfng button.sel {
+    background: var(--navy); color: #fff; border-color: var(--navy);
+  }
+
+  .summary {
+    margin: 8px 0 0 40px;
+    font-size: .95rem;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+  .blank {
+    display: inline-block;
+    min-width: 96px;
+    margin: 0 3px;
+    padding: 3px 8px;
+    border: none;
+    border-bottom: 2px solid #9fb4d6;
+    background: #f7faff;
+    border-radius: 4px 4px 0 0;
+    font: inherit;
+    color: var(--ink-strong);
+    text-align: center;
+  }
+
+  .submit {
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-top: 2px solid rgba(15,23,42,.1);
+    background: #fffef9;
+  }
+  .submit .status { font-size: .82rem; color: var(--muted); font-weight: 600; }
+  .submit .cta {
+    margin-left: auto;
+    border: none; border-radius: 10px;
+    background: var(--navy); color: #fff;
+    font-weight: 800; padding: 10px 18px;
+    cursor: pointer; font-family: inherit;
+  }
+
+  /* ═════ 7 NEW PAIRINGS (none from previous set) ═════ */
+
+  /* 1 · Alegreya + Alegreya Sans — humanist book family */
+  body[data-font="1"] .p-body,
+  body[data-font="1"] .p-title { font-family: Alegreya, Georgia, serif; }
+  body[data-font="1"] .q-body,
+  body[data-font="1"] .q-head h3,
+  body[data-font="1"] .inst,
+  body[data-font="1"] .tfng button,
+  body[data-font="1"] .blank,
+  body[data-font="1"] .hint,
+  body[data-font="1"] .nav button,
+  body[data-font="1"] .submit { font-family: "Alegreya Sans", system-ui, sans-serif; }
+  body[data-font="1"] .p-body { font-size: 1.08rem; line-height: 1.78; }
+  body[data-font="1"] .p-title { font-weight: 700; letter-spacing: -.01em; }
+  body[data-font="1"] .qprompt { font-weight: 700; }
+
+  /* 2 · Roboto Serif + Roboto — computer-delivered exam */
+  body[data-font="2"] .p-body,
+  body[data-font="2"] .p-title { font-family: "Roboto Serif", Georgia, serif; }
+  body[data-font="2"] .q-body,
+  body[data-font="2"] .q-head h3,
+  body[data-font="2"] .inst,
+  body[data-font="2"] .tfng button,
+  body[data-font="2"] .blank,
+  body[data-font="2"] .hint,
+  body[data-font="2"] .nav button,
+  body[data-font="2"] .submit { font-family: Roboto, system-ui, sans-serif; }
+  body[data-font="2"] .p-body { font-size: 1.03rem; line-height: 1.86; font-optical-sizing: auto; }
+  body[data-font="2"] .p-title { font-weight: 600; }
+  body[data-font="2"] .qprompt { font-weight: 500; }
+
+  /* 3 · Crimson Pro + Nunito Sans — classic book + soft UI */
+  body[data-font="3"] .p-body,
+  body[data-font="3"] .p-title { font-family: "Crimson Pro", Georgia, serif; }
+  body[data-font="3"] .q-body,
+  body[data-font="3"] .q-head h3,
+  body[data-font="3"] .inst,
+  body[data-font="3"] .tfng button,
+  body[data-font="3"] .blank,
+  body[data-font="3"] .hint,
+  body[data-font="3"] .nav button,
+  body[data-font="3"] .submit { font-family: "Nunito Sans", system-ui, sans-serif; }
+  body[data-font="3"] .p-body { font-size: 1.1rem; line-height: 1.8; }
+  body[data-font="3"] .p-title { font-weight: 600; font-size: 1.35rem; }
+  body[data-font="3"] .qprompt { font-weight: 700; }
+
+  /* 4 · STIX Two Text + Fira Sans — academic journal */
+  body[data-font="4"] .p-body,
+  body[data-font="4"] .p-title { font-family: "STIX Two Text", "Times New Roman", serif; }
+  body[data-font="4"] .q-body,
+  body[data-font="4"] .q-head h3,
+  body[data-font="4"] .inst,
+  body[data-font="4"] .tfng button,
+  body[data-font="4"] .blank,
+  body[data-font="4"] .hint,
+  body[data-font="4"] .nav button,
+  body[data-font="4"] .submit { font-family: "Fira Sans", system-ui, sans-serif; }
+  body[data-font="4"] .p-body { font-size: 1.07rem; line-height: 1.82; }
+  body[data-font="4"] .p-title { font-weight: 600; letter-spacing: 0; }
+  body[data-font="4"] .qprompt { font-weight: 600; }
+
+  /* 5 · Newsreader + Public Sans — newsroom / civic UI */
+  body[data-font="5"] .p-body,
+  body[data-font="5"] .p-title { font-family: Newsreader, Georgia, serif; }
+  body[data-font="5"] .q-body,
+  body[data-font="5"] .q-head h3,
+  body[data-font="5"] .inst,
+  body[data-font="5"] .tfng button,
+  body[data-font="5"] .blank,
+  body[data-font="5"] .hint,
+  body[data-font="5"] .nav button,
+  body[data-font="5"] .submit { font-family: "Public Sans", system-ui, sans-serif; }
+  body[data-font="5"] .p-body { font-size: 1.06rem; line-height: 1.84; font-optical-sizing: auto; }
+  body[data-font="5"] .p-title { font-weight: 600; letter-spacing: -.02em; }
+  body[data-font="5"] .qprompt { font-weight: 600; }
+
+  /* 6 · Tinos + Arimo — Times/Arial exam-lab clones */
+  body[data-font="6"] .p-body,
+  body[data-font="6"] .p-title { font-family: Tinos, "Times New Roman", serif; }
+  body[data-font="6"] .q-body,
+  body[data-font="6"] .q-head h3,
+  body[data-font="6"] .inst,
+  body[data-font="6"] .tfng button,
+  body[data-font="6"] .blank,
+  body[data-font="6"] .hint,
+  body[data-font="6"] .nav button,
+  body[data-font="6"] .submit { font-family: Arimo, Arial, sans-serif; }
+  body[data-font="6"] .p-body { font-size: 1.09rem; line-height: 1.75; }
+  body[data-font="6"] .p-title { font-weight: 700; font-size: 1.22rem; letter-spacing: 0; }
+  body[data-font="6"] .qprompt { font-weight: 600; }
+
+  /* 7 · Bitter + Figtree — sturdy slab + airy UI */
+  body[data-font="7"] .p-body,
+  body[data-font="7"] .p-title { font-family: Bitter, Georgia, serif; }
+  body[data-font="7"] .q-body,
+  body[data-font="7"] .q-head h3,
+  body[data-font="7"] .inst,
+  body[data-font="7"] .tfng button,
+  body[data-font="7"] .blank,
+  body[data-font="7"] .hint,
+  body[data-font="7"] .nav button,
+  body[data-font="7"] .submit { font-family: Figtree, system-ui, sans-serif; }
+  body[data-font="7"] .p-body { font-size: 1.02rem; line-height: 1.88; font-optical-sizing: auto; }
+  body[data-font="7"] .p-title { font-weight: 700; letter-spacing: -.02em; }
+  body[data-font="7"] .qprompt { font-weight: 650; }
+
+  @media (max-width: 960px) {
+    .switcher { grid-template-columns: 1fr; }
+    .pills { justify-content: flex-start; }
+    .meta { grid-template-columns: 1fr; }
+    .layout { grid-template-columns: 1fr; height: auto; min-height: 0; }
+    .gutter { display: none; }
+    .pane { max-height: 58vh; }
+  }
+</style>
+</head>
+<body data-font="1">
+
+<div class="switcher">
+  <div class="switcher-intro">
+    <b>Reading fonts · round 2 (7 new)</b>
+    <p>Previous five dropped. Same Digital Nomads exam layout — only type changes.</p>
+  </div>
+  <div class="pills" id="pills"></div>
+</div>
+
+<div class="meta">
+  <div class="meta-card" id="metaCard"></div>
+  <div class="meta-why" id="metaWhy"></div>
+</div>
+
+<div class="exam">
+  <div class="exambar">
+    <div>
+      <div class="ttl">IELTS Academic Reading · Feb 2026</div>
+      <div class="sub">Passage 1 of 3 · Questions 1–13</div>
+    </div>
+    <div class="timer">18:24</div>
+  </div>
+
+  <div class="layout">
+    <section class="pane" aria-label="Passage">
+      <div class="p-head">
+        <div class="sectionLabel">Reading Passage 1</div>
+        <h2 class="p-title">The Rise of Digital Nomads</h2>
+        <div class="reader-bar">
+          <span>SIZE</span><button type="button">A−</button><button type="button">A+</button>
+          <span style="margin-left:6px">LINE</span><button type="button">↕</button>
+          <button type="button" style="margin-left:6px">Sepia</button>
+        </div>
+      </div>
+      <div class="p-body">
+        <p><span class="para-letter">A</span> A digital nomad is usually defined as someone who uses digital technologies to work remotely while living or travelling away from a fixed workplace. The idea is not completely new: freelance writers, consultants and programmers were working from laptops <span class="hl">long before the term became fashionable</span>. What changed after the pandemic was the scale of remote work and the number of people who realised that a job did not always have to be tied to one city. By 2026, digital nomads are no longer viewed only as adventurous backpackers with blogs. Many are salaried employees, business owners or independent contractors who carry out ordinary professional tasks from temporary homes abroad.</p>
+        <p><span class="para-letter">B</span> Governments have responded by creating special visa schemes for remote workers. These visas are intended to regularise a practice that had often existed in a legal grey area, because many people worked online while entering countries as tourists. Most schemes require applicants to show proof of income, health insurance and a contract with a foreign employer or clients outside the host country. The logic is simple: if digital nomads earn money elsewhere but spend it locally, they may support restaurants, transport services, language schools and short-term accommodation without directly competing for local jobs.</p>
+        <p><span class="para-letter">C</span> The benefits are not evenly distributed. Cities with beaches, reliable internet and relatively low living costs can attract a sudden flow of higher-earning visitors. Cafes, coworking spaces and apartment owners may welcome the spending, but residents may see rents rise faster than wages. Some critics argue that digital nomads can unintentionally reshape neighbourhoods by increasing demand for furnished flats and international services. Others point out that many nomads stay for only a few months, so their connection with local communities may remain shallow even when their economic impact is visible.</p>
+        <p><span class="para-letter">D</span> Employers face a different problem: compliance. If an employee works from another country without permission, the company may create tax, immigration or employment-law obligations without realising it. A worker who spends several months abroad may also handle client data across borders, use unsecured networks or fall outside the insurance arrangements that normally apply at home. For this reason, some firms have introduced formal work-from-anywhere policies. These often limit the number of days employees can spend overseas and require approval before travel begins.</p>
+        <p><span class="para-letter">E</span> Digital nomads themselves also describe a mixture of freedom and pressure. They may enjoy choosing where to live, learning languages and avoiding long commutes. However, the lifestyle can involve loneliness, time-zone problems and constant administration. Opening bank accounts, renewing visas and finding quiet places for video meetings can take more energy than social media suggests. Experienced nomads often say that success depends less on travel inspiration than on routine: stable income, careful planning and the ability to work when a new city is more tempting than a laptop screen.</p>
+        <p><span class="para-letter">F</span> The rise of digital nomads therefore raises a broader question about the future of work. If jobs can move across borders more easily than people, governments must decide how to tax, welcome and regulate mobile workers. Host cities must also balance visitor income against housing pressure and community change. The digital nomad is sometimes presented as a symbol of personal freedom, but the phenomenon is also a test of institutions designed for a world in which work, residence and citizenship usually belonged in the same place.</p>
+      </div>
+    </section>
+
+    <div class="gutter" aria-hidden="true"></div>
+
+    <section class="pane" aria-label="Questions">
+      <div class="q-head">
+        <div class="sectionLabel">Questions</div>
+        <h3>Questions 1–13</h3>
+        <div class="nav" id="nav"></div>
+      </div>
+      <div class="q-body">
+        <div class="inst">
+          <strong>Questions 1–7</strong><br />
+          Do the following statements agree with the claims of the writer in Reading Passage 1?<br />
+          In boxes 1–7 on your answer sheet, write
+          <div class="key">
+            <span><b>YES</b> if the statement agrees with the claims of the writer</span>
+            <span><b>NO</b> if the statement contradicts the claims of the writer</span>
+            <span><b>NOT GIVEN</b> if it is impossible to say what the writer thinks about this</span>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qrow">
+            <div class="qnum">1</div>
+            <div class="qprompt">Digital nomads existed before the expression became widely used.</div>
+            <button class="hint" type="button">Show hint</button>
+          </div>
+          <div class="tfng">
+            <button type="button" class="sel">YES</button>
+            <button type="button">NO</button>
+            <button type="button">NOT GIVEN</button>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qrow">
+            <div class="qnum">2</div>
+            <div class="qprompt">Digital nomads are more likely than ordinary tourists to travel with children.</div>
+            <button class="hint" type="button">Show hint</button>
+          </div>
+          <div class="tfng">
+            <button type="button">YES</button>
+            <button type="button">NO</button>
+            <button type="button">NOT GIVEN</button>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qrow">
+            <div class="qnum">4</div>
+            <div class="qprompt">Most digital nomad visas are designed for people who work for employers or clients in the host country.</div>
+            <button class="hint" type="button">Show hint</button>
+          </div>
+          <div class="tfng">
+            <button type="button">YES</button>
+            <button type="button" class="sel">NO</button>
+            <button type="button">NOT GIVEN</button>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qrow">
+            <div class="qnum">7</div>
+            <div class="qprompt">Companies may face legal or tax problems if employees work abroad without approval.</div>
+            <button class="hint" type="button">Show hint</button>
+          </div>
+          <div class="tfng">
+            <button type="button">YES</button>
+            <button type="button">NO</button>
+            <button type="button">NOT GIVEN</button>
+          </div>
+        </div>
+
+        <div class="inst" style="margin-top:16px">
+          <strong>Questions 8–13</strong><br />
+          Complete the summary below.<br />
+          Choose <b>ONE WORD ONLY</b> from the passage for each answer.
+        </div>
+
+        <div class="qcard">
+          <div class="qrow">
+            <div class="qnum">8–13</div>
+            <div class="qprompt">Digital nomads and host countries</div>
+            <button class="hint" type="button">Show hint</button>
+          </div>
+          <div class="summary">
+            Digital nomads use digital <input class="blank" value="technologies" aria-label="Q8" /> to work remotely while moving between places.
+            Many countries have created special <input class="blank" aria-label="Q9" /> to make this form of work more legally visible.
+            Applicants are often asked to provide evidence of their <input class="blank" aria-label="Q10" /> and health <input class="blank" aria-label="Q11" />.
+            Host economies may benefit from nomads' local <input class="blank" aria-label="Q12" />, although residents sometimes worry that housing <input class="blank" aria-label="Q13" /> will increase.
+          </div>
+        </div>
+      </div>
+
+      <div class="submit">
+        <div class="status">Answered 3 / 13 · Flagged 0</div>
+        <button class="cta" type="button">Review &amp; submit</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  const PROPOSALS = [
+    {
+      id: 1,
+      name: 'Alegreya pair',
+      tag: 'Humanist book',
+      passage: 'Alegreya',
+      questions: 'Alegreya Sans',
+      vibe: 'Calligraphic warmth — designed as a true serif/sans family for long texts',
+      why: 'Neither Inter-adjacent grotesk nor Adobe Source. Feels like a well-set paperback; questions stay in the same DNA so the split pane does not clash.',
+      pros: ['True related family', 'Alive italic for quotes', 'High personality without costume fonts'],
+      cons: ['More character than “neutral SaaS”', 'Sans is slightly quirky vs brand Inter']
+    },
+    {
+      id: 2,
+      name: 'Roboto Serif + Roboto',
+      tag: 'CBT exam screen',
+      passage: 'Roboto Serif',
+      questions: 'Roboto',
+      vibe: 'What a modern computer-delivered test centre UI might use',
+      why: 'Roboto Serif is tuned for screens with optical sizing. Roboto keeps stems/options mechanistically clear — opposite of “pretty editorial”.',
+      pros: ['Excellent small-size clarity', 'Familiar Android/Material feel', 'Engineering-clean questions'],
+      cons: ['Can feel corporate', 'Less “paper book” romance']
+    },
+    {
+      id: 3,
+      name: 'Crimson Pro + Nunito',
+      tag: 'Book + soft UI',
+      passage: 'Crimson Pro',
+      questions: 'Nunito Sans',
+      vibe: 'Old-style book body with a friendly rounded question pane',
+      why: 'Crimson is a Garamond-like reading face (not Literata/Source). Nunito Sans softens TFNG pills and blanks — good for ESL eye fatigue.',
+      pros: ['Passage feels scholarly', 'Questions feel approachable', 'Clear emotional split left/right'],
+      cons: ['Rounded sans may feel “app-y”', 'Less institutional than STIX/Tinos']
+    },
+    {
+      id: 4,
+      name: 'STIX Two + Fira',
+      tag: 'Journal paper',
+      passage: 'STIX Two Text',
+      questions: 'Fira Sans',
+      vibe: 'Scientific journal body + Mozilla-grade UI sans',
+      why: 'STIX is literally for scientific publishing — dense academic paragraphs look native. Fira is narrow and hyper-legible for crowded question lists.',
+      pros: ['Most “academic paper” authenticity', 'Fira packs well in the right pane', 'Serious tone matches IELTS Academic'],
+      cons: ['STIX can look dry', 'Fira is tighter than Inter']
+    },
+    {
+      id: 5,
+      name: 'Newsreader + Public Sans',
+      tag: 'Newsroom / civic',
+      passage: 'Newsreader',
+      questions: 'Public Sans',
+      vibe: 'Long-form journalism left, government-form clarity right',
+      why: 'Newsreader is for articles, not fonts-for-fonts’-sake. Public Sans (USWDS) is ruthlessly plain for instructions, keys, and blanks.',
+      pros: ['Passage reads like a magazine feature', 'Questions feel trustworthy/neutral', 'Strong craft contrast'],
+      cons: ['Public Sans is very plain', 'Not a matched family']
+    },
+    {
+      id: 6,
+      name: 'Tinos + Arimo',
+      tag: 'Times / Arial lab',
+      passage: 'Tinos',
+      questions: 'Arimo',
+      vibe: 'Metric-compatible Times + Arial — closest to a dull real test centre PC',
+      why: 'If the goal is familiarity with actual IELTS computer labs / Word-ish systems, this is the honest clone — intentionally unfashionable.',
+      pros: ['Most realistic test-day muscle memory', 'Zero fashion risk', 'Tiny font payload'],
+      cons: ['Looks dated on purpose', 'Weak brand differentiation']
+    },
+    {
+      id: 7,
+      name: 'Bitter + Figtree',
+      tag: 'Slab + air',
+      passage: 'Bitter',
+      questions: 'Figtree',
+      vibe: 'Heavy-footed slab for endurance reading; open geometric UI for questions',
+      why: 'Bitter’s slab serifs hold up on low-DPI screens where hairline serifs blur. Figtree is wide and breathable for prompts — opposite of condensed exam UI.',
+      pros: ['Passage stays sharp when tired', 'Questions feel spacious', 'Distinct from all prior proposals'],
+      cons: ['Bitter is assertive / darker', 'Figtree can feel startup-y']
+    }
+  ];
+
+  const pills = document.getElementById('pills');
+  const metaCard = document.getElementById('metaCard');
+  const metaWhy = document.getElementById('metaWhy');
+  const nav = document.getElementById('nav');
+
+  for (let i = 1; i <= 13; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = String(i);
+    if (i === 1 || i === 4 || i === 8) b.classList.add('done');
+    if (i === 2) b.classList.add('cur');
+    nav.appendChild(b);
+  }
+
+  function render(id) {
+    const p = PROPOSALS.find(x => x.id === id);
+    document.body.dataset.font = String(id);
+    [...pills.children].forEach((btn, i) => btn.classList.toggle('on', i + 1 === id));
+    metaCard.innerHTML = `
+      <h2>${p.id}. ${p.name} <span style="font-size:.72rem;font-weight:700;color:var(--blue);margin-left:6px;text-transform:uppercase;letter-spacing:.04em">${p.tag}</span></h2>
+      <div style="font-size:.88rem;color:var(--ink)">${p.vibe}</div>
+      <div class="pair">
+        <div class="chip"><strong>Passage</strong>${p.passage}</div>
+        <div class="chip"><strong>Questions</strong>${p.questions}</div>
+      </div>`;
+    metaWhy.innerHTML = `
+      <h3>Why this pairing</h3>
+      <p>${p.why}</p>
+      <ul>${p.pros.map(x => `<li>+ ${x}</li>`).concat(p.cons.map(x => `<li>− ${x}</li>`)).join('')}</ul>`;
+  }
+
+  PROPOSALS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (p.id === 1 ? ' on' : '');
+    btn.type = 'button';
+    btn.innerHTML = `${p.id} · ${p.name}<small>${p.passage} / ${p.questions}</small>`;
+    btn.addEventListener('click', () => render(p.id));
+    pills.appendChild(btn);
+  });
+
+  document.querySelectorAll('.tfng').forEach(group => {
+    group.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      group.querySelectorAll('button').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+  });
+
+  render(1);
+</script>
+</body>
+</html>

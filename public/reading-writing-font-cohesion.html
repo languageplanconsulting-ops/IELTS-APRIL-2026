@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reading × Writing type cohesion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Kanit:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy: #0f2e85;
+    --navy-deep: #0b1f44;
+    --brand-blue: #004aad;
+    --ink: #0b2a5b;
+    --body-ink: #28324a;
+    --muted: #64748b;
+    --line: rgba(0, 74, 173, 0.12);
+    --bg: #eef2f7;
+    --paper: #f7f9fc;
+    --white: #ffffff;
+    --yellow: #ffcc00;
+    --soft: #eaf1fd;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Anuphan, Inter, system-ui, sans-serif;
+    line-height: 1.45;
+  }
+
+  .switcher {
+    position: sticky; top: 0; z-index: 80;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--navy-deep);
+    color: #fff;
+  }
+  .switcher b { font-size: .9rem; margin-right: 6px; }
+  .switcher p {
+    flex: 1 1 220px; margin: 0;
+    font-size: .75rem; color: rgba(255,255,255,.7); line-height: 1.35;
+  }
+  .pill {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,.22);
+    background: transparent; color: #cbd6e6;
+    border-radius: 999px; padding: 8px 14px;
+    font: inherit; font-size: .78rem; font-weight: 700;
+    cursor: pointer;
+  }
+  .pill.on { background: var(--yellow); color: #2a2200; border-color: var(--yellow); }
+
+  .page { max-width: 1340px; margin: 0 auto; padding: 16px 18px 48px; }
+
+  .banner {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .banner h1 {
+    margin: 0;
+    font-family: Kanit, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .banner p { margin: 6px 0 0; color: var(--muted); font-size: .88rem; line-height: 1.5; }
+  .tokens {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+  }
+  .token {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 10px;
+    background: var(--paper);
+    font-size: .78rem;
+  }
+  .token strong {
+    display: block;
+    color: var(--brand-blue);
+    font-size: .66rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: minmax(280px, .85fr) 1.35fr;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .label {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 8px;
+  }
+
+  /* ── Writing reference (live system) ── */
+  .writing-ref {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+  .writing-ref .flow-title {
+    margin: 0;
+    font-family: Kanit, sans-serif;
+    font-weight: 700;
+    font-size: 1.45rem;
+    color: var(--ink);
+    line-height: 1.15;
+  }
+  .writing-ref .flow-sub {
+    margin: 0;
+    color: var(--muted);
+    font-size: .92rem;
+    font-weight: 600;
+  }
+  .writing-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .writing-card h3 {
+    margin: 0 0 8px;
+    font-family: Kanit, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .writing-card p {
+    margin: 0;
+    font-family: Anuphan, Inter, sans-serif;
+    font-size: .92rem;
+    color: #334155;
+    line-height: 1.65;
+  }
+  .writing-prompt {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #fffef6;
+    border: 1px solid rgba(191, 139, 48, 0.25);
+    font-family: Anuphan, Inter, sans-serif;
+    font-size: .9rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .writing-essay {
+    margin-top: 10px;
+    min-height: 140px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-family: Anuphan, Inter, sans-serif;
+    font-size: .95rem;
+    line-height: 1.7;
+    color: #1e293b;
+  }
+  .writing-chip {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--soft);
+    color: var(--brand-blue);
+    font-family: Kanit, sans-serif;
+    font-size: .72rem;
+    font-weight: 600;
+  }
+
+  /* ── Reading (writing-cohesive) ── */
+  .reading-side { min-width: 0; }
+  .exambar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 14px 14px 0 0;
+    font-family: Anuphan, Inter, sans-serif;
+  }
+  .exambar .ttl {
+    font-family: Kanit, sans-serif;
+    font-weight: 700;
+    font-size: .95rem;
+  }
+  .exambar .sub { font-size: .76rem; color: rgba(255,255,255,.72); }
+  .exambar .timer {
+    margin-left: auto;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.2);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: .85rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1.4fr 8px 1fr;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    height: min(72vh, 780px);
+    min-height: 520px;
+    overflow: hidden;
+  }
+  .gutter { background: #eef2f8; }
+  .pane {
+    display: flex; flex-direction: column;
+    min-width: 0; min-height: 0;
+    background: #fff;
+  }
+  .p-head, .q-head {
+    flex-shrink: 0;
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .sectionLabel {
+    color: var(--brand-blue);
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: .68rem;
+  }
+  .p-title {
+    margin: 6px 0 0;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .reader-bar {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .reader-bar span {
+    font-size: .7rem; font-weight: 700; color: var(--muted);
+    letter-spacing: .04em;
+  }
+  .reader-bar button {
+    min-height: 30px; padding: 3px 10px;
+    border: 1px solid rgba(0,74,173,.18);
+    border-radius: 8px;
+    background: #fff; color: var(--ink);
+    font-weight: 700; font-size: .78rem; cursor: pointer;
+    font-family: inherit;
+  }
+
+  .p-body, .q-body {
+    flex: 1; min-height: 0;
+    overflow: auto;
+    padding: 16px 18px 24px;
+  }
+  .p-body { color: var(--body-ink); }
+  .p-body p { margin: 0 0 1em; }
+  .para-letter {
+    display: inline-block;
+    min-width: 1.1em;
+    font-weight: 700;
+    color: var(--brand-blue);
+    margin-right: .2em;
+  }
+  .hl {
+    box-shadow: inset 0 -.5em 0 rgba(255, 204, 0, .9);
+    border-radius: 2px;
+    padding: 0 1px;
+    font-weight: 600;
+  }
+
+  .q-head h3 { margin: 4px 0 0; font-size: 1.05rem; color: var(--ink); }
+  .nav { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .nav button {
+    min-width: 32px; height: 30px; padding: 0 7px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: #42506a;
+    font-weight: 700; font-size: .78rem; cursor: pointer;
+    font-family: inherit;
+  }
+  .nav button.done { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .nav button.cur { outline: 3px solid var(--yellow); }
+
+  .inst {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 13px;
+    margin-bottom: 12px;
+    font-size: .88rem;
+    line-height: 1.55;
+    color: #334155;
+  }
+  .inst strong { color: var(--ink); }
+  .inst .key { margin-top: 8px; font-size: .8rem; color: var(--muted); }
+  .inst .key span { display: inline-block; margin-right: 10px; }
+
+  .qcard {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 14px;
+    margin-bottom: 10px;
+  }
+  .qrow { display: flex; gap: 10px; align-items: flex-start; }
+  .qnum {
+    flex: 0 0 auto;
+    min-width: 30px; height: 30px;
+    display: grid; place-items: center;
+    border-radius: 8px;
+    background: var(--navy); color: #fff;
+    font-weight: 700; font-size: .8rem;
+  }
+  .qprompt {
+    flex: 1;
+    font-size: .96rem;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .hint {
+    flex: 0 0 auto;
+    border: 1px solid #cfe0fb;
+    background: var(--soft);
+    color: var(--brand-blue);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: .72rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tfng {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    margin: 12px 0 0 40px;
+  }
+  .tfng button {
+    border: 1px solid #d7e3fb;
+    border-radius: 999px;
+    background: var(--soft);
+    color: var(--navy);
+    font-weight: 700;
+    padding: 8px 14px;
+    font-size: .82rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tfng button.sel {
+    background: var(--navy); color: #fff; border-color: var(--navy);
+  }
+  .summary {
+    margin: 8px 0 0 40px;
+    font-size: .94rem;
+    line-height: 1.75;
+    color: var(--body-ink);
+  }
+  .blank {
+    display: inline-block;
+    min-width: 96px;
+    margin: 0 3px;
+    padding: 3px 8px;
+    border: none;
+    border-bottom: 2px solid #9fb4d6;
+    background: #f7faff;
+    border-radius: 4px 4px 0 0;
+    font: inherit;
+    color: var(--ink);
+    text-align: center;
+  }
+  .submit {
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .submit .status { font-size: .8rem; color: var(--muted); font-weight: 600; }
+  .submit .cta {
+    margin-left: auto;
+    border: none; border-radius: 999px;
+    background: var(--brand-blue); color: #fff;
+    font-weight: 700; padding: 10px 18px;
+    cursor: pointer; font-family: inherit;
+  }
+
+  .note {
+    margin-top: 12px;
+    font-size: .82rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ═════ cohesion modes ═════ */
+
+  /* A · Exact writing system */
+  body[data-mode="a"] .p-title,
+  body[data-mode="a"] .q-head h3,
+  body[data-mode="a"] .qnum,
+  body[data-mode="a"] .submit .cta,
+  body[data-mode="a"] .sectionLabel {
+    font-family: Kanit, sans-serif;
+  }
+  body[data-mode="a"] .p-body,
+  body[data-mode="a"] .q-body,
+  body[data-mode="a"] .reader-bar,
+  body[data-mode="a"] .nav button,
+  body[data-mode="a"] .hint,
+  body[data-mode="a"] .tfng button,
+  body[data-mode="a"] .blank,
+  body[data-mode="a"] .submit .status {
+    font-family: Anuphan, Inter, sans-serif;
+  }
+  body[data-mode="a"] .p-title { font-weight: 700; letter-spacing: 0; }
+  body[data-mode="a"] .q-head h3 { font-family: Kanit, sans-serif; font-weight: 700; }
+  body[data-mode="a"] .qprompt { font-family: Anuphan, Inter, sans-serif; font-weight: 700; }
+  body[data-mode="a"] .p-body { font-size: 1.02rem; line-height: 1.75; font-weight: 500; }
+
+  /* B · Passage = Anuphan body role, questions chrome = Kanit heavier */
+  body[data-mode="b"] .p-title,
+  body[data-mode="b"] .p-body {
+    font-family: Anuphan, Inter, sans-serif;
+  }
+  body[data-mode="b"] .p-title { font-weight: 700; font-size: 1.28rem; letter-spacing: 0; }
+  body[data-mode="b"] .p-body { font-size: 1.04rem; line-height: 1.8; font-weight: 500; }
+  body[data-mode="b"] .q-head h3,
+  body[data-mode="b"] .sectionLabel,
+  body[data-mode="b"] .qnum,
+  body[data-mode="b"] .qprompt,
+  body[data-mode="b"] .nav button,
+  body[data-mode="b"] .hint,
+  body[data-mode="b"] .tfng button,
+  body[data-mode="b"] .submit .cta {
+    font-family: Kanit, sans-serif;
+  }
+  body[data-mode="b"] .inst,
+  body[data-mode="b"] .summary,
+  body[data-mode="b"] .blank,
+  body[data-mode="b"] .submit .status,
+  body[data-mode="b"] .reader-bar {
+    font-family: Anuphan, Inter, sans-serif;
+  }
+  body[data-mode="b"] .qprompt { font-weight: 600; font-size: .95rem; }
+
+  /* C · Soft writing guide paper on both panes + same type roles */
+  body[data-mode="c"] .pane,
+  body[data-mode="c"] .layout { background: var(--paper); }
+  body[data-mode="c"] .p-head,
+  body[data-mode="c"] .q-head,
+  body[data-mode="c"] .submit { background: #fff; }
+  body[data-mode="c"] .p-title,
+  body[data-mode="c"] .q-head h3,
+  body[data-mode="c"] .qnum,
+  body[data-mode="c"] .submit .cta {
+    font-family: Kanit, sans-serif;
+    font-weight: 700;
+  }
+  body[data-mode="c"] .p-body,
+  body[data-mode="c"] .q-body,
+  body[data-mode="c"] .qprompt,
+  body[data-mode="c"] .inst,
+  body[data-mode="c"] .summary,
+  body[data-mode="c"] .blank,
+  body[data-mode="c"] .reader-bar,
+  body[data-mode="c"] .nav button,
+  body[data-mode="c"] .hint,
+  body[data-mode="c"] .tfng button {
+    font-family: Anuphan, Inter, sans-serif;
+  }
+  body[data-mode="c"] .p-body { font-size: 1.0rem; line-height: 1.78; font-weight: 500; }
+  body[data-mode="c"] .qprompt { font-weight: 700; }
+  body[data-mode="c"] .qcard {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+  }
+
+  /* D · Current reading Inter (control) vs writing — for contrast */
+  body[data-mode="d"] .p-title,
+  body[data-mode="d"] .q-head h3,
+  body[data-mode="d"] .p-body,
+  body[data-mode="d"] .q-body,
+  body[data-mode="d"] .qprompt,
+  body[data-mode="d"] .inst,
+  body[data-mode="d"] .summary,
+  body[data-mode="d"] .blank,
+  body[data-mode="d"] .reader-bar,
+  body[data-mode="d"] .nav button,
+  body[data-mode="d"] .hint,
+  body[data-mode="d"] .tfng button,
+  body[data-mode="d"] .submit {
+    font-family: Inter, system-ui, sans-serif;
+  }
+  body[data-mode="d"] .p-title { font-weight: 800; letter-spacing: -.02em; }
+  body[data-mode="d"] .q-head h3 { font-weight: 800; letter-spacing: -.015em; }
+  body[data-mode="d"] .qprompt { font-weight: 650; }
+  body[data-mode="d"] .p-body { font-size: 1.02rem; line-height: 1.85; font-weight: 400; color: #28324a; }
+
+  @media (max-width: 980px) {
+    .compare { grid-template-columns: 1fr; }
+    .layout { grid-template-columns: 1fr; height: auto; }
+    .gutter { display: none; }
+    .pane { max-height: 55vh; }
+  }
+</style>
+</head>
+<body data-mode="a">
+
+<div class="switcher">
+  <b>Reading × Writing cohesion</b>
+  <button class="pill on" type="button" data-mode="a">A · Exact writing fonts</button>
+  <button class="pill" type="button" data-mode="b">B · Role map (Kanit questions)</button>
+  <button class="pill" type="button" data-mode="c">C · Writing guide paper</button>
+  <button class="pill" type="button" data-mode="d">D · Current Inter (control)</button>
+  <p>Left = live Writing type system. Right = Reading exam remapped. A–C use Kanit + Anuphan only.</p>
+</div>
+
+<div class="page">
+  <div class="banner">
+    <h1>Same brand type stack as Writing</h1>
+    <p>
+      Writing already ships <b>Kanit</b> for titles and <b>Anuphan</b> for body
+      (<code>WritingGuidePage.css</code> / <code>index.html</code>).
+      These modes apply that stack to Reading instead of introducing new families.
+    </p>
+    <div class="tokens">
+      <div class="token"><strong>Writing headings</strong>Kanit 700</div>
+      <div class="token"><strong>Writing body</strong>Anuphan 400–700</div>
+      <div class="token"><strong>Brand blue</strong>#004aad</div>
+      <div class="token"><strong>Guide paper</strong>#f7f9fc</div>
+    </div>
+  </div>
+
+  <div class="compare">
+    <div>
+      <div class="label">Writing page · current</div>
+      <aside class="writing-ref">
+        <div>
+          <div class="sectionLabel">Writing · Task 2</div>
+          <h2 class="flow-title">Opinion essay builder</h2>
+          <p class="flow-sub">Practice with the same fonts students already see on Writing.</p>
+        </div>
+        <div class="writing-card">
+          <h3>Question</h3>
+          <p>Some people believe that digital nomads benefit host cities. Others worry about rising rents.</p>
+          <div class="writing-prompt">
+            Discuss both views and give your own opinion. Write at least 250 words.
+          </div>
+          <div class="writing-essay">
+            While remote workers can inject foreign income into local cafes and coworking spaces, their demand for short-term housing may push rents beyond what residents can afford. In my view, governments should welcome nomads only with clear visa rules and housing safeguards…
+          </div>
+          <span class="writing-chip">Kanit title · Anuphan prompt &amp; essay</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="reading-side">
+      <div class="label" id="readingLabel">Reading exam · mode A</div>
+      <div class="exambar">
+        <div>
+          <div class="ttl">IELTS Academic Reading · Feb 2026</div>
+          <div class="sub">Passage 1 of 3 · Questions 1–13</div>
+        </div>
+        <div class="timer">18:24</div>
+      </div>
+      <div class="layout">
+        <section class="pane">
+          <div class="p-head">
+            <div class="sectionLabel">Reading Passage 1</div>
+            <h2 class="p-title">The Rise of Digital Nomads</h2>
+            <div class="reader-bar">
+              <span>SIZE</span><button type="button">A−</button><button type="button">A+</button>
+              <span style="margin-left:6px">LINE</span><button type="button">↕</button>
+              <button type="button" style="margin-left:6px">Sepia</button>
+            </div>
+          </div>
+          <div class="p-body">
+            <p><span class="para-letter">A</span> A digital nomad is usually defined as someone who uses digital technologies to work remotely while living or travelling away from a fixed workplace. The idea is not completely new: freelance writers, consultants and programmers were working from laptops <span class="hl">long before the term became fashionable</span>. What changed after the pandemic was the scale of remote work and the number of people who realised that a job did not always have to be tied to one city. By 2026, digital nomads are no longer viewed only as adventurous backpackers with blogs. Many are salaried employees, business owners or independent contractors who carry out ordinary professional tasks from temporary homes abroad.</p>
+            <p><span class="para-letter">B</span> Governments have responded by creating special visa schemes for remote workers. These visas are intended to regularise a practice that had often existed in a legal grey area, because many people worked online while entering countries as tourists. Most schemes require applicants to show proof of income, health insurance and a contract with a foreign employer or clients outside the host country. The logic is simple: if digital nomads earn money elsewhere but spend it locally, they may support restaurants, transport services, language schools and short-term accommodation without directly competing for local jobs.</p>
+            <p><span class="para-letter">C</span> The benefits are not evenly distributed. Cities with beaches, reliable internet and relatively low living costs can attract a sudden flow of higher-earning visitors. Cafes, coworking spaces and apartment owners may welcome the spending, but residents may see rents rise faster than wages. Some critics argue that digital nomads can unintentionally reshape neighbourhoods by increasing demand for furnished flats and international services.</p>
+            <p><span class="para-letter">D</span> Employers face a different problem: compliance. If an employee works from another country without permission, the company may create tax, immigration or employment-law obligations without realising it. For this reason, some firms have introduced formal work-from-anywhere policies.</p>
+          </div>
+        </section>
+        <div class="gutter"></div>
+        <section class="pane">
+          <div class="q-head">
+            <div class="sectionLabel">Questions</div>
+            <h3>Questions 1–13</h3>
+            <div class="nav" id="nav"></div>
+          </div>
+          <div class="q-body">
+            <div class="inst">
+              <strong>Questions 1–7</strong><br />
+              Do the following statements agree with the claims of the writer in Reading Passage 1?
+              <div class="key">
+                <span><b>YES</b> if the statement agrees</span>
+                <span><b>NO</b> if it contradicts</span>
+                <span><b>NOT GIVEN</b> if unknown</span>
+              </div>
+            </div>
+            <div class="qcard">
+              <div class="qrow">
+                <div class="qnum">1</div>
+                <div class="qprompt">Digital nomads existed before the expression became widely used.</div>
+                <button class="hint" type="button">Show hint</button>
+              </div>
+              <div class="tfng">
+                <button type="button" class="sel">YES</button>
+                <button type="button">NO</button>
+                <button type="button">NOT GIVEN</button>
+              </div>
+            </div>
+            <div class="qcard">
+              <div class="qrow">
+                <div class="qnum">4</div>
+                <div class="qprompt">Most digital nomad visas are designed for people who work for employers or clients in the host country.</div>
+                <button class="hint" type="button">Show hint</button>
+              </div>
+              <div class="tfng">
+                <button type="button">YES</button>
+                <button type="button" class="sel">NO</button>
+                <button type="button">NOT GIVEN</button>
+              </div>
+            </div>
+            <div class="inst" style="margin-top:12px">
+              <strong>Questions 8–13</strong> · Choose ONE WORD ONLY from the passage.
+            </div>
+            <div class="qcard">
+              <div class="qrow">
+                <div class="qnum">8</div>
+                <div class="qprompt">Summary completion</div>
+              </div>
+              <div class="summary">
+                Digital nomads use digital <input class="blank" value="technologies" /> to work remotely.
+                Many countries have created special <input class="blank" /> for remote workers.
+              </div>
+            </div>
+          </div>
+          <div class="submit">
+            <div class="status">Answered 3 / 13</div>
+            <button class="cta" type="button">Review &amp; submit</button>
+          </div>
+        </section>
+      </div>
+      <p class="note" id="modeNote"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const NOTES = {
+    a: 'Mode A — Exact Writing stack: Kanit on titles / section labels / CTA; Anuphan on passage + question body. Strongest brand match when flipping Writing ↔ Reading.',
+    b: 'Mode B — Role remap: passage stays Anuphan (like essay body); question chrome (prompts, pills, numbers) goes Kanit so the right pane feels like Writing UI controls.',
+    c: 'Mode C — Same fonts as A, plus Writing guide paper (#f7f9fc), soft cards, and pill CTA — visual chrome matches WritingGuidePage, not just type.',
+    d: 'Mode D — Control: current Reading Inter. Compare left Writing vs right Reading to feel the cohesion gap.'
+  };
+  const LABELS = {
+    a: 'Reading exam · mode A · exact Writing fonts',
+    b: 'Reading exam · mode B · Kanit-weighted questions',
+    c: 'Reading exam · mode C · Writing guide paper',
+    d: 'Reading exam · mode D · Inter control (today)'
+  };
+
+  const nav = document.getElementById('nav');
+  for (let i = 1; i <= 13; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = String(i);
+    if (i === 1 || i === 4 || i === 8) b.classList.add('done');
+    if (i === 2) b.classList.add('cur');
+    nav.appendChild(b);
+  }
+
+  function setMode(mode) {
+    document.body.dataset.mode = mode;
+    document.querySelectorAll('.switcher .pill').forEach(p => {
+      p.classList.toggle('on', p.dataset.mode === mode);
+    });
+    document.getElementById('modeNote').textContent = NOTES[mode];
+    document.getElementById('readingLabel').textContent = LABELS[mode];
+  }
+
+  document.querySelectorAll('.switcher .pill').forEach(btn => {
+    btn.addEventListener('click', () => setMode(btn.dataset.mode));
+  });
+
+  document.querySelectorAll('.tfng').forEach(group => {
+    group.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      group.querySelectorAll('button').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+  });
+
+  setMode('a');
+</script>
+</body>
+</html>

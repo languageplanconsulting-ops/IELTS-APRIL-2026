@@ -28348,3 +28348,589 @@ textarea {
   }
 }
 /* =================== end admin function uniformity =================== */
+
+/* =============================================================================
+   Speaking ↔ Writing ticket cohesion (overrides older soft speakingFlowTheme)
+   ============================================================================= */
+
+.speakingFlowTheme {
+  --sg-ticket-ink: #0f172a;
+  --sg-ticket-paper: #fffef6;
+  --sg-ticket-cta: #ffcc00;
+  --sg-ticket-border: 3px solid #0f172a;
+  --sg-ticket-shadow: 4px 4px 0 #0f172a;
+  --sg-ticket-shadow-lg: 8px 8px 0 #0f172a;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 18px;
+  padding: clamp(16px, 2vw, 28px) !important;
+  min-height: calc(100vh - 88px);
+  border-radius: 8px !important;
+  border: var(--sg-ticket-border) !important;
+  background: var(--sg-ticket-paper) !important;
+  color: var(--sg-ticket-ink) !important;
+  box-shadow: var(--sg-ticket-shadow-lg) !important;
+  overflow-x: hidden;
+  overflow-y: visible;
+  font-family: Inter, Anuphan, system-ui, sans-serif !important;
+}
+
+.speakingFlowTheme > h2 {
+  display: none !important;
+}
+
+.speakingFlowTheme .speakingAmbient {
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.speakingFlowTheme .speakingFlowStage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 20px;
+}
+
+.speakingFlowTheme .speakingHubShell,
+.speakingFlowTheme .trialStageShell {
+  display: grid;
+  gap: 18px;
+}
+
+.speakingFlowTheme .writingGuideHubIntro {
+  display: grid;
+  gap: 10px;
+  max-width: 42rem;
+}
+
+.speakingFlowTheme .writingGuideHubH1 {
+  margin: 0;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: clamp(1.85rem, 4.2vw, 3rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.18;
+  max-width: 18ch;
+}
+
+.speakingFlowTheme .writingGuideHubLead,
+.speakingFlowTheme .writingGuideFlowSub {
+  margin: 0;
+  color: #64748b;
+  font-family: Anuphan, Inter, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.speakingFlowTheme .wlpKicker {
+  margin: 0;
+  color: #004aad;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.speakingFlowTheme .wlpAccentRule {
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: #ffcc00;
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.speakingFlowTheme .wgTicketPathBoard {
+  max-width: 920px;
+}
+
+.speakingFlowTheme .wgTicket.sgTicketActive {
+  background: #fffbeb !important;
+  outline: 2px solid #ffcc00;
+  outline-offset: 1px;
+}
+
+.speakingFlowTheme .sgFullMockPreview {
+  max-width: 920px;
+  margin: 0;
+  padding: 14px 16px;
+  border: 3px solid #0f172a;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 4px 4px 0 #0f172a;
+}
+
+.speakingFlowTheme .sgFullMockPreview .fullMockPreviewTitle {
+  margin: 0 0 10px;
+  font-family: Kanit, Inter, sans-serif;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.speakingFlowTheme .fullMockPreviewSteps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.speakingFlowTheme .previewStep {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #fffef6;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.speakingFlowTheme .previewStepFinal {
+  background: #ffcc00;
+}
+
+.speakingFlowTheme .previewArrow {
+  color: #64748b;
+  font-weight: 800;
+}
+
+/* Topic bank */
+.speakingFlowTheme .speakingTopicBank {
+  display: grid;
+  gap: 14px;
+  max-width: 960px;
+  padding: 18px;
+  border: 3px solid #0f172a;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 8px 8px 0 #0f172a;
+}
+
+.speakingFlowTheme .speakingBankHead {
+  gap: 6px;
+}
+
+.speakingFlowTheme .writingGuideFlowTitle {
+  margin: 0;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 2.8vw, 1.85rem);
+  color: #0f172a;
+  line-height: 1.15;
+}
+
+.speakingFlowTheme .topicBankToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.speakingFlowTheme .topicBankSearchInput {
+  min-width: min(100%, 280px);
+  min-height: 40px;
+  padding: 0 12px;
+  border: 3px solid #0f172a !important;
+  border-radius: 4px !important;
+  background: #fffef6 !important;
+  box-shadow: 2px 2px 0 #0f172a;
+  font-family: Inter, Anuphan, sans-serif;
+}
+
+.speakingFlowTheme .topicBankSearchInput:focus {
+  outline: 2px solid #ffcc00;
+  outline-offset: 1px;
+}
+
+.speakingFlowTheme .topicBankViewToggle {
+  display: inline-flex;
+  gap: 0;
+  border: 3px solid #0f172a;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.speakingFlowTheme .topicBankViewToggle button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #0f172a !important;
+  font-family: Kanit, Inter, sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme .topicBankViewToggle button.active {
+  background: #ffcc00 !important;
+}
+
+.speakingFlowTheme .topicBankGroupHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 8px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #0f172a;
+}
+
+.speakingFlowTheme .topicBankGroupTitle {
+  margin: 0;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #004aad;
+}
+
+.speakingFlowTheme .topicBankGroupCount {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.speakingFlowTheme .sgTopicTicketGrid.thumbnailGrid--list {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+.speakingFlowTheme .sgTopicTicketGrid.thumbnailGrid--grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.speakingFlowTheme .sgTopicTicket.thumbnailCard {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 14px !important;
+  border: 3px solid #0f172a !important;
+  border-radius: 6px !important;
+  background: #fffef6 !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.speakingFlowTheme .sgTopicTicket.thumbnailCard:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #0f172a !important;
+}
+
+.speakingFlowTheme .sgTopicTicket.thumbnailCard--selected,
+.speakingFlowTheme .sgTopicTicket.sgTicketActive {
+  background: #fffbeb !important;
+  outline: 2px solid #ffcc00;
+  outline-offset: 1px;
+}
+
+.speakingFlowTheme .sgTopicTicket .wgTicketStamp {
+  width: 52px;
+  height: 52px;
+  font-size: 1.25rem;
+}
+
+.speakingFlowTheme .sgTopicTicket .wgTicketTitleRow strong {
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.98rem;
+}
+
+.speakingFlowTheme .sgTopicTicketActions {
+  display: grid;
+  gap: 6px;
+  justify-items: stretch;
+}
+
+.speakingFlowTheme .topicCardStartBtn,
+.speakingFlowTheme .primaryReadyBtn,
+.speakingFlowTheme .micCheckBtn,
+.speakingFlowTheme button.primary,
+.speakingFlowTheme .nextStepCard {
+  border: 3px solid #0f172a !important;
+  border-radius: 4px !important;
+  background: #ffcc00 !important;
+  color: #0f172a !important;
+  box-shadow: 3px 3px 0 #0f172a !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+.speakingFlowTheme .topicCardStartBtn:hover,
+.speakingFlowTheme .primaryReadyBtn:hover,
+.speakingFlowTheme .micCheckBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #0f172a !important;
+}
+
+.speakingFlowTheme .redeemBtn,
+.speakingFlowTheme .secondary,
+.speakingFlowTheme .cancelBtn,
+.speakingFlowTheme .micCheckRetry,
+.speakingFlowTheme .writingGuideFlowBack {
+  border: 3px solid #0f172a !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  color: #0f172a !important;
+  box-shadow: 2px 2px 0 #0f172a !important;
+  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+.speakingFlowTheme .writingGuideFlowBack.dangerBtn {
+  background: #fff !important;
+  color: #0f172a !important;
+}
+
+.speakingFlowTheme .writingGuideFlowBack.dangerBtn:hover {
+  background: #fee2e2 !important;
+}
+
+/* Attempt stages */
+.speakingFlowTheme .attemptFlow {
+  display: grid;
+  gap: 16px;
+}
+
+.speakingFlowTheme .speakingAttemptHead {
+  display: grid;
+  gap: 8px;
+  max-width: 920px;
+}
+
+.speakingFlowTheme .sgPromptBrief,
+.speakingFlowTheme .stageCard,
+.speakingFlowTheme .prepStageV2,
+.speakingFlowTheme .loadingStageCard,
+.speakingFlowTheme .resultCard,
+.speakingFlowTheme .speakingPromptCard,
+.speakingFlowTheme .speakingPerformanceCard,
+.speakingFlowTheme .promptBrief,
+.speakingFlowTheme .examPausedCard,
+.speakingFlowTheme .trialBriefCard,
+.speakingFlowTheme .trialUsedCard,
+.speakingFlowTheme .attemptFlow > .card,
+.speakingFlowTheme .prepStageV2 .card {
+  border: 3px solid #0f172a !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+  color: #0f172a !important;
+}
+
+.speakingFlowTheme .sgPrepTimer,
+.speakingFlowTheme .prepStageV2 .timer {
+  font-family: Kanit, Inter, sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: #004aad;
+}
+
+.speakingFlowTheme .prepHeadsUp,
+.speakingFlowTheme .prepMicCheck,
+.speakingFlowTheme .prepTimeEstimate {
+  border: 2px solid #0f172a;
+  border-radius: 6px;
+  background: #fffef6;
+  padding: 12px 14px;
+}
+
+.speakingFlowTheme .prepHeadsUpTitle,
+.speakingFlowTheme .prepMicCheckTitle {
+  margin: 0 0 6px;
+  font-family: Kanit, Inter, sans-serif;
+  font-weight: 800;
+  color: #004aad;
+}
+
+.speakingFlowTheme .speakingTopToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 3px solid #0f172a;
+  border-radius: 6px;
+  background: #fffef6;
+  box-shadow: 4px 4px 0 #0f172a;
+}
+
+.speakingFlowTheme .assessmentInfoPill {
+  min-height: 32px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #fff;
+  font-family: Kanit, Inter, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme .pauseBtn {
+  border: 3px solid #0f172a !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  color: #0f172a !important;
+  box-shadow: 2px 2px 0 #0f172a !important;
+  font-family: Kanit, Inter, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+.speakingFlowTheme .pauseBtn.pauseBtnActive {
+  background: #ffcc00 !important;
+}
+
+.speakingFlowTheme .speakingBrandStrip {
+  display: none !important;
+}
+
+.speakingFlowTheme .speakingExamLane,
+.speakingFlowTheme .speakingPanelLayout {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 960px) {
+  .speakingFlowTheme .speakingPanelLayout {
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: start;
+  }
+}
+
+.speakingFlowTheme .speakingPromptCard,
+.speakingFlowTheme .speakingPerformanceCard {
+  padding: 18px !important;
+}
+
+.speakingFlowTheme .promptPill,
+.speakingFlowTheme .promptTag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #ffcc00;
+  color: #0f172a;
+  font-family: Kanit, Inter, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.speakingFlowTheme .globalProgressBar {
+  border: 3px solid #0f172a;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 2px 2px 0 #0f172a;
+}
+
+.speakingFlowTheme .globalProgressFill {
+  background: linear-gradient(90deg, #004aad, #ffcc00) !important;
+}
+
+/* Report */
+.speakingFlowTheme .reportShowcase {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 960px) {
+  .speakingFlowTheme .reportShowcase {
+    grid-template-columns: minmax(220px, 0.85fr) 1.4fr;
+    align-items: start;
+  }
+}
+
+.speakingFlowTheme .reportV2,
+.speakingFlowTheme .bandStickyBar,
+.speakingFlowTheme .criteriaGrid > *,
+.speakingFlowTheme .nextStepCard {
+  border: 3px solid #0f172a !important;
+  border-radius: 8px !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+  background: #fff !important;
+}
+
+.speakingFlowTheme .bandStickyBar {
+  background: #fffef6 !important;
+}
+
+.speakingFlowTheme .trialHeroChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.speakingFlowTheme .trialHeroChips span {
+  min-height: 30px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  background: #ffcc00;
+  font-family: Kanit, Inter, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.speakingFlowTheme .trialBriefGrid {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 800px) {
+  .speakingFlowTheme .trialBriefGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.speakingFlowTheme .speakingEntryChooser,
+.speakingFlowTheme .speakingPartTabs {
+  display: none !important;
+}
+
+@media (max-width: 720px) {
+  .speakingFlowTheme {
+    padding: 14px !important;
+  }
+
+  .speakingFlowTheme .sgTopicTicket.thumbnailCard {
+    grid-template-columns: auto 1fr;
+  }
+
+  .speakingFlowTheme .sgTopicTicketActions {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .speakingFlowTheme .wgTicket {
+    grid-template-columns: auto 1fr !important;
+  }
+
+  .speakingFlowTheme .wgTicketGo {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

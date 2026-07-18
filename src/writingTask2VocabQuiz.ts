@@ -10,7 +10,7 @@ import type { WritingTask2Prompt } from './writingTask2Data'
 // (word families + collocate alternatives) shared across all essays.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type VocabQuizKind = 'collocation' | 'word-form' | 'spot-usage'
+export type VocabQuizKind = 'collocation' | 'word-form' | 'spot-usage' | 'spell'
 
 export type VocabQuizChoice = { text: string; correct: boolean }
 
@@ -20,12 +20,14 @@ export type VocabQuizQuestion = {
   word: string
   thaiMeaning: string
   instruction: string
-  // Cloze kinds (collocation / word-form): a sentence split around one blank.
+  // Cloze kinds (collocation / word-form / spell): a sentence split around one blank.
   before?: string
   after?: string
-  // All kinds carry choices. For cloze kinds each choice is a single word/phrase;
-  // for spot-usage each choice is a full sentence.
+  // Choice kinds carry choices (single word/phrase, or full sentence for spot-usage).
   choices: VocabQuizChoice[]
+  // Spell kind: the full target word plus the starting letters that are revealed.
+  answer?: string
+  prefix?: string
   explain: string
 }
 
@@ -275,6 +277,32 @@ export const buildVocabQuiz = (prompt: WritingTask2Prompt, targetCount = 40): Vo
           explain: `“${phrase}” (${item.thaiMeaning}) — ช่องนี้ต้องเป็น “${cloze.answer}” เพื่อให้วลีถูกต้อง`
         })
       }
+    })
+
+    // ── Spell it: reveal the first 2–3 letters, one box per missing letter ──
+    const spellTargets = [head, content[0]].filter(
+      (token, position, list) =>
+        /^[A-Za-z]+$/.test(token.word) &&
+        token.word.length >= 4 &&
+        list.findIndex((other) => other.start === token.start) === position
+    )
+    spellTargets.forEach((token, tokenIndex) => {
+      const cloze = clozeAround(sentence, token)
+      const prefixLen = token.word.length <= 5 ? 2 : 3
+      if (token.word.length - prefixLen < 1) return
+      push({
+        id: `${idBase}-spell-${tokenIndex}`,
+        kind: 'spell',
+        word: phrase,
+        thaiMeaning: item.thaiMeaning,
+        instruction: 'พิมพ์เติมตัวอักษรที่หายไปให้ครบ (มีตัวขึ้นต้นให้แล้ว)',
+        before: cloze.before,
+        after: cloze.after,
+        choices: [],
+        answer: token.word,
+        prefix: token.word.slice(0, prefixLen),
+        explain: `คำเต็มคือ “${token.word}” — วลี “${phrase}” แปลว่า ${item.thaiMeaning}`
+      })
     })
 
     // ── "Pick the correct collocation" — full phrase vs head-swapped decoys ──

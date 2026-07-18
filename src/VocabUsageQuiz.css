@@ -136,6 +136,74 @@
   background: #d8c7ff;
 }
 
+.vqKind-spell {
+  background: #ffc9a3;
+}
+
+/* Fill-in-the-letters: revealed prefix boxes + one empty box per missing letter */
+.vqSpell {
+  position: relative;
+  display: inline-flex;
+  gap: 5px;
+  margin: 0 6px;
+  vertical-align: middle;
+  cursor: text;
+}
+
+.vqBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 36px;
+  border: 2px solid #172033;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.vqBox.is-locked {
+  background: #e7ecf6;
+  color: #4f5b70;
+}
+
+.vqBox.is-active {
+  border-color: #d8712a;
+  box-shadow: 0 0 0 3px rgba(216, 113, 42, .18);
+}
+
+.vqBox.is-correct {
+  background: #c9f6d4;
+  border-color: #1f7a44;
+}
+
+.vqBox.is-wrong {
+  background: #ffd1dc;
+  border-color: #a23a55;
+}
+
+.vqSpellInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  outline: none;
+  cursor: text;
+}
+
+.vqSpellCheck {
+  width: fit-content;
+}
+
+.vqReveal {
+  font-weight: 800;
+}
+
 .vqCounter {
   font-size: .82rem;
   font-weight: 850;
