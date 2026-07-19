@@ -18,7 +18,7 @@
   background: var(--gtCream);
   box-shadow: 7px 7px 0 var(--gtInk);
   color: var(--gtInk);
-  font-family: 'Styrene B', 'Styrene A', Inter, Anuphan, system-ui, sans-serif;
+  font-family: var(--font-ui);
 }
 
 /* The glass orbs belong to the old look — the flat cream surface replaces them. */
@@ -59,7 +59,7 @@
 .gtReadingHeader h2 {
   margin: 0;
   font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-  font-family: 'Galaxie Copernicus', Kanit, Georgia, serif;
+  font-family: var(--font-display);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -162,7 +162,7 @@
 
 .gtReadingSectionCard strong {
   font-size: 1.15rem;
-  font-family: 'Galaxie Copernicus', Kanit, Georgia, serif;
+  font-family: var(--font-display);
   font-weight: 700;
 }
 
@@ -235,7 +235,7 @@
 .gtReadingExamCard h3 {
   margin: 0;
   font-size: 1.05rem;
-  font-family: 'Galaxie Copernicus', Kanit, Georgia, serif;
+  font-family: var(--font-display);
   font-weight: 700;
 }
 

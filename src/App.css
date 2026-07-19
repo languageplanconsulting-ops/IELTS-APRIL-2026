@@ -70,7 +70,7 @@
   background: var(--studio-surface) !important;
   color: var(--studio-ink) !important;
   box-shadow: none !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: 0.88rem !important;
   font-weight: 800 !important;
   letter-spacing: 0 !important;
@@ -476,7 +476,7 @@ body,
 #root {
   background: var(--bc-blue) !important;
   color: var(--bc-black) !important;
-  font-family: Inter, system-ui, -apple-system, sans-serif !important;
+  font-family: var(--font-ui) !important;
   scroll-behavior: smooth;
 }
 
@@ -492,7 +492,7 @@ body,
 .discoverSection h3,
 .panel h2,
 .panel h3 {
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   letter-spacing: 0.04em;
 }
 
@@ -545,7 +545,7 @@ body,
   background: var(--bc-white) !important;
   color: var(--bc-black) !important;
   box-shadow: 4px 4px 0 var(--bc-black) !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-weight: 700 !important;
   transition:
     transform var(--duration-luxury) var(--ease-luxury),
@@ -663,7 +663,7 @@ body,
 .resultMainScore,
 .bigTimer,
 .timer {
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   letter-spacing: 0.03em;
   color: var(--bc-blue) !important;
 }
@@ -1266,7 +1266,7 @@ body,
   border: 2px solid var(--bc-black) !important;
   background: #fffdf5 !important;
   box-shadow: 4px 4px 0 var(--bc-black) !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: 1.3rem !important;
   line-height: 1.45;
   padding: 12px 14px !important;
@@ -18112,7 +18112,7 @@ body,
 
 .speakingFlowTheme,
 .speakingFlowTheme * {
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .speakingFlowTheme h2 {
@@ -18360,7 +18360,7 @@ body,
 #root {
   background: var(--ep-page) !important;
   color: var(--ep-ink) !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 * {
@@ -18400,7 +18400,7 @@ body,
 .topbar h1 {
   margin: 0 !important;
   color: #ffffff !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: clamp(2.25rem, 4.2vw, 3.25rem) !important;
   font-weight: 950 !important;
   line-height: 0.95 !important;
@@ -18453,7 +18453,7 @@ body,
   background: var(--ep-blue-soft) !important;
   color: #ffffff !important;
   box-shadow: none !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: clamp(1.05rem, 1.65vw, 1.85rem) !important;
   font-weight: 850 !important;
   letter-spacing: -0.04em !important;
@@ -18567,7 +18567,7 @@ body,
   border: 0 !important;
   padding: 0 !important;
   color: var(--ep-ink) !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: clamp(2.75rem, 5vw, 4.25rem) !important;
   font-weight: 950 !important;
   line-height: 1.02 !important;
@@ -18622,7 +18622,7 @@ body,
 .speakingPromptCard h3,
 .listeningBuilderExamQuestionPrompt {
   color: var(--ep-ink) !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: clamp(1.65rem, 2.8vw, 2.55rem) !important;
   font-weight: 900 !important;
   line-height: 1.2 !important;
@@ -18644,7 +18644,7 @@ body,
   background: #f2f7ff !important;
   color: var(--ep-blue-dark) !important;
   box-shadow: none !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: clamp(0.9rem, 1.2vw, 1.35rem) !important;
   font-weight: 850 !important;
   letter-spacing: -0.02em !important;
@@ -18677,7 +18677,7 @@ body,
 .timer,
 .resultMainScore {
   color: var(--ep-blue-dark) !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   letter-spacing: -0.06em !important;
 }
 
@@ -18699,7 +18699,7 @@ body,
   background: var(--ep-yellow) !important;
   color: var(--ep-yellow-dark) !important;
   box-shadow: 0 8px 0 #0b1530 !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: 1.02rem !important;
   font-weight: 900 !important;
   letter-spacing: -0.03em !important;
@@ -18807,7 +18807,7 @@ select:focus,
 
 .homeCard h1 {
   color: var(--ep-ink) !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-size: clamp(2.6rem, 6vw, 5rem) !important;
   font-weight: 950 !important;
   letter-spacing: -0.08em !important;
@@ -22090,7 +22090,7 @@ select:focus,
   background: #fff !important;
   color: #004aad !important;
   box-shadow: 3px 3px 0 #0f172a !important;
-  font-family: Inter, system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-weight: 850 !important;
   transition:
     transform var(--duration-luxury-fast) var(--ease-luxury),
@@ -23823,7 +23823,7 @@ button,
 input,
 select,
 textarea {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .readingPage,
@@ -23831,7 +23831,7 @@ textarea {
 .readingPage input,
 .readingPage select,
 .readingPage textarea {
-  font-family: Inter, Anuphan, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .readingPage .readingQuestionPrompt,
@@ -23847,14 +23847,14 @@ textarea {
   font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
 }
 
 .readingPage .readingQuestionsHeader h3,
 .readingPage .readingPassageHeader h3 {
   font-size: 1rem !important;
   font-weight: 700 !important;
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
 }
 
 .readingQuestionReference pre,
@@ -26219,7 +26219,7 @@ textarea {
 .readingReportWrap h4,
 .readingExamWrap .readingPassageHeader h3,
 .readingExamWrap .readingQuestionsHeader h3 {
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
   color: #10182d !important;
@@ -26360,7 +26360,7 @@ textarea {
 }
 .readingExamWrap .readingSummaryCard strong,
 .readingReportWrap .readingSummaryCard strong {
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
   color: #10182d !important;
@@ -26415,7 +26415,7 @@ textarea {
 .readingReportWrap textarea,
 .readingPdoyBank button,
 .readingPdoyLessonWrap button {
-  font-family: Inter, Anuphan, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .readingPage h1,
@@ -26442,7 +26442,7 @@ textarea {
 .readingPdoyBank h3,
 .readingPdoyLessonWrap h2,
 .readingPdoyLessonWrap h3 {
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
 }
 
 /* ---- Report + vocab bridge (พี่ดอยสอน Vocab) — force full stack ---- */
@@ -26476,7 +26476,7 @@ textarea {
 .readingPage .vbWrap,
 .readingPage .vbWrap *,
 .readingPage .paraphraseBridgeActions button {
-  font-family: Inter, Anuphan, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .readingReportWrap .vbBrandTitle,
@@ -26489,7 +26489,7 @@ textarea {
 .readingPage .vbPairHd,
 .readingPage .vbHd,
 .readingPage .vbVocabLabel {
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
   letter-spacing: 0 !important;
 }
 
@@ -27410,7 +27410,7 @@ textarea {
 .workspace .adminPanelPage :is(
   h1, h2, h3, h4, h5, h6, p, span, strong, small, label, button, input, select, textarea, option, table, th, td
 ) {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
   letter-spacing: normal;
 }
 
@@ -27798,7 +27798,7 @@ textarea {
 .adminUserDetailCard :is(h1, h2, h3, h4, p, span, strong, small, button, input, select, textarea, time),
 .adminEngagementDrawer,
 .adminEngagementDrawer :is(h1, h2, h3, h4, p, span, strong, small, button, input, select, textarea, time) {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .adminUserDetailCard {
@@ -28081,12 +28081,12 @@ textarea {
 .adminUserDetailCard *,
 .adminEngagementDrawer,
 .adminEngagementDrawer * {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .workspace .adminPanelPage :is(code, pre, kbd, samp),
 .workspace .adminPanelPage :is(code, pre, kbd, samp) * {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 .workspace .adminPanelPage :is(
@@ -28333,7 +28333,7 @@ textarea {
 
 .workspace .adminPanelPage .epLanding,
 .workspace .adminPanelPage .epLanding * {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
 }
 
 @media (max-width: 720px) {
@@ -28666,7 +28666,7 @@ textarea {
   background: #ffcc00 !important;
   color: #0f172a !important;
   box-shadow: 3px 3px 0 #0f172a !important;
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
   font-weight: 800 !important;
 }
 
@@ -28687,7 +28687,7 @@ textarea {
   background: #fff !important;
   color: #0f172a !important;
   box-shadow: 2px 2px 0 #0f172a !important;
-  font-family: Kanit, Inter, Anuphan, sans-serif !important;
+  font-family: var(--font-display) !important;
   font-weight: 800 !important;
 }
 
@@ -28932,5 +28932,146 @@ textarea {
   .speakingFlowTheme .wgTicketGo {
     grid-column: 2;
     justify-self: start;
+  }
+}
+
+/* =====================================================================
+   Fill-in-the-blank questions — visual hierarchy pass
+   Problem this fixes: every level (task label, instructions, note title,
+   subheading, bullets) rendered at near-identical size and weight, so the
+   eye had nothing to anchor on; and the sticky question-number strip sat
+   on top of the group heading. Scoped to the reading exam only.
+   ===================================================================== */
+
+/* 1 ── Sticky number strip must not overlap the heading beneath it. */
+.readingExamLayout-bank .readingQuestionsScroll .readingQuestionNavigator {
+  padding: 6px 0 8px !important;
+  margin: 0 0 14px !important;
+  border-bottom: 1px solid #e6eaf0;
+  box-shadow: 0 6px 10px -8px rgba(16, 24, 45, 0.28);
+}
+
+/* Anchor scrolling clears the sticky strip instead of hiding under it. */
+.readingExamWrap .readingFillBlankSlot,
+.readingExamWrap .readingQuestionCard {
+  scroll-margin-top: 64px;
+}
+
+/* 2 ── Level 3 (lowest): the task-type label is a quiet kicker, not a title. */
+.readingExamWrap .readingFillNewGroup .readingFillGroupHeader h4 {
+  font-family: var(--font-ui) !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase !important;
+  color: #7a879e !important;
+}
+
+/* 3 ── Level 3: instructions are reference text — recede them. */
+.readingExamWrap .readingFillNewInstruction {
+  margin: 6px 0 18px !important;
+  padding: 10px 14px !important;
+  border: 0 !important;
+  border-left: 3px solid #d6deea !important;
+  border-radius: 0 6px 6px 0 !important;
+  background: #f7f9fc !important;
+  color: #6b7789 !important;
+  font-size: 0.84rem !important;
+  line-height: 1.55 !important;
+}
+
+/* 4 ── Level 1 (highest): the note title is what the questions are about. */
+.readingExamWrap .readingFillNewTitle {
+  margin: 0 0 4px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 2px solid #10182d !important;
+  font-family: var(--font-display) !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  color: #10182d !important;
+}
+
+/* 5 ── Level 2: subheadings group the bullets under the title. */
+.readingExamWrap .readingFillNewSubheading {
+  margin: 20px 0 6px !important;
+  font-family: var(--font-ui) !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.07em !important;
+  text-transform: uppercase !important;
+  color: #0754b8 !important;
+}
+
+/* 6 ── Level 2: the content itself reads as plain prose, not as headings.
+   Everything above was competing at bold; the answerable text wins by being
+   the only normal-weight text at full size. */
+.readingExamWrap .readingFillNewBody {
+  padding: 18px 20px !important;
+  border: 1px solid #e6eaf0 !important;
+  border-radius: 12px !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  line-height: 2.05 !important;
+  color: #28324a !important;
+}
+
+.readingExamWrap .readingFillNewBullet,
+.readingExamWrap .readingFillNewPara {
+  font-weight: 400 !important;
+}
+
+.readingExamWrap .readingFillNewBullet {
+  margin: 4px 0 4px 4px !important;
+  padding-left: 18px !important;
+}
+
+/* Small, quiet bullet — the old one was a heavy black disc that read as
+   more important than the sentence it introduced. */
+.readingExamWrap .readingFillNewBullet::before {
+  content: '' !important;
+  top: 0.85em !important;
+  left: 2px !important;
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 50% !important;
+  background: #9aa7bd !important;
+}
+
+/* 7 ── Blanks: size to the answer, not to the leftover line width.
+   `flex: 1 1 auto` let a single input swallow the rest of the row, which is
+   why 15 and 16 rendered at wildly different widths. */
+.readingExamWrap .readingFillBlankInput {
+  flex: 0 1 auto !important;
+  width: 13ch !important;
+  min-width: 8ch !important;
+}
+
+.readingExamWrap .readingFillBlankInputWrap {
+  margin: 0 3px !important;
+  padding: 3px 7px !important;
+  border: 1px solid #c9d4e4 !important;
+  border-radius: 8px !important;
+  background: #fbfcfe !important;
+}
+
+.readingExamWrap .readingFillBlankInputWrap:focus-within {
+  background: #ffffff !important;
+  border-color: #0754b8 !important;
+  box-shadow: 0 0 0 3px rgba(7, 84, 184, 0.14) !important;
+}
+
+/* Answered blanks read as done at a glance. */
+.readingExamWrap .readingFillBlankInput:not(:placeholder-shown) {
+  color: #0754b8 !important;
+}
+
+@media (max-width: 720px) {
+  .readingExamWrap .readingFillNewTitle {
+    font-size: 1.1rem !important;
+  }
+
+  .readingExamWrap .readingFillBlankInput {
+    width: 10ch !important;
   }
 }
