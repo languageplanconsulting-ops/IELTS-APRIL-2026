@@ -1,9 +1,5 @@
 import { Fragment, useMemo, useState } from 'react'
-import type {
-  GeneralTask1Prompt,
-  GeneralTask1Register,
-  GeneralTask1Sentence
-} from './writingGeneralTask1Data'
+import type { GeneralTask1Prompt, GeneralTask1Register } from './writingGeneralTask1Data'
 import { assembleGeneralTask1ModelLetter, getRegisterGuidance } from './writingGeneralTask1Data'
 import {
   buildWritingRecallFeedback,
@@ -13,6 +9,12 @@ import {
 import { LetterHintBlankInput } from './LetterHintBlankInput'
 import { buildLetterHintMask, resolveThaiMeaning } from './writingLetterHint'
 import { VocabMeaningButton } from './VocabMeaningButton'
+import {
+  buildSentenceSegments,
+  normalizeApostrophe,
+  type OptionPracticeBlank,
+  type PracticeBlank
+} from './generalTask1Blanks'
 import './GeneralTask1LetterPractice.css'
 
 type PracticeProps = {
@@ -20,25 +22,6 @@ type PracticeProps = {
   onSaveVocab?: (payload: { word: string; thaiMeaning: string }) => void
 }
 
-type OptionPracticeBlank = {
-  id: string
-  kind: 'transition' | 'contraction' | 'conjunction'
-  answer: string
-  options: string[]
-  sentenceIndex: number
-}
-
-type PracticeBlank =
-  | OptionPracticeBlank
-  | {
-      id: string
-      kind: 'letter-hint'
-      answer: string
-      thaiMeaning: string
-      sentenceIndex: number
-    }
-
-type RenderSegment = { kind: 'text'; text: string } | { kind: 'blank'; blank: PracticeBlank }
 
 const REGISTER_OPTIONS: Array<{ value: GeneralTask1Register; label: string; hint: string }> = [
   { value: 'formal', label: 'Formal', hint: 'ไม่รู้จักผู้รับเป็นการส่วนตัว' },
@@ -46,52 +29,13 @@ const REGISTER_OPTIONS: Array<{ value: GeneralTask1Register; label: string; hint
   { value: 'informal', label: 'Informal', hint: 'เพื่อนหรือสมาชิกครอบครัว' }
 ]
 
-const TRANSITION_BANKS: Record<GeneralTask1Register, string[]> = {
-  informal: [
-    'First of all,',
-    'Honestly,',
-    'Also,',
-    'For example,',
-    'By the way,',
-    'Anyway,',
-    'However,',
-    'Luckily,',
-    'Then,',
-    'Afterwards,',
-    'Finally,',
-    'Most importantly,'
-  ],
-  'semi-formal': [
-    'First of all,',
-    'Firstly,',
-    'As you may remember,',
-    'As you know,',
-    'In fact,',
-    'Actually,',
-    'In addition,',
-    'Moreover,',
-    'However,',
-    'Unfortunately,',
-    'Honestly,',
-    'If possible,',
-    'Of course,',
-    'Finally,'
-  ],
-  formal: [
-    'First of all,',
-    'To begin with,',
-    'Firstly,',
-    'In addition,',
-    'Furthermore,',
-    'Moreover,',
-    'However,',
-    'Unfortunately,',
-    'Consequently,',
-    'Therefore,',
-    'In particular,',
-    'Finally,'
-  ]
-}
+const TUTORIAL_LINES = [
+  'ย่อหน้าแรกของจดหมายตอบ Bullet 1 เท่านั้น — ร้อยทุกประโยคเป็นย่อหน้าเดียว อย่าเพิ่งพูดถึง Bullet อื่น',
+  'ย่อหน้าที่สองต่อเนื่องจากย่อหน้าแรก และตอบ Bullet 2 ทั้งย่อหน้าเป็นก้อนเดียวกัน',
+  'ย่อหน้าสุดท้ายตอบ Bullet 3 เพื่อปิดเนื้อหา แล้วจึงตามด้วยคำลงท้ายและชื่อผู้เขียน'
+]
+
+
 
 /**
  * Each opener's Thai meaning plus the *relationship* it signals between the
@@ -153,203 +97,6 @@ const CONJUNCTION_META: Record<string, ConjunctionMeta> = {
   that: { th: 'ที่ / ว่า', group: 'ขยายความ', use: 'ขยายคำนามแบบเจาะจง หรือขึ้นต้น noun clause' }
 }
 
-const CONJUNCTION_CONFUSABLES: Record<string, string[]> = {
-  and: ['but', 'so'],
-  but: ['and', 'so'],
-  so: ['and', 'but'],
-  'so that': ['because', 'so'],
-  because: ['although', 'when'],
-  although: ['because', 'however'],
-  when: ['while', 'because'],
-  while: ['when', 'although'],
-  since: ['because', 'when'],
-  if: ['when', 'because'],
-  whether: ['if', 'that'],
-  which: ['who', 'that']
-}
-
-const TUTORIAL_LINES = [
-  'ย่อหน้าแรกของจดหมายตอบ Bullet 1 เท่านั้น — ร้อยทุกประโยคเป็นย่อหน้าเดียว อย่าเพิ่งพูดถึง Bullet อื่น',
-  'ย่อหน้าที่สองต่อเนื่องจากย่อหน้าแรก และตอบ Bullet 2 ทั้งย่อหน้าเป็นก้อนเดียวกัน',
-  'ย่อหน้าสุดท้ายตอบ Bullet 3 เพื่อปิดเนื้อหา แล้วจึงตามด้วยคำลงท้ายและชื่อผู้เขียน'
-]
-
-const CONTRACTION_OPTIONS: Record<string, string[]> = {
-  "i'm": ["I'm", 'I am', 'I was'],
-  "i've": ["I've", 'I have', 'I had'],
-  "i'd": ["I'd", 'I would', 'I will'],
-  "i'll": ["I'll", 'I will', 'I would'],
-  "can't": ["can't", 'cannot', "won't"],
-  "couldn't": ["couldn't", 'could not', "can't"],
-  "don't": ["don't", 'do not', "didn't"],
-  "didn't": ["didn't", 'did not', "don't"],
-  "won't": ["won't", 'will not', "wouldn't"],
-  "wouldn't": ["wouldn't", 'would not', "won't"],
-  "it's": ["it's", 'it is', 'its'],
-  "that's": ["that's", 'that is', 'this is'],
-  "there's": ["there's", 'there is', 'there are'],
-  "we're": ["we're", 'we are', 'we were'],
-  "we've": ["we've", 'we have', 'we had'],
-  "we'll": ["we'll", 'we will', 'we would'],
-  "you're": ["you're", 'you are', 'your'],
-  "you'll": ["you'll", 'you will', 'you would'],
-  "you've": ["you've", 'you have', 'you had']
-}
-
-const normalizeApostrophe = (value: string) => value.replaceAll('’', "'")
-
-const getContractionOptions = (answer: string) => {
-  const normalized = normalizeApostrophe(answer)
-  const mapped = CONTRACTION_OPTIONS[normalized.toLowerCase()]
-  if (mapped) return [answer, ...mapped.slice(1)]
-
-  const lower = normalized.toLowerCase()
-  const expanded = lower.endsWith("n't")
-    ? `${normalized.slice(0, -3)} not`
-    : lower.endsWith("'re")
-      ? `${normalized.slice(0, -3)} are`
-      : lower.endsWith("'ve")
-        ? `${normalized.slice(0, -3)} have`
-        : lower.endsWith("'ll")
-          ? `${normalized.slice(0, -3)} will`
-          : lower.endsWith("'d")
-            ? `${normalized.slice(0, -2)} would`
-            : lower.endsWith("'s")
-              ? `${normalized.slice(0, -2)} is`
-              : normalized
-  return [answer, expanded, `${normalized.split("'")[0]} had`]
-}
-
-const getConjunctionOptions = (answer: string) => {
-  const lower = normalizeApostrophe(answer).toLowerCase()
-  const confusables = CONJUNCTION_CONFUSABLES[lower] ?? ['and', 'but']
-  return [...new Set([answer, ...confusables])].slice(0, 3)
-}
-
-const transitionOptions = (answer: string, seed: number, bank: string[]) => {
-  const distractors = bank.filter((item) => item !== answer)
-  const offset = distractors.length > 0 ? seed % distractors.length : 0
-  const options = [...distractors.slice(offset), ...distractors.slice(0, offset)].slice(0, 3)
-  options.splice(seed % 4, 0, answer)
-  return [...new Set(options)]
-}
-
-const CONTRACTION_RE =
-  /\b(?:I|you|he|she|it|we|they|there|that|who|what|can|could|do|does|did|is|are|was|were|will|would|should|have|has)[’'][A-Za-z]+\b/gi
-const CONJUNCTION_RE = /\b(?:so that|because|although|whether|while|since|which|when|and|but|so|if)\b/gi
-
-const buildSentenceSegments = (
-  sentence: GeneralTask1Sentence,
-  register: GeneralTask1Register,
-  paragraphIndex: number,
-  sentenceIndex: number,
-  vocab: readonly { phrase: string; thaiMeaning: string }[]
-): RenderSegment[] => {
-  const transitionEnd = sentence.transition.length
-  const rest = sentence.text.slice(transitionEnd)
-  type Candidate =
-    | { start: number; end: number; answer: string; kind: 'contraction' | 'conjunction' }
-    | { start: number; end: number; answer: string; kind: 'letter-hint'; thaiMeaning: string }
-  const blankCandidates: Candidate[] = []
-
-  for (const match of rest.matchAll(CONTRACTION_RE)) {
-    if (match.index === undefined) continue
-    blankCandidates.push({
-      start: match.index,
-      end: match.index + match[0].length,
-      answer: match[0],
-      kind: 'contraction'
-    })
-  }
-
-  for (const match of rest.matchAll(CONJUNCTION_RE)) {
-    if (match.index === undefined) continue
-    blankCandidates.push({
-      start: match.index,
-      end: match.index + match[0].length,
-      answer: match[0],
-      kind: 'conjunction'
-    })
-  }
-
-  // Practical vocab → letter-hint fill-ins (prefer longer phrases / head words)
-  for (const item of vocab) {
-    const parts = item.phrase.trim().split(/\s+/).filter(Boolean)
-    const candidates = [item.phrase.trim(), ...(parts.length > 1 ? [parts[parts.length - 1]] : [])]
-    for (const candidate of candidates) {
-      if (candidate.length < 5 || /\s/.test(candidate)) continue
-      if (!/^[A-Za-z][A-Za-z'-]*$/.test(candidate)) continue
-      const match = new RegExp(`\\b${candidate.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').exec(rest)
-      if (!match || match.index == null) continue
-      const start = match.index
-      const end = start + match[0].length
-      if (blankCandidates.some((h) => !(end <= h.start || start >= h.end))) continue
-      blankCandidates.push({
-        start,
-        end,
-        answer: match[0],
-        kind: 'letter-hint',
-        thaiMeaning: item.thaiMeaning
-      })
-      break
-    }
-  }
-
-  blankCandidates.sort((left, right) => left.start - right.start)
-  const segments: RenderSegment[] = [
-    {
-      kind: 'blank',
-      blank: {
-        id: `gt1-${paragraphIndex}-${sentenceIndex}-transition`,
-        kind: 'transition',
-        answer: sentence.transition,
-        options: transitionOptions(
-          sentence.transition,
-          paragraphIndex * 4 + sentenceIndex,
-          TRANSITION_BANKS[register]
-        ),
-        sentenceIndex
-      }
-    }
-  ]
-  let cursor = 0
-  let blankIndex = 0
-  for (const candidate of blankCandidates) {
-    if (candidate.start < cursor) continue
-    if (candidate.start > cursor) segments.push({ kind: 'text', text: rest.slice(cursor, candidate.start) })
-    if (candidate.kind === 'letter-hint') {
-      segments.push({
-        kind: 'blank',
-        blank: {
-          id: `gt1-${paragraphIndex}-${sentenceIndex}-letter-${blankIndex}`,
-          kind: 'letter-hint',
-          answer: candidate.answer,
-          thaiMeaning: candidate.thaiMeaning,
-          sentenceIndex
-        }
-      })
-    } else {
-      const options =
-        candidate.kind === 'contraction'
-          ? getContractionOptions(candidate.answer)
-          : getConjunctionOptions(candidate.answer)
-      segments.push({
-        kind: 'blank',
-        blank: {
-          id: `gt1-${paragraphIndex}-${sentenceIndex}-${candidate.kind}-${blankIndex}`,
-          kind: candidate.kind,
-          answer: candidate.answer,
-          options: [...new Set(options)],
-          sentenceIndex
-        }
-      })
-    }
-    cursor = candidate.end
-    blankIndex += 1
-  }
-  if (cursor < rest.length) segments.push({ kind: 'text', text: rest.slice(cursor) })
-  return segments
-}
 
 const contractionReason = (answer: string): string =>
   `รูปย่อ (contraction): จดหมายแบบเป็นกันเองต้องใช้ “${answer}” เต็มรูปแบบพร้อม apostrophe ให้ถูกตำแหน่ง (เช่น I’m, don’t, can’t)`

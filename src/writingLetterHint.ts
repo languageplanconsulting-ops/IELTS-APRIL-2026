@@ -3,7 +3,7 @@
  * Example: motivation → mot_ _ _ _ _ _ _
  */
 
-import { WRITING_THAI_GLOSS_EXTRA } from './writingThaiGlossExtra'
+import { GENERAL_TASK1_THAI_GLOSS, WRITING_THAI_GLOSS_EXTRA } from './writingThaiGlossExtra'
 
 export const LETTER_HINT_FOCUS = 'letter-hint' as const
 
@@ -86,7 +86,7 @@ const glossStems = (key: string): string[] => {
 }
 
 const lookupGloss = (key: string): string =>
-  WRITING_THAI_GLOSS_EXTRA[key] || COMMON_THAI_GLOSS[key] || ''
+  WRITING_THAI_GLOSS_EXTRA[key] || GENERAL_TASK1_THAI_GLOSS[key] || COMMON_THAI_GLOSS[key] || ''
 
 /**
  * Prefer explicit thaiMeaning, else pull from explain text, else the gloss maps,
