@@ -30,12 +30,18 @@ export function LetterHintBlankInput({
   onEnter?: () => void
 }) {
   const mask = buildLetterHintMask(answer || base || '')
-  const widthCh = Math.max(mask.answer.length + 2, mask.spacedMask.length + 1, 8)
+  const widthCh = Math.max(mask.missingCount + 2, 4)
   const [open, setOpen] = useState(false)
   const [leaving, setLeaving] = useState(false)
+  const [revealed, setRevealed] = useState(false)
   const leaveTimer = useRef<number | null>(null)
   const meaning = (thaiMeaning || '').trim()
   const canShowMeaning = meaning.length > 0
+
+  /** The learner only types the missing tail; `value` stays the full word for grading. */
+  const suffix = value.toLowerCase().startsWith(mask.prefix.toLowerCase())
+    ? value.slice(mask.prefix.length)
+    : value
 
   const clearLeave = () => {
     if (leaveTimer.current != null) {
@@ -47,6 +53,7 @@ export function LetterHintBlankInput({
   const dismiss = () => {
     if (!open) return
     setOpen(false)
+    setRevealed(false)
     setLeaving(true)
     clearLeave()
     leaveTimer.current = window.setTimeout(() => {
@@ -78,17 +85,28 @@ export function LetterHintBlankInput({
   return (
     <span className={`wgbLetterHint ${open || leaving ? 'is-open' : ''}`}>
       <span className="wgbLetterHintTop">
-        <span className="wgbLetterHintMask" aria-hidden="true">
-          <span className="wgbLetterHintPrefix">{mask.prefix}</span>
-          {mask.missingCount > 0 ? (
-            <span className="wgbLetterHintSlots">
-              {Array.from({ length: mask.missingCount }, (_, i) => (
-                <span key={i} className="wgbLetterHintSlot">
-                  _
-                </span>
-              ))}
-            </span>
-          ) : null}
+        <span className={`wgbLetterHintShell ${stateClass} ${value ? 'is-filled' : ''}`}>
+          <span className="wgbLetterHintPrefix" aria-hidden="true">
+            {mask.prefix}
+          </span>
+          <input
+            type="text"
+            className="wgbLetterHintInput"
+            value={suffix}
+            placeholder={'_'.repeat(mask.missingCount)}
+            style={{ width: `${widthCh}ch` }}
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
+            autoComplete="off"
+            aria-label={`เติมส่วนที่เหลือของคำที่ขึ้นต้นด้วย ${mask.prefix} (อีก ${mask.missingCount} ตัวอักษร)`}
+            onChange={(event) => onChange(mask.prefix + event.target.value)}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') onEnter?.()
+            }}
+          />
         </span>
         {canShowMeaning ? (
           <button
@@ -112,24 +130,6 @@ export function LetterHintBlankInput({
           </button>
         ) : null}
       </span>
-      <input
-        type="text"
-        className={`wgbInput wgbLetterHintInput ${stateClass} ${value ? 'is-filled' : ''}`}
-        value={value}
-        placeholder={mask.spacedMask}
-        style={{ width: `${widthCh}ch` }}
-        autoCapitalize="off"
-        autoCorrect="off"
-        spellCheck={false}
-        autoComplete="off"
-        aria-label={`เติมคำที่ขึ้นต้นด้วย ${mask.prefix} มี ${mask.missingCount} ตัวอักษรที่หายไป`}
-        onChange={(event) => onChange(event.target.value)}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') onEnter?.()
-        }}
-      />
       {open || leaving ? (
         <span
           className={`wgbLetterHintPopover ${leaving ? 'is-leaving' : ''}`}
@@ -145,11 +145,21 @@ export function LetterHintBlankInput({
             <span className="wgbLetterHintPopoverJewel" aria-hidden="true" />
             Vocab meaning
           </p>
-          <p className="wgbLetterHintPopoverWord">{mask.answer}</p>
-          <p className="wgbLetterHintPopoverMask" aria-hidden="true">
-            {mask.spacedMask}
-          </p>
           <p className="wgbLetterHintPopoverTh">{meaning}</p>
+          {revealed ? (
+            <p className="wgbLetterHintPopoverWord">{mask.answer}</p>
+          ) : (
+            <button
+              type="button"
+              className="wgbLetterHintPopoverReveal"
+              onClick={(event) => {
+                event.stopPropagation()
+                setRevealed(true)
+              }}
+            >
+              👁 แสดงคำภาษาอังกฤษ
+            </button>
+          )}
           {onSaveToNotebook ? (
             <button
               type="button"
