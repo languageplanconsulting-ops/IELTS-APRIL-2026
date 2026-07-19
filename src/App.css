@@ -3136,13 +3136,15 @@ body,
 }
 
 @keyframes luxuryOverlayBackdropIn {
+  /* Only opacity animates. Interpolating `backdrop-filter` re-blurs everything
+     behind a full-screen overlay on every frame, which is the most expensive
+     thing that can be animated here; the element keeps its static blur and
+     simply fades in, which looks the same and costs nothing. */
   0% {
     opacity: 0;
-    backdrop-filter: blur(0);
   }
   100% {
     opacity: 1;
-    backdrop-filter: blur(12px);
   }
 }
 
@@ -3204,15 +3206,17 @@ body,
 }
 
 @keyframes luxuryQuestionReveal {
+  /* No blur here. Animating `filter: blur()` forces an off-GPU repaint of the
+     text every frame, which is the one thing in this flow that actually costs
+     frames on mid-range phones — the rest was just long durations. Opacity and
+     transform are compositor-only. */
   0% {
     opacity: 0;
     transform: translateY(10px);
-    filter: blur(4px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 }
 
