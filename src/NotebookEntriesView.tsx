@@ -6,6 +6,7 @@ type NotebookEntryLike = {
   criterion: string
   quote: string
   fix: string
+  sourceQuestion?: string
   thaiMeaning?: string
   personalNote?: string
   savedReportSnapshot?: unknown
@@ -98,7 +99,12 @@ export function NotebookEntriesView({
                 </div>
 
                 <p className="notebookEntryCriterion">{entry.criterion}</p>
-                <h3 className="notebookEntryTopic">Topic: {entry.topicTitle}</h3>
+                {/* The saved word is the reason this card exists, so it leads.
+                    The topic is context and is deliberately quieter. */}
+                {!hasReport && entry.fix ? <h3 className="notebookEntryWord">{entry.fix}</h3> : null}
+                <p className="notebookEntryTopicLine">
+                  {entry.topicTitle?.trim() || 'General vocabulary'}
+                </p>
 
                 {hasReport ? (
                   <>
@@ -125,9 +131,23 @@ export function NotebookEntriesView({
                   </>
                 ) : (
                   <>
-                    {entry.quote ? <p className="entryOriginal">"{entry.quote}"</p> : null}
-                    {entry.fix ? <p className="entryBetter">{entry.fix}</p> : null}
-                    {entry.thaiMeaning ? <p className="notebookEntryThai">TH: {entry.thaiMeaning}</p> : null}
+                    {entry.thaiMeaning ? (
+                      <p className="notebookEntryThai">
+                        <span>คำแปล</span> {entry.thaiMeaning}
+                      </p>
+                    ) : null}
+                    {entry.quote || entry.sourceQuestion ? (
+                      <details className="notebookEntryQuestion">
+                        <summary>คำถามโจทย์: {entry.quote}</summary>
+                        {entry.sourceQuestion ? (
+                          <p className="notebookEntryQuestionBody">{entry.sourceQuestion}</p>
+                        ) : (
+                          <p className="notebookEntryQuestionBody is-empty">
+                            ยังไม่ได้บันทึกข้อความโจทย์ของข้อนี้
+                          </p>
+                        )}
+                      </details>
+                    ) : null}
                     {!readOnly ? (
                       <>
                         <label className="noteFieldLabel">

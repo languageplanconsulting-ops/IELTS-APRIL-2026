@@ -29075,3 +29075,88 @@ textarea {
     width: 10ch !important;
   }
 }
+
+/* =====================================================================
+   Notebook vocab card — the saved word leads, context recedes.
+   Previously the card led with "Topic: <speaking topic>" (often unrelated)
+   and struck through the question title, which buried the actual word.
+   ===================================================================== */
+
+.notebookPage .notebookEntryWord {
+  margin: 0 !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  background: #ffcc00 !important;
+  font-family: 'Kanit', sans-serif !important;
+  font-size: 1.12rem !important;
+  font-weight: 800 !important;
+  color: #0b1f44 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Context, not headline — quiet, small, below the word. */
+.notebookPage .notebookEntryTopicLine {
+  margin: 0 !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #94a3b8 !important;
+}
+
+.notebookPage .notebookEntryThai {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.notebookPage .notebookEntryThai span {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eaf1fd;
+  color: #0754b8;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+/* "คำถามโจทย์" — collapsed by default so it never competes with the word. */
+.notebookPage .notebookEntryQuestion {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.notebookPage .notebookEntryQuestion > summary {
+  padding: 8px 11px;
+  color: #46506a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.45;
+  cursor: pointer;
+  list-style: revert;
+}
+
+.notebookPage .notebookEntryQuestion[open] > summary {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.notebookPage .notebookEntryQuestionBody {
+  margin: 0;
+  padding: 10px 12px;
+  color: #28324a;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.notebookPage .notebookEntryQuestionBody.is-empty {
+  color: #94a3b8;
+  font-style: italic;
+}

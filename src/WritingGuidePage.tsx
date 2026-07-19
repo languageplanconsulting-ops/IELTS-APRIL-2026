@@ -63,7 +63,14 @@ type WritingGuidePageProps = {
   onBackHome: () => void
   onSaveEssayToNotebook?: (payload: WritingEssaySavePayload) => void
   onSaveTask2EssayToNotebook?: (payload: WritingTask2EssaySavePayload) => void
-  onSaveVocabToNotebook?: (payload: { word: string; thaiMeaning: string; questionTitle: string; questionNumber: number }) => void
+  onSaveVocabToNotebook?: (payload: {
+    word: string
+    thaiMeaning: string
+    questionTitle: string
+    questionNumber: number
+    /** The actual prompt wording, for the “คำถามโจทย์” disclosure in the Notebook. */
+    questionText?: string
+  }) => void
   onAnalyticsContextChange?: (context: EngagementContext) => void
 }
 
@@ -1720,7 +1727,12 @@ export function WritingGuidePage({
                         word: letter,
                         thaiMeaning: `Model letter (${register}) — ${title}`,
                         questionTitle: title,
-                        questionNumber: activeGeneralTask1Prompt.number
+                        questionNumber: activeGeneralTask1Prompt.number,
+                        questionText: [
+                          activeGeneralTask1Prompt.situation,
+                          activeGeneralTask1Prompt.letterInstruction,
+                          ...activeGeneralTask1Prompt.bullets.map((b) => `• ${b}`)
+                        ].join('\n')
                       })
                   : undefined
               }
@@ -1731,7 +1743,12 @@ export function WritingGuidePage({
                         word,
                         thaiMeaning,
                         questionTitle: activeGeneralTask1Prompt.title,
-                        questionNumber: activeGeneralTask1Prompt.number
+                        questionNumber: activeGeneralTask1Prompt.number,
+                        questionText: [
+                          activeGeneralTask1Prompt.situation,
+                          activeGeneralTask1Prompt.letterInstruction,
+                          ...activeGeneralTask1Prompt.bullets.map((b) => `• ${b}`)
+                        ].join('\n')
                       })
                   : undefined
               }
@@ -1900,6 +1917,8 @@ export function WritingGuidePage({
                               thaiMeaning,
                               questionTitle: prompt.title,
                               questionNumber: prompt.number
+                              // Academic Task 1 prompts are charts, not a question
+                              // sentence, so there is no wording to disclose here.
                             })
                         : undefined
                     }
@@ -2168,7 +2187,8 @@ export function WritingGuidePage({
                               word: vocab.word,
                               thaiMeaning: vocab.thaiMeaning,
                               questionTitle: prompt.title,
-                              questionNumber: prompt.number
+                              questionNumber: prompt.number,
+                              questionText: prompt.questionText
                             })
                         : undefined
                     }
@@ -2216,7 +2236,8 @@ export function WritingGuidePage({
                         word: vocab.word,
                         thaiMeaning: vocab.thaiMeaning,
                         questionTitle: quizPrompt.title,
-                        questionNumber: quizPrompt.number
+                        questionNumber: quizPrompt.number,
+                        questionText: quizPrompt.questionText
                       })
                   : undefined
               }

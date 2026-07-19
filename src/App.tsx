@@ -640,6 +640,8 @@ type NotebookEntry = {
   criterion: string
   quote: string
   fix: string
+  /** Full prompt text, shown in the collapsible “คำถามโจทย์” row. */
+  sourceQuestion?: string
   thaiMeaning?: string
   personalNote?: string
   savedReportSnapshot?: SavedReportSnapshot | WritingReportSnapshot | WritingTask2ReportSnapshot
@@ -12003,6 +12005,8 @@ function App() {
     fix,
     thaiMeaning,
     preferredSection,
+    topicTitle: explicitTopicTitle,
+    sourceQuestion,
     successNotice = 'Added to notebook',
     suppressNotice = false
   }: {
@@ -12011,6 +12015,11 @@ function App() {
     fix: string
     thaiMeaning?: string
     preferredSection?: NotebookSection | string
+    /** Pass this whenever the save has its own subject. Without it a Writing or
+     *  Listening save would inherit the unrelated Speaking topic that happens to
+     *  be open — which is how vocabulary ended up filed under "Topic: Art". */
+    topicTitle?: string
+    sourceQuestion?: string
     successNotice?: string
     suppressNotice?: boolean
   }) => {
@@ -12021,9 +12030,12 @@ function App() {
     const section = (isBuiltIn ? chosenSection : 'custom') as NotebookSection
     const customSectionName = section === 'custom' ? chosenSection : undefined
     const topicTitle =
-      preferredSection === 'reading'
+      explicitTopicTitle ||
+      (preferredSection === 'reading'
         ? activeReadingExam?.title || activeReadingPdoyExam?.title || 'Reading lesson'
-        : activeTopic?.title || 'Untitled topic'
+        : preferredSection === 'writing'
+          ? ''
+          : activeTopic?.title || 'Untitled topic')
 
     const nextEntry: NotebookEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -12033,6 +12045,7 @@ function App() {
       criterion,
       quote,
       fix,
+      sourceQuestion,
       thaiMeaning: thaiMeaning || '',
       personalNote: '',
       createdAt: new Date().toISOString()
@@ -24409,12 +24422,13 @@ function App() {
               onAnalyticsContextChange={setWritingAnalyticsContext}
               onSaveEssayToNotebook={saveWritingEssayToNotebook}
               onSaveTask2EssayToNotebook={saveWritingTask2EssayToNotebook}
-              onSaveVocabToNotebook={({ word, thaiMeaning, questionTitle, questionNumber }) =>
+              onSaveVocabToNotebook={({ word, thaiMeaning, questionTitle, questionNumber, questionText }) =>
                 savePlanToNotebook({
-                  criterion: 'Writing Task 2 Vocab',
+                  criterion: 'Writing Vocab',
                   quote: `Q${questionNumber}: ${questionTitle}`,
                   fix: word,
                   thaiMeaning,
+                  sourceQuestion: questionText,
                   preferredSection: 'writing',
                   successNotice: 'Added to notebook'
                 })
