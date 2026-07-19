@@ -48,7 +48,8 @@ import { NotebookEntriesView } from './NotebookEntriesView'
 import {
   buildListeningSectionExamGroups,
   builderTaskToExamQuestion,
-  foundationSetToExamConfig
+  foundationSetToExamConfig,
+  type ListeningSectionExamQuestion
 } from './listeningSectionExamModel'
 import {
   LISTENING_FULL_TEST_LABEL,
@@ -82,6 +83,7 @@ import {
   getCambridgeListeningAudioAlternatives,
   getCambridgeListeningAudioUrls
 } from './listeningCambridgeAudioUrls'
+import { formatBand, listeningRawToBand } from './listeningBandScore'
 import { CAMBRIDGE_10_SECTION_2_EXAM_SET } from './listeningBuilderCambridge10Section2'
 import { CAMBRIDGE_10_SECTION_4_EXAM_SET } from './listeningBuilderCambridge10Section4'
 import { CAMBRIDGE_11_SECTION_2_EXAM_SET } from './listeningBuilderCambridge11Section2'
@@ -2694,6 +2696,35 @@ const TEST_LATEST_SCORE_KEY = 'ielts-test-latest-scores'
 const READING_ATTEMPTS_KEY = 'ielts-reading-attempts'
 const LISTENING_ATTEMPTS_KEY = 'ielts-listening-attempts'
 const LISTENING_FOUNDATION_PROGRESS_KEY = 'ielts-listening-foundation-progress'
+const LISTENING_MISTAKE_QUEUE_KEY = 'ielts-listening-mistake-queue'
+/** Same bar as Reading's ด่าน gates: clear 80% of a set to open the next one. */
+const LISTENING_TRACK_UNLOCK_PERCENT = 80
+const LISTENING_MISTAKE_QUEUE_MAX = 120
+
+type ListeningMistakeItem = {
+  id: string
+  number: number
+  stem: string
+  yourAnswer: string
+  correctAnswer: string
+  evidence: string
+  explanationThai: string
+  setTitle: string
+  savedAt: number
+}
+
+const parseStoredListeningMistakeQueue = (raw: string | null): ListeningMistakeItem[] => {
+  if (!raw) return []
+  try {
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed
+      .filter((item): item is ListeningMistakeItem => Boolean(item && typeof item.id === 'string'))
+      .slice(0, LISTENING_MISTAKE_QUEUE_MAX)
+  } catch {
+    return []
+  }
+}
 const READING_PDOY_PROGRESS_KEY = 'ielts-reading-pdoy-progress'
 const AUTH_SESSION_KEY = 'english-plan-auth-session'
 const DEFAULT_FEEDBACK_CREDITS = 20
@@ -7097,11 +7128,15 @@ function App() {
   const [listeningFoundationQuestionIndex, setListeningFoundationQuestionIndex] = useState(0)
   const [listeningFoundationAudioPlayed, setListeningFoundationAudioPlayed] = useState(false)
   const [listeningFoundationAnswerState, setListeningFoundationAnswerState] = useState<Record<string, 'correct'>>({})
+  const [listeningMistakeQueue, setListeningMistakeQueue] = useState<ListeningMistakeItem[]>([])
+  const [listeningMistakesOpen, setListeningMistakesOpen] = useState(false)
   const [selectedListeningFullTestId, setSelectedListeningFullTestId] = useState('')
   const [listeningFullTestSectionIndex, setListeningFullTestSectionIndex] = useState(0)
   const [listeningFullTestStage, setListeningFullTestStage] = useState<'bank' | 'exam' | 'complete'>('bank')
   const [listeningFullTestSectionScores, setListeningFullTestSectionScores] = useState<number[]>([])
   const [listeningFullTestAudioPlayed, setListeningFullTestAudioPlayed] = useState(false)
+  /** First-attempt score of the section report currently on screen (real score, not the corrected 100%). */
+  const listeningFullTestPendingScoreRef = useRef<number | null>(null)
   const [adminReadingTitleInput, setAdminReadingTitleInput] = useState('')
   const [adminReadingCategoryInput, setAdminReadingCategoryInput] = useState<ReadingBankCategory>('normal')
   const [adminReadingCollectionInput, setAdminReadingCollectionInput] = useState(DEFAULT_READING_COLLECTION_TITLE)
@@ -8275,6 +8310,11 @@ function App() {
     setReadingJourneyProgress(localReadingJourneyProgress)
     setListeningAttemptHistory(localListeningAttempts)
     setListeningFoundationAnswerState(localListeningFoundationProgress)
+    setListeningMistakeQueue(
+      parseStoredListeningMistakeQueue(
+        localStorage.getItem(makeScopedStorageKey(LISTENING_MISTAKE_QUEUE_KEY, session.email))
+      )
+    )
     applyReadingPdoyProgressSnapshot(localReadingPdoyProgress)
     const hydrateReadingAttemptsFromRemote = async () => {
       try {
@@ -8412,6 +8452,8 @@ function App() {
     readingJourneyProgressSyncedSignatureRef.current = ''
     setListeningAttemptHistory({})
     setListeningFoundationAnswerState({})
+    setListeningMistakeQueue([])
+    setListeningMistakesOpen(false)
     setListeningFoundationAudioPlayed(false)
     setListeningFoundationQuestionIndex(0)
     setListeningBuilderExamAnswerState({})
@@ -9875,6 +9917,28 @@ function App() {
     () => groupFoundationSetsByBook(visibleListeningFoundationSets, listeningBankBookFilter),
     [visibleListeningFoundationSets, listeningBankBookFilter]
   )
+  /**
+   * Sequential gating within the current listening track (mirrors Reading's ด่าน
+   * gates): the first set is open; each later set opens once the previous one is
+   * ≥80% correct. Keyed by set id, computed over the displayed order.
+   */
+  const listeningSetLockState = useMemo(() => {
+    const flattened = foundationSetsByBook.flatMap((group) => group.sets)
+    const state: Record<string, { locked: boolean; previousTitle: string }> = {}
+    let previousPassed = true
+    let previousTitle = ''
+    for (const set of flattened) {
+      state[set.id] = { locked: !previousPassed, previousTitle }
+      const correct = set.questions.filter(
+        (question) => listeningFoundationAnswerState[question.id] === 'correct'
+      ).length
+      previousPassed =
+        set.questions.length > 0 &&
+        correct / set.questions.length >= LISTENING_TRACK_UNLOCK_PERCENT / 100
+      previousTitle = parseListeningFoundationSetMeta(set).cardTitle
+    }
+    return state
+  }, [foundationSetsByBook, listeningFoundationAnswerState])
   const activeListeningFoundationSet =
     ALL_LISTENING_FOUNDATION_SETS.find((set) => set.id === selectedListeningFoundationSetId) ??
     visibleListeningFoundationSets[0] ??
@@ -11913,6 +11977,14 @@ function App() {
       JSON.stringify(listeningFoundationAnswerState)
     )
   }, [authSession, listeningFoundationAnswerState])
+
+  useEffect(() => {
+    if (!authSession?.email) return
+    localStorage.setItem(
+      makeScopedStorageKey(LISTENING_MISTAKE_QUEUE_KEY, authSession.email),
+      JSON.stringify(listeningMistakeQueue)
+    )
+  }, [authSession, listeningMistakeQueue])
 
   useEffect(() => () => {
     const audio = listeningSectionAudioRef.current
@@ -18292,7 +18364,10 @@ function App() {
     const currentSet = activeListeningFullTestSectionSet
     if (!currentSet || !activeListeningFullTestSpec) return
 
-    const sectionScore = currentSet.questions.length
+    // Real first-attempt score reported by the exam view; falls back to full marks
+    // only if the report somehow opened without a submit (defensive).
+    const sectionScore = listeningFullTestPendingScoreRef.current ?? currentSet.questions.length
+    listeningFullTestPendingScoreRef.current = null
     stopListeningPlayback()
     setListeningFullTestAudioPlayed(false)
 
@@ -18392,6 +18467,56 @@ function App() {
         : isListeningSave
           ? 'บันทึกลง #listening แล้ว — อย่าลืมทบทวนนะ :)'
           : 'อย่าลืมทบทวนด้วยนะ :)',
+      variant: 'notebook'
+    })
+  }
+
+  /**
+   * Report-card capture for the listening mistake-review queue. Each NEW miss is
+   * also saved to the #listening notebook silently (no toast per item — a section
+   * can add up to 10 at once). Repeating a set never duplicates queue entries.
+   */
+  const captureListeningMistakes = (setTitle: string) => (
+    items: Array<{ question: ListeningSectionExamQuestion; firstAnswer: string }>
+  ) => {
+    if (!items.length) return
+    const known = new Set(listeningMistakeQueue.map((item) => item.id))
+    const fresh = items.filter(({ question }) => !known.has(question.id))
+    if (!fresh.length) return
+    fresh.forEach(({ question, firstAnswer }) => {
+      savePlanToNotebook({
+        criterion: 'Listening Mistake',
+        quote: `Q${question.number}: ${question.stem || question.questionText}`,
+        fix: [
+          `Your answer: ${firstAnswer || '—'}`,
+          `Correct: ${question.correctAnswer}`,
+          `Audioscript: ${question.evidence}`
+        ].join('\n'),
+        thaiMeaning: question.explanationThai || question.thaiMeaning || '',
+        preferredSection: 'listening',
+        suppressNotice: true
+      })
+    })
+    setListeningMistakeQueue((current) => {
+      const currentIds = new Set(current.map((item) => item.id))
+      const additions = fresh
+        .filter(({ question }) => !currentIds.has(question.id))
+        .map(({ question, firstAnswer }) => ({
+          id: question.id,
+          number: question.number,
+          stem: question.stem || question.questionText,
+          yourAnswer: firstAnswer,
+          correctAnswer: question.correctAnswer,
+          evidence: question.evidence,
+          explanationThai: question.explanationThai || question.thaiMeaning || '',
+          setTitle,
+          savedAt: Date.now()
+        }))
+      return [...additions, ...current].slice(0, LISTENING_MISTAKE_QUEUE_MAX)
+    })
+    setPracticeActionToast({
+      id: Date.now(),
+      message: `เก็บ ${fresh.length} ข้อที่พลาดไว้ใน “ทบทวนข้อที่พลาด” และ #listening แล้ว`,
       variant: 'notebook'
     })
   }
@@ -21470,23 +21595,66 @@ function App() {
                 </div>
               </section>
 
-              <section className="listeningJourneySkills">
-                <div className="listeningJourneySkillsHeader">
-                  <h3>General Training</h3>
-                  <p className="meta">Reading available now · Listening &amp; Writing coming soon</p>
-                </div>
-                <button
-                  type="button"
-                  className="listeningSkillCard listeningSkillCard-generalTraining"
-                  onClick={openGeneralTrainingReadingHub}
-                >
-                  <span className="listeningSkillCardLabel">IELTS GT</span>
-                  <strong>{GENERAL_TRAINING_READING_LABEL}</strong>
-                  <p className="listeningSkillCardSubtitle">Section 1 · 2 · 3 · Full Test · 40 questions</p>
-                  <small>{GENERAL_TRAINING_READING_LEAD}</small>
-                  <span className="listeningSkillCardCount">{generalTrainingFullTestExams.length} full tests</span>
-                </button>
-              </section>
+              {listeningMistakeQueue.length > 0 ? (
+                <section className="listeningJourneySkills listeningMistakeReview">
+                  <div className="listeningJourneySkillsHeader">
+                    <h3>ทบทวนข้อที่พลาด</h3>
+                    <p className="meta">
+                      {listeningMistakeQueue.length} ข้อจากการฝึกที่ผ่านมา — ทบทวนซ้ำคือวิธีที่คะแนน Listening ขึ้นจริง
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="listeningSkillCard listeningMistakeReviewToggle"
+                    onClick={() => setListeningMistakesOpen((value) => !value)}
+                  >
+                    <span className="listeningSkillCardLabel">Review</span>
+                    <strong>ข้อที่เคยพลาด {listeningMistakeQueue.length} ข้อ</strong>
+                    <small>{listeningMistakesOpen ? 'กดเพื่อซ่อนรายการ' : 'กดเพื่อเปิดรายการพร้อมเฉลยและคำอธิบาย'}</small>
+                  </button>
+                  {listeningMistakesOpen ? (
+                    <div className="listeningMistakeList">
+                      {listeningMistakeQueue.map((item) => (
+                        <article key={item.id} className="listeningMistakeItem">
+                          <header>
+                            <span className="listeningMistakeItemSet">{item.setTitle}</span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setListeningMistakeQueue((current) =>
+                                  current.filter((entry) => entry.id !== item.id)
+                                )
+                              }
+                            >
+                              เข้าใจแล้ว ✓
+                            </button>
+                          </header>
+                          <h4>Q{item.number}: {item.stem}</h4>
+                          <dl>
+                            <div>
+                              <dt>คำตอบของคุณ</dt>
+                              <dd className="is-wrong">{item.yourAnswer || '—'}</dd>
+                            </div>
+                            <div>
+                              <dt>คำตอบที่ถูก</dt>
+                              <dd className="is-right">{item.correctAnswer}</dd>
+                            </div>
+                          </dl>
+                          <p className="listeningMistakeEvidence">“{item.evidence}”</p>
+                          {item.explanationThai ? <p className="listeningMistakeThai">{item.explanationThai}</p> : null}
+                        </article>
+                      ))}
+                      <button
+                        type="button"
+                        className="listeningMistakeClearAll"
+                        onClick={() => setListeningMistakeQueue([])}
+                      >
+                        ล้างทั้งหมด
+                      </button>
+                    </div>
+                  ) : null}
+                </section>
+              ) : null}
 
               <section className="listeningJourneySkills">
                 <div className="listeningJourneySkillsHeader">
@@ -21627,10 +21795,12 @@ function App() {
                           const setCompletedCount = set.questions.filter(
                             (question) => listeningFoundationAnswerState[question.id] === 'correct'
                           ).length
+                          const lockInfo = listeningSetLockState[set.id]
+                          const isLocked = Boolean(lockInfo?.locked)
                           return (
                             <article
                               key={set.id}
-                              className={`listeningSetCard ${selectedListeningFoundationSetId === set.id ? 'active' : ''}`}
+                              className={`listeningSetCard ${selectedListeningFoundationSetId === set.id ? 'active' : ''} ${isLocked ? 'is-locked' : ''}`}
                               style={{ '--motion-stagger': setIndex % 8 } as CSSProperties}
                             >
                               <p className="listeningSetCardEyebrow">Section {meta.section}</p>
@@ -21639,8 +21809,14 @@ function App() {
                               <span className="listeningSetCardMeta">
                                 {setCompletedCount}/{set.questions.length} complete · {set.questions.length} questions
                               </span>
-                              <button type="button" onClick={() => openListeningFoundationSet(set.id)}>
-                                Start drill
+                              <button
+                                type="button"
+                                disabled={isLocked}
+                                onClick={() => openListeningFoundationSet(set.id)}
+                              >
+                                {isLocked
+                                  ? `🔒 เคลียร์ ${lockInfo?.previousTitle || 'ด่านก่อนหน้า'} ${LISTENING_TRACK_UNLOCK_PERCENT}%+ ก่อน`
+                                  : 'Start drill'}
                               </button>
                             </article>
                           )
@@ -22122,6 +22298,7 @@ function App() {
                     successNotice: 'Added to notebook · saved to #listening'
                   })
                 }}
+                onMissedQuestions={captureListeningMistakes(activeListeningFoundationSet.title)}
               />
               </div>
             ) : (
@@ -22163,7 +22340,9 @@ function App() {
                   </div>
                   <div className="listeningFullTestSummaryScore">
                     <strong>{listeningFullTestSectionScores.reduce((sum, n) => sum + n, 0)}/40</strong>
-                    <span>sections mastered</span>
+                    <span>
+                      Band {formatBand(listeningRawToBand(listeningFullTestSectionScores.reduce((sum, n) => sum + n, 0)))}
+                    </span>
                   </div>
                 </header>
                 <div className="listeningFullTestSummaryGrid">
@@ -22250,6 +22429,12 @@ function App() {
                       : `Continue to Section ${activeListeningFullTestSections[listeningFullTestSectionIndex + 1]?.section ?? listeningFullTestSectionIndex + 2}`
                   }
                   onContinueAfterReport={advanceListeningFullTestAfterSection}
+                  onFirstAttemptScore={(correct) => {
+                    listeningFullTestPendingScoreRef.current = correct
+                  }}
+                  onMissedQuestions={captureListeningMistakes(
+                    `${activeListeningFullTestSpec.title} · Section ${activeListeningFullTestSectionSet.section}`
+                  )}
                 />
               </>
             ) : (
@@ -22319,6 +22504,7 @@ function App() {
                     successNotice: 'Added to notebook · saved to #listening'
                   })
                 }}
+                onMissedQuestions={captureListeningMistakes(listeningBuilderExamConfig.title)}
               />
               </div>
             ) : (

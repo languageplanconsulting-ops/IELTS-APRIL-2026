@@ -3,8 +3,15 @@ import {
   hasSeenListeningEvidenceTutorial,
   ListeningEvidenceTutorial
 } from './ListeningEvidenceTutorial'
+import { estimateListeningBand, formatBand } from './listeningBandScore'
 import { getListeningEvidenceMatch } from './listeningHighlightMatch'
-import { isListeningGapFillAnswerCorrect, isListeningPart1AnswerCorrect } from './listeningPart1AnswerCheck'
+import {
+  exceedsListeningWordLimit,
+  isListeningGapFillAnswerCorrect,
+  isListeningPart1AnswerCorrect,
+  parseListeningWordLimit,
+  type ListeningWordLimit
+} from './listeningPart1AnswerCheck'
 import type { Part1ExamForm, Part1FormLine } from './listeningPart1FormLayout'
 import type {
   ListeningSectionExamConfig,
@@ -43,6 +50,9 @@ export type ListeningNotebookSavePayload = {
   fix: string
   thaiMeaning: string
 }
+
+/** Real IELTS gives time to read questions before each part's audio starts. */
+const EXAM_MODE_PREREAD_SECONDS = 40
 
 const defaultAttempt = (): QuestionAttempt => ({
   answer: '',
@@ -221,6 +231,12 @@ export type ListeningSectionExamViewProps = {
   onTestChange?: (testId: string) => void
   continueAfterReportLabel?: string
   onContinueAfterReport?: () => void
+  /** Fired once when the report opens, with the FIRST-ATTEMPT score (the real one). */
+  onFirstAttemptScore?: (correct: number, total: number) => void
+  /** Questions missed on the first attempt, for the mistake-review queue. */
+  onMissedQuestions?: (
+    items: Array<{ question: ListeningSectionExamQuestion; firstAnswer: string }>
+  ) => void
 }
 
 export function ListeningSectionExamView({
@@ -239,7 +255,9 @@ export function ListeningSectionExamView({
   activeTestId,
   onTestChange,
   continueAfterReportLabel,
-  onContinueAfterReport
+  onContinueAfterReport,
+  onFirstAttemptScore,
+  onMissedQuestions
 }: ListeningSectionExamViewProps) {
   const scriptBodyRef = useRef<HTMLDivElement | null>(null)
   const [activeQuestionId, setActiveQuestionId] = useState(config.questions[0]?.id || '')
@@ -256,6 +274,57 @@ export function ListeningSectionExamView({
   const answerOnlyMode = Boolean(config.answerOnlyMode)
   const evidenceHintMode = Boolean(config.evidenceHintMode)
   const evidenceAnchorMode = Boolean(config.evidenceAnchorMode)
+  /**
+   * Reading the audioscript while answering turns a listening task into a reading
+   * one, so it stays locked until the first submit. Highlight mode is exempt (the
+   * task itself is selecting evidence in the script), as are excerpt drills.
+   */
+  const scriptLockedWhileAnswering = answerOnlyMode && !excerptDrill && examStage === 'answering'
+
+  /**
+   * Exam mode mirrors the real IELTS test: pre-reading time first, then the audio
+   * plays ONCE — no pause, no scrubbing, no replay. Off by default (practice mode).
+   */
+  const [examAudioMode, setExamAudioMode] = useState(false)
+  const [examModePlayConsumed, setExamModePlayConsumed] = useState(false)
+  const [preReadSecondsLeft, setPreReadSecondsLeft] = useState<number | null>(null)
+
+  useEffect(() => {
+    // New section/test: allow one fresh play and cancel any pending countdown.
+    setExamModePlayConsumed(false)
+    setPreReadSecondsLeft(null)
+  }, [config.title])
+
+  useEffect(() => {
+    if (examAudioMode && playbackState === 'ended') setExamModePlayConsumed(true)
+  }, [examAudioMode, playbackState])
+
+  useEffect(() => {
+    if (preReadSecondsLeft === null) return
+    if (preReadSecondsLeft <= 0) {
+      setPreReadSecondsLeft(null)
+      onTogglePlay()
+      return
+    }
+    const timer = window.setTimeout(() => {
+      setPreReadSecondsLeft((current) => (current === null ? null : current - 1))
+    }, 1000)
+    return () => window.clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preReadSecondsLeft])
+
+  const handlePlayButtonClick = () => {
+    if (!examAudioMode) {
+      onTogglePlay()
+      return
+    }
+    if (examModePlayConsumed || playbackState === 'playing' || preReadSecondsLeft !== null) return
+    if (playbackState === 'paused') {
+      onTogglePlay()
+      return
+    }
+    setPreReadSecondsLeft(EXAM_MODE_PREREAD_SECONDS)
+  }
 
   const toggleQuestionHint = useCallback((questionId: string) => {
     setRevealedHintIds((current) => {
@@ -322,8 +391,30 @@ export function ListeningSectionExamView({
   const activeQuestion = config.questions.find((item) => item.id === activeQuestionId) || config.questions[0]
   const activeAttempt = attempts[activeQuestion?.id || ''] || defaultAttempt()
 
+  /** Word limit per question, from the Part-1 form header or the group instruction. */
+  const wordLimitByQuestion = useMemo(() => {
+    const map: Record<string, ListeningWordLimit | null> = {}
+    const formLimit =
+      parseListeningWordLimit(config.part1Form?.wordLimit) ||
+      parseListeningWordLimit(config.part1Form?.instruction)
+    for (const group of config.groups) {
+      const groupLimit = parseListeningWordLimit(group.instruction)
+      for (const question of group.questions) {
+        map[question.id] = question.layout === 'gap-fill' ? groupLimit || formLimit : null
+      }
+    }
+    for (const question of config.questions) {
+      if (!(question.id in map)) {
+        map[question.id] = question.layout === 'gap-fill' ? formLimit : null
+      }
+    }
+    return map
+  }, [config])
+
   const isQuestionAnswerCorrect = useCallback(
     (question: ListeningSectionExamQuestion, answer: string) => {
+      // Over the word limit is wrong in the real exam even when the content is right.
+      if (exceedsListeningWordLimit(answer, wordLimitByQuestion[question.id] ?? null)) return false
       if (question.layout === 'gap-fill') {
         return isListeningGapFillAnswerCorrect(answer, {
           correctAnswer: question.correctAnswer,
@@ -333,7 +424,7 @@ export function ListeningSectionExamView({
       }
       return isListeningPart1AnswerCorrect(answer, question.correctAnswer, question.acceptedAnswers)
     },
-    []
+    [wordLimitByQuestion]
   )
 
   const decorations = useMemo(
@@ -641,7 +732,9 @@ export function ListeningSectionExamView({
         wrongEvidence: answerOnlyMode || evidenceOk ? '' : attempt.evidenceDraft,
         completed: false,
         feedback: answerOnlyMode
-          ? `คำตอบยังไม่ถูกครับ — ในสคริปต์: "${question.evidence.length > 90 ? `${question.evidence.slice(0, 87)}…` : question.evidence}"`
+          ? exceedsListeningWordLimit(attempt.answer, wordLimitByQuestion[question.id] ?? null)
+            ? `เกินจำนวนคำที่โจทย์กำหนด (${(wordLimitByQuestion[question.id] as ListeningWordLimit).label}) — ในสอบจริงจะถูกหักคะแนนทันทีแม้เนื้อหาถูกครับ ตัดให้เหลือคำที่จำเป็น`
+            : `คำตอบยังไม่ถูกครับ — ในสคริปต์: "${question.evidence.length > 90 ? `${question.evidence.slice(0, 87)}…` : question.evidence}"`
           : !answerOk && !evidenceOk
             ? 'คำตอบและหลักฐานยังไม่ถูกครับ แก้คำตอบ และลบ highlight นี้แล้วเลือกหลักฐานจริงใหม่'
             : !answerOk
@@ -656,6 +749,22 @@ export function ListeningSectionExamView({
     newlyCompleted.forEach((questionId) => onQuestionComplete?.(questionId))
 
     if (allCorrect) {
+      // The real score is the first round, not this (always-perfect) final round.
+      const review = firstRound ? firstSnapshot : firstAttemptReview
+      const firstAttemptCorrect = config.questions.filter((question) => {
+        const first = review[question.id]
+        if (!first) return true
+        return answerOnlyMode ? first.answerOk : first.answerOk && first.evidenceOk
+      }).length
+      onFirstAttemptScore?.(firstAttemptCorrect, config.questions.length)
+      onMissedQuestions?.(
+        config.questions
+          .filter((question) => {
+            const first = review[question.id]
+            return first && !(answerOnlyMode ? first.answerOk : first.answerOk && first.evidenceOk)
+          })
+          .map((question) => ({ question, firstAnswer: review[question.id]?.answer || '' }))
+      )
       setExamStage('report')
       setExamFeedback(
         answerOnlyMode
@@ -755,32 +864,33 @@ export function ListeningSectionExamView({
       return answerOnlyMode ? first.answerOk : first.answerOk && first.evidenceOk
     }).length
     const correctedCount = config.questions.length - firstAttemptCorrectCount
+    const estimatedBand = estimateListeningBand(firstAttemptCorrectCount, config.questions.length)
 
     return (
       <article className="listeningSectionExamFinalReport">
         <header className="listeningSectionExamReportHero">
           <div>
             <p className="listeningSectionExamSubmitEyebrow">Report card</p>
-            <h3>Listening section mastered</h3>
+            <h3>Listening section complete</h3>
             <p>
               {answerOnlyMode
-                ? 'ครบ 100% แล้วครับ ด้านล่างคือคำตอบที่ถูก คำอธิบายภาษาไทย และประโยคจาก audioscript'
-                : 'ครบ 100% แล้วครับ ด้านล่างคือ keyword, passage response, Thai explanation และ distractor จากคำตอบรอบแรก'}
+                ? 'คะแนนจริงของคุณคือรอบแรกครับ ด้านล่างคือคำตอบที่ถูก คำอธิบายภาษาไทย และประโยคจาก audioscript'
+                : 'คะแนนจริงของคุณคือรอบแรกครับ ด้านล่างคือ keyword, passage response, Thai explanation และ distractor จากคำตอบรอบแรก'}
             </p>
           </div>
           <div className="listeningSectionExamReportScore">
-            <strong>{config.questions.length}/{config.questions.length}</strong>
-            <span>final score</span>
+            <strong>{firstAttemptCorrectCount}/{config.questions.length}</strong>
+            <span>first attempt</span>
           </div>
         </header>
 
         <div className="listeningSectionExamReportSummary">
           <div>
-            <span>First attempt</span>
-            <strong>{firstAttemptCorrectCount}/{config.questions.length}</strong>
+            <span>Band (est.)</span>
+            <strong>{formatBand(estimatedBand)}</strong>
           </div>
           <div>
-            <span>Corrected</span>
+            <span>Corrected after</span>
             <strong>{correctedCount}</strong>
           </div>
           {!answerOnlyMode ? (
@@ -983,17 +1093,33 @@ export function ListeningSectionExamView({
           <div className="listeningSectionExamAudio">
             <div className="listeningSectionExamAudioMeta">
               <span>Part {config.sectionNumber}</span>
-              <span>{playbackStatus}</span>
+              <span>
+                {preReadSecondsLeft !== null
+                  ? `อ่านคำถาม ${preReadSecondsLeft}s`
+                  : examAudioMode && examModePlayConsumed
+                    ? 'เล่นครบ 1 ครั้งแล้ว'
+                    : playbackStatus}
+              </span>
             </div>
             <div className="listeningSectionAudioPlayer">
               <button
                 type="button"
                 className="listeningSectionExamPlayBtn"
                 aria-label={`${playbackButtonLabel} audio`}
-                onClick={onTogglePlay}
+                onClick={handlePlayButtonClick}
+                disabled={
+                  examAudioMode &&
+                  (examModePlayConsumed || playbackState === 'playing' || preReadSecondsLeft !== null)
+                }
               >
                 <span aria-hidden>{playbackButtonIcon}</span>
-                <span>{playbackButtonLabel}</span>
+                <span>
+                  {examAudioMode && examModePlayConsumed
+                    ? 'จบแล้ว'
+                    : examAudioMode && playbackState === 'playing'
+                      ? 'ห้ามหยุด'
+                      : playbackButtonLabel}
+                </span>
               </button>
               <div className="listeningSectionExamTimeline">
                 <div
@@ -1001,20 +1127,44 @@ export function ListeningSectionExamView({
                   style={{ width: `${playbackPercent}%` }}
                   aria-hidden="true"
                 />
-                <input
-                  type="range"
-                  min="0"
-                  max={Math.max(1, Math.floor(playbackDuration || 0))}
-                  step="1"
-                  value={Math.min(Math.floor(playbackPosition || 0), Math.max(1, Math.floor(playbackDuration || 0)))}
-                  disabled={!playbackDuration}
-                  aria-label="Audio progress"
-                  onChange={(event) => onSeek(Number(event.target.value))}
-                />
+                {!examAudioMode ? (
+                  <input
+                    type="range"
+                    min="0"
+                    max={Math.max(1, Math.floor(playbackDuration || 0))}
+                    step="1"
+                    value={Math.min(Math.floor(playbackPosition || 0), Math.max(1, Math.floor(playbackDuration || 0)))}
+                    disabled={!playbackDuration}
+                    aria-label="Audio progress"
+                    onChange={(event) => onSeek(Number(event.target.value))}
+                  />
+                ) : null}
               </div>
               <span className="listeningSectionExamTime">
                 {formatListeningPlaybackTime(playbackPosition)} / {formatListeningPlaybackTime(playbackDuration)}
               </span>
+            </div>
+            <div className="listeningSectionExamModeRow">
+              <label className="listeningSectionExamModeToggle">
+                <input
+                  type="checkbox"
+                  checked={examAudioMode}
+                  onChange={(event) => setExamAudioMode(event.target.checked)}
+                  disabled={playbackState === 'playing' || preReadSecondsLeft !== null}
+                />
+                <span>
+                  โหมดสอบจริง — อ่านคำถาม {EXAM_MODE_PREREAD_SECONDS} วิ แล้วเสียงเล่น <strong>ครั้งเดียว</strong> ห้ามหยุด/เลื่อน
+                </span>
+              </label>
+              {preReadSecondsLeft !== null ? (
+                <button
+                  type="button"
+                  className="listeningSectionExamPrereadSkip"
+                  onClick={() => setPreReadSecondsLeft(0)}
+                >
+                  เริ่มฟังเลย
+                </button>
+              ) : null}
             </div>
           </div>
 
@@ -1024,11 +1174,18 @@ export function ListeningSectionExamView({
               className="listeningSectionExamScriptToggle"
               onClick={() => setScriptCollapsed((value) => !value)}
               aria-expanded={!scriptCollapsed}
+              disabled={scriptLockedWhileAnswering}
             >
-              <span>Audioscript</span>
-              <span aria-hidden>{scriptCollapsed ? '▼' : '▲'}</span>
+              <span>Audioscript{scriptLockedWhileAnswering ? ' · 🔒' : ''}</span>
+              <span aria-hidden>{scriptLockedWhileAnswering ? '' : scriptCollapsed ? '▼' : '▲'}</span>
             </button>
-            {!scriptCollapsed ? (
+            {scriptLockedWhileAnswering ? (
+              <p className="listeningSectionExamScriptHint">
+                ฟังจากเสียงอย่างเดียวก่อนครับ — audioscript จะเปิดให้อ่านหลังส่งคำตอบรอบแรก
+                เพื่อฝึกการฟังจริง ไม่ใช่การอ่านหาคำตอบ
+              </p>
+            ) : null}
+            {!scriptCollapsed && !scriptLockedWhileAnswering ? (
               <>
                 <p className="listeningSectionExamScriptHint">
                   {excerptDrill

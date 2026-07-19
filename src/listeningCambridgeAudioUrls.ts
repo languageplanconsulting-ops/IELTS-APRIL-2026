@@ -641,6 +641,7 @@ export const CAMBRIDGE_LISTENING_AUDIO_URLS: Record<string, string[]> = {
     'https://ieltstrainingonline.com/wp-content/uploads/2024/07/cam19-test4-part1.m4a'
   ],
   '19-4-2': [
+    'https://engnovate.com/wp-content/uploads/2024/08/cambridge-ielts-19-academic-listening-4-audio-2-.mp3',
     'https://ieltstrainingonline.com/wp-content/uploads/2024/07/cam19-test4-part2.m4a'
   ],
   '19-4-3': [

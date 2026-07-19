@@ -1724,7 +1724,7 @@ body,
 
 .fullExamOverlayMessage {
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   font-size: clamp(2rem, 4.8vw, 3.8rem);
   line-height: 1.04;
   letter-spacing: 0.04em;
@@ -1821,7 +1821,7 @@ body,
 
 .answerReviewCard h3 {
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   font-size: clamp(2.4rem, 5vw, 4rem);
   line-height: 0.95;
   letter-spacing: 0.03em;
@@ -1990,7 +1990,7 @@ body,
 
 .scriptReviewHero h3 {
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
   font-size: clamp(2.3rem, 4.8vw, 4rem);
   line-height: 0.95;
   letter-spacing: 0.03em;
@@ -2067,9 +2067,10 @@ body,
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.95);
   padding: 16px 18px;
-  font: inherit;
-  font-size: 1rem;
-  line-height: 1.7;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.6;
   color: #0f172a;
   resize: vertical;
 }
@@ -20754,7 +20755,9 @@ select:focus,
 }
 
 .speakingFlowTheme .prepStageV2 {
-  max-width: 1260px;
+  width: 100%;
+  max-width: var(--sg-col);
+  margin-inline: auto;
   padding: clamp(22px, 3vw, 38px) !important;
   margin-top: 6px !important;
 }
@@ -21347,20 +21350,35 @@ select:focus,
   padding: clamp(22px, 3vw, 36px) !important;
 }
 
-.speakingFlowTheme .speakingPromptCard h3 {
-  margin-bottom: 14px !important;
-  font-size: clamp(1.35rem, 2.4vw, 2.12rem) !important;
+/* "Question 2/4" is wayfinding, not content — it was set larger and bolder
+   (2.12rem/800) than the actual question below it (1.42rem/650), so the least
+   important line on the card was the most visually dominant. Demoted to a
+   small eyebrow; the question text below now carries the emphasis instead. */
+/* Targets .speakingFlowSwap > h3 / > p, not .speakingPromptCard h3 / > p —
+   the question content sits one level deeper, inside .speakingFlowSwap
+   (JSX renders <div className="speakingFlowSwap"><h3>...<p>...), so a
+   selector anchored on .speakingPromptCard itself only matches .promptPill
+   and never reaches the actual question text. This mirrors the base-layer
+   selector at line ~1541 that already gets this right. Scoping to
+   .speakingFlowSwap also naturally excludes .restPeriodCard's own heading
+   and paragraphs (a real card one level deeper still), so it needs no
+   separate carve-out. */
+.speakingFlowTheme .speakingFlowSwap > h3 {
+  margin-bottom: 10px !important;
+  font-size: 0.8rem !important;
   font-weight: 800 !important;
-  letter-spacing: -0.045em !important;
-  line-height: 1.14 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+  color: var(--bc-blue) !important;
 }
 
-.speakingFlowTheme .speakingPromptCard > p:not(.promptSub),
+.speakingFlowTheme .speakingFlowSwap > p:not(.promptSub):not(.sectionLabel):not(.handNoteText):not(.questionNotePrompt),
 .speakingFlowTheme .part2BigQuestion {
-  font-size: clamp(1.06rem, 1.65vw, 1.42rem) !important;
-  font-weight: 650 !important;
-  letter-spacing: -0.025em !important;
-  line-height: 1.42 !important;
+  font-size: clamp(1.5rem, 2.6vw, 2.15rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.3 !important;
 }
 
 .speakingFlowTheme .promptSub,
@@ -21708,6 +21726,113 @@ select:focus,
   font-size: 1.35rem;
 }
 
+/* ── Mistake-review queue on the listening landing ── */
+
+.listeningMistakeReviewToggle {
+  min-height: auto;
+  text-align: left;
+}
+
+.listeningMistakeList {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.listeningMistakeItem {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  padding: 14px 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.listeningMistakeItem header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.listeningMistakeItemSet {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.listeningMistakeItem header button {
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.listeningMistakeItem h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.listeningMistakeItem dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.listeningMistakeItem dt {
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.listeningMistakeItem dd {
+  margin: 2px 0 0;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.listeningMistakeItem dd.is-wrong {
+  color: #b91c1c;
+}
+
+.listeningMistakeItem dd.is-right {
+  color: #15803d;
+}
+
+.listeningMistakeEvidence {
+  margin: 0;
+  color: #334155;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  border-left: 3px solid #cbd5f5;
+  padding-left: 10px;
+}
+
+.listeningMistakeThai {
+  margin: 0;
+  color: #475569;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+.listeningMistakeClearAll {
+  justify-self: end;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .listeningSkillCardGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -21940,6 +22065,20 @@ select:focus,
   background: #fffdfa;
   box-shadow: 4px 4px 0 #0f172a;
   padding: 16px;
+}
+
+.listeningSetCard.is-locked {
+  opacity: 0.62;
+  border-color: #94a3b8;
+  box-shadow: 4px 4px 0 #94a3b8;
+}
+
+.listeningSetCard.is-locked button {
+  cursor: not-allowed;
+  font-size: 0.78rem;
+}
+
+.listeningSetCard {
   animation: luxuryCardEnter var(--duration-luxury) var(--ease-luxury) both;
   animation-delay: calc(min(var(--motion-stagger, 0), 6) * 24ms);
   transition:
@@ -23559,9 +23698,14 @@ section.panel.full.speakingFlowTheme > h2 {
 }
 
 .speakingFlowTheme .reportStickyBand {
-  font-size: 1.35rem !important;
+  /* The overall band is the single most important number on the results
+     screen — it was shrinking to 1.35rem here, smaller than body text,
+     so it read as a minor label instead of the headline result. */
+  font-size: clamp(1.9rem, 3vw, 2.4rem) !important;
+  font-weight: 900 !important;
   line-height: 1 !important;
   letter-spacing: -0.02em !important;
+  color: var(--bc-blue) !important;
 }
 
 .speakingFlowTheme .reportStickyChips {
@@ -28461,6 +28605,10 @@ textarea {
   /* One shared content column so the hero, path board, mock preview and topic
      bank all sit on the same centered spine instead of three different widths. */
   --sg-col: 960px;
+  /* Wider spine for the two-column exam lane (prompt + timer/recording) and
+     the report showcase (brief + results) — narrower content stacks reuse
+     --sg-col above so everything still shares one centered midline. */
+  --sg-col-wide: 1180px;
 
   position: relative;
   isolation: isolate;
@@ -28857,7 +29005,9 @@ textarea {
 .speakingFlowTheme .speakingAttemptHead {
   display: grid;
   gap: 8px;
-  max-width: 920px;
+  width: 100%;
+  max-width: var(--sg-col);
+  margin-inline: auto;
 }
 
 .speakingFlowTheme .sgPromptBrief,
@@ -28878,6 +29028,15 @@ textarea {
   background: #fff !important;
   box-shadow: 4px 4px 0 #0f172a !important;
   color: #0f172a !important;
+}
+
+/* sgPromptBrief sits directly above prepStageV2 as a single-column card, so
+   it shares the narrow spine; loadingStageCard/resultCard sit inside their
+   own already-centered wrappers (see .attemptFlow / .reportShowcase below). */
+.speakingFlowTheme .sgPromptBrief {
+  width: 100%;
+  max-width: var(--sg-col);
+  margin-inline: auto;
 }
 
 .speakingFlowTheme .sgPrepTimer,
@@ -28956,6 +29115,15 @@ textarea {
   gap: 14px;
 }
 
+/* Exam lane gets the wide spine (two columns need more room than the
+   single-column hub/prep content above it); the inner panel grid just
+   fills it, so it isn't capped a second time. */
+.speakingFlowTheme .speakingExamLane {
+  width: 100%;
+  max-width: var(--sg-col-wide);
+  margin-inline: auto;
+}
+
 @media (min-width: 960px) {
   .speakingFlowTheme .speakingPanelLayout {
     grid-template-columns: 1.15fr 0.85fr;
@@ -29001,6 +29169,26 @@ textarea {
 .speakingFlowTheme .reportShowcase {
   display: grid;
   gap: 14px;
+  width: 100%;
+  max-width: var(--sg-col-wide);
+  margin-inline: auto;
+}
+
+/* Note-taking / transcript text, everywhere it appears in the journey (Part 2
+   notebook, live transcript during recording, per-question notes, script
+   review before submit). Earlier layers left this at 0.96rem — the same size
+   as the hint text and question label sitting right next to it, so the one
+   place users actually write in never read as distinct. Selectors here carry
+   higher specificity than the older blanket
+   `.speakingFlowTheme, .speakingFlowTheme * { font-family: ... !important }`
+   rule, so this wins on specificity regardless of source order. */
+.speakingFlowTheme .part2NotebookTextarea,
+.speakingFlowTheme .liveTranscriptTextarea,
+.speakingFlowTheme .questionNoteItem textarea {
+  font-family: Inter, Anuphan, system-ui, sans-serif !important;
+  font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  line-height: 1.6 !important;
 }
 
 @media (min-width: 960px) {

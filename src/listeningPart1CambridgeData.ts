@@ -183,7 +183,7 @@ export const CAMBRIDGE_PART1_ANSWERS_BY_TEST: Record<string, Record<string, stri
     '4': 'boat',
     '5': 'Tuesday',
     '6': 'space',
-    '7': 'vegetarian / vegerarian',
+    '7': 'vegetarian',
     '8': '2.30 / 2:30 / two thirty / half past two / half 2',
     '9': '75 / seventy-five',
     '10': 'port'

@@ -12,14 +12,21 @@ export type ListeningFullTestSpec = {
   subtitle: string
 }
 
-export const LISTENING_FULL_TEST_BOOKS = [15, 16, 17, 19, 20] as const
+/**
+ * Only books whose generated question sets passed the content audit are listed.
+ * Cambridge 15, 16, and 19 are HIDDEN (June 2026 audit): their generated sets have
+ * transcripts bound to the wrong section, scrambled answer keys, and collapsed
+ * evidence/Thai explanations (Cam15 20%, Cam16 10%, Cam19 73% answer-in-passage
+ * rates vs 93–97% for the books below). Regenerate those sets from the correct
+ * audioscripts before re-adding a book here — do not just re-enable it.
+ */
+export const LISTENING_FULL_TEST_BOOKS = [17, 20] as const
 
 export type ListeningFullTestBook = (typeof LISTENING_FULL_TEST_BOOKS)[number]
 
 /** Each Cambridge book has Tests 1–4 (one full 40-question exam each). */
 export const FULL_TESTS_PER_BOOK = 4
 
-/** Cambridge 15, 16, 17, 19, 20 → 5 books × 4 tests = 20 full listening exams. */
 export const TOTAL_FULL_LISTENING_TESTS = LISTENING_FULL_TEST_BOOKS.length * FULL_TESTS_PER_BOOK
 
 export const LISTENING_FULL_TEST_LABEL = 'Full Test'
@@ -27,9 +34,9 @@ export const LISTENING_FULL_TEST_LEAD =
   'สอบเต็ม Listening จาก Cambridge — 4 sections · 40 ข้อ เหมือนข้อสอบ IELTS จริง'
 
 export const LISTENING_FULL_TEST_DETAIL_TH =
-  'Full Test คือการทำข้อสอบ Listening Academic แบบเต็มชุดจากหนังสือ Cambridge IELTS (เล่ม 15–17, 19–20) ทำทีละ Section 1–4 (section ละ 10 ข้อ พร้อม audio และ audioscript) ในรูปแบบเดียวกับข้อสอบ official จริง หลังทำเสร็จจะได้ report พร้อมคำอธิบายเต็มและ tips จากพี่ดอย เพื่อให้เห็นจุดอ่อนและรู้ว่าต้องปรับปรุงตรงไหน'
+  'Full Test คือการทำข้อสอบ Listening Academic แบบเต็มชุดจากหนังสือ Cambridge IELTS (เล่ม 17 และ 20) ทำทีละ Section 1–4 (section ละ 10 ข้อ พร้อม audio และ audioscript) ในรูปแบบเดียวกับข้อสอบ official จริง หลังทำเสร็จจะได้ report พร้อมคำอธิบายเต็มและ tips จากพี่ดอย เพื่อให้เห็นจุดอ่อนและรู้ว่าต้องปรับปรุงตรงไหน'
 
-export const LISTENING_FULL_TEST_CATALOG_SUMMARY = `${TOTAL_FULL_LISTENING_TESTS} tests · ${FULL_TESTS_PER_BOOK} per book · Cambridge 15–17, 19–20`
+export const LISTENING_FULL_TEST_CATALOG_SUMMARY = `${TOTAL_FULL_LISTENING_TESTS} tests · ${FULL_TESTS_PER_BOOK} per book · Cambridge 17 & 20`
 
 const CAMBRIDGE_16_SECTION_2_FOUNDATION_SETS = builderExamSetToFoundationSets(
   CAMBRIDGE_16_SECTION_2_EXAM_SET,

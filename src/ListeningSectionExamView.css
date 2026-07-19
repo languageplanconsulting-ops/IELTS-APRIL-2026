@@ -279,6 +279,46 @@
   white-space: nowrap;
 }
 
+.listeningSectionExamModeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.listeningSectionExamModeToggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: var(--lse-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.listeningSectionExamModeToggle input {
+  margin-top: 2px;
+  accent-color: var(--lse-accent, #2563eb);
+}
+
+.listeningSectionExamModeToggle strong {
+  color: var(--lse-text, inherit);
+}
+
+.listeningSectionExamPrereadSkip {
+  flex: 0 0 auto;
+  border: 1px solid var(--lse-border, #d7dbe4);
+  background: transparent;
+  color: var(--lse-text, inherit);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .listeningSectionExamScriptCard {
   flex: 1 1 auto;
   min-height: 0;
@@ -1506,7 +1546,21 @@
   .listeningSectionExamLayout {
     --listening-exam-panel-height: max(480px, calc(100dvh - 260px));
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 42vh) minmax(0, 1fr);
+    /* Audio pane sizes to content so questions get the screen; while the
+       transcript is locked the top pane is just the compact player. */
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .listeningSectionExamScriptPane {
+    max-height: 45dvh;
+    overflow-y: auto;
+  }
+
+  /* Keep the player reachable while scrolling an unlocked transcript. */
+  .listeningSectionExamAudio {
+    position: sticky;
+    top: 0;
+    z-index: 6;
   }
 }
 

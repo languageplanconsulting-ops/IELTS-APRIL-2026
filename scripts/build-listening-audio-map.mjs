@@ -35,7 +35,10 @@ const SOURCES = [
     // Only the bare test page; engnovate also publishes a page per question range.
     pageRe: /cambridge-ielts-(\d+)-academic-listening-test-(\d+)\/$/,
     audioRe: /https:\/\/engnovate\.com\/wp-content\/uploads\/\d{4}\/\d{2}\/[^"'\s<>\\]+?\.(?:mp3|m4a)/gi,
-    partRe: /-?(?:audio-?)?(\d+)\.(?:mp3|m4a)$/i
+    // engnovate filenames end in several ways: `-audio-1.mp3`, `-test-1-1.mp3`,
+    // `-audio1.mp3`, and even `-audio-2-.mp3` (trailing dash). Match the last digit
+    // group before the extension, tolerating optional dashes on either side.
+    partRe: /(\d+)-?\.(?:mp3|m4a)$/i
   },
   {
     id: 'ieltstrainingonline',

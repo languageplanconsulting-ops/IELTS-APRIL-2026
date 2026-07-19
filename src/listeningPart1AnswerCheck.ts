@@ -287,3 +287,40 @@ export const isListeningGapFillAnswerCorrect = (
   const resolved = resolveListeningGapFillAnswer(input)
   return isListeningPart1AnswerCorrect(userAnswer, resolved.correctAnswer, resolved.acceptedAnswers)
 }
+
+/**
+ * IELTS word-limit rules ("NO MORE THAN TWO WORDS AND/OR A NUMBER", "ONE WORD
+ * ONLY", …). The real exam marks an over-limit answer wrong even when the content
+ * is right, so practice must enforce it too.
+ */
+export type ListeningWordLimit = { maxWords: number; label: string }
+
+const WORD_COUNT_NAMES: Record<string, number> = { ONE: 1, TWO: 2, THREE: 3, FOUR: 4 }
+
+export const parseListeningWordLimit = (instruction: string | undefined): ListeningWordLimit | null => {
+  const text = String(instruction || '').toUpperCase()
+  if (!text) return null
+  const noMoreThan = text.match(/NO MORE THAN (ONE|TWO|THREE|FOUR) WORDS?/)
+  if (noMoreThan) {
+    const maxWords = WORD_COUNT_NAMES[noMoreThan[1]]
+    return { maxWords, label: `NO MORE THAN ${noMoreThan[1]} WORD${maxWords > 1 ? 'S' : ''}` }
+  }
+  if (/\bONE WORD (ONLY|AND\/OR)/.test(text) || /WRITE ONE WORD\b/.test(text)) {
+    return { maxWords: 1, label: 'ONE WORD' }
+  }
+  return null
+}
+
+/**
+ * Numbers do not count toward the word limit (official IELTS rule), and
+ * hyphenated forms count as one word.
+ */
+export const countListeningAnswerWords = (answer: string): number =>
+  String(answer || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((token) => !/^[0-9][0-9.,:%$£€/-]*$/.test(token)).length
+
+export const exceedsListeningWordLimit = (answer: string, limit: ListeningWordLimit | null): boolean =>
+  limit !== null && countListeningAnswerWords(answer) > limit.maxWords
