@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useState } from 'react'
 import type { GeneralTask1Prompt, GeneralTask1Register } from './writingGeneralTask1Data'
 import { assembleGeneralTask1ModelLetter, getRegisterGuidance } from './writingGeneralTask1Data'
+import { GeneralTask1WriteOutDrill } from './GeneralTask1WriteOutDrill'
 import {
   buildWritingRecallFeedback,
   isWritingRecallExact,
@@ -20,6 +21,8 @@ import './GeneralTask1LetterPractice.css'
 type PracticeProps = {
   prompt: GeneralTask1Prompt
   onSaveVocab?: (payload: { word: string; thaiMeaning: string }) => void
+  /** Saves the whole assembled model letter as a single Notebook entry. */
+  onSaveModelLetter?: (payload: { letter: string; title: string; register: string }) => void
 }
 
 
@@ -217,7 +220,7 @@ const describeBlankReason = (blank: PracticeBlank): string => {
   return meta ? `${meta.th} — ${meta.use}` : 'คำเชื่อมต้องเลือกให้ตรงกับความสัมพันธ์ระหว่างสองใจความ'
 }
 
-export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProps) {
+export function GeneralTask1LetterPractice({ prompt, onSaveVocab, onSaveModelLetter }: PracticeProps) {
   const guidance = getRegisterGuidance(prompt.register)
   const [classification, setClassification] = useState<GeneralTask1Register | null>(null)
   const [classificationPassed, setClassificationPassed] = useState(false)
@@ -232,6 +235,9 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
   const [recallDrafts, setRecallDrafts] = useState<Record<number, string>>({})
   const [recallChecks, setRecallChecks] = useState<Record<number, WritingRecallCheck>>({})
   const [savedWords, setSavedWords] = useState<Set<string>>(() => new Set())
+  const [drillOpen, setDrillOpen] = useState(false)
+  const [drillDone, setDrillDone] = useState(false)
+  const [letterSaved, setLetterSaved] = useState(false)
 
   const paragraph = prompt.paragraphs[stepIndex]
   const sentenceSegments = useMemo(
@@ -257,6 +263,11 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
   const wrongBlanks = checked ? blanks.filter((blank) => !isBlankCorrect(blank)) : []
   const allCompleted = completedSteps.size === prompt.paragraphs.length
   const modelLetter = assembleGeneralTask1ModelLetter(prompt)
+  const saveModelLetter = () => {
+    if (!onSaveModelLetter || letterSaved) return
+    onSaveModelLetter({ letter: modelLetter, title: prompt.title, register: prompt.register })
+    setLetterSaved(true)
+  }
   const modelWordCount = modelLetter.trim().match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu)?.length ?? 0
   const expectedRecallParagraph = paragraph.sentences.map((sentence) => sentence.text).join(' ')
   const showTutorial = started && !tutorialDismissed.has(stepIndex)
@@ -648,10 +659,45 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
             </div>
 
             {allCompleted ? (
-              <div className="gt1ModelReveal">
-                <span>MODEL LETTER · {modelWordCount} WORDS</span>
-                <pre>{modelLetter}</pre>
-              </div>
+              <>
+                {/* The model is hidden while the write-out drill runs, otherwise
+                    the learner would just copy it off the screen. */}
+                {drillOpen && !drillDone ? null : (
+                  <div className="gt1ModelReveal">
+                    <span>MODEL LETTER · {modelWordCount} WORDS</span>
+                    <pre>{modelLetter}</pre>
+                    <div className="gt1ModelActions">
+                      <button
+                        type="button"
+                        className="gt1ModelSave"
+                        disabled={letterSaved || !onSaveModelLetter}
+                        onClick={saveModelLetter}
+                      >
+                        {letterSaved ? '✓ บันทึกลง Notebook แล้ว' : '💾 บันทึกจดหมายฉบับเต็มลง Notebook'}
+                      </button>
+                      {!drillOpen ? (
+                        <button type="button" className="gt1ModelDrill" onClick={() => setDrillOpen(true)}>
+                          ✍️ อยากลองเขียนเอง
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                )}
+
+                {drillOpen ? (
+                  <GeneralTask1WriteOutDrill prompt={prompt} onComplete={() => setDrillDone(true)} />
+                ) : null}
+
+                {/* Completed the drill without ever saving — offer it once more. */}
+                {drillDone && !letterSaved && onSaveModelLetter ? (
+                  <div className="gt1SavePrompt" role="status">
+                    <strong>เขียนครบทั้งฉบับแล้ว — เก็บจดหมายนี้ไว้ทบทวนไหม?</strong>
+                    <button type="button" className="gt1ModelSave" onClick={saveModelLetter}>
+                      💾 บันทึกลง Notebook
+                    </button>
+                  </div>
+                ) : null}
+              </>
             ) : null}
           </div>
 

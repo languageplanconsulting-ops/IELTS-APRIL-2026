@@ -1713,6 +1713,17 @@ export function WritingGuidePage({
             <GeneralTask1LetterPractice
               key={activeGeneralTask1Prompt.id}
               prompt={activeGeneralTask1Prompt}
+              onSaveModelLetter={
+                onSaveVocabToNotebook
+                  ? ({ letter, title, register }) =>
+                      onSaveVocabToNotebook({
+                        word: letter,
+                        thaiMeaning: `Model letter (${register}) — ${title}`,
+                        questionTitle: title,
+                        questionNumber: activeGeneralTask1Prompt.number
+                      })
+                  : undefined
+              }
               onSaveVocab={
                 onSaveVocabToNotebook
                   ? ({ word, thaiMeaning }) =>

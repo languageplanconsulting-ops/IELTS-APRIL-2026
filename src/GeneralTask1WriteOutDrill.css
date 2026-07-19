@@ -1,0 +1,248 @@
+/* Write-it-out drill — same neo-brutalist language as the letter builder. */
+
+.gt1Drill {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  border: 3px solid #172033;
+  border-radius: 18px;
+  background: #fffdf4;
+  box-shadow: 7px 7px 0 #172033;
+}
+
+.gt1DrillHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gt1DrillHead h3 {
+  margin: 8px 0 6px;
+  font-size: 1.05rem;
+}
+
+.gt1DrillHead p {
+  margin: 0;
+  max-width: 62ch;
+  color: #526078;
+  font-size: .8rem;
+  line-height: 1.6;
+}
+
+.gt1DrillKicker {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  background: #b9dcff;
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.gt1DrillScore {
+  flex-shrink: 0;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 10px 14px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 4px 4px 0 #172033;
+}
+
+.gt1DrillScore.is-done {
+  background: #c9f6d4;
+}
+
+.gt1DrillScore strong {
+  font-size: 1.3rem;
+}
+
+.gt1DrillScore small {
+  color: #526078;
+  font-size: .7rem;
+  font-weight: 800;
+}
+
+.gt1DrillProgress {
+  height: 12px;
+  border: 2px solid #172033;
+  border-radius: 999px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.gt1DrillProgress span {
+  display: block;
+  height: 100%;
+  background: #ffe676;
+  transition: width .3s ease;
+}
+
+.gt1DrillGroup {
+  display: grid;
+  gap: 12px;
+}
+
+.gt1DrillGroupLabel {
+  margin: 6px 0 0;
+  font-size: .72rem;
+  font-weight: 950;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #172033;
+}
+
+.gt1DrillRow {
+  display: grid;
+  gap: 7px;
+  padding: 13px 15px;
+  border: 2px solid #172033;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.gt1DrillRow.is-done {
+  background: #eafaef;
+}
+
+.gt1DrillRow.is-typing {
+  background: #fffbe9;
+}
+
+/* The hint line must be monospaced or the underscores stop lining up with the
+   letters they stand for. */
+.gt1DrillHint {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: .92rem;
+  font-weight: 700;
+  line-height: 1.75;
+  letter-spacing: .04em;
+  color: #172033;
+  word-break: break-word;
+}
+
+.gt1DrillThai {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 2px solid #b9dcff;
+  color: #46506a;
+  font-size: .78rem;
+  line-height: 1.55;
+}
+
+.gt1DrillInputWrap {
+  position: relative;
+}
+
+.gt1DrillInputWrap textarea {
+  width: 100%;
+  padding: 9px 34px 9px 11px;
+  border: 2px solid #172033;
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: .9rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.gt1DrillInputWrap textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(23, 32, 51, .16);
+}
+
+.gt1DrillInputWrap textarea:disabled {
+  background: #f4fbf6;
+  color: #1d5c33;
+  font-weight: 650;
+}
+
+.gt1DrillMark {
+  position: absolute;
+  top: 9px;
+  right: 11px;
+  font-weight: 900;
+  color: #1d5c33;
+}
+
+.gt1DrillFeedback {
+  margin: 0;
+  color: #7c2438;
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.gt1DrillReveal {
+  justify-self: start;
+  padding: 5px 10px;
+  border: 2px solid #172033;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.gt1DrillReveal:hover {
+  background: #ffe676;
+}
+
+.gt1DrillAnswer {
+  margin: 0;
+  padding: 8px 10px;
+  border: 2px dashed #172033;
+  border-radius: 9px;
+  background: #fff8e1;
+  font-size: .82rem;
+  line-height: 1.6;
+}
+
+.gt1DrillDone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #c9f6d4;
+  box-shadow: 4px 4px 0 #172033;
+}
+
+.gt1DrillFinish {
+  padding: 9px 14px;
+  border: 3px solid #172033;
+  border-radius: 11px;
+  background: #ffe676;
+  color: inherit;
+  font: inherit;
+  font-weight: 850;
+  box-shadow: 4px 4px 0 #172033;
+  cursor: pointer;
+}
+
+.gt1DrillFinish:active {
+  translate: 3px 3px;
+  box-shadow: 1px 1px 0 #172033;
+}
+
+@media (max-width: 720px) {
+  .gt1DrillHead {
+    flex-direction: column;
+  }
+
+  .gt1Drill {
+    box-shadow: 4px 4px 0 #172033;
+  }
+}

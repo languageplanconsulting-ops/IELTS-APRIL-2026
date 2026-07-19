@@ -830,3 +830,61 @@
   vertical-align: middle;
   margin: 0 4px;
 }
+
+/* Model-letter actions: save the whole letter, or start the write-out drill. */
+.gt1ModelActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.gt1ModelSave,
+.gt1ModelDrill {
+  padding: 9px 14px;
+  border: 3px solid #172033;
+  border-radius: 11px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 850;
+  font-size: .82rem;
+  box-shadow: 4px 4px 0 #172033;
+  cursor: pointer;
+}
+
+.gt1ModelDrill {
+  background: #ffe676;
+}
+
+.gt1ModelSave:hover:not(:disabled),
+.gt1ModelDrill:hover {
+  background: #b9dcff;
+}
+
+.gt1ModelSave:active:not(:disabled),
+.gt1ModelDrill:active {
+  translate: 3px 3px;
+  box-shadow: 1px 1px 0 #172033;
+}
+
+.gt1ModelSave:disabled {
+  background: #c9f6d4;
+  cursor: default;
+  opacity: .9;
+}
+
+/* Shown after a 100% drill run when the letter was never saved. */
+.gt1SavePrompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #ffe676;
+  box-shadow: 4px 4px 0 #172033;
+}
