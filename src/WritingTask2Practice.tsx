@@ -23,6 +23,7 @@ import { typeBlankPlaceholder } from './writingTask2Harden'
 import { LetterHintBlankInput, isLetterHintBlank } from './LetterHintBlankInput'
 import { resolveThaiMeaning } from './writingLetterHint'
 import { VocabMeaningButton } from './VocabMeaningButton'
+import { WriteOutDrill } from './WriteOutDrill'
 import {
   buildWritingRecallFeedback,
   isWritingRecallExact,
@@ -172,6 +173,8 @@ export function WritingTask2Practice({
   const [dragOverId, setDragOverId] = useState<string | null>(null)
   const [droppedId, setDroppedId] = useState<string | null>(null)
   const [savedEssayNotice, setSavedEssayNotice] = useState(false)
+  const [drillOpen, setDrillOpen] = useState(false)
+  const [drillDone, setDrillDone] = useState(false)
   const [recallOpenSteps, setRecallOpenSteps] = useState<Set<string>>(() => new Set())
   const [recallDismissedSteps, setRecallDismissedSteps] = useState<Set<string>>(() => new Set())
   const [recallDrafts, setRecallDrafts] = useState<Record<string, string>>({})
@@ -298,6 +301,25 @@ export function WritingTask2Practice({
   }
 
   const model = useMemo(() => assembleTask2Essay(exercise), [exercise])
+
+  /**
+   * Task 2 stores whole paragraphs, not sentence objects, so the drill splits on
+   * sentence-final punctuation. Abbreviations would break a naive split, but
+   * these essays are plain prose with none, and a bad split would show up
+   * immediately as an untypeable row.
+   */
+  const drillGroups = useMemo(
+    () =>
+      model.map((para) => ({
+        label: para.labelTh,
+        sentences: para.text
+          .split(/(?<=[.!?])\s+/)
+          .map((text) => text.trim())
+          .filter(Boolean)
+          .map((text) => ({ text }))
+      })),
+    [model]
+  )
   const expectedRecallParagraph = model[stepIndex]?.text ?? ''
   const recallDraft = recallDrafts[step.id] ?? ''
   const recallCheck = recallChecks[step.id]
@@ -709,6 +731,18 @@ export function WritingTask2Practice({
                     {savedEssayNotice ? '✓ บันทึกลง Notebook แล้ว' : '＋ บันทึกเรียงความลง Notebook'}
                   </button>
                 ) : null}
+                {!drillOpen ? (
+                  <button
+                    type="button"
+                    className="wlpBtn wlpBtn-secondary"
+                    onClick={() => {
+                      setDrillOpen(true)
+                      setShowEssay(false)
+                    }}
+                  >
+                    ✍️ อยากลองเขียนเอง
+                  </button>
+                ) : null}
                 <button type="button" className="wlpBtn wlpBtn-secondary" onClick={resetAll}>
                   เริ่มใหม่
                 </button>
@@ -738,6 +772,27 @@ export function WritingTask2Practice({
                   </div>
                 ))}
               </article>
+            ) : null}
+
+            {drillOpen ? (
+              <WriteOutDrill
+                groupNoun="ย่อหน้า"
+                groups={drillGroups}
+                intro="ตัวอักษรแรกของแต่ละคำถูกใบ้ไว้ให้แล้ว ขีด _ หนึ่งขีดคือตัวอักษรที่หายไปหนึ่งตัว · เครื่องหมายวรรคตอนและการเว้นวรรคต้องตรงทั้งหมด · ชื่อเฉพาะแสดงให้เต็มคำ"
+                onComplete={() => {
+                  setDrillDone(true)
+                  setShowEssay(true)
+                }}
+              />
+            ) : null}
+
+            {drillDone && !savedEssayNotice && onSaveEssay ? (
+              <div className="wgb2SavePrompt" role="status">
+                <strong>เขียนครบทั้งฉบับแล้ว — เก็บเรียงความนี้ไว้ทบทวนไหม?</strong>
+                <button type="button" className="wlpBtn wlpBtn-save" onClick={handleSaveEssay}>
+                  ＋ บันทึกเรียงความลง Notebook
+                </button>
+              </div>
             ) : null}
 
             <div className="wgb2VocabList">

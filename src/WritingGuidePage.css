@@ -5403,3 +5403,23 @@
   font-size: 0.78rem;
   line-height: 1.5;
 }
+
+/* Offered after a 100% write-out run when the essay was never saved. */
+.wgb2SavePrompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 3px solid #172033;
+  border-radius: 14px;
+  background: #ffe676;
+  box-shadow: 4px 4px 0 #172033;
+}
+
+.wgb2SavePrompt strong {
+  color: #172033;
+  font-size: .9rem;
+}

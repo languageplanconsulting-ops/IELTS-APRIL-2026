@@ -1,22 +1,37 @@
 /**
- * "อยากลองเขียนเอง" — the write-it-out drill that follows the blank builder.
+ * "อยากลองเขียนเอง" — the write-it-out drill, shared by GT Task 1 letters and
+ * GT Task 2 essays.
  *
- * Each sentence of the model letter is typed from scratch. Above the input sits
- * a hint line showing the first letters of every word (same prefix rule as the
+ * Each sentence of the model is typed from scratch. Above the input sits a hint
+ * line showing the first letters of every word (same prefix rule as the
  * letter-hint blanks) with one underscore per missing letter, so punctuation and
- * spacing stay visible. Proper nouns are shown in full — the learner is being
- * drilled on sentence construction, not on guessing a name.
+ * spacing stay visible as part of what must be reproduced. Proper nouns are
+ * shown in full — the learner is being drilled on sentence construction, not on
+ * guessing a name.
  *
- * The model letter is hidden while the drill runs; it comes back once every
- * sentence is correct.
+ * The model is hidden by the caller while the drill runs; it comes back once
+ * every sentence is correct.
  */
 import { useMemo, useState } from 'react'
 import { letterHintPrefixLength } from './writingLetterHint'
-import type { GeneralTask1Prompt } from './writingGeneralTask1Data'
-import './GeneralTask1WriteOutDrill.css'
+import './WriteOutDrill.css'
+
+export type WriteOutSentence = {
+  text: string
+  /** Literal Thai gloss, where the source data has one (GT Task 1 letters). */
+  thai?: string
+}
+
+export type WriteOutGroup = {
+  label: string
+  sentences: readonly WriteOutSentence[]
+}
 
 type DrillProps = {
-  prompt: GeneralTask1Prompt
+  groups: readonly WriteOutGroup[]
+  /** e.g. "Bullet" for letters, "ย่อหน้า" for essays. */
+  groupNoun?: string
+  intro?: string
   /** Fired once every sentence is correct. */
   onComplete: () => void
 }
@@ -73,19 +88,19 @@ export const buildHintLine = (sentence: string): string =>
     .map((word, index) => (isProperNoun(word, index) ? word : maskWord(word)))
     .join(' ')
 
-export function GeneralTask1WriteOutDrill({ prompt, onComplete }: DrillProps) {
+export function WriteOutDrill({ groups, groupNoun = 'Bullet', intro, onComplete }: DrillProps) {
   const sentences = useMemo(
-    () => prompt.paragraphs.flatMap((paragraph, pIndex) =>
-      paragraph.sentences.map((sentence, sIndex) => ({
-        key: `${pIndex}-${sIndex}`,
-        paragraphLabel: paragraph.label,
-        bulletIndex: paragraph.bulletIndex,
-        text: sentence.text,
-        thai: sentence.thai,
-        hint: buildHintLine(sentence.text)
-      }))
-    ),
-    [prompt]
+    () =>
+      groups.flatMap((group, pIndex) =>
+        group.sentences.map((sentence, sIndex) => ({
+          key: `${pIndex}-${sIndex}`,
+          groupIndex: pIndex,
+          text: sentence.text,
+          thai: sentence.thai,
+          hint: buildHintLine(sentence.text)
+        }))
+      ),
+    [groups]
   )
 
   const [drafts, setDrafts] = useState<Record<string, string>>({})
@@ -99,22 +114,22 @@ export function GeneralTask1WriteOutDrill({ prompt, onComplete }: DrillProps) {
   const allCorrect = correctCount === total
   const percent = Math.round((correctCount / total) * 100)
 
-  // Group by paragraph so the drill mirrors the three-bullet structure.
-  const groups = prompt.paragraphs.map((paragraph, index) => ({
-    label: paragraph.label,
-    bulletIndex: index,
-    items: sentences.filter((s) => s.key.startsWith(`${index}-`))
+  // Keep the model's own structure so the drill mirrors what was just taught.
+  const rendered = groups.map((group, index) => ({
+    label: group.label,
+    groupIndex: index,
+    items: sentences.filter((s) => s.groupIndex === index)
   }))
 
   return (
-    <section className="gt1Drill" aria-label="เขียนจดหมายเองทีละประโยค">
+    <section className="gt1Drill" aria-label="เขียนเองทีละประโยค">
       <header className="gt1DrillHead">
         <div>
           <span className="gt1DrillKicker">เขียนเอง</span>
           <h3>พิมพ์ทีละประโยคจากตัวช่วยด้านบนของแต่ละช่อง</h3>
           <p>
-            ตัวอักษรแรกของแต่ละคำถูกใบ้ไว้ให้แล้ว ขีด _ หนึ่งขีดคือตัวอักษรที่หายไปหนึ่งตัว ·
-            เครื่องหมายวรรคตอนและการเว้นวรรคต้องตรงทั้งหมด · ชื่อเฉพาะแสดงให้เต็มคำ
+            {intro ??
+              'ตัวอักษรแรกของแต่ละคำถูกใบ้ไว้ให้แล้ว ขีด _ หนึ่งขีดคือตัวอักษรที่หายไปหนึ่งตัว · เครื่องหมายวรรคตอนและการเว้นวรรคต้องตรงทั้งหมด · ชื่อเฉพาะแสดงให้เต็มคำ'}
           </p>
         </div>
         <div className={`gt1DrillScore ${allCorrect ? 'is-done' : ''}`}>
@@ -127,10 +142,10 @@ export function GeneralTask1WriteOutDrill({ prompt, onComplete }: DrillProps) {
         <span style={{ width: `${percent}%` }} />
       </div>
 
-      {groups.map((group) => (
-        <div key={group.bulletIndex} className="gt1DrillGroup">
+      {rendered.map((group) => (
+        <div key={group.groupIndex} className="gt1DrillGroup">
           <p className="gt1DrillGroupLabel">
-            Bullet {group.bulletIndex + 1} · {group.label}
+            {groupNoun} {group.groupIndex + 1} · {group.label}
           </p>
           {group.items.map((item) => {
             const value = drafts[item.key] || ''
@@ -142,7 +157,7 @@ export function GeneralTask1WriteOutDrill({ prompt, onComplete }: DrillProps) {
                 <p className="gt1DrillHint" aria-label="ตัวช่วย">
                   {done ? item.text : item.hint}
                 </p>
-                <p className="gt1DrillThai">{item.thai}</p>
+                {item.thai ? <p className="gt1DrillThai">{item.thai}</p> : null}
                 <div className="gt1DrillInputWrap">
                   <textarea
                     value={value}
@@ -187,7 +202,7 @@ export function GeneralTask1WriteOutDrill({ prompt, onComplete }: DrillProps) {
         <div className="gt1DrillDone">
           <strong>ครบ 100% — เขียนได้ทั้งฉบับแล้ว</strong>
           <button type="button" className="gt1DrillFinish" onClick={onComplete}>
-            ดู Model Letter อีกครั้ง →
+            ดูฉบับเต็มอีกครั้ง →
           </button>
         </div>
       ) : null}

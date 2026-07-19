@@ -1,7 +1,7 @@
 import { Fragment, useMemo, useState } from 'react'
 import type { GeneralTask1Prompt, GeneralTask1Register } from './writingGeneralTask1Data'
 import { assembleGeneralTask1ModelLetter, getRegisterGuidance } from './writingGeneralTask1Data'
-import { GeneralTask1WriteOutDrill } from './GeneralTask1WriteOutDrill'
+import { WriteOutDrill } from './WriteOutDrill'
 import {
   buildWritingRecallFeedback,
   isWritingRecallExact,
@@ -685,7 +685,17 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab, onSaveModelLet
                 )}
 
                 {drillOpen ? (
-                  <GeneralTask1WriteOutDrill prompt={prompt} onComplete={() => setDrillDone(true)} />
+                  <WriteOutDrill
+                    groupNoun="Bullet"
+                    groups={prompt.paragraphs.map((paragraph) => ({
+                      label: paragraph.label,
+                      sentences: paragraph.sentences.map((sentence) => ({
+                        text: sentence.text,
+                        thai: sentence.thai
+                      }))
+                    }))}
+                    onComplete={() => setDrillDone(true)}
+                  />
                 ) : null}
 
                 {/* Completed the drill without ever saving — offer it once more. */}
