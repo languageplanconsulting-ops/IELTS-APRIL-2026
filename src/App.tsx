@@ -78,7 +78,10 @@ import { convertSpeakingRecordingToMp3 } from './speakingRecordingMp3'
 import { parseListeningScriptSegments } from './listeningScriptReader'
 import listeningWorkbookRaw from '../cambridge-listening-transcript-first-workbook.md?raw'
 import listeningSectionBankRaw from '../cambridge-listening-sections-2-4-bank.md?raw'
-import { getCambridgeListeningAudioUrl } from './listeningCambridgeAudioUrls'
+import {
+  getCambridgeListeningAudioAlternatives,
+  getCambridgeListeningAudioUrls
+} from './listeningCambridgeAudioUrls'
 import { CAMBRIDGE_10_SECTION_2_EXAM_SET } from './listeningBuilderCambridge10Section2'
 import { CAMBRIDGE_10_SECTION_4_EXAM_SET } from './listeningBuilderCambridge10Section4'
 import { CAMBRIDGE_11_SECTION_2_EXAM_SET } from './listeningBuilderCambridge11Section2'
@@ -1140,6 +1143,17 @@ type ComponentReport = {
     fix: string
     originalText?: string
     improvedText?: string
+    /** Thai explanation of what changed between originalText and improvedText. */
+    reasonThai?: string
+    /** True when originalText is the learner's own verified sentence, not generic advice. */
+    isPersonalized?: boolean
+  }>
+  /** Every clear grammar mistake found, each with its correction and reason (grammar report only). */
+  grammarMistakes?: Array<{
+    originalText: string
+    correctedText: string
+    errorTypeThai?: string
+    reasonThai?: string
   }>
 }
 
@@ -2546,7 +2560,9 @@ const renderBandLadder = (
           quote: plan.quote,
           fix: plan.fix,
           originalText: plan.quote,
-          improvedText: plan.fix
+          improvedText: plan.fix,
+          reasonThai: '',
+          isPersonalized: false
         }))
   return (
     <div className="bandLadder">
@@ -2554,16 +2570,66 @@ const renderBandLadder = (
         <span className="ladderDot" aria-hidden="true" />
         <div className="ladderRungBody">
           <p className="ladderBand">Band {report.band.toFixed(1)} · ตอนนี้</p>
+          {(report.grammarMistakes || []).length > 0 && (
+            <div className="mistakeList">
+              <p className="mistakeListHead">
+                ข้อผิดพลาดทางไวยากรณ์ทั้งหมด ({(report.grammarMistakes || []).length} จุด)
+              </p>
+              <ol className="mistakeListItems">
+                {(report.grammarMistakes || []).map((mistake, idx) => (
+                  <li key={`${keyPrefix}-gm-${idx}`} className="mistakeItem">
+                    {mistake.errorTypeThai && <span className="mistakeType">{mistake.errorTypeThai}</span>}
+                    <p className="mistakeFrom">
+                      <span className="ladderStepTag">คุณพูดว่า</span>
+                      <s>{stripOuterQuotes(mistake.originalText)}</s>
+                    </p>
+                    <p className="mistakeTo">
+                      <span className="ladderStepTag is-good">ที่ถูกต้อง</span>
+                      {stripOuterQuotes(mistake.correctedText)}
+                    </p>
+                    {mistake.reasonThai && <p className="mistakeWhy">{mistake.reasonThai}</p>}
+                    <button
+                      type="button"
+                      className="ladderSaveBtn"
+                      onClick={() =>
+                        onSavePlan({
+                          quote: mistake.originalText,
+                          fix: mistake.correctedText,
+                          originalText: mistake.originalText,
+                          improvedText: mistake.correctedText
+                        })
+                      }
+                    >
+                      ＋ บันทึกลง Notebook
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
           {metTicks.length > 0 && (
             <ul className="ladderMetList">
-              {metTicks.slice(0, 4).map((tick, idx) => (
-                <li key={`${keyPrefix}-met-${idx}`}>
-                  <span className="ladderMetMark">✓</span> {tick.requirement}
-                  {tick.evidence?.[0] && (
-                    <span className="ladderMetEv"> — “{stripOuterQuotes(tick.evidence[0])}”</span>
-                  )}
-                </li>
-              ))}
+              {metTicks.slice(0, 4).map((tick, idx) => {
+                // Show every item that satisfied the criterion, not one sample.
+                const evidence = (tick.evidence || [])
+                  .map((item) => stripOuterQuotes(item))
+                  .filter((item) => item.trim().length > 0)
+                return (
+                  <li key={`${keyPrefix}-met-${idx}`}>
+                    <span className="ladderMetMark">✓</span> {tick.requirement}
+                    {evidence.length > 0 && (
+                      <span className="ladderMetEv">
+                        {' — '}
+                        {evidence.map((item, evIdx) => (
+                          <span key={`${keyPrefix}-met-${idx}-ev-${evIdx}`} className="ladderMetEvItem">
+                            “{item}”
+                          </span>
+                        ))}
+                      </span>
+                    )}
+                  </li>
+                )
+              })}
             </ul>
           )}
         </div>
@@ -2576,9 +2642,12 @@ const renderBandLadder = (
             <p className="ladderNote">ทำเกณฑ์ของ Band นี้ให้สม่ำเสมอเพื่อขยับขึ้นอีกครึ่งขั้นครับ</p>
           ) : (
             <ol className="ladderStepList">
-              {checklist.slice(0, 12).map((plan, idx) => {
+              {checklist.slice(0, 5).map((plan, idx) => {
                 const requirement = plan.requirement || plan.quote
                 const improved = plan.improvedText || plan.fix || ''
+                // Personalized items are the learner's own sentence rewritten, so they
+                // render as ✗ you said / ✓ say this instead, with the Thai reason below.
+                const personalized = Boolean(plan.isPersonalized && plan.originalText && plan.improvedText)
                 return (
                   <li key={`${keyPrefix}-step-${idx}`} className="ladderStep">
                     {requirement && <p className="ladderStepReq">{requirement}</p>}
@@ -2586,10 +2655,21 @@ const renderBandLadder = (
                         have no originalText, so they render as advice, not as an error. */}
                     {plan.originalText && (
                       <p className="ladderStepFrom">
+                        {personalized && <span className="ladderStepTag">คุณพูดว่า</span>}
                         <s>{stripOuterQuotes(plan.originalText)}</s>
                       </p>
                     )}
-                    {improved && <p className="ladderStepTo">{renderReportEmphasis(improved)}</p>}
+                    {personalized ? (
+                      <>
+                        <p className="ladderStepTo ladderStepToFixed">
+                          <span className="ladderStepTag is-good">พูดแบบนี้แทน</span>
+                          {stripOuterQuotes(plan.improvedText || '')}
+                        </p>
+                        {plan.reasonThai && <p className="ladderStepWhy">{plan.reasonThai}</p>}
+                      </>
+                    ) : (
+                      improved && <p className="ladderStepTo">{renderReportEmphasis(improved)}</p>
+                    )}
                     <button
                       type="button"
                       className="ladderSaveBtn"
@@ -10013,11 +10093,11 @@ function App() {
       title: activeListeningBuilderExamTest.title,
       subtitle: `Cambridge ${activeListeningBuilderExamSet.bookNumber} · Section ${activeListeningBuilderExamSet.sectionNumber} · Test ${activeListeningBuilderExamTest.testNumber}`,
       sectionNumber: activeListeningBuilderExamSet.sectionNumber,
-      audioUrl: getCambridgeListeningAudioUrl(
+      audioUrl: getCambridgeListeningAudioUrls(
         activeListeningBuilderExamSet.bookNumber,
         activeListeningBuilderExamTest.testNumber,
         activeListeningBuilderExamSet.sectionNumber
-      ),
+      )[0] || '',
       passage: activeListeningBuilderExamTest.scriptParagraphs.join('\n\n'),
       // Answer-only with a reading-style "Show hint" reveal instead of forced highlighting.
       answerOnlyMode: true,
@@ -17840,6 +17920,26 @@ function App() {
     setListeningPlaybackPosition(nextTime)
   }
 
+  /**
+   * Tries each known host in turn. Audio is hotlinked from public sites that rename
+   * and move files without warning, so one dead source must not take listening
+   * offline when another still serves the same recording.
+   */
+  const playListeningSectionAudioFromSources = async (sourceUrls: string[]) => {
+    const candidates = sourceUrls.filter(Boolean)
+    if (!candidates.length) throw new Error('No listening audio source is mapped for this section.')
+    let lastError: unknown = null
+    for (const candidate of candidates) {
+      try {
+        await playListeningSectionAudioFromUrl(candidate)
+        return
+      } catch (error) {
+        lastError = error
+      }
+    }
+    throw lastError instanceof Error ? lastError : new Error('Listening audio could not be played.')
+  }
+
   const playListeningSectionAudioFromUrl = async (sourceUrl: string) => {
     stopListeningPlayback()
     await new Promise<void>((resolve, reject) => {
@@ -18018,7 +18118,9 @@ function App() {
     try {
       if (activeListeningFoundationSet.audioUrl) {
         try {
-          await playListeningSectionAudioFromUrl(activeListeningFoundationSet.audioUrl)
+          await playListeningSectionAudioFromSources(
+            getCambridgeListeningAudioAlternatives(activeListeningFoundationSet.audioUrl)
+          )
           return
         } catch {
           // External Cambridge audio unavailable — fall back to cached section TTS below.
@@ -18056,7 +18158,7 @@ function App() {
     if (!activeListeningBuilderExamSet || !activeListeningBuilderExamTest) return
     setListeningBuilderExamAudioPlayed(true)
     const spokenText = activeListeningBuilderExamTest.scriptParagraphs.join(' ')
-    const sectionAudioUrl = getCambridgeListeningAudioUrl(
+    const sectionAudioUrls = getCambridgeListeningAudioUrls(
       activeListeningBuilderExamSet.bookNumber,
       activeListeningBuilderExamTest.testNumber,
       activeListeningBuilderExamSet.sectionNumber
@@ -18065,9 +18167,9 @@ function App() {
     const audioCacheKey = `listening-builder-cam${activeListeningBuilderExamSet.bookNumber}-test${activeListeningBuilderExamTest.testNumber}-section${activeListeningBuilderExamSet.sectionNumber}`
 
     try {
-      if (sectionAudioUrl) {
+      if (sectionAudioUrls.length) {
         try {
-          await playListeningSectionAudioFromUrl(sectionAudioUrl)
+          await playListeningSectionAudioFromSources(sectionAudioUrls)
           return
         } catch {
           // External Cambridge audio unavailable — fall back to cached section TTS below.
@@ -18150,7 +18252,9 @@ function App() {
     try {
       if (activeListeningFullTestSectionSet.audioUrl) {
         try {
-          await playListeningSectionAudioFromUrl(activeListeningFullTestSectionSet.audioUrl)
+          await playListeningSectionAudioFromSources(
+            getCambridgeListeningAudioAlternatives(activeListeningFullTestSectionSet.audioUrl)
+          )
           return
         } catch {
           // fall through to TTS
@@ -29755,6 +29859,19 @@ function App() {
                                           <p className="topFixLabel">{fix.label}</p>
                                           <p className="topFixTitle">{fix.title}</p>
                                           <p className="topFixDetail">{fix.detail}</p>
+                                          <button
+                                            type="button"
+                                            className="ladderSaveBtn"
+                                            onClick={() =>
+                                              savePlanToNotebook({
+                                                criterion: fix.label,
+                                                quote: fix.title,
+                                                fix: fix.detail
+                                              })
+                                            }
+                                          >
+                                            ＋ บันทึกลง Notebook
+                                          </button>
                                         </div>
                                       </li>
                                     ))}

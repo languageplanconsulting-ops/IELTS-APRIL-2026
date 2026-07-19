@@ -26017,6 +26017,92 @@ textarea {
   line-height: 1.5;
 }
 
+/* Personalised unlock steps: your sentence -> the rewrite -> why */
+.ladderStepTag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #f3d9d5;
+  color: #8a2f26;
+  font-size: 10.5px;
+  font-weight: 800;
+  vertical-align: middle;
+}
+.ladderStepTag.is-good {
+  background: #cfe9da;
+  color: #0e5e3f;
+}
+.ladderStepToFixed {
+  font-weight: 600;
+}
+.ladderStepWhy {
+  margin: 5px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4b5563;
+}
+.ladderMetEvItem + .ladderMetEvItem::before {
+  content: ', ';
+  font-style: normal;
+  color: #9aa3af;
+}
+
+/* Full grammar-mistake list */
+.mistakeList {
+  margin: 10px 0 4px;
+  padding: 10px 12px;
+  border: 1px solid #f0d6d2;
+  border-radius: 12px;
+  background: #fffaf9;
+}
+.mistakeListHead {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #8a2f26;
+}
+.mistakeListItems {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+}
+.mistakeItem {
+  font-size: 12.5px;
+}
+.mistakeType {
+  display: inline-block;
+  margin-bottom: 4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #46506a;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+.mistakeFrom {
+  margin: 0 0 4px;
+  color: #b9433b;
+  background: #fcefed;
+  border-radius: 8px;
+  padding: 6px 9px;
+  line-height: 1.45;
+}
+.mistakeTo {
+  margin: 0;
+  color: #0e5e3f;
+  background: #e7f4ec;
+  border-radius: 8px;
+  padding: 6px 9px;
+  line-height: 1.45;
+}
+.mistakeWhy {
+  margin: 5px 0 0;
+  color: #4b5563;
+  line-height: 1.55;
+}
+
 /* Focus lead banner + ladder save-to-notebook button */
 .focusLeadV2 {
   font-size: 12.5px;

@@ -463,7 +463,7 @@ Rules:
 - plusOnePlan.fix must be Thai coaching language (quote may keep original learner wording as evidence)
 - Use the polite Thai register with "ครับ" and never "ค่ะ".
 - requiredTicks must reflect that band's bucket logic
-- each required tick includes 1-3 short direct quotes from the submitted text as evidence whenever possible
+- requiredTicks[].evidence must list EVERY item from the submitted text that satisfies that requirement (up to 10), not just one example — e.g. for a collocation tick, list all the collocations found; for a linking-words tick, list every linker used
 - plusOnePlan should include as many actionable quote+fix items as possible (prefer 12-20 when evidence supports it)
 - analysisSignals.grammarErrorCount = count clear grammatical errors across the submitted answer(s)
 - analysisSignals.vocabularyIssueCount = count clear vocabulary mistakes or awkward lexical choices across the submitted answer(s)
@@ -587,7 +587,7 @@ Rules:
 - In fluency explanation, mention clearly that the score reflects only the 2-minute response.
 - plusOnePlan.fix must be Thai coaching language
 - requiredTicks must reflect the chosen band's logic
-- each required tick includes 1-3 short direct quotes whenever possible
+- requiredTicks[].evidence must list EVERY matching item from the submitted text (up to 10), not just one example
 - analysisSignals.grammarErrorCount = count clear grammatical errors across the whole task
 - analysisSignals.vocabularyIssueCount = count clear vocabulary issues across the whole task
 - analysisSignals.meaningImpact must be one of: "none", "minor", "major"
@@ -874,6 +874,95 @@ Rules:
 - Avoid repeating the same replacement idea.
 - If the answer is already strong, still provide a few meaningful refinement ideas instead of generic fillers.
 - In reasonThai, explain briefly why the new phrase sounds more natural in spoken English.
+
+Test mode: ${testMode}
+Full punctuated transcript:
+${punctuatedTranscript || '(empty)'}
+
+Question breakdown:
+${Array.isArray(questionBreakdown) && questionBreakdown.length
+    ? questionBreakdown
+        .map(
+          (item, index) =>
+            `[${index}] Question: ${item.question || 'Question'}\nAnswer: ${item.punctuatedTranscript || item.rawTranscript || '(empty)'}`
+        )
+        .join('\n\n')
+    : '(none)'}
+`
+
+const grammarMistakePrompt = ({ testMode, punctuatedTranscript, questionBreakdown }) => `
+You are an English Plan IELTS Speaking examiner marking Grammatical Range and Accuracy.
+
+List EVERY clear grammar mistake in the learner's answer. Do not summarise or pick highlights.
+
+Return only valid JSON with this schema:
+{
+  "mistakes": [
+    {
+      "originalText": string,
+      "correctedText": string,
+      "errorTypeThai": string,
+      "reasonThai": string
+    }
+  ]
+}
+
+Rules:
+- originalText MUST be copied verbatim from the learner transcript — the shortest phrase or clause that contains the mistake.
+- correctedText is that same phrase with the grammar fixed and nothing else changed.
+- Do not "fix" style, vocabulary or naturalness here — grammar only.
+- Spoken markers are normal: fillers ("um", "you know"), false starts and self-corrections are NOT mistakes.
+- errorTypeThai is a short Thai label such as "subject-verb agreement", "tense", "article", "plural", "preposition", "word order".
+- reasonThai explains in Thai why the original is wrong and what rule applies, in one or two sentences.
+- Use the polite Thai register with "ครับ" and never "ค่ะ".
+- If the same mistake pattern repeats, list each occurrence separately with its own quote.
+- Return an empty array when there is genuinely no clear grammar mistake.
+
+Test mode: ${testMode}
+Full punctuated transcript:
+${punctuatedTranscript || '(empty)'}
+
+Question breakdown:
+${Array.isArray(questionBreakdown) && questionBreakdown.length
+    ? questionBreakdown
+        .map(
+          (item, index) =>
+            `[${index}] Question: ${item.question || 'Question'}\nAnswer: ${item.punctuatedTranscript || item.rawTranscript || '(empty)'}`
+        )
+        .join('\n\n')
+    : '(none)'}
+`
+
+const unlockRewritePrompt = ({ testMode, criterionLabel, targetBand, requirements, punctuatedTranscript, questionBreakdown }) => `
+You are an English Plan IELTS Speaking coach.
+
+The learner needs to reach Band ${targetBand} for ${criterionLabel}. For EACH requirement below,
+find one sentence the learner actually said and rewrite it so that it satisfies that requirement.
+
+Return only valid JSON with this schema:
+{
+  "items": [
+    {
+      "requirement": string,
+      "originalText": string,
+      "improvedText": string,
+      "reasonThai": string
+    }
+  ]
+}
+
+Requirements (use this exact wording in "requirement"):
+${requirements.map((item, index) => `[${index}] ${item}`).join('\n')}
+
+Rules:
+- Return one item per requirement, in the same order, at most ${requirements.length}.
+- originalText MUST be copied verbatim from the learner transcript — one full sentence, no edits, no ellipsis.
+- Pick the sentence that best demonstrates the gap for THAT requirement; do not reuse the same originalText for two items.
+- If no sentence is a good fit for a requirement, omit that item entirely rather than inventing one.
+- improvedText is the SAME idea rewritten in natural spoken English so it now meets the requirement.
+- Keep improvedText close to the learner's own content and length. It must sound sayable out loud, not like a written essay.
+- reasonThai explains in Thai what changed and why it earns the higher band, in one or two sentences.
+- Use the polite Thai register with "ครับ" and never "ค่ะ".
 
 Test mode: ${testMode}
 Full punctuated transcript:
@@ -7601,7 +7690,17 @@ const normalizeComponentReport = (report, fallbackBand) => ({
         quote: normalizeThaiRegisterText(item?.quote || item?.requirement || ''),
         fix: normalizeThaiRegisterText(item?.fix || ''),
         originalText: normalizeThaiRegisterText(item?.originalText || ''),
-        improvedText: normalizeThaiRegisterText(item?.improvedText || '')
+        improvedText: normalizeThaiRegisterText(item?.improvedText || ''),
+        reasonThai: normalizeThaiRegisterText(item?.reasonThai || ''),
+        isPersonalized: Boolean(item?.isPersonalized)
+      }))
+    : [],
+  grammarMistakes: Array.isArray(report?.grammarMistakes)
+    ? report.grammarMistakes.slice(0, 20).map((item) => ({
+        originalText: String(item?.originalText || ''),
+        correctedText: String(item?.correctedText || ''),
+        errorTypeThai: normalizeThaiRegisterText(item?.errorTypeThai || ''),
+        reasonThai: normalizeThaiRegisterText(item?.reasonThai || '')
       }))
     : []
 })
@@ -8118,13 +8217,26 @@ const summarizeRequirementProgress = ({ requirement, punctuatedTranscript, quest
   return buildFallbackSuggestion()
 }
 
+/** The unlock list is a short, actionable plan — not an exhaustive audit. */
+const MAX_UNLOCK_ITEMS = 5
+
+/** Compare quotes ignoring case, punctuation and spacing so ASR/punctuation drift still matches. */
+const normalizeForQuoteMatch = (value) =>
+  String(value || '')
+    .toLowerCase()
+    .replace(/[\u2018\u2019\u201c\u201d"']/g, '')
+    .replace(/[.,!?;:—–-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
 const buildChecklistUnlockItems = ({
   criterion,
   currentBand,
   testMode,
   punctuatedTranscript,
   questionBreakdown,
-  plusOnePlan
+  plusOnePlan,
+  unlockRewrites
 }) => {
   const targetBand = getNextBandTarget(currentBand)
   const requirements = getNextBandRequirementBank({
@@ -8133,20 +8245,37 @@ const buildChecklistUnlockItems = ({
     testMode
   })
 
-  return requirements.slice(0, 10).map((requirement) => {
+  return requirements.slice(0, MAX_UNLOCK_ITEMS).map((requirement) => {
     const detail = summarizeRequirementProgress({
       requirement,
       punctuatedTranscript,
       questionBreakdown,
       plusOnePlan
     })
+    // Prefer the learner's own sentence + its rewrite; fall back to the generic
+    // coaching line only when no verified rewrite came back for this requirement.
+    const rewrite = unlockRewrites instanceof Map ? unlockRewrites.get(requirement) : null
+    if (rewrite) {
+      return {
+        requirement,
+        statusThai: rewrite.reasonThai || detail.statusThai || '',
+        quote: rewrite.originalText,
+        fix: rewrite.improvedText,
+        originalText: rewrite.originalText,
+        improvedText: rewrite.improvedText,
+        reasonThai: rewrite.reasonThai || '',
+        isPersonalized: true
+      }
+    }
     return {
       requirement,
       statusThai: detail.statusThai || '',
       quote: requirement,
       fix: detail.improvedText || detail.statusThai || '',
       originalText: detail.originalText || '',
-      improvedText: detail.improvedText || ''
+      improvedText: detail.improvedText || '',
+      reasonThai: '',
+      isPersonalized: false
     }
   })
 }
@@ -9430,6 +9559,111 @@ const buildCustomVocabularySuggestions = async ({
   }
 }
 
+/**
+ * Personalised unlock items: the learner's own sentence plus the rewrite that
+ * would earn the next band. Every originalText is verified against the
+ * transcript, so a hallucinated quote is dropped rather than shown.
+ */
+const buildUnlockRewrites = async ({
+  criterion,
+  criterionLabel,
+  targetBand,
+  requirements,
+  testMode,
+  punctuatedTranscript,
+  questionBreakdown,
+  usageTracker
+}) => {
+  const wanted = (Array.isArray(requirements) ? requirements : []).slice(0, MAX_UNLOCK_ITEMS)
+  if (!wanted.length) return new Map()
+  const comparableSource = normalizeForQuoteMatch(
+    [punctuatedTranscript, ...(Array.isArray(questionBreakdown) ? questionBreakdown : []).map((item) => item?.punctuatedTranscript || item?.rawTranscript || '')].join(' ')
+  )
+  if (!comparableSource) return new Map()
+
+  try {
+    const payload = await callGeminiCleanupJson(
+      unlockRewritePrompt({
+        testMode,
+        criterionLabel: criterionLabel || criterion,
+        targetBand,
+        requirements: wanted,
+        punctuatedTranscript,
+        questionBreakdown
+      }),
+      usageTracker
+    )
+    const items = Array.isArray(payload?.items) ? payload.items : []
+    const byRequirement = new Map()
+    const usedOriginals = new Set()
+
+    for (const item of items) {
+      const requirement = String(item?.requirement || '').replace(/\s+/g, ' ').trim()
+      const originalText = String(item?.originalText || '').replace(/\s+/g, ' ').trim()
+      const improvedText = String(item?.improvedText || '').replace(/\s+/g, ' ').trim()
+      if (!requirement || !originalText || !improvedText) continue
+      const matchedRequirement = wanted.find((entry) => normalizeForQuoteMatch(entry) === normalizeForQuoteMatch(requirement))
+      if (!matchedRequirement || byRequirement.has(matchedRequirement)) continue
+      // The quote has to be something the learner really said.
+      const comparableQuote = normalizeForQuoteMatch(originalText)
+      if (!comparableQuote || !comparableSource.includes(comparableQuote)) continue
+      if (usedOriginals.has(comparableQuote)) continue
+      // A "rewrite" identical to the original teaches nothing.
+      if (normalizeForQuoteMatch(improvedText) === comparableQuote) continue
+      usedOriginals.add(comparableQuote)
+      byRequirement.set(matchedRequirement, {
+        originalText,
+        improvedText,
+        reasonThai: normalizeThaiRegisterText(String(item?.reasonThai || '').trim())
+      })
+    }
+    return byRequirement
+  } catch {
+    return new Map()
+  }
+}
+
+/**
+ * Every clear grammar mistake with its correction and a Thai explanation.
+ * Quotes are verified against the transcript so a hallucinated error is dropped.
+ */
+const buildGrammarMistakes = async ({ testMode, punctuatedTranscript, questionBreakdown, usageTracker }) => {
+  const comparableSource = normalizeForQuoteMatch(
+    [punctuatedTranscript, ...(Array.isArray(questionBreakdown) ? questionBreakdown : []).map((item) => item?.punctuatedTranscript || item?.rawTranscript || '')].join(' ')
+  )
+  if (!comparableSource) return []
+  try {
+    const payload = await callGeminiCleanupJson(
+      grammarMistakePrompt({ testMode, punctuatedTranscript, questionBreakdown }),
+      usageTracker
+    )
+    const rows = Array.isArray(payload?.mistakes) ? payload.mistakes : []
+    const seen = new Set()
+    const mistakes = []
+    for (const row of rows) {
+      const originalText = String(row?.originalText || '').replace(/\s+/g, ' ').trim()
+      const correctedText = String(row?.correctedText || '').replace(/\s+/g, ' ').trim()
+      if (!originalText || !correctedText) continue
+      const comparable = normalizeForQuoteMatch(originalText)
+      if (!comparable || !comparableSource.includes(comparable)) continue
+      // A "correction" identical to the original is not a mistake.
+      if (normalizeForQuoteMatch(correctedText) === comparable) continue
+      if (seen.has(comparable)) continue
+      seen.add(comparable)
+      mistakes.push({
+        originalText,
+        correctedText,
+        errorTypeThai: normalizeThaiRegisterText(String(row?.errorTypeThai || '').trim()),
+        reasonThai: normalizeThaiRegisterText(String(row?.reasonThai || '').trim())
+      })
+      if (mistakes.length >= 20) break
+    }
+    return mistakes
+  } catch {
+    return []
+  }
+}
+
 const buildTranscriptAnnotations = async ({
   testMode,
   questionBreakdown,
@@ -9794,6 +10028,25 @@ const buildFinalReport = async ({
       })
     })
   }
+  const CRITERION_LABEL_EN = { grammar: 'Grammatical Range and Accuracy', lexical: 'Lexical Resource', fluency: 'Fluency and Coherence' }
+  const unlockRewriteByCriterion = Object.fromEntries(
+    await Promise.all(
+      ['grammar', 'lexical', 'fluency'].map(async (key) => {
+        const targetBand = getNextBandTarget(componentReports[key].band)
+        const requirements = getNextBandRequirementBank({ criterion: key, targetBand, testMode }).slice(0, MAX_UNLOCK_ITEMS)
+        const rewrites = await buildUnlockRewrites({
+          criterion: key,
+          criterionLabel: CRITERION_LABEL_EN[key],
+          targetBand,
+          requirements,
+          testMode,
+          punctuatedTranscript,
+          questionBreakdown: normalizedQuestionBreakdown
+        })
+        return [key, rewrites]
+      })
+    )
+  )
   ;['grammar', 'lexical', 'fluency'].forEach((key) => {
     componentReports[key].plusOneChecklist = buildChecklistUnlockItems({
       criterion: key,
@@ -9801,14 +10054,23 @@ const buildFinalReport = async ({
       testMode,
       punctuatedTranscript,
       questionBreakdown: normalizedQuestionBreakdown,
-      plusOnePlan: componentReports[key].plusOnePlan
+      plusOnePlan: componentReports[key].plusOnePlan,
+      unlockRewrites: unlockRewriteByCriterion[key]
     })
   })
-  const vocabularyLevelUpSuggestions = await buildCustomVocabularySuggestions({
-    testMode,
-    punctuatedTranscript,
-    questionBreakdown: normalizedQuestionBreakdown
-  })
+  const [vocabularyLevelUpSuggestions, grammarMistakes] = await Promise.all([
+    buildCustomVocabularySuggestions({
+      testMode,
+      punctuatedTranscript,
+      questionBreakdown: normalizedQuestionBreakdown
+    }),
+    buildGrammarMistakes({
+      testMode,
+      punctuatedTranscript,
+      questionBreakdown: normalizedQuestionBreakdown
+    })
+  ])
+  componentReports.grammar.grammarMistakes = grammarMistakes
   const nextAttemptFocusThai = buildNextAttemptFocusThai({
     testMode,
     criteria: reportCriteria,
