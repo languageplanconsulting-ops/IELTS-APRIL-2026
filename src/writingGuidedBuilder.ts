@@ -21,6 +21,7 @@
 
 import { EXTRA_MAP_GUIDED_BUILDERS, quizMapArticles } from './writingTask1MapExercises'
 import { EXTRA_TASK1_GUIDED_BUILDERS } from './writingTask1ExtraBuilders'
+import { overviewOpener } from './writingTask1Overview'
 
 // A blank's `focus` only drives which coach message is shown; either blank kind may carry any
 // focus, so both share this union.
@@ -110,7 +111,7 @@ export const STEP_COACH_TH: Record<WgbStep['role'], string> = {
   intro:
     'Introduction ของ Timeline และ No Timeline ต้องมี 1 ประโยคเท่านั้น โดยพาราเฟรสโจทย์ด้วย synonym หรือเปลี่ยนโครงสร้าง ห้ามเขียนประโยคที่ 2',
   overview:
-    'Overview ต้องมี 1 ประโยค: Timeline สรุปทิศทางหลัก; No Timeline ที่มี 2 ภาพให้บอกเฉพาะสิ่งที่มากที่สุดของแต่ละภาพ ส่วนภาพเดียวใช้ “While X was the largest, Y was the smallest in share.” ห้ามใช้ contrasting with หรือ leaving other sources',
+    'Overview ต้องมี 1 ประโยค และเปิดด้วย “Overall, it can be clearly observed that …” เสมอ: Timeline สรุปทิศทางหลัก; No Timeline ที่มี 2 ภาพให้บอกเฉพาะสิ่งที่มากที่สุดของแต่ละภาพ ส่วนภาพเดียวใช้ “… X was the largest, while Y was the smallest in share.” ห้ามใช้ contrasting with หรือ leaving other sources',
   body1:
     'Timeline Body 1 ต้องระบุปีและใช้ complex sentence ตามแบบเรียน; Pie chart / Map Body 1 ต้องเปิดด้วย “Starting with …” — Map ใช้ northern หรือ western part of the map',
   body2:
@@ -122,7 +123,7 @@ export const BLANK_COACH_TH: Record<WgbBlank['focus'], string> = {
   paraphrase: 'ช่องนี้คือการพาราเฟรส — ใช้ synonym แทนคำในโจทย์ หรือเปลี่ยนโครงสร้างประโยคใหม่',
   'word-choice': 'เลือกคำที่ความหมายและไวยากรณ์เข้ากับประโยคที่สุด อ่านทั้งประโยคก่อนตัดสินใจ',
   transition:
-    'เลือกคำเปิดตามชนิดคำถาม: Pie/Map Body 1 ใช้ Starting with และ Body 2 ใช้ In terms of; Map Body 1 = northern/western part · Body 2 = eastern side/section หรือ southern section; Map body ใช้ while/whereas/although + Interestingly/However/Surprisingly/It is interesting to note that/On the other hand; No Timeline Overview ใช้ While; Timeline ใช้คำเชื่อมตามความสัมพันธ์ของข้อมูล',
+    'เลือกคำเปิดตามชนิดคำถาม: Pie/Map Body 1 ใช้ Starting with และ Body 2 ใช้ In terms of; Map Body 1 = northern/western part · Body 2 = eastern side/section หรือ southern section; Map body ใช้ while/whereas/although + Interestingly/However/Surprisingly/It is interesting to note that/On the other hand; No Timeline Overview เปิดด้วย Overall, it can be clearly observed that แล้วใช้ while กลางประโยค; Timeline ใช้คำเชื่อมตามความสัมพันธ์ของข้อมูล',
   referencing: 'ตรงนี้อ้างถึงคำนามที่พูดถึงไปแล้ว — ใช้ "this number" หรือ "that of" แบบไหนถึงจะถูก?',
   'trend-phrase':
     'Timeline Overview: ขาขึ้นต้องเลือก experienced an upward trend (ห้าม showed) · ขาลงใช้ showed a downward trend · หรือ fluctuate / remain unchanged — ห้ามใส่ตัวเลข',
@@ -176,8 +177,14 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          sel('gb8-o1', ['While', 'Because', 'So'], 'While', 'transition', 'ใช้ While เปิดประโยค Overview เพื่อบอกหมวดที่มากที่สุดของ pie chart แต่ละวง'),
-          t(' coffee was the largest share of Vietnam’s exports to the US, aircraft parts were the largest share of US exports to Vietnam.')
+          ...overviewOpener('gb8'),
+          t('coffee '),
+          typ('gb8-o3', 'be', ['was'], 'verb-tense', 'ประธาน coffee เอกพจน์ + เล่าอดีต จึงใช้ was'),
+          t(' the '),
+          sel('gb8-o4', ['largest', 'larger', 'large'], 'largest', 'word-choice', 'largest = มากที่สุด (superlative) เพราะเทียบกับทุกหมวดในวง ส่วน larger ใช้เทียบแค่ 2 สิ่ง'),
+          t(' share of Vietnam’s exports to the US, '),
+          sel('gb8-o5', ['while', 'because', 'unless'], 'while', 'transition', 'while เชื่อมภาพสองวงที่เทียบกัน ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'),
+          t(' aircraft parts were the largest share of US exports to Vietnam.')
         ]
       },
       {
@@ -201,7 +208,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb8-b5', ['at', 'in', 'of'], 'at', 'word-choice', 'บอกจุดตัวเลขเจาะจงใช้ at $16 million ส่วน in และ of ไม่เข้ากับการระบุมูลค่า'),
           t(' $16 million, the '),
           sel('gb8-b14', ['second', 'seconds', 'secondly'], 'second', 'word-choice', 'the second highest = อันดับสอง ใช้ second (เลขลำดับ) ส่วน seconds (วินาที) และ secondly (คำเชื่อม) ผิดรูป'),
-          t(' most valuable group. Seafood and rice '),
+          t(' most valuable group. However, seafood and rice '),
           typ('gb8-b6', 'account', ['accounted'], 'verb-tense', 'past simple เล่าอดีต + ประธานพหูพจน์ ใช้ accounted (account for = คิดเป็น)'),
           t(' for '),
           sel('gb8-b17', ['markedly', 'marked', 'mark'], 'markedly', 'degree-adverb', 'markedly smaller = เล็กกว่าอย่างชัดเจน ใช้ adverb ขยาย smaller'),
@@ -210,7 +217,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' shares, at $4.4 and $4.3 million, '),
           sel('gb8-b8', ['respectively', 'roughly', 'partly'], 'respectively', 'word-choice', 'respectively = ตามลำดับ จับคู่ตัวเลขกับสินค้าที่ระบุก่อนหน้า (ต้องมี comma นำหน้าเสมอ) ส่วน roughly/partly ผิดความหมาย'),
           t('. '),
-          sel('gb8-b9', ['By comparison', 'Therefore', 'For example'], 'By comparison', 'transition', 'By comparison เปิดประโยคเปรียบเทียบใหม่'),
+          sel('gb8-b9', ['However', 'Therefore', 'For example'], 'However', 'transition', 'However เปิดประโยคเปรียบเทียบใหม่'),
           t(', garments and other goods each '),
           typ('gb8-b10', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต + made up = ประกอบเป็น (ประธาน each ตามด้วยกริยาเอกพจน์แต่รูปอดีต made เหมือนกัน)'),
           t(' up $2 million, the '),
@@ -237,14 +244,14 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb8-c14', ['recorded', 'wasted', 'ignored'], 'recorded', 'v3-clause', 'V3 recorded = ที่ถูกบันทึก ขยาย that (the value) ส่วน wasted (สูญเปล่า) และ ignored (เพิกเฉย) ไม่ตรงข้อมูล'),
           t(' for machinery '),
           sel('gb8-c5', ['at', 'by', 'to'], 'at', 'word-choice', 'ระบุจุดมูลค่าใช้ at $30.5 million ส่วน by (ภายใน) และ to (ถึง) ไม่เข้ากับการระบุมูลค่า'),
-          t(' $30.5 million. Fertiliser and cotton '),
+          t(' $30.5 million. Similarly, fertiliser and cotton '),
           typ('gb8-c6', 'follow', ['followed'], 'verb-tense', 'past simple เล่าอดีต + ประธานพหูพจน์ ใช้ followed (ตามมา)'),
           t(' '),
           sel('gb8-c15', ['closely', 'closest', 'close'], 'closely', 'degree-adverb', 'followed closely = ตามมาอย่างใกล้ชิด ใช้ adverb closely ขยายกริยา ส่วน closest (ขั้นกว่าสุด) และ close (adj/adv บอกระยะ) ไม่เข้ากับตำแหน่งนี้'),
           t(', at $16.5 and $12 million, '),
           sel('gb8-c7', ['respectively', 'exactly', 'nearly'], 'respectively', 'word-choice', 'respectively = ตามลำดับ จับคู่ตัวเลขกับ fertiliser/cotton (มี comma นำหน้าเสมอ) ส่วน exactly/nearly ผิดความหมาย'),
           t('. '),
-          sel('gb8-c8', ['By contrast', 'Therefore', 'Moreover'], 'By contrast', 'transition', 'By contrast เปิดประโยคเปรียบเทียบใหม่'),
+          sel('gb8-c8', ['In contrast', 'Therefore', 'Moreover'], 'In contrast', 'transition', 'In contrast เปิดประโยคเปรียบเทียบใหม่'),
           t(', cars '),
           typ('gb8-c9', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต + ประธานพหูพจน์ ใช้ made (make up = ประกอบเป็น)'),
           t(' up the '),
@@ -304,8 +311,14 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          sel('gb9-o1', ['While', 'Because', 'So'], 'While', 'transition', 'กราฟเดียวให้ใช้ While เชื่อมหมวดที่มากที่สุดกับหมวดที่น้อยที่สุด'),
-          t(' housing in the UK was the largest category, healthcare in Thailand was the smallest in share.')
+          ...overviewOpener('gb9'),
+          t('housing in the UK '),
+          typ('gb9-o3', 'be', ['was'], 'verb-tense', 'ประธาน housing เอกพจน์ + เล่าอดีต จึงใช้ was'),
+          t(' the largest '),
+          sel('gb9-o4', ['category', 'calendar', 'ceremony'], 'category', 'word-choice', 'category = หมวดค่าใช้จ่าย ส่วน calendar (ปฏิทิน) และ ceremony (พิธี) ผิดความหมาย'),
+          t(', '),
+          sel('gb9-o5', ['while', 'because', 'unless'], 'while', 'transition', 'while เชื่อมค่าที่มากที่สุดกับค่าที่น้อยที่สุด ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'),
+          t(' healthcare in Thailand was the smallest in share.')
         ]
       },
       {
@@ -329,8 +342,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb9-b7', ['at', 'in', 'on'], 'at', 'word-choice', 'บอกค่า % จุดเดียวใช้ at 18% ส่วน in/on ไม่ใช่คำบุพบทของค่าตัวเลขแบบนี้'),
           t(' 18% '),
           sel('gb9-b8', ['and', 'but', 'or'], 'and', 'transition', 'เชื่อมสองรายการที่เพิ่มเข้ามาใช้ and ส่วน but (แต่) และ or (หรือ) ผิดความหมาย'),
-          t(' leisure at 15%. '),
-          sel('gb9-b9', ['Transport', 'Transports', 'Transporting'], 'Transport', 'word-choice', 'transport เป็นนามนับไม่ได้ในความหมายนี้ ไม่เติม s และไม่ใช้รูป V-ing'),
+          t(' leisure at 15%. However, '),
+          sel('gb9-b9', ['transport', 'transports', 'transporting'], 'transport', 'word-choice', 'transport เป็นนามนับไม่ได้ในความหมายนี้ ไม่เติม s และไม่ใช้รูป V-ing'),
           t(' and healthcare '),
           typ('gb9-b10', 'account', ['accounted'], 'verb-tense', 'ประธานพหูพจน์ + เล่าอดีต จึงผัน account -> accounted'),
           t(' for '),
@@ -339,7 +352,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb9-b12', ['shares', 'sharing', 'shore'], 'shares', 'word-choice', 'shares (ส่วนแบ่งพหูพจน์) เข้ากับสองหมวด ส่วน sharing/shore ผิดรูปและความหมาย'),
           t(', at 14% and 12%, '),
           sel('gb9-b13', ['respectively', 'suddenly', 'clearly'], 'respectively', 'word-choice', 'respectively = ตามลำดับ ใช้จับคู่ 14%-transport และ 12%-healthcare และต้องมีคอมมาข้างหน้าเสมอ'),
-          t('. These five '),
+          t('. Similarly, these five '),
           sel('gb9-b14', ['categories', 'countries', 'centuries'], 'categories', 'referencing', 'อ้างถึงหมวดค่าใช้จ่ายที่กล่าวไปแล้ว จึงใช้ categories ส่วน countries/centuries ผิดความหมาย'),
           t(' together '),
           typ('gb9-b15', 'make', ['made'], 'verb-tense', 'เล่าอดีต จึงผัน make up -> made up'),
@@ -347,7 +360,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           typ('gb9-b17', 'lead', ['led'], 'v3-clause', 'led by (V3) = นำโดย ใช้ชี้หมวดที่สูงสุด และเล่าอดีต จึงใช้ led'),
           t(' by '),
           sel('gb9-b18', ['housing', 'food', 'leisure'], 'housing', 'referencing', 'housing (28%) เป็นหมวดสูงสุดใน UK จึงนำหมวดอื่น ส่วน food/leisure มีสัดส่วนน้อยกว่า'),
-          t('. This ordering placed housing clearly ahead of every other category recorded for British households overall.')
+          t('. Interestingly, this ordering placed housing clearly ahead of every other category recorded for British households.')
         ]
       },
       {
@@ -374,8 +387,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' 22% '),
           sel('gb9-c7b', ['and', 'but', 'nor'], 'and', 'transition', 'เชื่อมรายการเพิ่มใช้ and ส่วน but (แต่) และ nor (และไม่) ผิดความหมาย'),
           t(' transport at 18%. '),
-          sel('gb9-c8', ['While', 'Because', 'Therefore'], 'While', 'transition', 'While ใช้ชี้ความต่างของหมวด healthcare เทียบกับหมวดที่ใหญ่กว่า ส่วน Because/Therefore เป็นเหตุ-ผล ไม่ใช่การเทียบ'),
-          t(' housing and transport '),
+          sel('gb9-c8', ['In contrast', 'Because', 'Therefore'], 'In contrast', 'transition', 'In contrast = ในทางตรงข้าม ใช้ชี้ความต่างของหมวด healthcare เทียบกับหมวดที่ใหญ่กว่า ส่วน Because/Therefore เป็นเหตุ-ผล ไม่ใช่การเทียบ'),
+          t(', housing and transport '),
           typ('gb9-c9', 'take', ['took'], 'verb-tense', 'ประธานพหูพจน์ + เล่าอดีต จึงผัน take -> took'),
           t(' up '),
           sel('gb9-c10', ['larger', 'smaller', 'lower'], 'larger', 'word-choice', 'housing และ transport มีสัดส่วนใหญ่กว่า healthcare จึงใช้ larger ส่วน smaller/lower ขัดกับข้อมูล'),
@@ -440,8 +453,13 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          sel('gb10-o1', ['While', 'Because', 'So'], 'While', 'transition', 'ใช้ While บอกแหล่งพลังงานที่มากที่สุดของ pie chart แต่ละประเทศ'),
-          t(' renewables made up the largest share in Germany, coal accounted for the largest share in Australia.')
+          ...overviewOpener('gb10'),
+          sel('gb10-o3', ['renewable energy', 'renewing energy', 'renewal energy'], 'renewable energy', 'word-choice', 'renewable energy = พลังงานหมุนเวียน (renewable เป็น adjective ขยาย energy) ส่วน renewing/renewal ผิดรูป'),
+          t(' '),
+          typ('gb10-o4', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต: made up = ประกอบเป็น'),
+          t(' up the largest share in Germany, '),
+          sel('gb10-o5', ['while', 'because', 'unless'], 'while', 'transition', 'while เชื่อมภาพสองประเทศที่เทียบกัน ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'),
+          t(' coal accounted for the largest share in Australia.')
         ]
       },
       {
@@ -451,20 +469,20 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         hintTh: HINT_CONJUGATE,
         segments: [
           sel('gb10-b1', ['Starting with Germany', 'Despite Germany', 'Unlike Germany'], 'Starting with Germany', 'transition', 'Body 1 ของ pie chart ต้องเปิดด้วย Starting with + ประเทศแรก'),
-          t(', renewables '),
+          t(', renewable energy '),
           typ('gb10-b2', 'account', ['accounted'], 'verb-tense', 'past simple เล่าอดีต: account -> accounted'),
           t(' '),
           sel('gb10-b3', ['for', 'of', 'with'], 'for', 'word-choice', 'สำนวนคงที่คือ account for = คิดเป็นสัดส่วน จึงต้องใช้ for'),
           t(' the '),
           sel('gb10-b4', ['largest', 'largely', 'large'], 'largest', 'word-choice', 'largest (superlative) = ใหญ่ที่สุด ขยาย share ส่วน largely เป็น adverb และ large เป็นรูปธรรมดา ไม่ได้สื่อว่ามากที่สุด'),
           t(' share, at '),
-          sel('gb10-b5', ['44%', '25%', '16%'], '44%', 'word-choice', 'ข้อเท็จจริงจากกราฟ: renewables ของเยอรมนี = 44%'),
+          sel('gb10-b5', ['44%', '25%', '16%'], '44%', 'word-choice', 'ข้อเท็จจริงจากกราฟ: renewable energy ของเยอรมนี = 44%'),
           t(', '),
           typ('gb10-b6', 'follow', ['followed'], 'v3-clause', 'V3 (past participle) ในโครงสร้าง followed by = ตามมาด้วย ใช้ขยายลำดับสัดส่วน'),
           t(' by coal '),
           sel('gb10-b7', ['at', 'in', 'by'], 'at', 'word-choice', 'ระบุค่าตัวเลข/เปอร์เซ็นต์เฉพาะจุด ใช้ at (at 25%) เสมอ'),
-          t(' 25% and gas at 16%. '),
-          sel('gb10-b8', ['Nuclear', 'A nuclear', 'Nuclears'], 'Nuclear', 'word-choice', 'nuclear (พลังงานนิวเคลียร์) เป็นนามนับไม่ได้ ไม่ใช้ a หรือเติม s'),
+          t(' 25% and gas at 16%. However, '),
+          sel('gb10-b8', ['nuclear', 'a nuclear', 'nuclears'], 'nuclear', 'word-choice', 'nuclear (พลังงานนิวเคลียร์) เป็นนามนับไม่ได้ ไม่ใช้ a หรือเติม s'),
           t(' and other sources '),
           typ('gb10-b9', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต: make -> made (ประธานพหูพจน์)'),
           t(' up '),
@@ -472,14 +490,14 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' shares, at 6% and 9%, '),
           sel('gb10-b11', ['respectively', 'clearly', 'lately'], 'respectively', 'word-choice', 'respectively = ตามลำดับ จับคู่ nuclear=6% และ other=9% (มี comma นำหน้าเสมอ) ส่วน clearly/lately ผิดความหมาย'),
           t('. '),
-          sel('gb10-b12', ['Together', 'Alone', 'Instead'], 'Together', 'transition', 'Together = เมื่อรวมกัน สื่อการรวมสัดส่วน เข้ากับประโยคสรุปย่อย ส่วน Alone/Instead ผิดความหมาย'),
+          sel('gb10-b12', ['Likewise', 'Alone', 'Instead'], 'Likewise', 'transition', 'Likewise = เช่นเดียวกัน ใช้เปิดประโยคสรุปย่อยที่รวมสัดส่วนทั้งหมด ส่วน Alone/Instead ผิดความหมาย'),
           t(', '),
           sel('gb10-b13', ['these', 'this', 'those'], 'these', 'referencing', 'อ้างถึง sources ที่เพิ่งกล่าว (พหูพจน์และอยู่ในย่อหน้าเดียวกัน) ใช้ these ส่วน this เอกพจน์ และ those ชี้ของไกล'),
           t(' five sources '),
           typ('gb10-b14', 'provide', ['provided'], 'verb-tense', 'past simple เล่าอดีต: provide -> provided'),
           t(' the country’s electricity in 2020. '),
-          sel('gb10-b15', ['Notably', 'Notable', 'Note'], 'Notably', 'transition', 'Notably (adverb) = ที่น่าสังเกตคือ เปิดประโยคขยายความ ส่วน notable เป็นคุณศัพท์ และ note เป็นคำนาม/กริยา ผิดตำแหน่ง'),
-          t(', the share of renewables '),
+          sel('gb10-b15', ['Interestingly', 'Interesting', 'Interest'], 'Interestingly', 'transition', 'Interestingly (adverb) = ที่น่าสนใจคือ เปิดประโยคขยายความ ส่วน interesting เป็นคุณศัพท์ และ interest เป็นคำนาม ผิดตำแหน่ง'),
+          t(', the share of renewable energy '),
           typ('gb10-b16', 'be', ['was'], 'verb-tense', 'ประธาน the share เอกพจน์ + เล่าอดีต จึงใช้ was'),
           t(' '),
           sel('gb10-b17', ['nearly', 'near', 'nearer'], 'nearly', 'degree-adverb', 'nearly (adverb) = เกือบ ขยายวลี twice ส่วน near เป็นคุณศัพท์/บุพบท และ nearer เป็น comparative ผิดบริบท'),
@@ -507,22 +525,22 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb10-c5', ['that', 'those', 'it'], 'that', 'referencing', 'that of gas = แทน the share of gas (share เอกพจน์) จึงใช้ that ส่วน those ใช้กับพหูพจน์ และ it อ้างไม่ชัด'),
           t(' of gas '),
           sel('gb10-c6', ['at', 'by', 'in'], 'at', 'word-choice', 'ระบุค่าเปอร์เซ็นต์เฉพาะจุด ใช้ at 22%'),
-          t(' 22%. '),
-          sel('gb10-c6b', ['Gas', 'A gas', 'Gases'], 'Gas', 'word-choice', 'gas (พลังงานก๊าซ) เป็นนามนับไม่ได้ ไม่ใช้ a หรือเติม s'),
-          t(' therefore '),
+          t(' 22%. Similarly, '),
+          sel('gb10-c6b', ['gas', 'a gas', 'gases'], 'gas', 'word-choice', 'gas (พลังงานก๊าซ) เป็นนามนับไม่ได้ ไม่ใช้ a หรือเติม s'),
+          t(' '),
           typ('gb10-c6c', 'rank', ['ranked'], 'verb-tense', 'past simple เล่าอดีต: rank -> ranked (ประธาน gas เอกพจน์)'),
           t(' second, '),
           typ('gb10-c6d', 'follow', ['followed'], 'v3-clause', 'V3 (past participle) ในโครงสร้าง followed by = ตามมาด้วย'),
           t(' '),
           sel('gb10-c6e', ['closely', 'close', 'closer'], 'closely', 'degree-adverb', 'closely (adverb) = อย่างสูสี ขยาย followed by ส่วน close เป็นคุณศัพท์ และ closer เป็น comparative ผิดบริบท'),
-          t(' by renewables. Renewables '),
+          t(' by renewable energy. Interestingly, renewable energy '),
           typ('gb10-c7', 'account', ['accounted'], 'verb-tense', 'past simple เล่าอดีต: account -> accounted'),
           t(' for 21%, only '),
           sel('gb10-c8', ['slightly', 'sharply', 'widely'], 'slightly', 'degree-adverb', 'ความต่างระหว่าง 21% กับ 22% เล็กมาก จึงใช้ slightly (เล็กน้อย) ส่วน sharply/widely สื่อความต่างมาก ไม่ตรงข้อมูล'),
           t(' below '),
           sel('gb10-c9', ['that', 'those', 'them'], 'that', 'referencing', 'that of gas = แทน the share of gas (เอกพจน์) จึงใช้ that ส่วน those/them ผิดจำนวนหรืออ้างไม่ชัด'),
           t(' of gas. '),
-          sel('gb10-c10', ['By contrast', 'Therefore', 'For example'], 'By contrast', 'transition', 'By contrast เปิดประโยคเปรียบเทียบใหม่'),
+          sel('gb10-c10', ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast เปิดประโยคเปรียบเทียบใหม่'),
           t(', other sources '),
           typ('gb10-c11', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต: make -> made (ประธานพหูพจน์)'),
           t(' up the '),
@@ -530,10 +548,10 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' proportion '),
           sel('gb10-c13', ['at', 'of', 'for'], 'at', 'word-choice', 'ระบุค่าเปอร์เซ็นต์เฉพาะจุด ใช้ at 5%'),
           t(' 5%. '),
-          sel('gb10-c14', ['Although', 'Because', 'Since'], 'Although', 'transition', 'Although = แม้ว่า เปิดประโยคเปรียบเทียบที่มีความขัดแย้งในตัว ส่วน Because/Since สื่อเหตุผล ผิดความหมายที่ต้องการ'),
-          t(' renewables '),
+          sel('gb10-c14', ['However', 'Because', 'Since'], 'However', 'transition', 'However = อย่างไรก็ตาม เปิดประโยคที่ขัดแย้งกับประโยคก่อนหน้า ส่วน Because/Since สื่อเหตุผล ผิดความหมายที่ต้องการ'),
+          t(', renewable energy '),
           typ('gb10-c15', 'play', ['played'], 'verb-tense', 'past simple เล่าอดีต: play -> played'),
-          t(' a role in both countries, coal '),
+          t(' a role in both countries, but coal '),
           typ('gb10-c16', 'be', ['was'], 'verb-tense', 'ประธาน coal เอกพจน์ + เล่าอดีต จึงใช้ was'),
           t(' far more '),
           sel('gb10-c17', ['central', 'centrally', 'centre'], 'central', 'word-choice', 'ต้องการคุณศัพท์ขยายหลัง more จึงใช้ central (เป็นแกนหลัก) ส่วน centrally เป็น adverb และ centre เป็นคำนาม'),
@@ -584,8 +602,14 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          sel('gb11-o1', ['While', 'Because', 'So'], 'While', 'transition', 'ตารางเดียวให้ใช้ While เชื่อมค่าที่มากที่สุดกับค่าที่น้อยที่สุดในตัวชี้วัดเดียวกัน'),
-          t(' Oxford’s research output was the largest, Chulalongkorn’s was the smallest in share.')
+          ...overviewOpener('gb11'),
+          t('Oxford’s '),
+          sel('gb11-o3', ['research', 'rehearsal', 'reservation'], 'research', 'word-choice', 'research output = ผลงานวิจัย ส่วน rehearsal (การซ้อม) และ reservation (การจอง) ผิดความหมาย'),
+          t(' output '),
+          typ('gb11-o4', 'be', ['was'], 'verb-tense', 'ประธาน output เอกพจน์ + เล่าอดีต จึงใช้ was'),
+          t(' the largest, '),
+          sel('gb11-o5', ['while', 'because', 'unless'], 'while', 'transition', 'while เชื่อมค่าที่มากที่สุดกับค่าที่น้อยที่สุด ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'),
+          t(' Chulalongkorn’s was the smallest in share.')
         ]
       },
       {
@@ -605,7 +629,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb11-b5', ['by', 'with', 'from'], 'by', 'word-choice', 'followed by = ตามมาด้วย เป็นวลีตายตัวใช้บุพบท by ส่วน with และ from ไม่เข้ากับโครงสร้างนี้'),
           t(' MIT at 42,000 and Seoul National '),
           sel('gb11-b5b', ['at', 'on', 'by'], 'at', 'word-choice', 'ระบุค่าตัวเลขจุดเดียวใช้ at 22,100 ส่วน on และ by ไม่ใช้บอกค่าแบบนี้'),
-          t(' 22,100. Chulalongkorn '),
+          t(' 22,100. However, Chulalongkorn '),
           typ('gb11-b6', 'record', ['recorded'], 'verb-tense', 'ประธานเอกพจน์ + เล่าอดีต จึงผัน record เป็น recorded'),
           t(' '),
           sel('gb11-b7', ['by far', 'so far', 'as far'], 'by far', 'word-choice', 'by far the lowest = ต่ำสุดแบบทิ้งห่าง เป็นวลีเน้นความต่างชัดเจน ส่วน so far (จนถึงตอนนี้) และ as far ไม่เข้ากับความหมายนี้'),
@@ -613,7 +637,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb11-b8', ['lowest', 'largest', 'busiest'], 'lowest', 'word-choice', 'lowest = ต่ำสุด ตรงกับตัวเลข 4,300 ที่น้อยสุด ส่วน largest (ใหญ่สุด) และ busiest (ยุ่งสุด) ไม่เข้ากับปริมาณผลงานวิจัย'),
           t(' figure, at only 4,300, well below '),
           sel('gb11-b9', ['that', 'those', 'this'], 'that', 'referencing', 'that of Seoul National = ตัวเลขของ Seoul National ใช้ that แทนคำนามเอกพจน์ (figure) ส่วน those ใช้แทนพหูพจน์ และ this ต้องตามด้วยคำนาม'),
-          t(' of Seoul National. This gap made Oxford the clear leader in published research.')
+          t(' of Seoul National. Interestingly, this gap made Oxford the clear leader in published research.')
         ]
       },
       {
@@ -633,12 +657,12 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb11-c4', ['at', 'in', 'by'], 'at', 'word-choice', 'ระบุตัวเลขจุดเดียวใช้ at 91% ส่วน in และ by ไม่ใช้บอกค่าตัวเลขแบบนี้'),
           t(' 91% and employment at 97%, the '),
           sel('gb11-c4b', ['best', 'better', 'good'], 'best', 'word-choice', 'เทียบกับทุกมหาวิทยาลัยจึงใช้ขั้นสูงสุด the best ส่วน better (กว่า) เทียบแค่สองสิ่ง และ good เป็นรูปธรรมดา'),
-          t(' scores in the table. Oxford and Seoul National '),
+          t(' scores in the table. Similarly, Oxford and Seoul National '),
           typ('gb11-c5', 'follow', ['followed'], 'verb-tense', 'ประธานพหูพจน์ + เล่าอดีต จึงผัน follow เป็น followed'),
           t(' '),
           sel('gb11-c6', ['closely', 'close', 'closer'], 'closely', 'word-choice', 'ขยายกริยา followed จึงใช้ adverb closely'),
           t('. '),
-          sel('gb11-c7', ['By contrast', 'Therefore', 'Also'], 'By contrast', 'transition', 'By contrast เปิดประโยคเปรียบเทียบใหม่'),
+          sel('gb11-c7', ['In contrast', 'Therefore', 'Also'], 'In contrast', 'transition', 'In contrast เปิดประโยคเปรียบเทียบใหม่'),
           t(', Chulalongkorn '),
           typ('gb11-c8', 'remain', ['remained'], 'verb-tense', 'ประธานเอกพจน์ + เล่าอดีต จึงผัน remain เป็น remained'),
           t(' the '),
@@ -648,13 +672,13 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' figures below '),
           sel('gb11-c11', ['those', 'that', 'them'], 'those', 'referencing', 'those of every other university = ตัวเลขของมหาวิทยาลัยอื่น ใช้ those แทนคำนามพหูพจน์ (figures) ส่วน that ใช้แทนเอกพจน์ และ them เป็นกรรม ไม่ใช้เทียบ'),
           t(' of every other university. '),
-          sel('gb11-c12', ['Regarding', 'Although', 'Because'], 'Regarding', 'transition', 'Regarding = เกี่ยวกับ ใช้เปิดหัวข้อย่อยใหม่ ส่วน Although (แม้ว่า) และ Because (เพราะ) เป็นคำเชื่อมอนุประโยค ไม่ใช้เปิดหัวข้อ'),
-          t(' international students, MIT '),
+          sel('gb11-c12', ['Similarly', 'Although', 'Because'], 'Similarly', 'transition', 'Similarly = ในทำนองเดียวกัน ใช้เปิดประโยคที่เล่าแนวโน้มซ้ำแบบเดิมในอีกคอลัมน์ ส่วน Although (แม้ว่า) และ Because (เพราะ) เป็นคำเชื่อมอนุประโยค'),
+          t(', in terms of international students, MIT '),
           typ('gb11-c13', 'attract', ['attracted'], 'verb-tense', 'ประธานเอกพจน์ MIT + เล่าอดีต จึงผัน attract เป็น attracted'),
           t(' the largest share, '),
           typ('gb11-c14', 'follow', ['followed'], 'v3-clause', 'ใช้โครงสร้าง followed by (V3) เพื่อไล่อันดับรองลงมา'),
           t(' by Oxford and Seoul National. '),
-          sel('gb11-c15', ['By contrast', 'Therefore', 'For example'], 'By contrast', 'transition', 'By contrast เปิดประโยคเปรียบเทียบใหม่'),
+          sel('gb11-c15', ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast เปิดประโยคเปรียบเทียบใหม่'),
           t(', Chulalongkorn '),
           typ('gb11-c16', 'enrol', ['enrolled'], 'verb-tense', 'ประธานเอกพจน์ + เล่าอดีต จึงผัน enrol เป็น enrolled'),
           t(' the fewest, '),
@@ -702,7 +726,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t('Overall, Chinese students '),
+          ...overviewOpener('gb12'),
+          t('Chinese students '),
           typ('gb12-o1', 'make', ['made'], 'verb-tense', 'ใช้ past simple (made) เพราะเล่าข้อมูลปี 2023 ที่เกิดขึ้นแล้ว'),
           t(' up the '),
           sel('gb12-o2', ['largest', 'larger', 'large'], 'largest', 'word-choice', 'largest = ใหญ่ที่สุด (superlative) เพราะเทียบกับทุกสัญชาติ ส่วน larger ใช้เทียบแค่ 2 สิ่ง และ large เป็นรูปธรรมดา'),
@@ -895,7 +920,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         hintTh: HINT_CONJUGATE,
         // 1 sentence · 1 complex (passive: can be observed)
         segments: [
-          t('Overall, a number of '),
+          ...overviewOpener('gb13'),
+          t('a number of '),
           sel(
             'gb13-o1',
             ['transformations', 'temperatures', 'celebrations'],
@@ -906,10 +932,10 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' '),
           typ(
             'gb13-o2',
-            'observe',
-            ['can be observed'],
-            'v3-clause',
-            'passive เดียวของ overview: transformations can be observed (= สามารถสังเกตได้)'
+            'take',
+            ['took place'],
+            'verb-tense',
+            'ประโยคเปิดใช้ can be observed ไปแล้ว ท่อนนี้จึงเล่าเป็น past simple: took place (= เกิดขึ้น)'
           ),
           t(', including the '),
           sel(
@@ -1155,9 +1181,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t('Overall, it can be clearly '),
-          typ('gb14-o1', 'observe', ['observed'], 'v3-clause', 'หลัง can be ต้องใช้ V3: observed'),
-          t(' that the process '),
+          ...overviewOpener('gb14'),
+          t('the process '),
           sel('gb14-o2', ['entails', 'compares', 'fluctuates'], 'entails', 'word-choice', 'entails = มี/ประกอบด้วยขั้นตอน ตามแบบเรียน process overview'),
           t(' '),
           sel('gb14-o3', ['eight', 'three', 'twelve'], 'eight', 'word-choice', 'กระบวนการนี้มี 8 ขั้นตอน'),
@@ -1302,8 +1327,13 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          sel('gb15-o1', ['While', 'Because', 'So'], 'While', 'transition', 'ใช้ While บอกประเภทขยะที่มากที่สุดของ pie chart แต่ละปี'),
-          t(' non-recycled waste was the largest share in 2008, recycled waste was the largest share in 2018.')
+          ...overviewOpener('gb15'),
+          sel('gb15-o3', ['non-recycled', 'non-recycling', 'not-recycle'], 'non-recycled', 'word-choice', 'non-recycled waste = ขยะที่ไม่ถูกรีไซเคิล ใช้ V3 ขยายคำนาม ส่วนรูปอื่นผิดไวยากรณ์'),
+          t(' waste '),
+          typ('gb15-o4', 'be', ['was'], 'verb-tense', 'ประธาน waste เป็นนามนับไม่ได้ + เล่าอดีต จึงใช้ was'),
+          t(' the largest share in 2008, '),
+          sel('gb15-o5', ['while', 'because', 'unless'], 'while', 'transition', 'while เชื่อมภาพสองปีที่เทียบกัน ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'),
+          t(' recycled waste was the largest share in 2018.')
         ]
       },
       {
@@ -1319,7 +1349,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb15-b3', ['vast', 'vague', 'various'], 'vast', 'word-choice', 'the vast majority = ส่วนใหญ่อย่างมาก ตรงกับ 72% ส่วน vague (คลุมเครือ) และ various (หลากหลาย) ผิดความหมาย'),
           t(' majority of household waste, '),
           typ('gb15-b4', 'stand', ['standing'], 'ving-clause', 'ใช้ V-ing clause (standing) ขยายผลของประโยคหลัก บอกตัวเลขที่ยืนอยู่'),
-          t(' at 72%. Recycled waste stood at just 28%, '),
+          t(' at 72%. However, recycled waste stood at just 28%, '),
           sel('gb15-b8', ['which', 'who', 'where'], 'which', 'referencing', 'which เชื่อมผลของตัวเลข 28% เข้ากับคำอธิบายในประโยคเดียว'),
           t(' '),
           sel('gb15-b9', ['reflected', 'reflects', 'reflecting'], 'reflected', 'verb-tense', 'เล่าอดีต ประธานเอกพจน์ (this figure) จึงใช้ past simple reflected'),
@@ -1337,7 +1367,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb15-c1', ['In terms of 2018', 'In 2008', 'Until 2008'], 'In terms of 2018', 'transition', 'Body 2 ของ pie chart ต้องเปิดด้วย In terms of + ปีที่สอง'),
           t(', however, this pattern '),
           typ('gb15-c2', 'reverse', ['had reversed'], 'verb-tense', 'เล่าเหตุการณ์ที่เกิดก่อนเวลาที่กำลังพูดถึงในอดีต จึงใช้ past perfect (had reversed) เพื่อบอกว่ารูปแบบเปลี่ยนไปแล้วก่อนถึงปี 2018'),
-          t(' considerably. Recycled waste '),
+          t(' considerably. However, recycled waste '),
           typ('gb15-c3', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต + ประธานเอกพจน์ ใช้ made (make up = ประกอบเป็น)'),
           t(' up 58% of the total, '),
           typ('gb15-c4', 'overtake', ['overtaking'], 'ving-clause', 'ใช้ V-ing clause (overtaking) ขยายผลของประโยคหลัก บอกว่าขยะรีไซเคิล "แซง" ขยะไม่รีไซเคิลไปแล้ว'),
@@ -1345,8 +1375,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb15-c5', ['which', 'who', 'where'], 'which', 'referencing', 'which ใช้แทนสิ่งของ (non-recycled waste) ส่วน who ใช้กับคน และ where ใช้กับสถานที่'),
           t(' '),
           typ('gb15-c6', 'fall', ['fell'], 'verb-tense', 'fall เป็นกริยาผันไม่ปกติ อดีตคือ fell + ประธานเอกพจน์ (which อ้างถึง waste) เล่าอดีต'),
-          t(' to just 42%. '),
-          sel('gb15-c7', ['This', 'These', 'Those'], 'This', 'referencing', 'This ใช้แทนเหตุการณ์/ประเด็นที่พูดไปแล้วทั้งหมด (เอกพจน์) ส่วน These/Those ใช้กับพหูพจน์'),
+          t(' to just 42%. Interestingly, '),
+          sel('gb15-c7', ['this', 'these', 'those'], 'this', 'referencing', 'This ใช้แทนเหตุการณ์/ประเด็นที่พูดไปแล้วทั้งหมด (เอกพจน์) ส่วน These/Those ใช้กับพหูพจน์'),
           t(' '),
           typ('gb15-c8', 'represent', ['represented'], 'verb-tense', 'เล่าอดีต ประธานเอกพจน์ (This) จึงผัน represent เป็น represented'),
           t(' a '),
@@ -1357,7 +1387,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb15-c11', ['suggesting', 'suggested', 'suggests'], 'suggesting', 'ving-clause', 'ใช้ V-ing clause (suggesting) ขยายผลสรุปต่อจากประโยคหลัก'),
           t(' a substantial behavioural shift in household attitudes '),
           sel('gb15-c12', ['towards', 'against', 'without'], 'towards', 'word-choice', 'attitudes towards recycling = ทัศนคติที่มีต่อการรีไซเคิล ใช้ towards ส่วน against (ต่อต้าน) และ without (ปราศจาก) ผิดความหมาย'),
-          t(' recycling between 2008 and 2018, reducing the gap between the categories to 16 percentage points and showing a clear reversal in household waste disposal. The later chart therefore placed recycled waste clearly ahead overall.')
+          t(' recycling between 2008 and 2018, reducing the gap to 16 percentage points and showing a clear reversal in household waste disposal. Interestingly, the later chart placed recycled waste clearly ahead overall.')
         ]
       }
     ]
@@ -1396,8 +1426,14 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          sel('gb16-o1', ['While', 'Because', 'So'], 'While', 'transition', 'กราฟเดียวให้ใช้ While เชื่อมสถานที่ที่มากที่สุดกับสถานที่ที่น้อยที่สุด'),
-          t(' the British Museum had the largest figure, the Science Museum was the smallest in share.')
+          ...overviewOpener('gb16'),
+          t('the British Museum '),
+          typ('gb16-o3', 'have', ['had'], 'verb-tense', 'past simple เล่าอดีต + ประธานเอกพจน์ จึงใช้ had'),
+          t(' the largest '),
+          sel('gb16-o4', ['figure', 'feature', 'furniture'], 'figure', 'word-choice', 'figure = ตัวเลข/จำนวน ส่วน feature (ลักษณะเด่น) และ furniture (เฟอร์นิเจอร์) ผิดความหมาย'),
+          t(', '),
+          sel('gb16-o5', ['while', 'because', 'unless'], 'while', 'transition', 'while เชื่อมค่าที่มากที่สุดกับค่าที่น้อยที่สุด ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'),
+          t(' the Science Museum was the smallest in share.')
         ]
       },
       {
@@ -1416,8 +1452,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb16-b4', ['comfortably', 'comfortable', 'comfort'], 'comfortably', 'word-choice', 'ขยายกริยา making ต้องใช้ adverb (comfortably) ส่วน comfortable (adj) และ comfort (n) ผิดหน้าที่'),
           t(' the most-visited '),
           sel('gb16-b5', ['venue', 'vein', 'vent'], 'venue', 'word-choice', 'venue = สถานที่จัดงาน/สถานที่ ตรงกับความหมาย ส่วน vein (เส้นเลือด) และ vent (ช่องระบาย) คนละความหมาย'),
-          t(' of the three. '),
-          sel('gb16-b6', ['This', 'These', 'Those'], 'This', 'referencing', 'This ใช้แทนตัวเลข/ประเด็นเอกพจน์ที่กล่าวไปแล้ว ส่วน These/Those ใช้กับพหูพจน์'),
+          t(' of the three. Interestingly, '),
+          sel('gb16-b6', ['this', 'these', 'those'], 'this', 'referencing', 'This ใช้แทนตัวเลข/ประเด็นเอกพจน์ที่กล่าวไปแล้ว ส่วน These/Those ใช้กับพหูพจน์'),
           t(' '),
           sel('gb16-b7', ['figure', 'figures', 'figuring'], 'figure', 'word-choice', 'this figure = ตัวเลขนี้ (เอกพจน์) จึงใช้ figure ส่วน figures/figuring ผิดรูป'),
           t(' '),
@@ -1444,7 +1480,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' it '),
           sel('gb16-c4', ['second', 'secondly', 'seconds'], 'second', 'word-choice', 'placing it second = จัดให้อยู่อันดับสอง ใช้ second (เลขลำดับ) ส่วน secondly (คำเชื่อม) และ seconds (วินาที) ผิดรูป'),
           t(' among the three venues. '),
-          sel('gb16-c5', ['By contrast', 'For example', 'In addition'], 'By contrast', 'transition', 'By contrast = ในทางตรงข้าม ใช้เปรียบเทียบกับพิพิธภัณฑ์ที่ตัวเลขต่ำสุด ส่วน For example (ยกตัวอย่าง) และ In addition (นอกจากนี้) ไม่ตรงความหมาย'),
+          sel('gb16-c5', ['In contrast', 'For example', 'In addition'], 'In contrast', 'transition', 'In contrast = ในทางตรงข้าม ใช้เปรียบเทียบกับพิพิธภัณฑ์ที่ตัวเลขต่ำสุด ส่วน For example (ยกตัวอย่าง) และ In addition (นอกจากนี้) ไม่ตรงความหมาย'),
           t(', the Science Museum '),
           typ('gb16-c6', 'lag', ['lagged'], 'verb-tense', 'เล่าอดีต ประธานเอกพจน์ (the Science Museum) จึงผัน lag เป็น lagged'),
           t(' behind both '),
@@ -1455,7 +1491,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb16-c9', ['per', 'a', 'each'], 'per', 'word-choice', 'per month = ต่อเดือน เป็นสำนวนบอกความถี่ ส่วน a/each month ไม่เข้ากับโครงสร้างนี้'),
           t(' month, roughly half '),
           sel('gb16-c10', ['that', 'those', 'it'], 'that', 'referencing', 'that = แทนคำนามเอกพจน์ (the figure) ที่พูดถึงไปแล้ว จึง that of the British Museum ส่วน those ใช้กับพหูพจน์ และ it ไม่ตามด้วย of แบบนี้'),
-          t(' of the British Museum. The difference between the second- and third-ranked museums was 50,000 visitors each month. This ranking remained clear across the monthly averages.')
+          t(' of the British Museum. However, the difference between the second- and third-ranked museums was 50,000 visitors each month. Interestingly, this ranking remained clear across the monthly averages.')
         ]
       }
     ]
@@ -1494,7 +1530,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t('Overall, it can be clearly observed that the private car '),
+          ...overviewOpener('gb17'),
+          t('the private car '),
           typ('gb17-o1', 'be', ['was'], 'verb-tense', 'ประธานเอกพจน์ (the private car) + เล่าอดีต จึงใช้ was'),
           t(' the '),
           sel('gb17-o2', ['most', 'more', 'much'], 'most', 'word-choice', 'เทียบวิธีเดินทางห้าแบบ ใช้ขั้นสุด most ไม่ใช่ more (ขั้นกว่า)'),
@@ -1536,7 +1573,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' by 22% and 18% of visitors, '),
           sel('gb17-b6', ['respectively', 'obviously', 'clearly'], 'respectively', 'word-choice', 'respectively = ตามลำดับที่กล่าว (ต้องมีคอมมาก่อนเสมอ) ส่วน obviously/clearly แปลว่าชัดเจน ไม่ตรง'),
           t('. '),
-          sel('gb17-b7', ['By comparison', 'For example', 'In addition'], 'By comparison', 'transition', 'By comparison = เมื่อเทียบกัน ใช้เปรียบเทียบกับสองวิธีที่ตัวเลขต่ำสุด ส่วน For example (ยกตัวอย่าง) และ In addition (นอกจากนี้) ไม่ตรงความหมาย'),
+          sel('gb17-b7', ['However', 'For example', 'In addition'], 'However', 'transition', 'However = เมื่อเทียบกัน ใช้เปรียบเทียบกับสองวิธีที่ตัวเลขต่ำสุด ส่วน For example (ยกตัวอย่าง) และ In addition (นอกจากนี้) ไม่ตรงความหมาย'),
           t(', walking and other methods '),
           typ('gb17-b8', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต + ประธานพหูพจน์ ใช้ made (make up = ประกอบเป็น)'),
           t(' up just 12% and 6% '),
@@ -1641,7 +1678,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         hintTh: HINT_CONJUGATE,
         // 1 sentence · 1 complex (passive: can be observed)
         segments: [
-          t('Overall, a number of '),
+          ...overviewOpener('gb18'),
+          t('a number of '),
           sel(
             'gb18-o1',
             ['transformations', 'temperatures', 'celebrations'],
@@ -1652,10 +1690,10 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' '),
           typ(
             'gb18-o2',
-            'observe',
-            ['can be observed'],
-            'v3-clause',
-            'passive เดียวของ overview: transformations can be observed'
+            'take',
+            ['took place'],
+            'verb-tense',
+            'ประโยคเปิดใช้ can be observed ไปแล้ว ท่อนนี้จึงเล่าเป็น past simple: took place (= เกิดขึ้น)'
           ),
           t(', including the '),
           sel(
@@ -1909,7 +1947,8 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t('Overall, the '),
+          ...overviewOpener('gb19'),
+          t('the '),
           sel('gb19-o1', ['process', 'graph', 'pie'], 'process', 'paraphrase', 'ไดอะแกรมนี้เป็น process ไม่ใช่ graph หรือ pie chart จึงต้องใช้ process'),
           t(' '),
           typ('gb19-o2', 'consist', ['consists'], 'verb-tense', 'ประธานเอกพจน์ (the process) ใน present simple จึงเติม -s เป็น consists'),

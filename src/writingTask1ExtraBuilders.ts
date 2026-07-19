@@ -3,6 +3,7 @@
  * Pattern-matched to existing teacher essay structure (intro → overview → body1 → body2).
  */
 import type { WgbExercise, WgbFocus, WgbSegment, WgbStep } from './writingGuidedBuilder'
+import { overviewOpener } from './writingTask1Overview'
 
 const t = (text: string): WgbSegment => ({ kind: 'text', text })
 const sel = (
@@ -92,9 +93,8 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t(''),
-          sel(`${p}-o1`, ['While', 'Because', 'So'], 'While', 'transition', 'While เปิด dependent clause เพื่อเปรียบเทียบสองทิศทาง'),
-          t(` ${spec.risingNoun} `),
+          ...overviewOpener(p),
+          t(`${spec.risingNoun} `),
           sel(
             `${p}-o2`,
             [
@@ -120,7 +120,15 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
             'trend-phrase',
             'ขาลงใช้ showed a downward trend'
           ),
-          t(', highlighting the clear contrast between their directions.')
+          t(', '),
+          sel(
+            `${p}-o4`,
+            ['highlighting', 'highlighted', 'highlight'],
+            'highlighting',
+            'ving-clause',
+            'ใช้ V-ing clause ขยายประโยคหลัก จึงใช้ highlighting'
+          ),
+          t(' the clear contrast between their directions.')
         ]
       },
       {
@@ -135,7 +143,7 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
           t(` at ${spec.startRising} in ${spec.fromYear}, that of ${spec.thatOfFalling} `),
           typ(`${p}-b3`, 'begin', ['began'], 'verb-tense', 'past simple: began'),
           t(` at ${spec.startFalling}, revealing a substantial initial difference between the two categories. `),
-          t(`In ${spec.midYear}, ${spec.risingNoun} `),
+          t(`However, in ${spec.midYear}, ${spec.risingNoun} `),
           typ(`${p}-b5`, 'rise', ['rose'], 'verb-tense', 'past simple: rose'),
           t(' '),
           sel(
@@ -247,7 +255,7 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
             ? 'เลือก largest เพราะเป็นหมวดที่มากที่สุดของ pie chart วงที่สอง'
             : 'เลือก smallest เพราะเป็นหมวดที่น้อยที่สุดของ pie chart วงเดียว'
         ),
-        t(` in that part of the data. The remaining categories occupied the middle positions, which kept them below the leading category but above the least significant result. Although their individual values varied, the ranking clearly separated the largest and smallest portions of the chart.${spec.extraBodyDetail ? ` ${spec.extraBodyDetail}` : ''}`)
+        t(` in that part of the data. However, the remaining categories occupied the middle positions, which kept them below the leading category but above the least significant result. Interestingly, the ranking clearly separated the largest and smallest portions of the chart, even though their individual values varied.${spec.extraBodyDetail ? ` ${spec.extraBodyDetail}` : ''}`)
       ]
     : [
         sel(`${p}-c1`, ['Meanwhile', 'Because', 'Unless'], 'Meanwhile', 'transition', 'Meanwhile = ในขณะเดียวกัน (ใช้ใน snapshot body ได้ตามบริบทเปรียบเทียบหมวดอื่น)'),
@@ -257,7 +265,7 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
         sel(`${p}-c3`, ['shares', 'shapes', 'ships'], 'shares', 'paraphrase', 'shares = ส่วนแบ่ง'),
         t(', '),
         typ(`${p}-c4`, 'follow', ['following'], 'ving-clause', 'V-ing clause'),
-        t(` well behind the leading group and occupying the middle or lower positions overall. Although their individual values varied, none matched the result recorded for the largest category, producing an uneven distribution across all of the categories. The smaller figure remained one of the least significant results displayed, reinforcing the contrast with the leading category.${spec.extraBodyDetail ? ` ${spec.extraBodyDetail}` : ''}`)
+        t(` well behind the leading group and occupying the middle or lower positions overall. However, none matched the result recorded for the largest category, producing an uneven distribution across all of the categories. Interestingly, the smaller figure remained one of the least significant results displayed, reinforcing the contrast with the leading category.${spec.extraBodyDetail ? ` ${spec.extraBodyDetail}` : ''}`)
       ]
   return {
     id: spec.id,
@@ -286,19 +294,29 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
+          ...overviewOpener(p),
+          t(`${spec.leadingItem} ${spec.leadingBe ?? 'was'} the `),
           sel(
             `${p}-o1`,
-            ['While', 'Because', 'So'],
-            'While',
+            ['largest', 'larger', 'large'],
+            'largest',
+            'word-choice',
+            'largest = มากที่สุด (superlative) เพราะเทียบกับทุกหมวด ส่วน larger ใช้เทียบแค่ 2 สิ่ง และ large เป็นรูปธรรมดา'
+          ),
+          t(spec.visualCount === 2 ? ' in the first chart, ' : ', '),
+          sel(
+            `${p}-o2`,
+            ['while', 'because', 'unless'],
+            'while',
             'transition',
             spec.visualCount === 2
-              ? 'ใช้ While เชื่อมหมวดที่มากที่สุดของภาพทั้งสอง'
-              : 'ใช้ While เชื่อมหมวดที่มากที่สุดกับหมวดที่น้อยที่สุด'
+              ? 'while เชื่อมหมวดที่มากที่สุดของภาพทั้งสอง ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'
+              : 'while เชื่อมหมวดที่มากที่สุดกับหมวดที่น้อยที่สุด ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'
           ),
           t(
             spec.visualCount === 2
-              ? ` ${spec.leadingItem} ${spec.leadingBe ?? 'was'} the largest in the first chart, ${spec.contrastItem} ${spec.contrastBe ?? 'was'} the largest in the second chart.`
-              : ` ${spec.leadingItem} ${spec.leadingBe ?? 'was'} the largest, ${spec.contrastItem} ${spec.contrastBe ?? 'was'} the smallest in share.`
+              ? ` ${spec.contrastItem} ${spec.contrastBe ?? 'was'} the largest in the second chart.`
+              : ` ${spec.contrastItem} ${spec.contrastBe ?? 'was'} the smallest in share.`
           )
         ]
       },
@@ -367,13 +385,14 @@ function buildProcessExercise(spec: ProcessSpec): WgbExercise {
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t('Overall, the process '),
+          ...overviewOpener(p),
+          t('the process '),
           typ(`${p}-o1`, 'consist', ['consists'], 'verb-tense', 'present simple เอกพจน์'),
           t(` of ${spec.stageCount} stages, `),
           typ(`${p}-o2`, 'begin', ['beginning'], 'ving-clause', 'V-ing'),
           t(` with ${spec.firstStage} and `),
           typ(`${p}-o3`, 'end', ['ending'], 'ving-clause', 'V-ing'),
-          t(` with ${spec.lastStage}; therefore, it is a linear procedure in which each phase prepares the material for the next one.`)
+          t(` with ${spec.lastStage}; therefore, each phase prepares the material for the next one.`)
         ]
       },
       {
@@ -824,7 +843,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     contrastLinker: 'whereas',
     body1Topic: 'the leading brand',
     body2Topic: 'the remaining brands',
-    extraBodyDetail: 'Together, the middle-ranking brands occupied the remaining market share, creating a clear gap between Apple and Oppo overall.'
+    extraBodyDetail: 'Similarly, the middle-ranking brands occupied the remaining market share, creating a clear gap between Apple and Oppo overall.'
   }),
   buildSnapshotExercise({
     id: 'gb-student-majors',
@@ -948,7 +967,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     body1Topic: 'the leading app',
     body2Topic: 'the remaining apps',
     contrastBe: 'were',
-    extraBodyDetail: 'The middle-ranked services shared the remainder, creating a clear separation between GrabFood and the smallest providers overall.'
+    extraBodyDetail: 'Similarly, the middle-ranked services shared the remainder, creating a clear separation between GrabFood and the smallest providers overall.'
   }),
   buildSnapshotExercise({
     id: 'gb-device-ownership',
@@ -963,7 +982,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     contrastLinker: 'while',
     leadingBe: 'were',
     contrastBe: 'were',
-    extraBodyDetail: 'This pattern remained clear.'
+    extraBodyDetail: 'Interestingly, this pattern remained clear.'
   }),
   buildSnapshotExercise({
     id: 'gb-energy-bills',
@@ -978,7 +997,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     contrastLinker: 'whereas',
     body1Topic: 'France',
     body2Topic: 'Poland',
-    extraBodyDetail: 'This distinction remained clear.'
+    extraBodyDetail: 'Interestingly, this distinction remained clear.'
   }),
   buildSnapshotExercise({
     id: 'gb-airport-scores',
@@ -991,7 +1010,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     contrastItem: 'City West for security',
     contrastShare: '6.2',
     contrastLinker: 'while',
-    extraBodyDetail: 'This ranking remained clear.'
+    extraBodyDetail: 'Interestingly, this ranking remained clear.'
   }),
   buildSnapshotExercise({
     id: 'gb-study-hours',

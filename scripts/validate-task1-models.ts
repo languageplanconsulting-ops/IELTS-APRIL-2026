@@ -38,6 +38,44 @@ const forbiddenComplexStructures = [
   /;\s*/g
 ]
 
+/**
+ * SOP (CLAUDE.md): in timeline / snapshot / map bodies, every sentence AFTER the
+ * paragraph's taught opener must start with one of these — and nothing else.
+ */
+const APPROVED_BODY_TRANSITIONS = [
+  'However',
+  'On the other hand',
+  'In contrast',
+  'Likewise',
+  'Similarly',
+  'Interestingly',
+  'Surprisingly',
+  'It is interesting to note that'
+]
+
+const splitSentences = (text: string): string[] =>
+  text
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+
+const validateBodyTransitions = (label: string, paragraphs: { role: string; text: string }[], failures: string[]) => {
+  for (const paragraph of paragraphs) {
+    if (paragraph.role !== 'body1' && paragraph.role !== 'body2') continue
+    splitSentences(paragraph.text).forEach((sentence, index) => {
+      if (index === 0) return // Body 1 "Starting with …" / Body 2 "In terms of …"
+      const approved = APPROVED_BODY_TRANSITIONS.some(
+        (transition) => sentence === transition || sentence.startsWith(`${transition} `) || sentence.startsWith(`${transition},`)
+      )
+      if (!approved) {
+        failures.push(
+          `${label}: body sentence must start with an approved transition (got “${sentence.split(/[\s,]+/).slice(0, 3).join(' ')}…”)`
+        )
+      }
+    })
+  }
+}
+
 const sentenceCount = (text: string): number =>
   text
     .split(/[.!?]+(?=\s|$)/)
@@ -49,36 +87,36 @@ const validComparisonOpening =
 const forbiddenIntroReportingVerb = /\b(?:illustrat(?:e|es|ed|ing)|show(?:s|ed|ing)?)\b/i
 const snapshotOverviewByPrompt: Record<string, string> = {
   'snapshot-vietnam-us-exports':
-    'While coffee was the largest share of Vietnam’s exports to the US, aircraft parts were the largest share of US exports to Vietnam.',
+    'Overall, it can be clearly observed that coffee was the largest share of Vietnam’s exports to the US, while aircraft parts were the largest share of US exports to Vietnam.',
   'snapshot-uk-thailand-spending':
-    'While housing in the UK was the largest category, healthcare in Thailand was the smallest in share.',
+    'Overall, it can be clearly observed that housing in the UK was the largest category, while healthcare in Thailand was the smallest in share.',
   'snapshot-germany-australia-energy':
-    'While renewables made up the largest share in Germany, coal accounted for the largest share in Australia.',
+    'Overall, it can be clearly observed that renewable energy made up the largest share in Germany, while coal accounted for the largest share in Australia.',
   'snapshot-universities-table':
-    'While Oxford’s research output was the largest, Chulalongkorn’s was the smallest in share.',
+    'Overall, it can be clearly observed that Oxford’s research output was the largest, while Chulalongkorn’s was the smallest in share.',
   'snapshot-household-waste':
-    'While non-recycled waste was the largest share in 2008, recycled waste was the largest share in 2018.',
+    'Overall, it can be clearly observed that non-recycled waste was the largest share in 2008, while recycled waste was the largest share in 2018.',
   'snapshot-museum-visitors':
-    'While the British Museum had the largest figure, the Science Museum was the smallest in share.',
-  'snapshot-phone-brands': 'While Apple was the largest, Oppo was the smallest in share.',
+    'Overall, it can be clearly observed that the British Museum had the largest figure, while the Science Museum was the smallest in share.',
+  'snapshot-phone-brands': 'Overall, it can be clearly observed that Apple was the largest, while Oppo was the smallest in share.',
   'snapshot-student-majors':
-    'While engineering in South Korea was the largest, education in South Korea was the smallest in share.',
+    'Overall, it can be clearly observed that engineering in South Korea was the largest, while education in South Korea was the smallest in share.',
   'snapshot-commute-modes':
-    'While public transport in Singapore was the largest in the first chart, private cars in Bangkok were the largest in the second chart.',
+    'Overall, it can be clearly observed that public transport in Singapore was the largest in the first chart, while private cars in Bangkok were the largest in the second chart.',
   'snapshot-hotel-ratings':
-    'While Hotel Orchid for location was the largest, Budget Inn for cleanliness was the smallest in share.',
+    'Overall, it can be clearly observed that Hotel Orchid for location was the largest, while Budget Inn for cleanliness was the smallest in share.',
   'snapshot-water-use':
-    'While agriculture in Australia was the largest, energy use in Australia was the smallest in share.',
+    'Overall, it can be clearly observed that agriculture in Australia was the largest, while energy use in Australia was the smallest in share.',
   'snapshot-food-delivery-apps':
-    'While GrabFood was the largest, smaller apps were the smallest in share.',
+    'Overall, it can be clearly observed that GrabFood was the largest, while smaller apps were the smallest in share.',
   'snapshot-device-ownership':
-    'While smartphones in Sweden were the largest, smartwatches in Italy were the smallest in share.',
+    'Overall, it can be clearly observed that smartphones in Sweden were the largest, while smartwatches in Italy were the smallest in share.',
   'snapshot-energy-bills':
-    'While electricity in France was the largest in the first chart, heating in Poland was the largest in the second chart.',
+    'Overall, it can be clearly observed that electricity in France was the largest in the first chart, while heating in Poland was the largest in the second chart.',
   'snapshot-airport-scores':
-    'While Changi for cleanliness was the largest, City West for security was the smallest in share.',
+    'Overall, it can be clearly observed that Changi for cleanliness was the largest, while City West for security was the smallest in share.',
   'snapshot-study-hours':
-    'While mathematics in Mexico was the largest, arts in Mexico was the smallest in share.'
+    'Overall, it can be clearly observed that mathematics in Mexico was the largest, while arts in Mexico was the smallest in share.'
 }
 const pieBodyOpenings: Record<string, [string, string]> = {
   'snapshot-vietnam-us-exports': ['Starting with Vietnam’s exports to the US,', 'In terms of US exports to Vietnam,'],
@@ -168,12 +206,22 @@ for (const prompt of prompts) {
   }
 
   if (prompt.kind === 'timeline' || prompt.kind === 'snapshot') {
+    // The taught Overview frame is "Overall, it can be clearly observed that X, while Y",
+    // so ", while" is required there; the ban still applies to the rest of the essay.
+    const essayOutsideOverview = paragraphs
+      .filter((paragraph) => paragraph.role !== 'overview')
+      .map((paragraph) => paragraph.text)
+      .join(' ')
     for (const pattern of forbiddenComplexStructures) {
-      if (pattern.test(essay)) {
-        failures.push(`${prompt.id}: forbidden complex structure “${essay.match(pattern)?.[0]}”`)
+      if (pattern.test(essayOutsideOverview)) {
+        failures.push(`${prompt.id}: forbidden complex structure “${essayOutsideOverview.match(pattern)?.[0]}”`)
       }
       pattern.lastIndex = 0
     }
+  }
+
+  if (prompt.kind === 'timeline' || prompt.kind === 'snapshot' || prompt.kind === 'map') {
+    validateBodyTransitions(prompt.id, paragraphs, failures)
   }
 
   if (prompt.kind === 'timeline') {

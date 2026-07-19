@@ -1,4 +1,5 @@
 import type { WgbExercise, WgbSegment, WgbFocus, WgbStep } from './writingGuidedBuilder'
+import { overviewOpener } from './writingTask1Overview'
 
 const t = (text: string): WgbSegment => ({ kind: 'text', text })
 const sel = (
@@ -150,7 +151,8 @@ function buildMapExercise(spec: MapExerciseSpec): WgbExercise {
         labelTh: ROLE_LABEL_TH.overview,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t('Overall, a '),
+          ...overviewOpener(p),
+          t('a '),
           sel(`${p}-o0`, ['number', 'nature', 'nation'], 'number', 'word-choice', 'a number of = หลาย ๆ อย่าง'),
           t(' of '),
           sel(
@@ -163,10 +165,10 @@ function buildMapExercise(spec: MapExerciseSpec): WgbExercise {
           t(' '),
           typ(
             `${p}-o2`,
-            'observe',
-            ['can be observed'],
-            'v3-clause',
-            'passive เดียวของ overview: can be observed'
+            'take',
+            ['took place'],
+            'verb-tense',
+            'ประโยคเปิดใช้ can be observed ไปแล้ว ท่อนนี้จึงเล่าเป็น past simple: took place (= เกิดขึ้น)'
           ),
           t(', including the '),
           sel(
