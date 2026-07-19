@@ -93,39 +93,64 @@ const TRANSITION_BANKS: Record<GeneralTask1Register, string[]> = {
   ]
 }
 
-// Why each opener is the right choice — surfaced when a transition blank is wrong.
-const TRANSITION_REASONS: Record<string, string> = {
-  'First of all,': 'ใช้เปิดประเด็นหรือเหตุผลข้อแรกของย่อหน้า',
-  'To begin with,': 'ใช้เริ่มลำดับประเด็นแรกในสำนวนทางการ',
-  'Firstly,': 'ใช้จัดลำดับประเด็นแรก (ทางการกว่า First of all)',
-  'Secondly,': 'ใช้จัดลำดับประเด็นที่สองต่อจาก Firstly',
-  'Honestly,': 'ใช้เมื่อกำลังบอกความรู้สึกจริงใจหรือสารภาพตรง ๆ',
-  'Actually,': 'ใช้เสริมข้อเท็จจริงหรือแก้ความเข้าใจอย่างสุภาพ',
-  'In fact,': 'ใช้เน้นย้ำข้อเท็จจริงที่หนักแน่นขึ้น',
-  'Also,': 'ใช้เพิ่มข้อมูลที่สอดคล้องกับประโยคก่อนหน้า',
-  'In addition,': 'ใช้เพิ่มข้อมูลในสำนวนกึ่งทางการ/ทางการ',
-  'Furthermore,': 'ใช้เสริมน้ำหนักข้อมูลเดิมให้หนักแน่นขึ้น (ทางการ)',
-  'Moreover,': 'ใช้เพิ่มประเด็นสนับสนุนที่สำคัญ (ทางการ)',
-  'For example,': 'ใช้ยกตัวอย่างสนับสนุนประโยคก่อนหน้า',
-  'For instance,': 'ใช้ยกตัวอย่างในสำนวนทางการ',
-  'By the way,': 'ใช้เปลี่ยนไปเรื่องใหม่แบบเป็นกันเอง',
-  'Anyway,': 'ใช้ดึงกลับเข้าประเด็นหลักหรือเริ่มย่อหน้าสรุป',
-  'However,': 'ใช้แสดงความขัดแย้งหรือข้อจำกัดกับใจความก่อนหน้า',
-  'Nevertheless,': 'ใช้ยอมรับข้อขัดแย้งแต่ยังยืนยันใจความหลัก (ทางการ)',
-  'Unfortunately,': 'ใช้บอกเรื่องที่ไม่ดีหรือน่าเสียดาย',
-  'Luckily,': 'ใช้บอกเหตุการณ์ที่โชคดี',
-  'Then,': 'ใช้บอกลำดับเหตุการณ์ถัดไป',
-  'Afterwards,': 'ใช้บอกสิ่งที่เกิดขึ้นภายหลัง',
-  'Consequently,': 'ใช้บอกผลที่ตามมาอย่างเป็นเหตุเป็นผล (ทางการ)',
-  'As a result,': 'ใช้บอกผลลัพธ์ที่ตามมา',
-  'Therefore,': 'ใช้สรุปผลเชิงเหตุผลหรือข้อเรียกร้อง (ทางการ)',
-  'In particular,': 'ใช้เจาะจงประเด็นที่โดดเด่นเป็นพิเศษ',
-  'As you may remember,': 'ใช้เชื่อมความสัมพันธ์เดิมกับผู้รับอย่างสุภาพ',
-  'As you know,': 'ใช้อ้างถึงข้อมูลที่ทั้งสองฝ่ายทราบอยู่แล้ว',
-  'If possible,': 'ใช้ขึ้นต้นคำขอร้องอย่างสุภาพ',
-  'Of course,': 'ใช้ยืนยันหรือให้ความมั่นใจอย่างสุภาพ',
-  'Finally,': 'ใช้ปิดท้ายด้วยประเด็นสุดท้ายของย่อหน้า',
-  'Most importantly,': 'ใช้เน้นประเด็นที่สำคัญที่สุด'
+/**
+ * Each opener's Thai meaning plus the *relationship* it signals between the
+ * previous sentence and this one. The group is what makes a wrong pick
+ * explainable: "you chose an adding word where the sentence turns".
+ */
+type TransitionMeta = { th: string; group: string; use: string }
+
+const TRANSITION_META: Record<string, TransitionMeta> = {
+  'First of all,': { th: 'อย่างแรกเลย', group: 'ลำดับความ', use: 'เปิดประเด็นหรือเหตุผลข้อแรกของย่อหน้า' },
+  'To begin with,': { th: 'เริ่มจาก…ก่อน', group: 'ลำดับความ', use: 'เริ่มลำดับประเด็นแรกในสำนวนทางการ' },
+  'Firstly,': { th: 'ประการแรก', group: 'ลำดับความ', use: 'จัดลำดับประเด็นแรก (ทางการกว่า First of all)' },
+  'Secondly,': { th: 'ประการที่สอง', group: 'ลำดับความ', use: 'จัดลำดับประเด็นที่สองต่อจาก Firstly' },
+  'Then,': { th: 'จากนั้น', group: 'ลำดับความ', use: 'บอกลำดับเหตุการณ์ถัดไป' },
+  'Afterwards,': { th: 'หลังจากนั้น', group: 'ลำดับความ', use: 'บอกสิ่งที่เกิดขึ้นภายหลัง' },
+  'Finally,': { th: 'สุดท้ายนี้', group: 'ลำดับความ', use: 'ปิดท้ายด้วยประเด็นสุดท้ายของย่อหน้า' },
+  'Also,': { th: 'อีกอย่างหนึ่ง', group: 'เสริมความ', use: 'เพิ่มข้อมูลที่ไปทางเดียวกับประโยคก่อนหน้า' },
+  'In addition,': { th: 'นอกจากนี้', group: 'เสริมความ', use: 'เพิ่มข้อมูลในสำนวนกึ่งทางการ/ทางการ' },
+  'Furthermore,': { th: 'ยิ่งไปกว่านั้น', group: 'เสริมความ', use: 'เสริมน้ำหนักข้อมูลเดิมให้หนักแน่นขึ้น (ทางการ)' },
+  'Moreover,': { th: 'ยิ่งไปกว่านั้น', group: 'เสริมความ', use: 'เพิ่มประเด็นสนับสนุนที่สำคัญ (ทางการ)' },
+  'Most importantly,': { th: 'ที่สำคัญที่สุดคือ', group: 'เสริมความ', use: 'เน้นประเด็นที่สำคัญที่สุด' },
+  'In particular,': { th: 'โดยเฉพาะอย่างยิ่ง', group: 'เจาะจงประเด็น', use: 'เจาะจงประเด็นที่โดดเด่นเป็นพิเศษ' },
+  'For example,': { th: 'ตัวอย่างเช่น', group: 'ยกตัวอย่าง', use: 'ยกตัวอย่างสนับสนุนประโยคก่อนหน้า' },
+  'For instance,': { th: 'ยกตัวอย่างเช่น', group: 'ยกตัวอย่าง', use: 'ยกตัวอย่างในสำนวนทางการ' },
+  'However,': { th: 'อย่างไรก็ตาม', group: 'ขัดแย้ง', use: 'พลิกความคาดหวัง หรือบอกข้อจำกัดที่สวนทางกับประโยคก่อนหน้า' },
+  'Nevertheless,': { th: 'ถึงกระนั้นก็ตาม', group: 'ขัดแย้ง', use: 'ยอมรับข้อขัดแย้งแต่ยังยืนยันใจความหลัก (ทางการ)' },
+  'Unfortunately,': { th: 'น่าเสียดายที่', group: 'ขัดแย้ง', use: 'บอกเรื่องที่ไม่ดีหรือน่าเสียดาย ซึ่งมักสวนทางกับความคาดหวัง' },
+  'Consequently,': { th: 'ด้วยเหตุนี้', group: 'เหตุ-ผล', use: 'บอกผลที่ตามมาอย่างเป็นเหตุเป็นผล (ทางการ)' },
+  'As a result,': { th: 'ผลก็คือ', group: 'เหตุ-ผล', use: 'บอกผลลัพธ์ที่ตามมาจากเหตุก่อนหน้า' },
+  'Therefore,': { th: 'ดังนั้น', group: 'เหตุ-ผล', use: 'สรุปผลเชิงเหตุผลหรือข้อเรียกร้อง (ทางการ)' },
+  'Luckily,': { th: 'โชคดีที่', group: 'แสดงทัศนคติ', use: 'บอกเหตุการณ์ที่โชคดี' },
+  'Honestly,': { th: 'พูดตามตรง', group: 'แสดงทัศนคติ', use: 'บอกความรู้สึกจริงใจหรือสารภาพตรง ๆ' },
+  'Actually,': { th: 'จริง ๆ แล้ว', group: 'แสดงทัศนคติ', use: 'เสริมข้อเท็จจริงหรือแก้ความเข้าใจอย่างสุภาพ' },
+  'In fact,': { th: 'อันที่จริง', group: 'แสดงทัศนคติ', use: 'เน้นย้ำข้อเท็จจริงที่หนักแน่นขึ้น' },
+  'Of course,': { th: 'แน่นอนว่า', group: 'แสดงทัศนคติ', use: 'ยืนยันหรือให้ความมั่นใจอย่างสุภาพ' },
+  'By the way,': { th: 'อ้อ อีกเรื่องหนึ่ง', group: 'เปลี่ยนเรื่อง', use: 'เปลี่ยนไปเรื่องใหม่แบบเป็นกันเอง' },
+  'Anyway,': { th: 'เอาเป็นว่า', group: 'เปลี่ยนเรื่อง', use: 'ดึงกลับเข้าประเด็นหลักหรือเริ่มย่อหน้าสรุป' },
+  'As you may remember,': { th: 'อย่างที่คุณอาจจำได้', group: 'อ้างสิ่งที่รู้ร่วมกัน', use: 'เชื่อมความสัมพันธ์เดิมกับผู้รับอย่างสุภาพ' },
+  'As you know,': { th: 'อย่างที่คุณทราบ', group: 'อ้างสิ่งที่รู้ร่วมกัน', use: 'อ้างถึงข้อมูลที่ทั้งสองฝ่ายทราบอยู่แล้ว' },
+  'If possible,': { th: 'ถ้าเป็นไปได้', group: 'ขอร้องอย่างสุภาพ', use: 'ขึ้นต้นคำขอร้องอย่างสุภาพ' }
+}
+
+type ConjunctionMeta = { th: string; group: string; use: string }
+
+const CONJUNCTION_META: Record<string, ConjunctionMeta> = {
+  and: { th: 'และ', group: 'เสริมความ', use: 'เชื่อมสองใจความที่เท่ากันเข้าด้วยกัน (S + V, and + S + V)' },
+  but: { th: 'แต่', group: 'ขัดแย้ง', use: 'แสดงความขัดแย้งระหว่างสองใจความ' },
+  so: { th: 'จึง / ดังนั้น', group: 'เหตุ-ผล', use: 'บอกผลลัพธ์ที่ตามมาจากเหตุก่อนหน้า' },
+  'so that': { th: 'เพื่อที่จะ', group: 'วัตถุประสงค์', use: 'บอกวัตถุประสงค์ของการกระทำ' },
+  because: { th: 'เพราะว่า', group: 'เหตุผล', use: 'ขึ้นต้น clause ที่บอกเหตุผล' },
+  although: { th: 'แม้ว่า', group: 'ขัดแย้ง', use: 'ยอมรับข้อเท็จจริงที่ขัดแย้งกับใจความหลัก' },
+  when: { th: 'เมื่อ / ตอนที่', group: 'เวลา', use: 'บอกช่วงเวลาที่เหตุการณ์เกิดขึ้น' },
+  while: { th: 'ขณะที่ / ในขณะที่', group: 'เวลา/ขัดแย้ง', use: 'บอกสองเหตุการณ์ที่เกิดพร้อมกันหรือขัดแย้งกัน' },
+  since: { th: 'เนื่องจาก / ตั้งแต่', group: 'เหตุผล', use: 'บอกเหตุผลหรือจุดเริ่มของเวลา' },
+  if: { th: 'ถ้า', group: 'เงื่อนไข', use: 'ขึ้นต้นเงื่อนไข' },
+  whether: { th: 'ว่า…หรือไม่', group: 'ทางเลือก', use: 'ใช้เมื่อมีสองทางเลือก (…or…)' },
+  which: { th: 'ซึ่ง', group: 'ขยายความ', use: 'relative pronoun ที่ขยายคำนามหรือทั้งประโยคก่อนหน้า (…, which + verb)' },
+  who: { th: 'ผู้ซึ่ง', group: 'ขยายความ', use: 'relative pronoun ที่ขยายคน' },
+  that: { th: 'ที่ / ว่า', group: 'ขยายความ', use: 'ขยายคำนามแบบเจาะจง หรือขึ้นต้น noun clause' }
 }
 
 const CONJUNCTION_CONFUSABLES: Record<string, string[]> = {
@@ -141,21 +166,6 @@ const CONJUNCTION_CONFUSABLES: Record<string, string[]> = {
   if: ['when', 'because'],
   whether: ['if', 'that'],
   which: ['who', 'that']
-}
-
-const CONJUNCTION_REASONS: Record<string, string> = {
-  and: '“and” เชื่อมสองใจความที่เท่ากันเข้าด้วยกัน (S + V, and + S + V)',
-  but: '“but” ใช้แสดงความขัดแย้งระหว่างสองใจความ',
-  so: '“so” ใช้บอกผลลัพธ์ที่ตามมาจากเหตุก่อนหน้า',
-  'so that': '“so that” ใช้บอกวัตถุประสงค์ของการกระทำ',
-  because: '“because” ใช้ขึ้นต้น clause ที่บอกเหตุผล',
-  although: '“although” ใช้ยอมรับข้อเท็จจริงที่ขัดแย้งกับใจความหลัก',
-  when: '“when” ใช้บอกช่วงเวลาที่เหตุการณ์เกิดขึ้น',
-  while: '“while” ใช้บอกสองเหตุการณ์ที่เกิดพร้อมกันหรือขัดแย้งกัน',
-  since: '“since” ใช้บอกเหตุผลหรือจุดเริ่มของเวลา',
-  if: '“if” ใช้ขึ้นต้นเงื่อนไข',
-  whether: '“whether” ใช้เมื่อมีสองทางเลือก (…or…)',
-  which: '“which” เป็น relative pronoun ที่ขยายคำนามหรือทั้งประโยคก่อนหน้า (…, which + verb)'
 }
 
 const TUTORIAL_LINES = [
@@ -344,17 +354,80 @@ const buildSentenceSegments = (
 const contractionReason = (answer: string): string =>
   `รูปย่อ (contraction): จดหมายแบบเป็นกันเองต้องใช้ “${answer}” เต็มรูปแบบพร้อม apostrophe ให้ถูกตำแหน่ง (เช่น I’m, don’t, can’t)`
 
+/** A wrong answer is explained as: what you picked, what it does, and why this
+ *  slot needs a different relationship — grounded in the two real sentences. */
+type BlankExplanation = {
+  context?: { before?: string; here: string }
+  chosen?: { word: string; th: string; group: string; use: string }
+  correct: { word: string; th: string; group: string; use: string }
+  verdict: string
+}
+
+const transitionMeta = (word: string): TransitionMeta | undefined => TRANSITION_META[word.trim()]
+
+const conjunctionMeta = (word: string): ConjunctionMeta | undefined =>
+  CONJUNCTION_META[normalizeApostrophe(word).trim().toLowerCase()]
+
+/** Trim a sentence for display so the card stays readable. */
+const clip = (text: string, max = 120) => {
+  const clean = text.trim()
+  return clean.length > max ? `${clean.slice(0, max - 1)}…` : clean
+}
+
+const buildBlankExplanation = (
+  blank: PracticeBlank,
+  chosenRaw: string,
+  sentences: string[]
+): BlankExplanation | null => {
+  if (blank.kind === 'contraction' || blank.kind === 'letter-hint') return null
+  const chosen = chosenRaw.trim()
+  const here = sentences[blank.sentenceIndex]
+  const before = blank.sentenceIndex > 0 ? sentences[blank.sentenceIndex - 1] : undefined
+  const lookup = blank.kind === 'transition' ? transitionMeta : conjunctionMeta
+
+  const correctMeta = lookup(blank.answer)
+  if (!correctMeta) return null
+  const chosenMeta = chosen ? lookup(chosen) : undefined
+
+  // A transition links this sentence to the previous one; a conjunction links the
+  // two halves of this sentence. The explanation has to say the right one.
+  const isTransition = blank.kind === 'transition'
+  const linkedThing = isTransition
+    ? before
+      ? 'กับประโยคก่อนหน้า'
+      : 'ในฐานะประโยคเปิดย่อหน้า'
+    : 'ระหว่างสองใจความในประโยคนี้'
+
+  const sameGroup = chosenMeta?.group === correctMeta.group
+  const verdict = !chosen
+    ? `ช่องนี้ต้องการคำที่สื่อความสัมพันธ์แบบ “${correctMeta.group}” ${linkedThing}`
+    : chosenMeta
+      ? sameGroup
+        ? `ทั้งสองคำอยู่กลุ่ม “${correctMeta.group}” เหมือนกัน แต่ระดับความเป็นทางการ/ความเข้มของประโยคนี้เข้ากับ “${blank.answer}” มากกว่า`
+        : `ความสัมพันธ์ ${linkedThing} ไม่ใช่แบบ “${chosenMeta.group}” แต่เป็นแบบ “${correctMeta.group}” จึงต้องใช้ “${blank.answer}”`
+      : `“${chosen}” ไม่เข้ากับความสัมพันธ์แบบ “${correctMeta.group}” ที่ช่องนี้ต้องการ`
+
+  return {
+    // The previous sentence only matters for an opener; a conjunction is judged inside its own sentence.
+    context: here ? { before: isTransition && before ? clip(before) : undefined, here: clip(here) } : undefined,
+    chosen: chosenMeta ? { word: chosen, ...chosenMeta } : undefined,
+    correct: { word: blank.answer, ...correctMeta },
+    verdict
+  }
+}
+
 const describeBlankReason = (blank: PracticeBlank): string => {
   if (blank.kind === 'letter-hint') {
     const mask = buildLetterHintMask(blank.answer)
     return `เติมคำศัพท์จากใบ้ “${mask.spacedMask}” — ความหมาย: ${blank.thaiMeaning} · คำที่ถูกคือ “${blank.answer}”`
   }
   if (blank.kind === 'transition') {
-    return TRANSITION_REASONS[blank.answer] ?? 'คำเปิดประโยคต้องสื่อความเชื่อมโยงให้ตรงกับใจความของประโยค'
+    const meta = transitionMeta(blank.answer)
+    return meta ? `${meta.th} — ${meta.use}` : 'คำเปิดประโยคต้องสื่อความเชื่อมโยงให้ตรงกับใจความของประโยค'
   }
   if (blank.kind === 'contraction') return contractionReason(blank.answer)
-  const lower = normalizeApostrophe(blank.answer).toLowerCase()
-  return CONJUNCTION_REASONS[lower] ?? 'คำเชื่อมต้องเลือกให้ตรงกับความสัมพันธ์ระหว่างสองใจความ'
+  const meta = conjunctionMeta(blank.answer)
+  return meta ? `${meta.th} — ${meta.use}` : 'คำเชื่อมต้องเลือกให้ตรงกับความสัมพันธ์ระหว่างสองใจความ'
 }
 
 export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProps) {
@@ -695,17 +768,48 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
               <div className="gt1MistakeList" role="alert">
                 <strong>ช่องที่ยังผิด พร้อมเหตุผล ({wrongBlanks.length} จุด)</strong>
                 <ul>
-                  {wrongBlanks.map((blank) => (
-                    <li key={blank.id}>
-                      <span className="gt1MistakeWhere">{blankLocationLabel(blank)}</span>
-                      <span className="gt1MistakeAnswer">
-                        {values[blank.id]
-                          ? <>คุณเลือก <em>“{values[blank.id]}”</em> — ต้องเป็น <strong>“{blank.answer}”</strong></>
-                          : <>ยังไม่ได้เลือก — ต้องเป็น <strong>“{blank.answer}”</strong></>}
-                      </span>
-                      <span className="gt1MistakeReason">{describeBlankReason(blank)}</span>
-                    </li>
-                  ))}
+                  {wrongBlanks.map((blank) => {
+                    const explanation = buildBlankExplanation(blank, values[blank.id] || '', paragraph.sentences.map((s) => s.text))
+                    return (
+                      <li key={blank.id}>
+                        <span className="gt1MistakeWhere">{blankLocationLabel(blank)}</span>
+                        <span className="gt1MistakeAnswer">
+                          {values[blank.id]
+                            ? <>คุณเลือก <em>“{values[blank.id]}”</em> — ต้องเป็น <strong>“{blank.answer}”</strong></>
+                            : <>ยังไม่ได้เลือก — ต้องเป็น <strong>“{blank.answer}”</strong></>}
+                        </span>
+                        {explanation ? (
+                          <span className="gt1MistakeWhy">
+                            {explanation.context ? (
+                              <span className="gt1MistakeContext">
+                                {explanation.context.before ? (
+                                  <span className="gt1MistakeContextLine">
+                                    <b>ประโยคก่อนหน้า:</b> {explanation.context.before}
+                                  </span>
+                                ) : null}
+                                <span className="gt1MistakeContextLine">
+                                  <b>ประโยคนี้:</b> {explanation.context.here}
+                                </span>
+                              </span>
+                            ) : null}
+                            {explanation.chosen ? (
+                              <span className="gt1MistakeRow is-wrong">
+                                <b>✗ {explanation.chosen.word}</b> ({explanation.chosen.th}) · กลุ่ม “{explanation.chosen.group}” —{' '}
+                                {explanation.chosen.use}
+                              </span>
+                            ) : null}
+                            <span className="gt1MistakeRow is-right">
+                              <b>✓ {explanation.correct.word}</b> ({explanation.correct.th}) · กลุ่ม “{explanation.correct.group}” —{' '}
+                              {explanation.correct.use}
+                            </span>
+                            <span className="gt1MistakeVerdict">{explanation.verdict}</span>
+                          </span>
+                        ) : (
+                          <span className="gt1MistakeReason">{describeBlankReason(blank)}</span>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             ) : null}

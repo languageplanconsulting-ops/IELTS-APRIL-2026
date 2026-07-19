@@ -371,6 +371,58 @@
   line-height: 1.55;
 }
 
+/* Contextual explanation: the two real sentences, then wrong vs right usage. */
+.gt1MistakeWhy {
+  display: grid;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.gt1MistakeContext {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #f4f6fb;
+  border: 1px solid #dbe1ee;
+}
+
+.gt1MistakeContextLine {
+  font-size: .78rem;
+  line-height: 1.55;
+  color: #46506a;
+}
+
+.gt1MistakeContextLine b {
+  color: #172033;
+}
+
+.gt1MistakeRow {
+  font-size: .8rem;
+  line-height: 1.55;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.gt1MistakeRow.is-wrong {
+  background: #fdeef1;
+  border: 1px solid #f0c4ce;
+  color: #7c2438;
+}
+
+.gt1MistakeRow.is-right {
+  background: #eaf7ee;
+  border: 1px solid #b9e2c6;
+  color: #1d5c33;
+}
+
+.gt1MistakeVerdict {
+  font-size: .82rem;
+  font-weight: 650;
+  line-height: 1.55;
+  color: #172033;
+}
+
 .gt1BulletCard span {
   font-size: .72rem;
   font-weight: 900;
