@@ -10212,6 +10212,11 @@ body,
   overflow: hidden;
 }
 
+/* Let the click-to-reveal vocab popover escape the scroll clipping of the passage panel. */
+.readingExamLayout-bank .readingPassagePanel-exam:has(.vocabHiWrap .vocabHiPopover) {
+  overflow: visible;
+}
+
 .readingExamWrap .readingSummaryStrip {
   gap: 8px;
 }
@@ -10303,6 +10308,11 @@ body,
   -webkit-overflow-scrolling: touch;
   font-size: calc(1.02rem * var(--reading-font-scale, 1));
   line-height: calc(1.8 * var(--reading-line-scale, 1));
+}
+
+/* While a vocab popover is open, drop the scroll clipping so it doesn't get cut off. */
+.readingExamLayout-bank .readingPassageBody:has(.vocabHiWrap .vocabHiPopover) {
+  overflow: visible;
 }
 
 /* Reader controls: comfortable-reading toolbar above the passage */
@@ -10725,6 +10735,15 @@ body,
   gap: 6px;
 }
 
+.readingUnifiedTimer {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0f2e85;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 .readingExamProgressBar {
   width: 100%;
   height: 3px;
@@ -10973,6 +10992,51 @@ body,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
+}
+
+.readingReportTypeStrip {
+  margin: -4px 0 4px;
+  padding: 8px 14px;
+  border: 2px solid var(--bc-black);
+  background: #fffdf4;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.readingReportJumpBar {
+  position: sticky;
+  top: 92px;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 0;
+  background: var(--ep-page, #f8fafc);
+}
+
+.readingReportJumpBtn {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border: 2px solid var(--bc-black);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.readingReportJumpBtn:hover {
+  background: #eef2ff;
+}
+
+.readingReportJumpBtn.is-wrong {
+  border-color: #b91c1c;
+  background: #fff0f0;
+  color: #b91c1c;
 }
 
 .readingSummaryCard,
@@ -14087,6 +14151,65 @@ body,
 .readingReportAnswerItem-correct {
   background: #f0fdf4;
   color: #15803d;
+}
+
+/* Full option list for MCQ / choose-TWO report items */
+.readingReportMcqOptions {
+  padding: 10px 18px 0;
+}
+
+.readingReportMcqOptionList {
+  display: grid;
+  gap: 6px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.readingReportMcqOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.readingReportMcqOption.is-correct {
+  border-color: #7fd2a4;
+  background: #f0fdf4;
+  color: #15803d;
+  font-weight: 700;
+}
+
+.readingReportMcqOptionLetter {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.08);
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+
+.readingReportMcqOption.is-correct .readingReportMcqOptionLetter {
+  background: #15803d;
+  color: #fff;
+}
+
+.readingReportMcqOptionText {
+  flex: 1 1 auto;
+}
+
+.readingReportMcqOptionCheck {
+  flex-shrink: 0;
+  font-weight: 800;
 }
 
 /* Evidence section */
@@ -19567,6 +19690,7 @@ select:focus,
   overflow: visible;
   padding-left: 0;
   padding-right: 0;
+  scroll-padding-top: 100px;
 }
 
 .readingPage-journey .readingPageHeader {
@@ -19633,11 +19757,13 @@ select:focus,
 .readingPage .readingJourneyJournal {
   display: grid;
   gap: 20px;
+  margin-top: 12px;
   padding: 22px 22px 20px;
   border: 1px solid var(--ep-line);
   border-radius: 20px;
   background: var(--ep-card);
   box-shadow: var(--ep-shadow);
+  scroll-margin-top: 100px;
 }
 
 @media (min-width: 700px) {
@@ -19736,6 +19862,17 @@ select:focus,
   line-height: 1.1;
 }
 
+.readingPage .readingJourneyStatHint {
+  display: block;
+  margin-top: 2px;
+  color: var(--ep-muted);
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .readingPage .readingJourneyToolbar {
   display: flex;
   flex-wrap: wrap;
@@ -19815,8 +19952,7 @@ select:focus,
   grid-template-columns: 52px 1fr;
   gap: 12px;
   align-items: stretch;
-  animation: luxuryCardEnter calc(var(--duration-view) + 120ms) var(--ease-luxury) both;
-  animation-delay: calc(40ms + (min(var(--motion-stagger, 0), 6) * 28ms));
+  /* No enter animation/stagger here — with 15-20+ stages the delay chain caused scroll jank. */
 }
 
 .readingPage .readingJourneyTrailRow.is-alt .readingJourneyMissionCard {
@@ -19865,7 +20001,8 @@ select:focus,
 .readingPage .readingJourneyTrailDot.is-active {
   background: var(--ep-yellow);
   border-color: var(--ep-yellow);
-  animation: readingJourneyPulse 2.4s var(--ease-luxury-soft) infinite;
+  /* Pulsing animation caused scroll jank on the quest log; keep the highlight static. */
+  animation: none;
 }
 
 .readingPage .readingJourneyTrailDot.is-locked {
@@ -19892,6 +20029,9 @@ select:focus,
   background: var(--ep-card);
   box-shadow: var(--ep-shadow);
   transform: none;
+  content-visibility: auto;
+  contain: content;
+  contain-intrinsic-size: 260px;
   transition:
     transform var(--duration-luxury) var(--ease-luxury),
     box-shadow var(--duration-luxury) var(--ease-luxury),
@@ -19970,6 +20110,15 @@ select:focus,
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--ep-ink);
+}
+
+.readingPage .readingJourneyMissionSubtitle {
+  margin: 0 0 8px;
+  color: var(--ep-muted);
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .readingPage .readingJourneyMissionObjective {
@@ -26986,7 +27135,7 @@ textarea {
 }
 .vocabHiPopover {
   position: absolute;
-  z-index: 40;
+  z-index: 80;
   left: 0;
   top: calc(100% + 6px);
   display: grid;
@@ -29495,4 +29644,14 @@ textarea {
 .notebookPage .notebookEntryQuestionBody.is-empty {
   color: #94a3b8;
   font-style: italic;
+}
+
+.listeningReportExactPortion {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-left: 4px solid #004aad;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }

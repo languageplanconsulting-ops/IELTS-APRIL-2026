@@ -16,13 +16,32 @@ export const INTENSIVE_VOCAB_PAIRS_BY_STAGE: Record<number, StagePairs> = {
 }
 
 /** Attach the word-level pairs (if any) for one passage slot onto its questions, by local number. */
+export const sanitizeReadingVocabPairs = (
+  pairs: ReadingVocabBridgePair[] | undefined
+): ReadingVocabBridgePair[] => {
+  if (!pairs?.length) return []
+  const seen = new Set<string>()
+  return pairs.filter((pair) => {
+    const q = String(pair.q || '').trim()
+    const p = String(pair.p || '').trim()
+    if (!q || !p) return false
+    // Drop identical / near-identical noise ("ventilation shafts = ventilation shafts").
+    if (q.toLowerCase() === p.toLowerCase()) return false
+    if (q.length < 3 || p.length < 3) return false
+    const key = `${q.toLowerCase()}::${p.toLowerCase()}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 export const applyIntensiveVocabPairs = (
   passage: { questions: Array<{ number: number; pairs?: ReadingVocabBridgePair[] }> },
   slotPairs: SlotNumberPairs | undefined
 ) => {
   if (!slotPairs) return
   for (const question of passage.questions) {
-    const pairs = slotPairs[question.number]
-    if (pairs && pairs.length) question.pairs = pairs
+    const pairs = sanitizeReadingVocabPairs(slotPairs[question.number])
+    if (pairs.length) question.pairs = pairs
   }
 }

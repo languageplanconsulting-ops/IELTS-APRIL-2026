@@ -125,12 +125,12 @@ const isMatchingHeadingQuestion = (question: ReadingQuestion, sectionText: strin
 const isMatchingInformationQuestion = (question: ReadingQuestion, sectionText: string) => {
   const answer = String(question.correctAnswer || '').trim()
   const prompt = String(question.prompt || '')
+  if (!/^[A-G]$/i.test(answer)) return false
+  // Regular MCQs (incl. choose-TWO) must not be counted as matching-information.
+  if (/which TWO|choose TWO|which of the following|when comparing/i.test(prompt)) return false
   const context = `${sectionText}\n${prompt}`
-  return (
-    /^[A-G]$/i.test(answer) &&
-    /which (?:paragraph|section) contains|contains the following information|match each statement with the correct/i.test(
-      context
-    )
+  return /which (?:paragraph|section) contains|contains the following information|match each statement with the correct/i.test(
+    context
   )
 }
 
@@ -676,20 +676,24 @@ export const buildJourneyStageDefinitions = (
   maximumStages = Infinity
 ): ReadingJourneyStageDefinition[] => {
   const candidates = poolExams.filter(Boolean).filter(isReadingJourneySourceExam)
-  if (!candidates.length) return []
+  // Intensive stages (1–17) are self-contained and do not need the bank pool.
+  const intensiveCount = Math.min(maximumStages, INTENSIVE_JOURNEY_STAGE_MAX)
+  if (!candidates.length && intensiveCount <= 0) return []
 
-  const maxStages = Math.min(
-    maximumStages,
-    Math.max(
-      minimumStages,
-      Math.floor(candidates.length / JOURNEY_PASSAGES_PER_STAGE),
-      Math.min(
-        candidates.filter((exam) => passageHasFill(exam.parsedPayload.passages[0])).length,
-        candidates.filter((exam) => passageHasJudgement(exam.parsedPayload.passages[0])).length,
-        candidates.filter((exam) => passageHasMatching(exam.parsedPayload.passages[0])).length
+  const maxStages = candidates.length
+    ? Math.min(
+        maximumStages,
+        Math.max(
+          minimumStages,
+          Math.floor(candidates.length / JOURNEY_PASSAGES_PER_STAGE),
+          Math.min(
+            candidates.filter((exam) => passageHasFill(exam.parsedPayload.passages[0])).length,
+            candidates.filter((exam) => passageHasJudgement(exam.parsedPayload.passages[0])).length,
+            candidates.filter((exam) => passageHasMatching(exam.parsedPayload.passages[0])).length
+          )
+        )
       )
-    )
-  )
+    : intensiveCount
 
   const stages: ReadingJourneyStageDefinition[] = []
 
@@ -713,6 +717,7 @@ export const buildJourneyStageDefinitions = (
       continue
     }
 
+    if (!candidates.length) break
     const duo = buildStageDuo(candidates, stageNumber)
     if (!duo) break
     const merged = mergeExamsIntoJourneyExam(stageNumber, duo)
@@ -811,12 +816,24 @@ export const getJourneyStageTypeSummary = (exam: ReadingExamRecord) => {
       acc.ynng += stats.ynng
       acc.matching += stats.matching
       acc.matchingHeadings += stats.matchingHeadings
+      acc.mcq += (passage.questions || []).filter((question) => {
+        if (question.answerType !== 'multiple-choice') return false
+        const sectionText = String(passage.questionSectionText || '')
+        return !isAnyMatchingQuestion(question, sectionText)
+      }).length
       return acc
     },
-    { fill: 0, tfng: 0, ynng: 0, matching: 0, matchingHeadings: 0 }
+    { fill: 0, tfng: 0, ynng: 0, matching: 0, matchingHeadings: 0, mcq: 0 }
   )
-  const matchingLabel =
-    totals.matchingHeadings > 0 ? `Matching headings ${totals.matchingHeadings}` : `Matching ${totals.matching}`
+  const parts: string[] = []
+  if (totals.fill > 0) parts.push(`Fill ${totals.fill}`)
+  if (totals.tfng > 0) parts.push(`TFNG ${totals.tfng}`)
+  if (totals.ynng > 0) parts.push(`Y/N/NG ${totals.ynng}`)
+  if (totals.matchingHeadings > 0) parts.push(`Matching headings ${totals.matchingHeadings}`)
+  else if (totals.matching > 0) parts.push(`Matching information ${totals.matching}`)
+  if (totals.mcq > 0) parts.push(`MCQ ${totals.mcq}`)
   const passageCount = passages.length || JOURNEY_PASSAGES_PER_STAGE
-  return `${passageCount} passages · Fill ${totals.fill} · TFNG ${totals.tfng} · Y/N/NG ${totals.ynng} · ${matchingLabel}`
+  return parts.length
+    ? `${passageCount} passages · ${parts.join(' · ')}`
+    : `${passageCount} passages`
 }

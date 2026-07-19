@@ -168,9 +168,8 @@ export const INTENSIVE_PAIRS_STAGE_6_15: Record<number, Record<1 | 2, Record<num
         { q: "More people than predicted", p: "almost 40,000 passengers", th: "คนมากกว่าที่คาดการณ์ไว้", note: "บทความบอกจำนวนผู้โดยสารวันแรก แต่ไม่ได้พูดถึง \"การคาดการณ์\" ว่ามากหรือน้อยกว่า จึงตอบ NOT GIVEN" },
       ],
       9: [
-        { q: "ventilation shafts", p: "ventilation shafts", th: "ปล่องระบายอากาศ" },
+        { q: "ventilation shafts", p: "shafts were added to the tunnels", th: "ปล่องระบายอากาศ" },
         { q: "failed to prevent pollution", p: "smoke and fumes remained a problem", th: "ไม่สามารถป้องกันมลพิษได้", note: "ถึงมีปล่องระบายอากาศ แต่ \"smoke and fumes remained a problem\" ตรงกับข้อ จึงตอบ TRUE" },
-        { q: "in the tunnels", p: "added to the tunnels", th: "ในอุโมงค์" },
       ],
       10: [
         { q: "A different approach", p: "The only alternative", th: "วิธีการที่ต่างออกไป" },
@@ -178,16 +177,16 @@ export const INTENSIVE_PAIRS_STAGE_6_15: Record<number, Record<1 | 2, Record<num
         { q: "in London's central area", p: "this part of the capital", th: "ในใจกลางกรุงลอนดอน" },
       ],
       11: [
-        { q: "The windows on City & South London trains", p: "tiny windows just below the roof", th: "หน้าต่างบนรถไฟ City & South London", note: "บทความบอกว่าหน้าต่างเล็กเพราะคิดว่าผู้โดยสารไม่อยากมองออกไป ข้อความในข้อขัดกับบทความ จึงตอบ FALSE" },
-        { q: "City & South London", p: "City & South London", th: "สาย City & South London" },
+        { q: "windows … were at eye level", p: "tiny windows just below the roof", th: "หน้าต่างอยู่ระดับสายตา", note: "บทความบอกว่าหน้าต่างเล็กและอยู่ใกล้หลังคา ไม่ใช่ที่ระดับสายตา จึงตอบ FALSE" },
+        { q: "City & South London trains", p: "City & South London", th: "รถไฟสาย City & South London" },
       ],
       12: [
-        { q: "The City & South London Railway", p: "the City & South London Railway", th: "ทางรถไฟ City & South London" },
-        { q: "was a financial success", p: "did not make a profit", th: "ประสบความสำเร็จทางการเงิน", note: "บทความระบุว่า \"did not make a profit\" ขัดกับข้อที่ว่าเป็น financial success จึงตอบ FALSE" },
+        { q: "financial success", p: "did not make a profit", th: "ประสบความสำเร็จทางการเงิน", note: "บทความระบุว่า \"did not make a profit\" ขัดกับข้อที่ว่าเป็น financial success จึงตอบ FALSE" },
+        { q: "City & South London Railway", p: "great technical achievement", th: "ทางรถไฟ City & South London" },
       ],
       13: [
-        { q: "the 'Tuppenny Tube'", p: "the 'Tuppenny Tube'", th: "สาย Tuppenny Tube" },
-        { q: "Trains on the 'Tuppenny Tube' nearly", p: "began operation using new electric locomotives", th: "รถไฟบนสาย Tuppenny Tube เกือบ...", note: "บทความบอกแค่ว่าเปิดให้บริการและได้รับความนิยม ไม่มีข้อมูลเรื่องที่ข้อกล่าวถึง จึงตอบ NOT GIVEN" },
+        { q: "nearly always ran on time", p: "It was very popular", th: "เกือบจะตรงต่อเวลาเสมอ", note: "บทความบอกแค่ว่าได้รับความนิยม ไม่มีข้อมูลเรื่องความตรงต่อเวลา จึงตอบ NOT GIVEN" },
+        { q: "Tuppenny Tube", p: "Central London Railway, known as the 'Tuppenny Tube'", th: "สาย Tuppenny Tube" },
       ],
     },
     2: {
@@ -215,12 +214,12 @@ export const INTENSIVE_PAIRS_STAGE_6_15: Record<number, Record<1 | 2, Record<num
         { q: "amphitheatre of Arles", p: "Built by the Romans in 90 AD", th: "อัฒจันทร์แห่งอาร์ล" },
       ],
       6: [
-        { q: "venue where … is performed", p: "converted back into an arena for the staging of bullfights", th: "สถานที่จัดแสดง", note: "อารีนาที่เวโรนากลับมาใช้จัดการแสดง \"bullfights\" จึงเติมคำว่า bullfights" },
-        { q: "arena in Verona", p: "imposing arena of Verona", th: "อารีนาในเวโรนา" },
+        { q: "spectators could watch", p: "converted back into an arena for the staging of bullfights", th: "ผู้ชมสามารถดู…", note: "อารีนาที่อาร์ลถูกเปลี่ยนกลับมาจัดการแสดง \"bullfights\" จึงเติมคำว่า bullfights" },
+        { q: "amphitheatre of Arles", p: "amphitheatre of Arles in southwest France", th: "อัฒจันทร์แห่งอาร์ล" },
       ],
       7: [
-        { q: "prime sites for", p: "prime sites for opera", th: "สถานที่ชั้นนำสำหรับ", note: "เวโรนาเป็นหนึ่งในสถานที่ชั้นนำของโลกสำหรับ \"opera\" ด้วยอะคูสติกที่ยอดเยี่ยม จึงเติมคำว่า opera" },
-        { q: "outstanding acoustics", p: "outstanding acoustics", th: "อะคูสติกที่ยอดเยี่ยม" },
+        { q: "venue where … is performed", p: "prime sites for opera", th: "สถานที่จัดแสดง", note: "เวโรนาเป็นหนึ่งในสถานที่ชั้นนำของโลกสำหรับ \"opera\" ด้วยอะคูสติกที่ยอดเยี่ยม จึงเติมคำว่า opera" },
+        { q: "arena in Verona", p: "imposing arena of Verona", th: "อารีนาในเวโรนา" },
       ],
       8: [
         { q: "used as houses, a … depot and a prison", p: "variously used as houses, a salt depot and a prison", th: "ใช้เป็นบ้าน คลังเก็บ และคุก", note: "ช่องว่างคือชนิดของคลังเก็บ คือ \"salt\" depot จึงเติมคำว่า salt" },

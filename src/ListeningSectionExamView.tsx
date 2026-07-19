@@ -5,6 +5,8 @@ import {
 } from './ListeningEvidenceTutorial'
 import { estimateListeningBand, formatBand } from './listeningBandScore'
 import { getListeningEvidenceMatch } from './listeningHighlightMatch'
+import { ListeningParaphraseBox } from './ListeningParaphraseBox'
+import { buildListeningParaphraseTeaching } from './listeningParaphraseTeaching'
 import {
   exceedsListeningWordLimit,
   isListeningGapFillAnswerCorrect,
@@ -251,6 +253,7 @@ export function ListeningSectionExamView({
   onBack,
   onSaveNotebook,
   onQuestionComplete,
+  onKnewIt,
   testTabs,
   activeTestId,
   onTestChange,
@@ -874,8 +877,8 @@ export function ListeningSectionExamView({
             <h3>Listening section complete</h3>
             <p>
               {answerOnlyMode
-                ? 'คะแนนจริงของคุณคือรอบแรกครับ ด้านล่างคือคำตอบที่ถูก คำอธิบายภาษาไทย และประโยคจาก audioscript'
-                : 'คะแนนจริงของคุณคือรอบแรกครับ ด้านล่างคือ keyword, passage response, Thai explanation และ distractor จากคำตอบรอบแรก'}
+                ? 'คะแนนจริงของคุณคือรอบแรกครับ แต่ละข้อมีกล่อง paraphrase: คำใน audio = คำในโจทย์ = ความหมายไทย พร้อมอธิบายว่าใช้คำพ้องหรือเปลี่ยนโครงสร้าง'
+                : 'คะแนนจริงของคุณคือรอบแรกครับ แต่ละข้อมีกล่อง paraphrase: คำใน audio = คำในโจทย์ = ความหมายไทย พร้อมอธิบายวิธี paraphrase เป็นภาษาไทย'}
             </p>
           </div>
           <div className="listeningSectionExamReportScore">
@@ -914,16 +917,26 @@ export function ListeningSectionExamView({
               first.answer && !first.answerOk
                 ? getOptionLabel(question, first.answer)
                 : ''
+            const teaching = buildListeningParaphraseTeaching({
+              passageKeyword: question.passageKeyword,
+              questionKeyword: question.questionKeyword,
+              thaiMeaning: question.thaiMeaning,
+              explanationThai: question.explanationThai,
+              evidence: question.evidence,
+              correctAnswer: question.correctAnswer,
+              stem: question.stem
+            })
             const notebookPayload: ListeningNotebookSavePayload = {
-              criterion: 'Listening Report',
+              criterion: 'Listening Paraphrase',
               quote: `Q${question.number}: ${question.stem || question.questionText}`,
               fix: [
-                `Keyword in question: ${question.questionKeyword || question.stem}`,
-                `Passage response: ${question.passageKeyword || question.evidence}`,
-                `Evidence: ${question.evidence}`,
-                `Distractor: ${distractor || 'ไม่มีจากคำตอบรอบแรก'}`
+                `วิธี: ${teaching.methodLabelTh}`,
+                `Audioscript: ${teaching.passageKeyword}`,
+                `ในคำถาม: ${teaching.questionKeyword}`,
+                `= ${teaching.thaiMeaning}`,
+                teaching.explanationThai
               ].join('\n'),
-              thaiMeaning: question.explanationThai || question.thaiMeaning || ''
+              thaiMeaning: teaching.thaiMeaning
             }
             return (
               <section
@@ -944,61 +957,27 @@ export function ListeningSectionExamView({
                 </div>
 
                 <dl className={`listeningSectionExamReportTeachingGrid ${answerOnlyMode ? 'is-part1' : ''}`}>
-                  {answerOnlyMode ? (
-                    <>
-                      <div>
-                        <dt>Your first answer</dt>
-                        <dd>{first.answer || '—'}</dd>
-                      </div>
-                      <div>
-                        <dt>Correct answer</dt>
-                        <dd>{question.correctAnswer}</dd>
-                      </div>
-                      <div className="is-wide">
-                        <dt>Audioscript</dt>
-                        <dd>{question.evidence}</dd>
-                      </div>
-                      <div className="is-wide">
-                        <dt>Thai explanation</dt>
-                        <dd>{question.explanationThai || question.thaiMeaning}</dd>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        <dt>Keyword in question</dt>
-                        <dd>{question.questionKeyword || question.stem}</dd>
-                      </div>
-                      <div>
-                        <dt>Passage response</dt>
-                        <dd>{question.passageKeyword || question.evidence}</dd>
-                      </div>
-                      <div className="is-wide">
-                        <dt>Thai explanation</dt>
-                        <dd>{question.explanationThai || question.thaiMeaning}</dd>
-                      </div>
-                      <div className="is-wide">
-                        <dt>Distractor</dt>
-                        <dd>{distractor || 'ไม่มีจากคำตอบรอบแรก'}</dd>
-                      </div>
-                    </>
-                  )}
+                  <div>
+                    <dt>Your first answer</dt>
+                    <dd>{first.answer || '—'}</dd>
+                  </div>
+                  <div>
+                    <dt>Correct answer</dt>
+                    <dd>{question.correctAnswer}</dd>
+                  </div>
+                  {!firstCorrect && distractor ? (
+                    <div className="is-wide">
+                      <dt>Distractor จากคำตอบรอบแรก</dt>
+                      <dd>{distractor}</dd>
+                    </div>
+                  ) : null}
                 </dl>
 
-                {!answerOnlyMode ? (
-                  <div className="listeningSectionExamReportEvidence">
-                    <span>Evidence</span>
-                    <p>{question.evidence}</p>
-                  </div>
-                ) : null}
-
-                <button
-                  type="button"
-                  className="listeningSectionExamReportSave"
-                  onClick={() => onSaveNotebook(question, notebookPayload)}
-                >
-                  Save teaching note
-                </button>
+                <ListeningParaphraseBox
+                  teaching={teaching}
+                  onKnewIt={() => onKnewIt?.()}
+                  onSaveToNotebook={() => onSaveNotebook(question, notebookPayload)}
+                />
               </section>
             )
           })}

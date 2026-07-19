@@ -75,6 +75,8 @@ import {
   isReadingFullTestExamId
 } from './readingFullTestData'
 import { ParaphraseBridgeActions, PracticeActionToast, type PracticeActionToastState } from './PracticeActionToast'
+import { ListeningParaphraseBox } from './ListeningParaphraseBox'
+import { buildListeningParaphraseTeaching } from './listeningParaphraseTeaching'
 import { convertSpeakingRecordingToMp3 } from './speakingRecordingMp3'
 import { parseListeningScriptSegments } from './listeningScriptReader'
 import listeningWorkbookRaw from '../cambridge-listening-transcript-first-workbook.md?raw'
@@ -216,6 +218,8 @@ import {
   sanitizeReadingPromptForDisplay as sanitizeReadingPromptForDisplayShared,
   sanitizeReadingQuestionSectionTextForDisplay as sanitizeReadingQuestionSectionTextShared
 } from './readingOcrCleanup'
+import { estimateReadingBand, formatReadingBand } from './readingBandScore'
+import { sanitizeReadingVocabPairs } from './intensiveJourneyVocabPairs'
 import { lookupReadingVocabBridge, type ReadingVocabBridgePair } from './readingPassage3VocabBridge'
 import { getReadingPassageVocab, type ReadingPassageVocabItem } from './readingPassageVocab'
 
@@ -428,6 +432,7 @@ type ReadingAttemptSummary = {
   reportItems: ReadingReportItem[]
   attemptCount?: number
   bestAccuracy?: number
+  timeTakenSeconds?: number
 }
 
 type ReadingPdoyLesson = {
@@ -5134,6 +5139,37 @@ const getReadingExamTypeSummary = (exam: ReadingExamRecord) => {
   return Array.from(labels).slice(0, 4).join(' · ') || 'IELTS Reading'
 }
 
+type ReadingReportQuestionTypeKey = 'fill' | 'tfng' | 'matching' | 'mcq'
+
+/** Same precedence as getReadingExamTypeSummary: matching first, then judgement, then MCQ, else fill. */
+const classifyReadingReportItemType = (
+  passage: ReadingPassageRecord | null,
+  question: ReadingQuestion
+): ReadingReportQuestionTypeKey => {
+  if (passage && isReadingMatchingQuestion(passage, question)) return 'matching'
+  if (question.answerType === 'true-false-not-given' || question.answerType === 'yes-no-not-given') return 'tfng'
+  if (question.answerType === 'multiple-choice') return 'mcq'
+  return 'fill'
+}
+
+const READING_REPORT_TYPE_LABELS: Array<{ key: ReadingReportQuestionTypeKey; label: string }> = [
+  { key: 'fill', label: 'Fill' },
+  { key: 'tfng', label: 'TFNG' },
+  { key: 'matching', label: 'Matching' },
+  { key: 'mcq', label: 'MCQ' }
+]
+
+/** mm:ss, or h:mm:ss once past an hour. */
+const formatReadingElapsedTime = (totalSeconds: number): string => {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds))
+  const hours = Math.floor(safeSeconds / 3600)
+  const minutes = Math.floor((safeSeconds % 3600) / 60)
+  const seconds = safeSeconds % 60
+  const mm = hours > 0 ? String(minutes).padStart(2, '0') : String(minutes)
+  const ss = String(seconds).padStart(2, '0')
+  return hours > 0 ? `${hours}:${mm}:${ss}` : `${mm}:${ss}`
+}
+
 const getReadingTypeTagVariant = (raw: string): string => {
   const t = raw.toLowerCase()
   if (/yes\s*\/\s*no|yes\/no/.test(t)) return 'yn'
@@ -7074,6 +7110,11 @@ function App() {
   } | null>(null)
   const [readingSplitDragging, setReadingSplitDragging] = useState(false)
   const [readingAttemptStage, setReadingAttemptStage] = useState<'bank' | 'exam' | 'report' | 'review' | 'briefing'>('bank')
+  const [readingExamStartedAt, setReadingExamStartedAt] = useState<number | null>(null)
+  const [readingExamElapsedSeconds, setReadingExamElapsedSeconds] = useState(0)
+  const [readingLastTimeTakenSeconds, setReadingLastTimeTakenSeconds] = useState<number | null>(null)
+  const [readingReportWrongOnly, setReadingReportWrongOnly] = useState(true)
+  const [readingReportPendingJumpTo, setReadingReportPendingJumpTo] = useState<number | null>(null)
   const [readingReportItems, setReadingReportItems] = useState<ReadingReportItem[]>([])
   const [readingAttemptHistory, setReadingAttemptHistory] = useState<Record<string, ReadingAttemptSummary>>({})
   const [readingJourneyProgress, setReadingJourneyProgress] = useState<ReadingJourneyProgress>(
@@ -9859,7 +9900,9 @@ function App() {
   }, [activeReadingJudgementGroups])
   const activeReadingAllQuestions = activeReadingPassages.flatMap((passage) => passage.questions || [])
   const visibleReadingReportItems =
-    readingAttemptStage === 'review' ? readingReportItems.filter((item) => !item.isCorrect) : readingReportItems
+    readingAttemptStage === 'review' || readingReportWrongOnly
+      ? readingReportItems.filter((item) => !item.isCorrect)
+      : readingReportItems
   const answeredReadingCount = activeReadingAllQuestions.filter((question) =>
     String(readingAnswers[question.number] || '').trim()
   ).length
@@ -9867,6 +9910,39 @@ function App() {
     ? Math.round((readingReportItems.filter((item) => item.isCorrect).length / readingReportItems.length) * 100)
     : 0
   const unansweredReadingCount = readingReportItems.filter((item) => !String(item.userAnswer || '').trim()).length
+  const readingReportBandEstimate = estimateReadingBand(
+    readingReportItems.filter((item) => item.isCorrect).length,
+    readingReportItems.length
+  )
+  const readingReportTypeBreakdown = useMemo(() => {
+    const buckets: Record<ReadingReportQuestionTypeKey, { correct: number; total: number }> = {
+      fill: { correct: 0, total: 0 },
+      tfng: { correct: 0, total: 0 },
+      matching: { correct: 0, total: 0 },
+      mcq: { correct: 0, total: 0 }
+    }
+    readingReportItems.forEach((item) => {
+      const itemPassage =
+        activeReadingPassages.find((passage) => passage.questions.some((question) => question.number === item.number)) ||
+        null
+      const typeKey = classifyReadingReportItemType(itemPassage, item)
+      buckets[typeKey].total += 1
+      if (item.isCorrect) buckets[typeKey].correct += 1
+    })
+    return buckets
+  }, [readingReportItems, activeReadingPassages])
+  const readingReportTypeBreakdownLabel = READING_REPORT_TYPE_LABELS.filter(
+    ({ key }) => readingReportTypeBreakdown[key].total > 0
+  )
+    .map(({ key, label }) => `${label} ${readingReportTypeBreakdown[key].correct}/${readingReportTypeBreakdown[key].total}`)
+    .join(' · ')
+  const readingReportTimeTakenSeconds =
+    readingAttemptHistory[activeReadingExam?.id || '']?.timeTakenSeconds ?? readingLastTimeTakenSeconds
+  const jumpToReadingReportQuestion = (questionNumber: number) => {
+    const alreadyVisible = visibleReadingReportItems.some((item) => item.number === questionNumber)
+    if (!alreadyVisible) setReadingReportWrongOnly(false)
+    setReadingReportPendingJumpTo(questionNumber)
+  }
   const readingReportByPassage = activeReadingPassages.map((passage) => {
     const items = visibleReadingReportItems.filter((item) =>
       passage.questions.some((question) => question.number === item.number)
@@ -11897,6 +11973,26 @@ function App() {
       // localStorage full or unavailable — ignore
     }
   }, [authSession, activeReadingExam, readingAttemptStage, readingAnswers, readingUserHighlights])
+
+  useEffect(() => {
+    if (readingAttemptStage !== 'exam' || !readingExamStartedAt) {
+      setReadingExamElapsedSeconds(0)
+      return
+    }
+    const tick = () => setReadingExamElapsedSeconds(Math.max(0, Math.floor((Date.now() - readingExamStartedAt) / 1000)))
+    tick()
+    const interval = window.setInterval(tick, 1000)
+    return () => window.clearInterval(interval)
+  }, [readingAttemptStage, readingExamStartedAt])
+
+  useEffect(() => {
+    if (readingReportPendingJumpTo === null) return
+    const target = document.getElementById(`reading-report-q-${readingReportPendingJumpTo}`)
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      setReadingReportPendingJumpTo(null)
+    }
+  }, [readingReportPendingJumpTo, visibleReadingReportItems])
 
   useEffect(() => {
     if (!authSession?.email || isNotebookHydrating) return
@@ -18823,6 +18919,9 @@ function App() {
     setReadingAnswers(restoredAnswers)
     setReadingReportItems([])
     setReadingAttemptStage(options?.mode === 'fix-wrong' ? 'exam' : 'briefing')
+    setReadingExamStartedAt(Date.now())
+    setReadingLastTimeTakenSeconds(null)
+    setReadingReportWrongOnly(true)
     setReadingHintQuestionNumber(null)
     setReadingExamError('')
     setReadingSelectionText('')
@@ -19115,6 +19214,8 @@ function App() {
     }
     setReadingAnswers(Object.fromEntries(savedAttempt.reportItems.map((item) => [item.number, item.userAnswer])))
     setReadingAttemptStage(stage)
+    setReadingReportWrongOnly(true)
+    setReadingLastTimeTakenSeconds(savedAttempt.timeTakenSeconds ?? null)
     setReadingHintQuestionNumber(null)
     setReadingExamError('')
     setReadingSelectionText('')
@@ -19132,6 +19233,10 @@ function App() {
     const totalQuestions = results.length
     const accuracy = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0
     const completedAt = new Date().toISOString()
+    const timeTakenSeconds = readingExamStartedAt
+      ? Math.max(0, Math.round((Date.now() - readingExamStartedAt) / 1000))
+      : undefined
+    setReadingLastTimeTakenSeconds(timeTakenSeconds ?? null)
     setReadingAttemptHistory((current) => {
       const previous = current[activeReadingExam.id]
       const previousAttempts = previous?.attemptCount || 0
@@ -19149,7 +19254,8 @@ function App() {
           completedAt,
           reportItems: results,
           attemptCount: previousAttempts + 1,
-          bestAccuracy: Math.max(previousBest, accuracy)
+          bestAccuracy: Math.max(previousBest, accuracy),
+          timeTakenSeconds
         }
       }
     })
@@ -22130,6 +22236,15 @@ function App() {
               <div className="readingReportList">
                 {listeningReportItems.map((item) => {
                   const paraphraseEquation = buildListeningParaphraseEquation(item)
+                  const teaching = buildListeningParaphraseTeaching({
+                    passageKeyword: paraphraseEquation?.passageKeyword,
+                    questionKeyword: paraphraseEquation?.questionKeyword,
+                    thaiMeaning: paraphraseEquation?.thaiMeaning,
+                    explanationThai: item.explanationThai,
+                    evidence: item.exactPortion,
+                    correctAnswer: item.correctAnswer,
+                    stem: item.prompt
+                  })
                   return (
                   <article key={`listening-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
                     <div className="readingReportHeader">
@@ -22153,42 +22268,27 @@ function App() {
                         ))}
                       </div>
                     ) : null}
-                    <div className="readingReportEvidence">
-                      <h4>Why?</h4>
-                      {paraphraseEquation && (
-                        <div className="listeningBuilderExamWordCheck">
-                          <p>Do you know this word?</p>
-                          <div className="listeningBuilderExamWordEquation">
-                            <span>{paraphraseEquation.passageKeyword}</span>
-                            <b>=</b>
-                            <span>{paraphraseEquation.questionKeyword}</span>
-                            <b>=</b>
-                            <span>{paraphraseEquation.thaiMeaning}</span>
-                          </div>
-                        </div>
-                      )}
-                      <p>{item.explanationThai}</p>
-                      <blockquote>{item.exactPortion}</blockquote>
-                    </div>
-                    {(item.paraphrasedVocabulary || paraphraseEquation) && (
-                      <div className="readingParaphraseCard">
-                        <p className="sectionLabel">Paraphrase link</p>
-                        {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
-                        <ParaphraseBridgeActions
-                          onKnewIt={showPracticeKnewItToast}
-                          onSaveToNotebook={() =>
-                            handlePracticeSaveToNotebook({
-                              criterion: 'Listening Paraphrase',
-                              quote: `Q${item.number}: ${item.prompt}`,
-                              fix: item.paraphrasedVocabulary || item.correctAnswer,
-                              thaiMeaning: paraphraseEquation?.thaiMeaning || item.explanationThai,
-                              preferredSection: 'listening',
-                              successNotice: 'Added to notebook'
-                            })
-                          }
-                        />
-                      </div>
-                    )}
+                    <blockquote className="listeningReportExactPortion">{item.exactPortion}</blockquote>
+                    <ListeningParaphraseBox
+                      teaching={teaching}
+                      onKnewIt={showPracticeKnewItToast}
+                      onSaveToNotebook={() =>
+                        handlePracticeSaveToNotebook({
+                          criterion: 'Listening Paraphrase',
+                          quote: `Q${item.number}: ${item.prompt}`,
+                          fix: [
+                            `วิธี: ${teaching.methodLabelTh}`,
+                            `Audioscript: ${teaching.passageKeyword}`,
+                            `ในคำถาม: ${teaching.questionKeyword}`,
+                            `= ${teaching.thaiMeaning}`,
+                            teaching.explanationThai
+                          ].join('\n'),
+                          thaiMeaning: teaching.thaiMeaning,
+                          preferredSection: 'listening',
+                          successNotice: 'Added to notebook'
+                        })
+                      }
+                    />
                   </article>
                 )})}
               </div>
@@ -22998,8 +23098,9 @@ function App() {
                       </strong>
                     </div>
                     <div className="readingJourneyStatBox">
-                      <span>ด่านปัจจุบัน</span>
+                      <span>ด่านถัดไป</span>
                       <strong>#{String(readingJourneyGameStats.activeMission).padStart(2, '0')}</strong>
+                      <small className="readingJourneyStatHint">ด่านถัดไปที่ยังไม่เคลียร์</small>
                     </div>
                     <div className="readingJourneyStatBox">
                       <span>Best score</span>
@@ -23073,6 +23174,7 @@ function App() {
                               </span>
                             </header>
                             <h4 className="readingJourneyMissionName">ด่าน {stage.stageNumber}</h4>
+                            {stage.subtitle && <p className="readingJourneyMissionSubtitle">{stage.subtitle}</p>}
                             <p className="readingJourneyMissionObjective">
                               {exam
                                 ? getJourneyStageTypeSummary(exam).replace(/^\d+ passages · /, '')
@@ -23089,6 +23191,7 @@ function App() {
                                   <button
                                     type="button"
                                     className="readingJourneyBtn readingJourneyBtn-play"
+                                    aria-label={`เริ่มทำข้อสอบ ด่าน ${stage.stageNumber}`}
                                     onClick={() => startReadingExam(stage.id)}
                                   >
                                     {attempt ? '↻ เล่นใหม่' : '▶ เริ่มทำข้อสอบ'}
@@ -23859,6 +23962,9 @@ function App() {
                   {answeredReadingCount} / {activeReadingAllQuestions.length}
                   {readingAutosaveLabel && <span className="readingAutosaveStamp">{readingAutosaveLabel}</span>}
                 </span>
+                <span className="readingUnifiedTimer" aria-label="เวลาที่ใช้ไปแล้ว">
+                  ⏱ {formatReadingElapsedTime(readingExamElapsedSeconds)}
+                </span>
               </div>
 
               {!adminBypassNormalReadingQuestionLocks && readingLockedQuestions.size > 0 && (
@@ -24279,10 +24385,10 @@ function App() {
                       {isSubmittingReading ? (
                         <>
                           <span className="readingSubmitSpinner" aria-hidden="true" />
-                          Scoring…
+                          กำลังตรวจ…
                         </>
                       ) : (
-                        'Submit Reading Exam'
+                        'ส่งคำตอบ Reading'
                       )}
                     </button>
                   </div>
@@ -24301,10 +24407,9 @@ function App() {
                     className="readingSubmitConfirmCard"
                     onClick={(event) => event.stopPropagation()}
                   >
-                    <p className="sectionLabel">Submit early?</p>
+                    <p className="sectionLabel">ส่งก่อนครบทุกข้อ?</p>
                     <h3 id="reading-submit-confirm-title">
-                      {activeReadingAllQuestions.length - answeredReadingCount} question
-                      {activeReadingAllQuestions.length - answeredReadingCount === 1 ? '' : 's'} still blank
+                      ยังว่างอยู่ {activeReadingAllQuestions.length - answeredReadingCount} ข้อ…
                     </h3>
                     <p className="meta">
                       Unanswered:{' '}
@@ -24314,8 +24419,7 @@ function App() {
                         .join(', ')}
                     </p>
                     <p>
-                      Blank answers will be marked wrong. You can still go back and answer them, or
-                      submit now to see your score.
+                      ข้อที่ว่างไว้จะถูกตัดสินว่าผิด กลับไปตอบให้ครบก่อนได้ หรือส่งเลยเพื่อดูคะแนน
                     </p>
                     <div className="readingSubmitConfirmActions">
                       <button
@@ -24324,7 +24428,7 @@ function App() {
                         onClick={() => setReadingSubmitConfirmOpen(false)}
                         disabled={isSubmittingReading}
                       >
-                        Go back
+                        กลับไปทำต่อ
                       </button>
                       <button
                         type="button"
@@ -24335,10 +24439,10 @@ function App() {
                         {isSubmittingReading ? (
                           <>
                             <span className="readingSubmitSpinner" aria-hidden="true" />
-                            Scoring…
+                            กำลังตรวจ…
                           </>
                         ) : (
-                          'Submit anyway'
+                          'ส่งเลย'
                         )}
                       </button>
                     </div>
@@ -24441,11 +24545,14 @@ function App() {
               <div className="readingAttemptToolbar">
                 <div>
                   <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
-                  <h3>{activeReadingExam.title} {readingAttemptStage === 'review' ? 'Mistake Review' : 'Report'}</h3>
+                  <h3>{activeReadingExam.title} {readingAttemptStage === 'review' ? 'ทบทวนข้อผิด' : 'สรุปผล'}</h3>
                   <p className="meta">
                     Score: {readingReportItems.filter((item) => item.isCorrect).length}/{readingReportItems.length}
                     {isReadingFullTestExamId(activeReadingExam.id)
                       ? ` · ${activeReadingPassages.length} passages · 40 questions total`
+                      : ''}
+                    {readingReportTimeTakenSeconds !== null && readingReportTimeTakenSeconds !== undefined
+                      ? ` · ใช้เวลา ${formatReadingElapsedTime(readingReportTimeTakenSeconds)}`
                       : ''}
                   </p>
                 </div>
@@ -24457,11 +24564,20 @@ function App() {
                       returnToReadingBank(activeReadingExam)
                     }}
                   >
-                    Back to Bank
+                    กลับคลังข้อสอบ
                   </button>
                   <button type="button" className="secondary" onClick={exportReadingReportPdf}>
                     Export PDF
                   </button>
+                  {readingAttemptStage === 'report' && readingReportItems.some((item) => !item.isCorrect) && (
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => setReadingReportWrongOnly((current) => !current)}
+                    >
+                      {readingReportWrongOnly ? 'แสดงทุกข้อ' : 'แสดงเฉพาะข้อผิด'}
+                    </button>
+                  )}
                   {readingAttemptStage === 'report' && readingReportItems.some((item) => !item.isCorrect) && (
                     <button
                       type="button"
@@ -24485,7 +24601,7 @@ function App() {
                       type="button"
                       onClick={() => startReadingExam(activeReadingExam.id, { mode: 'fix-wrong' })}
                     >
-                      Fix Wrong Answers
+                      แก้เฉพาะข้อผิด
                     </button>
                   )}
                   <button
@@ -24493,28 +24609,57 @@ function App() {
                     className={readingReportItems.some((item) => !item.isCorrect) ? 'secondary' : ''}
                     onClick={() => startReadingExam(activeReadingExam.id, { mode: 'fresh' })}
                   >
-                    {readingReportItems.some((item) => !item.isCorrect) ? 'Start Fresh' : 'Retry Exam'}
+                    เริ่มใหม่ทั้งชุด
                   </button>
                 </div>
               </div>
 
+              <div className="readingReportJumpBar" role="navigation" aria-label="สลับไปข้อที่ต้องการ">
+                {(readingAttemptStage === 'review'
+                  ? readingReportItems.filter((item) => !item.isCorrect)
+                  : readingReportItems
+                ).map((item) => (
+                  <button
+                    key={`reading-report-jump-${item.number}`}
+                    type="button"
+                    className={`readingReportJumpBtn ${item.isCorrect ? '' : 'is-wrong'}`}
+                    onClick={() => jumpToReadingReportQuestion(item.number)}
+                  >
+                    {item.number}
+                  </button>
+                ))}
+              </div>
+
               <div className="readingSummaryStrip">
                 <article className="readingSummaryCard">
-                  <p className="sectionLabel">Accuracy</p>
+                  <p className="sectionLabel">ความแม่นยำ</p>
                   <strong>{readingAccuracy}%</strong>
                   <span>{readingReportItems.filter((item) => item.isCorrect).length} correct answers</span>
                 </article>
                 <article className="readingSummaryCard">
-                  <p className="sectionLabel">Unanswered</p>
+                  <p className="sectionLabel">ยังไม่ได้ตอบ</p>
                   <strong>{unansweredReadingCount}</strong>
                   <span>questions left blank</span>
                 </article>
                 <article className="readingSummaryCard">
-                  <p className="sectionLabel">Review Focus</p>
+                  <p className="sectionLabel">จุดที่ควรทบทวน</p>
                   <strong>{visibleReadingReportItems.find((item) => !item.isCorrect)?.number ? `Q${visibleReadingReportItems.find((item) => !item.isCorrect)?.number}` : 'Strong set'}</strong>
                   <span>{readingAttemptStage === 'review' ? 'only wrong answers are shown here' : 'start with the first wrong answer'}</span>
                 </article>
+                <article className="readingSummaryCard">
+                  <p className="sectionLabel">ประมาณ Band</p>
+                  <strong>{formatReadingBand(readingReportBandEstimate)}</strong>
+                  <span>
+                    {isReadingFullTestExamId(activeReadingExam.id)
+                      ? 'Academic Reading band'
+                      : 'ประมาณจากคะแนนดิบ (สเกลเต็ม 40 ข้อ)'}
+                  </span>
+                </article>
               </div>
+
+              {readingReportTypeBreakdownLabel && (
+                <p className="readingReportTypeStrip">{readingReportTypeBreakdownLabel}</p>
+              )}
 
               <div className="readingPassageBreakdown">
                 {readingReportByPassage.map((group) => (
@@ -24528,7 +24673,7 @@ function App() {
                 ))}
               </div>
 
-              {readingAttemptStage === 'review' && visibleReadingReportItems.length === 0 && (
+              {(readingAttemptStage === 'review' || readingReportWrongOnly) && visibleReadingReportItems.length === 0 && (
                 <div className="emptyNotebook">
                   <p>No mistakes in the latest attempt for this exam.</p>
                   <p>You can still retry the test if you want a fresh timed run.</p>
@@ -24548,8 +24693,33 @@ function App() {
                   const isNotGivenReport =
                     isReadingJudgementQuestion(item) && isReadingNotGivenAnswer(item.correctAnswer)
                   const reportBlockquote = reportEvidenceExcerpt || item.exactPortion
+                  const sanitizedVocabBridgePairs = sanitizeReadingVocabPairs(vocabBridge?.pairs)
+                  const sanitizedItemPairs = sanitizeReadingVocabPairs(item.pairs)
+                  const isMcqReportItem =
+                    item.answerType === 'multiple-choice' &&
+                    !(reportPassage && isReadingMatchingQuestion(reportPassage, item))
+                  const isChooseTwoReportItem = isMcqReportItem && reportPassage
+                    ? isReadingChooseTwoQuestion(reportPassage, item)
+                    : false
+                  const reportMcqOptions =
+                    isMcqReportItem && reportPassage ? extractReadingMultipleChoiceOptions(reportPassage, item) : []
+                  const reportMcqCorrectLetters = new Set<string>()
+                  if (isMcqReportItem) {
+                    reportMcqCorrectLetters.add(canonicalizeReadingCorrectAnswer(item.correctAnswer).toUpperCase())
+                    if (isChooseTwoReportItem && item.answerGroup) {
+                      readingReportItems.forEach((sibling) => {
+                        if (sibling.answerGroup === item.answerGroup && sibling.number !== item.number) {
+                          reportMcqCorrectLetters.add(canonicalizeReadingCorrectAnswer(sibling.correctAnswer).toUpperCase())
+                        }
+                      })
+                    }
+                  }
                   return (
-                    <article key={`reading-report-${item.number}`} className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}>
+                    <article
+                      key={`reading-report-${item.number}`}
+                      id={`reading-report-q-${item.number}`}
+                      className={`readingReportCard ${item.isCorrect ? 'readingReportCard-correct' : 'readingReportCard-wrong'}`}
+                    >
                       {/* Option D: top accent bar */}
                       <div className="readingReportAccentBar" />
 
@@ -24582,13 +24752,36 @@ function App() {
                         </div>
                       </div>
 
+                      {isMcqReportItem && reportMcqOptions.length > 0 && (
+                        <div className="readingReportMcqOptions">
+                          <p className="sectionLabel">
+                            {isChooseTwoReportItem ? 'ตัวเลือกทั้งหมด (เลือก 2 ข้อ)' : 'ตัวเลือกทั้งหมด'}
+                          </p>
+                          <ul className="readingReportMcqOptionList">
+                            {reportMcqOptions.map((option) => {
+                              const isCorrectOption = reportMcqCorrectLetters.has(option.letter.toUpperCase())
+                              return (
+                                <li
+                                  key={`report-mcq-${item.number}-${option.letter}`}
+                                  className={`readingReportMcqOption ${isCorrectOption ? 'is-correct' : ''}`.trim()}
+                                >
+                                  <span className="readingReportMcqOptionLetter">{option.letter.toUpperCase()}</span>
+                                  <span className="readingReportMcqOptionText">{option.text}</span>
+                                  {isCorrectOption && <span className="readingReportMcqOptionCheck">✓</span>}
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        </div>
+                      )}
+
                       {/* Evidence / explanation */}
                       <div className="readingReportEvidence">
                         {vocabBridge && (
                           <div className="vbWrap">
                             <p className="vbBrandTitle"><span className="vbBrandMark">พี่ดอย</span>สอน Vocab</p>
                             <p className="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
-                            {vocabBridge.pairs && vocabBridge.pairs.length > 0 ? (
+                            {sanitizedVocabBridgePairs.length > 0 ? (
                               <ul className="vbPairList">
                                 <li className="vbPairHead">
                                   <span className="vbPairHd vbPairHd-q">❓ ในโจทย์</span>
@@ -24596,7 +24789,7 @@ function App() {
                                   <span className="vbPairHd vbPairHd-p">📖 ในบทความ</span>
                                   <span className="vbPairHd vbPairHd-save" />
                                 </li>
-                                {vocabBridge.pairs.map((pair, pairIdx) => (
+                                {sanitizedVocabBridgePairs.map((pair, pairIdx) => (
                                   <li key={`vbpair-${item.number}-${pairIdx}`} className="vbPairRow">
                                     <div className="vbPairMain">
                                       <span className="vbPairQ">{pair.q}</span>
@@ -24660,7 +24853,7 @@ function App() {
                             )}
                           </div>
                         )}
-                        {!vocabBridge && item.pairs && item.pairs.length > 0 && (
+                        {!vocabBridge && sanitizedItemPairs.length > 0 && (
                           <div className="vbWrap">
                             <p className="vbBrandTitle"><span className="vbBrandMark">พี่ดอย</span>สอน Vocab</p>
                             <p className="vbLabel">คำในโจทย์ ↔ คำในบทความ (synonym / paraphrase)</p>
@@ -24671,7 +24864,7 @@ function App() {
                                 <span className="vbPairHd vbPairHd-p">📖 ในบทความ</span>
                                 <span className="vbPairHd vbPairHd-save" />
                               </li>
-                              {item.pairs.map((pair, pairIdx) => (
+                              {sanitizedItemPairs.map((pair, pairIdx) => (
                                 <li key={`vbpair-normal-${item.number}-${pairIdx}`} className="vbPairRow">
                                   <div className="vbPairMain">
                                     <span className="vbPairQ">{pair.q}</span>
@@ -24698,7 +24891,7 @@ function App() {
                             </ul>
                           </div>
                         )}
-                        {!vocabBridge && !(item.pairs && item.pairs.length > 0) && paraphraseEquation && (() => {
+                        {!vocabBridge && sanitizedItemPairs.length === 0 && paraphraseEquation && (() => {
                           const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
                           const hasMeaningfulBridge = isIntensive || Boolean(parseParaphraseBridge(item.paraphrasedVocabulary))
                           const isJudgement = isReadingJudgementQuestion(item)

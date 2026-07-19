@@ -273,7 +273,7 @@ export const builderTaskToExamQuestion = (
     options,
     correctAnswer,
     evidence: task.targetText,
-    passageKeyword: task.targetText.slice(0, 80),
+    passageKeyword: task.targetText,
     questionKeyword: task.questionWordPhrase,
     thaiMeaning: task.thaiMeaning,
     explanationThai: task.explanationThai,
