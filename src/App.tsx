@@ -6911,6 +6911,8 @@ function App() {
   const [readingUserHighlights, setReadingUserHighlights] = useState<Array<{ id: string; passageNumber: number; text: string; color?: string }>>([])
   const [readingVocabSavedWords, setReadingVocabSavedWords] = useState<Set<string>>(new Set())
   const [readingVocabOpenKey, setReadingVocabOpenKey] = useState<string | null>(null)
+  const [readingVocabClosingKey, setReadingVocabClosingKey] = useState<string | null>(null)
+  const readingVocabClosingTimerRef = useRef<number | null>(null)
   const [readingHighlightMenu, setReadingHighlightMenu] = useState<{ x: number; y: number; text: string } | null>(null)
   const [readingSmartPencilMode, setReadingSmartPencilMode] = useState(false)
   const [readingPencilStrokes, setReadingPencilStrokes] = useState<Record<number, ReadingPencilStroke[]>>({})
@@ -18138,6 +18140,19 @@ function App() {
     })
   }
 
+  const resolveReadingPassageContentTitle = (passage?: {
+    title?: string
+    bodyParagraphs?: string[]
+  } | null) => {
+    const stored = String(passage?.title || '').trim()
+    const first = String(passage?.bodyParagraphs?.[0] || '').trim()
+    if (!first) return stored || 'Reading'
+    // GT notices often put the real title in the first short paragraph.
+    if (first.length <= 140) return first
+    const firstSentence = first.split(/[.!?]/)[0]?.trim() || first
+    return (firstSentence.slice(0, 120) || stored || 'Reading').trim()
+  }
+
   const saveReadingPassageVocabWord = (item: ReadingPassageVocabItem, passageTitle: string) => {
     if (!customSectionsRef.current.includes(PDOY_VOCAB_SECTION)) {
       setCustomSections((current) =>
@@ -18958,22 +18973,54 @@ function App() {
     }
   }, [readingHighlightMenu])
 
+  const clearReadingVocabClosingTimer = () => {
+    if (readingVocabClosingTimerRef.current != null) {
+      window.clearTimeout(readingVocabClosingTimerRef.current)
+      readingVocabClosingTimerRef.current = null
+    }
+  }
+
+  const dismissReadingVocabPopover = () => {
+    if (!readingVocabOpenKey) return
+    const key = readingVocabOpenKey
+    setReadingVocabOpenKey(null)
+    setReadingVocabClosingKey(key)
+    clearReadingVocabClosingTimer()
+    readingVocabClosingTimerRef.current = window.setTimeout(() => {
+      setReadingVocabClosingKey((current) => (current === key ? null : current))
+      readingVocabClosingTimerRef.current = null
+    }, 220)
+  }
+
+  const openOrToggleReadingVocabPopover = (key: string) => {
+    if (readingVocabOpenKey === key) {
+      dismissReadingVocabPopover()
+      return
+    }
+    clearReadingVocabClosingTimer()
+    setReadingVocabClosingKey(null)
+    setReadingVocabOpenKey(key)
+  }
+
+  useEffect(() => () => clearReadingVocabClosingTimer(), [])
+
   useEffect(() => {
     if (!readingVocabOpenKey) return undefined
     const closeIfOutside = (event: Event) => {
       const target = event.target
       if (target instanceof Element && target.closest('.vocabHiWrap')) return
-      setReadingVocabOpenKey(null)
+      dismissReadingVocabPopover()
     }
     const onKey = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') setReadingVocabOpenKey(null)
+      if (event.key === 'Escape') dismissReadingVocabPopover()
     }
-    window.addEventListener('mousedown', closeIfOutside)
+    // Capture phase so any screen tap/click closes even if a child stops bubbling.
+    window.addEventListener('pointerdown', closeIfOutside, true)
     window.addEventListener('scroll', closeIfOutside, true)
     window.addEventListener('resize', closeIfOutside)
     window.addEventListener('keydown', onKey)
     return () => {
-      window.removeEventListener('mousedown', closeIfOutside)
+      window.removeEventListener('pointerdown', closeIfOutside, true)
       window.removeEventListener('scroll', closeIfOutside, true)
       window.removeEventListener('resize', closeIfOutside)
       window.removeEventListener('keydown', onKey)
@@ -19063,11 +19110,12 @@ function App() {
       if (vocabItem) {
         const key = `${vocabKeyPrefix || ''}-${index}-${vocabItem.word}`
         const isOpen = readingVocabOpenKey === key
+        const isClosing = readingVocabClosingKey === key
         const saved = readingVocabSavedWords.has(vocabItem.word)
         content = (
           <span className="vocabHiWrap">
             <mark
-              className={`vocabHiMark ${hintMark ? 'readingHintMark' : ''} ${isOpen ? 'is-open' : ''}`.trim()}
+              className={`vocabHiMark ${hintMark ? 'readingHintMark' : ''} ${isOpen || isClosing ? 'is-open' : ''}`.trim()}
               role="button"
               tabIndex={0}
               ref={
@@ -19079,12 +19127,27 @@ function App() {
                     }
                   : undefined
               }
-              onClick={() => setReadingVocabOpenKey((current) => (current === key ? null : key))}
+              onClick={(event) => {
+                event.stopPropagation()
+                openOrToggleReadingVocabPopover(key)
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  openOrToggleReadingVocabPopover(key)
+                }
+              }}
             >
               {part}
             </mark>
-            {isOpen ? (
-              <span className="vocabHiPopover" role="dialog">
+            {isOpen || isClosing ? (
+              <span
+                className={`vocabHiPopover ${isClosing ? 'is-leaving' : ''}`}
+                role="dialog"
+                onAnimationEnd={() => {
+                  if (isClosing) setReadingVocabClosingKey((current) => (current === key ? null : current))
+                }}
+              >
                 <span className="vocabHiPopoverWord">{vocabItem.word}</span>
                 <span className="vocabHiPopoverTh">{vocabItem.thaiMeaning}</span>
                 {vocabItem.example ? <span className="vocabHiPopoverEx">{vocabItem.example}</span> : null}
@@ -19092,12 +19155,14 @@ function App() {
                   type="button"
                   className="vocabHiPopoverSave"
                   disabled={saved}
-                  onClick={() =>
+                  onClick={(event) => {
+                    event.stopPropagation()
                     saveReadingPassageVocabWord(
                       vocabItem,
                       passageTitle || activeReadingPassage?.title || 'Reading'
                     )
-                  }
+                  }}
+                  onPointerDown={(event) => event.stopPropagation()}
                 >
                   {saved ? '✓ บันทึกแล้ว' : '＋ เพิ่มลง Notebook'}
                 </button>
@@ -22874,8 +22939,10 @@ function App() {
                       <div className="readingPassageBody" ref={readingPassageBodyRef}>
                         {(() => {
                           const pdoyPassageText = activeReadingPdoyPassage.bodyParagraphs.join('\n')
-                          const pdoyPassageVocab = getReadingPassageVocab(activeReadingPdoyPassage.title, {
+                          const pdoyContentTitle = resolveReadingPassageContentTitle(activeReadingPdoyPassage)
+                          const pdoyPassageVocab = getReadingPassageVocab(pdoyContentTitle, {
                             fallbackTitles: [
+                              activeReadingPdoyPassage.title,
                               activeReadingPdoyLesson?.examTitle,
                               `Passage ${activeReadingPdoyPassage.number}`
                             ],
@@ -22927,7 +22994,7 @@ function App() {
                                 activeReadingPdoyQuestion.exactPortion,
                                 pdoyPassageVocab,
                                 `pdoy-p${activeReadingPdoyPassage.number}-${index}`,
-                                activeReadingPdoyPassage.title
+                                pdoyContentTitle
                               )}
                             </p>
                           </div>
@@ -23468,8 +23535,10 @@ function App() {
                           )
                         }
                         const passageText = activeReadingPassage.bodyParagraphs.join('\n')
-                        const passageVocab = getReadingPassageVocab(activeReadingPassage.title, {
+                        const passageContentTitle = resolveReadingPassageContentTitle(activeReadingPassage)
+                        const passageVocab = getReadingPassageVocab(passageContentTitle, {
                           fallbackTitles: [
+                            activeReadingPassage.title,
                             activeReadingExam?.title,
                             activeReadingExam?.collectionTitle,
                             `Passage ${activeReadingPassage.number}`
@@ -23478,7 +23547,10 @@ function App() {
                         })
                         return activeReadingPassage.bodyParagraphs.map((paragraph, index) => {
                           const vocabKeyPrefix = `p${activeReadingPassage.number}-${index}`
-                          const hasOpenVocab = Boolean(readingVocabOpenKey?.startsWith(`${vocabKeyPrefix}-`))
+                          const hasOpenVocab = Boolean(
+                            readingVocabOpenKey?.startsWith(`${vocabKeyPrefix}-`) ||
+                              readingVocabClosingKey?.startsWith(`${vocabKeyPrefix}-`)
+                          )
                           return (
                             <p
                               key={`reading-paragraph-${index}`}
@@ -23490,7 +23562,7 @@ function App() {
                                 highlightNeedles,
                                 passageVocab,
                                 vocabKeyPrefix,
-                                activeReadingPassage.title
+                                passageContentTitle
                               )}
                             </p>
                           )

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import {
+  ALL_GENERAL_TASK1_PROMPTS,
   GENERAL_TASK1_INFORMAL_PROMPTS,
   assembleGeneralTask1ModelLetter,
   type GeneralTask1SentencePattern
@@ -53,7 +54,7 @@ const detectPatterns = (core: string): GeneralTask1SentencePattern[] => {
   return matches
 }
 
-assert.equal(GENERAL_TASK1_INFORMAL_PROMPTS.length, 4, 'There must be exactly four informal prompts.')
+assert.equal(GENERAL_TASK1_INFORMAL_PROMPTS.length, 6, 'There must be exactly six informal prompts.')
 
 const results: Array<{ title: string; words: number }> = []
 
@@ -113,7 +114,49 @@ for (const [promptIndex, prompt] of GENERAL_TASK1_INFORMAL_PROMPTS.entries()) {
   results.push({ title: prompt.title, words })
 }
 
+/**
+ * Every sentence in every register must carry a literal Thai gloss, and when the
+ * sentence hangs on a connector the Thai must actually contain that connector's
+ * Thai equivalent — otherwise the wrong-answer card cannot argue from meaning.
+ */
+const THAI_CUE: Record<string, string[]> = {
+  ' because ': ['เพราะ'],
+  ' although ': ['แม้'],
+  // Only the taught relative-clause form (", which"), never interrogative "which".
+  ', which ': ['ซึ่ง', 'ที่'],
+  ', and ': ['และ', 'แล้ว'],
+  ', but ': ['แต่'],
+  ' so that ': ['เพื่อ']
+}
+
+let thaiChecked = 0
+for (const prompt of ALL_GENERAL_TASK1_PROMPTS) {
+  for (const paragraph of prompt.paragraphs) {
+    for (const sentence of paragraph.sentences) {
+      assert.ok(
+        sentence.thai && sentence.thai.trim().length > 0,
+        `${prompt.id} sentence has no Thai gloss: ${sentence.text}`
+      )
+      assert.match(
+        sentence.thai,
+        /[฀-๿]/,
+        `${prompt.id} Thai gloss contains no Thai script: ${sentence.text}`
+      )
+      const core = sentence.text.slice(sentence.transition.length).toLowerCase()
+      for (const [en, cues] of Object.entries(THAI_CUE)) {
+        if (!core.includes(en)) continue
+        assert.ok(
+          cues.some((cue) => sentence.thai.includes(cue)),
+          `${prompt.id} uses “${en.trim()}” but its Thai gloss never shows ${cues.join(' / ')}: ${sentence.thai}`
+        )
+      }
+      thaiChecked += 1
+    }
+  }
+}
+
 console.log('General Training Task 1 validation passed (manual bullet-content review noted).')
+console.log(`- Thai glosses verified on ${thaiChecked} sentences across ${ALL_GENERAL_TASK1_PROMPTS.length} prompts`)
 for (const result of results) {
   console.log(`- ${result.title}: ${result.words} words`)
 }

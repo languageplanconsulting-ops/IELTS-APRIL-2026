@@ -104,9 +104,11 @@ const contractionReason = (answer: string): string =>
 /** A wrong answer is explained as: what you picked, what it does, and why this
  *  slot needs a different relationship — grounded in the two real sentences. */
 type BlankExplanation = {
-  context?: { before?: string; here: string }
+  context?: { before?: string; here: string; thaiHere?: string; thaiBefore?: string }
   chosen?: { word: string; th: string; group: string; use: string }
   correct: { word: string; th: string; group: string; use: string }
+  /** Why the correct word fits *this* sentence, argued from the Thai meaning. */
+  meaningReason?: string
   verdict: string
 }
 
@@ -121,15 +123,35 @@ const clip = (text: string, max = 120) => {
   return clean.length > max ? `${clean.slice(0, max - 1)}…` : clean
 }
 
+/** The Thai clue word a learner should look for to justify each connector. */
+const THAI_CONNECTOR_CUE: Record<string, string> = {
+  because: 'เพราะว่า',
+  although: 'แม้ว่า',
+  while: 'ขณะที่',
+  when: 'เมื่อ',
+  since: 'เนื่องจาก / ตั้งแต่',
+  which: 'ซึ่ง',
+  and: 'และ',
+  but: 'แต่',
+  so: 'จึง',
+  'so that': 'เพื่อที่จะ',
+  if: 'ถ้า',
+  whether: 'ว่า…หรือไม่',
+  who: 'ผู้ซึ่ง',
+  that: 'ที่ / ว่า'
+}
+
 const buildBlankExplanation = (
   blank: PracticeBlank,
   chosenRaw: string,
-  sentences: string[]
+  sentences: readonly { text: string; thai: string }[]
 ): BlankExplanation | null => {
   if (blank.kind === 'contraction' || blank.kind === 'letter-hint') return null
   const chosen = chosenRaw.trim()
-  const here = sentences[blank.sentenceIndex]
-  const before = blank.sentenceIndex > 0 ? sentences[blank.sentenceIndex - 1] : undefined
+  const hereSentence = sentences[blank.sentenceIndex]
+  const beforeSentence = blank.sentenceIndex > 0 ? sentences[blank.sentenceIndex - 1] : undefined
+  const here = hereSentence?.text
+  const before = beforeSentence?.text
   const lookup = blank.kind === 'transition' ? transitionMeta : conjunctionMeta
 
   const correctMeta = lookup(blank.answer)
@@ -154,11 +176,29 @@ const buildBlankExplanation = (
         : `ความสัมพันธ์ ${linkedThing} ไม่ใช่แบบ “${chosenMeta.group}” แต่เป็นแบบ “${correctMeta.group}” จึงต้องใช้ “${blank.answer}”`
       : `“${chosen}” ไม่เข้ากับความสัมพันธ์แบบ “${correctMeta.group}” ที่ช่องนี้ต้องการ`
 
+  // Argue from the Thai meaning of this exact sentence, not from the abstract
+  // group name — the learner should be able to point at the Thai and see it.
+  const cue = THAI_CONNECTOR_CUE[normalizeApostrophe(blank.answer).trim().toLowerCase()]
+  const thaiHere = hereSentence?.thai
+  const meaningReason = thaiHere
+    ? cue
+      ? `อ่านคำแปลไทยของประโยคนี้: ใจความคือ “${thaiHere}” — ตรงจุดเชื่อมนั้นภาษาไทยใช้คำว่า “${cue}” ซึ่งตรงกับ “${blank.answer}” พอดี จึงต้องเติม “${blank.answer}”`
+      : `อ่านคำแปลไทยของประโยคนี้: ใจความคือ “${thaiHere}” — ความหมายนี้ต้องการคำเปิดที่สื่อ “${correctMeta.th}” จึงต้องใช้ “${blank.answer}”`
+    : undefined
+
   return {
     // The previous sentence only matters for an opener; a conjunction is judged inside its own sentence.
-    context: here ? { before: isTransition && before ? clip(before) : undefined, here: clip(here) } : undefined,
+    context: here
+      ? {
+          before: isTransition && before ? clip(before) : undefined,
+          here: clip(here),
+          thaiHere,
+          thaiBefore: isTransition ? beforeSentence?.thai : undefined
+        }
+      : undefined,
     chosen: chosenMeta ? { word: chosen, ...chosenMeta } : undefined,
     correct: { word: blank.answer, ...correctMeta },
+    meaningReason,
     verdict
   }
 }
@@ -516,7 +556,7 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
                 <strong>ช่องที่ยังผิด พร้อมเหตุผล ({wrongBlanks.length} จุด)</strong>
                 <ul>
                   {wrongBlanks.map((blank) => {
-                    const explanation = buildBlankExplanation(blank, values[blank.id] || '', paragraph.sentences.map((s) => s.text))
+                    const explanation = buildBlankExplanation(blank, values[blank.id] || '', paragraph.sentences)
                     return (
                       <li key={blank.id}>
                         <span className="gt1MistakeWhere">{blankLocationLabel(blank)}</span>
@@ -534,9 +574,19 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
                                     <b>ประโยคก่อนหน้า:</b> {explanation.context.before}
                                   </span>
                                 ) : null}
+                                {explanation.context.thaiBefore ? (
+                                  <span className="gt1MistakeContextLine is-thai">
+                                    <b>แปลไทย:</b> {explanation.context.thaiBefore}
+                                  </span>
+                                ) : null}
                                 <span className="gt1MistakeContextLine">
                                   <b>ประโยคนี้:</b> {explanation.context.here}
                                 </span>
+                                {explanation.context.thaiHere ? (
+                                  <span className="gt1MistakeContextLine is-thai">
+                                    <b>แปลไทย:</b> {explanation.context.thaiHere}
+                                  </span>
+                                ) : null}
                               </span>
                             ) : null}
                             {explanation.chosen ? (
@@ -549,6 +599,9 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
                               <b>✓ {explanation.correct.word}</b> ({explanation.correct.th}) · กลุ่ม “{explanation.correct.group}” —{' '}
                               {explanation.correct.use}
                             </span>
+                            {explanation.meaningReason ? (
+                              <span className="gt1MistakeMeaning">{explanation.meaningReason}</span>
+                            ) : null}
                             <span className="gt1MistakeVerdict">{explanation.verdict}</span>
                           </span>
                         ) : (

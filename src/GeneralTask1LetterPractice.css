@@ -397,6 +397,24 @@
   color: #172033;
 }
 
+/* Thai gloss sits under its English line so the pair reads as one unit. */
+.gt1MistakeContextLine.is-thai {
+  padding-left: 10px;
+  border-left: 2px solid #b9dcff;
+  color: #24304d;
+}
+
+/* The meaning-based argument: why this connector fits THIS sentence. */
+.gt1MistakeMeaning {
+  padding: 8px 10px;
+  border: 1px solid #ffdf8a;
+  border-radius: 8px;
+  background: #fff8e1;
+  color: #5c4a00;
+  font-size: .8rem;
+  line-height: 1.6;
+}
+
 .gt1MistakeRow {
   font-size: .8rem;
   line-height: 1.55;
