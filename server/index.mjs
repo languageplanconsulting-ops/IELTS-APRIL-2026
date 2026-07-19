@@ -7745,6 +7745,29 @@ const buildPassiveRewrite = (sentence) => {
   return `${capitalizedObject} ${be} ${participle}.`
 }
 
+const COHERENCE_REQUIREMENTS = {
+  9: [
+    'เชื่อมประโยคด้วย linking words หลากหลายอย่างน้อย 5 จุด (however, whereas, on top of that)',
+    'ใช้ referencing แทนการพูดคำเดิมซ้ำ (it, this, that, they) อย่างน้อย 5 จุด',
+    'ตอบเป็นโครง answer → reason → example ครบทุกคำถาม',
+    'ไม่มีการวกกลับไปพูดประเด็นเดิมซ้ำโดยไม่จำเป็น'
+  ],
+  8: [
+    'เชื่อมประโยคด้วย linking words หลากหลายอย่างน้อย 3 จุด (however, because of that, for instance)',
+    'ใช้ referencing แทนการพูดคำเดิมซ้ำ (it, this, they) อย่างน้อย 3 จุด',
+    'ตอบเป็นโครง answer → reason → example อย่างน้อย 2 ใน 3 คำถาม'
+  ],
+  7: [
+    'เชื่อมประโยคด้วย linking words อย่างน้อย 2 จุด (and so, but, because)',
+    'ใช้ referencing แทนการพูดคำเดิมซ้ำอย่างน้อย 2 จุด',
+    'ทุกคำตอบมีเหตุผลตามหลังอย่างน้อย 1 ประโยค'
+  ],
+  6: [
+    'เชื่อมประโยคด้วย and / but / because ให้ต่อเนื่อง ไม่พูดเป็นประโยคสั้นโดด ๆ',
+    'ตอบให้ตรงคำถามก่อน แล้วค่อยขยายเหตุผล'
+  ]
+}
+
 const getNextBandRequirementBank = ({ criterion, targetBand, testMode }) => {
   const key = String(criterion || '').toLowerCase()
   const roundedBand = Math.max(4, Math.min(9, Math.floor(Number(targetBand) || 0)))
@@ -7760,7 +7783,71 @@ const getNextBandRequirementBank = ({ criterion, targetBand, testMode }) => {
   if (key === 'grammar' && testMode === 'part3' && PASSIVE_VOICE_PART3_REQUIREMENTS[roundedBand]) {
     return [...base, PASSIVE_VOICE_PART3_REQUIREMENTS[roundedBand]]
   }
+  // IELTS scores "Fluency and Coherence" as one criterion, but this bank only
+  // ever asked about fluency — so coherence was never reported on. Append the
+  // coherence requirements so they show up in the criterion that already exists,
+  // de-duplicated in case a bank already mentions linking or referencing.
+  if (key === 'fluency') {
+    const coherence = COHERENCE_REQUIREMENTS[roundedBand] || COHERENCE_REQUIREMENTS[7] || []
+    const seen = new Set(base.map((item) => String(item).toLowerCase()))
+    return [...base, ...coherence.filter((item) => !seen.has(String(item).toLowerCase()))]
+  }
   return base
+}
+
+
+/**
+ * Band-8 lexical helpers. These produce *recommendations* — what to say next
+ * time and which words to reach for — rather than echoing a correction the
+ * learner has already seen elsewhere in the report.
+ */
+const B1_PLUS_COLLOCATION_REGEX =
+  /\b(?:depends on|addicted to|take part in|pay attention to|make progress|keep in touch|spend time|get used to|look forward to|deal with|come up with|take advantage of|play a role|have an impact|a great deal of|quite a few|on a daily basis|in the long run)\b/gi
+
+const countCollocationHits = (text) => countPatternHits(String(text || ''), B1_PLUS_COLLOCATION_REGEX)
+
+/** Topic-neutral upgrades that fit almost any Part 1/3 answer. */
+const COLLOCATION_SUGGESTIONS = [
+  '"play a major role in" (แทน "is important for")',
+  '"have a significant impact on" (แทน "affects a lot")',
+  '"on a daily basis" (แทน "every day")',
+  '"in the long run" (แทน "later")',
+  '"take advantage of" (แทน "use")',
+  '"a great deal of" (แทน "a lot of")'
+]
+
+const ADVANCED_WORD_SUGGESTIONS = [
+  '"invaluable" = มีค่ามาก (แทน "very useful")',
+  '"detrimental" = ส่งผลเสีย (แทน "bad for")',
+  '"compelling" = น่าเชื่อถือ/น่าสนใจมาก (แทน "very interesting")',
+  '"inevitable" = เลี่ยงไม่ได้ (แทน "will happen anyway")',
+  '"nuanced" = มีรายละเอียดซับซ้อน (แทน "not simple")'
+]
+
+const pickTopicWord = (questionBreakdown) => {
+  const first = (Array.isArray(questionBreakdown) ? questionBreakdown : [])[0]
+  const question = String(first?.question || '').trim()
+  return question ? question.replace(/\?+$/, '') : ''
+}
+
+const buildCollocationRecommendation = (questionBreakdown) => {
+  const topic = pickTopicWord(questionBreakdown)
+  const picks = COLLOCATION_SUGGESTIONS.slice(0, 3).join(' · ')
+  return (
+    `วิธีทำให้ผ่าน: เลือก collocation มาใช้จริง 3-4 ตัวต่อคำตอบ เช่น ${picks} ` +
+    (topic ? `ลองประกอบเป็นประโยคกับคำถาม "${topic}" ` : '') +
+    'เทคนิคคือใส่ตอนให้เหตุผล ("...because it plays a major role in...") จะฟังเป็นธรรมชาติที่สุดครับ'
+  )
+}
+
+const buildAdvancedWordRecommendation = (questionBreakdown) => {
+  const topic = pickTopicWord(questionBreakdown)
+  const picks = ADVANCED_WORD_SUGGESTIONS.slice(0, 3).join(' · ')
+  return (
+    `วิธีทำให้ผ่าน: ใส่คำระดับ C1-C2 เพียง 1-2 คำก็พอ แต่ต้องใช้ถูกบริบท เช่น ${picks} ` +
+    (topic ? `ลองใช้กับคำถาม "${topic}" ` : '') +
+    'อย่าใส่หลายคำรวดเพราะถ้าใช้ผิดจะเสียคะแนนมากกว่าที่ได้ครับ'
+  )
 }
 
 const summarizeRequirementProgress = ({ requirement, punctuatedTranscript, questionBreakdown, plusOnePlan }) => {
@@ -7772,10 +7859,15 @@ const summarizeRequirementProgress = ({ requirement, punctuatedTranscript, quest
     const answer = String(item?.punctuatedTranscript || item?.rawTranscript || '').trim()
     return answer && !isFullyDevelopedAnswer(answer)
   })
+  // Deliberately does NOT reuse fallbackPlan's quote/fix. Doing so made every
+  // unmatched requirement display the same unrelated correction, which read as
+  // three identical (and wrong) suggestions on one checklist.
   const buildFallbackSuggestion = () => ({
     statusThai: '',
-    originalText: fallbackPlan?.quote || clipSentence(sentences[0] || ''),
-    improvedText: fallbackPlan?.fix || 'เติมเหตุผลหรือยกตัวอย่างให้ตรง requirement ของ checklist ข้อนี้ครับ'
+    originalText: '',
+    improvedText:
+      'วิธีทำให้ผ่าน: อ่าน requirement ข้อนี้แล้วตั้งใจใส่ให้ครบอย่างน้อย 1 ครั้งต่อคำตอบ ' +
+      'โดยวางไว้ตอนขยายเหตุผลหรือตอนยกตัวอย่าง ซึ่งเป็นจังหวะที่ใส่ได้เป็นธรรมชาติที่สุดครับ'
   })
 
   if (
@@ -7889,36 +7981,75 @@ const summarizeRequirementProgress = ({ requirement, punctuatedTranscript, quest
   if (normalizedRequirement.includes('ไม่มีข้อผิดพลาดทางไวยากรณ์')) {
     return {
       statusThai: 'สถานะ: ข้อนี้จะผ่านได้เมื่อ grammar slip ทั้งหมดหายไปจากคำตอบครับ',
-      originalText: clipSentence(fallbackPlan?.quote || sentences[0] || ''),
-      improvedText: fallbackPlan?.fix || 'ย้อนเช็ก tense, article, subject-verb agreement และ plural/singular ในประโยคที่ยาวที่สุดก่อนครับ'
-    }
-  }
-
-  if (normalizedRequirement.includes('collocations')) {
-    const matchingPlans = (Array.isArray(plusOnePlan) ? plusOnePlan : []).slice(0, 3)
-    return {
-      statusThai: `สถานะ: ตอนนี้ระบบยังต้องการ collocation ที่แม่นขึ้นให้ครบตาม checklist ครับ`,
-      originalText: clipSentence(matchingPlans[0]?.quote || sentences[0] || ''),
+      originalText: '',
       improvedText:
-        matchingPlans[0]?.fix || 'ลองอัปเกรดคำพื้นฐานเป็น collocation ที่ฟังเป็นธรรมชาติมากขึ้นในหัวข้อเดียวกันครับ'
+        'วิธีทำให้ผ่าน: ไล่เช็ก 4 จุดที่พลาดบ่อยที่สุดตามลำดับ — (1) tense ให้สม่ำเสมอทั้งคำตอบ ' +
+        '(2) subject-verb agreement (he/she/it + -s) (3) a / an / the หน้าคำนามเอกพจน์ ' +
+        '(4) นามนับไม่ได้ห้ามเติม -s (information, advice, content, research) ' +
+        'ฝึกโดยพูดช้าลงเล็กน้อยในประโยคยาว เพราะประโยคยาวคือจุดที่ผิดบ่อยที่สุดครับ'
     }
   }
 
-  if (normalizedRequirement.includes('c2 level')) {
-    const matchingPlans = (Array.isArray(plusOnePlan) ? plusOnePlan : []).slice(0, 3)
+  // NOTE: these matchers must match the *Thai* requirement text that actually
+  // ships in the requirement banks. They previously looked for English plurals
+  // ('collocations', 'c2 level', 'awkward') which never appear, so every lexical
+  // requirement fell through to the shared fallback and rendered the identical
+  // quote three times over.
+  if (normalizedRequirement.includes('collocation') && !normalizedRequirement.includes('c1-c2')) {
+    const used = countCollocationHits(fullText)
+    const targetMatch = String(requirement || '').match(/(\d+)/)
+    const target = Number(targetMatch?.[1] || 4)
     return {
-      statusThai: 'สถานะ: ยังต้องเพิ่มคำระดับสูงที่ใช้ได้เนียนในบริบทจริงครับ',
-      originalText: clipSentence(matchingPlans[0]?.quote || sentences[0] || ''),
+      statusThai: `สถานะ: ตอนนี้พบ collocation ระดับ B1+ ประมาณ ${used} จุด · target ข้อนี้คือ ${target} จุดขึ้นไปครับ`,
+      originalText: '',
+      improvedText: buildCollocationRecommendation(questionBreakdown)
+    }
+  }
+
+  if (normalizedRequirement.includes('c1-c2') || normalizedRequirement.includes('c2 level')) {
+    return {
+      statusThai: 'สถานะ: ยังต้องมีคำระดับ C1-C2 ที่ใช้ได้เนียนในบริบทจริงครับ',
+      originalText: '',
+      improvedText: buildAdvancedWordRecommendation(questionBreakdown)
+    }
+  }
+
+  if (
+    normalizedRequirement.includes('lexical choice') ||
+    normalizedRequirement.includes('ฟังแปลกหู') ||
+    normalizedRequirement.includes('awkward') ||
+    normalizedRequirement.includes('คำผิดบริบท')
+  ) {
+    return {
+      statusThai: 'สถานะ: ข้อนี้ผ่านเมื่อไม่มีคำที่ผิดบริบทหรือฟังแปลกหูเลยครับ',
+      originalText: '',
       improvedText:
-        matchingPlans[0]?.fix || 'เลือกอัปเกรดเพียง 1-2 คำในประโยคเดิม ให้ฟัง advanced แต่ยังเป็นธรรมชาติครับ'
+        'วิธีทำให้ผ่าน: (1) เลี่ยงคำเติมอย่าง "you know", "a lot of" — เปลี่ยนเป็น "quite a few", "a great deal of" ' +
+        '(2) ระวังนามนับไม่ได้ เช่น content, information, advice, research ห้ามเติม -s ' +
+        '(3) ถ้าไม่มั่นใจคำยาก ให้ใช้คำง่ายที่ชัวร์กว่า เพราะคำผิด 1 จุดหักมากกว่าคำง่ายที่ถูกครับ'
     }
   }
 
-  if (normalizedRequirement.includes('awkward') || normalizedRequirement.includes('คำผิดบริบท')) {
+  if (normalizedRequirement.includes('answer → reason → example') || normalizedRequirement.includes('answer →')) {
+    const shortest = getShortestQuestionModeAnswers(questionBreakdown, 1)[0]
     return {
-      statusThai: 'สถานะ: ลดคำที่ฟังแปลกหรือยังไม่เข้าบริบทให้หมดก่อน ข้อนี้ถึงจะผ่านครับ',
-      originalText: clipSentence(fallbackPlan?.quote || sentences[0] || ''),
-      improvedText: fallbackPlan?.fix || 'เลือกคำที่ง่ายกว่าแต่ใช้ได้ชัวร์ จะดีกว่าคำยากที่ยังไม่แม่นครับ'
+      statusThai: 'สถานะ: ข้อนี้ดูว่าแต่ละคำตอบมีครบ 3 ชั้นหรือยังครับ',
+      originalText: '',
+      improvedText:
+        'วิธีทำให้ผ่าน: วางคำตอบเป็น 3 ชั้นทุกครั้ง — (1) ตอบตรงคำถามหนึ่งประโยค ' +
+        '(2) ต่อด้วยเหตุผล ขึ้นด้วย "That\'s mainly because..." ' +
+        '(3) ปิดด้วยตัวอย่าง ขึ้นด้วย "For instance, ..." ' +
+        (shortest ? `ลองใช้กับคำถามที่ตอบสั้นที่สุดคือ "${shortest.question}" ครับ` : '')
+    }
+  }
+
+  if (normalizedRequirement.includes('วกกลับไปพูดประเด็นเดิม')) {
+    return {
+      statusThai: 'สถานะ: ข้อนี้ผ่านเมื่อไม่มีการพูดวนประเด็นเดิมซ้ำครับ',
+      originalText: '',
+      improvedText:
+        'วิธีทำให้ผ่าน: ถ้ารู้สึกว่าจะพูดซ้ำ ให้ปิดคำตอบด้วยประโยคสรุปสั้น ๆ เช่น ' +
+        '"So overall, that\'s why I think so." แล้วหยุด ดีกว่าพูดวนจนเสียคะแนน coherence ครับ'
     }
   }
 
@@ -7936,7 +8067,7 @@ const summarizeRequirementProgress = ({ requirement, punctuatedTranscript, quest
     }
   }
 
-  if (normalizedRequirement.includes('transitional words')) {
+  if (normalizedRequirement.includes('transitional words') || normalizedRequirement.includes('linking words')) {
     const count = countPatternHits(fullText, TRANSITION_REGEX)
     const needed = normalizedRequirement.includes('อย่างน้อย 3') ? 3 : 2
     const candidate = sentences[0] || ''
@@ -7977,8 +8108,10 @@ const summarizeRequirementProgress = ({ requirement, punctuatedTranscript, quest
   if (normalizedRequirement.includes('basic vocabulary') || normalizedRequirement.includes('พื้นฐานทั่วไป')) {
     return {
       statusThai: 'สถานะ: ตอนนี้ยังพึ่งคำพื้นฐานค่อนข้างมากครับ',
-      originalText: clipSentence(fallbackPlan?.quote || sentences[0] || ''),
-      improvedText: fallbackPlan?.fix || 'เลือกอัปเกรดคำสำคัญเพียง 1 คำในแต่ละประโยคก่อน จะคุมความถูกต้องได้ง่ายกว่าครับ'
+      originalText: '',
+      improvedText:
+        'วิธีทำให้ผ่าน: อัปเกรดคำสำคัญประโยคละ 1 คำก่อน เช่น good → beneficial, big → substantial, ' +
+        'important → crucial, hard → demanding แล้วค่อยเพิ่มความยากเมื่อใช้ได้แม่นแล้วครับ'
     }
   }
 

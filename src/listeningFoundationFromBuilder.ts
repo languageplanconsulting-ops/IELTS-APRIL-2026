@@ -178,8 +178,9 @@ const builderTaskToFoundationQuestion = (
   }
 }
 
+// Books 18+ were uploaded to the host under a later path than books 17 and below.
 const cambridgeAudioUrl = (book: number, section: number, test: number) =>
-  `https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam${book}-Test${test}-Section${section}.mp3`
+  `https://ieltstrainingonline.com/wp-content/uploads/${book >= 18 ? '2024/07' : '2021/07'}/Cam${book}-Test${test}-Section${section}.mp3`
 
 export const builderExamSetToFoundationSets = (
   examSet: ListeningBuilderExamSet,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent, type ReactNode } from 'react'
 import './App.css'
 import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
@@ -895,6 +895,38 @@ const ADMIN_VIDEO_API_UPLOAD_SAFE_BYTES = 3.8 * 1024 * 1024
 const ADMIN_VIDEO_API_UPLOAD_SAFE_MB = Math.floor((ADMIN_VIDEO_API_UPLOAD_SAFE_BYTES / (1024 * 1024)) * 10) / 10
 const ADMIN_VIDEO_RECORDING_VIDEO_BITS_PER_SECOND = 220_000
 const ADMIN_VIDEO_RECORDING_AUDIO_BITS_PER_SECOND = 32_000
+
+// Ordered best-first. Safari/iOS only supports the mp4 entries and throws on the
+// bare `new MediaRecorder(stream)` default, so the container has to be negotiated.
+const SPEAKING_RECORDER_MIME_TYPES = [
+  'audio/webm;codecs=opus',
+  'audio/webm',
+  'audio/mp4;codecs=mp4a.40.2',
+  'audio/mp4',
+  'audio/ogg;codecs=opus'
+]
+
+const createSupportedMediaRecorder = (stream: MediaStream) => {
+  const isTypeSupported = (type: string) =>
+    typeof MediaRecorder.isTypeSupported === 'function' ? MediaRecorder.isTypeSupported(type) : false
+  const supported = SPEAKING_RECORDER_MIME_TYPES.find(isTypeSupported)
+  if (supported) {
+    try {
+      return new MediaRecorder(stream, { mimeType: supported })
+    } catch {
+      // Fall through to the browser default below.
+    }
+  }
+  return new MediaRecorder(stream)
+}
+
+const getSpeakingAudioFileExtension = (mimeType: string) => {
+  const base = String(mimeType || '').split(';')[0].trim().toLowerCase()
+  if (base === 'audio/mp4' || base === 'audio/aac') return 'm4a'
+  if (base === 'audio/ogg') return 'ogg'
+  if (base === 'audio/mpeg') return 'mp3'
+  return 'webm'
+}
 const ADMIN_SUBTITLE_FONT_PRESETS = [
   { id: 'inter', label: 'Inter', family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
   { id: 'arial', label: 'Arial', family: 'Arial, Helvetica, sans-serif' },
@@ -2470,6 +2502,29 @@ const renderNextBandCriteria = (
   )
 }
 
+/**
+ * Report text arrives with light markdown (**bold**) from the model, and
+ * evidence strings already carry their own quote marks. Rendering them raw
+ * produced literal `**content**` and doubled `""like this""` in the band ladder.
+ */
+const stripOuterQuotes = (value: string) =>
+  String(value || '')
+    .trim()
+    .replace(/^["“”']+/, '')
+    .replace(/["“”']+$/, '')
+
+const renderReportEmphasis = (value: string) =>
+  String(value || '')
+    .split(/(\*\*[^*]+\*\*)/g)
+    .filter(Boolean)
+    .map((chunk, index) =>
+      chunk.startsWith('**') && chunk.endsWith('**') ? (
+        <strong key={index}>{chunk.slice(2, -2)}</strong>
+      ) : (
+        <Fragment key={index}>{chunk}</Fragment>
+      )
+    )
+
 const renderBandLadder = (
   keyPrefix: string,
   report: ComponentReport,
@@ -2503,7 +2558,9 @@ const renderBandLadder = (
               {metTicks.slice(0, 4).map((tick, idx) => (
                 <li key={`${keyPrefix}-met-${idx}`}>
                   <span className="ladderMetMark">✓</span> {tick.requirement}
-                  {tick.evidence?.[0] && <span className="ladderMetEv"> — “{tick.evidence[0]}”</span>}
+                  {tick.evidence?.[0] && (
+                    <span className="ladderMetEv"> — “{stripOuterQuotes(tick.evidence[0])}”</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -2524,12 +2581,14 @@ const renderBandLadder = (
                 return (
                   <li key={`${keyPrefix}-step-${idx}`} className="ladderStep">
                     {requirement && <p className="ladderStepReq">{requirement}</p>}
+                    {/* Only a real "you said X" gets struck through. Recommendations
+                        have no originalText, so they render as advice, not as an error. */}
                     {plan.originalText && (
                       <p className="ladderStepFrom">
-                        <s>{plan.originalText}</s>
+                        <s>{stripOuterQuotes(plan.originalText)}</s>
                       </p>
                     )}
-                    {improved && <p className="ladderStepTo">{improved}</p>}
+                    {improved && <p className="ladderStepTo">{renderReportEmphasis(improved)}</p>}
                     <button
                       type="button"
                       className="ladderSaveBtn"
@@ -12283,10 +12342,14 @@ function App() {
     const isStandalonePart2 = attemptStage === 'speaking' && !isFullExamMode && selectedTestMode === 'part2'
     const isFullMockPart2 = attemptStage === 'speaking' && isFullExamMode && fullExamPhase === 'part2_speaking'
     const isPart2Speaking = isStandalonePart2 || isFullMockPart2
-    if (!isPart2Speaking || questionCountdown !== null || !part2TimerDelayArmedRef.current || !isTranscribing) return
+    // Deliberately not gated on `isTranscribing`: a transient recognition error
+    // (e.g. "no-speech") briefly flips it false, which used to skip the grace
+    // window and start the 2-minute clock early. The interval below already
+    // holds off while the countdown or prompt TTS is running.
+    if (!isPart2Speaking || questionCountdown !== null || !part2TimerDelayArmedRef.current) return
     part2TimerDelayUntilRef.current = Date.now() + 3000
     part2TimerDelayArmedRef.current = false
-  }, [attemptStage, isFullExamMode, selectedTestMode, fullExamPhase, questionCountdown, isTranscribing])
+  }, [attemptStage, isFullExamMode, selectedTestMode, fullExamPhase, questionCountdown])
 
   useEffect(() => {
     return () => {
@@ -12396,7 +12459,11 @@ function App() {
       // Some browsers frequently emit "aborted" even while the user is speaking.
       // To prevent the UI from going into a stopped/aborted state, we ignore it
       // and restart recognition as long as we're still in the speaking stage.
-      if (errorCode.toLowerCase() === 'aborted') {
+      // "no-speech" is emitted after a short silence (very common during Part 2's
+      // planning pause). It is not a failure—onend restarts recognition—so treat
+      // it exactly like "aborted" instead of surfacing an error.
+      const benignErrorCode = errorCode.toLowerCase()
+      if (benignErrorCode === 'aborted' || benignErrorCode === 'no-speech') {
         setIsTranscribing(false)
         setInterimTranscript('')
         return
@@ -12423,6 +12490,8 @@ function App() {
     try {
       recognition.start()
       setIsTranscribing(true)
+      // A successful (re)start clears any error left over from a previous attempt.
+      setTranscriptionError('')
     } catch (error) {
       recognitionRef.current = null
       transcriptionStartPendingRef.current = false
@@ -12567,10 +12636,27 @@ function App() {
       return false
     }
 
+    let stream: MediaStream
     try {
       setAudioError('')
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const recorder = new MediaRecorder(stream)
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    } catch (error) {
+      const name = (error as { name?: string })?.name || ''
+      if (name === 'NotAllowedError' || name === 'SecurityError') {
+        setAudioError('Microphone permission was denied. Allow microphone access for this site, then try again.')
+      } else if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+        setAudioError('No microphone was found. Connect a microphone, then try again.')
+      } else {
+        setAudioError('Could not open the microphone. Close other apps using it, then try again.')
+      }
+      return false
+    }
+
+    try {
+      // Safari/iOS cannot record webm and throws on the bare constructor, so negotiate
+      // a supported container instead of assuming the Chrome default.
+      const recorder = createSupportedMediaRecorder(stream)
+      const recordedMimeType = recorder.mimeType || 'audio/webm'
       audioChunksRef.current = []
       setAudioUrl('')
       setRecordingDuration(0)
@@ -12582,7 +12668,7 @@ function App() {
       }
 
       recorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+        const audioBlob = new Blob(audioChunksRef.current, { type: recordedMimeType })
         latestAudioBlobRef.current = audioBlob
         const nextUrl = URL.createObjectURL(audioBlob)
         setAudioUrl(nextUrl)
@@ -12606,7 +12692,8 @@ function App() {
       }, 1000)
       return true
     } catch {
-      setAudioError('Microphone permission denied or unavailable.')
+      stream.getTracks().forEach((track) => track.stop())
+      setAudioError('This browser cannot record audio. Try Safari on iPhone, or Chrome on desktop.')
       return false
     }
   }
@@ -16366,7 +16453,12 @@ function App() {
       startQuestionCountdown(label)
       return
     }
-    await speakPromptWithTtsAndManageTranscription(promptText)
+    try {
+      await speakPromptWithTtsAndManageTranscription(promptText)
+    } catch {
+      // Losing the spoken prompt must not abort the exam — the question is on screen,
+      // so carry on to the countdown instead of leaving the student on a dead stage.
+    }
     startQuestionCountdown(label)
   }
 
@@ -16436,12 +16528,39 @@ function App() {
     }, 1000)
   }
 
-  const checkAssessmentApiReady = async () => {
+  // Serverless cold starts make the first probe fail on a perfectly healthy backend,
+  // so give it a second chance before declaring the API offline.
+  const checkAssessmentApiReady = async (attempts = 2) => {
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      try {
+        const response = await fetch('/api/health')
+        if (response.ok) return true
+      } catch {
+        // Retry below.
+      }
+      if (attempt < attempts - 1) {
+        await new Promise((resolve) => window.setTimeout(resolve, 1200))
+      }
+    }
+    return false
+  }
+
+  const transcribeRecordingOnServer = async (audioBlob: Blob): Promise<string> => {
     try {
-      const response = await fetch('/api/health')
-      return response.ok
+      const extension = getSpeakingAudioFileExtension(audioBlob.type)
+      const formData = new FormData()
+      formData.append('audio', audioBlob, `speaking-attempt.${extension}`)
+      const response = await fetch('/api/transcribe', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: formData
+      })
+      if (!response.ok) return ''
+      const payload = await response.json().catch(() => null)
+      return String(payload?.text || '').trim()
     } catch {
-      return false
+      // Fall back to the empty-transcript error the caller already handles.
+      return ''
     }
   }
 
@@ -16476,10 +16595,9 @@ function App() {
     setAssessmentError('')
 
     try {
-      const apiReady = await checkAssessmentApiReady()
-      if (!apiReady) {
-        throw new Error('Assessment API is offline. Please retry in a few seconds.')
-      }
+      // Deliberately not gating on the health probe here: the real /api/assess call
+      // below reports precise errors, and a flaky probe used to block valid attempts
+      // after the student had already finished speaking.
       if (!authSession?.accessToken) {
         throw new Error('Please sign in before starting an assessment.')
       }
@@ -16492,7 +16610,17 @@ function App() {
         .map((item) => String(item?.response || '').trim())
         .filter(Boolean)
         .join(' ')
-      const browserTranscript = forcedTranscript || transcript.trim() || interimTranscript.trim() || questionTranscript
+      let browserTranscript = forcedTranscript || transcript.trim() || interimTranscript.trim() || questionTranscript
+      if (!browserTranscript) {
+        // Safari/iOS gives an empty or truncated Web Speech transcript even when the
+        // student spoke the whole time. The recording is still good, so transcribe it
+        // server-side before treating this as "nothing was said".
+        const recordedBlob = _audioBlob || latestAudioBlobRef.current
+        if (recordedBlob && recordedBlob.size > 1024) {
+          setAssessmentRuntimeMessages(['กำลังถอดเสียงจากไฟล์บันทึก (backup transcription)'])
+          browserTranscript = await transcribeRecordingOnServer(recordedBlob)
+        }
+      }
       if (!browserTranscript) {
         throw new Error('No spoken text detected yet. Please speak for a few seconds, then try again.')
       }
@@ -17925,14 +18053,37 @@ function App() {
     const spokenText = activeListeningBuilderExamTest.scriptParagraphs.join(' ')
     const sectionAudioUrl = `https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam${activeListeningBuilderExamSet.bookNumber}-Test${activeListeningBuilderExamTest.testNumber}-Section${activeListeningBuilderExamSet.sectionNumber}.mp3`
 
+    const audioCacheKey = `listening-builder-cam${activeListeningBuilderExamSet.bookNumber}-test${activeListeningBuilderExamTest.testNumber}-section${activeListeningBuilderExamSet.sectionNumber}`
+
     try {
-      await playListeningSectionAudioFromUrl(sectionAudioUrl)
-    } catch {
       try {
-        playListeningScriptWithSpeech(spokenText, 'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ')
+        await playListeningSectionAudioFromUrl(sectionAudioUrl)
+        return
       } catch {
-        setListeningExerciseError('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
+        // External Cambridge audio unavailable — fall back to cached section TTS below.
       }
+      if (authSession?.accessToken) {
+        const payload = await fetchJson<{ audioUrl: string; cached?: boolean }>('/api/tts/listening-section-audio', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authSession.accessToken}`
+          },
+          body: JSON.stringify({
+            cacheKey: audioCacheKey,
+            topicId: audioCacheKey,
+            topicTitle: `Cambridge ${activeListeningBuilderExamSet.bookNumber} Test ${activeListeningBuilderExamTest.testNumber} Section ${activeListeningBuilderExamSet.sectionNumber}`,
+            section: activeListeningBuilderExamSet.sectionNumber,
+            text: spokenText
+          })
+        })
+        if (payload.audioUrl) {
+          await playListeningSectionAudioFromUrl(payload.audioUrl)
+          return
+        }
+      }
+      playListeningScriptWithSpeech(spokenText, 'อุปกรณ์นี้ยังไม่รองรับการเล่นเสียงใน browser ครับ')
+    } catch {
+      setListeningExerciseError('เล่นเสียงไม่สำเร็จ ลองกดเล่นอีกครั้งครับ')
     }
   }
 

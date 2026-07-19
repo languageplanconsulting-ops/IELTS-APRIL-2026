@@ -7,10 +7,16 @@
   --bc-black: #0d0d0d;
   --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-luxury-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-luxury-fast: 420ms;
-  --duration-luxury: 580ms;
-  --duration-luxury-slow: 760ms;
-  --duration-view: 680ms;
+  /* Interaction timings. These were 420/580/760/680ms, which meant a click in
+     the Speaking journey took ~580ms just to show press feedback and ~760ms for
+     the next stage to animate in, with the question text arriving 660ms after
+     that — well over a second of dead time per tap, on every device. Anything
+     past ~150ms on a direct response reads as lag, so interaction feedback is
+     now ~120ms and entrances ~260ms. */
+  --duration-luxury-fast: 120ms;
+  --duration-luxury: 200ms;
+  --duration-luxury-slow: 260ms;
+  --duration-view: 240ms;
 }
 
 /* Admin video studio polish: scoped override for the global exam button style. */
@@ -1535,7 +1541,7 @@ body,
 .speakingFlowSwap > h3,
 .speakingFlowSwap > p:not(.promptSub):not(.sectionLabel):not(.handNoteText):not(.questionNotePrompt),
 .speakingFlowSwap .part2BigQuestion {
-  animation: luxuryQuestionReveal var(--duration-luxury) var(--ease-luxury-soft) 80ms both;
+  animation: luxuryQuestionReveal var(--duration-luxury) var(--ease-luxury-soft) both;
 }
 
 .speakingStageWrap {
@@ -11262,7 +11268,7 @@ body,
   display: grid;
   gap: 12px;
   animation: luxuryCardEnter var(--duration-luxury) var(--ease-luxury) both;
-  animation-delay: calc(var(--motion-stagger, 0) * 75ms);
+  animation-delay: calc(min(var(--motion-stagger, 0), 6) * 26ms);
   transition:
     transform var(--duration-luxury) var(--ease-luxury),
     box-shadow var(--duration-luxury) var(--ease-luxury);
@@ -19064,7 +19070,7 @@ select:focus,
   display: grid;
   gap: 0;
   animation: luxuryCardEnter calc(var(--duration-view) + 60ms) var(--ease-luxury) both;
-  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+  animation-delay: calc(min(var(--motion-stagger, 0), 6) * 24ms);
 }
 
 .readingPage .readingPathNode {
@@ -19304,7 +19310,7 @@ select:focus,
     border-color var(--duration-luxury-fast) var(--ease-luxury-soft),
     background-color var(--duration-luxury-fast) var(--ease-luxury-soft);
   animation: luxuryCardEnter calc(var(--duration-view) + 80ms) var(--ease-luxury) both;
-  animation-delay: calc(var(--motion-stagger, 0) * 90ms);
+  animation-delay: calc(min(var(--motion-stagger, 0), 6) * 30ms);
 }
 
 .readingPage .readingEntryCard::before {
@@ -19803,7 +19809,7 @@ select:focus,
   gap: 12px;
   align-items: stretch;
   animation: luxuryCardEnter calc(var(--duration-view) + 120ms) var(--ease-luxury) both;
-  animation-delay: calc(160ms + (var(--motion-stagger, 0) * 85ms));
+  animation-delay: calc(40ms + (min(var(--motion-stagger, 0), 6) * 28ms));
 }
 
 .readingPage .readingJourneyTrailRow.is-alt .readingJourneyMissionCard {
@@ -21662,7 +21668,7 @@ select:focus,
   border-radius: 18px;
   background: #f8fbff;
   animation: luxuryCardEnter var(--duration-luxury) var(--ease-luxury) both;
-  animation-delay: calc(var(--motion-stagger, 0) * 80ms);
+  animation-delay: calc(min(var(--motion-stagger, 0), 6) * 28ms);
 }
 
 .listeningJourneyBandGoals .listeningJourneyBandGoal:nth-child(1) {
@@ -21718,7 +21724,7 @@ select:focus,
     box-shadow var(--duration-luxury, 420ms) var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1)),
     border-color var(--duration-luxury-fast) var(--ease-luxury-soft);
   animation: luxuryCardEnter var(--duration-luxury-slow) var(--ease-luxury) both;
-  animation-delay: calc(var(--motion-stagger, 0) * 90ms);
+  animation-delay: calc(min(var(--motion-stagger, 0), 6) * 30ms);
 }
 
 .listeningSkillCard:hover {
@@ -21929,7 +21935,7 @@ select:focus,
   box-shadow: 4px 4px 0 #0f172a;
   padding: 16px;
   animation: luxuryCardEnter var(--duration-luxury) var(--ease-luxury) both;
-  animation-delay: calc(var(--motion-stagger, 0) * 70ms);
+  animation-delay: calc(min(var(--motion-stagger, 0), 6) * 24ms);
   transition:
     transform var(--duration-luxury) var(--ease-luxury),
     box-shadow var(--duration-luxury) var(--ease-luxury),
