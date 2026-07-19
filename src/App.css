@@ -12393,7 +12393,9 @@ body,
 }
 
 .readingQuestionsPanel-pdoyTutorial .readingPdoyCoachCard {
-  backdrop-filter: blur(12px);
+  /* No backdrop-filter here: the card is 98% opaque so the blur cannot be seen,
+     and because this element animates, the backdrop behind it had to be
+     re-blurred on every frame of an infinite loop. */
   background: rgba(255, 255, 255, 0.98);
   box-shadow:
     0 22px 46px rgba(15, 23, 42, 0.14),
@@ -28370,6 +28372,9 @@ textarea {
   --sg-ticket-border: 3px solid #0f172a;
   --sg-ticket-shadow: 4px 4px 0 #0f172a;
   --sg-ticket-shadow-lg: 8px 8px 0 #0f172a;
+  /* One shared content column so the hero, path board, mock preview and topic
+     bank all sit on the same centered spine instead of three different widths. */
+  --sg-col: 960px;
 
   position: relative;
   isolation: isolate;
@@ -28412,7 +28417,15 @@ textarea {
 .speakingFlowTheme .writingGuideHubIntro {
   display: grid;
   gap: 10px;
-  max-width: 42rem;
+  /* Full column, left-aligned: kicker, heading, lead and accent rule share the
+     same left spine as the path board and topic bank below. */
+  width: 100%;
+  max-width: var(--sg-col);
+  margin-inline: auto;
+}
+
+.speakingFlowTheme .writingGuideHubLead {
+  max-width: 52ch;
 }
 
 .speakingFlowTheme .writingGuideHubH1 {
@@ -28457,7 +28470,9 @@ textarea {
 }
 
 .speakingFlowTheme .wgTicketPathBoard {
-  max-width: 920px;
+  width: 100%;
+  max-width: var(--sg-col);
+  margin-inline: auto;
 }
 
 .speakingFlowTheme .wgTicket.sgTicketActive {
@@ -28467,8 +28482,9 @@ textarea {
 }
 
 .speakingFlowTheme .sgFullMockPreview {
-  max-width: 920px;
-  margin: 0;
+  width: 100%;
+  max-width: var(--sg-col);
+  margin-inline: auto;
   padding: 14px 16px;
   border: 3px solid #0f172a;
   border-radius: 6px;
@@ -28516,7 +28532,9 @@ textarea {
 .speakingFlowTheme .speakingTopicBank {
   display: grid;
   gap: 14px;
-  max-width: 960px;
+  width: 100%;
+  max-width: var(--sg-col);
+  margin-inline: auto;
   padding: 18px;
   border: 3px solid #0f172a;
   border-radius: 8px;
@@ -28624,9 +28642,9 @@ textarea {
 
 .speakingFlowTheme .sgTopicTicket.thumbnailCard {
   display: grid !important;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 10px 12px;
   margin: 0;
   padding: 12px 14px !important;
   border: 3px solid #0f172a !important;
@@ -28661,9 +28679,22 @@ textarea {
 }
 
 .speakingFlowTheme .sgTopicTicketActions {
-  display: grid;
-  gap: 6px;
-  justify-items: stretch;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.speakingFlowTheme .sgTopicTicketActions .redeemBtn {
+  flex: 0 0 auto;
+}
+
+.speakingFlowTheme .sgTopicTicketActions .topicCardStartBtn {
+  flex: 1 1 auto;
+}
+
+.speakingFlowTheme .sgTopicTicket .wgTicketBody {
+  min-width: 0;
 }
 
 .speakingFlowTheme .topicCardStartBtn,
@@ -28685,6 +28716,27 @@ textarea {
 .speakingFlowTheme .micCheckBtn:hover {
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0 #0f172a !important;
+}
+
+/* Topic card START: full-width blue bar. Yellow on the cream card body was
+   ~1.2:1 contrast — the button was effectively invisible. */
+.speakingFlowTheme .sgTopicTicket .topicCardStartBtn {
+  width: 100%;
+  padding: 11px 14px !important;
+  background: var(--bc-blue) !important;
+  color: #fff !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.speakingFlowTheme .sgTopicTicket .topicCardStartBtn:hover {
+  background: #0059d1 !important;
+}
+
+.speakingFlowTheme .sgTopicTicket .topicCardStartBtn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #0f172a !important;
 }
 
 .speakingFlowTheme .redeemBtn,

@@ -78,6 +78,7 @@ import { convertSpeakingRecordingToMp3 } from './speakingRecordingMp3'
 import { parseListeningScriptSegments } from './listeningScriptReader'
 import listeningWorkbookRaw from '../cambridge-listening-transcript-first-workbook.md?raw'
 import listeningSectionBankRaw from '../cambridge-listening-sections-2-4-bank.md?raw'
+import { getCambridgeListeningAudioUrl } from './listeningCambridgeAudioUrls'
 import { CAMBRIDGE_10_SECTION_2_EXAM_SET } from './listeningBuilderCambridge10Section2'
 import { CAMBRIDGE_10_SECTION_4_EXAM_SET } from './listeningBuilderCambridge10Section4'
 import { CAMBRIDGE_11_SECTION_2_EXAM_SET } from './listeningBuilderCambridge11Section2'
@@ -10012,7 +10013,11 @@ function App() {
       title: activeListeningBuilderExamTest.title,
       subtitle: `Cambridge ${activeListeningBuilderExamSet.bookNumber} · Section ${activeListeningBuilderExamSet.sectionNumber} · Test ${activeListeningBuilderExamTest.testNumber}`,
       sectionNumber: activeListeningBuilderExamSet.sectionNumber,
-      audioUrl: `https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam${activeListeningBuilderExamSet.bookNumber}-Test${activeListeningBuilderExamTest.testNumber}-Section${activeListeningBuilderExamSet.sectionNumber}.mp3`,
+      audioUrl: getCambridgeListeningAudioUrl(
+        activeListeningBuilderExamSet.bookNumber,
+        activeListeningBuilderExamTest.testNumber,
+        activeListeningBuilderExamSet.sectionNumber
+      ),
       passage: activeListeningBuilderExamTest.scriptParagraphs.join('\n\n'),
       // Answer-only with a reading-style "Show hint" reveal instead of forced highlighting.
       answerOnlyMode: true,
@@ -18051,16 +18056,22 @@ function App() {
     if (!activeListeningBuilderExamSet || !activeListeningBuilderExamTest) return
     setListeningBuilderExamAudioPlayed(true)
     const spokenText = activeListeningBuilderExamTest.scriptParagraphs.join(' ')
-    const sectionAudioUrl = `https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam${activeListeningBuilderExamSet.bookNumber}-Test${activeListeningBuilderExamTest.testNumber}-Section${activeListeningBuilderExamSet.sectionNumber}.mp3`
+    const sectionAudioUrl = getCambridgeListeningAudioUrl(
+      activeListeningBuilderExamSet.bookNumber,
+      activeListeningBuilderExamTest.testNumber,
+      activeListeningBuilderExamSet.sectionNumber
+    )
 
     const audioCacheKey = `listening-builder-cam${activeListeningBuilderExamSet.bookNumber}-test${activeListeningBuilderExamTest.testNumber}-section${activeListeningBuilderExamSet.sectionNumber}`
 
     try {
-      try {
-        await playListeningSectionAudioFromUrl(sectionAudioUrl)
-        return
-      } catch {
-        // External Cambridge audio unavailable — fall back to cached section TTS below.
+      if (sectionAudioUrl) {
+        try {
+          await playListeningSectionAudioFromUrl(sectionAudioUrl)
+          return
+        } catch {
+          // External Cambridge audio unavailable — fall back to cached section TTS below.
+        }
       }
       if (authSession?.accessToken) {
         const payload = await fetchJson<{ audioUrl: string; cached?: boolean }>('/api/tts/listening-section-audio', {
@@ -28698,7 +28709,7 @@ function App() {
                                     openStartFlowForTopic(topic.id)
                                   }}
                                 >
-                                  Start →
+                                  Start speaking →
                                 </button>
                               </span>
                             </div>

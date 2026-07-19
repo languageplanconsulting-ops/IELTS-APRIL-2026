@@ -41,7 +41,8 @@
   border-radius: 50%;
   filter: blur(48px);
   opacity: 0.18;
-  animation: writingGuideOrbFloat 10s var(--ease-luxury-soft) infinite alternate;
+  /* Not animated: a 48px blur kept in a permanent animation loop keeps a large
+     blurred layer live for the whole session for a decoration nobody looks at. */
 }
 
 .writingGuideOrb-a {

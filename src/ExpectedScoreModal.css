@@ -6,8 +6,10 @@
   align-items: center;
   justify-content: center;
   padding: clamp(12px, 2vw, 28px);
+  /* No backdrop-filter: at 94% opacity the blur behind this is not visible,
+     yet it costs a full-screen blur pass that had to be recomputed on every
+     frame the decorative orbs animated. Pure cost, no visual gain. */
   background: rgba(8, 12, 24, 0.94);
-  backdrop-filter: blur(14px);
 }
 
 .expectedScoreCard {
@@ -27,7 +29,7 @@
     0 0 0 1px rgba(0, 74, 173, 0.08),
     0 28px 80px rgba(0, 20, 60, 0.34),
     0 0 48px rgba(255, 204, 0, 0.12);
-  animation: expectedScoreCardIn 0.55s var(--ease-luxury) both;
+  animation: expectedScoreCardIn var(--duration-luxury-slow) var(--ease-luxury) both;
 }
 
 @keyframes expectedScoreCardIn {
@@ -55,7 +57,9 @@
   border-radius: 50%;
   filter: blur(40px);
   opacity: 0.55;
-  animation: expectedScoreOrbFloat 9s var(--ease-luxury-soft) infinite alternate;
+  /* Deliberately not animated. Scaling a blurred element re-rasterizes the blur
+     every frame; as a permanent infinite loop that pinned the compositor for as
+     long as the modal was open. The static glow looks the same when still. */
 }
 
 .expectedScoreOrb-a {
@@ -72,7 +76,6 @@
   width: 260px;
   height: 260px;
   background: rgba(0, 74, 173, 0.32);
-  animation-delay: -3s;
 }
 
 .expectedScoreGridGlow {
@@ -82,11 +85,6 @@
   background-color: rgba(0, 74, 173, 0.05);
   background-size: 28px 28px;
   mask-image: none;
-}
-
-@keyframes expectedScoreOrbFloat {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(0, -10px, 0) scale(1.05); }
 }
 
 .expectedScoreHeader,

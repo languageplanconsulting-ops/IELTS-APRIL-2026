@@ -1,5 +1,6 @@
 import type { ListeningBuilderExamSet, ListeningBuilderExamTask } from './listeningBuilderCambridge18Section2'
 import type { ListeningFoundationQuestion, ListeningFoundationSet } from './listeningFoundationData'
+import { getCambridgeListeningAudioUrl } from './listeningCambridgeAudioUrls'
 import {
   buildListeningBuilderGapFillOptions,
   getListeningBuilderTaskAnswerChoices,
@@ -178,9 +179,11 @@ const builderTaskToFoundationQuestion = (
   }
 }
 
-// Books 18+ were uploaded to the host under a later path than books 17 and below.
+// The host renames audio files and moves them between upload folders — six filename
+// shapes and six folder dates are in use — so the URL cannot be computed from a
+// template. It comes from the scraped table; see scripts/build-listening-audio-map.mjs.
 const cambridgeAudioUrl = (book: number, section: number, test: number) =>
-  `https://ieltstrainingonline.com/wp-content/uploads/${book >= 18 ? '2024/07' : '2021/07'}/Cam${book}-Test${test}-Section${section}.mp3`
+  getCambridgeListeningAudioUrl(book, test, section)
 
 export const builderExamSetToFoundationSets = (
   examSet: ListeningBuilderExamSet,
