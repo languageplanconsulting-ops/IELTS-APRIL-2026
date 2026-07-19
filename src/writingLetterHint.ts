@@ -3,6 +3,8 @@
  * Example: motivation → mot_ _ _ _ _ _ _
  */
 
+import { WRITING_THAI_GLOSS_EXTRA } from './writingThaiGlossExtra'
+
 export const LETTER_HINT_FOCUS = 'letter-hint' as const
 
 export type LetterHintMask = {
@@ -53,13 +55,63 @@ export const matchesLetterHintAnswer = (value: string, answers: string[]): boole
   return answers.some((answer) => normalize(answer) === given)
 }
 
-/** Prefer explicit thaiMeaning, else pull from explain text, else common gloss map. */
+/** Generic Task 2 vocab-MCQ filler — not a real meaning, so keep looking past it. */
+const THAI_GLOSS_PLACEHOLDER = 'เลือกคำศัพท์ที่เหมาะกับบริบทประโยค'
+
+/** Inflected forms the data may use that the gloss maps key under a base form. */
+const glossStems = (key: string): string[] => {
+  const stems: string[] = []
+  const add = (s: string) => {
+    if (s.length >= 3 && !stems.includes(s)) stems.push(s)
+  }
+  if (key.endsWith('ies')) add(`${key.slice(0, -3)}y`)
+  if (key.endsWith('es')) add(key.slice(0, -2))
+  if (key.endsWith('s')) add(key.slice(0, -1))
+  if (key.endsWith('ied')) add(`${key.slice(0, -3)}y`)
+  if (key.endsWith('ed')) {
+    add(key.slice(0, -2))
+    add(key.slice(0, -1))
+    add(key.slice(0, -3))
+  }
+  if (key.endsWith('ing')) {
+    add(key.slice(0, -3))
+    add(`${key.slice(0, -3)}e`)
+    add(key.slice(0, -4))
+  }
+  if (key.endsWith('ly')) add(key.slice(0, -2))
+  if (key.endsWith('ily')) add(`${key.slice(0, -3)}y`)
+  if (key.endsWith('er')) add(key.slice(0, -2))
+  if (key.endsWith('est')) add(key.slice(0, -3))
+  return stems
+}
+
+const lookupGloss = (key: string): string =>
+  WRITING_THAI_GLOSS_EXTRA[key] || COMMON_THAI_GLOSS[key] || ''
+
+/**
+ * Prefer explicit thaiMeaning, else pull from explain text, else the gloss maps,
+ * else the same lookup on a de-inflected stem. Returns '' only if nothing matches.
+ */
 export const resolveThaiMeaning = (word: string, thaiMeaning?: string, explain?: string): string => {
-  if (thaiMeaning?.trim()) return thaiMeaning.trim()
+  const explicit = thaiMeaning?.trim()
+  if (explicit && explicit !== THAI_GLOSS_PLACEHOLDER) return explicit
   const fromExplain = explain?.match(/ความหมาย:\s*([^\n]+)/)?.[1]?.trim()
-  if (fromExplain) return fromExplain
+  if (fromExplain && fromExplain !== THAI_GLOSS_PLACEHOLDER) return fromExplain
   const key = word.trim().toLowerCase()
-  return COMMON_THAI_GLOSS[key] || ''
+  const direct = lookupGloss(key)
+  if (direct) return direct
+  for (const stem of glossStems(key)) {
+    const hit = lookupGloss(stem)
+    if (hit) return hit
+  }
+  // Hyphenated compounds: fall back to the head word (e.g. "state-funded" → "funded").
+  if (key.includes('-')) {
+    for (const part of key.split('-')) {
+      const hit = lookupGloss(part)
+      if (hit) return hit
+    }
+  }
+  return explicit || ''
 }
 
 const COMMON_THAI_GLOSS: Record<string, string> = {

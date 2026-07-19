@@ -22,6 +22,7 @@ import { COUNTABILITY_LABEL_TH, getCountability } from './nounCountability'
 import { typeBlankPlaceholder } from './writingTask2Harden'
 import { LetterHintBlankInput, isLetterHintBlank } from './LetterHintBlankInput'
 import { resolveThaiMeaning } from './writingLetterHint'
+import { VocabMeaningButton } from './VocabMeaningButton'
 import {
   buildWritingRecallFeedback,
   isWritingRecallExact,
@@ -235,6 +236,17 @@ export function WritingTask2Practice({
 
   const wrongBlanks = checkedNow ? stepBlanks.filter((blank) => !isBlankCorrect(blank)) : []
 
+  /** Authored prompt vocab wins over the generic gloss map when it covers the word. */
+  const vocabGlossIndex = useMemo(() => {
+    const index: Record<string, string> = {}
+    for (const item of prompt.vocab ?? []) {
+      const key = item.word.trim().toLowerCase()
+      if (key && item.thaiMeaning?.trim()) index[key] = item.thaiMeaning.trim()
+    }
+    return index
+  }, [prompt.vocab])
+  const promptVocabGloss = (word: string) => vocabGlossIndex[word.trim().toLowerCase()]
+
   const blankCorrectAnswer = (blank: Wgb2Blank): string => {
     if (blank.kind === 'select') return blank.answer === WGB2_NO_ARTICLE ? 'ไม่ต้องใส่คำนำหน้า' : blank.answer
     if (blank.kind === 'type') return blank.answers[0]
@@ -404,6 +416,21 @@ export function WritingTask2Practice({
 
           <p className="wgbSentence">
             {step.segments.map((segment, index) => {
+              /** TH pill for any word blank — Thai first, English behind a reveal. */
+              const meaningButton = (word: string) => {
+                const clean = (word || '').trim()
+                if (!clean || clean === WGB2_NO_ARTICLE) return null
+                const gloss = resolveThaiMeaning(clean, promptVocabGloss(clean))
+                if (!gloss) return null
+                return (
+                  <VocabMeaningButton
+                    word={clean}
+                    thaiMeaning={gloss}
+                    saved={savedWords.has(clean)}
+                    onSaveToNotebook={onSaveVocab ? handleSaveVocab : undefined}
+                  />
+                )
+              }
               if (segment.kind === 'text') {
                 return (
                   <VocabHighlightText
@@ -437,6 +464,7 @@ export function WritingTask2Practice({
                         </option>
                       ))}
                     </select>
+                    {meaningButton(blank.answer)}
                     {checkedNow && !correct ? (
                       <em className="wgbReveal">{blankCorrectAnswer(blank)}</em>
                     ) : null}
@@ -492,6 +520,7 @@ export function WritingTask2Practice({
                         if (event.key === 'Enter') checkStep()
                       }}
                     />
+                    {meaningButton(blank.answers[0])}
                     {checkedNow && !correct ? <em className="wgbReveal">{blank.answers[0]}</em> : null}
                   </span>
                 )
@@ -560,6 +589,7 @@ export function WritingTask2Practice({
                         </>
                       )}
                     </span>
+                    {meaningButton(blank.answer)}
                     {checkedNow && !correct ? <em className="wgbReveal">{blank.answer}</em> : null}
                   </span>
                 )

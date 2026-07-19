@@ -4424,9 +4424,7 @@
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(15, 23, 42, 0.34);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.62);
   animation: wgb2TutorialFade 0.3s ease both;
 }
 
@@ -4435,11 +4433,9 @@
   max-height: calc(100vh - 40px);
   overflow-y: auto;
   padding: clamp(20px, 3vw, 30px);
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border: 1.5px solid #dbe3f2;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.62);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  background: #ffffff;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
   color: #16233b;
   animation: wgb2TutorialPop 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
@@ -4476,9 +4472,9 @@
   align-items: start;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid #e4eaf6;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.5);
+  background: #f6f8fd;
 }
 
 .wgb2TutorialNum {

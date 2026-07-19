@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
 import { buildLetterHintMask, isLetterHintBlank } from './writingLetterHint'
+import { VocabMeaningButton } from './VocabMeaningButton'
 import './LetterHintBlank.css'
 
-/** Shared letter-hint input: shows mot_ _ _ _ _ _ _ and asks for the full word.
- *  Optional TH button reveals Thai meaning with a genie card + notebook save. */
+/** Shared letter-hint input: one box holding a fixed prefix plus an input for the
+ *  missing tail. The learner types only the tail; onChange still emits the full word.
+ *  An optional TH button reveals the Thai meaning and offers a Notebook save. */
 export function LetterHintBlankInput({
   answer,
   value,
@@ -31,59 +32,14 @@ export function LetterHintBlankInput({
 }) {
   const mask = buildLetterHintMask(answer || base || '')
   const widthCh = Math.max(mask.missingCount + 2, 4)
-  const [open, setOpen] = useState(false)
-  const [leaving, setLeaving] = useState(false)
-  const [revealed, setRevealed] = useState(false)
-  const leaveTimer = useRef<number | null>(null)
-  const meaning = (thaiMeaning || '').trim()
-  const canShowMeaning = meaning.length > 0
 
   /** The learner only types the missing tail; `value` stays the full word for grading. */
   const suffix = value.toLowerCase().startsWith(mask.prefix.toLowerCase())
     ? value.slice(mask.prefix.length)
     : value
 
-  const clearLeave = () => {
-    if (leaveTimer.current != null) {
-      window.clearTimeout(leaveTimer.current)
-      leaveTimer.current = null
-    }
-  }
-
-  const dismiss = () => {
-    if (!open) return
-    setOpen(false)
-    setRevealed(false)
-    setLeaving(true)
-    clearLeave()
-    leaveTimer.current = window.setTimeout(() => {
-      setLeaving(false)
-      leaveTimer.current = null
-    }, 260)
-  }
-
-  useEffect(() => () => clearLeave(), [])
-
-  useEffect(() => {
-    if (!open) return undefined
-    const onPointer = (event: Event) => {
-      const target = event.target
-      if (target instanceof Element && target.closest('.wgbLetterHint')) return
-      dismiss()
-    }
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') dismiss()
-    }
-    window.addEventListener('pointerdown', onPointer, true)
-    window.addEventListener('keydown', onKey)
-    return () => {
-      window.removeEventListener('pointerdown', onPointer, true)
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [open])
-
   return (
-    <span className={`wgbLetterHint ${open || leaving ? 'is-open' : ''}`}>
+    <span className="wgbLetterHint">
       <span className="wgbLetterHintTop">
         <span className={`wgbLetterHintShell ${stateClass} ${value ? 'is-filled' : ''}`}>
           <span className="wgbLetterHintPrefix" aria-hidden="true">
@@ -107,74 +63,15 @@ export function LetterHintBlankInput({
               if (event.key === 'Enter') onEnter?.()
             }}
           />
+          <VocabMeaningButton
+            word={mask.answer}
+            thaiMeaning={thaiMeaning || ''}
+            saved={saved}
+            inset
+            onSaveToNotebook={onSaveToNotebook}
+          />
         </span>
-        {canShowMeaning ? (
-          <button
-            type="button"
-            className={`wgbLetterHintThBtn ${open || leaving ? 'is-open' : ''}`}
-            aria-expanded={open}
-            aria-label="ดูความหมายภาษาไทย"
-            onClick={(event) => {
-              event.stopPropagation()
-              if (open) {
-                dismiss()
-                return
-              }
-              clearLeave()
-              setLeaving(false)
-              setOpen(true)
-            }}
-            onPointerDown={(event) => event.stopPropagation()}
-          >
-            TH
-          </button>
-        ) : null}
       </span>
-      {open || leaving ? (
-        <span
-          className={`wgbLetterHintPopover ${leaving ? 'is-leaving' : ''}`}
-          role="dialog"
-          aria-label={`ความหมายของ ${mask.answer}`}
-          onAnimationEnd={(event) => {
-            if (event.target !== event.currentTarget) return
-            if (leaving) setLeaving(false)
-          }}
-          onPointerDown={(event) => event.stopPropagation()}
-        >
-          <p className="wgbLetterHintPopoverKicker">
-            <span className="wgbLetterHintPopoverJewel" aria-hidden="true" />
-            Vocab meaning
-          </p>
-          <p className="wgbLetterHintPopoverTh">{meaning}</p>
-          {revealed ? (
-            <p className="wgbLetterHintPopoverWord">{mask.answer}</p>
-          ) : (
-            <button
-              type="button"
-              className="wgbLetterHintPopoverReveal"
-              onClick={(event) => {
-                event.stopPropagation()
-                setRevealed(true)
-              }}
-            >
-              👁 แสดงคำภาษาอังกฤษ
-            </button>
-          )}
-          {onSaveToNotebook ? (
-            <button
-              type="button"
-              className="wgbLetterHintPopoverSave"
-              disabled={saved}
-              onClick={(event) => {
-                event.stopPropagation()
-                onSaveToNotebook({ word: mask.answer, thaiMeaning: meaning })
-              }}
-            >
-              {saved ? '✓ บันทึกแล้ว' : '＋ เพิ่มลง Notebook'}
-            </button>
-          ) : null}
-        </span>
-      ) : null}
     </span>
   )
 }

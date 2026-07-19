@@ -11,7 +11,8 @@ import {
   type WritingRecallCheck
 } from './writingParagraphRecall'
 import { LetterHintBlankInput } from './LetterHintBlankInput'
-import { buildLetterHintMask } from './writingLetterHint'
+import { buildLetterHintMask, resolveThaiMeaning } from './writingLetterHint'
+import { VocabMeaningButton } from './VocabMeaningButton'
 import './GeneralTask1LetterPractice.css'
 
 type PracticeProps = {
@@ -578,19 +579,46 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
                     {segments.map((segment, segmentIndex) => {
                       if (segment.kind === 'text') return <span key={segmentIndex}>{segment.text}</span>
                       const blank = segment.blank
+                      /** TH pill for any word blank — Thai first, English behind a reveal. */
+                      const meaningButton = (word: string, thaiMeaning?: string) => {
+                        const clean = (word || '').trim()
+                        if (!clean) return null
+                        const gloss = resolveThaiMeaning(clean, thaiMeaning)
+                        if (!gloss) return null
+                        return (
+                          <VocabMeaningButton
+                            word={clean}
+                            thaiMeaning={gloss}
+                            saved={savedWords.has(clean)}
+                            onSaveToNotebook={
+                              onSaveVocab
+                                ? ({ word: w, thaiMeaning: th }) => {
+                                    onSaveVocab({ word: w, thaiMeaning: th })
+                                    setSavedWords((current) => new Set(current).add(w))
+                                  }
+                                : undefined
+                            }
+                          />
+                        )
+                      }
                       if (blank.kind === 'transition') {
                         return (
-                          <span
-                            key={blank.id}
-                            className={`gt1DropSlot ${checked ? (isBlankCorrect(blank) ? 'is-correct' : 'is-wrong') : ''}`}
-                            onDragOver={(event) => event.preventDefault()}
-                            onDrop={(event) => {
-                              event.preventDefault()
-                              setValues((current) => ({ ...current, [blank.id]: event.dataTransfer.getData('text/plain') }))
-                              setChecked(false)
-                            }}
-                          >
-                            {values[blank.id] || `คำเชื่อม ${transitionSlotNumber(blank)}`}
+                          <span key={blank.id} className="wgbBlankWrap">
+                            <span
+                              className={`gt1DropSlot ${checked ? (isBlankCorrect(blank) ? 'is-correct' : 'is-wrong') : ''}`}
+                              onDragOver={(event) => event.preventDefault()}
+                              onDrop={(event) => {
+                                event.preventDefault()
+                                setValues((current) => ({
+                                  ...current,
+                                  [blank.id]: event.dataTransfer.getData('text/plain')
+                                }))
+                                setChecked(false)
+                              }}
+                            >
+                              {values[blank.id] || `คำเชื่อม ${transitionSlotNumber(blank)}`}
+                            </span>
+                            {meaningButton(blank.answer)}
                           </span>
                         )
                       }
@@ -602,7 +630,7 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
                               answer={blank.answer}
                               value={values[blank.id] || ''}
                               stateClass={stateClass}
-                              thaiMeaning={blank.thaiMeaning}
+                              thaiMeaning={resolveThaiMeaning(blank.answer, blank.thaiMeaning)}
                               saved={savedWords.has(blank.answer)}
                               onSaveToNotebook={
                                 onSaveVocab
@@ -624,22 +652,24 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab }: PracticeProp
                         )
                       }
                       return (
-                        <select
-                          key={blank.id}
-                          value={values[blank.id] || ''}
-                          className={checked ? (isBlankCorrect(blank) ? 'is-correct' : 'is-wrong') : ''}
-                          onChange={(event) => {
-                            setValues((current) => ({ ...current, [blank.id]: event.target.value }))
-                            setChecked(false)
-                          }}
-                        >
-                          <option value="">เลือก</option>
-                          {blank.options.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
+                        <span key={blank.id} className="wgbBlankWrap">
+                          <select
+                            value={values[blank.id] || ''}
+                            className={checked ? (isBlankCorrect(blank) ? 'is-correct' : 'is-wrong') : ''}
+                            onChange={(event) => {
+                              setValues((current) => ({ ...current, [blank.id]: event.target.value }))
+                              setChecked(false)
+                            }}
+                          >
+                            <option value="">เลือก</option>
+                            {blank.options.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                          {meaningButton(blank.answer)}
+                        </span>
                       )
                     })}
                   </Fragment>

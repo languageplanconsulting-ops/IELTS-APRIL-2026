@@ -44,6 +44,7 @@ import { hardenAcademicTask2Exercise } from './writingTask2Harden'
 import { hardenTask1Exercise, getTask1BlankExplain } from './writingTask1Harden'
 import { LetterHintBlankInput, isLetterHintBlank } from './LetterHintBlankInput'
 import { resolveThaiMeaning } from './writingLetterHint'
+import { VocabMeaningButton } from './VocabMeaningButton'
 import { countTask1Paragraphs } from './writingTask1WordCount'
 import type { EngagementContext } from './engagementTracking'
 import {
@@ -499,7 +500,10 @@ function WritingGuidedBuilder({
   const [stepIndex, setStepIndex] = useState(0)
   const [values, setValues] = useState<Record<string, string>>({})
   const [checkedSteps, setCheckedSteps] = useState<Set<string>>(() => new Set())
-  const [masteredSteps, setMasteredSteps] = useState<Set<string>>(() => new Set())
+  /** Steps whose optional write-from-memory check has been passed 100%. */
+  const [, setMasteredSteps] = useState<Set<string>>(() => new Set())
+  const [recallOpenSteps, setRecallOpenSteps] = useState<Set<string>>(() => new Set())
+  const [recallDismissedSteps, setRecallDismissedSteps] = useState<Set<string>>(() => new Set())
   const [recallDrafts, setRecallDrafts] = useState<Record<string, string>>({})
   const [recallChecks, setRecallChecks] = useState<Record<string, WritingRecallCheck>>({})
   const [checkedNow, setCheckedNow] = useState(false)
@@ -527,8 +531,29 @@ function WritingGuidedBuilder({
   )
   const stepScore = stepBlanks.filter(isBlankCorrect).length
   const stepQuizDone = checkedSteps.has(step.id)
-  const stepDone = masteredSteps.has(step.id)
-  const allDone = steps.every((item) => masteredSteps.has(item.id))
+  // Getting every blank right is enough to move on; the recall write-out is offered, not required.
+  const stepDone = stepQuizDone
+  const allDone = steps.every((item) => checkedSteps.has(item.id))
+  const recallOpen = recallOpenSteps.has(step.id)
+  const recallDismissed = recallDismissedSteps.has(step.id)
+
+  const openRecall = () => {
+    setRecallOpenSteps((current) => new Set(current).add(step.id))
+    setRecallDismissedSteps((current) => {
+      const next = new Set(current)
+      next.delete(step.id)
+      return next
+    })
+  }
+
+  const dismissRecall = () => {
+    setRecallDismissedSteps((current) => new Set(current).add(step.id))
+    setRecallOpenSteps((current) => {
+      const next = new Set(current)
+      next.delete(step.id)
+      return next
+    })
+  }
 
   const totalBlanks = useMemo(
     () => steps.reduce((sum, item) => sum + item.segments.filter((s) => s.kind === 'blank').length, 0),
@@ -595,7 +620,7 @@ function WritingGuidedBuilder({
   }
 
   const goToStep = (index: number) => {
-    const reachable = index === 0 || masteredSteps.has(steps[index - 1].id) || masteredSteps.has(steps[index].id)
+    const reachable = index === 0 || checkedSteps.has(steps[index - 1].id) || checkedSteps.has(steps[index].id)
     if (!reachable) return
     setStepIndex(index)
     setCheckedNow(false)
@@ -611,6 +636,8 @@ function WritingGuidedBuilder({
     setValues({})
     setCheckedSteps(new Set())
     setMasteredSteps(new Set())
+    setRecallOpenSteps(new Set())
+    setRecallDismissedSteps(new Set())
     setRecallDrafts({})
     setRecallChecks({})
     setCheckedNow(false)
@@ -667,8 +694,8 @@ function WritingGuidedBuilder({
       <div className="wgbPanel">
         <ol className="wgbRail">
           {steps.map((item, index) => {
-            const done = masteredSteps.has(item.id)
-            const reachable = index === 0 || masteredSteps.has(steps[index - 1].id) || done
+            const done = checkedSteps.has(item.id)
+            const reachable = index === 0 || checkedSteps.has(steps[index - 1].id) || done
             const current = index === stepIndex
             return (
               <li key={item.id}>
@@ -701,6 +728,28 @@ function WritingGuidedBuilder({
               const value = values[blank.id] ?? ''
               const correct = isBlankCorrect(blank)
               const stateClass = !checkedNow ? '' : correct ? 'is-correct' : 'is-incorrect'
+              /** TH pill for any word blank — Thai first, English behind a reveal. */
+              const meaningButton = (word: string) => {
+                const clean = (word || '').trim()
+                if (!clean) return null
+                const gloss = resolveThaiMeaning(clean)
+                if (!gloss) return null
+                return (
+                  <VocabMeaningButton
+                    word={clean}
+                    thaiMeaning={gloss}
+                    saved={savedWords.has(clean)}
+                    onSaveToNotebook={
+                      onSaveVocab
+                        ? ({ word: w, thaiMeaning }) => {
+                            onSaveVocab({ word: w, thaiMeaning })
+                            setSavedWords((current) => new Set(current).add(w))
+                          }
+                        : undefined
+                    }
+                  />
+                )
+              }
               if (blank.kind === 'select') {
                 return (
                   <span key={blank.id} className="wgbBlankWrap">
@@ -718,6 +767,7 @@ function WritingGuidedBuilder({
                         </option>
                       ))}
                     </select>
+                    {meaningButton(blank.answer)}
                     {checkedNow && !correct ? (
                       <em className="wgbReveal">{blank.answer}</em>
                     ) : null}
@@ -775,6 +825,7 @@ function WritingGuidedBuilder({
                       if (event.key === 'Enter') checkStep()
                     }}
                   />
+                  {meaningButton(blank.answers[0])}
                   {checkedNow && !correct ? <em className="wgbReveal">{blank.answers[0]}</em> : null}
                 </span>
               )
@@ -798,7 +849,7 @@ function WritingGuidedBuilder({
           {checkedNow ? (
             stepBlanks.every(isBlankCorrect) ? (
               <div className="wgbFeedback is-good" role="status">
-                ถูกทุกช่องแล้ว! ต่อไปลองพิมพ์ย่อหน้าที่เพิ่งประกอบให้ตรง 100% ในกล่อง Genie ด้านล่าง ✨
+                {isLastStep ? 'เยี่ยมมาก! ประกอบครบทุกย่อหน้าแล้ว 🎉' : 'ถูกทุกช่อง! กด “ถัดไป” เพื่อประกอบย่อหน้าถัดไป ✅'}
               </div>
             ) : (
               <div className="wgbFeedback is-retry" role="status">
@@ -821,7 +872,30 @@ function WritingGuidedBuilder({
             </div>
           ) : null}
 
-          {stepQuizDone ? (
+          {stepQuizDone && !recallOpen ? (
+            recallDismissed ? (
+              <button type="button" className="wgb2RecallReopen" onClick={openRecall}>
+                เปิดแบบฝึกเขียนย่อหน้านี้จากความจำ
+              </button>
+            ) : (
+              <div className="wgb2RecallPrompt" role="status">
+                <div>
+                  <strong>ได้ 100% แล้ว — อยากลองเขียนย่อหน้านี้เองไหม?</strong>
+                  <p>แนะนำสำหรับการจำโครงสร้าง และอย่าลืมแตะคำศัพท์ที่ต้องการใช้แล้วบันทึกลง Notebook ก่อนลองเขียน</p>
+                </div>
+                <div className="wgb2RecallPromptActions">
+                  <button type="button" className="wlpBtn wlpBtn-primary" onClick={openRecall}>
+                    ลองเขียน (แนะนำ)
+                  </button>
+                  <button type="button" className="wlpBtn wlpBtn-secondary" onClick={dismissRecall}>
+                    ไว้ทีหลัง
+                  </button>
+                </div>
+              </div>
+            )
+          ) : null}
+
+          {recallOpen ? (
             <section
               className={`wgbRecallCard ${recallCheck?.passed ? 'is-passed' : recallCheck?.attempted ? 'is-retry' : ''}`}
               aria-labelledby={`recall-title-${step.id}`}
@@ -839,7 +913,7 @@ function WritingGuidedBuilder({
                 </div>
                 <p className="wgbRecallInstruction">
                   ช่องว่างและการขึ้นบรรทัดใหม่ไม่นับ แต่ <strong>ตัวพิมพ์ใหญ่–เล็ก เครื่องหมายวรรคตอน และรูปกริยา</strong>{' '}
-                  ต้องตรงทั้งหมด จึงจะไปด่านถัดไปได้
+                  ต้องตรงทั้งหมดจึงจะผ่าน (ไม่บังคับ — ข้ามไปย่อหน้าถัดไปก่อนก็ได้)
                 </p>
                 <textarea
                   className="wgbRecallTextarea"
@@ -863,6 +937,9 @@ function WritingGuidedBuilder({
                     {recallCheck?.passed ? '✓ ผ่าน 100% แล้ว' : 'ตรวจย่อหน้า'}
                   </button>
                   <span className="wgbRecallShortcut">⌘/Ctrl + Enter เพื่อตรวจ</span>
+                  <button type="button" className="wlpBtn wlpBtn-secondary" onClick={dismissRecall}>
+                    ไว้ทีหลัง
+                  </button>
                 </div>
 
                 {recallCheck?.passed ? (

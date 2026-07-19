@@ -9,6 +9,48 @@
   max-width: 100%;
 }
 
+/* Anchor for the คำใบ้ chip + its genie card, wherever a blank places it. */
+.wgbThWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+/* Inside a blank's own box: a divider-separated chip, not a floating pill. */
+.wgbThWrap.is-inset {
+  margin: 0 0 0 8px;
+  align-self: stretch;
+  padding-left: 8px;
+  border-left: 1px dashed rgba(0, 74, 173, 0.28);
+}
+
+.wgbLetterHintThBtn.is-inset {
+  min-width: 0;
+  height: 22px;
+  padding: 0 9px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 204, 0, 0.22);
+  box-shadow: none;
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+}
+
+.wgbLetterHintThBtn.is-inset::before {
+  width: 5px;
+  height: 5px;
+  box-shadow: none;
+}
+
+.wgbLetterHintThBtn.is-inset:hover,
+.wgbLetterHintThBtn.is-inset.is-open {
+  transform: none;
+  background: linear-gradient(180deg, #ffe566 0%, #ffcc00 100%);
+  box-shadow: none;
+}
+
 .wgbLetterHintTop {
   display: inline-flex;
   align-items: center;
@@ -19,9 +61,9 @@
 /* One single box: fixed prefix + the input for the missing tail. */
 .wgbLetterHintShell {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1px;
-  padding: 3px 10px;
+  padding: 3px 4px 3px 10px;
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(0, 74, 173, 0.06), rgba(0, 74, 173, 0.02));
   border: 1.5px solid rgba(0, 74, 173, 0.32);
