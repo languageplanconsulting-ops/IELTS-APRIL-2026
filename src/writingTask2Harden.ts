@@ -8,6 +8,8 @@ import {
   LETTER_HINT_FOCUS,
   resolveThaiMeaning
 } from './writingLetterHint'
+import { getWgb2OptionFillers } from './writingTask2Fillers'
+import { isRealTask2Word } from './writingTask2RealWords'
 
 /** Deterministic shuffle so option order is stable across re-renders. */
 const shuffle = <T,>(items: T[], seed: string): T[] => {
@@ -223,9 +225,9 @@ export const buildMorphDistractors = (answer: string): string[] => {
   })
 }
 
-const pickFourOptions = (answer: string, preferred?: string[]): string[] => {
+const pickFourOptions = (answer: string, preferred?: string[], focus?: Wgb2Focus): string[] => {
   const pool = [...(preferred || []), ...buildMorphDistractors(answer)].filter(
-    (item) => item.toLowerCase() !== answer.toLowerCase()
+    (item) => item.toLowerCase() !== answer.toLowerCase() && isRealTask2Word(item)
   )
   const unique: string[] = []
   for (const item of pool) {
@@ -234,8 +236,7 @@ const pickFourOptions = (answer: string, preferred?: string[]): string[] => {
     if (unique.length >= 3) break
   }
   // Fallback fillers so every MCQ has exactly 4 choices
-  const fillers = ['alternative', 'general', 'specific', 'possible', 'necessary', 'effective']
-  for (const fill of fillers) {
+  for (const fill of getWgb2OptionFillers(focus)) {
     if (unique.length >= 3) break
     if (fill.toLowerCase() === answer.toLowerCase()) continue
     if (unique.some((x) => x.toLowerCase() === fill.toLowerCase())) continue
@@ -306,12 +307,14 @@ const convertIdentityTypeToSelect = (blank: Extract<Wgb2Blank, { kind: 'type' }>
         ? [`${answer}s`, `${answer}es`, answer.replace(/y$/i, 'ies'), answer.replace(/s$/i, '')]
         : undefined
 
+  const focus: Wgb2Focus =
+    blank.focus === 'verb-tense' || blank.focus === 'plural' ? blank.focus : 'word-choice'
   return {
     kind: 'select',
     id: blank.id,
-    options: pickFourOptions(answer, preferred),
+    options: pickFourOptions(answer, preferred, focus),
     answer,
-    focus: blank.focus === 'verb-tense' || blank.focus === 'plural' ? blank.focus : 'word-choice',
+    focus,
     explain:
       blank.explain ||
       buildDetailedThaiExplain({ answer, focus: blank.focus, authoredExplain: blank.explain })
@@ -319,24 +322,27 @@ const convertIdentityTypeToSelect = (blank: Extract<Wgb2Blank, { kind: 'type' }>
 }
 
 const expandSelectToFour = (blank: Extract<Wgb2Blank, { kind: 'select' }>): Wgb2Blank => {
-  if (blank.options.length >= 4) return blank
   // Article blanks stay ternary (a / the / ∅)
   if (blank.focus === 'article' || blank.options.includes(WGB2_NO_ARTICLE)) return blank
   // Punctuation-like short options — leave alone
   if (blank.options.every((opt) => opt.length <= 2)) return blank
 
-  const extra = buildMorphDistractors(blank.answer).filter(
-    (item) => !blank.options.some((opt) => opt.toLowerCase() === item.toLowerCase())
+  // Task 2 tests grammar and word choice, not spelling: drop any authored foil
+  // that is not a real English word, then top up with real ones.
+  const options = blank.options.filter(
+    (opt) => opt.toLowerCase() === blank.answer.toLowerCase() || isRealTask2Word(opt)
   )
-  const options = [...blank.options]
-  for (const item of extra) {
+  if (options.length >= 4) return { ...blank, options }
+
+  const has = (word: string) => options.some((opt) => opt.toLowerCase() === word.toLowerCase())
+  const topUps = [
+    ...buildMorphDistractors(blank.answer).filter(isRealTask2Word),
+    ...getWgb2OptionFillers(blank.focus)
+  ]
+  for (const item of topUps) {
     if (options.length >= 4) break
+    if (item.toLowerCase() === blank.answer.toLowerCase() || has(item)) continue
     options.push(item)
-  }
-  while (options.length < 4) {
-    const fill = buildMorphDistractors(blank.answer)[options.length] || `more ${blank.answer}`
-    if (!options.some((opt) => opt.toLowerCase() === fill.toLowerCase())) options.push(fill)
-    else break
   }
   return { ...blank, options: shuffle(options.slice(0, 4), blank.id || blank.answer) }
 }

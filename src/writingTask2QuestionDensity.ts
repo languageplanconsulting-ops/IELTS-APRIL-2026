@@ -6,6 +6,8 @@ import type {
   Wgb2Segment,
   Wgb2Step
 } from './writingTask2Builder'
+import { getWgb2OptionFillers } from './writingTask2Fillers'
+import { isAttestedTask2Word } from './writingTask2RealWords'
 
 const INTRO_MINIMUM = 6
 const BODY_MINIMUM = 12
@@ -105,15 +107,15 @@ const SELECT_RULES: SelectRule[] = [
   },
   {
     pattern: /\boften\b/,
-    options: ['often', 'oftenly', 'frequency'],
+    options: ['often', 'frequent', 'frequency'],
     focus: 'adverb',
-    explain: 'often เป็น adverb of frequency และไม่มีรูป oftenly'
+    explain: 'often เป็น adverb of frequency ส่วน frequent เป็น adjective และ frequency เป็นคำนาม'
   },
   {
     pattern: /\bmodern\b/,
-    options: ['modern', 'modernise', 'modernly'],
+    options: ['modern', 'modernity', 'modernise'],
     focus: 'adjective',
-    explain: 'modern เป็น adjective ใช้ขยายคำนาม'
+    explain: 'modern เป็น adjective ใช้ขยายคำนาม ส่วน modernity เป็นคำนามและ modernise เป็นกริยา'
   },
   {
     pattern: /\bserious\b/,
@@ -122,6 +124,9 @@ const SELECT_RULES: SelectRule[] = [
     explain: 'serious เป็น adjective ใช้ขยายคำนาม; seriously เป็น adverb'
   }
 ]
+
+/** Every option these rules can inject — seeds the real-word lexicon build. */
+export const WGB2_DENSITY_SELECT_OPTIONS: string[] = SELECT_RULES.flatMap((rule) => rule.options)
 
 const DRAG_RULES = [
   {
@@ -369,31 +374,37 @@ const insertSelectBlank = (
     }
   }
 
-  const candidate = findTypeCandidate(segments)
-  if (!candidate) return null
-  const answer = candidate.answer
-  const lower = answer.toLocaleLowerCase()
-  const generated = lower.endsWith('ing')
-    ? [answer, `${answer.slice(0, -3)}ed`, answer.slice(0, -3)]
-    : lower.endsWith('ed')
-      ? [answer, answer.slice(0, -2), `${answer.slice(0, -2)}ing`]
-      : [answer, `${answer}s`, `${answer}ed`]
-  const options = [...new Set(generated)]
-  if (options.length < 3) options.push(`${answer}ing`)
-  return replaceTextRange(
-    segments,
-    candidate.segmentIndex,
-    candidate.start,
-    answer.length,
-    {
+  // Walk candidates until one yields real-word foils. Task 2 tests grammar and
+  // word choice, so a word with no genuine alternative forms ("that", "cannot",
+  // "themselves") must be skipped rather than given invented ones.
+  const asSelectBlank = (candidate: TypeCandidate, foils: string[]) =>
+    replaceTextRange(segments, candidate.segmentIndex, candidate.start, candidate.answer.length, {
       kind: 'select',
       id: blankId,
-      options,
-      answer,
+      options: [candidate.answer, ...foils.slice(0, 3)],
+      answer: candidate.answer,
       focus: 'word-choice',
-      explain: `เลือก “${answer}” เพราะเป็นรูปคำที่ทำให้ความหมายและโครงสร้างของประโยคนี้สมบูรณ์`
-    }
-  )
+      explain: `เลือก “${candidate.answer}” เพราะเป็นรูปคำที่ทำให้ความหมายและโครงสร้างของประโยคนี้สมบูรณ์`
+    })
+
+  let fallback: { candidate: TypeCandidate; foils: string[] } | null = null
+  for (const candidate of rankTypeCandidates(segments)) {
+    const foils = wordFormCandidates(candidate.answer).filter(isAttestedTask2Word)
+    if (foils.length >= 2) return asSelectBlank(candidate, foils)
+    // Prefer a candidate that at least contributes one genuine word-form foil.
+    if (!fallback || (foils.length > fallback.foils.length)) fallback = { candidate, foils }
+  }
+  if (!fallback) return null
+
+  // Last resort: the word has no real alternative forms, so top up with genuine
+  // words rather than inventing forms like "facted".
+  const foils = [...fallback.foils]
+  for (const filler of getWgb2OptionFillers('word-choice')) {
+    if (foils.length >= 2) break
+    if (filler === fallback.candidate.answer || foils.includes(filler)) continue
+    foils.push(filler)
+  }
+  return asSelectBlank(fallback.candidate, foils)
 }
 
 type TypeCandidate = {
@@ -435,7 +446,83 @@ const getExerciseBaseForm = (answer: string) => {
   return lower
 }
 
-function findTypeCandidate(segments: Wgb2Segment[]): TypeCandidate | null {
+/**
+ * Words with no useful inflected forms. "willed" and "pasted" are real English,
+ * but as foils for the modal "will" or the noun "past" they teach nothing.
+ */
+const NON_INFLECTING = new Set([
+  'will', 'would', 'shall', 'should', 'can', 'could', 'may', 'might', 'must',
+  'past', 'present', 'future', 'that', 'this', 'these', 'those', 'such', 'well',
+  'very', 'much', 'more', 'most', 'less', 'least', 'often', 'always', 'never',
+  'both', 'each', 'every', 'while', 'since', 'because', 'though', 'although'
+])
+
+/**
+ * Correctly spelled inflections of `answer`, for use as multiple-choice foils.
+ * Callers must still filter through `isRealTask2Word` — this only guarantees
+ * the spelling rules, not that the resulting word exists.
+ */
+export const wordFormCandidates = (answer: string): string[] => {
+  const lower = answer.toLocaleLowerCase()
+  // Contractions and possessives ("nation's") have no inflected forms to offer.
+  if (!/^[a-z]+$/.test(lower)) return []
+  if (NON_INFLECTING.has(lower)) return []
+  const forms: string[] = []
+  const push = (word: string) => {
+    if (word.length < 3 || word === lower) return
+    if (/^[A-Z]/.test(answer)) forms.push(word.charAt(0).toUpperCase() + word.slice(1))
+    else forms.push(word)
+  }
+
+  if (lower.endsWith('ing')) {
+    const stem = lower.slice(0, -3)
+    push(stem)
+    push(`${stem}e`)
+    push(`${stem}ed`)
+    push(`${stem}ed`.replace(/eed$/, 'ed'))
+    push(`${stem}s`)
+    push(`${stem}es`)
+  } else if (lower.endsWith('ied')) {
+    const stem = lower.slice(0, -3)
+    push(`${stem}y`)
+    push(`${stem}ies`)
+    push(`${stem}ying`)
+  } else if (lower.endsWith('ed')) {
+    const stem = lower.slice(0, -2)
+    push(stem)
+    push(`${stem}e`)
+    push(`${stem}ing`)
+    push(`${stem}s`)
+  } else if (lower.endsWith('ies')) {
+    const stem = lower.slice(0, -3)
+    push(`${stem}y`)
+    push(`${stem}ied`)
+    push(`${stem}ying`)
+  } else if (lower.endsWith('s') && !/(?:ss|us|is)$/.test(lower)) {
+    const stem = lower.slice(0, -1)
+    push(stem)
+    push(`${stem}e`)
+    push(`${stem}ed`)
+    push(`${stem}ing`)
+  } else if (lower.endsWith('e')) {
+    push(`${lower}s`)
+    push(`${lower}d`)
+    push(`${lower.slice(0, -1)}ing`)
+  } else if (/[^aeiou]y$/.test(lower)) {
+    const stem = lower.slice(0, -1)
+    push(`${stem}ies`)
+    push(`${stem}ied`)
+    push(`${lower}ing`)
+  } else {
+    push(`${lower}s`)
+    push(`${lower}es`)
+    push(`${lower}ed`)
+    push(`${lower}ing`)
+  }
+  return [...new Set(forms)]
+}
+
+function rankTypeCandidates(segments: Wgb2Segment[]): TypeCandidate[] {
   const candidates: Array<TypeCandidate & { score: number }> = []
   segments.forEach((segment, segmentIndex) => {
     if (segment.kind !== 'text') return
@@ -454,8 +541,11 @@ function findTypeCandidate(segments: Wgb2Segment[]): TypeCandidate | null {
     })
   })
   candidates.sort((a, b) => b.score - a.score)
-  return candidates[0] ?? null
+  return candidates
 }
+
+const findTypeCandidate = (segments: Wgb2Segment[]): TypeCandidate | null =>
+  rankTypeCandidates(segments)[0] ?? null
 
 const insertTypeBlank = (
   segments: Wgb2Segment[],
