@@ -117,8 +117,22 @@ contrast, [last] made up the smallest share at just [v].
 ```
 
 Use **`significantly`**, never `markedly`. Rating tables and hour charts swap the
-share nouns for scores/figures (`recorded significantly lower scores`, `recorded
-the lowest score at just …`).
+share nouns for scores/figures (`recorded significantly lower scores`, `standing
+at 8.2 and 7.8`).
+
+**Figures ride a V-ing clause, not a bare `at`.** The middle sentence reads
+`… made up significantly smaller shares, accounting for 16% and 9%, respectively.`
+The main verb must not repeat the clause (`accounted for … accounting for`).
+
+**Rank strictly, and isolate the lowest.** Every figure is quoted largest-first,
+and the final sentence of Body 1 covers the lowest category on its own.
+
+**Body 2 closes with the cross-chart comparison** — the one comparison the SOP
+allows, because it states a gap rather than interpreting it:
+```
+In contrast, [last] made up the smallest share at just [v], which is
+lower/higher than that of [chart 1] by [gap].
+```
 
 **Chart data comes first.** A "portion" prompt needs enough to compare: prefer
 **two pies** over one, with **five or six slices each** (see
