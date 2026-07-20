@@ -104,7 +104,8 @@ const snapshotOverviewByPrompt: Record<string, string> = {
     'Overall, it can be clearly observed that non-recycled waste was the largest share in 2008, while recycled waste was the largest share in 2018.',
   'snapshot-museum-visitors':
     'Overall, it can be clearly observed that the British Museum had the largest figure, while the Science Museum was the smallest in share.',
-  'snapshot-phone-brands': 'Overall, it can be clearly observed that Apple was the largest, while Oppo was the smallest in share.',
+  'snapshot-phone-brands':
+    'Overall, it can be clearly observed that Samsung was the largest in the first chart, while Apple was the largest in the second chart.',
   'snapshot-student-majors':
     'Overall, it can be clearly observed that engineering in South Korea was the largest, while education in South Korea was the smallest in share.',
   'snapshot-commute-modes':
@@ -114,7 +115,7 @@ const snapshotOverviewByPrompt: Record<string, string> = {
   'snapshot-water-use':
     'Overall, it can be clearly observed that agriculture in Australia was the largest, while energy use in Australia was the smallest in share.',
   'snapshot-food-delivery-apps':
-    'Overall, it can be clearly observed that GrabFood was the largest, while other identified apps were the smallest in share.',
+    'Overall, it can be clearly observed that Foodpanda was the largest in the first chart, while GrabFood was the largest in the second chart.',
   'snapshot-device-ownership':
     'Overall, it can be clearly observed that smartphones in Sweden were the largest, while smartwatches in Italy were the smallest in share.',
   'snapshot-energy-bills':
@@ -128,9 +129,9 @@ const pieBodyOpenings: Record<string, [string, string]> = {
   'snapshot-vietnam-us-exports': ['Starting with Vietnam’s exports to the US,', 'In terms of US exports to Vietnam,'],
   'snapshot-germany-australia-energy': ['Starting with Germany,', 'In terms of Australia,'],
   'snapshot-household-waste': ['Starting with 2008,', 'In terms of 2018,'],
-  'snapshot-phone-brands': ['Starting with the leading brands,', 'In terms of the remaining brands,'],
+  'snapshot-phone-brands': ['Starting with 2020,', 'In terms of 2024,'],
   'snapshot-commute-modes': ['Starting with Singapore,', 'In terms of Bangkok,'],
-  'snapshot-food-delivery-apps': ['Starting with the leading apps,', 'In terms of the remaining apps,'],
+  'snapshot-food-delivery-apps': ['Starting with 2020,', 'In terms of 2024,'],
   'snapshot-energy-bills': ['Starting with France,', 'In terms of Poland,']
 }
 

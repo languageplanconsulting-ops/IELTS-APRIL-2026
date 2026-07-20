@@ -1263,13 +1263,15 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
         hintTh: HINT_CONJUGATE,
         segments: [
           sel('gb15-b1', ['Starting with 2008', 'By 2018', 'Since 2008'], 'Starting with 2008', 'transition', 'Body 1 ของ pie chart ต้องเปิดด้วย Starting with + ปีแรก'),
-          t(', non-recycled waste '),
+          t(', at 72%, non-recycled waste '),
           typ('gb15-b2', 'account', ['accounted'], 'verb-tense', 'past simple เพราะเล่าข้อมูลปี 2008 ที่ผ่านไปแล้ว + ประธานเอกพจน์ จึงใช้ accounted'),
           t(' for the '),
           sel('gb15-b3', ['vast', 'vague', 'various'], 'vast', 'word-choice', 'the vast majority = ส่วนใหญ่อย่างมาก ตรงกับ 72% ส่วน vague (คลุมเครือ) และ various (หลากหลาย) ผิดความหมาย'),
-          t(' majority of household waste, '),
-          typ('gb15-b4', 'stand', ['standing'], 'ving-clause', 'ใช้ V-ing clause (standing) ขยายผลของประโยคหลัก บอกตัวเลขที่ยืนอยู่'),
-          t(' at 72%. However, recycled waste stood at just 28%. Interestingly, the share for recycled waste was lower than that of non-recycled waste by 44%.')
+          t(' majority of household waste. However, recycled waste '),
+          typ('gb15-b4', 'stand', ['stood'], 'verb-tense', 'past simple เล่าอดีต: stand -> stood'),
+          t(' at just 28%, '),
+          sel('gb15-b8', ['which', 'who', 'where'], 'which', 'referencing', 'which ใช้ขยายตัวเลขที่เพิ่งกล่าว ส่วน who ใช้กับคน และ where ใช้กับสถานที่'),
+          t(' made up the smallest proportion. Interestingly, the share for recycled waste in 2008 was lower than that of non-recycled waste by 44%.')
         ]
       },
       {
@@ -1287,7 +1289,9 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb15-c1b', ['In contrast', 'Because', 'Therefore'], 'In contrast', 'transition', 'In contrast = ในทางตรงข้าม ใช้ชี้ตัวเลขที่ต่ำกว่า ส่วน Because/Therefore เป็นเหตุ-ผล'),
           t(', non-recycled waste '),
           typ('gb15-c6', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต ใช้ made (make up = ประกอบเป็น)'),
-          t(' up 42%. Interestingly, the share for non-recycled waste in 2018 was lower than that of 2008 by 30%. Likewise, the share for recycled waste in 2008 was lower than that of 2018 by 30%. Similarly, the share for non-recycled waste in 2018 was lower than that of recycled waste by 16%.')
+          t(' up 42%, '),
+          sel('gb15-c7', ['which', 'who', 'where'], 'which', 'referencing', 'which ใช้ขยายตัวเลขที่เพิ่งกล่าว ส่วน who ใช้กับคน และ where ใช้กับสถานที่'),
+          t(' remained the least significant portion across both years. Interestingly, the share for non-recycled waste in 2018 was lower than that of 2008 by 30%. Likewise, the share for recycled waste in 2008 was lower than that of non-recycled waste in 2018 by 14%.')
         ]
       }
     ]
