@@ -120,9 +120,17 @@ Use **`significantly`**, never `markedly`. Rating tables and hour charts swap th
 share nouns for scores/figures (`recorded significantly lower scores`, `recorded
 the lowest score at just …`).
 
-**Word-floor top-up.** Task 1 answers must clear 150 words. Charts with only four
-or five categories cannot get there on bare figures, so — and only then — append
-the taught gap sentence, largest gaps first:
+**Chart data comes first.** A "portion" prompt needs enough to compare: prefer
+**two pies** over one, with **five or six slices each** (see
+`snapshot-vietnam-us-exports`). A single four-slice pie cannot fill a 150-word
+answer on figures alone — enrich the chart rather than padding the prose.
+
+**`which` clause.** A closing figure may carry one relative clause instead of a
+new sentence: `…, which made up the smallest proportion.` /
+`…, which remained the least significant portion across both years.`
+
+**Word-floor top-up.** Task 1 answers must clear 150 words. Where a chart is still
+too thin, and only then, append the taught gap sentence, largest gaps first:
 ```
 [Interestingly | Similarly | Likewise | Surprisingly], the share for [X] was
 lower than that of [Y] by [gap].

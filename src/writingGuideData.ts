@@ -772,22 +772,32 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'pie-chart',
     chartTypeLabel: 'Pie Chart',
-    title: 'The chart below shows smartphone market share by brand in one country in 2024.',
-    chartCaption: 'Smartphone market share by brand (2024)',
-    subjectPhrase: 'smartphone market share by brand in one country in 2024',
+    title: 'The charts below show smartphone market share by brand in one country in 2020 and 2024.',
+    chartCaption: 'Smartphone market share by brand, 2020 vs 2024',
+    subjectPhrase: 'smartphone market share by brand in one country in 2020 and 2024',
     unit: '% of sales',
     valueLabel: 'Percentage',
     mainFeature:
-      'Apple accounted for the largest share of sales, while smaller brands together made up less than a quarter of the market.',
+      'Samsung led the market in 2020, whereas Apple had taken the largest share by 2024.',
     pies: [
+      {
+        title: 'Smartphone Market Share 2020',
+        slices: [
+          { label: 'Samsung', value: 32, color: '#0d9488' },
+          { label: 'Apple', value: 26, color: '#0f53c9' },
+          { label: 'Other', value: 19, color: '#e2e8f0' },
+          { label: 'Oppo', value: 12, color: '#7c3aed' },
+          { label: 'Xiaomi', value: 11, color: '#d97706' }
+        ]
+      },
       {
         title: 'Smartphone Market Share 2024',
         slices: [
           { label: 'Apple', value: 34, color: '#0f53c9' },
           { label: 'Samsung', value: 28, color: '#0d9488' },
+          { label: 'Other', value: 15, color: '#e2e8f0' },
           { label: 'Xiaomi', value: 14, color: '#d97706' },
-          { label: 'Oppo', value: 9, color: '#7c3aed' },
-          { label: 'Other', value: 15, color: '#e2e8f0' }
+          { label: 'Oppo', value: 9, color: '#7c3aed' }
         ]
       }
     ]
@@ -900,21 +910,32 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'pie-chart',
     chartTypeLabel: 'Pie Chart',
-    title: 'The chart below shows food-delivery app market share in one city in 2024.',
-    chartCaption: 'Food-delivery app market share (2024)',
-    subjectPhrase: 'food-delivery app market share in one city in 2024',
+    title: 'The charts below show food-delivery app market share in one city in 2020 and 2024.',
+    chartCaption: 'Food-delivery app market share, 2020 vs 2024',
+    subjectPhrase: 'food-delivery app market share in one city in 2020 and 2024',
     unit: '% of orders',
     valueLabel: 'Percentage',
     mainFeature:
-      'GrabFood accounted for the largest share of orders, while smaller apps together made up under a fifth of the market.',
+      'Foodpanda took the most orders in 2020, whereas GrabFood had the largest share by 2024.',
     pies: [
+      {
+        title: 'Food-delivery Market Share 2020',
+        slices: [
+          { label: 'Foodpanda', value: 34, color: '#d97706' },
+          { label: 'GrabFood', value: 29, color: '#0d9488' },
+          { label: 'Line Man', value: 15, color: '#0f53c9' },
+          { label: 'Other', value: 14, color: '#e2e8f0' },
+          { label: 'Robinhood', value: 8, color: '#7c3aed' }
+        ]
+      },
       {
         title: 'Food-delivery Market Share 2024',
         slices: [
           { label: 'GrabFood', value: 38, color: '#0d9488' },
           { label: 'Foodpanda', value: 27, color: '#d97706' },
           { label: 'Line Man', value: 18, color: '#0f53c9' },
-          { label: 'Other', value: 17, color: '#e2e8f0' }
+          { label: 'Robinhood', value: 9, color: '#7c3aed' },
+          { label: 'Other', value: 8, color: '#e2e8f0' }
         ]
       }
     ]

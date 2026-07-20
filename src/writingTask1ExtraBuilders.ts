@@ -1081,23 +1081,27 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
   buildSnapshotExercise({
     id: 'gb-phone-brands',
     promptId: 'snapshot-phone-brands',
-    chartNoun: 'pie chart',
+    chartNoun: 'pie charts',
     subject: 'smartphone market share',
-    categoryPhrase: 'across different brands',
+    categoryPhrase: 'across different brands in 2020 and 2024',
     examples: 'Apple and Samsung',
     unit: 'percentage of sales',
-    timeframe: 'in 2024',
-    visualCount: 1,
-    leadingItem: 'Apple',
-    contrastItem: 'Oppo',
-    body1Topic: 'the leading brands',
+    visualCount: 2,
+    leadingItem: 'Samsung',
+    contrastItem: 'Apple',
+    body1Topic: '2020',
     body1Items: [
+      { label: 'Samsung', value: '32%' },
+      { label: 'Apple', value: '26%' },
+      { label: 'the other brands combined', value: '19%' },
+      { label: 'Oppo', value: '12%' },
+      { label: 'Xiaomi', value: '11%' }
+    ],
+    body2Topic: '2024',
+    body2Items: [
       { label: 'Apple', value: '34%' },
       { label: 'Samsung', value: '28%' },
-      { label: 'the other brands combined', value: '15%' }
-    ],
-    body2Topic: 'the remaining brands',
-    body2Items: [
+      { label: 'the other brands combined', value: '15%' },
       { label: 'Xiaomi', value: '14%' },
       { label: 'Oppo', value: '9%' }
     ]
@@ -1277,25 +1281,29 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
   buildSnapshotExercise({
     id: 'gb-food-delivery-apps',
     promptId: 'snapshot-food-delivery-apps',
-    chartNoun: 'pie chart',
+    chartNoun: 'pie charts',
     subject: 'food-delivery app market share',
-    categoryPhrase: 'across different providers',
+    categoryPhrase: 'across different providers in 2020 and 2024',
     examples: 'GrabFood and Line Man',
     unit: 'percentage of orders',
-    timeframe: 'in 2024',
-    visualCount: 1,
-    leadingItem: 'GrabFood',
-    contrastItem: 'other identified apps',
-    contrastBe: 'were',
-    body1Topic: 'the leading apps',
+    visualCount: 2,
+    leadingItem: 'Foodpanda',
+    contrastItem: 'GrabFood',
+    body1Topic: '2020',
     body1Items: [
-      { label: 'GrabFood', value: '38%' },
-      { label: 'Foodpanda', value: '27%' }
+      { label: 'Foodpanda', value: '34%' },
+      { label: 'GrabFood', value: '29%' },
+      { label: 'Line Man', value: '15%' },
+      { label: 'the other providers combined', value: '14%' },
+      { label: 'Robinhood', value: '8%' }
     ],
-    body2Topic: 'the remaining apps',
+    body2Topic: '2024',
     body2Items: [
+      { label: 'GrabFood', value: '38%' },
+      { label: 'Foodpanda', value: '27%' },
       { label: 'Line Man', value: '18%' },
-      { label: 'the other providers combined', value: '17%' }
+      { label: 'Robinhood', value: '9%' },
+      { label: 'the other providers combined', value: '8%' }
     ]
   }),
   buildSnapshotExercise({
