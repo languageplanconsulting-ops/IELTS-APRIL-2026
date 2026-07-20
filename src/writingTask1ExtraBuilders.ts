@@ -4,6 +4,7 @@
  */
 import type { WgbExercise, WgbFocus, WgbSegment, WgbStep } from './writingGuidedBuilder'
 import { overviewOpener } from './writingTask1Overview'
+import { countTask1Paragraphs } from './writingTask1WordCount'
 
 const t = (text: string): WgbSegment => ({ kind: 'text', text })
 const sel = (
@@ -35,7 +36,10 @@ type TimelineSpec = {
   id: string
   promptId: string
   chartNoun: 'line graph' | 'bar chart' | 'table'
+  /** Short general topic, no category names, e.g. "the proportion of students using different methods of learning" */
   subject: string
+  /** Fed into "measured in …" in the introduction, e.g. "millions of workers" */
+  unit: string
   fromYear: string
   midYear: string
   peakYear: string
@@ -63,17 +67,49 @@ type TimelineSpec = {
 
 function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
   const p = spec.id.replace(/^gb-/, 'x')
-  const peakIsFinalPoint = spec.peakYear === spec.toYear
+  const yearSpan = Number(spec.toYear) - Number(spec.fromYear)
+  const risingFluctuates = Boolean(spec.endRising) && spec.endRising !== spec.peakRising
   const risingEnd = spec.endRising ?? spec.peakRising
-  const risingPeakClause = peakIsFinalPoint
-    ? `a peak at ${spec.peakRising} in ${spec.peakYear}, recording its strongest result of the period. `
-    : `a peak at ${spec.peakRising} in ${spec.peakYear} and finishing at ${risingEnd} in ${spec.toYear}, recording its strongest result during these years. `
   const fallingLow = spec.lowFalling ?? spec.endFalling
   const fallingLowYear = spec.lowYear ?? spec.toYear
-  const fallingFinish =
-    fallingLowYear === spec.toYear
-      ? ' and ending the period at its lowest recorded level'
-      : ` and later recovering to ${spec.endFalling} in ${spec.toYear}, remaining below its starting figure`
+  const fallingFluctuates = fallingLowYear !== spec.toYear
+
+  const risingClause = risingFluctuates
+    ? [
+        typ(`${p}-c1`, 'fluctuate', ['fluctuated'], 'verb-tense', 'past simple: fluctuated'),
+        t(', '),
+        typ(`${p}-c3`, 'reach', ['reaching'], 'ving-clause', 'V-ing: reaching a peak'),
+        t(
+          ` a peak at ${spec.peakRising} in ${spec.peakYear}, up from ${spec.startRising} in ${spec.fromYear}, and finishing at ${risingEnd} in ${spec.toYear}, as the chart shows. `
+        )
+      ]
+    : [
+        typ(`${p}-c1`, 'continue', ['continued'], 'verb-tense', 'past simple: continued'),
+        t(' to rise, '),
+        typ(`${p}-c3`, 'reach', ['reaching'], 'ving-clause', 'V-ing: reaching a peak'),
+        t(
+          ` its peak at ${spec.peakRising} in ${spec.peakYear}, up from ${spec.startRising} in ${spec.fromYear}, as the chart shows. `
+        )
+      ]
+
+  const fallingClause = fallingFluctuates
+    ? [
+        typ(`${p}-c5`, 'fluctuate', ['fluctuated'], 'verb-tense', 'past simple: fluctuated'),
+        t(', '),
+        typ(`${p}-c7`, 'drop', ['dropping'], 'ving-clause', 'V-ing: dropping'),
+        t(
+          ` to its lowest point at ${fallingLow} in ${fallingLowYear}, down from ${spec.startFalling} in ${spec.fromYear}, and finishing at ${spec.endFalling} in ${spec.toYear}, as clearly shown in the data.`
+        )
+      ]
+    : [
+        typ(`${p}-c5`, 'drop', ['dropped'], 'verb-tense', 'past simple: dropped'),
+        t(' consistently, '),
+        typ(`${p}-c7`, 'reach', ['reaching'], 'ving-clause', 'V-ing: reaching'),
+        t(
+          ` the lowest point at ${fallingLow} during the same year, down from ${spec.startFalling} in ${spec.fromYear}, as clearly shown in the data.`
+        )
+      ]
+
   return {
     id: spec.id,
     promptId: spec.promptId,
@@ -86,9 +122,9 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
         segments: [
           t(`The ${spec.chartNoun} `),
           sel(`${p}-i1`, ['compares', 'argues', 'decides'], 'compares', 'paraphrase', 'The + ชื่อกราฟเอกพจน์ ใช้ compares เพื่อบอกว่ากราฟเปรียบเทียบข้อมูล'),
-          t(` ${spec.subject} between ${spec.fromYear} `),
-          sel(`${p}-i2`, ['and', 'until', 'with'], 'and', 'word-choice', 'between X and Y'),
-          t(` ${spec.toYear} across the categories included in the data.`)
+          t(` the ${spec.subject}: ${spec.risingNoun} and ${spec.thatOfFalling}, over a ${yearSpan}-year period from ${spec.fromYear} `),
+          sel(`${p}-i2`, ['to', 'until', 'with'], 'to', 'word-choice', 'from X to Y'),
+          t(` ${spec.toYear}, measured in ${spec.unit}.`)
         ]
       },
       {
@@ -98,7 +134,7 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
         hintTh: HINT_CONJUGATE,
         segments: [
           ...overviewOpener(p),
-          t(`${spec.risingNoun} `),
+          t(`while ${spec.risingNoun} `),
           sel(
             `${p}-o2`,
             [
@@ -111,28 +147,20 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
             'trend-phrase',
             'Timeline ขาขึ้นต้องใช้ experienced an upward trend — ห้ามใช้ showed'
           ),
-          t(`, ${spec.fallingNoun} `),
+          t(`, that of ${spec.thatOfFalling} `),
           sel(
             `${p}-o3`,
             [
+              'displayed a downward trend',
               'showed a downward trend',
-              'experienced an upward trend',
               'fluctuated',
               'remained unchanged over the given period'
             ],
-            'showed a downward trend',
+            'displayed a downward trend',
             'trend-phrase',
-            'ขาลงใช้ showed a downward trend'
+            'ขาลงใช้ displayed a downward trend'
           ),
-          t(', '),
-          sel(
-            `${p}-o4`,
-            ['highlighting', 'highlighted', 'highlight'],
-            'highlighting',
-            'ving-clause',
-            'ใช้ V-ing clause ขยายประโยคหลัก จึงใช้ highlighting'
-          ),
-          t(' the clear contrast between their directions.')
+          t(' over the given period.')
         ]
       },
       {
@@ -141,14 +169,13 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
         labelTh: ROLE_LABEL_TH.body1,
         hintTh: HINT_CONJUGATE,
         segments: [
-          sel(`${p}-b2`, ['Whereas', 'Because', 'So'], 'Whereas', 'transition', 'complex #1: Whereas เปิด dependent clause เพื่อเปรียบต่าง'),
-          t(` ${spec.risingNoun} `),
-          typ(`${p}-b1`, 'stand', ['stood'], 'verb-tense', 'past simple: stood'),
-          t(` at ${spec.startRising} in ${spec.fromYear}, that of ${spec.thatOfFalling} `),
-          typ(`${p}-b3`, 'begin', ['began'], 'verb-tense', 'past simple: began'),
-          t(` at ${spec.startFalling}, revealing a substantial initial difference between the two categories. `),
-          t(`However, in ${spec.midYear}, ${spec.risingNoun} `),
-          typ(`${p}-b5`, 'rise', ['rose'], 'verb-tense', 'past simple: rose'),
+          t(`Starting in ${spec.fromYear}, ${spec.thatOfFalling} `),
+          typ(`${p}-b1`, 'represent', ['represented'], 'verb-tense', 'past simple: represented'),
+          t(` the highest figure in the data, at ${spec.startFalling}, while ${spec.risingNoun} `),
+          typ(`${p}-b3`, 'represent', ['represented'], 'verb-tense', 'past simple: represented'),
+          t(` the lowest, at just ${spec.startRising}, according to the chart. `),
+          t(`However, by ${spec.midYear}, the figure for ${spec.risingNoun} had `),
+          typ(`${p}-b5`, 'increase', ['increased'], 'verb-tense', 'past simple: increased'),
           t(' '),
           sel(
             `${p}-b6`,
@@ -157,10 +184,8 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
             'degree-adverb',
             `ใช้ ${spec.riseAdv} บอกระดับการเพิ่มขึ้น`
           ),
-          t(` to ${spec.midRising}, contrasting with that of ${spec.thatOfFalling}, `),
-          sel(`${p}-b7`, ['which', 'who', 'where'], 'which', 'referencing', 'which อ้างถึง figure เอกพจน์'),
-          t(' '),
-          typ(`${p}-b8`, 'decline', ['declined'], 'verb-tense', 'past simple: declined'),
+          t(` to ${spec.midRising}, while that for ${spec.fallingNoun} had `),
+          typ(`${p}-b8`, 'drop', ['dropped'], 'verb-tense', 'past simple: dropped'),
           t(' '),
           sel(
             `${p}-b9`,
@@ -169,7 +194,7 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
             'degree-adverb',
             `ใช้ ${spec.declineAdv} บอกระดับการลดลง`
           ),
-          t(` to ${spec.midFalling}, narrowing the gap between the figures considerably by that point.`)
+          t(` to ${spec.midFalling} over the same period.`)
         ]
       },
       {
@@ -178,19 +203,8 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
         labelTh: ROLE_LABEL_TH.body2,
         hintTh: HINT_CONJUGATE,
         segments: [
-          t(`Between ${spec.midYear} and ${spec.toYear}, ${spec.risingNoun} `),
-          typ(`${p}-c1`, 'increase', ['increased'], 'verb-tense', 'past simple: increased'),
-          t(' '),
-          sel(
-            `${p}-c2`,
-            [spec.increaseAdv, 'rarely', 'barely'],
-            spec.increaseAdv,
-            'degree-adverb',
-            `ใช้ ${spec.increaseAdv} บอกระดับ`
-          ),
-          t(', '),
-          typ(`${p}-c3`, 'reach', ['reaching'], 'ving-clause', 'V-ing: reaching a peak'),
-          t(` ${risingPeakClause}`),
+          t(`From ${spec.midYear} onwards, ${spec.risingNoun} `),
+          ...risingClause,
           sel(
             `${p}-c4`,
             ['On the other hand', 'Therefore', 'For example'],
@@ -198,84 +212,245 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
             'transition',
             'On the other hand เปิดประโยค complex ที่ 2'
           ),
-          t(`, over the same interval, this figure for ${spec.fallingNoun} `),
-          typ(`${p}-c5`, 'drop', ['dropped'], 'verb-tense', 'past simple: dropped'),
-          t(' '),
-          sel(
-            `${p}-c6`,
-            [spec.dropAdv, 'happily', 'rarely'],
-            spec.dropAdv,
-            'degree-adverb',
-            `ใช้ ${spec.dropAdv} บอกระดับ`
-          ),
-          t(', '),
-          typ(`${p}-c7`, 'reach', ['reaching'], 'ving-clause', 'V-ing: reaching the lowest point'),
-          t(` its lowest point at ${fallingLow} in ${fallingLowYear}${fallingFinish}, confirming the marked contrast between the two categories.`)
+          t(`, ${spec.fallingNoun} `),
+          ...fallingClause
         ]
       }
     ]
   }
 }
 
+/** One ranked figure quoted in a snapshot body — label plus its exact chart value. */
+type SnapshotItem = { label: string; value: string; be?: 'was' | 'were' }
+
 type SnapshotSpec = {
   id: string
   promptId: string
   chartNoun: 'pie chart' | 'pie charts' | 'bar chart' | 'table'
   subject: string
+  /** e.g. "in different product categories" — sits straight after the subject */
+  categoryPhrase: string
   /** e.g. "GrabFood and Line Man" — fed into "such as …" in the introduction */
   examples: string
-  /** e.g. "percentage of the share" — fed into "measured in …" in the introduction */
+  /** e.g. "millions of dollars" — fed into "measured in …" in the introduction */
   unit: string
+  /** e.g. "in 2023" — closes the introduction */
+  timeframe?: string
   visualCount: 1 | 2
   leadingItem: string
-  leadingShare: string
   contrastItem: string
-  contrastShare: string
-  contrastLinker: 'whereas' | 'while'
-  body1Topic?: string
-  body2Topic?: string
   leadingBe?: 'was' | 'were'
   contrastBe?: 'was' | 'were'
-  extraBodyDetail?: string
+  /** Body 1 = "Starting with <topic>, …" then its ranked figures, largest first. */
+  body1Topic: string
+  body1Items: SnapshotItem[]
+  /** Superlative for the top figure — money charts read "the most valuable category". */
+  body1Lead?: string
+  /** What the numbers are. Rating tables are scores, not shares; hours are figures. */
+  measureNoun?: 'share' | 'score' | 'figure'
+  /** Body 2 = "In terms of <topic>, …" then its ranked figures, largest first. */
+  body2Topic: string
+  body2Items: SnapshotItem[]
+}
+
+/**
+ * Body 1 (CLAUDE.md snapshot SOP): report figures only, never rank them against
+ * each other. Sentence 1 names the top two, sentence 2 the next pair, sentence 3
+ * the lowest — each sentence after the first opens with "However".
+ */
+
+/** Minimum length for a Task 1 model answer (the IELTS floor). */
+const SNAPSHOT_TARGET_WORDS = 152
+
+const segmentsToText = (segments: WgbSegment[]): string =>
+  segments
+    .map((segment) =>
+      segment.kind === 'text'
+        ? segment.text
+        : segment.blank.kind === 'select'
+          ? segment.blank.answer
+          : segment.blank.answers[0]
+    )
+    .join('')
+    .replace(/\s+([,.])/g, '$1')
+
+/** Parse "34%", "8.5", "6.5 hours" or "$23 million" into a number plus its formatting. */
+const parseFigure = (value: string): { num: number; format: (n: number) => string } | null => {
+  const match = value.match(/^(\$?)([\d.,]+)(.*)$/)
+  if (!match) return null
+  const num = Number(match[2].replace(/,/g, ''))
+  if (!Number.isFinite(num)) return null
+  const prefix = match[1]
+  const suffix = match[3]
+  return { num, format: (n: number) => `${prefix}${Number(n.toFixed(2))}${suffix}` }
+}
+
+/**
+ * Teacher-approved top-up sentence: "…, lower than that of X by Y". Only appended
+ * when a chart is too thin to reach the IELTS word floor on figures alone, and it
+ * still only reports numbers — the gap is stated, never interpreted.
+ */
+const comparisonSentence = (
+  top: SnapshotItem,
+  item: SnapshotItem,
+  transition: string,
+  isShare: boolean
+): string | null => {
+  const high = parseFigure(top.value)
+  const low = parseFigure(item.value)
+  if (!high || !low) return null
+  const gap = high.num - low.num
+  if (gap <= 0) return null
+  return ` ${transition}, the ${isShare ? 'share' : 'figure'} for ${item.label} was lower than that of ${top.label} by ${high.format(gap)}.`
+}
+
+const TOP_UP_TRANSITIONS = ['Interestingly', 'Similarly', 'Likewise', 'Surprisingly']
+
+const makeOrRecord = (id: string, isShare: boolean): WgbSegment =>
+  isShare
+    ? typ(id, 'make', ['made'], 'verb-tense', 'past simple')
+    : typ(id, 'record', ['recorded'], 'verb-tense', 'past simple')
+
+function snapshotBody1Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
+  const items = spec.body1Items
+  const lead = spec.body1Lead ?? 'the largest category'
+  const measure = spec.measureNoun ?? 'share'
+  const measurePlural = `${measure}s`
+  const isShare = measure === 'share'
+  const segments: WgbSegment[] = [
+    t(`Starting with ${spec.body1Topic}, ${items[0].label} `),
+    typ(`${p}-b1`, 'be', [items[0].be ?? 'was'], 'verb-tense', 'past simple'),
+    t(` ${lead} at ${items[0].value}, `),
+    typ(`${p}-b2`, 'follow', ['followed'], 'v3-clause', 'V3 \u0e2b\u0e25\u0e31\u0e07\u0e04\u0e2d\u0e21\u0e21\u0e32: followed by = \u0e15\u0e32\u0e21\u0e21\u0e32\u0e14\u0e49\u0e27\u0e22'),
+    t(` by ${items[1].label} at ${items[1].value}.`)
+  ]
+
+  // Middle sentence: one figure when the chart has four categories, a pair when it has five or more.
+  const middle = items.length >= 5 ? items.slice(2, 4) : items.length === 4 ? items.slice(2, 3) : []
+  if (middle.length === 2) {
+    segments.push(
+      t(` However, ${middle[0].label} and ${middle[1].label} `),
+      isShare
+        ? typ(`${p}-b3`, 'account', ['accounted'], 'verb-tense', 'past simple')
+        : typ(`${p}-b3`, 'record', ['recorded'], 'verb-tense', 'past simple'),
+      t(isShare ? ' for ' : ' '),
+      sel(
+        `${p}-b4`,
+        ['significantly', 'markedly', 'barely'],
+        'significantly',
+        'degree-adverb',
+        'significantly = \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e32\u0e01 (\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e19\u0e35\u0e49\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19) \u0e2a\u0e48\u0e27\u0e19 markedly \u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 \u0e41\u0e25\u0e30 barely = \u0e41\u0e17\u0e1a\u0e44\u0e21\u0e48'
+      ),
+      t(`${isShare ? ' smaller' : ' lower'} ${measurePlural}, at ${middle[0].value} and ${middle[1].value}, respectively.`)
+    )
+  } else if (middle.length === 1) {
+    segments.push(
+      t(` However, ${middle[0].label} `),
+      isShare
+        ? typ(`${p}-b3`, 'account', ['accounted'], 'verb-tense', 'past simple')
+        : typ(`${p}-b3`, 'record', ['recorded'], 'verb-tense', 'past simple'),
+      t(isShare ? ' for a ' : ' a '),
+      sel(
+        `${p}-b4`,
+        ['significantly', 'markedly', 'barely'],
+        'significantly',
+        'degree-adverb',
+        'significantly = \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e32\u0e01 (\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e19\u0e35\u0e49\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19) \u0e2a\u0e48\u0e27\u0e19 markedly \u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 \u0e41\u0e25\u0e30 barely = \u0e41\u0e17\u0e1a\u0e44\u0e21\u0e48'
+      ),
+      t(`${isShare ? ' smaller' : ' lower'} ${measure}, at ${middle[0].value}.`)
+    )
+  }
+
+  // Closing sentence: the lowest figure, or the lowest pair when they are level.
+  const tail = items.slice(2 + middle.length)
+  if (tail.length >= 2) {
+    const [a, b] = [tail[0], tail[1]]
+    segments.push(t(` However, ${a.label} and ${b.label} `))
+    if (a.value === b.value) {
+      segments.push(
+        t('each '),
+        makeOrRecord(`${p}-b5`, isShare),
+        t(`${isShare ? ' up' : ''} ${a.value}, accounting for the lowest figures.`)
+      )
+    } else {
+      segments.push(
+        makeOrRecord(`${p}-b5`, isShare),
+        t(`${isShare ? ' up' : ''} ${a.value} and ${b.value}, respectively, accounting for the lowest figures.`)
+      )
+    }
+  } else if (tail.length === 1) {
+    segments.push(
+      t(` However, ${tail[0].label} `),
+      makeOrRecord(`${p}-b5`, isShare),
+      t(`${isShare ? ' up' : ''} ${tail[0].value}, accounting for the lowest figure.`)
+    )
+  }
+
+  return segments
+}
+
+/**
+ * Body 2 (CLAUDE.md snapshot SOP): largest first, the middle figures joined with
+ * "Similarly, … followed closely", the smallest closed with "In contrast".
+ */
+function snapshotBody2Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
+  const items = spec.body2Items
+  const middle = items.slice(1, -1)
+  const last = items[items.length - 1]
+  const measure = spec.measureNoun ?? 'share'
+  const isShare = measure === 'share'
+  const segments: WgbSegment[] = isShare
+    ? [
+        t(`In terms of ${spec.body2Topic}, ${items[0].label} `),
+        typ(`${p}-c1`, 'account', ['accounted'], 'verb-tense', 'past simple'),
+        t(` for the largest proportion, at ${items[0].value}. `)
+      ]
+    : [
+        t(`In terms of ${spec.body2Topic}, ${items[0].label} `),
+        typ(`${p}-c1`, 'record', ['recorded'], 'verb-tense', 'past simple'),
+        t(` the highest ${measure}, at ${items[0].value}. `)
+      ]
+
+  if (middle.length >= 2) {
+    segments.push(
+      sel(`${p}-c2`, ['Similarly', 'Therefore', 'Otherwise'], 'Similarly', 'transition', 'Similarly = ในทำนองเดียวกัน'),
+      t(`, ${middle[0].label} and ${middle[1].label} `),
+      typ(`${p}-c3`, 'follow', ['followed'], 'verb-tense', 'past simple'),
+      t(` closely, at ${middle[0].value} and ${middle[1].value}, respectively. `)
+    )
+  } else if (middle.length === 1) {
+    segments.push(
+      sel(`${p}-c2`, ['Similarly', 'Therefore', 'Otherwise'], 'Similarly', 'transition', 'Similarly = ในทำนองเดียวกัน'),
+      t(`, ${middle[0].label} `),
+      typ(`${p}-c3`, 'follow', ['followed'], 'verb-tense', 'past simple'),
+      t(` closely, at ${middle[0].value}. `)
+    )
+  }
+
+  segments.push(
+    sel(`${p}-c4`, ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast = ในทางตรงกันข้าม'),
+    t(`, ${last.label} `)
+  )
+  if (isShare) {
+    segments.push(
+      typ(`${p}-c5`, 'make', ['made'], 'verb-tense', 'past simple'),
+      t(` up the smallest share at just ${last.value}.`)
+    )
+  } else {
+    segments.push(
+      typ(`${p}-c5`, 'record', ['recorded'], 'verb-tense', 'past simple'),
+      t(` the lowest ${measure} at just ${last.value}.`)
+    )
+  }
+
+  return segments
 }
 
 function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
   const p = spec.id.replace(/^gb-/, 's')
   const pluralChart = spec.chartNoun.endsWith('s')
-  const pieChart = spec.chartNoun.startsWith('pie chart')
-  const sentenceCase = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
-  const body1Opening = pieChart
-    ? `Starting with ${spec.body1Topic}, ${spec.leadingItem}`
-    : sentenceCase(spec.leadingItem)
-  const body2Segments: WgbSegment[] = pieChart
-    ? [
-        t(`In terms of ${spec.body2Topic}, ${spec.contrastItem} `),
-        typ(`${p}-c2`, 'represent', ['represented'], 'verb-tense', 'past simple'),
-        t(` ${spec.contrastShare}, `),
-        sel(
-          `${p}-c3`,
-          spec.visualCount === 2
-            ? ['the largest share', 'the smallest share', 'an equal share']
-            : ['the smallest share', 'the largest share', 'an equal share'],
-          spec.visualCount === 2 ? 'the largest share' : 'the smallest share',
-          'word-choice',
-          spec.visualCount === 2
-            ? 'เลือก largest เพราะเป็นหมวดที่มากที่สุดของ pie chart วงที่สอง'
-            : 'เลือก smallest เพราะเป็นหมวดที่น้อยที่สุดของ pie chart วงเดียว'
-        ),
-        t(` in that part of the data. However, the remaining categories occupied the middle positions, which kept them below the leading category but above the least significant result. Interestingly, the ranking clearly separated the largest and smallest portions of the chart, even though their individual values varied.${spec.extraBodyDetail ? ` ${spec.extraBodyDetail}` : ''}`)
-      ]
-    : [
-        sel(`${p}-c1`, ['Meanwhile', 'Because', 'Unless'], 'Meanwhile', 'transition', 'Meanwhile = ในขณะเดียวกัน (ใช้ใน snapshot body ได้ตามบริบทเปรียบเทียบหมวดอื่น)'),
-        t(', the remaining categories in the chart '),
-        typ(`${p}-c2`, 'make', ['made'], 'verb-tense', 'past simple'),
-        t(' up smaller '),
-        sel(`${p}-c3`, ['shares', 'shapes', 'ships'], 'shares', 'paraphrase', 'shares = ส่วนแบ่ง'),
-        t(', '),
-        typ(`${p}-c4`, 'follow', ['following'], 'ving-clause', 'V-ing clause'),
-        t(` well behind the leading group and occupying the middle or lower positions overall. However, none matched the result recorded for the largest category, producing an uneven distribution across all of the categories. Interestingly, the smaller figure remained one of the least significant results displayed, reinforcing the contrast with the leading category.${spec.extraBodyDetail ? ` ${spec.extraBodyDetail}` : ''}`)
-      ]
-  return {
+  const timeframe = spec.timeframe ? ` ${spec.timeframe}` : ''
+  const exercise: WgbExercise = {
     id: spec.id,
     promptId: spec.promptId,
     steps: [
@@ -291,9 +466,9 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
             pluralChart ? ['compare', 'complain', 'consider'] : ['compares', 'complains', 'considers'],
             pluralChart ? 'compare' : 'compares',
             'paraphrase',
-            `The ${spec.chartNoun} ใช้ ${pluralChart ? 'compare' : 'compares'} ให้ตรงกับประธาน`
+            `The ${spec.chartNoun} \u0e43\u0e0a\u0e49 ${pluralChart ? 'compare' : 'compares'} \u0e43\u0e2b\u0e49\u0e15\u0e23\u0e07\u0e01\u0e31\u0e1a\u0e1b\u0e23\u0e30\u0e18\u0e32\u0e19`
           ),
-          t(` ${spec.subject}, such as ${spec.examples}, measured in ${spec.unit}.`)
+          t(` ${spec.subject} ${spec.categoryPhrase}, such as ${spec.examples}, measured in ${spec.unit}${timeframe}.`)
         ]
       },
       {
@@ -309,7 +484,7 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
             ['largest', 'larger', 'large'],
             'largest',
             'word-choice',
-            'largest = มากที่สุด (superlative) เพราะเทียบกับทุกหมวด ส่วน larger ใช้เทียบแค่ 2 สิ่ง และ large เป็นรูปธรรมดา'
+            'largest = \u0e21\u0e32\u0e01\u0e17\u0e35\u0e48\u0e2a\u0e38\u0e14 (superlative) \u0e40\u0e1e\u0e23\u0e32\u0e30\u0e40\u0e17\u0e35\u0e22\u0e1a\u0e01\u0e31\u0e1a\u0e17\u0e38\u0e01\u0e2b\u0e21\u0e27\u0e14 \u0e2a\u0e48\u0e27\u0e19 larger \u0e43\u0e0a\u0e49\u0e40\u0e17\u0e35\u0e22\u0e1a\u0e41\u0e04\u0e48 2 \u0e2a\u0e34\u0e48\u0e07 \u0e41\u0e25\u0e30 large \u0e40\u0e1b\u0e47\u0e19\u0e23\u0e39\u0e1b\u0e18\u0e23\u0e23\u0e21\u0e14\u0e32'
           ),
           t(spec.visualCount === 2 ? ' in the first chart, ' : ', '),
           sel(
@@ -318,8 +493,8 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
             'while',
             'transition',
             spec.visualCount === 2
-              ? 'while เชื่อมหมวดที่มากที่สุดของภาพทั้งสอง ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'
-              : 'while เชื่อมหมวดที่มากที่สุดกับหมวดที่น้อยที่สุด ส่วน because บอกเหตุผล และ unless แปลว่านอกจาก'
+              ? 'while \u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e2b\u0e21\u0e27\u0e14\u0e17\u0e35\u0e48\u0e21\u0e32\u0e01\u0e17\u0e35\u0e48\u0e2a\u0e38\u0e14\u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e\u0e17\u0e31\u0e49\u0e07\u0e2a\u0e2d\u0e07'
+              : 'while \u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e2b\u0e21\u0e27\u0e14\u0e17\u0e35\u0e48\u0e21\u0e32\u0e01\u0e17\u0e35\u0e48\u0e2a\u0e38\u0e14\u0e01\u0e31\u0e1a\u0e2b\u0e21\u0e27\u0e14\u0e17\u0e35\u0e48\u0e19\u0e49\u0e2d\u0e22\u0e17\u0e35\u0e48\u0e2a\u0e38\u0e14'
           ),
           t(
             spec.visualCount === 2
@@ -333,26 +508,74 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
         role: 'body1',
         labelTh: ROLE_LABEL_TH.body1,
         hintTh: HINT_CONJUGATE,
-        segments: [
-          t(`${body1Opening} `),
-          typ(`${p}-b1`, 'represent', ['represented'], 'verb-tense', 'past simple'),
-          t(` ${spec.leadingShare}, the `),
-          sel(`${p}-b2`, ['highest', 'hottest', 'heaviest'], 'highest', 'word-choice', 'highest figure'),
-          t(' figure shown, placing it ahead of every other category included in the comparison and making it the most prominent result. '),
-          sel(`${p}-b3`, ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast = เทียบต่าง'),
-          t(`, ${spec.contrastItem} `),
-          typ(`${p}-b4`, 'stand', ['stood'], 'verb-tense', 'past simple'),
-          t(` at ${spec.contrastShare}, which illustrates the considerable gap between these two parts of the data.`)
-        ]
+        segments: snapshotBody1Segments(p, spec)
       },
       {
         id: `${p}-body2`,
         role: 'body2',
         labelTh: ROLE_LABEL_TH.body2,
         hintTh: HINT_CONJUGATE,
-        segments: body2Segments
+        segments: snapshotBody2Segments(p, spec)
       }
     ]
+  }
+
+  padSnapshotToWordFloor(exercise, spec)
+  return exercise
+}
+
+/**
+ * Charts with only four or five categories cannot reach the IELTS word floor on
+ * bare figures alone. Top them up with the taught comparison sentence — largest
+ * gaps first — and stop the moment the essay is long enough.
+ */
+function padSnapshotToWordFloor(exercise: WgbExercise, spec: SnapshotSpec): void {
+  const body1 = exercise.steps[2]
+  const body2 = exercise.steps[3]
+  const isShare = (spec.measureNoun ?? 'share') === 'share'
+  const wordCount = () =>
+    countTask1Paragraphs(exercise.steps.map((step) => ({ text: segmentsToText(step.segments) })))
+  if (wordCount() >= SNAPSHOT_TARGET_WORDS) return
+
+  type Candidate = { step: WgbStep; top: SnapshotItem; item: SnapshotItem }
+  const candidates: Candidate[] = []
+  const seen = new Set<string>()
+  const add = (step: WgbStep, top: SnapshotItem, item: SnapshotItem) => {
+    const key = `${step.id}|${item.label}|${top.label}`
+    if (top.label === item.label || seen.has(key)) return
+    seen.add(key)
+    candidates.push({ step, top, item })
+  }
+
+  const a = spec.body1Items
+  const b = spec.body2Items
+  const rounds = Math.max(a.length, b.length)
+  // Each figure against its own group's leader, alternating between the two bodies.
+  for (let i = 1; i < rounds; i += 1) {
+    if (b[i]) add(body2, b[0], b[i])
+    if (a[i]) add(body1, a[0], a[i])
+  }
+  // Then across the two charts, against the overall leader.
+  for (let i = 0; i < b.length; i += 1) add(body2, a[0], b[i])
+  // Finally against each group's runner-up, then across charts against it.
+  for (let i = 2; i < rounds; i += 1) {
+    if (b[i] && b[1]) add(body2, b[1], b[i])
+    if (a[i] && a[1]) add(body1, a[1], a[i])
+  }
+  if (a[1]) for (let i = 0; i < b.length; i += 1) add(body2, a[1], b[i])
+
+  let used = 0
+  for (const candidate of candidates) {
+    if (wordCount() >= SNAPSHOT_TARGET_WORDS) return
+    const sentence = comparisonSentence(
+      candidate.top,
+      candidate.item,
+      TOP_UP_TRANSITIONS[used % TOP_UP_TRANSITIONS.length],
+      isShare
+    )
+    if (!sentence) continue
+    candidate.step.segments.push(t(sentence))
+    used += 1
   }
 }
 
@@ -438,7 +661,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-online-learning',
     promptId: 'timeline-online-learning',
     chartNoun: 'line graph',
-    subject: 'the proportion of students using online learning platforms and in-person classes',
+    subject: 'proportion of students using different methods of learning',
+    unit: 'percentage of students',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -461,7 +685,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-food-delivery',
     promptId: 'timeline-food-delivery',
     chartNoun: 'line graph',
-    subject: 'the number of petrol-powered and electric cars sold',
+    subject: 'number of vehicles sold by fuel type',
+    unit: 'thousands of vehicles sold',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -484,7 +709,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-work-from-home',
     promptId: 'timeline-work-from-home',
     chartNoun: 'bar chart',
-    subject: 'the number of people working from home and those commuting to an office',
+    subject: 'number of people in different work arrangements',
+    unit: 'millions of workers',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2020',
@@ -510,7 +736,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-electric-bicycles',
     promptId: 'timeline-electric-bicycles',
     chartNoun: 'bar chart',
-    subject: 'spending on public libraries and digital reading services',
+    subject: 'spending on different reading services',
+    unit: 'millions of US dollars',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -533,7 +760,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-smart-tvs',
     promptId: 'timeline-smart-tvs',
     chartNoun: 'table',
-    subject: 'household ownership of smart TVs, laptops and desktops',
+    subject: 'household ownership of different devices',
+    unit: 'percentage of households',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -556,7 +784,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-online-shopping-3country',
     promptId: 'timeline-online-shopping-3country',
     chartNoun: 'line graph',
-    subject: 'average monthly online shopping spend in the UK, the USA and Australia',
+    subject: 'average monthly online shopping spend in three countries',
+    unit: 'US dollars',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -579,7 +808,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-social-media-4region',
     promptId: 'timeline-social-media-4region',
     chartNoun: 'line graph',
-    subject: 'social media users in four regions',
+    subject: 'number of social media users across four regions',
+    unit: 'millions of users',
     fromYear: '2010',
     midYear: '2016',
     peakYear: '2024',
@@ -602,7 +832,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-renewable-energy',
     promptId: 'timeline-renewable-energy',
     chartNoun: 'line graph',
-    subject: 'the share of electricity from renewables and fossil fuels',
+    subject: 'share of electricity generated from different sources',
+    unit: 'percentage of electricity generated',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -625,7 +856,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-cinema-streaming',
     promptId: 'timeline-cinema-streaming',
     chartNoun: 'line graph',
-    subject: 'cinema ticket sales and streaming subscriptions',
+    subject: 'consumption of different entertainment formats',
+    unit: 'millions',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -650,7 +882,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-public-transport',
     promptId: 'timeline-public-transport',
     chartNoun: 'bar chart',
-    subject: 'average daily public-transport and private-car trips in one city',
+    subject: 'number of daily trips by different transport modes',
+    unit: 'millions of trips',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -673,7 +906,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-coffee-tea-spend',
     promptId: 'timeline-coffee-tea-spend',
     chartNoun: 'table',
-    subject: 'average weekly spending on coffee and tea',
+    subject: 'average weekly spending on different beverages',
+    unit: 'US dollars',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -696,7 +930,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-tourism-arrivals',
     promptId: 'timeline-tourism-arrivals',
     chartNoun: 'line graph',
-    subject: 'international tourist arrivals in Thailand, Japan and Vietnam',
+    subject: 'international tourist arrivals in three countries',
+    unit: 'millions of visitors',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -721,7 +956,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-remote-work-office',
     promptId: 'timeline-remote-work-office',
     chartNoun: 'line graph',
-    subject: 'the share of office-based and remote employees',
+    subject: 'share of employees in different work locations',
+    unit: 'percentage of employees',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2020',
@@ -747,7 +983,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-book-ebook-sales',
     promptId: 'timeline-book-ebook-sales',
     chartNoun: 'line graph',
-    subject: 'sales of printed books and e-books',
+    subject: 'sales of different book formats',
+    unit: 'millions of units sold',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -770,7 +1007,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-city-bike-share',
     promptId: 'timeline-city-bike-share',
     chartNoun: 'bar chart',
-    subject: 'bike-share and short private-car trips in one city',
+    subject: 'number of trips by different transport modes in one city',
+    unit: 'millions of trips',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -793,7 +1031,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-meat-plant-protein',
     promptId: 'timeline-meat-plant-protein',
     chartNoun: 'table',
-    subject: 'weekly spending on meat and plant-based protein',
+    subject: 'average weekly spending on different protein sources',
+    unit: 'US dollars',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -816,7 +1055,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-rail-air-passengers',
     promptId: 'timeline-rail-air-passengers',
     chartNoun: 'line graph',
-    subject: 'the number of rail and air passengers',
+    subject: 'number of passengers using different transport modes',
+    unit: 'millions of passengers',
     fromYear: '2014',
     midYear: '2018',
     peakYear: '2024',
@@ -842,78 +1082,140 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-phone-brands',
     promptId: 'snapshot-phone-brands',
     chartNoun: 'pie chart',
-    subject: 'smartphone market share by brand in 2024',
-    examples: 'Apple and Oppo',
-    unit: 'percentage of the share',
+    subject: 'smartphone market share',
+    categoryPhrase: 'across different brands',
+    examples: 'Apple and Samsung',
+    unit: 'percentage of sales',
+    timeframe: 'in 2024',
     visualCount: 1,
     leadingItem: 'Apple',
-    leadingShare: '34%',
     contrastItem: 'Oppo',
-    contrastShare: '9%',
-    contrastLinker: 'whereas',
-    body1Topic: 'the leading brand',
+    body1Topic: 'the leading brands',
+    body1Items: [
+      { label: 'Apple', value: '34%' },
+      { label: 'Samsung', value: '28%' },
+      { label: 'the other brands combined', value: '15%' }
+    ],
     body2Topic: 'the remaining brands',
-    extraBodyDetail: 'Similarly, the middle-ranking brands occupied the remaining market share, creating a clear gap between Apple and Oppo overall.'
+    body2Items: [
+      { label: 'Xiaomi', value: '14%' },
+      { label: 'Oppo', value: '9%' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-student-majors',
     promptId: 'snapshot-student-majors',
     chartNoun: 'bar chart',
-    subject: 'university enrolments by major in Japan and South Korea',
-    examples: 'engineering and education',
-    unit: 'percentage of total enrolments',
+    subject: 'university enrolments',
+    categoryPhrase: 'across five different majors in Japan and South Korea',
+    examples: 'engineering and business',
+    unit: 'percentage of students',
+    timeframe: 'in 2023',
     visualCount: 1,
     leadingItem: 'engineering in South Korea',
-    leadingShare: '30%',
     contrastItem: 'education in South Korea',
-    contrastShare: '10%',
-    contrastLinker: 'while'
+    body1Topic: 'South Korea',
+    body1Items: [
+      { label: 'engineering', value: '30%' },
+      { label: 'business', value: '20%' },
+      { label: 'medicine', value: '16%' },
+      { label: 'arts', value: '12%' },
+      { label: 'education', value: '10%' }
+    ],
+    body2Topic: 'Japan',
+    body2Items: [
+      { label: 'business', value: '26%' },
+      { label: 'arts', value: '22%' },
+      { label: 'engineering', value: '18%' },
+      { label: 'education', value: '14%' },
+      { label: 'medicine', value: '12%' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-commute-modes',
     promptId: 'snapshot-commute-modes',
     chartNoun: 'pie charts',
-    subject: 'how workers in Singapore and Bangkok travelled to work',
+    subject: 'how workers travelled to work',
+    categoryPhrase: 'using different methods of transport in Singapore and Bangkok',
     examples: 'public transport and private cars',
-    unit: 'percentage of commuters',
+    unit: 'percentage of workers',
+    timeframe: 'in 2023',
     visualCount: 2,
     leadingItem: 'public transport in Singapore',
-    leadingShare: '58%',
     contrastItem: 'private cars in Bangkok',
-    contrastShare: '46%',
-    contrastLinker: 'whereas',
+    contrastBe: 'were',
     body1Topic: 'Singapore',
+    body1Items: [
+      { label: 'public transport', value: '58%' },
+      { label: 'private cars', value: '22%', be: 'were' },
+      { label: 'walking or cycling', value: '12%' },
+      { label: 'other methods', value: '8%' }
+    ],
     body2Topic: 'Bangkok',
-    contrastBe: 'were'
+    body2Items: [
+      { label: 'private cars', value: '46%' },
+      { label: 'public transport', value: '28%' },
+      { label: 'motorbikes', value: '18%' },
+      { label: 'other methods', value: '8%' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-hotel-ratings',
     promptId: 'snapshot-hotel-ratings',
     chartNoun: 'table',
-    subject: 'guest ratings for five hotels across four categories',
-    examples: 'Hotel Orchid and Budget Inn',
-    unit: 'average score out of 10',
+    subject: 'guest ratings for five hotels',
+    categoryPhrase: 'across four different service categories',
+    examples: 'cleanliness and location',
+    unit: 'a score out of 10',
+    timeframe: 'in 2024',
     visualCount: 1,
     leadingItem: 'Hotel Orchid for location',
-    leadingShare: '9.2',
     contrastItem: 'Budget Inn for cleanliness',
-    contrastShare: '6.4',
-    contrastLinker: 'while'
+    measureNoun: 'score',
+    body1Topic: 'the location scores',
+    body1Lead: 'the highest-rated hotel',
+    body1Items: [
+      { label: 'Hotel Orchid', value: '9.2' },
+      { label: 'Sea Breeze', value: '8.5' },
+      { label: 'Grand Plaza', value: '8.2' },
+      { label: 'City Lodge', value: '7.8' },
+      { label: 'Budget Inn', value: '6.8' }
+    ],
+    body2Topic: 'the cleanliness scores',
+    body2Items: [
+      { label: 'Sea Breeze', value: '8.9' },
+      { label: 'Grand Plaza', value: '8.6' },
+      { label: 'Hotel Orchid', value: '8.1' },
+      { label: 'City Lodge', value: '7.5' },
+      { label: 'Budget Inn', value: '6.4' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-water-use',
     promptId: 'snapshot-water-use',
     chartNoun: 'bar chart',
-    subject: 'water use by sector in Australia and Canada',
-    examples: 'agriculture and energy use',
+    subject: 'water use',
+    categoryPhrase: 'across four different sectors in Australia and Canada',
+    examples: 'agriculture and industry',
     unit: 'percentage of total water use',
+    timeframe: 'in 2022',
     visualCount: 1,
     leadingItem: 'agriculture in Australia',
-    leadingShare: '65%',
     contrastItem: 'energy use in Australia',
-    contrastShare: '5%',
-    contrastLinker: 'whereas',
-    extraBodyDetail: 'Interestingly, this pattern remained clear across both countries.'
+    body1Topic: 'Australia',
+    body1Items: [
+      { label: 'agriculture', value: '65%' },
+      { label: 'industry', value: '18%' },
+      { label: 'households', value: '12%' },
+      { label: 'energy production', value: '5%' }
+    ],
+    body2Topic: 'Canada',
+    body2Items: [
+      { label: 'industry', value: '42%' },
+      { label: 'agriculture', value: '28%' },
+      { label: 'households', value: '18%' },
+      { label: 'energy production', value: '12%' }
+    ]
   }),
 
   buildProcessExercise({
@@ -976,83 +1278,140 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     id: 'gb-food-delivery-apps',
     promptId: 'snapshot-food-delivery-apps',
     chartNoun: 'pie chart',
-    subject: 'food-delivery app market share in 2024',
+    subject: 'food-delivery app market share',
+    categoryPhrase: 'across different providers',
     examples: 'GrabFood and Line Man',
-    unit: 'percentage of the share',
+    unit: 'percentage of orders',
+    timeframe: 'in 2024',
     visualCount: 1,
     leadingItem: 'GrabFood',
-    leadingShare: '38%',
     contrastItem: 'other identified apps',
-    contrastShare: '17%',
-    contrastLinker: 'whereas',
-    body1Topic: 'the leading app',
-    body2Topic: 'the remaining apps',
     contrastBe: 'were',
-    extraBodyDetail: 'Similarly, the middle-ranked services shared the remainder, creating a clear separation between GrabFood and the smallest providers overall.'
+    body1Topic: 'the leading apps',
+    body1Items: [
+      { label: 'GrabFood', value: '38%' },
+      { label: 'Foodpanda', value: '27%' }
+    ],
+    body2Topic: 'the remaining apps',
+    body2Items: [
+      { label: 'Line Man', value: '18%' },
+      { label: 'the other providers combined', value: '17%' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-device-ownership',
     promptId: 'snapshot-device-ownership',
     chartNoun: 'bar chart',
-    subject: 'device ownership among adults in Sweden and Italy',
-    examples: 'smartphones and smartwatches',
+    subject: 'device ownership among adults',
+    categoryPhrase: 'across four different device types in Sweden and Italy',
+    examples: 'smartphones and laptops',
     unit: 'percentage of adults',
+    timeframe: 'in 2023',
     visualCount: 1,
     leadingItem: 'smartphones in Sweden',
-    leadingShare: '92%',
-    contrastItem: 'smartwatches in Italy',
-    contrastShare: '18%',
-    contrastLinker: 'while',
     leadingBe: 'were',
+    contrastItem: 'smartwatches in Italy',
     contrastBe: 'were',
-    extraBodyDetail: 'Interestingly, this ownership pattern remained clear across both countries.'
+    body1Topic: 'Sweden',
+    body1Items: [
+      { label: 'smartphones', value: '92%', be: 'were' },
+      { label: 'laptops', value: '78%' },
+      { label: 'tablets', value: '54%' },
+      { label: 'smartwatches', value: '28%' }
+    ],
+    body2Topic: 'Italy',
+    body2Items: [
+      { label: 'smartphones', value: '88%' },
+      { label: 'laptops', value: '62%' },
+      { label: 'tablets', value: '41%' },
+      { label: 'smartwatches', value: '18%' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-energy-bills',
     promptId: 'snapshot-energy-bills',
     chartNoun: 'pie charts',
-    subject: 'household energy bill breakdown in France and Poland',
+    subject: 'the household energy bill breakdown',
+    categoryPhrase: 'across different types of use in France and Poland',
     examples: 'electricity and heating',
     unit: 'percentage of the bill',
+    timeframe: 'in 2022',
     visualCount: 2,
     leadingItem: 'electricity in France',
-    leadingShare: '42%',
     contrastItem: 'heating in Poland',
-    contrastShare: '48%',
-    contrastLinker: 'whereas',
     body1Topic: 'France',
+    body1Items: [
+      { label: 'electricity', value: '42%' },
+      { label: 'heating', value: '34%' },
+      { label: 'cooking', value: '14%' },
+      { label: 'other uses', value: '10%' }
+    ],
     body2Topic: 'Poland',
-    extraBodyDetail: 'Interestingly, this distinction remained clear.'
+    body2Items: [
+      { label: 'heating', value: '48%' },
+      { label: 'electricity', value: '30%' },
+      { label: 'cooking', value: '12%' },
+      { label: 'other uses', value: '10%' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-airport-scores',
     promptId: 'snapshot-airport-scores',
     chartNoun: 'table',
     subject: 'passenger ratings for five airports',
-    examples: 'Changi and City West',
-    unit: 'average score out of 10',
+    categoryPhrase: 'across four different service categories',
+    examples: 'cleanliness and security',
+    unit: 'a score out of 10',
+    timeframe: 'in 2024',
     visualCount: 1,
     leadingItem: 'Changi for cleanliness',
-    leadingShare: '9.4',
     contrastItem: 'City West for security',
-    contrastShare: '6.2',
-    contrastLinker: 'while',
-    extraBodyDetail: 'Interestingly, this ranking remained clear.'
+    measureNoun: 'score',
+    body1Topic: 'the cleanliness scores',
+    body1Lead: 'the highest-rated airport',
+    body1Items: [
+      { label: 'Changi', value: '9.4' },
+      { label: 'Incheon', value: '9.0' },
+      { label: 'Heathrow', value: '8.2' },
+      { label: 'Suvarnabhumi', value: '8.0' },
+      { label: 'City West', value: '7.1' }
+    ],
+    body2Topic: 'the security scores',
+    body2Items: [
+      { label: 'Changi', value: '8.8' },
+      { label: 'Incheon', value: '8.5' },
+      { label: 'Suvarnabhumi', value: '7.6' },
+      { label: 'Heathrow', value: '7.4' },
+      { label: 'City West', value: '6.2' }
+    ]
   }),
   buildSnapshotExercise({
     id: 'gb-study-hours',
     promptId: 'snapshot-study-hours',
     chartNoun: 'bar chart',
-    subject: 'weekly study hours by subject in Finland and Mexico',
-    examples: 'mathematics and arts',
+    subject: 'weekly study hours',
+    categoryPhrase: 'across four different subjects in Finland and Mexico',
+    examples: 'mathematics and languages',
     unit: 'hours per week',
+    timeframe: 'in 2023',
     visualCount: 1,
     leadingItem: 'mathematics in Mexico',
-    leadingShare: '6.5 hours',
     contrastItem: 'arts in Mexico',
-    contrastShare: '2 hours',
-    contrastLinker: 'whereas',
-    extraBodyDetail: 'Interestingly, this subject gap remained clear across the school week.'
+    measureNoun: 'figure',
+    body1Topic: 'Mexico',
+    body1Items: [
+      { label: 'mathematics', value: '6.5 hours' },
+      { label: 'science', value: '5 hours' },
+      { label: 'languages', value: '3.5 hours' },
+      { label: 'arts', value: '2 hours' }
+    ],
+    body2Topic: 'Finland',
+    body2Items: [
+      { label: 'languages', value: '5.5 hours' },
+      { label: 'mathematics', value: '4.5 hours' },
+      { label: 'science', value: '4 hours' },
+      { label: 'arts', value: '3 hours' }
+    ]
   }),
 
   buildProcessExercise({
