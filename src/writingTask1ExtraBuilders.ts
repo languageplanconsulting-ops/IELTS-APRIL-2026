@@ -1079,6 +1079,64 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
   }),
 
   buildSnapshotExercise({
+    id: 'gb-museum-visitors',
+    promptId: 'snapshot-museum-visitors',
+    chartNoun: 'bar chart',
+    subject: 'the average number of visitors',
+    categoryPhrase: 'across five London museums in 2019 and 2023',
+    examples: 'the British Museum and the Science Museum',
+    unit: 'thousands of visitors per month',
+    measureNoun: 'figure',
+    visualCount: 1,
+    leadingItem: 'the British Museum in 2019',
+    contrastItem: 'the Science Museum in 2023',
+    body1Topic: '2019',
+    body1Lead: 'the most-visited museum',
+    body1Items: [
+      { label: 'the British Museum', value: '195,000' },
+      { label: 'the Natural History Museum', value: '160,000' },
+      { label: 'Tate Modern', value: '130,000' },
+      { label: 'the V&A', value: '115,000' },
+      { label: 'the Science Museum', value: '105,000' }
+    ],
+    body2Topic: '2023',
+    body2Items: [
+      { label: 'the British Museum', value: '180,000' },
+      { label: 'the Natural History Museum', value: '145,000' },
+      { label: 'Tate Modern', value: '122,000' },
+      { label: 'the V&A', value: '108,000' },
+      { label: 'the Science Museum', value: '95,000' }
+    ]
+  }),
+  buildSnapshotExercise({
+    id: 'gb-household-waste',
+    promptId: 'snapshot-household-waste',
+    chartNoun: 'pie charts',
+    subject: 'how household waste was disposed of',
+    categoryPhrase: 'across five different methods in 2008 and 2018',
+    examples: 'landfill and recycling',
+    unit: 'percentage of household waste',
+    visualCount: 2,
+    leadingItem: 'landfill',
+    contrastItem: 'recycled waste',
+    body1Topic: '2008',
+    body1Items: [
+      { label: 'landfill', value: '52%' },
+      { label: 'recycled waste', value: '28%' },
+      { label: 'incinerated waste', value: '12%' },
+      { label: 'composted waste', value: '5%' },
+      { label: 'other methods', value: '3%' }
+    ],
+    body2Topic: '2018',
+    body2Items: [
+      { label: 'recycled waste', value: '45%' },
+      { label: 'landfill', value: '25%' },
+      { label: 'composted waste', value: '18%' },
+      { label: 'incinerated waste', value: '9%' },
+      { label: 'other methods', value: '3%' }
+    ]
+  }),
+  buildSnapshotExercise({
     id: 'gb-phone-brands',
     promptId: 'snapshot-phone-brands',
     chartNoun: 'pie charts',
@@ -1153,14 +1211,16 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'public transport', value: '58%' },
       { label: 'private cars', value: '22%', be: 'were' },
       { label: 'walking or cycling', value: '12%' },
-      { label: 'other methods', value: '8%' }
+      { label: 'taxis', value: '5%' },
+      { label: 'other methods', value: '3%' }
     ],
     body2Topic: 'Bangkok',
     body2Items: [
       { label: 'private cars', value: '46%' },
       { label: 'public transport', value: '28%' },
       { label: 'motorbikes', value: '18%' },
-      { label: 'other methods', value: '8%' }
+      { label: 'walking or cycling', value: '5%' },
+      { label: 'other methods', value: '3%' }
     ]
   }),
   buildSnapshotExercise({
@@ -1211,14 +1271,16 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'agriculture', value: '65%' },
       { label: 'industry', value: '18%' },
       { label: 'households', value: '12%' },
-      { label: 'energy production', value: '5%' }
+      { label: 'energy production', value: '5%' },
+      { label: 'services', value: '4%' }
     ],
     body2Topic: 'Canada',
     body2Items: [
       { label: 'industry', value: '42%' },
       { label: 'agriculture', value: '28%' },
       { label: 'households', value: '18%' },
-      { label: 'energy production', value: '12%' }
+      { label: 'energy production', value: '12%' },
+      { label: 'services', value: '8%' }
     ]
   }),
 
@@ -1325,6 +1387,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'smartphones', value: '92%', be: 'were' },
       { label: 'laptops', value: '78%' },
       { label: 'tablets', value: '54%' },
+      { label: 'smart speakers', value: '36%' },
       { label: 'smartwatches', value: '28%' }
     ],
     body2Topic: 'Italy',
@@ -1332,6 +1395,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'smartphones', value: '88%' },
       { label: 'laptops', value: '62%' },
       { label: 'tablets', value: '41%' },
+      { label: 'smart speakers', value: '24%' },
       { label: 'smartwatches', value: '18%' }
     ]
   }),
@@ -1352,14 +1416,16 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'electricity', value: '42%' },
       { label: 'heating', value: '34%' },
       { label: 'cooking', value: '14%' },
-      { label: 'other uses', value: '10%' }
+      { label: 'hot water', value: '7%' },
+      { label: 'other uses', value: '3%' }
     ],
     body2Topic: 'Poland',
     body2Items: [
       { label: 'heating', value: '48%' },
       { label: 'electricity', value: '30%' },
       { label: 'cooking', value: '12%' },
-      { label: 'other uses', value: '10%' }
+      { label: 'hot water', value: '7%' },
+      { label: 'other uses', value: '3%' }
     ]
   }),
   buildSnapshotExercise({
@@ -1411,6 +1477,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'mathematics', value: '6.5 hours' },
       { label: 'science', value: '5 hours' },
       { label: 'languages', value: '3.5 hours' },
+      { label: 'history', value: '3 hours' },
       { label: 'arts', value: '2 hours' }
     ],
     body2Topic: 'Finland',
@@ -1418,6 +1485,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'languages', value: '5.5 hours' },
       { label: 'mathematics', value: '4.5 hours' },
       { label: 'science', value: '4 hours' },
+      { label: 'history', value: '3.5 hours' },
       { label: 'arts', value: '3 hours' }
     ]
   }),

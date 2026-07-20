@@ -691,7 +691,8 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
           { label: 'Coal', value: 52, color: '#64748b' },
           { label: 'Gas', value: 22, color: '#0f53c9' },
           { label: 'Renewables', value: 21, color: '#0d9488' },
-          { label: 'Other', value: 5, color: '#e2e8f0' }
+          { label: 'Nuclear', value: 3, color: '#7c3aed' },
+          { label: 'Other', value: 2, color: '#e2e8f0' }
         ]
       }
     ]
@@ -725,26 +726,32 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'pie-chart',
     chartTypeLabel: 'Pie Chart',
-    title: 'The charts below show the proportion of household waste recycled in a European city in 2008 and 2018.',
-    chartCaption: 'Proportion of household waste that was recycled vs. not recycled (2008 and 2018)',
-    subjectPhrase: 'the proportion of household waste that was recycled compared with waste that was not recycled, in 2008 and 2018',
+    title: 'The charts below show how household waste was disposed of in a European city in 2008 and 2018.',
+    chartCaption: 'Household waste by disposal method (2008 and 2018)',
+    subjectPhrase: 'how household waste was disposed of across five methods in 2008 and 2018',
     unit: '% of household waste',
     valueLabel: 'Percentage',
     mainFeature:
-      'The proportion of household waste that was recycled rose substantially between 2008 and 2018, overtaking non-recycled waste to become the majority in 2018.',
+      'Landfill took the largest share of household waste in 2008, whereas recycling had become the main disposal method by 2018.',
     pies: [
       {
         title: 'Household Waste 2008',
         slices: [
-          { label: 'Not recycled', value: 72, color: '#64748b' },
-          { label: 'Recycled', value: 28, color: '#0d9488' }
+          { label: 'Landfill', value: 52, color: '#64748b' },
+          { label: 'Recycled', value: 28, color: '#0d9488' },
+          { label: 'Incinerated', value: 12, color: '#d97706' },
+          { label: 'Composted', value: 5, color: '#0f53c9' },
+          { label: 'Other', value: 3, color: '#e2e8f0' }
         ]
       },
       {
         title: 'Household Waste 2018',
         slices: [
-          { label: 'Recycled', value: 58, color: '#0d9488' },
-          { label: 'Not recycled', value: 42, color: '#64748b' }
+          { label: 'Recycled', value: 45, color: '#0d9488' },
+          { label: 'Landfill', value: 25, color: '#64748b' },
+          { label: 'Composted', value: 18, color: '#0f53c9' },
+          { label: 'Incinerated', value: 9, color: '#d97706' },
+          { label: 'Other', value: 3, color: '#e2e8f0' }
         ]
       }
     ]
@@ -755,16 +762,19 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     kind: 'snapshot',
     chartType: 'bar-chart',
     chartTypeLabel: 'Bar Chart',
-    title: 'The chart below shows the number of visitors to three museums in London in 2023.',
-    chartCaption: 'Average number of visitors to three London museums per month',
+    title: 'The chart below shows the number of visitors to five London museums in 2019 and 2023.',
+    chartCaption: 'Average number of visitors to five London museums per month, 2019 vs 2023',
     subjectPhrase:
-      'the average number of visitors per month to three London museums — the British Museum, the Science Museum, and the Natural History Museum',
+      'the average number of visitors per month to five London museums in 2019 and 2023',
     unit: 'thousand visitors per month',
     valueLabel: 'Number of visitors',
     mainFeature:
-      'The British Museum attracted considerably more visitors than the other two museums, while the Science Museum received the fewest.',
-    categories: ['British Museum', 'Science Museum', 'Natural History Museum'],
-    series: [{ label: 'Visitors', color: '#0f53c9', values: [180, 95, 145] }]
+      'The British Museum drew the most visitors in both years, while the Science Museum received the fewest.',
+    categories: ['British Museum', 'Natural History Museum', 'Tate Modern', 'V&A', 'Science Museum'],
+    series: [
+      { label: '2019', color: '#0f53c9', values: [195, 160, 130, 115, 105] },
+      { label: '2023', color: '#d97706', values: [180, 145, 122, 108, 95] }
+    ]
   },
   {
     id: 'snapshot-phone-brands',
@@ -845,7 +855,8 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
           { label: 'Public transport', value: 58, color: '#0f53c9' },
           { label: 'Private car', value: 22, color: '#d97706' },
           { label: 'Walk / cycle', value: 12, color: '#0d9488' },
-          { label: 'Other', value: 8, color: '#e2e8f0' }
+          { label: 'Taxi', value: 5, color: '#7c3aed' },
+          { label: 'Other', value: 3, color: '#e2e8f0' }
         ]
       },
       {
@@ -854,7 +865,8 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
           { label: 'Private car', value: 46, color: '#d97706' },
           { label: 'Public transport', value: 28, color: '#0f53c9' },
           { label: 'Motorbike', value: 18, color: '#7c3aed' },
-          { label: 'Other', value: 8, color: '#e2e8f0' }
+          { label: 'Walk / cycle', value: 5, color: '#0d9488' },
+          { label: 'Other', value: 3, color: '#e2e8f0' }
         ]
       }
     ]
@@ -898,10 +910,10 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     valueLabel: 'Percentage',
     mainFeature:
       'Agriculture accounted for the vast majority of water use in Australia, whereas industry made up the largest share in Canada.',
-    categories: ['Agriculture', 'Industry', 'Households', 'Energy'],
+    categories: ['Agriculture', 'Industry', 'Households', 'Energy', 'Services'],
     series: [
-      { label: 'Australia', color: '#0d9488', values: [65, 18, 12, 5] },
-      { label: 'Canada', color: '#0f53c9', values: [28, 42, 18, 12] }
+      { label: 'Australia', color: '#0d9488', values: [65, 18, 12, 5, 4] },
+      { label: 'Canada', color: '#0f53c9', values: [28, 42, 18, 12, 8] }
     ]
   },
   {
@@ -955,10 +967,10 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     valueLabel: 'Percentage',
     mainFeature:
       'Smartphone ownership was high in both countries, whereas smartwatch ownership remained the lowest category.',
-    categories: ['Smartphone', 'Laptop', 'Tablet', 'Smartwatch'],
+    categories: ['Smartphone', 'Laptop', 'Tablet', 'Smart speaker', 'Smartwatch'],
     series: [
-      { label: 'Sweden', color: '#0f53c9', values: [92, 78, 54, 28] },
-      { label: 'Italy', color: '#d97706', values: [88, 62, 41, 18] }
+      { label: 'Sweden', color: '#0f53c9', values: [92, 78, 54, 36, 28] },
+      { label: 'Italy', color: '#d97706', values: [88, 62, 41, 24, 18] }
     ]
   },
   {
@@ -983,7 +995,8 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
           { label: 'Electricity', value: 42, color: '#0f53c9' },
           { label: 'Heating', value: 34, color: '#d97706' },
           { label: 'Cooking', value: 14, color: '#0d9488' },
-          { label: 'Other', value: 10, color: '#e2e8f0' }
+          { label: 'Hot water', value: 7, color: '#7c3aed' },
+          { label: 'Other', value: 3, color: '#e2e8f0' }
         ]
       },
       {
@@ -992,7 +1005,8 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
           { label: 'Heating', value: 48, color: '#d97706' },
           { label: 'Electricity', value: 30, color: '#0f53c9' },
           { label: 'Cooking', value: 12, color: '#0d9488' },
-          { label: 'Other', value: 10, color: '#e2e8f0' }
+          { label: 'Hot water', value: 7, color: '#7c3aed' },
+          { label: 'Other', value: 3, color: '#e2e8f0' }
         ]
       }
     ]
@@ -1036,10 +1050,10 @@ export const WRITING_SNAPSHOT_PRACTICE_PROMPTS: WritingSnapshotPracticePrompt[] 
     valueLabel: 'Hours',
     mainFeature:
       'Mathematics took the most study time in Mexico, whereas languages accounted for a higher share of study hours in Finland.',
-    categories: ['Mathematics', 'Science', 'Languages', 'Arts'],
+    categories: ['Mathematics', 'Science', 'Languages', 'History', 'Arts'],
     series: [
-      { label: 'Finland', color: '#0f53c9', values: [4.5, 4.0, 5.5, 3.0] },
-      { label: 'Mexico', color: '#d97706', values: [6.5, 5.0, 3.5, 2.0] }
+      { label: 'Finland', color: '#0f53c9', values: [4.5, 4.0, 5.5, 3.5, 3.0] },
+      { label: 'Mexico', color: '#d97706', values: [6.5, 5.0, 3.5, 3.0, 2.0] }
     ]
   }
 ]

@@ -101,9 +101,9 @@ const snapshotOverviewByPrompt: Record<string, string> = {
   'snapshot-universities-table':
     'Overall, it can be clearly observed that Oxford’s research output was the largest, while Chulalongkorn’s was the smallest in share.',
   'snapshot-household-waste':
-    'Overall, it can be clearly observed that non-recycled waste was the largest share in 2008, while recycled waste was the largest share in 2018.',
+    'Overall, it can be clearly observed that landfill was the largest in the first chart, while recycled waste was the largest in the second chart.',
   'snapshot-museum-visitors':
-    'Overall, it can be clearly observed that the British Museum had the largest figure, while the Science Museum was the smallest in share.',
+    'Overall, it can be clearly observed that the British Museum in 2019 was the largest, while the Science Museum in 2023 was the smallest in share.',
   'snapshot-phone-brands':
     'Overall, it can be clearly observed that Samsung was the largest in the first chart, while Apple was the largest in the second chart.',
   'snapshot-student-majors':
