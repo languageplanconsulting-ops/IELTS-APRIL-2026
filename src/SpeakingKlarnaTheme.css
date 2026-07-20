@@ -1,0 +1,990 @@
+/* ============================================================================
+   Speaking journey — Klarna-style visual system, brand blue (#004aad).
+
+   Measured off klarna.com and applied here: pure white ground, no shadows,
+   48px panels / 24px pills, big tight display type, whitespace as the only
+   separator. Colour is confined to filled panels and pills.
+
+   ---------------------------------------------------------------------------
+   WHY THE DOUBLED SCOPE + !important
+   ---------------------------------------------------------------------------
+   App.css has been re-skinned several times and now carries stacked, competing
+   `!important` blocks for the very classes this file restyles — e.g. four
+   separate `.speakingFlowTheme .thumbnailCard { ... !important }` rules, a
+   3-class `.speakingFlowTheme .sgTopicTicket.thumbnailCard { ... !important }`,
+   and a global `* { border-radius: 0 !important }`. A normal-weight override,
+   even imported last, loses to all of them.
+
+   So every rule here is scoped `.speakingFlowTheme.speakingFlowTheme` (the
+   class repeated to raise specificity without altering markup) and marks its
+   visual declarations `!important`. This is deliberate, and it is contained:
+   nothing outside the Speaking journey can match these selectors.
+
+   The clean fix is to delete the dead `!important` layers in App.css, at which
+   point this file can drop to normal weight. That is a separate change.
+   ---------------------------------------------------------------------------
+
+   Scope: the whole journey renders under `.speakingFlowTheme`.
+   Imported last in App.tsx. Style only — no markup changes.
+   ========================================================================= */
+
+.speakingFlowTheme {
+  --sk-accent: #004aad;
+  --sk-accent-ink: #ffffff;
+  --sk-ink: #0b051d;
+  --sk-white: #ffffff;
+  --sk-tint: #eaf0fa;
+  --sk-line: #e8e8ed;
+
+  /* Thai matches the Writing journey (Kanit). Latin uses Klarna's system
+     stack. Thai never inherits the tight Latin leading — see typography. */
+  --sk-font-latin: -apple-system, "system-ui", "Segoe UI", Roboto, Arial, sans-serif;
+  --sk-font-th: "Kanit", "Anuphan", sans-serif;
+
+  --sk-r-xl: 48px;
+  --sk-r-lg: 32px;
+  --sk-r-md: 24px;
+}
+
+/* ---------------------------------------------------------------- ground -- */
+/* Klarna's page is pure white with no section fills. */
+.speakingFlowTheme.speakingFlowTheme,
+.speakingFlowTheme.speakingFlowTheme .speakingFlowStage,
+.speakingFlowTheme.speakingFlowTheme .trialStageShell,
+.speakingFlowTheme.speakingFlowTheme .writingGuideHubShell,
+.speakingFlowTheme.speakingFlowTheme .speakingHubShell,
+.speakingFlowTheme.speakingFlowTheme .speakingTopicBank,
+.speakingFlowTheme.speakingFlowTheme .speakingStageWrap,
+.speakingFlowTheme.speakingFlowTheme .speakingExamLane,
+.speakingFlowTheme.speakingFlowTheme .speakingPanelLayout,
+.speakingFlowTheme.speakingFlowTheme .attemptFlow,
+.speakingFlowTheme.speakingFlowTheme .reportShowcase,
+.speakingFlowTheme.speakingFlowTheme .reportV2 {
+  background: var(--sk-white) !important;
+  color: var(--sk-ink) !important;
+  border: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Kill the ambient orbs/glow inherited from the Writing shell. */
+.speakingFlowTheme.speakingFlowTheme .writingGuideAmbient,
+.speakingFlowTheme.speakingFlowTheme .speakingAmbient,
+.speakingFlowTheme.speakingFlowTheme .writingGuideOrb,
+.speakingFlowTheme.speakingFlowTheme .writingGuideOrb-a,
+.speakingFlowTheme.speakingFlowTheme .writingGuideOrb-b,
+.speakingFlowTheme.speakingFlowTheme .writingGuideGridGlow,
+.speakingFlowTheme.speakingFlowTheme .speakingBrandStrip,
+.speakingFlowTheme.speakingFlowTheme .reportSaveButtonGlow,
+.speakingFlowTheme.speakingFlowTheme .notebookSaveToastSparkle,
+.speakingFlowTheme.speakingFlowTheme .reportSaveToastSparkle {
+  display: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme {
+  font-family: var(--sk-font-latin) !important;
+  font-size: 18px !important;
+  line-height: 28px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme :lang(th) {
+  font-family: var(--sk-font-th) !important;
+}
+
+/* Neutralise the decorative pseudo-elements App.css hangs off these panels
+   (ticket notches, tape strips, corner folds). */
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard::before,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard::after,
+.speakingFlowTheme.speakingFlowTheme .sgTopicTicket::before,
+.speakingFlowTheme.speakingFlowTheme .sgTopicTicket::after,
+.speakingFlowTheme.speakingFlowTheme .wgTicket::before,
+.speakingFlowTheme.speakingFlowTheme .wgTicket::after,
+.speakingFlowTheme.speakingFlowTheme .stageCard::before,
+.speakingFlowTheme.speakingFlowTheme .stageCard::after,
+.speakingFlowTheme.speakingFlowTheme .sectionV2::before,
+.speakingFlowTheme.speakingFlowTheme .sectionV2::after,
+.speakingFlowTheme.speakingFlowTheme .topicBankGroupHeader::before,
+.speakingFlowTheme.speakingFlowTheme .topicBankGroupHeader::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* ------------------------------------------------------------ typography -- */
+.speakingFlowTheme.speakingFlowTheme .writingGuideHubH1,
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowTitle,
+.speakingFlowTheme.speakingFlowTheme .part2BigQuestion,
+.speakingFlowTheme.speakingFlowTheme .sectionV2Title {
+  font-family: var(--sk-font-th) !important;
+  font-size: 52px !important;
+  line-height: 1.3 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--sk-ink) !important;
+  margin: 0 !important;
+  text-transform: none !important;
+}
+
+/* Latin-only headings keep Klarna's genuinely tight setting; Thai cannot —
+   at 0.96 the upper vowels and tone marks collide with the line above. */
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowTitle:lang(en),
+.speakingFlowTheme.speakingFlowTheme .writingGuideHubH1:lang(en),
+.speakingFlowTheme.speakingFlowTheme .part2BigQuestion:lang(en),
+.speakingFlowTheme.speakingFlowTheme .sectionV2Title:lang(en) {
+  font-family: var(--sk-font-latin) !important;
+  line-height: 0.96 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .writingGuideHubLead,
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowSub,
+.speakingFlowTheme.speakingFlowTheme .promptSub,
+.speakingFlowTheme.speakingFlowTheme .phaseInfoText,
+.speakingFlowTheme.speakingFlowTheme .trialPromptText,
+.speakingFlowTheme.speakingFlowTheme .insightV2,
+.speakingFlowTheme.speakingFlowTheme .focusLeadV2 {
+  font-size: 18px !important;
+  line-height: 28px !important;
+  color: var(--sk-ink) !important;
+  font-weight: 400 !important;
+}
+
+/* Klarna sets body copy in full ink, not grey. Only true metadata dims. */
+.speakingFlowTheme.speakingFlowTheme .meta,
+.speakingFlowTheme.speakingFlowTheme .prepTimeEstimate,
+.speakingFlowTheme.speakingFlowTheme .topicBankCount,
+.speakingFlowTheme.speakingFlowTheme .wgTicketSub,
+.speakingFlowTheme.speakingFlowTheme .topicBankGroupCount {
+  color: var(--sk-ink) !important;
+  opacity: 0.55 !important;
+  font-size: 16px !important;
+  line-height: 24px !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .wlpKicker,
+.speakingFlowTheme.speakingFlowTheme .sectionLabel,
+.speakingFlowTheme.speakingFlowTheme .sectionV2Eyebrow,
+.speakingFlowTheme.speakingFlowTheme .reportStickyEyebrow,
+.speakingFlowTheme.speakingFlowTheme .liveLengthGuideEyebrow,
+.speakingFlowTheme.speakingFlowTheme .nextAttemptEyebrow,
+.speakingFlowTheme.speakingFlowTheme .audioConsultEyebrow,
+.speakingFlowTheme.speakingFlowTheme .vocabV2Eyebrow {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  color: var(--sk-accent) !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  padding: 0 !important;
+}
+
+/* Short underline bar under a heading. */
+.speakingFlowTheme.speakingFlowTheme .wlpAccentRule {
+  height: 10px !important;
+  width: 120px !important;
+  background: var(--sk-accent) !important;
+  border-radius: var(--sk-r-md) !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 24px 0 0 !important;
+  opacity: 1 !important;
+}
+
+/* ---------------------------------------------------------------- panels -- */
+.speakingFlowTheme.speakingFlowTheme .stageCard,
+.speakingFlowTheme.speakingFlowTheme .card,
+.speakingFlowTheme.speakingFlowTheme .prepStageV2,
+.speakingFlowTheme.speakingFlowTheme .speakingPromptCard,
+.speakingFlowTheme.speakingFlowTheme .speakingControlCard,
+.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard,
+.speakingFlowTheme.speakingFlowTheme .resultCard,
+.speakingFlowTheme.speakingFlowTheme .loadingStageCard,
+.speakingFlowTheme.speakingFlowTheme .sgPromptBrief,
+.speakingFlowTheme.speakingFlowTheme .prepNotebookCard,
+.speakingFlowTheme.speakingFlowTheme .prepThaiPracticeGuide,
+.speakingFlowTheme.speakingFlowTheme .restPeriodCard,
+.speakingFlowTheme.speakingFlowTheme .liveNoteCard,
+.speakingFlowTheme.speakingFlowTheme .trialUsedCard,
+.speakingFlowTheme.speakingFlowTheme .trialBriefCard,
+.speakingFlowTheme.speakingFlowTheme .sectionV2,
+.speakingFlowTheme.speakingFlowTheme .part3CoachPanel,
+.speakingFlowTheme.speakingFlowTheme .topFixesPanel,
+.speakingFlowTheme.speakingFlowTheme .vocabV2,
+.speakingFlowTheme.speakingFlowTheme .audioBox,
+.speakingFlowTheme.speakingFlowTheme .audioBoxV2,
+.speakingFlowTheme.speakingFlowTheme .audioConsultCard,
+.speakingFlowTheme.speakingFlowTheme .reportDisclaimerCard,
+.speakingFlowTheme.speakingFlowTheme .liveTranscriptBox,
+.speakingFlowTheme.speakingFlowTheme .liveLengthGuide,
+.speakingFlowTheme.speakingFlowTheme .prepHeadsUp,
+.speakingFlowTheme.speakingFlowTheme .prepMicCheck,
+.speakingFlowTheme.speakingFlowTheme .examPausedCard,
+.speakingFlowTheme.speakingFlowTheme .fullMockPreviewBanner {
+  background: var(--sk-tint) !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: var(--sk-r-xl) !important;
+  box-shadow: none !important;
+  padding: 40px !important;
+  color: var(--sk-ink) !important;
+  transform: none !important;
+}
+
+/* Nested panels sit on white inside a tinted parent. */
+.speakingFlowTheme.speakingFlowTheme .stageCard .card,
+.speakingFlowTheme.speakingFlowTheme .sectionV2 .subBlockV2,
+.speakingFlowTheme.speakingFlowTheme .prepStageV2 .prepHeadsUp,
+.speakingFlowTheme.speakingFlowTheme .prepStageV2 .prepMicCheck,
+.speakingFlowTheme.speakingFlowTheme .prepStageV2 .prepNotebookCard,
+.speakingFlowTheme.speakingFlowTheme .vocabV2Item,
+.speakingFlowTheme.speakingFlowTheme .topFixItem,
+.speakingFlowTheme.speakingFlowTheme .part3CoachItem,
+.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard,
+.speakingFlowTheme.speakingFlowTheme .mistakeCardV2,
+.speakingFlowTheme.speakingFlowTheme .suggestionCardV2,
+.speakingFlowTheme.speakingFlowTheme .questionNoteItem,
+.speakingFlowTheme.speakingFlowTheme .pronRiskItem,
+.speakingFlowTheme.speakingFlowTheme .punctuatedTranscriptBox,
+.speakingFlowTheme.speakingFlowTheme .nextStepCard,
+.speakingFlowTheme.speakingFlowTheme .prepAccordion,
+.speakingFlowTheme.speakingFlowTheme .prepAccordionWrap,
+.speakingFlowTheme.speakingFlowTheme .transcriptV2 {
+  background: var(--sk-white) !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: var(--sk-r-lg) !important;
+  box-shadow: none !important;
+  padding: 28px !important;
+  transform: none !important;
+}
+
+/* --------------------------------------------------------------- pills ---- */
+/* Klarna button: 24px radius, 12px 20px, 14px/500. Dark = navigation,
+   blue = primary commitment, tint = quiet. */
+.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn,
+.speakingFlowTheme.speakingFlowTheme .primaryNextBtn,
+.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn,
+.speakingFlowTheme.speakingFlowTheme .secondary,
+.speakingFlowTheme.speakingFlowTheme .cancelBtn,
+.speakingFlowTheme.speakingFlowTheme .dangerBtn,
+.speakingFlowTheme.speakingFlowTheme .redeemBtn,
+.speakingFlowTheme.speakingFlowTheme .saveNotebookBtn,
+.speakingFlowTheme.speakingFlowTheme .ladderSaveBtn,
+.speakingFlowTheme.speakingFlowTheme .reviewScriptBtn,
+.speakingFlowTheme.speakingFlowTheme .micCheckBtn,
+.speakingFlowTheme.speakingFlowTheme .micCheckRetry,
+.speakingFlowTheme.speakingFlowTheme .pauseBtn,
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack,
+.speakingFlowTheme.speakingFlowTheme .audioConsultButton,
+.speakingFlowTheme.speakingFlowTheme .reportSaveButton,
+.speakingFlowTheme.speakingFlowTheme .wgTicketGo,
+.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button,
+.speakingFlowTheme.speakingFlowTheme .controls button {
+  font-family: var(--sk-font-th) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  padding: 12px 20px !important;
+  border-radius: var(--sk-r-md) !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  transition: opacity 0.15s ease !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .primaryNextBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .reportSaveButton:hover,
+.speakingFlowTheme.speakingFlowTheme .audioConsultButton:hover,
+.speakingFlowTheme.speakingFlowTheme .controls button:hover {
+  opacity: 0.88 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Primary commitment — blue. */
+.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn,
+.speakingFlowTheme.speakingFlowTheme .primaryNextBtn,
+.speakingFlowTheme.speakingFlowTheme .reportSaveButton,
+.speakingFlowTheme.speakingFlowTheme .audioConsultButton,
+.speakingFlowTheme.speakingFlowTheme .micCheckBtn {
+  background: var(--sk-accent) !important;
+  color: var(--sk-accent-ink) !important;
+}
+
+/* Navigation / affirmative secondary — ink. */
+.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn,
+.speakingFlowTheme.speakingFlowTheme .wgTicketGo,
+.speakingFlowTheme.speakingFlowTheme .reviewScriptBtn,
+.speakingFlowTheme.speakingFlowTheme .saveNotebookBtn,
+.speakingFlowTheme.speakingFlowTheme .ladderSaveBtn,
+.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button.active {
+  background: var(--sk-ink) !important;
+  color: var(--sk-white) !important;
+}
+
+/* Quiet — tinted. */
+.speakingFlowTheme.speakingFlowTheme .secondary,
+.speakingFlowTheme.speakingFlowTheme .cancelBtn,
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack,
+.speakingFlowTheme.speakingFlowTheme .pauseBtn,
+.speakingFlowTheme.speakingFlowTheme .redeemBtn,
+.speakingFlowTheme.speakingFlowTheme .micCheckRetry,
+.speakingFlowTheme.speakingFlowTheme .audioConsultButton-secondary,
+.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button {
+  background: var(--sk-tint) !important;
+  color: var(--sk-ink) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .dangerBtn,
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack.dangerBtn {
+  background: var(--sk-tint) !important;
+  color: #b3261e !important;
+}
+
+/* Small status pills. */
+.speakingFlowTheme.speakingFlowTheme .promptPill,
+.speakingFlowTheme.speakingFlowTheme .assessmentInfoPill,
+.speakingFlowTheme.speakingFlowTheme .bandPill,
+.speakingFlowTheme.speakingFlowTheme .targetBandPill,
+.speakingFlowTheme.speakingFlowTheme .reportStickyChip,
+.speakingFlowTheme.speakingFlowTheme .wgTicketBadge,
+.speakingFlowTheme.speakingFlowTheme .vocabV2Pill,
+.speakingFlowTheme.speakingFlowTheme .vocabLevelBadge,
+.speakingFlowTheme.speakingFlowTheme .promptTag,
+.speakingFlowTheme.speakingFlowTheme .category,
+.speakingFlowTheme.speakingFlowTheme .answerAnnotationBadge,
+.speakingFlowTheme.speakingFlowTheme .recordingPill {
+  background: var(--sk-tint) !important;
+  color: var(--sk-accent) !important;
+  font-family: var(--sk-font-th) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 10px 18px !important;
+  border-radius: var(--sk-r-md) !important;
+  border: none !important;
+  box-shadow: none !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  transform: none !important;
+}
+
+/* Inside a tinted panel the pill flips to white for separation. */
+.speakingFlowTheme.speakingFlowTheme .stageCard .category,
+.speakingFlowTheme.speakingFlowTheme .prepStageV2 .category,
+.speakingFlowTheme.speakingFlowTheme .sectionV2 .bandPill,
+.speakingFlowTheme.speakingFlowTheme .speakingPromptCard .promptPill {
+  background: var(--sk-white) !important;
+}
+
+/* ----------------------------------------------------------- topic bank -- */
+.speakingFlowTheme.speakingFlowTheme .topicBankToolbar {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-bottom: 40px !important;
+  gap: 16px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .topicBankSearchInput {
+  background: var(--sk-tint) !important;
+  border: none !important;
+  border-radius: var(--sk-r-md) !important;
+  padding: 14px 20px !important;
+  font-size: 16px !important;
+  font-family: var(--sk-font-th) !important;
+  color: var(--sk-ink) !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .topicBankGroup {
+  margin-top: 72px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .topicBankGroupHeader {
+  background: none !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 0 20px !important;
+  margin: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .topicBankGroupTitle {
+  font-family: var(--sk-font-th) !important;
+  font-size: 34px !important;
+  line-height: 1.3 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--sk-ink) !important;
+  text-transform: none !important;
+  background: none !important;
+}
+
+/* Cards become hairline-separated rows — Klarna uses rules, not boxes. */
+.speakingFlowTheme.speakingFlowTheme .thumbnailGrid,
+.speakingFlowTheme.speakingFlowTheme .topicBankCardGrid,
+.speakingFlowTheme.speakingFlowTheme .sgTopicTicketGrid {
+  display: block !important;
+  gap: 0 !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard,
+.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.sgTopicTicket,
+.speakingFlowTheme.speakingFlowTheme .wgTicket.wgTicket {
+  display: flex !important;
+  /* App.css stacks these as `flex-direction: column` — force the row back. */
+  flex-direction: row !important;
+  align-items: center !important;
+  text-align: left !important;
+  gap: 24px !important;
+  width: 100% !important;
+  background: var(--sk-white) !important;
+  background-image: none !important;
+  border: none !important;
+  border-top: 1px solid var(--sk-line) !important;
+  border-radius: 0 !important;
+  /* The selected/attempted rings are outlines, not borders. */
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 28px 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  clip-path: none !important;
+  transition: background 0.15s ease !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard:last-child,
+.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.sgTopicTicket:last-child,
+.speakingFlowTheme.speakingFlowTheme .wgTicket.wgTicket:last-child {
+  border-bottom: 1px solid var(--sk-line) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard:hover {
+  background: var(--sk-tint) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Selected state: tint fill rather than a coloured border. */
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--selected,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.sgTicketActive,
+.speakingFlowTheme.speakingFlowTheme .wgTicket.sgTicketActive,
+.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard--selected {
+  background: var(--sk-tint) !important;
+  border-color: var(--sk-line) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Mode/state modifiers all resolve to the same flat row — the stamp and
+   badge carry the distinction instead of the card chrome. */
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--mode-part1,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--mode-part2,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--mode-part3,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--mode-full,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--mode-trial,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--fresh,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--attempted,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard--has-pdoy-sample,
+.speakingFlowTheme.speakingFlowTheme .thumbnailCard.fullMockCard {
+  background: var(--sk-white) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* The stamp becomes Klarna's rounded icon tile. */
+.speakingFlowTheme.speakingFlowTheme .wgTicketStamp.wgTicketStamp {
+  flex: none !important;
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--sk-tint) !important;
+  background-image: none !important;
+  color: var(--sk-accent) !important;
+  border: none !important;
+  border-radius: var(--sk-r-md) !important;
+  box-shadow: none !important;
+  font-family: var(--sk-font-th) !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  transform: none !important;
+  writing-mode: horizontal-tb !important;
+  letter-spacing: normal !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .wgTicketBody {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  font-family: var(--sk-font-th) !important;
+  font-size: 22px !important;
+  line-height: 1.3 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--sk-ink) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .sgTopicTicketActions {
+  flex: none !important;
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+/* ------------------------------------------------------- ticket path hub -- */
+.speakingFlowTheme.speakingFlowTheme .wgTicketPathBoard,
+.speakingFlowTheme.speakingFlowTheme .wgTicketPath,
+.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .wgTicketPathNode {
+  background: var(--sk-tint) !important;
+  color: var(--sk-accent) !important;
+  border: none !important;
+  border-radius: var(--sk-r-md) !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep.is-done .wgTicketPathNode {
+  background: var(--sk-accent) !important;
+  color: var(--sk-white) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep.is-locked .wgTicketPathNode {
+  background: var(--sk-tint) !important;
+  color: var(--sk-ink) !important;
+  opacity: 0.4 !important;
+}
+
+/* ------------------------------------------------- preparation + timers -- */
+.speakingFlowTheme.speakingFlowTheme .timer,
+.speakingFlowTheme.speakingFlowTheme .sgPrepTimer,
+.speakingFlowTheme.speakingFlowTheme .bigTimer {
+  font-family: var(--sk-font-latin) !important;
+  font-size: 120px !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--sk-accent) !important;
+  background: none !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  padding: 0 !important;
+  margin: 40px 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .bigTimerLow,
+.speakingFlowTheme.speakingFlowTheme .lowTimeWarning {
+  color: #b3261e !important;
+  animation: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .part2NotebookTextarea,
+.speakingFlowTheme.speakingFlowTheme .liveTranscriptTextarea,
+.speakingFlowTheme.speakingFlowTheme .notebookQuickAddBar select {
+  background: var(--sk-white) !important;
+  border: none !important;
+  border-radius: var(--sk-r-lg) !important;
+  box-shadow: none !important;
+  padding: 24px 28px !important;
+  font-family: var(--sk-font-th) !important;
+  font-size: 17px !important;
+  line-height: 28px !important;
+  color: var(--sk-ink) !important;
+  resize: vertical !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .part2NotebookTextarea::placeholder,
+.speakingFlowTheme.speakingFlowTheme .liveTranscriptTextarea::placeholder {
+  color: var(--sk-ink) !important;
+  opacity: 0.4 !important;
+}
+
+/* Stepper — flat dots, no chrome. */
+.speakingFlowTheme.speakingFlowTheme .prepProgressStepper,
+.speakingFlowTheme.speakingFlowTheme .trialFlowSteps {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  gap: 12px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .stepperDot {
+  background: var(--sk-tint) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .stepperActive .stepperDot {
+  background: var(--sk-accent) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .stepperLine {
+  background: var(--sk-line) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .previewStep,
+.speakingFlowTheme.speakingFlowTheme .previewArrow {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--sk-ink) !important;
+  font-size: 16px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .previewStepFinal {
+  color: var(--sk-accent) !important;
+  font-weight: 500 !important;
+}
+
+/* -------------------------------------------------------- live exam view -- */
+.speakingFlowTheme.speakingFlowTheme .speakingTopToolbar {
+  background: var(--sk-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--sk-line) !important;
+  box-shadow: none !important;
+  padding: 16px 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .globalProgressBar {
+  background: var(--sk-line) !important;
+  height: 6px !important;
+  border: none !important;
+  border-radius: var(--sk-r-md) !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .globalProgressFill {
+  background: var(--sk-accent) !important;
+  box-shadow: none !important;
+}
+
+/* The live question — Klarna's solid accent block. */
+.speakingFlowTheme.speakingFlowTheme .questionNotePrompt-live,
+.speakingFlowTheme.speakingFlowTheme .speakingExamLane .part2BigQuestion {
+  background: var(--sk-accent) !important;
+  color: var(--sk-white) !important;
+  border: none !important;
+  border-radius: var(--sk-r-lg) !important;
+  box-shadow: none !important;
+  padding: 28px 32px !important;
+  font-family: var(--sk-font-th) !important;
+  font-size: 24px !important;
+  line-height: 1.35 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .recordingPill-live {
+  background: var(--sk-accent) !important;
+  color: var(--sk-white) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .recordingPill-paused {
+  background: var(--sk-tint) !important;
+  color: var(--sk-ink) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .recordingDot {
+  background: currentColor !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .audioBar {
+  background: var(--sk-accent) !important;
+  border-radius: var(--sk-r-md) !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .audioBarsPaused .audioBar {
+  background: var(--sk-line) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .examPausedOverlay {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard-hit {
+  background: var(--sk-tint) !important;
+}
+
+/* ---------------------------------------------------------------- report -- */
+.speakingFlowTheme.speakingFlowTheme .reportStickyBar {
+  background: var(--sk-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--sk-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 20px 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .reportStickyBand,
+.speakingFlowTheme.speakingFlowTheme .reportStickyCalc {
+  font-family: var(--sk-font-latin) !important;
+  font-size: 52px !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--sk-accent) !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .providerTabs {
+  background: none !important;
+  border: none !important;
+  border-bottom: 1px solid var(--sk-line) !important;
+  box-shadow: none !important;
+  gap: 8px !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .providerTabs button {
+  background: none !important;
+  border: none !important;
+  border-radius: var(--sk-r-md) var(--sk-r-md) 0 0 !important;
+  box-shadow: none !important;
+  padding: 14px 22px !important;
+  font-family: var(--sk-font-th) !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--sk-ink) !important;
+  opacity: 0.55 !important;
+  transform: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .providerTabs button.active {
+  background: var(--sk-tint) !important;
+  color: var(--sk-accent) !important;
+  opacity: 1 !important;
+}
+
+/* Tone variants flatten to the one tinted panel. The doubled class is needed
+   to beat App.css's `.speakingFlowTheme .sectionV2.sectionV2Tone-*` rules. */
+.speakingFlowTheme.speakingFlowTheme [class*="sectionV2Tone-"],
+.speakingFlowTheme.speakingFlowTheme .sectionV2.sectionV2.sectionV2 {
+  background: var(--sk-tint) !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* App.css centres these headings; Klarna sets them flush left. */
+.speakingFlowTheme.speakingFlowTheme .sectionV2Title,
+.speakingFlowTheme.speakingFlowTheme .sectionV2Top,
+.speakingFlowTheme.speakingFlowTheme .sectionV2Body,
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowTitle,
+.speakingFlowTheme.speakingFlowTheme .writingGuideHubH1 {
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+
+/* The section header carries its own cream band in App.css — strip it so the
+   panel reads as one flat tinted block. */
+.speakingFlowTheme.speakingFlowTheme .sectionV2Top,
+.speakingFlowTheme.speakingFlowTheme .sectionV2Body,
+.speakingFlowTheme.speakingFlowTheme .sectionV2HeaderRight,
+.speakingFlowTheme.speakingFlowTheme .subBlockHeader,
+.speakingFlowTheme.speakingFlowTheme .vocabV2Header,
+.speakingFlowTheme.speakingFlowTheme .vocabV2Body,
+.speakingFlowTheme.speakingFlowTheme .vocabV2Group,
+.speakingFlowTheme.speakingFlowTheme .topFixesHeader,
+.speakingFlowTheme.speakingFlowTheme .part3CoachHeader,
+.speakingFlowTheme.speakingFlowTheme .liveLengthGuideHeader,
+.speakingFlowTheme.speakingFlowTheme .audioBoxHeader,
+.speakingFlowTheme.speakingFlowTheme .liveTranscriptHeader,
+.speakingFlowTheme.speakingFlowTheme .reportNextSteps,
+.speakingFlowTheme.speakingFlowTheme .nextStepsGrid,
+.speakingFlowTheme.speakingFlowTheme .suggestionGridV2,
+.speakingFlowTheme.speakingFlowTheme .vocabV2Grid,
+.speakingFlowTheme.speakingFlowTheme .topFixesList,
+.speakingFlowTheme.speakingFlowTheme .part3CoachList,
+.speakingFlowTheme.speakingFlowTheme .pronRiskList,
+.speakingFlowTheme.speakingFlowTheme .reportStickyMain,
+.speakingFlowTheme.speakingFlowTheme .reportStickyChips,
+.speakingFlowTheme.speakingFlowTheme .reportStickyActions,
+.speakingFlowTheme.speakingFlowTheme .transcriptV2Body,
+.speakingFlowTheme.speakingFlowTheme .liveTranscriptContent {
+  background: none !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .bandGapBar {
+  background: var(--sk-line) !important;
+  border-radius: var(--sk-r-md) !important;
+  height: 10px !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .bandGapFill {
+  background: var(--sk-accent) !important;
+  border-radius: var(--sk-r-md) !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .vocabArrow,
+.speakingFlowTheme.speakingFlowTheme .vocabTo,
+.speakingFlowTheme.speakingFlowTheme .topFixIndex {
+  color: var(--sk-accent) !important;
+  font-weight: 700 !important;
+  background: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .nextStepIcon {
+  width: 56px !important;
+  height: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--sk-tint) !important;
+  color: var(--sk-accent) !important;
+  border-radius: var(--sk-r-md) !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 22px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .notebookSaveToast,
+.speakingFlowTheme.speakingFlowTheme .reportSaveToast {
+  background: var(--sk-ink) !important;
+  color: var(--sk-white) !important;
+  border: none !important;
+  border-radius: var(--sk-r-lg) !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .error {
+  background: #fdecea !important;
+  color: #b3261e !important;
+  border: none !important;
+  border-radius: var(--sk-r-lg) !important;
+  box-shadow: none !important;
+  padding: 20px 24px !important;
+}
+
+/* ---------------------------------------------------------------- rhythm -- */
+.speakingFlowTheme.speakingFlowTheme .speakingTopicBank > * + *,
+.speakingFlowTheme.speakingFlowTheme .reportV2 > * + *,
+.speakingFlowTheme.speakingFlowTheme .speakingHubShell > * + * {
+  margin-top: 72px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .controls,
+.speakingFlowTheme.speakingFlowTheme .prepControls,
+.speakingFlowTheme.speakingFlowTheme .speakingControls {
+  display: flex !important;
+  gap: 12px !important;
+  align-items: center !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-top: 32px !important;
+}
+
+/* ------------------------------------------------------------ reduced UI -- */
+@media (prefers-reduced-motion: reduce) {
+  .speakingFlowTheme.speakingFlowTheme *,
+  .speakingFlowTheme.speakingFlowTheme *::before,
+  .speakingFlowTheme.speakingFlowTheme *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ------------------------------------------------------------- responsive -- */
+@media (max-width: 860px) {
+  .speakingFlowTheme.speakingFlowTheme .writingGuideHubH1,
+  .speakingFlowTheme.speakingFlowTheme .writingGuideFlowTitle,
+  .speakingFlowTheme.speakingFlowTheme .part2BigQuestion,
+  .speakingFlowTheme.speakingFlowTheme .sectionV2Title {
+    font-size: 34px !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .topicBankGroupTitle {
+    font-size: 26px !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .timer,
+  .speakingFlowTheme.speakingFlowTheme .sgPrepTimer,
+  .speakingFlowTheme.speakingFlowTheme .bigTimer {
+    font-size: 72px !important;
+    margin: 28px 0 !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .reportStickyBand,
+  .speakingFlowTheme.speakingFlowTheme .reportStickyCalc {
+    font-size: 34px !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .stageCard,
+  .speakingFlowTheme.speakingFlowTheme .card,
+  .speakingFlowTheme.speakingFlowTheme .prepStageV2,
+  .speakingFlowTheme.speakingFlowTheme .speakingPromptCard,
+  .speakingFlowTheme.speakingFlowTheme .speakingControlCard,
+  .speakingFlowTheme.speakingFlowTheme .resultCard,
+  .speakingFlowTheme.speakingFlowTheme .sectionV2,
+  .speakingFlowTheme.speakingFlowTheme .vocabV2,
+  .speakingFlowTheme.speakingFlowTheme .topFixesPanel,
+  .speakingFlowTheme.speakingFlowTheme .part3CoachPanel {
+    padding: 28px 24px !important;
+    border-radius: var(--sk-r-lg) !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .thumbnailCard.thumbnailCard,
+  .speakingFlowTheme.speakingFlowTheme .wgTicket.wgTicket {
+    gap: 16px !important;
+    padding: 20px 0 !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow {
+    font-size: 18px !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .speakingTopicBank > * + *,
+  .speakingFlowTheme.speakingFlowTheme .reportV2 > * + *,
+  .speakingFlowTheme.speakingFlowTheme .speakingHubShell > * + * {
+    margin-top: 48px !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme .topicBankGroup {
+    margin-top: 48px !important;
+  }
+}

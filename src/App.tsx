@@ -64,6 +64,9 @@ import {
   isFullTestComplete
 } from './listeningFullTestData'
 import './ListeningFullTestView.css'
+// Imported last so the Speaking journey's Klarna-style overrides win on
+// cascade order against App.css at equal specificity.
+import './SpeakingKlarnaTheme.css'
 import {
   READING_FULL_TEST_LABEL,
   READING_FULL_TEST_LEAD,
