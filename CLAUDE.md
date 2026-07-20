@@ -127,12 +127,21 @@ The main verb must not repeat the clause (`accounted for … accounting for`).
 **Rank strictly, and isolate the lowest.** Every figure is quoted largest-first,
 and the final sentence of Body 1 covers the lowest category on its own.
 
-**Body 2 closes with the cross-chart comparison** — the one comparison the SOP
-allows, because it states a gap rather than interpreting it:
-```
-In contrast, [last] made up the smallest share at just [v], which is
-lower/higher than that of [chart 1] by [gap].
-```
+**Body 2 carries the cross-chart comparison** — the one comparison the SOP
+allows, because it states a gap rather than interpreting it. Two shapes:
+
+- **Two places / groups** (`Australia` vs `Canada`):
+  `…, which was higher than that of Australia by 24%.`
+- **Same metric, two years** (set `timeComparison: true`): track the movement
+  instead — `…, which increased dramatically from 2008 by 17%.` The adverb
+  scales with the move: `dramatically` ≥40%, `significantly` ≥20%,
+  `moderately` ≥10%, otherwise `slightly`.
+
+Only say a category `remained the smallest … across the two years` when it was
+genuinely last in **both** charts — otherwise it is a false claim.
+
+Tables are exempt: their two bodies are different columns, so comparing them
+across bodies is meaningless.
 
 **Chart data comes first.** A "portion" prompt needs enough to compare: prefer
 **two pies** over one, with **five or six slices each** (see
