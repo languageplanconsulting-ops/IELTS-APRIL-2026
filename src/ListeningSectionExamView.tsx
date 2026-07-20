@@ -1348,16 +1348,26 @@ export function ListeningSectionExamView({
               </p>
             ))}
           </header>
-          <div className="listeningSectionExamOptionPool">
-            <strong>{group.poolTitle}</strong>
-            <ul>
-              {group.options.map((option) => (
-                <li key={`${group.id}-${option.key}`}>
-                  <b>{option.key}.</b> {option.text}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {group.imageUrl ? (
+            <div className="listeningSectionExamMapImageWrap">
+              <img
+                className="listeningSectionExamMapImage"
+                src={group.imageUrl}
+                alt={`${group.title} diagram — match each lettered point to the answers below`}
+              />
+            </div>
+          ) : (
+            <div className="listeningSectionExamOptionPool">
+              <strong>{group.poolTitle}</strong>
+              <ul>
+                {group.options.map((option) => (
+                  <li key={`${group.id}-${option.key}`}>
+                    <b>{option.key}.</b> {option.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <ul className="listeningSectionExamMatchingRows">
             {group.questions.map((question) => renderMatchingRow(question))}
           </ul>

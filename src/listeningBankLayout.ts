@@ -49,14 +49,18 @@ export const groupFoundationSetsByBook = (
   }
 
   return [...byBook.entries()]
-    .sort(([a], [b]) => a - b)
+    .sort(([a], [b]) => {
+      if (a === 0 && b !== 0) return 1
+      if (b === 0 && a !== 0) return -1
+      return a - b
+    })
     .map(([book, bookSets]) => ({
       book,
       sets: [...bookSets].sort((a, b) => {
         const metaA = parseListeningFoundationSetMeta(a)
         const metaB = parseListeningFoundationSetMeta(b)
-        if (metaA.section !== metaB.section) return metaA.section - metaB.section
-        return metaA.test - metaB.test
+        if (metaA.test !== metaB.test) return metaA.test - metaB.test
+        return metaA.section - metaB.section
       })
     }))
 }

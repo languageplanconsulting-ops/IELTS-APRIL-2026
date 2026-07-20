@@ -69,6 +69,18 @@ create table if not exists public.support_reports (
   updated_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.task1_qa_comments (
+  id uuid primary key default gen_random_uuid(),
+  prompt_id text not null,
+  role text not null check (role in ('intro', 'overview', 'body1', 'body2', 'general')),
+  quote text not null default '',
+  note text not null,
+  status text not null default 'open' check (status in ('open', 'resolved')),
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default timezone('utc', now()),
+  resolved_at timestamptz
+);
+
 create table if not exists public.speaking_sample_videos (
   topic_id text primary key,
   topic_title text not null,
@@ -267,6 +279,7 @@ alter table public.learner_access enable row level security;
 alter table public.user_notebooks enable row level security;
 alter table public.reading_exams enable row level security;
 alter table public.support_reports enable row level security;
+alter table public.task1_qa_comments enable row level security;
 alter table public.speaking_sample_videos enable row level security;
 alter table public.user_activity_events enable row level security;
 alter table public.user_engagement_segments enable row level security;

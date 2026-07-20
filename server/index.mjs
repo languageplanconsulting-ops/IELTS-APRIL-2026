@@ -13100,6 +13100,126 @@ app.patch('/api/admin/support-reports/:reportId', requireAdmin, async (req, res)
   }
 })
 
+const TASK1_QA_COMMENT_ROLES = ['intro', 'overview', 'body1', 'body2', 'general']
+
+const normalizeTask1QaRole = (value) =>
+  TASK1_QA_COMMENT_ROLES.includes(String(value || '')) ? String(value) : 'general'
+
+const normalizeTask1QaStatus = (value) => (String(value || '') === 'resolved' ? 'resolved' : 'open')
+
+const mapTask1QaCommentRecord = (row) => ({
+  id: String(row?.id || ''),
+  promptId: String(row?.prompt_id || ''),
+  role: normalizeTask1QaRole(row?.role),
+  quote: String(row?.quote || ''),
+  note: String(row?.note || ''),
+  status: normalizeTask1QaStatus(row?.status),
+  createdBy: normalizeOptionalUuid(row?.created_by),
+  createdAt: row?.created_at || null,
+  resolvedAt: row?.resolved_at || null
+})
+
+app.post('/api/admin/task1-qa-comments', requireAdmin, async (req, res) => {
+  try {
+    const promptId = String(req.body?.promptId || '').trim().slice(0, 200)
+    const note = String(req.body?.note || '').trim().slice(0, 5000)
+    if (!promptId || !note) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'A prompt id and a note are required.'
+        }
+      })
+    }
+
+    const rows = await fetchSupabaseJson('/rest/v1/task1_qa_comments', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify({
+        prompt_id: promptId,
+        role: normalizeTask1QaRole(req.body?.role),
+        quote: String(req.body?.quote || '').trim().slice(0, 2000),
+        note,
+        status: 'open',
+        created_by: normalizeOptionalUuid(req.auth?.user?.id)
+      })
+    })
+
+    const created = Array.isArray(rows) ? rows[0] || null : rows
+    return res.json({ comment: mapTask1QaCommentRecord(created) })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'task1_qa_comment_create_error',
+        message: error instanceof Error ? error.message : 'Could not save the comment.'
+      }
+    })
+  }
+})
+
+app.get('/api/admin/task1-qa-comments', requireAdmin, async (req, res) => {
+  try {
+    const statusFilter = String(req.query?.status || '').trim()
+    let path =
+      '/rest/v1/task1_qa_comments?select=id,prompt_id,role,quote,note,status,created_by,created_at,resolved_at&order=created_at.desc'
+    if (statusFilter === 'open' || statusFilter === 'resolved') {
+      path += `&status=eq.${encodeURIComponent(statusFilter)}`
+    }
+    const rows = await fetchSupabaseJson(path, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+    return res.json({
+      comments: (Array.isArray(rows) ? rows : []).map(mapTask1QaCommentRecord)
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'task1_qa_comments_list_error',
+        message: error instanceof Error ? error.message : 'Could not load the QA comments.'
+      }
+    })
+  }
+})
+
+app.patch('/api/admin/task1-qa-comments/:commentId', requireAdmin, async (req, res) => {
+  try {
+    const commentId = normalizeOptionalUuid(req.params.commentId)
+    if (!commentId) {
+      return res.status(400).json({
+        error: {
+          status: 400,
+          type: 'validation_error',
+          message: 'A valid comment id is required.'
+        }
+      })
+    }
+
+    const status = normalizeTask1QaStatus(req.body?.status)
+    const rows = await fetchSupabaseJson(`/rest/v1/task1_qa_comments?id=eq.${encodeURIComponent(commentId)}`, {
+      method: 'PATCH',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify({
+        status,
+        resolved_at: status === 'resolved' ? new Date().toISOString() : null
+      })
+    })
+
+    const updated = Array.isArray(rows) ? rows[0] || null : rows
+    return res.json({ comment: mapTask1QaCommentRecord(updated) })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: 'task1_qa_comment_update_error',
+        message: error instanceof Error ? error.message : 'Could not update the comment.'
+      }
+    })
+  }
+})
+
 app.get('/api/admin/assessment-reports', requireAdmin, async (_req, res) => {
   try {
     const index = await loadAssessmentReportsIndex()

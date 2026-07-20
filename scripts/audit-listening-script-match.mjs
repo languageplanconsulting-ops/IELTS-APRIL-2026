@@ -10,7 +10,6 @@ import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundati
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridge13Data.ts'
 import { CAMBRIDGE_17_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridge17Data.ts'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridgeSafeData.ts'
-import { ADVANCED_PART34_LISTENING_SETS } from '../src/listeningAdvancedPart34Data.ts'
 import {
   isListeningExcerptDrillSet,
   resolveListeningFoundationAudioscript
@@ -25,7 +24,6 @@ const ALL_SETS = [
   ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_17_LISTENING_FOUNDATION_SETS,
   ...CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS,
-  ...ADVANCED_PART34_LISTENING_SETS
 ]
 
 const normalize = (value) =>

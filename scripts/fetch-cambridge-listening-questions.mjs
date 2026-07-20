@@ -165,11 +165,11 @@ const extractMcQuestion = (html, qNum) => {
 
   const chunk = chunkUntilNextQuestion(html, pos, qNum)
   const standardStem = chunk.match(
-    /ielts-listening-question-number-\d+[\s\S]*?>\s*\d+\s*<\/strong>\s*<span>([^<]+)<\/span>/i
+    /ielts-listening-question-number-\d+[\s\S]*?>\s*\d+\s*<\/strong>\s*<span>([\s\S]*?)<\/span>/i
   )
   const whichTwoStem = extractChooseTwoStem(chunk)
   const stem = standardStem
-    ? decodeHtml(standardStem[1]).trim()
+    ? stripTags(standardStem[1]).trim()
     : whichTwoStem
   const options = extractMcOptions(chunk)
 
@@ -186,19 +186,18 @@ const extractGapLine = (html, qNum) => {
   const before = html.slice(Math.max(0, pos - 1200), pos)
   const liStartRel = before.lastIndexOf('<li')
   const tdStartRel = before.lastIndexOf('<td')
-  const containerStartRel = Math.max(liStartRel, tdStartRel)
+  const pStartRel = before.lastIndexOf('<p')
+  const containerStartRel = Math.max(liStartRel, tdStartRel, pStartRel)
   if (containerStartRel < 0) return ''
 
   const absStart = Math.max(0, pos - 1200) + containerStartRel
   const afterFragment = html.slice(pos, pos + 800)
-  const closeLi = afterFragment.indexOf('</li>')
-  const closeTd = afterFragment.indexOf('</td>')
-  let endPos = pos + 400
-  if (closeLi >= 0 && (closeTd < 0 || closeLi < closeTd)) {
-    endPos = pos + closeLi + 5
-  } else if (closeTd >= 0) {
-    endPos = pos + closeTd + 5
-  }
+  const closeCandidates = [
+    afterFragment.indexOf('</li>'),
+    afterFragment.indexOf('</td>'),
+    afterFragment.indexOf('</p>')
+  ].filter((idx) => idx >= 0)
+  const endPos = closeCandidates.length ? pos + Math.min(...closeCandidates) + 5 : pos + 400
 
   const chunk = html.slice(absStart, endPos)
 
@@ -230,6 +229,41 @@ const extractDndOptions = (blockHtml) => {
       seen.add(opt.key)
       return true
     })
+}
+
+/**
+ * "Label the map/plan/diagram" style matching: a shared table with a lettered header row
+ * (A, B, C, ...) and one row per question holding just a row label + radio picks — no option
+ * text exists anywhere in the markup, only in the accompanying map/diagram image.
+ */
+const extractMapMatchingContext = (html, qNum) => {
+  const re = new RegExp(
+    `ielts-listening-matching-question-cell">\\s*<strong[^>]*id\\s*=\\s*"ielts-listening-question-number-${qNum}"[^>]*>\\s*${qNum}\\s*<\\/strong>\\s*<span>([^<]+)<\\/span>`,
+    'i'
+  )
+  const rowMatch = html.match(re)
+  if (!rowMatch) return null
+
+  const tableStart = html.lastIndexOf('<table class="ielts-listening-matching-table">', rowMatch.index)
+  if (tableStart < 0) return null
+
+  const theadMatch = html.slice(tableStart, rowMatch.index).match(/<thead>([\s\S]*?)<\/thead>/i)
+  const letters = theadMatch
+    ? [...theadMatch[1].matchAll(/<th>([^<]*)<\/th>/gi)]
+        .map((m) => decodeHtml(m[1]).trim())
+        .filter((letter) => /^[A-H]$/.test(letter))
+    : []
+  if (!letters.length) return null
+
+  const beforeTable = html.slice(Math.max(0, tableStart - 4000), tableStart)
+  const imgMatches = [...beforeTable.matchAll(/<img[^>]*\ssrc="([^"]+)"[^>]*>/gi)]
+  const imageUrl = imgMatches.length ? imgMatches[imgMatches.length - 1][1] : ''
+
+  return {
+    rowLabel: decodeHtml(rowMatch[1]).trim(),
+    options: letters.map((key) => ({ key, text: '' })),
+    imageUrl
+  }
 }
 
 const buildQuestionText = ({ type, instruction, sharedStem, stem, gapLine, rowLabel, options, qNum }) => {
@@ -278,16 +312,23 @@ const parseTestQuestions = (html) => {
     const block = findBlockForQuestion(blocks, qNum, html)
     const { instruction, sharedStem } = findSectionIntroBefore(html, qPos)
 
-    const mc = extractMcQuestion(html, qNum)
-    const rowLabel = extractMatchingRow(html, qNum)
+    const mapMatch = extractMapMatchingContext(html, qNum)
+    const mc = mapMatch ? null : extractMcQuestion(html, qNum)
+    let rowLabel = extractMatchingRow(html, qNum)
     const gapLine = extractGapLine(html, qNum)
     const dndOptions = extractDndOptionsNear(html, qPos)
 
     let type = 'gap-fill'
     let stem = ''
     let options = []
+    let mapImageUrl = ''
 
-    if (mc?.stem) {
+    if (mapMatch) {
+      type = 'matching-row'
+      rowLabel = mapMatch.rowLabel
+      options = mapMatch.options
+      mapImageUrl = mapMatch.imageUrl
+    } else if (mc?.stem) {
       type = 'choice'
       stem = mc.stem
       options = mc.options
@@ -318,7 +359,8 @@ const parseTestQuestions = (html) => {
       instruction: instruction || undefined,
       sharedStem: sharedStem || undefined,
       questionText,
-      questionWordPhrase: ''
+      questionWordPhrase: '',
+      mapImageUrl: mapImageUrl || undefined
     }
   }
 

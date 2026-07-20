@@ -63,7 +63,11 @@ type TimelineSpec = {
 
 function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
   const p = spec.id.replace(/^gb-/, 'x')
+  const peakIsFinalPoint = spec.peakYear === spec.toYear
   const risingEnd = spec.endRising ?? spec.peakRising
+  const risingPeakClause = peakIsFinalPoint
+    ? `a peak at ${spec.peakRising} in ${spec.peakYear}, recording its strongest result of the period. `
+    : `a peak at ${spec.peakRising} in ${spec.peakYear} and finishing at ${risingEnd} in ${spec.toYear}, recording its strongest result during these years. `
   const fallingLow = spec.lowFalling ?? spec.endFalling
   const fallingLowYear = spec.lowYear ?? spec.toYear
   const fallingFinish =
@@ -186,7 +190,7 @@ function buildTimelineExercise(spec: TimelineSpec): WgbExercise {
           ),
           t(', '),
           typ(`${p}-c3`, 'reach', ['reaching'], 'ving-clause', 'V-ing: reaching a peak'),
-          t(` a peak at ${spec.peakRising} in ${spec.peakYear} and finishing at ${risingEnd} in ${spec.toYear}, recording its strongest result during these years. `),
+          t(` ${risingPeakClause}`),
           sel(
             `${p}-c4`,
             ['On the other hand', 'Therefore', 'For example'],
@@ -218,6 +222,10 @@ type SnapshotSpec = {
   promptId: string
   chartNoun: 'pie chart' | 'pie charts' | 'bar chart' | 'table'
   subject: string
+  /** e.g. "GrabFood and Line Man" — fed into "such as …" in the introduction */
+  examples: string
+  /** e.g. "percentage of the share" — fed into "measured in …" in the introduction */
+  unit: string
   visualCount: 1 | 2
   leadingItem: string
   leadingShare: string
@@ -285,7 +293,7 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
             'paraphrase',
             `The ${spec.chartNoun} ใช้ ${pluralChart ? 'compare' : 'compares'} ให้ตรงกับประธาน`
           ),
-          t(` ${spec.subject}, presenting the main figures side by side and allowing the most important similarities and differences to be identified.`)
+          t(` ${spec.subject}, such as ${spec.examples}, measured in ${spec.unit}.`)
         ]
       },
       {
@@ -835,6 +843,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-phone-brands',
     chartNoun: 'pie chart',
     subject: 'smartphone market share by brand in 2024',
+    examples: 'Apple and Oppo',
+    unit: 'percentage of the share',
     visualCount: 1,
     leadingItem: 'Apple',
     leadingShare: '34%',
@@ -850,6 +860,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-student-majors',
     chartNoun: 'bar chart',
     subject: 'university enrolments by major in Japan and South Korea',
+    examples: 'engineering and education',
+    unit: 'percentage of total enrolments',
     visualCount: 1,
     leadingItem: 'engineering in South Korea',
     leadingShare: '30%',
@@ -862,6 +874,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-commute-modes',
     chartNoun: 'pie charts',
     subject: 'how workers in Singapore and Bangkok travelled to work',
+    examples: 'public transport and private cars',
+    unit: 'percentage of commuters',
     visualCount: 2,
     leadingItem: 'public transport in Singapore',
     leadingShare: '58%',
@@ -877,6 +891,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-hotel-ratings',
     chartNoun: 'table',
     subject: 'guest ratings for five hotels across four categories',
+    examples: 'Hotel Orchid and Budget Inn',
+    unit: 'average score out of 10',
     visualCount: 1,
     leadingItem: 'Hotel Orchid for location',
     leadingShare: '9.2',
@@ -889,12 +905,15 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-water-use',
     chartNoun: 'bar chart',
     subject: 'water use by sector in Australia and Canada',
+    examples: 'agriculture and energy use',
+    unit: 'percentage of total water use',
     visualCount: 1,
     leadingItem: 'agriculture in Australia',
     leadingShare: '65%',
     contrastItem: 'energy use in Australia',
     contrastShare: '5%',
-    contrastLinker: 'whereas'
+    contrastLinker: 'whereas',
+    extraBodyDetail: 'Interestingly, this pattern remained clear across both countries.'
   }),
 
   buildProcessExercise({
@@ -958,10 +977,12 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-food-delivery-apps',
     chartNoun: 'pie chart',
     subject: 'food-delivery app market share in 2024',
+    examples: 'GrabFood and Line Man',
+    unit: 'percentage of the share',
     visualCount: 1,
     leadingItem: 'GrabFood',
     leadingShare: '38%',
-    contrastItem: 'smaller apps',
+    contrastItem: 'other identified apps',
     contrastShare: '17%',
     contrastLinker: 'whereas',
     body1Topic: 'the leading app',
@@ -974,6 +995,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-device-ownership',
     chartNoun: 'bar chart',
     subject: 'device ownership among adults in Sweden and Italy',
+    examples: 'smartphones and smartwatches',
+    unit: 'percentage of adults',
     visualCount: 1,
     leadingItem: 'smartphones in Sweden',
     leadingShare: '92%',
@@ -982,13 +1005,15 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     contrastLinker: 'while',
     leadingBe: 'were',
     contrastBe: 'were',
-    extraBodyDetail: 'Interestingly, this pattern remained clear.'
+    extraBodyDetail: 'Interestingly, this ownership pattern remained clear across both countries.'
   }),
   buildSnapshotExercise({
     id: 'gb-energy-bills',
     promptId: 'snapshot-energy-bills',
     chartNoun: 'pie charts',
     subject: 'household energy bill breakdown in France and Poland',
+    examples: 'electricity and heating',
+    unit: 'percentage of the bill',
     visualCount: 2,
     leadingItem: 'electricity in France',
     leadingShare: '42%',
@@ -1004,6 +1029,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-airport-scores',
     chartNoun: 'table',
     subject: 'passenger ratings for five airports',
+    examples: 'Changi and City West',
+    unit: 'average score out of 10',
     visualCount: 1,
     leadingItem: 'Changi for cleanliness',
     leadingShare: '9.4',
@@ -1017,12 +1044,15 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     promptId: 'snapshot-study-hours',
     chartNoun: 'bar chart',
     subject: 'weekly study hours by subject in Finland and Mexico',
+    examples: 'mathematics and arts',
+    unit: 'hours per week',
     visualCount: 1,
     leadingItem: 'mathematics in Mexico',
     leadingShare: '6.5 hours',
     contrastItem: 'arts in Mexico',
     contrastShare: '2 hours',
-    contrastLinker: 'whereas'
+    contrastLinker: 'whereas',
+    extraBodyDetail: 'Interestingly, this subject gap remained clear across the school week.'
   }),
 
   buildProcessExercise({

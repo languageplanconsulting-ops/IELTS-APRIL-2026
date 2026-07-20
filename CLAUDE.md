@@ -43,11 +43,23 @@ Overall, it can be clearly observed that …
 No-timeline overviews then use `…, while …` mid-sentence to join the two
 features. Never `contrasting with` or `leaving other sources`.
 
+### Introduction
+
+Every Introduction — all prompt kinds — is exactly **one sentence**, with no
+extra clause tacked on (no `presenting …`, `allowing … to be identified`,
+`highlighting …`, etc.). The shape differs by kind:
+
+- **Timeline**: `The [chart] compares [subject] between [year] and [year]
+  across the categories included in the data.`
+- **No-timeline / snapshot** (pie/bar/table, single or paired charts):
+  `The [chart] compares [subject], such as [examples], measured in [unit].`
+  That's it — nothing after `measured in [unit].`
+- **Map**: `The maps compare [subject] …` (existing pattern; one sentence).
+- **Process**: `This chart shows the process of … from start to completion.`
+
 ### Other standing rules
 
 - Essays are **160–190 words** (`countTask1Paragraphs`).
-- Introduction is exactly one sentence: `The [visual] compare/compares …`
-  (process prompts: `This chart shows the process of … from start to completion.`).
 - `respectively` always takes a preceding comma.
 - Timeline bodies must state real chart years.
 - Blank counts: every Overview has **at least 5** blanks.

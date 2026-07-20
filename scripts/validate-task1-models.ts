@@ -85,6 +85,12 @@ const sentenceCount = (text: string): number =>
 const validComparisonOpening =
   /^(?:The (?:line graph|bar chart|pie chart|table|diagram) compares\b|The (?:(?:two )?pie charts|charts|maps|pie chart and line graph) compare\b)/
 const forbiddenIntroReportingVerb = /\b(?:illustrat(?:e|es|ed|ing)|show(?:s|ed|ing)?)\b/i
+/**
+ * SOP (CLAUDE.md): the Introduction is one sentence with no trailing filler
+ * clause (no "presenting …", "allowing … to be identified", "highlighting …").
+ * No legitimate introduction uses a ", …ing" tail, so this catches the class.
+ */
+const forbiddenIntroFillerClause = /,\s*[a-z]+ing\b[^.]*$/i
 const snapshotOverviewByPrompt: Record<string, string> = {
   'snapshot-vietnam-us-exports':
     'Overall, it can be clearly observed that coffee was the largest share of Vietnam’s exports to the US, while aircraft parts were the largest share of US exports to Vietnam.',
@@ -108,7 +114,7 @@ const snapshotOverviewByPrompt: Record<string, string> = {
   'snapshot-water-use':
     'Overall, it can be clearly observed that agriculture in Australia was the largest, while energy use in Australia was the smallest in share.',
   'snapshot-food-delivery-apps':
-    'Overall, it can be clearly observed that GrabFood was the largest, while smaller apps were the smallest in share.',
+    'Overall, it can be clearly observed that GrabFood was the largest, while other identified apps were the smallest in share.',
   'snapshot-device-ownership':
     'Overall, it can be clearly observed that smartphones in Sweden were the largest, while smartwatches in Italy were the smallest in share.',
   'snapshot-energy-bills':
@@ -159,6 +165,10 @@ const validateIntroduction = (
   const forbidden = introduction.match(forbiddenIntroReportingVerb)?.[0]
   if (forbidden) {
     failures.push(`${label}: forbidden introduction reporting verb “${forbidden}”`)
+  }
+  const fillerClause = introduction.match(forbiddenIntroFillerClause)?.[0]
+  if (fillerClause) {
+    failures.push(`${label}: introduction must not have a trailing filler clause “${fillerClause.trim()}”`)
   }
 }
 

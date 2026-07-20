@@ -1,6 +1,6 @@
 import { CAM10_TEST1_SECTION3_SCRIPT } from './listeningFoundationSectionScripts'
 
-export type ListeningFoundationCategory = 'part1-detail' | 'essential' | 'advanced' | 'advanced-listening'
+export type ListeningFoundationCategory = 'part1-detail' | 'essential' | 'advanced'
 
 export type ListeningFoundationQuestion = {
   id: string
@@ -20,6 +20,8 @@ export type ListeningFoundationQuestion = {
   questionText?: string
   layout?: 'choice' | 'gap-fill' | 'matching-row'
   rowLabel?: string
+  /** Map/diagram-labeling questions: the source image showing where each lettered option sits. */
+  imageUrl?: string
 }
 
 export type ListeningFoundationSet = {
@@ -131,9 +133,9 @@ export const LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
   {
     id: 'foundation-essential-section-2-leisure-club',
     category: 'essential',
-    title: 'Section 2 - Joining the Leisure Club',
+    title: 'Cam 10 Test 2 · Section 2 - Joining the Leisure Club',
     section: 2,
-    levelLabel: 'Essential · below Band 6',
+    levelLabel: 'Essential · Cam 10 Test 2',
     questions: [
       q(2, 11, 'Which facility at the leisure club has recently been improved?', CAM10_SECTION2_LEISURE_CLUB_SCRIPT, 'we have expanded it to eight lanes', 'C', [{ key: 'A', text: 'the gym' }, { key: 'B', text: 'the tracks' }, { key: 'C', text: 'the indoor pool' }, { key: 'D', text: 'the outdoor pool' }], 'expanded it to eight lanes', 'recently been improved', 'ถูกปรับปรุง / ขยายให้ดีขึ้น', 'The indoor swimming pool was improved because it was expanded to eight lanes.'),
       q(2, 12, 'Which other facility has recently been improved?', CAM10_SECTION2_LEISURE_CLUB_SCRIPT, 'recently refurbished fitness suite', 'A', [{ key: 'A', text: 'the gym' }, { key: 'B', text: 'the tracks' }, { key: 'C', text: 'the indoor pool' }, { key: 'E', text: 'the sports training for children' }], 'refurbished fitness suite', 'recently been improved', 'ห้องฟิตเนสที่ได้รับการปรับปรุงใหม่', 'Fitness suite is another way to say gym, and refurbished means improved.'),
@@ -150,9 +152,9 @@ export const LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
   {
     id: 'foundation-essential-section-2-dolphin-trust-skill-drill',
     category: 'essential',
-    title: 'Section 2 - Dolphin Conservation Trust Skill Drill',
+    title: 'Cam 10 Test 3 · Section 2 - Dolphin Conservation Trust Skill Drill',
     section: 2,
-    levelLabel: 'Essential · Cam 10 Test 3 style',
+    levelLabel: 'Essential · Cam 10 Test 3',
     audioUrl: 'https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam10-Test3-Section2.mp3',
     questions: [
       q(2, 11, 'Which statement about the Dolphin Conservation Trust is correct?', CAM10_TEST3_SECTION2_SCRIPT, 'Of course, many people give their services on a voluntary basis and we now have volunteers working in observation, office work and other things.', 'E', [{ key: 'A', text: 'children make up most members' }, { key: 'B', text: 'it is the largest conservation group' }, { key: 'C', text: 'it pays for fishing campaigns' }, { key: 'E', text: 'volunteers help in various ways' }], 'give their services on a voluntary basis', 'volunteers help', 'อาสาสมัครช่วยเหลือ', 'Give their services on a voluntary basis means volunteers help.'),
@@ -170,9 +172,9 @@ export const LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
   {
     id: 'foundation-advanced-section-3-theatre-studies-skill-drill',
     category: 'advanced',
-    title: 'Section 3 - Theatre Studies Course Skill Drill',
+    title: 'Cam 10 Test 3 · Section 3 - Theatre Studies Course Skill Drill',
     section: 3,
-    levelLabel: 'Advanced · Cam 10 Test 3 style',
+    levelLabel: 'Advanced · Cam 10 Test 3',
     audioUrl: 'https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam10-Test3-Section3.mp3',
     questions: [
       q(3, 21, 'What helped Rob prepare to play the character of a doctor?', CAM10_TEST3_SECTION3_SCRIPT, 'I’d … I’d visualise what he must have been like in the past, when he was sitting in his consulting room listening to his patients.', 'C', [{ key: 'A', text: 'the stories his grandfather told him' }, { key: 'B', text: 'the times when he watched his grandfather working' }, { key: 'C', text: 'the way he imagined his grandfather at work' }], 'visualise', 'imagined', 'จินตนาการ / นึกภาพ', 'Visualise means imagine.'),
@@ -190,9 +192,9 @@ export const LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
   {
     id: 'foundation-advanced-section-4-self-regulatory-focus-skill-drill',
     category: 'advanced',
-    title: 'Section 4 - Self-Regulatory Focus Theory Skill Drill',
+    title: 'Cam 10 Test 3 · Section 4 - Self-Regulatory Focus Theory Skill Drill',
     section: 4,
-    levelLabel: 'Advanced · Cam 10 Test 3 style',
+    levelLabel: 'Advanced · Cam 10 Test 3',
     audioUrl: 'https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam10-Test3-Section4.mp3',
     questions: [
       q(4, 31, 'Promotion goals focus on _____.', CAM10_TEST3_SECTION4_SCRIPT, 'Promotion goals in different life situations emphasise achievement.', 'A', [{ key: 'A', text: 'achievement' }, { key: 'B', text: 'punishment' }, { key: 'C', text: 'obligations' }, { key: 'D', text: 'mistakes' }], 'emphasise', 'focus on', 'เน้นย้ำ', 'Emphasise means focus on.'),
@@ -210,9 +212,9 @@ export const LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
   {
     id: 'foundation-advanced-section-3-global-design',
     category: 'advanced',
-    title: 'Section 3 - Global Design Competition',
+    title: 'Cam 10 Test 1 · Section 3 - Global Design Competition',
     section: 3,
-    levelLabel: 'Advanced · Cam 10 Test 1 style',
+    levelLabel: 'Advanced · Cam 10 Test 1',
     audioUrl: 'https://ieltstrainingonline.com/wp-content/uploads/2021/07/Cam10-Test1-Section3.mp3',
     questions: [
       q(3, 21, 'Students entering the design competition have to _____.', CAM10_TEST1_SECTION3_SCRIPT, 'using it in a way that hasn’t been thought of before', 'C', [{ key: 'A', text: 'produce an energy-efficient design' }, { key: 'B', text: 'adapt an existing energy-saving appliance' }, { key: 'C', text: 'develop a new use for current technology' }], 'existing technology', 'current technology', 'เทคโนโลยีที่มีอยู่แล้ว', 'A new use for current technology is paraphrased as using existing technology in a new way.'),
@@ -230,9 +232,9 @@ export const LISTENING_FOUNDATION_SETS: ListeningFoundationSet[] = [
   {
     id: 'foundation-advanced-section-4-spirit-bear',
     category: 'advanced',
-    title: 'Section 4 - The Spirit Bear',
+    title: 'Cam 10 Test 1 · Section 4 - The Spirit Bear',
     section: 4,
-    levelLabel: 'Advanced · Section 4 lecture',
+    levelLabel: 'Advanced · Cam 10 Test 1',
     questions: [
       q(4, 31, 'Its colour comes from an uncommon _____.', 'One in ten black bears is actually born with a white coat, which is the result of a special gene that surfaces in a few.', 'the result of a special gene', 'B', [{ key: 'A', text: 'coat' }, { key: 'B', text: 'gene' }, { key: 'C', text: 'legend' }, { key: 'D', text: 'family' }], 'special gene', 'uncommon gene', 'ยีนที่พบได้ไม่บ่อย', 'The white colour is caused by a special gene.'),
       q(4, 32, 'Local people believe that it has unusual _____.', 'According to the legends of these communities, its snowy fur brings with it a special power.', 'a special power', 'C', [{ key: 'A', text: 'colour' }, { key: 'B', text: 'habits' }, { key: 'C', text: 'power' }, { key: 'D', text: 'roots' }], 'special power', 'unusual power', 'พลังพิเศษ', 'Special power is paraphrased as unusual power.'),

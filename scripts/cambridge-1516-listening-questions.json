@@ -191,11 +191,11 @@
         "questionNumber": 15,
         "section": 2,
         "type": "gap-fill",
-        "gapLine": "Introduction by manager Hotel dining room has view of the ____",
+        "gapLine": "Hotel dining room has view of the ____",
         "options": [],
         "instruction": "Choose the correct letter, A , B or C .\nMatthews Island Holidays",
         "sharedStem": "Matthews Island Holidays",
-        "questionText": "Choose the correct letter, A , B or C .\nMatthews Island Holidays\nIntroduction by manager Hotel dining room has view of the ____",
+        "questionText": "Choose the correct letter, A , B or C .\nMatthews Island Holidays\nHotel dining room has view of the ____",
         "questionWordPhrase": ""
       },
       "16": {
@@ -248,9 +248,7 @@
         "type": "gap-fill",
         "gapLine": "Free time, then coach to Castletown – former ____ has old castle.",
         "options": [],
-        "instruction": "Choose the correct letter, A , B or C .\nMatthews Island Holidays",
-        "sharedStem": "Matthews Island Holidays",
-        "questionText": "Choose the correct letter, A , B or C .\nMatthews Island Holidays\nFree time, then coach to Castletown – former ____ has old castle.",
+        "questionText": "Complete the notes below.\nFree time, then coach to Castletown – former ____ has old castle.",
         "questionWordPhrase": ""
       },
       "21": {
@@ -679,20 +677,20 @@
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "mid-frequency bushfires result in the growth of eucalyptus forests, because they: – make more ____ available to the trees – maintain the quality of the <stro",
+        "gapLine": "– make more ____ available to the trees",
         "options": [],
         "instruction": "Choose TWO letters, A-E .",
-        "questionText": "Choose TWO letters, A-E .\nmid-frequency bushfires result in the growth of eucalyptus forests, because they: – make more ____ available to the trees – maintain the quality of the <stro",
+        "questionText": "Choose TWO letters, A-E .\n– make more ____ available to the trees",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "mid-frequency bushfires result in the growth of eucalyptus forests, because they: – make more 36 ____ available to the trees – maintain the quality of the ____ low-frequency bushfires result in the growth of ‘ 38 ____ rainforest’, which is:",
+        "gapLine": "– maintain the quality of the ____",
         "options": [],
         "instruction": "Choose TWO letters, A-E .",
-        "questionText": "Choose TWO letters, A-E .\nmid-frequency bushfires result in the growth of eucalyptus forests, because they: – make more 36 ____ available to the trees – maintain the quality of the ____ low-frequency bushfires result in the growth of ‘ 38 ____ rainforest’, which is:",
+        "questionText": "Choose TWO letters, A-E .\n– maintain the quality of the ____",
         "questionWordPhrase": ""
       },
       "38": {
@@ -709,20 +707,20 @@
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "low-frequency bushfires result in the growth of ‘ 38 ____ rainforest’, which is: – a ____ Ecosystem – an ideal environment for the <strong id=\"ielts",
+        "gapLine": "– a ____ Ecosystem",
         "options": [],
         "instruction": "Choose TWO letters, A-E .",
-        "questionText": "Choose TWO letters, A-E .\nlow-frequency bushfires result in the growth of ‘ 38 ____ rainforest’, which is: – a ____ Ecosystem – an ideal environment for the <strong id=\"ielts",
+        "questionText": "Choose TWO letters, A-E .\n– a ____ Ecosystem",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "low-frequency bushfires result in the growth of ‘ 38 ____ rainforest’, which is: – a 39 ____ Ecosystem – an ideal environment for the ____ of the bell-miner",
+        "gapLine": "– an ideal environment for the ____ of the bell-miner",
         "options": [],
         "instruction": "Choose TWO letters, A-E .",
-        "questionText": "Choose TWO letters, A-E .\nlow-frequency bushfires result in the growth of ‘ 38 ____ rainforest’, which is: – a 39 ____ Ecosystem – an ideal environment for the ____ of the bell-miner",
+        "questionText": "Choose TWO letters, A-E .\n– an ideal environment for the ____ of the bell-miner",
         "questionWordPhrase": ""
       }
     },
@@ -822,11 +820,11 @@
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Walking in the woods, led by an expert on 9 ____ See the festival organiser’s ____ for more information",
+        "gapLine": "See the festival organiser’s ____ for more information",
         "options": [],
         "instruction": "Complete the table below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Festival information",
-        "questionText": "Complete the table below.\nWrite ONE WORD ONLY for each answer.\nWalking in the woods, led by an expert on 9 ____ See the festival organiser’s ____ for more information",
+        "questionText": "Complete the table below.\nWrite ONE WORD ONLY for each answer.\nSee the festival organiser’s ____ for more information",
         "questionWordPhrase": ""
       },
       "11": {
@@ -928,60 +926,264 @@
       "15": {
         "questionNumber": 15,
         "section": 2,
-        "type": "choice",
-        "stem": "statue of Diane Gosforth",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "statue of Diane Gosforth",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
-        "questionText": "statue of Diane Gosforth",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-I , next to Questions.\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n15 statue of Diane Gosforth",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-2-15-20.jpg"
       },
       "16": {
         "questionNumber": 16,
         "section": 2,
-        "type": "choice",
-        "stem": "wooden sculptures",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "wooden sculptures",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
-        "questionText": "wooden sculptures",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-I , next to Questions.\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n16 wooden sculptures",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-2-15-20.jpg"
       },
       "17": {
         "questionNumber": 17,
         "section": 2,
-        "type": "choice",
-        "stem": "playground",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "playground",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
-        "questionText": "playground",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-I , next to Questions.\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n17 playground",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-2-15-20.jpg"
       },
       "18": {
         "questionNumber": 18,
         "section": 2,
-        "type": "choice",
-        "stem": "maze",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "maze",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
-        "questionText": "maze",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-I , next to Questions.\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n18 maze",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-2-15-20.jpg"
       },
       "19": {
         "questionNumber": 19,
         "section": 2,
-        "type": "choice",
-        "stem": "tennis courts",
-        "options": [],
-        "questionText": "tennis courts",
-        "questionWordPhrase": ""
+        "type": "matching-row",
+        "rowLabel": "tennis courts",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
+        "questionText": "Options\nA \nB \nC \nD \nE \nF \nG \nH \n19 tennis courts",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-2-15-20.jpg"
       },
       "20": {
         "questionNumber": 20,
         "section": 2,
-        "type": "choice",
-        "stem": "fitness area",
-        "options": [],
-        "questionText": "fitness area",
-        "questionWordPhrase": ""
+        "type": "matching-row",
+        "rowLabel": "fitness area",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
+        "questionText": "Options\nA \nB \nC \nD \nE \nF \nG \nH \n20 fitness area",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-2-15-20.jpg"
       },
       "21": {
         "questionNumber": 21,
@@ -1111,11 +1313,11 @@
         "questionNumber": 25,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Novels by Dickens • The Pickwick Papers Drop answer here ____",
         "options": [],
         "instruction": "What topic do Cathy and Graham choose to illustrate with each novel?\nChoose SIX answers from the box and write the correct letter, A-H , next to Questions.",
         "sharedStem": "Topics",
-        "questionText": "What topic do Cathy and Graham choose to illustrate with each novel?\nChoose SIX answers from the box and write the correct letter, A-H , next to Questions.\n25 ____",
+        "questionText": "What topic do Cathy and Graham choose to illustrate with each novel?\nChoose SIX answers from the box and write the correct letter, A-H , next to Questions.\nNovels by Dickens • The Pickwick Papers Drop answer here ____",
         "questionWordPhrase": ""
       },
       "26": {
@@ -1195,27 +1397,27 @@
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "The programme provided – ____ for the fences – 34 ____ for suitable crops – water pumps. The farmers provided",
+        "gapLine": "– ____ for the fences",
         "options": [],
-        "questionText": "Complete the notes below.\nThe programme provided – ____ for the fences – 34 ____ for suitable crops – water pumps. The farmers provided",
+        "questionText": "Complete the notes below.\n– ____ for the fences",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "The programme provided – 33 ____ for the fences – ____ for suitable crops – water pumps. The farmers provided",
+        "gapLine": "– ____ for suitable crops",
         "options": [],
-        "questionText": "Complete the notes below.\nThe programme provided – 33 ____ for the fences – ____ for suitable crops – water pumps. The farmers provided",
+        "questionText": "Complete the notes below.\n– ____ for suitable crops",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "The farmers provided – labour – ____ for the fences on their land. Further developments The marketing of produce was sometimes difficult due to lack of 36 ____ .",
+        "gapLine": "– ____ for the fences on their land.",
         "options": [],
-        "questionText": "Complete the notes below.\nThe farmers provided – labour – ____ for the fences on their land. Further developments The marketing of produce was sometimes difficult due to lack of 36 ____ .",
+        "questionText": "Complete the notes below.\n– ____ for the fences on their land.",
         "questionWordPhrase": ""
       },
       "36": {
@@ -1269,9 +1471,9 @@
         "questionNumber": 1,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Administrative assistant in a company that produces ____ (North London)",
         "options": [],
-        "questionText": "Complete the notes below.\n1 ____",
+        "questionText": "Complete the notes below.\nAdministrative assistant in a company that produces ____ (North London)",
         "questionWordPhrase": ""
       },
       "2": {
@@ -1851,9 +2053,7 @@
         "type": "gap-fill",
         "gapLine": "____ began to be added to soap",
         "options": [],
-        "instruction": "What does Hazel decide to do about each of the following types of articles?\nWrite the correct letter, A , B or C , next to Questions",
-        "sharedStem": "What does Hazel decide to do about each of the following types of articles?",
-        "questionText": "What does Hazel decide to do about each of the following types of articles?\nWrite the correct letter, A , B or C , next to Questions\n____ began to be added to soap",
+        "questionText": "Complete the notes below.\n____ began to be added to soap",
         "questionWordPhrase": ""
       },
       "38": {
@@ -1889,150 +2089,354 @@
         "questionNumber": 1,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Occupation: ____",
         "options": [],
-        "questionText": "Complete the notes below.\n1 ____",
+        "questionText": "Complete the notes below.\nOccupation: ____",
         "questionWordPhrase": ""
       },
       "2": {
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Reason for travel today: ____",
         "options": [],
-        "questionText": "Complete the notes below.\n2 ____",
+        "questionText": "Complete the notes below.\nReason for travel today: ____",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Name of station returning to: ____",
         "options": [],
-        "questionText": "Complete the notes below.\n3 ____",
+        "questionText": "Complete the notes below.\nName of station returning to: ____",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Type of ticket purchased: Standard ____ ticket",
         "options": [],
-        "questionText": "Complete the notes below.\n4 ____",
+        "questionText": "Complete the notes below.\nType of ticket purchased: Standard ____ ticket",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Cost of ticket: £ ____",
         "options": [],
-        "questionText": "Complete the notes below.\n5 ____",
+        "questionText": "Complete the notes below.\nCost of ticket: £ ____",
         "questionWordPhrase": ""
       },
       "6": {
         "questionNumber": 6,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Where ticket was bought: ____",
         "options": [],
-        "questionText": "Complete the notes below.\n6 ____",
+        "questionText": "Complete the notes below.\nWhere ticket was bought: ____",
         "questionWordPhrase": ""
       },
       "7": {
         "questionNumber": 7,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Least satisfied with: the ____ this morning.",
         "options": [],
-        "questionText": "Complete the notes below.\n7 ____",
+        "questionText": "Complete the notes below.\nLeast satisfied with: the ____ this morning.",
         "questionWordPhrase": ""
       },
       "8": {
         "questionNumber": 8,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Most satisfied with: how much ____ was provided",
         "options": [],
-        "questionText": "Complete the notes below.\n8 ____",
+        "questionText": "Complete the notes below.\nMost satisfied with: how much ____ was provided",
         "questionWordPhrase": ""
       },
       "9": {
         "questionNumber": 9,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Least satisfied with: lack of seats, particularly on the ____",
         "options": [],
-        "questionText": "Complete the notes below.\n9 ____",
+        "questionText": "Complete the notes below.\nLeast satisfied with: lack of seats, particularly on the ____",
         "questionWordPhrase": ""
       },
       "10": {
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Neither satisfied nor dissatisfied with: the ____ available",
         "options": [],
-        "questionText": "Complete the notes below.\n10 ____",
+        "questionText": "Complete the notes below.\nNeither satisfied nor dissatisfied with: the ____ available",
         "questionWordPhrase": ""
       },
       "11": {
         "questionNumber": 11,
         "section": 2,
-        "type": "choice",
-        "stem": "café",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "café",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-H , next to Questions",
-        "questionText": "café",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-H , next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n11 café",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-4-11-16.jpg"
       },
       "12": {
         "questionNumber": 12,
         "section": 2,
-        "type": "choice",
-        "stem": "toilets",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "toilets",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-H , next to Questions",
-        "questionText": "toilets",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-H , next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n12 toilets",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-4-11-16.jpg"
       },
       "13": {
         "questionNumber": 13,
         "section": 2,
-        "type": "choice",
-        "stem": "formal gardens",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "formal gardens",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-H , next to Questions",
-        "questionText": "formal gardens",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-H , next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n13 formal gardens",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-4-11-16.jpg"
       },
       "14": {
         "questionNumber": 14,
         "section": 2,
-        "type": "choice",
-        "stem": "outdoor gym",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "outdoor gym",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-H , next to Questions",
-        "questionText": "outdoor gym",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-H , next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n14 outdoor gym",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-4-11-16.jpg"
       },
       "15": {
         "questionNumber": 15,
         "section": 2,
-        "type": "choice",
-        "stem": "skateboard ramp",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "skateboard ramp",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-H , next to Questions",
-        "questionText": "skateboard ramp",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below.\nWrite the correct letter, A-H , next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n15 skateboard ramp",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-4-11-16.jpg"
       },
       "16": {
         "questionNumber": 16,
         "section": 2,
-        "type": "choice",
-        "stem": "wild flowers",
-        "options": [],
-        "questionText": "wild flowers",
-        "questionWordPhrase": ""
+        "type": "matching-row",
+        "rowLabel": "wild flowers",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
+        "questionText": "Options\nA \nB \nC \nD \nE \nF \nG \nH \n16 wild flowers",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-15-academic-listening-test-4-11-16.jpg"
       },
       "17": {
         "questionNumber": 17,
@@ -2426,9 +2830,7 @@
         "type": "gap-fill",
         "gapLine": "The Industrial Revolution would not have happened without the new types of ____ that were used then.",
         "options": [],
-        "instruction": "Who is going to do research into each topic?\nWrite the correct letter, A , B or C , next to Questions.",
-        "sharedStem": "Who is going to do research into each topic?",
-        "questionText": "Who is going to do research into each topic?\nWrite the correct letter, A , B or C , next to Questions.\nThe Industrial Revolution would not have happened without the new types of ____ that were used then.",
+        "questionText": "Complete the notes below.\nThe Industrial Revolution would not have happened without the new types of ____ that were used then.",
         "questionWordPhrase": ""
       },
       "34": {
@@ -2453,36 +2855,36 @@
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Because of the new transport: – greater access to ____ Made people more aware of what they could buy in shops. – when shopping, people were not limited to b",
+        "gapLine": "– greater access to ____ Made people more aware of what they could buy in shops.",
         "options": [],
-        "questionText": "Complete the notes below.\nBecause of the new transport: – greater access to ____ Made people more aware of what they could buy in shops. – when shopping, people were not limited to b",
+        "questionText": "Complete the notes below.\n– greater access to ____ Made people more aware of what they could buy in shops.",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Because of the new transport: – greater access to 36 ____ Made people more aware of what they could buy in shops. – when shopping, people were not limited to buying ____ goods. Retailing The first department stores were opened.",
+        "gapLine": "– when shopping, people were not limited to buying ____ goods.",
         "options": [],
-        "questionText": "Complete the notes below.\nBecause of the new transport: – greater access to 36 ____ Made people more aware of what they could buy in shops. – when shopping, people were not limited to buying ____ goods. Retailing The first department stores were opened.",
+        "questionText": "Complete the notes below.\n– when shopping, people were not limited to buying ____ goods.",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "The displays of goods were more visible: – inside stores because of better ____ . – outside stores, because <strong id=\"ielts-listening-qu",
+        "gapLine": "– inside stores because of better ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\nThe displays of goods were more visible: – inside stores because of better ____ . – outside stores, because <strong id=\"ielts-listening-qu",
+        "questionText": "Complete the notes below.\n– inside stores because of better ____ .",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "The displays of goods were more visible: – inside stores because of better 38 ____ . – outside stores, because ____ were bigger. 40 ____ that was persuasive became much more common.",
+        "gapLine": "– outside stores, because ____ were bigger.",
         "options": [],
-        "questionText": "Complete the notes below.\nThe displays of goods were more visible: – inside stores because of better 38 ____ . – outside stores, because ____ were bigger. 40 ____ that was persuasive became much more common.",
+        "questionText": "Complete the notes below.\n– outside stores, because ____ were bigger.",
         "questionWordPhrase": ""
       },
       "40": {
@@ -2565,27 +2967,27 @@
         "questionNumber": 8,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Build, 7 ____ and program a humanoid robot. Cost for a five-week block: £50 Held on ____ from 10 am to 11 am Location Building 10A, <span class=\"ielts-listening-question-",
+        "gapLine": "Held on ____ from 10 am to 11 am",
         "options": [],
-        "questionText": "Complete the notes below.\nBuild, 7 ____ and program a humanoid robot. Cost for a five-week block: £50 Held on ____ from 10 am to 11 am Location Building 10A, <span class=\"ielts-listening-question-",
+        "questionText": "Complete the notes below.\nHeld on ____ from 10 am to 11 am",
         "questionWordPhrase": ""
       },
       "9": {
         "questionNumber": 9,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Build, 7 ____ and program a humanoid robot. Cost for a five-week block: £50 Held on 8 ____ from 10 am to 11 am Location Building 10A, ____ Industrial Estate, Grasford Plenty of <strong id=\"ielts-liste",
+        "gapLine": "Building 10A, ____ Industrial Estate, Grasford",
         "options": [],
-        "questionText": "Complete the notes below.\nBuild, 7 ____ and program a humanoid robot. Cost for a five-week block: £50 Held on 8 ____ from 10 am to 11 am Location Building 10A, ____ Industrial Estate, Grasford Plenty of <strong id=\"ielts-liste",
+        "questionText": "Complete the notes below.\nBuilding 10A, ____ Industrial Estate, Grasford",
         "questionWordPhrase": ""
       },
       "10": {
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Plenty of ____ is available.",
         "options": [],
-        "questionText": "Complete the notes below.\n10 ____",
+        "questionText": "Complete the notes below.\nPlenty of ____ is available.",
         "questionWordPhrase": ""
       },
       "11": {
@@ -2683,64 +3085,268 @@
       "15": {
         "questionNumber": 15,
         "section": 2,
-        "type": "choice",
-        "stem": "coffee room",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "coffee room",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-J , next to Questions.",
         "sharedStem": "Plan of Stevenson’s site",
-        "questionText": "Plan of Stevenson’s site\ncoffee room",
-        "questionWordPhrase": ""
+        "questionText": "Plan of Stevenson’s site\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n15 coffee room",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-1-15-20.jpg"
       },
       "16": {
         "questionNumber": 16,
         "section": 2,
-        "type": "choice",
-        "stem": "warehouse",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "warehouse",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-J , next to Questions.",
         "sharedStem": "Plan of Stevenson’s site",
-        "questionText": "Plan of Stevenson’s site\nwarehouse",
-        "questionWordPhrase": ""
+        "questionText": "Plan of Stevenson’s site\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n16 warehouse",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-1-15-20.jpg"
       },
       "17": {
         "questionNumber": 17,
         "section": 2,
-        "type": "choice",
-        "stem": "staff canteen",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "staff canteen",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-J , next to Questions.",
         "sharedStem": "Plan of Stevenson’s site",
-        "questionText": "Plan of Stevenson’s site\nstaff canteen",
-        "questionWordPhrase": ""
+        "questionText": "Plan of Stevenson’s site\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n17 staff canteen",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-1-15-20.jpg"
       },
       "18": {
         "questionNumber": 18,
         "section": 2,
-        "type": "choice",
-        "stem": "meeting room",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "meeting room",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-J , next to Questions.",
         "sharedStem": "Plan of Stevenson’s site",
-        "questionText": "Plan of Stevenson’s site\nmeeting room",
-        "questionWordPhrase": ""
+        "questionText": "Plan of Stevenson’s site\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n18 meeting room",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-1-15-20.jpg"
       },
       "19": {
         "questionNumber": 19,
         "section": 2,
-        "type": "choice",
-        "stem": "human resources",
-        "options": [],
-        "questionText": "human resources",
-        "questionWordPhrase": ""
+        "type": "matching-row",
+        "rowLabel": "human resources",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
+        "questionText": "Options\nA \nB \nC \nD \nE \nF \nG \nH \n19 human resources",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-1-15-20.jpg"
       },
       "20": {
         "questionNumber": 20,
         "section": 2,
-        "type": "choice",
-        "stem": "boardroom",
-        "options": [],
-        "questionText": "boardroom",
-        "questionWordPhrase": ""
+        "type": "matching-row",
+        "rowLabel": "boardroom",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
+        "questionText": "Options\nA \nB \nC \nD \nE \nF \nG \nH \n20 boardroom",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-1-15-20.jpg"
       },
       "21": {
         "questionNumber": 21,
@@ -3134,9 +3740,9 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Stoicism is still relevant today because of its ____ appeal.",
         "options": [],
-        "questionText": "Complete the notes below.\n31 ____",
+        "questionText": "Complete the notes below.\nStoicism is still relevant today because of its ____ appeal.",
         "questionWordPhrase": ""
       },
       "32": {
@@ -3188,18 +3794,18 @@
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Cognitive Behaviour Therapy (CBT) – the treatment for ____ is based on ideas from Stoicism – people learn to base their thinking on <span class=\"ielts-listening",
+        "gapLine": "– the treatment for ____ is based on ideas from Stoicism",
         "options": [],
-        "questionText": "Complete the notes below.\nCognitive Behaviour Therapy (CBT) – the treatment for ____ is based on ideas from Stoicism – people learn to base their thinking on <span class=\"ielts-listening",
+        "questionText": "Complete the notes below.\n– the treatment for ____ is based on ideas from Stoicism",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Cognitive Behaviour Therapy (CBT) – the treatment for 37 ____ is based on ideas from Stoicism – people learn to base their thinking on ____ . In business, people benefit from Stoicism by identifying obstacles as 39 ____ .",
+        "gapLine": "– people learn to base their thinking on ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\nCognitive Behaviour Therapy (CBT) – the treatment for 37 ____ is based on ideas from Stoicism – people learn to base their thinking on ____ . In business, people benefit from Stoicism by identifying obstacles as 39 ____ .",
+        "questionText": "Complete the notes below.\n– people learn to base their thinking on ____ .",
         "questionWordPhrase": ""
       },
       "39": {
@@ -3678,55 +4284,53 @@
         "questionNumber": 25,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "Decide on sample: Twelve students from the ____ department",
+        "gapLine": "Twelve students from the ____ department",
         "options": [],
         "instruction": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams",
         "sharedStem": "Assignment on sleep and dreams",
-        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nDecide on sample: Twelve students from the ____ department",
+        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nTwelve students from the ____ department",
         "questionWordPhrase": ""
       },
       "26": {
         "questionNumber": 26,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "Decide on procedure: Answers on ____",
+        "gapLine": "Answers on ____",
         "options": [],
         "instruction": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams",
         "sharedStem": "Assignment on sleep and dreams",
-        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nDecide on procedure: Answers on ____",
+        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nAnswers on ____",
         "questionWordPhrase": ""
       },
       "27": {
         "questionNumber": 27,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "Check ethical guidelines for working with ____ Ensure that risk is assessed and 28 ____ is kept to a minimum",
+        "gapLine": "Check ethical guidelines for working with ____",
         "options": [],
         "instruction": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams",
         "sharedStem": "Assignment on sleep and dreams",
-        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nCheck ethical guidelines for working with ____ Ensure that risk is assessed and 28 ____ is kept to a minimum",
+        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nCheck ethical guidelines for working with ____",
         "questionWordPhrase": ""
       },
       "28": {
         "questionNumber": 28,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "Check ethical guidelines for working with 27 ____ Ensure that risk is assessed and ____ is kept to a minimum",
+        "gapLine": "Ensure that risk is assessed and ____ is kept to a minimum",
         "options": [],
         "instruction": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams",
         "sharedStem": "Assignment on sleep and dreams",
-        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nCheck ethical guidelines for working with 27 ____ Ensure that risk is assessed and ____ is kept to a minimum",
+        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nEnsure that risk is assessed and ____ is kept to a minimum",
         "questionWordPhrase": ""
       },
       "29": {
         "questionNumber": 29,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "Analyse the results Calculate the correlation and make a ____",
+        "gapLine": "Calculate the correlation and make a ____",
         "options": [],
-        "instruction": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams",
-        "sharedStem": "Assignment on sleep and dreams",
-        "questionText": "Choose the correct letter, A , B or C .\nAssignment on sleep and dreams\nAnalyse the results Calculate the correlation and make a ____",
+        "questionText": "Complete the notes below.\nCalculate the correlation and make a ____",
         "questionWordPhrase": ""
       },
       "30": {
@@ -3810,9 +4414,7 @@
         "type": "gap-fill",
         "gapLine": "can lessen the feeling of ____ , very common in older people",
         "options": [],
-        "instruction": "Complete the flow chart below.\nWrite ONE WORD ONLY for each answer.",
-        "sharedStem": "Assignment plan",
-        "questionText": "Complete the flow chart below.\nWrite ONE WORD ONLY for each answer.\ncan lessen the feeling of ____ , very common in older people",
+        "questionText": "Complete the notes below.\ncan lessen the feeling of ____ , very common in older people",
         "questionWordPhrase": ""
       },
       "38": {
@@ -3828,18 +4430,18 @@
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "The American Journal of Health Behavior study showed that: – women suffering from ____ benefited from doing Zumba. – Zumba became a <strong id=\"",
+        "gapLine": "– women suffering from ____ benefited from doing Zumba.",
         "options": [],
-        "questionText": "Complete the notes below.\nThe American Journal of Health Behavior study showed that: – women suffering from ____ benefited from doing Zumba. – Zumba became a <strong id=\"",
+        "questionText": "Complete the notes below.\n– women suffering from ____ benefited from doing Zumba.",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "The American Journal of Health Behavior study showed that: – women suffering from 39 ____ benefited from doing Zumba. – Zumba became a ____ for the participants.",
+        "gapLine": "– Zumba became a ____ for the participants.",
         "options": [],
-        "questionText": "Complete the notes below.\nThe American Journal of Health Behavior study showed that: – women suffering from 39 ____ benefited from doing Zumba. – Zumba became a ____ for the participants.",
+        "questionText": "Complete the notes below.\n– Zumba became a ____ for the participants.",
         "questionWordPhrase": ""
       }
     },
@@ -3937,21 +4539,63 @@
       "11": {
         "questionNumber": 11,
         "section": 2,
-        "type": "gap-fill",
-        "gapLine": "",
-        "options": [],
+        "type": "choice",
+        "stem": "According to Megan, what are the TWO main advantages of working in the agriculture and horticulture sectors?",
+        "options": [
+          {
+            "key": "A",
+            "text": "the active lifestyle"
+          },
+          {
+            "key": "B",
+            "text": "the above-average salaries"
+          },
+          {
+            "key": "C",
+            "text": "the flexible working opportunities"
+          },
+          {
+            "key": "D",
+            "text": "the opportunities for overseas travel"
+          },
+          {
+            "key": "E",
+            "text": "the chance to be in a natural environment"
+          }
+        ],
         "instruction": "Choose TWO letters, A-E .",
-        "questionText": "Choose TWO letters, A-E .\n11 ____",
+        "questionText": "According to Megan, what are the TWO main advantages of working in the agriculture and horticulture sectors?\nA the active lifestyle\nB the above-average salaries\nC the flexible working opportunities\nD the opportunities for overseas travel\nE the chance to be in a natural environment",
         "questionWordPhrase": ""
       },
       "12": {
         "questionNumber": 12,
         "section": 2,
-        "type": "gap-fill",
-        "gapLine": "",
-        "options": [],
+        "type": "choice",
+        "stem": "According to Megan, what are the TWO main advantages of working in the agriculture and horticulture sectors?",
+        "options": [
+          {
+            "key": "A",
+            "text": "the active lifestyle"
+          },
+          {
+            "key": "B",
+            "text": "the above-average salaries"
+          },
+          {
+            "key": "C",
+            "text": "the flexible working opportunities"
+          },
+          {
+            "key": "D",
+            "text": "the opportunities for overseas travel"
+          },
+          {
+            "key": "E",
+            "text": "the chance to be in a natural environment"
+          }
+        ],
         "instruction": "Choose TWO letters, A-E .",
-        "questionText": "Choose TWO letters, A-E .\n12 ____",
+        "questionText": "According to Megan, what are the TWO main advantages of working in the agriculture and horticulture sectors?\nA the active lifestyle\nB the above-average salaries\nC the flexible working opportunities\nD the opportunities for overseas travel\nE the chance to be in a natural environment",
         "questionWordPhrase": ""
       },
       "13": {
@@ -4656,9 +5300,9 @@
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "cost for the week: £ 2 ____ ____ Cottage cost for the week: £480",
+        "gapLine": "____ Cottage",
         "options": [],
-        "questionText": "Complete the notes below.\ncost for the week: £ 2 ____ ____ Cottage cost for the week: £480",
+        "questionText": "Complete the notes below.\n____ Cottage",
         "questionWordPhrase": ""
       },
       "4": {
@@ -4823,64 +5467,268 @@
       "15": {
         "questionNumber": 15,
         "section": 2,
-        "type": "choice",
-        "stem": "New car park",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "New car park",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
         "sharedStem": "Recreation ground after proposed changes",
-        "questionText": "Recreation ground after proposed changes\nNew car park",
-        "questionWordPhrase": ""
+        "questionText": "Recreation ground after proposed changes\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n15 New car park",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-4-15-20.jpg"
       },
       "16": {
         "questionNumber": 16,
         "section": 2,
-        "type": "choice",
-        "stem": "New cricket pitch",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "New cricket pitch",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
         "sharedStem": "Recreation ground after proposed changes",
-        "questionText": "Recreation ground after proposed changes\nNew cricket pitch",
-        "questionWordPhrase": ""
+        "questionText": "Recreation ground after proposed changes\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n16 New cricket pitch",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-4-15-20.jpg"
       },
       "17": {
         "questionNumber": 17,
         "section": 2,
-        "type": "choice",
-        "stem": "Children's playground",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "Children's playground",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
         "sharedStem": "Recreation ground after proposed changes",
-        "questionText": "Recreation ground after proposed changes\nChildren's playground",
-        "questionWordPhrase": ""
+        "questionText": "Recreation ground after proposed changes\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n17 Children's playground",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-4-15-20.jpg"
       },
       "18": {
         "questionNumber": 18,
         "section": 2,
-        "type": "choice",
-        "stem": "Skateboard ramp",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "Skateboard ramp",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A-I , next to Questions.",
         "sharedStem": "Recreation ground after proposed changes",
-        "questionText": "Recreation ground after proposed changes\nSkateboard ramp",
-        "questionWordPhrase": ""
+        "questionText": "Recreation ground after proposed changes\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n18 Skateboard ramp",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-4-15-20.jpg"
       },
       "19": {
         "questionNumber": 19,
         "section": 2,
-        "type": "choice",
-        "stem": "Pavilion",
-        "options": [],
-        "questionText": "Pavilion",
-        "questionWordPhrase": ""
+        "type": "matching-row",
+        "rowLabel": "Pavilion",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
+        "questionText": "Options\nA \nB \nC \nD \nE \nF \nG \nH \n19 Pavilion",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-4-15-20.jpg"
       },
       "20": {
         "questionNumber": 20,
         "section": 2,
-        "type": "choice",
-        "stem": "Notice board",
-        "options": [],
-        "questionText": "Notice board",
-        "questionWordPhrase": ""
+        "type": "matching-row",
+        "rowLabel": "Notice board",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
+        "questionText": "Options\nA \nB \nC \nD \nE \nF \nG \nH \n20 Notice board",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-16-academic-listening-test-4-15-20.jpg"
       },
       "21": {
         "questionNumber": 21,
@@ -6013,27 +6861,27 @@
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Mazes are a type of 31 ____ – ____ is needed to navigate through a maze – the word ‘maze’ is derived from a word meaning a feeling of <s",
+        "gapLine": "– ____ is needed to navigate through a maze",
         "options": [],
-        "questionText": "Complete the notes below.\nMazes are a type of 31 ____ – ____ is needed to navigate through a maze – the word ‘maze’ is derived from a word meaning a feeling of <s",
+        "questionText": "Complete the notes below.\n– ____ is needed to navigate through a maze",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Mazes are a type of 31 ____ – 32 ____ is needed to navigate through a maze – the word ‘maze’ is derived from a word meaning a feeling of ____ Labyrinths represent a journey through life",
+        "gapLine": "– the word ‘maze’ is derived from a word meaning a feeling of ____",
         "options": [],
-        "questionText": "Complete the notes below.\nMazes are a type of 31 ____ – 32 ____ is needed to navigate through a maze – the word ‘maze’ is derived from a word meaning a feeling of ____ Labyrinths represent a journey through life",
+        "questionText": "Complete the notes below.\n– the word ‘maze’ is derived from a word meaning a feeling of ____",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Labyrinths represent a journey through life – they have frequently been used in ____ and prayer Early examples of the labyrinth spiral Ancient carvings on 35 ____ have been found across many cultures",
+        "gapLine": "– they have frequently been used in ____ and prayer",
         "options": [],
-        "questionText": "Complete the notes below.\nLabyrinths represent a journey through life – they have frequently been used in ____ and prayer Early examples of the labyrinth spiral Ancient carvings on 35 ____ have been found across many cultures",
+        "questionText": "Complete the notes below.\n– they have frequently been used in ____ and prayer",
         "questionWordPhrase": ""
       },
       "35": {
@@ -6076,18 +6924,18 @@
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Popular with patients, visitors and staff in hospitals – patients who can’t walk can use ‘finger labyrinths’ made from ____ – research has shown that Alzheimer’s sufferers experience less <span class=\"ielts-listening-question",
+        "gapLine": "– patients who can’t walk can use ‘finger labyrinths’ made from ____",
         "options": [],
-        "questionText": "Complete the notes below.\nPopular with patients, visitors and staff in hospitals – patients who can’t walk can use ‘finger labyrinths’ made from ____ – research has shown that Alzheimer’s sufferers experience less <span class=\"ielts-listening-question",
+        "questionText": "Complete the notes below.\n– patients who can’t walk can use ‘finger labyrinths’ made from ____",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Popular with patients, visitors and staff in hospitals – patients who can’t walk can use ‘finger labyrinths’ made from 39 ____ – research has shown that Alzheimer’s sufferers experience less ____ <div class",
+        "gapLine": "– research has shown that Alzheimer’s sufferers experience less ____",
         "options": [],
-        "questionText": "Complete the notes below.\nPopular with patients, visitors and staff in hospitals – patients who can’t walk can use ‘finger labyrinths’ made from 39 ____ – research has shown that Alzheimer’s sufferers experience less ____ <div class",
+        "questionText": "Complete the notes below.\n– research has shown that Alzheimer’s sufferers experience less ____",
         "questionWordPhrase": ""
       }
     },
@@ -6813,21 +7661,47 @@
       "28": {
         "questionNumber": 28,
         "section": 3,
-        "type": "gap-fill",
-        "gapLine": "",
-        "options": [],
+        "type": "choice",
+        "stem": "The students think the story of Romeo and Juliet is still relevant for young people today because",
+        "options": [
+          {
+            "key": "A",
+            "text": "it illustrates how easily conflict can start."
+          },
+          {
+            "key": "B",
+            "text": "it deals with problems that families experience."
+          },
+          {
+            "key": "C",
+            "text": "it teaches them about relationships."
+          }
+        ],
         "instruction": "Choose the correct letter, A , B or C .",
-        "questionText": "Choose the correct letter, A , B or C .\n28 ____",
+        "questionText": "The students think the story of Romeo and Juliet is still relevant for young people today because\nA it illustrates how easily conflict can start.\nB it deals with problems that families experience.\nC it teaches them about relationships.",
         "questionWordPhrase": ""
       },
       "29": {
         "questionNumber": 29,
         "section": 3,
-        "type": "gap-fill",
-        "gapLine": "",
-        "options": [],
+        "type": "choice",
+        "stem": "The students found watching Romeo and Juliet in another language",
+        "options": [
+          {
+            "key": "A",
+            "text": "frustrating."
+          },
+          {
+            "key": "B",
+            "text": "demanding."
+          },
+          {
+            "key": "C",
+            "text": "moving."
+          }
+        ],
         "instruction": "Choose the correct letter, A , B or C .",
-        "questionText": "Choose the correct letter, A , B or C .\n29 ____",
+        "questionText": "The students found watching Romeo and Juliet in another language\nA frustrating.\nB demanding.\nC moving.",
         "questionWordPhrase": ""
       },
       "30": {
@@ -6949,8 +7823,7 @@
         "type": "gap-fill",
         "gapLine": "is worried about the consequences of children not being ____ in either Icelandic or English",
         "options": [],
-        "instruction": "Choose the correct letter, A , B or C .",
-        "questionText": "Choose the correct letter, A , B or C .\nis worried about the consequences of children not being ____ in either Icelandic or English",
+        "questionText": "Complete the notes below.\nis worried about the consequences of children not being ____ in either Icelandic or English",
         "questionWordPhrase": ""
       }
     },
@@ -6977,36 +7850,36 @@
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "County Clare – Lahinch has some good quality ____ and surf schools – There are famous cliffs nearby County Mayo",
+        "gapLine": "– Lahinch has some good quality ____ and surf schools",
         "options": [],
-        "questionText": "Complete the notes below.\nCounty Clare – Lahinch has some good quality ____ and surf schools – There are famous cliffs nearby County Mayo",
+        "questionText": "Complete the notes below.\n– Lahinch has some good quality ____ and surf schools",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "County Mayo – Good surf school at ____ beach – Surf camp lasts for one <strong id=\"ielts-listening-",
+        "gapLine": "– Good surf school at ____ beach",
         "options": [],
-        "questionText": "Complete the notes below.\nCounty Mayo – Good surf school at ____ beach – Surf camp lasts for one <strong id=\"ielts-listening-",
+        "questionText": "Complete the notes below.\n– Good surf school at ____ beach",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "County Mayo – Good surf school at 4 ____ beach – Surf camp lasts for one ____ – Can also explore the local <strong id=\"ielts-listening-que",
+        "gapLine": "– Surf camp lasts for one ____",
         "options": [],
-        "questionText": "Complete the notes below.\nCounty Mayo – Good surf school at 4 ____ beach – Surf camp lasts for one ____ – Can also explore the local <strong id=\"ielts-listening-que",
+        "questionText": "Complete the notes below.\n– Surf camp lasts for one ____",
         "questionWordPhrase": ""
       },
       "6": {
         "questionNumber": 6,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "County Mayo – Good surf school at 4 ____ beach – Surf camp lasts for one 5 ____ – Can also explore the local ____ by kayak Weather Best month to go: 7 ____",
+        "gapLine": "– Can also explore the local ____ by kayak",
         "options": [],
-        "questionText": "Complete the notes below.\nCounty Mayo – Good surf school at 4 ____ beach – Surf camp lasts for one 5 ____ – Can also explore the local ____ by kayak Weather Best month to go: 7 ____",
+        "questionText": "Complete the notes below.\n– Can also explore the local ____ by kayak",
         "questionWordPhrase": ""
       },
       "7": {
@@ -7031,18 +7904,18 @@
         "questionNumber": 9,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Equipment – Wetsuit and surfboard: ____ euros per day – Also advisable to hire <strong id=\"ielts-lis",
+        "gapLine": "– Wetsuit and surfboard: ____ euros per day",
         "options": [],
-        "questionText": "Complete the notes below.\nEquipment – Wetsuit and surfboard: ____ euros per day – Also advisable to hire <strong id=\"ielts-lis",
+        "questionText": "Complete the notes below.\n– Wetsuit and surfboard: ____ euros per day",
         "questionWordPhrase": ""
       },
       "10": {
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Equipment – Wetsuit and surfboard: 9 ____ euros per day – Also advisable to hire ____ for warmth",
+        "gapLine": "– Also advisable to hire ____ for warmth",
         "options": [],
-        "questionText": "Complete the notes below.\nEquipment – Wetsuit and surfboard: 9 ____ euros per day – Also advisable to hire ____ for warmth",
+        "questionText": "Complete the notes below.\n– Also advisable to hire ____ for warmth",
         "questionWordPhrase": ""
       },
       "11": {
@@ -7749,18 +8622,18 @@
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Aristotle believed birds changed from one species into another in summer and winter. – In autumn he observed that redstarts experience the loss of ____ and thought they then turned into robins. – Aristotle’s assumptions were logical because the two spec",
+        "gapLine": "– In autumn he observed that redstarts experience the loss of ____ and thought they then turned into robins.",
         "options": [],
-        "questionText": "Complete the notes below.\nAristotle believed birds changed from one species into another in summer and winter. – In autumn he observed that redstarts experience the loss of ____ and thought they then turned into robins. – Aristotle’s assumptions were logical because the two spec",
+        "questionText": "Complete the notes below.\n– In autumn he observed that redstarts experience the loss of ____ and thought they then turned into robins.",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Aristotle believed birds changed from one species into another in summer and winter. – In autumn he observed that redstarts experience the loss of 32 ____ and thought they then turned into robins. – Aristotle’s assumptions were logical because the two species of birds had a similar ____ . 17th century Charles Morton popularised the idea that birds fly to the 34 ____ in winter.",
+        "gapLine": "– Aristotle’s assumptions were logical because the two species of birds had a similar ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\nAristotle believed birds changed from one species into another in summer and winter. – In autumn he observed that redstarts experience the loss of 32 ____ and thought they then turned into robins. – Aristotle’s assumptions were logical because the two species of birds had a similar ____ . 17th century Charles Morton popularised the idea that birds fly to the 34 ____ in winter.",
+        "questionText": "Complete the notes below.\n– Aristotle’s assumptions were logical because the two species of birds had a similar ____ .",
         "questionWordPhrase": ""
       },
       "34": {
@@ -7785,9 +8658,9 @@
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "In 1822, a stork was killed in Germany which had an African spear in its 35 ____ . – previously there had been no ____ that storks migrate to Africa Little was known about the 37 ____ and journeys of migrating birds until the practice of ringing was established.",
+        "gapLine": "– previously there had been no ____ that storks migrate to Africa",
         "options": [],
-        "questionText": "Complete the notes below.\nIn 1822, a stork was killed in Germany which had an African spear in its 35 ____ . – previously there had been no ____ that storks migrate to Africa Little was known about the 37 ____ and journeys of migrating birds until the practice of ringing was established.",
+        "questionText": "Complete the notes below.\n– previously there had been no ____ that storks migrate to Africa",
         "questionWordPhrase": ""
       },
       "37": {
@@ -7803,18 +8676,18 @@
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Little was known about the 37 ____ and journeys of migrating birds until the practice of ringing was established. – It was thought large birds carried small birds on some journeys because they were considered incapable of travelling across huge ____ . – Ringing depended on what is called the ‘ <strong id=\"i",
+        "gapLine": "– It was thought large birds carried small birds on some journeys because they were considered incapable of travelling across huge ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\nLittle was known about the 37 ____ and journeys of migrating birds until the practice of ringing was established. – It was thought large birds carried small birds on some journeys because they were considered incapable of travelling across huge ____ . – Ringing depended on what is called the ‘ <strong id=\"i",
+        "questionText": "Complete the notes below.\n– It was thought large birds carried small birds on some journeys because they were considered incapable of travelling across huge ____ .",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Little was known about the 37 ____ and journeys of migrating birds until the practice of ringing was established. – It was thought large birds carried small birds on some journeys because they were considered incapable of travelling across huge 38 ____ . – Ringing depended on what is called the ‘ ____ ’ of dead birds. In 1931, the first 40 ____ to show the migration of European birds was printed.",
+        "gapLine": "– Ringing depended on what is called the ‘ ____ ’ of dead birds.",
         "options": [],
-        "questionText": "Complete the notes below.\nLittle was known about the 37 ____ and journeys of migrating birds until the practice of ringing was established. – It was thought large birds carried small birds on some journeys because they were considered incapable of travelling across huge 38 ____ . – Ringing depended on what is called the ‘ ____ ’ of dead birds. In 1931, the first 40 ____ to show the migration of European birds was printed.",
+        "questionText": "Complete the notes below.\n– Ringing depended on what is called the ‘ ____ ’ of dead birds.",
         "questionWordPhrase": ""
       },
       "40": {
@@ -7841,36 +8714,36 @@
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Every week – Cleaning the ____ – Ironing clothes – 3 ____ only Every month",
+        "gapLine": "– Cleaning the ____",
         "options": [],
-        "questionText": "Complete the notes below.\nEvery week – Cleaning the ____ – Ironing clothes – 3 ____ only Every month",
+        "questionText": "Complete the notes below.\n– Cleaning the ____",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Every week – Cleaning the 2 ____ – Ironing clothes – ____ only Every month",
+        "gapLine": "– Ironing clothes – ____ only",
         "options": [],
-        "questionText": "Complete the notes below.\nEvery week – Cleaning the 2 ____ – Ironing clothes – ____ only Every month",
+        "questionText": "Complete the notes below.\n– Ironing clothes – ____ only",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Every month – Cleaning all the ____ from the inside – Washing down the <strong id=\"ielts-listeni",
+        "gapLine": "– Cleaning all the ____ from the inside",
         "options": [],
-        "questionText": "Complete the notes below.\nEvery month – Cleaning all the ____ from the inside – Washing down the <strong id=\"ielts-listeni",
+        "questionText": "Complete the notes below.\n– Cleaning all the ____ from the inside",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Every month – Cleaning all the 4 ____ from the inside – Washing down the ____ Other possibilities They can organise a plumber or an 6 ____ if necessary.",
+        "gapLine": "– Washing down the ____",
         "options": [],
-        "questionText": "Complete the notes below.\nEvery month – Cleaning all the 4 ____ from the inside – Washing down the ____ Other possibilities They can organise a plumber or an 6 ____ if necessary.",
+        "questionText": "Complete the notes below.\n– Washing down the ____",
         "questionWordPhrase": ""
       },
       "6": {
@@ -8640,90 +9513,90 @@
         "questionNumber": 1,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Area: ____ hectares",
         "options": [],
-        "questionText": "Complete the notes below.\n1 ____",
+        "questionText": "Complete the notes below.\nArea: ____ hectares",
         "questionWordPhrase": ""
       },
       "2": {
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Wetland: lakes, ponds and a ____",
         "options": [],
-        "questionText": "Complete the notes below.\n2 ____",
+        "questionText": "Complete the notes below.\nWetland: lakes, ponds and a ____",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Science: Children look at ____ about plants, etc.",
         "options": [],
-        "questionText": "Complete the notes below.\n3 ____",
+        "questionText": "Complete the notes below.\nScience: Children look at ____ about plants, etc.",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Geography: includes learning to use a ____ and compass History: changes in land use",
         "options": [],
-        "questionText": "Complete the notes below.\n4 ____",
+        "questionText": "Complete the notes below.\nGeography: includes learning to use a ____ and compass History: changes in land use",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Leisure and tourism: mostly concentrates on the park’s ____",
         "options": [],
-        "questionText": "Complete the notes below.\n5 ____",
+        "questionText": "Complete the notes below.\nLeisure and tourism: mostly concentrates on the park’s ____",
         "questionWordPhrase": ""
       },
       "6": {
         "questionNumber": 6,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Music: Children make ____ with natural materials, and experiment with rhythm and speed.",
         "options": [],
-        "questionText": "Complete the notes below.\n6 ____",
+        "questionText": "Complete the notes below.\nMusic: Children make ____ with natural materials, and experiment with rhythm and speed.",
         "questionWordPhrase": ""
       },
       "7": {
         "questionNumber": 7,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "They give children a feeling of ____ that they may not have elsewhere.",
         "options": [],
-        "questionText": "Complete the notes below.\n7 ____",
+        "questionText": "Complete the notes below.\nThey give children a feeling of ____ that they may not have elsewhere.",
         "questionWordPhrase": ""
       },
       "8": {
         "questionNumber": 8,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Children learn new ____ and gain self-confidence.",
         "options": [],
-        "questionText": "Complete the notes below.\n8 ____",
+        "questionText": "Complete the notes below.\nChildren learn new ____ and gain self-confidence.",
         "questionWordPhrase": ""
       },
       "9": {
         "questionNumber": 9,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Cost per child: £ ____",
         "options": [],
-        "questionText": "Complete the notes below.\n9 ____",
+        "questionText": "Complete the notes below.\nCost per child: £ ____",
         "questionWordPhrase": ""
       },
       "10": {
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Adults, such as ____ , free",
         "options": [],
-        "questionText": "Complete the notes below.\n10 ____",
+        "questionText": "Complete the notes below.\nAdults, such as ____ , free",
         "questionWordPhrase": ""
       },
       "11": {
@@ -8849,57 +9722,227 @@
       "16": {
         "questionNumber": 16,
         "section": 2,
-        "type": "choice",
-        "stem": "Farm shop",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "Farm shop",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A–H , next to Questions.",
         "sharedStem": "Farley House",
-        "questionText": "Farley House\nFarm shop",
-        "questionWordPhrase": ""
+        "questionText": "Farley House\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n16 Farm shop",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2024/07/cambridge-ielts-19-academic-listening-test-1-16-20.png"
       },
       "17": {
         "questionNumber": 17,
         "section": 2,
-        "type": "choice",
-        "stem": "Disabled entry",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "Disabled entry",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A–H , next to Questions.",
         "sharedStem": "Farley House",
-        "questionText": "Farley House\nDisabled entry",
-        "questionWordPhrase": ""
+        "questionText": "Farley House\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n17 Disabled entry",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2024/07/cambridge-ielts-19-academic-listening-test-1-16-20.png"
       },
       "18": {
         "questionNumber": 18,
         "section": 2,
-        "type": "choice",
-        "stem": "Adventure playground",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "Adventure playground",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A–H , next to Questions.",
         "sharedStem": "Farley House",
-        "questionText": "Farley House\nAdventure playground",
-        "questionWordPhrase": ""
+        "questionText": "Farley House\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n18 Adventure playground",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2024/07/cambridge-ielts-19-academic-listening-test-1-16-20.png"
       },
       "19": {
         "questionNumber": 19,
         "section": 2,
-        "type": "choice",
-        "stem": "Kitchen gardens",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "Kitchen gardens",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A–H , next to Questions.",
         "sharedStem": "Farley House",
-        "questionText": "Farley House\nKitchen gardens",
-        "questionWordPhrase": ""
+        "questionText": "Farley House\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n19 Kitchen gardens",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2024/07/cambridge-ielts-19-academic-listening-test-1-16-20.png"
       },
       "20": {
         "questionNumber": 20,
         "section": 2,
-        "type": "choice",
-        "stem": "The Temple of the Four Winds",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "The Temple of the Four Winds",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          },
+          {
+            "key": "H",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below.\nWrite the correct letter, A–H , next to Questions.",
         "sharedStem": "Farley House",
-        "questionText": "Farley House\nThe Temple of the Four Winds",
-        "questionWordPhrase": ""
+        "questionText": "Farley House\nOptions\nA \nB \nC \nD \nE \nF \nG \nH \n20 The Temple of the Four Winds",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2024/07/cambridge-ielts-19-academic-listening-test-1-16-20.png"
       },
       "21": {
         "questionNumber": 21,
@@ -9293,90 +10336,90 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "In the 1930s, a local teacher realised that stones beneath the bog surface were once ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n31 ____",
+        "questionText": "Complete the notes below.\nIn the 1930s, a local teacher realised that stones beneath the bog surface were once ____ .",
         "questionWordPhrase": ""
       },
       "32": {
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "His ____ became an archaeologist and undertook an investigation of the site:",
         "options": [],
-        "questionText": "Complete the notes below.\n32 ____",
+        "questionText": "Complete the notes below.\nHis ____ became an archaeologist and undertook an investigation of the site:",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- a traditional method used by local people to dig for ____ was used to identify where stones were located",
         "options": [],
-        "questionText": "Complete the notes below.\n33 ____",
+        "questionText": "Complete the notes below.\n- a traditional method used by local people to dig for ____ was used to identify where stones were located",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Items are well preserved in the bog because of a lack of ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n34 ____",
+        "questionText": "Complete the notes below.\nItems are well preserved in the bog because of a lack of ____ .",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Houses were ____ in shape and had a hole in the roof.",
         "options": [],
-        "questionText": "Complete the notes below.\n35 ____",
+        "questionText": "Complete the notes below.\nHouses were ____ in shape and had a hole in the roof.",
         "questionWordPhrase": ""
       },
       "36": {
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- pots used for storage and to make ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n36 ____",
+        "questionText": "Complete the notes below.\n- pots used for storage and to make ____ .",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Each field at Céide was large enough to support a big ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n37 ____",
+        "questionText": "Complete the notes below.\nEach field at Céide was large enough to support a big ____ .",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "The fields were probably used to restrict the grazing of animals – no evidence of structures to house them during ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n38 ____",
+        "questionText": "Complete the notes below.\nThe fields were probably used to restrict the grazing of animals – no evidence of structures to house them during ____ .",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "a decline in ____ quality",
         "options": [],
-        "questionText": "Complete the notes below.\n39 ____",
+        "questionText": "Complete the notes below.\na decline in ____ quality",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "an increase in ____",
         "options": [],
-        "questionText": "Complete the notes below.\n40 ____",
+        "questionText": "Complete the notes below.\nan increase in ____",
         "questionWordPhrase": ""
       }
     },
@@ -9385,54 +10428,54 @@
         "questionNumber": 1,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Coordinator: Gary ____",
         "options": [],
-        "questionText": "Complete the notes below.\n1 ____",
+        "questionText": "Complete the notes below.\nCoordinator: Gary ____",
         "questionWordPhrase": ""
       },
       "2": {
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Level: ____",
         "options": [],
-        "questionText": "Complete the notes below.\n2 ____",
+        "questionText": "Complete the notes below.\nLevel: ____",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Place: the ____",
         "options": [],
-        "questionText": "Complete the notes below.\n3 ____",
+        "questionText": "Complete the notes below.\nPlace: the ____",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "____ Street",
         "options": [],
-        "questionText": "Complete the notes below.\n4 ____",
+        "questionText": "Complete the notes below.\n____ Street",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Time: Thursday morning at ____",
         "options": [],
-        "questionText": "Complete the notes below.\n5 ____",
+        "questionText": "Complete the notes below.\nTime: Thursday morning at ____",
         "questionWordPhrase": ""
       },
       "6": {
         "questionNumber": 6,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Recommended website: ‘The perfect ____ ’",
         "options": [],
-        "questionText": "Complete the notes below.\n6 ____",
+        "questionText": "Complete the notes below.\nRecommended website: ‘The perfect ____ ’",
         "questionWordPhrase": ""
       },
       "7": {
@@ -9482,12 +10525,25 @@
       "11": {
         "questionNumber": 11,
         "section": 2,
-        "type": "gap-fill",
-        "gapLine": "",
-        "options": [],
+        "type": "choice",
+        "stem": "What made David leave London and move to Northsea?",
+        "options": [
+          {
+            "key": "A",
+            "text": "He was eager to develop a hobby."
+          },
+          {
+            "key": "B",
+            "text": "He wanted to work shorter hours."
+          },
+          {
+            "key": "C",
+            "text": "He found his job in website design unsatisfying"
+          }
+        ],
         "instruction": "Choose the correct letter, A, B or C.\nWorking as a lifeboat volunteer",
         "sharedStem": "Working as a lifeboat volunteer",
-        "questionText": "Choose the correct letter, A, B or C.\nWorking as a lifeboat volunteer\n11 ____",
+        "questionText": "Working as a lifeboat volunteer\nWhat made David leave London and move to Northsea?\nA He was eager to develop a hobby.\nB He wanted to work shorter hours.\nC He found his job in website design unsatisfying",
         "questionWordPhrase": ""
       },
       "12": {
@@ -10020,100 +11076,100 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- also known as water ‘bears’ (due to how they ____ ) and ‘moss piglets’",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n31 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- also known as water ‘bears’ (due to how they ____ ) and ‘moss piglets’",
         "questionWordPhrase": ""
       },
       "32": {
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- a ____ round body and four pairs of legs",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n32 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- a ____ round body and four pairs of legs",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- claws or ____ for gripping",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n33 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- claws or ____ for gripping",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- body filled with a liquid that carries both ____ and blood",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n34 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- body filled with a liquid that carries both ____ and blood",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- mouth shaped like a ____ with teeth called stylets",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n35 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- mouth shaped like a ____ with teeth called stylets",
         "questionWordPhrase": ""
       },
       "36": {
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- very resilient and can exist in very low or high ____",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n36 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- very resilient and can exist in very low or high ____",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- A type of ____ ensures their DNA is not damaged.",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n37 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- A type of ____ ensures their DNA is not damaged.",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Research is underway to find out how many days they can stay alive in ____",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n38 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- Research is underway to find out how many days they can stay alive in ____",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- consume liquids, e.g., those found in moss or ____",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n39 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- consume liquids, e.g., those found in moss or ____",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- They are not considered to be ____ .",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n40 ____",
+        "questionText": "Choose the correct letter, A, B or C.\n- They are not considered to be ____ .",
         "questionWordPhrase": ""
       }
     },
@@ -10122,54 +11178,54 @@
         "questionNumber": 1,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Kite Place - near the ____",
         "options": [],
-        "questionText": "Complete the notes below.\n1 ____",
+        "questionText": "Complete the notes below.\n- Kite Place - near the ____",
         "questionWordPhrase": ""
       },
       "2": {
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- cross the ____ and turn right",
         "options": [],
-        "questionText": "Complete the notes below.\n2 ____",
+        "questionText": "Complete the notes below.\n- cross the ____ and turn right",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- best to go before ____ pm, earlier than closing time",
         "options": [],
-        "questionText": "Complete the notes below.\n3 ____",
+        "questionText": "Complete the notes below.\n- best to go before ____ pm, earlier than closing time",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- called ____",
         "options": [],
-        "questionText": "Complete the notes below.\n4 ____",
+        "questionText": "Complete the notes below.\n- called ____",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- look for the large ____ outside",
         "options": [],
-        "questionText": "Complete the notes below.\n5 ____",
+        "questionText": "Complete the notes below.\n- look for the large ____ outside",
         "questionWordPhrase": ""
       },
       "6": {
         "questionNumber": 6,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "take a ____ minibus, number 289",
         "options": [],
-        "questionText": "Complete the notes below.\n6 ____",
+        "questionText": "Complete the notes below.\ntake a ____ minibus, number 289",
         "questionWordPhrase": ""
       },
       "7": {
@@ -10749,20 +11805,20 @@
         "questionNumber": 28,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "Put each group in a separate cage. Feed group A commercial mouse food. Feed group B the same, but also sugar contained in Drop answer here ____ .",
+        "gapLine": "Feed group B the same, but also sugar contained in Drop answer here ____ .",
         "options": [],
         "instruction": "Complete the flowchart below.\nChoose FIVE answers from the box and write the correct letter, A-H .",
-        "questionText": "Complete the flowchart below.\nChoose FIVE answers from the box and write the correct letter, A-H .\nPut each group in a separate cage. Feed group A commercial mouse food. Feed group B the same, but also sugar contained in Drop answer here ____ .",
+        "questionText": "Complete the flowchart below.\nChoose FIVE answers from the box and write the correct letter, A-H .\nFeed group B the same, but also sugar contained in Drop answer here ____ .",
         "questionWordPhrase": ""
       },
       "29": {
         "questionNumber": 29,
         "section": 3,
         "type": "gap-fill",
-        "gapLine": "Take measurements using an electronic scale. Place them in a weighing chamber to prevent Drop answer here ____ .",
+        "gapLine": "Place them in a weighing chamber to prevent Drop answer here ____ .",
         "options": [],
         "instruction": "Complete the flowchart below.\nChoose FIVE answers from the box and write the correct letter, A-H .",
-        "questionText": "Complete the flowchart below.\nChoose FIVE answers from the box and write the correct letter, A-H .\nTake measurements using an electronic scale. Place them in a weighing chamber to prevent Drop answer here ____ .",
+        "questionText": "Complete the flowchart below.\nChoose FIVE answers from the box and write the correct letter, A-H .\nPlace them in a weighing chamber to prevent Drop answer here ____ .",
         "questionWordPhrase": ""
       },
       "30": {
@@ -10779,90 +11835,90 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "fibres from some ____ during washing",
         "options": [],
-        "questionText": "Complete the notes below.\n31 ____",
+        "questionText": "Complete the notes below.\nfibres from some ____ during washing",
         "questionWordPhrase": ""
       },
       "32": {
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "They cause injuries to the ____ of wildlife and affect their digestive systems.",
         "options": [],
-        "questionText": "Complete the notes below.\n32 ____",
+        "questionText": "Complete the notes below.\nThey cause injuries to the ____ of wildlife and affect their digestive systems.",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "They enter the food chain, e.g., in bottled and tap water, ____ and seafood.",
         "options": [],
-        "questionText": "Complete the notes below.\n33 ____",
+        "questionText": "Complete the notes below.\nThey enter the food chain, e.g., in bottled and tap water, ____ and seafood.",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "They may not affect human health, but they are already banned in skin cleaning products and ____ in some countries.",
         "options": [],
-        "questionText": "Complete the notes below.\n34 ____",
+        "questionText": "Complete the notes below.\nThey may not affect human health, but they are already banned in skin cleaning products and ____ in some countries.",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Microplastics enter the soil through the air, rain and ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n35 ____",
+        "questionText": "Complete the notes below.\nMicroplastics enter the soil through the air, rain and ____ .",
         "questionWordPhrase": ""
       },
       "36": {
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Earthworms are important because they add ____ to the soil.",
         "options": [],
-        "questionText": "Complete the notes below.\n36 ____",
+        "questionText": "Complete the notes below.\nEarthworms are important because they add ____ to the soil.",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "The study aimed to find whether microplastics in earthworms affect the ____ of plants.",
         "options": [],
-        "questionText": "Complete the notes below.\n37 ____",
+        "questionText": "Complete the notes below.\nThe study aimed to find whether microplastics in earthworms affect the ____ of plants.",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "____ loss in earthworms",
         "options": [],
-        "questionText": "Complete the notes below.\n38 ____",
+        "questionText": "Complete the notes below.\n____ loss in earthworms",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "a rise in the level of ____ in the soil.",
         "options": [],
-        "questionText": "Complete the notes below.\n39 ____",
+        "questionText": "Complete the notes below.\na rise in the level of ____ in the soil.",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "changes to soil damage both ecosystems and ____",
         "options": [],
-        "questionText": "Complete the notes below.\n40 ____",
+        "questionText": "Complete the notes below.\nchanges to soil damage both ecosystems and ____",
         "questionWordPhrase": ""
       }
     },
@@ -11550,90 +12606,90 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- not include invasive species because of possible ____ with native species",
         "options": [],
-        "questionText": "Complete the notes below.\n31 ____",
+        "questionText": "Complete the notes below.\n- not include invasive species because of possible ____ with native species",
         "questionWordPhrase": ""
       },
       "32": {
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- aim to capture carbon, protect the environment and provide sustainable sources of ____ for local people",
         "options": [],
-        "questionText": "Complete the notes below.\n32 ____",
+        "questionText": "Complete the notes below.\n- aim to capture carbon, protect the environment and provide sustainable sources of ____ for local people",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- use tree seeds with a high genetic diversity to increase resistance to ____ and climate change",
         "options": [],
-        "questionText": "Complete the notes below.\n33 ____",
+        "questionText": "Complete the notes below.\n- use tree seeds with a high genetic diversity to increase resistance to ____ and climate change",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- plant trees on previously forested land which is in a bad condition, not select land which is being used for ____",
         "options": [],
-        "questionText": "Complete the notes below.\n34 ____",
+        "questionText": "Complete the notes below.\n- plant trees on previously forested land which is in a bad condition, not select land which is being used for ____",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Base planning decisions on information from accurate ____",
         "options": [],
-        "questionText": "Complete the notes below.\n35 ____",
+        "questionText": "Complete the notes below.\n- Base planning decisions on information from accurate ____",
         "questionWordPhrase": ""
       },
       "36": {
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Drones are useful for identifying areas in Brazil which are endangered by keeping ____ and illegal logging.",
         "options": [],
-        "questionText": "Complete the notes below.\n36 ____",
+        "questionText": "Complete the notes below.\n- Drones are useful for identifying areas in Brazil which are endangered by keeping ____ and illegal logging.",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "+ increasing the ____ of recovery by attracting animals and birds, e.g., 38 ____ were soon attracted to the area.",
         "options": [],
-        "questionText": "Complete the notes below.\n37 ____",
+        "questionText": "Complete the notes below.\n+ increasing the ____ of recovery by attracting animals and birds, e.g., 38 ____ were soon attracted to the area.",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "+ increasing the 37 ____ of recovery by attracting animals and birds, e.g., ____ were soon attracted to the area.",
         "options": [],
-        "questionText": "Complete the notes below.\n38 ____",
+        "questionText": "Complete the notes below.\n+ increasing the 37 ____ of recovery by attracting animals and birds, e.g., ____ were soon attracted to the area.",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Destruction of mangrove forests in Madagascar made it difficult for people to make a living from ____",
         "options": [],
-        "questionText": "Complete the notes below.\n39 ____",
+        "questionText": "Complete the notes below.\n- Destruction of mangrove forests in Madagascar made it difficult for people to make a living from ____",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "+ protects against the higher risk of ____",
         "options": [],
-        "questionText": "Complete the notes below.\n40 ____",
+        "questionText": "Complete the notes below.\n+ protects against the higher risk of ____",
         "questionWordPhrase": ""
       }
     }
@@ -11653,9 +12709,9 @@
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Quite expensive The ____ is a good place for a drink",
+        "gapLine": "The ____ is a good place for a drink",
         "options": [],
-        "questionText": "Complete the notes below.\nQuite expensive The ____ is a good place for a drink",
+        "questionText": "Complete the notes below.\nThe ____ is a good place for a drink",
         "questionWordPhrase": ""
       },
       "3": {
@@ -11671,9 +12727,9 @@
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Staff are very friendly Need to pay £50 deposit A limited selection of ____ food on the menu",
+        "gapLine": "A limited selection of ____ food on the menu",
         "options": [],
-        "questionText": "Complete the notes below.\nStaff are very friendly Need to pay £50 deposit A limited selection of ____ food on the menu",
+        "questionText": "Complete the notes below.\nA limited selection of ____ food on the menu",
         "questionWordPhrase": ""
       },
       "5": {
@@ -11698,36 +12754,36 @@
         "questionNumber": 7,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "A famous chef All the ____ are very good Only uses 8 ____ ingredients",
+        "gapLine": "All the ____ are very good",
         "options": [],
-        "questionText": "Complete the notes below.\nA famous chef All the ____ are very good Only uses 8 ____ ingredients",
+        "questionText": "Complete the notes below.\nAll the ____ are very good",
         "questionWordPhrase": ""
       },
       "8": {
         "questionNumber": 8,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "A famous chef All the 7 ____ are very good Only uses ____ ingredients",
+        "gapLine": "Only uses ____ ingredients",
         "options": [],
-        "questionText": "Complete the notes below.\nA famous chef All the 7 ____ are very good Only uses ____ ingredients",
+        "questionText": "Complete the notes below.\nOnly uses ____ ingredients",
         "questionWordPhrase": ""
       },
       "9": {
         "questionNumber": 9,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Set lunch costs £ ____ per person Portions probably of 10 ____ size",
+        "gapLine": "Set lunch costs £ ____ per person",
         "options": [],
-        "questionText": "Complete the notes below.\nSet lunch costs £ ____ per person Portions probably of 10 ____ size",
+        "questionText": "Complete the notes below.\nSet lunch costs £ ____ per person",
         "questionWordPhrase": ""
       },
       "10": {
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Set lunch costs £ 9 ____ per person Portions probably of ____ size",
+        "gapLine": "Portions probably of ____ size",
         "options": [],
-        "questionText": "Complete the notes below.\nSet lunch costs £ 9 ____ per person Portions probably of ____ size",
+        "questionText": "Complete the notes below.\nPortions probably of ____ size",
         "questionWordPhrase": ""
       },
       "11": {
@@ -12274,110 +13330,110 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "-Pollution from ____ on the river bank.",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n31 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n-Pollution from ____ on the river bank.",
         "questionWordPhrase": ""
       },
       "32": {
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "In 1957, the River Thames in London was declared biologically ____",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n32 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nIn 1957, the River Thames in London was declared biologically ____",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Seals and even a ____ have been seen in the River Thames.",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n33 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nSeals and even a ____ have been seen in the River Thames.",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Riverside warehouses are converted to restaurants and ____",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n34 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nRiverside warehouses are converted to restaurants and ____",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Build a riverside ____",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n35 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nBuild a riverside ____",
         "questionWordPhrase": ""
       },
       "36": {
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Display ____ projects.",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n36 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nDisplay ____ projects.",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "In Paris, ____ are created on the sides of the river every summer.",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n37 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nIn Paris, ____ are created on the sides of the river every summer.",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Over 2 billion passengers already travel by ____ in cities around the world.",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n38 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nOver 2 billion passengers already travel by ____ in cities around the world.",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Instead of road transport, goods can be transported by large freight barges and electric ____ , or, in future, by 40 ____",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n39 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nInstead of road transport, goods can be transported by large freight barges and electric ____ , or, in future, by 40 ____",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Instead of road transport, goods can be transported by large freight barges and electric 39 ____ , or, in future, by ____",
         "options": [],
         "instruction": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.",
         "sharedStem": "Reclaiming Urban Rivers",
-        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\n40 ____",
+        "questionText": "Complete the notes below.\nWrite ONE WORD ONLY for each answer.\nInstead of road transport, goods can be transported by large freight barges and electric 39 ____ , or, in future, by ____",
         "questionWordPhrase": ""
       }
     },
@@ -12386,90 +13442,90 @@
         "questionNumber": 1,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– a ____",
         "options": [],
-        "questionText": "Complete the notes below.\n1 ____",
+        "questionText": "Complete the notes below.\n– a ____",
         "questionWordPhrase": ""
       },
       "2": {
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– how much ____ the caring involves",
         "options": [],
-        "questionText": "Complete the notes below.\n2 ____",
+        "questionText": "Complete the notes below.\n– how much ____ the caring involves",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– helping her have a ____",
         "options": [],
-        "questionText": "Complete the notes below.\n3 ____",
+        "questionText": "Complete the notes below.\n– helping her have a ____",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– dealing with ____",
         "options": [],
-        "questionText": "Complete the notes below.\n4 ____",
+        "questionText": "Complete the notes below.\n– dealing with ____",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– loss of ____",
         "options": [],
-        "questionText": "Complete the notes below.\n5 ____",
+        "questionText": "Complete the notes below.\n– loss of ____",
         "questionWordPhrase": ""
       },
       "6": {
         "questionNumber": 6,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– ____ her",
         "options": [],
-        "questionText": "Complete the notes below.\n6 ____",
+        "questionText": "Complete the notes below.\n– ____ her",
         "questionWordPhrase": ""
       },
       "7": {
         "questionNumber": 7,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– preventing a ____",
         "options": [],
-        "questionText": "Complete the notes below.\n7 ____",
+        "questionText": "Complete the notes below.\n– preventing a ____",
         "questionWordPhrase": ""
       },
       "8": {
         "questionNumber": 8,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– transport costs, e.g. cost of a ____",
         "options": [],
-        "questionText": "Complete the notes below.\n8 ____",
+        "questionText": "Complete the notes below.\n– transport costs, e.g. cost of a ____",
         "questionWordPhrase": ""
       },
       "9": {
         "questionNumber": 9,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– car-related costs, e.g. fuel and ____",
         "options": [],
-        "questionText": "Complete the notes below.\n9 ____",
+        "questionText": "Complete the notes below.\n– car-related costs, e.g. fuel and ____",
         "questionWordPhrase": ""
       },
       "10": {
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– help to reduce ____",
         "options": [],
-        "questionText": "Complete the notes below.\n10 ____",
+        "questionText": "Complete the notes below.\n– help to reduce ____",
         "questionWordPhrase": ""
       },
       "11": {
@@ -13147,92 +14203,91 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "The growth in interest in food fashions started with ____ of food being shared on social media.",
         "options": [],
         "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n31 ____",
+        "questionText": "Choose the correct letter, A, B or C.\nThe growth in interest in food fashions started with ____ of food being shared on social media.",
         "questionWordPhrase": ""
       },
       "32": {
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Sales of ____ food brands have grown rapidly this way.",
         "options": [],
-        "instruction": "Choose the correct letter, A, B or C.",
-        "questionText": "Choose the correct letter, A, B or C.\n32 ____",
+        "questionText": "Complete the notes below.\nSales of ____ food brands have grown rapidly this way.",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Famous ____ are influential.",
         "options": [],
-        "questionText": "Complete the notes below.\n33 ____",
+        "questionText": "Complete the notes below.\nFamous ____ are influential.",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "— ____ were invited to visit growers in South Africa.",
         "options": [],
-        "questionText": "Complete the notes below.\n34 ____",
+        "questionText": "Complete the notes below.\n— ____ were invited to visit growers in South Africa.",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "— Advertising focused on its ____ benefits.",
         "options": [],
-        "questionText": "Complete the notes below.\n35 ____",
+        "questionText": "Complete the notes below.\n— Advertising focused on its ____ benefits.",
         "questionWordPhrase": ""
       },
       "36": {
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "— Promotion in the USA through ____ shops reduced the need for advertising.",
         "options": [],
-        "questionText": "Complete the notes below.\n36 ____",
+        "questionText": "Complete the notes below.\n— Promotion in the USA through ____ shops reduced the need for advertising.",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "— It appealed to consumers who are concerned about the ____",
         "options": [],
-        "questionText": "Complete the notes below.\n37 ____",
+        "questionText": "Complete the notes below.\n— It appealed to consumers who are concerned about the ____",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "— has helped strengthen the ____ of Norwegian seafood.",
         "options": [],
-        "questionText": "Complete the notes below.\n38 ____",
+        "questionText": "Complete the notes below.\n— has helped strengthen the ____ of Norwegian seafood.",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "— Its success led to an increase in its ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n39 ____",
+        "questionText": "Complete the notes below.\n— Its success led to an increase in its ____ .",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "— Overuse of resources resulted in poor quality ____ .",
         "options": [],
-        "questionText": "Complete the notes below.\n40 ____",
+        "questionText": "Complete the notes below.\n— Overuse of resources resulted in poor quality ____ .",
         "questionWordPhrase": ""
       }
     },
@@ -13250,18 +14305,18 @@
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "The furniture is very ____ Delivers in 1-2 days Special offer: free 3 ____ with every living room set",
+        "gapLine": "The furniture is very ____",
         "options": [],
-        "questionText": "Complete the notes below.\nThe furniture is very ____ Delivers in 1-2 days Special offer: free 3 ____ with every living room set",
+        "questionText": "Complete the notes below.\nThe furniture is very ____",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "The furniture is very 2 ____ Delivers in 1-2 days Special offer: free ____ with every living room set",
+        "gapLine": "free ____ with every living room set",
         "options": [],
-        "questionText": "Complete the notes below.\nThe furniture is very 2 ____ Delivers in 1-2 days Special offer: free ____ with every living room set",
+        "questionText": "Complete the notes below.\nfree ____ with every living room set",
         "questionWordPhrase": ""
       },
       "4": {
@@ -13277,9 +14332,9 @@
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Mid-range prices 12% monthly free for ____",
+        "gapLine": "12% monthly free for ____",
         "options": [],
-        "questionText": "Complete the notes below.\nMid-range prices 12% monthly free for ____",
+        "questionText": "Complete the notes below.\n12% monthly free for ____",
         "questionWordPhrase": ""
       },
       "6": {
@@ -13295,9 +14350,9 @@
         "questionNumber": 7,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "Must have own ____ Minimum contract length: six months",
+        "gapLine": "Must have own ____",
         "options": [],
-        "questionText": "Complete the notes below.\nMust have own ____ Minimum contract length: six months",
+        "questionText": "Complete the notes below.\nMust have own ____",
         "questionWordPhrase": ""
       },
       "8": {
@@ -13468,42 +14523,162 @@
       "17": {
         "questionNumber": 17,
         "section": 2,
-        "type": "choice",
-        "stem": "bridge foundations",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "bridge foundations",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below. Drag the correct letter, A–G, next to Questions",
-        "questionText": "bridge foundations",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below. Drag the correct letter, A–G, next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \n17 bridge foundations",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2025/07/cambridge-ielts-20-academic-reading-test-3–17-20.png"
       },
       "18": {
         "questionNumber": 18,
         "section": 2,
-        "type": "choice",
-        "stem": "rubbish pit",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "rubbish pit",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below. Drag the correct letter, A–G, next to Questions",
-        "questionText": "rubbish pit",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below. Drag the correct letter, A–G, next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \n18 rubbish pit",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2025/07/cambridge-ielts-20-academic-reading-test-3–17-20.png"
       },
       "19": {
         "questionNumber": 19,
         "section": 2,
-        "type": "choice",
-        "stem": "meeting hall",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "meeting hall",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below. Drag the correct letter, A–G, next to Questions",
-        "questionText": "meeting hall",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below. Drag the correct letter, A–G, next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \n19 meeting hall",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2025/07/cambridge-ielts-20-academic-reading-test-3–17-20.png"
       },
       "20": {
         "questionNumber": 20,
         "section": 2,
-        "type": "choice",
-        "stem": "fish pond",
-        "options": [],
+        "type": "matching-row",
+        "rowLabel": "fish pond",
+        "options": [
+          {
+            "key": "A",
+            "text": ""
+          },
+          {
+            "key": "B",
+            "text": ""
+          },
+          {
+            "key": "C",
+            "text": ""
+          },
+          {
+            "key": "D",
+            "text": ""
+          },
+          {
+            "key": "E",
+            "text": ""
+          },
+          {
+            "key": "F",
+            "text": ""
+          },
+          {
+            "key": "G",
+            "text": ""
+          }
+        ],
         "instruction": "Label the map below. Drag the correct letter, A–G, next to Questions",
-        "questionText": "fish pond",
-        "questionWordPhrase": ""
+        "questionText": "Label the map below. Drag the correct letter, A–G, next to Questions\nOptions\nA \nB \nC \nD \nE \nF \nG \n20 fish pond",
+        "questionWordPhrase": "",
+        "mapImageUrl": "https://engnovate.com/wp-content/uploads/2025/07/cambridge-ielts-20-academic-reading-test-3–17-20.png"
       },
       "21": {
         "questionNumber": 21,
@@ -13791,90 +14966,90 @@
         "questionNumber": 31,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Designing products that can be accessed by a diverse range of people without the need for any ____",
         "options": [],
-        "questionText": "Complete the notes below.\n31 ____",
+        "questionText": "Complete the notes below.\n- Designing products that can be accessed by a diverse range of people without the need for any ____",
         "questionWordPhrase": ""
       },
       "32": {
         "questionNumber": 32,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Not the same as universal design: that is design for everyone, including catering for people with ____ problems.",
         "options": [],
-        "questionText": "Complete the notes below.\n32 ____",
+        "questionText": "Complete the notes below.\n- Not the same as universal design: that is design for everyone, including catering for people with ____ problems.",
         "questionWordPhrase": ""
       },
       "33": {
         "questionNumber": 33,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- ____ which are adjustable, avoiding back or neck problems",
         "options": [],
-        "questionText": "Complete the notes below.\n33 ____",
+        "questionText": "Complete the notes below.\n- ____ which are adjustable, avoiding back or neck problems",
         "questionWordPhrase": ""
       },
       "34": {
         "questionNumber": 34,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- ____ in public toilets which are easier to use",
         "options": [],
-        "questionText": "Complete the notes below.\n34 ____",
+        "questionText": "Complete the notes below.\n- ____ in public toilets which are easier to use",
         "questionWordPhrase": ""
       },
       "35": {
         "questionNumber": 35,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Designers avoid using ____ in interfaces",
         "options": [],
-        "questionText": "Complete the notes below.\n35 ____",
+        "questionText": "Complete the notes below.\n- Designers avoid using ____ in interfaces",
         "questionWordPhrase": ""
       },
       "36": {
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- People can make commands using a mouse, keyboard, or their ____",
         "options": [],
-        "questionText": "Complete the notes below.\n36 ____",
+        "questionText": "Complete the notes below.\n- People can make commands using a mouse, keyboard, or their ____",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- Seatbelts are especially problematic for ____ women.",
         "options": [],
-        "questionText": "Complete the notes below.\n37 ____",
+        "questionText": "Complete the notes below.\n- Seatbelts are especially problematic for ____ women.",
         "questionWordPhrase": ""
       },
       "38": {
         "questionNumber": 38,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- PPE jackets are often unsuitable because of the size of women’s ____",
         "options": [],
-        "questionText": "Complete the notes below.\n38 ____",
+        "questionText": "Complete the notes below.\n- PPE jackets are often unsuitable because of the size of women’s ____",
         "questionWordPhrase": ""
       },
       "39": {
         "questionNumber": 39,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- PPE for female ____ officers dealing with emergencies is the worst.",
         "options": [],
-        "questionText": "Complete the notes below.\n39 ____",
+        "questionText": "Complete the notes below.\n- PPE for female ____ officers dealing with emergencies is the worst.",
         "questionWordPhrase": ""
       },
       "40": {
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "- The ____ in offices is often too low for women.",
         "options": [],
-        "questionText": "Complete the notes below.\n40 ____",
+        "questionText": "Complete the notes below.\n- The ____ in offices is often too low for women.",
         "questionWordPhrase": ""
       }
     },
@@ -13883,90 +15058,90 @@
         "questionNumber": 1,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "____ Hotel on George Street",
         "options": [],
-        "questionText": "Complete the notes below.\n1 ____",
+        "questionText": "Complete the notes below.\n____ Hotel on George Street",
         "questionWordPhrase": ""
       },
       "2": {
         "questionNumber": 2,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Cost of family room per night: £ ____ (approx.)",
         "options": [],
-        "questionText": "Complete the notes below.\n2 ____",
+        "questionText": "Complete the notes below.\nCost of family room per night: £ ____ (approx.)",
         "questionWordPhrase": ""
       },
       "3": {
         "questionNumber": 3,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "A ____ tour of the city centre (starts in Carlton Square)",
         "options": [],
-        "questionText": "Complete the notes below.\n3 ____",
+        "questionText": "Complete the notes below.\nA ____ tour of the city centre (starts in Carlton Square)",
         "questionWordPhrase": ""
       },
       "4": {
         "questionNumber": 4,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "A trip by ____ to the old fort",
         "options": [],
-        "questionText": "Complete the notes below.\n4 ____",
+        "questionText": "Complete the notes below.\nA trip by ____ to the old fort",
         "questionWordPhrase": ""
       },
       "5": {
         "questionNumber": 5,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Best day to visit: ____",
         "options": [],
-        "questionText": "Complete the notes below.\n5 ____",
+        "questionText": "Complete the notes below.\nBest day to visit: ____",
         "questionWordPhrase": ""
       },
       "6": {
         "questionNumber": 6,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "See the exhibition about ____ which opens soon",
         "options": [],
-        "questionText": "Complete the notes below.\n6 ____",
+        "questionText": "Complete the notes below.\nSee the exhibition about ____ which opens soon",
         "questionWordPhrase": ""
       },
       "7": {
         "questionNumber": 7,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– Good for ____ food",
         "options": [],
-        "questionText": "Complete the notes below.\n7 ____",
+        "questionText": "Complete the notes below.\n– Good for ____ food",
         "questionWordPhrase": ""
       },
       "8": {
         "questionNumber": 8,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– Need to have lunch before ____ p.m.",
         "options": [],
-        "questionText": "Complete the notes below.\n8 ____",
+        "questionText": "Complete the notes below.\n– Need to have lunch before ____ p.m.",
         "questionWordPhrase": ""
       },
       "9": {
         "questionNumber": 9,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "Save up to ____ % on ticket prices at bargaintickets.com",
         "options": [],
-        "questionText": "Complete the notes below.\n9 ____",
+        "questionText": "Complete the notes below.\nSave up to ____ % on ticket prices at bargaintickets.com",
         "questionWordPhrase": ""
       },
       "10": {
         "questionNumber": 10,
         "section": 1,
         "type": "gap-fill",
-        "gapLine": "",
+        "gapLine": "– Climb Telegraph Hill to see a view of the ____",
         "options": [],
-        "questionText": "Complete the notes below.\n10 ____",
+        "questionText": "Complete the notes below.\n– Climb Telegraph Hill to see a view of the ____",
         "questionWordPhrase": ""
       },
       "11": {
@@ -14668,18 +15843,18 @@
         "questionNumber": 36,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "By electrocution from power lines, especially during times of high 35 ____ . – Local farmers may illegally shoot them or ____ them. Ways of protecting chickens from birds of prey – Clearing away veget",
+        "gapLine": "– Local farmers may illegally shoot them or ____ them.",
         "options": [],
-        "questionText": "Complete the notes below.\nBy electrocution from power lines, especially during times of high 35 ____ . – Local farmers may illegally shoot them or ____ them. Ways of protecting chickens from birds of prey – Clearing away veget",
+        "questionText": "Complete the notes below.\n– Local farmers may illegally shoot them or ____ them.",
         "questionWordPhrase": ""
       },
       "37": {
         "questionNumber": 37,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "By electrocution from power lines, especially during times of high 35 ____ . – Local farmers may illegally shoot them or 36 ____ them. Ways of protecting chickens from birds of prey – Clearing away vegetation (unhelpful). – Providing a ____ for chickens (expensive). – Frightening birds of prey by: Keeping a 38 ____ .",
+        "gapLine": "– Providing a ____ for chickens (expensive).",
         "options": [],
-        "questionText": "Complete the notes below.\nBy electrocution from power lines, especially during times of high 35 ____ . – Local farmers may illegally shoot them or 36 ____ them. Ways of protecting chickens from birds of prey – Clearing away vegetation (unhelpful). – Providing a ____ for chickens (expensive). – Frightening birds of prey by: Keeping a 38 ____ .",
+        "questionText": "Complete the notes below.\n– Providing a ____ for chickens (expensive).",
         "questionWordPhrase": ""
       },
       "38": {
@@ -14704,9 +15879,9 @@
         "questionNumber": 40,
         "section": 4,
         "type": "gap-fill",
-        "gapLine": "Making a 39 ____ (e.g., with metal objects). – A ____ of methods is usually most effective.",
+        "gapLine": "– A ____ of methods is usually most effective.",
         "options": [],
-        "questionText": "Complete the notes below.\nMaking a 39 ____ (e.g., with metal objects). – A ____ of methods is usually most effective.",
+        "questionText": "Complete the notes below.\n– A ____ of methods is usually most effective.",
         "questionWordPhrase": ""
       }
     }

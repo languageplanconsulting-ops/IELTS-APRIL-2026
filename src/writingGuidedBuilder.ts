@@ -587,13 +587,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           sel('gb11-i6', ['and', 'but', 'or'], 'and', 'transition', 'and ใช้เชื่อมรายการสุดท้ายในลิสต์ ส่วน but (แต่) แสดงความขัดแย้ง และ or (หรือ) ให้เลือก ไม่เหมาะกับการไล่รายการ'),
           t(' international students, '),
           sel('gb11-i7', ['in', 'on', 'at'], 'in', 'word-choice', 'ใช้ in กับปี (in 2024) เสมอ ส่วน on ใช้กับวันที่ และ at ใช้กับเวลา'),
-          t(' 2024, '),
-          typ('gb11-i8', 'allow', ['allowing'], 'ving-clause', 'หลัง comma ใช้ V-ing clause: allowing'),
-          t(' readers to '),
-          sel('gb11-i8b', ['rank', 'rankly', 'ranking'], 'rank', 'word-choice', 'หลัง us ต้องเป็นกริยารูปพื้นฐาน rank (จัดอันดับ) ส่วน rankly ไม่มีจริง และ ranking เป็น V-ing ผิดโครงสร้าง'),
-          t(' the institutions from strongest '),
-          sel('gb11-i9', ['to', 'than', 'as'], 'to', 'word-choice', 'from strongest to weakest = จากแข็งสุดถึงอ่อนสุด เป็นวลีคู่ from...to ส่วน than และ as ไม่เข้ากับโครงสร้างนี้'),
-          t(' weakest.')
+          t(' 2024.')
         ]
       },
       {

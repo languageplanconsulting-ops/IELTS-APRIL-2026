@@ -32,6 +32,7 @@ export type ListeningSectionExamQuestion = {
   explanationThai: string
   layout: 'choice' | 'gap-fill' | 'matching-row'
   rowLabel?: string
+  imageUrl?: string
 }
 
 export type ListeningSectionExamGroup =
@@ -54,6 +55,8 @@ export type ListeningSectionExamGroup =
       poolTitle: string
       options: Array<{ key: string; text: string }>
       questions: ListeningSectionExamQuestion[]
+      /** Map/diagram-labeling: the image showing where each lettered option sits. */
+      imageUrl?: string
     }
   | {
       kind: 'gap-fill-block'
@@ -145,7 +148,8 @@ export const buildListeningSectionExamGroups = (
         contextLines,
         poolTitle: 'Options',
         options: run[0].options,
-        questions: run
+        questions: run,
+        imageUrl: run.find((item) => item.imageUrl)?.imageUrl
       })
     } else if (run.every((item) => item.layout === 'gap-fill')) {
       groups.push({
@@ -216,7 +220,8 @@ export const foundationQuestionToExamQuestion = (
     thaiMeaning: question.thaiMeaning,
     explanationThai: question.explanationThai,
     layout: question.layout || (parsed.isGapFill ? 'gap-fill' : 'choice'),
-    rowLabel: question.rowLabel
+    rowLabel: question.rowLabel,
+    imageUrl: question.imageUrl
   }
 }
 
@@ -235,7 +240,7 @@ export const foundationSetToExamConfig = (set: ListeningFoundationSet): Listenin
     // the former evidence-highlighting sets instead expose a reading-style "Show hint".
     answerOnlyMode: true,
     evidenceHintMode: set.category !== 'part1-detail',
-    evidenceAnchorMode: set.category === 'advanced-listening',
+    evidenceAnchorMode: false,
     part1Form: formKey ? CAMBRIDGE_PART1_FORM_BY_TEST[formKey] : undefined,
     questions,
     groups: buildListeningSectionExamGroups(questions)

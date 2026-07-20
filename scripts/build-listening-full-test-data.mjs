@@ -211,7 +211,8 @@ const buildQuestionFromAnswer = (book, test, section, scriptEntry, qNum, answer)
     thaiMeaning: enriched.thaiMeaning,
     explanationThai: enriched.explanationThai,
     questionText,
-    layout
+    layout,
+    imageUrl: official?.mapImageUrl || undefined
   }
 }
 

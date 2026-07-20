@@ -25,7 +25,6 @@ import { CAMBRIDGE_12_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundati
 import { CAMBRIDGE_13_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridge13Data.ts'
 import { CAMBRIDGE_17_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridge17Data.ts'
 import { CAMBRIDGE_SAFE_LISTENING_FOUNDATION_SETS } from '../src/listeningFoundationCambridgeSafeData.ts'
-import { ADVANCED_PART34_LISTENING_SETS } from '../src/listeningAdvancedPart34Data.ts'
 import { resolveListeningFoundationAudioscript } from '../src/listeningFoundationAudioscript.ts'
 import { parseListeningScriptSegments } from '../src/listeningScriptReader.ts'
 import { LISTENING_FULL_TEST_BOOKS, FULL_TESTS_PER_BOOK, getFullTestSectionSets } from '../src/listeningFullTestData.ts'
@@ -54,7 +53,6 @@ const ALL_LISTENING_FOUNDATION_SETS = [
   ...CAMBRIDGE_12_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
   ...CAMBRIDGE_13_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
   ...CAMBRIDGE_17_LISTENING_FOUNDATION_SETS.filter((set) => set.category === 'advanced'),
-  ...ADVANCED_PART34_LISTENING_SETS
 ]
 
 // Mirrors getListeningFoundationAudioCacheKey() in src/App.tsx.
