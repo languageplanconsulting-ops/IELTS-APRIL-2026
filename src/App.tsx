@@ -25170,6 +25170,15 @@ function App() {
                       }))}
                   />
                 </div>
+                <div className="panel adminSectionCard adminOnly-task1-qa">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Content QA</p>
+                      <h3>Task 1 QA Review</h3>
+                    </div>
+                  </div>
+                  <Task1QaReview accessToken={authSession?.accessToken} />
+                </div>
                 <div className="panel adminSectionCard adminOnly-learners">
                   <div className="adminSectionHeader">
                     <div>

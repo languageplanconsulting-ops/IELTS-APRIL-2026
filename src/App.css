@@ -25126,6 +25126,7 @@ textarea {
   .adminOnly-audio,
   .adminOnly-videos,
   .adminOnly-video-studio,
+  .adminOnly-task1-qa,
   .adminOnly-settings
 ) {
   display: none !important;
@@ -25140,6 +25141,7 @@ textarea {
 .workspace .adminPanelPage[data-admin-section='audio'] .adminOnly-audio,
 .workspace .adminPanelPage[data-admin-section='videos'] .adminOnly-videos,
 .workspace .adminPanelPage[data-admin-section='video-studio'] .adminOnly-video-studio,
+.workspace .adminPanelPage[data-admin-section='task1-qa'] .adminOnly-task1-qa,
 .workspace .adminPanelPage[data-admin-section='settings'] .adminOnly-settings {
   display: grid !important;
 }
