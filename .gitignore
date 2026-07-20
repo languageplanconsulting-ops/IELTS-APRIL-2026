@@ -54,3 +54,6 @@ scripts/.intensive1to5/
 scripts/.intensive1to5-pairs/
 scripts/.intensive6to20/
 scripts/.intensive6to20-pairs/
+
+# Whisper/audio working files (mp3/wav/json) — never commit
+.cache
