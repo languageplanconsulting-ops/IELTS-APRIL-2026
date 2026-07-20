@@ -157,6 +157,8 @@
   opacity: 0.55 !important;
   font-size: 16px !important;
   line-height: 24px !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
   background: none !important;
   border: none !important;
   box-shadow: none !important;
@@ -460,6 +462,10 @@
   box-shadow: none !important;
   padding: 28px 0 !important;
   margin: 0 !important;
+  /* App.css gives these cards a grid-era min-height; the row sizes to
+     content instead. */
+  min-height: 0 !important;
+  height: auto !important;
   transform: none !important;
   clip-path: none !important;
   transition: background 0.15s ease !important;
@@ -529,15 +535,22 @@
   padding: 0 !important;
 }
 
+/* These are <span>s in the JSX, so they need an explicit display. */
 .speakingFlowTheme.speakingFlowTheme .wgTicketBody {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
   flex: 1 !important;
   min-width: 0 !important;
   padding: 0 !important;
   border: none !important;
   background: none !important;
+  box-shadow: none !important;
 }
 
-.speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow {
+.speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow,
+.speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow strong {
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
@@ -547,6 +560,16 @@
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   color: var(--sk-ink) !important;
+  /* App.css boxes and uppercases this row — strip both. */
+  text-transform: none !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow strong {
+  display: inline !important;
 }
 
 .speakingFlowTheme.speakingFlowTheme .sgTopicTicketActions {
@@ -554,6 +577,12 @@
   display: flex !important;
   gap: 10px !important;
   align-items: center !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
 }
 
 /* ------------------------------------------------------- ticket path hub -- */
