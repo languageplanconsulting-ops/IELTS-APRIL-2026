@@ -282,7 +282,15 @@ const parseFigure = (value: string): { num: number; format: (n: number) => strin
   if (!Number.isFinite(num)) return null
   const prefix = match[1]
   const suffix = match[3]
-  return { num, format: (n: number) => `${prefix}${Number(n.toFixed(2))}${suffix}` }
+  return {
+    num,
+    format: (n: number) => {
+      const rounded = Number(n.toFixed(2))
+      // "1 hours" reads wrong — drop the plural when the gap is exactly one unit
+      const unit = rounded === 1 ? suffix.replace(/s$/, '') : suffix
+      return `${prefix}${rounded}${unit}`
+    }
+  }
 }
 
 /**
@@ -331,9 +339,9 @@ function snapshotBody1Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
     segments.push(
       t(` However, ${middle[0].label} and ${middle[1].label} `),
       isShare
-        ? typ(`${p}-b3`, 'account', ['accounted'], 'verb-tense', 'past simple')
+        ? typ(`${p}-b3`, 'make', ['made'], 'verb-tense', 'past simple')
         : typ(`${p}-b3`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-      t(isShare ? ' for ' : ' '),
+      t(isShare ? ' up ' : ' '),
       sel(
         `${p}-b4`,
         ['significantly', 'markedly', 'barely'],
@@ -341,15 +349,15 @@ function snapshotBody1Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
         'degree-adverb',
         'significantly = \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e32\u0e01 (\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e19\u0e35\u0e49\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19) \u0e2a\u0e48\u0e27\u0e19 markedly \u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 \u0e41\u0e25\u0e30 barely = \u0e41\u0e17\u0e1a\u0e44\u0e21\u0e48'
       ),
-      t(`${isShare ? ' smaller' : ' lower'} ${measurePlural}, at ${middle[0].value} and ${middle[1].value}, respectively.`)
+      t(`${isShare ? ' smaller' : ' lower'} ${measurePlural}, ${isShare ? 'accounting for' : 'standing at'} ${middle[0].value} and ${middle[1].value}, respectively.`)
     )
   } else if (middle.length === 1) {
     segments.push(
       t(` However, ${middle[0].label} `),
       isShare
-        ? typ(`${p}-b3`, 'account', ['accounted'], 'verb-tense', 'past simple')
+        ? typ(`${p}-b3`, 'make', ['made'], 'verb-tense', 'past simple')
         : typ(`${p}-b3`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-      t(isShare ? ' for a ' : ' a '),
+      t(isShare ? ' up a ' : ' a '),
       sel(
         `${p}-b4`,
         ['significantly', 'markedly', 'barely'],
@@ -357,7 +365,7 @@ function snapshotBody1Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
         'degree-adverb',
         'significantly = \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e32\u0e01 (\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e19\u0e35\u0e49\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19) \u0e2a\u0e48\u0e27\u0e19 markedly \u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 \u0e41\u0e25\u0e30 barely = \u0e41\u0e17\u0e1a\u0e44\u0e21\u0e48'
       ),
-      t(`${isShare ? ' smaller' : ' lower'} ${measure}, at ${middle[0].value}.`)
+      t(`${isShare ? ' smaller' : ' lower'} ${measure}, ${isShare ? 'accounting for' : 'standing at'} ${middle[0].value}.`)
     )
   }
 
@@ -431,19 +439,37 @@ function snapshotBody2Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
     sel(`${p}-c4`, ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast = ในทางตรงกันข้าม'),
     t(`, ${last.label} `)
   )
+  const crossTail = crossChartClause(last, spec)
   if (isShare) {
     segments.push(
       typ(`${p}-c5`, 'make', ['made'], 'verb-tense', 'past simple'),
-      t(` up the smallest share at just ${last.value}.`)
+      t(` up the smallest share at just ${last.value}${crossTail}.`)
     )
   } else {
     segments.push(
       typ(`${p}-c5`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-      t(` the lowest ${measure} at just ${last.value}.`)
+      t(` the lowest ${measure} at just ${last.value}${crossTail}.`)
     )
   }
 
   return segments
+}
+
+/**
+ * Body 2's closing figure carries a "which is lower/higher than that of …"
+ * clause pointing back at the same category in the first chart — the only
+ * cross-chart comparison the SOP allows, and still a bare statement of the gap.
+ */
+function crossChartClause(last: SnapshotItem, spec: SnapshotSpec): string {
+  const counterpart = spec.body1Items.find((x) => x.label === last.label)
+  if (!counterpart) return ''
+  const here = parseFigure(last.value)
+  const there = parseFigure(counterpart.value)
+  if (!here || !there) return ''
+  const gap = Math.abs(there.num - here.num)
+  if (gap === 0) return ''
+  const direction = here.num < there.num ? 'lower' : 'higher'
+  return `, which is ${direction} than that of ${spec.body1Topic} by ${there.format(gap)}`
 }
 
 function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
@@ -1106,6 +1132,63 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
       { label: 'Tate Modern', value: '122,000' },
       { label: 'the V&A', value: '108,000' },
       { label: 'the Science Museum', value: '95,000' }
+    ]
+  }),
+  buildSnapshotExercise({
+    id: 'gb-uk-thailand-spending',
+    promptId: 'snapshot-uk-thailand-spending',
+    chartNoun: 'bar chart',
+    subject: 'the proportion of household spending',
+    categoryPhrase: 'across five different categories in the UK and Thailand',
+    examples: 'housing and food',
+    unit: 'percentage of total spending',
+    visualCount: 1,
+    leadingItem: 'housing in the UK',
+    contrastItem: 'healthcare in Thailand',
+    body1Topic: 'the UK',
+    body1Items: [
+      { label: 'housing', value: '28%' },
+      { label: 'food', value: '18%' },
+      { label: 'leisure', value: '15%' },
+      { label: 'transport', value: '14%' },
+      { label: 'healthcare', value: '12%' }
+    ],
+    body2Topic: 'Thailand',
+    body2Items: [
+      { label: 'food', value: '25%' },
+      { label: 'housing', value: '22%' },
+      { label: 'transport', value: '18%' },
+      { label: 'leisure', value: '10%' },
+      { label: 'healthcare', value: '8%' }
+    ]
+  }),
+  buildSnapshotExercise({
+    id: 'gb-germany-australia-energy',
+    promptId: 'snapshot-germany-australia-energy',
+    chartNoun: 'pie charts',
+    subject: 'how electricity was generated',
+    categoryPhrase: 'from five different energy sources in Germany and Australia',
+    examples: 'renewables and coal',
+    unit: 'percentage of total electricity',
+    timeframe: 'in 2020',
+    visualCount: 2,
+    leadingItem: 'renewable energy',
+    contrastItem: 'coal',
+    body1Topic: 'Germany',
+    body1Items: [
+      { label: 'renewable energy', value: '44%' },
+      { label: 'coal', value: '25%' },
+      { label: 'gas', value: '16%' },
+      { label: 'other sources', value: '9%' },
+      { label: 'nuclear power', value: '6%' }
+    ],
+    body2Topic: 'Australia',
+    body2Items: [
+      { label: 'coal', value: '52%' },
+      { label: 'gas', value: '22%' },
+      { label: 'renewable energy', value: '21%' },
+      { label: 'nuclear power', value: '3%' },
+      { label: 'other sources', value: '2%' }
     ]
   }),
   buildSnapshotExercise({

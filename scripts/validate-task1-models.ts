@@ -95,9 +95,9 @@ const snapshotOverviewByPrompt: Record<string, string> = {
   'snapshot-vietnam-us-exports':
     'Overall, it can be clearly observed that coffee was the largest share of Vietnam’s exports to the US, while aircraft parts were the largest share of US exports to Vietnam.',
   'snapshot-uk-thailand-spending':
-    'Overall, it can be clearly observed that housing in the UK was the largest category, while healthcare in Thailand was the smallest in share.',
+    'Overall, it can be clearly observed that housing in the UK was the largest, while healthcare in Thailand was the smallest in share.',
   'snapshot-germany-australia-energy':
-    'Overall, it can be clearly observed that renewable energy made up the largest share in Germany, while coal accounted for the largest share in Australia.',
+    'Overall, it can be clearly observed that renewable energy was the largest in the first chart, while coal was the largest in the second chart.',
   'snapshot-universities-table':
     'Overall, it can be clearly observed that Oxford’s research output was the largest, while Chulalongkorn’s was the smallest in share.',
   'snapshot-household-waste':
