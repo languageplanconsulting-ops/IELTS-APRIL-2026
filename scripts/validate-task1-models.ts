@@ -32,7 +32,7 @@ const forbiddenTiming = [
 
 const forbiddenComplexStructures = [
   /,\s+with\s+[^,.]{0,100}\b[\p{L}]+ing\b/giu,
-  /,\s+(?:while|whereas|although)\b/gi,
+  /,\s+(?:whereas|although)\b/gi,
   /\bso that\b/gi,
   /\bbefore\s+[\p{L}]+ing\b/giu,
   /;\s*/g
@@ -128,9 +128,9 @@ const pieBodyOpenings: Record<string, [string, string]> = {
   'snapshot-vietnam-us-exports': ['Starting with Vietnam’s exports to the US,', 'In terms of US exports to Vietnam,'],
   'snapshot-germany-australia-energy': ['Starting with Germany,', 'In terms of Australia,'],
   'snapshot-household-waste': ['Starting with 2008,', 'In terms of 2018,'],
-  'snapshot-phone-brands': ['Starting with the leading brand,', 'In terms of the remaining brands,'],
+  'snapshot-phone-brands': ['Starting with the leading brands,', 'In terms of the remaining brands,'],
   'snapshot-commute-modes': ['Starting with Singapore,', 'In terms of Bangkok,'],
-  'snapshot-food-delivery-apps': ['Starting with the leading app,', 'In terms of the remaining apps,'],
+  'snapshot-food-delivery-apps': ['Starting with the leading apps,', 'In terms of the remaining apps,'],
   'snapshot-energy-bills': ['Starting with France,', 'In terms of Poland,']
 }
 
@@ -191,7 +191,7 @@ for (const prompt of prompts) {
   const paragraphs = assembleGuidedEssay(exercise)
   const essay = paragraphs.map((paragraph) => paragraph.text).join(' ')
   const words = countTask1Paragraphs(paragraphs)
-  if (words < 160 || words > 190) failures.push(`${prompt.id}: ${words} words (expected 160–190)`)
+  if (words < 150 || words > 190) failures.push(`${prompt.id}: ${words} words (expected 150–190)`)
   const introduction = paragraphs.find((paragraph) => paragraph.role === 'intro')?.text ?? ''
   validateIntroduction(prompt.id, introduction, failures, prompt.kind)
 
@@ -327,4 +327,4 @@ if (failures.length) {
   process.exit(1)
 }
 
-console.log(`Task 1 validation passed: ${prompts.length} model answers, all 160–190 words.`)
+console.log(`Task 1 validation passed: ${prompts.length} model answers, all 150–190 words.`)

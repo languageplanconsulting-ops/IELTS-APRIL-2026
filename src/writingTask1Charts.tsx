@@ -184,11 +184,18 @@ function WritingLineGraphSvg({ prompt }: { prompt: WritingTimelinePracticePrompt
 }
 
 function WritingBarChartSvg({ prompt }: { prompt: WritingTimelinePracticePrompt }) {
-  const { max: yMax, ticks } = getNiceYScale(prompt.values)
-  const barWidth = 52
-  const gap = 26
+  const seriesList: WritingLineSeries[] = prompt.series?.length
+    ? prompt.series
+    : [{ label: prompt.valueLabel, color: '#0f53c9', values: prompt.values }]
+  const isMultiSeries = seriesList.length > 1
+
+  const { max: yMax, ticks } = getNiceYScale(seriesList.flatMap((s) => s.values))
   const plotHeight = CHART_SIZE.height - CHART_PAD.top - CHART_PAD.bottom
-  const totalWidth = prompt.values.length * barWidth + (prompt.values.length - 1) * gap
+  const barWidth = isMultiSeries ? 22 : 52
+  const barGap = 4
+  const clusterGap = isMultiSeries ? 20 : 26
+  const clusterWidth = seriesList.length * barWidth + (seriesList.length - 1) * barGap
+  const totalWidth = prompt.years.length * clusterWidth + (prompt.years.length - 1) * clusterGap
   const startX = (CHART_SIZE.width - totalWidth) / 2
 
   return (
@@ -201,25 +208,49 @@ function WritingBarChartSvg({ prompt }: { prompt: WritingTimelinePracticePrompt 
         aria-label={`Bar chart showing ${prompt.chartCaption}`}
       >
         <WritingIeltsYAxis ticks={ticks} yMax={yMax} label={prompt.yAxisLabel} />
-        {prompt.values.map((value, index) => {
-          const height = (value / yMax) * plotHeight
-          const x = startX + index * (barWidth + gap)
-          const y = CHART_PAD.top + plotHeight - height
+        {prompt.years.map((year, yearIndex) => {
+          const clusterX = startX + yearIndex * (clusterWidth + clusterGap)
           return (
-            <g key={prompt.years[index]}>
-              <rect x={x} y={y} width={barWidth} height={height} className="writingIeltsChartBar" />
+            <g key={year}>
+              {seriesList.map((series, seriesIndex) => {
+                const value = series.values[yearIndex] ?? 0
+                const height = (value / yMax) * plotHeight
+                const x = clusterX + seriesIndex * (barWidth + barGap)
+                const y = CHART_PAD.top + plotHeight - height
+                return (
+                  <rect
+                    key={series.label}
+                    x={x}
+                    y={y}
+                    width={barWidth}
+                    height={height}
+                    className="writingIeltsChartBar"
+                    style={isMultiSeries ? { fill: series.color } : undefined}
+                  />
+                )
+              })}
               <text
-                x={x + barWidth / 2}
+                x={clusterX + clusterWidth / 2}
                 y={CHART_SIZE.height - CHART_PAD.bottom + 22}
                 className="writingIeltsChartTick"
                 textAnchor="middle"
               >
-                {prompt.years[index]}
+                {year}
               </text>
             </g>
           )
         })}
       </svg>
+      {isMultiSeries ? (
+        <div className="writingIeltsChartLegend">
+          {seriesList.map((series) => (
+            <span key={series.label} className="writingIeltsChartLegendItem">
+              <span className="writingIeltsChartLegendSwatch" style={{ background: series.color }} />
+              {series.label}
+            </span>
+          ))}
+        </div>
+      ) : null}
     </figure>
   )
 }

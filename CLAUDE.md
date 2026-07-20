@@ -8,7 +8,9 @@ builder. They are enforced by `npm run verify:task1`, which runs as part of
 
 ### Body paragraphs: sentence-opening transitions
 
-Applies to **timeline**, **no-timeline / snapshot**, and **map** prompts.
+Applies to **no-timeline / snapshot** and **map** prompts. (**Timeline** has its
+own dedicated template below — it does not use `Starting with …` / `In terms
+of …` openers.)
 
 1. The **first** sentence of each body paragraph keeps its taught opener:
    - Pie / Map **Body 1** → `Starting with …`
@@ -32,6 +34,102 @@ or simply starting with the subject (`The remaining …`, `This gap …`, `In 20
 
 `process` prompts are out of scope for this rule.
 
+### Timeline — dedicated template (authoritative; do not improvise)
+
+Timeline prompts (line graph / bar chart / table showing two categories over
+years) follow this exact skeleton. Report numbers only — never interpret,
+characterise, or editorialise the data (no `revealing …`, `contrasting with
+…`, `narrowing the gap …`, `confirming the marked contrast …`, `recording its
+strongest result …`, etc.).
+
+**Introduction** — one sentence:
+```
+The [chart] compares the [short general topic]: [category A] and
+[category B], over a [N]-year period from [year] to [year], measured in
+[unit].
+```
+
+**Overview** — one sentence, always joined with `while … that of … over the
+given period`:
+```
+Overall, it can be clearly observed that while [A] experienced an upward
+trend, that of [B] displayed a downward trend over the given period.
+```
+`fluctuated` / `remained unchanged over the given period` are the fallback
+verbs when a category doesn't cleanly rise or fall — still one sentence.
+
+**Body 1** — exactly 2 sentences, plain numbers only:
+```
+Starting in [year], [B] represented the highest figure in the data, at
+[value], while [A] represented the lowest, at just [value], according to
+the chart. However, by [year], the figure for [A] had increased [adverb]
+to [value], while that for [B] had dropped [adverb] to [value] over the
+same period.
+```
+
+**Body 2** — exactly 2 sentences, plain numbers only:
+```
+From [year] onwards, [A] continued to rise, reaching its peak at [value]
+in [year], up from [value] in [year], as the chart shows. On the other
+hand, [B] dropped consistently, reaching the lowest point at [value]
+during the same year, down from [value] in [year], as clearly shown in
+the data.
+```
+When a category peaks/bottoms out mid-period and then partly recovers by the
+final year, swap `continued to rise` / `dropped consistently` for
+`fluctuated`, and state both the peak-or-low value *and* the final value
+(`… and finishing at [value] in [year]`) — still just reporting numbers.
+
+`, while …` is allowed inside Timeline body sentences (it is the required
+connector above) — this does not conflict with the snapshot/map transition
+list, which is a separate rule for a different prompt kind.
+
+### No-timeline / snapshot — dedicated template (authoritative; do not improvise)
+
+Pie / bar / table prompts with no year axis. Report figures only — never rank one
+figure against another in passing (`below that of …`, `more than twice …`,
+`roughly half that of …`, `the second most valuable group`, `the best scores in
+the table`) and never interpret (`reflecting the shift towards …`, `suggesting a
+behavioural shift`, `this gap made X the clear leader`).
+
+**Introduction** — one sentence:
+```
+The [chart] compare(s) [subject] [in/across different …], such as [A] and [B],
+measured in [unit] [in YEAR].
+```
+
+**Overview** — one sentence: `Overall, it can be clearly observed that [X] was
+the largest …, while [Y] was the largest / the smallest in share.`
+
+**Body 1** — `Starting with [group], …`, three sentences:
+```
+Starting with [group], [1st] was the largest category at [v], followed by [2nd]
+at [v]. However, [3rd] and [4th] accounted for significantly smaller shares, at
+[v] and [v], respectively. However, [5th] and [6th] each made up [v], accounting
+for the lowest figures.
+```
+
+**Body 2** — `In terms of [group], …`, three sentences:
+```
+In terms of [group], [1st] accounted for the largest proportion, at [v].
+Similarly, [2nd] and [3rd] followed closely, at [v] and [v], respectively. In
+contrast, [last] made up the smallest share at just [v].
+```
+
+Use **`significantly`**, never `markedly`. Rating tables and hour charts swap the
+share nouns for scores/figures (`recorded significantly lower scores`, `recorded
+the lowest score at just …`).
+
+**Word-floor top-up.** Task 1 answers must clear 150 words. Charts with only four
+or five categories cannot get there on bare figures, so — and only then — append
+the taught gap sentence, largest gaps first:
+```
+[Interestingly | Similarly | Likewise | Surprisingly], the share for [X] was
+lower than that of [Y] by [gap].
+```
+`buildSnapshotExercise` adds these automatically via `padSnapshotToWordFloor`;
+never hand-write filler instead.
+
 ### Overview
 
 Every Overview — all prompt kinds — is exactly one sentence opening with:
@@ -41,7 +139,8 @@ Overall, it can be clearly observed that …
 ```
 
 No-timeline overviews then use `…, while …` mid-sentence to join the two
-features. Never `contrasting with` or `leaving other sources`.
+features. Never `contrasting with` or `leaving other sources`. (Timeline
+overviews also use `while …`, per the dedicated template above.)
 
 ### Introduction
 
@@ -49,17 +148,14 @@ Every Introduction — all prompt kinds — is exactly **one sentence**, with no
 extra clause tacked on (no `presenting …`, `allowing … to be identified`,
 `highlighting …`, etc.). The shape differs by kind:
 
-- **Timeline**: `The [chart] compares [subject] between [year] and [year]
-  across the categories included in the data.`
-- **No-timeline / snapshot** (pie/bar/table, single or paired charts):
-  `The [chart] compares [subject], such as [examples], measured in [unit].`
-  That's it — nothing after `measured in [unit].`
+- **Timeline**: see the dedicated template above.
+- **No-timeline / snapshot**: see the dedicated template above.
 - **Map**: `The maps compare [subject] …` (existing pattern; one sentence).
 - **Process**: `This chart shows the process of … from start to completion.`
 
 ### Other standing rules
 
-- Essays are **160–190 words** (`countTask1Paragraphs`).
+- Essays are **150–190 words** (`countTask1Paragraphs`).
 - `respectively` always takes a preceding comma.
 - Timeline bodies must state real chart years.
 - Blank counts: every Overview has **at least 5** blanks.
