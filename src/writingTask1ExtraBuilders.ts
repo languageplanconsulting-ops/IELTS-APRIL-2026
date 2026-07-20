@@ -248,6 +248,12 @@ type SnapshotSpec = {
   body1Lead?: string
   /** What the numbers are. Rating tables are scores, not shares; hours are figures. */
   measureNoun?: 'share' | 'score' | 'figure'
+  /**
+   * True when the two charts are the same metric at two points in time. Body 2
+   * then tracks each figure against the earlier year (rose / fell / held steady)
+   * instead of comparing across places.
+   */
+  timeComparison?: boolean
   /** Body 2 = "In terms of <topic>, …" then its ranked figures, largest first. */
   body2Topic: string
   body2Items: SnapshotItem[]
@@ -288,7 +294,7 @@ const parseFigure = (value: string): { num: number; format: (n: number) => strin
       const rounded = Number(n.toFixed(2))
       // "1 hours" reads wrong — drop the plural when the gap is exactly one unit
       const unit = rounded === 1 ? suffix.replace(/s$/, '') : suffix
-      return `${prefix}${rounded}${unit}`
+      return `${prefix}${rounded.toLocaleString('en-US')}${unit}`
     }
   }
 }
@@ -328,9 +334,13 @@ function snapshotBody1Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
   const segments: WgbSegment[] = [
     t(`Starting with ${spec.body1Topic}, ${items[0].label} `),
     typ(`${p}-b1`, 'be', [items[0].be ?? 'was'], 'verb-tense', 'past simple'),
-    t(` ${lead} at ${items[0].value}, `),
+    t(` ${lead}, representing ${items[0].value}, `),
     typ(`${p}-b2`, 'follow', ['followed'], 'v3-clause', 'V3 \u0e2b\u0e25\u0e31\u0e07\u0e04\u0e2d\u0e21\u0e21\u0e32: followed by = \u0e15\u0e32\u0e21\u0e21\u0e32\u0e14\u0e49\u0e27\u0e22'),
-    t(` by ${items[1].label} at ${items[1].value}.`)
+    t(` by ${items[1].label}, which `),
+    isShare
+      ? typ(`${p}-b2b`, 'account', ['accounted'], 'verb-tense', 'past simple')
+      : typ(`${p}-b2b`, 'record', ['recorded'], 'verb-tense', 'past simple'),
+    t(`${isShare ? ' for' : ''} ${items[1].value}.`)
   ]
 
   // Middle sentence: one figure when the chart has four categories, a pair when it has five or more.
@@ -401,6 +411,100 @@ function snapshotBody1Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
  * Body 2 (CLAUDE.md snapshot SOP): largest first, the middle figures joined with
  * "Similarly, … followed closely", the smallest closed with "In contrast".
  */
+
+/** How big a move is, relative to where it started. */
+const moveAdverb = (gap: number, base: number): string => {
+  const ratio = base === 0 ? 1 : gap / base
+  if (ratio >= 0.4) return 'dramatically'
+  if (ratio >= 0.2) return 'significantly'
+  if (ratio >= 0.1) return 'moderately'
+  return 'slightly'
+}
+
+/**
+ * Body 2 for two-charts-one-metric-two-years prompts. Every figure is tracked
+ * back to the earlier year — rose, fell, or held steady — which is reporting
+ * movement, not interpreting it.
+ */
+function snapshotBody2RichSegments(p: string, spec: SnapshotSpec): WgbSegment[] {
+  const items = spec.body2Items
+  const measure = spec.measureNoun ?? 'share'
+  const isShare = measure === 'share'
+  const before = (label: string) => spec.body1Items.find((x) => x.label === label)
+
+  /**
+   * Two charts of the same metric a few years apart get movement ("which
+   * increased dramatically from 2008 by 17%"); two places get the plain gap
+   * ("which was higher than that of Australia by 24%"). Either way it states a
+   * number rather than reading anything into it.
+   */
+  const movement = (item: SnapshotItem, lead: string): string => {
+    const prior = before(item.label)
+    const now = parseFigure(item.value)
+    const then = prior ? parseFigure(prior.value) : null
+    if (!now || !then) return ''
+    const gap = Math.abs(now.num - then.num)
+    if (gap === 0) {
+      return spec.timeComparison ? `${lead} remained unchanged from ${spec.body1Topic}` : ''
+    }
+    if (spec.timeComparison) {
+      const verb = now.num > then.num ? 'increased' : 'declined'
+      return `${lead} ${verb} ${moveAdverb(gap, then.num)} from ${spec.body1Topic} by ${then.format(gap)}`
+    }
+    const direction = now.num > then.num ? 'higher' : 'lower'
+    return `${lead} was ${direction} than that of ${spec.body1Topic} by ${then.format(gap)}`
+  }
+
+  const [first, second, third] = items
+  const last = items[items.length - 1]
+  const middle = items.slice(3, -1)
+
+  const segments: WgbSegment[] = [
+    t(`In terms of ${spec.body2Topic}, ${first.label} `),
+    isShare
+      ? typ(`${p}-c1`, 'account', ['accounted'], 'verb-tense', 'past simple')
+      : typ(`${p}-c1`, 'record', ['recorded'], 'verb-tense', 'past simple'),
+    t(
+      `${isShare ? ' for the largest proportion' : ` the highest ${measure}`}, at ${first.value}${movement(first, ', which')}. `
+    ),
+    sel(`${p}-c2`, ['However', 'Because', 'Therefore'], 'However', 'transition', 'However = อย่างไรก็ตาม'),
+    t(`, the ${measure} for ${second.label}`),
+    t(`${movement(second, '')}, `),
+    typ(`${p}-c3`, 'make', ['making'], 'ving-clause', 'V-ing clause: making up'),
+    t(` up ${second.value}, while ${third.label} `),
+    typ(`${p}-c4`, 'follow', ['followed'], 'verb-tense', 'past simple'),
+    t(` closely, representing ${third.value}`)
+  ]
+
+  if (middle.length) {
+    segments.push(
+      t(`, alongside ${middle.map((x) => x.label).join(' and ')} at ${middle.map((x) => x.value).join(' and ')}`)
+    )
+  }
+  segments.push(t('. '))
+
+  // "remained the smallest" only holds when this category was also last in the
+  // first chart — Oppo was fourth in 2020, so it cannot have "remained" lowest.
+  const wasAlsoLast = spec.body1Items[spec.body1Items.length - 1]?.label === last.label
+  const lowestNoun = isShare ? 'smallest share' : `lowest ${measure}`
+  segments.push(
+    sel(`${p}-c5`, ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast = ในทางตรงกันข้าม'),
+    t(`, ${last.label} `)
+  )
+  if (wasAlsoLast && spec.timeComparison) {
+    segments.push(
+      typ(`${p}-c6`, 'remain', ['remained'], 'verb-tense', 'past simple'),
+      t(` the ${lowestNoun} across the two years, making up only ${last.value}.`)
+    )
+  } else {
+    segments.push(
+      typ(`${p}-c6`, 'make', ['made'], 'verb-tense', 'past simple'),
+      t(` up the ${lowestNoun}, at just ${last.value}${movement(last, ', which')}.`)
+    )
+  }
+  return segments
+}
+
 function snapshotBody2Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
   const items = spec.body2Items
   const middle = items.slice(1, -1)
@@ -456,7 +560,7 @@ function snapshotBody2Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
 }
 
 /**
- * Body 2's closing figure carries a "which is lower/higher than that of …"
+ * Body 2's closing figure carries a "which was lower/higher than that of …"
  * clause pointing back at the same category in the first chart — the only
  * cross-chart comparison the SOP allows, and still a bare statement of the gap.
  */
@@ -469,7 +573,7 @@ function crossChartClause(last: SnapshotItem, spec: SnapshotSpec): string {
   const gap = Math.abs(there.num - here.num)
   if (gap === 0) return ''
   const direction = here.num < there.num ? 'lower' : 'higher'
-  return `, which is ${direction} than that of ${spec.body1Topic} by ${there.format(gap)}`
+  return `, which was ${direction} than that of ${spec.body1Topic} by ${there.format(gap)}`
 }
 
 function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
@@ -541,7 +645,8 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
         role: 'body2',
         labelTh: ROLE_LABEL_TH.body2,
         hintTh: HINT_CONJUGATE,
-        segments: snapshotBody2Segments(p, spec)
+        segments:
+          spec.chartNoun === 'table' ? snapshotBody2Segments(p, spec) : snapshotBody2RichSegments(p, spec)
       }
     ]
   }
@@ -1116,8 +1221,9 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     visualCount: 1,
     leadingItem: 'the British Museum in 2019',
     contrastItem: 'the Science Museum in 2023',
-    body1Topic: '2019',
+    timeComparison: true,
     body1Lead: 'the most-visited museum',
+    body1Topic: '2019',
     body1Items: [
       { label: 'the British Museum', value: '195,000' },
       { label: 'the Natural History Museum', value: '160,000' },
@@ -1202,6 +1308,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     visualCount: 2,
     leadingItem: 'landfill',
     contrastItem: 'recycled waste',
+    timeComparison: true,
+    body1Lead: 'the most popular method of waste disposal',
     body1Topic: '2008',
     body1Items: [
       { label: 'landfill', value: '52%' },
@@ -1230,6 +1338,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     visualCount: 2,
     leadingItem: 'Samsung',
     contrastItem: 'Apple',
+    timeComparison: true,
+    body1Lead: 'the best-selling brand',
     body1Topic: '2020',
     body1Items: [
       { label: 'Samsung', value: '32%' },
@@ -1434,6 +1544,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     visualCount: 2,
     leadingItem: 'Foodpanda',
     contrastItem: 'GrabFood',
+    timeComparison: true,
+    body1Lead: 'the most used provider',
     body1Topic: '2020',
     body1Items: [
       { label: 'Foodpanda', value: '34%' },
