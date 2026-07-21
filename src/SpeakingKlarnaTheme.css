@@ -1267,3 +1267,106 @@
     gap: 28px !important;
   }
 }
+
+/* --------------------------------------------------------------- vocab v3 --
+   Revamped Vocabulary Lift card. Cohesive with the Klarna report system:
+   sunken surface, hairline-free, one accent (brand blue) on the upgraded word,
+   Styrene/Anuphan type throughout. Word leads, Thai meaning second, the
+   from → to swap and reason sit quietly below. */
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3 {
+  background: var(--sk-sunken) !important;
+  border: none !important;
+  border-radius: var(--sk-r-lg) !important;
+  box-shadow: none !important;
+  padding: 22px !important;
+  display: grid !important;
+  gap: 8px !important;
+  align-content: start !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin-bottom: 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Level {
+  font-family: var(--sk-font-latin) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  color: var(--sk-accent) !important;
+  background: var(--sk-accent-soft) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Save {
+  font-family: var(--sk-font-th) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--sk-ink) !important;
+  background: var(--sk-surface) !important;
+  border: 1px solid var(--sk-border-strong) !important;
+  border-radius: var(--sk-r-md) !important;
+  padding: 7px 14px !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Save:hover {
+  background: var(--sk-sunken) !important;
+  filter: brightness(0.98) !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Word {
+  font-family: var(--sk-font-display) !important;
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+  font-weight: 600 !important;
+  color: var(--sk-ink) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Thai {
+  font-family: var(--sk-font-th) !important;
+  font-size: 15px !important;
+  color: var(--sk-ink-soft) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Swap {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 6px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid var(--sk-border) !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3From {
+  font-family: var(--sk-font-latin) !important;
+  font-size: 14px !important;
+  color: var(--sk-ink-soft) !important;
+  text-decoration: line-through !important;
+  text-decoration-color: rgba(107, 102, 92, 0.5) !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Arrow {
+  color: var(--sk-accent) !important;
+  font-weight: 700 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3To {
+  font-family: var(--sk-font-latin) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--sk-accent) !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Reason {
+  font-family: var(--sk-font-th) !important;
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  color: var(--sk-ink-soft) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .vocabCardV3Source {
+  font-family: var(--sk-font-th) !important;
+  font-size: 12px !important;
+  color: var(--sk-ink-soft) !important;
+  opacity: 0.85 !important;
+  margin: 0 !important;
+}

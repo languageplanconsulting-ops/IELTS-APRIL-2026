@@ -3097,6 +3097,8 @@ const sanitizeSavedReportSnapshot = (value) => {
   }
 }
 
+const NOTEBOOK_NOTE_KINDS = ['vocabulary', 'grammar', 'paraphrase', 'report', 'note']
+
 const sanitizeNotebookEntries = (value) =>
   (Array.isArray(value) ? value : []).slice(0, 1000).map((entry) => ({
     id: String(entry?.id || randomUUID()),
@@ -3106,8 +3108,16 @@ const sanitizeNotebookEntries = (value) =>
     criterion: String(entry?.criterion || '').slice(0, 200),
     quote: String(entry?.quote || '').slice(0, 4000),
     fix: String(entry?.fix || '').slice(0, 4000),
+    ...(entry?.sourceQuestion ? { sourceQuestion: String(entry.sourceQuestion).slice(0, 4000) } : {}),
     ...(entry?.thaiMeaning ? { thaiMeaning: String(entry.thaiMeaning).slice(0, 4000) } : {}),
     ...(entry?.personalNote ? { personalNote: String(entry.personalNote).slice(0, 8000) } : {}),
+    // Structured facets that drive prioritized display + the revision matching
+    // game. Persist them so logged-in users keep game data across sync.
+    ...(NOTEBOOK_NOTE_KINDS.includes(String(entry?.noteKind || ''))
+      ? { noteKind: String(entry.noteKind) }
+      : {}),
+    ...(entry?.primaryText ? { primaryText: String(entry.primaryText).slice(0, 2000) } : {}),
+    ...(entry?.secondaryText ? { secondaryText: String(entry.secondaryText).slice(0, 2000) } : {}),
     ...(entry?.savedReportSnapshot ? { savedReportSnapshot: sanitizeSavedReportSnapshot(entry.savedReportSnapshot) } : {}),
     createdAt: String(entry?.createdAt || new Date().toISOString())
   }))

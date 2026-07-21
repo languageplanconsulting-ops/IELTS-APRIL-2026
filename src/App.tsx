@@ -46,6 +46,9 @@ import {
 } from './generalTrainingReadingUtils'
 import { ListeningSectionExamView, type ListeningNotebookSavePayload } from './ListeningSectionExamView'
 import { NotebookEntriesView } from './NotebookEntriesView'
+import { NotebookSaveCelebration, type NotebookCelebration } from './NotebookSaveCelebration'
+import { NotebookRevisionGame } from './NotebookRevisionGame'
+import { collectRevisionItems, type NotebookNoteKind } from './notebookFacets'
 import {
   buildListeningSectionExamGroups,
   builderTaskToExamQuestion,
@@ -660,6 +663,13 @@ type NotebookEntry = {
   sourceQuestion?: string
   thaiMeaning?: string
   personalNote?: string
+  /** Structured facets that drive prioritized display + the revision game.
+   *  vocabulary → primaryText = English word, secondaryText = Thai meaning.
+   *  grammar    → primaryText = rule/topic, secondaryText = corrected instance.
+   *  paraphrase → primaryText = side A, secondaryText = side B. */
+  noteKind?: NotebookNoteKind
+  primaryText?: string
+  secondaryText?: string
   savedReportSnapshot?: SavedReportSnapshot | WritingReportSnapshot | WritingTask2ReportSnapshot
   createdAt: string
 }
@@ -2702,6 +2712,17 @@ const renderBandLadder = (
 
 const NOTEBOOK_ENTRIES_KEY = 'ielts-notebook-entries'
 const NOTEBOOK_CUSTOM_SECTIONS_KEY = 'ielts-notebook-custom-sections'
+
+/**
+ * Every save made from the Speaking report lands in one dedicated notebook tab
+ * ("speaking notes"), and each card is sub-labelled by criterion — Grammar,
+ * Vocabulary, or Referencing — via the `criterion` field. Per the teacher, the
+ * "Referencing" bucket is what the report scores as Fluency/Coherence, so any
+ * Fluency save is re-tagged Referencing.
+ */
+const SPEAKING_NOTES_SECTION = 'speaking notes'
+const toSpeakingNoteCriterion = (label: string) =>
+  /fluen/i.test(label) ? 'Referencing' : label
 const TEST_LATEST_SCORE_KEY = 'ielts-test-latest-scores'
 const READING_ATTEMPTS_KEY = 'ielts-reading-attempts'
 const LISTENING_ATTEMPTS_KEY = 'ielts-listening-attempts'
@@ -7020,6 +7041,10 @@ function App() {
   const [trialAuthMode, setTrialAuthMode] = useState<'signup' | 'signin'>('signup')
   const [trialSignupStep, setTrialSignupStep] = useState<'email' | 'password'>('email')
   const [signupNameInput, setSignupNameInput] = useState('')
+  const [notebookCelebration, setNotebookCelebration] = useState<NotebookCelebration | null>(null)
+  const [isNotebookGameOpen, setIsNotebookGameOpen] = useState(false)
+  const lastPointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
+  const notebookCelebrationSeqRef = useRef(0)
   const [signupEmailInput, setSignupEmailInput] = useState('')
   const [signupPasswordInput, setSignupPasswordInput] = useState('')
   const [adminCodeInput, setAdminCodeInput] = useState('')
@@ -11034,7 +11059,16 @@ function App() {
   }, [isFullExamMode, fullExamPhaseSeconds, remainingTalkSeconds])
 
   const notebookSectionTabs = useMemo(
-    () => ['speaking', 'writing', 'writing essay', 'listening', 'reading', ...customSections],
+    () => [
+      'speaking',
+      SPEAKING_NOTES_SECTION,
+      'writing',
+      'writing essay',
+      'listening',
+      'reading',
+      // Guard against a legacy custom section duplicating the built-in tab.
+      ...customSections.filter((name) => name !== SPEAKING_NOTES_SECTION)
+    ],
     [customSections]
   )
   const filteredNotebookEntries = useMemo(
@@ -11047,6 +11081,11 @@ function App() {
       ),
     [notebookEntries, selectedNotebookSection]
   )
+  // The whole notebook feeds the revision game — vocabulary (word↔meaning) and
+  // paraphrase (A↔B) pools, drawn from every section, not just the active tab.
+  const notebookRevisionItems = useMemo(() => collectRevisionItems(notebookEntries), [notebookEntries])
+  const notebookRevisionTotal =
+    notebookRevisionItems.vocabulary.length + notebookRevisionItems.paraphrase.length
   const currentLoadingPhrase = ANALYSIS_LOADING_PHRASES[loadingPhraseCursor % ANALYSIS_LOADING_PHRASES.length]
   const latestRuntimeMessage = assessmentRuntimeMessages[assessmentRuntimeMessages.length - 1] || ''
   const roundedAssessmentProgress = Math.round(assessmentProgress)
@@ -12310,6 +12349,27 @@ function App() {
     setNewCustomSectionName('')
   }
 
+  // Track the last pointer position so the save celebration can fly out of the
+  // exact button the learner clicked, wherever it lives in the app.
+  useEffect(() => {
+    const onPointerDown = (event: PointerEvent) => {
+      lastPointerRef.current = { x: event.clientX, y: event.clientY }
+    }
+    window.addEventListener('pointerdown', onPointerDown, true)
+    return () => window.removeEventListener('pointerdown', onPointerDown, true)
+  }, [])
+
+  const triggerNotebookCelebration = (message?: string) => {
+    notebookCelebrationSeqRef.current += 1
+    const { x, y } = lastPointerRef.current
+    setNotebookCelebration({
+      id: notebookCelebrationSeqRef.current,
+      x: x || window.innerWidth / 2,
+      y: y || window.innerHeight / 2,
+      message
+    })
+  }
+
   const savePlanToNotebook = ({
     criterion,
     quote,
@@ -12318,14 +12378,22 @@ function App() {
     preferredSection,
     topicTitle: explicitTopicTitle,
     sourceQuestion,
+    noteKind,
+    primaryText,
+    secondaryText,
     successNotice = 'Added to notebook',
-    suppressNotice = false
+    suppressNotice = false,
+    celebrate = true
   }: {
     criterion: string
     quote: string
     fix: string
     thaiMeaning?: string
     preferredSection?: NotebookSection | string
+    noteKind?: NotebookNoteKind
+    primaryText?: string
+    secondaryText?: string
+    celebrate?: boolean
     /** Pass this whenever the save has its own subject. Without it a Writing or
      *  Listening save would inherit the unrelated Speaking topic that happens to
      *  be open — which is how vocabulary ended up filed under "Topic: Art". */
@@ -12359,6 +12427,9 @@ function App() {
       sourceQuestion,
       thaiMeaning: thaiMeaning || '',
       personalNote: '',
+      ...(noteKind ? { noteKind } : {}),
+      ...(primaryText ? { primaryText } : {}),
+      ...(secondaryText ? { secondaryText } : {}),
       createdAt: new Date().toISOString()
     }
     const nextEntries = [nextEntry, ...notebookEntriesRef.current]
@@ -12371,6 +12442,9 @@ function App() {
     if (!suppressNotice) {
       setNotebookSaveNotice(resolvedSuccessNotice)
     }
+    if (celebrate) {
+      triggerNotebookCelebration()
+    }
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: customSectionsRef.current,
@@ -12379,11 +12453,11 @@ function App() {
   }
 
   const saveFullReportToNotebook = (report: AssessmentReport) => {
-    const customSectionName = 'saved reports'
-    const nextSections = customSectionsRef.current.includes(customSectionName)
-      ? customSectionsRef.current
-      : [...customSectionsRef.current, customSectionName]
-    setCustomSections(nextSections)
+    // Full-report snapshots live alongside the per-item saves in the single
+    // "speaking notes" tab, which is a built-in tab — so it must NOT be pushed
+    // into customSections (that would render the tab twice).
+    const customSectionName = SPEAKING_NOTES_SECTION
+    const nextSections = customSectionsRef.current
 
     const nextEntry: NotebookEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -12395,6 +12469,7 @@ function App() {
       fix: 'Open this saved report to review it in the full report UI.',
       thaiMeaning: '',
       personalNote: '',
+      noteKind: 'report',
       savedReportSnapshot: {
         testMode: selectedTestMode,
         topicTitle: activeTopic?.title || 'Saved report',
@@ -12415,6 +12490,7 @@ function App() {
       title: 'Saved for future revision',
       text: 'บันทึก report เรียบร้อยแล้วครับ กลับมาทบทวนจุดอ่อนชุดนี้ได้ทุกเมื่อเลย'
     })
+    triggerNotebookCelebration('เก็บ report ไว้ทบทวนแล้ว — อย่าลืมกลับมาดูนะครับ 📚')
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: nextSections,
@@ -12424,6 +12500,32 @@ function App() {
 
   const handleDownloadCurrentRecording = async () => {
     if (!audioUrl) return
+    const topicSlug =
+      String(activeTopic?.title || 'english-plan-speaking')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'english-plan-speaking'
+    const saveBlob = (blob: Blob, extension: string) => {
+      const objectUrl = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = objectUrl
+      link.download = `${topicSlug}-recording.${extension}`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(objectUrl)
+    }
+    // Pick a sensible extension from the raw recording's MIME type when we fall
+    // back to the original file (the MP3 encoder can be unavailable in some
+    // browsers/bundles).
+    const extensionForBlob = (blob: Blob) => {
+      const type = (blob.type || '').toLowerCase()
+      if (type.includes('mpeg') || type.includes('mp3')) return 'mp3'
+      if (type.includes('mp4') || type.includes('m4a') || type.includes('aac')) return 'm4a'
+      if (type.includes('ogg')) return 'ogg'
+      if (type.includes('wav')) return 'wav'
+      return 'webm'
+    }
     try {
       let sourceBlob: Blob | null = latestAudioBlobRef.current
       if (!sourceBlob) {
@@ -12432,24 +12534,24 @@ function App() {
       if (!sourceBlob) {
         throw new Error('No recording available to download.')
       }
-      const mp3Blob = await convertSpeakingRecordingToMp3(sourceBlob)
-      const objectUrl = URL.createObjectURL(mp3Blob)
-      const link = document.createElement('a')
-      const topicSlug = String(activeTopic?.title || 'english-plan-speaking')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-      link.href = objectUrl
-      link.download = `${topicSlug || 'english-plan-speaking'}-recording.mp3`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(objectUrl)
-      setReportActionToast({
-        icon: '🎧',
-        title: 'MP3 downloaded',
-        text: "โหลดไฟล์ MP3 เรียบร้อยแล้วครับ เก็บไว้ส่งให้พี่ดอยใช้ประกอบการ consult ต่อได้เลย"
-      })
+      try {
+        const mp3Blob = await convertSpeakingRecordingToMp3(sourceBlob)
+        saveBlob(mp3Blob, 'mp3')
+        setReportActionToast({
+          icon: '🎧',
+          title: 'MP3 downloaded',
+          text: 'โหลดไฟล์ MP3 เรียบร้อยแล้วครับ เก็บไว้ส่งให้พี่ดอยใช้ประกอบการ consult ต่อได้เลย'
+        })
+      } catch {
+        // MP3 conversion failed — still hand the student a usable audio file in
+        // its original format rather than nothing.
+        saveBlob(sourceBlob, extensionForBlob(sourceBlob))
+        setReportActionToast({
+          icon: '🎧',
+          title: 'Audio downloaded',
+          text: 'โหลดไฟล์เสียงเรียบร้อยแล้วครับ เก็บไว้ส่งให้พี่ดอยใช้ประกอบการ consult ต่อได้เลย'
+        })
+      }
     } catch {
       setNotebookSaveNotice('Could not download the recording right now.')
     }
@@ -12470,6 +12572,7 @@ function App() {
       fix: `เปิดดูรายงานฉบับเต็ม (กราฟ + เรียงความไฮไลต์) — ทำถูก ${payload.score.correct}/${payload.score.total} ช่อง`,
       thaiMeaning: '',
       personalNote: '',
+      noteKind: 'report',
       savedReportSnapshot: snapshot,
       createdAt: new Date().toISOString()
     }
@@ -12477,6 +12580,7 @@ function App() {
     setNotebookEntries(nextEntries)
     setSelectedNotebookSection('writing')
     setNotebookSaveNotice('บันทึกเรียงความลง Notebook แล้ว')
+    triggerNotebookCelebration('เก็บเรียงความไว้ทบทวนแล้วครับ 📚')
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: customSectionsRef.current,
@@ -12502,6 +12606,7 @@ function App() {
       fix: `เปิดดูเรียงความฉบับเต็มพร้อมคำศัพท์ — ทำถูก ${payload.score.correct}/${payload.score.total} ช่อง`,
       thaiMeaning: '',
       personalNote: '',
+      noteKind: 'report',
       savedReportSnapshot: snapshot,
       createdAt: new Date().toISOString()
     }
@@ -12509,6 +12614,7 @@ function App() {
     setNotebookEntries(nextEntries)
     setSelectedNotebookSection('writing essay')
     setNotebookSaveNotice('บันทึกเรียงความลง Notebook แล้ว')
+    triggerNotebookCelebration('เก็บเรียงความไว้ทบทวนแล้วครับ 📚')
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: customSectionsRef.current,
@@ -18608,6 +18714,9 @@ function App() {
       fix: pair.note || pair.p,
       thaiMeaning: pair.th,
       preferredSection: PDOY_VOCAB_SECTION,
+      noteKind: 'paraphrase',
+      primaryText: pair.q,
+      secondaryText: pair.p,
       successNotice: 'บันทึกลง พี่ดอยสอน Vocab แล้ว'
     })
   }
@@ -18632,11 +18741,14 @@ function App() {
       )
     }
     handlePracticeSaveToNotebook({
-      criterion: passageTitle,
+      criterion: `${passageTitle} · Vocabulary`,
       quote: item.word,
       fix: item.example || item.word,
       thaiMeaning: item.thaiMeaning,
       preferredSection: PDOY_VOCAB_SECTION,
+      noteKind: 'vocabulary',
+      primaryText: item.word,
+      secondaryText: item.thaiMeaning,
       successNotice: 'บันทึกลง พี่ดอยสอน Vocab แล้ว'
     })
     setReadingVocabSavedWords((current) => new Set(current).add(item.word))
@@ -21192,11 +21304,16 @@ function App() {
   const adminUserNotebookSectionTabs = useMemo(
     () => [
       'speaking',
+      SPEAKING_NOTES_SECTION,
       'writing',
       'writing essay',
       'listening',
       'reading',
-      ...(adminUserNotebook?.customSections || [])
+      // Drop any legacy customSections that duplicate the built-in tabs above
+      // (e.g. the old "speaking notes" that used to be pushed as a custom one).
+      ...(adminUserNotebook?.customSections || []).filter(
+        (name) => name !== SPEAKING_NOTES_SECTION
+      )
     ],
     [adminUserNotebook]
   )
@@ -22221,6 +22338,9 @@ function App() {
                           ].join('\n'),
                           thaiMeaning: teaching.thaiMeaning,
                           preferredSection: 'listening',
+                          noteKind: 'paraphrase',
+                          primaryText: teaching.questionKeyword,
+                          secondaryText: teaching.passageKeyword,
                           successNotice: 'Added to notebook'
                         })
                       }
@@ -22331,6 +22451,9 @@ function App() {
                     fix: payload?.fix || `${question.passageKeyword} = ${question.questionKeyword}`,
                     thaiMeaning: payload?.thaiMeaning || question.thaiMeaning,
                     preferredSection: 'listening',
+                    noteKind: 'paraphrase',
+                    primaryText: question.questionKeyword,
+                    secondaryText: question.passageKeyword,
                     successNotice: 'Added to notebook · saved to #listening'
                   })
                 }}
@@ -22456,6 +22579,9 @@ function App() {
                       fix: payload?.fix || `${question.passageKeyword} = ${question.questionKeyword}`,
                       thaiMeaning: payload?.thaiMeaning || question.thaiMeaning,
                       preferredSection: 'listening',
+                      noteKind: 'paraphrase',
+                      primaryText: question.questionKeyword,
+                      secondaryText: question.passageKeyword,
                       successNotice: 'Added to notebook · saved to #listening'
                     })
                   }}
@@ -22537,6 +22663,9 @@ function App() {
                     fix: payload?.fix || `${question.questionKeyword} = ${question.evidence}`,
                     thaiMeaning: payload?.thaiMeaning || question.thaiMeaning || question.explanationThai || '',
                     preferredSection: 'listening',
+                    noteKind: 'paraphrase',
+                    primaryText: question.questionKeyword,
+                    secondaryText: question.passageKeyword || question.evidence,
                     successNotice: 'Added to notebook · saved to #listening'
                   })
                 }}
@@ -23614,6 +23743,9 @@ function App() {
                                       fix: activeReadingPdoyVocabSupport.notebookFix,
                                       thaiMeaning: activeReadingPdoyVocabSupport.meaning,
                                       preferredSection: 'reading',
+                                      noteKind: 'vocabulary',
+                                      primaryText: activeReadingPdoyVocabSupport.quote,
+                                      secondaryText: activeReadingPdoyVocabSupport.meaning,
                                       successNotice: 'Added to notebook'
                                     })
                                   }
@@ -23638,6 +23770,11 @@ function App() {
                                         fix: activeReadingPdoyQuestion.paraphrasedVocabulary || activeReadingPdoyQuestion.exactPortion,
                                         thaiMeaning: activeReadingPdoyClue.thaiHelper,
                                         preferredSection: 'reading',
+                                        noteKind: 'paraphrase',
+                                        primaryText: activeReadingPdoyClue.clue,
+                                        secondaryText:
+                                          activeReadingPdoyQuestion.paraphrasedVocabulary ||
+                                          activeReadingPdoyQuestion.exactPortion,
                                         successNotice: 'Added to notebook'
                                       })
                                     }
@@ -24972,6 +25109,12 @@ function App() {
                                 vocabSupport?.meaning ||
                                 item.explanationThai,
                               preferredSection: 'reading',
+                              noteKind: 'paraphrase',
+                              primaryText: paraphraseEquation?.questionKeyword || item.prompt,
+                              secondaryText:
+                                paraphraseEquation?.passageKeyword ||
+                                item.paraphrasedVocabulary ||
+                                item.correctAnswer,
                               successNotice: 'Added to notebook'
                             })
                           }
@@ -25011,6 +25154,9 @@ function App() {
                   thaiMeaning,
                   sourceQuestion: questionText,
                   preferredSection: 'writing',
+                  noteKind: 'vocabulary',
+                  primaryText: word,
+                  secondaryText: thaiMeaning,
                   successNotice: 'Added to notebook'
                 })
               }
@@ -30188,9 +30334,10 @@ function App() {
                                             className="ladderSaveBtn"
                                             onClick={() =>
                                               savePlanToNotebook({
-                                                criterion: fix.label,
+                                                criterion: toSpeakingNoteCriterion(fix.label),
                                                 quote: fix.title,
-                                                fix: fix.detail
+                                                fix: fix.detail,
+                                                preferredSection: SPEAKING_NOTES_SECTION
                                               })
                                             }
                                           >
@@ -30203,17 +30350,11 @@ function App() {
                                 </aside>
                               )}
                               <div className="notebookQuickAddBar">
-                                <p className="sectionLabel">Save +1 actions to notebook section</p>
-                                <select
-                                  value={selectedNotebookSection}
-                                  onChange={(event) => setSelectedNotebookSection(event.target.value)}
-                                >
-                                  {notebookSectionTabs.map((sectionName) => (
-                                    <option key={sectionName} value={sectionName}>
-                                      {sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}
-                                    </option>
-                                  ))}
-                                </select>
+                                <p className="sectionLabel">
+                                  ทุกจุดที่กด “บันทึกลง Notebook” จะไปรวมอยู่ในแท็บ{' '}
+                                  <strong>speaking notes</strong> — แยกหมวด Grammar / Vocabulary /
+                                  Referencing ให้อัตโนมัติ
+                                </p>
                               </div>
                               {isMockFullReport && activeReport.mockFullReport ? (
                                 <>
@@ -30255,9 +30396,10 @@ function App() {
                                                   className="saveNotebookBtn"
                                                   onClick={() =>
                                                     savePlanToNotebook({
-                                                      criterion: 'Part 1 Grammar',
+                                                      criterion: 'Grammar',
                                                       quote: item.evidence || item.issue,
-                                                      fix: item.suggestion || item.issue
+                                                      fix: item.suggestion || item.issue,
+                                                      preferredSection: SPEAKING_NOTES_SECTION
                                                     })
                                                   }
                                                 >
@@ -30359,10 +30501,11 @@ function App() {
                                                       className="saveNotebookBtn"
                                                       onClick={() =>
                                                         savePlanToNotebook({
-                                                          criterion: label,
+                                                          criterion: toSpeakingNoteCriterion(label),
                                                           quote: plan.quote,
                                                           fix: plan.fix,
-                                                          thaiMeaning: plan.thaiMeaning
+                                                          thaiMeaning: plan.thaiMeaning,
+                                                          preferredSection: SPEAKING_NOTES_SECTION
                                                         })
                                                       }
                                                     >
@@ -30460,9 +30603,10 @@ function App() {
                                                     targetBand,
                                                     (plan) =>
                                                       savePlanToNotebook({
-                                                        criterion: label,
+                                                        criterion: toSpeakingNoteCriterion(label),
                                                         quote: plan.originalText || plan.quote,
-                                                        fix: plan.improvedText || plan.fix || ''
+                                                        fix: plan.improvedText || plan.fix || '',
+                                                        preferredSection: SPEAKING_NOTES_SECTION
                                                       })
                                                   )}
                                                 </div>
@@ -30493,32 +30637,44 @@ function App() {
                                         </div>
                                         <div className="vocabV2Grid">
                                           {vocabByLevel[level].map((item, idx) => (
-                                            <article key={`vocab-${level}-${idx}`} className="vocabV2Item">
-                                              <div className="vocabUpgradeWords">
-                                                <span className="vocabFrom">{item.sourcePhrase}</span>
-                                                <span className="vocabArrow">{'->'}</span>
-                                                <span className="vocabTo">{item.replacement}</span>
+                                            <article key={`vocab-${level}-${idx}`} className="vocabCardV3">
+                                              <div className="vocabCardV3Top">
+                                                <span className="vocabCardV3Level">{item.level}</span>
+                                                <button
+                                                  type="button"
+                                                  className="vocabCardV3Save"
+                                                  onClick={() =>
+                                                    savePlanToNotebook({
+                                                      criterion: 'Vocabulary',
+                                                      quote: item.sourcePhrase,
+                                                      fix: `Use ${item.level}: ${item.replacement}`,
+                                                      thaiMeaning: `${item.replacement} = ${item.thaiMeaning}`,
+                                                      preferredSection: SPEAKING_NOTES_SECTION,
+                                                      noteKind: 'vocabulary',
+                                                      primaryText: item.replacement,
+                                                      secondaryText: item.thaiMeaning
+                                                    })
+                                                  }
+                                                >
+                                                  ＋ บันทึก
+                                                </button>
                                               </div>
-                                              <div className="vocabUpgradeMetaRow">
-                                                <span className="vocabLevelBadge">{item.level}</span>
-                                                <span className="vocabThai">{item.thaiMeaning}</span>
+                                              {/* Vocabulary leads: the upgraded word, then its Thai meaning. */}
+                                              <p className="vocabCardV3Word">{item.replacement}</p>
+                                              {item.thaiMeaning && (
+                                                <p className="vocabCardV3Thai">{item.thaiMeaning}</p>
+                                              )}
+                                              <div className="vocabCardV3Swap">
+                                                <span className="vocabCardV3From">{item.sourcePhrase}</span>
+                                                <span className="vocabCardV3Arrow" aria-hidden="true">→</span>
+                                                <span className="vocabCardV3To">{item.replacement}</span>
                                               </div>
-                                              {item.sourceQuestion && <p className="meta">มาจากคำถาม: {item.sourceQuestion}</p>}
-                                              <p className="fixText">{item.reasonThai}</p>
-                                              <button
-                                                type="button"
-                                                className="saveNotebookBtn"
-                                                onClick={() =>
-                                                  savePlanToNotebook({
-                                                    criterion: 'Vocabulary Upgrade',
-                                                    quote: item.sourcePhrase,
-                                                    fix: `Use ${item.level}: ${item.replacement}`,
-                                                    thaiMeaning: `${item.replacement} = ${item.thaiMeaning}`
-                                                  })
-                                                }
-                                              >
-                                                Save
-                                              </button>
+                                              {item.reasonThai && (
+                                                <p className="vocabCardV3Reason">{item.reasonThai}</p>
+                                              )}
+                                              {item.sourceQuestion && (
+                                                <p className="vocabCardV3Source">มาจากคำถาม: {item.sourceQuestion}</p>
+                                              )}
                                             </article>
                                           ))}
                                         </div>
@@ -30796,6 +30952,9 @@ function App() {
                         fix: item.word,
                         thaiMeaning: item.thaiMeaning,
                         preferredSection: 'writing',
+                        noteKind: 'vocabulary',
+                        primaryText: item.word,
+                        secondaryText: item.thaiMeaning,
                         successNotice: 'Added to notebook'
                       })
                     }
@@ -30805,8 +30964,28 @@ function App() {
             </div>
           ) : null}
           <div className="notebookHeader">
-            <h2>Notebook</h2>
-            <p>เก็บคำแนะนำ +1 band และเรียงความที่บันทึกจาก Writing — จัดตาม Speaking, Writing, Writing Essay, Listening, Reading</p>
+            <div className="notebookHeaderTop">
+              <div>
+                <h2>Notebook</h2>
+                <p>เก็บคำแนะนำ +1 band และเรียงความที่บันทึกจาก Writing — จัดตาม Speaking, Writing, Writing Essay, Listening, Reading</p>
+              </div>
+              <button
+                type="button"
+                className="notebookRevisionBtn"
+                disabled={notebookRevisionTotal === 0}
+                onClick={() => setIsNotebookGameOpen(true)}
+                title={
+                  notebookRevisionTotal === 0
+                    ? 'ยังไม่มีคำศัพท์หรือพาราเฟรสให้ทบทวน — บันทึกจากรายงานหรือบทเรียนก่อนนะครับ'
+                    : 'เล่นเกมจับคู่ทบทวนคำศัพท์และพาราเฟรสที่บันทึกไว้'
+                }
+              >
+                🎮 Notebook Revision
+                {notebookRevisionTotal > 0 ? (
+                  <span className="notebookRevisionBtnCount">{notebookRevisionTotal}</span>
+                ) : null}
+              </button>
+            </div>
             {isNotebookHydrating ? (
               <p className="meta">Loading your synced notebook...</p>
             ) : notebookSyncError ? (
@@ -30815,6 +30994,13 @@ function App() {
               <p className="meta">Notebook sync is connected to your Supabase account.</p>
             ) : null}
           </div>
+          {isNotebookGameOpen ? (
+            <NotebookRevisionGame
+              vocabulary={notebookRevisionItems.vocabulary}
+              paraphrase={notebookRevisionItems.paraphrase}
+              onClose={() => setIsNotebookGameOpen(false)}
+            />
+          ) : null}
           <NotebookEntriesView
             notebookSectionTabs={notebookSectionTabs}
             selectedSection={selectedNotebookSection}
@@ -31424,6 +31610,10 @@ function App() {
         </div>
       )}
       <PracticeActionToast toast={practiceActionToast} onDismiss={dismissPracticeActionToast} />
+      <NotebookSaveCelebration
+        celebration={notebookCelebration}
+        onDone={() => setNotebookCelebration(null)}
+      />
     </main>
   )
 }

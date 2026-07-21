@@ -1,3 +1,5 @@
+import { deriveNotebookFacets, type NotebookNoteKind } from './notebookFacets'
+
 type NotebookEntryLike = {
   id: string
   section: string
@@ -9,8 +11,20 @@ type NotebookEntryLike = {
   sourceQuestion?: string
   thaiMeaning?: string
   personalNote?: string
+  noteKind?: NotebookNoteKind
+  primaryText?: string
+  secondaryText?: string
   savedReportSnapshot?: unknown
   createdAt: string
+}
+
+/** Short human label for the facet kind, shown as a chip on each card. */
+const KIND_LABEL: Record<NotebookNoteKind, string> = {
+  vocabulary: 'Vocabulary',
+  grammar: 'Grammar',
+  paraphrase: 'Paraphrase',
+  report: 'Report',
+  note: 'Note'
 }
 
 export type NotebookEntriesViewProps = {
@@ -88,6 +102,7 @@ export function NotebookEntriesView({
             const label = entry.section === 'custom' ? entry.customSectionName || 'Custom' : entry.section
             const tone = sectionTone(String(label))
             const hasReport = Boolean(entry.savedReportSnapshot)
+            const facets = deriveNotebookFacets(entry)
             return (
               <article
                 key={entry.id}
@@ -95,13 +110,55 @@ export function NotebookEntriesView({
               >
                 <div className="notebookEntryMeta">
                   <span className="notebookEntryBadge">{label}</span>
+                  {!hasReport ? (
+                    <span className={`notebookEntryKindChip kind-${facets.kind}`}>
+                      {KIND_LABEL[facets.kind]}
+                    </span>
+                  ) : null}
                   <span className="notebookEntryDate">{new Date(entry.createdAt).toLocaleString()}</span>
                 </div>
 
-                <p className="notebookEntryCriterion">{entry.criterion}</p>
-                {/* The saved word is the reason this card exists, so it leads.
-                    The topic is context and is deliberately quieter. */}
-                {!hasReport && entry.fix ? <h3 className="notebookEntryWord">{entry.fix}</h3> : null}
+                {/* Prioritized headline: vocabulary leads with the English word,
+                    grammar with the rule, paraphrase with the A ↔ B pair. */}
+                {!hasReport ? (
+                  facets.kind === 'vocabulary' ? (
+                    <div className="notebookEntryFacet">
+                      <h3 className="notebookEntryWord">{facets.primary || entry.fix}</h3>
+                      {facets.secondary ? (
+                        <p className="notebookEntryThai">
+                          <span>ความหมาย</span> {facets.secondary}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : facets.kind === 'grammar' ? (
+                    <div className="notebookEntryFacet">
+                      <p className="notebookEntryRule">{facets.primary || entry.criterion}</p>
+                      {facets.secondary && facets.secondary !== facets.primary ? (
+                        <p className="notebookEntryInstance">{facets.secondary}</p>
+                      ) : null}
+                    </div>
+                  ) : facets.kind === 'paraphrase' ? (
+                    <div className="notebookEntryFacet">
+                      <div className="notebookEntryPair">
+                        <span className="notebookEntryPairA">{facets.primary}</span>
+                        <span className="notebookEntryPairEq">=</span>
+                        <span className="notebookEntryPairB">{facets.secondary}</span>
+                      </div>
+                      {facets.thai ? (
+                        <p className="notebookEntryThai">
+                          <span>ความหมาย</span> {facets.thai}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="notebookEntryFacet">
+                      <p className="notebookEntryCriterion">{entry.criterion}</p>
+                      {entry.fix ? <h3 className="notebookEntryWord">{entry.fix}</h3> : null}
+                    </div>
+                  )
+                ) : (
+                  <p className="notebookEntryCriterion">{entry.criterion}</p>
+                )}
                 <p className="notebookEntryTopicLine">
                   {entry.topicTitle?.trim() || 'General vocabulary'}
                 </p>
@@ -131,7 +188,10 @@ export function NotebookEntriesView({
                   </>
                 ) : (
                   <>
-                    {entry.thaiMeaning ? (
+                    {/* Meaning is already surfaced in the prioritized headline for
+                        vocabulary/paraphrase; only show the raw Thai here as a
+                        fallback for notes that had no facet meaning. */}
+                    {entry.thaiMeaning && facets.kind !== 'vocabulary' && facets.kind !== 'paraphrase' ? (
                       <p className="notebookEntryThai">
                         <span>คำแปล</span> {entry.thaiMeaning}
                       </p>

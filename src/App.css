@@ -29657,3 +29657,375 @@ textarea {
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
+/* ==========================================================================
+   Notebook facets, revision game, and save celebration
+   ========================================================================== */
+
+/* --- Notebook header + revision game launcher --------------------------- */
+.notebookHeaderTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.notebookRevisionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #004aad, #0a6bd8);
+  box-shadow: 0 14px 30px -16px rgba(0, 74, 173, 0.7);
+  transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+  white-space: nowrap;
+}
+.notebookRevisionBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+.notebookRevisionBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.notebookRevisionBtnCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #ffcc00;
+  color: #0f172a;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+/* --- Notebook card facet display (prioritized) -------------------------- */
+.notebookEntryKindChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: #eef2fb;
+  color: #004aad;
+  border: 1px solid #dbe6f7;
+}
+.notebookEntryKindChip.kind-vocabulary { background: #eaf7ef; color: #157347; border-color: #cdeed9; }
+.notebookEntryKindChip.kind-grammar { background: #eef2fb; color: #1d4ed8; border-color: #d7e2f8; }
+.notebookEntryKindChip.kind-paraphrase { background: #fef6e7; color: #a15c00; border-color: #f6e3bd; }
+
+.notebookEntryFacet {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 2px;
+}
+.notebookEntryRule {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.02rem;
+  color: #0f172a;
+}
+.notebookEntryInstance {
+  margin: 0;
+  color: #334155;
+  font-size: 0.95rem;
+  padding: 8px 10px;
+  background: #f6f8fc;
+  border-radius: 10px;
+  border-left: 3px solid #004aad;
+}
+.notebookEntryPair {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.notebookEntryPairA,
+.notebookEntryPairB {
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #f1f5fb;
+  color: #0f172a;
+}
+.notebookEntryPairB { background: #eaf7ef; color: #157347; }
+.notebookEntryPairEq { font-weight: 800; color: #94a3b8; }
+
+/* --- Revision matching game -------------------------------------------- */
+.nbGameOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.nbGameCard {
+  width: min(880px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 40px 90px -40px rgba(15, 23, 42, 0.6);
+  padding: 26px;
+}
+.nbGameHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.nbGameEyebrow {
+  margin: 0 0 2px;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #64748b;
+}
+.nbGameHeader h3 { margin: 0; color: #004aad; font-size: 1.3rem; }
+.nbGameClose {
+  border: none;
+  background: #f1f5f9;
+  color: #334155;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.nbGameClose:hover { background: #e2e8f0; }
+
+.nbGameMenuLead { color: #475569; margin: 4px 0 16px; }
+.nbGameModeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.nbGameModeCard {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  text-align: left;
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  cursor: pointer;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+}
+.nbGameModeCard:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: #004aad;
+  box-shadow: 0 20px 40px -28px rgba(0, 74, 173, 0.5);
+}
+.nbGameModeCard:disabled { opacity: 0.45; cursor: not-allowed; }
+.nbGameModeIcon { font-size: 1.8rem; }
+.nbGameModeTitle { font-weight: 800; font-size: 1.1rem; color: #0f172a; }
+.nbGameModeDesc { color: #475569; font-size: 0.9rem; }
+.nbGameModeCount {
+  margin-top: 4px;
+  font-weight: 800;
+  color: #004aad;
+  background: #eef2fb;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+.nbGameModeUse { font-size: 0.75rem; color: #94a3b8; }
+.nbGameEmpty { margin-top: 16px; color: #64748b; text-align: center; }
+
+.nbGameProgressRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.nbGameBackBtn,
+.nbGameProgressText {
+  font-weight: 700;
+  color: #475569;
+  white-space: nowrap;
+}
+.nbGameBackBtn {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.nbGameProgressBar {
+  flex: 1;
+  height: 10px;
+  background: #eef2f7;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.nbGameProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #004aad, #22c55e);
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+.nbGameHint { color: #64748b; font-size: 0.88rem; margin: 0 0 14px; }
+
+.nbGameColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.nbGameColumn { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; align-content: start; }
+.nbGameTile {
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.12s ease, background 0.12s ease;
+}
+.nbGameTile:hover:not(:disabled) { border-color: #004aad; }
+.nbGameTileRight { background: #fbfcfe; }
+.nbGameTile.is-selected {
+  border-color: #004aad;
+  background: #eef4ff;
+  box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.15);
+}
+.nbGameTile.is-matched {
+  border-color: #bbe7cd;
+  background: #eafaf0;
+  color: #157347;
+  cursor: default;
+}
+.nbGameTile.is-matched::after { content: ' ✓'; color: #22c55e; font-weight: 900; }
+.nbGameTile.is-wrong { animation: nbShake 0.4s ease; border-color: #ef4444; background: #fef2f2; }
+@keyframes nbShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.nbGameDone { text-align: center; padding: 20px 10px 6px; }
+.nbGameDoneBadge { font-size: 3.4rem; }
+.nbGameDone h4 { margin: 8px 0 6px; color: #004aad; font-size: 1.5rem; }
+.nbGameDone p { color: #475569; margin: 0 auto 18px; max-width: 460px; }
+.nbGameDoneActions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.nbGamePrimaryBtn {
+  border: none;
+  background: #004aad;
+  color: #fff;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.nbGameGhostBtn {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .nbGameColumns { gap: 10px; }
+  .nbGameTile { padding: 12px; font-size: 0.9rem; }
+}
+
+/* --- Save celebration (fly-to-notebook) -------------------------------- */
+.nbCelebrateLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  pointer-events: none;
+  overflow: hidden;
+}
+.nbCelebrateNote {
+  position: fixed;
+  font-size: 2rem;
+  transform: translate(-50%, -50%);
+  animation: nbFly 1.5s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+}
+.nbCelebrateNoteIcon {
+  display: inline-block;
+  filter: drop-shadow(0 8px 14px rgba(15, 23, 42, 0.3));
+}
+@keyframes nbFly {
+  0% { transform: translate(-50%, -50%) scale(0.4) rotate(-8deg); opacity: 0; }
+  16% { transform: translate(-50%, -50%) scale(1.25) rotate(4deg); opacity: 1; }
+  40% { transform: translate(calc(-50% + var(--fly-dx) * 0.15), calc(-50% + var(--fly-dy) * 0.15 - 40px)) scale(1.05); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--fly-dx)), calc(-50% + var(--fly-dy))) scale(0.25) rotate(20deg); opacity: 0; }
+}
+
+.nbCelebrateBurst { position: fixed; transform: translate(-50%, -50%); }
+.nbCelebrateConfetti {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  transform: rotate(var(--c-angle));
+  animation: nbConfetti 0.95s ease-out forwards;
+}
+@keyframes nbConfetti {
+  0% { opacity: 1; transform: rotate(var(--c-angle)) translateY(0) scale(1); }
+  100% { opacity: 0; transform: rotate(var(--c-angle)) translateY(-70px) scale(0.4); }
+}
+
+.nbCelebrateToast {
+  position: fixed;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0f172a;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 16px;
+  box-shadow: 0 24px 50px -24px rgba(15, 23, 42, 0.7);
+  animation: nbToastIn 0.4s ease, nbToastOut 0.5s ease 1.55s forwards;
+  max-width: min(92vw, 460px);
+}
+.nbCelebrateToastSpark { font-size: 1.5rem; }
+.nbCelebrateToastTitle { margin: 0; font-weight: 800; font-size: 0.98rem; }
+.nbCelebrateToastText { margin: 2px 0 0; font-size: 0.86rem; color: #cbd5e1; }
+@keyframes nbToastIn {
+  from { opacity: 0; transform: translate(-50%, -14px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes nbToastOut {
+  to { opacity: 0; transform: translate(-50%, -10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nbCelebrateNote, .nbCelebrateConfetti { animation-duration: 0.01ms; }
+}

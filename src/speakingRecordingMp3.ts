@@ -91,8 +91,13 @@ export const convertSpeakingRecordingToMp3 = async (blob: Blob): Promise<Blob> =
     throw new Error('Recording has no audio samples to export.')
   }
 
-  const lamejs = await import('lamejs')
-  const Mp3Encoder = lamejs.Mp3Encoder || (lamejs as { default?: { Mp3Encoder: typeof lamejs.Mp3Encoder } }).default?.Mp3Encoder
+  // `lamejs@1.2.1` ships a broken modular entry (`MPEGMode is not defined`) that
+  // throws the moment we encode, so the download silently failed. The maintained
+  // `@breezystack/lamejs` fork fixes the global wiring and encodes real MP3s.
+  const lamejs = await import('@breezystack/lamejs')
+  const Mp3Encoder =
+    lamejs.Mp3Encoder ||
+    (lamejs as unknown as { default?: { Mp3Encoder?: typeof lamejs.Mp3Encoder } }).default?.Mp3Encoder
   if (!Mp3Encoder) {
     throw new Error('MP3 encoder is unavailable in this browser.')
   }
