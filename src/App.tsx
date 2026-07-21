@@ -10322,8 +10322,15 @@ function App() {
   const roundSpeakingAverageScore = (score: number) => Math.ceil(score * 2) / 2
 
   const getSpeakingAverageScore = (mode: SpeakingTestMode) => {
-    const scores = speakingModeTopics[mode]
-      .map((topic) => latestScoresByTest[`${mode}:${topic.id}`])
+    // Average every saved score for this mode, keyed `${mode}:${topicId}`. We scan
+    // the saved scores directly rather than iterating a fixed topic list, because a
+    // learner can practise legacy/bank topics (and the trial full-mock topic) whose
+    // ids are not in the curated lists — iterating curated topics silently dropped
+    // those attempts, so a finished test never showed up in the panel average.
+    const prefix = `${mode}:`
+    const scores = Object.entries(latestScoresByTest)
+      .filter(([key]) => key.startsWith(prefix))
+      .map(([, score]) => score)
       .filter((score): score is number => typeof score === 'number' && Number.isFinite(score))
     if (!scores.length) return null
     return roundSpeakingAverageScore(scores.reduce((total, score) => total + score, 0) / scores.length)
