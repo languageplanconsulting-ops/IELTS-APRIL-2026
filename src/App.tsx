@@ -11933,7 +11933,7 @@ function App() {
   // Track the last pointer position so the save celebration can fly out of the
   // exact button the learner clicked, wherever it lives in the app.
   useEffect(() => {
-    const onPointerDown = (event: PointerEvent) => {
+    const onPointerDown = (event: globalThis.PointerEvent) => {
       lastPointerRef.current = { x: event.clientX, y: event.clientY }
     }
     window.addEventListener('pointerdown', onPointerDown, true)

@@ -103,42 +103,65 @@ the largest …, while [Y] was the largest / the smallest in share.`
 
 **Body 1** — `Starting with [group], …`, three sentences:
 ```
-Starting with [group], [1st] was the largest category at [v], followed by [2nd]
-at [v]. However, [3rd] and [4th] accounted for significantly smaller shares, at
-[v] and [v], respectively. However, [5th] and [6th] each made up [v], accounting
-for the lowest figures.
+Starting with [group], the figure for [1st] was the largest, at [v], followed by
+[2nd], which stood at [v]. However, the figures for [3rd] and [4th] were
+significantly smaller, standing at [v] and [v], respectively. However, that of
+[5th] was the lowest, at just [v].
 ```
 
 **Body 2** — `In terms of [group], …`, three sentences:
 ```
-In terms of [group], [1st] accounted for the largest proportion, at [v].
-Similarly, [2nd] and [3rd] followed closely, at [v] and [v], respectively. In
-contrast, [last] made up the smallest share at just [v].
+In terms of [group], the figure for [1st] was the largest, at [v]. Similarly, the
+figures for [2nd] and [3rd] followed closely, at [v] and [v], respectively. In
+contrast, that of [last] was the lowest, at just [v].
 ```
 
-Use **`significantly`**, never `markedly`. Rating tables and hour charts swap the
-share nouns for scores/figures (`recorded significantly lower scores`, `standing
-at 8.2 and 7.8`).
+**Subjects wear the metric, then are referenced — never named twice.** The
+leading subject of each body carries the thing the prompt actually measures —
+`the ownership of smartphones`, `the spending on housing` (set `metricNoun`, plus
+`metricPrep` for `on` / `in`). A prompt that names no such metric falls back to
+the data-typed quantity phrase, and **only these three are allowed**:
+
+- `the number of …` — countable head nouns (people, vehicles, trips)
+- `the amount of …` — money or mass (dollars, water, energy)
+- `the figure for …` — percentages, rates and scores (the default)
+
+Never `the quantity of …`, and never a bare category label
+(`smartphones were the largest`).
+
+**Referencing — do not repeat the measure word in the same or the next
+sentence.** After the opener, every later subject is a reference: `the figure(s)
+for [X]`, then `that of [X]` for the closing figure. The words `share` / `shares`
+never appear inside a body — they belong only to the Overview's `… in share`.
+When the prompt names a metric, the Body 2 opener keeps the taught verb
+(`the ownership of smartphones accounted for the largest proportion, at 88%`); a
+bare `the figure for …` subject is copular (`… was the largest, at [v]`).
+
+Use **`significantly`**, never `markedly`. Rating tables and hour charts read the
+same way, with `highest`/`lowest` for the extremes
+(`the figure for Changi was the highest, at 9.4` · `the figures for … were
+significantly lower, standing at 8.2 and 8.0`).
 
 **Figures ride a V-ing clause, not a bare `at`.** The middle sentence reads
-`… made up significantly smaller shares, accounting for 16% and 9%, respectively.`
-The main verb must not repeat the clause (`accounted for … accounting for`).
+`the figures for [3rd] and [4th] were significantly smaller, standing at 16% and
+9%, respectively.` The copular `were` carries the `significantly …` degree, and
+the `standing` V-ing clause carries the numbers.
 
 **Rank strictly, and isolate the lowest.** Every figure is quoted largest-first,
-and the final sentence of Body 1 covers the lowest category on its own.
+and the final sentence of Body 1 covers the lowest category on its own,
+referenced as `that of [X]`.
 
 **Body 2 carries the cross-chart comparison** — the one comparison the SOP
-allows, because it states a gap rather than interpreting it. Two shapes:
+allows, riding the closing `that of [last] … was the lowest, at just [v]` figure
+because it states a gap rather than interpreting it. Two shapes:
 
 - **Two places / groups** (`Australia` vs `Canada`):
   `…, which was higher than that of Australia by 24%.`
 - **Same metric, two years** (set `timeComparison: true`): track the movement
   instead — `…, which increased dramatically from 2008 by 17%.` The adverb
   scales with the move: `dramatically` ≥40%, `significantly` ≥20%,
-  `moderately` ≥10%, otherwise `slightly`.
-
-Only say a category `remained the smallest … across the two years` when it was
-genuinely last in **both** charts — otherwise it is a false claim.
+  `moderately` ≥10%, otherwise `slightly`. A figure level across both years reads
+  `…, which remained unchanged since [year]`.
 
 Tables are exempt: their two bodies are different columns, so comparing them
 across bodies is meaningless.
@@ -149,13 +172,13 @@ across bodies is meaningless.
 answer on figures alone — enrich the chart rather than padding the prose.
 
 **`which` clause.** A closing figure may carry one relative clause instead of a
-new sentence: `…, which made up the smallest proportion.` /
-`…, which remained the least significant portion across both years.`
+new sentence: the cross-chart gap above, or a plain
+`…, which stood at the lowest level.`
 
 **Word-floor top-up.** Task 1 answers must clear 150 words. Where a chart is still
 too thin, and only then, append the taught gap sentence, largest gaps first:
 ```
-[Interestingly | Similarly | Likewise | Surprisingly], the share for [X] was
+[Interestingly | Similarly | Likewise | Surprisingly], the figure for [X] was
 lower than that of [Y] by [gap].
 ```
 `buildSnapshotExercise` adds these automatically via `padSnapshotToWordFloor`;

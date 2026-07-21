@@ -249,6 +249,22 @@ type SnapshotSpec = {
   /** What the numbers are. Rating tables are scores, not shares; hours are figures. */
   measureNoun?: 'share' | 'score' | 'figure'
   /**
+   * The thing the prompt measures, worn on the leading subject of each body:
+   * "the ownership of smartphones", "the spending on housing". Present only when
+   * the prompt names a possession/action metric that reads naturally in front of
+   * the category label. Absent charts fall back to `quantityKind`.
+   */
+  metricNoun?: string
+  /** Preposition that joins `metricNoun` to the label — "of" (default), "on", "in". */
+  metricPrep?: string
+  /**
+   * How a bare figure is named when there is no `metricNoun` — pick by data type:
+   * "number" for countable head nouns, "amount" for money/mass, "figure" for
+   * percentages, rates and scores (the default). Later references always fall
+   * back to "the figure(s) for …" / "that of …" so no measure word repeats.
+   */
+  quantityKind?: 'number' | 'amount' | 'figure'
+  /**
    * True when the two charts are the same metric at two points in time. Body 2
    * then tracks each figure against the earlier year (rose / fell / held steady)
    * instead of comparing across places.
@@ -307,100 +323,106 @@ const parseFigure = (value: string): { num: number; format: (n: number) => strin
 const comparisonSentence = (
   top: SnapshotItem,
   item: SnapshotItem,
-  transition: string,
-  isShare: boolean
+  transition: string
 ): string | null => {
   const high = parseFigure(top.value)
   const low = parseFigure(item.value)
   if (!high || !low) return null
   const gap = high.num - low.num
   if (gap <= 0) return null
-  return ` ${transition}, the ${isShare ? 'share' : 'figure'} for ${item.label} was lower than that of ${top.label} by ${high.format(gap)}.`
+  return ` ${transition}, the figure for ${item.label} was lower than that of ${top.label} by ${high.format(gap)}.`
 }
 
 const TOP_UP_TRANSITIONS = ['Interestingly', 'Similarly', 'Likewise', 'Surprisingly']
 
-const makeOrRecord = (id: string, isShare: boolean): WgbSegment =>
-  isShare
-    ? typ(id, 'make', ['made'], 'verb-tense', 'past simple')
-    : typ(id, 'record', ['recorded'], 'verb-tense', 'past simple')
+/** How a bare figure is named on a leading subject, keyed by data type. */
+const QUANTITY_LEAD: Record<'number' | 'amount' | 'figure', string> = {
+  number: 'the number of',
+  amount: 'the amount of',
+  figure: 'the figure for'
+}
+
+/** Does this chart wear a metric noun ("the ownership of …") on its subjects? */
+const hasMetricNoun = (spec: SnapshotSpec): boolean => Boolean(spec.metricNoun)
+
+/**
+ * The leading subject of a body sentence. When the prompt names a metric it
+ * rides in front of the label ("the ownership of smartphones"); otherwise the
+ * figure is named by its data type ("the figure for coal", "the number of …").
+ */
+const leadSubject = (spec: SnapshotSpec, label: string): string =>
+  spec.metricNoun
+    ? `the ${spec.metricNoun} ${spec.metricPrep ?? 'of'} ${label}`
+    : `${QUANTITY_LEAD[spec.quantityKind ?? 'figure']} ${label}`
+
+/** Referencing subject for every sentence after the first — never the metric word. */
+const figureRef = (label: string): string => `the figure for ${label}`
+const figuresRef = (a: string, b: string): string => `the figures for ${a} and ${b}`
+/** Second reference within earshot of a "the figure(s) for …" — avoids repeating it. */
+const thatOf = (label: string): string => `that of ${label}`
 
 function snapshotBody1Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
   const items = spec.body1Items
-  const lead = spec.body1Lead ?? 'the largest category'
   const measure = spec.measureNoun ?? 'share'
-  const measurePlural = `${measure}s`
   const isShare = measure === 'share'
+  const topWord = isShare ? 'largest' : 'highest'
+  const smallerLower = isShare ? 'smaller' : 'lower'
+  const SIG_HINT =
+    'significantly = \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e32\u0e01 (\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e19\u0e35\u0e49\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19) \u0e2a\u0e48\u0e27\u0e19 markedly \u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 \u0e41\u0e25\u0e30 barely = \u0e41\u0e17\u0e1a\u0e44\u0e21\u0e48'
+
+  // Sentence 1: the metric noun rides the leading subject; the runner-up is a
+  // plain "which stood at \u2026" so the paragraph opens on figures, not on "share".
   const segments: WgbSegment[] = [
-    t(`Starting with ${spec.body1Topic}, ${items[0].label} `),
-    typ(`${p}-b1`, 'be', [items[0].be ?? 'was'], 'verb-tense', 'past simple'),
-    t(` ${lead}, representing ${items[0].value}, `),
+    t(`Starting with ${spec.body1Topic}, ${leadSubject(spec, items[0].label)} `),
+    typ(`${p}-b1`, 'be', ['was'], 'verb-tense', 'past simple'),
+    t(` the ${topWord}, at ${items[0].value}, `),
     typ(`${p}-b2`, 'follow', ['followed'], 'v3-clause', 'V3 \u0e2b\u0e25\u0e31\u0e07\u0e04\u0e2d\u0e21\u0e21\u0e32: followed by = \u0e15\u0e32\u0e21\u0e21\u0e32\u0e14\u0e49\u0e27\u0e22'),
     t(` by ${items[1].label}, which `),
-    isShare
-      ? typ(`${p}-b2b`, 'account', ['accounted'], 'verb-tense', 'past simple')
-      : typ(`${p}-b2b`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-    t(`${isShare ? ' for' : ''} ${items[1].value}.`)
+    typ(`${p}-b2b`, 'stand', ['stood'], 'verb-tense', 'past simple'),
+    t(` at ${items[1].value}.`)
   ]
 
   // Middle sentence: one figure when the chart has four categories, a pair when it has five or more.
   const middle = items.length >= 5 ? items.slice(2, 4) : items.length === 4 ? items.slice(2, 3) : []
   if (middle.length === 2) {
     segments.push(
-      t(` However, ${middle[0].label} and ${middle[1].label} `),
-      isShare
-        ? typ(`${p}-b3`, 'make', ['made'], 'verb-tense', 'past simple')
-        : typ(`${p}-b3`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-      t(isShare ? ' up ' : ' '),
-      sel(
-        `${p}-b4`,
-        ['significantly', 'markedly', 'barely'],
-        'significantly',
-        'degree-adverb',
-        'significantly = \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e32\u0e01 (\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e19\u0e35\u0e49\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19) \u0e2a\u0e48\u0e27\u0e19 markedly \u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 \u0e41\u0e25\u0e30 barely = \u0e41\u0e17\u0e1a\u0e44\u0e21\u0e48'
-      ),
-      t(`${isShare ? ' smaller' : ' lower'} ${measurePlural}, ${isShare ? 'accounting for' : 'standing at'} ${middle[0].value} and ${middle[1].value}, respectively.`)
+      t(` However, ${figuresRef(middle[0].label, middle[1].label)} `),
+      typ(`${p}-b3`, 'be', ['were'], 'verb-tense', 'past simple'),
+      t(' '),
+      sel(`${p}-b4`, ['significantly', 'markedly', 'barely'], 'significantly', 'degree-adverb', SIG_HINT),
+      t(` ${smallerLower}, `),
+      typ(`${p}-b4b`, 'stand', ['standing'], 'ving-clause', 'V-ing clause: standing at'),
+      t(` at ${middle[0].value} and ${middle[1].value}, respectively.`)
     )
   } else if (middle.length === 1) {
     segments.push(
-      t(` However, ${middle[0].label} `),
-      isShare
-        ? typ(`${p}-b3`, 'make', ['made'], 'verb-tense', 'past simple')
-        : typ(`${p}-b3`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-      t(isShare ? ' up a ' : ' a '),
-      sel(
-        `${p}-b4`,
-        ['significantly', 'markedly', 'barely'],
-        'significantly',
-        'degree-adverb',
-        'significantly = \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e21\u0e32\u0e01 (\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e19\u0e35\u0e49\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19) \u0e2a\u0e48\u0e27\u0e19 markedly \u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 \u0e41\u0e25\u0e30 barely = \u0e41\u0e17\u0e1a\u0e44\u0e21\u0e48'
-      ),
-      t(`${isShare ? ' smaller' : ' lower'} ${measure}, ${isShare ? 'accounting for' : 'standing at'} ${middle[0].value}.`)
+      t(` However, ${figureRef(middle[0].label)} `),
+      typ(`${p}-b3`, 'be', ['was'], 'verb-tense', 'past simple'),
+      t(' '),
+      sel(`${p}-b4`, ['significantly', 'markedly', 'barely'], 'significantly', 'degree-adverb', SIG_HINT),
+      t(` ${smallerLower}, `),
+      typ(`${p}-b4b`, 'stand', ['standing'], 'ving-clause', 'V-ing clause: standing at'),
+      t(` at ${middle[0].value}.`)
     )
   }
 
-  // Closing sentence: the lowest figure, or the lowest pair when they are level.
+  // Closing sentence: the lowest figure, referenced with "that of \u2026" so no
+  // measure word repeats, or the lowest pair when there is more than one.
   const tail = items.slice(2 + middle.length)
   if (tail.length >= 2) {
     const [a, b] = [tail[0], tail[1]]
-    segments.push(t(` However, ${a.label} and ${b.label} `))
-    if (a.value === b.value) {
-      segments.push(
-        t('each '),
-        makeOrRecord(`${p}-b5`, isShare),
-        t(`${isShare ? ' up' : ''} ${a.value}, accounting for the lowest figures.`)
-      )
-    } else {
-      segments.push(
-        makeOrRecord(`${p}-b5`, isShare),
-        t(`${isShare ? ' up' : ''} ${a.value} and ${b.value}, respectively, accounting for the lowest figures.`)
-      )
-    }
+    segments.push(
+      t(` However, ${figuresRef(a.label, b.label)} `),
+      typ(`${p}-b5`, 'be', ['were'], 'verb-tense', 'past simple'),
+      a.value === b.value
+        ? t(` each the lowest, at just ${a.value}.`)
+        : t(` the lowest, at ${a.value} and ${b.value}, respectively.`)
+    )
   } else if (tail.length === 1) {
     segments.push(
-      t(` However, ${tail[0].label} `),
-      makeOrRecord(`${p}-b5`, isShare),
-      t(`${isShare ? ' up' : ''} ${tail[0].value}, accounting for the lowest figure.`)
+      t(` However, ${thatOf(tail[0].label)} `),
+      typ(`${p}-b5`, 'be', ['was'], 'verb-tense', 'past simple'),
+      t(` the lowest, at just ${tail[0].value}.`)
     )
   }
 
@@ -422,118 +444,77 @@ const moveAdverb = (gap: number, base: number): string => {
 }
 
 /**
- * Body 2 for two-charts-one-metric-two-years prompts. Every figure is tracked
- * back to the earlier year — rose, fell, or held steady — which is reporting
- * movement, not interpreting it.
+ * The one cross-chart clause the SOP allows, pointing a figure back at the same
+ * category in the first chart. Two charts a few years apart get movement ("which
+ * increased dramatically from 2008 by 17%"); two places get the plain gap
+ * ("which was higher than that of Australia by 24%"). Either way it reports a
+ * number rather than reading anything into it.
  */
-function snapshotBody2RichSegments(p: string, spec: SnapshotSpec): WgbSegment[] {
-  const items = spec.body2Items
-  const measure = spec.measureNoun ?? 'share'
-  const isShare = measure === 'share'
-  const before = (label: string) => spec.body1Items.find((x) => x.label === label)
-
-  /**
-   * Two charts of the same metric a few years apart get movement ("which
-   * increased dramatically from 2008 by 17%"); two places get the plain gap
-   * ("which was higher than that of Australia by 24%"). Either way it states a
-   * number rather than reading anything into it.
-   */
-  const movement = (item: SnapshotItem, lead: string): string => {
-    const prior = before(item.label)
-    const now = parseFigure(item.value)
-    const then = prior ? parseFigure(prior.value) : null
-    if (!now || !then) return ''
-    const gap = Math.abs(now.num - then.num)
-    if (gap === 0) {
-      return spec.timeComparison ? `${lead} remained unchanged from ${spec.body1Topic}` : ''
-    }
-    if (spec.timeComparison) {
-      const verb = now.num > then.num ? 'increased' : 'declined'
-      return `${lead} ${verb} ${moveAdverb(gap, then.num)} from ${spec.body1Topic} by ${then.format(gap)}`
-    }
-    const direction = now.num > then.num ? 'higher' : 'lower'
-    return `${lead} was ${direction} than that of ${spec.body1Topic} by ${then.format(gap)}`
+function crossMovement(item: SnapshotItem, spec: SnapshotSpec, lead: string): string {
+  const counterpart = spec.body1Items.find((x) => x.label === item.label)
+  if (!counterpart) return ''
+  const here = parseFigure(item.value)
+  const there = parseFigure(counterpart.value)
+  if (!here || !there) return ''
+  const gap = Math.abs(here.num - there.num)
+  if (spec.timeComparison) {
+    if (gap === 0) return `${lead} remained unchanged since ${spec.body1Topic}`
+    const verb = here.num > there.num ? 'increased' : 'declined'
+    return `${lead} ${verb} ${moveAdverb(gap, there.num)} from ${spec.body1Topic} by ${there.format(gap)}`
   }
-
-  const [first, second, third] = items
-  const last = items[items.length - 1]
-  const middle = items.slice(3, -1)
-
-  const segments: WgbSegment[] = [
-    t(`In terms of ${spec.body2Topic}, ${first.label} `),
-    isShare
-      ? typ(`${p}-c1`, 'account', ['accounted'], 'verb-tense', 'past simple')
-      : typ(`${p}-c1`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-    t(
-      `${isShare ? ' for the largest proportion' : ` the highest ${measure}`}, at ${first.value}${movement(first, ', which')}. `
-    ),
-    sel(`${p}-c2`, ['However', 'Because', 'Therefore'], 'However', 'transition', 'However = อย่างไรก็ตาม'),
-    t(`, the ${measure} for ${second.label}`),
-    t(`${movement(second, '')}, `),
-    typ(`${p}-c3`, 'make', ['making'], 'ving-clause', 'V-ing clause: making up'),
-    t(` up ${second.value}, while ${third.label} `),
-    typ(`${p}-c4`, 'follow', ['followed'], 'verb-tense', 'past simple'),
-    t(` closely, representing ${third.value}`)
-  ]
-
-  if (middle.length) {
-    segments.push(
-      t(`, alongside ${middle.map((x) => x.label).join(' and ')} at ${middle.map((x) => x.value).join(' and ')}`)
-    )
-  }
-  segments.push(t('. '))
-
-  // "remained the smallest" only holds when this category was also last in the
-  // first chart — Oppo was fourth in 2020, so it cannot have "remained" lowest.
-  const wasAlsoLast = spec.body1Items[spec.body1Items.length - 1]?.label === last.label
-  const lowestNoun = isShare ? 'smallest share' : `lowest ${measure}`
-  segments.push(
-    sel(`${p}-c5`, ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast = ในทางตรงกันข้าม'),
-    t(`, ${last.label} `)
-  )
-  if (wasAlsoLast && spec.timeComparison) {
-    segments.push(
-      typ(`${p}-c6`, 'remain', ['remained'], 'verb-tense', 'past simple'),
-      t(` the ${lowestNoun} across the two years, making up only ${last.value}.`)
-    )
-  } else {
-    segments.push(
-      typ(`${p}-c6`, 'make', ['made'], 'verb-tense', 'past simple'),
-      t(` up the ${lowestNoun}, at just ${last.value}${movement(last, ', which')}.`)
-    )
-  }
-  return segments
+  if (gap === 0) return ''
+  const direction = here.num < there.num ? 'lower' : 'higher'
+  return `${lead} was ${direction} than that of ${spec.body1Topic} by ${there.format(gap)}`
 }
 
+/**
+ * Body 2 (CLAUDE.md snapshot SOP): the metric noun opens the paragraph, the two
+ * runners-up follow with "Similarly, the figures for …", and the lowest closes
+ * with "In contrast, that of …". Later subjects never repeat the metric word —
+ * they are referenced as "the figure(s) for …" / "that of …". A two-place chart
+ * carries its single cross-chart clause on the closing figure; a two-year chart
+ * also tracks the leading figure's movement.
+ */
 function snapshotBody2Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
   const items = spec.body2Items
   const middle = items.slice(1, -1)
   const last = items[items.length - 1]
   const measure = spec.measureNoun ?? 'share'
   const isShare = measure === 'share'
-  const segments: WgbSegment[] = isShare
+  const topWord = isShare ? 'largest' : 'highest'
+  // Only two-year charts track the leader's movement here; two-place charts keep
+  // their single cross-chart comparison for the closing figure.
+  const topTail = spec.timeComparison ? crossMovement(items[0], spec, ', which') : ''
+
+  // Sentence 1: a named metric can "account for the largest proportion"; a bare
+  // figure is copular ("the figure for … was the largest").
+  const segments: WgbSegment[] = hasMetricNoun(spec)
     ? [
-        t(`In terms of ${spec.body2Topic}, ${items[0].label} `),
-        typ(`${p}-c1`, 'account', ['accounted'], 'verb-tense', 'past simple'),
-        t(` for the largest proportion, at ${items[0].value}. `)
+        t(`In terms of ${spec.body2Topic}, ${leadSubject(spec, items[0].label)} `),
+        isShare
+          ? typ(`${p}-c1`, 'account', ['accounted'], 'verb-tense', 'past simple')
+          : typ(`${p}-c1`, 'record', ['recorded'], 'verb-tense', 'past simple'),
+        t(
+          `${isShare ? ' for the largest proportion' : ` the highest ${measure}`}, at ${items[0].value}${topTail}. `
+        )
       ]
     : [
-        t(`In terms of ${spec.body2Topic}, ${items[0].label} `),
-        typ(`${p}-c1`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-        t(` the highest ${measure}, at ${items[0].value}. `)
+        t(`In terms of ${spec.body2Topic}, ${leadSubject(spec, items[0].label)} `),
+        typ(`${p}-c1`, 'be', ['was'], 'verb-tense', 'past simple'),
+        t(` the ${topWord}, at ${items[0].value}${topTail}. `)
       ]
 
   if (middle.length >= 2) {
     segments.push(
       sel(`${p}-c2`, ['Similarly', 'Therefore', 'Otherwise'], 'Similarly', 'transition', 'Similarly = ในทำนองเดียวกัน'),
-      t(`, ${middle[0].label} and ${middle[1].label} `),
+      t(`, ${figuresRef(middle[0].label, middle[1].label)} `),
       typ(`${p}-c3`, 'follow', ['followed'], 'verb-tense', 'past simple'),
       t(` closely, at ${middle[0].value} and ${middle[1].value}, respectively. `)
     )
   } else if (middle.length === 1) {
     segments.push(
       sel(`${p}-c2`, ['Similarly', 'Therefore', 'Otherwise'], 'Similarly', 'transition', 'Similarly = ในทำนองเดียวกัน'),
-      t(`, ${middle[0].label} `),
+      t(`, ${figureRef(middle[0].label)} `),
       typ(`${p}-c3`, 'follow', ['followed'], 'verb-tense', 'past simple'),
       t(` closely, at ${middle[0].value}. `)
     )
@@ -541,39 +522,12 @@ function snapshotBody2Segments(p: string, spec: SnapshotSpec): WgbSegment[] {
 
   segments.push(
     sel(`${p}-c4`, ['In contrast', 'Therefore', 'For example'], 'In contrast', 'transition', 'In contrast = ในทางตรงกันข้าม'),
-    t(`, ${last.label} `)
+    t(`, ${thatOf(last.label)} `),
+    typ(`${p}-c5`, 'be', ['was'], 'verb-tense', 'past simple'),
+    t(` the lowest, at just ${last.value}${crossMovement(last, spec, ', which')}.`)
   )
-  const crossTail = crossChartClause(last, spec)
-  if (isShare) {
-    segments.push(
-      typ(`${p}-c5`, 'make', ['made'], 'verb-tense', 'past simple'),
-      t(` up the smallest share at just ${last.value}${crossTail}.`)
-    )
-  } else {
-    segments.push(
-      typ(`${p}-c5`, 'record', ['recorded'], 'verb-tense', 'past simple'),
-      t(` the lowest ${measure} at just ${last.value}${crossTail}.`)
-    )
-  }
 
   return segments
-}
-
-/**
- * Body 2's closing figure carries a "which was lower/higher than that of …"
- * clause pointing back at the same category in the first chart — the only
- * cross-chart comparison the SOP allows, and still a bare statement of the gap.
- */
-function crossChartClause(last: SnapshotItem, spec: SnapshotSpec): string {
-  const counterpart = spec.body1Items.find((x) => x.label === last.label)
-  if (!counterpart) return ''
-  const here = parseFigure(last.value)
-  const there = parseFigure(counterpart.value)
-  if (!here || !there) return ''
-  const gap = Math.abs(there.num - here.num)
-  if (gap === 0) return ''
-  const direction = here.num < there.num ? 'lower' : 'higher'
-  return `, which was ${direction} than that of ${spec.body1Topic} by ${there.format(gap)}`
 }
 
 function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
@@ -645,8 +599,7 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
         role: 'body2',
         labelTh: ROLE_LABEL_TH.body2,
         hintTh: HINT_CONJUGATE,
-        segments:
-          spec.chartNoun === 'table' ? snapshotBody2Segments(p, spec) : snapshotBody2RichSegments(p, spec)
+        segments: snapshotBody2Segments(p, spec)
       }
     ]
   }
@@ -663,7 +616,6 @@ function buildSnapshotExercise(spec: SnapshotSpec): WgbExercise {
 function padSnapshotToWordFloor(exercise: WgbExercise, spec: SnapshotSpec): void {
   const body1 = exercise.steps[2]
   const body2 = exercise.steps[3]
-  const isShare = (spec.measureNoun ?? 'share') === 'share'
   const wordCount = () =>
     countTask1Paragraphs(exercise.steps.map((step) => ({ text: segmentsToText(step.segments) })))
   if (wordCount() >= SNAPSHOT_TARGET_WORDS) return
@@ -701,8 +653,7 @@ function padSnapshotToWordFloor(exercise: WgbExercise, spec: SnapshotSpec): void
     const sentence = comparisonSentence(
       candidate.top,
       candidate.item,
-      TOP_UP_TRANSITIONS[used % TOP_UP_TRANSITIONS.length],
-      isShare
+      TOP_UP_TRANSITIONS[used % TOP_UP_TRANSITIONS.length]
     )
     if (!sentence) continue
     candidate.step.segments.push(t(sentence))
@@ -1246,6 +1197,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     chartNoun: 'bar chart',
     subject: 'the proportion of household spending',
     categoryPhrase: 'across five different categories in the UK and Thailand',
+    metricNoun: 'spending',
+    metricPrep: 'on',
     examples: 'housing and food',
     unit: 'percentage of total spending',
     visualCount: 1,
@@ -1363,6 +1316,8 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     chartNoun: 'bar chart',
     subject: 'university enrolments',
     categoryPhrase: 'across five different majors in Japan and South Korea',
+    metricNoun: 'enrolment',
+    metricPrep: 'in',
     examples: 'engineering and business',
     unit: 'percentage of students',
     timeframe: 'in 2023',
@@ -1571,6 +1526,7 @@ export const EXTRA_TASK1_GUIDED_BUILDERS: WgbExercise[] = [
     categoryPhrase: 'across four different device types in Sweden and Italy',
     examples: 'smartphones and laptops',
     unit: 'percentage of adults',
+    metricNoun: 'ownership',
     timeframe: 'in 2023',
     visualCount: 1,
     leadingItem: 'smartphones in Sweden',

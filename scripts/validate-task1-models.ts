@@ -258,6 +258,33 @@ for (const prompt of prompts) {
     if (forbiddenSnapshotPhrase) {
       failures.push(`${prompt.id}: forbidden No Timeline phrase “${forbiddenSnapshotPhrase}”`)
     }
+
+    // Subjects wear the metric / a data-typed quantity phrase, and later figures
+    // are referenced — never restated. "share(s)" and "the quantity of" belong to
+    // neither; "share" lives only in the Overview's "… in share".
+    const bodyText = paragraphs
+      .filter((paragraph) => paragraph.role === 'body1' || paragraph.role === 'body2')
+      .map((paragraph) => paragraph.text)
+      .join(' ')
+    const bannedSubject = bodyText.match(/\bshares\b|\bthe shares? for\b|\bthe quantity of\b/i)?.[0]
+    if (bannedSubject) {
+      failures.push(
+        `${prompt.id}: snapshot body must not use “${bannedSubject}” — name figures with “the figure for …” / “that of …”`
+      )
+    }
+    // The multi-indicator universities table compares named institutions, not a
+    // single measured quantity, so it keeps its own subject shape.
+    const referenceExempt = prompt.id === 'snapshot-universities-table'
+    if (!referenceExempt) {
+      for (const role of ['body1', 'body2'] as const) {
+        const roleText = paragraphs.find((paragraph) => paragraph.role === role)?.text ?? ''
+        if (!/the figures? for /.test(roleText)) {
+          failures.push(
+            `${prompt.id}: ${role} must reference at least one figure with “the figure(s) for …”`
+          )
+        }
+      }
+    }
     const requiredOpenings = pieBodyOpenings[prompt.id]
     if (requiredOpenings) {
       const body1 = paragraphs.find((paragraph) => paragraph.role === 'body1')?.text ?? ''
