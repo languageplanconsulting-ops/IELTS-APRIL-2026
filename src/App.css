@@ -25922,28 +25922,14 @@ textarea {
   box-shadow: 0 12px 28px rgba(0, 74, 173, 0.12) !important;
 }
 
+/* Saved-report card: a clean full-width white card marked by a single hairline
+   accent on the left, not a saturated blue fill. */
 .notebookPage .notebookEntry-featured {
   grid-column: 1 / -1;
-  background: #004aad !important;
-  border-color: #004aad !important;
-  color: #fff !important;
-}
-
-.notebookPage .notebookEntry-featured .notebookEntryCriterion,
-.notebookPage .notebookEntry-featured .notebookEntryTopic,
-.notebookPage .notebookEntry-featured .notebookEntryDate,
-.notebookPage .notebookEntry-featured .notebookEntryThai {
-  color: rgba(255, 255, 255, 0.78) !important;
-}
-
-.notebookPage .notebookEntry-featured .notebookEntryTopic {
-  color: #fff !important;
-}
-
-.notebookPage .notebookEntry-featured .entryOriginal {
-  color: rgba(255, 255, 255, 0.55) !important;
-  border-left-color: rgba(255, 204, 0, 0.55) !important;
-  text-decoration-color: rgba(255, 204, 0, 0.55) !important;
+  background: #ffffff !important;
+  border-color: rgba(0, 74, 173, 0.12) !important;
+  border-left: 3px solid #004aad !important;
+  color: inherit !important;
 }
 
 .notebookPage .notebookEntryMeta {
@@ -25983,8 +25969,8 @@ textarea {
 }
 
 .notebookPage .notebookEntry-featured .notebookEntryBadge {
-  background: rgba(255, 204, 0, 0.22);
-  color: #ffcc00;
+  background: #e8f0fb;
+  color: #004aad;
 }
 
 .notebookPage .notebookEntryDate {
@@ -26035,14 +26021,14 @@ textarea {
 .notebookPage .entryBetter {
   display: block;
   margin: 0 !important;
-  background: #ffcc00 !important;
+  background: #f5f7fb !important;
   border: none !important;
   border-radius: 12px !important;
   padding: 12px 14px !important;
   font-family: 'Kanit', sans-serif !important;
-  font-size: 0.98rem !important;
-  font-weight: 700 !important;
-  color: #0b1f44 !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
   line-height: 1.45 !important;
   letter-spacing: 0 !important;
 }
@@ -26068,30 +26054,27 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
+  min-height: 42px;
   padding: 0 18px !important;
   border: none !important;
-  border-radius: 12px !important;
-  background: #ffcc00 !important;
-  color: #0b1f44 !important;
+  border-radius: 10px !important;
+  background: #004aad !important;
+  color: #fff !important;
   font-family: 'Kanit', sans-serif !important;
-  font-size: 0.92rem !important;
-  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
-  box-shadow: 0 4px 0 #004aad !important;
+  box-shadow: none !important;
   cursor: pointer;
-  transition: transform 140ms ease, box-shadow 140ms ease !important;
+  transition: transform 140ms ease, filter 140ms ease !important;
 }
 
 .notebookPage .notebookPrimaryBtn:hover,
 .notebookPage .primaryNextBtn:hover {
   transform: translateY(-1px) !important;
-  box-shadow: 0 6px 0 #004aad !important;
-}
-
-.notebookPage .notebookEntry-featured .notebookPrimaryBtn {
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35) !important;
+  filter: brightness(1.06) !important;
+  box-shadow: none !important;
 }
 
 .notebookPage .noteFieldLabel {
@@ -26136,12 +26119,6 @@ textarea {
   text-transform: uppercase !important;
   box-shadow: none !important;
   cursor: pointer;
-}
-
-.notebookPage .notebookEntry-featured .removeNotebookBtn {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.22) !important;
-  color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .notebookPage .removeNotebookBtn:hover {
