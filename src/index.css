@@ -1,12 +1,60 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
+/* Licensed brand webfonts. The files are NOT in the repo — they are paid faces
+   (Galaxie Copernicus = Village; Styrene B = Commercial Type). Drop the .woff2
+   files into public/fonts/ (see public/fonts/README.md for exact names) and
+   these light up. Until then each face falls back to the stack in :root below.
+   Anuphan (Thai) is loaded from Google Fonts in index.html and works already. */
+@font-face {
+  font-family: 'Galaxie Copernicus';
+  src: url('/fonts/GalaxieCopernicus-Book.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Galaxie Copernicus';
+  src: url('/fonts/GalaxieCopernicus-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Galaxie Copernicus';
+  src: url('/fonts/GalaxieCopernicus-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Styrene B';
+  src: url('/fonts/StyreneB-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Styrene B';
+  src: url('/fonts/StyreneB-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Styrene B';
+  src: url('/fonts/StyreneB-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Brand type stacks — one place to change fonts app-wide.
    Display (headers): Galaxie Copernicus.  Body/UI/nav: Styrene B, then Styrene A.
-   Anuphan carries Thai glyphs; Inter/Kanit are the fallbacks until the licensed
-   Commercial Type webfonts are added under public/fonts + @font-face. */
+   Anuphan carries Thai glyphs; Inter/Georgia are the fallbacks until the
+   licensed webfonts above resolve. */
 :root {
-  --font-display: 'Galaxie Copernicus', Kanit, Anuphan, Georgia, serif;
-  --font-ui: 'Styrene B', 'Styrene A', Inter, Anuphan, system-ui, -apple-system,
+  --font-display: 'Galaxie Copernicus', Anuphan, Georgia, serif;
+  --font-ui: 'Styrene B', 'Styrene A', Anuphan, Inter, system-ui, -apple-system,
     BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 

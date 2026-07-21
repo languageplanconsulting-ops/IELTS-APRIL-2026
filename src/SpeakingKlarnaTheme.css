@@ -29,25 +29,42 @@
    ========================================================================= */
 
 .speakingFlowTheme {
+  /* Claude-style compartments: warm neutral surfaces defined by hairline
+     borders (not fills), restrained radii, one accent — the brand blue —
+     used sparingly. Keeps the licensed fonts below. */
   --sk-accent: #004aad;
   --sk-accent-ink: #ffffff;
-  --sk-ink: #0b051d;
+  --sk-accent-soft: #eaf0fa; /* blue tint — accent chips, active states */
+  --sk-ink: #211d16;         /* warm charcoal, not cool black */
+  --sk-ink-soft: #6b665c;    /* secondary copy */
   --sk-white: #ffffff;
-  --sk-tint: #eaf0fa;
-  --sk-line: #e8e8ed;
+  --sk-paper: #faf9f6;       /* page ground, warm off-white */
+  --sk-surface: #ffffff;     /* raised card */
+  --sk-sunken: #f5f4ef;      /* nested item, gentle depth */
+  --sk-border: rgba(33, 29, 22, 0.11);        /* default hairline */
+  --sk-border-strong: rgba(33, 29, 22, 0.18); /* emphasis / hover */
+  --sk-shadow: 0 1px 2px rgba(33, 29, 22, 0.05), 0 1px 3px rgba(33, 29, 22, 0.04);
+  --sk-tint: #f5f4ef;        /* legacy alias → now the neutral sunken */
+  --sk-line: rgba(33, 29, 22, 0.11);
 
-  /* Thai matches the Writing journey (Kanit). Latin uses Klarna's system
-     stack. Thai never inherits the tight Latin leading — see typography. */
-  --sk-font-latin: -apple-system, "system-ui", "Segoe UI", Roboto, Arial, sans-serif;
-  --sk-font-th: "Kanit", "Anuphan", sans-serif;
+  /* Brand type for the whole speaking journey:
+       headlines (Latin) → Galaxie Copernicus  (--sk-font-display)
+       body / all other text (Latin) → Styrene B  (--sk-font-latin)
+       Thai (headlines and body) → Anuphan  (--sk-font-th)
+     Copernicus and Styrene are Latin-only faces, so Thai always resolves to
+     Anuphan. Files load from public/fonts via @font-face in index.css; the
+     tails below are fallbacks until those licensed files are present. */
+  --sk-font-display: 'Galaxie Copernicus', 'Anuphan', Georgia, serif;
+  --sk-font-latin: 'Styrene B', 'Styrene A', 'Anuphan', Inter, system-ui, -apple-system, sans-serif;
+  --sk-font-th: 'Anuphan', 'Kanit', sans-serif;
 
-  --sk-r-xl: 48px;
-  --sk-r-lg: 32px;
-  --sk-r-md: 24px;
+  --sk-r-xl: 20px; /* raised cards */
+  --sk-r-lg: 16px; /* nested items */
+  --sk-r-md: 12px; /* controls */
 }
 
 /* ---------------------------------------------------------------- ground -- */
-/* Klarna's page is pure white with no section fills. */
+/* Warm paper ground so white cards read as compartments, Claude-style. */
 .speakingFlowTheme.speakingFlowTheme,
 .speakingFlowTheme.speakingFlowTheme .speakingFlowStage,
 .speakingFlowTheme.speakingFlowTheme .trialStageShell,
@@ -60,7 +77,7 @@
 .speakingFlowTheme.speakingFlowTheme .attemptFlow,
 .speakingFlowTheme.speakingFlowTheme .reportShowcase,
 .speakingFlowTheme.speakingFlowTheme .reportV2 {
-  background: var(--sk-white) !important;
+  background: var(--sk-paper) !important;
   color: var(--sk-ink) !important;
   border: none !important;
   box-shadow: none !important;
@@ -87,7 +104,20 @@
   line-height: 28px !important;
 }
 
-.speakingFlowTheme.speakingFlowTheme :lang(th) {
+/* App.css carries a second blanket `.speakingFlowTheme * { font-family: Inter
+   !important }` that beats plain inheritance, so the root rule above never
+   reaches body text. Re-assert the brand stacks on descendants at higher
+   specificity (and later in the cascade). Family only — never touch size, or
+   every heading/timer would collapse to 18px. Latin → Styrene B; Thai →
+   Anuphan (the :lang(th) rule follows, so it wins for Thai glyphs). Headline
+   rules below are (0,3,x) and keep Copernicus. */
+.speakingFlowTheme.speakingFlowTheme,
+.speakingFlowTheme.speakingFlowTheme * {
+  font-family: var(--sk-font-latin) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme :lang(th),
+.speakingFlowTheme.speakingFlowTheme *:lang(th) {
   font-family: var(--sk-font-th) !important;
 }
 
@@ -115,23 +145,32 @@
 .speakingFlowTheme.speakingFlowTheme .part2BigQuestion,
 .speakingFlowTheme.speakingFlowTheme .sectionV2Title {
   font-family: var(--sk-font-th) !important;
-  font-size: 52px !important;
-  line-height: 1.3 !important;
+  font-size: 42px !important;
+  line-height: 1.25 !important;
   font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
+  letter-spacing: -0.015em !important;
   color: var(--sk-ink) !important;
   margin: 0 !important;
   text-transform: none !important;
 }
 
-/* Latin-only headings keep Klarna's genuinely tight setting; Thai cannot —
-   at 0.96 the upper vowels and tone marks collide with the line above. */
+/* Section titles are compartment headers, not hero type — calmer scale so the
+   hierarchy reads page → section → item rather than everything shouting. */
+.speakingFlowTheme.speakingFlowTheme .sectionV2Title {
+  font-size: 27px !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Latin headings take the Copernicus display face; Thai headings stay on
+   Anuphan (set on the base rule above — Copernicus carries no Thai glyphs).
+   Latin keeps the genuinely tight setting; Thai cannot — at 0.96 the upper
+   vowels and tone marks collide with the line above. */
 .speakingFlowTheme.speakingFlowTheme .writingGuideFlowTitle:lang(en),
 .speakingFlowTheme.speakingFlowTheme .writingGuideHubH1:lang(en),
 .speakingFlowTheme.speakingFlowTheme .part2BigQuestion:lang(en),
 .speakingFlowTheme.speakingFlowTheme .sectionV2Title:lang(en) {
-  font-family: var(--sk-font-latin) !important;
-  line-height: 0.96 !important;
+  font-family: var(--sk-font-display) !important;
+  line-height: 1 !important;
 }
 
 .speakingFlowTheme.speakingFlowTheme .writingGuideHubLead,
@@ -173,10 +212,10 @@
 .speakingFlowTheme.speakingFlowTheme .nextAttemptEyebrow,
 .speakingFlowTheme.speakingFlowTheme .audioConsultEyebrow,
 .speakingFlowTheme.speakingFlowTheme .vocabV2Eyebrow {
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 500 !important;
-  letter-spacing: 0.01em !important;
-  text-transform: none !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
   color: var(--sk-accent) !important;
   background: none !important;
   border: none !important;
@@ -227,17 +266,18 @@
 .speakingFlowTheme.speakingFlowTheme .prepMicCheck,
 .speakingFlowTheme.speakingFlowTheme .examPausedCard,
 .speakingFlowTheme.speakingFlowTheme .fullMockPreviewBanner {
-  background: var(--sk-tint) !important;
+  background: var(--sk-surface) !important;
   background-image: none !important;
-  border: none !important;
+  border: 1px solid var(--sk-border) !important;
   border-radius: var(--sk-r-xl) !important;
-  box-shadow: none !important;
-  padding: 40px !important;
+  box-shadow: var(--sk-shadow) !important;
+  padding: 32px !important;
   color: var(--sk-ink) !important;
   transform: none !important;
 }
 
-/* Nested panels sit on white inside a tinted parent. */
+/* Nested items sit on the warm sunken surface for gentle depth — no border,
+   so the parent card's hairline stays the only hard edge. */
 .speakingFlowTheme.speakingFlowTheme .stageCard .card,
 .speakingFlowTheme.speakingFlowTheme .sectionV2 .subBlockV2,
 .speakingFlowTheme.speakingFlowTheme .prepStageV2 .prepHeadsUp,
@@ -256,12 +296,12 @@
 .speakingFlowTheme.speakingFlowTheme .prepAccordion,
 .speakingFlowTheme.speakingFlowTheme .prepAccordionWrap,
 .speakingFlowTheme.speakingFlowTheme .transcriptV2 {
-  background: var(--sk-white) !important;
+  background: var(--sk-sunken) !important;
   background-image: none !important;
   border: none !important;
   border-radius: var(--sk-r-lg) !important;
   box-shadow: none !important;
-  padding: 28px !important;
+  padding: 22px !important;
   transform: none !important;
 }
 
@@ -306,34 +346,32 @@
 .speakingFlowTheme.speakingFlowTheme .topicCardStartBtn:hover,
 .speakingFlowTheme.speakingFlowTheme .reportSaveButton:hover,
 .speakingFlowTheme.speakingFlowTheme .audioConsultButton:hover,
+.speakingFlowTheme.speakingFlowTheme .micCheckBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .wgTicketGo:hover,
 .speakingFlowTheme.speakingFlowTheme .controls button:hover {
-  opacity: 0.88 !important;
+  filter: brightness(1.06) !important;
   transform: none !important;
   box-shadow: none !important;
 }
 
-/* Primary commitment — blue. */
+/* One accent: the blue solid marks the single primary action per view. */
 .speakingFlowTheme.speakingFlowTheme .primaryReadyBtn,
 .speakingFlowTheme.speakingFlowTheme .primaryNextBtn,
 .speakingFlowTheme.speakingFlowTheme .reportSaveButton,
 .speakingFlowTheme.speakingFlowTheme .audioConsultButton,
-.speakingFlowTheme.speakingFlowTheme .micCheckBtn {
+.speakingFlowTheme.speakingFlowTheme .micCheckBtn,
+.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn,
+.speakingFlowTheme.speakingFlowTheme .wgTicketGo {
   background: var(--sk-accent) !important;
   color: var(--sk-accent-ink) !important;
+  border: 1px solid var(--sk-accent) !important;
 }
 
-/* Navigation / affirmative secondary — ink. */
-.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn,
-.speakingFlowTheme.speakingFlowTheme .wgTicketGo,
+/* Everything else is a ghost: white, hairline border, ink text — Claude's
+   restrained secondary. Hover fills to the sunken surface. */
 .speakingFlowTheme.speakingFlowTheme .reviewScriptBtn,
 .speakingFlowTheme.speakingFlowTheme .saveNotebookBtn,
 .speakingFlowTheme.speakingFlowTheme .ladderSaveBtn,
-.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button.active {
-  background: var(--sk-ink) !important;
-  color: var(--sk-white) !important;
-}
-
-/* Quiet — tinted. */
 .speakingFlowTheme.speakingFlowTheme .secondary,
 .speakingFlowTheme.speakingFlowTheme .cancelBtn,
 .speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack,
@@ -342,14 +380,33 @@
 .speakingFlowTheme.speakingFlowTheme .micCheckRetry,
 .speakingFlowTheme.speakingFlowTheme .audioConsultButton-secondary,
 .speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button {
-  background: var(--sk-tint) !important;
+  background: var(--sk-surface) !important;
   color: var(--sk-ink) !important;
+  border: 1px solid var(--sk-border-strong) !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reviewScriptBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .saveNotebookBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .ladderSaveBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .secondary:hover,
+.speakingFlowTheme.speakingFlowTheme .cancelBtn:hover,
+.speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack:hover,
+.speakingFlowTheme.speakingFlowTheme .pauseBtn:hover {
+  background: var(--sk-sunken) !important;
+  filter: none !important;
+}
+
+/* Active toggle reads as a soft accent chip, not a heavy fill. */
+.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button.active {
+  background: var(--sk-accent-soft) !important;
+  color: var(--sk-accent) !important;
+  border: 1px solid var(--sk-accent) !important;
 }
 
 .speakingFlowTheme.speakingFlowTheme .dangerBtn,
 .speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack.dangerBtn {
-  background: var(--sk-tint) !important;
+  background: var(--sk-surface) !important;
   color: #b3261e !important;
+  border: 1px solid rgba(179, 38, 30, 0.32) !important;
 }
 
 /* Small status pills. */
@@ -365,26 +422,18 @@
 .speakingFlowTheme.speakingFlowTheme .category,
 .speakingFlowTheme.speakingFlowTheme .answerAnnotationBadge,
 .speakingFlowTheme.speakingFlowTheme .recordingPill {
-  background: var(--sk-tint) !important;
+  background: var(--sk-accent-soft) !important;
   color: var(--sk-accent) !important;
   font-family: var(--sk-font-th) !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
-  padding: 10px 18px !important;
-  border-radius: var(--sk-r-md) !important;
-  border: none !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid transparent !important;
   box-shadow: none !important;
   letter-spacing: normal !important;
   text-transform: none !important;
   transform: none !important;
-}
-
-/* Inside a tinted panel the pill flips to white for separation. */
-.speakingFlowTheme.speakingFlowTheme .stageCard .category,
-.speakingFlowTheme.speakingFlowTheme .prepStageV2 .category,
-.speakingFlowTheme.speakingFlowTheme .sectionV2 .bandPill,
-.speakingFlowTheme.speakingFlowTheme .speakingPromptCard .promptPill {
-  background: var(--sk-white) !important;
 }
 
 /* ----------------------------------------------------------- topic bank -- */
@@ -398,18 +447,23 @@
 }
 
 .speakingFlowTheme.speakingFlowTheme .topicBankSearchInput {
-  background: var(--sk-tint) !important;
-  border: none !important;
+  background: var(--sk-surface) !important;
+  border: 1px solid var(--sk-border-strong) !important;
   border-radius: var(--sk-r-md) !important;
-  padding: 14px 20px !important;
+  padding: 14px 18px !important;
   font-size: 16px !important;
   font-family: var(--sk-font-th) !important;
   color: var(--sk-ink) !important;
   box-shadow: none !important;
 }
+.speakingFlowTheme.speakingFlowTheme .topicBankSearchInput:focus {
+  border-color: var(--sk-accent) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px var(--sk-accent-soft) !important;
+}
 
 .speakingFlowTheme.speakingFlowTheme .topicBankGroup {
-  margin-top: 72px !important;
+  margin-top: 44px !important;
 }
 
 .speakingFlowTheme.speakingFlowTheme .topicBankGroupHeader {
@@ -932,7 +986,7 @@
 .speakingFlowTheme.speakingFlowTheme .speakingTopicBank > * + *,
 .speakingFlowTheme.speakingFlowTheme .reportV2 > * + *,
 .speakingFlowTheme.speakingFlowTheme .speakingHubShell > * + * {
-  margin-top: 72px !important;
+  margin-top: 44px !important;
 }
 
 .speakingFlowTheme.speakingFlowTheme .controls,
@@ -1015,5 +1069,201 @@
 
   .speakingFlowTheme.speakingFlowTheme .topicBankGroup {
     margin-top: 48px !important;
+  }
+}
+
+/* ============================================================ report v2 -- */
+/* Result screen, "Version A": one centred reading column instead of the old
+   sidebar+report split that shoved every section into the right ~62% of the
+   page. Nothing here removes report content — it only re-flows and re-weights
+   what App.tsx already renders. Loaded last, so these win the cascade. */
+
+/* The showcase was a 2-col grid (prompt | report); collapse it to a single
+   centred column so the report is no longer clustered on the right. */
+.speakingFlowTheme.speakingFlowTheme .reportShowcase {
+  display: block !important;
+  grid-template-columns: none !important;
+  width: 100% !important;
+  max-width: 1040px !important;
+  margin-inline: auto !important;
+}
+
+/* The teacher prompt was a sticky left rail; make it a flat header strip that
+   sits above the report and lets its cues wrap on one row. */
+.speakingFlowTheme.speakingFlowTheme .promptBrief {
+  position: static !important;
+  background: var(--sk-tint) !important;
+  border: none !important;
+  border-radius: var(--sk-r-lg) !important;
+  box-shadow: none !important;
+  padding: 24px 28px !important;
+  margin: 0 0 20px !important;
+}
+.speakingFlowTheme.speakingFlowTheme .promptBrief::before {
+  display: none !important;
+  content: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme .promptBrief h3 {
+  font-size: 24px !important;
+  line-height: 1.35 !important;
+  font-weight: 700 !important;
+  margin: 8px 0 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .promptBrief ul {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px 20px !important;
+  margin: 14px 0 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme .promptBrief li {
+  margin: 0 !important;
+  padding: 0 0 0 18px !important;
+  font-size: 15px !important;
+  opacity: 0.85 !important;
+}
+
+/* The report card itself carries no chrome — it reads as the page. */
+.speakingFlowTheme.speakingFlowTheme .resultCard {
+  background: var(--sk-white) !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Even vertical rhythm via gap; the old 72px `* + *` margins fought the
+   re-ordering below and left uneven gaps. */
+.speakingFlowTheme.speakingFlowTheme .reportV2 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 36px !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportV2 > * + * {
+  margin-top: 0 !important;
+}
+
+/* Lead with the priorities: score bar, then the "start here" fixes, then the
+   caveat, then everything else in its authored order. Child-combinator +
+   class beats `.reportV2 > *`, so these orders hold. */
+.speakingFlowTheme.speakingFlowTheme .reportV2 > * {
+  order: 5 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportV2 > .reportStickyBar {
+  order: 1 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportV2 > .reportSaveToast,
+.speakingFlowTheme.speakingFlowTheme .reportV2 > .authSuccess {
+  order: 2 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportV2 > .topFixesPanel {
+  order: 3 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportV2 > .reportDisclaimerCard {
+  order: 4 !important;
+}
+
+/* Score header on one calm row: small label, medium band, criteria chips,
+   save on the far right. */
+.speakingFlowTheme.speakingFlowTheme .reportStickyBar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px 24px !important;
+  flex-wrap: wrap !important;
+  padding: 18px 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportStickyMain {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px 24px !important;
+  flex-wrap: wrap !important;
+  flex: 1 1 auto !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportStickyEyebrow {
+  font-size: 12px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  opacity: 0.55 !important;
+  margin: 0 !important;
+}
+/* Down from 52px — the band was the loudest thing on the page. Copernicus
+   display face, since it's the report's headline figure. */
+.speakingFlowTheme.speakingFlowTheme .reportStickyBand {
+  font-family: var(--sk-font-display) !important;
+  font-size: 34px !important;
+  margin: 2px 0 0 !important;
+}
+/* The (a+b+c)÷3 working stays available but shrinks to a muted footnote —
+   nobody reads the report for the arithmetic. */
+.speakingFlowTheme.speakingFlowTheme .reportStickyCalc {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  letter-spacing: normal !important;
+  color: var(--sk-ink) !important;
+  opacity: 0.45 !important;
+  margin: 4px 0 0 !important;
+}
+
+/* "Start here" fixes read as a soft accent compartment — a blue-tinted card
+   with a hairline accent border, not a heavy ring. */
+.speakingFlowTheme.speakingFlowTheme .topFixesPanel {
+  background: var(--sk-accent-soft) !important;
+  border: 1px solid rgba(0, 74, 173, 0.28) !important;
+  border-radius: var(--sk-r-xl) !important;
+  box-shadow: none !important;
+}
+/* Its nested fix items flip to white so they separate from the blue field. */
+.speakingFlowTheme.speakingFlowTheme .topFixesPanel .topFixItem {
+  background: var(--sk-surface) !important;
+}
+
+/* The caveat is real content but shouldn't outweigh the score — quiet it into
+   a borderless note rather than a full card. */
+.speakingFlowTheme.speakingFlowTheme .reportDisclaimerCard {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 4px !important;
+}
+.speakingFlowTheme.speakingFlowTheme .reportDisclaimerCard p {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  opacity: 0.7 !important;
+  margin: 0 !important;
+}
+
+/* Mistake / fix rows: a stray global `.quoteText { border: 2px solid #0d0d0d }`
+   drew hard black edges. Soften to hairline tinted rows — red for the error,
+   green for the correction — so they read as gentle diff chips. */
+.speakingFlowTheme.speakingFlowTheme .quoteText {
+  background: #fbf1f1 !important;
+  color: #9d2b26 !important;
+  border: 1px solid rgba(157, 43, 38, 0.24) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  padding: 8px 12px !important;
+  text-decoration-color: rgba(157, 43, 38, 0.55) !important;
+}
+.speakingFlowTheme.speakingFlowTheme .fixText {
+  background: #f0f7f1 !important;
+  color: #1c6a3c !important;
+  border: 1px solid rgba(28, 106, 60, 0.24) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  padding: 8px 12px !important;
+  font-weight: 500 !important;
+}
+.speakingFlowTheme.speakingFlowTheme .mockMistakeIssue {
+  color: var(--sk-ink) !important;
+  font-weight: 500 !important;
+}
+
+@media (max-width: 860px) {
+  .speakingFlowTheme.speakingFlowTheme .reportStickyBand {
+    font-size: 30px !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme .reportV2 {
+    gap: 28px !important;
   }
 }
