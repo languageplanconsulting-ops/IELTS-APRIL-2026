@@ -225,6 +225,7 @@ import { estimateReadingBand, formatReadingBand } from './readingBandScore'
 import { sanitizeReadingVocabPairs } from './intensiveJourneyVocabPairs'
 import { lookupReadingVocabBridge, type ReadingVocabBridgePair } from './readingPassage3VocabBridge'
 import { getReadingPassageVocab, type ReadingPassageVocabItem } from './readingPassageVocab'
+import { getReadingParagraphExplanation } from './readingParagraphExplanations'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -7169,6 +7170,7 @@ function App() {
   const [readingVocabSavedWords, setReadingVocabSavedWords] = useState<Set<string>>(new Set())
   const [readingVocabOpenKey, setReadingVocabOpenKey] = useState<string | null>(null)
   const [readingVocabClosingKey, setReadingVocabClosingKey] = useState<string | null>(null)
+  const [readingParagraphExplainOpenKey, setReadingParagraphExplainOpenKey] = useState<string | null>(null)
   const readingVocabClosingTimerRef = useRef<number | null>(null)
   const [readingHighlightMenu, setReadingHighlightMenu] = useState<{ x: number; y: number; text: string } | null>(null)
   const [readingSmartPencilMode, setReadingSmartPencilMode] = useState(false)
@@ -23796,20 +23798,62 @@ function App() {
                             readingVocabOpenKey?.startsWith(`${vocabKeyPrefix}-`) ||
                               readingVocabClosingKey?.startsWith(`${vocabKeyPrefix}-`)
                           )
+                          const paragraphExplainKey = `${activeReadingPassage.number}-${index}`
+                          const isExplainOpen = readingParagraphExplainOpenKey === paragraphExplainKey
+                          const paragraphExplanation = getReadingParagraphExplanation(passageContentTitle, index)
                           return (
-                            <p
-                              key={`reading-paragraph-${index}`}
-                              className={hasOpenVocab ? 'readingPassageParagraph-vocabOpen' : undefined}
-                            >
-                              {renderPassageParagraphWithHighlights(
-                                paragraph,
-                                activeReadingPassage.number,
-                                highlightNeedles,
-                                passageVocab,
-                                vocabKeyPrefix,
-                                passageContentTitle
+                            <div key={`reading-paragraph-wrap-${index}`} className="readingParagraphExplainWrap">
+                              <p
+                                className={hasOpenVocab ? 'readingPassageParagraph-vocabOpen' : undefined}
+                              >
+                                {renderPassageParagraphWithHighlights(
+                                  paragraph,
+                                  activeReadingPassage.number,
+                                  highlightNeedles,
+                                  passageVocab,
+                                  vocabKeyPrefix,
+                                  passageContentTitle
+                                )}
+                              </p>
+                              <button
+                                type="button"
+                                className={`readingParagraphExplainBtn${isExplainOpen ? ' is-open' : ''}`}
+                                onClick={() =>
+                                  setReadingParagraphExplainOpenKey(isExplainOpen ? null : paragraphExplainKey)
+                                }
+                              >
+                                🧞 งงกับย่อหน้านี้ อยากให้พี่ดอยช่วยอธิบาย
+                              </button>
+                              {isExplainOpen && (
+                                <div className="readingParagraphExplainBox">
+                                  {paragraphExplanation ? (
+                                    <>
+                                      <p className="readingParagraphExplainText">
+                                        {paragraphExplanation.explanationTh}
+                                      </p>
+                                      {paragraphExplanation.vocab && paragraphExplanation.vocab.length > 0 && (
+                                        <div className="readingParagraphExplainVocab">
+                                          <p className="readingParagraphExplainVocabLabel">คำศัพท์ที่ควรรู้</p>
+                                          <ul>
+                                            {paragraphExplanation.vocab.map((item, vocabIndex) => (
+                                              <li key={`paragraph-vocab-${index}-${vocabIndex}`}>
+                                                <span className="readingParagraphExplainVocabTerm">{item.term}</span>
+                                                <span className="readingParagraphExplainVocabEq">=</span>
+                                                <span className="readingParagraphExplainVocabTh">{item.th}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                    </>
+                                  ) : (
+                                    <p className="readingParagraphExplainEmpty">
+                                      พี่ดอยยังไม่ได้เขียนคำอธิบายสำหรับย่อหน้านี้ครับ — กำลังทยอยเพิ่มเรื่อยๆ 🙏
+                                    </p>
+                                  )}
+                                </div>
                               )}
-                            </p>
+                            </div>
                           )
                         })
                       })()}

@@ -10377,6 +10377,7 @@ body,
 }
 
 .readingExamLayout-bank .readingPencilStage > p,
+.readingExamLayout-bank .readingPencilStage > .readingParagraphExplainWrap,
 .readingExamLayout-bank .readingPassageSection {
   position: relative;
   z-index: 1;
@@ -10385,6 +10386,113 @@ body,
 
 .readingExamLayout-bank .readingPencilStage > p.readingPassageParagraph-vocabOpen {
   z-index: 5;
+}
+
+.readingParagraphExplainWrap {
+  display: block;
+}
+
+.readingParagraphExplainWrap > p {
+  margin: 0;
+}
+
+.readingParagraphExplainBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 14px;
+  padding: 5px 12px;
+  border: 1px solid #dbe6f7;
+  border-radius: 999px;
+  background: #eef2fb;
+  color: var(--bc-blue);
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.readingParagraphExplainBtn:hover {
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+}
+
+.readingParagraphExplainBtn.is-open {
+  background: var(--bc-blue);
+  border-color: var(--bc-blue);
+  color: #fff;
+}
+
+.readingParagraphExplainBox {
+  margin: -6px 0 16px;
+  padding: 14px 16px;
+  border: 1px solid #dbe6f7;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f5f8ff, #eef2fb);
+}
+
+.readingParagraphExplainText {
+  margin: 0;
+  font-family: Anuphan, Inter, system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: #1f2a44;
+  white-space: pre-wrap;
+}
+
+.readingParagraphExplainVocab {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #c7d2fe;
+}
+
+.readingParagraphExplainVocabLabel {
+  margin: 0 0 8px;
+  font-family: Kanit, Inter, Anuphan, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bc-blue);
+}
+
+.readingParagraphExplainVocab ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.readingParagraphExplainVocab li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.84rem;
+}
+
+.readingParagraphExplainVocabTerm {
+  font-weight: 700;
+  color: #92400e;
+}
+
+.readingParagraphExplainVocabEq {
+  color: #94a3b8;
+  font-weight: 800;
+}
+
+.readingParagraphExplainVocabTh {
+  font-family: Anuphan, Inter, system-ui, sans-serif;
+  color: #334155;
+}
+
+.readingParagraphExplainEmpty {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.84rem;
+  font-style: italic;
 }
 
 .readingPencilCanvas {
