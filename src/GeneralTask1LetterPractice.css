@@ -120,6 +120,38 @@
   line-height: 1.45;
 }
 
+.gt1Translation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.gt1TranslationToggle {
+  width: fit-content;
+  padding: 8px 14px;
+  border: 2px solid #172033;
+  border-radius: 10px;
+  background: #fff4c2;
+  font-weight: 750;
+  font-size: .88rem;
+  cursor: pointer;
+}
+
+.gt1TranslationToggle[aria-expanded='true'] {
+  background: #ffe27a;
+}
+
+.gt1TranslationText {
+  margin: 0;
+  padding: 12px 14px;
+  border: 2px dashed #172033;
+  border-radius: 12px;
+  background: #fbf7ec;
+  line-height: 1.6;
+  font-size: .92rem;
+}
+
 .gt1ClassificationFeedback,
 .gt1StepFeedback {
   padding: 12px 14px;

@@ -4114,6 +4114,39 @@
   color: #1e293b;
 }
 
+.wgb2Translation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.wgb2TranslationToggle {
+  width: fit-content;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 74, 173, 0.1);
+  color: #004aad;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.wgb2TranslationToggle[aria-expanded='true'] {
+  background: rgba(0, 74, 173, 0.18);
+}
+
+.wgb2TranslationText {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #f4f7fc;
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
 /* Coach panel — tuned for ADHD focus: one calm, high-contrast focal
    point, a clear left accent, roomy readable text, and NO perpetual
    motion (a single soft entrance only). */

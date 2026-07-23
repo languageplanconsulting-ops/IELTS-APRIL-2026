@@ -187,7 +187,7 @@ for (const typeId of typeIds) {
     assert.ok(exercise, `${prompt.id} is missing its guided builder.`)
     assert.deepEqual(
       assembleTask2Essay(exercise).map(({ role, text }) => ({ role, text })),
-      prompt.paragraphs,
+      prompt.paragraphs.map(({ role, text }) => ({ role, text })),
       `${prompt.id} builder must reconstruct the model essay exactly.`
     )
 

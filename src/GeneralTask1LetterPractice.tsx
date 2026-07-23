@@ -238,6 +238,7 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab, onSaveModelLet
   const [drillOpen, setDrillOpen] = useState(false)
   const [drillDone, setDrillDone] = useState(false)
   const [letterSaved, setLetterSaved] = useState(false)
+  const [translationOpenSteps, setTranslationOpenSteps] = useState<Set<number>>(() => new Set())
 
   const paragraph = prompt.paragraphs[stepIndex]
   const sentenceSegments = useMemo(
@@ -553,6 +554,29 @@ export function GeneralTask1LetterPractice({ prompt, onSaveVocab, onSaveModelLet
                 </div>
               ) : null}
             </article>
+
+            <div className="gt1Translation">
+              <button
+                type="button"
+                className="gt1TranslationToggle"
+                aria-expanded={translationOpenSteps.has(stepIndex)}
+                onClick={() =>
+                  setTranslationOpenSteps((current) => {
+                    const next = new Set(current)
+                    if (next.has(stepIndex)) next.delete(stepIndex)
+                    else next.add(stepIndex)
+                    return next
+                  })
+                }
+              >
+                {translationOpenSteps.has(stepIndex) ? 'ซ่อนคำแปลภาษาไทย ▲' : 'ดูคำแปลภาษาไทย ▼'}
+              </button>
+              {translationOpenSteps.has(stepIndex) ? (
+                <p className="gt1TranslationText">
+                  {paragraph.sentences.map((sentence) => sentence.thai).join(' ')}
+                </p>
+              ) : null}
+            </div>
 
             {checked ? (
               <p className={`gt1StepFeedback ${stepPassed ? 'is-correct' : 'is-wrong'}`}>

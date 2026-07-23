@@ -3,6 +3,7 @@
 // re-render and the essay text is shown plain (Task 2 blanks resolve to one fixed model
 // answer, so there is nothing to highlight as "your answer vs. correct answer").
 
+import { useState } from 'react'
 import type { WritingTask2ReportSnapshot } from './writingReportTypes'
 import { VocabHighlightText } from './VocabHighlightText'
 import './WritingReportView.css'
@@ -19,6 +20,7 @@ export function WritingTask2ReportView({
   onSaveVocab?: (item: { word: string; thaiMeaning: string; example?: string }) => void
   savedWords?: Set<string>
 }) {
+  const [translationOpenRoles, setTranslationOpenRoles] = useState<Set<string>>(() => new Set())
   const { correct, total } = snapshot.score
   const pct = total ? Math.round((correct / total) * 100) : 0
   const savedLabel = (() => {
@@ -69,6 +71,28 @@ export function WritingTask2ReportView({
                   onSave={onSaveVocab}
                 />
               </p>
+              {para.thai ? (
+                <div className="wgb2Translation">
+                  <button
+                    type="button"
+                    className="wgb2TranslationToggle"
+                    aria-expanded={translationOpenRoles.has(para.role)}
+                    onClick={() =>
+                      setTranslationOpenRoles((current) => {
+                        const next = new Set(current)
+                        if (next.has(para.role)) next.delete(para.role)
+                        else next.add(para.role)
+                        return next
+                      })
+                    }
+                  >
+                    {translationOpenRoles.has(para.role) ? 'ซ่อนคำแปลภาษาไทย ▲' : 'ดูคำแปลภาษาไทย ▼'}
+                  </button>
+                  {translationOpenRoles.has(para.role) ? (
+                    <p className="wgb2TranslationText">{para.thai}</p>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           ))}
         </article>

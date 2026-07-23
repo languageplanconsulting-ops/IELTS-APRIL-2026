@@ -53,6 +53,8 @@ export type WritingTask2ReportParagraph = {
   role: WritingTask2Role
   labelTh: string
   text: string
+  /** Literal Thai translation of `text`, shown behind a "ดูคำแปลภาษาไทย" toggle. */
+  thai?: string
 }
 
 export type WritingTask2EssaySavePayload = {

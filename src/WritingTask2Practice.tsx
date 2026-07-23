@@ -167,6 +167,7 @@ export function WritingTask2Practice({
   const [checkedSteps, setCheckedSteps] = useState<Set<string>>(() => new Set())
   const [checkedNow, setCheckedNow] = useState(false)
   const [showEssay, setShowEssay] = useState(false)
+  const [translationOpenRoles, setTranslationOpenRoles] = useState<Set<string>>(() => new Set())
   const [activeBlankId, setActiveBlankId] = useState<string | null>(null)
   const [savedWords, setSavedWords] = useState<Set<string>>(() => new Set())
   const [pickedChip, setPickedChip] = useState<string | null>(null)
@@ -300,7 +301,7 @@ export function WritingTask2Practice({
     setRecallChecks({})
   }
 
-  const model = useMemo(() => assembleTask2Essay(exercise), [exercise])
+  const model = useMemo(() => assembleTask2Essay(exercise, prompt.paragraphs), [exercise, prompt.paragraphs])
 
   /**
    * Task 2 stores whole paragraphs, not sentence objects, so the drill splits on
@@ -769,6 +770,28 @@ export function WritingTask2Practice({
                         onSave={onSaveVocab ? handleSaveVocab : undefined}
                       />
                     </p>
+                    {para.thai ? (
+                      <div className="wgb2Translation">
+                        <button
+                          type="button"
+                          className="wgb2TranslationToggle"
+                          aria-expanded={translationOpenRoles.has(para.role)}
+                          onClick={() =>
+                            setTranslationOpenRoles((current) => {
+                              const next = new Set(current)
+                              if (next.has(para.role)) next.delete(para.role)
+                              else next.add(para.role)
+                              return next
+                            })
+                          }
+                        >
+                          {translationOpenRoles.has(para.role) ? 'ซ่อนคำแปลภาษาไทย ▲' : 'ดูคำแปลภาษาไทย ▼'}
+                        </button>
+                        {translationOpenRoles.has(para.role) ? (
+                          <p className="wgb2TranslationText">{para.thai}</p>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
                 ))}
               </article>

@@ -11,7 +11,7 @@
 // Reconstructing every blank's correct answer must reproduce the matching essay text in
 // writingTask2Data.ts EXACTLY (see assembleTask2Essay).
 
-import type { WritingTask2Role } from './writingTask2Data'
+import type { WritingTask2Paragraph, WritingTask2Role } from './writingTask2Data'
 import { buildDetailedThaiExplain } from './writingLetterHint'
 
 export type Wgb2Focus =
@@ -6476,8 +6476,11 @@ const wgb2AssembleBlank = (blank: Wgb2Blank): string => {
 // Assemble a clean, blank-free model essay from an exercise (used for the
 // "show the finished essay" reveal after the student completes all steps).
 export const assembleTask2Essay = (
-  exercise: Wgb2Exercise
-): { role: WritingTask2Role; labelTh: string; text: string }[] =>
+  exercise: Wgb2Exercise,
+  /** The source prompt's paragraphs, used to look up each step's literal Thai translation
+   * by role (the exercise itself only carries blanks/segments, not the `thai` gloss). */
+  paragraphs?: readonly WritingTask2Paragraph[]
+): { role: WritingTask2Role; labelTh: string; text: string; thai?: string }[] =>
   exercise.steps.map((step) => ({
     role: step.role,
     labelTh: step.labelTh,
@@ -6486,5 +6489,6 @@ export const assembleTask2Essay = (
       .join('')
       .replace(/\s+/g, ' ')
       .replace(/\s+([,.;:])/g, '$1')
-      .trim()
+      .trim(),
+    thai: paragraphs?.find((paragraph) => paragraph.role === step.role)?.thai
   }))

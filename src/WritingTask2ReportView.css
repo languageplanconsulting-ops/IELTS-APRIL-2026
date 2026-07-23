@@ -49,3 +49,39 @@
   font-style: italic;
   font-family: Inter, Anuphan, system-ui, sans-serif;
 }
+
+.wgb2Translation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.wgb2TranslationToggle {
+  width: fit-content;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 74, 173, 0.1);
+  color: #004aad;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+}
+
+.wgb2TranslationToggle[aria-expanded='true'] {
+  background: rgba(0, 74, 173, 0.18);
+}
+
+.wgb2TranslationText {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #f4f7fc;
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  font-family: Anuphan, Inter, system-ui, sans-serif;
+}

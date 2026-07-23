@@ -818,7 +818,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
         label: 'Why I am asking you',
         sentences: [
           {
-            text: 'Firstly, you taught me for two years, so you understand my strengths better than anyone.',
+            text: 'Firstly, you taught me for two years; therefore, you understand my strengths better than anyone.',
             transition: 'Firstly,',
             pattern: 'coordinating',
             thai: 'ประการแรก คุณครูสอนผมมาสองปี ดังนั้นคุณครูจึงเข้าใจจุดแข็งของผมดีกว่าใคร'
@@ -932,7 +932,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'ยิ่งไปกว่านั้น ค่าไฟฟ้าของดิฉันสูงขึ้น เพราะว่าเครื่องทำความร้อนไฟฟ้าทำงานตลอดทั้งวัน'
           },
           {
-            text: 'Honestly, I am worried about the colder weather, so a quick repair would help enormously.',
+            text: 'Honestly, I am worried about the colder weather; therefore, a quick repair would help enormously.',
             transition: 'Honestly,',
             pattern: 'coordinating',
             thai: 'พูดตามตรง ดิฉันเป็นกังวลเรื่องอากาศที่จะหนาวลงกว่านี้ ดังนั้นการซ่อมที่รวดเร็วจึงจะช่วยได้อย่างมาก'
@@ -950,7 +950,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'ถ้าเป็นไปได้ คุณช่วยนัดหมายให้ช่างเทคนิคมาดูอพาร์ตเมนต์ในสัปดาห์นี้ได้ไหมคะ'
           },
           {
-            text: 'Of course, I am at home most afternoons, so any time after two would suit me.',
+            text: 'Of course, I am at home most afternoons; therefore, any time after two would suit me.',
             transition: 'Of course,',
             pattern: 'coordinating',
             thai: 'แน่นอนว่า ดิฉันอยู่บ้านเกือบทุกช่วงบ่าย ดังนั้นเวลาใดก็ได้หลังบ่ายสองโมงจึงสะดวกสำหรับดิฉัน'
@@ -1004,7 +1004,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'อย่างแรกเลย ผมจะลาพักร้อนประจำปีตั้งแต่วันที่ห้าถึงวันที่สิบเก้ามิถุนายน'
           },
           {
-            text: 'As you know, I had already booked this holiday, so I cannot change the dates now.',
+            text: 'As you know, I had already booked this holiday; consequently, I cannot change the dates now.',
             transition: 'As you know,',
             pattern: 'coordinating',
             thai: 'อย่างที่คุณทราบ ผมได้จองวันหยุดนี้ไว้ล่วงหน้าแล้ว ดังนั้นผมจึงไม่สามารถเปลี่ยนวันได้ในตอนนี้'
@@ -1022,7 +1022,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
         label: 'Tasks to cover',
         sentences: [
           {
-            text: 'Firstly, the client reports are due on the tenth, so they will need your attention first.',
+            text: 'Firstly, the client reports are due on the tenth; therefore, they will need your attention first.',
             transition: 'Firstly,',
             pattern: 'coordinating',
             thai: 'ประการแรก รายงานลูกค้าครบกำหนดส่งในวันที่สิบ ดังนั้นมันจึงต้องการความใส่ใจจากคุณเป็นอันดับแรก'
@@ -1034,7 +1034,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'นอกจากนี้ การประชุมทีมประจำสัปดาห์ยังคงจัดในวันจันทร์ ซึ่งคุณสามารถเป็นประธานได้อย่างง่ายดาย'
           },
           {
-            text: 'However, the budget file is nearly finished, so it should not take much of your time.',
+            text: 'However, the budget file is nearly finished; consequently, it should not take much of your time.',
             transition: 'However,',
             pattern: 'coordinating',
             thai: 'อย่างไรก็ตาม ไฟล์งบประมาณเกือบเสร็จแล้ว ดังนั้นมันจึงไม่น่าจะใช้เวลาของคุณมากนัก'
@@ -1052,7 +1052,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'แน่นอนว่า ผมจะเขียนบันทึกที่ชัดเจนสำหรับทุกงาน ก่อนที่ผมจะออกจากออฟฟิศ'
           },
           {
-            text: 'If possible, we could meet on Friday, so I can explain anything that is unclear.',
+            text: 'If possible, we could meet on Friday, so that I can explain anything that is unclear.',
             transition: 'If possible,',
             pattern: 'coordinating',
             thai: 'ถ้าเป็นไปได้ เราอาจจะพบกันในวันศุกร์ เพื่อที่จะให้ผมได้อธิบายสิ่งใดก็ตามที่ยังไม่ชัดเจน'
@@ -1130,7 +1130,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'ประการแรก ดิฉันได้ยืมสมุดจดจากเพื่อนร่วมชั้นมาแล้ว ซึ่งครอบคลุมเนื้อหาส่วนใหญ่ของการบรรยาย'
           },
           {
-            text: 'Moreover, I will complete the reading this weekend, so I am not left behind.',
+            text: 'Moreover, I will complete the reading this weekend, so that I am not left behind.',
             transition: 'Moreover,',
             pattern: 'coordinating',
             thai: 'ยิ่งไปกว่านั้น ดิฉันจะอ่านเอกสารให้จบภายในสุดสัปดาห์นี้ เพื่อที่จะไม่ตามคนอื่นไม่ทัน'
@@ -1238,7 +1238,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'นอกจากนี้ วันที่เสียงดังที่สุดจะเป็นสองวันแรก เพราะว่าต้องรื้อตู้เก่าออกและผนังต้องฉาบใหม่'
           },
           {
-            text: 'However, the team will not start before nine, so you should still enjoy peaceful mornings.',
+            text: 'However, the team will not start before nine; therefore, you should still enjoy peaceful mornings.',
             transition: 'However,',
             pattern: 'coordinating',
             thai: 'อย่างไรก็ตาม ทีมช่างจะไม่เริ่มงานก่อนเก้าโมง คุณจึงยังคงมีช่วงเช้าที่สงบอยู่'
@@ -1358,7 +1358,7 @@ export const GENERAL_TASK1_SEMIFORMAL_PROMPTS = [
             thai: 'แน่นอนว่า ดิฉันได้คุยกับพรียาแล้ว และเธอยินดีอย่างยิ่งที่จะดูแลงานแทนดิฉันในช่วงที่ดิฉันไม่อยู่เดือนหน้า'
           },
           {
-            text: 'In addition, I will finish the quarterly report before I leave, so I will not delay any other work.',
+            text: 'In addition, I will finish the quarterly report before I leave; therefore, I will not delay any other work.',
             transition: 'In addition,',
             pattern: 'coordinating',
             thai: 'นอกจากนี้ ดิฉันจะทำรายงานรายไตรมาสให้เสร็จก่อนที่จะไป ดิฉันจึงจะไม่ทำให้งานอื่นล่าช้า'
@@ -1439,7 +1439,7 @@ export const GENERAL_TASK1_FORMAL_PROMPTS = [
             thai: 'น่าเสียดายที่ เครื่องพิมพ์หยุดทำงานหลังจากใช้ไปเพียงหนึ่งสัปดาห์ แม้ว่าข้าพเจ้าจะปฏิบัติตามคำแนะนำอย่างระมัดระวังแล้วก็ตาม'
           },
           {
-            text: 'Furthermore, it now fails to switch on, so I cannot print any documents at all.',
+            text: 'Furthermore, it now fails to switch on; therefore, I cannot print any documents at all.',
             transition: 'Furthermore,',
             pattern: 'coordinating',
             thai: 'ยิ่งไปกว่านั้น ขณะนี้เครื่องไม่สามารถเปิดติดได้ ข้าพเจ้าจึงไม่สามารถพิมพ์เอกสารใด ๆ ได้เลย'
@@ -1517,7 +1517,7 @@ export const GENERAL_TASK1_FORMAL_PROMPTS = [
             thai: 'อย่างแรกเลย ข้าพเจ้าเขียนจดหมายฉบับนี้มาเพื่อสอบถามข้อมูลเกี่ยวกับหลักสูตรการตลาดดิจิทัล ที่ได้ลงโฆษณาไว้ในนิตยสารฉบับเดือนนี้'
           },
           {
-            text: 'To begin with, I have worked in sales for five years, so I wish to develop new skills.',
+            text: 'To begin with, I have worked in sales for five years; therefore, I wish to develop new skills.',
             transition: 'To begin with,',
             pattern: 'coordinating',
             thai: 'เริ่มจากเรื่องแรกก่อน ข้าพเจ้าทำงานด้านการขายมาเป็นเวลาห้าปี ข้าพเจ้าจึงปรารถนาที่จะพัฒนาทักษะใหม่ ๆ'
@@ -1637,7 +1637,7 @@ export const GENERAL_TASK1_FORMAL_PROMPTS = [
         label: 'Effect on residents',
         sentences: [
           {
-            text: 'Unfortunately, many residents feel unsafe, so they now avoid the area in the evening.',
+            text: 'Unfortunately, many residents feel unsafe; as a result, they now avoid the area in the evening.',
             transition: 'Unfortunately,',
             pattern: 'coordinating',
             thai: 'น่าเสียดายที่ ผู้อยู่อาศัยจำนวนมากรู้สึกไม่ปลอดภัย พวกเขาจึงหลีกเลี่ยงบริเวณดังกล่าวในช่วงเย็นในขณะนี้'
@@ -1721,7 +1721,7 @@ export const GENERAL_TASK1_FORMAL_PROMPTS = [
             thai: 'อย่างแรกเลย ข้าพเจ้าเขียนจดหมายฉบับนี้มาเพื่อสมัครงานในตำแหน่งผู้ช่วยสำนักงาน ซึ่งได้ลงประกาศไว้บนเว็บไซต์ของท่าน'
           },
           {
-            text: 'To begin with, I have three years of experience in administration, so I am confident I could do the job well.',
+            text: 'To begin with, I have three years of experience in administration; therefore, I am confident I could do the job well.',
             transition: 'To begin with,',
             pattern: 'coordinating',
             thai: 'เริ่มจากเรื่องแรกก่อน ข้าพเจ้ามีประสบการณ์ด้านงานบริหารธุรการเป็นเวลาสามปี ข้าพเจ้าจึงมั่นใจว่าข้าพเจ้าสามารถทำงานนี้ได้เป็นอย่างดี'
