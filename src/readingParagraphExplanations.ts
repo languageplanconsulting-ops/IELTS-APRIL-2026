@@ -7,6 +7,12 @@
 // Keyed by normalized passage title (see normalizeReadingPassageTitle) +
 // 0-based paragraph index, since paragraph order is stable per passage.
 import { normalizeReadingPassageTitle } from './readingPassageVocab'
+import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_11 } from './readingParagraphExplanations.cambridge11'
+import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_12 } from './readingParagraphExplanations.cambridge12'
+import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_13 } from './readingParagraphExplanations.cambridge13'
+import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_14 } from './readingParagraphExplanations.cambridge14'
+import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_15 } from './readingParagraphExplanations.cambridge15'
+import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_19 } from './readingParagraphExplanations.cambridge19'
 
 export type ReadingParagraphVocabGloss = {
   /** The English word or phrase as it appears in the paragraph. */
@@ -43,11 +49,28 @@ const READING_PARAGRAPH_EXPLANATIONS: ParagraphExplanationBank = {
   }
 }
 
+// Per-book banks generated separately (one book = one file, so parallel
+// generation runs never conflict on the same file). Merged here; each book
+// only contributes distinct passage-title keys, so a shallow merge is safe.
+const READING_PARAGRAPH_EXPLANATION_BANKS: ParagraphExplanationBank[] = [
+  READING_PARAGRAPH_EXPLANATIONS,
+  READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_11,
+  READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_12,
+  READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_13,
+  READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_14,
+  READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_15,
+  READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_19
+]
+
 export const getReadingParagraphExplanation = (
   passageTitle: string,
   paragraphIndex: number
 ): ReadingParagraphExplanation | null => {
   const key = normalizeReadingPassageTitle(passageTitle)
   if (!key) return null
-  return READING_PARAGRAPH_EXPLANATIONS[key]?.[paragraphIndex] ?? null
+  for (const bank of READING_PARAGRAPH_EXPLANATION_BANKS) {
+    const found = bank[key]?.[paragraphIndex]
+    if (found) return found
+  }
+  return null
 }
