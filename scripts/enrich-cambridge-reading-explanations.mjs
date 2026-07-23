@@ -211,8 +211,11 @@ const enrichExam = (exam, { force: forceAll }) => {
   if (!changed) return { exam, changed: 0 }
 
   const rawAnswerKey = `READING PASSAGE ${passageNum}: ${passageTitle}\n\n${blocks.join('\n\n')}`
+  // Drop the stale parsedPayload cache: buildReadingExamPayload() prefers it over
+  // rawAnswerKey when present, so leaving it in place would silently discard this edit.
+  const { parsedPayload, ...rest } = exam
   return {
-    exam: { ...exam, rawAnswerKey, updatedAt: new Date().toISOString() },
+    exam: { ...rest, rawAnswerKey, updatedAt: new Date().toISOString() },
     changed
   }
 }

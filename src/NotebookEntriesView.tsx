@@ -139,7 +139,7 @@ export function NotebookEntriesView({
                     </div>
                   ) : facets.kind === 'paraphrase' ? (
                     <div className="notebookEntryFacet">
-                      <div className="notebookEntryPair">
+                      <div className="notebookEntryPairHighlight">
                         <span className="notebookEntryPairA">{facets.primary}</span>
                         <span className="notebookEntryPairEq">=</span>
                         <span className="notebookEntryPairB">{facets.secondary}</span>

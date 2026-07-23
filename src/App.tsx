@@ -7136,7 +7136,7 @@ function App() {
   const [readingExamStartedAt, setReadingExamStartedAt] = useState<number | null>(null)
   const [readingExamElapsedSeconds, setReadingExamElapsedSeconds] = useState(0)
   const [readingLastTimeTakenSeconds, setReadingLastTimeTakenSeconds] = useState<number | null>(null)
-  const [readingReportWrongOnly, setReadingReportWrongOnly] = useState(true)
+  const [readingReportWrongOnly, setReadingReportWrongOnly] = useState(false)
   const [readingReportPendingJumpTo, setReadingReportPendingJumpTo] = useState<number | null>(null)
   const [readingReportItems, setReadingReportItems] = useState<ReadingReportItem[]>([])
   const [readingAttemptHistory, setReadingAttemptHistory] = useState<Record<string, ReadingAttemptSummary>>({})
@@ -24443,9 +24443,15 @@ function App() {
                                 {sanitizedVocabBridgePairs.map((pair, pairIdx) => (
                                   <li key={`vbpair-${item.number}-${pairIdx}`} className="vbPairRow">
                                     <div className="vbPairMain">
-                                      <span className="vbPairQ">{pair.q}</span>
+                                      <div className="vbPairSide vbPairSide-q">
+                                        <span className="vbPairQ">{pair.q}</span>
+                                        <span className="vbPairSideTh">{pair.th}</span>
+                                      </div>
                                       <span className="vbPairEq">=</span>
-                                      <span className="vbPairP">{pair.p}</span>
+                                      <div className="vbPairSide vbPairSide-p">
+                                        <span className="vbPairP">{pair.p}</span>
+                                        <span className="vbPairSideTh">{pair.th}</span>
+                                      </div>
                                       <button
                                         type="button"
                                         className="vbPairSave"
@@ -24460,7 +24466,6 @@ function App() {
                                         ＋ บันทึกศัพท์
                                       </button>
                                     </div>
-                                    <div className="vbPairTh">{pair.th}</div>
                                     {pair.note && <div className="vbPairNote">{pair.note}</div>}
                                   </li>
                                 ))}
@@ -24518,9 +24523,15 @@ function App() {
                               {sanitizedItemPairs.map((pair, pairIdx) => (
                                 <li key={`vbpair-normal-${item.number}-${pairIdx}`} className="vbPairRow">
                                   <div className="vbPairMain">
-                                    <span className="vbPairQ">{pair.q}</span>
+                                    <div className="vbPairSide vbPairSide-q">
+                                      <span className="vbPairQ">{pair.q}</span>
+                                      <span className="vbPairSideTh">{pair.th}</span>
+                                    </div>
                                     <span className="vbPairEq">=</span>
-                                    <span className="vbPairP">{pair.p}</span>
+                                    <div className="vbPairSide vbPairSide-p">
+                                      <span className="vbPairP">{pair.p}</span>
+                                      <span className="vbPairSideTh">{pair.th}</span>
+                                    </div>
                                     <button
                                       type="button"
                                       className="vbPairSave"
@@ -24535,7 +24546,6 @@ function App() {
                                       ＋ บันทึกศัพท์
                                     </button>
                                   </div>
-                                  <div className="vbPairTh">{pair.th}</div>
                                   {pair.note && <div className="vbPairNote">{pair.note}</div>}
                                 </li>
                               ))}
