@@ -13,6 +13,7 @@ import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_13 } from './readingParagraphE
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_14 } from './readingParagraphExplanations.cambridge14'
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_15 } from './readingParagraphExplanations.cambridge15'
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_16 } from './readingParagraphExplanations.cambridge16'
+import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_17 } from './readingParagraphExplanations.cambridge17'
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_19 } from './readingParagraphExplanations.cambridge19'
 
 export type ReadingParagraphVocabGloss = {
@@ -61,6 +62,7 @@ const READING_PARAGRAPH_EXPLANATION_BANKS: ParagraphExplanationBank[] = [
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_14,
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_15,
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_16,
+  READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_17,
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_19
 ]
 
