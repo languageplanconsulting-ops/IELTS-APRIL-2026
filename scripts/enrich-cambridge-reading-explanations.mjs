@@ -1,12 +1,14 @@
 /**
- * Enrich Cambridge reading Thai explanations to match Cam 17/19 criteria:
+ * Enrich reading Thai explanations (single-passage-per-exam-id banks) to
+ * match Cam 17/19 criteria:
  * - quoted passage evidence in explanationThai
  * - meaningful paraphrasedVocabulary (not HTML artifacts)
  * - clean question prompts
  *
- * Run: node scripts/enrich-cambridge-reading-explanations.mjs [book...] [--force]
+ * Run: node scripts/enrich-cambridge-reading-explanations.mjs [book|bank...] [--force]
  * Example: node scripts/enrich-cambridge-reading-explanations.mjs 11 14 15 16
  *          node scripts/enrich-cambridge-reading-explanations.mjs 12 13 17 19
+ *          node scripts/enrich-cambridge-reading-explanations.mjs june2026 custom
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -21,11 +23,33 @@ const { buildReadingExamPayload } = await import(
   pathToFileURL(path.join(root, 'server/readingImportUtils.mjs')).href
 )
 
+const NAMED_BANKS = {
+  june2026: {
+    label: 'June 2026',
+    modulePath: path.join(root, 'server', 'userProvidedReadingPracticeJune2026.mjs'),
+    exportName: 'USER_PROVIDED_READING_PRACTICE_JUNE_2026_EXAMS'
+  },
+  custom: {
+    label: 'Custom',
+    modulePath: path.join(root, 'server', 'userProvidedReadingPracticeCustom.mjs'),
+    exportName: 'USER_PROVIDED_READING_PRACTICE_CUSTOM_EXAMS'
+  }
+}
+
 const DEFAULT_BOOKS = [11, 12, 13, 14, 15, 16, 17, 19]
 const args = process.argv.slice(2)
 const force = args.includes('--force')
-const books = args.filter((arg) => /^\d+$/.test(arg)).map(Number)
-const targetBooks = books.length ? books : DEFAULT_BOOKS
+const requestedBooks = args.filter((arg) => /^\d+$/.test(arg)).map(Number)
+const requestedNamed = args.filter((arg) => NAMED_BANKS[arg])
+const targetBooks = requestedBooks.length || requestedNamed.length ? requestedBooks : DEFAULT_BOOKS
+const targets = [
+  ...targetBooks.map((book) => ({
+    label: `Cambridge ${book}`,
+    modulePath: path.join(root, 'server', `userProvidedReadingPracticeCambridge${book}.mjs`),
+    exportName: `USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_${book}_EXAMS`
+  })),
+  ...requestedNamed.map((key) => NAMED_BANKS[key])
+]
 
 const synthesizePrompt = (fields, passageTitle = '') => {
   const cleaned = cleanBrokenPrompt(fields.prompt, fields.number)
@@ -97,9 +121,13 @@ const parseAnswerKeySegments = (rawAnswerKey) => {
 
 const parseSegmentFields = (segment) => {
   const number = Number(segment.match(/^Question\s+(\d+):/im)?.[1] || 0)
+  // [ \t]* (not \s*) after "Question N:" — a greedy \s* would swallow an
+  // empty prompt's blank-line separator and let the lazy capture run past
+  // its own "Correct Answer:" line into the rest of the block. See the same
+  // fix (and the incident) in server/readingImportUtils.mjs.
   const prompt = String(
     segment.match(
-      /^Question\s+\d+:\s*([\s\S]*?)(?=\n\s*(?:Correct Answer|Accepted Answers|Answer Group|Exact Portion|Short Thai Explanation|Paraphrased Vocabulary):|$)/im
+      /^Question\s+\d+:[ \t]*([\s\S]*?)(?=\n\s*(?:Correct Answer|Accepted Answers|Answer Group|Exact Portion|Short Thai Explanation|Paraphrased Vocabulary):|$)/im
     )?.[1] || ''
   ).trim()
   const correctAnswer = String(segment.match(/Correct Answer:\s*(.+)/i)?.[1] || '').trim()
@@ -222,9 +250,7 @@ const enrichExam = (exam, { force: forceAll }) => {
 
 let totalChanged = 0
 
-for (const book of targetBooks) {
-  const modulePath = path.join(root, 'server', `userProvidedReadingPracticeCambridge${book}.mjs`)
-  const exportName = `USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_${book}_EXAMS`
+for (const { label, modulePath, exportName } of targets) {
   const mod = await import(pathToFileURL(modulePath).href)
   const exams = mod[exportName]
   let bookChanged = 0
@@ -237,7 +263,7 @@ for (const book of targetBooks) {
 
   totalChanged += bookChanged
   fs.writeFileSync(modulePath, `export const ${exportName} = ${JSON.stringify(nextExams, null, 2)}\n`, 'utf8')
-  console.log(`Cambridge ${book}: enriched ${bookChanged} question(s)`)
+  console.log(`${label}: enriched ${bookChanged} question(s)`)
 }
 
 console.log(`Done. ${totalChanged} explanations updated across ${targetBooks.length} book(s).`)

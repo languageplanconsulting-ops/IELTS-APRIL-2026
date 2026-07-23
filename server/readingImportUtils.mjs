@@ -505,8 +505,15 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
   )
   return segments.map((segment) => {
     const numberMatch = segment.match(/^Question\s+(\d+):/im)
+    // The head's trailing whitespace must stop at the line break, not cross
+    // it — otherwise an empty prompt (e.g. drag-and-drop heading questions,
+    // "Question 27: \n\nCorrect Answer: vi") lets the greedy \s* swallow the
+    // blank-line separator, forcing the lazy capture to run past its own
+    // "Correct Answer:" line (nothing left in-segment to stop it early) and
+    // grab the entire rest of the block — "Correct Answer: vi\n\nAccepted
+    // Answers: …" — as if it were the question's prompt.
     const promptMatch = segment.match(
-      /^Question\s+\d+:\s*([\s\S]*?)(?=\n\s*(?:Correct Answer|Accepted Answers|Answer Group|Exact Portion|Short Thai Explanation|Paraphrased Vocabulary):|$)/im
+      /^Question\s+\d+:[ \t]*([\s\S]*?)(?=\n\s*(?:Correct Answer|Accepted Answers|Answer Group|Exact Portion|Short Thai Explanation|Paraphrased Vocabulary):|$)/im
     )
     const correctAnswerMatch = segment.match(/Correct Answer:\s*(.+)/i)
     const acceptedAnswersMatch = segment.match(/Accepted Answers:\s*(.+)/i)
@@ -555,10 +562,18 @@ export const normalizeReadingQuestionRecord = (question, questionSectionText = '
     correctAnswer
   )
   const sectionPrompt = extractReadingPromptFromQuestionSection(questionSectionText, question?.number)
+  // Drag-and-drop heading/summary-completion questions legitimately carry no
+  // clue sentence — fall back to a description of the task instead of the
+  // bare, meaningless "Question N".
+  const fallbackPrompt = READING_ROMAN_HEADING_PATTERN.test(correctAnswer)
+    ? 'Choose the correct heading for this paragraph from the list of headings.'
+    : /^[A-J]$/i.test(correctAnswer)
+      ? 'Complete the summary using the list of phrases provided.'
+      : `Question ${question?.number || ''}`.trim()
   const prompt =
     sanitizedPrompt && !/^Question\s+\d+$/i.test(sanitizedPrompt)
       ? sanitizedPrompt
-      : sectionPrompt || sanitizedPrompt || `Question ${question?.number || ''}`.trim()
+      : sectionPrompt || sanitizedPrompt || fallbackPrompt
   return {
     ...question,
     prompt,

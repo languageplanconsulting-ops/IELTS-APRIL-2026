@@ -4103,9 +4103,24 @@ const buildReadingMatchingHintNeedles = (
   if (!passage || !question) return []
   const kind = getReadingMatchingQuestionKind(passage, question)
   const useParagraphLabels = kind === 'information'
-  const { correctText, distractors } = buildReadingMatchingEvidencePortions(passage, question, allQuestions)
+  const { correctText, distractors, focusIndex } = buildReadingMatchingEvidencePortions(passage, question, allQuestions)
   const excluded = new Set(getReadingMatchingExcludedParagraphIndices(passage, question, allQuestions))
-  const portions = [correctText, ...distractors.slice(0, MATCHING_HINT_HIGHLIGHT_COUNT - 1)].filter(Boolean)
+  // Heading questions ask for the paragraph's overall gist, not one fact —
+  // so the hint should read as paragraph context, not a single pinpointed
+  // sentence (that narrower treatment stays correct for "which paragraph
+  // contains this information" lookups, i.e. kind === 'information').
+  const focusParagraph = focusIndex >= 0 ? passage.bodyParagraphs?.[focusIndex] : ''
+  const focusParagraphSentences =
+    kind === 'heading' && focusParagraph
+      ? String(focusParagraph)
+          .split(/(?<=[.!?])\s+/)
+          .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+          .filter((sentence) => sentence.length >= 12)
+      : []
+  const portions =
+    focusParagraphSentences.length
+      ? focusParagraphSentences.slice(0, MATCHING_HINT_HIGHLIGHT_COUNT)
+      : [correctText, ...distractors.slice(0, MATCHING_HINT_HIGHLIGHT_COUNT - 1)].filter(Boolean)
   const needles: string[] = []
   const seen = new Set<string>()
 
@@ -4121,6 +4136,11 @@ const buildReadingMatchingHintNeedles = (
     if (needles.length >= MATCHING_HINT_HIGHLIGHT_COUNT) break
     addPortion(portion)
   }
+
+  // Heading hints stay scoped to the focus paragraph — padding with sentences
+  // from unrelated paragraphs would undercut the "read this paragraph's
+  // context" point of the extended highlight above.
+  if (focusParagraphSentences.length) return needles.slice(0, MATCHING_HINT_HIGHLIGHT_COUNT)
 
   const paragraphs = passage.bodyParagraphs || []
   for (let index = 0; index < paragraphs.length && needles.length < MATCHING_HINT_HIGHLIGHT_COUNT; index += 1) {
