@@ -16,6 +16,7 @@ import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_16 } from './readingParagraphE
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_17 } from './readingParagraphExplanations.cambridge17'
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_19 } from './readingParagraphExplanations.cambridge19'
 import { READING_PARAGRAPH_EXPLANATIONS_GT_2 } from './readingParagraphExplanations.gt2'
+import { READING_PARAGRAPH_EXPLANATIONS_JUNE2026_CUSTOM } from './readingParagraphExplanations.june2026custom'
 
 export type ReadingParagraphVocabGloss = {
   /** The English word or phrase as it appears in the paragraph. */
@@ -65,7 +66,8 @@ const READING_PARAGRAPH_EXPLANATION_BANKS: ParagraphExplanationBank[] = [
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_16,
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_17,
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_19,
-  READING_PARAGRAPH_EXPLANATIONS_GT_2
+  READING_PARAGRAPH_EXPLANATIONS_GT_2,
+  READING_PARAGRAPH_EXPLANATIONS_JUNE2026_CUSTOM
 ]
 
 /** Some banks (e.g. General Training "full test" exams) reuse the same
