@@ -225,7 +225,7 @@ import { estimateReadingBand, formatReadingBand } from './readingBandScore'
 import { sanitizeReadingVocabPairs } from './intensiveJourneyVocabPairs'
 import { lookupReadingVocabBridge, type ReadingVocabBridgePair } from './readingPassage3VocabBridge'
 import { getReadingPassageVocab, type ReadingPassageVocabItem } from './readingPassageVocab'
-import { getReadingParagraphExplanation } from './readingParagraphExplanations'
+import { getReadingParagraphExplanation, buildReadingParagraphExamKey } from './readingParagraphExplanations'
 
 const LISTENING_BUILDER_EXAM_SETS = [
   CAMBRIDGE_10_SECTION_2_EXAM_SET,
@@ -23800,7 +23800,13 @@ function App() {
                           )
                           const paragraphExplainKey = `${activeReadingPassage.number}-${index}`
                           const isExplainOpen = readingParagraphExplainOpenKey === paragraphExplainKey
-                          const paragraphExplanation = getReadingParagraphExplanation(passageContentTitle, index)
+                          const paragraphExplanation = getReadingParagraphExplanation(
+                            passageContentTitle,
+                            index,
+                            activeReadingExam?.id
+                              ? buildReadingParagraphExamKey(activeReadingExam.id, activeReadingPassage.number)
+                              : undefined
+                          )
                           return (
                             <div key={`reading-paragraph-wrap-${index}`} className="readingParagraphExplainWrap">
                               <p

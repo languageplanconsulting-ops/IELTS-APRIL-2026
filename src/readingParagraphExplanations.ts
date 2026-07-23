@@ -66,15 +66,30 @@ const READING_PARAGRAPH_EXPLANATION_BANKS: ParagraphExplanationBank[] = [
   READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_19
 ]
 
+/** Some banks (e.g. General Training "full test" exams) reuse the same
+ *  generic passage title — "Passage 1" / "Passage 2" — across many different
+ *  exams, so a title-only key would collide across unrelated passages. For
+ *  those, key by `${examId}#p${passageNumber}` instead. Title-based lookup
+ *  stays as the primary/fallback path for banks with genuinely distinct
+ *  titles (Cambridge, Custom, June 2026). */
+export const buildReadingParagraphExamKey = (examId: string, passageNumber: number) =>
+  `${String(examId || '').trim()}#p${passageNumber}`
+
 export const getReadingParagraphExplanation = (
   passageTitle: string,
-  paragraphIndex: number
+  paragraphIndex: number,
+  examKey?: string
 ): ReadingParagraphExplanation | null => {
-  const key = normalizeReadingPassageTitle(passageTitle)
-  if (!key) return null
+  const titleKey = normalizeReadingPassageTitle(passageTitle)
   for (const bank of READING_PARAGRAPH_EXPLANATION_BANKS) {
-    const found = bank[key]?.[paragraphIndex]
-    if (found) return found
+    if (examKey) {
+      const foundByExam = bank[examKey]?.[paragraphIndex]
+      if (foundByExam) return foundByExam
+    }
+    if (titleKey) {
+      const foundByTitle = bank[titleKey]?.[paragraphIndex]
+      if (foundByTitle) return foundByTitle
+    }
   }
   return null
 }
