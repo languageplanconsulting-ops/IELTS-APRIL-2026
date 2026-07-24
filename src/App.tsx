@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, typ
 import './App.css'
 import './ExpectedScoreModal.css'
 import { WritingGuidePage } from './WritingGuidePage'
+import { CourseHomePage } from './CourseHomePage'
 import { WritingReportView } from './WritingReportView'
 import { WritingTask2ReportView } from './WritingTask2ReportView'
 import type {
@@ -258,7 +259,7 @@ const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
   set.audioCacheKey || `listening-foundation-${set.id}`
 
 type Role = 'student' | 'admin' | 'trial'
-type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin' | 'examfeed'
+type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin' | 'examfeed' | 'course'
 type AdminWorkspaceSection =
   | 'landing'
   | 'reading'
@@ -21308,6 +21309,15 @@ function App() {
             </button>
             {authSession?.role === 'admin' && (
               <button
+                className={activePage === 'course' ? 'active' : ''}
+                onClick={() => setActivePage('course')}
+                type="button"
+              >
+                Course
+              </button>
+            )}
+            {authSession?.role === 'admin' && (
+              <button
                 className={activePage === 'admin' ? 'active' : ''}
                 onClick={() => setActivePage('admin')}
                 type="button"
@@ -25018,6 +25028,24 @@ function App() {
         )
       ) : activePage === 'examfeed' ? (
         <ExamFeedPage onOpenCourse={() => setActivePage('home')} />
+      ) : activePage === 'course' ? (
+        authSession?.role === 'admin' ? (
+          <CourseHomePage
+            onBackHome={() => setActivePage('home')}
+            learnerEmail={authSession.email}
+            learnerName={authSession.name}
+          />
+        ) : (
+          <section className="panel full">
+            <div className="emptyState">
+              <h3>Course isn't available yet</h3>
+              <p>This is an admin-only preview while we finish deciding how lessons will be hosted.</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
       ) : activePage === 'admin' ? (
           <section className="adminPanelPage" data-admin-section={adminWorkspaceSection}>
             <div className="adminHero adminControlHeader">
