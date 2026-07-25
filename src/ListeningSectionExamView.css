@@ -279,6 +279,61 @@
   white-space: nowrap;
 }
 
+.listeningSectionExamCcBtn {
+  flex: 0 0 auto;
+  border: 1px solid var(--lse-border, #d7dbe4);
+  background: transparent;
+  color: var(--lse-muted);
+  border-radius: 6px;
+  padding: 3px 7px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.listeningSectionExamCcBtn.is-on {
+  border-color: var(--lse-accent, #2563eb);
+  background: var(--lse-accent, #2563eb);
+  color: #fff;
+}
+
+/* Subtitle line. Sits under the transport rather than over it — the player is
+   already compact, and an overlay would cover the timeline on small screens. */
+.listeningSectionExamCaption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--lse-caption-bg, rgba(15, 23, 42, 0.92));
+  text-align: center;
+}
+
+.listeningSectionExamCaptionLine {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.listeningSectionExamCaptionSpeaker {
+  margin-right: 6px;
+  color: var(--lse-caption-speaker, #7dd3fc);
+  font-weight: 800;
+}
+
+.listeningSectionExamCaptionIdle {
+  margin: 0;
+  color: rgba(248, 250, 252, 0.45);
+  font-size: 0.9rem;
+}
+
 .listeningSectionExamModeRow {
   display: flex;
   align-items: center;

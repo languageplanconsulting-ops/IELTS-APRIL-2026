@@ -24,14 +24,14 @@ export const READING_PARAGRAPH_EXPLANATIONS_GT_1: Record<string, Record<number, 
 
 สรุปใจความ: ย่อหน้านี้เป็นคำนำที่อธิบายว่าทำไมการไปโรงเรียนสม่ำเสมอถึงสำคัญ (รวมถึงมีผลทางกฎหมาย) แล้วให้คำแนะนำ 2 ข้อแรก คือ พาลูกไปให้ตรงเวลา และแจ้งเหตุผลทันทีถ้าต้องขาดเรียน`,
       vocab: [
-        { term: 'punctually', th: 'ตรงเวลา — เน้นว่าต้องไปโรงเรียนให้ทันเวลาทุกครั้ง' },
-        { term: 'essential', th: 'จำเป็นอย่างยิ่ง — ในที่นี้คือเรื่องที่ขาดไม่ได้' },
-        { term: 'make the most of the opportunities', th: 'ใช้โอกาสที่มีให้คุ้มค่าที่สุด' },
-        { term: 'must ensure', th: 'ต้องดูแล/รับรองให้เกิดขึ้นจริง (เป็นหน้าที่ตามกฎหมายของพ่อแม่)' },
-        { term: 'classroom disruption', th: 'การรบกวน/สร้างความวุ่นวายในห้องเรียน' },
-        { term: 'unauthorised absence', th: "การขาดเรียนที่ไม่ได้รับอนุญาต (ถือเป็นความผิด)" },
-        { term: 'vital', th: 'สำคัญมาก ขาดไม่ได้' },
-        { term: 'preferably', th: 'ควรจะ (ทำแบบนี้ดีที่สุด)' }
+        { term: 'punctually', th: 'ตรงเวลา — ไม่ใช่แค่ “ไปโรงเรียน” แต่ต้องไปให้ทันเวลาที่โรงเรียนกำหนดทุกครั้ง' },
+        { term: 'essential', th: 'จำเป็นอย่างยิ่ง / ขาดไม่ได้ — ในที่นี้หมายถึงถ้าอยากให้เด็กใช้โอกาสเรียนได้เต็มที่ “ต้อง” ไปสม่ำเสมอ' },
+        { term: 'make the most of the opportunities', th: 'ใช้โอกาสที่มีให้คุ้มที่สุด — ไม่ใช่แค่มีโอกาส แต่ต้อง “ใช้ให้เต็มที่”' },
+        { term: 'must ensure', th: 'ต้องดูแลให้เกิดขึ้นจริง — เป็นหน้าที่ตามกฎหมายของพ่อแม่ ไม่ใช่แค่คำแนะนำ' },
+        { term: 'classroom disruption', th: 'การรบกวนในห้องเรียน — เช่น เข้าสายแล้วครูต้องหยุดสอน ทำให้เพื่อนเสียสมาธิ' },
+        { term: "an 'unauthorised' absence", th: 'การขาดเรียนที่ไม่ได้รับอนุญาต — โรงเรียนถือว่าเป็นการขาดแบบผิดกฎ (ใกล้เคียงกับหนีเรียน)' },
+        { term: 'vital', th: 'สำคัญมากจนขาดไม่ได้ — ถ้าขาดเรียนแล้วไม่แจ้ง จะมีผลตามมา' },
+        { term: 'preferably on the first morning of absence', th: 'ควรแจ้งตั้งแต่เช้าวันแรกที่ขาด — ยิ่งแจ้งเร็ว โรงเรียนยิ่งจัดการได้ง่าย' }
       ]
     },
     1: {
@@ -40,11 +40,22 @@ export const READING_PARAGRAPH_EXPLANATIONS_GT_1: Record<string, Record<number, 
 
 ใจความคือ: ถ้าคุณรู้หรือคิดว่า (know or think) ลูกกำลังมีปัญหาในการไปโรงเรียน (having difficulties attending the school) คุณควรติดต่อโรงเรียน (should contact the school) และย้ำว่าการทำแต่เนิ่นๆ ดีกว่าทำทีหลัง (It is better to do this sooner rather than later) เพราะปัญหาส่วนใหญ่ (most problems) สามารถแก้ไขได้อย่างรวดเร็วมาก (can be dealt with very quickly) ถ้าจัดการตั้งแต่เนิ่นๆ
 
+หมายเหตุคำศัพท์สำคัญ: sooner rather than later ในที่นี้ไม่ใช่ความหมายเดียวกับ sooner or later ของไทยที่แปลว่า “ช้าเร็วก็ต้องเกิด” แต่หมายถึง “รีบทำเลย / ทำเร็วดีกว่าช้า” — คือให้ติดต่อโรงเรียนทันที
+
 สรุปใจความ: ถ้าลูกเริ่มมีปัญหาเรื่องการมาเรียน อย่ารอช้า รีบติดต่อโรงเรียนทันที เพราะยิ่งแก้เร็วยิ่งง่าย`,
       vocab: [
-        { term: 'having difficulties', th: 'กำลังมีปัญหา/ลำบากใจ' },
-        { term: 'sooner rather than later', th: 'ทำแต่เนิ่นๆ ดีกว่าทำทีหลัง' },
-        { term: 'dealt with very quickly', th: 'แก้ไขได้อย่างรวดเร็ว' }
+        {
+          term: 'having difficulties attending the school',
+          th: 'กำลังมีปัญหาในการไปโรงเรียน — เช่น ไม่อยากไป ไปไม่สม่ำเสมอ หรือมีอุปสรรคทำให้ขาดเรียนบ่อย'
+        },
+        {
+          term: 'sooner rather than later',
+          th: 'รีบทำเลย / ทำเร็วดีกว่าช้า — ไม่ใช่ “ช้าเร็วก็ต้องเกิด” (sooner or later) แต่หมายถึงให้ติดต่อโรงเรียนทันที อย่ารอให้ปัญหารุนแรงขึ้น'
+        },
+        {
+          term: 'can be dealt with very quickly',
+          th: 'สามารถแก้ไขได้อย่างรวดเร็วมาก — ถ้าจัดการแต่เนิ่นๆ ปัญหาส่วนใหญ่จะแก้ได้ง่ายและเร็ว'
+        }
       ]
     },
     2: {
@@ -55,11 +66,22 @@ export const READING_PARAGRAPH_EXPLANATIONS_GT_1: Record<string, Record<number, 
 
 สรุปใจความ: การขาดเรียนจะถูกตัดสินว่า "ไม่ได้รับอนุญาต" (เท่ากับหนีเรียน) ถ้าพ่อแม่ไม่แจ้งเหตุผล หรือแจ้งแล้วแต่เหตุผลฟังไม่ขึ้น`,
       vocab: [
-        { term: 'absent', th: 'ขาดเรียน' },
-        { term: 'explanation', th: 'คำอธิบาย/เหตุผล' },
-        { term: 'unsatisfactory', th: 'ไม่น่าพอใจ ฟังไม่ขึ้น' },
-        { term: 'unauthorised', th: 'ไม่ได้รับอนุญาต' },
-        { term: 'truancy', th: 'การหนีเรียน' }
+        {
+          term: 'does not receive an explanation from you',
+          th: 'โรงเรียนไม่ได้รับคำอธิบายจากคุณ — คือพ่อแม่ไม่ได้แจ้งเหตุผลว่าลูกขาดเรียนทำไม'
+        },
+        {
+          term: 'considers the explanation unsatisfactory',
+          th: 'เห็นว่าคำอธิบาย “ไม่น่าพอใจ / ฟังไม่ขึ้น” — แม้แจ้งแล้ว แต่เหตุผลไม่ผ่านเกณฑ์โรงเรียน'
+        },
+        {
+          term: 'unauthorised',
+          th: 'ไม่ได้รับอนุญาต — ในประกาศนี้เท่ากับถูกบันทึกว่าเป็นการขาดเรียนผิดกฎ'
+        },
+        {
+          term: 'truancy',
+          th: 'การหนีเรียน — ข้อความย้ำชัดว่า unauthorised absence “ก็คือ” truancy นั่นเอง'
+        }
       ]
     },
     3: {
@@ -73,12 +95,30 @@ export const READING_PARAGRAPH_EXPLANATIONS_GT_1: Record<string, Record<number, 
 
 สรุปใจความ: นี่คือรายการเหตุผลที่โรงเรียนยอมรับได้ว่าเป็นการขาดเรียนที่ถูกต้อง ไม่ถือว่าหนีเรียน`,
       vocab: [
-        { term: 'acceptable reasons', th: 'เหตุผลที่ยอมรับได้' },
-        { term: 'unavoidable', th: 'เลี่ยงไม่ได้' },
-        { term: 'prospective employer', th: 'นายจ้างที่มีแนวโน้มจะจ้างงาน' },
-        { term: 'exceptional family circumstances', th: 'สถานการณ์ครอบครัวที่ไม่ปกติ/พิเศษ' },
-        { term: 'bereavement', th: 'การสูญเสียคนในครอบครัว (เสียชีวิต)' },
-        { term: 'religious observance', th: 'การปฏิบัติ/พิธีทางศาสนา' }
+        {
+          term: 'acceptable reasons will be authorised',
+          th: 'เหตุผลที่ยอมรับได้จะได้รับการอนุญาต — โรงเรียนยอมรับว่าเป็นการขาดเรียนที่ถูกต้อง ไม่ถือว่าหนีเรียน'
+        },
+        {
+          term: 'unavoidable medical or dental appointments',
+          th: 'นัดหมอ/หมอฟันที่เลี่ยงไม่ได้ — เน้นคำว่า unavoidable คือจำเป็นจริงๆ ไม่ใช่แค่อยากไป'
+        },
+        {
+          term: 'a prospective employer',
+          th: 'นายจ้างที่มีแนวโน้มจะจ้าง — prospective = ที่กำลังจะเป็น / มีโอกาสเกิดขึ้นในอนาคต'
+        },
+        {
+          term: 'exceptional family circumstances',
+          th: 'สถานการณ์ครอบครัวที่ไม่ปกติ/พิเศษมาก — เช่น มีคนในบ้านเสียชีวิต ไม่ใช่เรื่องเล็กทั่วไป'
+        },
+        {
+          term: 'bereavement',
+          th: 'การสูญเสียคนในครอบครัวจากการเสียชีวิต — เป็นตัวอย่างของ exceptional family circumstances'
+        },
+        {
+          term: 'days of religious observance',
+          th: 'วันสำคัญทางศาสนาที่ต้องไปร่วมพิธี/ปฏิบัติศาสนกิจ'
+        }
       ]
     },
     4: {
@@ -92,9 +132,26 @@ export const READING_PARAGRAPH_EXPLANATIONS_GT_1: Record<string, Record<number, 
 
 สรุปใจความ: เหตุผลเหล่านี้ ถึงแม้จะฟังดูมีเหตุผลในชีวิตจริง แต่โรงเรียนจะไม่ยอมรับว่าเป็นการขาดเรียนที่ถูกต้อง — จะถูกนับเป็นขาดเรียนแบบไม่ได้รับอนุญาต`,
       vocab: [
-        { term: 'day trips', th: 'ไปเที่ยวแบบไปเช้าเย็นกลับ ไม่ค้างคืน' },
-        { term: 'holidays which have not been agreed', th: 'วันหยุด/พักร้อนที่ไม่ได้ตกลงล่วงหน้ากับโรงเรียน' },
-        { term: 'ill relatives', th: 'ญาติที่ป่วย' }
+        {
+          term: 'will not authorise absence',
+          th: 'จะไม่อนุญาตให้ขาดเรียน — แม้เหตุผลจะฟังดูมีเหตุผลในชีวิตจริง แต่โรงเรียนไม่ยอมรับ'
+        },
+        {
+          term: 'shopping during school hours',
+          th: 'ไปช้อปปิ้งในเวลาเรียน — ตัวอย่างเหตุผลที่โรงเรียนปฏิเสธแน่นอน'
+        },
+        {
+          term: 'day trips',
+          th: 'ไปเที่ยวแบบไปเช้าเย็นกลับ ไม่ค้างคืน — ก็ยังถือว่าไม่ใช่เหตุผลที่ยอมรับได้'
+        },
+        {
+          term: 'holidays which have not been agreed',
+          th: 'วันหยุด/พักร้อนที่ยังไม่ได้ตกลงล่วงหน้ากับโรงเรียน — ถ้าไม่ได้ขออนุญาตก่อน จะถูกบันทึกเป็นขาดแบบไม่ได้รับอนุญาต'
+        },
+        {
+          term: 'looking after brothers or sisters or ill relatives',
+          th: 'การดูแลพี่น้องหรือญาติที่ป่วย — แม้ฟังดูเป็นหน้าที่ครอบครัว แต่ประกาศนี้ระบุชัดว่าโรงเรียนจะไม่อนุญาต'
+        }
       ]
     }
   },

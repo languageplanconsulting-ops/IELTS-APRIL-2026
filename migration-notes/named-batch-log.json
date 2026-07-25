@@ -1,0 +1,237 @@
+{
+  "c0-l0": {
+    "guid": "ff93a63a-6f48-4287-8432-7ff2deb73dbb",
+    "uploadedAt": "2026-07-25T07:43:04.460Z",
+    "deletedLocal": true
+  },
+  "c0-l1": {
+    "guid": "b39c07dd-03ac-4181-bc23-1bc2f3347477",
+    "uploadedAt": "2026-07-25T07:43:15.231Z",
+    "deletedLocal": true
+  },
+  "c0-l2": {
+    "guid": "8ea7bc24-57c3-4971-b2ac-8870232b6b7c",
+    "uploadedAt": "2026-07-25T07:45:08.402Z",
+    "deletedLocal": true
+  },
+  "c0-l3": {
+    "guid": "4a598b30-5ff8-4337-8d13-818c2b5d1901",
+    "uploadedAt": "2026-07-25T07:45:20.181Z",
+    "deletedLocal": true
+  },
+  "c1-l15": {
+    "guid": "bb546f38-de6e-4424-91d0-c19bf16c5d2c",
+    "uploadedAt": "2026-07-25T07:46:14.119Z",
+    "deletedLocal": true
+  },
+  "c1-l18": {
+    "guid": "0dbb9e26-4658-4765-8ef9-7a480f0d3dd8",
+    "uploadedAt": "2026-07-25T07:47:11.243Z",
+    "deletedLocal": true
+  },
+  "c1-l4": {
+    "guid": "1ae0d95c-82b8-48fa-945e-9b89673f44e8",
+    "uploadedAt": "2026-07-25T07:48:57.700Z",
+    "deletedLocal": true
+  },
+  "c10-l0": {
+    "guid": "57d9b31a-66bf-4e62-a4c5-9cc9824c760b",
+    "uploadedAt": "2026-07-25T07:49:09.211Z",
+    "deletedLocal": true
+  },
+  "c10-l1": {
+    "guid": "13a896f3-4d37-44db-942a-652876839289",
+    "uploadedAt": "2026-07-25T07:49:23.650Z",
+    "deletedLocal": true
+  },
+  "c10-l3": {
+    "guid": "adeabd85-f056-4a97-842a-a37fbb1edf87",
+    "uploadedAt": "2026-07-25T07:49:33.328Z",
+    "deletedLocal": true
+  },
+  "c11-l0": {
+    "guid": "968570c4-8c83-4f33-b939-4a53756cec1a",
+    "uploadedAt": "2026-07-25T07:49:50.152Z",
+    "deletedLocal": true
+  },
+  "c11-l6": {
+    "guid": "3d172e65-6adf-4d7b-97fe-ce517f80652e",
+    "uploadedAt": "2026-07-25T10:07:20.710Z",
+    "deletedLocal": true
+  },
+  "c2-l0": {
+    "guid": "8759525e-b78e-443d-ba66-008bece103a4",
+    "uploadedAt": "2026-07-25T08:54:54.867Z",
+    "deletedLocal": true
+  },
+  "c2-l1": {
+    "guid": "7437f299-e363-4ac0-89a9-5a9d77140bc7",
+    "uploadedAt": "2026-07-25T08:57:08.296Z",
+    "deletedLocal": true
+  },
+  "c2-l2": {
+    "error": "TypeError: fetch failed",
+    "attemptedAt": "2026-07-25T10:08:22.720Z",
+    "deletedLocal": false
+  },
+  "c2-l3": {
+    "guid": "eb0cf513-8aea-4aa4-9b7e-f4891daa20c5",
+    "uploadedAt": "2026-07-25T10:10:33.270Z",
+    "deletedLocal": true
+  },
+  "c2-l4": {
+    "guid": "935a4542-14e8-4597-ae66-04b02b800f28",
+    "uploadedAt": "2026-07-25T09:04:03.539Z",
+    "deletedLocal": true
+  },
+  "c3-l0": {
+    "guid": "615a3086-107a-4053-9a77-d489d3efd851",
+    "uploadedAt": "2026-07-25T10:12:09.831Z",
+    "deletedLocal": true
+  },
+  "c3-l1": {
+    "guid": "7253f029-3cd7-415c-b0b7-c79a8538763d",
+    "uploadedAt": "2026-07-25T09:09:14.921Z",
+    "deletedLocal": true
+  },
+  "c3-l2": {
+    "guid": "b383a63f-c562-45e8-af6f-f655c9b3a92e",
+    "uploadedAt": "2026-07-25T09:09:59.955Z",
+    "deletedLocal": true
+  },
+  "c3-l3": {
+    "guid": "3d3fc9ef-a828-49ec-ba83-f4a125fde486",
+    "uploadedAt": "2026-07-25T09:14:25.408Z",
+    "deletedLocal": true
+  },
+  "c3-l4": {
+    "guid": "93277554-1858-48fa-9733-d41dd21cf779",
+    "uploadedAt": "2026-07-25T09:15:22.172Z",
+    "deletedLocal": true
+  },
+  "c4-l0": {
+    "guid": "16cb9b5b-0e0a-4e11-bf8c-0a02f8763f8a",
+    "uploadedAt": "2026-07-25T10:13:23.287Z",
+    "deletedLocal": true
+  },
+  "c4-l1": {
+    "guid": "0331638a-4866-48e3-8a03-9c2f20dbf6cf",
+    "uploadedAt": "2026-07-25T10:14:07.157Z",
+    "deletedLocal": true
+  },
+  "c4-l11": {
+    "guid": "c12b8074-1fbe-4665-944c-094836005a66",
+    "uploadedAt": "2026-07-25T10:16:26.893Z",
+    "deletedLocal": true
+  },
+  "c4-l13": {
+    "guid": "e0623f24-1777-4ad7-97f0-e85599c1d998",
+    "uploadedAt": "2026-07-25T09:28:41.995Z",
+    "deletedLocal": true
+  },
+  "c4-l2": {
+    "guid": "f236bfc3-465b-436d-b82c-c8322bd73e9f",
+    "uploadedAt": "2026-07-25T10:16:48.010Z",
+    "deletedLocal": true
+  },
+  "c4-l3": {
+    "guid": "fec666da-a075-4bf7-8a94-eb4d055065e6",
+    "uploadedAt": "2026-07-25T09:30:35.758Z",
+    "deletedLocal": true
+  },
+  "c4-l4": {
+    "guid": "81b904cb-20ab-4cfd-a4fe-1f9f1e5c277a",
+    "uploadedAt": "2026-07-25T09:35:41.050Z",
+    "deletedLocal": true
+  },
+  "c4-l6": {
+    "guid": "1c191b22-b3bf-42d6-883a-85c52da4a8b6",
+    "uploadedAt": "2026-07-25T09:36:25.041Z",
+    "deletedLocal": true
+  },
+  "c4-l7": {
+    "guid": "fd3e9bad-298e-4cf2-bf6b-5e11cfe79cfa",
+    "uploadedAt": "2026-07-25T09:36:53.106Z",
+    "deletedLocal": true
+  },
+  "c4-l9": {
+    "guid": "72d19111-6471-4792-8af0-d35dac873911",
+    "uploadedAt": "2026-07-25T09:37:29.188Z",
+    "deletedLocal": true
+  },
+  "c5-l0": {
+    "guid": "48147d91-9847-4eb1-aa64-f9f10b8d167b",
+    "uploadedAt": "2026-07-25T09:38:37.246Z",
+    "deletedLocal": true
+  },
+  "c5-l2": {
+    "guid": "1964f09b-934f-4bda-82b8-41ec8c78dd2f",
+    "uploadedAt": "2026-07-25T09:40:32.848Z",
+    "deletedLocal": true
+  },
+  "c5-l3": {
+    "guid": "c27a8d11-305a-49a9-8940-4bbcb6d51511",
+    "uploadedAt": "2026-07-25T09:41:00.936Z",
+    "deletedLocal": true
+  },
+  "c5-l4": {
+    "guid": "d71dd833-2129-4e61-85eb-8556c8af1dd4",
+    "uploadedAt": "2026-07-25T10:17:59.416Z",
+    "deletedLocal": true
+  },
+  "c5-l6": {
+    "guid": "d036e588-8f16-4346-b318-6628e3868252",
+    "uploadedAt": "2026-07-25T09:45:29.182Z",
+    "deletedLocal": true
+  },
+  "c5-l8": {
+    "guid": "b8745236-a55b-4e47-87b4-69af52056ddd",
+    "uploadedAt": "2026-07-25T09:47:15.904Z",
+    "deletedLocal": true
+  },
+  "c5-l9": {
+    "guid": "6532db5d-1aa1-4842-9632-ec75fcfad33a",
+    "uploadedAt": "2026-07-25T09:48:56.467Z",
+    "deletedLocal": true
+  },
+  "c6-l5": {
+    "guid": "7404dbbc-1568-4c66-ad5f-9c4b4f1aed24",
+    "uploadedAt": "2026-07-25T09:51:26.960Z",
+    "deletedLocal": true
+  },
+  "c7-l0": {
+    "guid": "ab1668fe-1591-429c-87d3-08bad359f725",
+    "uploadedAt": "2026-07-25T09:52:28.440Z",
+    "deletedLocal": true
+  },
+  "c7-l1": {
+    "guid": "0a99e047-dcc7-4586-8725-7798153f6766",
+    "uploadedAt": "2026-07-25T09:52:32.574Z",
+    "deletedLocal": true
+  },
+  "c7-l2": {
+    "guid": "01c3d3fb-1d7b-4ce7-8bea-abcb45ccef4c",
+    "uploadedAt": "2026-07-25T09:53:34.074Z",
+    "deletedLocal": true
+  },
+  "c7-l3": {
+    "guid": "6553ee8c-2580-42ae-92ae-abfbf40b8b54",
+    "uploadedAt": "2026-07-25T09:54:48.518Z",
+    "deletedLocal": true
+  },
+  "c7-l4": {
+    "guid": "65aa36cd-256a-480c-a6b2-c994e42074ae",
+    "uploadedAt": "2026-07-25T09:55:55.921Z",
+    "deletedLocal": true
+  },
+  "c7-l5": {
+    "guid": "e79609f6-a0b2-494b-a976-281f8b4543e8",
+    "uploadedAt": "2026-07-25T09:57:34.334Z",
+    "deletedLocal": true
+  },
+  "c9-l0": {
+    "guid": "3d7b323d-fe54-486e-a41a-5153dadaec6f",
+    "uploadedAt": "2026-07-25T09:59:58.145Z",
+    "deletedLocal": true
+  }
+}

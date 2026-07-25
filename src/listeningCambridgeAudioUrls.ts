@@ -790,9 +790,20 @@ export const getCambridgeListeningAudioUrl = (book: number, test: number, part: 
   getCambridgeListeningAudioUrls(book, test, part)[0] || ''
 
 const ALTERNATIVES_BY_URL: Record<string, string[]> = {}
-for (const sources of Object.values(CAMBRIDGE_LISTENING_AUDIO_URLS)) {
-  for (const source of sources) ALTERNATIVES_BY_URL[source] = sources
+const KEY_BY_URL: Record<string, string> = {}
+for (const [key, sources] of Object.entries(CAMBRIDGE_LISTENING_AUDIO_URLS)) {
+  for (const source of sources) {
+    ALTERNATIVES_BY_URL[source] = sources
+    KEY_BY_URL[source] = key
+  }
 }
+
+/**
+ * `${book}-${test}-${part}` for any known audio URL, or '' when unmapped. Lets a
+ * caller holding only an audioUrl find the matching caption file, which is keyed
+ * the same way — including when playback fell back to a mirror host.
+ */
+export const getCambridgeListeningKeyForUrl = (url: string): string => (url ? KEY_BY_URL[url] || '' : '')
 
 /**
  * Given any known audio URL, returns every mirror of the same recording (that URL

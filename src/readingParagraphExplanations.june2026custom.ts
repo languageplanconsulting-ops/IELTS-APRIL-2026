@@ -923,44 +923,120 @@ export const READING_PARAGRAPH_EXPLANATIONS_JUNE2026_CUSTOM: Record<
       explanationTh:
         "ย่อหน้าเปิดเรื่องนี้บอกว่าอุตสาหกรรมบรรจุภัณฑ์ทั่วโลก (The global packaging industry) สร้างขยะโฟมโพลิสไตรีนและพลาสติกใช้ครั้งเดียวทิ้ง (polystyrene and single-use plastic foam) หลายร้อยล้านตันในทุกๆ ปี วัสดุเหล่านี้เป็นฉนวนกันความร้อนและตัวดูดซับแรงกระแทกที่มีประสิทธิภาพ (effective insulators and shock absorbers) แต่มันทำมาจากปิโตรเลียม (derived from petroleum) แทบเป็นไปไม่ได้เลยที่จะรีไซเคิลในทางปฏิบัติ (almost impossible to recycle in practice) และคงอยู่ในสิ่งแวดล้อมนานหลายศตวรรษ (persist in the environment for centuries)\n\nเมื่อผู้ผลิตถูกกดดันมากขึ้นให้ลดการพึ่งพาวัสดุจากเชื้อเพลิงฟอสซิล (reduce their reliance on fossil-fuel-based materials) นักวิจัยและผู้ประกอบการจึงหันไปหาแหล่งวัสดุที่ไม่คาดคิด (an unexpected source): เชื้อรา (fungi) เครือข่ายเส้นใยคล้ายรากที่ประกอบเป็นตัวของเชื้อรา (The root-like network of fibres) ที่เรียกว่าไมซีเลียม (mycelium) สามารถถูกเพาะให้เติบโตในแม่พิมพ์ (grown into moulds) เพื่อผลิตวัสดุที่มีน้ำหนักเบา แข็งแรง และย่อยสลายได้อย่างสมบูรณ์ (fully biodegradable) ด้วยคุณสมบัติที่คล้ายคลึงกับโฟมโพลิสไตรีนอย่างน่าทึ่ง (strikingly similar to polystyrene foam)\n\nสรุปใจความ: ย่อหน้านี้เปิดเรื่องด้วยปัญหาของโฟมพลาสติกที่รีไซเคิลไม่ได้ ก่อนแนะนำวัสดุทางเลือกที่ไม่คาดคิด — เชื้อราหรือไมซีเลียม ที่มีคุณสมบัติคล้ายโฟมแต่ย่อยสลายได้เต็มที่",
       vocab: [
-        { term: "effective insulators and shock absorbers", th: "ฉนวนกันความร้อนและตัวดูดซับแรงกระแทกที่มีประสิทธิภาพ" },
-        { term: "derived from petroleum", th: "ทำ/สกัดมาจากปิโตรเลียม" },
-        { term: "almost impossible to recycle in practice", th: "แทบเป็นไปไม่ได้เลยที่จะรีไซเคิลในทางปฏิบัติจริง" },
-        { term: "an unexpected source", th: "แหล่งวัสดุที่ไม่มีใครคาดคิดมาก่อน" },
-        { term: "mycelium", th: "ไมซีเลียม — เครือข่ายเส้นใยคล้ายรากของเชื้อรา" },
-        { term: "strikingly similar to polystyrene foam", th: "มีคุณสมบัติคล้ายคลึงกับโฟมโพลิสไตรีนอย่างน่าทึ่ง" }
+        {
+          term: 'effective insulators and shock absorbers',
+          th: 'ฉนวนกันความร้อนและตัวดูดซับแรงกระแทกที่มีประสิทธิภาพ — ข้อดีของโฟมที่ทำให้ยังถูกใช้กว้าง ทั้งที่รีไซเคิลยาก'
+        },
+        {
+          term: 'derived from petroleum',
+          th: 'ทำ/สกัดมาจากปิโตรเลียม — เน้นว่าโฟมมาจากน้ำมัน ไม่ใช่วัสดุธรรมชาติ'
+        },
+        {
+          term: 'almost impossible to recycle in practice',
+          th: 'แทบเป็นไปไม่ได้เลยที่จะรีไซเคิลในทางปฏิบัติจริง — ไม่ใช่แค่ยาก แต่ใช้งานจริงแล้วทำไม่ได้'
+        },
+        {
+          term: 'persist in the environment for centuries',
+          th: 'คงค้างในสิ่งแวดล้อมได้นานหลายศตวรรษ — ขยะโฟมหายไปช้ามาก'
+        },
+        {
+          term: 'an unexpected source',
+          th: 'แหล่งวัสดุที่ไม่มีใครคาดคิดมาก่อน — ผู้เขียนพลิกไปหาเชื้อราเป็นทางเลือก'
+        },
+        {
+          term: 'mycelium',
+          th: 'ไมซีเลียม — เครือข่ายเส้นใยคล้ายรากของเชื้อรา ที่เพาะในแม่พิมพ์แล้วกลายเป็นวัสดุได้'
+        },
+        {
+          term: 'fully biodegradable',
+          th: 'ย่อยสลายได้อย่างสมบูรณ์ — ข้อได้เปรียบสำคัญเหนือโฟมพลาสติก'
+        },
+        {
+          term: 'strikingly similar to polystyrene foam',
+          th: 'มีคุณสมบัติคล้ายโฟมโพลิสไตรีนอย่างน่าทึ่ง — คล้ายของเดิมแต่เป็นมิตรต่อสิ่งแวดล้อมกว่า'
+        }
       ]
     },
     1: {
       explanationTh:
         "ย่อหน้านี้อธิบายว่าไมซีเลียมเติบโตอย่างไร: มันเติบโตตามธรรมชาติโดยการสอดเส้นใยของมัน (threading its fibres) ผ่านสารอินทรีย์ (organic matter) เช่นเศษวัสดุเหลือใช้จากการเกษตร (agricultural waste) โดยยึดอนุภาคต่างๆ เข้าด้วยกัน (binding the particles together) ขณะที่มันขยายตัว\n\nด้วยการควบคุมสภาพการเจริญเติบโต (By controlling the growing conditions) เช่น อุณหภูมิ ความชื้น และองค์ประกอบของวัสดุตั้งต้น (temperature, humidity and the composition of the substrate) ผู้ผลิตสามารถกำหนดความหนาแน่น ความแข็ง และเนื้อสัมผัส (density, rigidity and texture) ของวัสดุสุดท้ายได้ เมื่อได้รูปทรงที่ต้องการแล้ว (Once the desired shape has been achieved) กระบวนการเจริญเติบโตจะถูกหยุดด้วยการให้ความร้อน (applying heat) ซึ่งฆ่าไมซีเลียมและหยุดการเติบโตต่อไป (kills the mycelium and prevents further growth)\n\nประโยคสุดท้ายบอกว่าผลลัพธ์คือวัสดุที่แข็งและแห้ง (a rigid, dry material) ที่สามารถนำไปหมักเป็นปุ๋ยได้เมื่อหมดอายุการใช้งาน (composted at the end of its useful life) และคืนกลับสู่ดินได้อย่างสมบูรณ์ภายในไม่กี่สัปดาห์ (returns completely to the soil within weeks)\n\nสรุปใจความ: ย่อหน้านี้อธิบายกระบวนการผลิตวัสดุจากไมซีเลียมทีละขั้น — ปลูกให้เกาะกับเศษวัสดุเหลือใช้ ควบคุมสภาพแวดล้อมเพื่อกำหนดคุณสมบัติ แล้วหยุดการเติบโตด้วยความร้อน ได้วัสดุที่ย่อยสลายกลับสู่ดินได้เต็มที่",
       vocab: [
-        { term: "threading its fibres through organic matter", th: "สอดเส้นใยของมันผ่านสารอินทรีย์" },
-        { term: "binding the particles together as it expands", th: "ยึดอนุภาคต่างๆ เข้าด้วยกันขณะที่มันขยายตัว" },
-        { term: "temperature, humidity and the composition of the substrate", th: "อุณหภูมิ ความชื้น และองค์ประกอบของวัสดุตั้งต้น" },
-        { term: "kills the mycelium and prevents further growth", th: "ฆ่าไมซีเลียมและหยุดไม่ให้เติบโตต่อไปอีก" },
-        { term: "returns completely to the soil within weeks", th: "คืนกลับสู่ดินได้อย่างสมบูรณ์ภายในไม่กี่สัปดาห์" }
+        {
+          term: 'threading its fibres through organic matter',
+          th: 'สอดเส้นใยของมันผ่านสารอินทรีย์ — ไมซีเลียมเติบโตโดยแทรกเส้นใยเข้าไปในเศษวัสดุ'
+        },
+        {
+          term: 'binding the particles together as it expands',
+          th: 'ยึดอนุภาคต่างๆ เข้าด้วยกันขณะขยายตัว — ทำให้เศษวัสดุกลายเป็นก้อนวัสดุชิ้นเดียว'
+        },
+        {
+          term: 'controlling the growing conditions',
+          th: 'ควบคุมสภาพการเจริญเติบโต — เช่น อุณหภูมิ ความชื้น และวัสดุตั้งต้น เพื่อกำหนดคุณสมบัติของชิ้นงาน'
+        },
+        {
+          term: 'kills the mycelium and prevents further growth',
+          th: 'ฆ่าไมซีเลียมและหยุดไม่ให้เติบโตต่อไป — ขั้นตอน “ล็อก” รูปทรงด้วยความร้อนเมื่อได้รูปที่ต้องการแล้ว'
+        },
+        {
+          term: 'returns completely to the soil within weeks',
+          th: 'คืนกลับสู่ดินได้อย่างสมบูรณ์ภายในไม่กี่สัปดาห์ — เมื่อหมดอายุการใช้งาน สามารถหมักเป็นปุ๋ยได้จริง'
+        }
       ]
     },
     2: {
       explanationTh:
         "ย่อหน้านี้เล่าจุดเริ่มต้นเชิงพาณิชย์ (The commercial potential) ของวัสดุไมซีเลียม ซึ่งถูกสาธิตครั้งแรกโดยบริษัทอเมริกัน Ecovative Design ที่ก่อตั้งในรัฐนิวยอร์กเมื่อปี 2007 Ecovative พัฒนากระบวนการเพาะไมซีเลียมให้เติบโตรอบเศษวัสดุเหลือใช้ทางการเกษตร (agricultural residues) เช่น เปลือกข้าวโพดและเปลือกกัญชง (corn husks and hemp hurds) เพื่อผลิตวัสดุบรรจุภัณฑ์ที่ทำหน้าที่เป็นตัวแทนโดยตรง (drop-in replacements) แทนโฟมโพลิสไตรีนได้เลย\n\nประโยคสุดท้ายยกตัวอย่างบริษัทเฟอร์นิเจอร์สัญชาติสวีเดน IKEA ที่ประกาศในปี 2021 ว่ากำลังสำรวจการใช้บรรจุภัณฑ์จากไมซีเลียม (exploring the use of mycelium packaging) สำหรับผลิตภัณฑ์บางส่วนของตน สะท้อนถึงความสนใจที่เพิ่มขึ้นของผู้ผลิตรายใหญ่ในทางเลือกที่มาจากชีวภาพ (bio-based alternatives)\n\nสรุปใจความ: ย่อหน้านี้แสดงว่าวัสดุไมซีเลียมไม่ใช่แค่ไอเดียในห้องแล็บ แต่มีบริษัทจริงอย่าง Ecovative ผลิตขายจริงมาตั้งแต่ปี 2007 และแบรนด์ใหญ่อย่าง IKEA ก็เริ่มสนใจนำไปใช้แล้ว",
       vocab: [
-        { term: "the commercial potential was first demonstrated by", th: "ศักยภาพเชิงพาณิชย์ถูกสาธิตให้เห็นเป็นครั้งแรกโดย..." },
-        { term: "agricultural residues such as corn husks and hemp hurds", th: "เศษวัสดุเหลือใช้ทางการเกษตร เช่น เปลือกข้าวโพดและเปลือกกัญชง" },
-        { term: "drop-in replacements for polystyrene", th: "วัสดุที่ใช้แทนโฟมโพลิสไตรีนได้ทันทีโดยไม่ต้องปรับกระบวนการผลิต" },
-        { term: "exploring the use of mycelium packaging", th: "กำลังสำรวจ/พิจารณาความเป็นไปได้ในการใช้บรรจุภัณฑ์จากไมซีเลียม" },
-        { term: "the growing interest of major manufacturers", th: "ความสนใจที่เพิ่มขึ้นของผู้ผลิตรายใหญ่" }
+        {
+          term: 'the commercial potential was first demonstrated by',
+          th: 'ศักยภาพเชิงพาณิชย์ถูกสาธิตให้เห็นเป็นครั้งแรกโดย… — แสดงว่ามีบริษัทจริงนำออกขายได้ ไม่ใช่แค่ไอเดียในแล็บ'
+        },
+        {
+          term: 'agricultural residues such as corn husks and hemp hurds',
+          th: 'เศษวัสดุเหลือใช้ทางการเกษตร เช่น เปลือกข้าวโพดและเปลือกกัญชง — เป็นวัตถุดิบตั้งต้นราคาถูก'
+        },
+        {
+          term: 'drop-in replacements for polystyrene',
+          th: 'วัสดุที่ใช้แทนโฟมโพลิสไตรีนได้ทันทีโดยไม่ต้องปรับกระบวนการผลิต — “เสียบแทน” ของเดิมได้เลย'
+        },
+        {
+          term: 'exploring the use of mycelium packaging',
+          th: 'กำลังสำรวจความเป็นไปได้ในการใช้บรรจุภัณฑ์จากไมซีเลียม — IKEA ยังอยู่ในขั้นพิจารณา ไม่ได้ใช้เต็มรูปแบบแล้ว'
+        },
+        {
+          term: 'bio-based alternatives',
+          th: 'ทางเลือกที่มาจากชีวภาพ — วัสดุที่ผลิตจากสิ่งมีชีวิต/เศษชีวมวล แทนวัสดุจากน้ำมัน'
+        }
       ]
     },
     3: {
       explanationTh:
         "ย่อหน้านี้ขยายขอบเขตไปไกลกว่าบรรจุภัณฑ์ (Beyond packaging): นักวิจัยกำลังศึกษาคุณสมบัติเชิงโครงสร้าง (the structural properties) ของไมซีเลียมสำหรับใช้ในงานก่อสร้าง (for use in construction) ทีมวิจัยจากมหาวิทยาลัย Delft ในเนเธอร์แลนด์และห้องปฏิบัติการ BioMASON ใน North Carolina ได้ผลิตอิฐและแผงจากไมซีเลียม (mycelium-based bricks and panels) ที่ทนไฟ (fire-resistant) กันน้ำ (water-repellent) และมีความแข็งแรงต้านแรงอัด (compressive strength) เทียบเท่ากับวัสดุฉนวนทั่วไป\n\nประโยคสุดท้ายยกตัวอย่างศาลาชั่วคราว (A temporary pavilion) ที่สร้างจากอิฐไมซีเลียม ซึ่งถูกจัดแสดง (exhibited) ที่พิพิธภัณฑ์ Museum of Modern Art ในนิวยอร์ก แสดงให้เห็นศักยภาพด้านสถาปัตยกรรมของวัสดุนี้ (the material's architectural potential)\n\nสรุปใจความ: ย่อหน้านี้ยกระดับความเป็นไปได้ของไมซีเลียมจากแค่บรรจุภัณฑ์ ไปสู่วัสดุก่อสร้างจริง — อิฐและแผงไมซีเลียมทนไฟ กันน้ำ แข็งแรง และแม้แต่ถูกนำไปจัดแสดงในพิพิธภัณฑ์ศิลปะระดับโลกแล้ว",
       vocab: [
-        { term: "the structural properties of mycelium", th: "คุณสมบัติเชิงโครงสร้างของไมซีเลียม (ความแข็งแรง รับน้ำหนักได้)" },
-        { term: "fire-resistant, water-repellent", th: "ทนไฟ กันน้ำ" },
-        { term: "comparable in compressive strength to conventional insulation materials", th: "มีความแข็งแรงต้านแรงอัดเทียบเท่ากับวัสดุฉนวนทั่วไป" },
-        { term: "demonstrating the material's architectural potential", th: "แสดงให้เห็นถึงศักยภาพด้านสถาปัตยกรรมของวัสดุนี้" }
+        {
+          term: 'beyond packaging',
+          th: 'ไปไกลกว่าบรรจุภัณฑ์ — ย่อหน้านี้ยกระดับจากกล่องโฟม ไปสู่วัสดุก่อสร้าง'
+        },
+        {
+          term: 'the structural properties of mycelium',
+          th: 'คุณสมบัติเชิงโครงสร้างของไมซีเลียม — ความแข็งแรง/รับน้ำหนักได้ เหมาะกับงานก่อสร้าง ไม่ใช่แค่ห่อของ'
+        },
+        {
+          term: 'fire-resistant',
+          th: 'ทนไฟ — คุณสมบัติสำคัญของวัสดุก่อสร้างที่ทำให้อิฐไมซีเลียมน่าสนใจ'
+        },
+        {
+          term: 'water-repellent',
+          th: 'กันน้ำ — ไม่ให้น้ำซึมง่าย ช่วยให้ใช้กลางแจ้ง/ในอาคารได้ดีขึ้น'
+        },
+        {
+          term: 'comparable in compressive strength to conventional insulation materials',
+          th: 'ความแข็งแรงต้านแรงอัดเทียบเท่ากับวัสดุฉนวนทั่วไป — แปลว่าแข็งแรงพอใช้จริง ไม่ใช่แค่ของโชว์'
+        },
+        {
+          term: 'a temporary pavilion … exhibited at the Museum of Modern Art',
+          th: 'ศาลาชั่วคราวที่ถูกจัดแสดงที่ MoMA — ตัวอย่างที่พิสูจน์ศักยภาพด้านสถาปัตยกรรมในเวทีระดับโลก'
+        }
       ]
     },
     4: {

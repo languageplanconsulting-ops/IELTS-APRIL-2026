@@ -7,6 +7,7 @@
 // Keyed by normalized passage title (see normalizeReadingPassageTitle) +
 // 0-based paragraph index, since paragraph order is stable per passage.
 import { normalizeReadingPassageTitle } from './readingPassageVocab'
+import { enrichReadingParagraphExplanation } from './readingParagraphVocabEnrich'
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_11 } from './readingParagraphExplanations.cambridge11'
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_12 } from './readingParagraphExplanations.cambridge12'
 import { READING_PARAGRAPH_EXPLANATIONS_CAMBRIDGE_13 } from './readingParagraphExplanations.cambridge13'
@@ -90,11 +91,11 @@ export const getReadingParagraphExplanation = (
   for (const bank of READING_PARAGRAPH_EXPLANATION_BANKS) {
     if (examKey) {
       const foundByExam = bank[examKey]?.[paragraphIndex]
-      if (foundByExam) return foundByExam
+      if (foundByExam) return enrichReadingParagraphExplanation(foundByExam)
     }
     if (titleKey) {
       const foundByTitle = bank[titleKey]?.[paragraphIndex]
-      if (foundByTitle) return foundByTitle
+      if (foundByTitle) return enrichReadingParagraphExplanation(foundByTitle)
     }
   }
   return null

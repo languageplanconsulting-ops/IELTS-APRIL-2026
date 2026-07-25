@@ -14,6 +14,10 @@ import {
   parseListeningWordLimit,
   type ListeningWordLimit
 } from './listeningPart1AnswerCheck'
+import {
+  useActiveCaptionCue,
+  useListeningCaptions
+} from './listeningCaptions'
 import type { Part1ExamForm, Part1FormLine } from './listeningPart1FormLayout'
 import type {
   ListeningSectionExamConfig,
@@ -55,6 +59,7 @@ export type ListeningNotebookSavePayload = {
 
 /** Real IELTS gives time to read questions before each part's audio starts. */
 const EXAM_MODE_PREREAD_SECONDS = 40
+const CAPTIONS_STORAGE_KEY = 'listening-captions-enabled'
 
 const defaultAttempt = (): QuestionAttempt => ({
   answer: '',
@@ -283,6 +288,25 @@ export function ListeningSectionExamView({
    * task itself is selecting evidence in the script), as are excerpt drills.
    */
   const scriptLockedWhileAnswering = answerOnlyMode && !excerptDrill && examStage === 'answering'
+
+  /**
+   * Subtitles carry the canonical script, so they are locked by the same rule as
+   * the audioscript pane — otherwise the lock above would be trivially bypassed by
+   * turning captions on. Off by default; the preference is remembered.
+   */
+  const captionTrack = useListeningCaptions(config.audioUrl)
+  const [captionsWanted, setCaptionsWanted] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem(CAPTIONS_STORAGE_KEY) === 'on'
+  })
+  const captionsAvailable = Boolean(captionTrack) && !scriptLockedWhileAnswering
+  const captionsOn = captionsWanted && captionsAvailable
+  const activeCaptionCue = useActiveCaptionCue(captionTrack, playbackPosition, captionsOn)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(CAPTIONS_STORAGE_KEY, captionsWanted ? 'on' : 'off')
+  }, [captionsWanted])
 
   /**
    * Exam mode mirrors the real IELTS test: pre-reading time first, then the audio
@@ -1122,7 +1146,32 @@ export function ListeningSectionExamView({
               <span className="listeningSectionExamTime">
                 {formatListeningPlaybackTime(playbackPosition)} / {formatListeningPlaybackTime(playbackDuration)}
               </span>
+              {captionsAvailable ? (
+                <button
+                  type="button"
+                  className={`listeningSectionExamCcBtn ${captionsOn ? 'is-on' : ''}`}
+                  onClick={() => setCaptionsWanted((value) => !value)}
+                  aria-pressed={captionsOn}
+                  title={captionsOn ? 'ปิดคำบรรยาย' : 'เปิดคำบรรยาย (subtitle)'}
+                >
+                  CC
+                </button>
+              ) : null}
             </div>
+            {captionsOn ? (
+              <div className="listeningSectionExamCaption" aria-live="polite">
+                {activeCaptionCue ? (
+                  <p className="listeningSectionExamCaptionLine">
+                    {activeCaptionCue.speaker ? (
+                      <span className="listeningSectionExamCaptionSpeaker">{activeCaptionCue.speaker}</span>
+                    ) : null}
+                    {activeCaptionCue.text}
+                  </p>
+                ) : (
+                  <p className="listeningSectionExamCaptionIdle">♪</p>
+                )}
+              </div>
+            ) : null}
             <div className="listeningSectionExamModeRow">
               <label className="listeningSectionExamModeToggle">
                 <input

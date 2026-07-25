@@ -1,0 +1,94 @@
+{
+  "d6k2n9im3pcs72vr4b70.mov": {
+    "key": "c0-l3",
+    "guid": "96f963fb-88fc-4919-9991-41c16350ef52",
+    "sizeBytes": 142074987,
+    "uploadedAt": "2026-07-25T15:14:07.703Z",
+    "deletedLocal": true
+  },
+  "d6lasiquo1pc72r3blf0.mov": {
+    "key": "c0-l4",
+    "guid": "2ea7a56c-b4be-44ef-a59a-5302d71fcb9e",
+    "sizeBytes": 237376349,
+    "uploadedAt": "2026-07-25T16:01:17.590Z",
+    "deletedLocal": true
+  },
+  "d6lb2j6qekqs72u3l80g.mov": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 283013192,
+    "attemptedAt": "2026-07-25T16:04:18.579Z",
+    "deletedLocal": false
+  },
+  "d6nau4jau1lc72vrqgj0.mov": {
+    "key": "c0-l6",
+    "guid": "3a662311-696b-4d29-b21f-7472954bcc50",
+    "sizeBytes": 327841232,
+    "uploadedAt": "2026-07-25T15:41:26.101Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/d6nau4jau1lc72vrqgj0.mov'",
+    "attemptedAt": "2026-07-25T15:41:26.104Z"
+  },
+  "d6nbbcsk7o3s72t7gl8g.mov": {
+    "seconds": 1975,
+    "skipped": true,
+    "reason": "ambiguous duration",
+    "attemptedAt": "2026-07-25T15:28:35.101Z"
+  },
+  "d6naaa3au1lc72vrqg3g.mov": {
+    "key": "c0-l8",
+    "guid": "d387ad78-2fe9-496a-9ac8-43e454a84d21",
+    "sizeBytes": 213652633,
+    "uploadedAt": "2026-07-25T16:06:45.818Z",
+    "deletedLocal": true
+  },
+  "d6p6k7ee62is72vg65l0.mov": {
+    "key": "c1-l0",
+    "guid": "f69d1a60-85b4-4446-8795-41307413f28a",
+    "sizeBytes": 291160565,
+    "uploadedAt": "2026-07-25T16:09:20.522Z",
+    "deletedLocal": true
+  },
+  "d6p6q8hgvens72s7v67g.mov": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 264143687,
+    "attemptedAt": "2026-07-25T16:12:21.427Z",
+    "deletedLocal": false
+  },
+  "d6p9oj9gvens72s7v870.mov": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 270146583,
+    "attemptedAt": "2026-07-25T16:15:23.725Z",
+    "deletedLocal": false
+  },
+  "cr2796sjgbqs72q4ql0g.mp4": {
+    "key": "c5-l0",
+    "guid": "822b946b-cab3-40f1-abd8-5918d3d2e842",
+    "sizeBytes": 1302299800,
+    "uploadedAt": "2026-07-25T16:22:14.349Z",
+    "deletedLocal": true
+  },
+  "cr5b0fhifvec72si25t0.mp4": {
+    "seconds": 1975,
+    "skipped": true,
+    "reason": "ambiguous duration",
+    "attemptedAt": "2026-07-25T16:22:52.160Z"
+  },
+  "cr43hb39rsms72o9o1m0.mov": {
+    "error": "Error: upload failed: 500 {\"success\":false,\"message\":\"Internal Server Error\",\"statusCode\":500}",
+    "sizeBytes": 1384081654,
+    "attemptedAt": "2026-07-25T16:28:09.044Z",
+    "deletedLocal": false
+  },
+  "cr2or8cjgbqs72q4r3r0.mp4": {
+    "error": "Error: upload failed: 500 {\"success\":false,\"message\":\"Internal Server Error\",\"statusCode\":500}",
+    "sizeBytes": 1619507425,
+    "attemptedAt": "2026-07-25T16:28:09.084Z",
+    "deletedLocal": false
+  },
+  "cr44f0regt6c72tjreu0.mov": {
+    "error": "Error: upload failed: 500 {\"success\":false,\"message\":\"Internal Server Error\",\"statusCode\":500}",
+    "sizeBytes": 1328288679,
+    "attemptedAt": "2026-07-25T16:28:09.217Z",
+    "deletedLocal": false
+  }
+}

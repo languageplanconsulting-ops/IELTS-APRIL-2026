@@ -1,0 +1,2080 @@
+/* Course / Academic Writing — student-facing course app.
+   Layout follows the convention every real course platform (Coursera, edX,
+   Yale Online) has converged on: a fixed app bar carrying course identity and
+   progress, a persistent curriculum sidebar, and a main column where the video
+   is the largest thing on the page. The earlier single narrow column was a
+   mobile layout stretched across a desktop screen — it read as empty because
+   nothing but one lesson row ever occupied 2000px of width.
+
+   Restrained SaaS treatment: neutral cool-grey ground, white surfaces on
+   hairline borders, one confident accent (the app's brand blue, #004aad). */
+
+.courseWritingPage {
+  /* OpenClassrooms palette. Their identity is flat: violet does the work, and
+     the only structural device is a 4px coloured rule capping a tinted panel.
+     There are no shadows anywhere on their site, so there are none here —
+     separation comes from the tint and the rule, not from elevation. */
+  --cw-ink: #1b1b32;
+  --cw-ink-soft: #3d3d5c;
+  --cw-page: #ffffff;
+  --cw-surface: #ffffff;
+  --cw-sunken: #faf9fe;
+  --cw-border: #e4e2ef;
+  --cw-border-strong: #d3d0e4;
+  --cw-muted: #6e6e8f;
+  --cw-accent: #6c4bf4;
+  --cw-accent-ink: #ffffff;
+  --cw-accent-soft: #eae7fb;
+  --cw-good: #2f9e6e;
+  --cw-good-soft: #e8f6ef;
+  --cw-locked: #9a9ab5;
+  --cw-locked-soft: #f1f0f6;
+  /* Pale-yellow band from their student panel; the "in progress" counterpart
+     to lavender's "done". */
+  --cw-butter: #fdf8e9;
+  --cw-lemon: #f5c518;
+  --cw-shadow-sm: none;
+  --cw-shadow-md: none;
+  /* Near-square. OpenClassrooms buttons and panels are 3-4px, not pill-like. */
+  --cw-r-lg: 3px;
+  --cw-r-md: 3px;
+
+  /* One easing curve and two durations for the whole page — the earlier 0.1s
+     linear-ish transitions read as a snap, which is what made hovers feel jumpy. */
+  --cw-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --cw-t-fast: 180ms;
+  --cw-t-slow: 280ms;
+
+  --cw-bar-h: 60px;
+
+  min-height: calc(100vh - 88px);
+  background: var(--cw-page);
+  color: var(--cw-ink);
+  font-family: Inter, Anuphan, system-ui, sans-serif;
+  padding: clamp(20px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+h1 {
+  font-size: clamp(21px, 2.6vw, 27px);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0 0 6px;
+  line-height: 1.28;
+}
+
+h2 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.cwKicker {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--cw-accent);
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.cwLede {
+  color: var(--cw-muted);
+  font-size: 14px;
+  max-width: 62ch;
+  margin: 0 0 18px;
+  line-height: 1.55;
+}
+
+/* =============================================================== bars == */
+.cwTopBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cwTopBarLabel {
+  margin-inline-start: auto;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cw-muted);
+  font-weight: 600;
+}
+
+.cwBack {
+  font: inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  background: var(--cw-surface);
+  color: var(--cw-ink-soft);
+  border: 1px solid var(--cw-border);
+  border-radius: 8px;
+  padding: 7px 13px;
+  box-shadow: var(--cw-shadow-sm);
+  transition: border-color var(--cw-t-fast) var(--cw-ease), color var(--cw-t-fast) var(--cw-ease),
+    background var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwBack:hover {
+  border-color: var(--cw-border-strong);
+  color: var(--cw-ink);
+  background: var(--cw-sunken);
+}
+
+.cwBack:focus-visible,
+.cwIconBtn:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 2px;
+}
+
+.cwBack-inline {
+  align-self: flex-start;
+  margin-bottom: 14px;
+}
+
+.cwBack-bare {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  font-size: 16px;
+  padding: 6px 10px;
+}
+
+/* ========================================================= app shell == */
+.cwApp {
+  padding: 0;
+  gap: 0;
+  min-height: calc(100vh - 88px);
+}
+
+.cwAppBar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: var(--cw-bar-h);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  background: var(--cw-surface);
+  border-bottom: 1px solid var(--cw-border);
+}
+
+.cwIconBtn {
+  font: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--cw-ink-soft);
+  transition: background var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwIconBtn:hover {
+  background: var(--cw-sunken);
+}
+
+/* The sidebar is pinned on desktop, so its toggle only exists on narrow screens. */
+.cwSidebarToggle {
+  display: none;
+}
+
+.cwAppBarTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.cwAppBarTitle b {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cwAppBarTitle small {
+  font-size: 11.5px;
+  color: var(--cw-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cwAppBarProgress {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: none;
+  min-width: 160px;
+}
+
+.cwAppBarTrack {
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--cw-sunken);
+  overflow: hidden;
+}
+
+.cwAppBarTrack i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--cw-accent);
+  transition: width var(--cw-t-slow) var(--cw-ease);
+}
+
+.cwAppBarProgress span {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--cw-ink-soft);
+  min-width: 32px;
+  text-align: end;
+}
+
+.cwAppBody {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  align-items: start;
+}
+
+/* ============================================================ sidebar == */
+.cwSidebar {
+  position: sticky;
+  top: var(--cw-bar-h);
+  height: calc(100vh - var(--cw-bar-h));
+  border-inline-end: 1px solid var(--cw-border);
+  background: var(--cw-surface);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.cwSidebarInner {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.cwSidebarHead {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--cw-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cwSidebarHead h2 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cw-muted);
+}
+
+.cwSearch {
+  font: inherit;
+  font-size: 13.5px;
+  width: 100%;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--cw-border);
+  background: var(--cw-page);
+  color: var(--cw-ink);
+  transition: border-color var(--cw-t-fast) var(--cw-ease), box-shadow var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwSearch::placeholder {
+  color: var(--cw-muted);
+}
+
+.cwSearch:focus {
+  outline: none;
+  border-color: var(--cw-accent);
+  box-shadow: 0 0 0 3px var(--cw-accent-soft);
+}
+
+.cwFilterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.cwSearchNote {
+  margin: 0;
+  font-size: 12px;
+  color: var(--cw-muted);
+}
+
+.cwSidebarUpgrade {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: start;
+  background: var(--cw-accent-soft);
+  color: var(--cw-accent);
+  border: none;
+  border-radius: var(--cw-r-md);
+  padding: 8px 11px;
+  transition: background var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwSidebarUpgrade:hover {
+  background: #dde9fa;
+}
+
+.cwSidebarScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px 8px 24px;
+  overscroll-behavior: contain;
+}
+
+/* OpenClassrooms' signature: a tinted block capped by a 4px coloured rule.
+   The rule colour is the chapter's state, so progress is legible from the
+   rail alone — grey untouched, violet in progress, green finished. */
+.cwSideChapter {
+  position: relative;
+  margin: 0 4px 8px;
+  padding-top: 4px;
+  border-radius: var(--cw-r-md);
+  background: var(--cw-sunken);
+}
+
+.cwSideChapter::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--cw-border-strong);
+  border-radius: var(--cw-r-md) var(--cw-r-md) 0 0;
+}
+
+.cwSideChapter.is-open {
+  background: var(--cw-accent-soft);
+}
+
+.cwSideChapter.is-open::before {
+  background: var(--cw-accent);
+}
+
+.cwSideChapter.is-complete::before {
+  background: var(--cw-good);
+}
+
+.cwSideChapterHead {
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  text-align: start;
+  color: var(--cw-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 10px;
+  border-radius: var(--cw-r-md);
+  transition: background var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwSideChapterHead:hover {
+  background: var(--cw-sunken);
+}
+
+.cwSideChapterHead:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: -2px;
+}
+
+/* Oversized violet numeral instead of a caret — OpenClassrooms leads each
+   parcours step with its number, and it doubles as the expand affordance. */
+.cwChapterCaret {
+  flex: none;
+  width: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--cw-locked);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwSideChapter.is-open .cwChapterCaret {
+  color: var(--cw-accent);
+}
+
+.cwSideChapter.is-complete .cwChapterCaret {
+  color: var(--cw-good);
+}
+
+.cwSideChapter.is-open .cwChapterCaret {
+  transform: rotate(90deg);
+  color: var(--cw-accent);
+}
+
+.cwSideChapterTitle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cwSideChapterTitle b {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.cwSideChapterTitle small {
+  font-size: 11.5px;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cwSideChapterDone {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cw-good);
+}
+
+.cwSideLessons {
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cwSideLessons[hidden] {
+  display: none;
+}
+
+.cwSideLesson {
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-inline-start: 2px solid transparent;
+  border-radius: 0 var(--cw-r-md) var(--cw-r-md) 0;
+  padding: 8px 10px;
+  color: var(--cw-ink);
+  text-align: start;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  transition: background var(--cw-t-fast) var(--cw-ease), border-color var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwSideLesson:hover {
+  background: var(--cw-sunken);
+}
+
+.cwSideLesson:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: -2px;
+}
+
+/* The lesson currently in the player — the sidebar always says where you are. */
+.cwSideLesson.is-active {
+  background: var(--cw-accent-soft);
+  border-inline-start-color: var(--cw-accent);
+}
+
+.cwSideLesson.is-active .cwSideLessonBody b {
+  color: var(--cw-accent);
+}
+
+.cwSideLesson.is-done .cwSideLessonBody b {
+  color: var(--cw-muted);
+  font-weight: 500;
+}
+
+/* Outside the student's plan — visibly optional, never hidden. */
+.cwSideLesson.is-bonus .cwSideLessonBody b {
+  color: var(--cw-muted);
+}
+
+.cwSideMark {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 8.5px;
+  color: var(--cw-muted);
+  background: var(--cw-sunken);
+}
+
+.cwSideMark.is-done {
+  background: var(--cw-good);
+  color: #fff;
+}
+
+.cwSideLessonBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cwSideLessonBody b {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.cwSideLessonBody small {
+  font-size: 11px;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cwSidebarScrim {
+  display: none;
+}
+
+/* =============================================================== main == */
+.cwMain {
+  padding: clamp(20px, 2.6vw, 34px);
+  min-width: 0;
+}
+
+.cwMain > * {
+  max-width: 1040px;
+  margin: 0 auto;
+  animation: cwViewIn var(--cw-t-slow) var(--cw-ease) both;
+}
+
+.courseWritingPage > section {
+  animation: cwViewIn var(--cw-t-slow) var(--cw-ease) both;
+}
+
+@keyframes cwViewIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================= player == */
+.cwLessonPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* The video is the page. Full width of the main column, black surround, so it
+   reads as a player rather than an embedded thumbnail. */
+.cwPlayer {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0b1220;
+  border-radius: var(--cw-r-lg);
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(16, 24, 40, 0.16);
+}
+
+.cwPlayer iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.cwPlayerEmpty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 24px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cwPlayerEmpty span {
+  font-size: 30px;
+}
+
+.cwPlayerEmpty b {
+  font-size: 15px;
+  color: #fff;
+}
+
+.cwPlayerEmpty p {
+  margin: 0;
+  font-size: 12.5px;
+  max-width: 44ch;
+  line-height: 1.55;
+}
+
+.cwLessonMeta2 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cwLessonMeta2 h1 {
+  margin: 0;
+}
+
+.cwLessonCrumb {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cw-accent);
+}
+
+.cwLessonTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.cwMetaDot {
+  font-size: 12.5px;
+  color: var(--cw-muted);
+}
+
+.cwMetaDot + .cwMetaDot::before {
+  content: '· ';
+  margin-inline-end: 4px;
+}
+
+/* Butter panel with a lemon cap — the same device as the sidebar chapters,
+   reused for supporting material rather than progress. */
+.cwLessonDocs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--cw-butter);
+  border-radius: var(--cw-r-md);
+  border-top: 4px solid var(--cw-lemon);
+  padding: 12px 14px;
+  font-size: 13px;
+}
+
+.cwLessonDocs b {
+  color: var(--cw-ink);
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.cwLessonDocs ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cwLessonDocs a {
+  color: var(--cw-accent, #2563eb);
+  text-decoration: none;
+}
+
+.cwLessonDocs a:hover {
+  text-decoration: underline;
+}
+
+.cwLessonActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--cw-border);
+  padding-block-end: 18px;
+}
+
+.cwBonusNote,
+.cwLongNote {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--cw-ink-soft);
+  background: var(--cw-sunken);
+  border-radius: var(--cw-r-md);
+  padding: 10px 13px;
+}
+
+.cwPendingNote {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  background: var(--cw-accent-soft);
+  border-radius: var(--cw-r-md);
+  padding: 12px 14px;
+}
+
+.cwPendingNote p {
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--cw-ink-soft);
+}
+
+/* ======================================================== lesson nav == */
+.cwLessonNav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cwLessonNavBtn {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  background: var(--cw-surface);
+  border: 1px solid var(--cw-border);
+  border-radius: var(--cw-r-md);
+  padding: 11px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  color: var(--cw-ink);
+  transition: border-color var(--cw-t-fast) var(--cw-ease), box-shadow var(--cw-t-fast) var(--cw-ease),
+    transform var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwLessonNavBtn-next {
+  text-align: end;
+  align-items: flex-end;
+}
+
+.cwLessonNavBtn:hover {
+  border-color: var(--cw-accent);
+  box-shadow: var(--cw-shadow-md);
+  transform: translateY(-1px);
+}
+
+.cwLessonNavBtn:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 2px;
+}
+
+.cwLessonNavBtn small {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--cw-accent);
+}
+
+.cwLessonNavBtn b {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================== pills == */
+.cwPill {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--cw-sunken);
+  color: var(--cw-ink-soft);
+}
+
+.cwPill-onDark {
+  background: var(--cw-accent-soft);
+  color: var(--cw-accent);
+}
+
+.cwPill-small {
+  padding: 2px 8px;
+  font-size: 10px;
+}
+
+.cwTier {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+
+.cwTier.is-core {
+  background: var(--cw-accent-soft);
+  color: var(--cw-accent);
+}
+
+.cwTier.is-reinforce {
+  background: var(--cw-sunken);
+  color: var(--cw-ink-soft);
+}
+
+.cwTier.is-extend {
+  background: transparent;
+  color: var(--cw-muted);
+  box-shadow: inset 0 0 0 1px var(--cw-border);
+}
+
+/* ============================================================ buttons == */
+.cwBtn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: var(--cw-r-md);
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1.25;
+  transition: background var(--cw-t-fast) var(--cw-ease), box-shadow var(--cw-t-fast) var(--cw-ease),
+    border-color var(--cw-t-fast) var(--cw-ease), transform var(--cw-t-fast) var(--cw-ease),
+    color var(--cw-t-fast) var(--cw-ease);
+}
+
+/* No lift on hover. OpenClassrooms buttons are flat blocks that darken —
+   a translate would reintroduce the elevation the palette just removed. */
+.cwBtn:hover {
+  transform: none;
+}
+
+.cwBtn:active {
+  transform: none;
+  transition-duration: 60ms;
+}
+
+.cwBtn-primary {
+  background: var(--cw-accent);
+  color: var(--cw-accent-ink);
+  box-shadow: none;
+}
+
+.cwBtn-primary:hover {
+  background: #5b3ce0;
+  box-shadow: none;
+}
+
+.cwBtn-primary:active {
+  background: #4c30c4;
+  box-shadow: none;
+}
+
+.cwBtn-ghost {
+  background: var(--cw-surface);
+  color: var(--cw-ink-soft);
+  border-color: var(--cw-border);
+  box-shadow: var(--cw-shadow-sm);
+}
+
+.cwBtn-ghost:hover {
+  border-color: var(--cw-accent);
+  color: var(--cw-accent);
+  box-shadow: var(--cw-shadow-md);
+}
+
+.cwBtn-quiet {
+  background: transparent;
+  color: var(--cw-muted);
+  border-color: transparent;
+}
+
+.cwBtn-quiet:hover {
+  background: var(--cw-sunken);
+  color: var(--cw-ink);
+}
+
+.cwBtn-block {
+  width: 100%;
+}
+
+.cwBtn-small {
+  padding: 8px 13px;
+  font-size: 12.5px;
+}
+
+.cwBtn-lg {
+  padding: 15px 24px;
+  font-size: 15px;
+}
+
+.cwBtn:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 2px;
+}
+
+/* ============================================================== chips == */
+.cwChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cwChip {
+  font: inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  background: var(--cw-surface);
+  color: var(--cw-ink-soft);
+  border: 1px solid var(--cw-border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  transition: border-color var(--cw-t-fast) var(--cw-ease), background var(--cw-t-fast) var(--cw-ease),
+    color var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwChip:hover {
+  border-color: var(--cw-border-strong);
+}
+
+.cwChip.is-active {
+  background: var(--cw-accent);
+  border-color: var(--cw-accent);
+  color: #fff;
+}
+
+.cwChip:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 2px;
+}
+
+.cwChip-sm {
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+.cwChipCount {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+  margin-inline-start: 3px;
+}
+
+/* =============================================================== hub === */
+.cwHub {
+  display: flex;
+  flex-direction: column;
+}
+
+.cwHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+  background: var(--cw-surface);
+  border: 1px solid var(--cw-border);
+  border-radius: 20px;
+  padding: clamp(24px, 3vw, 40px);
+  box-shadow: var(--cw-shadow-md);
+}
+
+.cwHeroText h1 {
+  font-size: clamp(24px, 3.2vw, 36px);
+  margin-bottom: 12px;
+}
+
+.cwHeroLede {
+  color: var(--cw-ink-soft);
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 22px;
+  max-width: 54ch;
+}
+
+.cwHeroStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  padding: 18px 0;
+  border-top: 1px solid var(--cw-border);
+  border-bottom: 1px solid var(--cw-border);
+  margin-bottom: 22px;
+}
+
+.cwHeroStats div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cwHeroStats b {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.cwHeroStats span {
+  font-size: 12px;
+  color: var(--cw-muted);
+}
+
+.cwHeroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cwHeroNote {
+  margin: 16px 0 0;
+  font-size: 12.5px;
+  color: var(--cw-muted);
+}
+
+.cwHeroArt {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cwHeroArtCard {
+  background: var(--cw-page);
+  border: 1px solid var(--cw-border);
+  border-radius: var(--cw-r-lg);
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.cwHeroArtCard span {
+  font-size: 24px;
+}
+
+.cwHeroArtCard b {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--cw-ink-soft);
+}
+
+.cwSectionTitle {
+  font-size: 16px;
+  margin: 32px 0 14px;
+}
+
+.cwChapterPreview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.cwChapterPreviewCard {
+  background: var(--cw-surface);
+  border: 1px solid var(--cw-border);
+  border-radius: var(--cw-r-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cwChapterPreviewCard b {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.cwChapterPreviewCard small {
+  font-size: 11.5px;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cwOtherCourse {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border: 1px dashed var(--cw-border-strong);
+  border-radius: var(--cw-r-md);
+  color: var(--cw-muted);
+  font-size: 13px;
+}
+
+/* ========================================================= onboarding == */
+.cwOnboard {
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.cwSteps {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.cwSteps i {
+  height: 3px;
+  width: 34px;
+  border-radius: 2px;
+  background: var(--cw-border);
+  transition: background var(--cw-t-slow) var(--cw-ease);
+}
+
+.cwSteps i.is-on {
+  background: var(--cw-accent);
+}
+
+.cwTrackPick {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.cwTrackCard {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  color: var(--cw-ink);
+  background: var(--cw-surface);
+  border: 1.5px solid var(--cw-border);
+  border-radius: var(--cw-r-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--cw-shadow-sm);
+  transition: border-color var(--cw-t-fast) var(--cw-ease), box-shadow var(--cw-t-fast) var(--cw-ease),
+    transform var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwTrackCard:hover {
+  border-color: var(--cw-accent);
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.1);
+  transform: translateY(-2px);
+}
+
+.cwTrackCard.is-active {
+  border-color: var(--cw-accent);
+  box-shadow: 0 0 0 3px var(--cw-accent-soft);
+}
+
+.cwTrackCard:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 2px;
+}
+
+.cwTrackTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cwTrackEmoji {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--cw-accent-soft);
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+}
+
+.cwTrackTop .cwPill {
+  margin-inline-start: auto;
+}
+
+.cwTrackLabel {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.cwTrackTagline {
+  font-size: 13px;
+  color: var(--cw-muted);
+  line-height: 1.5;
+}
+
+.cwTrackFacts {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  margin-top: 2px;
+  border-top: 1px solid var(--cw-border);
+  border-bottom: 1px solid var(--cw-border);
+}
+
+.cwTrackFacts > span {
+  font-size: 11.5px;
+  color: var(--cw-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cwTrackFacts b {
+  font-size: 16px;
+  color: var(--cw-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cwTrackBullets {
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cwTrackBullets li {
+  font-size: 12.5px;
+  color: var(--cw-ink-soft);
+  line-height: 1.45;
+  padding-inline-start: 18px;
+  position: relative;
+}
+
+.cwTrackBullets li::before {
+  content: '✓';
+  position: absolute;
+  inset-inline-start: 0;
+  color: var(--cw-good);
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.cwTrackGo {
+  margin-top: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cw-accent);
+}
+
+.cwQuestion {
+  margin: 20px 0;
+}
+
+.cwQuestion h3 {
+  font-size: 14.5px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--cw-ink-soft);
+}
+
+.cwEstimate {
+  background: var(--cw-accent-soft);
+  border-radius: var(--cw-r-md);
+  padding: 13px 16px;
+  font-size: 13.5px;
+  color: var(--cw-ink-soft);
+  margin: 18px 0 22px;
+  line-height: 1.55;
+}
+
+.cwEstimate b {
+  font-variant-numeric: tabular-nums;
+  color: var(--cw-ink);
+}
+
+.cwEstimateSwap {
+  display: block;
+  margin-top: 8px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--cw-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ================================================================ day == */
+.cwDayPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cwDayHead h1 {
+  margin: 0 0 6px;
+}
+
+.cwDaySub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cwTodayCard {
+  background: var(--cw-surface);
+  border: 1px solid var(--cw-border);
+  border-inline-start: 3px solid var(--cw-accent);
+  border-radius: var(--cw-r-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: var(--cw-shadow-sm);
+}
+
+.cwTodayCard-done {
+  border-inline-start-color: var(--cw-good);
+  text-align: center;
+}
+
+.cwTodayCard-done p {
+  margin: 0;
+  font-weight: 600;
+  color: var(--cw-good);
+}
+
+.cwTodayCard-ahead {
+  background: var(--cw-accent-soft);
+}
+
+.cwTodayCard-ahead p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--cw-ink-soft);
+}
+
+.cwTodayCard-ahead .cwBtn {
+  align-self: flex-start;
+}
+
+.cwTodayTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cwTodayMinutes {
+  margin-inline-start: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The one action on the page. Deliberately the largest, warmest thing in the
+   card — a student with no decision-making energy should be able to tap this
+   without reading anything else. */
+.cwStartBtn {
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: start;
+  padding: 16px 18px;
+  border-radius: var(--cw-r-lg);
+  border: none;
+  background: var(--cw-accent);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 74, 173, 0.26);
+  transition: background var(--cw-t-fast) var(--cw-ease), box-shadow var(--cw-t-fast) var(--cw-ease),
+    transform var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwStartBtn:hover {
+  background: #003a89;
+  box-shadow: 0 8px 22px rgba(0, 74, 173, 0.28);
+  transform: translateY(-1px);
+}
+
+.cwStartBtn:active {
+  transform: translateY(0);
+  transition-duration: 60ms;
+}
+
+.cwStartBtn:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 3px;
+}
+
+.cwStartIcon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.cwStartBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cwStartBody small {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.cwStartBody b {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.cwStartMin {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cwDayDone {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cw-good);
+}
+
+.cwTodayList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cwTodayItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--cw-border);
+  border-radius: var(--cw-r-md);
+  padding: 10px 12px;
+  color: var(--cw-ink);
+  text-align: start;
+  transition: background var(--cw-t-fast) var(--cw-ease), border-color var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwTodayItem:hover {
+  background: var(--cw-sunken);
+  border-color: var(--cw-border-strong);
+}
+
+li.is-done .cwTodayItem {
+  opacity: 0.55;
+}
+
+.cwCheck {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--cw-border-strong);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: transparent;
+}
+
+.cwCheck.is-done {
+  background: var(--cw-good);
+  border-color: var(--cw-good);
+  color: #fff;
+}
+
+.cwTodayItemBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cwTodayItemBody b {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.cwTodayItemBody small {
+  font-size: 12px;
+  color: var(--cw-muted);
+}
+
+.cwThumb {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--cw-sunken);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.cwWritingPrompt {
+  background: var(--cw-accent-soft);
+  border-radius: var(--cw-r-md);
+  padding: 10px 14px;
+}
+
+.cwWritingPrompt b {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cw-accent);
+  font-weight: 700;
+}
+
+.cwWritingPrompt p {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  color: var(--cw-ink-soft);
+}
+
+.cwTodayNav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.cwNavCard {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  background: var(--cw-surface);
+  border: 1px solid var(--cw-border);
+  border-radius: var(--cw-r-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transition: border-color var(--cw-t-fast) var(--cw-ease), box-shadow var(--cw-t-fast) var(--cw-ease),
+    transform var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwNavCard:hover {
+  border-color: var(--cw-accent);
+  box-shadow: var(--cw-shadow-md);
+  transform: translateY(-1px);
+}
+
+.cwNavCard:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 2px;
+}
+
+.cwNavCard b {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cwNavCard span {
+  font-size: 12.5px;
+  color: var(--cw-muted);
+}
+
+/* =========================================================== progress == */
+.cwProgressPage,
+.cwCalendar {
+  display: flex;
+  flex-direction: column;
+}
+
+.cwProgressPage h1,
+.cwCalendar h1 {
+  margin-bottom: 8px;
+}
+
+.cwTrackSwitch {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.cwTrackSwitchBtn {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  color: var(--cw-ink);
+  background: var(--cw-surface);
+  border: 1.5px solid var(--cw-border);
+  border-radius: var(--cw-r-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: border-color var(--cw-t-fast) var(--cw-ease), background var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwTrackSwitchBtn:hover {
+  border-color: var(--cw-border-strong);
+}
+
+.cwTrackSwitchBtn.is-active {
+  border-color: var(--cw-accent);
+  background: var(--cw-accent-soft);
+}
+
+.cwTrackSwitchBtn b {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.cwTrackSwitchBtn small {
+  font-size: 11.5px;
+  color: var(--cw-muted);
+}
+
+.cwTrackSwitchBtn:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 2px;
+}
+
+.cwTypeGroup {
+  margin-bottom: 22px;
+}
+
+.cwTypeGroup h2 {
+  font-size: 14.5px;
+  margin: 0 0 10px;
+  color: var(--cw-ink-soft);
+}
+
+.cwTypeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.cwTypeCard {
+  background: var(--cw-surface);
+  border: 1px solid var(--cw-border);
+  border-radius: var(--cw-r-md);
+  padding: 13px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.cwTypeCard.is-mastered {
+  background: var(--cw-good-soft);
+  border-color: transparent;
+}
+
+.cwTypeCardTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cwTypeCardTop b {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cwTypeCardTop .cwCheck {
+  margin-inline-start: auto;
+  border-color: var(--cw-good);
+  background: var(--cw-good);
+  color: #fff;
+}
+
+.cwTypeCardTop .cwThumb {
+  width: 26px;
+  height: 26px;
+  font-size: 13px;
+}
+
+.cwTrack {
+  height: 6px;
+  background: var(--cw-sunken);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cwTrack i {
+  display: block;
+  height: 100%;
+  background: var(--cw-accent);
+  border-radius: 4px;
+  transition: width var(--cw-t-slow) var(--cw-ease);
+}
+
+.is-mastered .cwTrack i {
+  background: var(--cw-good);
+}
+
+.cwTypeCount {
+  font-size: 11.5px;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================== modal == */
+.cwModalScrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 24, 40, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 60;
+}
+
+.cwModal {
+  background: var(--cw-surface);
+  border-radius: var(--cw-r-lg);
+  box-shadow: 0 12px 32px rgba(16, 24, 40, 0.24);
+  padding: 22px 24px;
+  max-width: 380px;
+  width: 100%;
+}
+
+.cwModal h3 {
+  margin: 0 0 8px;
+  font-size: 16.5px;
+  font-weight: 700;
+}
+
+.cwModal p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--cw-ink-soft);
+  line-height: 1.5;
+}
+
+.cwModal p b {
+  color: var(--cw-ink);
+}
+
+.cwModalPreview {
+  margin: 0 0 16px;
+  padding-inline-start: 18px;
+  font-size: 13px;
+  color: var(--cw-muted);
+}
+
+.cwModalPreview li {
+  margin-bottom: 3px;
+}
+
+.cwModalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ========================================================= month grid == */
+.cwMonth {
+  margin-bottom: 26px;
+}
+
+.cwMonth h2 {
+  font-size: 14.5px;
+  margin: 0 0 10px;
+  color: var(--cw-ink-soft);
+}
+
+.cwMonthGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cwWeekday {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cw-muted);
+  padding-bottom: 4px;
+}
+
+.cwDateCell {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--cw-r-md);
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3px;
+  padding: 7px 8px;
+  font: inherit;
+  text-align: start;
+  overflow: hidden;
+}
+
+.cwDateCell-out {
+  background: transparent;
+}
+
+.cwDateCell-rest {
+  background: var(--cw-sunken);
+}
+
+.cwDateCell-rest .cwDateNo {
+  color: var(--cw-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cwDateCell-lesson {
+  cursor: pointer;
+  background: var(--cw-surface);
+  border-color: var(--cw-border);
+  box-shadow: var(--cw-shadow-sm);
+  transition: border-color var(--cw-t-fast) var(--cw-ease), box-shadow var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwDateCell-lesson:hover {
+  border-color: var(--cw-accent);
+  box-shadow: var(--cw-shadow-md);
+}
+
+.cwDateCell-lesson.is-complete {
+  background: var(--cw-good-soft);
+}
+
+.cwDateCell-lesson.is-complete .cwCellTitle {
+  color: var(--cw-good);
+}
+
+.cwDateCell-lesson.is-locked {
+  background: var(--cw-locked-soft);
+}
+
+.cwDateCell-lesson.is-locked .cwCellTitle,
+.cwDateCell-lesson.is-locked .cwCellMeta {
+  color: var(--cw-locked);
+}
+
+.cwDateCell-lesson.is-today {
+  border-color: var(--cw-accent);
+  box-shadow: 0 0 0 1px var(--cw-accent);
+}
+
+.cwDateCell:focus-visible {
+  outline: 2px solid var(--cw-accent);
+  outline-offset: 1px;
+}
+
+.cwCellTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cwDateNo {
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--cw-ink-soft);
+}
+
+.cwCellThumb {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.cwCellTitle {
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--cw-ink-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cwCellMeta {
+  margin-top: auto;
+  font-size: 8.5px;
+  color: var(--cw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cwCellBadge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 8px;
+  line-height: 1;
+}
+
+.cwCellBadge-done {
+  background: var(--cw-good);
+  color: #fff;
+}
+
+.cwCellBadge-locked {
+  background: var(--cw-surface);
+  box-shadow: var(--cw-shadow-sm);
+  font-size: 8.5px;
+}
+
+/* ========================================================= responsive == */
+@media (max-width: 1080px) {
+  .cwHero {
+    grid-template-columns: 1fr;
+  }
+  .cwHeroArt {
+    order: -1;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .cwHeroArtCard {
+    padding: 12px;
+  }
+}
+
+/* Below this the sidebar becomes an off-canvas drawer — the main column needs
+   the full width for the player long before the viewport gets phone-sized. */
+@media (max-width: 900px) {
+  .cwAppBody {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cwSidebarToggle {
+    display: block;
+  }
+
+  .cwSidebar {
+    position: fixed;
+    top: 0;
+    inset-inline-start: 0;
+    height: 100vh;
+    width: min(330px, 86vw);
+    z-index: 50;
+    transform: translateX(-102%);
+    box-shadow: 0 12px 40px rgba(16, 24, 40, 0.2);
+    transition: transform var(--cw-t-slow) var(--cw-ease);
+  }
+
+  .cwSidebar.is-open {
+    transform: none;
+  }
+
+  .cwSidebarScrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(16, 24, 40, 0.45);
+  }
+
+  .cwAppBarProgress {
+    min-width: 92px;
+  }
+
+  .cwAppBarPlan {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .cwMonthGrid {
+    gap: 4px;
+  }
+  .cwCellTitle,
+  .cwCellMeta {
+    display: none;
+  }
+  .cwDateCell {
+    aspect-ratio: auto;
+    min-height: 40px;
+  }
+  .cwLessonNav {
+    grid-template-columns: 1fr;
+  }
+  .cwLessonNavBtn-next {
+    text-align: start;
+    align-items: flex-start;
+  }
+  .cwHeroArt {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cwAppBarTitle small {
+    display: none;
+  }
+  .cwHeroStats {
+    gap: 18px;
+  }
+  /* The player keeps its aspect ratio but loses the rounded frame edge-to-edge. */
+  .cwMain {
+    padding: 16px 14px 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .courseWritingPage *,
+  .courseWritingPage *::before,
+  .courseWritingPage *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .cwBtn:hover,
+  .cwNavCard:hover,
+  .cwLessonNavBtn:hover,
+  .cwTrackCard:hover,
+  .cwStartBtn:hover {
+    transform: none;
+  }
+}
