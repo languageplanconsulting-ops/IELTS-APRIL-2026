@@ -818,6 +818,12 @@ function CurriculumSidebar({
           const isOpen = openChapters.has(chapter.index) || Boolean(trimmedQuery)
           const doneCount = chapter.lessons.filter((lesson) => completedIds.has(lesson.id)).length
           const allDone = doneCount === chapter.lessons.length
+          // "3 · Task 1 โจทย์ไม่มีตัวเลข" → numeral and label shown separately.
+          // Falls back to the whole name if a chapter is ever stored without
+          // the "N · " prefix.
+          const [, parsedNumber, parsedLabel] = /^(\d+)\s*·\s*(.+)$/.exec(chapter.name) ?? []
+          const chapterNumber = parsedNumber ?? String(chapter.index + 1)
+          const chapterLabel = parsedLabel ?? chapter.name
 
           return (
             <div
@@ -826,12 +832,15 @@ function CurriculumSidebar({
             >
               <button type="button" className="cwSideChapterHead" aria-expanded={isOpen} onClick={() => onToggleChapter(chapter.index)}>
                 {/* The chapter's own number, not a caret — the block's top rule
-                    already carries open/closed state. */}
+                    already carries open/closed state. Chapter names are stored
+                    with their number baked in ("3 · Task 1 …"), so the numeral
+                    is split off the name rather than derived from the index,
+                    which would render it twice. */}
                 <span className="cwChapterCaret" aria-hidden="true">
-                  {chapter.index + 1}
+                  {chapterNumber}
                 </span>
                 <span className="cwSideChapterTitle">
-                  <b>{chapter.name}</b>
+                  <b>{chapterLabel}</b>
                   <small>
                     {doneCount}/{chapter.lessons.length} บท
                     {chapter.minutes > 0 ? ` · ${formatMinutesAsHours(chapter.minutes)} ชม.` : ''}
