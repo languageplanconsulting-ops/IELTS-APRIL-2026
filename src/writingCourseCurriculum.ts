@@ -16,6 +16,7 @@
 // `priority` breaks ties within tier 2/3 (lower goes first).
 
 import BUNNY_VIDEO_IDS from './bunnyVideoIds.json'
+import WRITING_COURSE_DOCS from './writingCourseDocs.json'
 
 export type CourseArea = 'foundation' | 'task1' | 'task2' | 'exam'
 
@@ -80,6 +81,8 @@ export const GRADED_QUESTION_TYPES = QUESTION_TYPES.filter((type) => type.isGrad
 export type CourseLesson = {
   id: string
   chapterIndex: number
+  /** 1-based position within its chapter. Stable, so a filtered list still shows the lesson's real place in the course. */
+  orderInChapter: number
   chapterName: string
   area: CourseArea
   title: string
@@ -90,7 +93,11 @@ export type CourseLesson = {
   band75Only?: boolean
   /** Bunny Stream video GUID, once the lesson's video has been migrated off Thinkific. */
   bunnyVideoId?: string
+  /** Downloadable worksheets/study sheets attached to this lesson on Thinkific, if any. */
+  documents?: CourseLessonDocument[]
 }
+
+export type CourseLessonDocument = { name: string; path: string }
 
 type RawLesson = [title: string, minutes: number, tier: 1 | 2 | 3, priority: number, questionType: QuestionTypeId, band75Only?: true]
 
@@ -268,12 +275,37 @@ const RAW_CHAPTERS: RawChapter[] = [
   }
 ]
 
+/**
+ * Bunny keys the video migration wrote that don't match our lesson ids.
+ *
+ * Cambridge 19 is a SINGLE 8-lesson chapter on Thinkific, so the uploader keys
+ * its videos `c11-l0` … `c11-l7`. We split it into two chapters here (indexes 11
+ * and 12) purely so the Task 1 and Task 2 halves keep their correct `area` —
+ * which pushes the Task 2 half to `c12-l0` … `c12-l3` and orphans four ids.
+ *
+ * Mapping them here rather than renumbering the chapters keeps `area` honest and
+ * leaves already-stored `completedIds` valid. If the uploader is ever pointed at
+ * the real ids, these entries become dead and can go.
+ */
+const BUNNY_ID_ALIASES: Record<string, string> = {
+  'c12-l0': 'c11-l4',
+  'c12-l1': 'c11-l5',
+  'c12-l2': 'c11-l6',
+  'c12-l3': 'c11-l7'
+}
+
+const bunnyVideoIdFor = (lessonId: string): string | undefined => {
+  const map = BUNNY_VIDEO_IDS as Record<string, string>
+  return map[lessonId] ?? map[BUNNY_ID_ALIASES[lessonId]]
+}
+
 export const WRITING_COURSE_LESSONS: CourseLesson[] = RAW_CHAPTERS.flatMap((chapter, chapterIndex) =>
   chapter.lessons.map((lesson, lessonIndex) => {
     const id = `c${chapterIndex}-l${lessonIndex}`
     return {
       id,
       chapterIndex,
+      orderInChapter: lessonIndex + 1,
       chapterName: chapter.name,
       area: chapter.area,
       title: lesson[0],
@@ -282,12 +314,38 @@ export const WRITING_COURSE_LESSONS: CourseLesson[] = RAW_CHAPTERS.flatMap((chap
       priority: lesson[3],
       questionType: lesson[4],
       band75Only: lesson[5],
-      bunnyVideoId: (BUNNY_VIDEO_IDS as Record<string, string>)[id]
+      bunnyVideoId: bunnyVideoIdFor(id),
+      documents: (WRITING_COURSE_DOCS as Record<string, CourseLessonDocument[]>)[id]
     }
   })
 )
 
 export const WRITING_COURSE_CHAPTER_NAMES: string[] = RAW_CHAPTERS.map((chapter) => chapter.name)
+
+export type CourseChapter = {
+  index: number
+  name: string
+  area: CourseArea
+  lessons: CourseLesson[]
+  minutes: number
+}
+
+/** The curriculum grouped exactly as it appears on Thinkific — chapter order and
+ *  lesson order untouched. This is what the "บทเรียนทั้งหมด" browser renders, so a
+ *  student who knows the Thinkific course finds the same lesson in the same place. */
+export const WRITING_COURSE_CHAPTERS: CourseChapter[] = RAW_CHAPTERS.map((chapter, index) => {
+  const lessons = WRITING_COURSE_LESSONS.filter((lesson) => lesson.chapterIndex === index)
+  return {
+    index,
+    name: chapter.name,
+    area: chapter.area,
+    lessons,
+    minutes: lessons.reduce((sum, lesson) => sum + lesson.minutes, 0)
+  }
+})
+
+/** How many lessons already have a Bunny video — the rest are still being uploaded. */
+export const WRITING_COURSE_VIDEO_READY_COUNT = WRITING_COURSE_LESSONS.filter((lesson) => lesson.bunnyVideoId).length
 
 export const WRITING_COURSE_TOTAL_MINUTES = WRITING_COURSE_LESSONS.reduce((sum, lesson) => sum + lesson.minutes, 0)
 export const WRITING_COURSE_LESSON_COUNT = WRITING_COURSE_LESSONS.length

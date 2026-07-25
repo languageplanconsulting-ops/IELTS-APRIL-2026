@@ -28,13 +28,80 @@ import {
   type QuestionTypeId
 } from './writingCourseCurriculum'
 
+/**
+ * Which lessons the student's plan schedules.
+ *
+ *   'essentials' — tier 1 only: the one core method video per question type.
+ *                  Reaches full coverage of all 10 exam question types in the
+ *                  fewest possible minutes. Built for a student with 45 minutes
+ *                  and a limited attention budget.
+ *   'complete'   — the whole course, tier 1 → 2 → 3, in the taught order.
+ *
+ * The track NEVER deletes content — an essentials student can still open any
+ * lesson from the curriculum browser, and can fold the rest into their plan at
+ * any time. It only decides what the calendar schedules and what "100%" means.
+ */
+export type StudyTrack = 'essentials' | 'complete'
+
 export type WritingCourseOnboarding = {
   /** Study a new day every N calendar days. 1 = every day, 2 = เว้นวัน, 7 = once a week. */
   intervalDays: number
   minutesPerDay: number
   /** ISO yyyy-mm-dd. The date the plan's first study day is scheduled. */
   startDateIso: string
+  track: StudyTrack
 }
+
+export type StudyTrackMeta = {
+  id: StudyTrack
+  emoji: string
+  label: string
+  tagline: string
+  bullets: string[]
+  defaultIntervalDays: number
+  defaultMinutesPerDay: number
+  /** Cap on a single session, so the "45 นาที" promise is never quietly broken. */
+  maxMinutesPerDay: number
+}
+
+export const STUDY_TRACKS: StudyTrackMeta[] = [
+  {
+    id: 'essentials',
+    emoji: '⚡',
+    label: 'เอาเฉพาะที่จำเป็น',
+    tagline: 'มีเวลาน้อย อยากได้ที่ใช้สอบจริง ๆ',
+    bullets: [
+      'เฉพาะบทแก่น — ครบทั้ง 10 ชนิดโจทย์ที่ออกสอบ',
+      'ครั้งละไม่เกิน 45 นาที ไม่มีบทยาว ๆ',
+      'บทเสริมยังเปิดดูได้ทุกเมื่อ ถ้าอยากลงลึกทีหลัง'
+    ],
+    defaultIntervalDays: 1,
+    defaultMinutesPerDay: 45,
+    maxMinutesPerDay: 45
+  },
+  {
+    id: 'complete',
+    emoji: '📚',
+    label: 'เรียนให้ครบทุกบท',
+    tagline: 'มีเวลา อยากเข้าใจลึกและเห็นตัวอย่างเยอะ ๆ',
+    bullets: [
+      'ครบทั้ง 93 บท ตามลำดับที่สอนจริง',
+      'ตัวอย่างซ้ำหลายโจทย์ต่อ 1 ชนิด + คลังหัวข้อ',
+      'รวมบท Band 7.5+ ไว้ในแผนตั้งแต่ต้น'
+    ],
+    defaultIntervalDays: 1,
+    defaultMinutesPerDay: 90,
+    maxMinutesPerDay: 120
+  }
+]
+
+export const TRACK_BY_ID: Record<StudyTrack, StudyTrackMeta> = STUDY_TRACKS.reduce(
+  (map, track) => {
+    map[track.id] = track
+    return map
+  },
+  {} as Record<StudyTrack, StudyTrackMeta>
+)
 
 export const ONBOARDING_INTERVAL_OPTIONS: { value: number; label: string }[] = [
   { value: 1, label: 'ทุกวัน' },
@@ -92,6 +159,34 @@ export const ORDERED_LESSONS: CourseLesson[] = (() => {
   return [...core, ...rest]
 })()
 
+/**
+ * The lessons a given track actually schedules, in study order. Essentials keeps
+ * tier 1 only — one method video per question type — which is what makes a
+ * 45-minute-a-day plan finish in weeks instead of months.
+ */
+export const trackSequence = (track: StudyTrack): CourseLesson[] =>
+  track === 'essentials' ? ORDERED_LESSONS.filter((lesson) => lesson.tier === 1) : ORDERED_LESSONS
+
+/** Fast membership test for "is this lesson part of my plan?" — drives the ในแผน / เสริม badges. */
+export const trackLessonIds = (track: StudyTrack): Set<string> => new Set(trackSequence(track).map((l) => l.id))
+
+export type TrackSummary = {
+  lessonCount: number
+  minutes: number
+  /** How many of the 10 graded exam question types this track covers. Essentials must still reach all 10. */
+  gradedTypesCovered: number
+}
+
+export const summarizeTrack = (track: StudyTrack): TrackSummary => {
+  const lessons = trackSequence(track)
+  const covered = new Set(lessons.map((l) => l.questionType))
+  return {
+    lessonCount: lessons.length,
+    minutes: lessons.reduce((sum, l) => sum + l.minutes, 0),
+    gradedTypesCovered: GRADED_QUESTION_TYPES.filter((type) => covered.has(type.id)).length
+  }
+}
+
 export type CalendarDay = {
   index: number
   dateIso: string
@@ -101,6 +196,14 @@ export type CalendarDay = {
   writingPrompt: string | null
   /** Emoji of the day's dominant question type, for the calendar thumbnail. */
   thumbnailEmoji: string
+  /**
+   * True when this day runs past the session length the student asked for. It
+   * only happens for a single video longer than the whole budget (some core
+   * lessons are 50+ minutes), which we refuse to split across days. Surfaced in
+   * the UI rather than hidden — an unannounced 53-minute video is exactly the
+   * thing that makes a low-attention student quit.
+   */
+  isLongSession: boolean
 }
 
 const writingPromptFor = (lessons: CourseLesson[]): string | null => {
@@ -134,10 +237,12 @@ export function buildCalendar(
   includeBand75: boolean
 ): CalendarDay[] {
   const { minutesPerDay, intervalDays, startDateIso } = onboarding
+  const track = onboarding.track || 'complete'
   const videoBudget = Math.max(10, Math.round(minutesPerDay * VIDEO_TIME_SHARE))
+  const ordered = trackSequence(track)
   const sequence = includeBand75
-    ? ORDERED_LESSONS
-    : [...ORDERED_LESSONS.filter((l) => !l.band75Only), ...ORDERED_LESSONS.filter((l) => l.band75Only)]
+    ? ordered
+    : [...ordered.filter((l) => !l.band75Only), ...ordered.filter((l) => l.band75Only)]
 
   const buckets: CourseLesson[][] = []
   let current: CourseLesson[] = []
@@ -158,14 +263,18 @@ export function buildCalendar(
   }
   flush()
 
-  return buckets.map((lessons, index) => ({
-    index,
-    dateIso: addDaysIso(startDateIso, index * Math.max(1, intervalDays)),
-    lessons,
-    minutes: lessons.reduce((sum, l) => sum + l.minutes, 0),
-    writingPrompt: writingPromptFor(lessons),
-    thumbnailEmoji: dominantThumbnail(lessons)
-  }))
+  return buckets.map((lessons, index) => {
+    const minutes = lessons.reduce((sum, l) => sum + l.minutes, 0)
+    return {
+      index,
+      dateIso: addDaysIso(startDateIso, index * Math.max(1, intervalDays)),
+      lessons,
+      minutes,
+      writingPrompt: writingPromptFor(lessons),
+      thumbnailEmoji: dominantThumbnail(lessons),
+      isLongSession: minutes > minutesPerDay
+    }
+  })
 }
 
 export function isDayComplete(day: CalendarDay, completedIds: Set<string>): boolean {
@@ -237,17 +346,30 @@ export type OverallProgress = {
   completedMinutes: number
   totalMinutes: number
   percent: number
+  /** Lessons finished that sit outside the current plan (an essentials student who wandered into a bonus lesson). Counted, but never inflates the plan percentage past 100. */
+  bonusCompleted: number
 }
 
-export function computeOverallProgress(completedIds: Set<string>): OverallProgress {
-  const completedLessons = WRITING_COURSE_LESSONS.filter((l) => completedIds.has(l.id))
-  const completedMinutes = completedLessons.reduce((sum, l) => sum + l.minutes, 0)
+/**
+ * Progress against *the student's own plan*, not the whole catalogue. An
+ * essentials student who has done 12 of their 41 lessons should read 29%, not
+ * 13% of 93 — measuring them against material they deliberately opted out of is
+ * demoralising and, for the plan they chose, simply wrong.
+ */
+export function computeOverallProgress(completedIds: Set<string>, track: StudyTrack = 'complete'): OverallProgress {
+  const planLessons = trackSequence(track)
+  const planIds = new Set(planLessons.map((l) => l.id))
+  const completedInPlan = planLessons.filter((l) => completedIds.has(l.id))
+  const completedMinutes = completedInPlan.reduce((sum, l) => sum + l.minutes, 0)
+  const totalMinutes = track === 'complete' ? WRITING_COURSE_TOTAL_MINUTES : planLessons.reduce((sum, l) => sum + l.minutes, 0)
+  const bonusCompleted = WRITING_COURSE_LESSONS.filter((l) => completedIds.has(l.id) && !planIds.has(l.id)).length
   return {
-    completedLessons: completedLessons.length,
-    totalLessons: WRITING_COURSE_LESSONS.length,
+    completedLessons: completedInPlan.length,
+    totalLessons: planLessons.length,
     completedMinutes,
-    totalMinutes: WRITING_COURSE_TOTAL_MINUTES,
-    percent: Math.round((completedLessons.length / WRITING_COURSE_LESSONS.length) * 100)
+    totalMinutes,
+    percent: planLessons.length ? Math.round((completedInPlan.length / planLessons.length) * 100) : 0,
+    bonusCompleted
   }
 }
 
@@ -269,9 +391,12 @@ const AREA_LABEL: Record<string, string> = {
 }
 
 /** The "จุดที่ทำสำเร็จแล้ว" board — one row per question type the real exam can ask, so a student can see at a glance which chart/essay types they've actually touched. */
-export function computeQuestionTypeProgress(completedIds: Set<string>): QuestionTypeProgress[] {
+export function computeQuestionTypeProgress(completedIds: Set<string>, track: StudyTrack = 'complete'): QuestionTypeProgress[] {
+  const planIds = trackLessonIds(track)
   return GRADED_QUESTION_TYPES.map((type) => {
-    const lessons = WRITING_COURSE_LESSONS.filter((l) => l.questionType === type.id)
+    // Mastery is judged against the plan too: for an essentials student, "done
+    // with Pie Chart" means the core Pie Chart video, not all five of them.
+    const lessons = WRITING_COURSE_LESSONS.filter((l) => l.questionType === type.id && planIds.has(l.id))
     const completed = lessons.filter((l) => completedIds.has(l.id)).length
     return {
       id: type.id,
