@@ -818,15 +818,29 @@ function CurriculumSidebar({
           const isOpen = openChapters.has(chapter.index) || Boolean(trimmedQuery)
           const doneCount = chapter.lessons.filter((lesson) => completedIds.has(lesson.id)).length
           const allDone = doneCount === chapter.lessons.length
+          // "3 · Task 1 โจทย์ไม่มีตัวเลข" → numeral and label shown separately.
+          // Falls back to the whole name if a chapter is ever stored without
+          // the "N · " prefix.
+          const [, parsedNumber, parsedLabel] = /^(\d+)\s*·\s*(.+)$/.exec(chapter.name) ?? []
+          const chapterNumber = parsedNumber ?? String(chapter.index + 1)
+          const chapterLabel = parsedLabel ?? chapter.name
 
           return (
-            <div key={chapter.index} className={`cwSideChapter ${isOpen ? 'is-open' : ''}`}>
+            <div
+              key={chapter.index}
+              className={`cwSideChapter ${isOpen ? 'is-open' : ''} ${allDone ? 'is-complete' : ''}`}
+            >
               <button type="button" className="cwSideChapterHead" aria-expanded={isOpen} onClick={() => onToggleChapter(chapter.index)}>
+                {/* The chapter's own number, not a caret — the block's top rule
+                    already carries open/closed state. Chapter names are stored
+                    with their number baked in ("3 · Task 1 …"), so the numeral
+                    is split off the name rather than derived from the index,
+                    which would render it twice. */}
                 <span className="cwChapterCaret" aria-hidden="true">
-                  ›
+                  {chapterNumber}
                 </span>
                 <span className="cwSideChapterTitle">
-                  <b>{chapter.name}</b>
+                  <b>{chapterLabel}</b>
                   <small>
                     {doneCount}/{chapter.lessons.length} บท
                     {chapter.minutes > 0 ? ` · ${formatMinutesAsHours(chapter.minutes)} ชม.` : ''}
@@ -902,6 +916,22 @@ function LessonPanel({
 
   return (
     <article className="cwLessonPanel">
+      {/* Title above the player, not under it: OpenClassrooms leads every course
+          page with the heading and treats the video as a course resource. */}
+      <div className="cwLessonMeta2">
+        <span className="cwLessonCrumb">
+          {lesson.chapterName} · บทที่ {lessonNumber} จาก {WRITING_COURSE_LESSON_COUNT}
+        </span>
+        <h1>{lesson.title}</h1>
+        <div className="cwLessonTags">
+          <span className={`cwTier ${tier.className}`}>{tier.label}</span>
+          <span className="cwMetaDot">{AREA_LABEL[lesson.area]}</span>
+          <span className="cwMetaDot">{QUESTION_TYPE_BY_ID[lesson.questionType].label}</span>
+          <span className="cwMetaDot">{lesson.minutes > 0 ? `${lesson.minutes} นาที` : 'แบบฝึกหัด'}</span>
+          {lesson.band75Only && <span className="cwMetaDot">Band 7.5+</span>}
+        </div>
+      </div>
+
       <div className="cwPlayer">
         {lesson.bunnyVideoId ? (
           <iframe
@@ -919,20 +949,6 @@ function LessonPanel({
             <p>เนื้อหาบทอื่นเรียนต่อได้ตามปกติ — กรองด้วย "พร้อมดู" ในแถบซ้ายเพื่อดูบทที่ดูได้แล้ว</p>
           </div>
         )}
-      </div>
-
-      <div className="cwLessonMeta2">
-        <span className="cwLessonCrumb">
-          {lesson.chapterName} · บทที่ {lessonNumber} จาก {WRITING_COURSE_LESSON_COUNT}
-        </span>
-        <h1>{lesson.title}</h1>
-        <div className="cwLessonTags">
-          <span className={`cwTier ${tier.className}`}>{tier.label}</span>
-          <span className="cwMetaDot">{AREA_LABEL[lesson.area]}</span>
-          <span className="cwMetaDot">{QUESTION_TYPE_BY_ID[lesson.questionType].label}</span>
-          <span className="cwMetaDot">{lesson.minutes > 0 ? `${lesson.minutes} นาที` : 'แบบฝึกหัด'}</span>
-          {lesson.band75Only && <span className="cwMetaDot">Band 7.5+</span>}
-        </div>
       </div>
 
       {!inPlan && (

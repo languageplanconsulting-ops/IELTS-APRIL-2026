@@ -10,25 +10,34 @@
    hairline borders, one confident accent (the app's brand blue, #004aad). */
 
 .courseWritingPage {
-  --cw-ink: #101828;
-  --cw-ink-soft: #344054;
-  --cw-page: #f7f8fa;
+  /* OpenClassrooms palette. Their identity is flat: violet does the work, and
+     the only structural device is a 4px coloured rule capping a tinted panel.
+     There are no shadows anywhere on their site, so there are none here —
+     separation comes from the tint and the rule, not from elevation. */
+  --cw-ink: #1b1b32;
+  --cw-ink-soft: #3d3d5c;
+  --cw-page: #ffffff;
   --cw-surface: #ffffff;
-  --cw-sunken: #f2f4f7;
-  --cw-border: rgba(16, 24, 40, 0.1);
-  --cw-border-strong: rgba(16, 24, 40, 0.18);
-  --cw-muted: #667085;
-  --cw-accent: #004aad;
+  --cw-sunken: #faf9fe;
+  --cw-border: #e4e2ef;
+  --cw-border-strong: #d3d0e4;
+  --cw-muted: #6e6e8f;
+  --cw-accent: #6c4bf4;
   --cw-accent-ink: #ffffff;
-  --cw-accent-soft: #eaf0fb;
-  --cw-good: #0f7a58;
-  --cw-good-soft: #e5f5ee;
-  --cw-locked: #98a2b3;
-  --cw-locked-soft: #eef1f4;
-  --cw-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
-  --cw-shadow-md: 0 2px 4px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.04);
-  --cw-r-lg: 14px;
-  --cw-r-md: 10px;
+  --cw-accent-soft: #eae7fb;
+  --cw-good: #2f9e6e;
+  --cw-good-soft: #e8f6ef;
+  --cw-locked: #9a9ab5;
+  --cw-locked-soft: #f1f0f6;
+  /* Pale-yellow band from their student panel; the "in progress" counterpart
+     to lavender's "done". */
+  --cw-butter: #fdf8e9;
+  --cw-lemon: #f5c518;
+  --cw-shadow-sm: none;
+  --cw-shadow-md: none;
+  /* Near-square. OpenClassrooms buttons and panels are 3-4px, not pill-like. */
+  --cw-r-lg: 3px;
+  --cw-r-md: 3px;
 
   /* One easing curve and two durations for the whole page — the earlier 0.1s
      linear-ish transitions read as a snap, which is what made hovers feel jumpy. */
@@ -335,8 +344,36 @@ h2 {
   overscroll-behavior: contain;
 }
 
-.cwSideChapter + .cwSideChapter {
-  border-top: 1px solid var(--cw-border);
+/* OpenClassrooms' signature: a tinted block capped by a 4px coloured rule.
+   The rule colour is the chapter's state, so progress is legible from the
+   rail alone — grey untouched, violet in progress, green finished. */
+.cwSideChapter {
+  position: relative;
+  margin: 0 4px 8px;
+  padding-top: 4px;
+  border-radius: var(--cw-r-md);
+  background: var(--cw-sunken);
+}
+
+.cwSideChapter::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--cw-border-strong);
+  border-radius: var(--cw-r-md) var(--cw-r-md) 0 0;
+}
+
+.cwSideChapter.is-open {
+  background: var(--cw-accent-soft);
+}
+
+.cwSideChapter.is-open::before {
+  background: var(--cw-accent);
+}
+
+.cwSideChapter.is-complete::before {
+  background: var(--cw-good);
 }
 
 .cwSideChapterHead {
@@ -364,15 +401,28 @@ h2 {
   outline-offset: -2px;
 }
 
+/* Oversized violet numeral instead of a caret — OpenClassrooms leads each
+   parcours step with its number, and it doubles as the expand affordance. */
 .cwChapterCaret {
   flex: none;
-  width: 16px;
+  width: 22px;
   display: grid;
   place-items: center;
-  font-size: 15px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1;
-  color: var(--cw-muted);
-  transition: transform var(--cw-t-slow) var(--cw-ease), color var(--cw-t-fast) var(--cw-ease);
+  color: var(--cw-locked);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--cw-t-fast) var(--cw-ease);
+}
+
+.cwSideChapter.is-open .cwChapterCaret {
+  color: var(--cw-accent);
+}
+
+.cwSideChapter.is-complete .cwChapterCaret {
+  color: var(--cw-good);
 }
 
 .cwSideChapter.is-open .cwChapterCaret {
@@ -622,18 +672,23 @@ h2 {
   margin-inline-end: 4px;
 }
 
+/* Butter panel with a lemon cap — the same device as the sidebar chapters,
+   reused for supporting material rather than progress. */
 .cwLessonDocs {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: var(--cw-sunken);
+  background: var(--cw-butter);
   border-radius: var(--cw-r-md);
+  border-top: 4px solid var(--cw-lemon);
   padding: 12px 14px;
   font-size: 13px;
 }
 
 .cwLessonDocs b {
   color: var(--cw-ink);
+  font-size: 14px;
+  letter-spacing: -0.01em;
 }
 
 .cwLessonDocs ul {
@@ -815,31 +870,31 @@ h2 {
     color var(--cw-t-fast) var(--cw-ease);
 }
 
-/* A 1px lift on hover and a settle back on press — enough to feel responsive
-   without the button visibly jumping under the cursor. */
+/* No lift on hover. OpenClassrooms buttons are flat blocks that darken —
+   a translate would reintroduce the elevation the palette just removed. */
 .cwBtn:hover {
-  transform: translateY(-1px);
+  transform: none;
 }
 
 .cwBtn:active {
-  transform: translateY(0);
+  transform: none;
   transition-duration: 60ms;
 }
 
 .cwBtn-primary {
   background: var(--cw-accent);
   color: var(--cw-accent-ink);
-  box-shadow: 0 1px 2px rgba(0, 74, 173, 0.24);
+  box-shadow: none;
 }
 
 .cwBtn-primary:hover {
-  background: #003a89;
-  box-shadow: 0 4px 12px rgba(0, 74, 173, 0.22);
+  background: #5b3ce0;
+  box-shadow: none;
 }
 
 .cwBtn-primary:active {
-  background: #002d6b;
-  box-shadow: 0 1px 2px rgba(0, 74, 173, 0.24);
+  background: #4c30c4;
+  box-shadow: none;
 }
 
 .cwBtn-ghost {
