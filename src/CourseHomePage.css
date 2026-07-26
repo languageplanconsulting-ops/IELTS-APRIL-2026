@@ -50,7 +50,11 @@
   min-height: calc(100vh - 88px);
   background: var(--cw-page);
   color: var(--cw-ink);
-  font-family: Inter, Anuphan, system-ui, sans-serif;
+  /* Ubuntu Mono for English, Anuphan for Thai — no per-element classes needed.
+     Ubuntu Mono ships no Thai glyphs, so the browser falls through to Anuphan
+     for Thai characters on its own, per character rather than per element.
+     Inter sits between them to catch any Latin glyph Ubuntu Mono lacks. */
+  font-family: 'Ubuntu Mono', Inter, Anuphan, system-ui, sans-serif;
   padding: clamp(20px, 3vw, 36px);
   display: flex;
   flex-direction: column;
