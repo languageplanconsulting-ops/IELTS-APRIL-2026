@@ -1,5 +1,18 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './CourseHomePage.css'
+import { CourseJourneyHome } from './CourseJourneyHome'
+import { writingPlanStorageKey } from './courseStorageKeys'
+import { PERSONAS, PERSONA_BY_ID, personaScope, resetPersona, seedPersona, type PersonaId } from './coursePersonas'
+import {
+  buildEmbedUrl,
+  formatClock,
+  isResumable,
+  minutesLeft,
+  pickResumeLesson,
+  subscribeToPlaybackPosition,
+  type LessonResumeEntry,
+  type ResumeMap
+} from './lessonResume'
 import {
   QUESTION_TYPE_BY_ID,
   WRITING_COURSE_CHAPTERS,
@@ -56,15 +69,33 @@ type StoredState = {
   onboarding: WritingCourseOnboarding | null
   completedIds: string[]
   aheadUnlocked: number[]
+  /** Playback position per lesson id, so an interrupted lesson resumes exactly. */
+  resume: ResumeMap
 }
 
-const scopeKey = (email: string) => `writing-course-plan:${(email || 'admin-preview').trim().toLowerCase()}`
+
+const emptyState = (): StoredState => ({ onboarding: null, completedIds: [], aheadUnlocked: [], resume: {} })
+
+const parseResumeMap = (raw: unknown): ResumeMap => {
+  if (!raw || typeof raw !== 'object') return {}
+  const out: ResumeMap = {}
+  for (const [lessonId, value] of Object.entries(raw as Record<string, unknown>)) {
+    const entry = value as Partial<LessonResumeEntry>
+    if (typeof entry?.seconds !== 'number' || entry.seconds < 0) continue
+    out[lessonId] = {
+      seconds: Math.floor(entry.seconds),
+      duration: typeof entry.duration === 'number' && entry.duration > 0 ? Math.floor(entry.duration) : 0,
+      updatedAt: typeof entry.updatedAt === 'number' ? entry.updatedAt : 0
+    }
+  }
+  return out
+}
 
 const loadStoredState = (email: string): StoredState => {
-  if (typeof window === 'undefined') return { onboarding: null, completedIds: [], aheadUnlocked: [] }
+  if (typeof window === 'undefined') return emptyState()
   try {
-    const raw = window.localStorage.getItem(scopeKey(email))
-    if (!raw) return { onboarding: null, completedIds: [], aheadUnlocked: [] }
+    const raw = window.localStorage.getItem(writingPlanStorageKey(email))
+    if (!raw) return emptyState()
     const parsed = JSON.parse(raw)
     const onboarding: WritingCourseOnboarding | null =
       parsed?.onboarding &&
@@ -81,17 +112,18 @@ const loadStoredState = (email: string): StoredState => {
     return {
       onboarding,
       completedIds: Array.isArray(parsed?.completedIds) ? parsed.completedIds.filter((id: unknown) => typeof id === 'string') : [],
-      aheadUnlocked: Array.isArray(parsed?.aheadUnlocked) ? parsed.aheadUnlocked.filter((n: unknown) => typeof n === 'number') : []
+      aheadUnlocked: Array.isArray(parsed?.aheadUnlocked) ? parsed.aheadUnlocked.filter((n: unknown) => typeof n === 'number') : [],
+      resume: parseResumeMap(parsed?.resume)
     }
   } catch {
-    return { onboarding: null, completedIds: [], aheadUnlocked: [] }
+    return emptyState()
   }
 }
 
 const saveStoredState = (email: string, state: StoredState) => {
   if (typeof window === 'undefined') return
   try {
-    window.localStorage.setItem(scopeKey(email), JSON.stringify(state))
+    window.localStorage.setItem(writingPlanStorageKey(email), JSON.stringify(state))
   } catch {
     // Storage full or blocked — plan just won't persist across reloads this session.
   }
@@ -114,7 +146,73 @@ const TIER_BADGE: Record<1 | 2 | 3, { label: string; className: string }> = {
 
 const COURSE_TITLE = 'IELTS Academic Writing — Intensive'
 
+/**
+ * Admin entry point: the course, plus a persona switcher above it.
+ *
+ * A persona is only a storage scope, so switching one on is a remount with a
+ * different learner id — hence the `key`. Everything below this component is
+ * unchanged by the preview, and the admin's own scope is never written to while
+ * a persona is active.
+ */
 export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: CourseHomePageProps) {
+  const [personaId, setPersonaId] = useState<PersonaId>('self')
+  const scope = personaScope(personaId, learnerEmail)
+  const persona = PERSONA_BY_ID[personaId]
+
+  const switchPersona = (next: PersonaId) => {
+    seedPersona(next)
+    setPersonaId(next)
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0 })
+  }
+
+  return (
+    <>
+      <div className={`cwPersonaBar ${personaId === 'self' ? '' : 'is-preview'}`}>
+        <span className="cwPersonaLabel">ดูในมุมของ</span>
+        <div className="cwPersonaChips" role="group" aria-label="เลือกเพอร์โซนาที่จะดูตัวอย่าง">
+          {PERSONAS.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              className={`cwPersonaChip ${personaId === option.id ? 'is-active' : ''}`}
+              aria-pressed={personaId === option.id}
+              title={option.blurb}
+              onClick={() => switchPersona(option.id)}
+            >
+              <span aria-hidden="true">{option.emoji}</span> {option.label}
+            </button>
+          ))}
+        </div>
+        {personaId !== 'self' && (
+          <button
+            type="button"
+            className="cwPersonaReset"
+            onClick={() => {
+              resetPersona(personaId)
+              // Remount by bouncing through 'self' — the seed is already written,
+              // so this lands back on a freshly-seeded persona.
+              setPersonaId('self')
+              window.setTimeout(() => setPersonaId(personaId), 0)
+            }}
+          >
+            ↺ รีเซ็ตเพอร์โซนานี้
+          </button>
+        )}
+      </div>
+
+      {personaId !== 'self' && <p className="cwPersonaNote">{persona.emoji} {persona.blurb} — ข้อมูลจำลอง ไม่กระทบบัญชีจริงของคุณ</p>}
+
+      <CourseHomeShell
+        key={scope}
+        onBackHome={onBackHome}
+        learnerEmail={scope}
+        learnerName={personaId === 'self' ? learnerName : persona.label}
+      />
+    </>
+  )
+}
+
+function CourseHomeShell({ onBackHome, learnerEmail, learnerName }: CourseHomePageProps) {
   // Read once via lazy initializers, not an effect — this is an admin-only
   // preview where `learnerEmail` doesn't change mid-session, so there's no
   // real "hydration" step: the first render already has the right state.
@@ -123,7 +221,7 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
   )
   const [completedIds, setCompletedIds] = useState<Set<string>>(() => new Set(loadStoredState(learnerEmail).completedIds))
   const [aheadUnlocked, setAheadUnlocked] = useState<Set<number>>(() => new Set(loadStoredState(learnerEmail).aheadUnlocked))
-  const [view, setView] = useState<View>(() => (loadStoredState(learnerEmail).onboarding ? 'day' : 'hub'))
+  const [view, setView] = useState<View>('hub')
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null)
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null)
   // Open on the chapter the student has actually reached, not always chapter 1 —
@@ -145,13 +243,49 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
   // Desktop keeps the sidebar pinned; this only drives the mobile drawer.
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
+  const [resume, setResume] = useState<ResumeMap>(() => loadStoredState(learnerEmail).resume)
+
+  /**
+   * Which lesson, if any, should start playing the moment it opens.
+   *
+   * Only ever set by an explicit "continue"/"start" tap — never by ordinary
+   * navigation. A video that begins talking because you happened to land on a
+   * page is an uncontrolled event, and that is exactly the pattern that makes
+   * an interface hostile to sensory-sensitive learners.
+   */
+  const [autoplayLessonId, setAutoplayLessonId] = useState<string | null>(null)
+
   useEffect(() => {
     saveStoredState(learnerEmail, {
       onboarding,
       completedIds: Array.from(completedIds),
-      aheadUnlocked: Array.from(aheadUnlocked)
+      aheadUnlocked: Array.from(aheadUnlocked),
+      resume
     })
-  }, [learnerEmail, onboarding, completedIds, aheadUnlocked])
+  }, [learnerEmail, onboarding, completedIds, aheadUnlocked, resume])
+
+  /**
+   * Records where a lesson's video actually reached. Called from the player,
+   * throttled there — so this only fires every few seconds, plus on pause/end.
+   */
+  const recordPosition = useCallback((lessonId: string, seconds: number, duration: number) => {
+    setResume((prev) => {
+      const previous = prev[lessonId]
+      // Ignore no-op ticks so we don't churn state (and localStorage) on every poll.
+      if (previous && previous.seconds === seconds && previous.duration === duration) return prev
+      return { ...prev, [lessonId]: { seconds, duration, updatedAt: Date.now() } }
+    })
+  }, [])
+
+  /** Marking a lesson done clears its resume point — there's nothing to return to. */
+  const clearResume = useCallback((lessonId: string) => {
+    setResume((prev) => {
+      if (!prev[lessonId]) return prev
+      const next = { ...prev }
+      delete next[lessonId]
+      return next
+    })
+  }, [])
 
   const calendar = useMemo(() => (onboarding ? buildCalendar(onboarding, false) : []), [onboarding])
   const calendarByDate = useMemo(() => {
@@ -190,14 +324,40 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
     [completedIds]
   )
 
-  const openLesson = (lessonId: string) => {
+  const openLesson = (lessonId: string, options?: { autoplay?: boolean }) => {
     const lesson = WRITING_COURSE_LESSONS.find((l) => l.id === lessonId)
     if (lesson) setOpenChapters((prev) => new Set(prev).add(lesson.chapterIndex))
     setSelectedLessonId(lessonId)
+    setAutoplayLessonId(options?.autoplay ? lessonId : null)
     setView('lesson')
     setSidebarOpen(false)
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  /**
+   * The single action the course shell exists to serve: put the learner into
+   * the video they should be watching, playing, in one tap.
+   *
+   * Preference order — resume a half-watched lesson, else the first unfinished
+   * lesson of today's plan, else the next unfinished lesson in the track. There
+   * is deliberately no "pick one" step; deciding what to study is the work the
+   * plan already did.
+   */
+  const continueTarget = useMemo(() => {
+    const resumable = pickResumeLesson(resume)
+    if (resumable && !completedIds.has(resumable.lessonId)) {
+      const lesson = WRITING_COURSE_LESSONS.find((l) => l.id === resumable.lessonId)
+      if (lesson?.bunnyVideoId) return { lesson, entry: resumable.entry }
+    }
+    const fromToday = todayPlan?.day?.lessons?.find(
+      (l) => !completedIds.has(l.id) && l.bunnyVideoId
+    )
+    if (fromToday) return { lesson: fromToday, entry: undefined }
+    const nextInTrack = WRITING_COURSE_LESSONS.find(
+      (l) => planIds.has(l.id) && !completedIds.has(l.id) && l.bunnyVideoId
+    )
+    return nextInTrack ? { lesson: nextInTrack, entry: undefined } : null
+  }, [resume, completedIds, todayPlan, planIds])
 
   const toggleChapter = (chapterIndex: number) => {
     setOpenChapters((prev) => {
@@ -284,12 +444,28 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
   }, [draftTrack, draftInterval, draftMinutes])
 
   // ------------------------------------------------------- gate screens --
-  if (view === 'hub' || view === 'onboarding' || !onboarding) {
+  // The journey home is the front door for every course, not just Writing: pace
+  // first, then which courses, then the calendar those two produce. The Writing
+  // shell below is what one course looks like once you step into it.
+  if (view === 'hub') {
+    return (
+      <CourseJourneyHome
+        learnerEmail={learnerEmail}
+        learnerName={learnerName}
+        onBackHome={onBackHome}
+        onOpenWritingCourse={() => (onboarding ? setView('day') : startOnboarding('track'))}
+        writingCompletedIds={completedIds}
+        onToggleWritingLesson={toggleComplete}
+      />
+    )
+  }
+
+  if (view === 'onboarding' || !onboarding) {
     return (
       <div className="courseWritingPage">
         <div className="cwTopBar">
-          <button type="button" className="cwBack" onClick={onBackHome}>
-            ← กลับหน้าหลัก
+          <button type="button" className="cwBack" onClick={() => setView('hub')}>
+            ← กลับหน้าคอร์สของฉัน
           </button>
           <span className="cwTopBarLabel">Course · Admin preview</span>
         </div>
@@ -332,7 +508,7 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
         <button type="button" className="cwIconBtn cwSidebarToggle" onClick={() => setSidebarOpen((v) => !v)} aria-label="เปิดรายการบทเรียน">
           ☰
         </button>
-        <button type="button" className="cwBack cwBack-bare" onClick={onBackHome}>
+        <button type="button" className="cwBack cwBack-bare" onClick={() => setView('hub')} aria-label="กลับหน้าคอร์สของฉัน">
           ←
         </button>
         <div className="cwAppBarTitle">
@@ -341,11 +517,19 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
             {trackMeta.emoji} {trackMeta.label} · {overall.completedLessons}/{overall.totalLessons} บท
           </small>
         </div>
-        <div className="cwAppBarProgress" aria-label={`ความคืบหน้า ${overall.percent}%`}>
+        {/* A percentage alone is a summary the learner has to decode; the raw
+            count is the thing they can actually act on ("6 lessons left"). Show
+            both, count first. */}
+        <div
+          className="cwAppBarProgress"
+          aria-label={`เรียนแล้ว ${overall.completedLessons} จาก ${overall.totalLessons} บท (${overall.percent}%)`}
+        >
           <div className="cwAppBarTrack">
             <i style={{ width: `${overall.percent}%` }} />
           </div>
-          <span>{overall.percent}%</span>
+          <span>
+            {overall.completedLessons}/{overall.totalLessons} บท
+          </span>
         </div>
         <button type="button" className="cwBtn cwBtn-ghost cwBtn-small cwAppBarPlan" onClick={() => startOnboarding('pace')}>
           แผนของฉัน
@@ -382,9 +566,17 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
               trackLabel={trackMeta.label}
               prevLesson={prevLesson}
               nextLesson={nextLesson}
-              onToggleComplete={() => toggleComplete(selectedLesson.id)}
+              onToggleComplete={() => {
+                // Finishing a lesson removes its resume point — there's no
+                // half-watched state left to return to.
+                if (!completedIds.has(selectedLesson.id)) clearResume(selectedLesson.id)
+                toggleComplete(selectedLesson.id)
+              }}
               onOpenLesson={openLesson}
               onBackToPlan={() => setView('day')}
+              resumeEntry={resume[selectedLesson.id]}
+              autoplay={autoplayLessonId === selectedLesson.id}
+              onRecordPosition={(seconds, duration) => recordPosition(selectedLesson.id, seconds, duration)}
             />
           )}
 
@@ -398,6 +590,7 @@ export function CourseHomePage({ onBackHome, learnerEmail, learnerName }: Course
               finishDateIso={finishDateIso}
               completedIds={completedIds}
               firstPlayable={firstPlayable}
+              continueTarget={continueTarget}
               onOpenLesson={openLesson}
               onStudyAhead={(index) => setConfirmDayIndex(index)}
               onOpenCalendar={() => setView('calendar')}
@@ -887,6 +1080,60 @@ function CurriculumSidebar({
 
 // ============================================================ lesson =====
 
+/** Bunny Stream library holding the Writing course videos. */
+const WRITING_BUNNY_LIBRARY = '712721'
+
+/**
+ * The lesson video, wired so that leaving mid-lesson costs nothing.
+ *
+ * Position comes back out of the player over Bunny's Player.js channel and is
+ * handed upward to be persisted; on the way in, a saved position becomes the
+ * embed's start offset. The learner never has to scrub to find their place.
+ */
+function LessonPlayer({
+  lessonId,
+  videoId,
+  title,
+  startSeconds,
+  autoplay,
+  onRecordPosition
+}: {
+  lessonId: string
+  videoId: string
+  title: string
+  startSeconds?: number
+  autoplay?: boolean
+  onRecordPosition: (seconds: number, duration: number) => void
+}) {
+  const frameRef = useRef<HTMLIFrameElement | null>(null)
+
+  // Resolved once per lesson: re-deriving it on every position update would
+  // rewrite src mid-playback and restart the video.
+  const [embedSrc] = useState(() =>
+    buildEmbedUrl({ libraryId: WRITING_BUNNY_LIBRARY, videoId, startSeconds, autoplay })
+  )
+
+  useEffect(() => {
+    const frame = frameRef.current
+    if (!frame) return
+    return subscribeToPlaybackPosition(frame, (seconds, duration) => {
+      onRecordPosition(seconds, duration)
+    })
+  }, [lessonId, onRecordPosition])
+
+  return (
+    <iframe
+      key={lessonId}
+      ref={frameRef}
+      src={embedSrc}
+      loading="lazy"
+      allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+      allowFullScreen
+      title={title}
+    />
+  )
+}
+
 type LessonPanelProps = {
   lesson: CourseLesson
   lessonNumber: number
@@ -898,6 +1145,11 @@ type LessonPanelProps = {
   onToggleComplete: () => void
   onOpenLesson: (lessonId: string) => void
   onBackToPlan: () => void
+  /** Saved playback position for this lesson, if it was left part-way. */
+  resumeEntry?: LessonResumeEntry
+  /** Start playing immediately — set when the learner tapped "continue". */
+  autoplay?: boolean
+  onRecordPosition: (seconds: number, duration: number) => void
 }
 
 function LessonPanel({
@@ -910,9 +1162,13 @@ function LessonPanel({
   nextLesson,
   onToggleComplete,
   onOpenLesson,
-  onBackToPlan
+  onBackToPlan,
+  resumeEntry,
+  autoplay,
+  onRecordPosition
 }: LessonPanelProps) {
   const tier = TIER_BADGE[lesson.tier]
+  const showResumeNote = isResumable(resumeEntry) && !isDone
 
   return (
     <article className="cwLessonPanel">
@@ -934,13 +1190,17 @@ function LessonPanel({
 
       <div className="cwPlayer">
         {lesson.bunnyVideoId ? (
-          <iframe
+          <LessonPlayer
+            // Keyed on the lesson: the embed URL is initial state inside the
+            // player, so without a remount the next lesson kept the previous
+            // video — new title, same clip.
             key={lesson.id}
-            src={`https://iframe.mediadelivery.net/embed/712721/${lesson.bunnyVideoId}?autoplay=false`}
-            loading="lazy"
-            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-            allowFullScreen
+            lessonId={lesson.id}
+            videoId={lesson.bunnyVideoId}
             title={lesson.title}
+            startSeconds={resumeEntry?.seconds}
+            autoplay={autoplay}
+            onRecordPosition={onRecordPosition}
           />
         ) : (
           <div className="cwPlayerEmpty">
@@ -950,6 +1210,13 @@ function LessonPanel({
           </div>
         )}
       </div>
+
+      {showResumeNote && resumeEntry && (
+        <p className="cwResumeNote">
+          เล่นต่อจาก {formatClock(resumeEntry.seconds)}
+          {resumeEntry.duration > 0 && ` — เหลืออีก ${minutesLeft(resumeEntry)} นาที`}
+        </p>
+      )}
 
       {!inPlan && (
         <p className="cwBonusNote">บทนี้เป็นบทเสริม ไม่ได้อยู่ในแผน{trackLabel}ของคุณ — ดูได้ตามสบาย ไม่กระทบความคืบหน้า</p>
@@ -1024,10 +1291,12 @@ type DayPanelProps = {
   finishDateIso: string | null
   completedIds: Set<string>
   firstPlayable: CourseLesson | null
-  onOpenLesson: (lessonId: string) => void
+  onOpenLesson: (lessonId: string, options?: { autoplay?: boolean }) => void
   onStudyAhead: (dayIndex: number) => void
   onOpenCalendar: () => void
   onOpenProgress: () => void
+  /** Half-watched lesson to offer instead of starting something new, if any. */
+  continueTarget: { lesson: CourseLesson; entry?: LessonResumeEntry } | null
 }
 
 function DayPanel({
@@ -1042,7 +1311,8 @@ function DayPanel({
   onOpenLesson,
   onStudyAhead,
   onOpenCalendar,
-  onOpenProgress
+  onOpenProgress,
+  continueTarget
 }: DayPanelProps) {
   const nextUp = selectedDay?.lessons.find((lesson) => !completedIds.has(lesson.id)) ?? null
 
@@ -1091,10 +1361,37 @@ function DayPanel({
             </span>
           </div>
 
-          {/* The single obvious action. Everything below it is optional detail —
-              a student who only ever taps this button still finishes the course. */}
-          {nextUp ? (
-            <button type="button" className="cwStartBtn" onClick={() => onOpenLesson(nextUp.id)}>
+          {/* The single obvious action, and the only one that autoplays: one tap
+              from here puts the video on. If a lesson was left part-way, that is
+              what this button offers — resuming beats starting something new,
+              and it costs the learner nothing to find their place again. */}
+          {continueTarget ? (
+            <button
+              type="button"
+              className="cwStartBtn"
+              onClick={() => onOpenLesson(continueTarget.lesson.id, { autoplay: true })}
+            >
+              <span className="cwStartIcon" aria-hidden="true">
+                ▶
+              </span>
+              <span className="cwStartBody">
+                <small>
+                  {continueTarget.entry
+                    ? `เล่นต่อจาก ${formatClock(continueTarget.entry.seconds)}`
+                    : 'เริ่มตรงนี้'}
+                </small>
+                <b>{continueTarget.lesson.title}</b>
+              </span>
+              <span className="cwStartMin">
+                {continueTarget.entry
+                  ? `เหลือ ${minutesLeft(continueTarget.entry)} นาที`
+                  : continueTarget.lesson.minutes > 0
+                    ? `${continueTarget.lesson.minutes} นาที`
+                    : 'แบบฝึกหัด'}
+              </span>
+            </button>
+          ) : nextUp ? (
+            <button type="button" className="cwStartBtn" onClick={() => onOpenLesson(nextUp.id, { autoplay: true })}>
               <span className="cwStartIcon" aria-hidden="true">
                 ▶
               </span>

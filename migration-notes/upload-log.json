@@ -1,0 +1,600 @@
+{
+  "cr5b0fhifvec72si25t0.mp4": {
+    "guid": "764f31cd-1a7a-433b-8cd1-15279464daaa",
+    "sizeBytes": 1316599220,
+    "uploadedAt": "2026-07-25T20:15:55.114Z",
+    "deletedLocal": true
+  },
+  "d6nbbcsk7o3s72t7gl8g.mov": {
+    "guid": "8ae20c22-f114-4866-a046-2cacec5ca140",
+    "sizeBytes": 379243735,
+    "uploadedAt": "2026-07-25T20:18:47.381Z",
+    "deletedLocal": true
+  },
+  "cbp09r6tov91j64ivuqg.mp4": {
+    "guid": "2bc845ab-49e2-40cd-a9a7-9e739f2e33a0",
+    "sizeBytes": 772597500,
+    "uploadedAt": "2026-07-25T20:23:09.660Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbp09r6tov91j64ivuqg.mp4'",
+    "attemptedAt": "2026-07-25T20:23:09.664Z"
+  },
+  "cbhri19t4o1cl02sq0h0.mp4": {
+    "guid": "15b3559e-c49d-40b0-be9b-96de700c863f",
+    "sizeBytes": 498402602,
+    "uploadedAt": "2026-07-25T20:25:35.305Z",
+    "deletedLocal": true
+  },
+  "cbp0c2pt4o1cl02t6g40.mp4": {
+    "guid": "047ebf83-bef7-4e42-9feb-eca896c5f97e",
+    "sizeBytes": 785621417,
+    "uploadedAt": "2026-07-25T20:29:27.614Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbp0c2pt4o1cl02t6g40.mp4'",
+    "attemptedAt": "2026-07-25T20:29:27.618Z"
+  },
+  "d85gj3onq9dc72upip40.mov": {
+    "guid": "3d0a47a6-a5bf-4f4f-9776-63d60aa777c4",
+    "sizeBytes": 67615878,
+    "uploadedAt": "2026-07-26T06:24:49.988Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/d85gj3onq9dc72upip40.mov'",
+    "attemptedAt": "2026-07-26T06:24:49.991Z"
+  },
+  "cbmuu59t4o1cl02t35l0.mp4": {
+    "guid": "85495d50-f895-410a-99b3-e267f1d875e0",
+    "sizeBytes": 287452571,
+    "uploadedAt": "2026-07-26T06:28:35.303Z",
+    "deletedLocal": true
+  },
+  "cbnlojmtov91j64itk6g.mp4": {
+    "guid": "00df54fd-6a4a-416f-98e3-3cd9287a38d6",
+    "sizeBytes": 493325752,
+    "uploadedAt": "2026-07-26T06:36:09.607Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbnlojmtov91j64itk6g.mp4'",
+    "attemptedAt": "2026-07-26T06:36:09.609Z"
+  },
+  "cbhsg39t4o1cl02sq1dg.mp4": {
+    "guid": "5e3173b9-779d-4cf2-b4d5-20bbcd95f594",
+    "sizeBytes": 533809020,
+    "uploadedAt": "2026-07-26T07:40:04.350Z",
+    "deletedLocal": true
+  },
+  "cbjbb3etov91j64il72g.mp4": {
+    "guid": "fd3ec099-d63b-42c6-bd27-cdc446f4ee8c",
+    "sizeBytes": 304833247,
+    "uploadedAt": "2026-07-26T07:40:59.921Z",
+    "deletedLocal": true
+  },
+  "cbn213etov91j64isoag.mp4": {
+    "guid": "b010bac8-f143-48c3-8874-4cb32ce26d3a",
+    "sizeBytes": 552613350,
+    "uploadedAt": "2026-07-26T07:43:19.740Z",
+    "deletedLocal": true
+  },
+  "cbn31u1t4o1cl02t3c80.mp4": {
+    "guid": "5a2215a6-85f2-4be1-97a5-cc1e68d2b618",
+    "sizeBytes": 555135737,
+    "uploadedAt": "2026-07-26T07:45:14.734Z",
+    "deletedLocal": true
+  },
+  "cbhse31t4o1cl02sq1bg.mp4": {
+    "guid": "5e46e94e-8686-4713-b595-49eee00e8fd8",
+    "sizeBytes": 1011130622,
+    "uploadedAt": "2026-07-26T07:36:41.615Z",
+    "deletedLocal": true
+  },
+  "cbroeb2ngonk29796mag.mp4": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 384045404,
+    "attemptedAt": "2026-07-26T07:24:09.009Z",
+    "deletedLocal": false
+  },
+  "cbrogcunq5n3q0vts8ag.mp4": {
+    "error": "TypeError: fetch failed",
+    "sizeBytes": 334125703,
+    "attemptedAt": "2026-07-26T07:24:20.827Z",
+    "deletedLocal": false
+  },
+  "cbt2u9s42skf5nh8mdkg.mp4": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 443499009,
+    "attemptedAt": "2026-07-26T07:29:21.905Z",
+    "deletedLocal": false
+  },
+  "c7op6h5higa6vp78bkmg.mp4": {
+    "guid": "09b1afa0-1c5d-4662-95e2-2ddc23128105",
+    "sizeBytes": 68927014,
+    "uploadedAt": "2026-07-26T07:29:56.867Z",
+    "deletedLocal": true
+  },
+  "c7op6u7j446ouo8krts0.mp4": {
+    "guid": "56f25573-382a-4d4d-b8f5-1bdf37d55cc1",
+    "sizeBytes": 74964524,
+    "uploadedAt": "2026-07-26T07:30:20.887Z",
+    "deletedLocal": true
+  },
+  "c7op515higa6vp78bkfg.mp4": {
+    "guid": "e8f5c0ae-1970-4882-b7ef-029947cb6079",
+    "sizeBytes": 855280300,
+    "uploadedAt": "2026-07-26T07:49:02.063Z",
+    "deletedLocal": true
+  },
+  "c7op82vj446ouo8krtug.mp4": {
+    "guid": "4c8e8489-485a-4fbe-957b-14fc2340ad98",
+    "sizeBytes": 469259040,
+    "uploadedAt": "2026-07-26T07:50:40.856Z",
+    "deletedLocal": true
+  },
+  "cc36a5hiuev4njhudsv0.mp4": {
+    "guid": "b8577c9e-263b-4ad8-8e95-3438219e7eac",
+    "sizeBytes": 820702573,
+    "uploadedAt": "2026-07-26T07:53:43.303Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cc36a5hiuev4njhudsv0.mp4'",
+    "attemptedAt": "2026-07-26T07:53:43.307Z"
+  },
+  "cc5q4qse3foi0cqb96g0.mp4": {
+    "guid": "64b7dea8-7e8c-4d5a-9d3c-93be3d8e3211",
+    "sizeBytes": 458294030,
+    "uploadedAt": "2026-07-26T07:55:28.668Z",
+    "deletedLocal": true
+  },
+  "cc7olamv9f68seucfdkg.mp4": {
+    "guid": "f5805da2-fef0-4232-9199-e86d1f572cc7",
+    "sizeBytes": 527915392,
+    "uploadedAt": "2026-07-26T07:57:46.490Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cc7olamv9f68seucfdkg.mp4'",
+    "attemptedAt": "2026-07-26T07:57:46.492Z"
+  },
+  "civ700el95n6jch5m0tg.mov": {
+    "guid": "fe1a9e84-3555-434e-b0eb-e8d850abf55a",
+    "sizeBytes": 1260714673,
+    "uploadedAt": "2026-07-26T08:02:56.807Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/civ700el95n6jch5m0tg.mov'",
+    "attemptedAt": "2026-07-26T08:02:56.809Z"
+  },
+  "cr5bc9hifvec72si261g.mp4": {
+    "guid": "5a622f31-dc73-42df-adcd-8062267e8937",
+    "sizeBytes": 984450546,
+    "uploadedAt": "2026-07-26T08:06:13.646Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cr5bc9hifvec72si261g.mp4'",
+    "attemptedAt": "2026-07-26T08:06:13.650Z"
+  },
+  "cr7kv8ahkldc72r1rmrg.mp4": {
+    "guid": "a97831c6-2dc9-442d-85a3-6692b5fbcfd5",
+    "sizeBytes": 2124946988,
+    "uploadedAt": "2026-07-26T08:12:34.256Z",
+    "deletedLocal": true,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cr7kv8ahkldc72r1rmrg.mp4'",
+    "attemptedAt": "2026-07-26T08:12:34.261Z"
+  },
+  "d7spl9m1816c72vpflag.mov": {
+    "guid": "b6e1adab-8c4d-4d2c-8508-b9ba372bfe2d",
+    "sizeBytes": 276195682,
+    "uploadedAt": "2026-07-26T08:13:13.316Z",
+    "deletedLocal": true
+  },
+  "cbmvegmtov91j64isk9g (1).mp4": {
+    "guid": "6f756739-d2d2-4547-a57e-41f4d0cc18cc",
+    "sizeBytes": 224345222,
+    "uploadedAt": "2026-07-26T09:01:25.096Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbmvegmtov91j64isk9g (1).mp4'",
+    "attemptedAt": "2026-07-26T09:01:25.099Z"
+  },
+  "cbn010pt4o1cl02t36q0.mp4": {
+    "guid": "e98d7db6-9506-495a-b17f-4385f1eb7a6f",
+    "sizeBytes": 239690507,
+    "uploadedAt": "2026-07-26T09:02:29.126Z",
+    "deletedLocal": true
+  },
+  "cbmvegmtov91j64isk9g.mp4": {
+    "guid": "0a407f12-1a1f-4bf1-9e93-eb9260d848bc",
+    "sizeBytes": 224345222,
+    "uploadedAt": "2026-07-26T09:04:37.133Z",
+    "deletedLocal": true
+  },
+  "cbrodk2ngonk29796ma0.mp4": {
+    "guid": "e96cba38-40ca-4403-a40d-5d77f19c0766",
+    "sizeBytes": 374156142,
+    "uploadedAt": "2026-07-26T09:09:24.736Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbrodk2ngonk29796ma0.mp4'",
+    "attemptedAt": "2026-07-26T09:09:24.738Z"
+  },
+  "cc4chs4oerugogmbbimg.mp4": {
+    "guid": "55fd3c69-f796-4a51-aa03-e0de2113f908",
+    "sizeBytes": 497316158,
+    "uploadedAt": "2026-07-26T09:13:02.688Z",
+    "deletedLocal": true
+  },
+  "cbuaifbdgubqta5koodg.mp4": {
+    "guid": "7a83c479-6a14-4794-bebb-129f8fd56144",
+    "sizeBytes": 431705823,
+    "uploadedAt": "2026-07-26T09:17:32.536Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbuaifbdgubqta5koodg.mp4'",
+    "attemptedAt": "2026-07-26T09:17:32.538Z"
+  },
+  "cbpqjeht4o1cl02t82q0.mp4": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 987494058,
+    "attemptedAt": "2026-07-26T09:27:43.828Z",
+    "deletedLocal": false
+  },
+  "cbodadpt4o1cl02t52j0.mp4": {
+    "guid": "cb90e359-2213-4f39-a990-f88853c1e94b",
+    "sizeBytes": 411550294,
+    "uploadedAt": "2026-07-26T09:46:11.926Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbodadpt4o1cl02t52j0.mp4'",
+    "attemptedAt": "2026-07-26T09:46:11.928Z"
+  },
+  "cbhqim9t4o1cl02spuq0.mp4": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 388300011,
+    "attemptedAt": "2026-07-26T09:37:07.640Z",
+    "deletedLocal": false
+  },
+  "cbibo9etov91j64ik7pg.mp4": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 524190772,
+    "attemptedAt": "2026-07-26T09:43:09.357Z",
+    "deletedLocal": false
+  },
+  "cc0asi2sh0ofv2q34nr0.mp4": {
+    "guid": "a12f464b-be02-48b6-a065-dd27b5848e4c",
+    "sizeBytes": 291217427,
+    "uploadedAt": "2026-07-26T09:48:46.878Z",
+    "deletedLocal": true
+  },
+  "cc3fguvu8u1vnh1ahcag.mp4": {
+    "guid": "72cbc2c6-66e4-478a-955c-e8703df9ec1b",
+    "sizeBytes": 564134567,
+    "uploadedAt": "2026-07-26T09:53:49.190Z",
+    "deletedLocal": true
+  },
+  "c7opb4thiga6vp78bl4g.mp4": {
+    "error": "TypeError: fetch failed",
+    "sizeBytes": 167729427,
+    "attemptedAt": "2026-07-26T09:55:34.883Z",
+    "deletedLocal": false
+  },
+  "c7opbtdhiga6vp78bla0.mp4": {
+    "guid": "d323862c-de71-4808-bbfa-2d3c5b9cebaa",
+    "sizeBytes": 142105420,
+    "uploadedAt": "2026-07-26T09:57:01.522Z",
+    "deletedLocal": true
+  },
+  "c7opbudhiga6vp78blag.mp4": {
+    "guid": "4532780d-b61f-4738-85cc-5551efaac21d",
+    "sizeBytes": 149484651,
+    "uploadedAt": "2026-07-26T09:58:17.233Z",
+    "deletedLocal": true
+  },
+  "c7opcfnj446ouo8krufg.mp4": {
+    "guid": "0cbf943a-0b7e-4f38-8d4c-6be0029cb966",
+    "sizeBytes": 826057422,
+    "uploadedAt": "2026-07-26T10:04:05.365Z",
+    "deletedLocal": true
+  },
+  "c7rqc4od9bgdk36qt9kg.mp4": {
+    "guid": "89c35652-0547-4618-8c7f-5f23e3cf365b",
+    "sizeBytes": 1246162874,
+    "uploadedAt": "2026-07-26T10:09:08.047Z",
+    "deletedLocal": true
+  },
+  "c7rquvp69ueleahi9lb0.mp4": {
+    "guid": "0c1ef7f9-3712-42e9-8cce-bcb28ca6f505",
+    "sizeBytes": 223004323,
+    "uploadedAt": "2026-07-26T10:09:55.836Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/c7rquvp69ueleahi9lb0.mp4'",
+    "attemptedAt": "2026-07-26T10:09:55.838Z"
+  },
+  "d7srnejgotrs72rom00g.mov": {
+    "guid": "9f323e93-c083-4262-8002-885e0126ba0a",
+    "sizeBytes": 184940987,
+    "uploadedAt": "2026-07-26T10:10:51.147Z",
+    "deletedLocal": true
+  },
+  "cc0gqfdohl9ac3uo3tlg (1).mp4": {
+    "guid": "a2ed749e-f893-461d-93ea-cabda367a1ad",
+    "sizeBytes": 258765242,
+    "uploadedAt": "2026-07-26T11:15:23.710Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cc0gqfdohl9ac3uo3tlg (1).mp4'",
+    "attemptedAt": "2026-07-26T11:15:23.713Z"
+  },
+  "cc0gqfdohl9ac3uo3tlg.mp4": {
+    "guid": "0e802f9c-f578-48f7-94f7-1fc55d083a1a",
+    "sizeBytes": 258765242,
+    "uploadedAt": "2026-07-26T11:20:04.398Z",
+    "deletedLocal": true
+  },
+  "cc36b26mki57p3laqmag.mp4": {
+    "error": "TypeError: fetch failed",
+    "sizeBytes": 513624910,
+    "attemptedAt": "2026-07-26T11:21:48.238Z",
+    "deletedLocal": false
+  },
+  "cc7opnev9f68seucfeag.mp4": {
+    "guid": "043eee71-dede-45e3-9c82-5c8cc2603a78",
+    "sizeBytes": 892266338,
+    "uploadedAt": "2026-07-26T11:26:01.602Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cc7opnev9f68seucfeag.mp4'",
+    "attemptedAt": "2026-07-26T11:26:01.604Z"
+  },
+  "cboftoht4o1cl02t56v0.mp4": {
+    "guid": "d999c2d3-0492-4e7a-b018-6cff4a08d598",
+    "sizeBytes": 576247297,
+    "uploadedAt": "2026-07-26T15:32:38.889Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cboftoht4o1cl02t56v0.mp4'",
+    "attemptedAt": "2026-07-26T15:32:38.891Z"
+  },
+  "cbl22u6tov91j64iomt0.mp4": {
+    "guid": "65205e01-10d5-42d8-a6d7-0ca395b8e803",
+    "sizeBytes": 337582857,
+    "uploadedAt": "2026-07-26T15:34:12.568Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbl22u6tov91j64iomt0.mp4'",
+    "attemptedAt": "2026-07-26T15:34:12.569Z"
+  },
+  "cbhql2etov91j64ija90.mp4": {
+    "error": "TypeError: fetch failed",
+    "sizeBytes": 835902507,
+    "attemptedAt": "2026-07-26T15:37:26.008Z",
+    "deletedLocal": false
+  },
+  "cbnm5m9t4o1cl02t45mg.mp4": {
+    "guid": "7f78b3f3-ca02-4cd6-8a79-8ae7fc03cfbc",
+    "sizeBytes": 704098489,
+    "uploadedAt": "2026-07-26T15:39:05.367Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbnm5m9t4o1cl02t45mg.mp4'",
+    "attemptedAt": "2026-07-26T15:39:05.370Z"
+  },
+  "cbn010pt4o1cl02t36q0 (1).mp4": {
+    "guid": "701a5138-6e81-4140-9538-92210948438d",
+    "sizeBytes": 239690507,
+    "uploadedAt": "2026-07-26T16:58:19.986Z",
+    "deletedLocal": true
+  },
+  "cbj32q6tov91j64ikue0.mp4": {
+    "guid": "773631bb-b8d0-4c6e-878a-d586c0c44f81",
+    "sizeBytes": 266110484,
+    "uploadedAt": "2026-07-26T17:01:28.421Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbj32q6tov91j64ikue0.mp4'",
+    "attemptedAt": "2026-07-26T17:01:28.423Z"
+  },
+  "cbjarf9t4o1cl02srrjg.mp4": {
+    "guid": "417a9b3e-75c7-420d-8ca3-39b7982fb8e1",
+    "sizeBytes": 397884948,
+    "uploadedAt": "2026-07-26T17:05:08.413Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbjarf9t4o1cl02srrjg.mp4'",
+    "attemptedAt": "2026-07-26T17:05:08.438Z"
+  },
+  "cbj3qt6tov91j64ikv4g.mp4": {
+    "guid": "0b4a841e-9e96-4cf8-ada3-8719a6b9235d",
+    "sizeBytes": 356874691,
+    "uploadedAt": "2026-07-26T17:07:53.590Z",
+    "deletedLocal": true
+  },
+  "cbkck66tov91j64in2rg.mp4": {
+    "error": "TimeoutError: The operation was aborted due to timeout",
+    "sizeBytes": 288084068,
+    "attemptedAt": "2026-07-26T17:13:15.200Z",
+    "deletedLocal": false
+  },
+  "cc650i9bna5j9jj75oug.mp4": {
+    "guid": "6000a6a4-00d3-44e9-af1e-6a08544560c9",
+    "sizeBytes": 563923416,
+    "uploadedAt": "2026-07-26T17:18:33.616Z",
+    "deletedLocal": true,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cc650i9bna5j9jj75oug.mp4'",
+    "attemptedAt": "2026-07-26T17:18:33.619Z"
+  },
+  "cc75kfapnpkr54rlcf7g.mp4": {
+    "guid": "841d941c-2fff-467a-bef9-6c784a7b4f80",
+    "sizeBytes": 527799148,
+    "uploadedAt": "2026-07-26T17:21:10.053Z",
+    "deletedLocal": true
+  },
+  "cbjpspetov91j64ilpi0.mp4": {
+    "guid": "1f1ba30b-918a-45e1-85b4-05491991e3e8",
+    "sizeBytes": 621296111,
+    "uploadedAt": "2026-07-26T17:26:10.251Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbjpspetov91j64ilpi0.mp4'",
+    "attemptedAt": "2026-07-26T17:26:10.258Z"
+  },
+  "cbba22h6q8f61au7tql0.mp4": {
+    "guid": "b226496e-3ba4-46af-9ea4-545e5d640614",
+    "sizeBytes": 231464546,
+    "uploadedAt": "2026-07-26T17:27:55.680Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbba22h6q8f61au7tql0.mp4'",
+    "attemptedAt": "2026-07-26T17:27:55.682Z"
+  },
+  "cbkbed1t4o1cl02stkp0.mp4": {
+    "guid": "4dd8c66d-6917-43ba-abe8-c9184e9acf5c",
+    "sizeBytes": 349308687,
+    "uploadedAt": "2026-07-26T17:29:19.707Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cbkbed1t4o1cl02stkp0.mp4'",
+    "attemptedAt": "2026-07-26T17:29:19.709Z"
+  },
+  "cc650i9bna5j9jj75oug (1).mp4": {
+    "guid": "cbb52b62-b7b3-4df9-9cea-44a8103e51ea",
+    "sizeBytes": 563923416,
+    "uploadedAt": "2026-07-26T17:30:47.038Z",
+    "deletedLocal": true
+  },
+  "cbl3kcht4o1cl02svc5g.mp4": {
+    "guid": "3a3241f7-a1ae-493e-9f11-c24bfb32a147",
+    "sizeBytes": 680581347,
+    "uploadedAt": "2026-07-26T17:34:58.507Z",
+    "deletedLocal": true
+  },
+  "cbj3qt6tov91j64ikv4g (1).mp4": {
+    "guid": "cc5cf199-25b9-4aae-bced-9e50cce8e2b7",
+    "sizeBytes": 356874691,
+    "uploadedAt": "2026-07-26T17:43:10.253Z",
+    "deletedLocal": true
+  },
+  "d7spl9m1816c72vpflag (1).mov": {
+    "guid": "d26f3c8f-6b10-496c-a288-718b7689dd02",
+    "sizeBytes": 276195682,
+    "uploadedAt": "2026-07-26T17:48:12.196Z",
+    "deletedLocal": true
+  },
+  "cbl3kcht4o1cl02svc5g (1).mp4": {
+    "guid": "e59e3ff1-d19f-44a5-a5eb-0548ea316261",
+    "sizeBytes": 680581347,
+    "uploadedAt": "2026-07-26T17:47:08.291Z",
+    "deletedLocal": true
+  },
+  "c7opb2nj446ouo8kru6g.mp4": {
+    "guid": "7fd593c3-52c1-4398-a1c3-91a7a68cba79",
+    "sizeBytes": 569233727,
+    "uploadedAt": "2026-07-26T17:51:48.861Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/c7opb2nj446ouo8kru6g.mp4'",
+    "attemptedAt": "2026-07-26T17:51:48.863Z"
+  },
+  "d7srnejgotrs72rom00g (1).mov": {
+    "guid": "94d2f01e-f255-4dae-8818-038c5d7e92a0",
+    "sizeBytes": 184940987,
+    "uploadedAt": "2026-07-26T17:54:28.222Z",
+    "deletedLocal": true
+  },
+  "cbn010pt4o1cl02t36q0 (2).mp4": {
+    "guid": "537a0c70-0115-4f5c-916f-4d907fbfd548",
+    "sizeBytes": 239690507,
+    "uploadedAt": "2026-07-26T18:03:51.710Z",
+    "deletedLocal": true
+  },
+  "cr3hktbegt6c72tjqulg.mp4": {
+    "guid": "1a8fbd1a-41a4-49fc-9e38-f4dc7b4a69a1",
+    "sizeBytes": 1239557370,
+    "uploadedAt": "2026-07-26T18:22:34.139Z",
+    "deletedLocal": true
+  },
+  "ci8knqfqnfeulimq4p6g.mp4": {
+    "guid": "ca6661d5-9e54-4bc0-a770-07baa7ebb4b2",
+    "sizeBytes": 76726255,
+    "uploadedAt": "2026-07-27T06:09:02.704Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/ci8knqfqnfeulimq4p6g.mp4'",
+    "attemptedAt": "2026-07-27T06:09:02.706Z"
+  },
+  "ci7cetf0v4f0dlkhmgsg.mp4": {
+    "guid": "fb2d62cf-501c-4131-a5c5-a8e62a69032a",
+    "sizeBytes": 146304650,
+    "uploadedAt": "2026-07-27T06:10:00.213Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/ci7cetf0v4f0dlkhmgsg.mp4'",
+    "attemptedAt": "2026-07-27T06:10:00.217Z"
+  },
+  "cibdshmt6bgo63send8g.mp4": {
+    "guid": "4690fb17-c546-4c8a-8e1f-19de78e8a2aa",
+    "sizeBytes": 18233634,
+    "uploadedAt": "2026-07-27T06:12:31.991Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cibdshmt6bgo63send8g.mp4'",
+    "attemptedAt": "2026-07-27T06:12:31.993Z"
+  },
+  "cia159uh9ei38k4k2tag.mp4": {
+    "guid": "9d890611-be71-4485-bb72-57253d9dbe89",
+    "sizeBytes": 52643967,
+    "uploadedAt": "2026-07-27T06:13:15.060Z",
+    "deletedLocal": true
+  },
+  "cibadkbur55lmmto0450.mp4": {
+    "guid": "3351dc50-4085-41ea-a4f1-d77b87b9739a",
+    "sizeBytes": 35144401,
+    "uploadedAt": "2026-07-27T06:19:17.644Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cibadkbur55lmmto0450.mp4'",
+    "attemptedAt": "2026-07-27T06:19:17.646Z"
+  },
+  "cibad4oqej1rhvn1pbag.mp4": {
+    "guid": "84713794-0953-4892-bbc2-e3f272f8b4dd",
+    "sizeBytes": 43102531,
+    "uploadedAt": "2026-07-27T06:22:28.337Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cibad4oqej1rhvn1pbag.mp4'",
+    "attemptedAt": "2026-07-27T06:22:28.339Z"
+  },
+  "cia2e3uh9ei38k4k2ucg.mp4": {
+    "guid": "e6bdc7d0-869e-402f-9cde-c5e90aaab6d6",
+    "sizeBytes": 66321283,
+    "uploadedAt": "2026-07-27T06:23:53.644Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cia2e3uh9ei38k4k2ucg.mp4'",
+    "attemptedAt": "2026-07-27T06:23:53.645Z"
+  },
+  "ciojk7r4vn7e1kn5hun0.mp4": {
+    "guid": "26b43677-044c-4169-9bf0-5fa00ebe9455",
+    "sizeBytes": 82079872,
+    "uploadedAt": "2026-07-27T06:41:35.983Z",
+    "deletedLocal": true
+  },
+  "cibbpr3ur55lmmto04e0.mp4": {
+    "error": "Error: ENOENT: no such file or directory, stat '/Users/natchanon/Downloads/cibbpr3ur55lmmto04e0.mp4'",
+    "sizeBytes": 88498622,
+    "attemptedAt": "2026-07-27T06:41:56.818Z",
+    "deletedLocal": false
+  },
+  "cr3jtk3egt6c72tjr0q0.mp4": {
+    "guid": "375dd575-a2d5-4091-8d6f-f7c56b38fa90",
+    "sizeBytes": 1758306751,
+    "uploadedAt": "2026-07-27T06:51:50.285Z",
+    "deletedLocal": true
+  },
+  "cibbp2et6bgo63senbp0.mp4": {
+    "error": "TypeError: fetch failed",
+    "sizeBytes": 74265909,
+    "attemptedAt": "2026-07-27T07:46:47.093Z",
+    "deletedLocal": false
+  },
+  "cicp8518st33v0abor7g.mp4": {
+    "error": "Error: ENOENT: no such file or directory, stat '/Users/natchanon/Downloads/cicp8518st33v0abor7g.mp4'",
+    "sizeBytes": 96438933,
+    "attemptedAt": "2026-07-27T07:46:59.935Z",
+    "deletedLocal": false
+  },
+  "cicopoo2oja52hh28dvg.mp4": {
+    "guid": "54e9c5d4-bd5c-4396-ab47-73271112838d",
+    "sizeBytes": 134324518,
+    "uploadedAt": "2026-07-27T08:48:18.796Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/cicopoo2oja52hh28dvg.mp4'",
+    "attemptedAt": "2026-07-27T08:48:18.799Z"
+  },
+  "ci7e49tt0khi8ni6bpeg.mp4": {
+    "guid": "b49125c9-5b8d-41ff-bfd5-571f08068a24",
+    "sizeBytes": 191643650,
+    "uploadedAt": "2026-07-27T08:50:47.275Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/ci7e49tt0khi8ni6bpeg.mp4'",
+    "attemptedAt": "2026-07-27T08:50:47.278Z"
+  },
+  "ci7dtlqn4aj5pckmhjg0.mp4": {
+    "guid": "f2b6ecac-9222-45ae-b033-7581fc47a66c",
+    "sizeBytes": 317843003,
+    "uploadedAt": "2026-07-27T09:09:47.785Z",
+    "deletedLocal": false,
+    "error": "Error: ENOENT: no such file or directory, unlink '/Users/natchanon/Downloads/ci7dtlqn4aj5pckmhjg0.mp4'",
+    "attemptedAt": "2026-07-27T09:09:47.789Z"
+  }
+}

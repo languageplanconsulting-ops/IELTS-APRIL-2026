@@ -1,0 +1,3052 @@
+{
+ "speaking": {
+  "courseId": 1918204,
+  "name": "SPEAKING INTENSIVE FOR IELTS ",
+  "chapters": [
+   {
+    "pos": 0,
+    "name": "About IELTS Speaking ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "รู้จักข้อสอบ + ทำยังไงให้ได้ Band 7 ",
+      "cid": "TGVzc29uLTE1NDMzMDcx",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 1,
+    "name": "Day 1 : Talk about normal things like a pro",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "เพิ่ม fluency ด้วย past tense  🧠",
+      "cid": "TGVzc29uLTE1MTQ5MzI1",
+      "files": [
+       {
+        "fileName": "Day_1__Speaking_about_normal_things_like_a_pro!__ (1).pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Day_1__Speaking_about_normal_things_like_a_pro__1-220808-101321.pdf",
+        "size": "139 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "เพิ่ม Fluency ด้วย future tense  💡",
+      "cid": "TGVzc29uLTE1MTQ5Mzkx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "การใช้ discourse markers เพื่อเพิ่ม fluency ",
+      "cid": "TGVzc29uLTE1NDU1MDMw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "ตอบคำถามจริง (reading, work, hobby, music) - Part 1 ",
+      "cid": "TGVzc29uLTE1NTk0MjEw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "REAL-LIFE PRACTICE - Basic Questions ",
+      "cid": "TGVzc29uLTE1NjAyMjM5",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 2,
+    "name": "Day 2 : Give your opinion like a pro 🗣",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "การออกความเห็น 🧚‍♀️",
+      "cid": "TGVzc29uLTE1MTYyNTIz",
+      "files": [
+       {
+        "fileName": "DAY_2__GIVE_YOUR_OPINION_LIKE_A_PRO!_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/DAY_2__GIVE_YOUR_OPINION_LIKE_A_PRO_-220808-101456.pdf",
+        "size": "97.2 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "เรียบเรียง Idea ให้มี Logic",
+      "cid": "TGVzc29uLTE1NDU1NTE4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "ตัวอย่างการออกความเห็น",
+      "cid": "TGVzc29uLTE1MTY0MzY2",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 3,
+    "name": "Day 3 : Acing part 1 (focusing on fluency and grammar) ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Phrases and topics to improve your fluency - Talk about work",
+      "cid": "TGVzc29uLTE1MTYyOTk0",
+      "files": [
+       {
+        "fileName": "Useful phrases to increase your fluency.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Usefulphrasestoincreaseyourfluency-220808-102954.pdf",
+        "size": "78.7 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Part 1 Question (history/ stationary/ science class)",
+      "cid": "TGVzc29uLTE1MTYyODkz",
+      "files": [
+       {
+        "fileName": "SPEAKING ABOUT THE PAST.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/SPEAKINGABOUTTHEPAST-220808-103101.pdf",
+        "size": "67.3 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Part 1: Summary ",
+      "cid": "TGVzc29uLTI2ODY0NDgx",
+      "files": [
+       {
+        "fileName": "Speaking Part 1 Summary - A4 Printable.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/WpoiMgqQQ7CsR5Ewnr5F_Speaking%20Part%201%20Summary%20-%20A4%20Printable.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "การใช้ app ฝึก Speaking",
+      "cid": "TGVzc29uLTI5OTU0OTE4",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 4,
+    "name": "Day 4 : How to speak for 2 minutes 🎤",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "เทคนิคการพูด 2 นาที ",
+      "cid": "TGVzc29uLTE1NDgwNTM5",
+      "files": [
+       {
+        "fileName": "How to speaking for 2 minutes.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Howtospeakingfor2minutes-220808-161914.pdf",
+        "size": "89 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "วิธีฝึกการพูด 2 นาที",
+      "cid": "TGVzc29uLTE1MTYyOTc5",
+      "files": [
+       {
+        "fileName": "Movie_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Movie_-220808-190500.pdf",
+        "size": "48 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Describing a shop ",
+      "cid": "TGVzc29uLTE1MTYyOTI3",
+      "files": [
+       {
+        "fileName": "Favorite_shop_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Favorite_shop_-220809-183051.pdf",
+        "size": "64.1 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Describing your favorite shop (2) ",
+      "cid": "TGVzc29uLTE1NjIyNTQ5",
+      "files": [
+       {
+        "fileName": "Favorite_shop_-2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Favorite_shop_2-221127-221120.pdf",
+        "size": "64.1 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 5,
+    "name": "Day 5 : Speaking for 2 minutes ??? easy peasy 🍰",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "VOCABULARY FOR PEOPLE (PART 2) ",
+      "cid": "TGVzc29uLTE1MTYyOTM4",
+      "files": [
+       {
+        "fileName": "Add a heading.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Addaheading-220808-232858.pdf",
+        "size": "80.7 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "ฝึก Talk about people",
+      "cid": "TGVzc29uLTE1MTYyOTQ0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Talk about people (2) - Family member ",
+      "cid": "TGVzc29uLTE1NTA3NDM1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Vocabulary for Places (Speaking Part 2) ",
+      "cid": "TGVzc29uLTE1NTA3NjYz",
+      "files": [
+       {
+        "fileName": "Part 2  Talk about places.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Part2Talkaboutplaces-220808-233301.pdf",
+        "size": "38 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Practice : Talk about places (Market) ",
+      "cid": "TGVzc29uLTE1NTA3Njc1",
+      "files": [
+       {
+        "fileName": "Market_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Market_-220808-233807.pdf",
+        "size": "47.6 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 6,
+    "name": "Day 6 : Talk about people 🤾",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "TIPS for talking about activities",
+      "cid": "TGVzc29uLTE1MTYyOTUy",
+      "files": [
+       {
+        "fileName": "Part 1 - Useful phrases Generally speaking, I work as a doctor, so I am under a lot of stress. For this reason, there are many activities that I do on a regular basis to keep myself happy, whether it be....or.... Per.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Part1UsefulphrasesGenerallyspeakingIworkasadoctorsoIamunderalotofstressForthisreasontherearemanyactivitiesthatIdoonaregularbasistokeepmyselfhappywhetheritbeorPer-220808-234123.pdf",
+        "size": "37.3 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Practice : Habit that annoys you a lot (PART 2)",
+      "cid": "TGVzc29uLTE1NTE0MjEz",
+      "files": [
+       {
+        "fileName": "A_habit_that_annoys_you_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/A_habit_that_annoys_you_-220808-234447.pdf",
+        "size": "44.1 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "TIPS for speaking about objects  ",
+      "cid": "TGVzc29uLTE1NTE0MjE1",
+      "files": [
+       {
+        "fileName": "Talk about objects or things.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Talkaboutobjectsorthings-220808-234653.pdf",
+        "size": "38.5 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Practice : Talk about a product you bought and were dissatisfied (part2) ",
+      "cid": "TGVzc29uLTE1NTIyNTg1",
+      "files": [
+       {
+        "fileName": "Products_youre_dissatisfied_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Products_youre_dissatisfied_-220808-234948.pdf",
+        "size": "44.6 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 8,
+    "name": "Day 7 : Focus on using past tenses in speaking and introduction to part 3",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Template for talking about event (part 2) ",
+      "cid": "TGVzc29uLTE1MTYyOTY5",
+      "files": [
+       {
+        "fileName": "Talk about events.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Talkaboutevents-220808-235138.pdf",
+        "size": "98.1 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Practice : Describe an event you recently took ",
+      "cid": "TGVzc29uLTE1NTI0ODU4",
+      "files": [
+       {
+        "fileName": "Event_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Event_-220808-235519.pdf",
+        "size": "47.8 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Introduction to Part 3 (Focus on vocabulary) - Questions about education ",
+      "cid": "TGVzc29uLTE1MTYyOTcy",
+      "files": [
+       {
+        "fileName": "PART 3.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/PART3-220808-235634.pdf",
+        "size": "82.8 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 9,
+    "name": "Day 8 : Learn how to expand and justify your response (part 3)",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "ambition / work ",
+      "cid": "TGVzc29uLTE1MTYyOTg2",
+      "files": [
+       {
+        "fileName": "What ambitions do children usually have Why don't some people have dreams Why are some people very ambitious in their work How do people balance work and life Do you think that dreams are necessary to achieving succe.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/WhatambitionsdochildrenusuallyhaveWhydontsomepeoplehavedreamsWhyaresomepeopleveryambitiousintheirworkHowdopeoplebalanceworkandlifeDoyouthinkthatdreamsarenecessarytoachievingsucce-220801-172520.pdf",
+        "size": "49.8 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "personality",
+      "cid": "TGVzc29uLTE1NTE5MDU4",
+      "files": [
+       {
+        "fileName": "Personalities Useful ideas vocabulary.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/PersonalitiesUsefulideasvocabulary-220808-235934.pdf",
+        "size": "32.9 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "places ",
+      "cid": "TGVzc29uLTE1NTE5MDU5",
+      "files": [
+       {
+        "fileName": "Places  Travelling Useful ideas and vocabulary.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/PlacesTravellingUsefulideasandvocabulary-220801-181945.pdf",
+        "size": "49.1 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Pride/ Achievement",
+      "cid": "TGVzc29uLTE1NTMwNjA4",
+      "files": [
+       {
+        "fileName": "Pride.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Pride-220801-163649.pdf",
+        "size": "61.2 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 10,
+    "name": "Day 9 : Acing your part 3 answers ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Questions about social media ",
+      "cid": "TGVzc29uLTE1Mzk1MzEy",
+      "files": [
+       {
+        "fileName": "Social Media Useful Ideas and Vocabulary.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/SocialMediaUsefulIdeasandVocabulary-220802-145157.pdf",
+        "size": "37.7 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Talk about creativity and art 🎨",
+      "cid": "TGVzc29uLTE1Mzk1MzE3",
+      "files": [
+       {
+        "fileName": "Art and Creativity.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/ArtandCreativity-220802-153201.pdf",
+        "size": "34.9 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Questions about money and business",
+      "cid": "TGVzc29uLTE1NTQwOTAx",
+      "files": [
+       {
+        "fileName": "MONEY BUSINESS Use ideas and vocabulary.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/MONEYBUSINESSUseideasandvocabulary-220802-123416.pdf",
+        "size": "45.8 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Language and Education ",
+      "cid": "TGVzc29uLTE1Mzk3ODM2",
+      "files": [
+       {
+        "fileName": "Education and learning Useful ideas and vocabulary.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/EducationandlearningUsefulideasandvocabulary-220809-000145.pdf",
+        "size": "49.8 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Environment",
+      "cid": "TGVzc29uLTE1NjMyNjg2",
+      "files": [
+       {
+        "fileName": "Part 3 (1).pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Part31-220810-145652.pdf",
+        "size": "29.7 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 11,
+    "name": "Summing it all up",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "สรุปเทคนิคการตอบทั้งหมด - Grammar ",
+      "cid": "TGVzc29uLTE1NTE5MDY5",
+      "files": [
+       {
+        "fileName": "Summing it all up.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1918204/Summingitallup-220809-000402.pdf",
+        "size": "146 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Full Simulation ",
+      "cid": "TGVzc29uLTE1NTE5MDcy",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 12,
+    "name": "วิธีการตอบโจทย์เต็มล่าสุด ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "SPEAKING CAMBRIDGE 18 ",
+      "cid": "TGVzc29uLTE5NDk0MzM3",
+      "files": []
+     }
+    ]
+   }
+  ]
+ },
+ "listening": {
+  "courseId": 1843769,
+  "name": "LISTENING FOR BAND 7",
+  "chapters": [
+   {
+    "pos": 0,
+    "name": "BASICS ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "ภาพรวมทริคทั้งหมดที่ต้องรู้สำหรับ IELTS Listening ",
+      "cid": "TGVzc29uLTE0NDkxNDMw",
+      "files": [
+       {
+        "fileName": "LISTENING TIPS.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/LISTENINGTIPS-220831-232041.pdf",
+        "size": "1.37 MB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 1,
+    "name": "Section one ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Technique การทำ Section 1 ",
+      "cid": "TGVzc29uLTE1NjI2NTI4",
+      "files": [
+       {
+        "fileName": "SECTION 1.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/SECTION1-220831-232433.pdf",
+        "size": "1.08 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "ฝึกทำ section 1",
+      "cid": "TGVzc29uLTE1NjI2NTMx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "ฝึกทำ section 1 - Hotel Reservation",
+      "cid": "TGVzc29uLTE1NjI2NTMy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "ตลุยโจทย์ Section 1 ",
+      "cid": "TGVzc29uLTE1Nzk3NDg3",
+      "files": [
+       {
+        "fileName": "Section 1 .pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/Section1-220830-001016.pdf",
+        "size": "974 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 2,
+    "name": "Section two ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Techniques ",
+      "cid": "TGVzc29uLTE1NjI2NTc1",
+      "files": [
+       {
+        "fileName": "Listening section 2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/Listeningsection2-220831-232639.pdf",
+        "size": "1.15 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Techniques 2 (ฝึกกับโจทย์ที่ต้อง match ข้อมูล)",
+      "cid": "TGVzc29uLTIxMjA0NTAy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Listening Section 2 (focusing on connectors, passive voice) ",
+      "cid": "TGVzc29uLTE1NjI2NTgw",
+      "files": [
+       {
+        "fileName": "Colorful Simple Bold How to Be a Time Management Pro Training Talking Presentation.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/ColorfulSimpleBoldHowtoBeaTimeManagementProTrainingTalkingPresentation-220817-154016.pdf",
+        "size": "385 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "เทคนิคการทำโจทย์ Map Labelling ",
+      "cid": "TGVzc29uLTE1NjI2NTc2",
+      "files": [
+       {
+        "fileName": "Section 2 .pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/Section2-220831-203735.pdf",
+        "size": "2.94 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "เทคนิคการทำโจทย์ Multiple Choice ",
+      "cid": "TGVzc29uLTE1Nzk3NDE5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "เทคนิคการทำโจทย์​ Matching Information ",
+      "cid": "TGVzc29uLTE1Nzk3NDIy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "เทคนิคการทำโจทย์​ Diagram Completion ",
+      "cid": "TGVzc29uLTE1Nzk3NDYz",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 3,
+    "name": "Section 3",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Test 3 - เทคนิค Note Taking และ Grammar ที่จะช่วย",
+      "cid": "TGVzc29uLTE1NzQwMzQw",
+      "files": [
+       {
+        "fileName": "Section 3.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/Section3-220831-205149.pdf",
+        "size": "1.25 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Test 4 - เทคนิคสำหรับการฟังเพื่อหา ONE WORD",
+      "cid": "TGVzc29uLTE1NzQwNDcy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Test 5 - เทคนิคการทำ Diagram Completion ",
+      "cid": "TGVzc29uLTE1NzQ3Njc0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Section 3.2 - เทคนิคการ Take Note Keywords เพื่อช่วยตอบ",
+      "cid": "TGVzc29uLTE1NjI2NTg2",
+      "files": [
+       {
+        "fileName": "study sheet.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/studysheet-221119-153217.pdf",
+        "size": "274 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Test 2 - วิธีอ่าน multiple choice เร็วๆ ",
+      "cid": "TGVzc29uLTE1NjI2NTg3",
+      "files": [
+       {
+        "fileName": "CAMBRIDGE 17 TEST 4.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/CAMBRIDGE17TEST4-220831-205652.pdf",
+        "size": "104 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 4,
+    "name": "Section 4",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Techniques ",
+      "cid": "TGVzc29uLTE1NjI2NTkw",
+      "files": [
+       {
+        "fileName": "Section 4 technique .pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/Section4technique-220831-204735.pdf",
+        "size": "3.16 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Test 1 ",
+      "cid": "TGVzc29uLTE1NjI2NTkz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Test 2 ",
+      "cid": "TGVzc29uLTE1NjI2NTk0",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 5,
+    "name": "เพิ่มคลังคำศัพท์เพื่อแก้จุดอ่อน",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "โจทย์ Social History ",
+      "cid": "TGVzc29uLTE1NzQyMjA4",
+      "files": [
+       {
+        "fileName": "Section 4 practice final.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/Section4practicefinal-220831-233428.pdf",
+        "size": "800 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "โจทย์ how to",
+      "cid": "TGVzc29uLTE1NzQyMjA0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "โจทย์​ Technology ",
+      "cid": "TGVzc29uLTE1NzQyMjMz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "โจทย์​ Environment ",
+      "cid": "TGVzc29uLTE1NzQyMjA2",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 6,
+    "name": "ฝึกโจทย์จริงเต็ม",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "ทำ Section 1 - 2 พร้อมอธิบาย",
+      "cid": "TGVzc29uLTE1ODUxMDcw",
+      "files": [
+       {
+        "fileName": "Final Exam.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/FinalExam-221120-142959.pdf",
+        "size": "1.42 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "ทำ Section 3-4 พร้อมคำอธิบาย",
+      "cid": "TGVzc29uLTE1ODUyMzEz",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 7,
+    "name": "ฝึกโจทย์จริงเต็ม ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Section 1 -2 ",
+      "cid": "TGVzc29uLTE1ODYxMjIz",
+      "files": [
+       {
+        "fileName": "REAL EXAM.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1843769/REALEXAM-220831-202056.pdf",
+        "size": "1.38 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Section 3-4 ",
+      "cid": "TGVzc29uLTE1ODYxMzI1",
+      "files": []
+     }
+    ]
+   }
+  ]
+ },
+ "reading": {
+  "courseId": 1711162,
+  "name": "Intensive Academic Reading for IELTS ",
+  "chapters": [
+   {
+    "pos": 0,
+    "name": "First Chapter",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "ปรับ mindset ก่อนเรียน: แพลนการเรียน",
+      "cid": "TGVzc29uLTEzMjUyNjQx",
+      "files": [
+       {
+        "fileName": "READING THEORY.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/KE4xqIEgS7OqlbBVLJlV_READING%20THEORY.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "รูปแบบ paraphrase & synonyms ที่จะเจอในข้อสอบ",
+      "cid": "TGVzc29uLTEzMjUyNjEy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "รู้เรื่องนี้จะ save 20 hours of learning IELTS Reading ! ",
+      "cid": "TGVzc29uLTI5OTA4MzEz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Technique การทำ True, false, not given ",
+      "cid": "TGVzc29uLTI5OTA4MzE1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Technique การทำ fill in the blank ",
+      "cid": "TGVzc29uLTI5OTA4MzE3",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "technique ทำ matching heading ",
+      "cid": "TGVzc29uLTI5OTA4MzE4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "technique การทำ matching information ",
+      "cid": "TGVzc29uLTI5OTA4MzIx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "technique การทำ multiple choice",
+      "cid": "TGVzc29uLTI5OTA4NDY5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 8,
+      "name": "technique การทำ matching statements ",
+      "cid": "TGVzc29uLTMwMDg0MDc4",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 1,
+    "name": "ตลุยโจทย์ set 1 ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Passage 1.1 True/ False/ Not Given",
+      "cid": "TGVzc29uLTI5OTA4NTkx",
+      "files": [
+       {
+        "fileName": "Test 1.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/PXgsmHpeTaiHImkQE7Lv_Test%201.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Passage 1.2 Fill in the blank",
+      "cid": "TGVzc29uLTI5OTA4OTQ0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Passage 2.1 Matching Information",
+      "cid": "TGVzc29uLTI5OTA5MTU0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Passage 2.2 who says what?",
+      "cid": "TGVzc29uLTI5OTA5MjQw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Passage 2.3 - Fill in the blank",
+      "cid": "TGVzc29uLTI5OTA5NDIx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "passage 3.1 - Multiple choice",
+      "cid": "TGVzc29uLTI5OTA5NDU2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Passage 3.2 - Matching Statements",
+      "cid": "TGVzc29uLTI5OTA5NDg0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "passage 3.3 - true/ false/ not given",
+      "cid": "TGVzc29uLTI5OTA5NDkw",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 2,
+    "name": "ตลุยโจทย์จริง set 2",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Passage 1.1 - fill in the blanks",
+      "cid": "TGVzc29uLTI5OTA5NTAw",
+      "files": [
+       {
+        "fileName": "test 2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/xqK6XRw9RdWHWZE8iPs8_test%202.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "passage 1.2 - true, false, not given",
+      "cid": "TGVzc29uLTI5OTA5NTMx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "passage 2.1 - matching information",
+      "cid": "TGVzc29uLTI5OTA5NTQ0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "passage 2.2 - fill in the blanks",
+      "cid": "TGVzc29uLTI5OTA5NTY4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "passage 2.3 - matching statements",
+      "cid": "TGVzc29uLTI5OTA5Njg2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "passage 3.1 - Yes/ no/ not given",
+      "cid": "TGVzc29uLTI5OTA5NzAz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "passage 3.2 fill in the blank",
+      "cid": "TGVzc29uLTI5OTA5NzM5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "Passage 3.3 - multiple choice",
+      "cid": "TGVzc29uLTI5OTA5NzYw",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 3,
+    "name": "ตลุยโจทย์จริง set 3 ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Passage 1.1 - Fill in the blanks",
+      "cid": "TGVzc29uLTI5OTA5ODA2",
+      "files": [
+       {
+        "fileName": "test 3.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/Qvk0nInQsuZ0acMXGvHV_test%203.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Passage 1.2 - True, false, not given",
+      "cid": "TGVzc29uLTI5OTA5ODE0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "passage 2.1 - matching heading",
+      "cid": "TGVzc29uLTI5OTA5ODMy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "passage 2.2 - Matching statements",
+      "cid": "TGVzc29uLTI5OTA5ODQ1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "passage 2.3 - fill in the blanks",
+      "cid": "TGVzc29uLTI5OTA5ODU1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "passage 3.1 - matching statements",
+      "cid": "TGVzc29uLTI5OTA5ODYz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Passage 3.2 - Matching statements (2)",
+      "cid": "TGVzc29uLTI5OTA5ODkz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "Passage 3.3 - Multiple choice",
+      "cid": "TGVzc29uLTI5OTA5ODk2",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 4,
+    "name": "การใช้ APP READING เพื่อฝึกฝนต่อ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "วิธีการใช้ให้เกิดประโยชน์ที่สุด",
+      "cid": "TGVzc29uLTI5OTczODEw",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 5,
+    "name": "ตลุยโจทย์เพิ่มเติม Cambridge 19 (2025)",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Test 1 - Passage 1 - True/ False ",
+      "cid": "TGVzc29uLTIzNTc3MTUw",
+      "files": [
+       {
+        "fileName": "Cambridge IELTS 19 Academic PDF 2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/IX3nnZaQAaCSg9fjvOFg_Cambridge%20IELTS%2019%20Academic%20PDF%202.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Test 1 - Passage 2 - matching headings/ multiple choice/ fill in the blanks",
+      "cid": "TGVzc29uLTIzNTc3MTUy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Test 1 - Passage 3 - fill in the blanks/ true false ",
+      "cid": "TGVzc29uLTIzNTc3MTU2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Test 2 - Passage 1 - Fill in the blank/ true, false, not given ",
+      "cid": "TGVzc29uLTIzNTgxMjIy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Test 2 - Passage 2 - Matching Heading/ Fill in the Blank",
+      "cid": "TGVzc29uLTIzNTgxMjEy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Test 2 - Passage 3 - fill in the blanks/ yes, no/ multiple choice",
+      "cid": "TGVzc29uLTIzNTc3MTU5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Test 3 - Passage 1 - True/False / Fill in the blanks ",
+      "cid": "TGVzc29uLTIzNTc3MTYx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "Test 3 - Passage 2 - Matching Heading/ Fill in the blank/ Who says what? ",
+      "cid": "TGVzc29uLTIzNTc3MTYy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 8,
+      "name": "Test 3 - Passage 3 - Matching info/ Yes/ No/ Not Given ",
+      "cid": "TGVzc29uLTIzNTc3MTg1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 9,
+      "name": "Test 4 - Passage 1 - true/false/not given + fill in the blank",
+      "cid": "TGVzc29uLTIzNTc3MTg2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 10,
+      "name": "Test 4 - Passage 2 -  matching heading + matching statements",
+      "cid": "TGVzc29uLTIzNTc3MTg5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 11,
+      "name": "Test 4 - Passage 3 - multiple choice + yes/no/ not given ",
+      "cid": "TGVzc29uLTIzNTc3MTk0",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 6,
+    "name": "ตะลุยโจทย์เพิ่มเติม - ข้อสอบชุดที่ 1 ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Passage 1 - Matching Information",
+      "cid": "TGVzc29uLTEzMjUyNzEy",
+      "files": [
+       {
+        "fileName": "Bat.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/Bat-220127-121232.pdf",
+        "size": "786 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Passage 1 - Summary Completion",
+      "cid": "TGVzc29uLTEzMjUyNzUy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Passage 1 - Sentence Completion",
+      "cid": "TGVzc29uLTEzMjUyNzU1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Passage 2 - Matching Headings",
+      "cid": "TGVzc29uLTEzMjUyNzI5",
+      "files": [
+       {
+        "fileName": "Drop Count.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/DropCount-220127-121418.pdf",
+        "size": "460 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Passage 2 - Yes/ No/ Not Given ",
+      "cid": "TGVzc29uLTEzMjUyOTEx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Passage 3 - Multiple Choice",
+      "cid": "TGVzc29uLTEzMjUyOTE3",
+      "files": [
+       {
+        "fileName": "Educating Psyche.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/EducatingPsyche-220127-121537.pdf",
+        "size": "590 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Passage 3 part 2 - True/ False/ Not Given",
+      "cid": "TGVzc29uLTEzMjUyOTU0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "Passage 3 part 3 - Summary Completion",
+      "cid": "TGVzc29uLTEzMjUyOTM3",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 7,
+    "name": "ตะลุยโจทย์เพิ่มเติม - ข้อสอบชุดที่ 2",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Test 2 passage 1.1 - Yes / No / Not Given ",
+      "cid": "TGVzc29uLTEzMjUyOTQx",
+      "files": [
+       {
+        "fileName": "CAMBRIDGE-IELTS-7.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/CAMBRIDGEIELTS7-220127-122111.pdf",
+        "size": "991 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Test 2 passage 1.2 - Matching Features",
+      "cid": "TGVzc29uLTEzMjUyOTQy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Test 2 - passage 1.3 - Multiple Choice",
+      "cid": "TGVzc29uLTEzMjUyOTQz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Test 2 - passage 2.1 - Matching Information ",
+      "cid": "TGVzc29uLTEzMjUyOTQ2",
+      "files": [
+       {
+        "fileName": "True cost of food.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/Truecostoffood-220127-122227.pdf",
+        "size": "605 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Test 2 - passage 2.2 - Yes / No/ Not Given ",
+      "cid": "TGVzc29uLTEzMjUyOTQ1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Test 2 - passage 2.3 - Summary Completion ",
+      "cid": "TGVzc29uLTIyMjk3MTU5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Test 2 Passage 3.1 - Matching Headings ",
+      "cid": "TGVzc29uLTEzMjUyOTUy",
+      "files": [
+       {
+        "fileName": "Cambridge-ielts-7-5.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/Cambridgeielts75-220127-122355.pdf",
+        "size": "585 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "Test 2 Passage 3.2 - Yes/ No/ Not Given ",
+      "cid": "TGVzc29uLTEzMjUyOTUz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 8,
+      "name": "Test 2 passage 3.3 - Sentence's Ending Completion + Multiple Choices ",
+      "cid": "TGVzc29uLTEzMjUyOTU2",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 8,
+    "name": "ตะลุยโจทย์เพิ่มเติม - ข้อสอบชุดที่ 3",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "test 3.1.1 - Matching Features",
+      "cid": "TGVzc29uLTEzMjUzMDIx",
+      "files": [
+       {
+        "fileName": "Cambridge-Practice-Tests-for-IELTS-1-2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/CambridgePracticeTestsforIELTS12-220127-122501.pdf",
+        "size": "114 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Test 3.1.2 - Diagram Completion + Multiple Choice",
+      "cid": "TGVzc29uLTEzMjUzMDE5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "test 3.2.1 - Diagram Completion ",
+      "cid": "TGVzc29uLTEzMjUzMDI5",
+      "files": [
+       {
+        "fileName": "Cambridge-Practice-Tests-for-IELTS-1-3.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/CambridgePracticeTestsforIELTS13-220127-122556.pdf",
+        "size": "332 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "test 3.2.2. - Diagram Completion + Yes/ No/ Not Given",
+      "cid": "TGVzc29uLTEzMjUzMDE4",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 9,
+    "name": "ตลุยโจทย์เพิ่มเติม - ข้อสอบชุดที่ 4 ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Passage 1 - Sentence Completion ",
+      "cid": "TGVzc29uLTEzMzA3ODYw",
+      "files": [
+       {
+        "fileName": "CAMBRIDGE-IELTS-7-3.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/CAMBRIDGEIELTS73-220131-165633.pdf",
+        "size": "983 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Passage 1 - True/ False / Not Given ",
+      "cid": "TGVzc29uLTEzMzA3ODYz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Passage 2 - Matching Headings ",
+      "cid": "TGVzc29uLTEzMzA3ODY1",
+      "files": [
+       {
+        "fileName": "CAMBRIDGE-IELTS-7-4.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/CAMBRIDGEIELTS74-220131-165728.pdf",
+        "size": "1.03 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Passage 2 - Diagram Completion + Multiple Choice",
+      "cid": "TGVzc29uLTEzMzA3ODcw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Passage 3 - True/ False/ Not Given",
+      "cid": "TGVzc29uLTEzMzA3NTEy",
+      "files": [
+       {
+        "fileName": "CAMBRIDGE-IELTS-7-6.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/CAMBRIDGEIELTS76-220131-165822.pdf",
+        "size": "1.02 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Passage 3 - Matching Information + Multiple Choice",
+      "cid": "TGVzc29uLTEzMzA3ODQx",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 10,
+    "name": "คลังข้อสอบ (2023) ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Passage 1 (summary completion/ TFNG) ",
+      "cid": "TGVzc29uLTE5MDY4MTcx",
+      "files": [
+       {
+        "fileName": "832eb9b6-3132-4d6b-9c39-0c2ef67d5f5e%2FREADING_(JUNE_2023)_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/832eb9b631324d6b9c390c2ef67d5f5e2FREADING_JUNE_2023_-230613-174459.pdf",
+        "size": "83.3 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Passage 2 (Matching Information/ What says what?/ Summary Completion)",
+      "cid": "TGVzc29uLTE5MDY4MTkx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Passage 3 (Matching Information/ YN Not Given) ",
+      "cid": "TGVzc29uLTE5MDY4MjEz",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 11,
+    "name": "ข้อสอบ IELTS Cambridge เล่ม 2018 (2023)",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Passage 1 : Summary Completion / True False not Given",
+      "cid": "TGVzc29uLTE5NDA3ODk5",
+      "files": [
+       {
+        "fileName": "Cambridge 20.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1711162/Cambridge20-230715-173433.pdf",
+        "size": "3.95 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Passage 2: Matching paragraph / who said what? / summer completion ",
+      "cid": "TGVzc29uLTE5NDA4MDE5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Passage 3: Matching heading/ Summary Completion/ Who said what? ",
+      "cid": "TGVzc29uLTE5NDA4MDIx",
+      "files": []
+     }
+    ]
+   }
+  ]
+ },
+ "grammar": {
+  "courseId": 2280634,
+  "name": "COMPLETE ENGLISH GRAMMAR FOUNDATION (Pre-inter) ",
+  "chapters": [
+   {
+    "pos": 0,
+    "name": "เรื่อง BASIC แต่สำคัญมาก ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "โครงสร้างพื้นฐานของภาษาอังกฤษ​ (Basic Sentence Structure) ",
+      "cid": "TGVzc29uLTE4NjM2Mzc0",
+      "files": [
+       {
+        "fileName": "GRAMMAR BOOK ENGLISH PLAN.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/2280634/GRAMMARBOOKENGLISHPLAN-230628-223428.pdf",
+        "size": "935 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "BASIC เรื่องคำนาม และ SUBJECT ในภาษาอังกฤษ",
+      "cid": "TGVzc29uLTE5MTYzMzM2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "เปลี่ยนความคิดใหม่เรื่อง Verb ในภาษาอังกฤษ (คนชอบเข้าใจผิด!) ",
+      "cid": "TGVzc29uLTE5MTY3NDc2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "แกรมม่าร์เรื่อง Article ที่นักเรียนไทยทำผิดบ่อย ",
+      "cid": "TGVzc29uLTE4NjM2NDQz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "เทคนิคการใช้ Adjective",
+      "cid": "TGVzc29uLTE4NjM2Mzc2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "เทคนิคง่ายๆสำหรับจำการว่างตำแหน่ง Adjective ",
+      "cid": "TGVzc29uLTE5MTg0MzI4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "เทคนิคการใช้ Adverb ",
+      "cid": "TGVzc29uLTE5MTE1Mzgy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "กฏ Grammar เรื่อง Preposition และทำข้อสอบ Error Identification สรุปที่เรียนมา",
+      "cid": "TGVzc29uLTE4NjM2Mzc3",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 8,
+      "name": "Conjunction ",
+      "cid": "TGVzc29uLTE4NjM2Mzc5",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 1,
+    "name": "GRAMMAR ระดับกลาง (​Complex Sentences) ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "การใช้ which/ that ",
+      "cid": "TGVzc29uLTE4NjM2Mzg5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "การใช้ who/ whose/ whom",
+      "cid": "TGVzc29uLTE4NjM2Mzky",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "การขยายประโยคด้วย Present / Past Participle ",
+      "cid": "TGVzc29uLTE5MTY3NDcw",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 2,
+    "name": "ทุกอย่างที่เกี่ยวกับการใช้ Verb",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "สูตรวิธีจำ Present, Past, Future ",
+      "cid": "TGVzc29uLTE4NjM2NDAx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Subject-verb agreement กฏเหล็กที่ต้องรู้",
+      "cid": "TGVzc29uLTE4NjM2NDEy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Passive Voice VS Active Voice ",
+      "cid": "TGVzc29uLTE4NjM2NDAz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Conditionals ",
+      "cid": "TGVzc29uLTE4NjM2NDA3",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 3,
+    "name": " Grammar ขั้นสูง (C1) สำหรับเขียน / Error Identification ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "การใช้ Punctuations (colon, comma, semi-colon, etc.) ",
+      "cid": "TGVzc29uLTE4NjM2NDE1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "ทำโจทย์ทดสอบเรื่อง Punctuations ",
+      "cid": "TGVzc29uLTE5MTk3NjAw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "เทคนิคการเขียนแบบ Parallell Structure ",
+      "cid": "TGVzc29uLTE4NjM2NDIy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Parallel Structure ในข้อสอบจริงๆ (TOEFL, SAT, CU-TEP, etc.) ",
+      "cid": "TGVzc29uLTE5MTY2NjEz",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 4,
+    "name": "แกรมม่าร์​ระดับสูง (C2) และ Subtle Errors ที่มักออกข้อสอบ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "สรุป Transitional Words และรูปแบบการใช้เวลาเขียน + เจอในข้อสอบ ",
+      "cid": "TGVzc29uLTE4NjUwODIw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "ข้อยกเว้นเรื่อง Transitional word (therefore, thus, hence, then) ",
+      "cid": "TGVzc29uLTE5MTkwMDY0",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "ใช้ Preposition แบบ Advanced ",
+      "cid": "TGVzc29uLTE4NjUwODIx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "การใช้ Preposition เชื่อมประโยค ",
+      "cid": "TGVzc29uLTE5MTkwMDcy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "การหา Run-on sentences ",
+      "cid": "TGVzc29uLTE4NjUwODIz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Pronoun Cases และรูปแบบที่เจอออกสอบ Error Identification บ่อยๆ",
+      "cid": "TGVzc29uLTE4NjUwODI2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "การใช้ Referencing ",
+      "cid": "TGVzc29uLTE5MTY3NDY2",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 8,
+      "name": "การใช้ Which แบบ Advanced ",
+      "cid": "TGVzc29uLTE5MTY3NDY4",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 5,
+    "name": "ฝึกทำ Error Identification เพื่อให้พื้นแน่น",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "ทวนทั้งหมดผ่าน Checklist MIND MAP",
+      "cid": "TGVzc29uLTE5MjgzOTI1",
+      "files": [
+       {
+        "fileName": "Purple Colorful Organic Mind Map Brainstorm (3).pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/2280634/PurpleColorfulOrganicMindMapBrainstorm3-230714-190709.pdf",
+        "size": "205 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "ทบทวนทั้งหมด โดยการตลุยโจทย์จริง",
+      "cid": "TGVzc29uLTE4NjM2NDI4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "ตลุยโจทย์แกรมม่าร์จริงของ TOEFL ",
+      "cid": "TGVzc29uLTE4NjM2NDMz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "โจทย์แกรมม่าร์จริง​ SAT ",
+      "cid": "TGVzc29uLTE4NjM2NDQx",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Ending Remarks จบคอร์สและแนะแนวทางการฝึกต่อ",
+      "cid": "TGVzc29uLTE5MTg0MzI2",
+      "files": [
+       {
+        "fileName": "Parts of Speech Vocabulary English Flash Cards.png",
+        "url": "https://import.cdn.thinkific.com/563960/courses/2280634/PartsofSpeechVocabularyEnglishFlashCards-230729-154544.png",
+        "size": "389 KB"
+       },
+       {
+        "fileName": "ca9de1ec-15e9-44c1-9c1b-91329441604e%2FGRAMMAR_CHECKLIST_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/2280634/ca9de1ec15e944c19c1b91329441604e2FGRAMMAR_CHECKLIST_-230729-153852.pdf",
+        "size": "95.4 KB"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "writing": {
+  "courseId": 1576306,
+  "name": "IELTS ACADEMIC WRITING - INTENSIVE ",
+  "chapters": [
+   {
+    "pos": 0,
+    "name": "Writing Basics",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "สรุปเทคนิคทางลัดการได้ Writing Band 7 ",
+      "cid": "TGVzc29uLTI0NjUzNzE0",
+      "files": [
+       {
+        "fileName": "Grammar Foundation for Writing Band 7.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/YZyqE5zSHqQFGFJ8MA4d_Grammar%20Foundation%20for%20Writing%20Band%207.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "เทคนิคการทำ Complex Structures for Band 7 ",
+      "cid": "TGVzc29uLTI0NjUzNzE4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "เทคนิคการทำ complex structure (ต่อ)",
+      "cid": "TGVzc29uLTI0NjUzNzMw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "สรุป Transitional words (Connective Devices) สำหรับ Band 7",
+      "cid": "TGVzc29uLTI0NjUzNzYz",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "สูตรลัดเรื่อง Tense for Band 7 ",
+      "cid": "TGVzc29uLTI0NjUzNzcw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "เทคนิคการทำ Referencing for Band 7 ",
+      "cid": "TGVzc29uLTI0NjUzODIy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "การขยายคำนาม and mistakes to avoid",
+      "cid": "TGVzc29uLTI0NjUzODI5",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 1,
+    "name": "Writing Task 1 โจทย์​มีตัวเลข",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "รู้จัก Task 1",
+      "cid": "TGVzc29uLTEyNjY2ODIw",
+      "files": [
+       {
+        "fileName": "Task 1 Introduction.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Task1Introduction-220824-115334.pdf",
+        "size": "3.42 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "คำศัพท์ใช้อธิบายข้อมูล",
+      "cid": "TGVzc29uLTEyNzMwODky",
+      "files": [
+       {
+        "fileName": "Vocabulary for describing data.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Vocabularyfordescribingdata-220929-045747.pdf",
+        "size": "132 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "การใช้ Article (a/ an/ the) - ทำยังไงไม่ให้โดนหักคะแนน Grammar",
+      "cid": "TGVzc29uLTEzMzcxNTUx",
+      "files": [
+       {
+        "fileName": "การใช้ Article.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Article-220205-001447.pdf",
+        "size": "590 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Line Graph - Step by Step",
+      "cid": "TGVzc29uLTEzOTU5MDQ2",
+      "files": [
+       {
+        "fileName": "Step 1  เขียน Introduction What graph อะไร  Compare อะไร  Where  When ช่วงเวลา จาก..ไป...pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Step1IntroductionWhatgraphCompareWhereWhen-220317-123257.pdf",
+        "size": "292 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "โจทย์ LINE GRAPH ",
+      "cid": "TGVzc29uLTEyNjc3Mjg5",
+      "files": [
+       {
+        "fileName": "Study sheet - Line Graph.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/StudysheetLineGraph-220107-145934.pdf",
+        "size": "289 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "โจทย์ Line Graph (2) ",
+      "cid": "TGVzc29uLTEyOTI2MTI5",
+      "files": [
+       {
+        "fileName": "Study Sheet - Line Graph 2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/StudySheetLineGraph2-220103-174641.pdf",
+        "size": "217 KB"
+       }
+      ]
+     },
+     {
+      "type": "QuizLesson",
+      "pos": 6,
+      "name": "Task 1 vocab",
+      "cid": "UXVpei0xNzc4NjMw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "line graph เขียนพร้อมกัน ",
+      "cid": "TGVzc29uLTEzNjcyNzA3",
+      "files": [
+       {
+        "fileName": "line graph .jpg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/linegraph-220302-184912.jpg",
+        "size": "78 KB"
+       },
+       {
+        "fileName": "Note-2-Mar-BE-2565-5.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Note2MarBE25655-220302-234020.pdf",
+        "size": "8.57 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 8,
+      "name": "การรับมือกับโจทย์ตัวเลขเยอะๆ ",
+      "cid": "TGVzc29uLTE2ODI2MTYz",
+      "files": [
+       {
+        "fileName": "How_to_deal_with_too_much_information.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/How_to_deal_with_too_much_information-221127-185552.pdf",
+        "size": "268 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 9,
+      "name": "Line Graph 2 อัน",
+      "cid": "TGVzc29uLTEzNjAyNDY5",
+      "files": [
+       {
+        "fileName": "2 line graph.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/2linegraph-220224-161641.pdf",
+        "size": "388 KB"
+       }
+      ]
+     },
+     {
+      "type": "TextLesson",
+      "pos": 10,
+      "name": "แบบฝึกหัด Line Graph ",
+      "cid": "SHRtbEl0ZW0tODU2NTY2OA==",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 11,
+      "name": "โจทย์​ Pie Chart ",
+      "cid": "TGVzc29uLTEyNzAxMDY2",
+      "files": [
+       {
+        "fileName": "Presentation 5.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Presentation5-211230-235241.pdf",
+        "size": "412 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 12,
+      "name": "เขียน Pie chart พร้อมกัน",
+      "cid": "TGVzc29uLTEzNjcwMjQ5",
+      "files": [
+       {
+        "fileName": "Pie-chart-2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Piechart2-220302-124129.pdf",
+        "size": "2.13 MB"
+       }
+      ]
+     },
+     {
+      "type": "QuizLesson",
+      "pos": 13,
+      "name": "เพื่อความเข้าใจ Pie Chart ",
+      "cid": "UXVpei0xODA4NDIy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 14,
+      "name": "วิธีการเขียน Bar chart : PART 1",
+      "cid": "TGVzc29uLTE1MTI5NzI2",
+      "files": [
+       {
+        "fileName": "Bar_chart_Summary.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Bar_chart_Summary-220629-010851.pdf",
+        "size": "345 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 15,
+      "name": "วิธีทำ Bar chart PART 2",
+      "cid": "TGVzc29uLTE1MTI5NzA4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 16,
+      "name": "การเขียน Bar chart (1) ",
+      "cid": "TGVzc29uLTEzOTAwODU4",
+      "files": [
+       {
+        "fileName": "Bar_Chart_(Sample_1).pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Bar_Chart_Sample_1-220312-181314.pdf",
+        "size": "224 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 17,
+      "name": "โจทย์ Bar Chart  ",
+      "cid": "TGVzc29uLTEyNjg5MDU2",
+      "files": [
+       {
+        "fileName": "Presentation 6.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Presentation6-211231-000044.pdf",
+        "size": "590 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 19,
+      "name": "โจทย์​ Table ",
+      "cid": "TGVzc29uLTEyNzAxNjYy",
+      "files": [
+       {
+        "fileName": "Presentation 2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Presentation2-211231-000353.pdf",
+        "size": "140 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 2,
+    "name": "Writing Task 1 โจทย์ไม่มีตัวเลข",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "โจทย์​ Process Diagram",
+      "cid": "TGVzc29uLTEyNjg3NDc1",
+      "files": [
+       {
+        "fileName": "Presentation 7.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Presentation7-211231-000757.pdf",
+        "size": "337 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "โจทย์ Process Diagram (1) ",
+      "cid": "TGVzc29uLTEyNzYwMTEw",
+      "files": [
+       {
+        "fileName": "10D0E78B-ACE6-48F0-9B74-374E27C702C4.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/10D0E78BACE648F09B74374E27C702C4-211230-171332.jpeg",
+        "size": "545 KB"
+       },
+       {
+        "fileName": "73B80CC0-F678-47C4-B21E-25ED86861978.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/73B80CC0F67847C4B21E25ED86861978-211216-184429.jpeg",
+        "size": "353 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "วิธีคิดโจทย์ Process Diagram (BAND 7.5+) ",
+      "cid": "TGVzc29uLTE4ODA2MTE0",
+      "files": [
+       {
+        "fileName": "8a243c56-d706-4801-b00e-75f35bdc9ccc%2FProcess_Diagram_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/8a243c56d7064801b00e75f35bdc9ccc2FProcess_Diagram_-230518-154927.pdf",
+        "size": "392 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "คำศัพท์ เทคนิค & วิธีคิดโจทย์ MAP ",
+      "cid": "TGVzc29uLTE4Nzg5MzEy",
+      "files": [
+       {
+        "fileName": "ca354d48-1dc7-449c-97a5-d00c663661ea%2FMAP_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/ca354d481dc7449c97a5d00c663661ea2FMAP_-230517-011542.pdf",
+        "size": "476 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "โจทย์ Map",
+      "cid": "TGVzc29uLTEyNzEzMjU1",
+      "files": [
+       {
+        "fileName": "Presentation 8.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Presentation8-211231-001142.pdf",
+        "size": "659 KB"
+       }
+      ]
+     },
+     {
+      "type": "QuizLesson",
+      "pos": 6,
+      "name": "QUIZ เรื่อง MAP + Process Diagram ",
+      "cid": "UXVpei0yOTkyMzA2",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 3,
+    "name": "ฝึกทำโจทย์​ Task 1 ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": " โจทย์ผสม : Bar chart + line graph ",
+      "cid": "TGVzc29uLTEyNjc2NzMx",
+      "files": [
+       {
+        "fileName": "Bar chart, pie chart.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Barchartpiechart-211231-001505.pdf",
+        "size": "241 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "โจทย์ผสม Bar chart + pie chart",
+      "cid": "TGVzc29uLTEyNzAxNjIw",
+      "files": [
+       {
+        "fileName": "Pie chart : bar char.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Piechartbarchar-211231-001846.pdf",
+        "size": "341 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Pie chart + table ",
+      "cid": "TGVzc29uLTEzOTAxMDE2",
+      "files": [
+       {
+        "fileName": "Pie_chart__table_(sample_answer).pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Pie_chart__table_sample_answer-220312-185948.pdf",
+        "size": "198 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Pie chart + bar chart ",
+      "cid": "TGVzc29uLTE0MTA0MDc0",
+      "files": [
+       {
+        "fileName": "Bar_chart__pie_chart_(export).pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Bar_chart__pie_chart_export-220329-214310.pdf",
+        "size": "39.3 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Summary - Checklist for Band 7 (write along) ",
+      "cid": "TGVzc29uLTE0NTYzMzk0",
+      "files": [
+       {
+        "fileName": "Task_1_(table__pie_chart)_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Task_1_table__pie_chart_-220509-160204.pdf",
+        "size": "728 KB"
+       }
+      ]
+     },
+     {
+      "type": "TextLesson",
+      "pos": 6,
+      "name": "แบบฝึกหัด",
+      "cid": "SHRtbEl0ZW0tODU2NTc5OQ==",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 4,
+    "name": "อธิบาย Task 2 ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "พื้นฐาน Task 2 ",
+      "cid": "TGVzc29uLTEyNzA0NzA0",
+      "files": [
+       {
+        "fileName": "Task 2 .pdf",
+        "url": "https://import.cdn.thinkific.com/563960/9zuS1eSQzKhUEowpDFNq_Task%202%20.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "พื้นฐาน Task 2  (2) ",
+      "cid": "TGVzc29uLTEyNjk4ODQ0",
+      "files": [
+       {
+        "fileName": "Writing an introduction (task 2).pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Writinganintroductiontask2-211231-002451.pdf",
+        "size": "80.8 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "เทคนิคการหาไอเดียและคำศัพท์หรับ Band 7​​​ (Lexical Resource) ",
+      "cid": "TGVzc29uLTE0OTM1Mzkx",
+      "files": [
+       {
+        "fileName": "Top Strategy for Lexical Resourc.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/TopStrategyforLexicalResourc-220610-135203.pdf",
+        "size": "144 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "โจทย์​ Double Question",
+      "cid": "TGVzc29uLTEyNjk4NzA2",
+      "files": [
+       {
+        "fileName": "Double Question Textbook.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/xUq49ezRSEK5V51VFzFu_Double%20Question%20Textbook.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Double Question (Advanced) for band 7.5+ ",
+      "cid": "TGVzc29uLTE0NzIwMTQ3",
+      "files": [
+       {
+        "fileName": "Double_Question_for_BAND_7_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Double_Question_for_BAND_7_-220523-125807.pdf",
+        "size": "28.8 KB"
+       }
+      ]
+     },
+     {
+      "type": "TextLesson",
+      "pos": 6,
+      "name": "ฝึก double question ",
+      "cid": "SHRtbEl0ZW0tODE1MTE1Mg==",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "โจทย์ Disadvantages & advantages ",
+      "cid": "TGVzc29uLTEyNjk4NzA5",
+      "files": [
+       {
+        "fileName": "Disadvantages_and_advantages_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Disadvantages_and_advantages_-220223-193937.pdf",
+        "size": "211 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 8,
+      "name": "โจทย์​เกี่ยวกับ Nationalism (Patriotism) - March 20 ",
+      "cid": "TGVzc29uLTE0MTA0NTM2",
+      "files": [
+       {
+        "fileName": "Task_2_(Advantages)_-_Patriotism_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Task_2_Advantages__Patriotism_-220329-221705.pdf",
+        "size": "65.1 KB"
+       }
+      ]
+     },
+     {
+      "type": "TextLesson",
+      "pos": 9,
+      "name": "แบบฝึกหัด Disadvantages/ advantages",
+      "cid": "SHRtbEl0ZW0tODE2NDcyOQ==",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 10,
+      "name": "การเขียน To what extent",
+      "cid": "TGVzc29uLTEzNjAyMTY3",
+      "files": [
+       {
+        "fileName": "Task 2 guide To what extent.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Task2guideTowhatextent-220224-124558.pdf",
+        "size": "241 KB"
+       }
+      ]
+     },
+     {
+      "type": "TextLesson",
+      "pos": 11,
+      "name": "แบบฝึกหัด to what extent",
+      "cid": "SHRtbEl0ZW0tODE2NTIyNw==",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 12,
+      "name": "โจทย์​ Discuss both views and give your own opinion (โจทย์ 23 feb 2022) ",
+      "cid": "TGVzc29uLTEzNjMzMzc2",
+      "files": [
+       {
+        "fileName": "Discuss both views pattern.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Discussbothviewspattern-220227-180309.pdf",
+        "size": "82.9 KB"
+       }
+      ]
+     },
+     {
+      "type": "TextLesson",
+      "pos": 13,
+      "name": "ฝึก discuss both views and give your own opinion ",
+      "cid": "SHRtbEl0ZW0tODE4NzU4NQ==",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 15,
+      "name": "โจทย์ To what extent ล่าสุด (2025) ",
+      "cid": "TGVzc29uLTEzMjkwOTY5",
+      "files": [
+       {
+        "fileName": "7 band Students should pay the full cost for their own study, because university education benefits individuals rather than society. To what extent do you agree or disagree.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/7bandStudentsshouldpaythefullcostfortheirownstudybecauseuniversityeducationbenefitsindividualsratherthansocietyTowhatextentdoyouagreeordisagree-220129-160133.pdf",
+        "size": "75.7 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 5,
+    "name": "Task 2 โจทย์ Art / Culture / Society - ฝึกเขียน",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "โจทย์​ 25 Feb - Nuclear weapons benefit the world at large? ",
+      "cid": "TGVzc29uLTEzODEwNDYx",
+      "files": [
+       {
+        "fileName": "Task_2__Nuclear_weapons_-_25_February.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Task_2__Nuclear_weapons__25_February-220305-153209.pdf",
+        "size": "1.92 MB"
+       }
+      ]
+     },
+     {
+      "type": "TextLesson",
+      "pos": 1,
+      "name": "แบบฝึกหัดเกี่ยวกับ Nuclear ",
+      "cid": "SHRtbEl0ZW0tODQwMjY0NA==",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "โจทย์เกี่ยวกับ Gender Equality ",
+      "cid": "TGVzc29uLTEyOTg4OTgy",
+      "files": [
+       {
+        "fileName": "You can live in harmonious, close contact with nature..pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Youcanliveinharmoniousclosecontactwithnature-230704-232055.pdf",
+        "size": "110 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "โจทย์ To what extent (Relationship)",
+      "cid": "TGVzc29uLTEzMDIxMDIx",
+      "files": [
+       {
+        "fileName": "โจทย์เกี่ยวกับ Relationship.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Relationship-220110-162013.pdf",
+        "size": "80.9 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "โจทย์​ To What Extent",
+      "cid": "TGVzc29uLTEyNjk4NzEy",
+      "files": [
+       {
+        "fileName": "To what extent ? .pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Towhatextent-211231-003032.pdf",
+        "size": "97.4 KB"
+       }
+      ]
+     },
+     {
+      "type": "QuizLesson",
+      "pos": 5,
+      "name": "ตัวอย่างโจทย์ Equality",
+      "cid": "UXVpei0xODA5OTUy",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "โจทย์เกี่ยวกับสิทธิสัตว์ Animal Rights ",
+      "cid": "TGVzc29uLTEzMTA1NjEy",
+      "files": [
+       {
+        "fileName": "Animal Rights .pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/AnimalRights-220117-014935.pdf",
+        "size": "96.5 KB"
+       }
+      ]
+     },
+     {
+      "type": "QuizLesson",
+      "pos": 8,
+      "name": "Exercise : energy",
+      "cid": "UXVpei0xODIwMDA4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 9,
+      "name": "โจทย์เกี่ยวกับ ​: Famous People",
+      "cid": "TGVzc29uLTEyOTM5ODc2",
+      "files": [
+       {
+        "fileName": "Study Sheet - Young People .pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/StudySheetYoungPeople-220104-182839.pdf",
+        "size": "191 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 10,
+      "name": "โจทย์เกี่ยวกับสุขภาพ : Health ",
+      "cid": "TGVzc29uLTEyOTI1MDgw",
+      "files": [
+       {
+        "fileName": "Study sheet - Health.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/StudysheetHealth-220103-160640.pdf",
+        "size": "118 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 11,
+      "name": "โจทย์ฺเกี่ยวกับ​ Art/ culture ",
+      "cid": "TGVzc29uLTEyOTA5NDM2",
+      "files": [
+       {
+        "fileName": "ทำพร้อมกันculture.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/culture-220101-183702.pdf",
+        "size": "49.5 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 12,
+      "name": "โจทย์ Art Education (JUNE)",
+      "cid": "TGVzc29uLTE4OTc4MDY2",
+      "files": [
+       {
+        "fileName": "865a6274-3ef3-4b7a-baa6-279889243722%2FART_EDUCATION_.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/865a62743ef34b7abaa62798892437222FART_EDUCATION_-230604-172555.pdf",
+        "size": "59.8 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 13,
+      "name": "โจทย์เกี่ยวกับ ข้อดีข้อเสีย Globalization ",
+      "cid": "TGVzc29uLTEyOTAzMjY4",
+      "files": [
+       {
+        "fileName": "ทำพร้อมกัน.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/-211231-182304.pdf",
+        "size": "44.8 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 6,
+    "name": "Task 2 - เขียนไปพร้อมกัน",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "เฉลยโจทย์​ล่าสุด - Should women's sports shows  be given more showtime on TV? ",
+      "cid": "TGVzc29uLTEzMzk5Njg4",
+      "files": [
+       {
+        "fileName": "C4C975A8-D325-431A-86A4-1F06E194F97C 2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/PhRTi4bgTlyavFIHa3EX_C4C975A8-D325-431A-86A4-1F06E194F97C%202.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "โจทย์เกี่ยวกับ Education ",
+      "cid": "TGVzc29uLTEyODE5MzIz",
+      "files": [
+       {
+        "fileName": "6C09C54F-86D4-49DA-89E1-9856B96F1B92.png",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/6C09C54F86D449DA89E19856B96F1B92-211222-171634.png",
+        "size": "1.43 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "โจทย์ Society - Shopping",
+      "cid": "TGVzc29uLTEyNjk4NzE2",
+      "files": [
+       {
+        "fileName": "444ECC13-FD7E-455A-BC1A-4CE740F44EB6.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/444ECC13FD7E455ABC1A4CE740F44EB6-211216-125723.jpeg",
+        "size": "258 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "โจทย์เกี่ยวกับกฏหมาย",
+      "cid": "TGVzc29uLTEyNzk0Mzgz",
+      "files": [
+       {
+        "fileName": "CC901480-0130-43CF-BDFC-F47A6FEC2C3C.png",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/CC901480013043CFBDFCF47A6FEC2C3C-211223-144741.png",
+        "size": "1.4 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "โจทย์เกี่ยวกับ Military Budget ",
+      "cid": "TGVzc29uLTEyODI5MDc0",
+      "files": [
+       {
+        "fileName": "DAB49407-01A7-4F62-BD2B-40781E8CAA0A.png",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/DAB4940701A74F62BD2B40781E8CAA0A-211223-164938.png",
+        "size": "1.38 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "โจทย์เกี่ยวกับภาวะโลกร้อน : Global Warming",
+      "cid": "TGVzc29uLTEyODA3OTc5",
+      "files": [
+       {
+        "fileName": "55B866CF-200E-462C-8970-FF35D4306284.png",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/55B866CF200E462C8970FF35D4306284-211222-151035.png",
+        "size": "1.46 MB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "โจทย์ล่าสุด 16 Feb 2022 - advertisements for kids ",
+      "cid": "TGVzc29uLTEzNTQ4NDE2",
+      "files": [
+       {
+        "fileName": "IELTS_Academic_Writing_-2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/IELTS_Academic_Writing_2-220219-110035.pdf",
+        "size": "42.3 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 7,
+    "name": "Task 2 คำถามแนว Social/ Politics",
+    "lessons": []
+   },
+   {
+    "pos": 8,
+    "name": "ฝึกหัดทำโจทย์ไปพร้อมกัน ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "ทำ Line Graph ไปพร้อมกัน",
+      "cid": "TGVzc29uLTEyNzQ0Mzg5",
+      "files": [
+       {
+        "fileName": "4B776764-C757-45FC-B260-7AF214DAD8E2.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/4B776764C75745FCB2607AF214DAD8E2-211230-133312.jpeg",
+        "size": "539 KB"
+       },
+       {
+        "fileName": "77D5B0BA-26A2-45EA-BE8C-F5AED3D2100F.png",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/77D5B0BA26A245EABE8CF5AED3D2100F-211216-125841.png",
+        "size": "77 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "แบบฝึกหัด Line Graph ",
+      "cid": "TGVzc29uLTEyNzU3NjIw",
+      "files": [
+       {
+        "fileName": "10FB4D7D-06B4-4748-828E-43757CF45E22.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/10FB4D7D06B44748828E43757CF45E22-211216-145305.jpeg",
+        "size": "233 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "ทำ Bar Graph ไปพร้อมกัน",
+      "cid": "TGVzc29uLTEyNzQ1ODc0",
+      "files": [
+       {
+        "fileName": "AE7C6273-AB6F-4D99-9678-A2017340B097.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/AE7C6273AB6F4D999678A2017340B097-211230-131100.jpeg",
+        "size": "604 KB"
+       },
+       {
+        "fileName": "1283C101-89C7-4E64-A8FB-E2CF7FD93FF6.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/1283C10189C74E64A8FBE2CF7FD93FF6-211215-192230.jpeg",
+        "size": "719 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "โจทย์ Bar Chart ",
+      "cid": "TGVzc29uLTEyNzczMzAz",
+      "files": [
+       {
+        "fileName": "8584B10A-6C95-4F79-8C46-E2D32FFB5DB3.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/8584B10A6C954F798C46E2D32FFB5DB3-211217-181747.jpeg",
+        "size": "537 KB"
+       },
+       {
+        "fileName": "5C5A7E33-0793-4555-B6D9-847186E2EDA6.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/5C5A7E3307934555B6D9847186E2EDA6-211230-113357.jpeg",
+        "size": "619 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "โจทย์ Line Graph (3)  ",
+      "cid": "TGVzc29uLTEyNzg3OTEy",
+      "files": [
+       {
+        "fileName": "B255DDB2-0743-4B8B-9741-9D637388C6F1.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/B255DDB207434B8B97419D637388C6F1-211230-115950.jpeg",
+        "size": "540 KB"
+       },
+       {
+        "fileName": "1F57ED96-D334-4FD4-933B-B1D93122946C.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/1F57ED96D3344FD4933BB1D93122946C-211219-190201.jpeg",
+        "size": "275 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "โจทย์ Table 2 อัน",
+      "cid": "TGVzc29uLTEyODA2Njk2",
+      "files": [
+       {
+        "fileName": "E60B268A-8AD0-4162-A798-F880B23E97B5.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/E60B268A8AD04162A798F880B23E97B5-211221-155706.jpeg",
+        "size": "810 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 9,
+    "name": "Final Exam",
+    "lessons": [
+     {
+      "type": "DownloadLesson",
+      "pos": 3,
+      "name": "Exam 2 ",
+      "cid": "RG93bmxvYWQtOTE5Njc2",
+      "files": [
+       {
+        "fileName": "C974EC00-3E21-47E8-B6E3-C5151DFD3B5C.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/C974EC003E2147E8B6E3C5151DFD3B5C-211217-004649.jpeg",
+        "size": "383 KB"
+       }
+      ]
+     },
+     {
+      "type": "DownloadLesson",
+      "pos": 4,
+      "name": "Exam 3 ",
+      "cid": "RG93bmxvYWQtOTE5Njc3",
+      "files": [
+       {
+        "fileName": "F191204E-F7D0-4D5E-ACA6-C2DA77276CC5.jpeg",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/F191204EF7D04D5EACA6C2DA77276CC5-211217-005029.jpeg",
+        "size": "309 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 10,
+    "name": "เฉลยการบ้าน",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "เฉลยการบ้าน Line Graph - ",
+      "cid": "TGVzc29uLTEzNjY0Mjc5",
+      "files": [
+       {
+        "fileName": "Task 1 - Tourist Office.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/Task1TouristOffice-220302-003141.pdf",
+        "size": "131 KB"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "pos": 11,
+    "name": "เฉลย Cambridge 18 ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Task 1 Test 1 - Line Graph ",
+      "cid": "TGVzc29uLTE5NDg1ODAw",
+      "files": [
+       {
+        "fileName": "Vocabulary about law Jur  Leg 2.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/courses/1576306/VocabularyaboutlawJurLeg2-230723-142832.pdf",
+        "size": "793 KB"
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Task 1 / Test 2: Bar Chart ",
+      "cid": "TGVzc29uLTE5NDg1Nzk4",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Task 1/ Test 3: Map of Central Library",
+      "cid": "TGVzc29uLTE5NDg1ODM1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Task 1/ Test 4: Line Graph : Change in prices of metals",
+      "cid": "TGVzc29uLTE5NDg1ODMz",
+      "files": []
+     }
+    ]
+   },
+   {
+    "pos": 12,
+    "name": "เฉลย Cambridge 19 (Update 2024) ",
+    "lessons": [
+     {
+      "type": "VideoLesson",
+      "pos": 0,
+      "name": "Line graph ",
+      "cid": "TGVzc29uLTIzNDMyMTYy",
+      "files": [
+       {
+        "fileName": "writing mini-course.pdf",
+        "url": "https://import.cdn.thinkific.com/563960/wh0S2g1xQVijTtyEHb2e_writing%20mini-course.pdf",
+        "size": null
+       }
+      ]
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 1,
+      "name": "Map",
+      "cid": "TGVzc29uLTIzNDMyMTY1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 2,
+      "name": "Diagram",
+      "cid": "TGVzc29uLTIzNDMyMTY3",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 3,
+      "name": "Mixed Graph",
+      "cid": "TGVzc29uLTIzNDMyMTcw",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 4,
+      "name": "Competition or Cooperation (Discuss both views) ",
+      "cid": "TGVzc29uLTIzNDMyMTc3",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 5,
+      "name": "Shorter Working Work (To what extent do you agree?)",
+      "cid": "TGVzc29uLTIzNDMyMTg1",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 6,
+      "name": "Globalization (international food) - positive or negative? ",
+      "cid": "TGVzc29uLTIzNDMyMTk5",
+      "files": []
+     },
+     {
+      "type": "VideoLesson",
+      "pos": 7,
+      "name": "Should people save money? (To what extent do you agree?) ",
+      "cid": "TGVzc29uLTIzNDMyMjAy",
+      "files": []
+     }
+    ]
+   }
+  ]
+ }
+}

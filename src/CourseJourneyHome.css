@@ -1,0 +1,2631 @@
+/* Course journey — planner → courses → journey rail.
+ *
+ * One stylesheet, one generation. This file previously carried four layers of
+ * successive restyles stacked on top of each other, where a rule's outcome
+ * depended on which layer it landed in — that is how the calendar's day cells
+ * ended up pale-on-pale (a later layer re-declared a base selector after the
+ * variant that was meant to win). It has been flattened: every selector appears
+ * exactly once, with the values that were actually winning, and the rules for
+ * the old month grid and block ribbon — dead since the rail replaced them — are
+ * gone.
+ *
+ * THE SYSTEM
+ *
+ * Colour   Indigo #4f50a6 carries structure; lavender tints carry grouping;
+ *          butter and coral are held back for the things that must not be
+ *          missed. Each of the three sections owns a hue through --cjSection,
+ *          and each course owns two — a saturated --cjAccent for ink on white,
+ *          a --cjPastel fill for cards on the indigo calendar.
+ *
+ * Type     One scale, --fs-xs (13.5px) to --fs-3xl (38px), body at 16.5px.
+ *          It starts high because Thai carries tone marks above and vowels
+ *          below the line: Anuphan at 12px has materially less readable body
+ *          than Latin at 12px, and this page is Thai first.
+ *
+ * Depth    Elevation, not hairlines. Soft wide indigo-tinted shadows are what
+ *          let the radii (16px inner, 26px sheets) read as sheets rather than
+ *          as blobs.
+ *
+ * Motion   One easing curve, two durations, everything rising into place; all
+ *          of it collapses under prefers-reduced-motion.
+ *
+ * Fonts are set once on .cjPage and never overridden — Ubuntu Mono for Latin
+ * falling through to Anuphan for Thai, per character.
+ */
+
+
+/* ====================================================================== */
+/* TOKENS, PAGE FRAME AND HEADINGS */
+
+.cjPage {
+  --cj-ink: #262550;
+  --cj-ink-soft: #45447a;
+  --cj-muted: #7a79a3;
+  --cj-page: #f1f1fa;
+  --cj-sunken: #f6f6fd;
+  --cj-border: #e6e5f5;
+  --cj-border-strong: #d5d4ec;
+  --cj-accent: #4f50a6;
+  --cj-accent-deep: #3f4090;
+  --cj-accent-soft: #e7e7f8;
+  --cj-butter: #f7dc4f;
+  --cj-coral: #ef8f57;
+  --cj-good: #2f9e6e;
+  --cj-good-soft: #e6f5ee;
+  --cj-locked: #9a9ab5;
+  --cj-locked-soft: #eeeef8;
+  --cj-r: 16px;
+  --cj-r-lg: 26px;
+  --cj-shadow: 0 12px 34px rgba(38, 37, 80, 0.08);
+  --cj-shadow-sm: 0 6px 18px rgba(38, 37, 80, 0.06);
+  --cj-ease: cubic-bezier(0.32, 0.72, 0.24, 1);
+  --cj-t: 260ms;
+  --cj-t-slow: 420ms;
+  --cjAccent: #6c4bf4;
+  min-height: calc(100vh - 88px);
+  background: var(--cj-page);
+  color: var(--cj-ink);
+  font-family: 'Ubuntu Mono', Inter, Anuphan, system-ui, sans-serif;
+  padding: clamp(20px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(26px, 3vw, 38px);
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  --fs-xs: 13.5px;
+  --fs-sm: 15px;
+  --fs-md: 16.5px;
+  --fs-lg: 19px;
+  --fs-xl: 23px;
+  --fs-2xl: 30px;
+  --fs-3xl: 38px;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+}
+
+.cjPage h1 {
+  font-size: clamp(27px, 3.4vw, var(--fs-3xl));
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0 0 6px;
+  line-height: 1.22;
+  margin-bottom: 8px;
+}
+
+.cjPage h2 {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.cjPage h3 {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  margin: 0 0 8px;
+  margin-bottom: 12px;
+}
+
+.cjKicker {
+  font-size: var(--fs-sm);
+  letter-spacing: 0.05em;
+  color: var(--cj-accent);
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.cjLede {
+  color: var(--cj-muted);
+  font-size: 14px;
+  max-width: 64ch;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.cjHead {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+
+/* ====================================================================== */
+/* TOP BARS, BACK BUTTONS, VIEW SWITCHER */
+
+.cjTopBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cjTopBarLabel {
+  margin-inline-start: auto;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cj-muted);
+  font-weight: 600;
+}
+
+.cjBack {
+  font: inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  background: #fff;
+  color: var(--cj-ink-soft);
+  border: 1px solid var(--cj-border);
+  border-radius: 8px;
+  padding: 7px 13px;
+  transition: border-color var(--cj-t) var(--cj-ease), color var(--cj-t) var(--cj-ease);
+}
+
+.cjBack:hover {
+  border-color: var(--cj-accent);
+  color: var(--cj-accent);
+}
+
+.cjRailBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cjSeg {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.cjSeg button {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  border: 0;
+  background: transparent;
+  color: #dcdcf7;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--cj-t) var(--cj-ease), color var(--cj-t) var(--cj-ease);
+}
+
+.cjSeg button:hover {
+  color: #fff;
+}
+
+.cjSeg button.is-on {
+  background: #fff;
+  color: var(--cj-accent);
+}
+
+.cjRailCount {
+  margin-inline-start: auto;
+  font-size: 12.5px;
+  color: #c6c6ee;
+  font-weight: 600;
+}
+
+.cjChip, .cjPreset, .cjBtn, .cjBack, .cjSeg button, .cjCourseAdd, .cjCourseRemove, .cjChipsMore, .cjPlannerSavedBody p {
+  font-size: var(--fs-sm);
+}
+
+
+/* ====================================================================== */
+/* BUTTONS, CHIPS AND INPUTS */
+
+.cjBtn {
+  font: inherit;
+  font-weight: 700;
+  font-size: var(--fs-md);
+  cursor: pointer;
+  border-radius: var(--cj-r);
+  padding: 13px 24px;
+  border: 1px solid transparent;
+  transition: background var(--cj-t) var(--cj-ease), border-color var(--cj-t) var(--cj-ease), color var(--cj-t) var(--cj-ease);
+}
+
+.cjBtn-primary {
+  background: var(--cjSection, var(--cj-accent));
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(79, 80, 166, 0.24);
+}
+
+.cjBtn-primary:hover {
+  background: #5a37e8;
+}
+
+.cjBtn-ghost {
+  background: #fff;
+  border-color: var(--cj-border-strong);
+  color: var(--cj-ink);
+}
+
+.cjBtn-ghost:hover {
+  border-color: var(--cj-accent);
+  color: var(--cj-accent);
+}
+
+.cjBtn-quiet {
+  background: transparent;
+  color: var(--cj-muted);
+  padding-inline: 10px;
+}
+
+.cjBtn-quiet:hover {
+  color: var(--cj-accent);
+}
+
+.cjChipRow, .cjPresetRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.cjChip {
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid var(--cj-border);
+  color: var(--cj-ink-soft);
+  border-radius: var(--cj-r);
+  padding: 12px 20px;
+  transition: all var(--cj-t) var(--cj-ease);
+  border-color: transparent;
+  box-shadow: var(--cj-shadow-sm);
+}
+
+.cjChip:hover {
+  border-color: var(--cj-accent);
+  color: var(--cj-accent);
+}
+
+.cjChip.is-active {
+  background: var(--cjSection, var(--cj-accent));
+  border-color: var(--cjSection, var(--cj-accent));
+  color: #fff;
+  box-shadow: none;
+}
+
+.cjModeBtn {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  background: #fff;
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-r);
+  padding: 16px 18px;
+  display: grid;
+  gap: 3px;
+  transition: all var(--cj-t) var(--cj-ease);
+}
+
+.cjModeBtn b {
+  font-size: var(--fs-md);
+}
+
+.cjModeBtn small {
+  color: var(--cj-muted);
+  font-size: var(--fs-sm);
+}
+
+.cjModeBtn:hover {
+  border-color: var(--cj-accent);
+}
+
+.cjModeBtn.is-active {
+  border-color: var(--cj-accent);
+  background: var(--cj-accent-soft);
+}
+
+.cjDayBtn {
+  font: inherit;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  min-width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid var(--cj-border);
+  background: var(--cj-sunken);
+  color: var(--cj-ink-soft);
+  transition: all var(--cj-t) var(--cj-ease);
+}
+
+.cjDayBtn:hover {
+  border-color: var(--cj-accent);
+  color: var(--cj-accent);
+}
+
+.cjDayBtn.is-active {
+  background: var(--cjSection, var(--cj-accent));
+  border-color: var(--cjSection, var(--cj-accent));
+  color: #fff;
+}
+
+.cjPreset {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  border: 1px dashed var(--cj-border-strong);
+  color: var(--cj-muted);
+  border-radius: var(--cj-r);
+  padding: 6px 12px;
+}
+
+.cjPreset:hover {
+  border-color: var(--cj-accent);
+  color: var(--cj-accent);
+}
+
+.cjDateInput {
+  font: inherit;
+  font-size: var(--fs-sm);
+  padding: 11px 14px;
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-r);
+  color: var(--cj-ink);
+  background: #fff;
+}
+
+.cjModeBtn, .cjPlanCard, .cjCourseCard, .cjNextCard {
+  border-color: transparent;
+  box-shadow: var(--cj-shadow-sm);
+}
+
+.cjModeBtn.is-active, .cjPlanCard.is-active {
+  box-shadow: inset 0 0 0 2px var(--cjSection);
+}
+
+.cjChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.cjChipDay {
+  font: inherit;
+  cursor: pointer;
+  min-width: 56px;
+  border: 0;
+  border-radius: 16px;
+  padding: 10px 8px;
+  display: grid;
+  gap: 1px;
+  justify-items: center;
+  background: rgba(255, 255, 255, 0.72);
+  color: #1d1c3d;
+  transition: transform 140ms var(--cj-ease), background var(--cj-t) var(--cj-ease);
+}
+
+.cjChipDay b {
+  font-size: var(--fs-lg);
+  line-height: 1.1;
+}
+
+.cjChipDay span {
+  font-size: var(--fs-xs);
+  opacity: 0.72;
+}
+
+.cjChipDay:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+.cjChipDay.is-done {
+  background: #cfe89f;
+  color: #1c3d22;
+}
+
+.cjChipDay.is-locked {
+  background: rgba(29, 28, 61, 0.14);
+  color: #45447a;
+}
+
+/* A locked chip sits on two opposite grounds: the dark indigo station card
+   (every month, and every block that isn't the one you're in) and the pastel
+   card of the block you are in. One rule can't serve both — a dark tint with
+   dark ink on the dark card left the date unreadable — so the chip takes its
+   contrast from whichever card it lands on. */
+.cjStationCard .cjChipDay.is-locked {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ecebff;
+}
+
+.cjStationCard .cjChipDay.is-locked span {
+  opacity: 0.92;
+}
+
+.cjStation.is-now .cjStationCard .cjChipDay.is-locked {
+  background: rgba(29, 28, 61, 0.16);
+  color: #2b2a55;
+}
+
+.cjChipDay.is-today {
+  background: #1d1c3d;
+  color: #fff;
+}
+
+.cjChipDay.is-open {
+  outline: 3px solid #1d1c3d;
+  outline-offset: 2px;
+}
+
+.cjChipDay.is-today.is-open {
+  outline-color: #fff;
+}
+
+.cjChipsMore {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  justify-self: start;
+  background: transparent;
+  border: 1px dashed rgba(29, 28, 61, 0.32);
+  color: inherit;
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+
+/* ====================================================================== */
+/* SECTION SHELLS AND COLOURED BANDS */
+
+.cjSection {
+  --cjSection: var(--cj-accent);
+  --cjSectionSoft: var(--cj-accent-soft);
+  border: 0;
+  border-radius: var(--cj-r-lg);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 0 clamp(16px, 2.2vw, 24px) clamp(18px, 2.4vw, 26px);
+  overflow: hidden;
+  box-shadow: var(--cj-shadow);
+}
+
+.cjSection-plan {
+  --cjSection: #4f50a6;
+  --cjSectionSoft: #e7e7f8;
+}
+
+.cjSection-courses {
+  --cjSection: #d97634;
+  --cjSectionSoft: #fdeee1;
+}
+
+.cjSection-path {
+  --cjSection: #2f9e6e;
+  --cjSectionSoft: #e6f5ee;
+}
+
+.cjSection-journey {
+  --cjSection: #f0b429;
+  --cjSectionSoft: rgba(240, 180, 41, 0.16);
+  --cjInkOnPastel: #17171c;
+  background: #3f4090;
+  border-color: #26262e;
+  color: #f3f3fc;
+  border-radius: 20px;
+  border: 0;
+}
+
+.cjBand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-inline: calc(clamp(16px, 2.2vw, 24px) * -1);
+  padding: 13px clamp(16px, 2.2vw, 24px);
+  background: var(--cjSection);
+  color: #fff;
+  border-radius: 0;
+  padding-block: 20px;
+}
+
+.cjBandNo {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.24);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: var(--fs-lg);
+}
+
+.cjBandText {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.cjBandText b {
+  font-size: var(--fs-xl);
+  letter-spacing: -0.01em;
+}
+
+.cjBandText small {
+  font-size: var(--fs-sm);
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+.cjSectionNo {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--cjSectionSoft);
+  color: var(--cjSection);
+  font-weight: 700;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+}
+
+.cjHint {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--cj-muted);
+  margin-top: 2px;
+}
+
+.cjField {
+  border-top: 0;
+  padding-top: 14px;
+  background: var(--cj-sunken);
+  border-radius: 20px;
+  padding: 18px 20px;
+}
+
+.cjField-first {
+  border-top: 0;
+  padding-top: 18px;
+}
+
+.cjSection-journey .cjBand {
+  background: var(--cj-butter);
+  color: #fff;
+}
+
+.cjSection-journey .cjBandNo {
+  background: rgba(38, 37, 80, 0.14);
+  color: #17171c;
+}
+
+.cjSection-journey .cjBandText small {
+  opacity: 0.72;
+}
+
+.cjSection-journey .cjEmpty {
+  color: #c6c6ee;
+}
+
+.cjSection-journey .cjBar {
+  background: rgba(23, 23, 28, 0.14);
+}
+
+.cjSection-journey .cjTodayCard {
+  background: var(--cjPastel);
+  color: var(--cjInkOnPastel);
+  border: 0;
+  border-radius: 28px;
+  padding: 20px;
+  gap: 14px;
+}
+
+.cjSection-journey .cjTodayCard.is-done {
+  background: #d9f2a5;
+}
+
+.cjSection-journey .cjTodayCourse {
+  font-size: var(--fs-md);
+  padding-bottom: 4px;
+}
+
+.cjSection-journey .cjTodayMinutes {
+  grid-column: 2;
+  justify-self: end;
+  color: rgba(23, 23, 28, 0.62);
+}
+
+.cjSection-journey .cjPlayBtn {
+  background: var(--cjInkOnPastel);
+  color: #fff;
+  border-radius: 18px;
+  padding: 15px 18px;
+}
+
+.cjSection-journey .cjPlayBtn:hover {
+  background: #2b2b34;
+}
+
+.cjSection-journey .cjDayItem {
+  background: rgba(255, 255, 255, 0.72);
+  border: 0;
+  border-radius: 16px;
+  padding: 11px 13px;
+  color: var(--cjInkOnPastel);
+}
+
+.cjSection-journey .cjDayItem:hover {
+  background: #fff;
+}
+
+.cjSection-journey .cjDayList li.is-done .cjDayItem {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.cjSection-journey .cjDayItemBody small {
+  color: rgba(23, 23, 28, 0.6);
+}
+
+.cjSection-journey .cjCheck {
+  background: #fff;
+  border-color: rgba(23, 23, 28, 0.14);
+  color: rgba(23, 23, 28, 0.55);
+}
+
+.cjSection-journey .cjCheck.is-done {
+  background: var(--cjInkOnPastel);
+  border-color: var(--cjInkOnPastel);
+  color: #fff;
+}
+
+.cjSection-journey .cjDoneRow, .cjSection-journey .cjOverdueNote, .cjSection-journey .cjLongNote {
+  background: rgba(255, 255, 255, 0.72);
+  border: 0;
+  border-radius: 16px;
+  color: var(--cjInkOnPastel);
+}
+
+.cjSection-journey .cjDoneRow b, .cjSection-journey .cjDoneRow p, .cjSection-journey .cjLockedRow p {
+  color: var(--cjInkOnPastel);
+}
+
+.cjSection-journey .cjDoneMark {
+  background: var(--cjInkOnPastel);
+}
+
+.cjSection-journey .cjBtn-ghost, .cjSection-journey .cjBtn-quiet {
+  background: #fff;
+  border-color: transparent;
+  color: var(--cjInkOnPastel);
+  border-radius: 999px;
+}
+
+.cjSection-journey .cjBtn-primary {
+  background: var(--cjInkOnPastel);
+  color: #fff;
+  border-radius: 999px;
+  box-shadow: none;
+}
+
+.cjSection-journey .cjBand, .cjSection-journey .cjBandNo {
+  color: #262550;
+}
+
+.cjField h3 {
+  margin-bottom: 14px;
+}
+
+
+/* ====================================================================== */
+/* 1 · PLANNER */
+
+.cjEstimate {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0;
+  background: var(--cjSectionSoft);
+  border: 0;
+  border-radius: var(--cj-r);
+  overflow: hidden;
+}
+
+.cjEstimate > div {
+  background: transparent;
+  padding: 18px 20px;
+  display: grid;
+  gap: 2px;
+}
+
+.cjEstimate b {
+  font-size: var(--fs-2xl);
+  color: var(--cjSection, var(--cj-accent));
+  line-height: 1.15;
+}
+
+.cjEstimate span {
+  font-size: var(--fs-sm);
+  color: var(--cj-muted);
+}
+
+.cjPlannerActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cjPlannerSaved {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+}
+
+.cjPlannerSavedBody {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.cjPlannerSavedBody b {
+  font-size: var(--fs-lg);
+}
+
+.cjPlannerSavedBody p {
+  margin: 3px 0 2px;
+  font-size: 13.5px;
+  color: var(--cj-ink-soft);
+}
+
+.cjPlannerSavedBody small {
+  font-size: 12.5px;
+  color: var(--cj-muted);
+}
+
+.cjPlanPick {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.cjPlanCard {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-r);
+  padding: 18px;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  transition: border-color var(--cj-t) var(--cj-ease), background var(--cj-t) var(--cj-ease),
+    transform var(--cj-t) var(--cj-ease), box-shadow var(--cj-t) var(--cj-ease);
+}
+
+.cjPlanCard:hover {
+  border-color: var(--cjSection);
+  transform: translateY(-1px);
+}
+
+.cjPlanCard.is-active {
+  border-color: var(--cjSection);
+  background: var(--cjSectionSoft);
+  box-shadow: inset 0 0 0 1px var(--cjSection);
+}
+
+.cjPlanTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cjPlanTop b {
+  font-size: var(--fs-lg);
+}
+
+.cjPlanCheck {
+  margin-inline-start: auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--cjSection);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  animation: cjPop var(--cj-t) var(--cj-ease);
+}
+
+.cjPlanTagline {
+  font-size: var(--fs-sm);
+  color: var(--cj-ink-soft);
+}
+
+.cjPlanBullets {
+  margin: 2px 0 0;
+  padding-inline-start: 16px;
+  display: grid;
+  gap: 3px;
+}
+
+.cjPlanBullets li {
+  font-size: var(--fs-sm);
+  color: var(--cj-muted);
+  line-height: 1.5;
+}
+
+.cjPlanTag {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: var(--cjSectionSoft);
+  color: var(--cjSection);
+  border-radius: 999px;
+  padding: 2px 10px;
+  margin-inline-end: 6px;
+}
+
+.cjPlanNote {
+  font-size: 12.5px !important;
+  color: #8a5a12 !important;
+  background: #fdf8e9;
+  border: 1px solid #f0e0b0;
+  border-radius: var(--cj-r);
+  padding: 8px 12px;
+  max-width: 62ch;
+}
+
+.cjPlannerSavedBody small, .cjPlanTag {
+  font-size: var(--fs-sm);
+}
+
+.cjDoneRow p, .cjLessonDone p, .cjOverdueNote, .cjLongNote, .cjPlanNote, .cjResumeNote, .cjLockedRow p {
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+
+/* ====================================================================== */
+/* 2 · COURSES, BUNDLE ROPE */
+
+.cjMineHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cjBundleTag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cj-accent);
+  background: var(--cj-accent-soft);
+  border: 1px solid #f0e0b0;
+  border-radius: 999px;
+  padding: 6px 16px;
+  border-color: transparent;
+}
+
+.cjBundleNote {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--cj-muted);
+}
+
+.cjBundleWrap {
+  position: relative;
+  margin-top: 18px;
+}
+
+.cjBundleWrap.is-bundled {
+  padding-top: 22px;
+}
+
+.cjRope {
+  position: absolute;
+  inset-inline: 6px;
+  top: 0;
+  height: 22px;
+  width: calc(100% - 12px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cjRopeLine {
+  fill: none;
+  stroke: #a9a8dd;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.cjRopeLine-thin {
+  stroke: #cfceef;
+  stroke-width: 1.1;
+}
+
+.cjRopeKnot {
+  fill: var(--cj-accent);
+}
+
+.cjCourseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.cjCourseCard {
+  border: 1px solid var(--cj-border);
+  border-top: 3px solid var(--cjAccent);
+  border-radius: 22px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cjCourseCard.is-mine {
+  background: #fff;
+}
+
+.cjCourseOpen {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  background: transparent;
+  border: 0;
+  padding: 18px;
+  display: grid;
+  gap: 8px;
+  flex: 1;
+  color: inherit;
+}
+
+.cjCourseOpen:hover b {
+  color: var(--cjAccent);
+}
+
+.cjCourseEmoji {
+  font-size: 26px;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  background: var(--cjSectionSoft, #e7e7f8);
+}
+
+.cjCourseEmoji-lg {
+  font-size: 42px;
+  width: 84px;
+  height: 84px;
+  border-radius: 20px;
+  background: #e7e7f8;
+}
+
+.cjCourseOpen b {
+  font-size: var(--fs-lg);
+  transition: color var(--cj-t) var(--cj-ease);
+  line-height: 1.35;
+}
+
+.cjCourseOpen small {
+  font-size: var(--fs-sm);
+  color: var(--cj-muted);
+  line-height: 1.5;
+}
+
+.cjCourseStats {
+  font-size: 12px;
+  color: var(--cj-muted);
+  font-weight: 600;
+}
+
+.cjCourseProgressText {
+  font-size: 12px;
+  color: var(--cj-ink-soft);
+  font-weight: 600;
+}
+
+.cjBar {
+  display: block;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--cj-locked-soft);
+  overflow: hidden;
+}
+
+.cjBar i {
+  display: block;
+  height: 100%;
+  background: var(--cjAccent);
+  border-radius: 999px;
+  transition: width var(--cj-t-slow) var(--cj-ease);
+}
+
+.cjBar-lg {
+  height: 8px;
+  margin: 10px 0 4px;
+  max-width: 420px;
+}
+
+.cjCourseAdd, .cjCourseRemove {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 0;
+  border-top: 1px solid var(--cj-border);
+  background: #fff;
+  padding: 13px 18px;
+  text-align: start;
+}
+
+.cjCourseAdd {
+  color: var(--cj-accent);
+}
+
+.cjCourseRemove {
+  color: var(--cj-muted);
+}
+
+.cjCourseAdd:hover, .cjCourseRemove:hover {
+  background: var(--cj-accent-soft);
+}
+
+.cjOther h3, .cjMine h3 {
+  margin-bottom: 10px;
+}
+
+.cjOther {
+  border-top: 1px solid var(--cj-border);
+  padding-top: 16px;
+}
+
+.cjBundleFoot {
+  margin: 0;
+  font-size: 12px;
+  color: var(--cj-muted);
+}
+
+.cjCourseHero {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  border: 0;
+  border-top: 4px solid var(--cjAccent);
+  border-radius: var(--cj-r-lg);
+  padding: clamp(16px, 2.2vw, 24px);
+  background: #fff;
+  box-shadow: var(--cj-shadow);
+}
+
+.cjCourseHero p {
+  margin: 0 0 4px;
+  font-size: var(--fs-md);
+  color: var(--cj-ink-soft);
+}
+
+.cjCourseHeroStats {
+  color: var(--cj-muted) !important;
+  font-size: var(--fs-sm) !important;
+}
+
+.cjCourseHeroActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 4px;
+}
+
+.cjCourseOrder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cjCourseSeq {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--cj-accent);
+  background: var(--cj-accent-soft);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.cjCoursePage .cjChapter, .cjLessonPage .cjLessonActions, .cjLessonPage .cjResumeNote {
+  background: #fff;
+  border-radius: var(--cj-r-lg);
+  box-shadow: var(--cj-shadow);
+  padding: clamp(16px, 2.2vw, 22px);
+}
+
+.cjMine h3, .cjOther h3 {
+  font-size: var(--fs-lg);
+}
+
+.cjCourseProgressText, .cjCourseSeq, .cjBundleTag {
+  font-size: var(--fs-xs);
+}
+
+
+/* ====================================================================== */
+/* 3 · ROADMAP RAIL, STATIONS, DAY CHIPS, WEEK LIST */
+
+.cjRail {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 34px;
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+
+.cjRail::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 11px;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.cjStation {
+  position: relative;
+}
+
+.cjStationDot {
+  position: absolute;
+  inset-inline-start: -30px;
+  top: 20px;
+  width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  background: #3f4090;
+  border: 4px solid rgba(255, 255, 255, 0.28);
+}
+
+.cjStation.is-now .cjStationDot {
+  background: #fff;
+  border-color: #fff;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.18);
+}
+
+.cjStation.is-done .cjStationDot {
+  background: #d9f2a5;
+  border-color: #d9f2a5;
+}
+
+.cjStationCard {
+  background: #4b4ca0;
+  border-radius: 22px;
+  padding: 18px 20px;
+  display: grid;
+  gap: 10px;
+  color: #e7e7ff;
+  transition: background var(--cj-t) var(--cj-ease);
+}
+
+.cjStation.is-now .cjStationCard {
+  background: var(--cjPastel);
+  color: #1d1c3d;
+  box-shadow: 0 14px 30px rgba(20, 20, 60, 0.24);
+}
+
+.cjStationTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cjStationHead {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.cjStationHead b, .cjStationTop > b {
+  font-size: var(--fs-xl);
+  letter-spacing: 0.02em;
+}
+
+.cjStationMeta {
+  font-size: 12.5px;
+  color: rgba(231, 231, 255, 0.72);
+}
+
+.cjStation.is-now .cjStationMeta {
+  color: rgba(29, 28, 61, 0.68);
+}
+
+.cjStationPill {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.18);
+  color: inherit;
+  white-space: nowrap;
+}
+
+.cjStationPill.is-now {
+  background: #1d1c3d;
+  color: #fff;
+}
+
+.cjStationPill.is-done {
+  background: #d9f2a5;
+  color: #1c3d22;
+}
+
+.cjRing {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(#1d1c3d var(--cjRingPct, 0%), rgba(29, 28, 61, 0.16) 0);
+}
+
+.cjRing span {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--cjPastel, #fff);
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #1d1c3d;
+}
+
+.cjStation:not(.is-now) .cjChipsMore {
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.cjWeekList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.cjWeekRow {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 56px 6px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  text-align: start;
+  background: #4b4ca0;
+  color: #e7e7ff;
+  border: 0;
+  border-radius: 18px;
+  padding: 15px 16px;
+  transition: background var(--cj-t) var(--cj-ease), transform 140ms var(--cj-ease);
+}
+
+.cjWeekRow:hover {
+  background: #5153ab;
+}
+
+.cjWeekRow.is-today {
+  background: var(--cjPastel);
+  color: #1d1c3d;
+}
+
+.cjWeekRow.is-done {
+  background: #d9f2a5;
+  color: #1c3d22;
+}
+
+.cjWeekRow.is-locked {
+  opacity: 0.82;
+}
+
+.cjWeekDate {
+  text-align: center;
+  display: grid;
+}
+
+.cjWeekDate b {
+  font-size: var(--fs-xl);
+  line-height: 1;
+}
+
+.cjWeekDate span {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.cjWeekBar {
+  align-self: stretch;
+  border-radius: 999px;
+  background: var(--cjAccent);
+}
+
+.cjWeekRow.is-today .cjWeekBar, .cjWeekRow.is-done .cjWeekBar {
+  background: #1d1c3d;
+}
+
+.cjWeekBody {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cjWeekBody b {
+  font-size: var(--fs-md);
+}
+
+.cjWeekBody small {
+  font-size: 12px;
+  opacity: 0.72;
+}
+
+.cjWeekRow .cjTimePill {
+  background: rgba(255, 255, 255, 0.9);
+  border: 0;
+}
+
+.cjWeekDate span, .cjWeekBody small {
+  font-size: var(--fs-xs);
+}
+
+
+/* ====================================================================== */
+/* THE FOCUS DAY CARD AND ITS LESSON ROWS */
+
+.cjEmpty {
+  margin: 0;
+  color: var(--cj-muted);
+  font-size: 13.5px;
+}
+
+.cjTodayCard {
+  border: 1px solid var(--cj-border);
+  border-inline-start: 4px solid var(--cjAccent, var(--cjSection));
+  border-radius: var(--cj-r);
+  background: var(--cj-sunken);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cjTodayCard.is-done {
+  border-inline-start-color: var(--cj-good);
+  background: var(--cj-good-soft);
+}
+
+.cjTodayCourse {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cjTodayMinutes {
+  margin-inline-start: auto;
+  font-size: var(--fs-sm);
+  color: var(--cj-muted);
+  font-weight: 600;
+}
+
+.cjPlayBtn {
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: start;
+  width: 100%;
+  background: var(--cjAccent, var(--cj-accent));
+  color: #fff;
+  border: 0;
+  border-radius: 20px;
+  padding: 18px 20px;
+  transition: background var(--cj-t) var(--cj-ease);
+}
+
+.cjPlayBtn:hover {
+  background: #5a37e8;
+}
+
+.cjPlayIcon {
+  font-size: var(--fs-xl);
+}
+
+.cjPlayBody {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cjPlayBody small {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.cjPlayBody b {
+  font-size: var(--fs-lg);
+  line-height: 1.35;
+}
+
+.cjPlayMin {
+  font-size: 12.5px;
+  font-weight: 700;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.cjLockedRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cjLockedRow p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--cj-ink-soft);
+}
+
+.cjDoneRow, .cjLessonDone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--cj-good-soft);
+  border: 1px solid #c6e6d6;
+  border-radius: var(--cj-r);
+  padding: 12px 14px;
+}
+
+.cjDoneRow b, .cjLessonDone b {
+  font-size: var(--fs-lg);
+  color: #1e7a55;
+}
+
+.cjDoneRow p, .cjLessonDone p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--cj-ink-soft);
+}
+
+.cjDoneRow > button, .cjLessonDoneActions {
+  margin-inline-start: auto;
+}
+
+.cjDoneMark {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--cj-good);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: var(--fs-lg);
+}
+
+.cjLongNote {
+  margin: 0;
+  font-size: 12.5px;
+  color: #8a5a12;
+  background: #fdf8e9;
+  border: 1px solid #f0e0b0;
+  border-radius: var(--cj-r);
+  padding: 8px 12px;
+}
+
+.cjDayList, .cjChapterList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.cjDayItem, .cjChapterItem {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: start;
+  background: #fff;
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-r);
+  padding: 14px 16px;
+  color: inherit;
+  transition: border-color var(--cj-t) var(--cj-ease);
+}
+
+.cjDayItem:hover, .cjChapterItem:hover {
+  border-color: var(--cj-accent);
+}
+
+.cjChapterItem.is-done, .cjDayList li.is-done .cjDayItem {
+  background: var(--cj-good-soft);
+  border-color: #c6e6d6;
+}
+
+.cjDayItemBody, .cjChapterItemBody {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cjDayItemBody b, .cjChapterItemBody b {
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+
+.cjDayItemBody small, .cjChapterItemBody small {
+  font-size: var(--fs-sm);
+  color: var(--cj-muted);
+}
+
+.cjCheck {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-sm);
+  border: 1px solid var(--cj-border-strong);
+  color: var(--cj-muted);
+  background: #fff;
+}
+
+.cjCheck.is-done {
+  background: var(--cj-good);
+  border-color: var(--cj-good);
+  color: #fff;
+}
+
+.cjReviseTag {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #1e7a55;
+  border: 1px solid #c6e6d6;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.cjPlayer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0d0d1a;
+  border-radius: var(--cj-r-lg);
+  overflow: hidden;
+  box-shadow: var(--cj-shadow);
+}
+
+.cjPlayer iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.cjPlayerEmpty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 6px;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.cjPlayerEmpty p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.75;
+  max-width: 44ch;
+}
+
+.cjOverdueNote {
+  margin: 0;
+  font-size: 12.5px;
+  color: #8a5a12;
+  background: #fdf8e9;
+  border: 1px solid #f0e0b0;
+  border-radius: var(--cj-r);
+  padding: 8px 12px;
+}
+
+.cjTodayHero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 4px 14px;
+}
+
+.cjDayPill {
+  grid-column: 1 / -1;
+  justify-self: start;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  background: #fff;
+  color: var(--cjInkOnPastel);
+  border-radius: 999px;
+  padding: 8px 20px;
+}
+
+.cjBigDate {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: clamp(46px, 8vw, 68px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.cjBigDate span {
+  font-size: clamp(20px, 3vw, 28px);
+  letter-spacing: 0;
+}
+
+.cjTimePill {
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  background: #fff;
+  color: var(--cjInkOnPastel);
+  border: 1px solid rgba(23, 23, 28, 0.12);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.cjPlayBody small, .cjPlayMin {
+  font-size: var(--fs-sm);
+}
+
+.cjTimePill, .cjReviseTag, .cjBonusTag {
+  font-size: var(--fs-xs);
+  padding: 6px 14px;
+}
+
+
+/* ====================================================================== */
+/* COURSE DETAIL AND LESSON PAGES */
+
+.cjLessonDoneActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cjChapter h2 {
+  margin-bottom: 12px;
+  padding-inline-start: 14px;
+  border-inline-start: 3px solid var(--cjAccent);
+  border-inline-start-color: var(--cjAccent, var(--cj-accent));
+  font-size: var(--fs-xl);
+  border-inline-start-width: 4px;
+}
+
+.cjLessonCrumb {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--cj-muted);
+}
+
+.cjLessonTitle {
+  margin: 0;
+  font-size: clamp(24px, 3.2vw, 34px);
+}
+
+.cjResumeNote {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cj-muted);
+}
+
+.cjLessonActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cjNextCard {
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  background: #fff;
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-r);
+  padding: 18px 20px;
+  display: grid;
+  gap: 2px;
+  color: inherit;
+  transition: border-color var(--cj-t) var(--cj-ease);
+}
+
+.cjNextCard:hover {
+  border-color: var(--cjAccent);
+}
+
+.cjNextCard small {
+  font-size: 12px;
+  color: var(--cj-muted);
+}
+
+.cjNextCard b {
+  font-size: var(--fs-lg);
+}
+
+.cjNextCard span {
+  font-size: 12px;
+  color: var(--cj-muted);
+}
+
+.cjBonusTag {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--cj-muted);
+  border: 1px dashed var(--cj-border-strong);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.cjChapterItem.is-bonus b {
+  color: var(--cj-muted);
+  font-weight: 600;
+}
+
+.cjLessonPage .cjLessonActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cjLessonCrumb, .cjLessonPage .cjNextCard small, .cjNextCard span {
+  font-size: var(--fs-sm);
+}
+
+
+/* ====================================================================== */
+/* ASK-AHEAD DIALOG */
+
+.cjScrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(30, 29, 66, 0.5);
+  backdrop-filter: blur(3px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: cjFade var(--cj-t) var(--cj-ease) both;
+}
+
+.cjModal {
+  width: min(460px, 100%);
+  background: #fff;
+  border-radius: var(--cj-r-lg);
+  padding: 26px;
+  box-shadow: 0 24px 60px rgba(24, 23, 60, 0.28);
+  animation: cjRise var(--cj-t-slow) var(--cj-ease) both;
+}
+
+.cjModalPill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--cj-accent-soft);
+  color: var(--cj-accent);
+  border-radius: 999px;
+  padding: 5px 14px;
+}
+
+.cjModal h3 {
+  margin: 12px 0 6px;
+  font-size: var(--fs-xl);
+  color: var(--cj-ink);
+}
+
+.cjModal > p {
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--cj-ink-soft);
+}
+
+.cjModalList {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.cjModalList li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cj-sunken);
+  border-radius: 12px;
+  padding: 13px 16px;
+}
+
+.cjModalList b {
+  font-size: 13.5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cjModalList span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cj-muted);
+  white-space: nowrap;
+}
+
+.cjModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.cjModal > p, .cjModalList b {
+  font-size: var(--fs-md);
+}
+
+.cjModalPill, .cjModalList span {
+  font-size: var(--fs-xs);
+}
+
+
+/* ====================================================================== */
+/* 3 · COURSE ORDER: THE RECOMMENDED PATH, AND THE STUDENT'S OWN */
+
+.cjPathStrip, .cjPathList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  counter-reset: cjPath;
+}
+
+.cjPathStrip > li, .cjPathList > li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--cj-sunken);
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-r);
+  padding: 12px 14px;
+  transition: background var(--cj-t) var(--cj-ease), border-color var(--cj-t) var(--cj-ease);
+}
+
+/* The first course is the one being studied now — it earns the accent. */
+.cjPathStrip > li:first-child, .cjPathList > li:first-child {
+  background: #fff;
+  border-color: var(--cjAccent);
+  box-shadow: var(--cj-shadow-sm);
+}
+
+.cjPathNum {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  background: var(--cjAccent);
+  color: #fff;
+}
+
+.cjPathName {
+  display: grid;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cjPathName b {
+  font-size: var(--fs-md);
+}
+
+.cjPathName small {
+  font-size: var(--fs-xs);
+  color: var(--cj-muted);
+}
+
+.cjPathShift {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cjPathShift.is-sooner {
+  color: var(--cj-good);
+}
+
+.cjPathShift.is-later {
+  color: #b8791f;
+}
+
+.cjPathMove {
+  flex: none;
+  display: flex;
+  gap: 4px;
+}
+
+.cjPathMove button {
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--cj-border-strong);
+  background: #fff;
+  color: var(--cj-ink);
+  transition: background var(--cj-t) var(--cj-ease), transform 140ms var(--cj-ease);
+}
+
+.cjPathMove button:hover:not(:disabled) {
+  background: var(--cj-accent-soft);
+}
+
+.cjPathMove button:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.cjPathMove button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cjPathFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cjPathFoot p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--cj-muted);
+  max-width: 62ch;
+}
+
+.cjPathModes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.cjPathMode {
+  font: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  text-align: start;
+  background: #fff;
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-r);
+  padding: 14px 16px;
+  color: inherit;
+  transition: box-shadow var(--cj-t) var(--cj-ease), background var(--cj-t) var(--cj-ease);
+}
+
+.cjPathMode.is-active {
+  background: var(--cjSectionSoft);
+  box-shadow: inset 0 0 0 2px var(--cjSection);
+}
+
+.cjPathMode b {
+  font-size: var(--fs-md);
+}
+
+.cjPathMode small {
+  font-size: var(--fs-xs);
+  color: var(--cj-muted);
+  line-height: 1.5;
+}
+
+.cjPathWarm {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  cursor: pointer;
+  background: var(--cj-good-soft);
+  border: 1px solid #c6e6d6;
+  border-radius: var(--cj-r);
+  padding: 14px 16px;
+}
+
+.cjPathWarm input {
+  margin-top: 3px;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--cj-good);
+  flex: none;
+}
+
+.cjPathWarm span {
+  display: grid;
+  gap: 2px;
+}
+
+.cjPathWarm b {
+  font-size: var(--fs-md);
+}
+
+.cjPathWarm small {
+  font-size: var(--fs-xs);
+  color: #2c6b52;
+  line-height: 1.5;
+}
+
+.cjPathActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cjPathNote {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--cj-muted);
+}
+
+.cjCourseNowTag {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--cj-good);
+  align-self: center;
+}
+
+
+/* ====================================================================== */
+/* PACE CHECK: THE PLAN MEASURING ITSELF AGAINST REALITY */
+
+.cjPaceCheck {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: #fdf8e9;
+  border: 1px solid #f0e0b0;
+  border-radius: var(--cj-r-lg);
+  padding: clamp(14px, 2vw, 20px);
+}
+
+.cjPaceIcon {
+  font-size: 28px;
+  flex: none;
+}
+
+.cjPaceBody {
+  flex: 1;
+  min-width: 240px;
+  display: grid;
+  gap: 2px;
+}
+
+.cjPaceBody b {
+  font-size: var(--fs-md);
+  color: #6f4a0d;
+}
+
+.cjPaceBody p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: #8a5a12;
+  line-height: 1.5;
+}
+
+.cjPaceActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+
+/* ====================================================================== */
+/* LESSON PAGE: SYLLABUS RAIL BESIDE THE PLAYER */
+
+/* The lesson page drops the journey's reading measure and takes the whole
+   window. A 1320px cap left a wide monitor showing a column of content marooned
+   in the middle with empty space either side — and the thing being framed is a
+   video, which has no measure to protect. */
+.cjLessonPage {
+  max-width: none;
+}
+
+.cjLessonLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: clamp(16px, 2vw, 26px);
+  align-items: start;
+}
+
+/* The one limit worth keeping: a 16:9 video that fills a 2000px window is
+   taller than the window, so the player never grows past the height that still
+   leaves the title and the buttons on screen. */
+.cjLessonMain .cjPlayer {
+  max-width: min(100%, calc((100vh - 260px) * 16 / 9));
+}
+
+.cjLessonMain {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.8vw, 20px);
+  min-width: 0;
+}
+
+.cjLessonMain > .cjLessonCrumb + h1 {
+  margin-top: -10px;
+}
+
+.cjLessonAside {
+  position: sticky;
+  top: 16px;
+  display: grid;
+  gap: 12px;
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.cjAsideBlock {
+  background: #fff;
+  border-radius: var(--cj-r-lg);
+  box-shadow: var(--cj-shadow-sm);
+  padding: 16px 16px 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.cjAsideHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cjAsideHead b {
+  font-size: var(--fs-md);
+  line-height: 1.3;
+}
+
+.cjAsidePct {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--cjAccent);
+  white-space: nowrap;
+}
+
+.cjAsideNote {
+  font-size: var(--fs-xs);
+  color: var(--cj-muted);
+}
+
+.cjAsideCourses {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+/* One row per course the student owns: name, its own percentage, its own bar.
+   The bundle number above is the same arithmetic rolled up, so the two can
+   never tell different stories. */
+.cjAsideCourse {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  display: grid;
+  gap: 4px;
+  text-align: start;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--cj-r);
+  padding: 8px 10px;
+  color: inherit;
+  transition: background var(--cj-t) var(--cj-ease);
+}
+
+.cjAsideCourse:hover {
+  background: var(--cj-sunken);
+}
+
+.cjAsideCourse.is-current {
+  background: var(--cj-sunken);
+  border-color: var(--cj-border-strong);
+}
+
+.cjAsideCourseTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: var(--fs-sm);
+}
+
+.cjAsideCourseTop span {
+  font-weight: 700;
+  color: var(--cj-muted);
+}
+
+.cjAsideCourse.is-current .cjAsideCourseTop span {
+  color: var(--cjAccent);
+}
+
+.cjAsideCourse small {
+  font-size: 12px;
+  color: var(--cj-muted);
+}
+
+.cjBar-thin {
+  height: 5px;
+}
+
+.cjAsideChapterList {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.cjAsideChapterList > li {
+  border-top: 1px solid var(--cj-border);
+}
+
+.cjAsideChapterList > li:first-child {
+  border-top: 0;
+}
+
+.cjAsideChapter {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 6px;
+  border-radius: 10px;
+  text-align: start;
+  transition: background var(--cj-t) var(--cj-ease);
+}
+
+.cjAsideChapter:hover {
+  background: var(--cj-sunken);
+}
+
+.cjAsideCaret {
+  flex: none;
+  font-size: 11px;
+  color: var(--cj-muted);
+  transition: transform var(--cj-t) var(--cj-ease), color var(--cj-t) var(--cj-ease);
+}
+
+li.is-open > .cjAsideChapter .cjAsideCaret {
+  transform: rotate(90deg);
+  color: var(--cjAccent);
+}
+
+.cjAsideChapterName {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.cjAsideChapterName b {
+  font-size: var(--fs-sm);
+  line-height: 1.35;
+}
+
+.cjAsideChapterName small {
+  font-size: 12px;
+  color: var(--cj-muted);
+}
+
+.cjAsideChapterPct {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cj-muted);
+  white-space: nowrap;
+}
+
+.cjAsideChapter.is-done .cjAsideChapterPct {
+  color: var(--cj-good);
+  font-size: var(--fs-sm);
+}
+
+/* A chapter opens by growing, not by appearing. The 0fr → 1fr grid row is the
+   only way to ease to a height nobody measured, so a two-lesson chapter and a
+   twelve-lesson one open at the same speed and neither jumps. */
+.cjAsidePanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--cj-t) var(--cj-ease), opacity 180ms var(--cj-ease);
+}
+
+.cjAsidePanel.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.cjAsidePanel > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.cjAsideLessons {
+  list-style: none;
+  margin: 0;
+  padding: 2px 0 8px 6px;
+  display: grid;
+  gap: 2px;
+  border-inline-start: 2px solid var(--cj-border);
+}
+
+.cjAsideLesson {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  text-align: start;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  padding: 7px 8px;
+  color: inherit;
+  transition: background var(--cj-t) var(--cj-ease), transform 140ms var(--cj-ease);
+}
+
+/* Every control in the rail gives the same small, quiet press — a tap should
+   feel answered without the row moving far enough to read as a jump. */
+.cjAsideLesson:active, .cjAsideChapter:active, .cjAsideCourse:active {
+  transform: scale(0.985);
+}
+
+.cjAsideLesson:hover {
+  background: var(--cj-sunken);
+}
+
+.cjAsideLesson.is-current {
+  background: var(--cj-accent-soft);
+}
+
+.cjAsideMark {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: var(--cj-muted);
+  border: 1px solid var(--cj-border-strong);
+  background: #fff;
+  transition: background var(--cj-t) var(--cj-ease), border-color var(--cj-t) var(--cj-ease),
+    color var(--cj-t) var(--cj-ease);
+}
+
+.cjAsideLesson.is-done .cjAsideMark {
+  background: var(--cj-good);
+  border-color: var(--cj-good);
+  color: #fff;
+}
+
+.cjAsideLesson.is-current .cjAsideMark {
+  background: var(--cjAccent);
+  border-color: var(--cjAccent);
+  color: #fff;
+}
+
+.cjAsideLessonBody {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.cjAsideLessonBody b {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.cjAsideLesson.is-current .cjAsideLessonBody b {
+  font-weight: 700;
+}
+
+.cjAsideLesson.is-done .cjAsideLessonBody b {
+  color: var(--cj-ink-soft);
+}
+
+.cjAsideLessonBody small {
+  font-size: 11.5px;
+  color: var(--cj-muted);
+}
+
+
+/* ====================================================================== */
+/* MISC */
+
+.cjModeRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.cjDayPick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.cjPage > * {
+  animation: cjRise var(--cj-t-slow) var(--cj-ease) both;
+}
+
+.cjPage > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.cjPage > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.cjPage > *:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.cjPage :focus-visible {
+  outline: 2px solid var(--cjSection, var(--cj-accent));
+  outline-offset: 2px;
+  border-radius: var(--cj-r);
+}
+
+
+/* ====================================================================== */
+/* AT-RULES: KEYFRAMES AND RESPONSIVE */
+
+@media (max-width: 980px) {
+  /* Under a laptop the rail stops being a rail: the video takes the full width
+     and the syllabus falls below it, unpinned, as a list you scroll to. */
+  .cjLessonLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cjLessonMain {
+    order: 1;
+  }
+
+  .cjLessonAside {
+    order: 2;
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 720px) {
+  .cjCourseHero {
+    flex-direction: column;
+  }
+}
+
+@keyframes cjRise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cjPop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cjPage *, .cjPage *::before, .cjPage *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+@keyframes cjFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .cjRail {
+    padding-inline-start: 26px;
+  }
+
+  .cjStationDot {
+    inset-inline-start: -24px;
+  }
+
+  .cjWeekRow {
+    grid-template-columns: 40px 4px 1fr;
+    row-gap: 6px;
+  }
+
+  .cjWeekRow .cjTimePill {
+    grid-column: 3;
+    justify-self: start;
+  }
+}

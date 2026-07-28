@@ -14,30 +14,32 @@
      the only structural device is a 4px coloured rule capping a tinted panel.
      There are no shadows anywhere on their site, so there are none here —
      separation comes from the tint and the rule, not from elevation. */
-  --cw-ink: #1b1b32;
-  --cw-ink-soft: #3d3d5c;
-  --cw-page: #ffffff;
+  --cw-ink: #262550;
+  --cw-ink-soft: #45447a;
+  --cw-page: #f1f1fa;
   --cw-surface: #ffffff;
-  --cw-sunken: #faf9fe;
-  --cw-border: #e4e2ef;
-  --cw-border-strong: #d3d0e4;
-  --cw-muted: #6e6e8f;
-  --cw-accent: #6c4bf4;
+  --cw-sunken: #f6f6fd;
+  --cw-border: #e6e5f5;
+  --cw-border-strong: #d5d4ec;
+  --cw-muted: #7a79a3;
+  --cw-accent: #4f50a6;
   --cw-accent-ink: #ffffff;
-  --cw-accent-soft: #eae7fb;
+  --cw-accent-soft: #e7e7f8;
   --cw-good: #2f9e6e;
-  --cw-good-soft: #e8f6ef;
+  --cw-good-soft: #e6f5ee;
   --cw-locked: #9a9ab5;
-  --cw-locked-soft: #f1f0f6;
+  --cw-locked-soft: #eeeef8;
   /* Pale-yellow band from their student panel; the "in progress" counterpart
      to lavender's "done". */
-  --cw-butter: #fdf8e9;
-  --cw-lemon: #f5c518;
-  --cw-shadow-sm: none;
-  --cw-shadow-md: none;
-  /* Near-square. OpenClassrooms buttons and panels are 3-4px, not pill-like. */
-  --cw-r-lg: 3px;
-  --cw-r-md: 3px;
+  --cw-butter: #fdf6e0;
+  --cw-lemon: #f7dc4f;
+  --cw-coral: #ef8f57;
+  /* Elevation replaces the hairline rules: soft, wide, indigo-tinted, so the
+     larger radii below read as sheets rather than as blobs. */
+  --cw-shadow-sm: 0 6px 18px rgba(38, 37, 80, 0.06);
+  --cw-shadow-md: 0 12px 34px rgba(38, 37, 80, 0.08);
+  --cw-r-lg: 22px;
+  --cw-r-md: 14px;
 
   /* One easing curve and two durations for the whole page — the earlier 0.1s
      linear-ish transitions read as a snap, which is what made hovers feel jumpy. */
@@ -729,6 +731,20 @@ h2 {
   line-height: 1.5;
   color: var(--cw-ink-soft);
   background: var(--cw-sunken);
+  border-radius: var(--cw-r-md);
+  padding: 10px 13px;
+}
+
+/* States a fact ("continuing from 7:34"), so it reads as information rather
+   than encouragement — and carries no motion, since it appears on arrival. */
+.cwResumeNote {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--cw-ink);
+  background: var(--cw-sunken);
+  border-left: 3px solid var(--cw-accent, #2f6df6);
   border-radius: var(--cw-r-md);
   padding: 10px 13px;
 }
@@ -2081,4 +2097,383 @@ li.is-done .cwTodayItem {
   .cwStartBtn:hover {
     transform: none;
   }
+}
+
+/* ========================================================== personas == */
+/* Admin-only preview strip. Deliberately unlike the course chrome below it —
+   this is scaffolding, and it should never be mistaken for something a student
+   sees. Amber when a persona is active, so the admin can't forget that the
+   progress on screen is fiction. */
+.cwPersonaBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px clamp(20px, 3vw, 36px);
+  background: #f4f3f9;
+  border-bottom: 1px solid #e4e2ef;
+  font-family: 'Ubuntu Mono', Inter, Anuphan, system-ui, sans-serif;
+}
+
+.cwPersonaBar.is-preview {
+  background: #fdf8e9;
+  border-bottom-color: #f0e0b0;
+}
+
+.cwPersonaLabel {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #6e6e8f;
+}
+
+.cwPersonaChips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cwPersonaChip {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #d3d0e4;
+  border-radius: 999px;
+  padding: 5px 12px;
+  color: #3d3d5c;
+  transition: border-color 180ms cubic-bezier(0.22, 0.61, 0.36, 1), color 180ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.cwPersonaChip:hover {
+  border-color: #6c4bf4;
+  color: #6c4bf4;
+}
+
+.cwPersonaChip.is-active {
+  background: #6c4bf4;
+  border-color: #6c4bf4;
+  color: #fff;
+}
+
+.cwPersonaReset {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-inline-start: auto;
+  background: transparent;
+  border: 1px dashed #c99a4e;
+  color: #8a5a12;
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.cwPersonaReset:hover {
+  background: #fff;
+}
+
+.cwPersonaNote {
+  margin: 0;
+  padding: 7px clamp(20px, 3vw, 36px);
+  background: #fdf8e9;
+  border-bottom: 1px solid #f0e0b0;
+  font-family: 'Ubuntu Mono', Inter, Anuphan, system-ui, sans-serif;
+  font-size: 12.5px;
+  color: #8a5a12;
+}
+
+/* ============================================ indigo sheet restyle ===== */
+/* Same material change as the journey home, applied to the Writing shell so a
+   student crossing between them doesn't feel they changed products. Fonts are
+   untouched throughout — only colour, radius and elevation move. */
+
+.courseWritingPage {
+  background: var(--cw-page);
+}
+
+.cwAppBar,
+.cwSidebar,
+.cwMain {
+  background: var(--cw-surface);
+}
+
+.cwAppBar {
+  border-bottom: 0;
+  box-shadow: var(--cw-shadow-sm);
+}
+
+.cwSidebar {
+  border-inline-end: 0;
+}
+
+.cwSidebarInner {
+  background: var(--cw-surface);
+}
+
+/* Panels become sheets: no hairline, a wide soft shadow, generous radius. */
+.cwTodayCard,
+.cwChapterPreviewCard,
+.cwTypeCard,
+.cwNavCard,
+.cwLessonNavBtn,
+.cwTrackCard,
+.cwModal,
+.cwLessonDocs,
+.cwWritingPrompt,
+.cwPendingNote,
+.cwEstimate,
+.cwOtherCourse {
+  border-color: transparent;
+  border-radius: var(--cw-r-lg);
+  box-shadow: var(--cw-shadow-sm);
+}
+
+.cwPlayer,
+.cwPlayer iframe {
+  border-radius: var(--cw-r-lg);
+}
+
+.cwPlayer {
+  overflow: hidden;
+  box-shadow: var(--cw-shadow-md);
+}
+
+/* Pills for anything you press. */
+.cwBtn,
+.cwChip,
+.cwBack,
+.cwIconBtn,
+.cwPill,
+.cwSearch,
+.cwSidebarUpgrade,
+.cwTier,
+.cwPersonaChip,
+.cwPersonaReset {
+  border-radius: 999px;
+}
+
+.cwBtn-primary {
+  box-shadow: 0 8px 20px rgba(79, 80, 166, 0.24);
+}
+
+.cwStartBtn {
+  border-radius: 20px;
+}
+
+.cwSideLesson,
+.cwTodayItem,
+.cwSideChapterHead {
+  border-radius: 14px;
+}
+
+.cwSideChapter {
+  border-color: transparent;
+}
+
+.cwSideChapter.is-open {
+  background: var(--cw-sunken);
+  border-radius: 18px;
+}
+
+/* Chapter numeral as a lavender tile, matching the course cards elsewhere. */
+.cwChapterCaret {
+  border-radius: 10px;
+  background: var(--cw-accent-soft);
+  color: var(--cw-accent);
+}
+
+/* ---- persona bar, restyled to the same house */
+.cwPersonaBar {
+  background: #e9e9f8;
+  border-bottom: 0;
+  padding-block: 10px;
+}
+
+.cwPersonaBar.is-preview {
+  background: #fdf6e0;
+}
+
+.cwPersonaChip {
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(38, 37, 80, 0.07);
+  color: #45447a;
+}
+
+.cwPersonaChip.is-active {
+  background: #4f50a6;
+  border-color: #4f50a6;
+}
+
+.cwPersonaLabel {
+  color: #6d6c9c;
+}
+
+.cwPersonaReset {
+  border-color: #d8a35f;
+  color: #8a5a12;
+}
+
+.cwPersonaNote {
+  background: #fdf6e0;
+  border-bottom: 0;
+}
+
+/* ================================================ type scale, shell ==== */
+/* Matches the journey home's scale — the Writing course sits behind the same
+   front door, so it cannot be a size smaller. Same reasoning: Thai needs the
+   vertical room, and this shell was set at 12–14px throughout. */
+
+.courseWritingPage {
+  --fs-xs: 13.5px;
+  --fs-sm: 15px;
+  --fs-md: 16.5px;
+  --fs-lg: 19px;
+  --fs-xl: 23px;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+}
+
+.courseWritingPage h1 {
+  font-size: clamp(25px, 3.2vw, 34px);
+}
+
+.courseWritingPage h2 {
+  font-size: var(--fs-xl);
+}
+
+.cwLede,
+.cwDaySub,
+.cwKicker {
+  font-size: var(--fs-md);
+}
+
+.cwBtn,
+.cwChip,
+.cwBack,
+.cwSearch,
+.cwSidebarUpgrade {
+  font-size: var(--fs-sm);
+}
+
+.cwBtn {
+  padding: 12px 22px;
+}
+
+.cwChip {
+  padding: 11px 18px;
+}
+
+/* Sidebar is read constantly — it was the smallest type on the page. */
+.cwSideLessonBody b {
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+
+.cwSideLessonBody small,
+.cwSideChapterTitle small {
+  font-size: var(--fs-xs);
+}
+
+.cwSideChapterTitle b {
+  font-size: var(--fs-md);
+}
+
+.cwSidebarHead h2 {
+  font-size: var(--fs-lg);
+}
+
+.cwChapterCaret {
+  width: 32px;
+  height: 32px;
+  font-size: var(--fs-sm);
+}
+
+.cwLessonCrumb,
+.cwMetaDot,
+.cwTier,
+.cwPill,
+.cwTodayMinutes,
+.cwCellMeta,
+.cwTypeCount {
+  font-size: var(--fs-xs);
+}
+
+.cwLessonPanel h1 {
+  font-size: clamp(23px, 3vw, 31px);
+}
+
+.cwStartBody b {
+  font-size: var(--fs-lg);
+}
+
+.cwStartBody small,
+.cwStartMin {
+  font-size: var(--fs-sm);
+}
+
+.cwTodayItemBody b,
+.cwLessonNavBtn b {
+  font-size: var(--fs-md);
+}
+
+.cwTodayItemBody small,
+.cwLessonNavBtn small {
+  font-size: var(--fs-sm);
+}
+
+.cwAppBarTitle b {
+  font-size: var(--fs-md);
+}
+
+.cwAppBarTitle small,
+.cwAppBarProgress span {
+  font-size: var(--fs-xs);
+}
+
+.cwHeroStats b {
+  font-size: 30px;
+}
+
+.cwHeroStats span,
+.cwHeroNote {
+  font-size: var(--fs-sm);
+}
+
+.cwTrackLabel {
+  font-size: var(--fs-lg);
+}
+
+.cwTrackTagline,
+.cwTrackBullets li,
+.cwTrackFacts {
+  font-size: var(--fs-sm);
+}
+
+.cwEstimate {
+  font-size: var(--fs-md);
+  padding: 18px 20px;
+}
+
+.cwModal h3 {
+  font-size: var(--fs-xl);
+}
+
+.cwModal p,
+.cwModalPreview li {
+  font-size: var(--fs-md);
+}
+
+/* ---- persona bar */
+.cwPersonaChip {
+  font-size: var(--fs-xs);
+  padding: 8px 16px;
+}
+
+.cwPersonaLabel,
+.cwPersonaReset,
+.cwPersonaNote {
+  font-size: var(--fs-xs);
 }

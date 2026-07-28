@@ -1,0 +1,69 @@
+{
+  "_readme": [
+    "Chapter names for the four migrated Thinkific courses, keyed by course id then chapter index.",
+    "",
+    "Why this file is hand-written rather than generated: the Thinkific -> Bunny migration",
+    "manifests (migration-notes/*-video-map.json) only captured contentId, key, title, seconds",
+    "and filename per LESSON. The chapter each lesson belongs to survived only as the number in",
+    "its key (c1-l3 = chapter 1), never as a name — so there is nothing to generate a name from.",
+    "",
+    "The names below were written from the lessons each chapter actually contains. Replace any of",
+    "them with the exact chapter title from Thinkific and it shows up verbatim in the sidebar, the",
+    "course page and the calendar. A chapter with no entry here falls back to 'บทที่ N'.",
+    "",
+    "Reading is the weak one: its manifest lost most lesson titles too, so those names are read off",
+    "the handful that survived. Worth checking against Thinkific first.",
+    "",
+    "Writing is absent on purpose — it has real chapter names in src/writingCourseCurriculum.ts."
+  ],
+
+  "speaking": {
+    "0": "แนะนำข้อสอบ และเป้าหมาย Band 7",
+    "1": "พื้นฐาน Fluency: Tense และ Discourse Markers",
+    "2": "การออกความเห็นและเรียบเรียงไอเดีย",
+    "3": "Part 1: คลังวลีตามหัวข้อ และสรุปเทคนิค",
+    "4": "Part 2: เทคนิคพูดให้ครบ 2 นาที",
+    "5": "Part 2: พูดถึงคน และสถานที่",
+    "6": "Part 2: พูดถึงกิจกรรม และสิ่งของ",
+    "7": "Part 2: พูดถึงเหตุการณ์ และเข้าสู่ Part 3",
+    "8": "Part 3: หัวข้องาน บุคลิก สถานที่ ความภูมิใจ",
+    "9": "Part 3: หัวข้อสังคม เทคโนโลยี และสิ่งแวดล้อม",
+    "10": "สรุปเทคนิคทั้งหมด และสอบเสมือนจริง",
+    "11": "ตะลุยโจทย์ Cambridge 18"
+  },
+
+  "listening": {
+    "0": "ภาพรวมทริคทั้งหมดของ IELTS Listening",
+    "1": "Section 1: เทคนิค และแบบฝึก",
+    "2": "Section 2: เทคนิคแยกตามชนิดคำถาม",
+    "3": "Section 3: Note Taking และตะลุยโจทย์",
+    "4": "Section 4: เทคนิค และแบบทดสอบ",
+    "5": "Section 4: ตะลุยโจทย์แยกตามหัวข้อ",
+    "6": "ข้อสอบเต็มชุดที่ 1 พร้อมคำอธิบาย",
+    "7": "ข้อสอบเต็มชุดที่ 2 พร้อมคำอธิบาย"
+  },
+
+  "reading": {
+    "0": "พื้นฐาน: Paraphrase และ Synonyms",
+    "1": "ตะลุยโจทย์ชุดที่ 1: Passage 1–3",
+    "2": "ตะลุยโจทย์ชุดที่ 2: Passage 1–3",
+    "3": "ตะลุยโจทย์ชุดที่ 3: Passage 1–3",
+    "4": "วิธีใช้คอร์สให้ได้ผลมากที่สุด",
+    "5": "ข้อสอบเสมือนจริง Test 2–3",
+    "6": "ข้อสอบเต็มชุด: Passage 1–3",
+    "7": "ข้อสอบเต็มชุด Test 2: Passage 1–3",
+    "8": "ข้อสอบเต็มชุด Test 3: Diagram Completion",
+    "9": "ข้อสอบเต็มชุด: Passage 1–3 (ชุดถัดไป)",
+    "10": "ข้อสอบเต็มชุด: Summary และ Matching",
+    "11": "ข้อสอบเต็มชุด: Matching Heading และ Summary"
+  },
+
+  "grammar": {
+    "0": "พื้นฐานโครงสร้างประโยค และชนิดของคำ",
+    "1": "Relative Clause และการขยายประโยค",
+    "2": "Tense, Subject–Verb Agreement, Passive และ Conditionals",
+    "3": "เครื่องหมายวรรคตอน และ Parallel Structure",
+    "4": "แกรมม่าร์ขั้นสูง: ตัวเชื่อม และการอ้างอิง",
+    "5": "ทบทวนทั้งหมด และตะลุยโจทย์จริง"
+  }
+}
