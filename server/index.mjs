@@ -12190,11 +12190,11 @@ const addUtcCalendarDays = ({ year, month, day }, days) => {
 }
 
 const parseEngagementPeriod = (query = {}) => {
-  const period = ['day', 'month', 'total'].includes(String(query.period || 'day'))
+  const period = ['day', 'week', 'month', 'total'].includes(String(query.period || 'day'))
     ? String(query.period || 'day')
     : null
   if (!period) {
-    const error = new Error('period must be day, month, or total.')
+    const error = new Error('period must be day, week, month, or total.')
     error.status = 400
     throw error
   }
@@ -12213,7 +12213,7 @@ const parseEngagementPeriod = (query = {}) => {
   }
 
   const nowParts = getZonedDateParts(new Date(), timezone)
-  if (period === 'day') {
+  if (period === 'day' || period === 'week') {
     const requestedDate = String(query.date || '').trim()
     if (requestedDate && !/^\d{4}-\d{2}-\d{2}$/.test(requestedDate)) {
       const error = new Error('date must use YYYY-MM-DD.')
@@ -12232,6 +12232,19 @@ const parseEngagementPeriod = (query = {}) => {
       const error = new Error('date is not a valid calendar date.')
       error.status = 400
       throw error
+    }
+    if (period === 'week') {
+      // Monday-start week containing the requested date, in the requested time zone.
+      const mondayOffset = (checked.getUTCDay() + 6) % 7
+      const weekStart = addUtcCalendarDays({ year, month, day }, -mondayOffset)
+      const weekEnd = addUtcCalendarDays(weekStart, 7)
+      return {
+        period,
+        timezone,
+        startAt: zonedDateTimeToUtc(weekStart, timezone).toISOString(),
+        endAt: zonedDateTimeToUtc(weekEnd, timezone).toISOString(),
+        bucket: 'day'
+      }
     }
     const next = addUtcCalendarDays({ year, month, day }, 1)
     return {

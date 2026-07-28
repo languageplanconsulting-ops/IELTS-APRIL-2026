@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { formatEngagementDuration } from '../engagementTracking'
 
-export type EngagementPeriod = 'day' | 'month' | 'total'
+export type EngagementPeriod = 'day' | 'week' | 'month' | 'total'
 
 export type EngagementRankedActor = {
   actorKey: string
@@ -155,7 +155,10 @@ const normalizeSummary = (payload: ApiRecord): EngagementSummary => {
     .filter(Boolean)
     .sort()
   return {
-    period: payload.period === 'month' || payload.period === 'total' ? payload.period : 'day',
+    period:
+      payload.period === 'week' || payload.period === 'month' || payload.period === 'total'
+        ? payload.period
+        : 'day',
     trackingSince: asNullableString(payload.trackingSince || trackingCandidates[0]),
     rangeStart: asNullableString(payload.rangeStart || rangePayload.startAt),
     rangeEnd: asNullableString(payload.rangeEnd || rangePayload.endAt),
@@ -444,6 +447,7 @@ function ActorJourneyDrawer({
 export function UserEngagementAnalytics({ accessToken }: { accessToken: string }) {
   const [period, setPeriod] = useState<EngagementPeriod>('day')
   const [day, setDay] = useState(() => new Date().toISOString().slice(0, 10))
+  const [week, setWeek] = useState(() => new Date().toISOString().slice(0, 10))
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7))
   const [summary, setSummary] = useState<EngagementSummary>(emptySummary)
   const [loading, setLoading] = useState(false)
@@ -456,9 +460,10 @@ export function UserEngagementAnalytics({ accessToken }: { accessToken: string }
   const query = useMemo(() => {
     const params = new URLSearchParams({ period, timezone: 'Asia/Bangkok' })
     if (period === 'day') params.set('date', day)
+    if (period === 'week') params.set('date', week)
     if (period === 'month') params.set('month', month)
     return params.toString()
-  }, [day, month, period])
+  }, [day, month, period, week])
 
   useEffect(() => {
     if (!accessToken) return
@@ -522,13 +527,21 @@ export function UserEngagementAnalytics({ accessToken }: { accessToken: string }
         </div>
         <div className="adminEngagementPeriodControls">
           <div className="adminEngagementTabs" role="tablist" aria-label="Engagement period">
-            {(['day', 'month', 'total'] as const).map((item) => (
+            {(['day', 'week', 'month', 'total'] as const).map((item) => (
               <button key={item} type="button" className={period === item ? 'active' : ''} onClick={() => setPeriod(item)}>
-                {item === 'day' ? 'Day' : item === 'month' ? 'Month' : 'All Time'}
+                {item === 'day' ? 'Day' : item === 'week' ? 'Week' : item === 'month' ? 'Month' : 'All Time'}
               </button>
             ))}
           </div>
           {period === 'day' ? <input type="date" value={day} onChange={(event) => setDay(event.target.value)} /> : null}
+          {period === 'week' ? (
+            <input
+              type="date"
+              value={week}
+              aria-label="Any date in the week"
+              onChange={(event) => setWeek(event.target.value)}
+            />
+          ) : null}
           {period === 'month' ? <input type="month" value={month} onChange={(event) => setMonth(event.target.value)} /> : null}
         </div>
       </div>
